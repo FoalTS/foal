@@ -1,25 +1,25 @@
 import * as bodyParser from 'body-parser';
 
-import { combineDecorators, ExtendedRequest, Injectable, logger, newContextualDecorator,
+import { combineDecorators, expressLogger, ExtendedRequest, Injectable, newContextualDecorator,
   newExpressDecorator, NotFoundError, RestController, RestParams } from '@foal/core';
 
 import { restrictToAdmin } from '../decorators/restrict-to-admin.decorator';
 
 @Injectable()
-@logger('User service')
+@expressLogger('User service')
 @newExpressDecorator(bodyParser.urlencoded({ extended: false }))
 @newExpressDecorator(bodyParser.json())
 export class User implements RestController {
   constructor() {}
 
-  @logger('create')
+  @expressLogger('create')
   public async create(data: any, params: RestParams): Promise<any> {
     return data;
   }
 
   @combineDecorators([
-    logger('Get 1'),
-    logger('Get 2')
+    expressLogger('Get 1'),
+    expressLogger('Get 2')
   ])
   @newExpressDecorator((req: ExtendedRequest, res, next) => {
     req.user = { roles: ['admin', 'user'] };
@@ -34,7 +34,7 @@ export class User implements RestController {
     throw new NotFoundError();
   }
 
-  @logger('update')
+  @expressLogger('update')
   public async update(id: any, data: any, params: RestParams): Promise<any> {
     console.log('id', id);
     console.log('data', data);
@@ -42,7 +42,7 @@ export class User implements RestController {
     return Promise.resolve();
   }
 
-  @logger('patch')
+  @expressLogger('patch')
   @newExpressDecorator((req, res, next) => next())
   @newContextualDecorator(ctx => Promise.resolve(ctx))
   public async patch(id: any, data: any, params: RestParams): Promise<any> {
@@ -52,7 +52,7 @@ export class User implements RestController {
     return Promise.resolve();
   }
 
-  @logger('delete')
+  @expressLogger('delete')
   public async delete(id: any, params: RestParams): Promise<any> {
     console.log('id', id);
     console.log('params', params);
