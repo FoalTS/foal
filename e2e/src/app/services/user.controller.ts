@@ -1,7 +1,17 @@
 import * as bodyParser from 'body-parser';
 
-import { combineDecorators, expressLogger, ExtendedRequest, Injectable, newContextualDecorator,
-  newExpressDecorator, NotFoundError, RestController, RestParams } from '@foal/core';
+import {
+  addToContextFromExpress,
+  combineDecorators,
+  expressLogger,
+  ExtendedRequest,
+  Injectable,
+  newContextualDecorator,
+  newExpressDecorator,
+  NotFoundError,
+  RestController,
+  RestParams
+} from '@foal/core';
 
 import { restrictToAdmin } from '../decorators/restrict-to-admin.decorator';
 
@@ -25,6 +35,7 @@ export class User implements RestController {
     req.user = { roles: ['admin', 'user'] };
     next();
   }, [{ req: 'user', ctx: 'user' }])
+  @addToContextFromExpress([{ req: 'hostname', ctx: 'hostname'}])
   @restrictToAdmin()
   @newContextualDecorator(async ctx => {
     console.log(ctx);
