@@ -9,13 +9,12 @@ export const AppModule: ModuleData = {
     rest.bindController('/users', User),
     basic.bindController('/basic', MyController)
   ],
-  // Use name: sharedControllerDecorators? Or commonControllerDecorators
-  controllerDecorators: [
-    expressLogger('AppModule'),
-    expressLogger('AppModule 2'),
-  ],
   imports: [
     { module: Module1Module, path: '/team2' }
   ],
-  services: [ User, MyController ]
+  services: [ User, MyController ],
+  sharedControllerDecorators: [
+    expressLogger('AppModule'),
+    expressLogger('AppModule 2'),
+  ],
 };

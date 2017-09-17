@@ -31,7 +31,7 @@ const app = express();
 const foal = new FoalModule({
   services: [ User ],
   controllerBindings: [ rest.bindController('/users', User) ],
-  controllerDecorators: [
+  sharedControllerDecorators: [
     newExpressDecorateur(bodyParser.urlencoded({ extended: false }),
     newExpressDecorateur(bodyParser.json())
   ]

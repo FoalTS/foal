@@ -10,7 +10,7 @@ export interface ModuleData {
   services: Type<any>[];
   controllerBindings: ((injector: Injector, controllerHooks: ModuleHooks,
                         controllerContextDef: ModuleContextDef) => { express: Router })[];
-  controllerDecorators?: Decorator[];
+  sharedControllerDecorators?: Decorator[];
   imports?: { module: ModuleData, path?: string }[];
 }
 
@@ -19,7 +19,7 @@ export class FoalModule {
   private readonly router: Router = Router();
 
   constructor(data: ModuleData, parentModule?: FoalModule) {
-    data.controllerDecorators = data.controllerDecorators || [];
+    data.sharedControllerDecorators = data.sharedControllerDecorators || [];
     data.imports = data.imports || [];
 
     if (parentModule) {
@@ -32,7 +32,7 @@ export class FoalModule {
 
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
-    data.controllerDecorators.reverse().forEach(decorator => decorator(FakeModule));
+    data.sharedControllerDecorators.reverse().forEach(decorator => decorator(FakeModule));
     const expressHooks: ExpressHook[] = Reflect.getMetadata('hooks:express', FakeModule) || [];
     const contextualHooks: ContextualHook[] = Reflect.getMetadata('hooks:contextual', FakeModule) || [];
     const expressContextDef: ExpressContextDef = Reflect.getMetadata('contextDef:express',
