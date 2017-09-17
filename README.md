@@ -47,9 +47,9 @@ Find docs [here]().
 
 ## Contributing
 
-There are several way to contribute.
+There are several ways to contribute.
 
-- Submit a PR to fix typos/grammatical erros.
+- Submit a PR to fix typos/grammatical errors.
 - Open an issue to report a bug.
 - Open an issue to suggest a new feature.
 - Improve the docs.
