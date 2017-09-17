@@ -1,0 +1,8 @@
+.DS_Store
+.git/
+node_modules/
+npm-debug.log
+
+*.js
+dist/
+.vscode/

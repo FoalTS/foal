@@ -1,0 +1,29 @@
+{
+  "name": "@foal/core",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "tslint -p tslint.json",
+    "test": "mocha --compilers ts:ts-node/register ./**/*.spec.ts",
+    "test-watch": "mocha -w --compilers ts:ts-node/register ./**/*.spec.ts",
+    "e2e": "ts-node -r tsconfig-paths/register e2e/src/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.0.37",
+    "express": "^4.15.4",
+    "lodash": "^4.17.4",
+    "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "body-parser": "^1.18.1",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "tsconfig-paths": "^2.3.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.2"
+  }
+}
