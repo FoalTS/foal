@@ -9,7 +9,17 @@
     "test-watch": "mocha -w --compilers ts:ts-node/register ./**/*.spec.ts",
     "e2e": "ts-node -r tsconfig-paths/register e2e/src/index.ts"
   },
-  "author": "",
+  "bugs": {
+    "url" : "https://github.com/FoalTS/foal/issues"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
   "license": "MIT",
   "dependencies": {
     "@types/express": "^4.0.37",
