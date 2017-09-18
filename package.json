@@ -12,6 +12,12 @@
     "compile": "tsc",
     "prepublishOnly": "tsc"
   },
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server"
+  ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
   },
