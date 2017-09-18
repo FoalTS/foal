@@ -14,13 +14,13 @@ npm install --save @foal/core
 
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { FoalModule, Injectable, newExpressDecorateur, rest, RestController } from '@foal/core';
+import { FoalModule, Injectable, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
 
 @Injectable()
 class User implements RestController {
   constructor () {}
 
-  async create(id, data, params) {
+  async create(data: any, params: RestParams) {
     console.log(params.query);
     data.createdAt = Date.now();
     return data;
@@ -32,8 +32,8 @@ const foal = new FoalModule({
   services: [ User ],
   controllerBindings: [ rest.bindController('/users', User) ],
   sharedControllerDecorators: [
-    newExpressDecorateur(bodyParser.urlencoded({ extended: false }),
-    newExpressDecorateur(bodyParser.json())
+    newExpressDecorator(bodyParser.urlencoded({ extended: false })),
+    newExpressDecorator(bodyParser.json())
   ]
 });
 app.use(foal.expressRouter());
