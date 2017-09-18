@@ -6,7 +6,7 @@ import { ControllerBinder } from '../controller.binder';
 import { getDeleteHandler, getGetHandler, getPatchHandler, getPostHandler, getPutHandler } from './handlers';
 import { RestController } from './rest-controller.interface';
 
-class RestBinder extends ControllerBinder<RestController> {
+export class RestBinder extends ControllerBinder<RestController> {
   protected expressRouter(
     path: string,
     controller: RestController,

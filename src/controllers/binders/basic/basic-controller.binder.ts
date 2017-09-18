@@ -7,7 +7,7 @@ import { ExpressMiddleware } from '../../interfaces';
 import { catchErrors } from '../../utils';
 import { ControllerBinder } from '../controller.binder';
 
-class BasicBinder extends ControllerBinder<BasicController> {
+export class BasicBinder extends ControllerBinder<BasicController> {
   protected expressRouter(
     path: string,
     controller: BasicController,

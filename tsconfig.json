@@ -2,26 +2,23 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "noImplicitAny": false,
-    "sourceMap": true,
     "module": "commonjs",
     "target": "es5",
-    "allowJs": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "@foal/core": ["./src"]
     },
+    "declaration": true,
     "lib": [
       "es6",
       "dom"
     ]
   },
   "include": [
-    "src/**/*",
-    "e2e/src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
+    "./index.ts",
+    "./src/**/*",
+    "./e2e/**/*"
   ]
 }
