@@ -5,13 +5,26 @@
 ## Installation
 
 ```ts
-npm install --save @foal/core
+npm install --save express @foal/core
 ```
 
 ## Get started
 
-```ts
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es6",
+      "dom"
+    ]
+    ...
+}
+```
 
+```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { FoalModule, Injectable, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
