@@ -18,7 +18,10 @@ export class Injector {
     }
     const dependencies: Type<any>[] = Reflect.getMetadata('design:paramtypes', Service);
     if (!dependencies) {
-      throw new Error(`${Service.name} has no constructor or does not have the @Injectable() decorator`);
+      throw new Error(`${Service.name} has no dependencies. Please check that:
+        - The service has a constructor.
+        - The service has the @Injectable() decorator.
+        - The "emitDecoratorMetadata" is set to true in the tsconfig.json file.`);
     }
     if (dependencies.length > 0) {
       dependencies.forEach(dep => this.inject(dep));
