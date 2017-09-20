@@ -24,7 +24,7 @@ export class User implements RestController {
 
   @expressLogger('create')
   public async create(data: any, params: RestParams): Promise<any> {
-    return data;
+    return 1;
   }
 
   @combineDecorators([

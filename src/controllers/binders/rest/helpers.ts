@@ -4,6 +4,6 @@ export function sendSuccess(res: Response, successStatus: number, data: any) {
   if (typeof data === 'undefined') {
     res.sendStatus(successStatus);
   } else {
-    res.status(successStatus).send(data);
+    res.status(successStatus).send(typeof data === 'number' ? data.toString() : data);
   }
 }
