@@ -1,3 +1,3 @@
-# Documentation
+# Table of contents
 
-No docs for now.
+* [Get started](get-started)
