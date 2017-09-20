@@ -5,7 +5,7 @@
 ## Installation
 
 ```ts
-npm install --save express @foal/core
+npm install --save express body-parser @foal/core
 ```
 
 ## Get started
@@ -69,9 +69,9 @@ There are several ways to contribute.
 
 ## Packages
 
-- [@foal/cli]()
-- [@foal/common]()
-- [@foal/sequelize]()
+- @foal/cli
+- @foal/common
+- [@foal/sequelize](https://github.com/FoalTS/foal-sequelize)
 
 ## License
 
