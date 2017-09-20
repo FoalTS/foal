@@ -14,7 +14,6 @@ class ServiceA {
 }
 
 const foal = new FoalModule({
-  controllerBindings: [],
   services: [ ServiceA ]
 });
 
@@ -42,7 +41,6 @@ class ServiceB {
 }
 
 const foal = new FoalModule({
-  controllerBindings: [],
   services: [ ServiceA, ServiceB ]
 });
 

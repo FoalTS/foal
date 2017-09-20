@@ -8,8 +8,8 @@ import { Type } from './interfaces';
 
 export interface ModuleData {
   services: Type<any>[];
-  controllerBindings: ((injector: Injector, controllerHooks: ModuleHooks,
-                        controllerContextDef: ModuleContextDef) => { express: Router })[];
+  controllerBindings?: ((injector: Injector, controllerHooks: ModuleHooks,
+                         controllerContextDef: ModuleContextDef) => { express: Router })[];
   sharedControllerDecorators?: Decorator[];
   imports?: { module: ModuleData, path?: string }[];
 }
@@ -19,8 +19,9 @@ export class FoalModule {
   private readonly router: Router = Router();
 
   constructor(data: ModuleData, parentModule?: FoalModule) {
-    data.sharedControllerDecorators = data.sharedControllerDecorators || [];
+    data.controllerBindings = data.controllerBindings || [];
     data.imports = data.imports || [];
+    data.sharedControllerDecorators = data.sharedControllerDecorators || [];
 
     if (parentModule) {
       this.injector = new Injector(parentModule.injector);

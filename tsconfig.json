@@ -6,6 +6,7 @@
     "target": "es5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "@foal/core": ["./src"]
