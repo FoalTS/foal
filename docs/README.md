@@ -1,4 +1,3 @@
-# Documentation
+# Get started
 
-* [Basic](./basics/README.md)
-  * [Services](./basics/services.md)
+Docs are not ready.
