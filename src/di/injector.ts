@@ -12,7 +12,7 @@ export class Injector {
 
   constructor(private parentInjector?: Injector) {}
 
-  public inject(Service: Type<any>) {
+  public inject(Service: Type<any>): void {
     if (this.map.get(Service) || (this.parentInjector && this.parentInjector.get(Service))) {
       return;
     }
@@ -32,7 +32,7 @@ export class Injector {
   }
 
   public get<T>(Service: Type<T>): T {
-    return this.map.get(Service) as T;
+    return this.map.get(Service) || (this.parentInjector && this.parentInjector.get(Service)) as T;
   }
 
 }

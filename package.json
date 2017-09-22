@@ -40,6 +40,8 @@
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
     "body-parser": "^1.18.1",
     "chai": "^4.1.2",
     "mocha": "^3.5.3",

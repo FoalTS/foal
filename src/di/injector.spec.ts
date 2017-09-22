@@ -1,24 +1,102 @@
+import { assert, expect } from 'chai';
+
 import { Injectable, Injector } from './injector';
 
-@Injectable()
-class Titi {
-  constructor() {}
-}
+describe('Injector', () => {
 
-@Injectable()
-class Toto {
-  constructor(public titi: Titi) {}
-}
+  describe('instantiated with no parent injector', () => {
+    let injector: Injector;
 
-const injector = new Injector();
-injector.inject(Titi);
-injector.inject(Toto);
-const toto = injector.get(Toto);
-const titi = injector.get(Titi);
-injector.inject(Toto);
-injector.inject(Titi);
-console.log(toto === injector.get(Toto));
-console.log(titi === injector.get(Titi));
-console.log(toto.titi === titi);
-console.log(injector.get(Toto));
-console.log(injector.get(Titi));
+    @Injectable()
+    class Foobar {
+      constructor() {}
+    }
+
+    beforeEach(() => injector = new Injector());
+
+    describe('when inject(Service: Type<any>): void is called', () => {
+
+      it('should raise an exception if the given Service is not a service class.', () => {
+        class Foo {}
+
+        @Injectable()
+        class Bar {}
+
+        class Barfoo {
+          constructor() {}
+        }
+
+        expect(() => injector.inject(Foo)).to.throw(Error);
+        expect(() => injector.inject(Bar)).to.throw();
+        expect(() => injector.inject(Barfoo)).to.throw();
+      });
+
+      it('should instantiate the given Service.', () => {
+        injector.inject(Foobar);
+
+        assert(injector.get(Foobar) instanceof Foobar);
+      });
+
+      it('should instantiate the dependencies of the given Service.', () => {
+        @Injectable()
+        class Foobar2 {
+          constructor(public foobar: Foobar) {}
+        }
+
+        injector.inject(Foobar2);
+        const foobar = injector.get(Foobar);
+
+        assert(foobar instanceof Foobar);
+        assert(injector.get(Foobar2).foobar === foobar);
+      });
+
+      it('should not instantiate twice the given Service.', () => {
+        injector.inject(Foobar);
+        const foobar = injector.get(Foobar);
+        injector.inject(Foobar);
+
+        assert(injector.get(Foobar) === foobar);
+      });
+
+    });
+
+  });
+
+  describe('instantiated with a parent injector', () => {
+    let parentInjector: Injector;
+    let injector: Injector;
+
+    @Injectable()
+    class Foobar {
+      constructor() {}
+    }
+
+    beforeEach(() => {
+      parentInjector = new Injector();
+      injector = new Injector(parentInjector);
+    });
+
+    describe('when get<T>(Service: Type<T>): T is called', () => {
+
+      it('should return the Service instance of the parent if it exists.', () => {
+        parentInjector.inject(Foobar);
+        const foobar = parentInjector.get(Foobar);
+        assert(injector.get(Foobar) === foobar);
+      });
+
+    });
+
+    describe('when inject(Service: Type<any>): void is called', () => {
+
+      it('should not instantiate the Service if it is instantiated in the parent injector.', () => {
+        parentInjector.inject(Foobar);
+        const foobar = parentInjector.get(Foobar);
+        injector.inject(Foobar);
+        assert(injector.get(Foobar) === foobar);
+      });
+
+    });
+
+  });
+
+});
