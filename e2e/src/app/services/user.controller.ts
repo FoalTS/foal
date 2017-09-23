@@ -4,7 +4,6 @@ import {
   addToContextFromExpress,
   combineDecorators,
   expressLogger,
-  ExtendedRequest,
   Injectable,
   newContextualDecorator,
   newExpressDecorator,
@@ -31,7 +30,7 @@ export class User implements RestController {
     expressLogger('Get 1'),
     expressLogger('Get 2')
   ])
-  @newExpressDecorator((req: ExtendedRequest, res, next) => {
+  @newExpressDecorator((req, res, next) => {
     req.user = { roles: ['admin', 'user'] };
     next();
   }, [{ req: 'user', ctx: 'user' }])

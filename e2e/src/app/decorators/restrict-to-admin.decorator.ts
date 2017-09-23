@@ -1,7 +1,7 @@
-import { ExtendedRequest, newExpressDecorator } from '@foal/core';
+import { newExpressDecorator } from '@foal/core';
 
 export function restrictToAdmin() {
-  return newExpressDecorator((req: ExtendedRequest, res, next) => {
+  return newExpressDecorator((req, res, next) => {
     const user = req.user;
     if (!user) {
       throw new Error('You should use the @authenticate before');
