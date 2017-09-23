@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
 import { NotFoundError } from '../errors';
-import { ExpressMiddleware } from '../interfaces';
 import { catchErrors } from './catch-errors';
 
 // TODO: This hack should be removed.
@@ -14,7 +13,6 @@ describe('catchError(middleware: ExpressMiddleware): ExpressMiddleware', () => {
       throw new Error();
     }
 
-    const wrappedMiddleware = catchErrors(middleware);
     let status: number|undefined;
     const res = { sendStatus: (num: number): void => { status = num; } };
 
@@ -29,7 +27,6 @@ describe('catchError(middleware: ExpressMiddleware): ExpressMiddleware', () => {
       return Promise.reject(new Error());
     }
 
-    const wrappedMiddleware = catchErrors(middleware);
     const res = {
       sendStatus: (status: number): void => {
         expect(status).to.equal(500);
@@ -46,7 +43,6 @@ describe('catchError(middleware: ExpressMiddleware): ExpressMiddleware', () => {
       throw new NotFoundError();
     }
 
-    const wrappedMiddleware = catchErrors(middleware);
     let status: number|undefined;
     const res = { sendStatus: (num: number): void => { status = num; } };
 
@@ -61,7 +57,6 @@ describe('catchError(middleware: ExpressMiddleware): ExpressMiddleware', () => {
       return Promise.reject(new NotFoundError());
     }
 
-    const wrappedMiddleware = catchErrors(middleware);
     const res = {
       sendStatus: (status: number): void => {
         expect(status).to.equal(404);
