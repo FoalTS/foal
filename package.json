@@ -9,6 +9,7 @@
     "test": "mocha --compilers ts:ts-node/register ./**/*.spec.ts",
     "test-watch": "mocha -w --compilers ts:ts-node/register ./**/*.spec.ts",
     "e2e": "ts-node -r tsconfig-paths/register e2e/src/index.ts",
+    "e2e-watch": "nodemon e2e/src/index.ts",
     "compile": "tsc",
     "prepublishOnly": "tsc"
   },
@@ -47,6 +48,7 @@
     "chai": "^4.1.2",
     "express": "^4.15.4",
     "mocha": "^3.5.3",
+    "nodemon": "^1.12.1",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.7.0",
