@@ -4,7 +4,7 @@ import { ExpressMiddleware } from '../interfaces';
 export function catchErrors(middleware: ExpressMiddleware): ExpressMiddleware {
   return async (req, res, next) => {
     try {
-      // Add await to suppor promise errors. Nothing happens if middleware
+      // Add await to support promise errors. Nothing happens if middleware
       // does not return a promise.
       await middleware(req, res, next);
     } catch (error) {
