@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import * as express from 'express';
 
 import { ExpressContextDef, ExpressMiddleware } from '../../interfaces';
 import { ControllerBinder } from '../controller.binder';
@@ -11,8 +11,8 @@ export class RestBinder extends ControllerBinder<RestController> {
     path: string,
     controller: RestController,
     getExpressMiddlewares: (methodName: string, defaultContextDef?: ExpressContextDef) => ExpressMiddleware[]
-  ): Router {
-    const router = Router();
+  ): any {
+    const router = express.Router();
     // Are we good with myPath////toto?
 
     const defaultcontextDef: ExpressContextDef = [

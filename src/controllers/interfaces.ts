@@ -1,20 +1,10 @@
-import { Request, RequestHandler } from 'express';
-
 import { Injector } from '../di/injector';
 
 export interface Context { [name: string]: any; }
-export interface RequestWithContext extends Request {
-  foal: {
-    context: Context
-  };
-}
-
-export interface ExtendedRequest extends Request {
-  [propertyKey: string]: any;
-}
 
 export type ContextualMiddleware = (ctx: Context) => Promise<Context>;
-export interface ExpressMiddleware extends RequestHandler {}
+export type NextFunction = (err?: Error) => void;
+export type ExpressMiddleware = (req: any, res: any, next: NextFunction) => any;
 
 export type ContextualHook = (injector: Injector) => ContextualMiddleware;
 export type ExpressHook = (injector: Injector) => ExpressMiddleware;

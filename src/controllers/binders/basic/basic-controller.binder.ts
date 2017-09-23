@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import * as express from 'express';
 
 import { BasicController } from './basic-controller.interface';
 
@@ -12,20 +12,20 @@ export class BasicBinder extends ControllerBinder<BasicController> {
     path: string,
     controller: BasicController,
     getExpressMiddlewares: (methodName: string) => ExpressMiddleware[]
-  ): Router {
-    const router = Router();
+  ): any {
+    const router = express.Router();
     // Use a type to have type check inside router[method]
     type MethodName = 'post'|'get'|'patch'|'put'|'delete';
     const methods: MethodName[] = ['post', 'get', 'patch', 'put', 'delete'];
 
     methods.forEach(method => {
-      router[method](path, getExpressMiddlewares(method), catchErrors((req: Request, res: Response) => {
+      router[method](path, getExpressMiddlewares(method), catchErrors((req: any, res: any) => {
         if (!controller[method]) {
           throw new NotImplementedError();
         }
         // Typescript bug here "error TS2532: Object is possibly 'undefined'"
         // whereas we have the conditional above. Use (as any) as hack.
-        (controller[method] as (req: Request, res: Response) => any)(req, res);
+        (controller[method] as (req: any, res: any) => any)(req, res);
       }));
     });
 

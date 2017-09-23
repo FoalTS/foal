@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import * as express from 'express';
 import 'reflect-metadata';
 
 import { ContextualHook, Decorator, ExpressContextDef, ExpressHook, ModuleContextDef,
@@ -9,14 +9,14 @@ import { Type } from './interfaces';
 export interface ModuleData {
   services: Type<any>[];
   controllerBindings?: ((injector: Injector, controllerHooks: ModuleHooks,
-                         controllerContextDef: ModuleContextDef) => { express: Router })[];
+                         controllerContextDef: ModuleContextDef) => { expressRouter: any })[];
   sharedControllerDecorators?: Decorator[];
   imports?: { module: ModuleData, path?: string }[];
 }
 
 export class FoalModule {
   public readonly injector: Injector;
-  private readonly router: Router = Router();
+  private readonly router: any = express.Router();
 
   constructor(data: ModuleData, parentModule?: FoalModule) {
     data.controllerBindings = data.controllerBindings || [];
@@ -40,12 +40,12 @@ export class FoalModule {
       FakeModule) || [];
 
     data.controllerBindings.forEach(getRouters => {
-      const { express } = getRouters(
+      const { expressRouter } = getRouters(
         this.injector,
         { express: expressHooks, contextual: contextualHooks },
         { express: expressContextDef }
       );
-      this.router.use(express);
+      this.router.use(expressRouter);
     });
 
     data.imports.forEach(imp => this.router.use(
@@ -54,7 +54,7 @@ export class FoalModule {
     ));
   }
 
-  public expressRouter(): Router {
+  public expressRouter(): any {
     return this.router;
   }
 

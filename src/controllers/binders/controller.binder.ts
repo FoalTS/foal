@@ -1,4 +1,3 @@
-import { NextFunction, Response, Router } from 'express';
 import * as get from 'lodash/get';
 import * as set from 'lodash/set';
 import 'reflect-metadata';
@@ -13,7 +12,7 @@ import {
   ExpressMiddleware,
   ModuleContextDef,
   ModuleHooks,
-  RequestWithContext
+  NextFunction
 } from '../interfaces';
 import { catchErrors } from '../utils';
 
@@ -22,8 +21,9 @@ export abstract class ControllerBinder<T> {
   constructor() {}
 
   public bindController(path: string, ControllerClass: Type<T>):
-      (injector: Injector, moduleHooks: ModuleHooks, moduleContextDef: ModuleContextDef) => { express: Router } {
-    return (injector: Injector, moduleHooks: ModuleHooks, moduleContextDef: ModuleContextDef): { express: Router } => {
+      (injector: Injector, moduleHooks: ModuleHooks, moduleContextDef: ModuleContextDef) => { expressRouter: any } {
+    return (injector: Injector, moduleHooks: ModuleHooks,
+            moduleContextDef: ModuleContextDef): { expressRouter: any } => {
 
       const controller = injector.get(ControllerClass);
 
@@ -55,7 +55,7 @@ export abstract class ControllerBinder<T> {
       function getExpressContextMaker(methodName: string,
                                       defaultContextDef: ExpressContextDef = []): ExpressMiddleware {
         const contextDef = getExpressContextDef(methodName);
-        return catchErrors((req: RequestWithContext, res: Response, next: NextFunction): void => {
+        return catchErrors((req: any, res: any, next: NextFunction): void => {
           set(req, 'foal.context', {});
           for (const tuple of defaultContextDef.concat(contextDef)) {
             set(req.foal.context, tuple.ctx, get(req, tuple.req));
@@ -66,7 +66,7 @@ export abstract class ControllerBinder<T> {
 
       function getExpressContextualMiddleware(methodName: string): ExpressMiddleware {
         const contextualMiddlewares = getContextualMiddlewares(methodName);
-        return catchErrors(async (req: RequestWithContext, res: Response, next: NextFunction) => {
+        return catchErrors(async (req: any, res: any, next: NextFunction) => {
           for (const middleware of contextualMiddlewares) {
             req.foal.context = await middleware(req.foal.context);
           }
@@ -84,7 +84,7 @@ export abstract class ControllerBinder<T> {
       }
 
       return {
-        express: this.expressRouter(path, controller, getGeneratedExpressMiddlewares)
+        expressRouter: this.expressRouter(path, controller, getGeneratedExpressMiddlewares)
       };
     };
   }
@@ -92,5 +92,5 @@ export abstract class ControllerBinder<T> {
   protected abstract expressRouter(
     path: string, controller: T,
     getExpressMiddlewares: (methodName: string, defaultContextDef?: ExpressContextDef) => ExpressMiddleware[]
-  ): Router;
+  ): any;
 }

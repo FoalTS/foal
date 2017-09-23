@@ -1,5 +1,3 @@
-import { RequestWithContext } from '../../interfaces';
-
 export interface RestParams {
   query: { [name: string]: any };
 }
@@ -8,12 +6,6 @@ export interface RestContext {
   id: any;
   data: any;
   params: RestParams;
-}
-
-export interface RequestWithRestContext extends RequestWithContext {
-  foal: {
-    context: RestContext;
-  };
 }
 
 export interface RestController {

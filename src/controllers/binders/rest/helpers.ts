@@ -1,6 +1,4 @@
-import { Response } from 'express';
-
-export function sendSuccess(res: Response, successStatus: number, data: any) {
+export function sendSuccess(res: any, successStatus: number, data: any) {
   if (typeof data === 'undefined') {
     res.sendStatus(successStatus);
   } else {

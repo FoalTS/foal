@@ -33,9 +33,10 @@
   "files": [
     "dist/"
   ],
+  "peerDependencies": {
+    "express": "4.x"
+  },
   "dependencies": {
-    "@types/express": "^4.0.37",
-    "express": "^4.15.4",
     "lodash": "^4.17.4",
     "reflect-metadata": "^0.1.10"
   },
@@ -44,6 +45,7 @@
     "@types/mocha": "^2.2.43",
     "body-parser": "^1.18.1",
     "chai": "^4.1.2",
+    "express": "^4.15.4",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.3.0",
