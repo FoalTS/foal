@@ -86,6 +86,29 @@ class MyController extends RestController {
 }
 ```
 
+## Combination
+
+You can combine several decorators into one thanks to `combineDecorators`.
+
+```ts
+import { combineDecorators, Injectable, newExpressDecorator, RestController } from '@foal/core';
+import * as bodyParser from 'body-parser';
+
+function parse() {
+  return combineDecorators([
+    newExpressDecorator(bodyParser.urlencoded({ extended: false }))
+    newExpressDecorator(bodyParser.json())
+  ])
+}
+
+@Injectable()
+@parse()
+export class Foobar implements RestController {
+  constructor() {}
+}
+
+```
+
 ## Testing a controller decorator
 
 To test a controller decorator you can either test its hook or middleware.
