@@ -59,6 +59,8 @@ class MyController {}
 
 ```
 
+![Schema](./controller-decorators.png)
+
 ## Example
 
 You can either bind your decorator to a controller method, its class or a module. Attaching a decorator to a class is equivalent to attaching it to all its methods. Providing a decorator to a module is equivalent to attaching it to all its controllers.
