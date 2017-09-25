@@ -67,7 +67,7 @@ You can either bind your decorator to a controller method, its class or a module
 // Import an express middleware to display request details
 import * as morgan from 'morgan';
 
-import { Injectable, newExpressControllerDecorator, newFoalControllerDecorator, RestController } from '@foal/core';
+import { Injectable, newExpressDecorator, newContextualDecorator, RestController } from '@foal/core';
 
 function contextLogger(context: any): Promise<any> {
   console.log(context);
@@ -78,8 +78,8 @@ function contextLogger(context: any): Promise<any> {
 class MyController extends RestController {
   constructor() {}
 
-  @newExpressControllerDecorator(morgan)
-  @newFoalControllerDecorator(contextLogger)
+  @newExpressDecorator(morgan('dev'))
+  @newContextualDecorator(contextLogger)
   async create(data: any, params: RestParams): Promise<any> {
     return 'Created';
   }
@@ -97,7 +97,11 @@ When testing controller methods, decorators are skipped. So with the previous ex
 ```ts
 import { expect } from 'chai';
 
-const myController = new MyController();
-const actual = myController.create({}, { query: {} });
-expect(actual).to.equal('Created');
+async function test() {
+  const myController = new MyController();
+  const actual = await myController.create({}, { query: {} });
+  expect(actual).to.equal('Created');
+}
+
+test();
 ```
