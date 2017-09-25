@@ -4,7 +4,7 @@ Controller decorators are TypeScript decorators used on either a controller meth
 
 ## Families
 
-There are two families: framework controller decorators and contextual controller decorators. The first ones are specific to express (or socket.io in the future). The other ones work with a `context`.
+There are two families: express and contextual controller decorators.
 
 Examples on how to create them:
 ```ts
@@ -52,7 +52,7 @@ function myContextualHook(injector: Injector) {
 @Injectable()
 @newExpressDecorator(myExpressMiddleware)
 @newExpressDecoratorWithInjector(myExpressHook)
-// Contextual decorators are executed after framework decorators
+// Contextual decorators are executed after express decorators
 @newContextualDecorator(myContextualMiddleware)
 @newContextualDecoratorWithInjector(myContextualHook)
 class MyController {}

@@ -8,7 +8,7 @@ export function newControllerDecoratorWithInjector(family: Family, hook: (inject
     if (family === 'contextual') {
       const expressHooks = getMetadata('hooks:express', target, methodName);
       if (expressHooks) {
-        console.log(`WARNING: contextual decorators should be specified after express hooks.`);
+        console.log(`WARNING: contextual decorators should be specified after express decorators.`);
       }
     }
     const hooks = getMetadata(`hooks:${family}`, target, methodName) || [];
