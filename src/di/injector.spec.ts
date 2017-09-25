@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 
 import { Injectable, Injector } from './injector';
 
@@ -34,7 +34,7 @@ describe('Injector', () => {
       it('should instantiate the given Service.', () => {
         injector.inject(Foobar);
 
-        assert(injector.get(Foobar) instanceof Foobar);
+        expect(injector.get(Foobar)).to.be.an.instanceof(Foobar);
       });
 
       it('should instantiate the dependencies of the given Service.', () => {
@@ -46,8 +46,8 @@ describe('Injector', () => {
         injector.inject(Foobar2);
         const foobar = injector.get(Foobar);
 
-        assert(foobar instanceof Foobar);
-        assert(injector.get(Foobar2).foobar === foobar);
+        expect(foobar).to.be.an.instanceof(Foobar);
+        expect(injector.get(Foobar2).foobar).to.equal(foobar);
       });
 
       it('should not instantiate twice the given Service.', () => {
@@ -55,7 +55,7 @@ describe('Injector', () => {
         const foobar = injector.get(Foobar);
         injector.inject(Foobar);
 
-        assert(injector.get(Foobar) === foobar);
+        expect(injector.get(Foobar)).to.equal(foobar);
       });
 
     });
@@ -81,7 +81,7 @@ describe('Injector', () => {
       it('should return the Service instance of the parent if it exists.', () => {
         parentInjector.inject(Foobar);
         const foobar = parentInjector.get(Foobar);
-        assert(injector.get(Foobar) === foobar);
+        expect(injector.get(Foobar)).to.equal(foobar);
       });
 
     });
@@ -92,7 +92,7 @@ describe('Injector', () => {
         parentInjector.inject(Foobar);
         const foobar = parentInjector.get(Foobar);
         injector.inject(Foobar);
-        assert(injector.get(Foobar) === foobar);
+        expect(injector.get(Foobar)).to.equal(foobar);
       });
 
     });
