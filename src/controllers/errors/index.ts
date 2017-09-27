@@ -52,6 +52,14 @@ export class NotFoundError extends ClientError {
   }
 }
 
+export class MethodNotAllowedError extends ClientError {
+  public statusCode = 405;
+  constructor() {
+    super();
+    Object.setPrototypeOf(this, MethodNotAllowedError.prototype);
+  }
+}
+
 export class ConflictError extends ClientError {
   public statusCode = 409;
   constructor() {

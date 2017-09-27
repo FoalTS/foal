@@ -5,6 +5,7 @@ import {
   combineDecorators,
   expressLogger,
   Injectable,
+  methodNotAllowed,
   newContextualDecorator,
   newExpressDecorator,
   NotFoundError,
@@ -44,6 +45,7 @@ export class User implements RestController {
     throw new NotFoundError();
   }
 
+  @methodNotAllowed()
   public async getAll(params: RestParams): Promise<any> {
     return 'You got it all';
   }
