@@ -44,6 +44,10 @@ export class User implements RestController {
     throw new NotFoundError();
   }
 
+  public async getAll(params: RestParams): Promise<any> {
+    return 'You got it all';
+  }
+
   @expressLogger('update')
   public async update(id: any, data: any, params: RestParams): Promise<any> {
     console.log('id', id);

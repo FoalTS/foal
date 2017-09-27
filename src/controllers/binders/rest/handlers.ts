@@ -15,6 +15,18 @@ export function getDeleteHandler(controller: RestController): ExpressMiddleware 
   });
 }
 
+export function getGetAllHandler(controller: RestController): ExpressMiddleware {
+  return catchErrors(async function handler(req: any, res: any) {
+    if (!controller.getAll) {
+      throw new NotImplementedError();
+    }
+    const data = await controller.getAll(
+      (req.foal.context as RestContext).params
+    );
+    sendSuccess(res, 200, data);
+  });
+}
+
 export function getGetHandler(controller: RestController): ExpressMiddleware {
   return catchErrors(async function handler(req: any, res: any) {
     if (!controller.get) {

@@ -3,7 +3,8 @@ import * as express from 'express';
 import { ExpressContextDef, ExpressMiddleware } from '../../interfaces';
 import { ControllerBinder } from '../controller.binder';
 
-import { getDeleteHandler, getGetHandler, getPatchHandler, getPostHandler, getPutHandler } from './handlers';
+import { getDeleteHandler, getGetAllHandler, getGetHandler, getPatchHandler,
+  getPostHandler, getPutHandler } from './handlers';
 import { RestController } from './rest-controller.interface';
 
 export class RestBinder extends ControllerBinder<RestController> {
@@ -22,7 +23,7 @@ export class RestBinder extends ControllerBinder<RestController> {
     ];
 
     router.route(path)
-      .get(getExpressMiddlewares('get', defaultcontextDef), getGetHandler(controller))
+      .get(getExpressMiddlewares('get', defaultcontextDef), getGetAllHandler(controller))
       .post(getExpressMiddlewares('create', defaultcontextDef), getPostHandler(controller));
 
     router.route(`${path}/:id`)
