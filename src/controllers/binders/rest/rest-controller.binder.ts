@@ -23,7 +23,7 @@ export class RestBinder extends ControllerBinder<RestController> {
     ];
 
     router.route(path)
-      .get(getExpressMiddlewares('get', defaultcontextDef), getGetAllHandler(controller))
+      .get(getExpressMiddlewares('getAll', defaultcontextDef), getGetAllHandler(controller))
       .post(getExpressMiddlewares('create', defaultcontextDef), getPostHandler(controller));
 
     router.route(`${path}/:id`)
