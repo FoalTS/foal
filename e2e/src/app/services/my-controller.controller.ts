@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import { BasicController, Injectable } from '@foal/core';
+import { BasicController, Service } from '@foal/core';
 
-@Injectable()
+@Service()
 export class MyController implements BasicController {
   public foobar = '';
   constructor() {}

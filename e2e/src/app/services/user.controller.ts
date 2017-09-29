@@ -4,18 +4,18 @@ import {
   addToContextFromExpress,
   combineDecorators,
   expressLogger,
-  Injectable,
   methodNotAllowed,
   newContextualDecorator,
   newExpressDecorator,
   NotFoundError,
   RestController,
-  RestParams
+  RestParams,
+  Service
 } from '@foal/core';
 
 import { restrictToAdmin } from '../decorators/restrict-to-admin.decorator';
 
-@Injectable()
+@Service()
 @expressLogger('User service')
 @newExpressDecorator(bodyParser.urlencoded({ extended: false }))
 @newExpressDecorator(bodyParser.json())

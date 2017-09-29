@@ -1,8 +1,8 @@
-import { basic, ModuleData } from '@foal/core';
+import { basic, FoalModule } from '@foal/core';
 
 import { TotoController } from './toto.controller';
 
-export const Module1Module: ModuleData = {
+export const Module1Module: FoalModule = {
   controllerBindings: [
     basic.bindController('/totos', TotoController)
   ],

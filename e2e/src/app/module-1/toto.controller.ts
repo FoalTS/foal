@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
-import { BasicController, Injectable } from '@foal/core';
+import { BasicController, Service } from '@foal/core';
 
 import { MyController } from '../services/my-controller.controller';
 
-@Injectable()
+@Service()
 export class TotoController implements BasicController {
   constructor(private myController: MyController) {}
 

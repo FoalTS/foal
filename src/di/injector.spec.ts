@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 
-import { Injectable, Injector } from './injector';
+import { Injector, Service } from './injector';
 
 describe('Injector', () => {
 
   describe('instantiated with no parent injector', () => {
     let injector: Injector;
 
-    @Injectable()
+    @Service()
     class Foobar {
       constructor() {}
     }
@@ -19,7 +19,7 @@ describe('Injector', () => {
       it('should raise an exception if the given Service is not a service class.', () => {
         class Foo {}
 
-        @Injectable()
+        @Service()
         class Bar {}
 
         class Barfoo {
@@ -38,7 +38,7 @@ describe('Injector', () => {
       });
 
       it('should instantiate the dependencies of the given Service.', () => {
-        @Injectable()
+        @Service()
         class Foobar2 {
           constructor(public foobar: Foobar) {}
         }
@@ -66,7 +66,7 @@ describe('Injector', () => {
     let parentInjector: Injector;
     let injector: Injector;
 
-    @Injectable()
+    @Service()
     class Foobar {
       constructor() {}
     }

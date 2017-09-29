@@ -2,18 +2,18 @@
 
 Services are the core of FoalTS. They are used to perform many different tasks such as handling requests or fetching data from a database.
 
-Basically every class can be a service. You just need to insert the `@Injectable()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
+Basically every class can be a service. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
 
 ```ts
-import { FoalModule, Injectable } from '@foal/core';
+import { Foal, Service } from '@foal/core';
 
-@Injectable()
+@Service()
 class ServiceA {
   public name = 'Service A';
   constructor() {}
 }
 
-const foal = new FoalModule({
+const foal = new Foal({
   services: [ ServiceA ]
 });
 
@@ -26,21 +26,21 @@ console.log(myServiceA.name);
 If you want to call a service from another one, you need to inject it in the constructor as follows.
 
 ```ts
-import { FoalModule, Injectable } from '@foal/core';
+import { Foal, Service } from '@foal/core';
 
-@Injectable()
+@Service()
 class ServiceA {
   public name = 'Service A';
   constructor() {}
 }
 
-@Injectable()
+@Service()
 class ServiceB {
   public name = 'Service B';
   constructor(public serviceA: ServiceA) {}
 }
 
-const foal = new FoalModule({
+const foal = new Foal({
   services: [ ServiceA, ServiceB ]
 });
 
@@ -58,16 +58,16 @@ npm install --save-dev chai
 ```
 
 ```ts
-import { Injectable } from '@foal/core';
+import { Service } from '@foal/core';
 import { expect } from 'chai';
 
-@Injectable()
+@Service()
 class ServiceA {
   public name = 'Service A';
   constructor() {}
 }
 
-@Injectable()
+@Service()
 class ServiceB {
   public name = 'Service B';
   constructor(public serviceA: ServiceA) {}

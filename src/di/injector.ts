@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { Type } from '../interfaces';
 
-export function Injectable() {
+export function Service() {
   return function decorator(target: any) {};
 }
 
@@ -20,7 +20,7 @@ export class Injector {
     if (!dependencies) {
       throw new Error(`${Service.name} has no dependencies. Please check that:
         - The service has a constructor.
-        - The service has the @Injectable() decorator.
+        - The service has the @Service() decorator.
         - The "emitDecoratorMetadata" is set to true in the tsconfig.json file.`);
     }
     if (dependencies.length > 0) {

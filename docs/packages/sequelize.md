@@ -29,10 +29,10 @@ $ npm install --save tedious // MSSQL
 ## Setting up a connection
 
 ```ts
-import { Injectable } from '@foal/core';
+import { Service } from '@foal/core';
 import { SequelizeConnectionService } from '@foal/sequelize';
 
-@Injectable()
+@Service()
 export class Connection extends SequelizeConnectionService {
   constructor() {
     super('postgres://user:pass@example.com:5432/dbname');
@@ -43,12 +43,12 @@ export class Connection extends SequelizeConnectionService {
 ## Get connected to a table
 
 ```ts
-import { Injectable } from '@foal/core';
+import { Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
-@Injectable()
+@Service()
 export class User extends SequelizeService {
   constructor(protected connection: Connection) {
     super('users', {
@@ -63,13 +63,13 @@ export class User extends SequelizeService {
 ```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { FoalModule, newExpressDecorator, rest } from '@foal/core';
+import { Foal, newExpressDecorator, rest } from '@foal/core';
 
 import { Connection } from './connection.service';
 import { User } from './user.service';
 
 const app = express();
-const foal = new FoalModule({
+const foal = new Foal({
   services: [ Connection, User ],
   controllerBindings: [ rest.bindController('/users', User) ],
   sharedControllerDecorators: [
@@ -86,12 +86,12 @@ app.listen(3000, () => console.log('Listening...'));
 Let's say that we want to forbid to use the method `delete` when using the service as a controller.
 
 ```ts
-import { Injectable, MethodNotAllowed, RestParams } from '@foal/core';
+import { Service, MethodNotAllowed, RestParams } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
-@Injectable()
+@Service()
 export class User extends SequelizeService {
   constructor(protected connection: Connection) {
     super('users', {
@@ -111,12 +111,12 @@ export class User extends SequelizeService {
 Let's say that we want to return all the users when updating one.
 
 ```ts
-import { Injectable, MethodNotAllowed, RestParams } from '@foal/core';
+import { Service, MethodNotAllowed, RestParams } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
-@Injectable()
+@Service()
 export class User extends SequelizeService {
   constructor(protected connection: Connection) {
     super('users', {

@@ -9,7 +9,7 @@ There are two families: express and contextual controller decorators.
 Examples on how to create them:
 ```ts
 import {
-  Injectable,
+  Service,
   Injector,
   newContextualDecorator,
   newContextualDecoratorWithInjector,
@@ -49,7 +49,7 @@ function myContextualHook(injector: Injector) {
   return myExpressMiddleware2;
 }
 
-@Injectable()
+@Service()
 @newExpressDecorator(myExpressMiddleware)
 @newExpressDecoratorWithInjector(myExpressHook)
 // Contextual decorators are executed after express decorators
@@ -69,14 +69,14 @@ You can either bind your decorator to a controller method, its class or a module
 // Import an express middleware to display request details
 import * as morgan from 'morgan';
 
-import { Injectable, newExpressDecorator, newContextualDecorator, RestController } from '@foal/core';
+import { Service, newExpressDecorator, newContextualDecorator, RestController } from '@foal/core';
 
 function contextLogger(context: any): Promise<any> {
   console.log(context);
   return params;
 }
 
-@Injectable()
+@Service()
 class MyController extends RestController {
   constructor() {}
 
@@ -93,7 +93,7 @@ class MyController extends RestController {
 You can combine several decorators into one thanks to `combineDecorators`.
 
 ```ts
-import { combineDecorators, Injectable, newExpressDecorator, RestController } from '@foal/core';
+import { combineDecorators, Service, newExpressDecorator, RestController } from '@foal/core';
 import * as bodyParser from 'body-parser';
 
 function parse() {
@@ -103,7 +103,7 @@ function parse() {
   ])
 }
 
-@Injectable()
+@Service()
 @parse()
 export class Foobar implements RestController {
   constructor() {}

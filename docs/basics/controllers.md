@@ -7,9 +7,9 @@ Examples:
 // RestController
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { FoalModule, Injectable, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
+import { Foal, Service, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
 
-@Injectable()
+@Service()
 class User implements RestController {
   constructor () {}
 
@@ -20,7 +20,7 @@ class User implements RestController {
 }
 
 const app = express();
-const foal = new FoalModule({
+const foal = new Foal({
   services: [ User ],
   controllerBindings: [ rest.bindController('/users', User) ],
   sharedControllerDecorators: [
@@ -37,9 +37,9 @@ app.listen(3000, () => console.log('Listening...'));
 // BasicController
 import * as express from 'express';
 import { Request, Response } from 'express';
-import { FoalModule, Injectable, basic, BasicController } from '@foal/core';
+import { Foal, Service, basic, BasicController } from '@foal/core';
 
-@Injectable()
+@Service()
 class User implements BasicController {
   constructor () {}
 
@@ -49,7 +49,7 @@ class User implements BasicController {
 }
 
 const app = express();
-const foal = new FoalModule({
+const foal = new Foal({
   services: [ User ],
   controllerBindings: [ basic.bindController('/users', User) ]
 });
