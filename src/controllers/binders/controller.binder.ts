@@ -12,7 +12,8 @@ import {
   ExpressMiddleware,
   ModuleContextDef,
   ModuleHooks,
-  NextFunction
+  NextFunction,
+  PreHook
 } from '../interfaces';
 import { catchErrors } from '../utils';
 
@@ -21,9 +22,8 @@ export abstract class ControllerBinder<T> {
   constructor() {}
 
   public bindController(path: string, ControllerClass: Type<T>):
-      (injector: Injector, moduleHooks: ModuleHooks, moduleContextDef: ModuleContextDef) => { expressRouter: any } {
-    return (injector: Injector, moduleHooks: ModuleHooks,
-            moduleContextDef: ModuleContextDef): { expressRouter: any } => {
+      (injector: Injector, modulePreHooks: PreHook[]) => { expressRouter: any } {
+    return (injector: Injector, modulePreHooks: PreHook[]): { expressRouter: any } => {
 
       const controller = injector.get(ControllerClass);
 
@@ -31,44 +31,29 @@ export abstract class ControllerBinder<T> {
         throw new Error(`${ControllerClass.name} is not injected`);
       }
 
-      function getExpressMiddlewares(methodName: string): ExpressMiddleware[] {
-        const classHooks: ExpressHook[] = Reflect.getMetadata(`hooks:express`, ControllerClass) || [];
-        const methodHooks: ExpressHook[] = Reflect.getMetadata(`hooks:express`, ControllerClass.prototype,
+      function getPreHooks(methodName: string): PreHook[] {
+        const classPreHooks: PreHook[] = Reflect.getMetadata(`preHooks`, ControllerClass) || [];
+        const methoPredHooks: PreHook[] = Reflect.getMetadata(`preHooks`, ControllerClass.prototype,
           methodName) || [];
-        return moduleHooks.express.concat(classHooks).concat(methodHooks).map(hook => hook(injector));
-      }
-
-      function getContextualMiddlewares(methodName: string): ContextualMiddleware[] {
-        const classHooks: ContextualHook[] = Reflect.getMetadata(`hooks:contextual`, ControllerClass) || [];
-        const methodHooks: ContextualHook[] = Reflect.getMetadata(`hooks:contextual`, ControllerClass.prototype,
-          methodName) || [];
-        return moduleHooks.contextual.concat(classHooks).concat(methodHooks).map(hook => hook(injector));
-      }
-
-      function getExpressContextDef(methodName: string): ExpressContextDef {
-        const classContextDef: ExpressContextDef = Reflect.getMetadata(`contextDef:express`, ControllerClass) || [];
-        const methodContextDef: ExpressContextDef = Reflect.getMetadata(`contextDef:express`, ControllerClass.prototype,
-          methodName) || [];
-        return moduleContextDef.express.concat(classContextDef).concat(methodContextDef);
+        return modulePreHooks.concat(classPreHooks).concat(methoPredHooks);
       }
 
       function getExpressContextMaker(methodName: string,
                                       defaultContextDef: ExpressContextDef = []): ExpressMiddleware {
-        const contextDef = getExpressContextDef(methodName);
         return catchErrors((req: any, res: any, next: NextFunction): void => {
           set(req, 'foal.context', {});
-          for (const tuple of defaultContextDef.concat(contextDef)) {
+          for (const tuple of defaultContextDef) {
             set(req.foal.context, tuple.ctx, get(req, tuple.req));
           }
           next();
         });
       }
 
-      function getExpressContextualMiddleware(methodName: string): ExpressMiddleware {
-        const contextualMiddlewares = getContextualMiddlewares(methodName);
+      function getExpressPreHooks(methodName: string): ExpressMiddleware {
+        const preHooks = getPreHooks(methodName);
         return catchErrors(async (req: any, res: any, next: NextFunction) => {
-          for (const middleware of contextualMiddlewares) {
-            req.foal.context = await middleware(req.foal.context);
+          for (const preHook of preHooks) {
+            req.foal.context = await preHook(req.foal.context, injector);
           }
           next();
         });
@@ -77,9 +62,8 @@ export abstract class ControllerBinder<T> {
       function getGeneratedExpressMiddlewares(methodName: string,
                                               defaultContextDef?: ExpressContextDef): ExpressMiddleware[] {
         return [
-          ...getExpressMiddlewares(methodName),
           getExpressContextMaker(methodName, defaultContextDef),
-          getExpressContextualMiddleware(methodName)
+          getExpressPreHooks(methodName)
         ];
       }
 

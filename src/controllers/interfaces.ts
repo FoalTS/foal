@@ -20,3 +20,5 @@ export interface ModuleContextDef {
 
 export type Decorator = (target: any, methodName?: string) => void;
 export type Family = 'express'|'contextual';
+
+export type PreHook = (ctx: Context, injector: Injector) => Context|Promise<Context>;

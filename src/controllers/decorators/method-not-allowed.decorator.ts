@@ -1,11 +1,11 @@
 import { MethodNotAllowedError } from '../errors';
-import { newContextualDecorator } from '../factories';
+import { preHook } from '../factories';
 import { Context } from '../interfaces';
 
-export async function methodNotAllowedMiddleware(ctx: Context): Promise<Context> {
+export async function methodNotAllowedHook(ctx: Context): Promise<Context> {
   throw new MethodNotAllowedError();
 }
 
 export function methodNotAllowed() {
-  return newContextualDecorator(methodNotAllowedMiddleware);
+  return preHook(methodNotAllowedHook);
 }
