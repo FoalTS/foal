@@ -1,11 +1,17 @@
 language: node_js
 node_js:
   - "7"
+services:
+  - postgresql
+env:
+  - password=''
 install:
   - npm install
   - cd packages/core && npm install
   - cd ../sequelize && npm install
   - cd ../..
+before_script:
+  - psql -c 'create database foal_test_db;' -U postgres
 script:
   - npm run lint
   - cd packages/core && npm run test
