@@ -4,7 +4,9 @@ node_js:
 install:
   - npm install
   - cd packages/core && npm install
+  - cd ../sequelize && npm install
   - cd ../..
 script:
   - npm run lint
   - cd packages/core && npm run test
+  - cd ../sequelize && npm run test
