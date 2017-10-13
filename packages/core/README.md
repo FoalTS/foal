@@ -69,9 +69,8 @@ There are several ways to contribute.
 
 ## Packages
 
-- @foal/cli
-- @foal/common
-- [@foal/sequelize](https://github.com/FoalTS/foal-sequelize)
+- @foal/core
+- @foal/sequelize
 
 ## License
 

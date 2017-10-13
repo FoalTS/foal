@@ -9,9 +9,6 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "declaration": true,
-    "paths": {
-      "@foal/sequelize": ["./src"]
-    },
     "lib": [
       "es6",
       "dom"
@@ -19,7 +16,6 @@
   },
   "include": [
     "./index.ts",
-    "./src/**/*",
-    "./e2e/**/*"
+    "./src/**/*"
   ]
 }
