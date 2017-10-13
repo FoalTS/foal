@@ -3,7 +3,7 @@ node_js:
   - "7"
 install:
   - npm install
-  - cd packages\core && npm install
+  - cd packages/core && npm install
 script:
   - npm run lint
-  - cd packages\core && npm run test
+  - cd packages/core && npm run test
