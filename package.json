@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
+    "lerna": "^2.4.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
   }

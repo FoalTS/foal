@@ -5,14 +5,13 @@ services:
   - postgresql
 env:
   - password=''
+before_install:
+  - npm install -g lerna
 install:
   - npm install
-  - cd packages/core && npm install
-  - cd ../sequelize && npm install
-  - cd ../..
+  - lerna bootstrap
 before_script:
   - psql -c 'create database foal_test_db;' -U postgres
 script:
   - npm run lint
-  - cd packages/core && npm run test
-  - cd ../sequelize && npm run test
+  - lerna run test
