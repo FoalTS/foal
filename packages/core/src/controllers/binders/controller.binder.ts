@@ -7,10 +7,7 @@ import { Type } from '../../interfaces';
 import {
   ContextualHook,
   ContextualMiddleware,
-  ExpressContextDef,
-  ExpressHook,
   ExpressMiddleware,
-  ModuleContextDef,
   ModuleHooks,
   NextFunction
 } from '../interfaces';
@@ -21,21 +18,13 @@ export abstract class ControllerBinder<T> {
   constructor() {}
 
   public bindController(path: string, ControllerClass: Type<T>):
-      (injector: Injector, moduleHooks: ModuleHooks, moduleContextDef: ModuleContextDef) => { expressRouter: any } {
-    return (injector: Injector, moduleHooks: ModuleHooks,
-            moduleContextDef: ModuleContextDef): { expressRouter: any } => {
+      (injector: Injector, moduleHooks: ModuleHooks) => { expressRouter: any } {
+    return (injector: Injector, moduleHooks: ModuleHooks): { expressRouter: any } => {
 
       const controller = injector.get(ControllerClass);
 
       if (!controller) {
         throw new Error(`${ControllerClass.name} is not injected`);
-      }
-
-      function getExpressMiddlewares(methodName: string): ExpressMiddleware[] {
-        const classHooks: ExpressHook[] = Reflect.getMetadata(`hooks:express`, ControllerClass) || [];
-        const methodHooks: ExpressHook[] = Reflect.getMetadata(`hooks:express`, ControllerClass.prototype,
-          methodName) || [];
-        return moduleHooks.express.concat(classHooks).concat(methodHooks).map(hook => hook(injector));
       }
 
       function getContextualMiddlewares(methodName: string): ContextualMiddleware[] {
@@ -45,19 +34,15 @@ export abstract class ControllerBinder<T> {
         return moduleHooks.contextual.concat(classHooks).concat(methodHooks).map(hook => hook(injector));
       }
 
-      function getExpressContextDef(methodName: string): ExpressContextDef {
-        const classContextDef: ExpressContextDef = Reflect.getMetadata(`contextDef:express`, ControllerClass) || [];
-        const methodContextDef: ExpressContextDef = Reflect.getMetadata(`contextDef:express`, ControllerClass.prototype,
-          methodName) || [];
-        return moduleContextDef.express.concat(classContextDef).concat(methodContextDef);
-      }
-
-      function getExpressContextMaker(methodName: string,
-                                      defaultContextDef: ExpressContextDef = []): ExpressMiddleware {
-        const contextDef = getExpressContextDef(methodName);
+      function getExpressContextMaker(methodName: string): ExpressMiddleware {
         return catchErrors((req: any, res: any, next: NextFunction): void => {
           set(req, 'foal.context', {});
-          for (const tuple of defaultContextDef.concat(contextDef)) {
+          const contextDef = [
+            { req: 'body', ctx: 'data' },
+            { req: 'params.id', ctx: 'id' },
+            { req: 'query', ctx: 'params.query' }
+          ];
+          for (const tuple of contextDef) {
             set(req.foal.context, tuple.ctx, get(req, tuple.req));
           }
           next();
@@ -74,11 +59,9 @@ export abstract class ControllerBinder<T> {
         });
       }
 
-      function getGeneratedExpressMiddlewares(methodName: string,
-                                              defaultContextDef?: ExpressContextDef): ExpressMiddleware[] {
+      function getGeneratedExpressMiddlewares(methodName: string): ExpressMiddleware[] {
         return [
-          ...getExpressMiddlewares(methodName),
-          getExpressContextMaker(methodName, defaultContextDef),
+          getExpressContextMaker(methodName),
           getExpressContextualMiddleware(methodName)
         ];
       }
@@ -91,6 +74,6 @@ export abstract class ControllerBinder<T> {
 
   protected abstract expressRouter(
     path: string, controller: T,
-    getExpressMiddlewares: (methodName: string, defaultContextDef?: ExpressContextDef) => ExpressMiddleware[]
+    getExpressMiddlewares: (methodName: string) => ExpressMiddleware[]
   ): any;
 }

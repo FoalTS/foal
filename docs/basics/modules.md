@@ -5,7 +5,7 @@ Every app starts with a module. A module instantiates services and binds control
 ## Example
 
 ```ts
-import { expressLogger, Module, rest } from '@foal/core';
+import { Module, rest } from '@foal/core';
 // module and service imports ...
 
 const AppModule: Module = {
@@ -17,9 +17,6 @@ const AppModule: Module = {
     { module: MyModule }
     { module: Team1Module, path: '/team1' },
     { module: Team2Module, path: '/team2' },
-  ],
-  sharedControllerDecorators: [
-    expressLogger('AppModule'),
   ]
 }
 ```

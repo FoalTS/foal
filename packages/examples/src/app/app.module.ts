@@ -1,4 +1,4 @@
-import { basic, expressLogger, FoalModule, rest } from '@foal/core';
+import { basic, FoalModule, rest } from '@foal/core';
 
 import { Module1Module } from './module-1/module-1.module';
 import { MyController } from './services/my-controller.controller';
@@ -14,9 +14,5 @@ export const AppModule: FoalModule = {
   imports: [
     { module: Module1Module, path: '/team2' }
   ],
-  services: [ User, User2, MyController ],
-  sharedControllerDecorators: [
-    expressLogger('AppModule'),
-    expressLogger('AppModule 2'),
-  ],
+  services: [ User, User2, MyController ]
 };

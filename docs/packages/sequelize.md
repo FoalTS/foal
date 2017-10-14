@@ -63,19 +63,18 @@ export class User extends SequelizeService {
 ```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { Foal, newExpressDecorator, rest } from '@foal/core';
+import { Foal, rest } from '@foal/core';
 
 import { Connection } from './connection.service';
 import { User } from './user.service';
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 const foal = new Foal({
   services: [ Connection, User ],
-  controllerBindings: [ rest.bindController('/users', User) ],
-  sharedControllerDecorators: [
-    newExpressDecorator(bodyParser.urlencoded({ extended: false })),
-    newExpressDecorator(bodyParser.json())
-  ]
+  controllerBindings: [ rest.bindController('/users', User) ]
 });
 app.use(foal.expressRouter());
 app.listen(3000, () => console.log('Listening...'));

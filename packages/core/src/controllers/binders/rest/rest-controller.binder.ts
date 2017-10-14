@@ -1,6 +1,6 @@
 import * as express from 'express';
 
-import { ExpressContextDef, ExpressMiddleware } from '../../interfaces';
+import { ExpressMiddleware } from '../../interfaces';
 import { ControllerBinder } from '../controller.binder';
 
 import { getDeleteHandler, getGetAllHandler, getGetHandler, getPatchHandler,
@@ -11,26 +11,20 @@ export class RestBinder extends ControllerBinder<RestController> {
   protected expressRouter(
     path: string,
     controller: RestController,
-    getExpressMiddlewares: (methodName: string, defaultContextDef?: ExpressContextDef) => ExpressMiddleware[]
+    getExpressMiddlewares: (methodName: string) => ExpressMiddleware[]
   ): any {
     const router = express.Router();
     // Are we good with myPath////toto?
 
-    const defaultcontextDef: ExpressContextDef = [
-      { req: 'body', ctx: 'data' },
-      { req: 'params.id', ctx: 'id' },
-      { req: 'query', ctx: 'params.query' }
-    ];
-
     router.route(path)
-      .get(getExpressMiddlewares('getAll', defaultcontextDef), getGetAllHandler(controller))
-      .post(getExpressMiddlewares('create', defaultcontextDef), getPostHandler(controller));
+      .get(getExpressMiddlewares('getAll'), getGetAllHandler(controller))
+      .post(getExpressMiddlewares('create'), getPostHandler(controller));
 
     router.route(`${path}/:id`)
-      .delete(getExpressMiddlewares('delete', defaultcontextDef), getDeleteHandler(controller))
-      .get(getExpressMiddlewares('get', defaultcontextDef), getGetHandler(controller))
-      .patch(getExpressMiddlewares('patch', defaultcontextDef), getPatchHandler(controller))
-      .put(getExpressMiddlewares('update', defaultcontextDef), getPutHandler(controller));
+      .delete(getExpressMiddlewares('delete'), getDeleteHandler(controller))
+      .get(getExpressMiddlewares('get'), getGetHandler(controller))
+      .patch(getExpressMiddlewares('patch'), getPatchHandler(controller))
+      .put(getExpressMiddlewares('update'), getPutHandler(controller));
 
     return router;
   }

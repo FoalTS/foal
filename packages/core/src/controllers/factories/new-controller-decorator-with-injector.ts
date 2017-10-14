@@ -1,25 +1,11 @@
 import { Injector } from '../../di/injector';
-import { Decorator, ExpressContextDef, Family } from '../interfaces';
+import { Decorator } from '../interfaces';
 import { defineMetadata, getMetadata } from './helpers';
 
-export function newControllerDecoratorWithInjector(family: Family, hook: (injector: Injector) => any,
-                                                   contextDef?: ExpressContextDef): Decorator {
+export function newControllerDecoratorWithInjector(hook: (injector: Injector) => any): Decorator {
   return function decorator(target: any, methodName?: string) {
-    if (family === 'contextual') {
-      const expressHooks = getMetadata('hooks:express', target, methodName);
-      if (expressHooks) {
-        throw new Error(`Contextual decorators should be specified after express decorators.`);
-      }
-    }
-    const hooks = getMetadata(`hooks:${family}`, target, methodName) || [];
+    const hooks = getMetadata('hooks:contextual', target, methodName) || [];
     hooks.unshift(hook);
-    defineMetadata(`hooks:${family}`, hooks, target, methodName);
-
-    if (contextDef) {
-      // Irrelevant if family === 'contextual'
-      let contextDef2 = getMetadata(`contextDef:${family}`, target, methodName) || [];
-      contextDef2 = contextDef2.concat(contextDef);
-      defineMetadata(`contextDef:${family}`, contextDef2, target, methodName);
-    }
+    defineMetadata('hooks:contextual', hooks, target, methodName);
   };
 }
