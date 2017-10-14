@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Backend framework written in TypeScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@foal/sequelize",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Foal integration of sequelize (ORM)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,7 +34,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/core": "^0.2.0",
+    "@foal/core": "^0.2.2",
     "sequelize": "^4.8.4"
   },
   "devDependencies": {
