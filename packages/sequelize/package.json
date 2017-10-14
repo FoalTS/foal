@@ -1,0 +1,50 @@
+{
+  "name": "@foal/sequelize",
+  "version": "0.2.2",
+  "description": "Foal integration of sequelize (ORM)",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register ./**/*.spec.ts",
+    "test-watch": "mocha -w --require ts-node/register ./**/*.spec.ts",
+    "compile": "tsc",
+    "prepublish": "tsc"
+  },
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server",
+    "sequelize",
+    "foal"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "@foal/core": "^0.2.2",
+    "sequelize": "^4.8.4"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "pg": "^7.3.0",
+    "pg-hstore": "^2.3.2",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
+  }
+}

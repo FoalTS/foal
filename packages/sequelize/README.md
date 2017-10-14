@@ -1,11 +1,17 @@
-# FoalTS
+# Foal sequelize
 
-**This work is in progress. Future releases may break current features, so use it at your own risk!**
+*This work is in progress.*
 
 ## Installation
 
 ```ts
-npm install --save express body-parser @foal/core
+npm install --save express @foal/core @foal/sequelize sequelize
+
+# And one of the following:
+$ npm install --save pg pg-hstore
+$ npm install --save mysql2
+$ npm install --save sqlite3
+$ npm install --save tedious // MSSQL
 ```
 
 ## Get started
@@ -27,16 +33,23 @@ npm install --save express body-parser @foal/core
 ```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { Foal, Service, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
+
+import { Foal, newExpressDecorator, rest, RestParams, Service } from '@foal/core';
+import { Sequelize, SequelizeConnectionService, SequelizeService } from '@foal/sequelize';
 
 @Service()
-class User implements RestController {
-  constructor () {}
+class Connection extends SequelizeConnectionService {
+  constructor() {
+    super('postgres://user:pass@example.com:5432/dbname');
+  }
+}
 
-  async create(data: any, params: RestParams) {
-    console.log(params.query);
-    data.createdAt = Date.now();
-    return data;
+@Service()
+class User extends SequelizeService {
+  constructor(protected connection: Connection) {
+    super('users', {
+      username: Sequelize.STRING
+    }, connection);
   }
 }
 
@@ -66,11 +79,6 @@ There are several ways to contribute.
 - Open an issue to report a bug.
 - Open an issue to suggest a new feature.
 - Improve the docs.
-
-## Packages
-
-- @foal/core
-- @foal/sequelize
 
 ## License
 

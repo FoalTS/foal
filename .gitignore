@@ -2,6 +2,7 @@
 .git/
 node_modules/
 npm-debug.log
+lerna-debug.log
 
 *.js
 dist/

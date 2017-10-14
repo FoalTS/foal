@@ -1,0 +1,43 @@
+{
+  "name": "@foal/examples",
+  "version": "0.2.2",
+  "description": "FoalTs examples",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register ./**/*.spec.ts",
+    "test-watch": "mocha -w --require ts-node/register ./**/*.spec.ts",
+    "start": "ts-node ./src/index.ts",
+    "start-watch": "nodemon ./src/index.ts",
+    "compile": "tsc",
+    "prepublish": "tsc"
+  },
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@foal/core": "^0.2.2",
+    "@foal/sequelize": "^0.2.2",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "pg": "^7.3.0",
+    "pg-hstore": "^2.3.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.3"
+  }
+}

@@ -1,6 +1,17 @@
 language: node_js
 node_js:
   - "7"
+services:
+  - postgresql
+env:
+  - password=''
+before_install:
+  - npm install -g lerna
+install:
+  - npm install
+  - lerna bootstrap
+before_script:
+  - psql -c 'create database foal_test_db;' -U postgres
 script:
   - npm run lint
-  - npm run test
+  - lerna run test

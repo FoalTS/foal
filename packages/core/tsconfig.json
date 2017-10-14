@@ -8,9 +8,6 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "baseUrl": ".",
-    "paths": {
-      "@foal/core": ["./src"]
-    },
     "declaration": true,
     "lib": [
       "es6",
@@ -19,7 +16,9 @@
   },
   "include": [
     "./index.ts",
-    "./src/**/*",
-    "./e2e/**/*"
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "./src/**/*.spec.ts"
   ]
 }

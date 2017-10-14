@@ -1,57 +1,24 @@
 {
-  "name": "@foal/core",
-  "version": "0.2.0",
+  "name": "foal-srcs",
   "description": "Backend framework written in TypeScript",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "lint": "tslint -p tslint.json",
-    "test": "mocha --compilers ts:ts-node/register ./**/*.spec.ts",
-    "test-watch": "mocha -w --compilers ts:ts-node/register ./**/*.spec.ts",
-    "e2e": "ts-node -r tsconfig-paths/register e2e/src/index.ts",
-    "e2e-watch": "nodemon e2e/src/index.ts",
-    "compile": "tsc",
-    "prepublishOnly": "tsc"
+  "directories": {
+    "doc": "docs"
   },
-  "keywords": [
-    "backend",
-    "node",
-    "typescript",
-    "server"
-  ],
-  "bugs": {
-    "url": "https://github.com/FoalTS/foal/issues"
+  "scripts": {
+    "lint": "tslint -p tslint.json"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/FoalTS/foal"
+    "url": "git+https://github.com/FoalTS/foal.git"
   },
-  "homepage": "https://github.com/FoalTS",
-  "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
-  ],
   "license": "MIT",
-  "files": [
-    "dist/"
-  ],
-  "peerDependencies": {
-    "express": "4.x"
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
   },
-  "dependencies": {
-    "lodash": "^4.17.4",
-    "reflect-metadata": "^0.1.10"
-  },
+  "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
-    "body-parser": "^1.18.1",
-    "chai": "^4.1.2",
-    "express": "^4.15.4",
-    "mocha": "^3.5.3",
-    "nodemon": "^1.12.1",
-    "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.3.0",
+    "lerna": "^2.4.0",
     "tslint": "^5.7.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.3"
   }
 }
