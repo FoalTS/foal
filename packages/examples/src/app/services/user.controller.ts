@@ -1,7 +1,7 @@
 import {
   methodNotAllowed,
-  newContextualDecorator,
   NotFoundError,
+  preHook,
   RestController,
   RestParams,
   Service
@@ -16,7 +16,7 @@ export class User implements RestController {
     return 1;
   }
 
-  @newContextualDecorator(async ctx => {
+  @preHook(async ctx => {
     console.log(ctx);
     return ctx;
   })
@@ -36,7 +36,7 @@ export class User implements RestController {
     return Promise.resolve();
   }
 
-  @newContextualDecorator(ctx => Promise.resolve(ctx))
+  @preHook(ctx => Promise.resolve(ctx))
   public async patch(id: any, data: any, params: RestParams): Promise<any> {
     console.log('id', id);
     console.log('data', data);

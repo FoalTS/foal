@@ -7,7 +7,7 @@
 * [Services](./basics/services.md)
 * [Controllers](./basics/controllers.md)
 * [Modules](./basics/modules.md)
-* [Controller decorators](./basics/controller-decorators.md)
+* [Pre-hooks](./basics/pre-hooks.md)
 
 ### Packages
 

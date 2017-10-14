@@ -1,5 +1,5 @@
 import { MethodNotAllowedError } from '../errors';
-import { newContextualDecorator } from '../factories';
+import { preHook } from '../factories';
 import { Context } from '../interfaces';
 
 export async function methodNotAllowedMiddleware(ctx: Context): Promise<Context> {
@@ -7,5 +7,5 @@ export async function methodNotAllowedMiddleware(ctx: Context): Promise<Context>
 }
 
 export function methodNotAllowed() {
-  return newContextualDecorator(methodNotAllowedMiddleware);
+  return preHook(methodNotAllowedMiddleware);
 }
