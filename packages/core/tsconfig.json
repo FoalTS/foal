@@ -16,6 +16,9 @@
   },
   "include": [
     "./index.ts",
-    "./src/**/*"
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "./src/**/*.spec.ts"
   ]
 }
