@@ -9,6 +9,10 @@
 * [Modules](./basics/modules.md)
 * [Controller decorators](./basics/controller-decorators.md)
 
+### API
+
+* [RestController](./api/rest-controller.md)
+
 ### Packages
 
 * [@foal/sequelize](./packages/sequelize.md)
