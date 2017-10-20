@@ -1,6 +1,6 @@
 # Pre-hooks
 
-Pre-hooks are TypeScript decorators used on either a controller method, a controller class or in the sharedControllerDecorators attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
+Pre-hooks are TypeScript decorators used on either a controller method, a controller class or in the preHooks attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
 
 ## How to create one
 
@@ -14,12 +14,10 @@ import {
 
 async function myContextualMiddleware(ctx: any): Promise<any> {
   console.log('Third decorator');
-  return ctx;
 }
 
 async function myContextualMiddleware2(ctx: any): Promise<any> {
   console.log('Fourth decorator');
-  return ctx;
 }
 
 function myContextualHook(injector: Injector) {

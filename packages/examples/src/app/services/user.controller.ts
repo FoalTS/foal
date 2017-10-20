@@ -1,4 +1,5 @@
 import {
+  log,
   methodNotAllowed,
   NotFoundError,
   preHook,
@@ -8,6 +9,8 @@ import {
 } from '@foal/core';
 
 @Service()
+@log('User (1)')
+@log('User (2)')
 export class User implements RestController {
   constructor() {}
 
@@ -16,9 +19,8 @@ export class User implements RestController {
     return 1;
   }
 
-  @preHook(async ctx => {
+  @preHook(ctx => {
     console.log(ctx);
-    return ctx;
   })
   public async get(id: any, params: RestParams): Promise<any> {
     throw new NotFoundError();
@@ -29,6 +31,8 @@ export class User implements RestController {
     return 'You got it all';
   }
 
+  @log('update (1)')
+  @log('update (2)')
   public async update(id: any, data: any, params: RestParams): Promise<any> {
     console.log('id', id);
     console.log('data', data);
