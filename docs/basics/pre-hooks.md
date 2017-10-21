@@ -1,34 +1,30 @@
 # Pre-hooks
 
-Pre-hooks are TypeScript decorators used on either a controller method, a controller class or in the preHooks attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
+Pre-hooks are TypeScript decorators used on either a controller method, a controller class or in the `preHooks` attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
 
 ## How to create one
 
 ```ts
 import {
+  Context,
   Service,
   Injector,
   preHook,
-  preHookWithInjector,
 } from '@foal/core';
 
-async function myContextualMiddleware(ctx: any): Promise<any> {
-  console.log('Third decorator');
+export function makeMyLoggerMiddleware(message: string): PreMiddleware {
+  return function myLoggerMiddleware(ctx: Context, injector: Injector): void {
+    console.log(message);
+  };
 }
 
-async function myContextualMiddleware2(ctx: any): Promise<any> {
-  console.log('Fourth decorator');
+export function myLoggerPreHook(message: string) {
+  return preHook(makeMyLoggerMiddleware(message));
 }
 
-function myContextualHook(injector: Injector) {
-  // The injector lets you call another service directly in the decorator. It may be
-  // useful to check that a user has permission to access a method.
-  return myContextualMiddleware2;
-}
 
 @Service()
-@preHook(myContextualMiddleware)
-@preHookWithInjector(myContextualHook)
+@myLoggerPreHook('hello world')
 class MyController {}
 
 ```
@@ -38,11 +34,10 @@ class MyController {}
 You can either bind your pre-hook to a controller method, its class or a module. Attaching a pre-hook to a class is equivalent to attaching it to all its methods. Providing a pre-hook to a module is equivalent to attaching it to all its controllers.
 
 ```ts
-import { Service, preHook, RestController } from '@foal/core';
+import { Context, Service, preHook, RestController } from '@foal/core';
 
-function contextLogger(context: any): Promise<any> {
+function contextLogger(context: Context): Promise<any> {
   console.log(context);
-  return params;
 }
 
 @Service()
@@ -80,7 +75,25 @@ export class Foobar implements RestController {
 
 ## Testing a pre-hook
 
-To test a pre-hook you can either test its hook or middleware.
+To test a pre-hook you can test its middleware. So prefer separate its declaration from the pre-hook itself.
+
+DON'T DO:
+```ts
+function addHelloWorldToContext() {
+  return preHook((ctx: Context) => ctx.helloWorld = 'Hello world');
+}
+```
+
+DO:
+```ts
+function addHelloWorldToContextMiddleware(ctx: Context) {
+  ctx.helloWorld = 'Hello world';
+}
+
+function addHelloWorldToContext() {
+  return preHook(addHelloWorldToContextMiddleware);
+}
+```
 
 ## Testing a controller with pre-hooks
 
