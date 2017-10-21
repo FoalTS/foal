@@ -20,7 +20,7 @@ export abstract class ControllerBinder<T> {
         const preMiddlewares = this.getPreMiddlewares(ControllerClass, binding.controllerMethodName)
           .map(pM => ((ctx: Context) => pM(ctx, injector)));
         const methodMiddleware = async (ctx: Context) => ctx.result = await binding.controllerMethodBinder(ctx);
-        const middlewares = [...preMiddlewares, methodMiddleware];
+        const middlewares = [ ...preMiddlewares, methodMiddleware ];
         return {
           httpMethod: binding.httpMethod,
           middlewares,

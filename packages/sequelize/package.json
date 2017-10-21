@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register ./**/*.spec.ts",
-    "test-watch": "mocha -w --require ts-node/register ./**/*.spec.ts",
+    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts ./**/*.spec.ts",
     "compile": "tsc",
     "prepublish": "tsc"
   },
