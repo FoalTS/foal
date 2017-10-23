@@ -1,9 +1,8 @@
-import * as express from 'express';
 import 'reflect-metadata';
 
-import { HttpError } from './controllers/errors';
-import { Context, Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
+import { Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
 import { Injector } from './di/injector';
+import { getExpressMiddleware } from './get-express-middleware';
 import { Type } from './interfaces';
 
 export interface FoalModule {
@@ -61,42 +60,7 @@ export class Foal {
   }
 
   public expressRouter(): any {
-    const router = express.Router();
-    for (const methodBinding of this.methodsBindings) {
-      const path = methodBinding.paths.join('/').replace(/\/\//g, '/');
-      router[methodBinding.httpMethod.toLowerCase()](path, async (req, res) => {
-        const context: Context = this.initContext(req);
-        try {
-          for (const middleware of methodBinding.middlewares) {
-            await middleware(context);
-          }
-          const result = context.result;
-          if (typeof result === 'undefined') {
-            res.sendStatus(methodBinding.successStatus);
-          } else {
-            res.status(methodBinding.successStatus).send(typeof result === 'number' ? result.toString() : result);
-          }
-        } catch (error) {
-          if (error instanceof HttpError) {
-            res.sendStatus(error.statusCode);
-          } else {
-            console.error(error);
-            res.sendStatus(500);
-          }
-        }
-      });
-    }
-    return router;
-  }
-
-  private initContext(req: any): Context {
-    return {
-      data: req.body,
-      id: req.params.id,
-      params: {
-        query: req.query
-      }
-    };
+    return getExpressMiddleware(this);
   }
 
   private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
