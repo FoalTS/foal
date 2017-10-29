@@ -4,8 +4,6 @@ export interface Context { [name: string]: any; }
 
 export type Middleware = (ctx: Context) => Promise<any>|any;
 export type PreMiddleware = (ctx: Context, injector: Injector) => Promise<any>|any;
-export type NextFunction = (err?: Error) => void;
-export type ExpressMiddleware = (req: any, res: any, next: NextFunction) => any;
 
 export type Decorator = (target: any, methodName?: string) => void;
 

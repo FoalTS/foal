@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@foal/core": "^0.2.2",
+    "@foal/express": "^0.2.0",
     "@foal/sequelize": "^0.2.2",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",

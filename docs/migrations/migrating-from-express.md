@@ -6,5 +6,5 @@ Some shared decorators are used in the team -> easy to create a controller decor
 
 express is in peerDependencies so that you can use your current 4.x version of node.
 
-.expressRouter() -> easily migrate your app
+getCallback(foal) -> easily migrate your app
 if already using services : almost nothing to change for testing thanks to controller decorators which are skipped

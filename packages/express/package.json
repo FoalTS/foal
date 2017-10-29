@@ -1,7 +1,7 @@
 {
-  "name": "@foal/core",
-  "version": "0.2.2",
-  "description": "Backend framework written in TypeScript",
+  "name": "@foal/express",
+  "version": "0.2.0",
+  "description": "Foal util to connect a foal application to express",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -14,7 +14,9 @@
     "backend",
     "node",
     "typescript",
-    "server"
+    "server",
+    "express",
+    "foal"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
@@ -32,13 +34,20 @@
     "dist/"
   ],
   "dependencies": {
-    "reflect-metadata": "^0.1.10"
+    "@foal/core": "^0.2.2"
+  },
+  "peerDependencies": {
+    "express": "4.x"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
+    "@types/supertest": "^2.0.3",
+    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
+    "express": "^4.16.2",
     "mocha": "^3.5.3",
+    "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }

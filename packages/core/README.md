@@ -5,7 +5,7 @@
 ## Installation
 
 ```ts
-npm install --save express body-parser @foal/core
+npm install --save express body-parser @foal/core @foal/express
 ```
 
 ## Get started
@@ -27,6 +27,7 @@ npm install --save express body-parser @foal/core
 ```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import { getCallback } from '@foal/express';
 import { Foal, Service, rest, RestController, RestParams } from '@foal/core';
 
 @Service()
@@ -40,15 +41,15 @@ class User implements RestController {
   }
 }
 
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
 const foal = new Foal({
   services: [ User ],
   controllerBindings: [ rest.bindController('/users', User) ]
 });
-app.use(foal.expressRouter());
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(getCallback(foal));
 app.listen(3000, () => console.log('Listening...'));
 
 ```
