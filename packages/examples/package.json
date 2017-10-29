@@ -5,8 +5,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register ./**/*.spec.ts",
-    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts ./**/*.spec.ts",
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "start": "ts-node ./src/index.ts",
     "start-watch": "nodemon ./src/index.ts",
     "compile": "tsc",
