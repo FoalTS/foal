@@ -1,19 +1,22 @@
 {
-  "name": "@foal/examples",
-  "version": "0.2.2",
-  "description": "FoalTs examples",
+  "name": "@foal/express",
+  "version": "0.2.0",
+  "description": "Foal util to connect a foal application to express",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "start": "ts-node ./src/index.ts",
-    "start-watch": "nodemon ./src/index.ts",
     "compile": "tsc",
     "prepublish": "tsc"
   },
-  "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server",
+    "express",
+    "foal"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
@@ -22,23 +25,30 @@
     "type": "git",
     "url": "https://github.com/FoalTS/foal"
   },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
   "license": "MIT",
+  "files": [
+    "dist/"
+  ],
   "dependencies": {
-    "@foal/core": "^0.2.2",
-    "@foal/express": "^0.2.0",
-    "@foal/sequelize": "^0.2.2",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "pg": "^7.3.0",
-    "pg-hstore": "^2.3.2"
+    "@foal/core": "^0.2.2"
+  },
+  "peerDependencies": {
+    "express": "4.x"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
+    "@types/supertest": "^2.0.3",
+    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "nodemon": "^1.12.1",
+    "express": "^4.16.2",
+    "mocha": "^3.5.3",
+    "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.2"
   }
 }

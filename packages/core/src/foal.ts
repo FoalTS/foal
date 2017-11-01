@@ -2,7 +2,6 @@ import 'reflect-metadata';
 
 import { Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
 import { Injector } from './di/injector';
-import { getExpressMiddleware } from './get-express-middleware';
 import { Type } from './interfaces';
 
 export interface FoalModule {
@@ -57,10 +56,6 @@ export class Foal {
         });
       }
     }
-  }
-
-  public expressRouter(): any {
-    return getExpressMiddleware(this);
   }
 
   private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
