@@ -33,12 +33,17 @@ describe('Foal', () => {
       expect(foal2.injector.get(Foobar)).to.equal(foal1.injector.get(Foobar));
     });
 
-    xit('should add method bindings with the module pre-hooks from the controllerBindings property.', () => {
-      // TODO: implement this test
+    xit('should create methodBindings from the controller bindings.', () => {
+
     });
 
-    xit('should add method bindings with the module pre-hooks from the imports property.', () => {
-      // TODO: implement this test
+    xit('should create methodBindings from the module imported.', () => {
+
+    });
+
+    xit('should add the module pre-hooks to the methodBindings.', () => {
+      // This test relies on the two previous tests. It's not great.
+
     });
 
   });

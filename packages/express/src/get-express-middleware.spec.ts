@@ -93,6 +93,22 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
         });
     });
 
+    it('should return a middleware which responds on GET /foo/bar/foo/ .', () => {
+      return request(app)
+        .get('/foo/bar/foo/')
+        .then(res => {
+          expect(res.status).not.to.equal(404);
+        });
+    });
+
+    it('should return a middleware which does not respond on GET /foo/bar/foo/1 .', () => {
+      return request(app)
+        .get('/foo/bar/foo/1')
+        .then(res => {
+          expect(res.status).to.equal(404);
+        });
+    });
+
   });
 
   describe('when it is called with { httpMethod: "GET", paths: [ "/foo/:id/bar/:id2" ] }', () => {
@@ -113,6 +129,14 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
         .get('/foo/12/bar/13')
         .then(res => {
           expect(res.status).not.to.equal(404);
+        });
+    });
+
+    it('should return a middleware which does not respond on GET /foo/12/bar/ .', () => {
+      return request(app)
+        .get('/foo/12/bar/')
+        .then(res => {
+          expect(res.status).to.equal(404);
         });
     });
 

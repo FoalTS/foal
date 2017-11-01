@@ -1,5 +1,8 @@
 # FoalTS
 
+[![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)](https://badge.fury.io/js/%40foal%2Fcore)
+[![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
+
 **This work is in progress. Future releases may break current features, so use it at your own risk!**
 
 ## Installation

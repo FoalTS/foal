@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { ExpressMiddleware } from './interfaces';
 
 export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware {
-  const middleware: ExpressMiddleware = async (req, res, next) => {
+  const expressMiddleware: ExpressMiddleware = async (req, res, next) => {
     const ctx: any = {
       data: req.body,
       id: req.params.id,
@@ -35,19 +35,19 @@ export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddl
 
   switch (methodBinding.httpMethod) {
     case 'DELETE':
-      router.delete(path, middleware);
+      router.delete(path, expressMiddleware);
       break;
     case 'GET':
-      router.get(path, middleware);
+      router.get(path, expressMiddleware);
       break;
     case 'PATCH':
-      router.patch(path, middleware);
+      router.patch(path, expressMiddleware);
       break;
     case 'POST':
-      router.post(path, middleware);
+      router.post(path, expressMiddleware);
       break;
     case 'PUT':
-      router.put(path, middleware);
+      router.put(path, expressMiddleware);
       break;
   }
 
