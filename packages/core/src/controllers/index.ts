@@ -1,6 +1,5 @@
 export * from './binders';
-export * from './decorators';
+export * from './pre-hooks';
 export * from './factories';
 export * from './errors';
-export * from './utils';
 export * from './interfaces';

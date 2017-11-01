@@ -1,12 +1,12 @@
 {
   "name": "@foal/examples",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "FoalTs examples",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register ./**/*.spec.ts",
-    "test-watch": "mocha -w --require ts-node/register ./**/*.spec.ts",
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "start": "ts-node ./src/index.ts",
     "start-watch": "nodemon ./src/index.ts",
     "compile": "tsc",
@@ -24,8 +24,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.2.2",
-    "@foal/sequelize": "^0.2.2",
+    "@foal/core": "^0.3.0",
+    "@foal/express": "^0.3.0",
+    "@foal/sequelize": "^0.3.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "pg": "^7.3.0",

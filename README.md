@@ -1,11 +1,14 @@
 # FoalTS
 
+[![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)](https://badge.fury.io/js/%40foal%2Fcore)
+[![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
+
 **This work is in progress. Future releases may break current features, so use it at your own risk!**
 
 ## Installation
 
 ```ts
-npm install --save express body-parser @foal/core
+npm install --save express body-parser @foal/core @foal/express
 ```
 
 ## Get started
@@ -27,7 +30,8 @@ npm install --save express body-parser @foal/core
 ```ts
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { Foal, Service, newExpressDecorator, rest, RestController, RestParams } from '@foal/core';
+import { getCallback } from '@foal/express';
+import { Foal, Service, rest, RestController, RestParams } from '@foal/core';
 
 @Service()
 class User implements RestController {
@@ -40,16 +44,15 @@ class User implements RestController {
   }
 }
 
-const app = express();
 const foal = new Foal({
   services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ],
-  sharedControllerDecorators: [
-    newExpressDecorator(bodyParser.urlencoded({ extended: false })),
-    newExpressDecorator(bodyParser.json())
-  ]
+  controllerBindings: [ rest.bindController('/users', User) ]
 });
-app.use(foal.expressRouter());
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(getCallback(foal));
 app.listen(3000, () => console.log('Listening...'));
 
 ```

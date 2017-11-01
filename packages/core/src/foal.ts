@@ -1,27 +1,24 @@
-import * as express from 'express';
 import 'reflect-metadata';
 
-import { ContextualHook, Decorator, ExpressContextDef, ExpressHook, ModuleContextDef,
-  ModuleHooks } from './controllers/interfaces';
+import { Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
 import { Injector } from './di/injector';
 import { Type } from './interfaces';
 
 export interface FoalModule {
   services: Type<any>[];
-  controllerBindings?: ((injector: Injector, controllerHooks: ModuleHooks,
-                         controllerContextDef: ModuleContextDef) => { expressRouter: any })[];
-  sharedControllerDecorators?: Decorator[];
+  controllerBindings?: ((injector: Injector) => MethodBinding[])[];
+  preHooks?: Decorator[];
   imports?: { module: FoalModule, path?: string }[];
 }
 
 export class Foal {
   public readonly injector: Injector;
-  private readonly router: any = express.Router();
+  public readonly methodsBindings: MethodBinding[] = [];
 
   constructor(foalModule: FoalModule, parentModule?: Foal) {
-    foalModule.controllerBindings = foalModule.controllerBindings || [];
-    foalModule.imports = foalModule.imports || [];
-    foalModule.sharedControllerDecorators = foalModule.sharedControllerDecorators || [];
+    const controllerBindings = foalModule.controllerBindings || [];
+    const imports = foalModule.imports || [];
+    const modulePreHooks = foalModule.preHooks || [];
 
     if (parentModule) {
       this.injector = new Injector(parentModule.injector);
@@ -31,31 +28,41 @@ export class Foal {
 
     foalModule.services.forEach(service => this.injector.inject(service));
 
-    class FakeModule {}
-    // Reverse the array to apply decorators in the proper order.
-    foalModule.sharedControllerDecorators.reverse().forEach(decorator => decorator(FakeModule));
-    const expressHooks: ExpressHook[] = Reflect.getMetadata('hooks:express', FakeModule) || [];
-    const contextualHooks: ContextualHook[] = Reflect.getMetadata('hooks:contextual', FakeModule) || [];
-    const expressContextDef: ExpressContextDef = Reflect.getMetadata('contextDef:express',
-      FakeModule) || [];
+    const modulePreMiddlewares = this.getPreMiddlewares(modulePreHooks);
 
-    foalModule.controllerBindings.forEach(getRouters => {
-      const { expressRouter } = getRouters(
-        this.injector,
-        { express: expressHooks, contextual: contextualHooks },
-        { express: expressContextDef }
-      );
-      this.router.use(expressRouter);
-    });
+    for (const controllerBinding of controllerBindings) {
+      for (const methodBinding of controllerBinding(this.injector)) {
+        this.methodsBindings.push({
+          ...methodBinding,
+          middlewares: [
+            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.injector))),
+            ...methodBinding.middlewares
+          ],
+        });
+      }
+    }
 
-    foalModule.imports.forEach(imp => this.router.use(
-      imp.path || '/',
-      new Foal(imp.module, this).router
-    ));
+    for (const imp of imports) {
+      const importedModule = new Foal(imp.module, this);
+      const path = imp.path || '';
+      for (const methodBinding of importedModule.methodsBindings) {
+        this.methodsBindings.push({
+          ...methodBinding,
+          middlewares: [
+            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.injector))),
+            ...methodBinding.middlewares
+          ],
+          paths: [path, ...methodBinding.paths],
+        });
+      }
+    }
   }
 
-  public expressRouter(): any {
-    return this.router;
+  private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
+    class FakeModule {}
+    // Reverse the array to apply decorators in the proper order.
+    preHooks.reverse().forEach(decorator => decorator(FakeModule));
+    return Reflect.getMetadata('pre-middlewares', FakeModule) || [];
   }
 
 }

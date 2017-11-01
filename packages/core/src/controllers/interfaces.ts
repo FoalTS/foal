@@ -2,21 +2,24 @@ import { Injector } from '../di/injector';
 
 export interface Context { [name: string]: any; }
 
-export type ContextualMiddleware = (ctx: Context) => Promise<Context>;
-export type NextFunction = (err?: Error) => void;
-export type ExpressMiddleware = (req: any, res: any, next: NextFunction) => any;
-
-export type ContextualHook = (injector: Injector) => ContextualMiddleware;
-export type ExpressHook = (injector: Injector) => ExpressMiddleware;
-export interface ModuleHooks {
-  express: ExpressHook[];
-  contextual: ContextualHook[];
-}
-
-export type ExpressContextDef = { req: string; ctx: string; }[];
-export interface ModuleContextDef {
-  express: ExpressContextDef;
-}
+export type Middleware = (ctx: Context) => Promise<any>|any;
+export type PreMiddleware = (ctx: Context, injector: Injector) => Promise<any>|any;
 
 export type Decorator = (target: any, methodName?: string) => void;
-export type Family = 'express'|'contextual';
+
+export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+
+export interface MethodBinding {
+  httpMethod: HttpMethod;
+  paths: string[];
+  middlewares: Middleware[];
+  successStatus: number;
+}
+
+export interface MethodPrimitiveBinding {
+  controllerMethodBinder: (context: Context) => Promise<any>;
+  controllerMethodName: string;
+  httpMethod: HttpMethod;
+  path: string;
+  successStatus: number;
+}

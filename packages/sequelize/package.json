@@ -1,12 +1,12 @@
 {
   "name": "@foal/sequelize",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Foal integration of sequelize (ORM)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register ./**/*.spec.ts",
-    "test-watch": "mocha -w --require ts-node/register ./**/*.spec.ts",
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "compile": "tsc",
     "prepublish": "tsc"
   },
@@ -34,7 +34,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/core": "^0.2.2",
+    "@foal/core": "^0.3.0",
     "sequelize": "^4.8.4"
   },
   "devDependencies": {

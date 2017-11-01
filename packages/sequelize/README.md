@@ -5,7 +5,7 @@
 ## Installation
 
 ```ts
-npm install --save express @foal/core @foal/sequelize sequelize
+npm install --save express @foal/core @foal/express @foal/sequelize sequelize
 
 # And one of the following:
 $ npm install --save pg pg-hstore
@@ -34,7 +34,8 @@ $ npm install --save tedious // MSSQL
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 
-import { Foal, newExpressDecorator, rest, RestParams, Service } from '@foal/core';
+import { getCallback } from '@foal/express';
+import { Foal, rest, RestParams, Service } from '@foal/core';
 import { Sequelize, SequelizeConnectionService, SequelizeService } from '@foal/sequelize';
 
 @Service()
@@ -53,16 +54,15 @@ class User extends SequelizeService {
   }
 }
 
-const app = express();
 const foal = new Foal({
   services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ],
-  sharedControllerDecorators: [
-    newExpressDecorator(bodyParser.urlencoded({ extended: false })),
-    newExpressDecorator(bodyParser.json())
-  ]
+  controllerBindings: [ rest.bindController('/users', User) ]
 });
-app.use(foal.expressRouter());
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(getCallback(foal));
 app.listen(3000, () => console.log('Listening...'));
 
 ```
