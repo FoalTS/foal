@@ -1,4 +1,4 @@
-# FoalTS
+# ![Logo](./docs/logo_64.png) FoalTS
 
 [![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)](https://badge.fury.io/js/%40foal%2Fcore)
 [![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
@@ -73,6 +73,7 @@ There are several ways to contribute.
 ## Packages
 
 - @foal/core
+- @foal/express
 - @foal/sequelize
 
 ## License
