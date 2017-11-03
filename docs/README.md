@@ -1,5 +1,7 @@
 # Get started
 
+![Logo](./logo_96.png)
+
 ## Installation
 
 `npm install -g yo generator-foal`
