@@ -73,6 +73,7 @@ There are several ways to contribute.
 ## Packages
 
 - @foal/core
+- @foal/express
 - @foal/sequelize
 
 ## License
