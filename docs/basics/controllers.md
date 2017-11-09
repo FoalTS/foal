@@ -1,11 +1,11 @@
 # Controllers
 
-Controllers are a sub-category of services. They are mainly used for request handling but they can also perform other tasks since they remain services.
+Controllers are a sub-category of services. They aim to be used for request handling but they can also perform other tasks since they remain services.
 
 So we'll say that a controller is called *as a service* when it has nothing to do with request handling and *as a controller* otherwise.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
-- the `RestController` interface which will help us to defined the controller methods,
+- the `RestController` interface which will help us to define the controller methods,
 - and the `rest` *controller binder* which will bind the controller to the request handler through a module.
 
 First, we need to create a service that implements the interface:
