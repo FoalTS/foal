@@ -5,6 +5,8 @@
 
 **This work is in progress. Future releases may break current features, so use it at your own risk!**
 
+FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript. Read the docs now to get started and learn more about all FoalTS features!
+
 ## Installation
 
 ```ts
