@@ -1,6 +1,11 @@
 import { Service } from '@foal/core';
 import { Sequelize, SequelizeConnectionService, SequelizeService } from '@foal/sequelize';
 
+export interface User {
+  firstName: string;
+  lastName: string;
+}
+
 @Service()
 export class Connection extends SequelizeConnectionService {
   constructor() {
@@ -9,7 +14,7 @@ export class Connection extends SequelizeConnectionService {
 }
 
 @Service()
-export class User2 extends SequelizeService {
+export class User2 extends SequelizeService<User> {
 
   constructor(protected connection: Connection) {
     super('users', {
