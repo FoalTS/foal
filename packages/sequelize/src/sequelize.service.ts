@@ -2,14 +2,14 @@ import { NotFoundError, RestController, RestParams } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
-export abstract class SequelizeService implements RestController {
+export abstract class SequelizeService<Model> implements RestController {
   protected model: any;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService) {
     this.model = connection.sequelize.define(name, schema);
   }
 
-  public async create(data: any, params: RestParams): Promise<any> {
+  public async create(data: any, params: RestParams): Promise<Model|Model[]> {
     await this.model.sync();
 
     if (Array.isArray(data)) {
@@ -24,7 +24,7 @@ export abstract class SequelizeService implements RestController {
     return model.dataValues;
   }
 
-  public async get(id: any, params: RestParams): Promise<any> {
+  public async get(id: any, params: RestParams): Promise<Model> {
     await this.model.sync();
 
     const result = await this.model.findById(id);
@@ -34,7 +34,7 @@ export abstract class SequelizeService implements RestController {
     return result.dataValues;
   }
 
-  public async getAll(params: RestParams): Promise<any> {
+  public async getAll(params: RestParams): Promise<Model[]> {
     await this.model.sync();
 
     const models = await this.model.findAll({
@@ -43,7 +43,7 @@ export abstract class SequelizeService implements RestController {
     return models.map(e => e.dataValues);
   }
 
-  public async update(id: any, data: any, params: RestParams): Promise<any> {
+  public async update(id: any, data: any, params: RestParams): Promise<Model> {
     await this.model.sync();
 
     if (data.id) {
@@ -61,7 +61,7 @@ export abstract class SequelizeService implements RestController {
     return model.dataValues;
   }
 
-  public async patch(id: any, data: any, params: RestParams): Promise<any> {
+  public async patch(id: any, data: any, params: RestParams): Promise<Model> {
     return this.update(id, data, params);
   }
 
