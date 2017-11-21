@@ -53,7 +53,35 @@ cd src/app
 yo foal:controller horse
 ```
 
+Press enter to choose the `REST` option.
+
+Open `horse-controller.service.ts` and implement the `getAll` method:
+
+```ts
+public async getAll(params: any): Promise<any> {
+  return ['Horse 1', 'Horse 2', 'Horse 3'];
+}
+```
+
+Open `app.module.ts` and replace the content by:
+```ts
+import { FoalModule, rest } from '@foal/core';
+
+import { HorseController } from './horse-controller.service';
+
+export const AppModule: FoalModule = {
+  controllerBindings: [
+    rest.bindController('/horses', HorseController)
+  ],
+  services: [ HorseController ]
+};
+```
+
+Navigate to `http://localhost:3000/horses` and find there the names of your horses.
+
 ## Next steps
+
+What's the next move?
 
 Read the documentation and find out the five key concepts of `FoalTS`!
 
