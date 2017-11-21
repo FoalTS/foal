@@ -5,59 +5,9 @@
 
 **This work is in progress. Future releases may break current features, so use it at your own risk!**
 
-FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript. Read the docs now to get started and learn more about all FoalTS features!
+FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript. Read the docs now to learn more about all FoalTS features!
 
-## Installation
-
-```ts
-npm install --save express body-parser @foal/core @foal/express
-```
-
-## Get started
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es6",
-      "dom"
-    ]
-    ...
-}
-```
-
-```ts
-import * as bodyParser from 'body-parser';
-import * as express from 'express';
-import { getCallback } from '@foal/express';
-import { Foal, Service, rest, RestController, RestParams } from '@foal/core';
-
-@Service()
-class User implements RestController {
-  constructor () {}
-
-  async create(data: any, params: RestParams) {
-    console.log(params.query);
-    data.createdAt = Date.now();
-    return data;
-  }
-}
-
-const foal = new Foal({
-  services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ]
-});
-
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(getCallback(foal));
-app.listen(3000, () => console.log('Listening...'));
-
-```
+[>> Get started <<](https://foalts.gitbooks.io/docs/content/)
 
 ## Documentation
 
