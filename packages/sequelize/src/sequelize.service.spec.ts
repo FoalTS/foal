@@ -11,10 +11,10 @@ interface User {
   lastName: string;
 }
 
-describe('SequelizeService', () => {
+describe('SequelizeService<User>', () => {
 
   let connection: SequelizeConnectionService;
-  let service: SequelizeService;
+  let service: SequelizeService<User>;
   let model: any;
   let user: User;
   let user2: User;
@@ -29,7 +29,7 @@ describe('SequelizeService', () => {
     }
     connection = new ConcreteSequelizeConnectionService();
 
-    class ConcreteSequelizeService extends SequelizeService {
+    class ConcreteSequelizeService extends SequelizeService<User> {
       constructor(connection: SequelizeConnectionService) {
         super('users', {
           firstName: Sequelize.STRING,
@@ -53,7 +53,7 @@ describe('SequelizeService', () => {
   // Clear table before each test
   beforeEach(() => model.sync({ force: true }));
 
-  describe('when create(data: any, query: ObjectType): Promise<any> is called', () => {
+  describe('when create(data: any, query: ObjectType): Promise<User|User[]> is called', () => {
 
     it('should create one user in the db and return it if `data` is an object.', async () => {
       const result = await service.create(user, {});
@@ -78,7 +78,7 @@ describe('SequelizeService', () => {
 
   });
 
-  describe('when getAll(query: ObjectType): Promise<any> is called', () => {
+  describe('when getAll(query: ObjectType): Promise<User[]> is called', () => {
 
     describe('with empty query', () => {
 
@@ -108,7 +108,7 @@ describe('SequelizeService', () => {
 
   });
 
-  describe('when get(id: any, query: ObjectType): Promise<any> is called', () => {
+  describe('when get(id: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should return the user with the given id from the db.', async () => {
       const createdUser = (await model.create(user)).dataValues;
@@ -129,7 +129,7 @@ describe('SequelizeService', () => {
 
   });
 
-  describe('when update(id: any, data: any, query: ObjectType): Promise<any> is called', () => {
+  describe('when update(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should update and return the user with the given id with the given data.', async () => {
       const createdUser = (await model.create(user)).dataValues;
@@ -158,7 +158,7 @@ describe('SequelizeService', () => {
 
   });
 
-  describe('when patch(id: any, data: any, query: ObjectType): Promise<any> is called', () => {
+  describe('when patch(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should update and return the user with the given id with the given data.', async () => {
       const createdUser = (await model.create(user)).dataValues;
