@@ -1,16 +1,17 @@
-import { HttpError, MethodBinding } from '@foal/core';
+import { Context, HttpError, MethodBinding } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
 
 export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware {
   const expressMiddleware: ExpressMiddleware = async (req, res, next) => {
-    const ctx: any = {
-      data: req.body,
-      id: req.params.id,
-      params: {
-        query: req.query
-      }
+    const ctx: Context = {
+      body: req.body,
+      getHeader: req.get.bind(req),
+      params: req.params,
+      query: req.query,
+      session: undefined,
+      state: {},
     };
     try {
       for (const middleware of methodBinding.middlewares) {

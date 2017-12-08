@@ -1,18 +1,18 @@
 import { NotImplementedError } from '../../errors';
-import { MethodPrimitiveBinding } from '../../interfaces';
+import { Context, MethodPrimitiveBinding } from '../../interfaces';
 import { ControllerBinder } from '../controller.binder';
 
-import { RestContext, RestController } from './rest-controller.interface';
+import { RestController } from './rest-controller.interface';
 
 export class RestBinder extends ControllerBinder<RestController> {
   protected bind(controller: RestController): MethodPrimitiveBinding[] {
     return [
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.getAll) {
             throw new NotImplementedError();
           }
-          return controller.getAll(ctx.params);
+          return controller.getAll(ctx.query);
         },
         controllerMethodName: 'getAll',
         httpMethod: 'GET',
@@ -20,11 +20,11 @@ export class RestBinder extends ControllerBinder<RestController> {
         successStatus: 200,
       },
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.create) {
             throw new NotImplementedError();
           }
-          return controller.create(ctx.data, ctx.params);
+          return controller.create(ctx.body, ctx.query);
         },
         controllerMethodName: 'create',
         httpMethod: 'POST',
@@ -32,11 +32,11 @@ export class RestBinder extends ControllerBinder<RestController> {
         successStatus: 201,
       },
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.delete) {
             throw new NotImplementedError();
           }
-          return controller.delete(ctx.id, ctx.params);
+          return controller.delete(ctx.params.id, ctx.query);
         },
         controllerMethodName: 'delete',
         httpMethod: 'DELETE',
@@ -44,11 +44,11 @@ export class RestBinder extends ControllerBinder<RestController> {
         successStatus: 200,
       },
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.get) {
             throw new NotImplementedError();
           }
-          return controller.get(ctx.id, ctx.params);
+          return controller.get(ctx.params.id, ctx.query);
         },
         controllerMethodName: 'get',
         httpMethod: 'GET',
@@ -56,11 +56,11 @@ export class RestBinder extends ControllerBinder<RestController> {
         successStatus: 200,
       },
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.patch) {
             throw new NotImplementedError();
           }
-          return controller.patch(ctx.id, ctx.data, ctx.params);
+          return controller.patch(ctx.params.id, ctx.body, ctx.query);
         },
         controllerMethodName: 'patch',
         httpMethod: 'PATCH',
@@ -68,11 +68,11 @@ export class RestBinder extends ControllerBinder<RestController> {
         successStatus: 200,
       },
       {
-        controllerMethodBinder: (ctx: RestContext) => {
+        controllerMethodBinder: (ctx: Context) => {
           if (!controller.update) {
             throw new NotImplementedError();
           }
-          return controller.update(ctx.id, ctx.data, ctx.params);
+          return controller.update(ctx.params.id, ctx.body, ctx.query);
         },
         controllerMethodName: 'update',
         httpMethod: 'PUT',
