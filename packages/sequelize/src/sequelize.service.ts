@@ -1,4 +1,4 @@
-import { NotFoundError, RestController, RestParams } from '@foal/core';
+import { NotFoundError, ObjectType, RestController } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
@@ -9,7 +9,7 @@ export abstract class SequelizeService<Model> implements RestController {
     this.model = connection.sequelize.define(name, schema);
   }
 
-  public async create(data: any, params: RestParams): Promise<Model|Model[]> {
+  public async create(data: any, query: ObjectType): Promise<Model|Model[]> {
     await this.model.sync();
 
     if (Array.isArray(data)) {
@@ -24,7 +24,7 @@ export abstract class SequelizeService<Model> implements RestController {
     return model.dataValues;
   }
 
-  public async get(id: any, params: RestParams): Promise<Model> {
+  public async get(id: any, query: ObjectType): Promise<Model> {
     await this.model.sync();
 
     const result = await this.model.findById(id);
@@ -34,16 +34,16 @@ export abstract class SequelizeService<Model> implements RestController {
     return result.dataValues;
   }
 
-  public async getAll(params: RestParams): Promise<Model[]> {
+  public async getAll(query: ObjectType): Promise<Model[]> {
     await this.model.sync();
 
     const models = await this.model.findAll({
-      where: params.query
+      where: query
     });
     return models.map(e => e.dataValues);
   }
 
-  public async update(id: any, data: any, params: RestParams): Promise<Model> {
+  public async update(id: any, data: any, query: ObjectType): Promise<Model> {
     await this.model.sync();
 
     if (data.id) {
@@ -61,11 +61,11 @@ export abstract class SequelizeService<Model> implements RestController {
     return model.dataValues;
   }
 
-  public async patch(id: any, data: any, params: RestParams): Promise<Model> {
-    return this.update(id, data, params);
+  public async patch(id: any, data: any, query: ObjectType): Promise<Model> {
+    return this.update(id, data, query);
   }
 
-  public async delete(id: any, params: RestParams): Promise<any> {
+  public async delete(id: any, query: ObjectType): Promise<any> {
     await this.model.sync();
 
     const result = await this.model.destroy({

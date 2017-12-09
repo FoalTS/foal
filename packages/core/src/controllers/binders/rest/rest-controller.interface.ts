@@ -1,18 +1,10 @@
-export interface RestParams {
-  query: { [name: string]: any };
-}
-
-export interface RestContext {
-  id: any;
-  data: any;
-  params: RestParams;
-}
+import { ObjectType } from '../../interfaces';
 
 export interface RestController {
-  create?: (data: any, params: any) => Promise<any>;
-  get?: (id: any, params: any) => Promise<any>;
-  getAll?: (params: any) => Promise<any>;
-  update?: (id: any, data: any, params: any) => Promise<any>;
-  patch?: (id: any, data: any, params: any) => Promise<any>;
-  delete?: (id: any, params: any) => Promise<any>;
+  create?: (data: any, query: ObjectType) => Promise<any>;
+  get?: (id: any, query: ObjectType) => Promise<any>;
+  getAll?: (query: ObjectType) => Promise<any>;
+  update?: (id: any, data: any, query: ObjectType) => Promise<any>;
+  patch?: (id: any, data: any, query: ObjectType) => Promise<any>;
+  delete?: (id: any, query: ObjectType) => Promise<any>;
 }

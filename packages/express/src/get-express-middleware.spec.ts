@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 
+import { Context } from '../../core/src/controllers/interfaces';
 import { getExpressMiddleware } from './get-express-middleware';
 
 // HACK
@@ -165,7 +166,7 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
     it('should return a middleware which inits properly the context.', () => {
       // This test depends on the test 'should return a middleware which responds on GET /foo/12/bar/13'.
-      let actual: any;
+      let actual: Context;
       middleware1 = ctx => actual = ctx;
       app = express();
       app.use(bodyParser.urlencoded({ extended: false }));
@@ -174,18 +175,23 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
       app.use(getExpressMiddleware(methodBinding));
 
       const expected = {
-        data: { text: 'Hello world' },
-        id: '1',
-        params: {
-          query: { a: 'b' }
-        }
+        body: { text: 'Hello world' },
+        params: { id: '1' },
+        query: { a: 'b' },
+        session: undefined,
+        state: {},
       };
       return request(app)
-        .post(`/${expected.id}`)
-        .query(expected.params.query)
-        .send(expected.data)
+        .post(`/${expected.params.id}`)
+        .query(expected.query)
+        .send(expected.body)
         .then(res => {
-          expect(actual).to.deep.equal(expected);
+          expect(actual.body).to.deep.equal(expected.body);
+          expect(actual.getHeader('Content-Type')).to.equal('application/json');
+          expect(actual.params).to.deep.equal(expected.params);
+          expect(actual.query).to.deep.equal(expected.query);
+          expect(actual.session).to.equal(expected.session);
+          expect(actual.state).to.deep.equal(expected.state);
         });
     });
 

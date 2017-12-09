@@ -2,17 +2,17 @@ import { expect } from 'chai';
 
 import { Injector, Service } from '../../di/injector';
 import { preHook } from '../factories';
-import { Context, MethodPrimitiveBinding, PreMiddleware } from '../interfaces';
+import { Context, MethodPrimitiveBinding, PostContext, PreMiddleware } from '../interfaces';
 import { ControllerBinder } from './controller.binder';
 
 describe('ControllerBinder<T>', () => {
 
   interface ServiceInterface { foobar: () => Promise<any>; }
   const classPreMiddleware: PreMiddleware = (ctx: Context, injector: Injector) => {
-    ctx.class = { injector };
+    ctx.state.class = { injector };
   };
   const methodPreMiddleware: PreMiddleware = (ctx: Context, injector: Injector) => {
-    ctx.method = { injector };
+    ctx.state.method = { injector };
   };
 
   @Service()
@@ -74,11 +74,11 @@ describe('ControllerBinder<T>', () => {
         expect(actual.successStatus).to.equal(10000);
 
         expect(actual.middlewares).to.be.an('array').and.to.have.lengthOf(3);
-        const ctx: Context = {};
+        const ctx = { state: {} } as PostContext<any>;
         actual.middlewares[0](ctx);
-        expect(ctx.class).to.deep.equal({ injector });
+        expect(ctx.state.class).to.deep.equal({ injector });
         actual.middlewares[1](ctx);
-        expect(ctx.method).to.deep.equal({ injector });
+        expect(ctx.state.method).to.deep.equal({ injector });
         await actual.middlewares[2](ctx);
         expect(ctx.result).to.equal('Hello world');
       });

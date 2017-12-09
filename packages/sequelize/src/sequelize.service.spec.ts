@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as Sequelize from 'sequelize';
 
-import { NotFoundError, RestParams } from '@foal/core';
+import { NotFoundError } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 import { SequelizeService } from './sequelize.service';
@@ -18,7 +18,6 @@ describe('SequelizeService<User>', () => {
   let model: any;
   let user: User;
   let user2: User;
-  let emptyParams: RestParams;
 
   before(() => {
     class ConcreteSequelizeConnectionService extends SequelizeConnectionService {
@@ -49,16 +48,15 @@ describe('SequelizeService<User>', () => {
       firstName: 'Estelle',
       lastName: 'Dupont'
     };
-    emptyParams = { query: {} };
   });
 
   // Clear table before each test
   beforeEach(() => model.sync({ force: true }));
 
-  describe('when create(data: any, params: RestParams): Promise<User|User[]> is called', () => {
+  describe('when create(data: any, query: ObjectType): Promise<User|User[]> is called', () => {
 
     it('should create one user in the db and return it if `data` is an object.', async () => {
-      const result = await service.create(user, emptyParams);
+      const result = await service.create(user, {});
 
       const users = await model.findAll();
 
@@ -68,7 +66,7 @@ describe('SequelizeService<User>', () => {
     });
 
     it('should create many users in the db and return them if `data` is an array.', async () => {
-      const result = await service.create([ user, user2 ], emptyParams);
+      const result = await service.create([ user, user2 ], {});
 
       const users = await model.findAll();
 
@@ -80,29 +78,29 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when getAll(params: RestParams): Promise<User[]> is called', () => {
+  describe('when getAll(query: ObjectType): Promise<User[]> is called', () => {
 
-    describe('with empty params', () => {
+    describe('with empty query', () => {
 
       it('should return all users from the db.', async () => {
         const createdUser = (await model.create(user)).dataValues;
         const createdUser2 = (await model.create(user2)).dataValues;
 
-        const result = await service.getAll(emptyParams);
+        const result = await service.getAll({});
         expect(result).to.deep.equal([ createdUser, createdUser2 ]);
       });
 
     });
 
-    describe('with non empty params', () => {
+    describe('with non empty query', () => {
 
-      it('should use params.query to get users from the db.', async () => {
+      it('should use `query` to get users from the db.', async () => {
         const createdUser = (await model.create(user)).dataValues;
         await model.create(user2);
 
         const query: any = { firstName: user.firstName };
 
-        const result = await service.getAll({ query });
+        const result = await service.getAll(query);
         expect(result).to.deep.equal([ createdUser ]);
       });
 
@@ -110,19 +108,19 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when get(id: any, params: RestParams): Promise<User> is called', () => {
+  describe('when get(id: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should return the user with the given id from the db.', async () => {
       const createdUser = (await model.create(user)).dataValues;
 
-      const result = await service.get(createdUser.id, emptyParams);
+      const result = await service.get(createdUser.id, {});
 
       expect(result).to.deep.equal(createdUser);
     });
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.get(666, emptyParams);
+        await service.get(666, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);
@@ -131,7 +129,7 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when update(id: any, data: any, params: RestParams): Promise<User> is called', () => {
+  describe('when update(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should update and return the user with the given id with the given data.', async () => {
       const createdUser = (await model.create(user)).dataValues;
@@ -139,7 +137,7 @@ describe('SequelizeService<User>', () => {
 
       const updatedUser = await service.update(createdUser.id, {
         lastName: 'Washington'
-      }, emptyParams);
+      }, {});
 
       const userFromDB = (await model.findById(createdUser.id)).dataValues;
       const user2FromDB = (await model.findById(createdUser2.id)).dataValues;
@@ -151,7 +149,7 @@ describe('SequelizeService<User>', () => {
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.update(666, {}, emptyParams);
+        await service.update(666, {}, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);
@@ -160,7 +158,7 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when patch(id: any, data: any, params: RestParams): Promise<User> is called', () => {
+  describe('when patch(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should update and return the user with the given id with the given data.', async () => {
       const createdUser = (await model.create(user)).dataValues;
@@ -168,7 +166,7 @@ describe('SequelizeService<User>', () => {
 
       const updatedUser = await service.patch(createdUser.id, {
         lastName: 'Washington'
-      }, emptyParams);
+      }, {});
 
       const userFromDB = (await model.findById(createdUser.id)).dataValues;
       const user2FromDB = (await model.findById(createdUser2.id)).dataValues;
@@ -180,7 +178,7 @@ describe('SequelizeService<User>', () => {
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.patch(666, {}, emptyParams);
+        await service.patch(666, {}, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);
@@ -189,7 +187,7 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when delete(id: any, params: RestParams): Promise<any> is called', () => {
+  describe('when delete(id: any, query: ObjectType): Promise<any> is called', () => {
 
     it('should delete the user with the given id from the db.', async () => {
       const createdUser = (await model.create(user)).dataValues;
@@ -198,7 +196,7 @@ describe('SequelizeService<User>', () => {
       let users = await model.findAll();
       expect(users).to.be.an('array').and.to.have.lengthOf(2);
 
-      await service.delete(createdUser.id, emptyParams);
+      await service.delete(createdUser.id, {});
 
       users = await model.findAll();
       expect(users).to.be.an('array').and.to.have.lengthOf(1);
@@ -207,7 +205,7 @@ describe('SequelizeService<User>', () => {
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.delete(666, emptyParams);
+        await service.delete(666, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);
