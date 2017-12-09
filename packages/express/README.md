@@ -1,6 +1,6 @@
 # FoalTS
 
-[![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)](https://badge.fury.io/js/%40foal%2Fcore)
+[![npm version](https://badge.fury.io/js/%40foal%2Fexpress.svg)](https://badge.fury.io/js/%40foal%2Fexpress)
 [![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
 
 A Node.js framework for building robust web apps.

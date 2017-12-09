@@ -1,6 +1,6 @@
 {
   "name": "foal-srcs",
-  "description": "Backend framework written in TypeScript",
+  "description": "A Node.js framework for building robust web apps.",
   "directories": {
     "doc": "docs"
   },
