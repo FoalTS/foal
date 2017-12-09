@@ -1,85 +1,14 @@
-# Foal sequelize
+# FoalTS
 
-*This work is in progress.*
+[![npm version](https://badge.fury.io/js/%40foal%2Fsequelize.svg)](https://badge.fury.io/js/%40foal%2Fsequelize)
+[![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
 
-## Installation
+A Node.js framework for building robust web apps.
 
-```ts
-npm install --save express @foal/core @foal/express @foal/sequelize sequelize
+Github: [https://github.com/FoalTS/foal](https://github.com/FoalTS/foal)
 
-# And one of the following:
-$ npm install --save pg pg-hstore
-$ npm install --save mysql2
-$ npm install --save sqlite3
-$ npm install --save tedious // MSSQL
-```
+Twitter: [https://twitter.com/FoalTs](https://twitter.com/FoalTs)
 
-## Get started
+Website: [https://foalts.org/](https://foalts.org/)
 
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es6",
-      "dom"
-    ]
-    ...
-}
-```
-
-```ts
-import * as bodyParser from 'body-parser';
-import * as express from 'express';
-
-import { getCallback } from '@foal/express';
-import { Foal, rest, RestParams, Service } from '@foal/core';
-import { Sequelize, SequelizeConnectionService, SequelizeService } from '@foal/sequelize';
-
-@Service()
-class Connection extends SequelizeConnectionService {
-  constructor() {
-    super('postgres://user:pass@example.com:5432/dbname');
-  }
-}
-
-@Service()
-class User extends SequelizeService {
-  constructor(protected connection: Connection) {
-    super('users', {
-      username: Sequelize.STRING
-    }, connection);
-  }
-}
-
-const foal = new Foal({
-  services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ]
-});
-
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(getCallback(foal));
-app.listen(3000, () => console.log('Listening...'));
-
-```
-
-## Documentation
-
-Find docs [here](https://foalts.gitbooks.io/docs/content/).
-
-## Contributing
-
-There are several ways to contribute.
-
-- Submit a PR to fix typos/grammatical errors.
-- Open an issue to report a bug.
-- Open an issue to suggest a new feature.
-- Improve the docs.
-
-## License
-
-MIT
+Documentation: [https://foalts.gitbooks.io/docs/](https://foalts.gitbooks.io/docs/)
