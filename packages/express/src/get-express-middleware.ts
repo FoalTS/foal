@@ -10,8 +10,10 @@ export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddl
       getHeader: req.get.bind(req),
       params: req.params,
       query: req.query,
-      session: undefined,
+      result: undefined,
+      session: req.session,
       state: {},
+      user: req.user,
     };
     try {
       for (const middleware of methodBinding.middlewares) {
