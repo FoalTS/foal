@@ -1,6 +1,7 @@
 import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/authorization';
 import { Context, ObjectType, preHook, Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
+import * as bcrypt from 'bcrypt-nodejs';
 
 import { ConnectionService } from './connection.service';
 
@@ -19,7 +20,10 @@ export class UserService extends SequelizeService<User> {
   @preHook((ctx: Context) => ctx.body.isAdmin = false)
   // @postHook((ctx: RContext<User>) => delete ctx.result.password)
   public create(data: any, query: ObjectType): Promise<User | User[]> {
-    return super.create(data, query);
+    return super.create({
+      ...data,
+      password: bcrypt.hashSync(data.password)
+    }, query);
   }
 
   @restrictAccessToAuthenticated()
@@ -45,6 +49,10 @@ export class UserService extends SequelizeService<User> {
   @restrictAccessToAdmin()
   public delete(id: any, query: ObjectType): Promise<any> {
     return super.delete(id, query);
+  }
+
+  public verifyPassword(password: string, hash: string): boolean {
+    return bcrypt.compareSync(password, hash);
   }
 
 }

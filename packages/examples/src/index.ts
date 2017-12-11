@@ -15,13 +15,15 @@ const foalApp = new Foal(AppModule);
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
-      const users = await foalApp.injector.get(UserService).getAll({ username, password });
-      if (users.length === 0) {
+      const userService = foalApp.injector.get(UserService);
+      const users = await userService.getAll({ username });
+      if (users.length === 0 || !userService.verifyPassword(password, users[0].password)) {
         done(null, false);
       } else {
         done(null, users[0]);
       }
     } catch (error) {
+      // TODO: express should only return errors on development.
       done(error);
     }
   }
