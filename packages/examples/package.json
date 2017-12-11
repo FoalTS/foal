@@ -24,11 +24,15 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@foal/authorization": "^0.3.0",
     "@foal/core": "^0.3.0",
     "@foal/express": "^0.3.0",
     "@foal/sequelize": "^0.3.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2"
   },

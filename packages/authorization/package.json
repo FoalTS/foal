@@ -1,6 +1,6 @@
 {
   "name": "@foal/authorization",
-  "version": "0.0.0",
+  "version": "0.3.0",
   "description": "Foal hooks for access control.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
