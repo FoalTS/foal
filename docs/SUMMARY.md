@@ -9,6 +9,10 @@
 * [Modules](./basics/modules.md)
 * [Pre-hooks](./basics/pre-hooks.md)
 
+### Advanced
+
+* [Contexts](./advanced/contexts.md)
+
 ### API
 
 * [RestController](./api/rest-controller.md)
