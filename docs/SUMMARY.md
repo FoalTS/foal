@@ -15,4 +15,5 @@
 
 ### Packages
 
+* [@foal/authorization](./packages/authorization.md)
 * [@foal/sequelize](./packages/sequelize.md)
