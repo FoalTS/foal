@@ -1,4 +1,4 @@
-import { Context, HttpError, MethodBinding } from '@foal/core';
+import { Context, HttpError, MethodBinding, UnauthorizedError } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
@@ -24,6 +24,11 @@ export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddl
       }
       res.status(methodBinding.successStatus).send(ctx.result);
     } catch (err) {
+      if (err instanceof UnauthorizedError) {
+        // It's more or less a hack since the header has value.
+        res.setHeader('WWW-Authenticate', '');
+        res.sendStatus(err.statusCode);
+      }
       if (err instanceof HttpError) {
         res.sendStatus(err.statusCode);
       } else {

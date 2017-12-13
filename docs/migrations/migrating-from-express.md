@@ -1,3 +1,5 @@
+**This section is in progress**.
+
 ex with several teams
 
 First team is ready to move on: create a module and use Foal directly here with its router.
@@ -8,3 +10,5 @@ express is in peerDependencies so that you can use your current 4.x version of n
 
 getCallback(foal) -> easily migrate your app
 if already using services : almost nothing to change for testing thanks to controller decorators which are skipped
+
+Testing just like a class: keep your current tests when migrating to foal.
