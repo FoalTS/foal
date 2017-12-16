@@ -1,7 +1,7 @@
 {
   "name": "@foal/core",
   "version": "0.3.0",
-  "description": "A Node.Js framework for ambitious web apps.",
+  "description": "A Node.js framework for building robust web apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
