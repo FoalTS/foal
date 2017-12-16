@@ -1,19 +1,22 @@
 {
-  "name": "@foal/examples",
+  "name": "@foal/authorization",
   "version": "0.3.0",
-  "description": "FoalTs examples",
+  "description": "Foal hooks for access control.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "start": "ts-node ./src/index.ts",
-    "start-watch": "nodemon ./src/index.ts",
     "compile": "tsc",
     "prepublish": "tsc"
   },
-  "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server",
+    "foal",
+    "authorization"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
@@ -22,28 +25,23 @@
     "type": "git",
     "url": "https://github.com/FoalTS/foal"
   },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
   "license": "MIT",
+  "files": [
+    "dist/"
+  ],
   "dependencies": {
-    "@foal/authorization": "^0.3.0",
-    "@foal/core": "^0.3.0",
-    "@foal/express": "^0.3.0",
-    "@foal/sequelize": "^0.3.0",
-    "bcrypt-nodejs": "0.0.3",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "pg": "^7.3.0",
-    "pg-hstore": "^2.3.2"
+    "@foal/core": "^0.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1",
-    "nodemon": "^1.12.1",
+    "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.2"
   }
 }

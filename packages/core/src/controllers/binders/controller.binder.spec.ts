@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { Injector, Service } from '../../di/injector';
 import { preHook } from '../factories';
-import { Context, MethodPrimitiveBinding, PostContext, PreMiddleware } from '../interfaces';
+import { Context, MethodPrimitiveBinding, PreMiddleware } from '../interfaces';
 import { ControllerBinder } from './controller.binder';
 
 describe('ControllerBinder<T>', () => {
@@ -74,7 +74,7 @@ describe('ControllerBinder<T>', () => {
         expect(actual.successStatus).to.equal(10000);
 
         expect(actual.middlewares).to.be.an('array').and.to.have.lengthOf(3);
-        const ctx = { state: {} } as PostContext<any>;
+        const ctx = { state: {} } as Context;
         actual.middlewares[0](ctx);
         expect(ctx.state.class).to.deep.equal({ injector });
         actual.middlewares[1](ctx);

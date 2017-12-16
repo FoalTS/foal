@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { Injector } from '../../di/injector';
 import { Type } from '../../interfaces';
-import { Context, MethodBinding, MethodPrimitiveBinding, PostContext, PreMiddleware } from '../interfaces';
+import { Context, MethodBinding, MethodPrimitiveBinding, PreMiddleware } from '../interfaces';
 
 export abstract class ControllerBinder<T> {
 
@@ -19,7 +19,7 @@ export abstract class ControllerBinder<T> {
       return this.bind(controller).map(binding => {
         const preMiddlewares = this.getPreMiddlewares(ControllerClass, binding.controllerMethodName)
           .map(pM => ((ctx: Context) => pM(ctx, injector)));
-        const methodMiddleware = async (ctx: PostContext<any>) => {
+        const methodMiddleware = async (ctx: Context) => {
           ctx.result = await binding.controllerMethodBinder(ctx);
         };
         const middlewares = [ ...preMiddlewares, methodMiddleware ];

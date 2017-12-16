@@ -1,10 +1,9 @@
-import { HttpMethod, MethodBinding, MethodNotAllowedError, Middleware } from '@foal/core';
+import { Context, HttpMethod, MethodBinding, MethodNotAllowedError, Middleware, UnauthorizedError } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 
-import { Context } from '../../core/src/controllers/interfaces';
 import { getExpressMiddleware } from './get-express-middleware';
 
 // HACK
@@ -167,10 +166,17 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
     it('should return a middleware which inits properly the context.', () => {
       // This test depends on the test 'should return a middleware which responds on GET /foo/12/bar/13'.
       let actual: Context;
+      const user = { name: 'foobar' };
+      const session = { foo: 'bar' };
       middleware1 = ctx => actual = ctx;
       app = express();
       app.use(bodyParser.urlencoded({ extended: false }));
       app.use(bodyParser.json());
+      app.use((req, res, next) => {
+        req.session = session;
+        req.user = user;
+        next();
+      });
       methodBinding = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
       app.use(getExpressMiddleware(methodBinding));
 
@@ -178,8 +184,9 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
         body: { text: 'Hello world' },
         params: { id: '1' },
         query: { a: 'b' },
-        session: undefined,
+        session,
         state: {},
+        user,
       };
       return request(app)
         .post(`/${expected.params.id}`)
@@ -192,6 +199,7 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
           expect(actual.query).to.deep.equal(expected.query);
           expect(actual.session).to.equal(expected.session);
           expect(actual.state).to.deep.equal(expected.state);
+          expect(actual.user).to.deep.equal(expected.user);
         });
     });
 
@@ -291,6 +299,20 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
       return request(app)
         .get('/')
         .expect(new MethodNotAllowedError().statusCode);
+    });
+
+    it('should return a middleware which responds with the WWW-Authenticate header if the previous error status '
+        + 'is 401.', () => {
+      middleware1 = ctx => { throw new UnauthorizedError(); };
+      app = express();
+      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(methodBinding));
+
+      return request(app)
+        .get('/')
+        .expect(401)
+        // It's more or less a hack since the header has value.
+        .expect('WWW-Authenticate', '');
     });
 
   });

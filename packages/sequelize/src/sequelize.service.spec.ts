@@ -23,7 +23,7 @@ describe('SequelizeService<User>', () => {
     class ConcreteSequelizeConnectionService extends SequelizeConnectionService {
       constructor() {
         // This is an ugly hack to run tests on local and on travis.
-        const password = process.env.password || 'LoicPoullain';
+        const password = process.env.password || 'password';
         super(`postgres://postgres:${password}@localhost:5432/foal_test_db`);
       }
     }

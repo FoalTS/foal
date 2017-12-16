@@ -12,6 +12,7 @@ install:
   - lerna bootstrap
 before_script:
   - psql -c 'create database foal_test_db;' -U postgres
+  - psql -c 'create database foal_examples;' -U postgres
 script:
   - npm run lint
   - lerna run test
