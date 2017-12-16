@@ -8,7 +8,7 @@
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "compile": "tsc",
-    "prepublish": "tsc"
+    "prepublish": "tsc && gulp add-header"
   },
   "keywords": [
     "backend",
@@ -49,6 +49,8 @@
     "mocha": "^3.5.3",
     "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9"
   }
 }
