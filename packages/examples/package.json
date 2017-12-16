@@ -10,7 +10,7 @@
     "start": "ts-node ./src/index.ts",
     "start-watch": "nodemon ./src/index.ts",
     "compile": "tsc",
-    "prepublish": "tsc"
+    "prepublish": "tsc && gulp add-header"
   },
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -44,6 +44,8 @@
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.3",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9"
   }
 }
