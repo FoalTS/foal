@@ -38,8 +38,7 @@ Go the project directory and start the server.
 
 ```sh
 cd my-app
-npm run compile
-npm run start
+npm run dev:app
 ```
 
 Open you browser on `http://localhost:3000` and find our `Hello world` welcoming message!
