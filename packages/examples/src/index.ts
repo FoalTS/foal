@@ -48,6 +48,7 @@ app.use(session({ secret: 'my secret', resave: true, saveUninitialized: true }))
 app.use(passport.initialize());
 app.use(passport.session());
 
+// The problem is the failureRedirect -> cannot GET /login
 app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), (req, res) => {
   res.send('Authenticated!');
 });

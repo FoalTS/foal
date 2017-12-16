@@ -21,3 +21,8 @@
 
 * [@foal/authorization](./packages/authorization.md)
 * [@foal/sequelize](./packages/sequelize.md)
+
+### Cookbook
+
+* [Authentication](./cookbook/authentication.md)
+ 
