@@ -1,8 +1,8 @@
 # Services
 
-Services are the core of FoalTS. They are used to perform many different tasks such as handling requests or fetching data from a database.
+Services are the core of FoalTS. They are used to perform many different tasks such as logging, handling requests or fetching data from a database.
 
-Basically every class can be a service. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
+Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
 
 ```ts
 import { Foal, Service } from '@foal/core';
