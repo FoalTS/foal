@@ -17,13 +17,13 @@ const foal = new Foal({
   services: [ ServiceA ]
 });
 
-const myServiceA = foal.injector.get(ServiceA);
+const myServiceA = foal.services.get(ServiceA);
 console.log(myServiceA.name);
 ```
 
 ## Nested services
 
-If you want to call a service from another one, you need to inject it in the constructor as follows.
+If you want to call a service from another one, you need to declare it in the constructor as follows.
 
 ```ts
 import { Foal, Service } from '@foal/core';
@@ -44,7 +44,7 @@ const foal = new Foal({
   services: [ ServiceA, ServiceB ]
 });
 
-const myServiceB = foal.injector.get(ServiceB);
+const myServiceB = foal.services.get(ServiceB);
 console.log(myServiceB.name);
 console.log(myServiceB.serviceA.name);
 ```

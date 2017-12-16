@@ -1,4 +1,4 @@
-import { Context, ForbiddenError, Injector, PreMiddleware, UnauthorizedError } from '@foal/core';
+import { Context, ForbiddenError, PreMiddleware, ServiceManager, UnauthorizedError } from '@foal/core';
 import { expect } from 'chai';
 
 import { makeRestrictAccessToAdminMiddleware } from './restrict-access-to-admin.pre-hook';
@@ -28,7 +28,7 @@ describe('makeRestrictAccessToAdminMiddleware', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: undefined
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected).to.throw(UnauthorizedError);
     });
 
@@ -36,12 +36,12 @@ describe('makeRestrictAccessToAdminMiddleware', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: {}
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected).to.throw(ForbiddenError);
       const expected2 = () => middleware({
         ...emptyContext,
         user: { isAdmin: false }
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected2).to.throw(ForbiddenError);
     });
 
@@ -49,7 +49,7 @@ describe('makeRestrictAccessToAdminMiddleware', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: { isAdmin: true }
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected).not.to.throw();
     });
 

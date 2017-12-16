@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Injector } from '../../di/injector';
+import { ServiceManager } from '../../di/service-manager';
 import { Type } from '../../interfaces';
 import { Context, MethodBinding, MethodPrimitiveBinding, PreMiddleware } from '../interfaces';
 
@@ -8,9 +8,9 @@ export abstract class ControllerBinder<T> {
 
   constructor() {}
 
-  public bindController(path: string, ControllerClass: Type<T>): (injector: Injector) => MethodBinding[] {
-    return (injector: Injector): MethodBinding[] => {
-      const controller = injector.get(ControllerClass);
+  public bindController(path: string, ControllerClass: Type<T>): (services: ServiceManager) => MethodBinding[] {
+    return (services: ServiceManager): MethodBinding[] => {
+      const controller = services.get(ControllerClass);
 
       if (!controller) {
         throw new Error(`${ControllerClass.name} should be declared in a module.`);
@@ -18,7 +18,7 @@ export abstract class ControllerBinder<T> {
 
       return this.bind(controller).map(binding => {
         const preMiddlewares = this.getPreMiddlewares(ControllerClass, binding.controllerMethodName)
-          .map(pM => ((ctx: Context) => pM(ctx, injector)));
+          .map(pM => ((ctx: Context) => pM(ctx, services)));
         const methodMiddleware = async (ctx: Context) => {
           ctx.result = await binding.controllerMethodBinder(ctx);
         };

@@ -8,12 +8,12 @@ Pre-hooks are TypeScript decorators used on either a controller method, a contro
 import {
   Context,
   Service,
-  Injector,
+  ServiceManager,
   preHook,
 } from '@foal/core';
 
 export function makeMyLoggerMiddleware(message: string): PreMiddleware {
-  return function myLoggerMiddleware(ctx: Context, injector: Injector): void {
+  return function myLoggerMiddleware(ctx: Context, services: ServiceManager): void {
     console.log(message);
   };
 }

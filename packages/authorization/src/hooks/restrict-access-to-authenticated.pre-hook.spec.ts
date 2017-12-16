@@ -1,4 +1,4 @@
-import { Context, Injector, PreMiddleware, UnauthorizedError } from '@foal/core';
+import { Context, PreMiddleware, ServiceManager, UnauthorizedError } from '@foal/core';
 import { expect } from 'chai';
 
 import { makeRestrictAccessToAuthenticatedMiddleware } from './restrict-access-to-authenticated.pre-hook';
@@ -28,7 +28,7 @@ describe('makeRestrictAccessToAuthenticatedMiddleware', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: undefined
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected).to.throw(UnauthorizedError);
     });
 
@@ -36,7 +36,7 @@ describe('makeRestrictAccessToAuthenticatedMiddleware', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: {}
-      }, new Injector());
+      }, new ServiceManager());
       expect(expected).not.to.throw();
     });
 

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Service } from './di/injector';
+import { Service } from './di/service-manager';
 import { Foal, FoalModule } from './foal';
 
 describe('Foal', () => {
@@ -18,19 +18,19 @@ describe('Foal', () => {
       services: []
     };
 
-    it('should create an injector.', () => {
+    it('should create an serviceManager.', () => {
       const foal1 = new Foal(foalModule1);
-      expect(foal1.injector).to.not.be.an('undefined');
-      expect(foal1.injector.get(Foobar)).to.be.instanceof(Foobar);
+      expect(foal1.services).to.not.be.an('undefined');
+      expect(foal1.services.get(Foobar)).to.be.instanceof(Foobar);
     });
 
-    it('should create an injector from the parentModule if it exists.', () => {
+    it('should create an serviceManager from the parentModule if it exists.', () => {
       const foal1 = new Foal(foalModule1);
       const foal2 = new Foal(foalModule2, foal1);
 
-      expect(foal1.injector).to.not.equal(foal2.injector);
-      expect(foal1.injector.get(Foobar)).to.not.be.an('undefined');
-      expect(foal2.injector.get(Foobar)).to.equal(foal1.injector.get(Foobar));
+      expect(foal1.services).to.not.equal(foal2.services);
+      expect(foal1.services.get(Foobar)).to.not.be.an('undefined');
+      expect(foal2.services.get(Foobar)).to.equal(foal1.services.get(Foobar));
     });
 
     xit('should create methodBindings from the controller bindings.', () => {

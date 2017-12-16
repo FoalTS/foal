@@ -1,4 +1,4 @@
-import { Injector } from '../di/injector';
+import { ServiceManager } from '../di/service-manager';
 
 export interface ObjectType {
   [name: string]: any;
@@ -23,7 +23,7 @@ export type UContext<User> = RSUContext<any, any, User>;
 export type Context = RSUContext<any, any, any>;
 
 export type Middleware = (ctx: Context) => Promise<any>|any;
-export type PreMiddleware = (ctx: Context, injector: Injector) => Promise<any>|any;
+export type PreMiddleware = (ctx: Context, services: ServiceManager) => Promise<any>|any;
 
 export type Decorator = (target: any, methodName?: string) => void;
 
