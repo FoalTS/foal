@@ -6,8 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "compile": "tsc",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "build": "tsc",
     "prepublish": "tsc && gulp add-header"
   },
   "keywords": [
