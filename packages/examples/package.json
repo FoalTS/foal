@@ -6,10 +6,10 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "start": "ts-node ./src/index.ts",
-    "start-watch": "nodemon ./src/index.ts",
-    "compile": "tsc",
+    "dev:app": "nodemon ./src/index.ts",
+    "build": "tsc",
     "prepublish": "tsc && gulp add-header"
   },
   "contributors": [
