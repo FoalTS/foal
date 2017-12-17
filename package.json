@@ -1,9 +1,13 @@
 {
   "name": "foal-srcs",
+  "private": true,
   "description": "A Node.js framework for building robust web apps.",
   "directories": {
     "doc": "docs"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "lint": "tslint -p tslint.json"
   },
