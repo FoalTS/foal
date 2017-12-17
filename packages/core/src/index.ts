@@ -1,3 +1,3 @@
-export { Injector, Service } from './di/injector';
+export { ServiceManager, Service } from './di/service-manager';
 export * from './foal';
 export * from './controllers';

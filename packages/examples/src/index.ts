@@ -15,7 +15,7 @@ const foalApp = new Foal(AppModule);
 passport.use(new LocalStrategy(
   async (username, password, done) => {
     try {
-      const userService = foalApp.injector.get(UserService);
+      const userService = foalApp.services.get(UserService);
       const users = await userService.getAll({ username });
       if (users.length === 0 || !userService.verifyPassword(password, users[0].password)) {
         done(null, false);
@@ -35,7 +35,7 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async (id, cb) => {
   try {
-    const user = await foalApp.injector.get(UserService).get(id, {});
+    const user = await foalApp.services.get(UserService).get(id, {});
     cb(null, user);
   } catch (error) {
     cb(error);
