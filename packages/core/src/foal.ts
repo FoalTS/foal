@@ -66,8 +66,8 @@ export class Foal {
     // Reverse the array to apply decorators in the proper order.
     hooks.reverse().forEach(decorator => decorator(FakeModule));
     return {
+      modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || [],
       modulePreMiddlewares: Reflect.getMetadata('pre-middlewares', FakeModule) || [],
-      modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || []
     };
   }
 
