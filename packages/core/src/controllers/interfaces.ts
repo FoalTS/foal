@@ -24,6 +24,7 @@ export type Context = RSUContext<any, any, any>;
 
 export type Middleware = (ctx: Context) => Promise<any>|any;
 export type PreMiddleware = (ctx: Context, services: ServiceManager) => Promise<any>|any;
+export type PostMiddleware = (ctx: Context, services: ServiceManager) => Promise<any>|any;
 
 export type Decorator = (target: any, methodName?: string) => void;
 
@@ -37,7 +38,7 @@ export interface MethodBinding {
 }
 
 export interface MethodPrimitiveBinding {
-  controllerMethodBinder: (context: Context) => Promise<any>;
+  controllerMethodBinder: (context: Context) => Promise<any>|any;
   controllerMethodName: string;
   httpMethod: HttpMethod;
   path: string;
