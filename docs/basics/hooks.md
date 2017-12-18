@@ -2,7 +2,7 @@
 
 Hooks are TypeScript decorators used on either a controller method, a controller class or in the `hooks` attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
 
-They are two types of hooks: pre-hooks which are executed before the controller method (ex: access control, data parser) and post-hooks which are executed after (ex: remove some attributes before returning an object to the client).
+They are two types of hooks: `pre-hooks` which are executed before the controller method (ex: access control, data parser) and `post-hooks` which are executed after (ex: remove some attributes before returning an object to the client). By convention, post-hooks should start with `afterThat`.
 
 ## How to create one
 
