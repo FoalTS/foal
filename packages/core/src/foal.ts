@@ -7,8 +7,7 @@ import { Type } from './interfaces';
 export interface FoalModule {
   services: Type<any>[];
   controllerBindings?: ((services: ServiceManager) => MethodBinding[])[];
-  preHooks?: Decorator[];
-  postHooks?: Decorator[];
+  hooks?: Decorator[];
   imports?: { module: FoalModule, path?: string }[];
 }
 
@@ -19,8 +18,7 @@ export class Foal {
   constructor(foalModule: FoalModule, parentModule?: Foal) {
     const controllerBindings = foalModule.controllerBindings || [];
     const imports = foalModule.imports || [];
-    const modulePreHooks = foalModule.preHooks || [];
-    const modulePostHooks = foalModule.postHooks || [];
+    const moduleHooks = foalModule.hooks || [];
 
     if (parentModule) {
       this.services = new ServiceManager(parentModule.services);
@@ -30,8 +28,7 @@ export class Foal {
 
     foalModule.services.forEach(service => this.services.add(service));
 
-    const modulePreMiddlewares = this.getPreMiddlewares(modulePreHooks);
-    const modulePostMiddlewares = this.getPostMiddlewares(modulePostHooks);
+    const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
     for (const controllerBinding of controllerBindings) {
       for (const methodBinding of controllerBinding(this.services)) {
@@ -63,18 +60,15 @@ export class Foal {
     }
   }
 
-  private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
+  private getMiddlewares(hooks: Decorator[]): { modulePreMiddlewares: PreMiddleware[],
+      modulePostMiddlewares: PostMiddleware[] } {
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
-    preHooks.reverse().forEach(decorator => decorator(FakeModule));
-    return Reflect.getMetadata('pre-middlewares', FakeModule) || [];
-  }
-
-  private getPostMiddlewares(postHooks: Decorator[]): PostMiddleware[] {
-    class FakeModule {}
-    // Reverse the array to apply decorators in the proper order.
-    postHooks.reverse().forEach(decorator => decorator(FakeModule));
-    return Reflect.getMetadata('post-middlewares', FakeModule) || [];
+    hooks.reverse().forEach(decorator => decorator(FakeModule));
+    return {
+      modulePreMiddlewares: Reflect.getMetadata('pre-middlewares', FakeModule) || [],
+      modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || []
+    };
   }
 
 }

@@ -6,13 +6,11 @@ export const AppModule: FoalModule = {
   controllerBindings: [
     rest.bindController('/users', UserService),
   ],
-  postHooks: [
-    afterThatLog('AppModule1 (post)'),
-    afterThatLog('AppModule2 (post)'),
-  ],
-  preHooks: [
+  hooks: [
     log('AppModule1'),
     log('AppModule2'),
+    afterThatLog('AppModule1 (post)'),
+    afterThatLog('AppModule2 (post)'),
   ],
   services: [ ConnectionService, UserService ],
 };
