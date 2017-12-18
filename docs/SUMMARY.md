@@ -13,10 +13,6 @@
 
 * [Contexts](./advanced/contexts.md)
 
-### API
-
-* [RestController](./api/rest-controller.md)
-
 ### Packages
 
 * [@foal/authorization](./packages/authorization.md)
