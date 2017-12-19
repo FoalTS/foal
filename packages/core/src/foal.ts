@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-import { Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
+import { Decorator, MethodBinding, PostMiddleware, PreMiddleware } from './controllers/interfaces';
 import { ServiceManager } from './di/service-manager';
 import { Type } from './interfaces';
 
 export interface FoalModule {
   services: Type<any>[];
   controllerBindings?: ((services: ServiceManager) => MethodBinding[])[];
-  preHooks?: Decorator[];
+  hooks?: Decorator[];
   imports?: { module: FoalModule, path?: string }[];
 }
 
@@ -18,7 +18,7 @@ export class Foal {
   constructor(foalModule: FoalModule, parentModule?: Foal) {
     const controllerBindings = foalModule.controllerBindings || [];
     const imports = foalModule.imports || [];
-    const modulePreHooks = foalModule.preHooks || [];
+    const moduleHooks = foalModule.hooks || [];
 
     if (parentModule) {
       this.services = new ServiceManager(parentModule.services);
@@ -28,7 +28,7 @@ export class Foal {
 
     foalModule.services.forEach(service => this.services.add(service));
 
-    const modulePreMiddlewares = this.getPreMiddlewares(modulePreHooks);
+    const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
     for (const controllerBinding of controllerBindings) {
       for (const methodBinding of controllerBinding(this.services)) {
@@ -36,7 +36,8 @@ export class Foal {
           ...methodBinding,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...methodBinding.middlewares
+            ...methodBinding.middlewares,
+            ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
         });
       }
@@ -50,7 +51,8 @@ export class Foal {
           ...methodBinding,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...methodBinding.middlewares
+            ...methodBinding.middlewares,
+            ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
           paths: [path, ...methodBinding.paths],
         });
@@ -58,11 +60,15 @@ export class Foal {
     }
   }
 
-  private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
+  private getMiddlewares(hooks: Decorator[]): { modulePreMiddlewares: PreMiddleware[],
+      modulePostMiddlewares: PostMiddleware[] } {
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
-    preHooks.reverse().forEach(decorator => decorator(FakeModule));
-    return Reflect.getMetadata('pre-middlewares', FakeModule) || [];
+    hooks.reverse().forEach(decorator => decorator(FakeModule));
+    return {
+      modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || [],
+      modulePreMiddlewares: Reflect.getMetadata('pre-middlewares', FakeModule) || [],
+    };
   }
 
 }

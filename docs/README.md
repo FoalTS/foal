@@ -38,8 +38,7 @@ Go the project directory and start the server.
 
 ```sh
 cd my-app
-npm run compile
-npm run start
+npm run dev:app
 ```
 
 Open you browser on `http://localhost:3000` and find our `Hello world` welcoming message!
@@ -57,14 +56,14 @@ Press enter to choose the `REST` option.
 
 Open `horse-controller.service.ts` and implement the `getAll` method:
 
-```ts
+```typescript
 public async getAll(params: any): Promise<any> {
   return ['Horse 1', 'Horse 2', 'Horse 3'];
 }
 ```
 
 Open `app.module.ts` and replace the content by:
-```ts
+```typescript
 import { FoalModule, rest } from '@foal/core';
 
 import { HorseController } from './horse-controller.service';

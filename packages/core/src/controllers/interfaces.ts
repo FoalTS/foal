@@ -24,6 +24,7 @@ export type Context = RSUContext<any, any, any>;
 
 export type Middleware = (ctx: Context) => Promise<any>|any;
 export type PreMiddleware = (ctx: Context, services: ServiceManager) => Promise<any>|any;
+export type PostMiddleware = (ctx: Context, services: ServiceManager) => Promise<any>|any;
 
 export type Decorator = (target: any, methodName?: string) => void;
 

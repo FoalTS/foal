@@ -2,11 +2,11 @@
 
 ## Prerequisities 
 
-```ts
+```typescript
 npm install --save express @foal/core @foal/express @foal/sequelize
 
 # And one of the following:
-$ npm install --save pg pg-hstore
+$ npm install --save pg@6 pg-hstore
 $ npm install --save mysql2
 $ npm install --save sqlite3
 $ npm install --save tedious // MSSQL
@@ -28,7 +28,7 @@ $ npm install --save tedious // MSSQL
 
 ## Setting up a connection
 
-```ts
+```typescript
 import { Service } from '@foal/core';
 import { SequelizeConnectionService } from '@foal/sequelize';
 
@@ -42,7 +42,7 @@ export class Connection extends SequelizeConnectionService {
 
 ## Get connected to a table
 
-```ts
+```typescript
 import { Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
@@ -60,7 +60,7 @@ export class User extends SequelizeService {
 
 ## Serve your service as an API (optional)
 
-```ts
+```typescript
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { getCallback } from '@foal/express';
@@ -85,7 +85,7 @@ app.listen(3000, () => console.log('Listening...'));
 
 Let's say that we want to forbid to use the method `delete` when using the service as a controller.
 
-```ts
+```typescript
 import { Service, MethodNotAllowed, RestParams } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
@@ -110,7 +110,7 @@ export class User extends SequelizeService {
 
 Let's say that we want to return all the users when updating one.
 
-```ts
+```typescript
 import { Service, MethodNotAllowed, RestParams } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
@@ -135,7 +135,7 @@ export class User extends SequelizeService {
 
 If you have overrided some methods and want to test them, you can do it with a fake DB thanks to the injection of the connection.
 
-```ts
+```typescript
 import { Connection } from './connection.service';
 import { User } from './user.service';
 

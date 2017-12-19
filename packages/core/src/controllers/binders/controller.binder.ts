@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { ServiceManager } from '../../di/service-manager';
 import { Type } from '../../interfaces';
-import { Context, MethodBinding, MethodPrimitiveBinding, PreMiddleware } from '../interfaces';
+import { Context, MethodBinding, MethodPrimitiveBinding, PostMiddleware, PreMiddleware } from '../interfaces';
 
 export abstract class ControllerBinder<T> {
 
@@ -22,7 +22,9 @@ export abstract class ControllerBinder<T> {
         const methodMiddleware = async (ctx: Context) => {
           ctx.result = await binding.controllerMethodBinder(ctx);
         };
-        const middlewares = [ ...preMiddlewares, methodMiddleware ];
+        const postMiddlewares = this.getPostMiddlewares(ControllerClass, binding.controllerMethodName)
+          .map(pM => ((ctx: Context) => pM(ctx, services)));
+        const middlewares = [ ...preMiddlewares, methodMiddleware, ...postMiddlewares ];
         return {
           httpMethod: binding.httpMethod,
           middlewares,
@@ -40,5 +42,12 @@ export abstract class ControllerBinder<T> {
     const methodPreMiddlewares: PreMiddleware[] = Reflect.getMetadata('pre-middlewares', ControllerClass.prototype,
       methodName) || [];
     return classPreMiddlewares.concat(methodPreMiddlewares);
+  }
+
+  private getPostMiddlewares(ControllerClass: Type<T>, methodName: string): PostMiddleware[] {
+    const classPostMiddlewares: PostMiddleware[] = Reflect.getMetadata('post-middlewares', ControllerClass) || [];
+    const methodPostMiddlewares: PostMiddleware[] = Reflect.getMetadata('post-middlewares', ControllerClass.prototype,
+      methodName) || [];
+    return methodPostMiddlewares.concat(classPostMiddlewares);
   }
 }
