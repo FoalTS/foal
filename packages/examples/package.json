@@ -26,6 +26,7 @@
   "dependencies": {
     "@foal/authorization": "^0.3.0",
     "@foal/core": "^0.3.0",
+    "@foal/ejs": "^0.3.0",
     "@foal/express": "^0.3.0",
     "@foal/sequelize": "^0.3.0",
     "bcrypt-nodejs": "0.0.3",
