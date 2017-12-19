@@ -1,0 +1,52 @@
+{
+  "name": "@foal/ejs",
+  "version": "0.3.0",
+  "description": "Foal package to render ejs templates",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "build": "tsc",
+    "prepublish": "tsc && gulp add-header"
+  },
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server",
+    "ejs",
+    "template",
+    "foal"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "@foal/core": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.5.1",
+    "chai": "^4.1.2",
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2",
+    "ejs": "^2.5.7",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9"
+  }
+}

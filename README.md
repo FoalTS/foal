@@ -28,6 +28,7 @@ There are several ways to contribute.
 ## Packages
 
 - @foal/core
+- @foal/ejs
 - @foal/express
 - @foal/sequelize
 
