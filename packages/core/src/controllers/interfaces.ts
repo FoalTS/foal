@@ -37,7 +37,7 @@ export interface MethodBinding {
 }
 
 export interface MethodPrimitiveBinding {
-  controllerMethodBinder: (context: Context) => Promise<any>;
+  controllerMethodBinder: (context: Context) => Promise<any>|any;
   controllerMethodName: string;
   httpMethod: HttpMethod;
   path: string;
