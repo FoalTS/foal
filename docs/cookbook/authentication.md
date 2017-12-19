@@ -17,7 +17,7 @@ In this example we'll be able to:
 
 `connection.service.ts`
 
-```ts
+```typescript
 import { Service } from '@foal/core';
 import { SequelizeConnectionService } from '@foal/sequelize';
 
@@ -33,7 +33,7 @@ export class ConnectionService extends SequelizeConnectionService {
 
 `user.ts`
 
-```ts
+```typescript
 export interface User {
   id: string;
   username: string;
@@ -46,7 +46,7 @@ export interface User {
 
 `user.service.ts`
 
-```ts
+```typescript
 import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/authorization';
 import { Context, ObjectType, preHook, Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
