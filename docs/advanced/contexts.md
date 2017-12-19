@@ -2,7 +2,7 @@
 
 Here's the definition of the `Context` interface used in hooks:
 
-```ts
+```typescript
 {
   session: any;
   params: ObjectType;
