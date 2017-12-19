@@ -4,7 +4,7 @@ Every app starts with a module. A module instantiates services and binds control
 
 ## Example
 
-```ts
+```typescript
 import { Module, rest } from '@foal/core';
 // module and service imports ...
 

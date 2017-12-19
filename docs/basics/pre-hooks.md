@@ -4,7 +4,7 @@ Pre-hooks are TypeScript decorators used on either a controller method, a contro
 
 ## How to create one
 
-```ts
+```typescript
 import {
   Context,
   Service,
@@ -33,7 +33,7 @@ class MyController {}
 
 You can either bind your pre-hook to a controller method, its class or a module. Attaching a pre-hook to a class is equivalent to attaching it to all its methods. Providing a pre-hook to a module is equivalent to attaching it to all its controllers.
 
-```ts
+```typescript
 import { Context, Service, preHook, RestController } from '@foal/core';
 
 function contextLogger(context: Context): Promise<any> {
@@ -55,7 +55,7 @@ class MyController extends RestController {
 
 You can combine several pre-hooks into one thanks to `combinePreHooks`.
 
-```ts
+```typescript
 import { combinePreHooks, Service, RestController } from '@foal/core';
 
 function myCombinedPreHooks() {
@@ -78,14 +78,14 @@ export class Foobar implements RestController {
 To test a pre-hook you can test its middleware. So prefer separate its declaration from the pre-hook itself.
 
 DON'T DO:
-```ts
+```typescript
 function addHelloWorldToContext() {
   return preHook((ctx: Context) => ctx.helloWorld = 'Hello world');
 }
 ```
 
 DO:
-```ts
+```typescript
 function addHelloWorldToContextMiddleware(ctx: Context) {
   ctx.helloWorld = 'Hello world';
 }
@@ -99,7 +99,7 @@ function addHelloWorldToContext() {
 
 When testing controller methods, pre-hooks are skipped. So with the previous example you have:
 
-```ts
+```typescript
 import { expect } from 'chai';
 
 async function test() {

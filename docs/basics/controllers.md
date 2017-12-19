@@ -9,7 +9,7 @@ Let's a take an example on how to set up a REST API endpoint. To do so, we'll ne
 - and the `rest` *controller binder* which will bind the controller to the request handler through a module.
 
 First, we need to create a service that implements the interface:
-```ts
+```typescript
 @Service()
 class User implements RestController {
   constructor () {}
@@ -24,7 +24,7 @@ class User implements RestController {
 There are other methods such as `update`, `delete`, `modify`, `get` or `getAll`. We choose to only implement the `create` method here which matches the `POST` requests.
 
 Now let's wire it to the request handler at the endpoint `/users`:
-```ts
+```typescript
 import { rest } from '@foal/core';
 
 const AppModule: FoalModule = {
@@ -36,7 +36,7 @@ const AppModule: FoalModule = {
 That's it!
 
 The final code looks like this:
-```ts
+```typescript
 // RestController
 import * as bodyParser from 'body-parser';
 import * as express from 'express';

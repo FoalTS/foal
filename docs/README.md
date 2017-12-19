@@ -56,14 +56,14 @@ Press enter to choose the `REST` option.
 
 Open `horse-controller.service.ts` and implement the `getAll` method:
 
-```ts
+```typescript
 public async getAll(params: any): Promise<any> {
   return ['Horse 1', 'Horse 2', 'Horse 3'];
 }
 ```
 
 Open `app.module.ts` and replace the content by:
-```ts
+```typescript
 import { FoalModule, rest } from '@foal/core';
 
 import { HorseController } from './horse-controller.service';

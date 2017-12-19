@@ -2,7 +2,7 @@
 
 `RestController` is an interface that should be used with the `rest` controller binder.
 
-```ts
+```typescript
 interface RestParams {
   query: { [name: string]: any };
 }
