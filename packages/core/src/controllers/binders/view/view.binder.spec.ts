@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Context, MethodPrimitiveBinding, ObjectType } from '../../interfaces';
+import { Context, MethodPrimitiveBinding } from '../../interfaces';
 import { ViewBinder } from './view.binder';
 import { ViewService } from './view.interface';
 
