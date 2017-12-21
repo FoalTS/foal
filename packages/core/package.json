@@ -7,8 +7,8 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "tsc",
-    "prepublish": "tsc && gulp add-header"
+    "build": "gulp clean && tsc && gulp add-header",
+    "prepublish": "gulp clean && tsc && gulp add-header"
   },
   "keywords": [
     "backend",
@@ -44,6 +44,7 @@
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2",
     "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9"
+    "gulp-header": "^1.8.9",
+    "del": "^3.0.0"
   }
 }
