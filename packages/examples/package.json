@@ -9,8 +9,8 @@
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "start": "ts-node ./src/index.ts",
     "dev:app": "nodemon ./src/index.ts",
-    "build": "tsc",
-    "prepublish": "tsc && gulp add-header"
+    "build": "gulp clean && tsc && gulp add-header",
+    "prepublish": "gulp clean && tsc && gulp add-header"
   },
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -47,6 +47,7 @@
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3",
     "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9"
+    "gulp-header": "^1.8.9",
+    "del": "^3.0.0"
   }
 }
