@@ -2,7 +2,7 @@ import {
   Context,
   postHook,
   PostMiddleware
-} from '../../index';
+} from '@foal/core';
 
 export function makeAfterThatLogMiddleware(message: string): PostMiddleware {
   return function afterThatlogMiddleware(ctx: Context): void {

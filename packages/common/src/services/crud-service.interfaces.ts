@@ -1,4 +1,4 @@
-import { ObjectType } from '../../index';
+import { ObjectType } from '@foal/core';
 
 export interface CreateService {
   create: (data: any, query: ObjectType) => Promise<any>|any;

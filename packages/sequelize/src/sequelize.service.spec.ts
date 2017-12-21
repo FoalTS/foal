@@ -135,7 +135,7 @@ describe('SequelizeService<User>', () => {
       const createdUser = (await model.create(user)).dataValues;
       const createdUser2 = (await model.create(user2)).dataValues;
 
-      const updatedUser = await service.update(createdUser.id, {
+      const updatedUser = await service.replace(createdUser.id, {
         lastName: 'Washington'
       }, {});
 
@@ -149,7 +149,7 @@ describe('SequelizeService<User>', () => {
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.update(666, {}, {});
+        await service.replace(666, {}, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);
@@ -158,13 +158,13 @@ describe('SequelizeService<User>', () => {
 
   });
 
-  describe('when patch(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
+  describe('when modify(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
     it('should update and return the user with the given id with the given data.', async () => {
       const createdUser = (await model.create(user)).dataValues;
       const createdUser2 = (await model.create(user2)).dataValues;
 
-      const updatedUser = await service.patch(createdUser.id, {
+      const updatedUser = await service.modify(createdUser.id, {
         lastName: 'Washington'
       }, {});
 
@@ -178,7 +178,7 @@ describe('SequelizeService<User>', () => {
 
     it('should throw an NotFoundError if no user exists in the db with the given id.', async () => {
       try {
-        await service.patch(666, {}, {});
+        await service.modify(666, {}, {});
         throw  new Error('No error was thrown in get()');
       } catch (err) {
         expect(err).to.be.instanceof(NotFoundError);

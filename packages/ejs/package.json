@@ -38,7 +38,8 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/core": "^0.3.0"
+    "@foal/core": "^0.3.0",
+    "@foal/common": "^0.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",

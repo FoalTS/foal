@@ -1,4 +1,10 @@
-import { Context, ForbiddenError, preHook, PreMiddleware, UnauthorizedError } from '@foal/core';
+import {
+  Context,
+  ForbiddenError,
+  preHook,
+  PreMiddleware,
+  UnauthorizedError
+} from '@foal/core';
 
 export function makeRestrictAccessToAdminMiddleware(): PreMiddleware {
   return function restrictAccessToAdminMiddleware(ctx: Context): void {

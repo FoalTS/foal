@@ -1,7 +1,7 @@
 {
-  "name": "@foal/authorization",
+  "name": "@foal/common",
   "version": "0.3.0",
-  "description": "Foal hooks for access control.",
+  "description": "Common hooks, controller factories and services for FoalTS.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -19,7 +19,8 @@
     "typescript",
     "server",
     "foal",
-    "authorization"
+    "authorization",
+    "rest"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"

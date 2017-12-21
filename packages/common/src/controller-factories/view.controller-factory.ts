@@ -2,7 +2,8 @@ import {
   Context,
   ControllerFactory,
   Route
-} from '../../index';
+} from '@foal/core';
+
 import { ViewService } from '../services';
 
 export class ViewControllerFactory extends ControllerFactory<ViewService> {

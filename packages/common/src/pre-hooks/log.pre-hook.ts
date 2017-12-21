@@ -2,7 +2,7 @@ import {
   Context,
   preHook,
   PreMiddleware
-} from '../../index';
+} from '@foal/core';
 
 export function makeLogMiddleware(message: string): PreMiddleware {
   return function logMiddleware(ctx: Context): void {

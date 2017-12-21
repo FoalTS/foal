@@ -1,7 +1,6 @@
 import { ServiceManager } from '../service-manager';
 import { Context } from './contexts';
 import { Middleware } from './middlewares';
-import { ObjectType } from './utils';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
 

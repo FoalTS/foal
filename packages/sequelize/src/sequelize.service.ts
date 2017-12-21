@@ -1,8 +1,9 @@
-import { NotFoundError, ObjectType, RestController } from '@foal/core';
+import { CRUDService } from '@foal/common';
+import { NotFoundError, ObjectType } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
-export abstract class SequelizeService<Model> implements RestController {
+export abstract class SequelizeService<Model> implements CRUDService {
   protected model: any;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService) {
@@ -43,7 +44,7 @@ export abstract class SequelizeService<Model> implements RestController {
     return models.map(e => e.dataValues);
   }
 
-  public async update(id: any, data: any, query: ObjectType): Promise<Model> {
+  public async replace(id: any, data: any, query: ObjectType): Promise<Model> {
     await this.model.sync();
 
     if (data.id) {
@@ -61,8 +62,8 @@ export abstract class SequelizeService<Model> implements RestController {
     return model.dataValues;
   }
 
-  public async patch(id: any, data: any, query: ObjectType): Promise<Model> {
-    return this.update(id, data, query);
+  public async modify(id: any, data: any, query: ObjectType): Promise<Model> {
+    return this.replace(id, data, query);
   }
 
   public async delete(id: any, query: ObjectType): Promise<any> {

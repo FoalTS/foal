@@ -2,7 +2,7 @@ import {
   Context,
   MethodNotAllowedError,
   preHook,
-} from '../../index';
+} from '@foal/core';
 
 export async function methodNotAllowedMiddleware(ctx: Context): Promise<Context> {
   throw new MethodNotAllowedError();

@@ -1,10 +1,10 @@
-import { expect } from 'chai';
-
 import {
   Context,
-  Route,
-  ViewService
-} from '../../index';
+  Route
+} from '@foal/core';
+import { expect } from 'chai';
+
+import { ViewService } from '../services';
 import { ViewControllerFactory } from './view.controller-factory';
 
 describe('ViewControllerFactory', () => {

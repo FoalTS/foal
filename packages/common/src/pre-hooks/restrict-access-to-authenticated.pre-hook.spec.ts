@@ -1,15 +1,20 @@
-import { Context, ForbiddenError, PreMiddleware, ServiceManager, UnauthorizedError } from '@foal/core';
+import {
+  Context,
+  PreMiddleware,
+  ServiceManager,
+  UnauthorizedError
+} from '@foal/core';
 import { expect } from 'chai';
 
-import { makeRestrictAccessToAdminMiddleware } from './restrict-access-to-admin.pre-hook';
+import { makeRestrictAccessToAuthenticatedMiddleware } from './restrict-access-to-authenticated.pre-hook';
 
-describe('makeRestrictAccessToAdminMiddleware', () => {
+describe('makeRestrictAccessToAuthenticatedMiddleware', () => {
 
   let middleware: PreMiddleware;
   let emptyContext: Context;
 
   before(() => {
-    middleware = makeRestrictAccessToAdminMiddleware();
+    middleware = makeRestrictAccessToAuthenticatedMiddleware();
     emptyContext = {
       body: undefined,
       getHeader: (field: string): string => '',
@@ -32,23 +37,10 @@ describe('makeRestrictAccessToAdminMiddleware', () => {
       expect(expected).to.throw(UnauthorizedError);
     });
 
-    it('throws a ForbiddenError if the user is not an admin.', () => {
+    it('does not throw any errors if the user is authenticated.', () => {
       const expected = () => middleware({
         ...emptyContext,
         user: {}
-      }, new ServiceManager());
-      expect(expected).to.throw(ForbiddenError);
-      const expected2 = () => middleware({
-        ...emptyContext,
-        user: { isAdmin: false }
-      }, new ServiceManager());
-      expect(expected2).to.throw(ForbiddenError);
-    });
-
-    it('does not throw any errors if the user is authenticated and is an admin.', () => {
-      const expected = () => middleware({
-        ...emptyContext,
-        user: { isAdmin: true }
       }, new ServiceManager());
       expect(expected).not.to.throw();
     });

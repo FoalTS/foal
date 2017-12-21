@@ -1,4 +1,5 @@
-import { ObjectType, Service, ViewService } from '@foal/core';
+import { ViewService } from '@foal/common';
+import { ObjectType, Service } from '@foal/core';
 import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';

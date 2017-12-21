@@ -1,5 +1,5 @@
-import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/authorization';
-import { afterThatLog, Context, log, ObjectType, preHook, Service } from '@foal/core';
+import { afterThatLog, log, restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/common';
+import { Context, ObjectType, preHook, Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 import * as bcrypt from 'bcrypt-nodejs';
 
@@ -45,13 +45,13 @@ export class UserService extends SequelizeService<User> {
   }
 
   @restrictAccessToAdmin()
-  public update(id: any, data: any, query: ObjectType): Promise<User> {
-    return super.update(id, data, query);
+  public replace(id: any, data: any, query: ObjectType): Promise<User> {
+    return super.replace(id, data, query);
   }
 
   @restrictAccessToAdmin()
-  public patch(id: any, data: any, query: ObjectType): Promise<User> {
-    return super.patch(id, data, query);
+  public modify(id: any, data: any, query: ObjectType): Promise<User> {
+    return super.modify(id, data, query);
   }
 
   @restrictAccessToAdmin()

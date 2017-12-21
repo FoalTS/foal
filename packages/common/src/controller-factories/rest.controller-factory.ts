@@ -1,10 +1,11 @@
-import { ControllerFactory } from '../../factories';
 import {
   Context,
+  ControllerFactory,
   NotImplementedError,
-  PartialCRUDService,
   Route
-} from '../../index';
+} from '@foal/core';
+
+import { PartialCRUDService } from '../services';
 
 export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
   protected getRoutes(controller: PartialCRUDService): Route[] {

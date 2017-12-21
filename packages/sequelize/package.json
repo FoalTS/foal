@@ -37,6 +37,7 @@
     "dist/"
   ],
   "dependencies": {
+    "@foal/common": "^0.3.0",
     "@foal/core": "^0.3.0",
     "sequelize": "^4.8.4"
   },
