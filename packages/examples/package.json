@@ -12,6 +12,9 @@
     "build": "gulp clean && tsc && gulp add-header",
     "prepublish": "gulp clean && tsc && gulp add-header"
   },
+  "engines": {
+    "node": ">=8"
+  },
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
   ],

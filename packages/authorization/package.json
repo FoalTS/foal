@@ -10,6 +10,9 @@
     "build": "gulp clean && tsc && gulp add-header",
     "prepublish": "gulp clean && tsc && gulp add-header"
   },
+  "engines": {
+    "node": ">=8"
+  },
   "keywords": [
     "backend",
     "node",
