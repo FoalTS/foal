@@ -33,7 +33,7 @@ describe('Foal', () => {
       expect(foal2.services.get(Foobar)).to.equal(foal1.services.get(Foobar));
     });
 
-    xit('should create lowLevelRoutes from the controller bindings.', () => {
+    xit('should create lowLevelRoutes from the controller routes.', () => {
 
     });
 
