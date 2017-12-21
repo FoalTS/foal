@@ -30,6 +30,7 @@ There are several ways to contribute.
 
 - @ƒoal/authorization
 - @foal/core
+- @foal/ejs
 - @foal/express
 - @foal/sequelize
 
