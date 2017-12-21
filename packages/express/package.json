@@ -10,6 +10,9 @@
     "build": "tsc",
     "prepublish": "tsc && gulp add-header"
   },
+  "engines": {
+    "node": ">=8"
+  },
   "keywords": [
     "backend",
     "node",
