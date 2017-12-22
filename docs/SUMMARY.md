@@ -16,7 +16,9 @@
 ### Packages
 
 * [@foal/common](./packages/common.md)
+* [@foal/core](./packages/core.md)
 * [@foal/ejs](./packages/ejs.md)
+* [@foal/express](./packages/express.md)
 * [@foal/sequelize](./packages/sequelize.md)
 
 ### Cookbook
