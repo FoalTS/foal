@@ -42,7 +42,7 @@ describe('Foal', () => {
 
     });
 
-    xit('should add the module pre-hooks to the lowLevelRoutes.', () => {
+    xit('should add the module hooks to the lowLevelRoutes.', () => {
       // This test relies on the two previous tests. It's not great.
 
     });
