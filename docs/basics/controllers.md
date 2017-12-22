@@ -2,9 +2,9 @@
 
 Controllers are created by `controller factories` and have to be registered with a module.
 
-Each controller factory has a `attachService(path: string, , ServiceClass: Type<T>)` method to create the controller from a given service.
+Each controller factory has an `attachService(path: string, ServiceClass: Type<T>)` method to create the controller from a given service.
 
-The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their service interfaces.
+The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their respective service interfaces. But you can also create your own factory with the abstract class `ControllerFactory<T>` in `@foal/core`.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
 - the `PartialCRUDService` interface which will help us to define the service methods,
@@ -74,7 +74,7 @@ app.listen(3000, () => console.log('Listening...'));
 
 ## Notes
 
-Paths are specified directly by the controller factory in the module. So:
+Paths are specified directly to the controller factory in the module. So:
 - a service can be re-used to serve several endpoints,
 - all paths are specified in one place (the module declarations).
 
