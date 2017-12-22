@@ -1,8 +1,8 @@
 # Hooks
 
-Hooks are TypeScript decorators used on either a controller method, a controller class or in the `hooks` attribute of a module. They're only executed when the regarded service is used as a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
+Hooks are TypeScript decorators used on either a service method, a service class or in the `hooks` attribute of a module. They're only executed when the regarded service is used by a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
 
-They are two types of hooks: `pre-hooks` which are executed before the controller method (ex: access control, data parser) and `post-hooks` which are executed after (ex: remove some attributes before returning an object to the client). By convention, post-hooks should start with `afterThat`.
+They are two types of hooks: `pre-hooks` which are executed before the service method (ex: access control, data parser) and `post-hooks` which are executed after (ex: remove some attributes before returning an object to the client). By convention, post-hooks should start with `afterThat`.
 
 ## How to create one
 
@@ -49,18 +49,19 @@ class MyController {}
 You can either bind your hook to a controller method, its class or a module. Attaching a hook to a class is equivalent to attaching it to all its methods. Providing a hook to a module is equivalent to attaching it to all its controllers.
 
 ```typescript
-import { Context, Service, preHook, RestController } from '@foal/core';
+import { PartialCRUDService } from '@foal/common';
+import { Context, ObjectType, preHook, Service } from '@foal/core';
 
 function contextLogger(context: Context): Promise<any> {
   console.log(context);
 }
 
 @Service()
-class MyController extends RestController {
+class MyController extends PartialCRUDService {
   constructor() {}
 
   @preHook(contextLogger)
-  async create(data: any, params: RestParams): Promise<any> {
+  async create(data: any, query: ObjectType): Promise<any> {
     return 'Created';
   }
 }
@@ -68,13 +69,14 @@ class MyController extends RestController {
 
 ## Combination
 
-You can combine several hooks into one thanks to `combinePreHooks` and `combinePostHooks`.
+You can combine several hooks into one thanks to `combineHooks`.
 
 ```typescript
-import { combinePreHooks, Service, RestController } from '@foal/core';
+import { PartialCRUDService } from '@foal/common';
+import { combineHooks, Service } from '@foal/core';
 
 function myCombinedPreHooks() {
-  return combinePreHooks([
+  return combineHooks([
     myPreHook1()
     myPreHook2()
   ])
@@ -82,7 +84,7 @@ function myCombinedPreHooks() {
 
 @Service()
 @myCombinedPreHooks()
-export class Foobar implements RestController {
+export class Foobar implements PartialCRUDService {
   constructor() {}
 }
 
@@ -110,16 +112,16 @@ function addHelloWorldToContext() {
 }
 ```
 
-## Testing a controller with hooks
+## Testing a service with hooks
 
-When testing controller methods, hooks are skipped. So with the previous example you have:
+When testing service methods, hooks are skipped. So with the previous example you have:
 
 ```typescript
 import { expect } from 'chai';
 
 async function test() {
-  const myController = new MyController();
-  const actual = await myController.create({}, { query: {} });
+  const myService = new MyService();
+  const actual = await myService.create({}, { query: {} });
   expect(actual).to.equal('Created');
 }
 

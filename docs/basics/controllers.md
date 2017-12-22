@@ -1,35 +1,41 @@
 # Controllers
 
-Controllers are a sub-category of services. They aim to be used for request handling but they can also perform other tasks since they remain services.
+Controllers are created by `controller factories` and have to be registered with a module.
 
-So we'll say that a controller is called *as a service* when it has nothing to do with request handling and *as a controller* otherwise.
+Each controller factory has a `attachService(path: string, , ServiceClass: Type<T>)` method to create the controller from a given service.
+
+The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their service interfaces.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
-- the `RestController` interface which will help us to define the controller methods,
-- and the `rest` *controller binder* which will bind the controller to the request handler through a module.
+- the `PartialCRUDService` interface which will help us to define the service methods,
+- and the `rest` *controller factory* which will create the controller.
 
 First, we need to create a service that implements the interface:
 ```typescript
+import { PartialCRUDService } from '@foal/common';
+import { ObjectType, Service } from '@foal/core';
+
 @Service()
-class User implements RestController {
+class User implements PartialCRUDService {
   constructor () {}
 
-  async create(data: any, params: RestParams): Promise<any> {
+  async create(data: any, query: ObjectType): Promise<any> {
     data.createdAt = Date.now();
     return data;
   }
 }
 ```
 
-There are other methods such as `update`, `delete`, `modify`, `get` or `getAll`. We choose to only implement the `create` method here which matches the `POST` requests.
+There are other methods such as `replace`, `delete`, `modify`, `get` or `getAll`. We choose to only implement the `create` method here which matches the `POST` requests.
 
-Now let's wire it to the request handler at the endpoint `/users`:
+Now let's create the controller that handles requests at the endpoint `/users`:
 ```typescript
-import { rest } from '@foal/core';
+import { rest } from '@foal/common';
+import { FoalModule } from '@foal/core';
 
 const AppModule: FoalModule = {
   services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ]
+  controllers: [ rest.attachService('/users', User) ]
 }
 ```
 
@@ -37,17 +43,17 @@ That's it!
 
 The final code looks like this:
 ```typescript
-// RestController
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { getCallback } from '@foal/express';
-import { Foal, Service, rest, RestController, RestParams } from '@foal/core';
+import { PartialCRUDService, rest } from '@foal/common';
+import { Foal, ObjectType, Service } from '@foal/core';
 
 @Service()
-class User implements RestController {
+class User implements PartialCRUDService {
   constructor () {}
 
-  async create(data: any, params: RestParams): Promise<any> {
+  async create(data: any, query: ObjectType): Promise<any> {
     data.createdAt = Date.now();
     return data;
   }
@@ -55,7 +61,7 @@ class User implements RestController {
 
 const foal = new Foal({
   services: [ User ],
-  controllerBindings: [ rest.bindController('/users', User) ]
+  controllers: [ rest.attachService('/users', User) ]
 });
 
 const app = express();
@@ -68,10 +74,10 @@ app.listen(3000, () => console.log('Listening...'));
 
 ## Notes
 
-Paths are specified directly by the binder in the module. So:
-- a controller can be re-used to serve several endpoints,
+Paths are specified directly by the controller factory in the module. So:
+- a service can be re-used to serve several endpoints,
 - all paths are specified in one place (the module declarations).
 
-Some foal services, such as `SequelizeService` in `@foal/sequelize`, already implement the `RestController` interface. So they can be used directly as a controller.
+Some foal services, such as `SequelizeService` in `@foal/sequelize`, already implement the `CRUDService` interface. So they can be used directly to create a REST endpoint.
 
-You can throw `HttpError` exceptions in your controller methods. Current supported exceptions are: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `MethodNotAllowedError`, `ConflictError`, `InternalServerError`, `NotImplementedError`
+You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `MethodNotAllowedError`, `ConflictError`, `InternalServerError`, `NotImplementedError`

@@ -36,13 +36,14 @@ export class IndexViewService extends EjsTemplateService {
 
 `app.module.ts`
 ```typescript
-import { FoalModule, view } from '@foal/core';
+import { view } from '@foal/common';
+import { FoalModule } from '@foal/core';
 
 import { IndexViewService } from './index-view.service';
 
 export const AppModule: FoalModule = {
-  controllerBindings: [
-    view.bindController('/', IndexViewService),
+  controllers: [
+    view.attachService('/', IndexViewService),
   ],
   services: [ IndexViewService ],
 };

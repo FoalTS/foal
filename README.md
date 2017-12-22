@@ -28,7 +28,7 @@ There are several ways to contribute.
 
 ## Packages
 
-- @ƒoal/authorization
+- @ƒoal/common
 - @foal/core
 - @foal/ejs
 - @foal/express

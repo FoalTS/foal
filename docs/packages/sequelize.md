@@ -64,14 +64,15 @@ export class User extends SequelizeService {
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { getCallback } from '@foal/express';
-import { Foal, rest } from '@foal/core';
+import { rest } from '@foal/common';
+import { Foal } from '@foal/core';
 
 import { Connection } from './connection.service';
 import { User } from './user.service';
 
 const foal = new Foal({
   services: [ Connection, User ],
-  controllerBindings: [ rest.bindController('/users', User) ]
+  controllers: [ rest.attachService('/users', User) ]
 });
 
 const app = express();
@@ -86,7 +87,8 @@ app.listen(3000, () => console.log('Listening...'));
 Let's say that we want to forbid to use the method `delete` when using the service as a controller.
 
 ```typescript
-import { Service, MethodNotAllowed, RestParams } from '@foal/core';
+import { MethodNotAllowed } from '@foal/common';
+import { Service, ObjectType } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
@@ -100,8 +102,8 @@ export class User extends SequelizeService {
   }
 
   @MethodNotAllowed()
-  public delete(id: any, params: RestParams): Promise<any> {
-    return super.delete(id, params);
+  public delete(id: any, query: ObjectType): Promise<any> {
+    return super.delete(id, query);
   }
 }
 ```
@@ -111,7 +113,7 @@ export class User extends SequelizeService {
 Let's say that we want to return all the users when updating one.
 
 ```typescript
-import { Service, MethodNotAllowed, RestParams } from '@foal/core';
+import { Service, ObjectType } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
@@ -124,9 +126,9 @@ export class User extends SequelizeService {
     }, connection);
   }
 
-  public async update(id: any, data: any, params: RestParams): Promise<any> {
+  public async update(id: any, data: any, query: ObjectType): Promise<any> {
     await super.update(id, data, params);
-    return this.getAll({ query: {} })
+    return this.getAll({})
   }
 }
 ```
