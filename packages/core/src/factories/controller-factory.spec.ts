@@ -61,12 +61,12 @@ describe('ControllerFactory<T>', () => {
       ];
     }
   }
-  let controllerBinder: ControllerFactory<ServiceInterface>;
+  let controllerFactory: ControllerFactory<ServiceInterface>;
   let services: ServiceManager;
 
   beforeEach(() => {
     services = new ServiceManager();
-    controllerBinder = new ConcreteControllerFactory();
+    controllerFactory = new ConcreteControllerFactory();
   });
 
   describe('when attachService(path: string, ServiceClass: Type<T>) is called', () => {
@@ -74,7 +74,7 @@ describe('ControllerFactory<T>', () => {
     describe('with a ServiceClass that has not been added to the service manager', () => {
 
       it('should raise an Error.', () => {
-        const func = controllerBinder.attachService('/my_path', ServiceClass);
+        const func = controllerFactory.attachService('/my_path', ServiceClass);
 
         expect(() => func(services)).to.throw();
       });
@@ -86,7 +86,7 @@ describe('ControllerFactory<T>', () => {
       beforeEach(() => services.add(ServiceClass));
 
       it('should return a LowLevelRoute array from the Route array of the getRoutes method.', async () => {
-        const func = controllerBinder.attachService('/my_path', ServiceClass);
+        const func = controllerFactory.attachService('/my_path', ServiceClass);
         const lowLevelRoutes = func(services);
 
         expect(lowLevelRoutes).to.be.an('array').and.to.have.lengthOf(1);
