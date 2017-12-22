@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import {
   Controller,
+  FoalModule,
   Hook,
   LowLevelRoute,
   PostMiddleware,
@@ -9,13 +10,6 @@ import {
   Type
 } from './interfaces';
 import { ServiceManager } from './service-manager';
-
-export interface FoalModule {
-  services: Type<any>[];
-  controllers?: Controller[];
-  hooks?: Hook[];
-  modules?: { module: FoalModule, path?: string }[];
-}
 
 export class Foal {
   public readonly services: ServiceManager;

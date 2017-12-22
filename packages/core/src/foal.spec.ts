@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
-import { Foal, FoalModule } from './foal';
+import { Foal } from './foal';
+import { FoalModule } from './interfaces';
 import { Service } from './service-manager';
 
 describe('Foal', () => {
