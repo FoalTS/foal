@@ -1,6 +1,6 @@
 export * from './factories';
 export * from './interfaces';
-export { combineHooks } from './utils';
+export { combineHooks, getPostMiddleware, getPreMiddleware } from './utils';
 
 export * from './errors';
 export { Foal } from './foal';
