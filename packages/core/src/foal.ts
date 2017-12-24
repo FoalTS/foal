@@ -1,13 +1,11 @@
 import 'reflect-metadata';
 
 import {
-  Controller,
   FoalModule,
   Hook,
   LowLevelRoute,
   PostMiddleware,
   PreMiddleware,
-  Type
 } from './interfaces';
 import { ServiceManager } from './service-manager';
 

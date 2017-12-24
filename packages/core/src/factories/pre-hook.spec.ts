@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'reflect-metadata';
 
-import { PreMiddleware, Type } from '../interfaces';
+import { PreMiddleware } from '../interfaces';
 import { preHook } from './pre-hook';
 
 describe('preHook', () => {

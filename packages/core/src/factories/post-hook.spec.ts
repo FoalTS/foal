@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'reflect-metadata';
 
-import { PostMiddleware, Type } from '../interfaces';
+import { PostMiddleware } from '../interfaces';
 import { postHook } from './post-hook';
 import { preHook } from './pre-hook';
 
@@ -21,12 +21,12 @@ describe('postHook', () => {
       expect(() => {
         @preHook((ctx, services) => { ctx.state.k = 3; })
         @postHook(postMiddleware)
-        class Service {}
+        class Service {} // tslint:disable-line
       }).not.to.throw();
       expect(() => {
         @postHook(postMiddleware)
         @preHook((ctx, services) => { ctx.state.k = 3; })
-        class Service {}
+        class Service {} // tslint:disable-line
       }).to.throw();
     });
 
