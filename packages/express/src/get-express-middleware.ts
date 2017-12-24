@@ -1,9 +1,9 @@
-import { Context, HttpError, MethodBinding, UnauthorizedError } from '@foal/core';
+import { Context, HttpError, LowLevelRoute, UnauthorizedError } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
 
-export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware {
+export function getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware {
   const expressMiddleware: ExpressMiddleware = async (req, res, next) => {
     const ctx: Context = {
       body: req.body,
@@ -16,13 +16,13 @@ export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddl
       user: req.user,
     };
     try {
-      for (const middleware of methodBinding.middlewares) {
+      for (const middleware of lowLevelRoute.middlewares) {
         await middleware(ctx);
       }
       if (typeof ctx.result === 'number') {
         ctx.result = ctx.result.toString();
       }
-      res.status(methodBinding.successStatus).send(ctx.result);
+      res.status(lowLevelRoute.successStatus).send(ctx.result);
     } catch (err) {
       if (err instanceof UnauthorizedError) {
         // It's more or less a hack since the header has value.
@@ -38,10 +38,10 @@ export function getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddl
     }
   };
 
-  const path = methodBinding.paths.join('/').replace(/(\/)+/g, '/') || '/';
+  const path = lowLevelRoute.paths.join('/').replace(/(\/)+/g, '/') || '/';
   const router = Router();
 
-  switch (methodBinding.httpMethod) {
+  switch (lowLevelRoute.httpMethod) {
     case 'DELETE':
       router.delete(path, expressMiddleware);
       break;

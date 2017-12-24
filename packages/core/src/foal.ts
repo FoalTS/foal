@@ -1,23 +1,21 @@
 import 'reflect-metadata';
 
-import { Decorator, MethodBinding, PostMiddleware, PreMiddleware } from './controllers/interfaces';
-import { ServiceManager } from './di/service-manager';
-import { Type } from './interfaces';
-
-export interface FoalModule {
-  services: Type<any>[];
-  controllerBindings?: ((services: ServiceManager) => MethodBinding[])[];
-  hooks?: Decorator[];
-  imports?: { module: FoalModule, path?: string }[];
-}
+import {
+  FoalModule,
+  Hook,
+  LowLevelRoute,
+  PostMiddleware,
+  PreMiddleware,
+} from './interfaces';
+import { ServiceManager } from './service-manager';
 
 export class Foal {
   public readonly services: ServiceManager;
-  public readonly methodsBindings: MethodBinding[] = [];
+  public readonly lowLevelRoutes: LowLevelRoute[] = [];
 
   constructor(foalModule: FoalModule, parentModule?: Foal) {
-    const controllerBindings = foalModule.controllerBindings || [];
-    const imports = foalModule.imports || [];
+    const controllers = foalModule.controllers || [];
+    const modules = foalModule.modules || [];
     const moduleHooks = foalModule.hooks || [];
 
     if (parentModule) {
@@ -30,41 +28,41 @@ export class Foal {
 
     const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
-    for (const controllerBinding of controllerBindings) {
-      for (const methodBinding of controllerBinding(this.services)) {
-        this.methodsBindings.push({
-          ...methodBinding,
+    for (const controller of controllers) {
+      for (const lowLevelRoute of controller(this.services)) {
+        this.lowLevelRoutes.push({
+          ...lowLevelRoute,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...methodBinding.middlewares,
+            ...lowLevelRoute.middlewares,
             ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
         });
       }
     }
 
-    for (const imp of imports) {
-      const importedModule = new Foal(imp.module, this);
-      const path = imp.path || '';
-      for (const methodBinding of importedModule.methodsBindings) {
-        this.methodsBindings.push({
-          ...methodBinding,
+    for (const mod of modules) {
+      const importedModule = new Foal(mod.module, this);
+      const path = mod.path || '';
+      for (const lowLevelRoute of importedModule.lowLevelRoutes) {
+        this.lowLevelRoutes.push({
+          ...lowLevelRoute,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...methodBinding.middlewares,
+            ...lowLevelRoute.middlewares,
             ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
-          paths: [path, ...methodBinding.paths],
+          paths: [path, ...lowLevelRoute.paths],
         });
       }
     }
   }
 
-  private getMiddlewares(hooks: Decorator[]): { modulePreMiddlewares: PreMiddleware[],
+  private getMiddlewares(hooks: Hook[]): { modulePreMiddlewares: PreMiddleware[],
       modulePostMiddlewares: PostMiddleware[] } {
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
-    hooks.reverse().forEach(decorator => decorator(FakeModule));
+    hooks.reverse().forEach(hook => hook(FakeModule));
     return {
       modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || [],
       modulePreMiddlewares: Reflect.getMetadata('pre-middlewares', FakeModule) || [],

@@ -5,13 +5,14 @@ Every app starts with a module. A module instantiates services and binds control
 ## Example
 
 ```typescript
-import { Module, rest } from '@foal/core';
+import { rest } from '@foal/common';
+import { FoalModule } from '@foal/core';
 // module and service imports ...
 
-const AppModule: Module = {
-  services: [ MyService1, MyService2, MyController ],
-  controllerBindings: [
-    rest.bindController('/my_controller', MyController)
+const AppModule: FoaModule = {
+  services: [ MyService1, MyService2, MyCRUDService ],
+  controllers: [
+    rest.attachService('/my_resources', MyCRUDService)
   ],
   imports: [
     { module: MyModule }

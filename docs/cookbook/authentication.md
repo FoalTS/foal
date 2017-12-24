@@ -2,7 +2,7 @@
 
 **This doc is in progress.**
 
-You can use passport for authentication as you would do with a regular express app. For access control you may use the package [`@foal/authorization`](../packages/authorization.md) which provides interesting hooks such as `@restrictAccessToAdmin` or `@restrictAccessToAuthenticated`.
+You can use passport for authentication as you would do with a regular express app. For access control you may use the package [`@foal/common`](../packages/common.md) which provides interesting hooks such as `@restrictAccessToAdmin` or `@restrictAccessToAuthenticated`.
 
 ## Example
 
@@ -47,7 +47,7 @@ export interface User {
 `user.service.ts`
 
 ```typescript
-import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/authorization';
+import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/common';
 import { Context, ObjectType, preHook, Service } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 import * as bcrypt from 'bcrypt-nodejs';
@@ -85,13 +85,13 @@ export class UserService extends SequelizeService<User> {
   }
 
   @restrictAccessToAdmin()
-  public update(id: any, data: any, query: ObjectType): Promise<User> {
-    return super.update(id, data, query);
+  public replace(id: any, data: any, query: ObjectType): Promise<User> {
+    return super.replace(id, data, query);
   }
 
   @restrictAccessToAdmin()
-  public patch(id: any, data: any, query: ObjectType): Promise<User> {
-    return super.patch(id, data, query);
+  public modify(id: any, data: any, query: ObjectType): Promise<User> {
+    return super.modify(id, data, query);
   }
 
   @restrictAccessToAdmin()

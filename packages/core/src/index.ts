@@ -1,3 +1,7 @@
-export { ServiceManager, Service } from './di/service-manager';
-export * from './foal';
-export * from './controllers';
+export * from './factories';
+export * from './interfaces';
+export { combineHooks } from './utils';
+
+export * from './errors';
+export { Foal } from './foal';
+export { ServiceManager, Service } from './service-manager';
