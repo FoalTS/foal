@@ -1,68 +1,72 @@
 import 'reflect-metadata';
 
-import { Decorator, MethodBinding, PreMiddleware } from './controllers/interfaces';
-import { Injector } from './di/injector';
-import { Type } from './interfaces';
-
-export interface FoalModule {
-  services: Type<any>[];
-  controllerBindings?: ((injector: Injector) => MethodBinding[])[];
-  preHooks?: Decorator[];
-  imports?: { module: FoalModule, path?: string }[];
-}
+import {
+  FoalModule,
+  Hook,
+  LowLevelRoute,
+  PostMiddleware,
+  PreMiddleware,
+} from './interfaces';
+import { ServiceManager } from './service-manager';
 
 export class Foal {
-  public readonly injector: Injector;
-  public readonly methodsBindings: MethodBinding[] = [];
+  public readonly services: ServiceManager;
+  public readonly lowLevelRoutes: LowLevelRoute[] = [];
 
   constructor(foalModule: FoalModule, parentModule?: Foal) {
-    const controllerBindings = foalModule.controllerBindings || [];
-    const imports = foalModule.imports || [];
-    const modulePreHooks = foalModule.preHooks || [];
+    const controllers = foalModule.controllers || [];
+    const modules = foalModule.modules || [];
+    const moduleHooks = foalModule.hooks || [];
 
     if (parentModule) {
-      this.injector = new Injector(parentModule.injector);
+      this.services = new ServiceManager(parentModule.services);
     } else {
-      this.injector = new Injector();
+      this.services = new ServiceManager();
     }
 
-    foalModule.services.forEach(service => this.injector.inject(service));
+    foalModule.services.forEach(service => this.services.add(service));
 
-    const modulePreMiddlewares = this.getPreMiddlewares(modulePreHooks);
+    const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
-    for (const controllerBinding of controllerBindings) {
-      for (const methodBinding of controllerBinding(this.injector)) {
-        this.methodsBindings.push({
-          ...methodBinding,
+    for (const controller of controllers) {
+      for (const lowLevelRoute of controller(this.services)) {
+        this.lowLevelRoutes.push({
+          ...lowLevelRoute,
           middlewares: [
-            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.injector))),
-            ...methodBinding.middlewares
+            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
+            ...lowLevelRoute.middlewares,
+            ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
         });
       }
     }
 
-    for (const imp of imports) {
-      const importedModule = new Foal(imp.module, this);
-      const path = imp.path || '';
-      for (const methodBinding of importedModule.methodsBindings) {
-        this.methodsBindings.push({
-          ...methodBinding,
+    for (const mod of modules) {
+      const importedModule = new Foal(mod.module, this);
+      const path = mod.path || '';
+      for (const lowLevelRoute of importedModule.lowLevelRoutes) {
+        this.lowLevelRoutes.push({
+          ...lowLevelRoute,
           middlewares: [
-            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.injector))),
-            ...methodBinding.middlewares
+            ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
+            ...lowLevelRoute.middlewares,
+            ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
-          paths: [path, ...methodBinding.paths],
+          paths: [path, ...lowLevelRoute.paths],
         });
       }
     }
   }
 
-  private getPreMiddlewares(preHooks: Decorator[]): PreMiddleware[] {
+  private getMiddlewares(hooks: Hook[]): { modulePreMiddlewares: PreMiddleware[],
+      modulePostMiddlewares: PostMiddleware[] } {
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
-    preHooks.reverse().forEach(decorator => decorator(FakeModule));
-    return Reflect.getMetadata('pre-middlewares', FakeModule) || [];
+    hooks.reverse().forEach(hook => hook(FakeModule));
+    return {
+      modulePostMiddlewares: Reflect.getMetadata('post-middlewares', FakeModule) || [],
+      modulePreMiddlewares: Reflect.getMetadata('pre-middlewares', FakeModule) || [],
+    };
   }
 
 }

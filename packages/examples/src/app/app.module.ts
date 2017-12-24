@@ -1,18 +1,18 @@
-import { FoalModule, log, rest } from '@foal/core';
+import { afterThatLog, log, rest, view } from '@foal/common';
+import { FoalModule } from '@foal/core';
 
-import { MyModule } from './my-module/my-module.module';
-import { User } from './services/user.controller';
+import { ConnectionService, IndexViewService, UserService } from './services';
 
 export const AppModule: FoalModule = {
-  controllerBindings: [
-    rest.bindController('/users', User),
+  controllers: [
+    view.attachService('/', IndexViewService),
+    rest.attachService('/users', UserService),
   ],
-  imports: [
-    { path: '/foo', module: MyModule }
+  hooks: [
+    log('AppModule1'),
+    log('AppModule2'),
+    afterThatLog('AppModule1 (post)'),
+    afterThatLog('AppModule2 (post)'),
   ],
-  preHooks: [
-    log('AppModule (1)'),
-    log('AppModule (2)')
-  ],
-  services: [ User ],
+  services: [ ConnectionService, UserService, IndexViewService ],
 };

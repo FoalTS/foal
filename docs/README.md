@@ -49,30 +49,31 @@ Nice, your application is now running. Let's create a controller to handle reque
 
 ```sh
 cd src/app
-yo foal:controller horse
+yo foal:service horse
 ```
 
-Press enter to choose the `REST` option.
+Please select the `PartialCRUDService` option.
 
-Open `horse-controller.service.ts` and implement the `getAll` method:
+Open `horse.service.ts` and implement the `getAll` method:
 
 ```typescript
-public async getAll(params: any): Promise<any> {
+public async getAll(query: any): Promise<any> {
   return ['Horse 1', 'Horse 2', 'Horse 3'];
 }
 ```
 
 Open `app.module.ts` and replace the content by:
 ```typescript
-import { FoalModule, rest } from '@foal/core';
+import { rest } from '@foal/common';
+import { FoalModule } from '@foal/core';
 
-import { HorseController } from './horse-controller.service';
+import { HorseService } from './horse.service';
 
 export const AppModule: FoalModule = {
-  controllerBindings: [
-    rest.bindController('/horses', HorseController)
+  controllers: [
+    rest.attachService('/horses', HorseService)
   ],
-  services: [ HorseController ]
+  services: [ HorseService ]
 };
 ```
 
@@ -85,8 +86,8 @@ What's the next move?
 Read the documentation and find out the five key concepts of `FoalTS`!
 
 
-[Services](./basics/services.md) | [Controllers](./basics/controllers.md) | [Modules](./basics/modules.md) | Controller binders | [Pre-hooks](./basics/pre-hooks.md)
---- | --- | --- | --- | ---
+[Services](./basics/services.md) | [Controllers](./basics/controllers.md) | [Modules](./basics/modules.md) | [Hooks](./basics/hooks.md)
+--- | --- | --- | ---
 
 ## Structure of the project
 

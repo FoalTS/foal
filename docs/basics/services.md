@@ -1,6 +1,6 @@
 # Services
 
-Services are the core of FoalTS. They are used to perform many different tasks such as logging, handling requests or fetching data from a database.
+Services are the core of FoalTS. They are used to perform many different tasks such as logging or fetching and writing data from and to a database.
 
 Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
 
@@ -17,13 +17,13 @@ const foal = new Foal({
   services: [ ServiceA ]
 });
 
-const myServiceA = foal.injector.get(ServiceA);
+const myServiceA = foal.services.get(ServiceA);
 console.log(myServiceA.name);
 ```
 
 ## Nested services
 
-If you want to call a service from another one, you need to inject it in the constructor as follows.
+If you want to call a service from another one, you need to declare it in the constructor as follows.
 
 ```typescript
 import { Foal, Service } from '@foal/core';
@@ -44,7 +44,7 @@ const foal = new Foal({
   services: [ ServiceA, ServiceB ]
 });
 
-const myServiceB = foal.injector.get(ServiceB);
+const myServiceB = foal.services.get(ServiceB);
 console.log(myServiceB.name);
 console.log(myServiceB.serviceA.name);
 ```

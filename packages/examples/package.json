@@ -1,16 +1,22 @@
 {
   "name": "@foal/examples",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "FoalTs examples",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "test-watch": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "start": "ts-node ./src/index.ts",
-    "start-watch": "nodemon ./src/index.ts",
-    "compile": "tsc",
-    "prepublish": "tsc"
+    "dev:app": "nodemon ./src/index.ts",
+    "build": "gulp clean && tsc && gulp add-header",
+    "prepublish": "gulp clean && tsc && gulp add-header"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -24,11 +30,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.3.0",
-    "@foal/express": "^0.3.0",
-    "@foal/sequelize": "^0.3.0",
+    "@foal/common": "^0.4.0-alpha.0",
+    "@foal/core": "^0.4.0-alpha.0",
+    "@foal/ejs": "^0.4.0-alpha.0",
+    "@foal/express": "^0.4.0-alpha.0",
+    "@foal/sequelize": "^0.4.0-alpha.0",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2"
   },
@@ -36,6 +48,9 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
     "ts-node": "^3.3.0",

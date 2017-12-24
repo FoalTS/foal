@@ -7,12 +7,21 @@
 * [Services](./basics/services.md)
 * [Controllers](./basics/controllers.md)
 * [Modules](./basics/modules.md)
-* [Pre-hooks](./basics/pre-hooks.md)
+* [Hooks](./basics/hooks.md)
 
-### API
+### Advanced
 
-* [RestController](./api/rest-controller.md)
+* [Contexts](./advanced/contexts.md)
 
 ### Packages
 
+* [@foal/common](./packages/common.md)
+* [@foal/core](./packages/core.md)
+* [@foal/ejs](./packages/ejs.md)
+* [@foal/express](./packages/express.md)
 * [@foal/sequelize](./packages/sequelize.md)
+
+### Cookbook
+
+* [Authentication](./cookbook/authentication.md)
+ 

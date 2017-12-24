@@ -1,0 +1,6 @@
+/**
+* FoalTS
+* Copyright(c) 2017-${today} ${pkg.contributors.join(', ')}
+* Released under the MIT License.
+*/
+

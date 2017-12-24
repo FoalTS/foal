@@ -1,4 +1,11 @@
-import { HttpMethod, MethodBinding, MethodNotAllowedError, Middleware } from '@foal/core';
+import {
+  Context,
+  HttpMethod,
+  LowLevelRoute,
+  MethodNotAllowedError,
+  Middleware,
+  UnauthorizedError
+} from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
 import * as express from 'express';
@@ -9,9 +16,9 @@ import { getExpressMiddleware } from './get-express-middleware';
 // HACK
 console.error = (msg: string) => {};
 
-describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware', () => {
+describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware', () => {
 
-  let methodBinding: MethodBinding;
+  let lowLevelRoute: LowLevelRoute;
   let app: any;
 
   function getHttpMethodTest(httpMethod: HttpMethod) {
@@ -19,8 +26,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
       before(() => {
         app = express();
-        methodBinding = { httpMethod, paths: [], middlewares: [], successStatus: 200 };
-        app.use(getExpressMiddleware(methodBinding));
+        lowLevelRoute = { httpMethod, paths: [], middlewares: [], successStatus: 200 };
+        app.use(getExpressMiddleware(lowLevelRoute));
       });
 
       it(`should return a middleware which responds on ${httpMethod} / .`, () => {
@@ -76,13 +83,13 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
     before(() => {
       app = express();
-      methodBinding = {
+      lowLevelRoute = {
         httpMethod: 'GET',
         middlewares: [],
         paths: [ '/', '/foo', '/', '/', '/bar', 'foo' ],
         successStatus: 200
       };
-      app.use(getExpressMiddleware(methodBinding));
+      app.use(getExpressMiddleware(lowLevelRoute));
     });
 
     it('should return a middleware which responds on GET /foo/bar/foo .', () => {
@@ -115,13 +122,13 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
     before(() => {
       app = express();
-      methodBinding = {
+      lowLevelRoute = {
         httpMethod: 'GET',
         middlewares: [],
         paths: [ '/foo/:id/bar/:id2' ],
         successStatus: 200
       };
-      app.use(getExpressMiddleware(methodBinding));
+      app.use(getExpressMiddleware(lowLevelRoute));
     });
 
     it('should return a middleware which responds on GET /foo/12/bar/13 .', () => {
@@ -146,8 +153,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
     before(() => {
       app = express();
-      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [], successStatus: 201 };
-      app.use(getExpressMiddleware(methodBinding));
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [], successStatus: 201 };
+      app.use(getExpressMiddleware(lowLevelRoute));
     });
 
     it('should return a middleware which responds with 201 on GET / .', () => {
@@ -165,27 +172,41 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
 
     it('should return a middleware which inits properly the context.', () => {
       // This test depends on the test 'should return a middleware which responds on GET /foo/12/bar/13'.
-      let actual: any;
+      let actual: Context;
+      const user = { name: 'foobar' };
+      const session = { foo: 'bar' };
       middleware1 = ctx => actual = ctx;
       app = express();
       app.use(bodyParser.urlencoded({ extended: false }));
       app.use(bodyParser.json());
-      methodBinding = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      app.use((req, res, next) => {
+        req.session = session;
+        req.user = user;
+        next();
+      });
+      lowLevelRoute = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       const expected = {
-        data: { text: 'Hello world' },
-        id: '1',
-        params: {
-          query: { a: 'b' }
-        }
+        body: { text: 'Hello world' },
+        params: { id: '1' },
+        query: { a: 'b' },
+        session,
+        state: {},
+        user,
       };
       return request(app)
-        .post(`/${expected.id}`)
-        .query(expected.params.query)
-        .send(expected.data)
+        .post(`/${expected.params.id}`)
+        .query(expected.query)
+        .send(expected.body)
         .then(res => {
-          expect(actual).to.deep.equal(expected);
+          expect(actual.body).to.deep.equal(expected.body);
+          expect(actual.getHeader('Content-Type')).to.equal('application/json');
+          expect(actual.params).to.deep.equal(expected.params);
+          expect(actual.query).to.deep.equal(expected.query);
+          expect(actual.session).to.equal(expected.session);
+          expect(actual.state).to.deep.equal(expected.state);
+          expect(actual.user).to.deep.equal(expected.user);
         });
     });
 
@@ -194,11 +215,11 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
       middleware1 = async ctx => str += 'a';
       middleware2 = ctx => str += 'b';
       app = express();
-      methodBinding = { httpMethod: 'GET', middlewares: [
+      lowLevelRoute = { httpMethod: 'GET', middlewares: [
         middleware1,
         middleware2
       ], paths: [], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       return request(app)
         .get('/')
@@ -209,8 +230,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
       return () => {
         middleware1 = ctx => { ctx.result = result; };
         app = express();
-        methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-        app.use(getExpressMiddleware(methodBinding));
+        lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+        app.use(getExpressMiddleware(lowLevelRoute));
 
         if (parsed) {
           return request(app)
@@ -244,8 +265,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
     it('should return a middleware which responds with 500 if a foal middleware throws some Error.', () => {
       middleware1 = ctx => { throw new Error(); };
       app = express();
-      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       return request(app)
         .get('/')
@@ -255,8 +276,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
     it('should return a middleware which responds with 500 if a foal middleware rejects some Error.', () => {
       middleware1 = ctx => Promise.reject(new Error());
       app = express();
-      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       return request(app)
         .get('/')
@@ -267,8 +288,8 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
         + 'an HttpError.', () => {
       middleware1 = ctx => { throw new MethodNotAllowedError(); };
       app = express();
-      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       return request(app)
         .get('/')
@@ -279,12 +300,26 @@ describe('getExpressMiddleware(methodBinding: MethodBinding): ExpressMiddleware'
         + 'an HttpError.', () => {
       middleware1 = ctx => Promise.reject(new MethodNotAllowedError());
       app = express();
-      methodBinding = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(methodBinding));
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
 
       return request(app)
         .get('/')
         .expect(new MethodNotAllowedError().statusCode);
+    });
+
+    it('should return a middleware which responds with the WWW-Authenticate header if the previous error status '
+        + 'is 401.', () => {
+      middleware1 = ctx => { throw new UnauthorizedError(); };
+      app = express();
+      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(lowLevelRoute));
+
+      return request(app)
+        .get('/')
+        .expect(401)
+        // It's more or less a hack since the header has value.
+        .expect('WWW-Authenticate', '');
     });
 
   });
