@@ -52,12 +52,16 @@ cd src/app
 yo foal:service horse
 ```
 
-Please select the `PartialCRUDService` option.
+Please select the `Partial CRUD` option.
 
 Open `horse.service.ts` and implement the `getAll` method:
 
 ```typescript
-public async getAll(query: any): Promise<any> {
+import { ObjectType } from '@foal/core';
+
+...
+
+public getAll(query: ObjectType): string[] {
   return ['Horse 1', 'Horse 2', 'Horse 3'];
 }
 ```
@@ -83,7 +87,7 @@ Navigate to `http://localhost:3000/horses` and find there the names of your hors
 
 What's the next move?
 
-Read the documentation and find out the five key concepts of `FoalTS`!
+Read the documentation and find out the four core concepts of `FoalTS`!
 
 
 [Services](./basics/services.md) | [Controllers](./basics/controllers.md) | [Modules](./basics/modules.md) | [Hooks](./basics/hooks.md)
