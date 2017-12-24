@@ -42,7 +42,8 @@
   ],
   "dependencies": {
     "@foal/common": "^0.4.0-alpha.0",
-    "@foal/core": "^0.4.0-alpha.0"
+    "@foal/core": "^0.4.0-alpha.0",
+    "ejs": "^2.5.7"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
@@ -50,7 +51,6 @@
     "@types/node": "^8.5.1",
     "chai": "^4.1.2",
     "del": "^3.0.0",
-    "ejs": "^2.5.7",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
     "mocha": "^3.5.3",
