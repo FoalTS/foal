@@ -15,6 +15,9 @@
   "engines": {
     "node": ">=8"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
   ],

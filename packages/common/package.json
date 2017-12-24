@@ -13,6 +13,9 @@
   "engines": {
     "node": ">=8"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "backend",
     "node",
