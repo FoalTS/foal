@@ -31,7 +31,7 @@ export class ServiceManager {
     ));
   }
 
-  public get<T>(Service: Type<T>): T|undefined {
+  public get<T>(Service: Type<T>): T {
     return this.map.get(Service) || (this.parentServiceManager && this.parentServiceManager.get(Service)) as T;
   }
 
