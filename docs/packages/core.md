@@ -16,6 +16,8 @@ Core package of the framework.
 
 ## `combineHooks`
 
+## `getPreMiddleware` and `getPostMiddleware`
+
 ## Errors
 
 ## `Foal`
