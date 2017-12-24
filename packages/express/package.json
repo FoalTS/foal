@@ -1,6 +1,6 @@
 {
   "name": "@foal/express",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "Foal util to connect a foal application to express",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -40,7 +40,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/core": "^0.3.0"
+    "@foal/core": "^0.4.0-alpha.0"
   },
   "peerDependencies": {
     "express": "4.x"
@@ -51,13 +51,13 @@
     "@types/supertest": "^2.0.3",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
+    "del": "^3.0.0",
     "express": "^4.16.2",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9",
     "mocha": "^3.5.3",
     "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2",
-    "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9",
-    "del": "^3.0.0"
+    "typescript": "^2.5.2"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "A Node.js framework for building robust web apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -46,11 +46,11 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
-    "mocha": "^3.5.3",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.5.2",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
-    "del": "^3.0.0"
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
   }
 }
