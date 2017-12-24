@@ -12,20 +12,6 @@ $ npm install --save sqlite3
 $ npm install --save tedious // MSSQL
 ```
 
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es6",
-      "dom"
-    ]
-    ...
-}
-```
-
 ## Setting up a connection
 
 ```typescript

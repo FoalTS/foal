@@ -1,13 +1,13 @@
 # Controllers
 
-Controllers are created by `controller factories` and have to be registered with a module.
+Controllers are created by `controller factories` and have to be registered within a module.
 
 Each controller factory has an `attachService(path: string, ServiceClass: Type<T>)` method to create the controller from a given service.
 
 The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their respective service interfaces. But you can also create your own factory with the abstract class `ControllerFactory<T>` in `@foal/core`.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
-- the `PartialCRUDService` interface which will help us to define the service methods,
+- the `PartialCRUDService` interface which will help us to define the service methods (which can be async functions),
 - and the `rest` *controller factory* which will create the controller.
 
 First, we need to create a service that implements the interface:
@@ -19,7 +19,7 @@ import { ObjectType, Service } from '@foal/core';
 class User implements PartialCRUDService {
   constructor () {}
 
-  async create(data: any, query: ObjectType): Promise<any> {
+  public create(data: any, query: ObjectType): any {
     data.createdAt = Date.now();
     return data;
   }
@@ -53,7 +53,7 @@ import { Foal, ObjectType, Service } from '@foal/core';
 class User implements PartialCRUDService {
   constructor () {}
 
-  async create(data: any, query: ObjectType): Promise<any> {
+  public create(data: any, query: ObjectType): any {
     data.createdAt = Date.now();
     return data;
   }

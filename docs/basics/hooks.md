@@ -27,14 +27,14 @@ export function myPreLoggerPreHook(message: string) {
   return preHook(makeMyPreLoggerMiddleware(message));
 }
 
-export function makeMyPostLoggerMiddleware(message: string): PreMiddleware {
+export function makeMyPostLoggerMiddleware(message: string): PostMiddleware {
   return function myPostLoggerMiddleware(ctx: Context, services: ServiceManager): void {
     console.log(message);
   };
 }
 
 export function myPostLoggerPreHook(message: string) {
-  return preHook(makeMyPostLoggerMiddleware(message));
+  return postHook(makeMyPostLoggerMiddleware(message));
 }
 
 @Service()
@@ -61,7 +61,7 @@ class MyController extends PartialCRUDService {
   constructor() {}
 
   @preHook(contextLogger)
-  async create(data: any, query: ObjectType): Promise<any> {
+  public create(data: any, query: ObjectType): string {
     return 'Created';
   }
 }
@@ -119,9 +119,9 @@ When testing service methods, hooks are skipped. So with the previous example yo
 ```typescript
 import { expect } from 'chai';
 
-async function test() {
+function test() {
   const myService = new MyService();
-  const actual = await myService.create({}, { query: {} });
+  const actual = myService.create({}, { query: {} });
   expect(actual).to.equal('Created');
 }
 
