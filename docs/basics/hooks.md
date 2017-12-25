@@ -9,8 +9,6 @@ They are two types of hooks: `pre-hooks` which are executed before the service m
 ```typescript
 import {
   Context,
-  PreMiddleware,
-  PostMiddleware,
   Service,
   ServiceManager,
   postHook,

@@ -1,15 +1,5 @@
-import {
-  Context,
-  postHook,
-  PostMiddleware
-} from '@foal/core';
+import { postHook } from '@foal/core';
 
-export function makeAfterThatLogMiddleware(message: string): PostMiddleware {
-  return function afterThatlogMiddleware(ctx: Context): void {
-    console.log(message);
-  };
-}
-
-export function afterThatLog(message: string) {
-  return postHook(makeAfterThatLogMiddleware(message));
+export function afterThatLog(message: string, logFn = console.log) {
+  return postHook(ctx => logFn(message));
 }
