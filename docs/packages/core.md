@@ -16,7 +16,13 @@ Core package of the framework.
 
 ## `combineHooks`
 
-## `getPreMiddleware` and `getPostMiddleware`
+## Testing
+
+### `getPreMiddleware` and `getPostMiddleware`
+
+### `createEmptyContext()`
+
+Creates an empty `Context`. This util is useful when testing a hook.
 
 ## Errors
 
