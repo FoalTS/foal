@@ -1,5 +1,5 @@
 import {
-  Context,
+  createEmptyContext,
   Route
 } from '@foal/core';
 import { expect } from 'chai';
@@ -34,7 +34,7 @@ describe('ViewControllerFactory', () => {
       expect(actual).to.be.an('array').and.to.have.lengthOf(1);
 
       const actualItem = actual[0];
-      const ctx = { state: {} } as Context;
+      const ctx = createEmptyContext();
       ctx.state.name = 'foo';
       expect(actualItem.serviceMethodBinder(ctx)).to.equal('foo');
       expect(actualItem.serviceMethodName).to.equal('render');

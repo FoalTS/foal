@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 
-import { RSUContext } from '../interfaces';
 import { createEmptyContext } from './create-empty-context';
 
 describe('createEmptyContext', () => {

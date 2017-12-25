@@ -1,4 +1,4 @@
-import { Context, getPostMiddleware, ServiceManager } from '@foal/core';
+import { createEmptyContext, getPostMiddleware, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
 import { afterThatRemoveField } from './after-that-remove-field.post-hook';
@@ -7,7 +7,7 @@ describe('afterThatRemoveField(name: string)', () => {
 
   it('should remove the given field from context.result if it is an object.', () => {
     const middleware = getPostMiddleware(afterThatRemoveField('foo'));
-    const ctx = {} as Context;
+    const ctx = createEmptyContext();
     ctx.result = {
       bar: 'foobar2',
       foo: 'foobar',
@@ -19,7 +19,7 @@ describe('afterThatRemoveField(name: string)', () => {
 
   it('should remove the given field from each item of context.result if it is an array.', () => {
     const middleware = getPostMiddleware(afterThatRemoveField('foo'));
-    const ctx = {} as Context;
+    const ctx = createEmptyContext();
     ctx.result = [
       {
         bar: 'foobar2',
@@ -39,14 +39,14 @@ describe('afterThatRemoveField(name: string)', () => {
 
   it('should not throw an Error if the given field does not exist on ctx.result (object).', () => {
     const middleware = getPostMiddleware(afterThatRemoveField('foo'));
-    const ctx = {} as Context;
+    const ctx = createEmptyContext();
     ctx.result = {};
     expect(() => middleware(ctx, new ServiceManager())).not.to.throw();
   });
 
   it('should not throw an Error if the given field does not exist in ctx.result (array).', () => {
     const middleware = getPostMiddleware(afterThatRemoveField('foo'));
-    const ctx = {} as Context;
+    const ctx = createEmptyContext();
     ctx.result = [{}];
     expect(() => middleware(ctx, new ServiceManager())).not.to.throw();
   });

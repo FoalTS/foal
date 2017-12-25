@@ -1,4 +1,4 @@
-import { Context, getPreMiddleware, ServiceManager } from '@foal/core';
+import { createEmptyContext, getPreMiddleware, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 import { log } from './log.pre-hook';
 
@@ -8,7 +8,7 @@ describe('log(message: string, logFn = console.log)', () => {
     let called = false;
     const logFn = msg => called = true;
     const middleware = getPreMiddleware(log('foo', logFn));
-    const ctx = {} as Context;
+    const ctx = createEmptyContext();
 
     middleware(ctx, new ServiceManager());
 
