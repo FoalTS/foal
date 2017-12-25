@@ -1,4 +1,4 @@
-import { Context, getPostMiddleware, PostMiddleware, ServiceManager } from '@foal/core';
+import { Context, getPostMiddleware, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
 import { afterThatRemoveField } from './after-that-remove-field.post-hook';
