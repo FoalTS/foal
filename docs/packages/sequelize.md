@@ -57,7 +57,6 @@ import { Connection } from './connection.service';
 import { User } from './user.service';
 
 const foal = new Foal({
-  services: [ Connection, User ],
   controllers: [ rest.attachService('/users', User) ]
 });
 

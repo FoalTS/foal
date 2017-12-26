@@ -34,7 +34,6 @@ import { rest } from '@foal/common';
 import { FoalModule } from '@foal/core';
 
 const AppModule: FoalModule = {
-  services: [ User ],
   controllers: [ rest.attachService('/users', User) ]
 }
 ```
@@ -60,7 +59,6 @@ class User implements PartialCRUDService {
 }
 
 const foal = new Foal({
-  services: [ User ],
   controllers: [ rest.attachService('/users', User) ]
 });
 

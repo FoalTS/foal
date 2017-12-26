@@ -45,7 +45,6 @@ export const AppModule: FoalModule = {
   controllers: [
     view.attachService('/', IndexViewService),
   ],
-  services: [ IndexViewService ],
 };
 
 ```

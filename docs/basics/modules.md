@@ -10,11 +10,15 @@ import { FoalModule } from '@foal/core';
 // module and service imports ...
 
 const AppModule: FoaModule = {
-  services: [ MyService1, MyService2, MyCRUDService ],
   controllers: [
     rest.attachService('/my_resources', MyCRUDService)
   ],
-  imports: [
+  hooks: [
+    myFirstPreHook(),
+    mySecondPreHook(),
+    myPostHook()
+  ],
+  modules: [
     { module: MyModule }
     { module: Team1Module, path: '/team1' },
     { module: Team2Module, path: '/team2' },
@@ -22,6 +26,8 @@ const AppModule: FoaModule = {
 }
 ```
 
-## Dependencies
+## Nested modules
+
+TODO: explain how services are instantiated and how the services attribute can be used (prototype pattern).
 
 ![Schema](./module-dependencies.png)
