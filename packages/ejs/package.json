@@ -7,8 +7,8 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "gulp clean && tsc && gulp -p tsconfig-build.json add-header",
-    "prepublish": "gulp clean && tsc && gulp -p tsconfig-build.json add-header"
+    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
+    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
   },
   "engines": {
     "node": ">=8"
