@@ -24,7 +24,8 @@ export class Foal {
       this.services = new ServiceManager();
     }
 
-    foalModule.services.forEach(service => this.services.add(service));
+    // Instantiate the services.
+    foalModule.services.forEach(service => this.services.get(service));
 
     const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
