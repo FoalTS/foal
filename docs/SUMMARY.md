@@ -21,6 +21,10 @@
 * [@foal/express](./packages/express.md)
 * [@foal/sequelize](./packages/sequelize.md)
 
+### Frontend
+
+* [Angular & FoalTS](./frontend/angular.md)
+
 ### Cookbook
 
 * [Authentication](./cookbook/authentication.md)
