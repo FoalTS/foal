@@ -4,5 +4,6 @@
 
 # Checklist
 
-- [ ] Add/update/check docs
-- [ ] Add/update/check tests
+- [ ] Add/update/check docs.
+- [ ] Add/update/check tests.
+- [ ] Update/check foal generator repo.
