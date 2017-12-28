@@ -10,7 +10,7 @@ export class ServiceManager {
 
   public map: Map<Type<any>, any>  = new Map();
 
-  constructor(private parentServiceManager?: ServiceManager) {}
+  constructor(readonly parentServiceManager?: ServiceManager) {}
 
   public get<T>(Service: Type<T>): T {
     // Get the service using a prototype pattern.
