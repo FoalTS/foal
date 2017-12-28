@@ -1,14 +1,14 @@
 {
   "name": "@foal/ejs",
-  "version": "0.4.0-alpha.1",
+  "version": "0.4.0-alpha.2",
   "description": "Foal package to render ejs templates",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "gulp clean && tsc && gulp -p tsconfig-build.json add-header",
-    "prepublish": "gulp clean && tsc && gulp -p tsconfig-build.json add-header"
+    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
+    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
   },
   "engines": {
     "node": ">=8"
@@ -41,8 +41,8 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/common": "^0.4.0-alpha.0",
-    "@foal/core": "^0.4.0-alpha.0",
+    "@foal/common": "^0.4.0-alpha.2",
+    "@foal/core": "^0.4.0-alpha.2",
     "ejs": "^2.5.7"
   },
   "devDependencies": {

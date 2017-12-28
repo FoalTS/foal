@@ -1,18 +1,12 @@
 import {
-  Context,
   preHook,
-  PreMiddleware,
   UnauthorizedError
 } from '@foal/core';
 
-export function makeRestrictAccessToAuthenticatedMiddleware(): PreMiddleware {
-  return function restrictAccessToAuthenticatedMiddleware(ctx: Context): void {
+export function restrictAccessToAuthenticated() {
+  return preHook(ctx => {
     if (!ctx.user) {
       throw new UnauthorizedError();
     }
-  };
-}
-
-export function restrictAccessToAuthenticated() {
-  return preHook(makeRestrictAccessToAuthenticatedMiddleware());
+  });
 }

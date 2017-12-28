@@ -1,20 +1,21 @@
 import {
   Context,
+  getPreMiddleware,
   PreMiddleware,
   ServiceManager,
   UnauthorizedError
 } from '@foal/core';
 import { expect } from 'chai';
 
-import { makeRestrictAccessToAuthenticatedMiddleware } from './restrict-access-to-authenticated.pre-hook';
+import { restrictAccessToAuthenticated } from './restrict-access-to-authenticated.pre-hook';
 
-describe('makeRestrictAccessToAuthenticatedMiddleware', () => {
+describe('restrictAccessToAuthenticated', () => {
 
   let middleware: PreMiddleware;
   let emptyContext: Context;
 
   before(() => {
-    middleware = makeRestrictAccessToAuthenticatedMiddleware();
+    middleware = getPreMiddleware(restrictAccessToAuthenticated());
     emptyContext = {
       body: undefined,
       getHeader: (field: string): string => '',
@@ -27,24 +28,20 @@ describe('makeRestrictAccessToAuthenticatedMiddleware', () => {
     };
   });
 
-  describe('when it is called should return a middleware that', () => {
+  it('should throw an UnauthorizedError if the user is not authenticated.', () => {
+    const expected = () => middleware({
+      ...emptyContext,
+      user: undefined
+    }, new ServiceManager());
+    expect(expected).to.throw(UnauthorizedError);
+  });
 
-    it('throws an UnauthorizedError if the user is not authenticated.', () => {
-      const expected = () => middleware({
-        ...emptyContext,
-        user: undefined
-      }, new ServiceManager());
-      expect(expected).to.throw(UnauthorizedError);
-    });
-
-    it('does not throw any errors if the user is authenticated.', () => {
-      const expected = () => middleware({
-        ...emptyContext,
-        user: {}
-      }, new ServiceManager());
-      expect(expected).not.to.throw();
-    });
-
+  it('should not throw any errors if the user is authenticated.', () => {
+    const expected = () => middleware({
+      ...emptyContext,
+      user: {}
+    }, new ServiceManager());
+    expect(expected).not.to.throw();
   });
 
 });

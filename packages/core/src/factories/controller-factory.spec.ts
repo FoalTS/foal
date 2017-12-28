@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { postHook, preHook } from '../factories';
 import { Context, PostMiddleware, PreMiddleware, Route } from '../interfaces';
 import { Service, ServiceManager } from '../service-manager';
+import { createEmptyContext } from '../testing';
 import { ControllerFactory } from './controller-factory';
 
 describe('ControllerFactory<T>', () => {
@@ -71,19 +72,7 @@ describe('ControllerFactory<T>', () => {
 
   describe('when attachService(path: string, ServiceClass: Type<T>) is called', () => {
 
-    describe('with a ServiceClass that has not been added to the service manager', () => {
-
-      it('should raise an Error.', () => {
-        const func = controllerFactory.attachService('/my_path', ServiceClass);
-
-        expect(() => func(services)).to.throw();
-      });
-
-    });
-
     describe('with good parameters', () => {
-
-      beforeEach(() => services.add(ServiceClass));
 
       it('should return a LowLevelRoute array from the Route array of the getRoutes method.', async () => {
         const func = controllerFactory.attachService('/my_path', ServiceClass);
@@ -98,7 +87,7 @@ describe('ControllerFactory<T>', () => {
         expect(actual.successStatus).to.equal(10000);
 
         expect(actual.middlewares).to.be.an('array').and.to.have.lengthOf(4 + 1 + 4);
-        const ctx = { state: {} } as Context;
+        const ctx = createEmptyContext();
 
         // Pre-hooks
         actual.middlewares[0](ctx);

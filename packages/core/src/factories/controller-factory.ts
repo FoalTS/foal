@@ -18,10 +18,6 @@ export abstract class ControllerFactory<T> {
     return (services: ServiceManager): LowLevelRoute[] => {
       const service = services.get(ServiceClass);
 
-      if (!service) {
-        throw new Error(`${ServiceClass.name} should be declared in a module.`);
-      }
-
       return this.getRoutes(service).map(route => {
         const middlewares = [
           ...this.getPreMiddlewares(ServiceClass, route.serviceMethodName),

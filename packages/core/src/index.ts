@@ -1,5 +1,6 @@
 export * from './factories';
 export * from './interfaces';
+export * from './testing';
 export { combineHooks } from './utils';
 
 export * from './errors';

@@ -17,6 +17,7 @@ export class Foal {
     const controllers = foalModule.controllers || [];
     const modules = foalModule.modules || [];
     const moduleHooks = foalModule.hooks || [];
+    const services = foalModule.services || [];
 
     if (parentModule) {
       this.services = new ServiceManager(parentModule.services);
@@ -24,7 +25,8 @@ export class Foal {
       this.services = new ServiceManager();
     }
 
-    foalModule.services.forEach(service => this.services.add(service));
+    // Instantiate the services.
+    services.forEach(service => this.services.get(service));
 
     const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 

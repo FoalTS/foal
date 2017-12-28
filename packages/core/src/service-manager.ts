@@ -8,31 +8,32 @@ export function Service() {
 
 export class ServiceManager {
 
-  private map: Map<Type<any>, any>  = new Map();
+  public map: Map<Type<any>, any>  = new Map();
 
-  constructor(private parentServiceManager?: ServiceManager) {}
+  constructor(readonly parentServiceManager?: ServiceManager) {}
 
-  public add(Service: Type<any>): void {
-    if (this.map.get(Service) || (this.parentServiceManager && this.parentServiceManager.get(Service))) {
-      return;
+  public get<T>(Service: Type<T>): T {
+    // Get the service using a prototype pattern.
+    if (this.map.get(Service)) {
+      return this.map.get(Service);
     }
-    const dependencies: Type<any>[] = Reflect.getMetadata('design:paramtypes', Service);
-    if (!dependencies) {
+    if (this.parentServiceManager && this.parentServiceManager.map.get(Service)) {
+      return this.parentServiceManager.map.get(Service);
+    }
+
+    // If the service has not been instantiated yet, then instantiate it in this service manager.
+    const dependencies = Reflect.getMetadata('design:paramtypes', Service);
+    if (!Array.isArray(dependencies)) {
       throw new Error(`${Service.name} has no dependencies. Please check that:
         - The service has a constructor.
         - The service has the @Service() decorator.
         - The "emitDecoratorMetadata" is set to true in the tsconfig.json file.`);
     }
-    if (dependencies.length > 0) {
-      dependencies.forEach(dep => this.add(dep));
-    }
-    this.map.set(Service, new Service(
-      ...dependencies.map(Dep => this.map.get(Dep) || (this.parentServiceManager && this.parentServiceManager.get(Dep)))
-    ));
-  }
+    const service = new Service(...dependencies.map(Dep => this.get(Dep)));
 
-  public get<T>(Service: Type<T>): T {
-    return this.map.get(Service) || (this.parentServiceManager && this.parentServiceManager.get(Service)) as T;
+    // Save and return the service.
+    this.map.set(Service, service);
+    return service;
   }
 
 }

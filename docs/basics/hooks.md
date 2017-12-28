@@ -9,37 +9,23 @@ They are two types of hooks: `pre-hooks` which are executed before the service m
 ```typescript
 import {
   Context,
-  PreMiddleware,
-  PostMiddleware,
   Service,
   ServiceManager,
   postHook,
   preHook,
 } from '@foal/core';
 
-export function makeMyPreLoggerMiddleware(message: string): PreMiddleware {
-  return function myPreLoggerMiddleware(ctx: Context, services: ServiceManager): void {
-    console.log(message);
-  };
+export function myLoggerPreHook(message: string) {
+  return preHook((ctx: Context, services: ServiceManager) => console.log(message));
 }
 
-export function myPreLoggerPreHook(message: string) {
-  return preHook(makeMyPreLoggerMiddleware(message));
-}
-
-export function makeMyPostLoggerMiddleware(message: string): PostMiddleware {
-  return function myPostLoggerMiddleware(ctx: Context, services: ServiceManager): void {
-    console.log(message);
-  };
-}
-
-export function myPostLoggerPreHook(message: string) {
-  return postHook(makeMyPostLoggerMiddleware(message));
+export function myLoggerPostHook(message: string) {
+  return postHook((ctx: Context, services: ServiceManager) => console.log(message));
 }
 
 @Service()
-@myPreLoggerPreHook('hello world')
-@myPostLoggerPreHook('hello world (post)')
+@myLoggerPreHook('hello world')
+@myLoggerPostHook('hello world (post)')
 class MyController {}
 
 ```
@@ -92,25 +78,7 @@ export class Foobar implements PartialCRUDService {
 
 ## Testing a hook
 
-To test a hook you can test its middleware. So prefer separate its declaration from the hook itself.
-
-DON'T DO:
-```typescript
-function addHelloWorldToContext() {
-  return preHook((ctx: Context) => ctx.helloWorld = 'Hello world');
-}
-```
-
-DO:
-```typescript
-function addHelloWorldToContextMiddleware(ctx: Context) {
-  ctx.helloWorld = 'Hello world';
-}
-
-function addHelloWorldToContext() {
-  return preHook(addHelloWorldToContextMiddleware);
-}
-```
+To test a hook you can use the `getPreMiddleware` and `getPostMiddeware` utils from `@foal/core`;
 
 ## Testing a service with hooks
 
