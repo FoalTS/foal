@@ -77,7 +77,6 @@ export const AppModule: FoalModule = {
   controllers: [
     rest.attachService('/horses', HorseService)
   ],
-  services: [ HorseService ]
 };
 ```
 

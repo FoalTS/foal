@@ -72,19 +72,7 @@ describe('ControllerFactory<T>', () => {
 
   describe('when attachService(path: string, ServiceClass: Type<T>) is called', () => {
 
-    describe('with a ServiceClass that has not been added to the service manager', () => {
-
-      it('should raise an Error.', () => {
-        const func = controllerFactory.attachService('/my_path', ServiceClass);
-
-        expect(() => func(services)).to.throw();
-      });
-
-    });
-
     describe('with good parameters', () => {
-
-      beforeEach(() => services.add(ServiceClass));
 
       it('should return a LowLevelRoute array from the Route array of the getRoutes method.', async () => {
         const func = controllerFactory.attachService('/my_path', ServiceClass);
