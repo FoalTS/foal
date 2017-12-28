@@ -9,7 +9,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('add-header', () => {
-  gulp.src('./dist/**/*.js')
+  gulp.src([ './dist/**/*.js', './dist/**/*.d.ts' ])
     .pipe(header(fs.readFileSync('../../header.txt', 'utf8'), { 
       pkg,
       today: new Date().getFullYear()
