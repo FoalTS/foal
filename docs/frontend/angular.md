@@ -26,9 +26,11 @@ ng new client
 
 ### Link the front and back ends for prod and development
 
-In `server/src/index.ts` add `app.get('/', (req, res) => res.render('index.html'))`.
+In `server/src/main.ts` replace the line `app.get('/', ... )` by `app.get('/', (req, res) => res.render('index.html'))`.
 
-In `client/package.json` replace the `start` script by `ng serve --proxy proxy.conf.json`.
+In `client/package.json` replace
+- the `start` script by `ng serve --proxy proxy.conf.json`,
+- and the `build` script by `ng build --prod --output-path ../server/dist/public`.
 
 Add the `proxy.conf.json` in `client/`:
 ```json
@@ -67,7 +69,7 @@ Now open the browser at `http://localhost:4200`.
 
 ```bash
 cd client
-npm run build --prod
+npm run build
 cd ..
 cd server
 npm run build
