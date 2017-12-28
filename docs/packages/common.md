@@ -54,7 +54,7 @@ class Service {}
 
 ### `methodNotAllowed()`
 
-Throws a MethodNotAllowedError. The client gets a `405 Method Not Allowed`;
+Throws a MethodNotAllowedError. The client gets a `405 Method Not Allowed`.
 
 ```typescript
 @Service()
