@@ -10,7 +10,7 @@ function render(locals): string {
     + '</html>';
 }
 
-export function handleErrors(options: { logErrors?: boolean, sendStack?: boolean } = {}, logFn = console.log) {
+export function handleErrors(options: { logErrors?: boolean, sendStack?: boolean } = {}, logFn = console.error) {
   options.logErrors = options.logErrors || false;
   options.sendStack = options.sendStack || false;
 
