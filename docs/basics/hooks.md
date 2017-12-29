@@ -1,10 +1,35 @@
 # Hooks
 
-Hooks are TypeScript decorators used on either a service method, a service class or in the `hooks` attribute of a module. They're only executed when the regarded service is used by a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
+Hooks are an elegant way to deal with access control, input validation or sanitization.
+
+They are TypeScript decorators used on either a service method, a service class or in the `hooks` attribute of a module. They're only executed when the regarded service is used by a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
 
 They are two types of hooks: `pre-hooks` which are executed before the service method (ex: access control, data parser) and `post-hooks` which are executed after (ex: remove some attributes before returning an object to the client). By convention, post-hooks should start with `afterThat`.
 
 ## How to create one
+
+To create a hook two things are required:
+- a sync or async function called `middleware` which takes two parameters `ctx: Context` and `services: ServiceManager`,
+- and either the `preHook` or `postHook` functions.
+
+The context `ctx` contains the following properties:
+
+```typescript
+interface Context {
+  session: any;
+  params: ObjectType;
+  body: any;
+  query: ObjectType;
+  result: any;
+  state: ObjectType;
+  user: ant|undefined;
+  getHeader(field: string): string;
+}
+```
+
+The `services` have a `get(ServiceClass: Type<T>): T` method which retreives any desired service.
+
+Note that the `middleware` may take an async function (or a function which returns a promise) which lets you easily deal with async programming.
 
 ```typescript
 import {
