@@ -1,5 +1,5 @@
 import { Foal } from '@foal/core';
-import { getCallback } from '@foal/express';
+import { getCallback, handleErrors } from '@foal/express';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as session from 'express-session';
@@ -8,6 +8,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 
 import { AppModule } from './app/app.module';
 import { UserService } from './app/services/user.service';
+import { config } from './config';
 
 const app = express();
 const foalApp = new Foal(AppModule);
@@ -54,5 +55,7 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/login' })
 });
 
 app.use(getCallback(foalApp));
+
+app.use(handleErrors(config.errors));
 
 app.listen(3000, () => console.log(`Listening on port 3000`));
