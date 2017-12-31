@@ -3,45 +3,39 @@ import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
 
-export function getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware {
-  const expressMiddleware: ExpressMiddleware = async (req, res, next) => {
-    const ctx: Context = {
-      body: req.body,
-      getHeader: req.get.bind(req),
-      params: req.params,
-      query: req.query,
-      result: undefined,
-      session: req.session,
-      state: {},
-      user: req.user,
-    };
-    try {
-      for (const middleware of lowLevelRoute.middlewares) {
-        await middleware(ctx);
-      }
-      if (typeof ctx.result === 'number') {
-        ctx.result = ctx.result.toString();
-      }
-      res.status(lowLevelRoute.successStatus).send(ctx.result);
-    } catch (err) {
-      if (err instanceof UnauthorizedError) {
-        // It's more or less a hack since the header has value.
-        res.setHeader('WWW-Authenticate', '');
-        res.sendStatus(err.statusCode);
-      }
-      if (err instanceof HttpError) {
-        res.sendStatus(err.statusCode);
-      } else {
-        console.error(err);
-        res.sendStatus(500);
-      }
+function makeContext(req): Context {
+  return {
+    body: req.body,
+    getHeader: req.get.bind(req),
+    params: req.params,
+    query: req.query,
+    result: undefined,
+    session: req.session,
+    state: {},
+    user: req.user,
+  };
+}
+
+export function getExpressMiddleware(route: LowLevelRoute): ExpressMiddleware {
+  async function handler(req, res) {
+    const ctx = makeContext(req);
+    for (const middleware of route.middlewares) {
+      await middleware(ctx);
     }
+    if (typeof ctx.result === 'number') {
+      ctx.result = ctx.result.toString();
+    }
+    res.status(route.successStatus).send(ctx.result);
+  }
+
+  const expressMiddleware = (req, res, next) => {
+    handler(req, res).catch(err => next(err));
   };
 
-  const path = lowLevelRoute.paths.join('/').replace(/(\/)+/g, '/') || '/';
+  const path = route.paths.join('/').replace(/(\/)+/g, '/') || '/';
   const router = Router();
 
-  switch (lowLevelRoute.httpMethod) {
+  switch (route.httpMethod) {
     case 'DELETE':
       router.delete(path, expressMiddleware);
       break;
