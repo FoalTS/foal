@@ -1,4 +1,4 @@
-import { Context, HttpError, LowLevelRoute, UnauthorizedError } from '@foal/core';
+import { Context, LowLevelRoute } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';

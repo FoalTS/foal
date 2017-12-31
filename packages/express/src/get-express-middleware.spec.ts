@@ -3,8 +3,7 @@ import {
   HttpMethod,
   LowLevelRoute,
   MethodNotAllowedError,
-  Middleware,
-  UnauthorizedError
+  Middleware
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
