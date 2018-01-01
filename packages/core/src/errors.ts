@@ -33,6 +33,9 @@ export class BadRequestError extends ClientError {
 export class UnauthorizedError extends ClientError {
   public statusCode = 401;
   public statusMessage = 'UNAUTHORIZED';
+  public headers = {
+    'WWW-Authenticate': ''
+  };
   constructor() {
     super();
     Object.setPrototypeOf(this, UnauthorizedError.prototype);
