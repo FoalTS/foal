@@ -8,15 +8,15 @@ import {
 import { PartialCRUDService } from '../services';
 
 export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  protected getRoutes(controller: PartialCRUDService): Route[] {
+  protected getRoutes(service: PartialCRUDService): Route[] {
     return [
       {
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
-          if (!controller.getAll) {
+          if (!service.getAll) {
             throw new NotImplementedError();
           }
-          return controller.getAll(ctx.query);
+          return service.getAll(ctx.query);
         },
         path: '/',
         serviceMethodName: 'getAll',
@@ -25,10 +25,10 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'POST',
         middleware: (ctx: Context) => {
-          if (!controller.create) {
+          if (!service.create) {
             throw new NotImplementedError();
           }
-          return controller.create(ctx.body, ctx.query);
+          return service.create(ctx.body, ctx.query);
         },
         path: '/',
         serviceMethodName: 'create',
@@ -37,10 +37,10 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'DELETE',
         middleware: (ctx: Context) => {
-          if (!controller.delete) {
+          if (!service.delete) {
             throw new NotImplementedError();
           }
-          return controller.delete(ctx.params.id, ctx.query);
+          return service.delete(ctx.params.id, ctx.query);
         },
         path: '/:id',
         serviceMethodName: 'delete',
@@ -49,10 +49,10 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
-          if (!controller.get) {
+          if (!service.get) {
             throw new NotImplementedError();
           }
-          return controller.get(ctx.params.id, ctx.query);
+          return service.get(ctx.params.id, ctx.query);
         },
         path: '/:id',
         serviceMethodName: 'get',
@@ -61,10 +61,10 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'PATCH',
         middleware: (ctx: Context) => {
-          if (!controller.modify) {
+          if (!service.modify) {
             throw new NotImplementedError();
           }
-          return controller.modify(ctx.params.id, ctx.body, ctx.query);
+          return service.modify(ctx.params.id, ctx.body, ctx.query);
         },
         path: '/:id',
         serviceMethodName: 'patch',
@@ -73,10 +73,10 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'PUT',
         middleware: (ctx: Context) => {
-          if (!controller.replace) {
+          if (!service.replace) {
             throw new NotImplementedError();
           }
-          return controller.replace(ctx.params.id, ctx.body, ctx.query);
+          return service.replace(ctx.params.id, ctx.body, ctx.query);
         },
         path: '/:id',
         serviceMethodName: 'update',

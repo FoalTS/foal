@@ -50,11 +50,11 @@ describe('ControllerFactory<T>', () => {
   }
 
   class ConcreteControllerFactory extends ControllerFactory<ServiceInterface> {
-    protected getRoutes(controller: ServiceInterface): Route[] {
+    protected getRoutes(service: ServiceInterface): Route[] {
       return [
         {
           httpMethod: 'GET',
-          middleware: async (context: Context) => controller.foobar(),
+          middleware: async (context: Context) => service.foobar(),
           path: '/foobar',
           serviceMethodName: 'foobar',
           successStatus: 10000
