@@ -41,6 +41,17 @@ describe('handleErrors(options?, logFn?)', () => {
         });
     });
 
+    it('should send the suitable headers if the error has a `headers` property.', () => {
+      const app = express();
+      app.use((req, res, next) => {
+        throw { headers: { 'WWW-Authenticate': 'Basic' } };
+      });
+      app.use(handleErrors());
+      return request(app)
+        .get('/')
+        .expect('WWW-Authenticate', 'Basic');
+    });
+
     it('should send a status equal to 500 if the error has no `statusCode` property.', () => {
       const app = express();
       app.use((req, res, next) => { throw new Error(); });

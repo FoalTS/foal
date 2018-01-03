@@ -26,6 +26,9 @@ export function handleErrors(options: { logErrors?: boolean, sendStack?: boolean
       locals.stack = err.stack;
     }
     res.status(locals.statusCode);
+    if (err.headers) {
+      res.set(err.headers);
+    }
     if (req.accepts('html')) {
       res.send(render(locals));
     } else {

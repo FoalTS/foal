@@ -12,6 +12,9 @@ import * as request from 'supertest';
 
 import { getExpressMiddleware } from './get-express-middleware';
 
+// HACK
+console.error = () => {};
+
 describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware', () => {
 
   let lowLevelRoute: LowLevelRoute;
