@@ -3,8 +3,7 @@ import {
   HttpMethod,
   LowLevelRoute,
   MethodNotAllowedError,
-  Middleware,
-  UnauthorizedError
+  Middleware
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
@@ -14,7 +13,7 @@ import * as request from 'supertest';
 import { getExpressMiddleware } from './get-express-middleware';
 
 // HACK
-console.error = (msg: string) => {};
+console.error = () => {};
 
 describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware', () => {
 
@@ -306,20 +305,6 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
       return request(app)
         .get('/')
         .expect(new MethodNotAllowedError().statusCode);
-    });
-
-    it('should return a middleware which responds with the WWW-Authenticate header if the previous error status '
-        + 'is 401.', () => {
-      middleware1 = ctx => { throw new UnauthorizedError(); };
-      app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
-
-      return request(app)
-        .get('/')
-        .expect(401)
-        // It's more or less a hack since the header has value.
-        .expect('WWW-Authenticate', '');
     });
 
   });
