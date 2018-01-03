@@ -1,5 +1,5 @@
 import { Foal } from '@foal/core';
-import { getCallback, handleErrors } from '@foal/express';
+import { getCallback, logErrors } from '@foal/express';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as session from 'express-session';
@@ -56,6 +56,6 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/login' })
 
 app.use(getCallback(foalApp));
 
-app.use(handleErrors(config.errors));
+app.use(logErrors(config.logErrors));
 
 app.listen(3000, () => console.log(`Listening on port 3000`));
