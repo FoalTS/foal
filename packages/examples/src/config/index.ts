@@ -2,5 +2,8 @@ export const config = {
   db: {
     uri: 'postgres://postgres:password@localhost:5432/foal_examples'
   },
-  logErrors: true,
+  errors: {
+    logErrors: true,
+    sendStack: true
+  }
 };
