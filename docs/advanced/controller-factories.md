@@ -1,8 +1,8 @@
 # Controller factories
 
-Controller factories let you create a controller from service. Some already exist such as `rest` or `view` in the `@foal/common` package. But you can also create your own.
+Controller factories let you create a controller from a given service. Some already exist such as `rest` or `view` in the `@foal/common` package. But you can also create your own.
 
-First define the interface of the `Service`s that you will use. For example:
+First define the interface of the `Service`s you will use. For example:
 
 ```typescript
 interface MyService {
@@ -37,5 +37,5 @@ export class MyControllerFactory extends ControllerFactory<MyService> {
   }
 }
 
-export const view = new MyControllerFactory();
+export const myControllerFactory = new MyControllerFactory();
 ```
