@@ -1,13 +1,13 @@
 import { ServiceManager } from '../service-manager';
 import { Context } from './contexts';
-import { Middleware } from './middlewares';
+import { ReducedMiddleware } from './middlewares';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface LowLevelRoute {
   httpMethod: HttpMethod;
   paths: string[];
-  middlewares: Middleware[];
+  middlewares: ReducedMiddleware[];
   successStatus: number;
 }
 

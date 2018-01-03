@@ -3,8 +3,7 @@ import 'reflect-metadata';
 import {
   Context,
   LowLevelRoute,
-  PostMiddleware,
-  PreMiddleware,
+  Middleware,
   Route,
   Type
 } from '../interfaces';
@@ -36,16 +35,16 @@ export abstract class ControllerFactory<T> {
 
   protected abstract getRoutes(service: T): Route[];
 
-  private getPreMiddlewares(ServiceClass: Type<T>, methodName: string): PreMiddleware[] {
-    const classPreMiddlewares: PreMiddleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass) || [];
-    const methodPreMiddlewares: PreMiddleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass.prototype,
+  private getPreMiddlewares(ServiceClass: Type<T>, methodName: string): Middleware[] {
+    const classPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass) || [];
+    const methodPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass.prototype,
       methodName) || [];
     return classPreMiddlewares.concat(methodPreMiddlewares);
   }
 
-  private getPostMiddlewares(ServiceClass: Type<T>, methodName: string): PostMiddleware[] {
-    const classPostMiddlewares: PostMiddleware[] = Reflect.getMetadata('post-middlewares', ServiceClass) || [];
-    const methodPostMiddlewares: PostMiddleware[] = Reflect.getMetadata('post-middlewares', ServiceClass.prototype,
+  private getPostMiddlewares(ServiceClass: Type<T>, methodName: string): Middleware[] {
+    const classPostMiddlewares: Middleware[] = Reflect.getMetadata('post-middlewares', ServiceClass) || [];
+    const methodPostMiddlewares: Middleware[] = Reflect.getMetadata('post-middlewares', ServiceClass.prototype,
       methodName) || [];
     return methodPostMiddlewares.concat(classPostMiddlewares);
   }

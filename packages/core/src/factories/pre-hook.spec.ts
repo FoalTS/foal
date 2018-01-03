@@ -1,15 +1,15 @@
 import { expect } from 'chai';
 import 'reflect-metadata';
 
-import { PreMiddleware } from '../interfaces';
+import { Middleware } from '../interfaces';
 import { preHook } from './pre-hook';
 
 describe('preHook', () => {
 
   describe('called with a preMiddleware should return a hook (decorator) that', () => {
 
-    let preMiddleware: PreMiddleware;
-    let preMiddleware2: PreMiddleware;
+    let preMiddleware: Middleware;
+    let preMiddleware2: Middleware;
 
     beforeEach(() => {
       preMiddleware = (ctx, services) => { ctx.state.k = 1; };

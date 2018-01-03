@@ -3,7 +3,7 @@ import {
   HttpMethod,
   LowLevelRoute,
   MethodNotAllowedError,
-  Middleware
+  ReducedMiddleware
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
@@ -166,8 +166,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
 
   describe('when it is called with { middlewares: [ ... ] }', () => {
 
-    let middleware1: Middleware;
-    let middleware2: Middleware;
+    let middleware1: ReducedMiddleware;
+    let middleware2: ReducedMiddleware;
 
     it('should return a middleware which inits properly the context.', () => {
       // This test depends on the test 'should return a middleware which responds on GET /foo/12/bar/13'.

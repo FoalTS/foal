@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'reflect-metadata';
 
-import { PostMiddleware } from '../interfaces';
+import { Middleware } from '../interfaces';
 import { postHook } from './post-hook';
 import { preHook } from './pre-hook';
 
@@ -9,8 +9,8 @@ describe('postHook', () => {
 
   describe('called with a postMiddleware should return a hook (decorator) that', () => {
 
-    let postMiddleware: PostMiddleware;
-    let postMiddleware2: PostMiddleware;
+    let postMiddleware: Middleware;
+    let postMiddleware2: Middleware;
 
     beforeEach(() => {
       postMiddleware = (ctx, services) => { ctx.state.k = 1; };

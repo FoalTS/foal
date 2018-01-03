@@ -1,7 +1,7 @@
-import { Hook, PostMiddleware } from '../interfaces';
+import { Hook, Middleware } from '../interfaces';
 import { defineMetadata, getMetadata } from '../utils';
 
-export function postHook(postMiddleware: PostMiddleware): Hook {
+export function postHook(postMiddleware: Middleware): Hook {
   return (target: any, methodName?: string) => {
     const preMiddlewares = getMetadata('pre-middlewares', target, methodName) || [];
     if (preMiddlewares.length > 0) {

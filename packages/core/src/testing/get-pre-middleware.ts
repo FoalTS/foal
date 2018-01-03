@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
-import { Hook, PreMiddleware } from '../interfaces';
+import { Hook, Middleware } from '../interfaces';
 
-export function getPreMiddleware(preHook: Hook): PreMiddleware {
+export function getPreMiddleware(preHook: Hook): Middleware {
   @preHook
   class Service {}
 
-  const preMiddlewares = Reflect.getMetadata('pre-middlewares', Service) as undefined|PreMiddleware[];
+  const preMiddlewares = Reflect.getMetadata('pre-middlewares', Service) as undefined|Middleware[];
 
   if (!preMiddlewares) {
     throw new Error('getPreMiddleware should receive a pre-hook.');

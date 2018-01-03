@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { postHook, preHook } from '../factories';
-import { Context, PostMiddleware, PreMiddleware, Route } from '../interfaces';
+import { Context, Middleware, Route } from '../interfaces';
 import { Service, ServiceManager } from '../service-manager';
 import { createEmptyContext } from '../testing';
 import { ControllerFactory } from './controller-factory';
@@ -9,28 +9,28 @@ import { ControllerFactory } from './controller-factory';
 describe('ControllerFactory<T>', () => {
 
   interface ServiceInterface { foobar: () => Promise<any>; }
-  const classPreMiddleware1: PreMiddleware = (ctx: Context, services: ServiceManager) => {
+  const classPreMiddleware1: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.preClass1 = { services };
   };
-  const classPreMiddleware2: PreMiddleware = (ctx: Context, services: ServiceManager) => {
+  const classPreMiddleware2: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.preClass2 = { services };
   };
-  const methodPreMiddleware1: PreMiddleware = (ctx: Context, services: ServiceManager) => {
+  const methodPreMiddleware1: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.preMethod1 = { services };
   };
-  const methodPreMiddleware2: PreMiddleware = (ctx: Context, services: ServiceManager) => {
+  const methodPreMiddleware2: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.preMethod2 = { services };
   };
-  const classPostMiddleware1: PostMiddleware = (ctx: Context, services: ServiceManager) => {
+  const classPostMiddleware1: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.postClass1 = { services };
   };
-  const classPostMiddleware2: PostMiddleware = (ctx: Context, services: ServiceManager) => {
+  const classPostMiddleware2: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.postClass2 = { services };
   };
-  const methodPostMiddleware1: PostMiddleware = (ctx: Context, services: ServiceManager) => {
+  const methodPostMiddleware1: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.postMethod1 = { services };
   };
-  const methodPostMiddleware2: PostMiddleware = (ctx: Context, services: ServiceManager) => {
+  const methodPostMiddleware2: Middleware = (ctx: Context, services: ServiceManager) => {
     ctx.state.postMethod2 = { services };
   };
 

@@ -4,8 +4,7 @@ import {
   FoalModule,
   Hook,
   LowLevelRoute,
-  PostMiddleware,
-  PreMiddleware,
+  Middleware,
 } from './interfaces';
 import { ServiceManager } from './service-manager';
 
@@ -60,8 +59,8 @@ export class Foal {
     }
   }
 
-  private getMiddlewares(hooks: Hook[]): { modulePreMiddlewares: PreMiddleware[],
-      modulePostMiddlewares: PostMiddleware[] } {
+  private getMiddlewares(hooks: Hook[]): { modulePreMiddlewares: Middleware[],
+      modulePostMiddlewares: Middleware[] } {
     class FakeModule {}
     // Reverse the array to apply decorators in the proper order.
     hooks.reverse().forEach(hook => hook(FakeModule));
