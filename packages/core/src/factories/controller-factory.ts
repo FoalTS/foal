@@ -20,7 +20,7 @@ export abstract class ControllerFactory<T> {
       return this.getRoutes(service).map(route => {
         const middlewares = [
           ...this.getPreMiddlewares(ServiceClass, route.serviceMethodName),
-          async (ctx: Context) => ctx.result = await route.serviceMethodBinder(ctx),
+          async (ctx: Context) => ctx.result = await route.middleware(ctx),
           ...this.getPostMiddlewares(ServiceClass, route.serviceMethodName)
         ].map(middleware => ((ctx: Context) => middleware(ctx, services)));
         return {

@@ -54,8 +54,8 @@ describe('ControllerFactory<T>', () => {
       return [
         {
           httpMethod: 'GET',
+          middleware: async (context: Context) => controller.foobar(),
           path: '/foobar',
-          serviceMethodBinder: async (context: Context) => controller.foobar(),
           serviceMethodName: 'foobar',
           successStatus: 10000
         }

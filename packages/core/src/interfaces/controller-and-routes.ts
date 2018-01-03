@@ -12,7 +12,7 @@ export interface LowLevelRoute {
 }
 
 export interface Route {
-  serviceMethodBinder: (context: Context) => Promise<any>|any;
+  middleware: ReducedMiddleware;
   serviceMethodName: string;
   httpMethod: HttpMethod;
   path: string;

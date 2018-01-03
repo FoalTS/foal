@@ -36,7 +36,7 @@ describe('ViewControllerFactory', () => {
       const actualItem = actual[0];
       const ctx = createEmptyContext();
       ctx.state.name = 'foo';
-      expect(actualItem.serviceMethodBinder(ctx)).to.equal('foo');
+      expect(actualItem.middleware(ctx)).to.equal('foo');
       expect(actualItem.serviceMethodName).to.equal('render');
       expect(actualItem.httpMethod).to.equal('GET');
       expect(actualItem.path).to.equal('/');

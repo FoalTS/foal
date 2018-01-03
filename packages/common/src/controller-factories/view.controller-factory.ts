@@ -11,8 +11,8 @@ export class ViewControllerFactory extends ControllerFactory<ViewService> {
     return [
       {
         httpMethod: 'GET',
+        middleware: (context: Context) => controller.render(context.state),
         path: '/',
-        serviceMethodBinder: (context: Context) => controller.render(context.state),
         serviceMethodName: 'render',
         successStatus: 200,
       }
