@@ -1,4 +1,7 @@
+import { NotFoundError } from '@foal/core';
 import { expect } from 'chai';
+import * as express from 'express';
+import * as request from 'supertest';
 
 import { logErrors } from './log-errors';
 
