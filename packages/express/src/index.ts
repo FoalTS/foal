@@ -1,2 +1,2 @@
 export { getCallback } from './get-callback';
-export { handleErrors } from './handle-errors';
+export { handleErrors, logOptions } from './handle-errors';

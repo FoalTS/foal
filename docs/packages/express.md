@@ -17,12 +17,12 @@ const foalApp = new Foal({
 app.use(getCallack(foalApp));
 ```
 
-## `handleErrors(options: { logErrors?: boolean, sendStack?: boolean } = {}, logFn = console.error)`
+## `handleErrors(options: { logs?: 'none'|'500'|'all', sendStack?: boolean } = {}, logFn = console.error)`
 
 Returns an express middleware to handle errors thrown in previous middlewares.
 
 **Options:**
-- `logErrors: boolean` - specifies if the errors should be logged. Default: `false`.
+- `logs: 'none'|'500'|'all'` - specifies which errors should be logged (with their traceback). `none` prevents the errors from being logged. `500` logs only internal server errors (such as `Error` or `InternalServerError`). `all` logs all errors (including `NotFoundError`, `BadRequestError`, etc). Default: `none`.
 - `sendStack: boolean` - specifies if the error stack should be sent in the response. Use it only in development. Default: `false`.
 - `logFn` - function used to log the errors. Default: `console.error`.
 
@@ -33,5 +33,5 @@ const foalApp = new Foal({
 });
 
 app.use(getCallack(foalApp));
-app.use(handleErrors({ logErrors: true }));
+app.use(handleErrors({ logs: '500' }));
 ```

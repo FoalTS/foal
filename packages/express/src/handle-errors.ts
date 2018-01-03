@@ -10,18 +10,23 @@ function render(locals): string {
     + '</html>';
 }
 
-export function handleErrors(options: { logErrors?: boolean, sendStack?: boolean } = {}, logFn = console.error) {
-  options.logErrors = options.logErrors || false;
+export type logOptions = 'none'|'500'|'all';
+
+export function handleErrors(options: { logs?: logOptions, sendStack?: boolean } = {},
+                             logFn = console.error) {
+  options.logs = options.logs || 'none';
   options.sendStack = options.sendStack || false;
 
   return (err, req, res, next) => {
-    if (options.logErrors) {
-      logFn(err);
-    }
     const locals: any = {
       statusCode: err.statusCode || 500,
       statusMessage: err.statusMessage || 'INTERNAL SERVER ERROR'
     };
+    if (options.logs === 'all') {
+      logFn(err);
+    } else if (options.logs === '500' && locals.statusCode === 500) {
+      logFn(err);
+    }
     if (options.sendStack) {
       locals.stack = err.stack;
     }

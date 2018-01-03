@@ -1,4 +1,4 @@
-import { NotFoundError } from '@foal/core';
+import { InternalServerError, NotFoundError } from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
@@ -9,11 +9,11 @@ describe('handleErrors(options?, logFn?)', () => {
 
   describe('should return an error-handling middleware which', () => {
 
-    it('should log the error with the given log function if options.logErrors is true.', () => {
+    it('should log the error with the given log function if options.logs equals \'all\'.', () => {
       let called = false;
       const logFn = () => called = true;
 
-      const middleware1 = handleErrors({ logErrors: true }, logFn);
+      const middleware1 = handleErrors({ logs: 'all' }, logFn);
 
       const app = express();
       app.use((req, res, next) => { throw new Error(); });
@@ -25,11 +25,62 @@ describe('handleErrors(options?, logFn?)', () => {
         });
     });
 
-    it('should not log the error with the given log function if options.logErrors is false.', () => {
+    it('should log the error with the given log function if options.logs equals \'500\' '
+      + 'and error.statusCode=undefined.', () => {
       let called = false;
       const logFn = () => called = true;
 
-      const middleware1 = handleErrors({ logErrors: false }, logFn);
+      const middleware1 = handleErrors({ logs: '500' }, logFn);
+
+      const app = express();
+      app.use((req, res, next) => { throw new Error(); });
+      app.use(middleware1);
+      return request(app)
+        .get('/')
+        .then(res => {
+          expect(called).to.equal(true);
+        });
+    });
+
+    it('should log the error with the given log function if options.logs equals \'500\' '
+      + 'and error.statusCode=500.', () => {
+      let called = false;
+      const logFn = () => called = true;
+
+      const middleware1 = handleErrors({ logs: '500' }, logFn);
+
+      const app = express();
+      app.use((req, res, next) => { throw new InternalServerError(); });
+      app.use(middleware1);
+      return request(app)
+        .get('/')
+        .then(res => {
+          expect(called).to.equal(true);
+        });
+    });
+
+    it('should not log the error with the given log function if options.logs equals \'500\' '
+      + 'and error.statusCode!=(500 & undefined).', () => {
+      let called = false;
+      const logFn = () => called = true;
+
+      const middleware1 = handleErrors({ logs: '500' }, logFn);
+
+      const app = express();
+      app.use((req, res, next) => { throw new NotFoundError(); });
+      app.use(middleware1);
+      return request(app)
+        .get('/')
+        .then(res => {
+          expect(called).to.equal(false);
+        });
+    });
+
+    it('should not log the error with the given log function if options.logs equals \'none\'.', () => {
+      let called = false;
+      const logFn = () => called = true;
+
+      const middleware1 = handleErrors({ logs: 'none' }, logFn);
 
       const app = express();
       app.use((req, res, next) => { throw new Error(); });
