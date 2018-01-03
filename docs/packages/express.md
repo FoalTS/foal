@@ -6,7 +6,7 @@ Foal package to run the app with express.
 
 Returns an express middleware from the foal application. It's an adapter to make foal work with express.
 
-**Note:** Errors are not processed by this middleware. This means that any errors thrown or rejected in the foal app will have to be handled then by an express error-handling middleware. You can use `handleErrors` for that (available in the same package).
+**Note:** Errors are not processed by this middleware. This means that any errors thrown or rejected in the foal app will have to be handled then by an express error-handling middleware. Express already integrates a default one but you can also use `handleErrors` for a higher flexibility.
 
 **Example**
 ```typescript
