@@ -2,8 +2,9 @@ import 'reflect-metadata';
 
 import {
   Context,
-  LowLevelRoute,
+  Controller,
   Middleware,
+  ReducedRoute,
   Route,
   Type
 } from '../interfaces';
@@ -13,8 +14,8 @@ export abstract class ControllerFactory<T> {
 
   constructor() {}
 
-  public attachService(path: string, ServiceClass: Type<T>): (services: ServiceManager) => LowLevelRoute[] {
-    return (services: ServiceManager): LowLevelRoute[] => {
+  public attachService(path: string, ServiceClass: Type<T>): Controller {
+    return (services: ServiceManager): ReducedRoute[] => {
       const service = services.get(ServiceClass);
 
       return this.getRoutes(service).map(route => {

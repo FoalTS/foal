@@ -3,14 +3,14 @@ import 'reflect-metadata';
 import {
   FoalModule,
   Hook,
-  LowLevelRoute,
   Middleware,
+  ReducedRoute,
 } from './interfaces';
 import { ServiceManager } from './service-manager';
 
 export class Foal {
   public readonly services: ServiceManager;
-  public readonly lowLevelRoutes: LowLevelRoute[] = [];
+  public readonly routes: ReducedRoute[] = [];
 
   constructor(foalModule: FoalModule, parentModule?: Foal) {
     const controllers = foalModule.controllers || [];
@@ -30,12 +30,12 @@ export class Foal {
     const { modulePreMiddlewares, modulePostMiddlewares } = this.getMiddlewares(moduleHooks);
 
     for (const controller of controllers) {
-      for (const lowLevelRoute of controller(this.services)) {
-        this.lowLevelRoutes.push({
-          ...lowLevelRoute,
+      for (const route of controller(this.services)) {
+        this.routes.push({
+          ...route,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...lowLevelRoute.middlewares,
+            ...route.middlewares,
             ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
         });
@@ -45,15 +45,15 @@ export class Foal {
     for (const mod of modules) {
       const importedModule = new Foal(mod.module, this);
       const path = mod.path || '';
-      for (const lowLevelRoute of importedModule.lowLevelRoutes) {
-        this.lowLevelRoutes.push({
-          ...lowLevelRoute,
+      for (const route of importedModule.routes) {
+        this.routes.push({
+          ...route,
           middlewares: [
             ...modulePreMiddlewares.map(e => (ctx => e(ctx, this.services))),
-            ...lowLevelRoute.middlewares,
+            ...route.middlewares,
             ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
-          paths: [path, ...lowLevelRoute.paths],
+          paths: [path, ...route.paths],
         });
       }
     }

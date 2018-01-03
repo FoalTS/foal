@@ -74,13 +74,13 @@ describe('ControllerFactory<T>', () => {
 
     describe('with good parameters', () => {
 
-      it('should return a LowLevelRoute array from the Route array of the getRoutes method.', async () => {
-        const func = controllerFactory.attachService('/my_path', ServiceClass);
-        const lowLevelRoutes = func(services);
+      it('should return a ReducedRoute array from the Route array of the getRoutes method.', async () => {
+        const controller = controllerFactory.attachService('/my_path', ServiceClass);
+        const routes = controller(services);
 
-        expect(lowLevelRoutes).to.be.an('array').and.to.have.lengthOf(1);
+        expect(routes).to.be.an('array').and.to.have.lengthOf(1);
 
-        const actual = lowLevelRoutes[0];
+        const actual = routes[0];
 
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.paths).to.deep.equal(['/my_path', '/foobar']);

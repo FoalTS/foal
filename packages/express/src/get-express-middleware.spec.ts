@@ -1,9 +1,9 @@
 import {
   Context,
   HttpMethod,
-  LowLevelRoute,
   MethodNotAllowedError,
-  ReducedMiddleware
+  ReducedMiddleware,
+  ReducedRoute,
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
@@ -15,9 +15,9 @@ import { getExpressMiddleware } from './get-express-middleware';
 // HACK
 console.error = () => {};
 
-describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware', () => {
+describe('getExpressMiddleware(route: ReducedRoute): ExpressMiddleware', () => {
 
-  let lowLevelRoute: LowLevelRoute;
+  let route: ReducedRoute;
   let app: any;
 
   function getHttpMethodTest(httpMethod: HttpMethod) {
@@ -25,8 +25,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
 
       before(() => {
         app = express();
-        lowLevelRoute = { httpMethod, paths: [], middlewares: [], successStatus: 200 };
-        app.use(getExpressMiddleware(lowLevelRoute));
+        route = { httpMethod, paths: [], middlewares: [], successStatus: 200 };
+        app.use(getExpressMiddleware(route));
       });
 
       it(`should return a middleware which responds on ${httpMethod} / .`, () => {
@@ -82,13 +82,13 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
 
     before(() => {
       app = express();
-      lowLevelRoute = {
+      route = {
         httpMethod: 'GET',
         middlewares: [],
         paths: [ '/', '/foo', '/', '/', '/bar', 'foo' ],
         successStatus: 200
       };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      app.use(getExpressMiddleware(route));
     });
 
     it('should return a middleware which responds on GET /foo/bar/foo .', () => {
@@ -121,13 +121,13 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
 
     before(() => {
       app = express();
-      lowLevelRoute = {
+      route = {
         httpMethod: 'GET',
         middlewares: [],
         paths: [ '/foo/:id/bar/:id2' ],
         successStatus: 200
       };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      app.use(getExpressMiddleware(route));
     });
 
     it('should return a middleware which responds on GET /foo/12/bar/13 .', () => {
@@ -152,8 +152,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
 
     before(() => {
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [], successStatus: 201 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'GET', paths: [], middlewares: [], successStatus: 201 };
+      app.use(getExpressMiddleware(route));
     });
 
     it('should return a middleware which responds with 201 on GET / .', () => {
@@ -183,8 +183,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
         req.user = user;
         next();
       });
-      lowLevelRoute = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(route));
 
       const expected = {
         body: { text: 'Hello world' },
@@ -214,11 +214,11 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
       middleware1 = async ctx => str += 'a';
       middleware2 = ctx => str += 'b';
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', middlewares: [
+      route = { httpMethod: 'GET', middlewares: [
         middleware1,
         middleware2
       ], paths: [], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
@@ -229,8 +229,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
       return () => {
         middleware1 = ctx => { ctx.result = result; };
         app = express();
-        lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-        app.use(getExpressMiddleware(lowLevelRoute));
+        route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+        app.use(getExpressMiddleware(route));
 
         if (parsed) {
           return request(app)
@@ -264,8 +264,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
     it('should return a middleware which responds with 500 if a foal middleware throws some Error.', () => {
       middleware1 = ctx => { throw new Error(); };
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
@@ -275,8 +275,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
     it('should return a middleware which responds with 500 if a foal middleware rejects some Error.', () => {
       middleware1 = ctx => Promise.reject(new Error());
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
@@ -287,8 +287,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
         + 'an HttpError.', () => {
       middleware1 = ctx => { throw new MethodNotAllowedError(); };
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
@@ -299,8 +299,8 @@ describe('getExpressMiddleware(lowLevelRoute: LowLevelRoute): ExpressMiddleware'
         + 'an HttpError.', () => {
       middleware1 = ctx => Promise.reject(new MethodNotAllowedError());
       app = express();
-      lowLevelRoute = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(lowLevelRoute));
+      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
+      app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
