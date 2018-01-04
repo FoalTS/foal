@@ -1,4 +1,4 @@
-import { Context, LowLevelRoute } from '@foal/core';
+import { Context, ReducedRoute } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
@@ -16,7 +16,7 @@ function makeContext(req): Context {
   };
 }
 
-export function getExpressMiddleware(route: LowLevelRoute): ExpressMiddleware {
+export function getExpressMiddleware(route: ReducedRoute): ExpressMiddleware {
   async function handler(req, res) {
     const ctx = makeContext(req);
     for (const middleware of route.middlewares) {

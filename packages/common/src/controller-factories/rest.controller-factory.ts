@@ -8,77 +8,77 @@ import {
 import { PartialCRUDService } from '../services';
 
 export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  protected getRoutes(controller: PartialCRUDService): Route[] {
+  protected getRoutes(service: PartialCRUDService): Route[] {
     return [
       {
         httpMethod: 'GET',
-        path: '/',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.getAll) {
+        middleware: (ctx: Context) => {
+          if (!service.getAll) {
             throw new NotImplementedError();
           }
-          return controller.getAll(ctx.query);
+          return service.getAll(ctx.query);
         },
+        path: '/',
         serviceMethodName: 'getAll',
         successStatus: 200,
       },
       {
         httpMethod: 'POST',
-        path: '/',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.create) {
+        middleware: (ctx: Context) => {
+          if (!service.create) {
             throw new NotImplementedError();
           }
-          return controller.create(ctx.body, ctx.query);
+          return service.create(ctx.body, ctx.query);
         },
+        path: '/',
         serviceMethodName: 'create',
         successStatus: 201,
       },
       {
         httpMethod: 'DELETE',
-        path: '/:id',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.delete) {
+        middleware: (ctx: Context) => {
+          if (!service.delete) {
             throw new NotImplementedError();
           }
-          return controller.delete(ctx.params.id, ctx.query);
+          return service.delete(ctx.params.id, ctx.query);
         },
+        path: '/:id',
         serviceMethodName: 'delete',
         successStatus: 200,
       },
       {
         httpMethod: 'GET',
-        path: '/:id',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.get) {
+        middleware: (ctx: Context) => {
+          if (!service.get) {
             throw new NotImplementedError();
           }
-          return controller.get(ctx.params.id, ctx.query);
+          return service.get(ctx.params.id, ctx.query);
         },
+        path: '/:id',
         serviceMethodName: 'get',
         successStatus: 200,
       },
       {
         httpMethod: 'PATCH',
-        path: '/:id',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.modify) {
+        middleware: (ctx: Context) => {
+          if (!service.modify) {
             throw new NotImplementedError();
           }
-          return controller.modify(ctx.params.id, ctx.body, ctx.query);
+          return service.modify(ctx.params.id, ctx.body, ctx.query);
         },
+        path: '/:id',
         serviceMethodName: 'patch',
         successStatus: 200,
       },
       {
         httpMethod: 'PUT',
-        path: '/:id',
-        serviceMethodBinder: (ctx: Context) => {
-          if (!controller.replace) {
+        middleware: (ctx: Context) => {
+          if (!service.replace) {
             throw new NotImplementedError();
           }
-          return controller.replace(ctx.params.id, ctx.body, ctx.query);
+          return service.replace(ctx.params.id, ctx.body, ctx.query);
         },
+        path: '/:id',
         serviceMethodName: 'update',
         successStatus: 200,
       },

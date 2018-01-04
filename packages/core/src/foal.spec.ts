@@ -42,15 +42,15 @@ describe('Foal', () => {
       expect(foal2.services.get(Foobar)).not.to.equal(foal1.services.get(Foobar));
     });
 
-    xit('should create lowLevelRoutes from the controller routes.', () => {
+    xit('should create ReducedRoute[] from the controller routes.', () => {
 
     });
 
-    xit('should create lowLevelRoutes from the module imported.', () => {
+    xit('should create ReducedRoute[] from the module imported.', () => {
 
     });
 
-    xit('should add the module hooks to the lowLevelRoutes.', () => {
+    xit('should add the module hooks to the ReducedRoute[].', () => {
       // This test relies on the two previous tests. It's not great.
 
     });
