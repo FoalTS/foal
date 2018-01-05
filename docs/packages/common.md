@@ -74,3 +74,21 @@ Returns a 401 status if the user is not authenticated.
 ### `restrictAccessToAdmin()`
 
 Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
+
+## Utils
+
+### `escape(str: string): string`
+
+Escapes HTML and returns a new string.
+
+### `escapeHTML(object: ObjectType, propName: string): void`
+
+Escapes HTML for the given property.
+
+```typescript
+escapeHTML(myObject, 'foobar')
+```
+is equivalent to
+```typescript
+myObject.foobar = escape(myObject.foobar)
+```
