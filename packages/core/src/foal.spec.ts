@@ -34,7 +34,7 @@ describe('Foal', () => {
 
     it('should instantiate the services given in the services array.', () => {
       // When calling `services.get` the services are instantiated if
-      // they do not already exist. The only way to test if there are created
+      // they do not already exist. The only way to test if they are created
       // before is using the prototype schema of the ServiceManager.
       const foal1 = new Foal(foalModule1);
       const foal2 = new Foal(foalModule2, foal1);
