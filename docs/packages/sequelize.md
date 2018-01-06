@@ -72,7 +72,7 @@ app.listen(3000, () => console.log('Listening...'));
 Let's say that we want to forbid to use the method `delete` when using the service as a controller.
 
 ```typescript
-import { MethodNotAllowed } from '@foal/common';
+import { methodNotAllowed } from '@foal/common';
 import { Service, ObjectType } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
@@ -86,7 +86,7 @@ export class User extends SequelizeService {
     }, connection);
   }
 
-  @MethodNotAllowed()
+  @methodNotAllowed()
   public delete(id: any, query: ObjectType): Promise<any> {
     return super.delete(id, query);
   }
