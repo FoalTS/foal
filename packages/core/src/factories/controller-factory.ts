@@ -36,15 +36,25 @@ export abstract class ControllerFactory<T> {
 
   protected abstract getRoutes(service: T): Route[];
 
-  private getPreMiddlewares(ServiceClass: Type<T>, methodName: string): Middleware[] {
+  private getPreMiddlewares(ServiceClass: Type<T>, methodName: string|null): Middleware[] {
     const classPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass) || [];
+
+    if (methodName === null) {
+      return classPreMiddlewares;
+    }
+
     const methodPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass.prototype,
       methodName) || [];
     return classPreMiddlewares.concat(methodPreMiddlewares);
   }
 
-  private getPostMiddlewares(ServiceClass: Type<T>, methodName: string): Middleware[] {
+  private getPostMiddlewares(ServiceClass: Type<T>, methodName: string|null): Middleware[] {
     const classPostMiddlewares: Middleware[] = Reflect.getMetadata('post-middlewares', ServiceClass) || [];
+
+    if (methodName === null) {
+      return classPostMiddlewares;
+    }
+
     const methodPostMiddlewares: Middleware[] = Reflect.getMetadata('post-middlewares', ServiceClass.prototype,
       methodName) || [];
     return methodPostMiddlewares.concat(classPostMiddlewares);

@@ -12,7 +12,7 @@ export interface ReducedRoute {
 
 export interface Route {
   middleware: ReducedMiddleware;
-  serviceMethodName: string;
+  serviceMethodName: string|null;
   httpMethod: HttpMethod;
   path: string;
   successStatus: number;
