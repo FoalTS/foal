@@ -1,11 +1,23 @@
 import {
   Context,
   ControllerFactory,
+  HttpMethod,
+  MethodNotAllowedError,
   NotImplementedError,
-  Route
+  Route,
 } from '@foal/core';
 
 import { PartialCRUDService } from '../services';
+
+function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
+  return {
+    httpMethod,
+    middleware: ctx => { throw new MethodNotAllowedError(); },
+    path,
+    serviceMethodName: null,
+    successStatus: 200
+  };
+}
 
 export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
   protected getRoutes(service: PartialCRUDService): Route[] {
@@ -34,6 +46,9 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
         serviceMethodName: 'create',
         successStatus: 201,
       },
+      routeNotAllowed('DELETE', '/'),
+      routeNotAllowed('PATCH', '/'),
+      routeNotAllowed('PUT', '/'),
       {
         httpMethod: 'DELETE',
         middleware: (ctx: Context) => {
