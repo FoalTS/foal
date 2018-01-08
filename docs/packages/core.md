@@ -37,6 +37,8 @@ You may throw an `HttpError` in a hook or in an service. This will stop the requ
 - `InternalServerError` (500)
 - `NotImplementedError` (501)
 
+The error may take an optional argument `details: ObjectType` to give more information on the error. This object aims to be returned to the client. Ex: `new BadRequestError({ message: 'The foo field is missing.' })`
+
 ## `Foal`
 
 ## `ServiceManager`
