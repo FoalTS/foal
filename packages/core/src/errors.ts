@@ -1,3 +1,5 @@
+import { ObjectType } from './interfaces';
+
 // Object.setPrototypeOf(this, MyErrorClass.prototype) must be added to each
 // constructor.
 // More docs at https://github.com/Microsoft/TypeScript-wiki/blob/master/
@@ -6,7 +8,7 @@
 export abstract class HttpError extends Error {
   public abstract statusCode: number;
   public abstract statusMessage: string;
-  constructor() {
+  constructor(public details?: ObjectType) {
     super();
     Object.setPrototypeOf(this, HttpError.prototype);
   }
@@ -15,8 +17,8 @@ export abstract class HttpError extends Error {
 /* 4xx Client Error */
 
 export abstract class ClientError extends HttpError {
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, ClientError.prototype);
   }
 }
@@ -24,8 +26,8 @@ export abstract class ClientError extends HttpError {
 export class BadRequestError extends ClientError {
   public statusCode = 400;
   public statusMessage = 'BAD REQUEST';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, BadRequestError.prototype);
   }
 }
@@ -36,8 +38,8 @@ export class UnauthorizedError extends ClientError {
   public headers = {
     'WWW-Authenticate': ''
   };
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, UnauthorizedError.prototype);
   }
 }
@@ -45,8 +47,8 @@ export class UnauthorizedError extends ClientError {
 export class ForbiddenError extends ClientError {
   public statusCode = 403;
   public statusMessage = 'FORBIDDEN';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, ForbiddenError.prototype);
   }
 }
@@ -54,8 +56,8 @@ export class ForbiddenError extends ClientError {
 export class NotFoundError extends ClientError {
   public statusCode = 404;
   public statusMessage = 'NOT FOUND';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }
@@ -63,8 +65,8 @@ export class NotFoundError extends ClientError {
 export class MethodNotAllowedError extends ClientError {
   public statusCode = 405;
   public statusMessage = 'METHOD NOT ALLOWED';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, MethodNotAllowedError.prototype);
   }
 }
@@ -72,8 +74,8 @@ export class MethodNotAllowedError extends ClientError {
 export class ConflictError extends ClientError {
   public statusCode = 409;
   public statusMessage = 'CONFLICT';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, ConflictError.prototype);
   }
 }
@@ -81,8 +83,8 @@ export class ConflictError extends ClientError {
 /* 5xx Server Error */
 
 export abstract class ServerError extends HttpError {
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, ServerError.prototype);
   }
 }
@@ -90,8 +92,8 @@ export abstract class ServerError extends HttpError {
 export class InternalServerError extends ServerError {
   public statusCode = 500;
   public statusMessage = 'INTERNAL SERVER ERROR';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, InternalServerError.prototype);
   }
 }
@@ -99,8 +101,8 @@ export class InternalServerError extends ServerError {
 export class NotImplementedError extends ServerError {
   public statusCode = 501;
   public statusMessage = 'NOT IMPLEMENTED';
-  constructor() {
-    super();
+  constructor(details?: ObjectType) {
+    super(details);
     Object.setPrototypeOf(this, NotImplementedError.prototype);
   }
 }
