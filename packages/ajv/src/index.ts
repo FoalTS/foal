@@ -1,1 +1,1 @@
-export const something = null;
+export { validate } from './validate.pre-hook';
