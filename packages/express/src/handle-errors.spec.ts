@@ -125,9 +125,13 @@ describe('handleErrors(options?, logFn?)', () => {
         });
     });
 
-    it('should send the suitable statusCode and statusMessage if the error has these properties.', () => {
+    it('should send the suitable `statusCode`, `statusMessage` and `details` if the error has '
+        + 'these properties.', () => {
       const app = express();
-      app.use((req, res, next) => { throw new NotFoundError(); });
+      const details = {
+        message: 'details'
+      };
+      app.use((req, res, next) => { throw new NotFoundError(details); });
       app.use(handleErrors());
       return request(app)
         .get('/')
@@ -135,6 +139,7 @@ describe('handleErrors(options?, logFn?)', () => {
         .then(res => {
           expect(res.body.statusCode).to.equal(404);
           expect(res.body.statusMessage).to.equal('NOT FOUND');
+          expect(res.body.details).to.deep.equal(details);
         });
     });
 
@@ -177,7 +182,10 @@ describe('handleErrors(options?, logFn?)', () => {
 
     it('should return an html page with the previous information if the request accepts html.', () => {
       const app = express();
-      app.use((req, res, next) => { throw new NotFoundError(); });
+      const details = {
+        message: 'details'
+      };
+      app.use((req, res, next) => { throw new NotFoundError(details); });
       app.use(handleErrors({ sendStack: false }));
       return request(app)
         .get('/')
@@ -191,6 +199,8 @@ describe('handleErrors(options?, logFn?)', () => {
             + '</head>'
             + '<body>'
             +  '<h1>404 - NOT FOUND</h1>'
+            +  '<h2>Details:</h2>'
+            +  '<pre>{\n "message": "details"\n}</pre>'
             + '</body>'
             + '</html>');
         });

@@ -6,6 +6,8 @@ function render(locals): string {
     + '<body>'
     +  `<h1>${locals.statusCode} - ${locals.statusMessage}</h1>`
     + (locals.stack ? `<pre>${locals.stack}</pre>` : '')
+    + (locals.details ? '<h2>Details:</h2>' : '')
+    + (locals.details ? `<pre>${JSON.stringify(locals.details, null, ' ')}</pre>` : '')
     + '</body>'
     + '</html>';
 }
@@ -19,8 +21,9 @@ export function handleErrors(options: { logs?: logOptions, sendStack?: boolean }
 
   return (err, req, res, next) => {
     const locals: any = {
+      details: err.details,
       statusCode: err.statusCode || 500,
-      statusMessage: err.statusMessage || 'INTERNAL SERVER ERROR'
+      statusMessage: err.statusMessage || 'INTERNAL SERVER ERROR',
     };
     if (options.logs === 'all') {
       logFn(err);
