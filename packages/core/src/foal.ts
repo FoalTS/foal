@@ -44,7 +44,6 @@ export class Foal {
 
     for (const mod of modules) {
       const importedModule = new Foal(mod.module, this);
-      const path = mod.path || '';
       for (const route of importedModule.routes) {
         this.routes.push({
           ...route,
@@ -53,7 +52,7 @@ export class Foal {
             ...route.middlewares,
             ...modulePostMiddlewares.map(e => (ctx => e(ctx, this.services))),
           ],
-          paths: [path, ...route.paths],
+          paths: mod.path ? [mod.path, ...route.paths] : route.paths,
         });
       }
     }
