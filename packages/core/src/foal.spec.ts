@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import { postHook, preHook } from './factories';
 import { Foal } from './foal';
-import { Context, Controller, FoalModule, ReducedRoute } from './interfaces';
-import { Service, ServiceManager } from './service-manager';
+import { Context, FoalModule, ReducedRoute } from './interfaces';
+import { Service } from './service-manager';
 import { createEmptyContext } from './testing';
 
 describe('Foal', () => {
