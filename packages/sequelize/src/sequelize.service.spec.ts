@@ -224,8 +224,8 @@ describe('SequelizeService<User>', () => {
   testSuite('postgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
 
   // MySQL
-  user = process.env.user || 'root';
-  password = process.env.password || 'password';
+  user = process.env.mysql_user || 'root';
+  password = process.env.mysql_password || 'password';
   testSuite('mySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
 
 });
