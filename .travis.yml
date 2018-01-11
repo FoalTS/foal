@@ -4,15 +4,14 @@ node_js:
 services:
   - postgresql
 env:
-  - password=''
+  - password='password'
 before_install:
   - npm install -g lerna
 install:
   - npm install
   - lerna bootstrap
 before_script:
-  - psql -c 'create database foal_test_db;' -U postgres
-  - psql -c 'create database foal_examples;' -U postgres
+  - psql -c 'create database foal_sequelize_test;' -U postgres
 script:
   - npm run lint
   - lerna run test

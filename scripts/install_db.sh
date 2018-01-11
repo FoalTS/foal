@@ -11,3 +11,9 @@ echo "create database foal_sequelize_test;" | mysql -u root --password=password
 # PostgreSQL
 sudo apt-get install -y postgresql
 echo "create database foal_sequelize_test;" | sudo -u postgres psql
+echo "ALTER USER postgres WITH PASSWORD 'password';"  | sudo -u postgres psql
+
+# Node 8 and npm
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install -g lerna
