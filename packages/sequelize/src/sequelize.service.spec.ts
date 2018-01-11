@@ -221,11 +221,13 @@ describe('SequelizeService<User>', () => {
   // Postgres
   let user = process.env.postgres_user || 'postgres';
   let password = process.env.postgres_password || 'password';
+  console.log(user, password);
   testSuite('postgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
 
   // MySQL
   user = process.env.mysql_user || 'root';
   password = process.env.mysql_password || 'password';
+  console.log(user, password);
   testSuite('mySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
 
 });
