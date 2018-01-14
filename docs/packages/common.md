@@ -2,6 +2,37 @@
 
 `@foal/common` consists of several hooks, controller factories and services that are generally used in an project.
 
+## Controller factories
+
+### `rest`
+
+`rest.attachService(path: string, service: PartialCRUDService)`
+
+Creates a REST controller from a `PartialCRUDService`.
+
+```typescript
+interface PartialCRUDService {
+  create?: (data: any, query: ObjectType) => Promise<any>|any;
+  get?: (id: any, query: ObjectType) => Promise<any>|any;
+  getAll?: (query: ObjectType) => Promise<any>|any;
+  replace?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+  modify?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+  delete?: (id: any, query: ObjectType) => Promise<any>|any;
+}
+```
+
+### `view`
+
+`view.attachService(path: string, service: ViewService)`
+
+Renders templates from a `ViewService`.
+
+```typescript
+interface ViewService {
+  render(locals: ObjectType): Promise<string>|string;
+}
+```
+
 ## Post-hooks
 
 ### `afterThatLog(message: string, logFn = console.log)`

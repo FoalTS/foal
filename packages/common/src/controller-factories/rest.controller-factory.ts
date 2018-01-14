@@ -1,39 +1,28 @@
 import {
   Context,
   ControllerFactory,
+  HttpMethod,
+  MethodNotAllowedError,
   NotImplementedError,
-  Route
+  Route,
 } from '@foal/core';
 
 import { PartialCRUDService } from '../services';
 
+function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
+  return {
+    httpMethod,
+    middleware: ctx => { throw new MethodNotAllowedError(); },
+    path,
+    serviceMethodName: null,
+    successStatus: 200
+  };
+}
+
 export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  protected getRoutes(service: PartialCRUDService): Route[] {
+  public getRoutes(service: PartialCRUDService): Route[] {
     return [
-      {
-        httpMethod: 'GET',
-        middleware: (ctx: Context) => {
-          if (!service.getAll) {
-            throw new NotImplementedError();
-          }
-          return service.getAll(ctx.query);
-        },
-        path: '/',
-        serviceMethodName: 'getAll',
-        successStatus: 200,
-      },
-      {
-        httpMethod: 'POST',
-        middleware: (ctx: Context) => {
-          if (!service.create) {
-            throw new NotImplementedError();
-          }
-          return service.create(ctx.body, ctx.query);
-        },
-        path: '/',
-        serviceMethodName: 'create',
-        successStatus: 201,
-      },
+      routeNotAllowed('DELETE', '/'),
       {
         httpMethod: 'DELETE',
         middleware: (ctx: Context) => {
@@ -49,6 +38,18 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
+          if (!service.getAll) {
+            throw new NotImplementedError();
+          }
+          return service.getAll(ctx.query);
+        },
+        path: '/',
+        serviceMethodName: 'getAll',
+        successStatus: 200,
+      },
+      {
+        httpMethod: 'GET',
+        middleware: (ctx: Context) => {
           if (!service.get) {
             throw new NotImplementedError();
           }
@@ -58,6 +59,7 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
         serviceMethodName: 'get',
         successStatus: 200,
       },
+      routeNotAllowed('PATCH', '/'),
       {
         httpMethod: 'PATCH',
         middleware: (ctx: Context) => {
@@ -67,9 +69,23 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
           return service.modify(ctx.params.id, ctx.body, ctx.query);
         },
         path: '/:id',
-        serviceMethodName: 'patch',
+        serviceMethodName: 'modify',
         successStatus: 200,
       },
+      {
+        httpMethod: 'POST',
+        middleware: (ctx: Context) => {
+          if (!service.create) {
+            throw new NotImplementedError();
+          }
+          return service.create(ctx.body, ctx.query);
+        },
+        path: '/',
+        serviceMethodName: 'create',
+        successStatus: 201,
+      },
+      routeNotAllowed('POST', '/:id'),
+      routeNotAllowed('PUT', '/'),
       {
         httpMethod: 'PUT',
         middleware: (ctx: Context) => {
@@ -79,7 +95,7 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
           return service.replace(ctx.params.id, ctx.body, ctx.query);
         },
         path: '/:id',
-        serviceMethodName: 'update',
+        serviceMethodName: 'replace',
         successStatus: 200,
       },
     ];

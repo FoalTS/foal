@@ -23,7 +23,7 @@ import {
 import { MyService } from '../services';
 
 export class MyControllerFactory extends ControllerFactory<MyService> {
-  protected getRoutes(service: MyService): Route[] {
+  public getRoutes(service: MyService): Route[] {
     return [
       {
         httpMethod: 'GET',
