@@ -1,6 +1,6 @@
 {
   "name": "@foal/sequelize",
-  "version": "0.4.0-alpha.2",
+  "version": "0.4.0-alpha.3",
   "description": "Foal integration of sequelize (ORM)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -40,8 +40,8 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/common": "^0.4.0-alpha.2",
-    "@foal/core": "^0.4.0-alpha.2",
+    "@foal/common": "^0.4.0-alpha.3",
+    "@foal/core": "^0.4.0-alpha.3",
     "sequelize": "^4.8.4"
   },
   "devDependencies": {

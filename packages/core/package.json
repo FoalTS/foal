@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.4.0-alpha.2",
+  "version": "0.4.0-alpha.3",
   "description": "A Node.js framework for building robust web apps.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
