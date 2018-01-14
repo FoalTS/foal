@@ -1,5 +1,7 @@
 # @foal/sequelize
 
+`@foal/sequelize` is a Foal integration of the ORM `Sequelize`. It lets you connect to a PostgreSQL or a MySQL database.
+
 ## Prerequisities 
 
 ```typescript
@@ -8,8 +10,6 @@ npm install --save express @foal/core @foal/express @foal/sequelize
 # And one of the following:
 $ npm install --save pg@6 pg-hstore
 $ npm install --save mysql2
-$ npm install --save sqlite3
-$ npm install --save tedious // MSSQL
 ```
 
 ## Setting up a connection
