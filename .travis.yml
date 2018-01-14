@@ -3,16 +3,17 @@ node_js:
   - "8"
 services:
   - postgresql
+  - mysql
 env:
-  - password=''
+  - postgres_password='' mysql_password=''
 before_install:
   - npm install -g lerna
 install:
   - npm install
   - lerna bootstrap
 before_script:
-  - psql -c 'create database foal_test_db;' -U postgres
-  - psql -c 'create database foal_examples;' -U postgres
+  - psql -c 'create database foal_sequelize_test;' -U postgres
+  - mysql -e 'CREATE DATABASE foal_sequelize_test;'
 script:
   - npm run lint
   - lerna run test

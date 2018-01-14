@@ -1,7 +1,7 @@
 import {
   Context,
   getPreMiddleware,
-  PreMiddleware,
+  Middleware,
   ServiceManager,
   UnauthorizedError
 } from '@foal/core';
@@ -11,7 +11,7 @@ import { restrictAccessToAuthenticated } from './restrict-access-to-authenticate
 
 describe('restrictAccessToAuthenticated', () => {
 
-  let middleware: PreMiddleware;
+  let middleware: Middleware;
   let emptyContext: Context;
 
   before(() => {

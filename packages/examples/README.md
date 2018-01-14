@@ -8,6 +8,8 @@
 
 A Node.js framework for building robust web apps.
 
+This package does not aim to have any distributed code. It exists only for testing.
+
 Github: [https://github.com/FoalTS/foal](https://github.com/FoalTS/foal)
 
 Twitter: [https://twitter.com/FoalTs](https://twitter.com/FoalTs)

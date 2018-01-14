@@ -3,11 +3,11 @@ import { Router } from 'express';
 
 import { getExpressMiddleware } from './get-express-middleware';
 
-// Test: should return 404 if no lowLevelRoute exists for the given method and path.
+// Test: should return 404 if no route exists for the given method and path.
 export function getCallback(foal: Foal) {
   const router = Router();
-  for (const lowLevelRoute of foal.lowLevelRoutes) {
-    router.use(getExpressMiddleware(lowLevelRoute));
+  for (const route of foal.routes) {
+    router.use(getExpressMiddleware(route));
   }
   return router;
 }

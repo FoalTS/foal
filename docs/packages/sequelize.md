@@ -1,5 +1,7 @@
 # @foal/sequelize
 
+`@foal/sequelize` is a Foal integration of the ORM `Sequelize`. It lets you connect to a PostgreSQL or a MySQL database.
+
 ## Prerequisities 
 
 ```typescript
@@ -8,8 +10,6 @@ npm install --save express @foal/core @foal/express @foal/sequelize
 # And one of the following:
 $ npm install --save pg@6 pg-hstore
 $ npm install --save mysql2
-$ npm install --save sqlite3
-$ npm install --save tedious // MSSQL
 ```
 
 ## Setting up a connection
@@ -72,7 +72,7 @@ app.listen(3000, () => console.log('Listening...'));
 Let's say that we want to forbid to use the method `delete` when using the service as a controller.
 
 ```typescript
-import { MethodNotAllowed } from '@foal/common';
+import { methodNotAllowed } from '@foal/common';
 import { Service, ObjectType } from '@foal/core';
 import { Sequelize, SequelizeService } from '@foal/sequelize';
 
@@ -86,7 +86,7 @@ export class User extends SequelizeService {
     }, connection);
   }
 
-  @MethodNotAllowed()
+  @methodNotAllowed()
   public delete(id: any, query: ObjectType): Promise<any> {
     return super.delete(id, query);
   }

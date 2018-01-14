@@ -1,22 +1,21 @@
 import { ServiceManager } from '../service-manager';
-import { Context } from './contexts';
-import { Middleware } from './middlewares';
+import { ReducedMiddleware } from './middlewares';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
 
-export interface LowLevelRoute {
+export interface ReducedRoute {
   httpMethod: HttpMethod;
   paths: string[];
-  middlewares: Middleware[];
+  middlewares: ReducedMiddleware[];
   successStatus: number;
 }
 
 export interface Route {
-  serviceMethodBinder: (context: Context) => Promise<any>|any;
-  serviceMethodName: string;
+  middleware: ReducedMiddleware;
+  serviceMethodName: string|null;
   httpMethod: HttpMethod;
   path: string;
   successStatus: number;
 }
 
-export type Controller = (services: ServiceManager) => LowLevelRoute[];
+export type Controller = (services: ServiceManager) => ReducedRoute[];

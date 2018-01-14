@@ -29,6 +29,7 @@ There are several ways to contribute.
 
 ## Packages
 
+- @foal/ajv
 - @foal/common
 - @foal/core
 - @foal/ejs

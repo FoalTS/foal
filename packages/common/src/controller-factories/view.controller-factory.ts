@@ -7,12 +7,12 @@ import {
 import { ViewService } from '../services';
 
 export class ViewControllerFactory extends ControllerFactory<ViewService> {
-  protected getRoutes(controller: ViewService): Route[] {
+  public getRoutes(service: ViewService): Route[] {
     return [
       {
         httpMethod: 'GET',
+        middleware: (context: Context) => service.render(context.state),
         path: '/',
-        serviceMethodBinder: (context: Context) => controller.render(context.state),
         serviceMethodName: 'render',
         successStatus: 200,
       }

@@ -2,7 +2,7 @@ import {
   Context,
   ForbiddenError,
   getPreMiddleware,
-  PreMiddleware,
+  Middleware,
   ServiceManager,
   UnauthorizedError
 } from '@foal/core';
@@ -12,7 +12,7 @@ import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
 
 describe('restrictAccessToAdmin', () => {
 
-  let middleware: PreMiddleware;
+  let middleware: Middleware;
   let emptyContext: Context;
 
   before(() => {

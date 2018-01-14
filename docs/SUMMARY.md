@@ -12,9 +12,11 @@
 ### Advanced
 
 * [Contexts](./advanced/contexts.md)
+* [Controller factories](./advanced/controller-factories.md)
 
 ### Packages
 
+* [@foal/ajv](./packages/ajv.md)
 * [@foal/common](./packages/common.md)
 * [@foal/core](./packages/core.md)
 * [@foal/ejs](./packages/ejs.md)

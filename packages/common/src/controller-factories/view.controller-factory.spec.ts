@@ -1,30 +1,23 @@
-import {
-  createEmptyContext,
-  Route
-} from '@foal/core';
+import { createEmptyContext } from '@foal/core';
 import { expect } from 'chai';
 
 import { ViewService } from '../services';
-import { ViewControllerFactory } from './view.controller-factory';
+import { view, ViewControllerFactory } from './view.controller-factory';
 
-describe('ViewControllerFactory', () => {
+describe('view', () => {
 
-  class MyViewControllerFactory extends ViewControllerFactory {
-    // Make the method public for testing.
-    public getRoutes(service: ViewService): Route[] {
-      return super.getRoutes(service);
-    }
-  }
-  let view: MyViewControllerFactory;
   let mock: ViewService;
 
   before(() => {
-    view = new MyViewControllerFactory();
     mock = {
       render: (locals: { name: string }): string => {
         return locals.name;
       }
     };
+  });
+
+  it('should be an instance of ViewControllerFactory', () => {
+    expect(view).to.an.instanceOf(ViewControllerFactory);
   });
 
   describe('when getRoutes(service: ViewService): Route[] is called with the mock service', () => {
@@ -36,7 +29,7 @@ describe('ViewControllerFactory', () => {
       const actualItem = actual[0];
       const ctx = createEmptyContext();
       ctx.state.name = 'foo';
-      expect(actualItem.serviceMethodBinder(ctx)).to.equal('foo');
+      expect(actualItem.middleware(ctx)).to.equal('foo');
       expect(actualItem.serviceMethodName).to.equal('render');
       expect(actualItem.httpMethod).to.equal('GET');
       expect(actualItem.path).to.equal('/');
