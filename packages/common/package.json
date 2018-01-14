@@ -46,7 +46,9 @@
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
+    "@types/chai-spies": "^0.0.0",
     "chai": "^4.1.2",
+    "chai-spies": "^1.0.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",

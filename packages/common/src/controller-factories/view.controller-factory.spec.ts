@@ -1,7 +1,4 @@
-import {
-  createEmptyContext,
-  Route
-} from '@foal/core';
+import { createEmptyContext } from '@foal/core';
 import { expect } from 'chai';
 
 import { ViewService } from '../services';
