@@ -6,8 +6,9 @@ import { SequelizeConnectionService } from './sequelize-connection.service';
 export abstract class SequelizeService<Model> implements CRUDService {
   protected model: any;
 
-  constructor(name: string, schema: any, connection: SequelizeConnectionService) {
-    this.model = connection.sequelize.define(name, schema);
+  constructor(name: string, schema: any, connection: SequelizeConnectionService,
+              options: ObjectType = {}) {
+    this.model = connection.sequelize.define(name, schema, options);
   }
 
   public async create(data: any, query: ObjectType): Promise<Model|Model[]> {
@@ -51,15 +52,16 @@ export abstract class SequelizeService<Model> implements CRUDService {
       delete data.id;
     }
 
-    await this.model.update(data, {
-      where: { id }
-    });
-
     const model = await this.model.findById(id);
     if (model === null) {
       throw new NotFoundError();
     }
-    return model.dataValues;
+
+    await this.model.update(data, {
+      where: { id }
+    });
+
+    return (await this.model.findById(id)).dataValues;
   }
 
   public async modify(id: any, data: any, query: ObjectType): Promise<Model> {
