@@ -43,54 +43,11 @@ npm run dev:app
 
 Open you browser on `http://localhost:3000` and find our `Hello world` welcoming message!
 
-## 4. Create your first REST Controller
-
-Nice, your application is now running. Let's create a controller to handle requests.
-
-```sh
-cd src/app
-yo foal:service horse
-```
-
-Please select the `Partial CRUD` option.
-
-Open `horse.service.ts` and implement the `getAll` method:
-
-```typescript
-import { ObjectType } from '@foal/core';
-
-...
-
-public getAll(query: ObjectType): string[] {
-  return ['Horse 1', 'Horse 2', 'Horse 3'];
-}
-```
-
-Open `app.module.ts` and replace the content by:
-```typescript
-import { rest } from '@foal/common';
-import { FoalModule } from '@foal/core';
-
-import { HorseService } from './horse.service';
-
-export const AppModule: FoalModule = {
-  controllers: [
-    rest.attachService('/horses', HorseService)
-  ],
-};
-```
-
-Navigate to `http://localhost:3000/horses` and find there the names of your horses.
-
 ## Next steps
 
 What's the next move?
 
-Read the documentation and find out the four core concepts of `FoalTS`!
-
-
-[Services](./basics/services.md) | [Controllers](./basics/controllers.md) | [Modules](./basics/modules.md) | [Hooks](./basics/hooks.md)
---- | --- | --- | ---
+Read the [official guide](./guide/1-introduction.md) to learn more on `FoalTS`!
 
 ## Structure of the project
 
