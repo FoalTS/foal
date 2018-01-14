@@ -23,7 +23,7 @@ function testSuite(dbName: string, uri: string) {
     before(() => {
       class ConcreteSequelizeConnectionService extends SequelizeConnectionService {
         constructor() {
-          super(uri);
+          super(uri, { define: { timestamps: false } });
         }
       }
 
@@ -127,9 +127,9 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('when update(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
+    describe('when replace(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
-      it('should update and return the user with the given id with the given data.', async () => {
+      it('should replace and return the user with the given id with the given data.', async () => {
         const createdUser = (await model.create(user)).dataValues;
         const createdUser2 = (await model.create(user2)).dataValues;
 
@@ -158,7 +158,7 @@ function testSuite(dbName: string, uri: string) {
 
     describe('when modify(id: any, data: any, query: ObjectType): Promise<User> is called', () => {
 
-      it('should update and return the user with the given id with the given data.', async () => {
+      it('should modify and return the user with the given id with the given data.', async () => {
         const createdUser = (await model.create(user)).dataValues;
         const createdUser2 = (await model.create(user2)).dataValues;
 
