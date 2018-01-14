@@ -34,7 +34,7 @@ describe('ControllerFactory<T>', () => {
   }
 
   class ConcreteControllerFactory extends ControllerFactory<ServiceInterface> {
-    protected getRoutes(service: ServiceInterface): Route[] {
+    public getRoutes(service: ServiceInterface): Route[] {
       return [
         {
           httpMethod: 'GET',

@@ -7,7 +7,7 @@ import {
 import { ViewService } from '../services';
 
 export class ViewControllerFactory extends ControllerFactory<ViewService> {
-  protected getRoutes(service: ViewService): Route[] {
+  public getRoutes(service: ViewService): Route[] {
     return [
       {
         httpMethod: 'GET',
