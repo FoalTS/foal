@@ -1,13 +1,14 @@
 import { ObjectType } from '@foal/core';
 import * as Sequelize from 'sequelize';
 
+const DEFAULT_OPTIONS = {
+  logging: false
+};
+
 export abstract class SequelizeConnectionService {
   public sequelize: Sequelize;
 
-  // Add params in the future.
-  constructor(uri: string, options: ObjectType = {}) {
-    this.sequelize = new Sequelize(uri, Object.assign({
-      logging: false
-    }, options));
+  constructor(dbName: string, username: string, password: string, options: ObjectType) {
+    this.sequelize = new Sequelize(dbName, username, password, Object.assign({}, DEFAULT_OPTIONS, options));
   }
 }

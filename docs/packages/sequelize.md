@@ -21,7 +21,7 @@ import { SequelizeConnectionService } from '@foal/sequelize';
 @Service()
 export class Connection extends SequelizeConnectionService {
   constructor() {
-    super('postgres://user:pass@example.com:5432/dbname');
+    super('dbname', 'user', 'password', { dialect: 'postgres' });
   }
 }
 ```

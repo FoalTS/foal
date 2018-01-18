@@ -2,7 +2,12 @@ import { logOptions } from '@foal/express';
 
 export const config = {
   db: {
-    uri: 'postgres://postgres:password@localhost:5432/foal_examples'
+    dbName: 'foal_examples',
+    options: {
+      dialect: 'postgres'
+    },
+    password: 'password',
+    user: 'postgres',
   },
   errors: {
     logs: 'all' as logOptions,
