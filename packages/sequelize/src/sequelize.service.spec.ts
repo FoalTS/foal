@@ -11,9 +11,9 @@ interface User {
   lastName: string;
 }
 
-function testSuite(dbName: string, uri: string) {
+function testSuite(dialect: string, dbName: string, username: string, password: string) {
 
-  describe(`with ${dbName}`, () => {
+  describe(`with ${dialect}`, () => {
 
     let service: SequelizeService<User>;
     let model: any;
@@ -23,7 +23,10 @@ function testSuite(dbName: string, uri: string) {
     before(() => {
       class ConcreteSequelizeConnectionService extends SequelizeConnectionService {
         constructor() {
-          super(uri, { define: { timestamps: false } });
+          super(dbName, username, password, {
+            define: { timestamps: false },
+            dialect,
+          });
         }
       }
 
@@ -219,13 +222,13 @@ function testSuite(dbName: string, uri: string) {
 describe('SequelizeService<User>', () => {
 
   // Postgres
-  let user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
-  let password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
-  testSuite('PostgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
+  let user = process.env.postgres_user !== undefined ?  process.env.postgres_user as string :  'postgres';
+  let password = process.env.postgres_password !== undefined ? process.env.postgres_password as string : 'password';
+  testSuite('postgres', 'foal_sequelize_test', user, password);
 
   // MySQL
-  user = process.env.mysql_user !== undefined ? process.env.mysql_user : 'root';
-  password = process.env.mysql_password !== undefined ? process.env.mysql_password : 'password';
-  testSuite('MySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
+  user = process.env.mysql_user !== undefined ? process.env.mysql_user as string : 'root';
+  password = process.env.mysql_password !== undefined ? process.env.mysql_password as string : 'password';
+  testSuite('mysql', 'foal_sequelize_test', user, password);
 
 });

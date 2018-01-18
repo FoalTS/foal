@@ -6,6 +6,6 @@ import { config } from '../../config';
 @Service()
 export class ConnectionService extends SequelizeConnectionService {
   constructor() {
-    super(config.db.uri);
+    super(config.db.dbName, config.db.user, config.db.password, config.db.options);
   }
 }
