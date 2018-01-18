@@ -10,11 +10,11 @@ Open the new created `task.service.ts` file:
 import { Service } from '@foal/core';
 import { SequelizeService } from '@foal/sequelize';
 
-import { MySequelizeConnection } from 'somewhere';
+import { ConnectionService } from './connection.service';
 
 @Service()
 export class TaskService extends SequelizeService<any> {
-  constructor(protected connection: MySequelizeConnection) {
+  constructor(protected connection: ConnectionService) {
     super('tasks', {
       // Schema
     }, connection);

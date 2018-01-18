@@ -27,11 +27,11 @@ This class inherits from the `SequelizeConnectionService` and is just a wrapper 
 
 You can find such file in the directory `src/config`. Open `config.ts` and change the string `'my_uri'` in the `developpement` configuration.
 
-> You don't know what URI you should use? Here some examples:
+> You don't know what URI you should use? Here are some examples:
 >
-> PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_sequelize_test`
+> PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
 >
-> MySQL: `mysql://root:my_password@localhost:3306/foal_sequelize_test`
+> MySQL: `mysql://root:my_password@localhost:3306/foal_examples_todo_list`
 
 Now go back to your service and replace the string `path/to/config` with `../config`.
 
