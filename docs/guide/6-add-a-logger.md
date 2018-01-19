@@ -36,8 +36,10 @@ export class TaskService extends SequelizeService<any> {
 
 ```
 
-> **Note**
-> `kind: 'info'|'debug'`
+> **Note:** TypeScript types
+>
+> `'info'|'debug'` defines a string type that can only take two values `'info'` or `'debug'`.
 
-> **Note**
-> Template literals
+> **Note:** Template literals
+>
+> \``[${kind}] ${message}`\` is called a template literal. It is a syntactic sugar to write `'[' + kind + '] ' + message` in a more readable way.

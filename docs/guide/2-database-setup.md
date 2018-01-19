@@ -10,7 +10,7 @@ You should now have a new file called `connection.service.ts` which looks like t
 import { Service } from '@foal/core';
 import { SequelizeConnectionService } from '@foal/sequelize';
 
-import { config } from 'path/to/config';
+import { config } from '../config';
 
 @Service()
 export class ConnectionService extends SequelizeConnectionService {
@@ -32,7 +32,5 @@ You can find such file in the directory `src/config`. Open `config.ts` and chang
 > PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
 >
 > MySQL: `mysql://root:my_password@localhost:3306/foal_examples_todo_list`
-
-Now go back to your service and replace the string `path/to/config` with `../config`.
 
 You can test that your connection is working by running `npm run dev:test`.

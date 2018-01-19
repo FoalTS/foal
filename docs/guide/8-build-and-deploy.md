@@ -1,5 +1,7 @@
 # 8. Build and deploy
 
+**Work in progress**
+
 Normally every of these public cloud offer free tiers. But there is no warantte (à revoir) using this guid -> costs.
 
 ## Build
@@ -27,16 +29,26 @@ Compress-Archive -Path * -DestinationPath bundle.zip
 
 `az webapp deployment source config-zip --resource-group myResouceGroup --name <app_name> --src bundle.zip`
 
+`az webapp log tail --name webappname --resource-group myResourceGroup`
+
 ## Deploy on Google Cloud Platform (GCP)
 
 1. Subscribe to a [Google Cloud Platform account]().
 2. Create a project called `foal-todo-app`.
+3. Create your database
 3. Install the [GCP SDK]() to use the command line interface and run `gcloud init`.
+
+4. `yo foal:cloud create-config`
 
 Add the following config file (`app.yaml`) next to your `package.json`:
 ```yaml
 runtime: nodejs
 env: flex
+
+env_variables:
+  DB_NAME: ""
+  DB_USERNAME: ""
+  DB_PASSWORD: ""
 ```
 
 Build the project by running `npm run build`.

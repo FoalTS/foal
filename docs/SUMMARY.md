@@ -11,7 +11,6 @@
 * [5. Control input data](./guide/5-control-input-data.md)
 * [6. Add a logger](./guide/6-add-a-logger.md) <!-- 6bis Add authentication -->
 * [7. Test](./guide/7-test.md)
-* [8. Build & deploy](./guide/8-build-and-deploy.md)
 
 ### Basics
 
