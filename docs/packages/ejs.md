@@ -18,6 +18,8 @@ export class IndexViewService extends EjsTemplateService {
 }
 ```
 
+> Note that the path `./templates/index.html` is relative to the directory from where you launch your node process. If you want it to be relative to the directory of `index-view.service.ts`, you must import the `path` package and write instead `path.join(__dirname, 'templates/index.html')`.
+
 `templates/index.html`
 ```html
 <!DOCTYPE html>
