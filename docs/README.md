@@ -18,8 +18,6 @@ Then install `yeoman` (generator manager) and the `foal` generator.
 npm install -g yo generator-foal
 ```
 
-> If you already have an `express` application in TypeScript and want to migrate to `Foal` please visit our [migration guide]().
-
 ## 2. Create a new project
 
 You are now ready to create your first foal project.
@@ -30,7 +28,7 @@ Open a terminal and then run the following command:
 yo foal my-app
 ```
 
-A new folder `my-app` should now appear in your current directory with the dependencies installed.
+A new folder `my-app` should now appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
 ## 3. Serve the application
 
@@ -43,56 +41,21 @@ npm run dev:app
 
 Open you browser on `http://localhost:3000` and find our `Hello world` welcoming message!
 
-## 4. Create your first REST Controller
+> `npm run dev:app` starts the **development server**. It watches at your files and automatically compiles and reloads your code. You don’t need to restart the server each time you make code changes. Note that it is only intended to be used in development, do not use it on production. <!-- See the [8. Build and deploy](./guide/8-build-and-deploy.md) section for more details. -->
 
-Nice, your application is now running. Let's create a controller to handle requests.
-
-```sh
-cd src/app
-yo foal:service horse
-```
-
-Please select the `Partial CRUD` option.
-
-Open `horse.service.ts` and implement the `getAll` method:
-
-```typescript
-import { ObjectType } from '@foal/core';
-
-...
-
-public getAll(query: ObjectType): string[] {
-  return ['Horse 1', 'Horse 2', 'Horse 3'];
-}
-```
-
-Open `app.module.ts` and replace the content by:
-```typescript
-import { rest } from '@foal/common';
-import { FoalModule } from '@foal/core';
-
-import { HorseService } from './horse.service';
-
-export const AppModule: FoalModule = {
-  controllers: [
-    rest.attachService('/horses', HorseService)
-  ],
-};
-```
-
-Navigate to `http://localhost:3000/horses` and find there the names of your horses.
+> **Port 3000 already in use?**
+>
+> You can modify in `src/config.ts` which port the application is using.
 
 ## Next steps
 
 What's the next move?
 
-Read the documentation and find out the four core concepts of `FoalTS`!
-
-
-[Services](./basics/services.md) | [Controllers](./basics/controllers.md) | [Modules](./basics/modules.md) | [Hooks](./basics/hooks.md)
---- | --- | --- | ---
+Read the [official guide](./guide/1-introduction.md) to learn more on `FoalTS`!
 
 ## Structure of the project
+
+Let’s take a look at what `yo foal:app ` created:
 
 ### The `src` folder
 
