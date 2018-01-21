@@ -18,7 +18,7 @@ export const AppModule: FoalModule = {
 
 ```
 
-That's it! We now have a REST API at the endpoint `/tasks`. Open your favorite request tool and test it! If you don't have one, you can download and use [Postman](https://www.getpostman.com/).
+That's it! We now have a REST API at the endpoint `/tasks`. Go back to your browser, refresh the page and play with your todo-list!
 
 ## What did we just do?
 

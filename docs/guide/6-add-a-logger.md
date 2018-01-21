@@ -1,29 +1,43 @@
 # 6. Add a logger
 
+Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[info] Creating a user...`. Create it by tapping in your terminal the command `yo foal:service logger` and select the `None` type. Open the file and add the below `log` method.
+
 ```typescript
 import { Service } from '@foal/core';
 
 @Service()
 class LoggerService {
 
-  public log(kind: 'info'|'string', message: string) {
+  public log(kind: 'info'|'debug', message: string) {
     console.log(`[${kind}] ${message}`);
   }
 
 }
 ```
 
+> **Note:** TypeScript types
+>
+> `'info'|'debug'` defines a string type that can only take two values `'info'` or `'debug'`.
+
+> **Note:** Template literals
+>
+> \``[${kind}] ${message}`\` is called a template literal. It is a syntactic sugar to write `'[' + kind + '] ' + message` in a more readable way.
+
+Now go back to `task.service.ts`, import the `LoggerService`, add `public logger: LoggerService` to the constructor and extend the `create` method with some logging.
+
 ```typescript
 import { ObjectType, Service } from '@foal/core';
 import { SequelizeService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
+import { LoggerService } from './logger.service';
 
 @Service()
 export class TaskService extends SequelizeService<any> {
-  constructor(protected connection: ConnectionService, private logger: LoggerService) {
+  constructor(protected connection: ConnectionService, public logger: LoggerService) {
     super('tasks', {
-      // Schema
+      completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+      text: { type: Sequelize.STRING, allowNull: false, defaultValue: '' }
     }, connection);
   }
 
@@ -36,10 +50,6 @@ export class TaskService extends SequelizeService<any> {
 
 ```
 
-> **Note:** TypeScript types
->
-> `'info'|'debug'` defines a string type that can only take two values `'info'` or `'debug'`.
+Create a new task in the browser and then take a look at the terminal from where you launched the app. New logs should appear.
 
-> **Note:** Template literals
->
-> \``[${kind}] ${message}`\` is called a template literal. It is a syntactic sugar to write `'[' + kind + '] ' + message` in a more readable way.
+By writting `public logger: LoggerService` we injected the logger service in the task one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
