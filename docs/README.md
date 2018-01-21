@@ -45,7 +45,7 @@ Open you browser on `http://localhost:3000` and find our `Hello world` welcoming
 
 > **Port 3000 already in use?**
 >
-> On unix `NODE_ENV`, other in config file.
+> You can modify in `src/config.ts` which port the application is using.
 
 ## Next steps
 
