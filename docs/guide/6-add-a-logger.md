@@ -26,13 +26,19 @@ class LoggerService {
 Now go back to `task.service.ts`, import the `LoggerService`, add `public logger: LoggerService` to the constructor and extend the `create` method with some logging.
 
 ```typescript
-import { ObjectType, Service } from '@foal/core';
-import { SequelizeService } from '@foal/sequelize';
+import { escapeHTML } from '@foal/common';
+import { ObjectType, preHook, Service } from '@foal/core';
+import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
 import { LoggerService } from './logger.service';
 
 @Service()
+@preHook(ctx => {
+  if (ctx.body && typeof ctx.body.text === 'string') {
+    escapeHTML(ctx.body, 'text');
+  }
+})
 export class TaskService extends SequelizeService<any> {
   constructor(protected connection: ConnectionService, public logger: LoggerService) {
     super('tasks', {

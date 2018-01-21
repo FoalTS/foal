@@ -5,7 +5,7 @@ Let's get started by a setting up a connection to the database. We assume that y
 > **How to create a database in postgres**
 >
 > 1. Open a terminal.
-> 2. Connect to `psql` by running `psql -u postgres`.
+> 2. Connect to `psql` by running `psql -U postgres`.
 > 3. Enter `CREATE DATABASE foal_examples_todo_list;`.
 > 4. Quit `psql` by taping `\q`.
 
@@ -47,4 +47,4 @@ You can find such file in the directory `src/config`. Open `config.ts` and chang
 >
 > MySQL: `mysql://root:my_password@localhost:3306/foal_examples_todo_list`
 
-You can test that your connection is working by running `npm run dev:test`.
+You can test that your connection is working by running `npm run build` and then `npm run test`.
