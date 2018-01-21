@@ -13,7 +13,7 @@ For this example you are going to create a todo-app and be taught how to:
 - and test your components.
 
 The user will be able to:
-- add task,
+- add a task,
 - mark a task as completed,
 - delete a task.
 

@@ -10,8 +10,8 @@ Here we are going to sanitize the `text` attribute to prevent XSS attacks. The `
 
 ```typescript
 import { escapeHTML } from '@foal/common';
-import { Service, preHook } from '@foal/core';
-import { SequelizeService } from '@foal/sequelize';
+import { preHook, Service } from '@foal/core';
+import { Sequelize, SequelizeService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
 
