@@ -18,8 +18,6 @@ Then install `yeoman` (generator manager) and the `foal` generator.
 npm install -g yo generator-foal
 ```
 
-> If you already have an `express` application in TypeScript and want to migrate to `Foal` please visit our [migration guide]().
-
 ## 2. Create a new project
 
 You are now ready to create your first foal project.
