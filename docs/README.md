@@ -1,7 +1,9 @@
 # Get started
 
 <p align="center">
-  <a href="https://foalts.org" target="blank"><img src="./logo.svg" alt="Logo" /></a>
+  <a href="https://foalts.org" target="blank">
+    <img src="./logo_400.png" alt="Logo" height="125px"/>
+  </a>
 </p>
 
 FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript.

@@ -7,7 +7,9 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)](https://snyk.io/test/github/foalts/foal)
 
 <p align="center">
-  <a href="https://foalts.org" target="blank"><img src="./docs/logo.svg" height="125px" alt="Logo" /></a>
+  <a href="https://foalts.org" target="blank">
+    <img src="./docs/logo_400.png" height="125px" alt="Logo" />
+  </a>
 </p>
 
 A Node.js framework for building robust web apps.
