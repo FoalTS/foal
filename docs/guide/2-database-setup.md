@@ -29,7 +29,7 @@ import { config } from '../config';
 @Service()
 export class ConnectionService extends SequelizeConnectionService {
   constructor() {
-    super(config.db.uri);
+    super(config.db.uri, config.db.options);
   }
 }
 
