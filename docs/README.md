@@ -36,7 +36,7 @@ yo foal my-app
 
 Fill up the given prompts.
 
-> If you don't which URI to use, you can leave it blank for now.
+> If you don't know which URI to use, you can leave it blank for now.
 
 A new folder `my-app` should now appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
