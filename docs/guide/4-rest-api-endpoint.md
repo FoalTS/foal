@@ -24,6 +24,18 @@ That's it! We now have a REST API at the endpoint `/tasks`. Go back to your brow
 
 First we imported the controller factory `rest` from the `@foal/common` package. A controller factory creates controllers from services that have a specific interface. For instance, the `rest` factory takes those which implement `PartialCRUDService` and the `view` factory (for rendering templates) takes the ones which implement the `ViewService` interface.
 
+> ```typescript
+> interface PartialCRUDService {
+>  create?: (data: any, query: ObjectType) => Promise<any>|any;
+>  get?: (id: any, query: ObjectType) => Promise<any>|any;
+>  getAll?: (query: ObjectType) => Promise<any>|any;
+>  replace?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+>  modify?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+>  delete?: (id: any, query: ObjectType) => Promise<any>|any;
+>}
+>```
+> Note that all methods in a `PartialCRUDService` are optional and they may return a promise (using `async/await` functions is thus possible).
+
 Once a controller is created, it needs to be registered within a module. Every app starts with a module which in this case is the `AppModule`. That's all you need to know for the moment.
 
 Now take a time and look at your code. You ended setting up a REST API with just a few lines! No need to reinvent the wheel every time!

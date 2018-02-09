@@ -12,7 +12,7 @@
   </a>
 </p>
 
-A Node.js framework for building robust web apps.
+FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript.
 
 **FoalTS v0.4.0 is currently under alpha prerelease.**
 

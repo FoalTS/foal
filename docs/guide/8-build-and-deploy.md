@@ -4,6 +4,23 @@
 
 Normally every of these public cloud offer free tiers. But there is no warantte (à revoir) using this guid -> costs.
 
+<!-- Article on how to create an Angular/FoalTS app and deploy it in gcp -->
+Define build repo as public
+
+Create todo-app
+Create angular-todo-app -> add proxy -> change package.json for the build and the proxy
+
+Then npm run build
+
+Create app.yml
+
+gcloud projects create foal-todo-app (need to define a billing account first)
+
+
+gcloud app deploy --project foal-examples
+gcloud app logs tail -s default
+<!-- end -->
+
 ## Build
 
 `npm run build`
