@@ -20,3 +20,7 @@ You can also run the tests of only one package by going to its directory and run
 
 - All new code should have tests.
 - Use linting rules.
+
+## Security
+
+To report a security issue please send me directly an email at loic.poullain@centraliens.net.
