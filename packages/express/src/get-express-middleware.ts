@@ -16,9 +16,11 @@ function makeContext(req): Context {
   };
 }
 
-export function getExpressMiddleware(route: ReducedRoute): ExpressMiddleware {
+export function getExpressMiddleware(route: ReducedRoute,
+                                     stateDef: { req: string, ctx: string }[] = []): ExpressMiddleware {
   async function handler(req, res) {
     const ctx = makeContext(req);
+    stateDef.forEach(e => ctx.state[e.ctx] = req[e.req]);
     for (const middleware of route.middlewares) {
       await middleware(ctx);
     }

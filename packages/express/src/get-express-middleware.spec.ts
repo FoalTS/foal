@@ -15,7 +15,8 @@ import { getExpressMiddleware } from './get-express-middleware';
 // HACK
 console.error = () => {};
 
-describe('getExpressMiddleware(route: ReducedRoute): ExpressMiddleware', () => {
+describe(`getExpressMiddleware(route: ReducedRoute,
+          stateDef: { req: string, ctx: string }[] = []): ExpressMiddleware`, () => {
 
   let route: ReducedRoute;
   let app: any;
@@ -181,17 +182,25 @@ describe('getExpressMiddleware(route: ReducedRoute): ExpressMiddleware', () => {
       app.use((req, res, next) => {
         req.session = session;
         req.user = user;
+        req.csrf = 'foobar';
         next();
       });
       route = { httpMethod: 'POST', paths: ['/:id'], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(route));
+      app.use(getExpressMiddleware(route, [
+        {
+          ctx: 'csrfToken',
+          req: 'csrf'
+        }
+      ]));
 
       const expected = {
         body: { text: 'Hello world' },
         params: { id: '1' },
         query: { a: 'b' },
         session,
-        state: {},
+        state: {
+          csrfToken: 'foobar'
+        },
         user,
       };
       return request(app)
