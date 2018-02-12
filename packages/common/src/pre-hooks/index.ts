@@ -1,3 +1,4 @@
+export { fromSessionToState } from './from-session-to-state.pre-hook';
 export { log } from './log.pre-hook';
 export { methodNotAllowed } from './method-not-allowed.pre-hook';
 export { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
