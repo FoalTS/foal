@@ -2,9 +2,11 @@
 
 Foal package to run the app with express.
 
-## `getCallback(foal: Foal)`
+## `getCallback(foal: Foal, stateDef: { req: string, ctx: string }[] = [])`
 
 Returns an express middleware from the foal application. It's an adapter to make foal work with express.
+
+**stateDef:** Optional array to forward data from the express `req` object to the foal `state` `context`.
 
 **Note:** Errors are not processed by this middleware. This means that any errors thrown or rejected in the foal app will have to be handled then by an express error-handling middleware. Express already integrates a default one but you can also use `handleErrors` for a higher flexibility.
 
