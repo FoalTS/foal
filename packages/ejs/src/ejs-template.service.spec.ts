@@ -9,7 +9,7 @@ describe('EjsTemplateService', () => {
 
   describe('when render(locals: ObjectType): Promise<string> is called', () => {
 
-    it('should reject an Error it the template does not exist.', done => {
+    it('should reject an Error if the template does not exist.', done => {
       service = new ConcreteTemplateService('./nowhere.html');
       service.render({ name: 'foo' }).catch(() => done());
     });
@@ -20,6 +20,7 @@ describe('EjsTemplateService', () => {
     });
 
     it('should render the ejs template with the given locals.', async () => {
+      service = new ConcreteTemplateService('./src/template-test.html');
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
       const actual = await service.render({ name });
