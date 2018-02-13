@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { MultipleEjsTemplateService } from './multiple-ejs-template.service';
+import { MultipleEjsTemplatesService } from './multiple-ejs-templates.service';
 
-describe('MultipleEjsTemplateService', () => {
+describe('MultipleEjsTemplatesService', () => {
 
-  class ConcreteTemplateService extends MultipleEjsTemplateService {}
+  class ConcreteTemplateService extends MultipleEjsTemplatesService {}
   let service: ConcreteTemplateService;
 
   it('should instantiate.', () => {

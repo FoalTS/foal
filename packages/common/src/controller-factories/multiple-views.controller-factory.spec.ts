@@ -1,12 +1,12 @@
 import { createEmptyContext } from '@foal/core';
 import { expect } from 'chai';
 
-import { MultipleViewService } from '../services/multiple-view-service.interface';
-import { multipleView, MultipleViewFactory } from './multiple-view.controller-factory';
+import { MultipleViewsService } from '../services/multiple-views-service.interface';
+import { multipleViews, MultipleViewsFactory } from './multiple-views.controller-factory';
 
-describe('multipleView', () => {
+describe('multipleViews', () => {
 
-  let mock: MultipleViewService;
+  let mock: MultipleViewsService;
 
   before(() => {
     mock = {
@@ -17,14 +17,14 @@ describe('multipleView', () => {
     };
   });
 
-  it('should be an instance of MultipleViewFactory', () => {
-    expect(multipleView).to.an.instanceOf(MultipleViewFactory);
+  it('should be an instance of MultipleViewsFactory', () => {
+    expect(multipleViews).to.an.instanceOf(MultipleViewsFactory);
   });
 
-  describe('when getRoutes(service: MultipleViewService): Route[] is called with the mock service', () => {
+  describe('when getRoutes(service: MultipleViewsService): Route[] is called with the mock service', () => {
 
     it('should return the proper Route array.', () => {
-      const actual = multipleView.getRoutes(mock);
+      const actual = multipleViews.getRoutes(mock);
       expect(actual).to.be.an('array').and.to.have.lengthOf(2);
 
       let actualItem = actual[0];

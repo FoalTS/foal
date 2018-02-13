@@ -1,2 +1,2 @@
 export { EjsTemplateService } from './ejs-template.service';
-export { MultipleEjsTemplateService } from './multiple-ejs-template.service';
+export { MultipleEjsTemplatesService } from './multiple-ejs-templates.service';

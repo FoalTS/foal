@@ -1,11 +1,11 @@
-import { MultipleViewService } from '@foal/common';
+import { MultipleViewsService } from '@foal/common';
 import { ObjectType, Service } from '@foal/core';
 import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
 @Service()
-export abstract class MultipleEjsTemplateService implements MultipleViewService {
+export abstract class MultipleEjsTemplatesService implements MultipleViewsService {
   constructor(private templates: ObjectType) {}
 
   public names(): string[] {

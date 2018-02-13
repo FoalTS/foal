@@ -53,18 +53,18 @@ export const AppModule: FoalModule = {
 
 ```
 
-## `MultipleEjsTemplateService`
+## `MultipleEjsTemplatesService`
 
-It implements the `MultipleViewService` interface.
+It implements the `MultipleViewsService` interface.
 
 `admin-views.service.ts`
 ```typescript
 import { preHook, Service } from '@foal/core';
-import { MultipleEjsTemplateService } from '@foal/ejs';
+import { MultipleEjsTemplatesService } from '@foal/ejs';
 
 @Service()
 @preHook(ctx => ctx.state.name = 'FoalTS')
-export class AdminViewsService extends MultipleEjsTemplateService {
+export class AdminViewsService extends MultipleEjsTemplatesService {
   constructor() {
     super({
       billing: './templates/billing.html',
@@ -78,14 +78,14 @@ export class AdminViewsService extends MultipleEjsTemplateService {
 
 `app.module.ts`
 ```typescript
-import { multipleView } from '@foal/common';
+import { multipleViews } from '@foal/common';
 import { FoalModule } from '@foal/core';
 
 import { AdminViewsService } from './admin-views.service';
 
 export const AppModule: FoalModule = {
   controllers: [
-    multipleView.attachService('/admin', AdminViewsService), // -> serves two paths: /admin/billing and /admin/users
+    multipleViews.attachService('/admin', AdminViewsService), // -> serves two paths: /admin/billing and /admin/users
   ],
 };
 
