@@ -1,4 +1,4 @@
-import { afterThatLog, log, rest, view, multipleViews } from '@foal/common';
+import { afterThatLog, log, multipleViews, rest, view } from '@foal/common';
 import { FoalModule } from '@foal/core';
 
 import { IndexViewService, PublicViewsService, UserService } from './services';
