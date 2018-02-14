@@ -4,6 +4,19 @@
 
 ## Controller factories
 
+### `multipleViews`
+
+`multipleViews.attachService(path: string, service: MultipleViewsService)`
+
+Renders several templates from a `MultipleViewsService`.
+
+```typescript
+interface MultipleViewsService {
+  names(): string[];
+  render(name: string, locals: ObjectType): Promise<string>|string;
+}
+```
+
 ### `rest`
 
 `rest.attachService(path: string, service: PartialCRUDService)`
@@ -25,7 +38,7 @@ interface PartialCRUDService {
 
 `view.attachService(path: string, service: ViewService)`
 
-Renders templates from a `ViewService`.
+Renders one template from a `ViewService`.
 
 ```typescript
 interface ViewService {
