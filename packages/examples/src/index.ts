@@ -5,7 +5,6 @@ import * as express from 'express';
 import * as session from 'express-session';
 
 import { AppModule } from './app/app.module';
-import { authenticate } from './authentication';
 import { config } from './config';
 
 const app = express();
@@ -16,7 +15,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({ secret: 'my secret', resave: true, saveUninitialized: true }));
-app.use(authenticate(foalApp));
 
 app.use(getCallback(foalApp));
 
