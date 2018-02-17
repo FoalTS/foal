@@ -7,3 +7,4 @@ export {
   PartialCRUDService
 } from './crud-service.interfaces';
 export { ViewService } from './view-service.interface';
+export { MultipleViewsService } from './multiple-views-service.interface';
