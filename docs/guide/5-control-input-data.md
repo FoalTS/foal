@@ -6,12 +6,12 @@ Pre-hooks are TypeScript decorators that can be attached either on a service met
 
 The `context` includes a set of properties that refer to the request (`context.body`, `context.query`, `context.params`, etc). The `services` parameter lets you access to other services through its `get` method.
 
-Here we are going to sanitize the `text` attribute to prevent XSS attacks. The `escapeHTML` is used for that. The decorator is attached to the service class which means that it will be executed for all the methods of the service. These methods are `create`, `get`, `getAll`, `update`, `replace` and `delete`.They are directly defined by the abstract `SequelizeService` and are used by the controller we defined previously in the module to handle requests.
+Here we are going to sanitize the `text` attribute to prevent XSS attacks. The `escapeHTML` is used for that. The decorator is attached to the service class which means that it will be executed for all the methods of the service. These methods are `create`, `get`, `getAll`, `update`, `replace` and `delete`.They are directly defined by the abstract `SequelizeModelService` and are used by the controller we defined previously in the module to handle requests.
 
 ```typescript
 import { escapeHTML } from '@foal/common';
 import { preHook, Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
 
@@ -21,7 +21,7 @@ import { ConnectionService } from './connection.service';
     escapeHTML(ctx.body, 'text');
   }
 })
-export class TaskService extends SequelizeService<any> {
+export class TaskService extends SequelizeModelService<any> {
   constructor(protected connection: ConnectionService) {
     super('tasks', {
       completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },

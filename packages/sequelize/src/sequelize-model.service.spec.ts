@@ -4,7 +4,7 @@ import * as Sequelize from 'sequelize';
 import { NotFoundError } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
-import { SequelizeService } from './sequelize.service';
+import { SequelizeModelService } from './sequelize-model.service';
 
 interface User {
   firstName: string;
@@ -15,7 +15,7 @@ function testSuite(dbName: string, uri: string) {
 
   describe(`with ${dbName}`, () => {
 
-    let service: SequelizeService<User>;
+    let service: SequelizeModelService<User>;
     let model: any;
     let user: User;
     let user2: User;
@@ -27,7 +27,7 @@ function testSuite(dbName: string, uri: string) {
         }
       }
 
-      class ConcreteSequelizeService extends SequelizeService<User> {
+      class ConcreteSequelizeModelService extends SequelizeModelService<User> {
         constructor(connection: SequelizeConnectionService) {
           super('users', {
             firstName: Sequelize.STRING,
@@ -36,7 +36,7 @@ function testSuite(dbName: string, uri: string) {
           model = this.model;
         }
       }
-      service = new ConcreteSequelizeService(new ConcreteSequelizeConnectionService());
+      service = new ConcreteSequelizeModelService(new ConcreteSequelizeConnectionService());
 
       user = {
         firstName: 'John',
@@ -216,7 +216,7 @@ function testSuite(dbName: string, uri: string) {
 
 }
 
-describe('SequelizeService<User>', () => {
+describe('SequelizeModelService<User>', () => {
 
   // Postgres
   let user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';

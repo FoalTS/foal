@@ -76,6 +76,6 @@ Paths are specified directly to the controller factory in the module. So:
 - a service can be re-used to serve several endpoints,
 - all paths are specified in one place (the module declarations).
 
-Some foal services, such as `SequelizeService` in `@foal/sequelize`, already implement the `CRUDService` interface. So they can be used directly to create a REST endpoint.
+Some foal services, such as `SequelizeModelService` in `@foal/sequelize`, already implement the `CRUDService` interface. So they can be used directly to create a REST endpoint.
 
 You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `MethodNotAllowedError`, `ConflictError`, `InternalServerError`, `NotImplementedError`

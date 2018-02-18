@@ -3,7 +3,7 @@ import { NotFoundError, ObjectType } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
-export abstract class SequelizeService<Model> implements CRUDService {
+export abstract class SequelizeModelService<Model> implements CRUDService {
   protected model: any;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService,

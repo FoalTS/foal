@@ -30,12 +30,12 @@ export class Connection extends SequelizeConnectionService {
 
 ```typescript
 import { Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
 @Service()
-export class User extends SequelizeService {
+export class User extends SequelizeModelService {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
@@ -74,12 +74,12 @@ Let's say that we want to forbid to use the method `delete` when using the servi
 ```typescript
 import { methodNotAllowed } from '@foal/common';
 import { Service, ObjectType } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
 @Service()
-export class User extends SequelizeService {
+export class User extends SequelizeModelService {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
@@ -99,12 +99,12 @@ Let's say that we want to return all the users when updating one.
 
 ```typescript
 import { Service, ObjectType } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
 @Service()
-export class User extends SequelizeService {
+export class User extends SequelizeModelService {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
