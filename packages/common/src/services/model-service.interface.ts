@@ -21,7 +21,8 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
 
   // Replace
   findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
+    SyncOrAsync<IModel & IIdAndTimeStamps>;
 
   // Delete
   findByIdAndRemove(id: IdType): void;
