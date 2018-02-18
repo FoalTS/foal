@@ -19,12 +19,3 @@ export interface DeleteService {
 }
 
 export interface CRUDService extends CreateService, ReadService, UpdateService, DeleteService {}
-
-export interface PartialCRUDService {
-  create?: (data: any, query: ObjectType) => Promise<any>|any;
-  get?: (id: any, query: ObjectType) => Promise<any>|any;
-  getAll?: (query: ObjectType) => Promise<any>|any;
-  replace?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  modify?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  delete?: (id: any, query: ObjectType) => Promise<any>|any;
-}

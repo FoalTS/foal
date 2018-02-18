@@ -19,18 +19,18 @@ interface MultipleViewsService {
 
 ### `rest`
 
-`rest.attachService(path: string, service: PartialCRUDService)`
+`rest.attachService(path: string, service: Partial<CRUDService>)`
 
-Creates a REST controller from a `PartialCRUDService`.
+Creates a REST controller from a `Partial<CRUDService>`.
 
 ```typescript
-interface PartialCRUDService {
-  create?: (data: any, query: ObjectType) => Promise<any>|any;
-  get?: (id: any, query: ObjectType) => Promise<any>|any;
-  getAll?: (query: ObjectType) => Promise<any>|any;
-  replace?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  modify?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  delete?: (id: any, query: ObjectType) => Promise<any>|any;
+interface CRUDService {
+  create: (data: any, query: ObjectType) => Promise<any>|any;
+  get: (id: any, query: ObjectType) => Promise<any>|any;
+  getAll: (query: ObjectType) => Promise<any>|any;
+  replace: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+  modify: (id: any, data: any, query: ObjectType) => Promise<any>|any;
+  delete: (id: any, query: ObjectType) => Promise<any>|any;
 }
 ```
 

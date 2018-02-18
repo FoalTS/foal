@@ -7,7 +7,7 @@ import {
   Route,
 } from '@foal/core';
 
-import { PartialCRUDService } from '../services';
+import { CRUDService } from '../services';
 
 function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   return {
@@ -19,8 +19,8 @@ function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   };
 }
 
-export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  public getRoutes(service: PartialCRUDService): Route[] {
+export class RestControllerFactory extends ControllerFactory<Partial<CRUDService>> {
+  public getRoutes(service: Partial<CRUDService>): Route[] {
     return [
       routeNotAllowed('DELETE', '/'),
       {

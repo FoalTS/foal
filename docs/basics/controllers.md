@@ -7,16 +7,16 @@ Each controller factory has an `attachService(path: string, ServiceClass: Type<T
 The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their respective service interfaces. But you can also create your own factory with the abstract class `ControllerFactory<T>` in `@foal/core`.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
-- the `PartialCRUDService` interface which will help us to define the service methods (which can be async functions),
+- the `Partial<CRUDService>` interface which will help us to define the service methods (which can be async functions),
 - and the `rest` *controller factory* which will create the controller.
 
 First, we need to create a service that implements the interface:
 ```typescript
-import { PartialCRUDService } from '@foal/common';
+import { CRUDService } from '@foal/common';
 import { ObjectType, Service } from '@foal/core';
 
 @Service()
-class User implements PartialCRUDService {
+class User implements Partial<CRUDService> {
   constructor () {}
 
   public create(data: any, query: ObjectType): any {
@@ -45,11 +45,11 @@ The final code looks like this:
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { getCallback } from '@foal/express';
-import { PartialCRUDService, rest } from '@foal/common';
+import { CRUDService, rest } from '@foal/common';
 import { Foal, ObjectType, Service } from '@foal/core';
 
 @Service()
-class User implements PartialCRUDService {
+class User implements Partial<CRUDService> {
   constructor () {}
 
   public create(data: any, query: ObjectType): any {

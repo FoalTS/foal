@@ -7,7 +7,7 @@ import {
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { PartialCRUDService } from '../services';
+import { CRUDService } from '../services';
 import { rest, RestControllerFactory } from './rest.controller-factory';
 
 chai.use(spies);
@@ -15,7 +15,7 @@ const expect = chai.expect;
 
 describe('rest', () => {
 
-  let mock: PartialCRUDService;
+  let mock: Partial<CRUDService>;
 
   beforeEach(() => {
     mock = {};
