@@ -1,6 +1,6 @@
 import { Context, ControllerFactory, HttpMethod, Route } from '@foal/core';
 
-import { MultipleViewsService } from '../services/multiple-views-service.interface';
+import { MultipleViewsService } from '../services';
 
 export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService> {
   public getRoutes(service: MultipleViewsService): Route[] {

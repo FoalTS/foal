@@ -1,7 +1,7 @@
 import { createEmptyContext } from '@foal/core';
 import { expect } from 'chai';
 
-import { MultipleViewsService } from '../services/multiple-views-service.interface';
+import { MultipleViewsService } from '../services';
 import { multipleViews, MultipleViewsFactory } from './multiple-views.controller-factory';
 
 describe('multipleViews', () => {
