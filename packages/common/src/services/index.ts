@@ -5,5 +5,6 @@ export {
   DeleteService,
   CRUDService
 } from './crud-service.interfaces';
-export { ViewService } from './view-service.interface';
+export { ModelService } from './model-service.interface';
 export { MultipleViewsService } from './multiple-views-service.interface';
+export { ViewService } from './view-service.interface';
