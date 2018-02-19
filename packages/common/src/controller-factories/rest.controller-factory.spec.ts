@@ -64,7 +64,7 @@ describe('rest', () => {
         expect(actual).to.be.an('array');
 
         const actualItem = actual[1];
-        const ctx = { ...createEmptyContext(), params: { id: 1 }, query: { bar: 'foo' } };
+        const ctx = { ...createEmptyContext(), params: { id: 1 } };
 
         expect(actualItem.serviceMethodName).to.equal('findByIdAndRemove');
         expect(actualItem.httpMethod).to.equal('DELETE');
@@ -103,7 +103,7 @@ describe('rest', () => {
         expect(actual).to.be.an('array');
 
         const actualItem = actual[2];
-        const ctx = { ...createEmptyContext(), query: { bar: 'foo' } };
+        const ctx = { ...createEmptyContext() };
 
         expect(actualItem.serviceMethodName).to.equal('findAll');
         expect(actualItem.httpMethod).to.equal('GET');
@@ -111,7 +111,11 @@ describe('rest', () => {
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.findAll).to.have.been.called.with.exactly(ctx.query);
+        expect(mock.findAll).to.have.been.called.with.exactly({});
+
+        ctx.state.query = { foo: 3 };
+        actualItem.middleware(ctx);
+        expect(mock.findAll).to.have.been.called.with.exactly(ctx.state.query);
       });
 
     });
@@ -140,7 +144,7 @@ describe('rest', () => {
         expect(actual).to.be.an('array');
 
         const actualItem = actual[3];
-        const ctx = { ...createEmptyContext(), params: { id: 1 }, query: { bar: 'foo' } };
+        const ctx = { ...createEmptyContext(), params: { id: 1 } };
 
         expect(actualItem.serviceMethodName).to.equal('findById');
         expect(actualItem.httpMethod).to.equal('GET');
@@ -193,8 +197,7 @@ describe('rest', () => {
         const ctx = {
           ...createEmptyContext(),
           body: { foo: 'bar' },
-          params: { id: 1 },
-          query: { bar: 'foo' }
+          params: { id: 1 }
         };
 
         expect(actualItem.serviceMethodName).to.equal('findByIdAndUpdate');
@@ -232,7 +235,7 @@ describe('rest', () => {
         expect(actual).to.be.an('array');
 
         const actualItem = actual[6];
-        const ctx = { ...createEmptyContext(), body: { foo: 'bar' }, query: { bar: 'foo' }};
+        const ctx = { ...createEmptyContext(), body: { foo: 'bar' } };
 
         expect(actualItem.serviceMethodName).to.equal('createOne');
         expect(actualItem.httpMethod).to.equal('POST');
@@ -298,8 +301,7 @@ describe('rest', () => {
         const ctx = {
           ...createEmptyContext(),
           body: { foo: 'bar' },
-          params: { id: 1 },
-          query: { bar: 'foo' }
+          params: { id: 1 }
         };
 
         expect(actualItem.serviceMethodName).to.equal('findByIdAndReplace');

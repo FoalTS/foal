@@ -41,7 +41,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
           if (!service.findAll) {
             throw new NotImplementedError();
           }
-          return service.findAll(ctx.query);
+          return service.findAll(ctx.state.query || {});
         },
         path: '/',
         serviceMethodName: 'findAll',
