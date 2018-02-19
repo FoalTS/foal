@@ -74,6 +74,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async findByIdAndUpdate(id: IdType,
                                  data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
+    this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
       // Ask Postgres to return the affected rows.
@@ -89,6 +90,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async findOneAndUpdate(query: ObjectType,
                                 data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
+    this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
       // Ask Postgres to return the affected rows.
@@ -103,6 +105,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
   public async updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): Promise<void> {
     await this.model.sync();
+    this.removeIdAndTimeStamps(data);
 
     await this.model.update(data, {
       where: query,
@@ -112,6 +115,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async findByIdAndReplace(id: IdType,
                                   data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
+    this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
       // Ask Postgres to return the affected rows.
@@ -127,6 +131,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async findOneAndReplace(query: ObjectType,
                                  data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
+    this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
       // Ask Postgres to return the affected rows.

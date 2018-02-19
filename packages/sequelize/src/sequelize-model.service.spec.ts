@@ -312,23 +312,23 @@ function testSuite(dbName: string, uri: string) {
             lastName: 'Hugo',
         });
 
-        const result = await service.findOneAndUpdate({ firstName: 'Donald' }, { firstName: 'John' });
+        const result = await service.findOneAndUpdate({ firstName: 'Victor' }, { firstName: 'John' });
 
         // The suitable user should be updated in the database.
-        const user = await service.getSequelizeModel().findById(user1.get('id'));
+        const user = await service.getSequelizeModel().findById(user2.get('id'));
         expect(user.get('firstName')).to.equal('John');
 
         // The other users should not be updated in the database.
-        const userbis = await service.getSequelizeModel().findById(user2.get('id'));
-        expect(userbis.get('firstName')).to.equal('Victor');
+        const userbis = await service.getSequelizeModel().findById(user1.get('id'));
+        expect(userbis.get('firstName')).to.equal('Donald');
 
         // The returned user should have the proper fields.
         expect(result).to.deep.equal({
           createdAt: user.get('createdAt'),
           firstName: 'John',
           id: user.get('id'),
-          isAdmin: false,
-          lastName: 'Smith',
+          isAdmin: true,
+          lastName: 'Hugo',
           updatedAt: user.get('updatedAt'),
         });
       });
@@ -446,29 +446,29 @@ function testSuite(dbName: string, uri: string) {
             lastName: 'Hugo',
         });
 
-        const result = await service.findOneAndReplace({ firstName: 'Donald' }, {
+        const result = await service.findOneAndReplace({ firstName: 'Victor' }, {
           firstName: 'Napoleon',
-          isAdmin: true,
+          isAdmin: false,
           lastName: 'Bonaparte'
         });
 
         // The suitable user should be updated in the database.
-        const user = await service.getSequelizeModel().findById(user1.get('id'));
+        const user = await service.getSequelizeModel().findById(user2.get('id'));
         expect(user.get('firstName')).to.equal('Napoleon');
-        expect(user.get('isAdmin')).to.equal(true);
+        expect(user.get('isAdmin')).to.equal(false);
         expect(user.get('lastName')).to.equal('Bonaparte');
 
         // The other users should not be updated in the database.
-        const userbis = await service.getSequelizeModel().findById(user2.get('id'));
-        expect(userbis.get('firstName')).to.equal('Victor');
-        expect(userbis.get('lastName')).to.equal('Hugo');
+        const userbis = await service.getSequelizeModel().findById(user1.get('id'));
+        expect(userbis.get('firstName')).to.equal('Donald');
+        expect(userbis.get('lastName')).to.equal('Smith');
 
         // The returned user should have the proper fields.
         expect(result).to.deep.equal({
           createdAt: user.get('createdAt'),
           firstName: 'Napoleon',
           id: user.get('id'),
-          isAdmin: true,
+          isAdmin: false,
           lastName: 'Bonaparte',
           updatedAt: user.get('updatedAt'),
         });
@@ -529,7 +529,7 @@ function testSuite(dbName: string, uri: string) {
           firstName: 'Donald',
           lastName: 'Smith'
         });
-        await service.getSequelizeModel().create({
+        const user2 = await service.getSequelizeModel().create({
           firstName: 'Victor',
           lastName: 'Hugo',
         });
@@ -537,11 +537,11 @@ function testSuite(dbName: string, uri: string) {
         let users = await service.getSequelizeModel().findAll();
         expect(users).to.be.an('array').and.to.have.lengthOf(2);
 
-        await service.findOneAndRemove({ firstName: user1.get('firstName')});
+        await service.findOneAndRemove({ firstName: user2.get('firstName') });
 
         users = await service.getSequelizeModel().findAll();
         expect(users).to.be.an('array').and.to.have.lengthOf(1);
-        expect(users[0].get('firstName')).not.to.equal(user1.get('firstName'));
+        expect(users[0].get('firstName')).not.to.equal(user2.get('firstName'));
       });
 
       it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
