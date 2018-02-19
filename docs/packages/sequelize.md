@@ -8,8 +8,8 @@
 npm install --save express @foal/core @foal/express @foal/sequelize
 
 # And one of the following:
-$ npm install --save pg@6 pg-hstore
-$ npm install --save mysql2
+$ npm install --save pg@6 pg-hstore # PostgreSQL
+$ npm install --save mysql2 # MySQL
 ```
 
 ## Setting up a connection
@@ -34,8 +34,12 @@ import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
+export interface User {
+  username: string;
+}
+
 @Service()
-export class User extends SequelizeModelService {
+export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
@@ -54,10 +58,10 @@ import { rest } from '@foal/common';
 import { Foal } from '@foal/core';
 
 import { Connection } from './connection.service';
-import { User } from './user.service';
+import { UserService } from './user.service';
 
 const foal = new Foal({
-  controllers: [ rest.attachService('/users', User) ]
+  controllers: [ rest.attachService('/users', UserService) ]
 });
 
 const app = express();
@@ -69,7 +73,7 @@ app.listen(3000, () => console.log('Listening...'));
 
 ## Restriction
 
-Let's say that we want to forbid to use the method `delete` when using the service as a controller.
+Let's say that we want to forbid to use the method `findByIdAndRemove` when the service is used by a controller.
 
 ```typescript
 import { methodNotAllowed } from '@foal/common';
@@ -78,8 +82,12 @@ import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
+export interface User {
+  username: string;
+}
+
 @Service()
-export class User extends SequelizeModelService {
+export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
@@ -87,8 +95,8 @@ export class User extends SequelizeModelService {
   }
 
   @methodNotAllowed()
-  public delete(id: any, query: ObjectType): Promise<any> {
-    return super.delete(id, query);
+  public findByIdAndRemove(id: string): Promise<void> {
+    return super.findByIdAndRemove(id);
   }
 }
 ```
@@ -99,21 +107,26 @@ Let's say that we want to return all the users when updating one.
 
 ```typescript
 import { Service, ObjectType } from '@foal/core';
-import { Sequelize, SequelizeModelService } from '@foal/sequelize';
+import { DefaultIdAndTimeStamps, Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
+export interface User {
+  username: string;
+}
+
 @Service()
-export class User extends SequelizeModelService {
+export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: Connection) {
     super('users', {
       username: Sequelize.STRING
     }, connection);
   }
 
-  public async update(id: any, data: any, query: ObjectType): Promise<any> {
-    await super.update(id, data, params);
-    return this.getAll({})
+  public findByIdAndUpdate(id: string, data: Partial<User & DefaultIdAndTimeStamps>):
+      Promise<(User & DefaultIdAndTimeStamps)[]> {
+    await super.findByIdAndUpdate(id, data);
+    return this.findAll({});
   }
 }
 ```
@@ -124,9 +137,9 @@ If you have overrided some methods and want to test them, you can do it with a f
 
 ```typescript
 import { Connection } from './connection.service';
-import { User } from './user.service';
+import { UserService } from './user.service';
 
-const userService = new User(new Connection('myFakeDBURI'));
+const userService = new UserService(new Connection('myFakeDBURI'));
 
 // Then test userService as a mere service.
 ```
