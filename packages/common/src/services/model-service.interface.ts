@@ -4,7 +4,7 @@ import { ObjectType } from '@foal/core';
 
 export type SyncOrAsync<T> = T | Promise<T>;
 
-export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
+export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps = { id: string }, IdType = string> {
   // Create
   createOne(data: ICreatingModel): SyncOrAsync<IModel & IIdAndTimeStamps>;
   createMany(records: ICreatingModel[]): SyncOrAsync<(IModel & IIdAndTimeStamps)[]>;
@@ -17,7 +17,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
   // Update
   findByIdAndUpdate(id: IdType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
   findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): void;
+  updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<void>;
 
   // Replace
   findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
@@ -25,7 +25,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
     SyncOrAsync<IModel & IIdAndTimeStamps>;
 
   // Delete
-  findByIdAndRemove(id: IdType): void;
-  findOneAndRemove(query: ObjectType): void;
-  removeMany(query: ObjectType): void;
+  findByIdAndRemove(id: IdType): SyncOrAsync<void>;
+  findOneAndRemove(query: ObjectType): SyncOrAsync<void>;
+  removeMany(query: ObjectType): SyncOrAsync<void>;
 }

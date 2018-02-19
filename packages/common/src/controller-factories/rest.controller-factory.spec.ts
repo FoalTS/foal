@@ -7,7 +7,7 @@ import {
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { CRUDService } from '../services';
+import { ModelService } from '../services';
 import { rest, RestControllerFactory } from './rest.controller-factory';
 
 chai.use(spies);
@@ -15,7 +15,7 @@ const expect = chai.expect;
 
 describe('rest', () => {
 
-  let mock: Partial<CRUDService>;
+  let mock: Partial<ModelService<any>>;
 
   beforeEach(() => {
     mock = {};
@@ -42,111 +42,113 @@ describe('rest', () => {
 
     describe('should return an array of which one item handles DELETE /:id', () => {
 
-      it('when service.delete is undefined.', () => {
+      it('when service.findByIdAndRemove is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[1];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('delete');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndRemove');
         expect(actualItem.httpMethod).to.equal('DELETE');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
       });
 
-      it('when service.delete is a function.', () => {
+      it('when service.findByIdAndRemove is a function.', () => {
         mock = {
-          delete(id: any, query: ObjectType) {}
+          findByIdAndRemove(id: any): void {}
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'delete');
+        chai.spy.on(mock, 'findByIdAndRemove');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[1];
         const ctx = { ...createEmptyContext(), params: { id: 1 }, query: { bar: 'foo' } };
 
-        expect(actualItem.serviceMethodName).to.equal('delete');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndRemove');
         expect(actualItem.httpMethod).to.equal('DELETE');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.delete).to.have.been.called.with.exactly(ctx.params.id, ctx.query);
+        expect(mock.findByIdAndRemove).to.have.been.called.with.exactly(ctx.params.id);
       });
 
     });
 
     describe('should return an array of which one item handles GET /.', () => {
 
-      it('when service.getAll is undefined.', () => {
+      it('when service.findAll is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[2];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('getAll');
+        expect(actualItem.serviceMethodName).to.equal('findAll');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/');
         expect(actualItem.successStatus).to.equal(200);
       });
 
-      it('when service.getAll is a function.', () => {
+      it('when service.findAll is a function.', () => {
         mock = {
-          getAll(query: ObjectType) {}
+          findAll(query: ObjectType) {
+            return [];
+          }
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'getAll');
+        chai.spy.on(mock, 'findAll');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[2];
         const ctx = { ...createEmptyContext(), query: { bar: 'foo' } };
 
-        expect(actualItem.serviceMethodName).to.equal('getAll');
+        expect(actualItem.serviceMethodName).to.equal('findAll');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/');
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.getAll).to.have.been.called.with.exactly(ctx.query);
+        expect(mock.findAll).to.have.been.called.with.exactly(ctx.query);
       });
 
     });
 
     describe('should return an array of which one item handles GET /:id.', () => {
 
-      it('when service.get is undefined.', () => {
+      it('when service.findById is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[3];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('get');
+        expect(actualItem.serviceMethodName).to.equal('findById');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
       });
 
-      it('when service.get is a function.', () => {
+      it('when service.findById is a function.', () => {
         mock = {
-          get(id: any, query: ObjectType) {}
+          findById(id: any) {}
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'get');
+        chai.spy.on(mock, 'findById');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[3];
         const ctx = { ...createEmptyContext(), params: { id: 1 }, query: { bar: 'foo' } };
 
-        expect(actualItem.serviceMethodName).to.equal('get');
+        expect(actualItem.serviceMethodName).to.equal('findById');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.get).to.have.been.called.with.exactly(ctx.params.id, ctx.query);
+        expect(mock.findById).to.have.been.called.with.exactly(ctx.params.id);
       });
 
     });
@@ -166,25 +168,25 @@ describe('rest', () => {
 
     describe('should return an array of which one item handles PATCH /:id.', () => {
 
-      it('when service.modify is undefined.', () => {
+      it('when service.findByIdAndUpdate is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[5];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('modify');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndUpdate');
         expect(actualItem.httpMethod).to.equal('PATCH');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
       });
 
-      it('when service.modify is a function.', () => {
+      it('when service.findByIdAndUpdate is a function.', () => {
         mock = {
-          modify(id: any, data: any, query: ObjectType) {}
+          findByIdAndUpdate(id: any, data: any) {}
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'modify');
+        chai.spy.on(mock, 'findByIdAndUpdate');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[5];
@@ -195,50 +197,50 @@ describe('rest', () => {
           query: { bar: 'foo' }
         };
 
-        expect(actualItem.serviceMethodName).to.equal('modify');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndUpdate');
         expect(actualItem.httpMethod).to.equal('PATCH');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.modify).to.have.been.called.with.exactly(ctx.params.id, ctx.body, ctx.query);
+        expect(mock.findByIdAndUpdate).to.have.been.called.with.exactly(ctx.params.id, ctx.body);
       });
 
     });
 
     describe('should return an array of which one item handles POST /.', () => {
 
-      it('when service.create is undefined.', () => {
+      it('when service.createOne is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[6];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('create');
+        expect(actualItem.serviceMethodName).to.equal('createOne');
         expect(actualItem.httpMethod).to.equal('POST');
         expect(actualItem.path).to.equal('/');
         expect(actualItem.successStatus).to.equal(201);
       });
 
-      it('when service.create is a function.', () => {
+      it('when service.createOne is a function.', () => {
         mock = {
-          create(data: any, query: ObjectType) {}
+          createOne(data: any) {}
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'create');
+        chai.spy.on(mock, 'createOne');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[6];
         const ctx = { ...createEmptyContext(), body: { foo: 'bar' }, query: { bar: 'foo' }};
 
-        expect(actualItem.serviceMethodName).to.equal('create');
+        expect(actualItem.serviceMethodName).to.equal('createOne');
         expect(actualItem.httpMethod).to.equal('POST');
         expect(actualItem.path).to.equal('/');
         expect(actualItem.successStatus).to.equal(201);
 
         actualItem.middleware(ctx);
-        expect(mock.create).to.have.been.called.with.exactly(ctx.body, ctx.query);
+        expect(mock.createOne).to.have.been.called.with.exactly(ctx.body);
       });
 
     });
@@ -271,25 +273,25 @@ describe('rest', () => {
 
     describe('should return an array of which one item handles PUT /:id.', () => {
 
-      it('when service.replace is undefined.', () => {
+      it('when service.findByIdAndReplace is undefined.', () => {
         const actual = rest.getRoutes(mock);
         expect(actual).to.be.an('array');
 
         const actualItem = actual[9];
         const ctx = createEmptyContext();
         expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
-        expect(actualItem.serviceMethodName).to.equal('replace');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndReplace');
         expect(actualItem.httpMethod).to.equal('PUT');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
       });
 
-      it('when service.replace is a function.', () => {
+      it('when service.findByIdAndReplace is a function.', () => {
         mock = {
-          replace(id: any, data: any, query: ObjectType) {}
+          findByIdAndReplace(id: any, data: any) {}
         };
         const actual = rest.getRoutes(mock);
-        chai.spy.on(mock, 'replace');
+        chai.spy.on(mock, 'findByIdAndReplace');
         expect(actual).to.be.an('array');
 
         const actualItem = actual[9];
@@ -300,13 +302,13 @@ describe('rest', () => {
           query: { bar: 'foo' }
         };
 
-        expect(actualItem.serviceMethodName).to.equal('replace');
+        expect(actualItem.serviceMethodName).to.equal('findByIdAndReplace');
         expect(actualItem.httpMethod).to.equal('PUT');
         expect(actualItem.path).to.equal('/:id');
         expect(actualItem.successStatus).to.equal(200);
 
         actualItem.middleware(ctx);
-        expect(mock.replace).to.have.been.called.with.exactly(ctx.params.id, ctx.body, ctx.query);
+        expect(mock.findByIdAndReplace).to.have.been.called.with.exactly(ctx.params.id, ctx.body);
       });
 
     });

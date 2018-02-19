@@ -19,19 +19,39 @@ interface MultipleViewsService {
 
 ### `rest`
 
-`rest.attachService(path: string, service: Partial<CRUDService>)`
+`rest.attachService(path: string, service: Partial<ModelService<IModel>>)`
 
-Creates a REST controller from a `Partial<CRUDService>`.
+Creates a REST controller from a `Partial<ModelService<IModel>>`.
 
 ```typescript
-interface CRUDService {
-  create: (data: any, query: ObjectType) => Promise<any>|any;
-  get: (id: any, query: ObjectType) => Promise<any>|any;
-  getAll: (query: ObjectType) => Promise<any>|any;
-  replace: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  modify: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  delete: (id: any, query: ObjectType) => Promise<any>|any;
+type SyncOrAsync<T> = T | Promise<T>;
+
+interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps = { id: string }, IdType = string> {
+  // Create
+  createOne(data: ICreatingModel): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  createMany(records: ICreatingModel[]): SyncOrAsync<(IModel & IIdAndTimeStamps)[]>;
+
+  // Read
+  findById(id: IdType): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  findOne(query: ObjectType): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  findAll(query: ObjectType): SyncOrAsync<(IModel & IIdAndTimeStamps)[]>;
+
+  // Update
+  findByIdAndUpdate(id: IdType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<void>;
+
+  // Replace
+  findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
+  findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
+    SyncOrAsync<IModel & IIdAndTimeStamps>;
+
+  // Delete
+  findByIdAndRemove(id: IdType): SyncOrAsync<void>;
+  findOneAndRemove(query: ObjectType): SyncOrAsync<void>;
+  removeMany(query: ObjectType): SyncOrAsync<void>;
 }
+
 ```
 
 ### `view`

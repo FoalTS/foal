@@ -7,26 +7,31 @@ Each controller factory has an `attachService(path: string, ServiceClass: Type<T
 The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their respective service interfaces. But you can also create your own factory with the abstract class `ControllerFactory<T>` in `@foal/core`.
 
 Let's a take an example on how to set up a REST API endpoint. To do so, we'll need two things:
-- the `Partial<CRUDService>` interface which will help us to define the service methods (which can be async functions),
+- the `Partial<ModelService>` interface which will help us to define the service methods (which can be async functions),
 - and the `rest` *controller factory* which will create the controller.
 
 First, we need to create a service that implements the interface:
 ```typescript
-import { CRUDService } from '@foal/common';
+import { ModelService } from '@foal/common';
 import { ObjectType, Service } from '@foal/core';
 
+class User {
+  name: string;
+}
+
 @Service()
-class User implements Partial<CRUDService> {
+class UserService implements Partial<ModelService<User>> {
+  private id = 0;
   constructor () {}
 
-  public create(data: any, query: ObjectType): any {
-    data.createdAt = Date.now();
-    return data;
+  public createOne(data: User): User & { id: string } {
+    this.id++;
+    return { ...data, id: this.id };
   }
 }
 ```
 
-There are other methods such as `replace`, `delete`, `modify`, `get` or `getAll`. We choose to only implement the `create` method here which matches the `POST` requests.
+There are other methods such as `createMany`, `findById`, `findAll`, `findByIdAndUpdate`, `updateMany` or `findOneAndRemove`. We choose to only implement the `createOne` method here which matches the `POST` requests.
 
 Now let's create the controller that handles requests at the endpoint `/users`:
 ```typescript
@@ -34,7 +39,7 @@ import { rest } from '@foal/common';
 import { FoalModule } from '@foal/core';
 
 const AppModule: FoalModule = {
-  controllers: [ rest.attachService('/users', User) ]
+  controllers: [ rest.attachService('/users', UserService) ]
 }
 ```
 
@@ -45,21 +50,26 @@ The final code looks like this:
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import { getCallback } from '@foal/express';
-import { CRUDService, rest } from '@foal/common';
+import { ModelService, rest } from '@foal/common';
 import { Foal, ObjectType, Service } from '@foal/core';
 
+class User {
+  name: string;
+}
+
 @Service()
-class User implements Partial<CRUDService> {
+class UserService implements Partial<ModelService<User>> {
+  private id = 0;
   constructor () {}
 
-  public create(data: any, query: ObjectType): any {
-    data.createdAt = Date.now();
-    return data;
+  public createOne(data: User): User & { id: string } {
+    this.id++;
+    return { ...data, id: this.id };
   }
 }
 
 const foal = new Foal({
-  controllers: [ rest.attachService('/users', User) ]
+  controllers: [ rest.attachService('/users', UserService) ]
 });
 
 const app = express();
@@ -76,6 +86,6 @@ Paths are specified directly to the controller factory in the module. So:
 - a service can be re-used to serve several endpoints,
 - all paths are specified in one place (the module declarations).
 
-Some foal services, such as `SequelizeModelService` in `@foal/sequelize`, already implement the `CRUDService` interface. So they can be used directly to create a REST endpoint.
+Some foal services, such as `SequelizeModelService` in `@foal/sequelize`, already implement the `ModelService` interface. So they can be used directly to create a REST endpoint.
 
 You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `MethodNotAllowedError`, `ConflictError`, `InternalServerError`, `NotImplementedError`
