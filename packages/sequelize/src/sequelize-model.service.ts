@@ -165,7 +165,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async removeMany(query: ObjectType): Promise<void> {
     await this.model.sync();
 
-    const result = await this.model.destroy({
+    await this.model.destroy({
       where: query
     });
   }

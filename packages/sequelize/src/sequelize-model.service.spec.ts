@@ -134,7 +134,7 @@ function testSuite(dbName: string, uri: string) {
     describe('when findById(id: IdType): Promise<IModel & IIdAndTimeStamps> is called', () => {
 
       it('should return the suitable user from the database with its id and timestamps.', async () => {
-        const user1 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
             firstName: 'Donald',
             lastName: 'Smith'
         });
@@ -170,7 +170,7 @@ function testSuite(dbName: string, uri: string) {
     describe('when findOne(query: ObjectType): Promise<IModel & IIdAndTimeStamps> is called', () => {
 
       it('should return the suitable user from the database with its id and timestamps.', async () => {
-        const user1 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Donald',
           lastName: 'Smith'
         });
@@ -496,7 +496,7 @@ function testSuite(dbName: string, uri: string) {
           firstName: 'Donald',
           lastName: 'Smith'
         });
-        const user2 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Victor',
           lastName: 'Hugo',
         });
@@ -529,7 +529,7 @@ function testSuite(dbName: string, uri: string) {
           firstName: 'Donald',
           lastName: 'Smith'
         });
-        const user2 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Victor',
           lastName: 'Hugo',
         });
@@ -558,15 +558,15 @@ function testSuite(dbName: string, uri: string) {
     describe('when removeMany(query: ObjectType): Promise<void> is called', () => {
 
       it('should delete the suitable users.', async () => {
-        const user1 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Donald',
           lastName: 'Smith'
         });
-        const user2 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Victor',
           lastName: 'Hugo',
         });
-        const user3 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Adele',
           lastName: 'Hugo',
         });
