@@ -525,7 +525,7 @@ function testSuite(dbName: string, uri: string) {
     describe('when findOneAndRemove(query: ObjectType): Promise<void> is called', () => {
 
       it('should delete the suitable user.', async () => {
-        const user1 = await service.getSequelizeModel().create({
+        await service.getSequelizeModel().create({
           firstName: 'Donald',
           lastName: 'Smith'
         });
