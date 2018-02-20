@@ -4,6 +4,7 @@ import {
   Context,
   Controller,
   Middleware,
+  ObjectType,
   ReducedRoute,
   Route,
   Type
@@ -14,11 +15,11 @@ export abstract class ControllerFactory<T> {
 
   constructor() {}
 
-  public attachService(path: string, ServiceClass: Type<T>): Controller {
+  public attachService(path: string, ServiceClass: Type<T>, options: ObjectType = {}): Controller {
     return (services: ServiceManager): ReducedRoute[] => {
       const service = services.get(ServiceClass);
 
-      return this.getRoutes(service).map(route => {
+      return this.getRoutes(service, options).map(route => {
         const middlewares = [
           ...this.getPreMiddlewares(ServiceClass, route.serviceMethodName),
           async (ctx: Context) => ctx.result = await route.middleware(ctx),
@@ -34,7 +35,7 @@ export abstract class ControllerFactory<T> {
     };
   }
 
-  protected abstract getRoutes(service: T): Route[];
+  protected abstract getRoutes(service: T, options: ObjectType): Route[];
 
   private getPreMiddlewares(ServiceClass: Type<T>, methodName: string|null): Middleware[] {
     const classPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass) || [];

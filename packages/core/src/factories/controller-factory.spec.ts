@@ -34,18 +34,18 @@ describe('ControllerFactory<T>', () => {
   }
 
   class ConcreteControllerFactory extends ControllerFactory<ServiceInterface> {
-    public getRoutes(service: ServiceInterface): Route[] {
+    public getRoutes(service: ServiceInterface, options): Route[] {
       return [
         {
           httpMethod: 'GET',
-          middleware: async (context: Context) => service.foobar(),
+          middleware: async (context: Context) =>  `${await service.foobar()} ${options.name}!`,
           path: '/foobar',
           serviceMethodName: 'foobar',
           successStatus: 10000
         },
         {
           httpMethod: 'GET',
-          middleware: async (context: Context) => service.foobar(),
+          middleware: async (context: Context) => `${await service.foobar()} ${options.name}!`,
           path: '/foobar',
           serviceMethodName: null,
           successStatus: 10000
@@ -64,7 +64,7 @@ describe('ControllerFactory<T>', () => {
   describe('when attachService(path: string, ServiceClass: Type<T>) is called', () => {
 
     it('should return a ReducedRoute array from the Route array of the getRoutes method.', async () => {
-      const controller = controllerFactory.attachService('/my_path', ServiceClass);
+      const controller = controllerFactory.attachService('/my_path', ServiceClass, { name: 'Jack' });
       const routes = controller(services);
 
       expect(routes).to.be.an('array').and.to.have.lengthOf(2);
@@ -90,7 +90,7 @@ describe('ControllerFactory<T>', () => {
 
       // Service method
       await actual.middlewares[4](ctx);
-      expect(ctx.result).to.equal('Hello world');
+      expect(ctx.result).to.equal('Hello world Jack!');
 
       // Post-hooks
       // Method post-hooks should be executed before class post-hooks.
