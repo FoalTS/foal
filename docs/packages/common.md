@@ -10,6 +10,8 @@
 
 Renders several templates from a `MultipleViewsService`.
 
+If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
+
 ```typescript
 interface MultipleViewsService {
   names(): string[];
@@ -37,6 +39,8 @@ You will find more docs on the `ModelService` interface [here](https://github.co
 ### `view`
 
 `view.attachService(path: string, service: ViewService)`
+
+If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
 Renders one template from a `ViewService`.
 

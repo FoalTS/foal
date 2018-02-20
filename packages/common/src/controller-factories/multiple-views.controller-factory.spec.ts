@@ -12,7 +12,7 @@ describe('multipleViews', () => {
     mock = {
       names: () => [ 'view1', 'view2' ],
       render: (name: string, locals: { name: string }): string => {
-        return `${name} ${locals.name}`;
+        return `${name} ${locals.name || 'bar'}`;
       },
     };
   });
@@ -29,7 +29,8 @@ describe('multipleViews', () => {
 
       let actualItem = actual[0];
       let ctx = createEmptyContext();
-      ctx.state.name = 'foo';
+      expect(actualItem.middleware(ctx)).to.equal('view1 bar');
+      ctx.state.locals = { name: 'foo' };
       expect(actualItem.middleware(ctx)).to.equal('view1 foo');
       expect(actualItem.serviceMethodName).to.equal('render');
       expect(actualItem.httpMethod).to.equal('GET');
@@ -38,7 +39,8 @@ describe('multipleViews', () => {
 
       actualItem = actual[1];
       ctx = createEmptyContext();
-      ctx.state.name = 'foo';
+      expect(actualItem.middleware(ctx)).to.equal('view2 bar');
+      ctx.state.locals = { name: 'foo' };
       expect(actualItem.middleware(ctx)).to.equal('view2 foo');
       expect(actualItem.serviceMethodName).to.equal('render');
       expect(actualItem.httpMethod).to.equal('GET');

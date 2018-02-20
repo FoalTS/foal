@@ -7,7 +7,7 @@ export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService
     return service.names().map(name => {
       return {
         httpMethod: 'GET' as HttpMethod,
-        middleware: (context: Context) => service.render(name, context.state),
+        middleware: (context: Context) => service.render(name, context.state.locals || {}),
         path: `/${name}`,
         serviceMethodName: 'render',
         successStatus: 200,
