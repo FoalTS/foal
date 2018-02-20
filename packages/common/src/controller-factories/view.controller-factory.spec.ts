@@ -29,7 +29,7 @@ describe('view', () => {
       const actualItem = actual[0];
       const ctx = createEmptyContext();
       expect(actualItem.middleware(ctx)).to.equal('bar');
-      ctx.state.locals = { name: 'foo' }
+      ctx.state.locals = { name: 'foo' };
       expect(actualItem.middleware(ctx)).to.equal('foo');
       expect(actualItem.serviceMethodName).to.equal('render');
       expect(actualItem.httpMethod).to.equal('GET');
