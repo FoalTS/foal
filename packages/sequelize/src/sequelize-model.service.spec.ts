@@ -590,13 +590,13 @@ function testSuite(dbName: string, uri: string) {
 describe('SequelizeModelService<User>', () => {
 
   // Postgres
-  const user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
-  const password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
+  let user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
+  let password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
   testSuite('PostgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
 
   // MySQL
-  // user = process.env.mysql_user !== undefined ? process.env.mysql_user : 'root';
-  // password = process.env.mysql_password !== undefined ? process.env.mysql_password : 'password';
-  // testSuite('MySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
+  user = process.env.mysql_user !== undefined ? process.env.mysql_user : 'root';
+  password = process.env.mysql_password !== undefined ? process.env.mysql_password : 'password';
+  testSuite('MySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
 
 });
