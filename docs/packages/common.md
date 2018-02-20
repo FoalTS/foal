@@ -23,36 +23,16 @@ interface MultipleViewsService {
 
 Creates a REST controller from a `Partial<ModelService<IModel>>`.
 
-```typescript
-type SyncOrAsync<T> = T | Promise<T>;
-
-interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps = { id: string }, IdType = string> {
-  // Create
-  createOne(data: ICreatingModel): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  createMany(records: ICreatingModel[]): SyncOrAsync<(IModel & IIdAndTimeStamps)[]>;
-
-  // Read
-  findById(id: IdType): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  findOne(query: ObjectType): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  findAll(query: ObjectType): SyncOrAsync<(IModel & IIdAndTimeStamps)[]>;
-
-  // Update
-  findByIdAndUpdate(id: IdType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): SyncOrAsync<void>;
-
-  // Replace
-  findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>): SyncOrAsync<IModel & IIdAndTimeStamps>;
-  findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
-    SyncOrAsync<IModel & IIdAndTimeStamps>;
-
-  // Delete
-  findByIdAndRemove(id: IdType): SyncOrAsync<void>;
-  findOneAndRemove(query: ObjectType): SyncOrAsync<void>;
-  removeMany(query: ObjectType): SyncOrAsync<void>;
-}
-
 ```
+POST /my_resource -> service.createOne(...)
+GET /my_resource -> service.findAll(...)
+GET /my_resource/:id -> service.findById(...)
+PATCH /my_resource/:id -> service.findByIdAndReplace(...)
+PUT /my_resource/:id -> service.findByIdAndUpdate(...)
+DELETE /my_resources/:id -> service.findByIdAndRemove(...)
+```
+
+You will find more docs on the `ModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
 
 ### `view`
 
@@ -138,6 +118,16 @@ Returns a 401 status if the user is not authenticated.
 ### `restrictAccessToAdmin()`
 
 Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
+
+## Services (interfaces)
+
+### `ModelService`
+
+See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
+
+### `MultipleViewsService`
+
+### `ViewService`
 
 ## Utils
 
