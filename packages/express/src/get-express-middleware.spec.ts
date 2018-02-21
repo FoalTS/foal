@@ -1,10 +1,10 @@
 import {
   Context,
   HttpMethod,
+  HttpRedirect,
   MethodNotAllowedError,
   ReducedMiddleware,
   ReducedRoute,
-  HttpRedirect,
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
@@ -270,7 +270,7 @@ describe(`getExpressMiddleware(route: ReducedRoute,
 
     it('should return a middleware which responds on success with ctx.result (object).',
        getCtxResultTest({ success: 'ok' }, { success: 'ok' }, true));
-    
+
     it('should return a middleware which redirects on success if ctx.result is an instance of HttpRedirect.', () => {
       middleware1 = ctx => { ctx.result = new HttpRedirect('/foo'); };
       app = express();

@@ -1,5 +1,5 @@
 import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType, UnauthorizedError } from '@foal/core';
+import { NotFoundError, ObjectType } from '@foal/core';
 
 import { AuthenticatorService } from '../authenticator-service.interface';
 

@@ -1,4 +1,4 @@
-import { Context, ReducedRoute, HttpRedirect } from '@foal/core';
+import { Context, HttpRedirect, ReducedRoute } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';

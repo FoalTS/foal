@@ -17,8 +17,8 @@ describe('authentication', () => {
       authenticate(credentials: ObjectType) {
         if (credentials.username === 'John') {
           return {
-            username: 'John',
             id: 1,
+            username: 'John',
           };
         }
         return null;
@@ -48,8 +48,8 @@ describe('authentication', () => {
       const result = await actual[0].middleware(ctx);
       expect(mock.authenticate).to.have.been.called.with(ctx.body);
       expect(result).to.deep.equal({
-        username: 'John',
         id: 1,
+        username: 'John',
       });
       expect(ctx.session.authentication).to.deep.equal({
         userId: 1
@@ -65,7 +65,7 @@ describe('authentication', () => {
         expect(err).to.be.instanceOf(UnauthorizedError);
         expect(err).to.have.deep.property('details', {
           message: 'Bad credentials.'
-        })
+        });
       }
     });
 
