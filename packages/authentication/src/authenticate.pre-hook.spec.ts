@@ -15,7 +15,7 @@ describe('authenticate', () => {
 
   @Service()
   class UserModelService implements ModelService<any, ObjectType, ObjectType, any> {
-    
+
     constructor() {}
 
     public createOne(): any {}
@@ -51,7 +51,7 @@ describe('authenticate', () => {
   it('should throw an Error if there is no session.', async () => {
     const middleware = getPreMiddleware(authenticate(UserModelService));
     const ctx = createEmptyContext();
-    
+
     try {
       await middleware(ctx, new ServiceManager());
       throw new Error('No error was thrown by the middleware');
