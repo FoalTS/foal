@@ -93,6 +93,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
+      limit: 1,
       // Ask Postgres to return the affected rows.
       returning: true,
       where: query,
@@ -134,6 +135,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     this.removeIdAndTimeStamps(data);
 
     const result = await this.model.update(data, {
+      limit: 1,
       // Ask Postgres to return the affected rows.
       returning: true,
       where: query,
@@ -158,8 +160,8 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   public async findOneAndRemove(query: ObjectType): Promise<void> {
     await this.model.sync();
 
-    // Il faut limiter à 1. Faire le test ?
     const result = await this.model.destroy({
+      limit: 1,
       where: query
     });
     if (result === 0) {
