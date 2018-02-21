@@ -1,4 +1,4 @@
-import { ControllerFactory, Route } from '@foal/core';
+import { ControllerFactory, Route, UnauthorizedError } from '@foal/core';
 
 import { AuthenticatorService } from './authenticator-service.interface';
 
@@ -9,6 +9,9 @@ export class AuthenticationFactory extends ControllerFactory<AuthenticatorServic
         httpMethod: 'POST',
         middleware: async ctx => {
           const user = await service.authenticate(ctx.body);
+          if (user === null) {
+            throw new UnauthorizedError({ message: 'Bad credentials.' });
+          }
           ctx.session.authentication = ctx.session.authentication || {};
           ctx.session.authentication.userId = user.id || user._id;
           return user;

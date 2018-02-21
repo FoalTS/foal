@@ -22,21 +22,20 @@ export abstract class LocalAuthenticatorService<User extends { email: string, pa
 
   constructor(protected userModelService: ModelService<User, ObjectType, ObjectType, any> & CheckPassword<User>) {}
 
-  public async authenticate({ email, password }: { email: string, password: string }): Promise<User> {
+  public async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;
 
     try {
       user = await this.userModelService.findOne({ email });
     } catch (err) {
       if (err instanceof NotFoundError) {
-        throw new UnauthorizedError({ message: 'Incorrect email or password.' });
-      } else {
-        throw err;
+        return null;
       }
+      throw err;
     }
 
     if (!this.userModelService.checkPassword(user, password)) {
-      throw new UnauthorizedError({ message: 'Incorrect email or password.' });
+      return null;
     }
 
     return user;

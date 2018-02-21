@@ -1,5 +1,5 @@
 import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType, UnauthorizedError } from '@foal/core';
+import { NotFoundError, ObjectType } from '@foal/core';
 import { expect } from 'chai';
 
 import { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
@@ -57,28 +57,14 @@ describe('LocalAuthenticatorService', () => {
   describe(`when authenticate({ email, password }: { email: string, password: string }):
             Promise<User> is called`, () => {
 
-    it('should throw an UnauthorizedError if no user is found for the given email.', async () => {
-      try {
-        await service.authenticate({ email: 'jack@foalts.org', password: 'foo'});
-        throw  new Error('No error was thrown in authenticate().');
-      } catch (err) {
-        expect(err).to.be.instanceOf(UnauthorizedError);
-        expect(err.details).to.deep.equal({
-          message: 'Incorrect email or password.'
-        });
-      }
+    it('should return null if no user is found for the given email.', async () => {
+      const user = await service.authenticate({ email: 'jack@foalts.org', password: 'foo' });
+      expect(user).to.equal(null);
     });
 
-    it('should throw an UnauthorizedError if the given password is incorrect.', async () => {
-      try {
-        await service.authenticate({ email: 'john@foalts.org', password: 'wrongPassword'});
-        throw  new Error('No error was thrown in authenticate().');
-      } catch (err) {
-        expect(err).to.be.instanceOf(UnauthorizedError);
-        expect(err.details).to.deep.equal({
-          message: 'Incorrect email or password.'
-        });
-      }
+    it('should return null if the given password is incorrect.', async () => {
+      const user = await service.authenticate({ email: 'john@foalts.org', password: 'wrongPassword'});
+      expect(user).to.equal(null);
     });
 
     it('should return the authenticated user if the given email and password are correct.', async () => {

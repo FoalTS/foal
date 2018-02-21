@@ -1,4 +1,4 @@
-import { createEmptyContext, ObjectType } from '@foal/core';
+import { createEmptyContext, ObjectType, UnauthorizedError } from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
@@ -15,10 +15,13 @@ describe('authentication', () => {
   before(() => {
     mock = {
       authenticate(credentials: ObjectType) {
-        return {
-          firstName: 'John',
-          id: 1,
-        };
+        if (credentials.username === 'John') {
+          return {
+            username: 'John',
+            id: 1,
+          };
+        }
+        return null;
       }
     };
   });
@@ -45,12 +48,25 @@ describe('authentication', () => {
       const result = await actual[0].middleware(ctx);
       expect(mock.authenticate).to.have.been.called.with(ctx.body);
       expect(result).to.deep.equal({
-        firstName: 'John',
+        username: 'John',
         id: 1,
       });
       expect(ctx.session.authentication).to.deep.equal({
         userId: 1
       });
+
+      const ctx2 = createEmptyContext();
+      ctx2.session = {};
+      ctx2.body = { username: 'Jack' };
+      try {
+        await actual[0].middleware(ctx2);
+        throw  new Error('No error was thrown in the middleware.');
+      } catch (err) {
+        expect(err).to.be.instanceOf(UnauthorizedError);
+        expect(err).to.have.deep.property('details', {
+          message: 'Bad credentials.'
+        })
+      }
     });
 
   });
