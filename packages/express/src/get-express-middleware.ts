@@ -1,4 +1,4 @@
-import { Context, ReducedRoute } from '@foal/core';
+import { Context, ReducedRoute, HttpRedirect } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
@@ -23,6 +23,10 @@ export function getExpressMiddleware(route: ReducedRoute,
     stateDef.forEach(e => ctx.state[e.ctx] = req[e.req]);
     for (const middleware of route.middlewares) {
       await middleware(ctx);
+    }
+    if (ctx.result instanceof HttpRedirect) {
+      res.redirect(route.successStatus, ctx.result.path);
+      return;
     }
     if (typeof ctx.result === 'number') {
       ctx.result = ctx.result.toString();
