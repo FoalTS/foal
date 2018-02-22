@@ -274,13 +274,13 @@ describe(`getExpressMiddleware(route: ReducedRoute,
     it('should return a middleware which redirects on success if ctx.result is an instance of HttpRedirect.', () => {
       middleware1 = ctx => { ctx.result = new HttpRedirect('/foo'); };
       app = express();
-      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 301 };
+      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
       app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
         .expect('location', '/foo')
-        .expect(route.successStatus);
+        .expect(302);
     });
 
     it('should return a middleware which responds with 500 if a foal middleware throws some Error.', () => {

@@ -25,7 +25,7 @@ export function getExpressMiddleware(route: ReducedRoute,
       await middleware(ctx);
     }
     if (ctx.result instanceof HttpRedirect) {
-      res.redirect(route.successStatus, ctx.result.path);
+      res.redirect(ctx.result.path);
       return;
     }
     if (typeof ctx.result === 'number') {
