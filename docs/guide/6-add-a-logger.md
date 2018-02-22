@@ -28,7 +28,7 @@ Now go back to `task.service.ts`, import the `LoggerService`, add `public logger
 ```typescript
 import { escapeHTML } from '@foal/common';
 import { ObjectType, preHook, Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
 import { LoggerService } from './logger.service';
@@ -39,7 +39,7 @@ import { LoggerService } from './logger.service';
     escapeHTML(ctx.body, 'text');
   }
 })
-export class TaskService extends SequelizeService<any> {
+export class TaskService extends SequelizeModelService<any> {
   constructor(protected connection: ConnectionService, public logger: LoggerService) {
     super('tasks', {
       completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },

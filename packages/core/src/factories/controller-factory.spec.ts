@@ -9,6 +9,7 @@ import { ControllerFactory } from './controller-factory';
 describe('ControllerFactory<T>', () => {
 
   interface ServiceInterface { foobar: () => Promise<any>; }
+  interface Options { name: string; }
   const classPreMiddleware1: Middleware = (ctx, services) => ctx.state.preClass1 = { services };
   const classPreMiddleware2: Middleware = (ctx, services) => ctx.state.preClass2 = { services };
   const methodPreMiddleware1: Middleware = (ctx, services) => ctx.state.preMethod1 = { services };
@@ -33,19 +34,19 @@ describe('ControllerFactory<T>', () => {
     public async foobar(): Promise<any> { return 'Hello world'; }
   }
 
-  class ConcreteControllerFactory extends ControllerFactory<ServiceInterface> {
-    public getRoutes(service: ServiceInterface): Route[] {
+  class ConcreteControllerFactory extends ControllerFactory<ServiceInterface, Options> {
+    public getRoutes(service: ServiceInterface, options: Options = { name: 'default name' }): Route[] {
       return [
         {
           httpMethod: 'GET',
-          middleware: async (context: Context) => service.foobar(),
+          middleware: async (context: Context) =>  `${await service.foobar()} ${options.name}!`,
           path: '/foobar',
           serviceMethodName: 'foobar',
           successStatus: 10000
         },
         {
           httpMethod: 'GET',
-          middleware: async (context: Context) => service.foobar(),
+          middleware: async (context: Context) => `${await service.foobar()} ${options.name}!`,
           path: '/foobar',
           serviceMethodName: null,
           successStatus: 10000
@@ -53,7 +54,7 @@ describe('ControllerFactory<T>', () => {
       ];
     }
   }
-  let controllerFactory: ControllerFactory<ServiceInterface>;
+  let controllerFactory: ConcreteControllerFactory;
   let services: ServiceManager;
 
   beforeEach(() => {
@@ -64,7 +65,7 @@ describe('ControllerFactory<T>', () => {
   describe('when attachService(path: string, ServiceClass: Type<T>) is called', () => {
 
     it('should return a ReducedRoute array from the Route array of the getRoutes method.', async () => {
-      const controller = controllerFactory.attachService('/my_path', ServiceClass);
+      const controller = controllerFactory.attachService('/my_path', ServiceClass, { name: 'Jack' });
       const routes = controller(services);
 
       expect(routes).to.be.an('array').and.to.have.lengthOf(2);
@@ -90,7 +91,7 @@ describe('ControllerFactory<T>', () => {
 
       // Service method
       await actual.middlewares[4](ctx);
-      expect(ctx.result).to.equal('Hello world');
+      expect(ctx.result).to.equal('Hello world Jack!');
 
       // Post-hooks
       // Method post-hooks should be executed before class post-hooks.

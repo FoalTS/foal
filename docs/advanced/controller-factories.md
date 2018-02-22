@@ -22,13 +22,20 @@ import {
 
 import { MyService } from '../services';
 
-export class MyControllerFactory extends ControllerFactory<MyService> {
-  public getRoutes(service: MyService): Route[] {
+interface Options {
+  addFive?: boolean;
+}
+
+export class MyControllerFactory extends ControllerFactory<MyService, Options> {
+  public getRoutes(service: MyService, options: Options = {}): Route[] {
     return [
       {
         httpMethod: 'GET',
         middleware: (context: Context) => {
-          return service.giveMeANumber(5, 10)
+          if (options.addFive) {
+            return service.giveMeANumber(5, 10) + 5;
+          }
+          return service.giveMeANumber(5, 10);
         },
         path: '/',
         serviceMethodName: 'giveMeANumber',

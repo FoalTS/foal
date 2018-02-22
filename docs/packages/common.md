@@ -10,6 +10,8 @@
 
 Renders several templates from a `MultipleViewsService`.
 
+If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
+
 ```typescript
 interface MultipleViewsService {
   names(): string[];
@@ -19,24 +21,26 @@ interface MultipleViewsService {
 
 ### `rest`
 
-`rest.attachService(path: string, service: PartialCRUDService)`
+`rest.attachService(path: string, service: Partial<ModelService<IModel>>)`
 
-Creates a REST controller from a `PartialCRUDService`.
+Creates a REST controller from a `Partial<ModelService<IModel>>`.
 
-```typescript
-interface PartialCRUDService {
-  create?: (data: any, query: ObjectType) => Promise<any>|any;
-  get?: (id: any, query: ObjectType) => Promise<any>|any;
-  getAll?: (query: ObjectType) => Promise<any>|any;
-  replace?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  modify?: (id: any, data: any, query: ObjectType) => Promise<any>|any;
-  delete?: (id: any, query: ObjectType) => Promise<any>|any;
-}
 ```
+POST /my_resource -> service.createOne(...)
+GET /my_resource -> service.findAll(...)
+GET /my_resource/:id -> service.findById(...)
+PATCH /my_resource/:id -> service.findByIdAndReplace(...)
+PUT /my_resource/:id -> service.findByIdAndUpdate(...)
+DELETE /my_resources/:id -> service.findByIdAndRemove(...)
+```
+
+You will find more docs on the `ModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
 
 ### `view`
 
 `view.attachService(path: string, service: ViewService)`
+
+If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
 Renders one template from a `ViewService`.
 
@@ -118,6 +122,16 @@ Returns a 401 status if the user is not authenticated.
 ### `restrictAccessToAdmin()`
 
 Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
+
+## Services (interfaces)
+
+### `ModelService`
+
+See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
+
+### `MultipleViewsService`
+
+### `ViewService`
 
 ## Utils
 

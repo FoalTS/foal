@@ -49,7 +49,7 @@ export interface User {
 ```typescript
 import { restrictAccessToAdmin, restrictAccessToAuthenticated } from '@foal/common';
 import { Context, ObjectType, preHook, Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 import * as bcrypt from 'bcrypt-nodejs';
 
 import { ConnectionService } from './connection.service';
@@ -57,7 +57,7 @@ import { ConnectionService } from './connection.service';
 import { User } from '../interfaces/user';
 
 @Service()
-export class UserService extends SequelizeService<User> {
+export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: ConnectionService) {
     super('users', {
       isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },

@@ -1,13 +1,13 @@
 import { Context, ControllerFactory, HttpMethod, Route } from '@foal/core';
 
-import { MultipleViewsService } from '../services/multiple-views-service.interface';
+import { MultipleViewsService } from '../services';
 
-export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService> {
+export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService, undefined> {
   public getRoutes(service: MultipleViewsService): Route[] {
     return service.names().map(name => {
       return {
         httpMethod: 'GET' as HttpMethod,
-        middleware: (context: Context) => service.render(name, context.state),
+        middleware: (context: Context) => service.render(name, context.state.locals || {}),
         path: `/${name}`,
         serviceMethodName: 'render',
         successStatus: 200,

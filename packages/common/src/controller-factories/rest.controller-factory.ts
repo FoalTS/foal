@@ -7,7 +7,7 @@ import {
   Route,
 } from '@foal/core';
 
-import { PartialCRUDService } from '../services';
+import { ModelService } from '../services';
 
 function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   return {
@@ -19,69 +19,69 @@ function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   };
 }
 
-export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  public getRoutes(service: PartialCRUDService): Route[] {
+export class RestControllerFactory extends ControllerFactory<Partial<ModelService<any>>, undefined> {
+  public getRoutes(service: Partial<ModelService<any>>): Route[] {
     return [
       routeNotAllowed('DELETE', '/'),
       {
         httpMethod: 'DELETE',
         middleware: (ctx: Context) => {
-          if (!service.delete) {
+          if (!service.findByIdAndRemove) {
             throw new NotImplementedError();
           }
-          return service.delete(ctx.params.id, ctx.query);
+          return service.findByIdAndRemove(ctx.params.id);
         },
         path: '/:id',
-        serviceMethodName: 'delete',
+        serviceMethodName: 'findByIdAndRemove',
         successStatus: 200,
       },
       {
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
-          if (!service.getAll) {
+          if (!service.findAll) {
             throw new NotImplementedError();
           }
-          return service.getAll(ctx.query);
+          return service.findAll(ctx.state.query || {});
         },
         path: '/',
-        serviceMethodName: 'getAll',
+        serviceMethodName: 'findAll',
         successStatus: 200,
       },
       {
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
-          if (!service.get) {
+          if (!service.findById) {
             throw new NotImplementedError();
           }
-          return service.get(ctx.params.id, ctx.query);
+          return service.findById(ctx.params.id);
         },
         path: '/:id',
-        serviceMethodName: 'get',
+        serviceMethodName: 'findById',
         successStatus: 200,
       },
       routeNotAllowed('PATCH', '/'),
       {
         httpMethod: 'PATCH',
         middleware: (ctx: Context) => {
-          if (!service.modify) {
+          if (!service.findByIdAndUpdate) {
             throw new NotImplementedError();
           }
-          return service.modify(ctx.params.id, ctx.body, ctx.query);
+          return service.findByIdAndUpdate(ctx.params.id, ctx.body);
         },
         path: '/:id',
-        serviceMethodName: 'modify',
+        serviceMethodName: 'findByIdAndUpdate',
         successStatus: 200,
       },
       {
         httpMethod: 'POST',
         middleware: (ctx: Context) => {
-          if (!service.create) {
+          if (!service.createOne) {
             throw new NotImplementedError();
           }
-          return service.create(ctx.body, ctx.query);
+          return service.createOne(ctx.body);
         },
         path: '/',
-        serviceMethodName: 'create',
+        serviceMethodName: 'createOne',
         successStatus: 201,
       },
       routeNotAllowed('POST', '/:id'),
@@ -89,13 +89,13 @@ export class RestControllerFactory extends ControllerFactory<PartialCRUDService>
       {
         httpMethod: 'PUT',
         middleware: (ctx: Context) => {
-          if (!service.replace) {
+          if (!service.findByIdAndReplace) {
             throw new NotImplementedError();
           }
-          return service.replace(ctx.params.id, ctx.body, ctx.query);
+          return service.findByIdAndReplace(ctx.params.id, ctx.body);
         },
         path: '/:id',
-        serviceMethodName: 'replace',
+        serviceMethodName: 'findByIdAndReplace',
         successStatus: 200,
       },
     ];

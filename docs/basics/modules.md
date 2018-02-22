@@ -11,7 +11,7 @@ import { FoalModule } from '@foal/core';
 
 const AppModule: FoaModule = {
   controllers: [
-    rest.attachService('/my_resources', MyCRUDService)
+    rest.attachService('/my_resources', MyModelService)
   ],
   hooks: [
     myFirstPreHook(),
@@ -28,19 +28,19 @@ When your app grows up, you may be interested in splitting your app into several
 ```typescript
 const Module1: FoalModule = {
   controllers: [
-    rest.attachService('/my_resources', MyCRUDService)
+    rest.attachService('/my_resources', MyModelService)
   ]
 };
 
 const Module2: FoalModule = {
   controllers: [
-    rest.attachService('/my_resources2', MyCRUDService2)
+    rest.attachService('/my_resources2', MyModelService2)
   ]
 };
 
 const AppModule: FoalModule = {
   controllers: [
-    rest.attachService('/my_resources3', MyCRUDService3)
+    rest.attachService('/my_resources3', MyModelService3)
   ],
   modules: [
     { module: Module1 }
@@ -61,13 +61,13 @@ Each service is instanciated per module. If you want to share the same instance 
 ```typescript
 const Module1: FoalModule = {
   controllers: [
-    rest.attachService('/my_resources', MySharedCRUDService)
+    rest.attachService('/my_resources', MySharedModelService)
   ]
 };
 
 const Module2: FoalModule = {
   controllers: [
-    rest.attachService('/my_resources2', MySharedCRUDService)
+    rest.attachService('/my_resources2', MySharedModelService)
   ]
 };
 
@@ -76,6 +76,6 @@ const AppModule: FoalModule = {
     { module: Module1 }
     { module: Module2, path: '/foo' },
   ],
-  services: [ MySharedCRUDService ]
+  services: [ MySharedModelService ]
 }
 ```

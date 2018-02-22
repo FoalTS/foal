@@ -60,20 +60,27 @@ class MyController {}
 You can either bind your hook to a controller method, its class or a module. Attaching a hook to a class is equivalent to attaching it to all its methods. Providing a hook to a module is equivalent to attaching it to all its controllers.
 
 ```typescript
-import { PartialCRUDService } from '@foal/common';
+import { ModelService } from '@foal/common';
 import { Context, ObjectType, preHook, Service } from '@foal/core';
 
 function contextLogger(context: Context): Promise<any> {
   console.log(context);
 }
 
+interface User {
+  name: string;
+}
+
 @Service()
-class MyController extends PartialCRUDService {
+class MyController extends Partial<ModelService<User>> {
+  private id = 0;
+
   constructor() {}
 
   @preHook(contextLogger)
-  public create(data: any, query: ObjectType): string {
-    return 'Created';
+  public create(data: User): User & { id: string } {
+    this.id++;
+    return { ...data, id: this.id };
   }
 }
 ```
@@ -83,7 +90,7 @@ class MyController extends PartialCRUDService {
 You can combine several hooks into one thanks to `combineHooks`.
 
 ```typescript
-import { PartialCRUDService } from '@foal/common';
+import { ModelService } from '@foal/common';
 import { combineHooks, Service } from '@foal/core';
 
 function myCombinedPreHooks() {
@@ -95,7 +102,7 @@ function myCombinedPreHooks() {
 
 @Service()
 @myCombinedPreHooks()
-export class Foobar implements PartialCRUDService {
+export class Foobar implements Partial<ModelService<any>> {
   constructor() {}
 }
 

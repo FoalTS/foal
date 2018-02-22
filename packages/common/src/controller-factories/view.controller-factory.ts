@@ -6,12 +6,12 @@ import {
 
 import { ViewService } from '../services';
 
-export class ViewControllerFactory extends ControllerFactory<ViewService> {
+export class ViewControllerFactory extends ControllerFactory<ViewService, undefined> {
   public getRoutes(service: ViewService): Route[] {
     return [
       {
         httpMethod: 'GET',
-        middleware: (context: Context) => service.render(context.state),
+        middleware: (context: Context) => service.render(context.state.locals || {}),
         path: '/',
         serviceMethodName: 'render',
         successStatus: 200,
