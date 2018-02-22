@@ -1,4 +1,4 @@
-import { InternalServerError, NotFoundError } from '@foal/core';
+import { HttpResponseInternalServerError, HttpResponseNotFound } from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
@@ -50,7 +50,7 @@ describe('handleErrors(options?, logFn?)', () => {
       const middleware1 = handleErrors({ logs: '500' }, logFn);
 
       const app = express();
-      app.use((req, res, next) => { throw new InternalServerError(); });
+      app.use((req, res, next) => { throw new HttpResponseInternalServerError(); });
       app.use(middleware1);
       return request(app)
         .get('/')
@@ -67,7 +67,7 @@ describe('handleErrors(options?, logFn?)', () => {
       const middleware1 = handleErrors({ logs: '500' }, logFn);
 
       const app = express();
-      app.use((req, res, next) => { throw new NotFoundError(); });
+      app.use((req, res, next) => { throw new HttpResponseNotFound(); });
       app.use(middleware1);
       return request(app)
         .get('/')
@@ -116,7 +116,7 @@ describe('handleErrors(options?, logFn?)', () => {
 
     it('should send a suitable status if the error has a `statusCode` property.', () => {
       const app = express();
-      app.use((req, res, next) => { throw new NotFoundError(); });
+      app.use((req, res, next) => { throw new HttpResponseNotFound(); });
       app.use(handleErrors());
       return request(app)
         .get('/')
@@ -131,7 +131,7 @@ describe('handleErrors(options?, logFn?)', () => {
       const details = {
         message: 'details'
       };
-      app.use((req, res, next) => { throw new NotFoundError(details); });
+      app.use((req, res, next) => { throw new HttpResponseNotFound(details); });
       app.use(handleErrors());
       return request(app)
         .get('/')
@@ -185,7 +185,7 @@ describe('handleErrors(options?, logFn?)', () => {
       const details = {
         message: 'details'
       };
-      app.use((req, res, next) => { throw new NotFoundError(details); });
+      app.use((req, res, next) => { throw new HttpResponseNotFound(details); });
       app.use(handleErrors({ sendStack: false }));
       return request(app)
         .get('/')

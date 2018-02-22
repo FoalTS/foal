@@ -1,8 +1,8 @@
-import { ModelService } from '@foal/common';
+import { ModelService, ObjectDoesNotExist } from '@foal/common';
 import {
   createEmptyContext,
   getPreMiddleware,
-  NotFoundError,
+  HttpResponseNotFound,
   ObjectType,
   Service,
   ServiceManager,
@@ -30,7 +30,7 @@ describe('authenticate', () => {
           username: 'John',
         };
       }
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     public findOne() {}
     public findAll(): any {}

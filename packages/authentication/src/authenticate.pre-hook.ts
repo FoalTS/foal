@@ -1,5 +1,5 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, preHook, Type} from '@foal/core';
+import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { preHook, Type} from '@foal/core';
 
 export function authenticate(UserModelService: Type<ModelService<any, any, any, any>>) {
   return preHook(async (ctx, services) => {
@@ -12,7 +12,7 @@ export function authenticate(UserModelService: Type<ModelService<any, any, any, 
     try {
       ctx.user = await services.get(UserModelService).findById(ctx.session.authentication.userId);
     } catch (err) {
-      if (!(err instanceof NotFoundError)) {
+      if (!(err instanceof ObjectDoesNotExist)) {
         throw err;
       }
     }

@@ -1,8 +1,8 @@
 import {
   Context,
   HttpMethod,
-  HttpRedirect,
-  MethodNotAllowedError,
+  HttpResponseRedirect,
+  HttpResponseMethodNotAllowed,
   ReducedMiddleware,
   ReducedRoute,
 } from '@foal/core';
@@ -271,8 +271,8 @@ describe(`getExpressMiddleware(route: ReducedRoute,
     it('should return a middleware which responds on success with ctx.result (object).',
        getCtxResultTest({ success: 'ok' }, { success: 'ok' }, true));
 
-    it('should return a middleware which redirects on success if ctx.result is an instance of HttpRedirect.', () => {
-      middleware1 = ctx => { ctx.result = new HttpRedirect('/foo'); };
+    it('should return a middleware which redirects on success if ctx.result is an instance of HttpResponseRedirect.', () => {
+      middleware1 = ctx => { ctx.result = new HttpResponseRedirect('/foo'); };
       app = express();
       route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
       app.use(getExpressMiddleware(route));
@@ -305,28 +305,16 @@ describe(`getExpressMiddleware(route: ReducedRoute,
         .expect(500);
     });
 
-    it('should return a middleware which responds with the error status code if a foal middleware throws '
-        + 'an HttpError.', () => {
-      middleware1 = ctx => { throw new MethodNotAllowedError(); };
-      app = express();
-      route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
-      app.use(getExpressMiddleware(route));
-
-      return request(app)
-        .get('/')
-        .expect(new MethodNotAllowedError().statusCode);
-    });
-
     it('should return a middleware which responds with the error status code if a foal middleware rejects '
         + 'an HttpError.', () => {
-      middleware1 = ctx => Promise.reject(new MethodNotAllowedError());
+      middleware1 = ctx => Promise.reject(new HttpResponseMethodNotAllowed());
       app = express();
       route = { httpMethod: 'GET', paths: [], middlewares: [ middleware1 ], successStatus: 200 };
       app.use(getExpressMiddleware(route));
 
       return request(app)
         .get('/')
-        .expect(new MethodNotAllowedError().statusCode);
+        .expect(new HttpResponseMethodNotAllowed().statusCode);
     });
 
   });

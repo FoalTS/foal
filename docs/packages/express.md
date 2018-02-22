@@ -24,7 +24,7 @@ app.use(getCallack(foalApp));
 Returns an express middleware to handle errors thrown in previous middlewares.
 
 **Options:**
-- `logs: 'none'|'500'|'all'` - specifies which errors should be logged (with their traceback). `none` prevents the errors from being logged. `500` logs only internal server errors (such as `Error` or `InternalServerError`). `all` logs all errors (including `NotFoundError`, `BadRequestError`, etc). Default: `none`.
+- `logs: 'none'|'500'|'all'` - specifies which errors should be logged (with their traceback). `none` prevents the errors from being logged. `500` logs only internal server errors (such as `Error` or `HttpResponseInternalServerError`). `all` logs all errors (including `HttpResponseNotFound`, `HttpResponseBadRequest`, etc). Default: `none`.
 - `sendStack: boolean` - specifies if the error stack should be sent in the response. Use it only in development. Default: `false`.
 - `logFn` - function used to log the errors. Default: `console.error`.
 

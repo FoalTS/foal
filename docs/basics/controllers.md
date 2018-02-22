@@ -88,4 +88,4 @@ Paths are specified directly to the controller factory in the module. So:
 
 Some foal services, such as `SequelizeModelService` in `@foal/sequelize`, already implement the `ModelService` interface. So they can be used directly to create a REST endpoint.
 
-You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `MethodNotAllowedError`, `ConflictError`, `InternalServerError`, `NotImplementedError`
+You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `HttpResponseBadRequest`, `HttpResponseUnauthorized`, `HttpResponseForbidden`, `HttpResponseNotFound`, `HttpResponseMethodNotAllowed`, `HttpResponseConflict`, `HttpResponseInternalServerError`, `HttpResponseNotImplemented`

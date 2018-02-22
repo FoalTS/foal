@@ -71,7 +71,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {IdType} id Unique id used to unambiguously find the object.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The matching object
    * with its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given id.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
    * @memberof ModelService
    */
   findById(id: IdType): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -86,7 +86,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {ObjectType} query Query used to unambiguously find the object.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The matching object
    * with its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given query.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof ModelService
    */
   findOne(query: ObjectType): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -116,7 +116,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {(Partial<IModel & IIdAndTimeStamps>)} data Object with the keys/values to update.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The updated object
    * with its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given id.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
    * @memberof ModelService
    */
   findByIdAndUpdate(id: IdType, data: Partial<IModel & IIdAndTimeStamps>):
@@ -137,7 +137,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {(Partial<IModel & IIdAndTimeStamps>)} data Object with the keys/values to update.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The updated object
    * with its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given query.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof ModelService
    */
   findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>):
@@ -167,7 +167,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {(IModel & Partial<IIdAndTimeStamps>)} data The new object to replace the current one.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The new object with
    * its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given id.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
    * @memberof ModelService
    */
   findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>):
@@ -186,7 +186,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    * @param {(IModel & Partial<IIdAndTimeStamps>)} data The new object to replace the current one.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The new object with
    * its id and timestamps.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given query.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof ModelService
    */
   findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
@@ -199,7 +199,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    *
    * @param {IdType} id Unique id used to unambiguously find the object.
    * @returns {(void | Promise<void>)} Returns nothing.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given id.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
    * @memberof ModelService
    */
   findByIdAndRemove(id: IdType): void | Promise<void>;
@@ -213,7 +213,7 @@ export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps 
    *
    * @param {ObjectType} query Query used to unambiguously find the object.
    * @returns {(void | Promise<void>)} Returns nothing.
-   * @throws {NotFoundError} Throws an error if no object was found in the database for the given query.
+   * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof ModelService
    */
   findOneAndRemove(query: ObjectType): void | Promise<void>;

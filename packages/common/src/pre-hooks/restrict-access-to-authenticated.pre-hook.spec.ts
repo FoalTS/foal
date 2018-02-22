@@ -3,7 +3,8 @@ import {
   getPreMiddleware,
   Middleware,
   ServiceManager,
-  UnauthorizedError
+  HttpResponseUnauthorized,
+  HttpResponse
 } from '@foal/core';
 import { expect } from 'chai';
 
@@ -28,20 +29,20 @@ describe('restrictAccessToAuthenticated', () => {
     };
   });
 
-  it('should throw an UnauthorizedError if the user is not authenticated.', () => {
-    const expected = () => middleware({
+  it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
+    const actual = middleware({
       ...emptyContext,
       user: undefined
     }, new ServiceManager());
-    expect(expected).to.throw(UnauthorizedError);
+    expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
   });
 
-  it('should not throw any errors if the user is authenticated.', () => {
-    const expected = () => middleware({
+  it('should not return any HttpResponse if the user is authenticated.', () => {
+    const actual = middleware({
       ...emptyContext,
       user: {}
     }, new ServiceManager());
-    expect(expected).not.to.throw();
+    expect(actual).not.to.be.instanceOf(HttpResponse);
   });
 
 });

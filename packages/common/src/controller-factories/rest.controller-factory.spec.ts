@@ -1,7 +1,7 @@
 import {
   createEmptyContext,
-  MethodNotAllowedError,
-  NotImplementedError,
+  HttpResponseMethodNotAllowed,
+  HttpResponseNotImplemented,
   ObjectType
 } from '@foal/core';
 import * as chai from 'chai';
@@ -33,7 +33,7 @@ describe('rest', () => {
 
       const actualItem = actual[0];
       const ctx = createEmptyContext();
-      expect(() => actualItem.middleware(ctx)).to.throw(MethodNotAllowedError);
+      expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseMethodNotAllowed);
       expect(actualItem.serviceMethodName).to.equal(null);
       expect(actualItem.httpMethod).to.equal('DELETE');
       expect(actualItem.path).to.equal('/');
@@ -48,7 +48,7 @@ describe('rest', () => {
 
         const actualItem = actual[1];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('findByIdAndRemove');
         expect(actualItem.httpMethod).to.equal('DELETE');
         expect(actualItem.path).to.equal('/:id');
@@ -85,7 +85,7 @@ describe('rest', () => {
 
         const actualItem = actual[2];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('findAll');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/');
@@ -128,7 +128,7 @@ describe('rest', () => {
 
         const actualItem = actual[3];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('findById');
         expect(actualItem.httpMethod).to.equal('GET');
         expect(actualItem.path).to.equal('/:id');
@@ -163,7 +163,7 @@ describe('rest', () => {
 
       const actualItem = actual[4];
       const ctx = createEmptyContext();
-      expect(() => actualItem.middleware(ctx)).to.throw(MethodNotAllowedError);
+      expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseMethodNotAllowed);
       expect(actualItem.serviceMethodName).to.equal(null);
       expect(actualItem.httpMethod).to.equal('PATCH');
       expect(actualItem.path).to.equal('/');
@@ -178,7 +178,7 @@ describe('rest', () => {
 
         const actualItem = actual[5];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('findByIdAndUpdate');
         expect(actualItem.httpMethod).to.equal('PATCH');
         expect(actualItem.path).to.equal('/:id');
@@ -219,7 +219,7 @@ describe('rest', () => {
 
         const actualItem = actual[6];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('createOne');
         expect(actualItem.httpMethod).to.equal('POST');
         expect(actualItem.path).to.equal('/');
@@ -254,7 +254,7 @@ describe('rest', () => {
 
       const actualItem = actual[7];
       const ctx = createEmptyContext();
-      expect(() => actualItem.middleware(ctx)).to.throw(MethodNotAllowedError);
+      expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseMethodNotAllowed);
       expect(actualItem.serviceMethodName).to.equal(null);
       expect(actualItem.httpMethod).to.equal('POST');
       expect(actualItem.path).to.equal('/:id');
@@ -267,7 +267,7 @@ describe('rest', () => {
 
       const actualItem = actual[8];
       const ctx = createEmptyContext();
-      expect(() => actualItem.middleware(ctx)).to.throw(MethodNotAllowedError);
+      expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseMethodNotAllowed);
       expect(actualItem.serviceMethodName).to.equal(null);
       expect(actualItem.httpMethod).to.equal('PUT');
       expect(actualItem.path).to.equal('/');
@@ -282,7 +282,7 @@ describe('rest', () => {
 
         const actualItem = actual[9];
         const ctx = createEmptyContext();
-        expect(() => actualItem.middleware(ctx)).to.throw(NotImplementedError);
+        expect(actualItem.middleware(ctx)).to.be.instanceOf(HttpResponseNotImplemented);
         expect(actualItem.serviceMethodName).to.equal('findByIdAndReplace');
         expect(actualItem.httpMethod).to.equal('PUT');
         expect(actualItem.path).to.equal('/:id');

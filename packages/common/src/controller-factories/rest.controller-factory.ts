@@ -2,8 +2,8 @@ import {
   Context,
   ControllerFactory,
   HttpMethod,
-  MethodNotAllowedError,
-  NotImplementedError,
+  HttpResponseMethodNotAllowed,
+  HttpResponseNotImplemented,
   Route,
 } from '@foal/core';
 
@@ -12,7 +12,7 @@ import { ModelService } from '../services';
 function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   return {
     httpMethod,
-    middleware: ctx => { throw new MethodNotAllowedError(); },
+    middleware: ctx => new HttpResponseMethodNotAllowed(),
     path,
     serviceMethodName: null,
     successStatus: 200
@@ -27,7 +27,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'DELETE',
         middleware: (ctx: Context) => {
           if (!service.findByIdAndRemove) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.findByIdAndRemove(ctx.params.id);
         },
@@ -39,7 +39,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
           if (!service.findAll) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.findAll(ctx.state.query || {});
         },
@@ -51,7 +51,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'GET',
         middleware: (ctx: Context) => {
           if (!service.findById) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.findById(ctx.params.id);
         },
@@ -64,7 +64,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'PATCH',
         middleware: (ctx: Context) => {
           if (!service.findByIdAndUpdate) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.findByIdAndUpdate(ctx.params.id, ctx.body);
         },
@@ -76,7 +76,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'POST',
         middleware: (ctx: Context) => {
           if (!service.createOne) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.createOne(ctx.body);
         },
@@ -90,7 +90,7 @@ export class RestControllerFactory extends ControllerFactory<Partial<ModelServic
         httpMethod: 'PUT',
         middleware: (ctx: Context) => {
           if (!service.findByIdAndReplace) {
-            throw new NotImplementedError();
+            return new HttpResponseNotImplemented();
           }
           return service.findByIdAndReplace(ctx.params.id, ctx.body);
         },

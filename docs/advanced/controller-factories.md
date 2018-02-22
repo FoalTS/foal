@@ -13,7 +13,7 @@ interface MyService {
 Then create your controller factory from the `ControllerFactory` abstract class.
 
 ```typescript
-import { MethodNotAllowedError } from '@foal/common';
+import { HttpResponseMethodNotAllowed } from '@foal/common';
 import {
   Context,
   ControllerFactory,
@@ -43,7 +43,7 @@ export class MyControllerFactory extends ControllerFactory<MyService, Options> {
       },
       {
         httpMethod: 'POST',
-        middleware: (context: Context) => { throw new MethodNotAllowedError(); },
+        middleware: (context: Context) => new HttpResponseMethodNotAllowed(),
         path: '/',
         serviceMethodName: null,
         successStatus: 200,

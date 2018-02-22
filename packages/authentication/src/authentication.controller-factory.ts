@@ -1,4 +1,4 @@
-import { ControllerFactory, HttpRedirect, Route, UnauthorizedError } from '@foal/core';
+import { ControllerFactory, HttpResponseRedirect, Route, HttpResponseUnauthorized } from '@foal/core';
 
 import { AuthenticatorService } from './authenticator-service.interface';
 
@@ -16,15 +16,15 @@ export class AuthenticationFactory extends ControllerFactory<AuthenticatorServic
           const user = await service.authenticate(ctx.body);
           if (user === null) {
             if (options.failureRedirect) {
-              return new HttpRedirect(options.failureRedirect);
+              return new HttpResponseRedirect(options.failureRedirect);
             }
-            throw new UnauthorizedError({ message: 'Bad credentials.' });
+            return new HttpResponseUnauthorized({ message: 'Bad credentials.' });
           }
           ctx.session.authentication = ctx.session.authentication || {};
           ctx.session.authentication.userId = user.id || user._id;
 
           if (options.successRedirect) {
-            return new HttpRedirect(options.successRedirect);
+            return new HttpResponseRedirect(options.successRedirect);
           }
           return user;
         },

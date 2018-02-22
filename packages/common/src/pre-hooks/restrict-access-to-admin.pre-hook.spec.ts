@@ -1,10 +1,11 @@
 import {
   Context,
-  ForbiddenError,
+  HttpResponseForbidden,
   getPreMiddleware,
   Middleware,
   ServiceManager,
-  UnauthorizedError
+  HttpResponseUnauthorized,
+  HttpResponse
 } from '@foal/core';
 import { expect } from 'chai';
 
@@ -29,33 +30,33 @@ describe('restrictAccessToAdmin', () => {
     };
   });
 
-  it('should throw an UnauthorizedError if the user is not authenticated.', () => {
-    const expected = () => middleware({
+  it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
+    const actual = middleware({
       ...emptyContext,
       user: undefined
     }, new ServiceManager());
-    expect(expected).to.throw(UnauthorizedError);
+    expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
   });
 
-  it('should throw a ForbiddenError if the user is not an admin.', () => {
-    const expected = () => middleware({
+  it('should return an HttpResponseForbidden if the user is not an admin.', () => {
+    const actual = middleware({
       ...emptyContext,
       user: {}
     }, new ServiceManager());
-    expect(expected).to.throw(ForbiddenError);
-    const expected2 = () => middleware({
+    expect(actual).to.be.instanceOf(HttpResponseForbidden);
+    const actual2 = middleware({
       ...emptyContext,
       user: { isAdmin: false }
     }, new ServiceManager());
-    expect(expected2).to.throw(ForbiddenError);
+    expect(actual2).to.be.instanceOf(HttpResponseForbidden);
   });
 
-  it('should not throw any errors if the user is authenticated and is an admin.', () => {
-    const expected = () => middleware({
+  it('should not return any HttpResponse if the user is authenticated and is an admin.', () => {
+    const actual = middleware({
       ...emptyContext,
       user: { isAdmin: true }
     }, new ServiceManager());
-    expect(expected).not.to.throw();
+    expect(actual).not.to.be.instanceOf(HttpResponse);
   });
 
 });

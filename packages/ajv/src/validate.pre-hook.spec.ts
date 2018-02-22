@@ -1,4 +1,4 @@
-import { BadRequestError, createEmptyContext, getPreMiddleware, ServiceManager } from '@foal/core';
+import { HttpResponseBadRequest, createEmptyContext, getPreMiddleware, ServiceManager } from '@foal/core';
 import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
@@ -6,7 +6,7 @@ import { validate } from './validate.pre-hook';
 
 describe('validate(schema: ObjectType, ajv = defaultInstance)', () => {
 
-  it('should not throw any errors if ctx.body is validated by ajv for the given schema.', () => {
+  it('should not return an HttpResponseBadRequest if ctx.body is validated by ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -19,10 +19,11 @@ describe('validate(schema: ObjectType, ajv = defaultInstance)', () => {
       foo: 3
     };
 
-    expect(() => middleware(ctx, new ServiceManager())).not.to.throw();
+    const actual = middleware(ctx, new ServiceManager());
+    expect(actual).not.to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should throw a BadRequestError if ctx.body is not validated by ajv for the given schema.', () => {
+  it('should return an HttpResponseBadRequest if ctx.body is not validated by ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -36,15 +37,15 @@ describe('validate(schema: ObjectType, ajv = defaultInstance)', () => {
       return { ...ctx, body };
     }
 
-    expect(() => middleware(context(null), new ServiceManager())).to.throw(BadRequestError);
-    expect(() => middleware(context(undefined), new ServiceManager())).to.throw(BadRequestError);
-    expect(() => middleware(context('foo'), new ServiceManager())).to.throw(BadRequestError);
-    expect(() => middleware(context(3), new ServiceManager())).to.throw(BadRequestError);
-    expect(() => middleware(context(true), new ServiceManager())).to.throw(BadRequestError);
-    expect(() => middleware(context({ foo: '3' }), new ServiceManager())).to.throw(BadRequestError);
+    expect(middleware(context(null), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    expect(middleware(context(undefined), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    expect(middleware(context('foo'), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    expect(middleware(context(3), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    expect(middleware(context(true), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    expect(middleware(context({ foo: '3' }), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should throw an Error with a `details` property if ctx.body is not validated by ajv.', () => {
+  it('should return an HttpResponseBadRequest with a `details` property if ctx.body is not validated by ajv.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -54,7 +55,9 @@ describe('validate(schema: ObjectType, ajv = defaultInstance)', () => {
     const middleware = getPreMiddleware(validate(schema));
     const ctx = createEmptyContext();
 
-    expect(() => middleware(ctx, new ServiceManager())).to.throw(Error).with.property('details');
+    const actual = middleware(ctx, new ServiceManager());
+    expect(actual).to.be.instanceOf(HttpResponseBadRequest);
+    expect(actual.details).not.to.equal(undefined);
   });
 
   it('should use the given ajv instance if it exists.', () => {

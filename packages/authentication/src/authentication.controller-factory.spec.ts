@@ -1,4 +1,4 @@
-import { createEmptyContext, HttpRedirect, ObjectType, UnauthorizedError } from '@foal/core';
+import { createEmptyContext, HttpResponseRedirect, ObjectType, HttpResponseUnauthorized } from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
@@ -58,15 +58,11 @@ describe('authentication', () => {
       const ctx2 = createEmptyContext();
       ctx2.session = {};
       ctx2.body = { username: 'Jack' };
-      try {
-        await actual[0].middleware(ctx2);
-        throw  new Error('No error was thrown in the middleware.');
-      } catch (err) {
-        expect(err).to.be.instanceOf(UnauthorizedError);
-        expect(err).to.have.deep.property('details', {
-          message: 'Bad credentials.'
-        });
-      }
+      const result2 =  await actual[0].middleware(ctx2);
+      expect(result2).to.be.instanceOf(HttpResponseUnauthorized);
+      expect(result2).to.have.deep.property('details', {
+        message: 'Bad credentials.'
+      });
     });
 
     it('should return the proper Route array when there are options.', async () => {
@@ -88,7 +84,7 @@ describe('authentication', () => {
       ctx.body = { username: 'John' };
       const result = await actual[0].middleware(ctx);
       expect(mock.authenticate).to.have.been.called.with(ctx.body);
-      expect(result).to.be.an.instanceOf(HttpRedirect).with.property('path', '/success');
+      expect(result).to.be.an.instanceOf(HttpResponseRedirect).with.property('path', '/success');
       expect(ctx.session.authentication).to.deep.equal({
         userId: 1
       });
@@ -97,7 +93,7 @@ describe('authentication', () => {
       ctx2.session = {};
       ctx2.body = { username: 'Jack' };
       const result2 = await actual[0].middleware(ctx2);
-      expect(result2).to.be.an.instanceOf(HttpRedirect).with.property('path', '/failure');
+      expect(result2).to.be.an.instanceOf(HttpResponseRedirect).with.property('path', '/failure');
     });
 
   });

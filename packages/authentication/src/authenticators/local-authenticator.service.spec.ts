@@ -1,5 +1,5 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType } from '@foal/core';
+import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { ObjectType } from '@foal/core';
 import { expect } from 'chai';
 
 import { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
@@ -29,7 +29,7 @@ describe('LocalAuthenticatorService', () => {
           username: 'John',
         };
       }
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     public findAll(): any {}
 
