@@ -19,7 +19,7 @@ function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
   };
 }
 
-export class RestControllerFactory extends ControllerFactory<Partial<ModelService<any>>> {
+export class RestControllerFactory extends ControllerFactory<Partial<ModelService<any>>, undefined> {
   public getRoutes(service: Partial<ModelService<any>>): Route[] {
     return [
       routeNotAllowed('DELETE', '/'),

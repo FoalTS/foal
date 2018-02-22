@@ -2,7 +2,7 @@ import { Context, ControllerFactory, HttpMethod, Route } from '@foal/core';
 
 import { MultipleViewsService } from '../services';
 
-export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService> {
+export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService, undefined> {
   public getRoutes(service: MultipleViewsService): Route[] {
     return service.names().map(name => {
       return {

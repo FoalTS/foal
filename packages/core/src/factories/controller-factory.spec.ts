@@ -9,6 +9,7 @@ import { ControllerFactory } from './controller-factory';
 describe('ControllerFactory<T>', () => {
 
   interface ServiceInterface { foobar: () => Promise<any>; }
+  interface Options { name: string; }
   const classPreMiddleware1: Middleware = (ctx, services) => ctx.state.preClass1 = { services };
   const classPreMiddleware2: Middleware = (ctx, services) => ctx.state.preClass2 = { services };
   const methodPreMiddleware1: Middleware = (ctx, services) => ctx.state.preMethod1 = { services };
@@ -33,8 +34,8 @@ describe('ControllerFactory<T>', () => {
     public async foobar(): Promise<any> { return 'Hello world'; }
   }
 
-  class ConcreteControllerFactory extends ControllerFactory<ServiceInterface> {
-    public getRoutes(service: ServiceInterface, options): Route[] {
+  class ConcreteControllerFactory extends ControllerFactory<ServiceInterface, Options> {
+    public getRoutes(service: ServiceInterface, options: Options = { name: 'default name' }): Route[] {
       return [
         {
           httpMethod: 'GET',
@@ -53,7 +54,7 @@ describe('ControllerFactory<T>', () => {
       ];
     }
   }
-  let controllerFactory: ControllerFactory<ServiceInterface>;
+  let controllerFactory: ConcreteControllerFactory;
   let services: ServiceManager;
 
   beforeEach(() => {

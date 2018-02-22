@@ -4,18 +4,17 @@ import {
   Context,
   Controller,
   Middleware,
-  ObjectType,
   ReducedRoute,
   Route,
   Type
 } from '../interfaces';
 import { ServiceManager } from '../service-manager';
 
-export abstract class ControllerFactory<T> {
+export abstract class ControllerFactory<IService, Options> {
 
   constructor() {}
 
-  public attachService(path: string, ServiceClass: Type<T>, options: ObjectType = {}): Controller {
+  public attachService(path: string, ServiceClass: Type<IService>, options?: Options): Controller {
     return (services: ServiceManager): ReducedRoute[] => {
       const service = services.get(ServiceClass);
 
@@ -35,9 +34,9 @@ export abstract class ControllerFactory<T> {
     };
   }
 
-  protected abstract getRoutes(service: T, options: ObjectType): Route[];
+  protected abstract getRoutes(service: IService, options?: Options): Route[];
 
-  private getPreMiddlewares(ServiceClass: Type<T>, methodName: string|null): Middleware[] {
+  private getPreMiddlewares(ServiceClass: Type<IService>, methodName: string|null): Middleware[] {
     const classPreMiddlewares: Middleware[] = Reflect.getMetadata('pre-middlewares', ServiceClass) || [];
 
     if (methodName === null) {
@@ -49,7 +48,7 @@ export abstract class ControllerFactory<T> {
     return classPreMiddlewares.concat(methodPreMiddlewares);
   }
 
-  private getPostMiddlewares(ServiceClass: Type<T>, methodName: string|null): Middleware[] {
+  private getPostMiddlewares(ServiceClass: Type<IService>, methodName: string|null): Middleware[] {
     const classPostMiddlewares: Middleware[] = Reflect.getMetadata('post-middlewares', ServiceClass) || [];
 
     if (methodName === null) {
