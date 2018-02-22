@@ -1,4 +1,4 @@
-import { Context, HttpRedirect, ReducedRoute } from '@foal/core';
+import { Context, HttpResponseRedirect, ReducedRoute } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';
@@ -24,7 +24,7 @@ export function getExpressMiddleware(route: ReducedRoute,
     for (const middleware of route.middlewares) {
       await middleware(ctx);
     }
-    if (ctx.result instanceof HttpRedirect) {
+    if (ctx.result instanceof HttpResponseRedirect) {
       res.redirect(ctx.result.path);
       return;
     }
