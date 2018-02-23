@@ -1,0 +1,24 @@
+import {
+  Context,
+  Hook,
+  Route,
+  Type
+} from '../interfaces';
+import { Controller } from './controller';
+import { ServiceManager } from './service-manager';
+
+export abstract class ServiceControllerFactory<IService, RouteName extends string, Options> {
+
+  constructor() {}
+
+  public attachService(path: string, ServiceClass: Type<IService>, options?: Options): Controller<RouteName> {
+    const controller = new Controller<RouteName>();
+    this.defineController(controller, ServiceClass, options);
+    controller.addPathAtTheBeginning(path);
+    return controller;
+  }
+
+  protected abstract defineController(controller: Controller<RouteName>, ServiceClass: Type<IService>,
+    options?: Options): void;
+
+}

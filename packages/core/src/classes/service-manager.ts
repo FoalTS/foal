@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Type } from './interfaces';
+import { Type } from '../interfaces';
 
 export function Service() {
   return function decorator(target: any) {};
@@ -10,15 +10,12 @@ export class ServiceManager {
 
   public map: Map<Type<any>, any>  = new Map();
 
-  constructor(readonly parentServiceManager?: ServiceManager) {}
+  constructor() {}
 
   public get<T>(Service: Type<T>): T {
-    // Get the service using a prototype pattern.
+    // Get the service if it exists.
     if (this.map.get(Service)) {
       return this.map.get(Service);
-    }
-    if (this.parentServiceManager && this.parentServiceManager.map.get(Service)) {
-      return this.parentServiceManager.map.get(Service);
     }
 
     // If the service has not been instantiated yet, then instantiate it in this service manager.

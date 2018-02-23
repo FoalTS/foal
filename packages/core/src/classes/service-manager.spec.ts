@@ -38,29 +38,6 @@ describe('ServiceManager', () => {
       expect(serviceManager.get(Foobar)).to.equal(serviceManager.get(Foobar));
     });
 
-    it('should follow the prototype pattern with its parentServiceManager.', () => {
-      const parentServiceManager = new ServiceManager();
-      serviceManager = new ServiceManager(parentServiceManager);
-
-      // Instantiate the service.
-      const parentFoobar = parentServiceManager.get(Foobar);
-      const childFoobar = serviceManager.get(Foobar);
-
-      expect(childFoobar).to.equal(parentFoobar);
-
-      @Service()
-      class Foobar2 {
-        constructor() {}
-      }
-
-      const childFoobar2 = serviceManager.get(Foobar2);
-      const parentFoobar2 = parentServiceManager.get(Foobar2);
-      const childFoobar2b = serviceManager.get(Foobar2);
-
-      expect(childFoobar2).to.not.equal(parentFoobar2);
-      expect(childFoobar2b).to.equal(childFoobar2);
-    });
-
     it('should return an instance of the given Service which dependencies are instances that can be retreived'
         + ' by the same method.', () => {
       @Service()

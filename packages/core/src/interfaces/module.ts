@@ -1,9 +1,10 @@
-import { Controller } from './controller-and-routes';
-import { Hook, Type } from './utils';
+import { Controller } from '../classes';
+import { Hook } from './hook';
 
-export interface FoalModule {
-  services?: Type<any>[];
-  controllers?: Controller[];
-  hooks?: Hook[];
-  modules?: { module: FoalModule, path?: string }[];
+export interface Module {
+  controllers?: Controller<string>[];
+  modules?: Module[];
+  path?: string;
+  postHooks?: Hook[];
+  preHooks?: Hook[];
 }

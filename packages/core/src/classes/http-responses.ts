@@ -1,10 +1,20 @@
-import { ObjectType } from './interfaces';
+import { ObjectType } from '../interfaces';
 
 export abstract class HttpResponse {
   public abstract statusCode: number;
   public abstract statusMessage: string;
 
   constructor() {}
+}
+
+/* 2xx Success */
+
+export class HttpResponseOK extends HttpResponse {
+  public statusCode = 200;
+  public statusMessage = 'OK';
+  constructor() {
+    super();
+  }
 }
 
 /* 3xx Redirection */

@@ -5,5 +5,3 @@ export interface Type<T> {
 export interface ObjectType {
   [name: string]: any;
 }
-
-export type Hook = (target: any, methodName?: string) => void;
