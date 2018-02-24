@@ -1,8 +1,7 @@
 import {
   Context,
   HttpResponseForbidden,
-  getPreMiddleware,
-  Middleware,
+  Hook,
   ServiceManager,
   HttpResponseUnauthorized,
   HttpResponse
@@ -13,11 +12,11 @@ import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
 
 describe('restrictAccessToAdmin', () => {
 
-  let middleware: Middleware;
+  let hook: Hook;
   let emptyContext: Context;
 
   before(() => {
-    middleware = getPreMiddleware(restrictAccessToAdmin());
+    hook = restrictAccessToAdmin();
     emptyContext = {
       body: undefined,
       getHeader: (field: string): string => '',
@@ -31,7 +30,7 @@ describe('restrictAccessToAdmin', () => {
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
-    const actual = middleware({
+    const actual = hook({
       ...emptyContext,
       user: undefined
     }, new ServiceManager());
@@ -39,12 +38,12 @@ describe('restrictAccessToAdmin', () => {
   });
 
   it('should return an HttpResponseForbidden if the user is not an admin.', () => {
-    const actual = middleware({
+    const actual = hook({
       ...emptyContext,
       user: {}
     }, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseForbidden);
-    const actual2 = middleware({
+    const actual2 = hook({
       ...emptyContext,
       user: { isAdmin: false }
     }, new ServiceManager());
@@ -52,7 +51,7 @@ describe('restrictAccessToAdmin', () => {
   });
 
   it('should not return any HttpResponse if the user is authenticated and is an admin.', () => {
-    const actual = middleware({
+    const actual = hook({
       ...emptyContext,
       user: { isAdmin: true }
     }, new ServiceManager());

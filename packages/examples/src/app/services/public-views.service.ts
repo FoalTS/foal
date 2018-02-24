@@ -1,9 +1,10 @@
-import { preHook, Service } from '@foal/core';
+import { Service } from '@foal/core';
 import { MultipleEjsTemplatesService } from '@foal/ejs';
 
+export type View = 'login';
+
 @Service()
-@preHook(ctx => ctx.state.name = 'FoalTS')
-export class PublicViewsService extends MultipleEjsTemplatesService {
+export class PublicViewsService extends MultipleEjsTemplatesService<View> {
   constructor() {
     super({
       login: './templates/login.html'

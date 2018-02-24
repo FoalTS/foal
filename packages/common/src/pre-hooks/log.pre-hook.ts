@@ -1,5 +1,5 @@
-import { preHook } from '@foal/core';
+import { Hook } from '@foal/core';
 
-export function log(message: string, logFn = console.log) {
-  return preHook(ctx => logFn(message));
+export function log(message: string, logFn = console.log): Hook {
+  return ctx => logFn(message);
 }

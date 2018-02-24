@@ -1,8 +1,8 @@
 import {
   HttpResponseMethodNotAllowed,
-  preHook,
+  Hook,
 } from '@foal/core';
 
-export function methodNotAllowed() {
-  return preHook(() => new HttpResponseMethodNotAllowed());
+export function methodNotAllowed(): Hook {
+  return () => new HttpResponseMethodNotAllowed();
 }

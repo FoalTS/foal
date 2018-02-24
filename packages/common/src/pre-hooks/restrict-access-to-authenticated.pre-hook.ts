@@ -1,12 +1,12 @@
 import {
-  preHook,
+  Hook,
   HttpResponseUnauthorized
 } from '@foal/core';
 
-export function restrictAccessToAuthenticated() {
-  return preHook(ctx => {
+export function restrictAccessToAuthenticated(): Hook {
+  return ctx => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
-  });
+  };
 }

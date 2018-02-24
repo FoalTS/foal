@@ -1,12 +1,14 @@
-import { Foal } from '@foal/core';
+import { App } from '@foal/core';
 import { Router } from 'express';
 
 import { getExpressMiddleware } from './get-express-middleware';
 
-export function getCallback(foal: Foal, stateDef: { req: string, ctx: string }[] = []) {
+export function getCallback(app: App, stateDef: { req: string, ctx: string }[] = []) {
   const router = Router();
-  for (const route of foal.routes) {
-    router.use(getExpressMiddleware(route, stateDef));
+  for (const controller of app.controllers) {
+    for (const route of controller.getRoutes()) {
+      router.use(getExpressMiddleware(route, app.services, stateDef));
+    }
   }
   return router;
 }

@@ -1,4 +1,4 @@
-import { Foal } from '@foal/core';
+import { App } from '@foal/core';
 import { getCallback, handleErrors } from '@foal/express';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
@@ -8,7 +8,7 @@ import { AppModule } from './app/app.module';
 import { config } from './config';
 
 const app = express();
-const foalApp = new Foal(AppModule);
+const foalApp = new App(AppModule);
 
 app.use(express.static('public'));
 

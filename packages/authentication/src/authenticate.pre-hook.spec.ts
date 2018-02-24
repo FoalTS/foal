@@ -1,7 +1,6 @@
 import { ModelService, ObjectDoesNotExist } from '@foal/common';
 import {
   createEmptyContext,
-  getPreMiddleware,
   HttpResponseNotFound,
   ObjectType,
   Service,
@@ -49,11 +48,11 @@ describe('authenticate', () => {
   }
 
   it('should throw an Error if there is no session.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     try {
-      await middleware(ctx, new ServiceManager());
+      await hook(ctx, new ServiceManager());
       throw new Error('No error was thrown by the middleware');
     } catch (err) {
       expect(err).to.be.instanceOf(Error).with.property(
@@ -64,18 +63,18 @@ describe('authenticate', () => {
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {};
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
 
     ctx.session.authentication = {};
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
   });
 
   it('should not throw an Error if no user is found in the database matching the given id.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {
@@ -83,11 +82,11 @@ describe('authenticate', () => {
         userId: 2
       }
     };
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {
@@ -95,7 +94,7 @@ describe('authenticate', () => {
         userId: 1
       }
     };
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
 
     expect(ctx.user).to.deep.equal({
       email: 'john@foalts.org',

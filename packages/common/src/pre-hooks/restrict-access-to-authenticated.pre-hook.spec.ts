@@ -1,7 +1,6 @@
 import {
   Context,
-  getPreMiddleware,
-  Middleware,
+  Hook,
   ServiceManager,
   HttpResponseUnauthorized,
   HttpResponse
@@ -12,11 +11,11 @@ import { restrictAccessToAuthenticated } from './restrict-access-to-authenticate
 
 describe('restrictAccessToAuthenticated', () => {
 
-  let middleware: Middleware;
+  let hook: Hook;
   let emptyContext: Context;
 
   before(() => {
-    middleware = getPreMiddleware(restrictAccessToAuthenticated());
+    hook = restrictAccessToAuthenticated();
     emptyContext = {
       body: undefined,
       getHeader: (field: string): string => '',
@@ -30,7 +29,7 @@ describe('restrictAccessToAuthenticated', () => {
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
-    const actual = middleware({
+    const actual = hook({
       ...emptyContext,
       user: undefined
     }, new ServiceManager());
@@ -38,7 +37,7 @@ describe('restrictAccessToAuthenticated', () => {
   });
 
   it('should not return any HttpResponse if the user is authenticated.', () => {
-    const actual = middleware({
+    const actual = hook({
       ...emptyContext,
       user: {}
     }, new ServiceManager());

@@ -30,6 +30,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@foal/authentication": "^0.4.0-alpha.3",
     "@foal/common": "^0.4.0-alpha.3",
     "@foal/core": "^0.4.0-alpha.3",
     "@foal/ejs": "^0.4.0-alpha.3",
