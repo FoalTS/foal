@@ -4,16 +4,30 @@ export abstract class HttpResponse {
   public abstract statusCode: number;
   public abstract statusMessage: string;
 
-  constructor() {}
+  constructor(public content?: any) {}
 }
 
 /* 2xx Success */
 
-export class HttpResponseOK extends HttpResponse {
+export abstract class HttpResponseSuccess extends HttpResponse {
+  constructor(content?: any) {
+    super(content);
+  }
+}
+
+export class HttpResponseOK extends HttpResponseSuccess {
   public statusCode = 200;
   public statusMessage = 'OK';
-  constructor() {
-    super();
+  constructor(content?: any) {
+    super(content);
+  }
+}
+
+export class HttpResponseCreated extends HttpResponseSuccess {
+  public statusCode = 201;
+  public statusMessage = 'CREATED';
+  constructor(content?: any) {
+    super(content);
   }
 }
 
@@ -30,8 +44,8 @@ export class HttpResponseRedirect extends HttpResponse {
 /* 4xx Client Error */
 
 export abstract class HttpResponseClientError extends HttpResponse {
-  constructor(public details?: ObjectType) {
-    super();
+  constructor(content?: any) {
+    super(content);
   }
 }
 
@@ -39,8 +53,8 @@ export abstract class HttpResponseClientError extends HttpResponse {
 export class HttpResponseBadRequest extends HttpResponseClientError {
   public statusCode = 400;
   public statusMessage = 'BAD REQUEST';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
@@ -50,63 +64,63 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
   public headers = {
     'WWW-Authenticate': ''
   };
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseForbidden extends HttpResponseClientError {
   public statusCode = 403;
   public statusMessage = 'FORBIDDEN';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseNotFound extends HttpResponseClientError {
   public statusCode = 404;
   public statusMessage = 'NOT FOUND';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
   public statusCode = 405;
   public statusMessage = 'METHOD NOT ALLOWED';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseConflict extends HttpResponseClientError {
   public statusCode = 409;
   public statusMessage = 'CONFLICT';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 /* 5xx Server Error */
 
 export abstract class HttpResponseServerError extends HttpResponse {
-  constructor(public details?: ObjectType) {
-    super();
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseInternalServerError extends HttpResponseServerError {
   public statusCode = 500;
   public statusMessage = 'INTERNAL SERVER ERROR';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }
 
 export class HttpResponseNotImplemented extends HttpResponseServerError {
   public statusCode = 501;
   public statusMessage = 'NOT IMPLEMENTED';
-  constructor(details?: ObjectType) {
-    super(details);
+  constructor(content?: any) {
+    super(content);
   }
 }

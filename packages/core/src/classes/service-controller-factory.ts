@@ -7,7 +7,7 @@ import {
 import { Controller } from './controller';
 import { ServiceManager } from './service-manager';
 
-export abstract class ServiceControllerFactory<IService, RouteName extends string, Options> {
+export abstract class ServiceControllerFactory<IService, RouteName extends string, Options = undefined> {
 
   constructor() {}
 
