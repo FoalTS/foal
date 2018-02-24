@@ -1,9 +1,9 @@
 import {
   Context,
   Hook,
-  ServiceManager,
+  HttpResponse,
   HttpResponseUnauthorized,
-  HttpResponse
+  ServiceManager,
 } from '@foal/core';
 import { expect } from 'chai';
 

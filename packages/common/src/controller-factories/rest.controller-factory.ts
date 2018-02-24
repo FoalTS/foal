@@ -1,14 +1,11 @@
 import {
-  Context,
   Controller,
-  Type,
-  ServiceControllerFactory,
-  HttpMethod,
-  HttpResponseOK,
   HttpResponseCreated,
   HttpResponseMethodNotAllowed,
   HttpResponseNotImplemented,
-  Route,
+  HttpResponseOK,
+  ServiceControllerFactory,
+  Type,
 } from '@foal/core';
 
 import { ModelService } from '../services';
@@ -16,7 +13,9 @@ import { ModelService } from '../services';
 export type RouteName = 'deleteAll' | 'deleteById' | 'getAll' | 'getById' | 'patchAll' | 'patchById'
   | 'postAll' | 'postById' | 'putAll' | 'putById' ;
 
-export class RestControllerFactory extends ServiceControllerFactory<Partial<ModelService<any, any, any, any>>, RouteName> {
+export class RestControllerFactory extends ServiceControllerFactory<
+    Partial<ModelService<any, any, any, any>>, RouteName
+  > {
   // Catch ObjectDoesNotExist
   public defineController(controller: Controller<RouteName>, ServiceClass: Type<Partial<ModelService<any>>>): void {
     controller.addRoute('deleteAll', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
@@ -64,7 +63,7 @@ export class RestControllerFactory extends ServiceControllerFactory<Partial<Mode
         return new HttpResponseNotImplemented();
       }
       return new HttpResponseOK(await service.findByIdAndReplace(ctx.params.id, ctx.body));
-    })
+    });
   }
 }
 

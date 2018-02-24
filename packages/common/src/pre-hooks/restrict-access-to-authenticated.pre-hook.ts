@@ -1,6 +1,6 @@
 import {
   Hook,
-  HttpResponseUnauthorized
+  HttpResponseUnauthorized,
 } from '@foal/core';
 
 export function restrictAccessToAuthenticated(): Hook {

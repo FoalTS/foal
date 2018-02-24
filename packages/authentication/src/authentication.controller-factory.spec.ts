@@ -1,16 +1,15 @@
 import {
   createEmptyContext,
-  HttpResponseRedirect,
-  ObjectType,
+  HttpResponseOK,
   HttpResponseUnauthorized,
-  ServiceManager,
+  ObjectType,
   Service,
-  HttpResponseOK
+  ServiceManager,
 } from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { authentication, AuthenticationFactory, Options } from './authentication.controller-factory';
+import { authentication, AuthenticationFactory } from './authentication.controller-factory';
 import { AuthenticatorService } from './authenticator-service.interface';
 
 chai.use(spies);
@@ -22,7 +21,7 @@ describe('authentication', () => {
   class MockAuthenticatorService implements AuthenticatorService<any> {
     constructor() {}
 
-    authenticate(credentials: ObjectType) {
+    public authenticate(credentials: ObjectType) {
       if (credentials.username === 'John') {
         return {
           id: 1,
@@ -38,7 +37,7 @@ describe('authentication', () => {
   });
 
   describe('when attachService is called', () => {
-  
+
     it('should return a controller with a proper `main` route when there is no option.', async () => {
       const controller = authentication.attachService('/', MockAuthenticatorService);
       const actual = controller.getRoute('main');
@@ -73,7 +72,7 @@ describe('authentication', () => {
         message: 'Bad credentials.'
       });
     });
-  
+
     xit('should return a controller with a proper `main` route when there are options.', async () => {
       // const options: Options = {
       //   failureRedirect: '/failure',

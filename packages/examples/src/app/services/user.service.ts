@@ -1,6 +1,6 @@
 import { CheckPassword } from '@foal/authentication';
-import { Context, ObjectType, Service } from '@foal/core';
-import { Sequelize, SequelizeModelService, DefaultIdAndTimeStamps } from '@foal/sequelize';
+import { Service } from '@foal/core';
+import { DefaultIdAndTimeStamps, Sequelize, SequelizeModelService } from '@foal/sequelize';
 import * as bcrypt from 'bcrypt-nodejs';
 
 import { ConnectionService } from './connection.service';

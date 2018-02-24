@@ -1,8 +1,8 @@
 import {
   Controller,
+  HttpResponseOK,
   ServiceControllerFactory,
   Type,
-  HttpResponseOK,
 } from '@foal/core';
 
 import { ViewService } from '../services';

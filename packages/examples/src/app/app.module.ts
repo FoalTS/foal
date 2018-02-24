@@ -3,9 +3,9 @@ import {
   log,
   multipleViews,
   rest,
-  view,
   restrictAccessToAdmin,
-  restrictAccessToAuthenticated
+  restrictAccessToAuthenticated,
+  view,
 } from '@foal/common';
 import { Module } from '@foal/core';
 
@@ -27,7 +27,7 @@ export const AppModule: Module = {
         log('UserService2')
       ])
       .withPreHooks([
-        ctx => { ctx.body.isAdmin = false },
+        ctx => { ctx.body.isAdmin = false; },
         log('create1'),
         log('create2'),
         afterThatLog('create1 (post)'),
@@ -40,12 +40,12 @@ export const AppModule: Module = {
         afterThatLog('UserService2 (post)')
       ])
   ],
+  postHooks: [
+    afterThatLog('AppModule1 (post)'),
+    afterThatLog('AppModule2 (post)'),
+  ],
   preHooks: [
     log('AppModule1'),
     log('AppModule2'),
   ],
-  postHooks: [
-    afterThatLog('AppModule1 (post)'),
-    afterThatLog('AppModule2 (post)'),
-  ]
 };

@@ -1,6 +1,6 @@
-import { Context, Hook } from '../interfaces';
-import { ServiceManager } from '../classes/service-manager';
 import { HttpResponse } from '../classes/http-responses';
+import { ServiceManager } from '../classes/service-manager';
+import { Context, Hook } from '../interfaces';
 
 export function combineHooks(hooks: Hook[]): Hook {
   return async (ctx: Context, services: ServiceManager) => {
@@ -10,5 +10,5 @@ export function combineHooks(hooks: Hook[]): Hook {
         return result;
       }
     }
-  }
+  };
 }

@@ -1,5 +1,3 @@
-import { ObjectType } from '../interfaces';
-
 export abstract class HttpResponse {
   public abstract statusCode: number;
   public abstract statusMessage: string;
@@ -48,7 +46,6 @@ export abstract class HttpResponseClientError extends HttpResponse {
     super(content);
   }
 }
-
 
 export class HttpResponseBadRequest extends HttpResponseClientError {
   public statusCode = 400;

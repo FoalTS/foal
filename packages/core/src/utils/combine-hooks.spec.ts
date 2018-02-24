@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { Hook } from '../interfaces';
-import { combineHooks } from './combine-hooks';
-import { createEmptyContext } from '../testing';
-import { ServiceManager } from '../classes/service-manager';
 import { HttpResponseOK } from '../classes/http-responses';
+import { ServiceManager } from '../classes/service-manager';
+import { Hook } from '../interfaces';
+import { createEmptyContext } from '../testing';
+import { combineHooks } from './combine-hooks';
 
 describe('combineHooks', () => {
 

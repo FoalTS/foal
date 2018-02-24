@@ -1,11 +1,7 @@
 import {
-  Context,
-  Hook,
-  Route,
   Type
 } from '../interfaces';
 import { Controller } from './controller';
-import { ServiceManager } from './service-manager';
 
 export abstract class ServiceControllerFactory<IService, RouteName extends string, Options = undefined> {
 
@@ -19,6 +15,6 @@ export abstract class ServiceControllerFactory<IService, RouteName extends strin
   }
 
   protected abstract defineController(controller: Controller<RouteName>, ServiceClass: Type<IService>,
-    options?: Options): void;
+                                      options?: Options): void;
 
 }

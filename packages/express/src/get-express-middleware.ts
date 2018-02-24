@@ -1,4 +1,4 @@
-import { Context, HttpResponseRedirect, Route, ServiceManager, HttpResponse, HttpResponseOK } from '@foal/core';
+import { Context, HttpResponse, HttpResponseOK, HttpResponseRedirect, Route, ServiceManager } from '@foal/core';
 import { Router } from 'express';
 
 import { ExpressMiddleware } from './interfaces';

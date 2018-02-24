@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-
 import { Controller } from './controller';
 
 xdescribe('Controller', () => {
@@ -18,7 +16,7 @@ xdescribe('Controller', () => {
     it('should throw an exception if we try to get a route that does not exist.', () => {
 
     });
-  
+
   });
 
   describe('when addPreHooksAtTheTop is called', () => {
@@ -38,7 +36,7 @@ xdescribe('Controller', () => {
   });
 
   describe('when withPreHook is called', () => {
-    
+
     it('should add the pre-hook at the bottom of the pre-hooks of each route if there is no route name.', () => {
 
     });

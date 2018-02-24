@@ -1,6 +1,6 @@
 import {
-  HttpResponseForbidden,
   Hook,
+  HttpResponseForbidden,
   HttpResponseUnauthorized
 } from '@foal/core';
 

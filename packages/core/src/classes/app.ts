@@ -1,4 +1,3 @@
-import { Module, Hook, Route } from '../interfaces';
 import { Controller } from './controller';
 import { ServiceManager } from './service-manager';
 

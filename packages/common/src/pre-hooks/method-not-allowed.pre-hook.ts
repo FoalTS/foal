@@ -1,6 +1,6 @@
 import {
-  HttpResponseMethodNotAllowed,
   Hook,
+  HttpResponseMethodNotAllowed,
 } from '@foal/core';
 
 export function methodNotAllowed(): Hook {

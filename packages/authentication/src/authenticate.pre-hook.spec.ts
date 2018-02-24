@@ -1,7 +1,6 @@
 import { ModelService, ObjectDoesNotExist } from '@foal/common';
 import {
   createEmptyContext,
-  HttpResponseNotFound,
   ObjectType,
   Service,
   ServiceManager,

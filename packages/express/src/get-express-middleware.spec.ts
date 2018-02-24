@@ -1,10 +1,8 @@
 import {
   Context,
   HttpMethod,
-  HttpResponseRedirect,
   HttpResponseMethodNotAllowed,
-  ReducedHook,
-  ReducedRoute,
+  HttpResponseRedirect,
 } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import { expect } from 'chai';
@@ -85,8 +83,8 @@ describe(`getExpressMiddleware(route: ReducedRoute,
     before(() => {
       app = express();
       route = {
-        httpMethod: 'GET',
         hooks: [],
+        httpMethod: 'GET',
         paths: [ '/', '/foo', '/', '/', '/bar', 'foo' ],
         successStatus: 200
       };
@@ -124,8 +122,8 @@ describe(`getExpressMiddleware(route: ReducedRoute,
     before(() => {
       app = express();
       route = {
-        httpMethod: 'GET',
         hooks: [],
+        httpMethod: 'GET',
         paths: [ '/foo/:id/bar/:id2' ],
         successStatus: 200
       };
@@ -224,10 +222,15 @@ describe(`getExpressMiddleware(route: ReducedRoute,
       middleware1 = async ctx => str += 'a';
       middleware2 = ctx => str += 'b';
       app = express();
-      route = { httpMethod: 'GET', hooks: [
-        middleware1,
-        middleware2
-      ], paths: [], successStatus: 200 };
+      route = {
+        hooks: [
+          middleware1,
+          middleware2
+        ],
+        httpMethod: 'GET',
+        paths: [],
+        successStatus: 200
+      };
       app.use(getExpressMiddleware(route));
 
       return request(app)
@@ -271,7 +274,8 @@ describe(`getExpressMiddleware(route: ReducedRoute,
     it('should return a middleware which responds on success with ctx.result (object).',
        getCtxResultTest({ success: 'ok' }, { success: 'ok' }, true));
 
-    it('should return a middleware which redirects on success if ctx.result is an instance of HttpResponseRedirect.', () => {
+    it(`should return a middleware which redirects on success if ctx.result is an instance
+        of HttpResponseRedirect.`, () => {
       middleware1 = ctx => { ctx.result = new HttpResponseRedirect('/foo'); };
       app = express();
       route = { httpMethod: 'GET', paths: [], hooks: [ middleware1 ], successStatus: 200 };

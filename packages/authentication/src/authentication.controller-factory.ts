@@ -1,11 +1,10 @@
 import {
   Controller,
-  ServiceControllerFactory,
-  HttpResponseRedirect,
-  Route,
-  HttpResponseUnauthorized,
-  Type,
   HttpResponseOK,
+  HttpResponseRedirect,
+  HttpResponseUnauthorized,
+  ServiceControllerFactory,
+  Type,
 } from '@foal/core';
 
 import { AuthenticatorService } from './authenticator-service.interface';
@@ -16,7 +15,9 @@ export interface Options {
 }
 
 export class AuthenticationFactory extends ServiceControllerFactory<AuthenticatorService<any>, 'main', Options> {
-  public defineController(controller: Controller<'main'>, ServiceClass: Type<AuthenticatorService<any>>, options: Options = {}): void {
+  public defineController(controller: Controller<'main'>,
+                          ServiceClass: Type<AuthenticatorService<any>>,
+                          options: Options = {}): void {
     controller.addRoute('main', 'POST', '/', async (ctx, services) => {
       const service = services.get(ServiceClass);
       const user = await service.authenticate(ctx.body);
@@ -33,7 +34,7 @@ export class AuthenticationFactory extends ServiceControllerFactory<Authenticato
         return new HttpResponseRedirect(options.successRedirect);
       }
       return new HttpResponseOK(user);
-    })
+    });
   }
 }
 

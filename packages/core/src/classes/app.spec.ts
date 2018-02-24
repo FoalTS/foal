@@ -1,10 +1,8 @@
 import { expect } from 'chai';
 
 import { App } from './app';
-import { Context, Module, Route } from '../interfaces';
-import { Service, ServiceManager } from './service-manager';
-import { createEmptyContext } from '../testing';
 import { Controller } from './controller';
+import { ServiceManager } from './service-manager';
 
 describe('App', () => {
 
@@ -59,24 +57,25 @@ describe('App', () => {
     const controller4 = new Controller();
     controller4.addRoute('main', 'POST', '/controller4', () => {});
 
-    const app = new App({
-      path: '/foo',
+    // tslint:disable-next-line:no-unused-expression
+    new App({
       controllers: [ controller1 ],
       modules: [
         {
-          path: '/',
           controllers: [ controller2 ],
           modules: [
             {
+              controllers: [ controller3 ],
               path: '/bar',
-              controllers: [ controller3 ]
             }
-          ]
+          ],
+          path: '/',
         },
         {
           controllers: [ controller4 ]
         }
-      ]
+      ],
+      path: '/foo',
     });
 
     expect(controller1.getRoute('main').path).to.equal('/foo/controller1');
@@ -102,24 +101,25 @@ describe('App', () => {
     controller4.addRoute('main', 'POST', '/controller4', () => {});
     controller4.withPreHook(preHookE, 'main');
 
-    const app = new App({
-      preHooks: [ preHookA, preHookB ],
+    // tslint:disable-next-line:no-unused-expression
+    new App({
       controllers: [ controller1 ],
       modules: [
         {
-          preHooks: [],
           controllers: [ controller2 ],
           modules: [
             {
+              controllers: [ controller3 ],
               preHooks: [ preHookC, preHookD ],
-              controllers: [ controller3 ]
             }
-          ]
+          ],
+          preHooks: [],
         },
         {
           controllers: [ controller4 ]
         }
-      ]
+      ],
+      preHooks: [ preHookA, preHookB ],
     });
 
     expect(controller1.getRoute('main').preHooks).to.deep.equal([ preHookA, preHookB ]);
@@ -145,24 +145,25 @@ describe('App', () => {
     controller4.addRoute('main', 'POST', '/controller4', () => {});
     controller4.withPostHook(postHookE, 'main');
 
-    const app = new App({
-      postHooks: [ postHookA, postHookB ],
+    // tslint:disable-next-line:no-unused-expression
+    new App({
       controllers: [ controller1 ],
       modules: [
         {
-          postHooks: [],
           controllers: [ controller2 ],
           modules: [
             {
+              controllers: [ controller3 ],
               postHooks: [ postHookC, postHookD ],
-              controllers: [ controller3 ]
             }
-          ]
+          ],
+          postHooks: [],
         },
         {
           controllers: [ controller4 ]
         }
-      ]
+      ],
+      postHooks: [ postHookA, postHookB ],
     });
 
     expect(controller1.getRoute('main').postHooks).to.deep.equal([ postHookA, postHookB ]);

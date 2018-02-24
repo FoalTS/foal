@@ -1,4 +1,4 @@
-import { HttpResponseBadRequest, createEmptyContext, ServiceManager } from '@foal/core';
+import { createEmptyContext, HttpResponseBadRequest, ServiceManager } from '@foal/core';
 import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
@@ -45,7 +45,8 @@ describe('validate', () => {
     expect(hook(context({ foo: '3' }), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest with a defined `content` property if ctx.body is not validated by ajv.', () => {
+  it('should return an HttpResponseBadRequest with a defined `content` property if ctx.body is'
+      + ' not validated by ajv.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
