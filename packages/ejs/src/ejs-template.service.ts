@@ -4,7 +4,6 @@ import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-@Service()
 export abstract class EjsTemplateService implements ViewService {
   constructor(private filePath: string) {}
 

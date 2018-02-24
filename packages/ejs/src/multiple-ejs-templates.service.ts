@@ -4,7 +4,6 @@ import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-@Service()
 export abstract class MultipleEjsTemplatesService<View extends string> implements MultipleViewsService<View> {
   constructor(private templates: Record<View, string>) {}
 

@@ -1,3 +1,4 @@
+import { Module } from '../interfaces';
 import { Controller } from './controller';
 import { ServiceManager } from './service-manager';
 
