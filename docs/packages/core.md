@@ -4,21 +4,15 @@ Core package of the framework.
 
 ## `ControllerFactory<T>`
 
-## `postHook`
-
-## `preHook`
-
 ## Contexts
 
-## `FoalModule`
+## `Module`
 
 ## `ObjectType`
 
 ## `combineHooks`
 
 ## Testing
-
-### `getPreMiddleware` and `getPostMiddleware`
 
 ### `createEmptyContext()`
 
@@ -39,6 +33,6 @@ You may throw an `HttpError` in a hook or in an service. This will stop the requ
 
 The error may take an optional argument `details: ObjectType` to give more information on the error. This object aims to be returned to the client. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
 
-## `Foal`
+## `App`
 
 ## `ServiceManager`

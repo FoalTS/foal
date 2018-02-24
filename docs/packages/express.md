@@ -2,7 +2,7 @@
 
 Foal package to run the app with express.
 
-## `getCallback(foal: Foal, stateDef: { req: string, ctx: string }[] = [])`
+## `getCallback(app: App, stateDef: { req: string, ctx: string }[] = [])`
 
 Returns an express middleware from the foal application. It's an adapter to make foal work with express.
 
@@ -12,7 +12,7 @@ Returns an express middleware from the foal application. It's an adapter to make
 
 **Example**
 ```typescript
-const foalApp = new Foal({
+const foalApp = new App({
   controllers: []
 });
 
@@ -30,7 +30,7 @@ Returns an express middleware to handle errors thrown in previous middlewares.
 
 **Example**
 ```typescript
-const foalApp = new Foal({
+const foalApp = new App({
   controllers: []
 });
 

@@ -13,15 +13,14 @@ Renders several templates from a `MultipleViewsService`.
 If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
 ```typescript
-interface MultipleViewsService {
-  names(): string[];
-  render(name: string, locals: ObjectType): Promise<string>|string;
+interface MultipleViewsService<View extends string> {
+  render(name: View, locals: ObjectType): Promise<string>|string;
 }
 ```
 
 ### `rest`
 
-`rest.attachService(path: string, service: Partial<ModelService<IModel>>)`
+`rest.attachService(path: string, service: Partial<ModelService<any, any, any, any>>)`
 
 Creates a REST controller from a `Partial<ModelService<IModel>>`.
 
@@ -58,9 +57,13 @@ Logs the message with the given log function (default is console.log).
 
 Example:
 ```typescript
-@Service()
-@afterThatLog('A method has been called!')
-class Service {}
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/', () => {})
+      .withPostHook(afterThatLog('Hello world'))
+  ]
+}
 ```
 
 ### `afterThatRemoveField(name: string)`
@@ -95,9 +98,13 @@ Logs the message with the given log function (default is console.log).
 
 Example:
 ```typescript
-@Service()
-@log('A method has been called!')
-class Service {}
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/', () => {})
+      .withPreHook(log('Hello world'))
+  ]
+}
 ```
 
 ### `methodNotAllowed()`
@@ -105,13 +112,12 @@ class Service {}
 Throws a HttpResponseMethodNotAllowed. The client gets a `405 Method Not Allowed`.
 
 ```typescript
-@Service()
-class OrganizationService {
-
-  @methodNotAllowed()
-  public delete(id) {
-    // Deletes the org.
-  }
+const AppModule: Module = {
+  controllers: [
+    rest
+      .attachService('/', MyModelService)
+      .withPreHook(methodNotAllowed(), 'deleteById')
+  ]
 }
 ```
 

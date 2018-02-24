@@ -8,11 +8,10 @@ It implements the `ViewService` interface.
 
 `index-view.service.ts`
 ```typescript
-import { preHook, Service } from '@foal/core';
+import { Service } from '@foal/core';
 import { EjsTemplateService } from '@foal/ejs';
 
 @Service()
-@preHook(ctx => ctx.state.name = 'FoalTS')
 export class IndexViewService extends EjsTemplateService {
   constructor() {
     super('./templates/index.html');
@@ -41,13 +40,15 @@ export class IndexViewService extends EjsTemplateService {
 `app.module.ts`
 ```typescript
 import { view } from '@foal/common';
-import { FoalModule } from '@foal/core';
+import { Module } from '@foal/core';
 
 import { IndexViewService } from './index-view.service';
 
-export const AppModule: FoalModule = {
+export const AppModule: Module = {
   controllers: [
-    view.attachService('/', IndexViewService),
+    view
+      .attachService('/', IndexViewService)
+      .withPreHook(ctx => { ctx.state.locals = { name: 'FoalTS' }; })
   ],
 };
 
@@ -59,12 +60,13 @@ It implements the `MultipleViewsService` interface.
 
 `admin-views.service.ts`
 ```typescript
-import { preHook, Service } from '@foal/core';
+import { Service } from '@foal/core';
 import { MultipleEjsTemplatesService } from '@foal/ejs';
 
+export type View = 'billing' | 'users';
+
 @Service()
-@preHook(ctx => ctx.state.name = 'FoalTS')
-export class AdminViewsService extends MultipleEjsTemplatesService {
+export class AdminViewsService extends MultipleEjsTemplatesService<View> {
   constructor() {
     super({
       billing: './templates/billing.html',
@@ -79,13 +81,20 @@ export class AdminViewsService extends MultipleEjsTemplatesService {
 `app.module.ts`
 ```typescript
 import { multipleViews } from '@foal/common';
-import { FoalModule } from '@foal/core';
+import { Module } from '@foal/core';
 
 import { AdminViewsService } from './admin-views.service';
 
-export const AppModule: FoalModule = {
+export const AppModule: Module = {
   controllers: [
-    multipleViews.attachService('/admin', AdminViewsService), // -> serves two paths: /admin/billing and /admin/users
+    multipleViews
+      .attachService('/admin', AdminViewsService, {
+        views: {
+          billing: '/billing',
+          users: '/users'
+        }
+      })
+      .withPreHook(ctx => { ctx.state.locals = { name: 'FoalTS' }; })
   ],
 };
 
