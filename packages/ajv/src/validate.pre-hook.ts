@@ -1,9 +1,9 @@
-import { Hook, HttpResponseBadRequest, ObjectType } from '@foal/core';
+import { HttpResponseBadRequest, ObjectType, PreHook } from '@foal/core';
 import * as Ajv from 'ajv';
 
 const defaultInstance = new Ajv();
 
-export function validate(schema: ObjectType, ajv = defaultInstance): Hook {
+export function validate(schema: ObjectType, ajv = defaultInstance): PreHook {
   const isValid = ajv.compile(schema);
   return ctx => {
     if (!isValid(ctx.body)) {
