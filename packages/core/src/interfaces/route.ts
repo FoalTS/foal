@@ -1,4 +1,4 @@
-import { Handler, PostHook, PreHook } from './hook';
+import { Handler, PostHook, PreHook } from './hooks';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
 

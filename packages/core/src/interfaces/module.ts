@@ -1,5 +1,5 @@
 import { Controller } from '../classes';
-import { PostHook, PreHook } from './hook';
+import { PostHook, PreHook } from './hooks';
 
 export interface Module {
   controllers?: Controller<string>[];
