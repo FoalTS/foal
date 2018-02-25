@@ -1,27 +1,27 @@
 import {
+  Class,
   Controller,
   HttpResponseOK,
   ServiceControllerFactory,
-  Type,
 } from '@foal/core';
 
 import { MultipleViewsService } from '../services';
 
-export interface Options<View extends string> {
-  views: Record<View, string>;
+export interface Options {
+  views: Record<string, string>;
 }
 
-export class MultipleViewsFactory<View extends string> extends ServiceControllerFactory<MultipleViewsService<View>,
-    View, Options<View>> {
-  protected defineController(controller: Controller<View>,
-                             ServiceClass: Type<MultipleViewsService<View>>,
-                             options?: Options<View>): void {
+export class MultipleViewsFactory extends ServiceControllerFactory<MultipleViewsService,
+    string, Options> {
+  public defineController(controller: Controller<string>,
+                          ServiceClass: Class<MultipleViewsService>,
+                          options?: Options): void {
     if (!options) {
       throw new Error('Options must be given to the multipleViews controller factory.');
     }
     for (const name in options.views) {
       if (options.views.hasOwnProperty(name)) {
-        controller.addRoute(name, 'GET', `/${name}`, async (ctx, services) => {
+        controller.addRoute(name, 'GET', options.views[name], async (ctx, services) => {
           const service = services.get(ServiceClass);
           return new HttpResponseOK(
             await service.render(name, ctx.state.locals || {})

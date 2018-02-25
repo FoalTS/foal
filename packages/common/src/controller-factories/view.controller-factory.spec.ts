@@ -1,4 +1,9 @@
-import { createEmptyContext, ServiceManager } from '@foal/core';
+import {
+  createEmptyContext,
+  HttpResponseOK,
+  Service,
+  ServiceManager
+} from '@foal/core';
 import { expect } from 'chai';
 
 import { ViewService } from '../services';
@@ -6,7 +11,9 @@ import { view, ViewControllerFactory } from './view.controller-factory';
 
 describe('view', () => {
 
+  @Service()
   class MockService implements ViewService {
+    constructor() {}
     public async render(locals: { name: string }): Promise<string> {
       return locals.name || 'bar';
     }
@@ -18,7 +25,7 @@ describe('view', () => {
 
   describe('when attachService is called', () => {
 
-    it('should return a controller with a proper `default` route.', async () => {
+    it('should return a controller with a proper "main" route.', async () => {
       const controller = view.attachService('/', MockService);
       const actual = controller.getRoute('main');
 
@@ -26,10 +33,12 @@ describe('view', () => {
       expect(actual.path).to.equal('/');
 
       const ctx = createEmptyContext();
-      expect(await actual.middleHook(ctx, new ServiceManager())).to.equal('bar');
+      let result = await actual.handler(ctx, new ServiceManager());
+      expect(result).to.be.an.instanceOf(HttpResponseOK).with.property('content', 'bar');
 
       ctx.state.locals = { name: 'foo' };
-      expect(await actual.middleHook(ctx, new ServiceManager())).to.equal('foo');
+      result = await actual.handler(ctx, new ServiceManager());
+      expect(result).to.be.an.instanceOf(HttpResponseOK).with.property('content', 'foo');
     });
 
   });

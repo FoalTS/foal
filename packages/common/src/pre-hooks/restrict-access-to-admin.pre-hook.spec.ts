@@ -1,6 +1,7 @@
 import {
   Context,
-  Hook,
+  createEmptyContext,
+  PreHook,
   HttpResponse,
   HttpResponseForbidden,
   HttpResponseUnauthorized,
@@ -12,26 +13,15 @@ import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
 
 describe('restrictAccessToAdmin', () => {
 
-  let hook: Hook;
-  let emptyContext: Context;
+  let hook: PreHook;
 
   before(() => {
     hook = restrictAccessToAdmin();
-    emptyContext = {
-      body: undefined,
-      getHeader: (field: string): string => '',
-      params: {},
-      query: {},
-      result: undefined,
-      session: undefined,
-      state: {},
-      user: undefined
-    };
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
     const actual = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: undefined
     }, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
@@ -39,12 +29,12 @@ describe('restrictAccessToAdmin', () => {
 
   it('should return an HttpResponseForbidden if the user is not an admin.', () => {
     const actual = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: {}
     }, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseForbidden);
     const actual2 = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: { isAdmin: false }
     }, new ServiceManager());
     expect(actual2).to.be.instanceOf(HttpResponseForbidden);
@@ -52,7 +42,7 @@ describe('restrictAccessToAdmin', () => {
 
   it('should not return any HttpResponse if the user is authenticated and is an admin.', () => {
     const actual = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: { isAdmin: true }
     }, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);

@@ -19,7 +19,7 @@ import { ObjectType } from '@foal/core';
  * Default to IModel.
  * @template IIdAndTimeStamps Interface to describe the field id and the timestamp fields of the objects.
  * Default to { id: string }.
- * @template IdType Type of the id (usually number or string). Default to string.
+ * @template IdType Class of the id (usually number or string). Default to string.
  * @example
  * interface Task {
  *   text: string;

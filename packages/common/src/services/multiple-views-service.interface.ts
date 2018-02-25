@@ -1,5 +1,5 @@
 import { ObjectType } from '@foal/core';
 
-export interface MultipleViewsService<View> {
-  render(name: View, locals: ObjectType): Promise<string>|string;
+export interface MultipleViewsService {
+  render(name: string, locals: ObjectType): Promise<string>|string;
 }

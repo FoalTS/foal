@@ -1,6 +1,7 @@
 import {
   Context,
-  Hook,
+  createEmptyContext,
+  PreHook,
   HttpResponse,
   HttpResponseUnauthorized,
   ServiceManager,
@@ -11,26 +12,15 @@ import { restrictAccessToAuthenticated } from './restrict-access-to-authenticate
 
 describe('restrictAccessToAuthenticated', () => {
 
-  let hook: Hook;
-  let emptyContext: Context;
+  let hook: PreHook;
 
   before(() => {
     hook = restrictAccessToAuthenticated();
-    emptyContext = {
-      body: undefined,
-      getHeader: (field: string): string => '',
-      params: {},
-      query: {},
-      result: undefined,
-      session: undefined,
-      state: {},
-      user: undefined
-    };
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
     const actual = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: undefined
     }, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
@@ -38,7 +28,7 @@ describe('restrictAccessToAuthenticated', () => {
 
   it('should not return any HttpResponse if the user is authenticated.', () => {
     const actual = hook({
-      ...emptyContext,
+      ...createEmptyContext(),
       user: {}
     }, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);

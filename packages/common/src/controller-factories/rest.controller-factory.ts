@@ -1,11 +1,11 @@
 import {
+  Class,
   Controller,
   HttpResponseCreated,
   HttpResponseMethodNotAllowed,
   HttpResponseNotImplemented,
   HttpResponseOK,
   ServiceControllerFactory,
-  Type,
 } from '@foal/core';
 
 import { ModelService } from '../services';
@@ -17,7 +17,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
     Partial<ModelService<any, any, any, any>>, RouteName
   > {
   // Catch ObjectDoesNotExist
-  public defineController(controller: Controller<RouteName>, ServiceClass: Type<Partial<ModelService<any>>>): void {
+  public defineController(controller: Controller<RouteName>, ServiceClass: Class<Partial<ModelService<any>>>): void {
     controller.addRoute('deleteAll', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('deleteById', 'DELETE', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);

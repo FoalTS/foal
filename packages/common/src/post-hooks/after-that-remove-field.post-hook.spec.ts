@@ -1,26 +1,78 @@
-import { createEmptyContext, ServiceManager } from '@foal/core';
+import {
+  createEmptyPostContext,
+  HttpResponseOK,
+  ServiceManager,
+  HttpResponseBadRequest,
+} from '@foal/core';
 import { expect } from 'chai';
 
 import { afterThatRemoveField } from './after-that-remove-field.post-hook';
 
-describe('afterThatRemoveField(name: string)', () => {
+describe('afterThatRemoveField', () => {
 
-  it('should remove the given field from context.result if it is an object.', () => {
-    const hook = afterThatRemoveField('foo');
-    const ctx = createEmptyContext();
-    ctx.result = {
-      bar: 'foobar2',
-      foo: 'foobar',
-    };
-    hook(ctx, new ServiceManager());
+  it('should not throw an Error if ctx.result is undefined.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
 
-    expect(ctx.result).to.deep.equal({ bar: 'foobar2' });
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
   });
 
-  it('should remove the given field from each item of context.result if it is an array.', () => {
-    const hook = afterThatRemoveField('foo');
-    const ctx = createEmptyContext();
-    ctx.result = [
+  it('should not throw an Error if ctx.result.content is undefined.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseOK();
+
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
+  });
+
+  it('should not modify ctx.result.content if ctx.result is not an instance'
+      + ' of HttpResponseSuccess.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseBadRequest({
+      foo: 'bar'
+    });
+
+    postHook(ctx, new ServiceManager());
+
+    expect(ctx.result.content).to.deep.equal({ foo: 'bar' });
+  });
+
+  it('should not throw an Error if ctx.result is an instance of HttpResponseSuccess'
+      + ' and the object ctx.result.content does not have the given field.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseOK({});
+
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();  
+  });
+
+  it('should not throw an Error if ctx.result is an instance of HttpResponseSuccess'
+      + ' and one item of the array ctx.result.content does not have the given field.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseOK([{}]);
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();    
+  });
+
+  it('should remove the given field from the object context.result.content if context.result'
+      + ' is an instance of HttpResponseSuccess.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseOK({
+      bar: 'foobar2',
+      foo: 'foobar',
+    });
+    postHook(ctx, new ServiceManager());
+
+    expect(ctx.result.content).to.deep.equal({ bar: 'foobar2' });
+  });
+
+  it('should remove the given field from each item of the array context.result.content if'
+      + ' context.result is an instance of HttpResponseSuccess.', () => {
+    const postHook = afterThatRemoveField('foo');
+    const ctx = createEmptyPostContext();
+    ctx.result = new HttpResponseOK([
       {
         bar: 'foobar2',
         foo: 'foobar'
@@ -29,25 +81,11 @@ describe('afterThatRemoveField(name: string)', () => {
         bar: 'barfoo2',
         foo: 'barfoo'
       }
-    ];
-    hook(ctx, new ServiceManager());
+    ]);
+    postHook(ctx, new ServiceManager());
 
-    expect(ctx.result).to.be.an('array').and.to.have.lengthOf(2);
-    expect(ctx.result[0]).to.deep.equal({ bar: 'foobar2' });
-    expect(ctx.result[1]).to.deep.equal({ bar: 'barfoo2' });
-  });
-
-  it('should not throw an Error if the given field does not exist on ctx.result (object).', () => {
-    const hook = afterThatRemoveField('foo');
-    const ctx = createEmptyContext();
-    ctx.result = {};
-    expect(() => hook(ctx, new ServiceManager())).not.to.throw();
-  });
-
-  it('should not throw an Error if the given field does not exist in ctx.result (array).', () => {
-    const hook = afterThatRemoveField('foo');
-    const ctx = createEmptyContext();
-    ctx.result = [{}];
-    expect(() => hook(ctx, new ServiceManager())).not.to.throw();
+    expect(ctx.result.content).to.be.an('array').and.to.have.lengthOf(2);
+    expect(ctx.result.content[0]).to.deep.equal({ bar: 'foobar2' });
+    expect(ctx.result.content[1]).to.deep.equal({ bar: 'barfoo2' });
   });
 });
