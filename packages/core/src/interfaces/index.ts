@@ -1,5 +1,5 @@
 export * from './contexts';
-export * from './hook';
+export * from './hooks';
 export * from './module';
 export * from './route';
 export * from './utils';
