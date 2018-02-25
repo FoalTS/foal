@@ -20,12 +20,12 @@ describe('ControllerFactory', () => {
   }
 
   class ConcreteServiceControllerFactory extends ServiceControllerFactory<
-      ServiceInterface, 'default', Options> {
+      ServiceInterface, 'main', Options> {
 
-    public defineController(controller: Controller<'default'>,
+    public defineController(controller: Controller<'main'>,
                             ServiceClass: Class<ServiceInterface>,
                             options?: Options) {
-      controller.addRoute('default', 'POST', '/foo', (ctx, services) => {
+      controller.addRoute('main', 'POST', '/foo', (ctx, services) => {
         return new HttpResponseOK(services.get(ServiceClass).getFoo());
       });
     }
@@ -59,7 +59,7 @@ describe('ControllerFactory', () => {
 
     it('should add the given path to each route of the returned controller.', () => {
       const controller = factory.attachService('/bar', ConcreteService);
-      expect(controller.getRoute('default').path).to.equal('/bar/foo');
+      expect(controller.getRoute('main').path).to.equal('/bar/foo');
     });
 
   });
