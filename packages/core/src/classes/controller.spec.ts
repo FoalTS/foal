@@ -13,12 +13,12 @@ describe('Controller', () => {
   describe('when addRoute/getRoute are called', () => {
 
     it('should add and return the given route.', () => {
-      const middleHook = () => {};
-      controller.addRoute('create', 'POST', '/foo', middleHook);
+      const handler = () => {};
+      controller.addRoute('create', 'POST', '/foo', handler);
 
       const expected: Route = {
         httpMethod: 'POST',
-        middleHook,
+        handler,
         path: '/foo',
         postHooks: [],
         preHooks: []
@@ -224,22 +224,22 @@ describe('Controller', () => {
   describe('when getRoutes is called', () => {
 
     it('should return an array of the routes.', () => {
-      const middleHook1 = () => {};
-      controller.addRoute('create', 'POST', '/foo', middleHook1);
-      const middleHook2 = () => {};
-      controller.addRoute('update', 'GET', '/bar', middleHook2);
+      const handler1 = () => {};
+      controller.addRoute('create', 'POST', '/foo', handler1);
+      const handler2 = () => {};
+      controller.addRoute('update', 'GET', '/bar', handler2);
 
       const expected: Route[] = [
         {
           httpMethod: 'POST',
-          middleHook: middleHook1,
+          handler: handler1,
           path: '/foo',
           postHooks: [],
           preHooks: []
         },
         {
           httpMethod: 'GET',
-          middleHook: middleHook2,
+          handler: handler2,
           path: '/bar',
           postHooks: [],
           preHooks: []

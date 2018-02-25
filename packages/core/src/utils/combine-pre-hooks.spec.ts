@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 
 import { HttpResponseOK, ServiceManager } from '../classes';
-import { Hook } from '../interfaces';
+import { PreHook } from '../interfaces';
 import { createEmptyContext } from '../testing';
-import { combineHooks } from './combine-hooks';
+import { combinePreHooks } from './combine-pre-hooks';
 
-describe('combineHooks', () => {
+describe('combinePreHooks', () => {
 
-  it('should return a hook that executes the given sync or async hooks in the right order.', async () => {
+  it('should return a pre-hook that executes the given sync or async pre-hooks in the right order.', async () => {
     const hook1 = ctx => {
       ctx.state.foo += 'a';
     };
@@ -21,12 +21,12 @@ describe('combineHooks', () => {
       ctx.state.foo += 'd';
     };
 
-    const hook: Hook = combineHooks([ hook1, hook2, hook3, hook4 ]);
+    const preHook: PreHook = combinePreHooks([ hook1, hook2, hook3, hook4 ]);
 
     const ctx = createEmptyContext();
     ctx.state.foo = '';
 
-    await hook(ctx, new ServiceManager());
+    await preHook(ctx, new ServiceManager());
 
     expect(ctx.state.foo).to.equal('abcd');
   });
@@ -47,12 +47,12 @@ describe('combineHooks', () => {
       ctx.state.foo += 'd';
     };
 
-    const hook: Hook = combineHooks([ hook1, hook2, hook3, hook4 ]);
+    const preHook: PreHook = combinePreHooks([ hook1, hook2, hook3, hook4 ]);
 
     const ctx = createEmptyContext();
     ctx.state.foo = '';
 
-    const actual = await hook(ctx, new ServiceManager());
+    const actual = await preHook(ctx, new ServiceManager());
 
     expect(ctx.state.foo).to.equal('abc');
     expect(actual).to.equal(httpResponse);

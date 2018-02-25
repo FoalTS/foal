@@ -1,10 +1,10 @@
-import { Hook, HttpMethod } from '../interfaces';
+import { Handler, HttpMethod } from '../interfaces';
 import { Controller } from './controller';
 
 export class BasicControllerFactory {
-  public attachHandlingFunction(httpMethod: HttpMethod, path: string, handlingFunction: Hook): Controller<'main'> {
+  public attachHandlingFunction(httpMethod: HttpMethod, path: string, handler: Handler): Controller<'main'> {
     const controller = new Controller<'main'>();
-    controller.addRoute('main', httpMethod, path, handlingFunction);
+    controller.addRoute('main', httpMethod, path, handler);
     return controller;
   }
 }

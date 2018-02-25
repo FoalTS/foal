@@ -1,11 +1,11 @@
 import { HttpResponse } from '../classes/http-responses';
 import { ServiceManager } from '../classes/service-manager';
-import { Context, Hook } from '../interfaces';
+import { Context, PreHook } from '../interfaces';
 
-export function combineHooks(hooks: Hook[]): Hook {
+export function combinePreHooks(preHooks: PreHook[]): PreHook {
   return async (ctx: Context, services: ServiceManager) => {
-    for (const hook of hooks) {
-      const result = await hook(ctx, services);
+    for (const preHook of preHooks) {
+      const result = await preHook(ctx, services);
       if (result instanceof HttpResponse) {
         return result;
       }

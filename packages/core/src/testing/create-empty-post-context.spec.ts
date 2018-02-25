@@ -1,15 +1,16 @@
 import { expect } from 'chai';
 
-import { createEmptyContext } from './create-empty-context';
+import { createEmptyPostContext } from './create-empty-post-context';
 
-describe('createEmptyContext', () => {
+describe('createEmptyPostContext', () => {
 
   it('should create an empty context.', () => {
-    const actual = createEmptyContext();
+    const actual = createEmptyPostContext();
 
     expect(actual.body).to.equal(undefined);
     expect(actual.params).to.deep.equal({});
     expect(actual.query).to.deep.equal({});
+    expect(actual.result).to.equal(undefined);
     expect(actual.session).to.equal(undefined);
     expect(actual.state).to.deep.equal({});
     expect(actual.user).to.equal(undefined);

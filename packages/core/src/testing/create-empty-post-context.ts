@@ -1,11 +1,12 @@
-import { Context } from '../interfaces';
+import { PostContext } from '../interfaces';
 
-export function createEmptyContext(): Context {
+export function createEmptyPostContext(): PostContext {
   return {
     body: undefined,
     getHeader: (field: string) => field,
     params: {},
     query: {},
+    result: undefined,
     session: undefined,
     state: {},
     user: undefined

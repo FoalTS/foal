@@ -17,7 +17,7 @@ describe('basic', () => {
 
       const expected: Route = {
         httpMethod: 'POST',
-        middleHook: handlingFunction,
+        handler: handlingFunction,
         path: '/foo',
         postHooks: [],
         preHooks: []
