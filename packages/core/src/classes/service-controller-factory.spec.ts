@@ -3,8 +3,8 @@ import * as spies from 'chai-spies';
 
 import { Class } from '../interfaces';
 import { Controller } from './controller';
+import { HttpResponseOK } from './http-responses';
 import { ServiceControllerFactory } from './service-controller-factory';
-import { HttpResponseOK } from '.';
 
 chai.use(spies);
 const expect = chai.expect;
@@ -45,14 +45,14 @@ describe('ControllerFactory', () => {
   describe('when attachService is called', () => {
 
     it('should call defineController with the ServiceClass, the returned controller and the optional options.', () => {
-      chai.spy.on(factory, 'defineController')
+      chai.spy.on(factory, 'defineController');
 
       let controller = factory.attachService('/', ConcreteService);
       expect(factory.defineController).to.have.been.called.with.exactly(controller, ConcreteService, undefined);
 
       const options: Options = {
         option: 'option 1'
-      }
+      };
       controller = factory.attachService('/', ConcreteService, options);
       expect(factory.defineController).to.have.been.called.with.exactly(controller, ConcreteService, options);
     });

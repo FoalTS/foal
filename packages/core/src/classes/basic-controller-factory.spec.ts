@@ -21,10 +21,10 @@ describe('basic', () => {
         path: '/foo',
         postHooks: [],
         preHooks: []
-      }
+      };
       expect(controller.getRoute('main')).to.deep.equal(expected);
     });
 
-  })
+  });
 
-})
+});

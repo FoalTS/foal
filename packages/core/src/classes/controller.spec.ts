@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { Controller } from './controller';
 import { Route } from '../interfaces';
+import { Controller } from './controller';
 
 describe('Controller', () => {
 
@@ -22,7 +22,7 @@ describe('Controller', () => {
         path: '/foo',
         postHooks: [],
         preHooks: []
-      }
+      };
       expect(controller.getRoute('create')).to.deep.equal(expected);
     });
 
@@ -244,7 +244,7 @@ describe('Controller', () => {
           postHooks: [],
           preHooks: []
         }
-      ]
+      ];
       expect(controller.getRoutes()).to.deep.equal(expected);
     });
 

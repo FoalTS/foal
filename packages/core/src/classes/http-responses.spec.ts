@@ -9,8 +9,8 @@ import {
   HttpResponseForbidden,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
-  HttpResponseNotImplemented,
   HttpResponseNotFound,
+  HttpResponseNotImplemented,
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseRedirection,
@@ -18,8 +18,6 @@ import {
   HttpResponseSuccess,
   HttpResponseUnauthorized,
 } from './http-responses';
-import { Class } from '../interfaces';
-
 
 describe('HttpResponseOK', () => {
 

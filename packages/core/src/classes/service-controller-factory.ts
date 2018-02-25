@@ -12,7 +12,8 @@ export abstract class ServiceControllerFactory<IService, RouteName extends strin
     return controller;
   }
 
-  public abstract defineController(controller: Controller<RouteName>, ServiceClass: Class<IService>,
-                                      options?: Options): void;
+  public abstract defineController(controller: Controller<RouteName>,
+                                   ServiceClass: Class<IService>,
+                                   options?: Options): void;
 
 }
