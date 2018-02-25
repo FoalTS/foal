@@ -13,7 +13,7 @@ describe('ServiceManager', () => {
 
   beforeEach(() => serviceManager = new ServiceManager());
 
-  describe('when get<T>(Service: Type<T>): T is called', () => {
+  describe('when get is called', () => {
 
     it('should throw an exception if the given Service is not a service class.', () => {
       class Foo {}

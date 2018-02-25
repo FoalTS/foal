@@ -31,11 +31,17 @@ export class HttpResponseCreated extends HttpResponseSuccess {
 
 /* 3xx Redirection */
 
-export class HttpResponseRedirect extends HttpResponse {
+export abstract class HttpResponseRedirection extends HttpResponse {
+  constructor(content?: any) {
+    super(content);
+  }
+}
+
+export class HttpResponseRedirect extends HttpResponseRedirection {
   public statusCode = 302;
   public statusMessage = 'FOUND';
-  constructor(public path: string) {
-    super();
+  constructor(public path: string, content?: any) {
+    super(content);
   }
 }
 

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
-import { HttpResponseOK } from '../classes/http-responses';
-import { ServiceManager } from '../classes/service-manager';
+import { HttpResponseOK, ServiceManager } from '../classes';
 import { Hook } from '../interfaces';
 import { createEmptyContext } from '../testing';
 import { combineHooks } from './combine-hooks';
