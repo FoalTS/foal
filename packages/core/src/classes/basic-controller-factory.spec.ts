@@ -16,8 +16,8 @@ describe('basic', () => {
       const controller = basic.attachHandlingFunction('POST', '/foo', handlingFunction);
 
       const expected: Route = {
-        httpMethod: 'POST',
         handler: handlingFunction,
+        httpMethod: 'POST',
         path: '/foo',
         postHooks: [],
         preHooks: []

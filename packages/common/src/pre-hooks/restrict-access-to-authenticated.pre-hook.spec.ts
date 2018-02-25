@@ -1,9 +1,8 @@
 import {
-  Context,
   createEmptyContext,
-  PreHook,
   HttpResponse,
   HttpResponseUnauthorized,
+  PreHook,
   ServiceManager,
 } from '@foal/core';
 import { expect } from 'chai';

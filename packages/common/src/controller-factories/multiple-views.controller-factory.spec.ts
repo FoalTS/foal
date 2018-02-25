@@ -29,7 +29,7 @@ describe('multipleViews', () => {
     it('should throw an Error if no options are given.', () => {
       expect(() => multipleViews.attachService('/', MockService))
         .to.throw('Options must be given to the multipleViews controller factory.');
-    })
+    });
 
     it('should return a controller with proper routes.', async () => {
       const controller = multipleViews.attachService('/', MockService, {

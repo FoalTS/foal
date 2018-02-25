@@ -1,5 +1,4 @@
-import { HttpResponse } from '../classes/http-responses';
-import { ServiceManager } from '../classes/service-manager';
+import { ServiceManager } from '../classes';
 import { PostContext, PostHook } from '../interfaces';
 
 export function combinePostHooks(postHooks: PostHook[]): PostHook {

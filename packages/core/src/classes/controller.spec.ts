@@ -17,8 +17,8 @@ describe('Controller', () => {
       controller.addRoute('create', 'POST', '/foo', handler);
 
       const expected: Route = {
-        httpMethod: 'POST',
         handler,
+        httpMethod: 'POST',
         path: '/foo',
         postHooks: [],
         preHooks: []
@@ -231,15 +231,15 @@ describe('Controller', () => {
 
       const expected: Route[] = [
         {
-          httpMethod: 'POST',
           handler: handler1,
+          httpMethod: 'POST',
           path: '/foo',
           postHooks: [],
           preHooks: []
         },
         {
-          httpMethod: 'GET',
           handler: handler2,
+          httpMethod: 'GET',
           path: '/bar',
           postHooks: [],
           preHooks: []

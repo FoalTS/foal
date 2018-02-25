@@ -10,9 +10,9 @@ import {
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
+import { ObjectDoesNotExist } from '../object-does-not-exist';
 import { ModelService } from '../services';
 import { rest, RestControllerFactory } from './rest.controller-factory';
-import { ObjectDoesNotExist } from '..';
 
 chai.use(spies);
 const expect = chai.expect;
@@ -58,7 +58,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async findByIdAndRemove(id: any): Promise<void> {}
+          public async findByIdAndRemove(id: any): Promise<void> {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -69,7 +69,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('DELETE');
         expect(actual.path).to.equal('/:id');
-        
+
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
         await actual.handler(ctx, services);
         expect(mock.findByIdAndRemove).to.have.been.called.with.exactly(ctx.params.id);
@@ -79,7 +79,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          findByIdAndRemove(id: any): void{
+          public findByIdAndRemove(id: any): void {
             throw new ObjectDoesNotExist();
           }
         }
@@ -108,7 +108,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async findAll(query: ObjectType) {
+          public async findAll(query: ObjectType) {
             return [];
           }
         }
@@ -121,7 +121,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/');
-        
+
         const ctx = createEmptyContext();
         await actual.handler(ctx, services);
         expect(mock.findAll).to.have.been.called.with.exactly({});
@@ -150,7 +150,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async findById(id: any) {}
+          public async findById(id: any) {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -161,7 +161,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/:id');
-        
+
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
         await actual.handler(ctx, services);
         expect(mock.findById).to.have.been.called.with.exactly(ctx.params.id);
@@ -171,7 +171,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          findById(id: any) {
+          public findById(id: any) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -211,7 +211,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async findByIdAndUpdate(id: any, data: any) {}
+          public async findByIdAndUpdate(id: any, data: any) {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -222,7 +222,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('PATCH');
         expect(actual.path).to.equal('/:id');
-        
+
         const ctx = {
           ...createEmptyContext(),
           body: { foo: 'bar' },
@@ -236,7 +236,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          findByIdAndUpdate(id: any, data: any) {
+          public findByIdAndUpdate(id: any, data: any) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -265,7 +265,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async createOne(data: any) {}
+          public async createOne(data: any) {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -276,7 +276,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('POST');
         expect(actual.path).to.equal('/');
-        
+
         const ctx = {
           ...createEmptyContext(),
           body: { foo: 'bar' },
@@ -326,7 +326,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          async findByIdAndReplace(id: any, data: any) {}
+          public async findByIdAndReplace(id: any, data: any) {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -337,7 +337,7 @@ describe('rest', () => {
 
         expect(actual.httpMethod).to.equal('PUT');
         expect(actual.path).to.equal('/:id');
-        
+
         const ctx = {
           ...createEmptyContext(),
           body: { foo: 'bar' },
@@ -351,7 +351,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<ModelService<any>> {
           constructor() {}
-          findByIdAndReplace(id: any, data: any) {
+          public findByIdAndReplace(id: any, data: any) {
             throw new ObjectDoesNotExist();
           }
         }

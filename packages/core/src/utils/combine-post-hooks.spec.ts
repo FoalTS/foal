@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { HttpResponseOK, ServiceManager } from '../classes';
+import { ServiceManager } from '../classes';
 import { PostHook } from '../interfaces';
 import { createEmptyPostContext } from '../testing';
 import { combinePostHooks } from './combine-post-hooks';

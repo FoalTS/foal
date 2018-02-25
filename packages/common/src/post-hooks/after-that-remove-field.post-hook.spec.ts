@@ -1,8 +1,8 @@
 import {
   createEmptyPostContext,
+  HttpResponseBadRequest,
   HttpResponseOK,
   ServiceManager,
-  HttpResponseBadRequest,
 } from '@foal/core';
 import { expect } from 'chai';
 
@@ -44,7 +44,7 @@ describe('afterThatRemoveField', () => {
     const ctx = createEmptyPostContext();
     ctx.result = new HttpResponseOK({});
 
-    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();  
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
   });
 
   it('should not throw an Error if ctx.result is an instance of HttpResponseSuccess'
@@ -52,7 +52,7 @@ describe('afterThatRemoveField', () => {
     const postHook = afterThatRemoveField('foo');
     const ctx = createEmptyPostContext();
     ctx.result = new HttpResponseOK([{}]);
-    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();    
+    expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
   });
 
   it('should remove the given field from the object context.result.content if context.result'

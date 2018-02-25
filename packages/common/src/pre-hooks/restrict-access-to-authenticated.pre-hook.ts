@@ -1,6 +1,6 @@
 import {
-  PreHook,
   HttpResponseUnauthorized,
+  PreHook,
 } from '@foal/core';
 
 export function restrictAccessToAuthenticated(): PreHook {

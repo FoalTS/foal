@@ -1,7 +1,7 @@
 import {
-  PreHook,
   HttpResponseForbidden,
-  HttpResponseUnauthorized
+  HttpResponseUnauthorized,
+  PreHook,
 } from '@foal/core';
 
 export function restrictAccessToAdmin(): PreHook {

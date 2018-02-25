@@ -1,5 +1,5 @@
-import { ObjectType } from './utils';
 import { HttpResponse } from '../classes';
+import { ObjectType } from './utils';
 
 export interface Context {
   session: any;
