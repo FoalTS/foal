@@ -3,26 +3,22 @@
 Here's the definition of the `Context` interface used in hooks:
 
 ```typescript
-{
+interface Context {
   session: any;
   params: ObjectType;
   body: any;
   query: ObjectType;
-  result: any;
+  result: HttpResponse|undefined;
   state: ObjectType;
   user: any|undefined;
   getHeader(field: string): string;
 }
 ```
 
-You can specify the type of the attributes `session`, `user` or `result` by using:
+You can specify the type of the attributes `session`, `user` by using:
 
 ```
-RSUContext<Result, Session, User>
-RSContext<Result, Session>
-RUContext<Result, User>
 SUContext<Session, User>
-RContext<Result>
-SContext<Session>
 UContext<User>
+SContext<Session>
 ```
