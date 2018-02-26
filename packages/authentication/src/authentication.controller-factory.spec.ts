@@ -3,8 +3,10 @@ import {
   HttpResponseOK,
   HttpResponseUnauthorized,
   ObjectType,
+  Route,
   Service,
   ServiceManager,
+  HttpResponseRedirect,
 } from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
@@ -38,70 +40,107 @@ describe('authentication', () => {
 
   describe('when attachService is called', () => {
 
-    it('should return a controller with a proper `main` route when there is no option.', async () => {
-      const controller = authentication.attachService('/', MockAuthenticatorService);
-      const actual = controller.getRoute('main');
+    describe('should return a controller with a proper `main` route that', () => {
 
-      expect(actual.httpMethod).to.equal('POST');
-      expect(actual.path).to.equal('/');
+      it('should handles requests at POST /.', () => {
+        const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
 
-      const ctx = createEmptyContext();
-      ctx.session = {};
-      ctx.body = { username: 'John' };
-      const services = new ServiceManager();
-      const mock = services.get(MockAuthenticatorService);
-      chai.spy.on(mock, 'authenticate');
-      const result = await actual.middleHook(ctx, services);
-
-      expect(mock.authenticate).to.have.been.called.with(ctx.body);
-      expect(result).to.be.an.instanceOf(HttpResponseOK);
-      expect((result as HttpResponseOK).content).to.deep.equal({
-        id: 1,
-        username: 'John',
-      });
-      expect(ctx.session.authentication).to.deep.equal({
-        userId: 1
+        expect(route.httpMethod).to.equal('POST');
+        expect(route.path).to.equal('/');
       });
 
-      const ctx2 = createEmptyContext();
-      ctx2.session = {};
-      ctx2.body = { username: 'Jack' };
-      const result2 =  await actual.middleHook(ctx2, services);
-      expect(result2).to.be.instanceOf(HttpResponseUnauthorized);
-      expect(result2).to.have.deep.property('content', {
-        message: 'Bad credentials.'
+      describe('when the authentication succeeds', () => {
+
+        it('should return an HttpResponseOK with the matching user if options.successRedirect is undefined.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
+  
+          const result = await route.handler(ctx, new ServiceManager());
+  
+          expect(result).to.be.an.instanceOf(HttpResponseOK);
+          expect((result as HttpResponseOK).content).to.deep.equal({
+            id: 1,
+            username: 'John',
+          });
+        });
+
+        it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService, {
+            successRedirect: '/foo'
+          }).getRoute('main');
+          
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
+  
+          const result = await route.handler(ctx, new ServiceManager());
+  
+          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+        });
+
+        it('should create or update ctx.session.authentication to include the userId.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
+  
+          await route.handler(ctx, new ServiceManager());
+
+          expect(ctx.session.authentication).to.deep.equal({
+            userId: 1
+          });
+
+          ctx.session.authentication.foo = 'bar';
+
+          await route.handler(ctx, new ServiceManager());
+
+          expect(ctx.session.authentication).to.deep.equal({
+            foo: 'bar',
+            userId: 1
+          });
+        });
+
       });
-    });
 
-    xit('should return a controller with a proper `main` route when there are options.', async () => {
-      // const options: Options = {
-      //   failureRedirect: '/failure',
-      //   successRedirect: '/success',
-      // };
-      // const actual = authentication.getRoutes(mock, options);
-      // chai.spy.on(mock, 'authenticate');
+      describe('when the authentication fails', () => {
 
-      // expect(actual).to.be.an('array').and.to.have.lengthOf(1);
-      // expect(actual[0].httpMethod).to.equal('POST');
-      // expect(actual[0].path).to.equal('/');
-      // expect(actual[0].serviceMethodName).to.equal('authenticate');
-      // expect(actual[0].successStatus).to.equal(200);
+        it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'Jack' };
+  
+          const result = await route.handler(ctx, new ServiceManager());
+  
+          expect(result).to.be.an.instanceOf(HttpResponseUnauthorized);
+          expect((result as HttpResponseUnauthorized).content).to.deep.equal({
+            message: 'Bad credentials.'
+          });
+        });
 
-      // const ctx = createEmptyContext();
-      // ctx.session = {};
-      // ctx.body = { username: 'John' };
-      // const result = await actual[0].middleware(ctx);
-      // expect(mock.authenticate).to.have.been.called.with(ctx.body);
-      // expect(result).to.be.an.instanceOf(HttpResponseRedirect).with.property('path', '/success');
-      // expect(ctx.session.authentication).to.deep.equal({
-      //   userId: 1
-      // });
+        it('should return an HttpResponseRedirect if options.failureRedirect is not empty.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService, {
+            failureRedirect: '/foo'
+          }).getRoute('main');
+          
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'Jack' };
+  
+          const result = await route.handler(ctx, new ServiceManager());
+  
+          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+        });
 
-      // const ctx2 = createEmptyContext();
-      // ctx2.session = {};
-      // ctx2.body = { username: 'Jack' };
-      // const result2 = await actual[0].middleware(ctx2);
-      // expect(result2).to.be.an.instanceOf(HttpResponseRedirect).with.property('path', '/failure');
+      });
+
     });
 
   });

@@ -54,8 +54,7 @@ describe('LocalAuthenticatorService', () => {
     service = new ConcreteClass(new UserModelService());
   });
 
-  describe(`when authenticate({ email, password }: { email: string, password: string }):
-            Promise<User> is called`, () => {
+  describe('when authenticate is called', () => {
 
     it('should return null if no user is found for the given email.', async () => {
       const user = await service.authenticate({ email: 'jack@foalts.org', password: 'foo' });

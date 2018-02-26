@@ -47,11 +47,11 @@ describe('authenticate', () => {
   }
 
   it('should throw an Error if there is no session.', async () => {
-    const hook = authenticate(UserModelService);
+    const preHook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     try {
-      await hook(ctx, new ServiceManager());
+      await preHook(ctx, new ServiceManager());
       throw new Error('No error was thrown by the middleware');
     } catch (err) {
       expect(err).to.be.instanceOf(Error).with.property(
@@ -62,17 +62,17 @@ describe('authenticate', () => {
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const hook = authenticate(UserModelService);
+    const preHook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {};
-    await hook(ctx, new ServiceManager());
+    await preHook(ctx, new ServiceManager());
 
     ctx.session.authentication = {};
-    await hook(ctx, new ServiceManager());
+    await preHook(ctx, new ServiceManager());
   });
 
-  it('should not throw an Error if no user is found in the database matching the given id.', async () => {
+  it('should set ctx.user to null if no user is found in the database matching the given id.', async () => {
     const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
@@ -82,6 +82,8 @@ describe('authenticate', () => {
       }
     };
     await hook(ctx, new ServiceManager());
+
+    expect(ctx.user).to.equal(null);
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {

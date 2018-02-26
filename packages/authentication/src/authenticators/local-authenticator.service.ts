@@ -20,7 +20,7 @@ export interface CheckPassword<User> {
 export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>
     implements AuthenticatorService<User> {
 
-  constructor(protected userModelService: ModelService<User, ObjectType, ObjectType, any> & CheckPassword<User>) {}
+  constructor(protected userModelService: ModelService<User, any, any, any> & CheckPassword<User>) {}
 
   public async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;
