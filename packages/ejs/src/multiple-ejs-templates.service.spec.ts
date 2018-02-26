@@ -14,7 +14,7 @@ describe('MultipleEjsTemplatesService', () => {
     });
   });
 
-  describe('when render(locals: ObjectType): string is called', () => {
+  describe('when render is called', () => {
 
     it('should reject an Error if no template is registered with the given name.', done => {
       service.render('foo', { name: 'foo' }).catch(() => done());

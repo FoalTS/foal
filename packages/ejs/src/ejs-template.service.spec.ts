@@ -7,7 +7,7 @@ describe('EjsTemplateService', () => {
   class ConcreteTemplateService extends EjsTemplateService {}
   let service: EjsTemplateService;
 
-  describe('when render(locals: ObjectType): Promise<string> is called', () => {
+  describe('when render is called', () => {
 
     it('should reject an Error if the template does not exist.', done => {
       service = new ConcreteTemplateService('./nowhere.html');
