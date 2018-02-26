@@ -16,10 +16,8 @@ import { ObjectType } from '@foal/core';
  * @interface ModelService
  * @template IModel Interface to describe the fields of the objects without their ids and timestamps.
  * @template ICreatingModel Interface to describe the minimum required fields to pass to create an object.
- * Default to IModel.
  * @template IIdAndTimeStamps Interface to describe the field id and the timestamp fields of the objects.
- * Default to { id: string }.
- * @template IdType Class of the id (usually number or string). Default to string.
+ * @template IdType Class of the id (usually number or string).
  * @example
  * interface Task {
  *   text: string;
@@ -38,8 +36,7 @@ import { ObjectType } from '@foal/core';
  * }
  * class MyModelService implements ModelService<Task, CreatingTask, IdAndTimeStamps, string> {}
  */
-export interface ModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps = { id: string },
-    IdType = string> {
+export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
 
   // Create
 
