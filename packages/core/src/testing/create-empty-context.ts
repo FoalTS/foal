@@ -8,6 +8,6 @@ export function createEmptyContext(): Context {
     query: {},
     session: undefined,
     state: {},
-    user: undefined
+    user: null
   };
 }

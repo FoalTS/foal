@@ -13,7 +13,7 @@ describe('createEmptyPostContext', () => {
     expect(actual.result).to.equal(undefined);
     expect(actual.session).to.equal(undefined);
     expect(actual.state).to.deep.equal({});
-    expect(actual.user).to.equal(undefined);
+    expect(actual.user).to.equal(null);
   });
 
 });

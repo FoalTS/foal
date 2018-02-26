@@ -9,6 +9,6 @@ export function createEmptyPostContext(): PostContext {
     result: undefined,
     session: undefined,
     state: {},
-    user: undefined
+    user: null
   };
 }
