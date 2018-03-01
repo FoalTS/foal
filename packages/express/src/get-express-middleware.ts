@@ -1,10 +1,18 @@
-import { Context, HttpResponse, HttpResponseOK, HttpResponseRedirect, Route, ServiceManager } from '@foal/core';
+import {
+  Context,
+  HttpResponse,
+  HttpResponseOK,
+  HttpResponseRedirect,
+  PostContext,
+  Route,
+  ServiceManager,
+  HttpResponseInternalServerError,
+  HttpResponseSuccess
+} from '@foal/core';
 import { Router } from 'express';
 
-import { ExpressMiddleware } from './interfaces';
-
-function makeContext(req): Context {
-  return {
+function getContext(req, stateDef: { req: string, ctx: string }[]): PostContext {
+  const context = {
     body: req.body,
     getHeader: req.get.bind(req),
     params: req.params,
@@ -14,66 +22,54 @@ function makeContext(req): Context {
     state: {},
     user: req.user,
   };
+  stateDef.forEach(e => context.state[e.ctx] = req[e.req]);
+  return context;
+}
+
+async function getResponse(route: Route, ctx: PostContext,
+                           services: ServiceManager): Promise<void | HttpResponse> {
+  for (const preHook of route.preHooks.concat(route.handler)) {
+    const result = await preHook(ctx, services);
+    if (result instanceof HttpResponse) {
+      ctx.result = result;
+      break;
+    }
+  }
+
+  for (const postHook of route.postHooks) {
+    await postHook(ctx, services);
+  }
+
+  return ctx.result;
+}
+
+function sendResponse(res, response: HttpResponse) {
+  if (response instanceof HttpResponseSuccess) {
+    if (typeof response.content === 'number') {
+      response.content = response.content.toString();
+    }
+    if (response.content) {
+      res.status(response.statusCode).send(response.content);
+    } else {
+      res.sendStatus(response.statusCode);
+    }
+  }
+  else if (response instanceof HttpResponseRedirect) {
+    res.redirect(response.path);
+  }
 }
 
 export function getExpressMiddleware(route: Route, services: ServiceManager,
-                                     stateDef: { req: string, ctx: string }[] = []): ExpressMiddleware {
-  async function handler(req, res) {
-    const ctx = makeContext(req);
-    stateDef.forEach(e => ctx.state[e.ctx] = req[e.req]);
-
-    for (const hook of route.preHooks.concat(route.middleHook)) {
-      const result = await hook(ctx, services);
-      if (result instanceof HttpResponse) {
-        ctx.result = result;
-        break;
+                                     stateDef: { req: string, ctx: string }[]) {
+  return async (req, res, next) => {
+    try {
+      const ctx = getContext(req, stateDef);
+      const response = await getResponse(route, ctx, services);
+      if (response) {
+        sendResponse(res, response);
       }
+    } catch (err) {
+      next(err);
     }
-
-    for (const hook of route.postHooks) {
-      await hook(ctx, services);
-    }
-
-    if (!(ctx.result instanceof HttpResponse)) {
-      console.log('The result of the context should be an HttpResponse.');
-      ctx.result = new HttpResponseOK(ctx.result);
-    }
-
-    if (ctx.result instanceof HttpResponseRedirect) {
-      res.redirect(ctx.result.path);
-      return;
-    }
-    if (typeof ctx.result.content === 'number') {
-      ctx.result.content = ctx.result.content.toString();
-    }
-    res.status((ctx.result as HttpResponse).statusCode)
-       .send((ctx.result as HttpResponse).content);
-  }
-
-  const expressMiddleware = (req, res, next) => {
-    handler(req, res).catch(err => next(err));
   };
-
-  const path = route.path || '/';
-  const router = Router();
-
-  switch (route.httpMethod) {
-    case 'DELETE':
-      router.delete(path, expressMiddleware);
-      break;
-    case 'GET':
-      router.get(path, expressMiddleware);
-      break;
-    case 'PATCH':
-      router.patch(path, expressMiddleware);
-      break;
-    case 'POST':
-      router.post(path, expressMiddleware);
-      break;
-    case 'PUT':
-      router.put(path, expressMiddleware);
-      break;
-  }
-
-  return router;
 }

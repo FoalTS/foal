@@ -208,7 +208,7 @@ describe(`getExpressMiddleware(route: ReducedRoute,
         .send(expected.body)
         .then(res => {
           expect(actual.body).to.deep.equal(expected.body);
-          expect(actual.getHeader('Content-Type')).to.equal('application/json');
+          expect(actual.getHeader('Content-Class')).to.equal('application/json');
           expect(actual.params).to.deep.equal(expected.params);
           expect(actual.query).to.deep.equal(expected.query);
           expect(actual.session).to.equal(expected.session);
