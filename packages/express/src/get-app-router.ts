@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 import { getExpressMiddleware } from './get-express-middleware';
 
-export function getAppRouter(app: App, stateDef: { req: string, ctx: string }[] = []) {
+export function getAppRouter(app: App, stateDef: { req: string, state: string }[] = []) {
   const router = Router();
   for (const controller of app.controllers) {
     for (const route of controller.getRoutes()) {

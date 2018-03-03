@@ -3,7 +3,7 @@ const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body><h
 function renderDebug500(stack): string {
   return '<html>'
     + '<head>'
-    +  '<title>500 - INTERNAL SERVER ERROR</title>'
+    +  '<title>INTERNAL SERVER ERROR</title>'
     + '</head>'
     + '<body>'
     +  '<h1>500 - INTERNAL SERVER ERROR</h1>'

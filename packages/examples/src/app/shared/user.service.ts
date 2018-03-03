@@ -4,8 +4,7 @@ import { DefaultIdAndTimeStamps, Sequelize, SequelizeModelService } from '@foal/
 import * as bcrypt from 'bcrypt-nodejs';
 
 import { ConnectionService } from './connection.service';
-
-import { User } from '../interfaces/user';
+import { User } from './user.interface';
 
 @Service()
 export class UserService extends SequelizeModelService<User> implements CheckPassword<User> {
