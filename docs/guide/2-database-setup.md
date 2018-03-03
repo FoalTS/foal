@@ -39,11 +39,11 @@ export class ConnectionService extends SequelizeConnectionService {
 
 This class is a *Service*. Basically a service can be any class that serves a restricted and well-defined purpose. It requires to be surrounded by the `Service` decorator from the `@foal/core` package.
 
-This class inherits from the `SequelizeConnectionService` and is just a wrapper of Sequelize, a largly-used ORM, to set up a connection to a database. You must specify the URI of the database you want to connect to. You could pass it directly to the `super` function here but let's start using good practices here and write it an config file.
+This class inherits from the `SequelizeConnectionService` and is just a wrapper of Sequelize, a largly-used ORM, to set up a connection to a database. You must specify the URI of the database you want to connect to. You could pass it directly to the `super` function here but let's start using good practices and write it an config file.
 
 You can find such file in the directory `src/config`. Open `config.ts` and change the string `'my_uri'` in the `developpement` configuration.
 
-> You don't know what URI you should use? Here are some examples:
+> You don't know what URI you should use? Here <!--are some examples-->is an example:
 >
 > PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
 <!--
