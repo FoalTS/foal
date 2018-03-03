@@ -61,6 +61,6 @@ Let’s take a look at what `yo foal:app ` created:
 
 The `src` contains all the code of your app.
 
-### The `root` folder
+### The parent folder
 
-All files in `root` which don't belong to `src` are configuration files to build and lint your app.
+All files in the parent directory which don't belong to `src` are configuration files to build and lint your app.
