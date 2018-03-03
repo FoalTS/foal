@@ -1,10 +1,10 @@
 # @foal/sequelize
 
-`@foal/sequelize` provides a connection and a model service to connect to a PostreSQL or MySQL database. It is based on the [Sequelize](http://docs.sequelizejs.com/) ORM.
+`@foal/sequelize` provides a connection and a model service to connect to a PostreSQL<!-- or MySQL--> database. It is based on the [Sequelize](http://docs.sequelizejs.com/) ORM.
 
 ## Prerequisities
 
-To use these services you need to install the package (`@foal/sequelize`) along with its MySQL (`mysql2`) or PostgreSQL (`pg@6 pg-hstore`) clients. If you have already specified which database you are using while creating the project they should already been installed.
+To use these services you need to install the package (`@foal/sequelize`) along with its <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) client<!--s-->. <!--If you have already specified which database you are using while creating the project they should already been installed.-->If you have already specified that you are using a database while creating the project they should already been installed.
 
 > To install a `npm` package you need to run this command: `npm install --save <package_name>`.
 

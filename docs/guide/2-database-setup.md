@@ -1,6 +1,6 @@
 # 2. Set up a database connection
 
-Let's get started by a setting up a connection to the database. We assume that you have already *PostgreSQL* or *MySQL* installed on your host with a database called `foal_examples_todo_list`.
+Let's get started by a setting up a connection to the database. We assume that you have already *PostgreSQL* <!--or *MySQL* -->installed on your host with a database called `foal_examples_todo_list`.
 
 > **How to create a database in postgres**
 >
@@ -9,12 +9,14 @@ Let's get started by a setting up a connection to the database. We assume that y
 > 3. Enter `CREATE DATABASE foal_examples_todo_list;`.
 > 4. Quit `psql` by taping `\q`.
 
+<!--
 > **How to create a database in mysql**
 >
 > 1. Open a terminal.
 > 2. Connect to `mysql` by running `mysql -u root --password`.
 > 3. Enter `CREATE DATABASE foal_examples_todo_list;`.
 > 4. Quit `mysql` by taping `exit`.
+-->
 
 Using the foal cli we are going to create a sequelize connection. Go to the directory `src/app`, run `yo foal:service connection` and select the appropriate option.
 
@@ -44,7 +46,9 @@ You can find such file in the directory `src/config`. Open `config.ts` and chang
 > You don't know what URI you should use? Here are some examples:
 >
 > PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
+<!--
 >
 > MySQL: `mysql://root:my_password@localhost:3306/foal_examples_todo_list`
+-->
 
 You can test that your connection is working by running `npm run build` and then `npm run test`.
