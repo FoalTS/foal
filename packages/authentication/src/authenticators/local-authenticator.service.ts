@@ -1,5 +1,4 @@
 import { ModelService, ObjectDoesNotExist } from '@foal/common';
-import { ObjectType } from '@foal/core';
 
 import { AuthenticatorService } from '../authenticator-service.interface';
 

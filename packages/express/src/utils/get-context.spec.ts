@@ -1,4 +1,3 @@
-import { PostContext } from '@foal/core';
 import { expect } from 'chai';
 
 import { getContext } from './get-context';
@@ -25,7 +24,7 @@ describe('getContext', () => {
       }
     };
     const actual = getContext(req, []);
-    
+
     expect(actual.body).to.deep.equal({ msg: 'foo' });
     expect(actual.getHeader('')).to.equal('bar');
     expect(actual.params).to.deep.equal({ id: 1 });

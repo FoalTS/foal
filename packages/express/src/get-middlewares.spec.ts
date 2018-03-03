@@ -30,13 +30,13 @@ describe('getMiddlewares', () => {
         .get('/create')
         .expect(201)
         .expect('Created!');
-    })
+    });
 
     it('should 500 if an error is thrown in a controller of the app.', () => {
       const middlewares = getMiddlewares(new App({
         controllers: [
           basic.attachHandlingFunction('GET', '/delete', () => {
-            throw new Error()
+            throw new Error();
           })
         ]
       }), { debugMode: false });
@@ -51,7 +51,7 @@ describe('getMiddlewares', () => {
 
     it('should 404 on a wrong URL.', () => {
       const middlewares = getMiddlewares(new App({}), { debugMode: false });
-      
+
       const app = express();
       app.use(middlewares);
 

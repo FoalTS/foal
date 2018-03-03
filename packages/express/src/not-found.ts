@@ -4,5 +4,5 @@ export function notFound() {
   return (req, res) => {
     res.status(404)
        .send(page404);
-  }
+  };
 }

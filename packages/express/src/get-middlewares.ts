@@ -1,7 +1,7 @@
 import { App } from '@foal/core';
 
-import { handleErrors } from './handle-errors';
 import { getAppRouter } from './get-app-router';
+import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
 export function getMiddlewares(app: App, { debugMode }: { debugMode: boolean },

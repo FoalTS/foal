@@ -1,4 +1,4 @@
-import { App, HttpResponse, HttpResponseOK, HttpResponseRedirect, Route } from '@foal/core';
+import { App } from '@foal/core';
 import { Router } from 'express';
 
 import { getExpressMiddleware } from './get-express-middleware';

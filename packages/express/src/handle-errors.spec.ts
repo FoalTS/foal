@@ -1,4 +1,3 @@
-import { HttpResponseInternalServerError, HttpResponseNotFound } from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
@@ -41,7 +40,8 @@ describe('handleErrors', () => {
       app.use(handleErrors(false));
       return request(app)
         .get('/')
-        .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body><h1>500 - INTERNAL SERVER ERROR</h1></body></html>');
+        .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
+                + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>');
     });
 
     it('should send the debug html 500 page with a stack if debugMode is true.', () => {
@@ -55,7 +55,8 @@ describe('handleErrors', () => {
       const info = 'You are seeing this error because you have debugMode set to true in your src/config file.';
       return request(app)
         .get('/')
-        .expect(`<html><head><title>INTERNAL SERVER ERROR</title></head><body><h1>500 - INTERNAL SERVER ERROR</h1>${stack}${info}</body></html>`);
+        .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
+                + `<h1>500 - INTERNAL SERVER ERROR</h1>${stack}${info}</body></html>`);
     });
 
   });

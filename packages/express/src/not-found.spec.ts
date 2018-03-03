@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 

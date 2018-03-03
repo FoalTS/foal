@@ -1,9 +1,9 @@
 import {
   HttpResponse,
-  HttpResponseRedirect,
-  HttpResponseSuccess,
   HttpResponseClientError,
-  HttpResponseServerError
+  HttpResponseRedirect,
+  HttpResponseServerError,
+  HttpResponseSuccess,
 } from '@foal/core';
 
 export function sendResponse(res, response: HttpResponse) {
@@ -17,8 +17,7 @@ export function sendResponse(res, response: HttpResponse) {
     } else {
       res.sendStatus(response.statusCode);
     }
-  }
-  else if (response instanceof HttpResponseRedirect) {
+  } else if (response instanceof HttpResponseRedirect) {
     res.redirect(response.path);
   }
 }

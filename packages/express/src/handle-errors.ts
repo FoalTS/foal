@@ -1,4 +1,5 @@
-const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body><h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
+const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
+                + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
 
 function renderDebug500(stack): string {
   return '<html>'
@@ -18,7 +19,7 @@ export function handleErrors(debugMode: boolean, logFn = console.error) {
     logFn(err.stack);
     if (debugMode) {
       res.status(500)
-         .send(renderDebug500(err.stack))
+         .send(renderDebug500(err.stack));
     } else {
       res.status(500)
          .send(page500);
