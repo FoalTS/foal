@@ -27,7 +27,7 @@ interface Context {
 }
 ```
 
-The `services` have a `get(ServiceClass: Type<T>): T` method which retreives any desired service.
+The `services` have a `get(ServiceClass: Class<T>): T` method which retreives any desired service.
 
 Note that the `middleware` may take an async function (or a function which returns a promise) which lets you easily deal with async programming.
 

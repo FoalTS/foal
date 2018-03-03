@@ -72,21 +72,25 @@ Removes the given field from the context result. If the context result is an arr
 
 Example:
 ```typescript
-@Service()
-class UserService {
-
-  @afterThatRemoveField('password')
-  public getUser() {
-    return { username: 'foobar', password: 'my_crypted_password' };
-  }
-
-  @afterThatRemoveField('password')
-  public getUsers() {
-    return [
-      { username: 'foobar', password: 'my_crypted_password' },
-      { username: 'barfoo', password: 'my_other_crypted_password' }
-    ];
-  }
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/foo', () => {
+        return new HttpSuccessResponseOK({
+          username: 'foobar',
+          password: 'my_crypted_password'
+        });
+      })
+      .withPostHook(afterThatRemoveField('password')),
+    basic
+      .attachHandlingFunction('/bar', () => {
+        return new HttpSuccessResponseOK([
+          { username: 'foobar', password: 'my_crypted_password' },
+          { username: 'barfoo', password: 'my_other_crypted_password' }
+        ]);
+      })
+      .withPostHook(afterThatRemoveField('password')),
+  ]
 }
 ```
 

@@ -2,7 +2,7 @@
 
 Controllers are created by `controller factories` and have to be registered within a module.
 
-Each controller factory has an `attachService(path: string, ServiceClass: Type<T>)` method to create the controller from a given service.
+Each controller factory has an `attachService(path: string, ServiceClass: Class<T>)` method to create the controller from a given service.
 
 The package `@foal/common` provides some common controller factories such as `rest` or `view` along with their respective service interfaces. But you can also create your own factory with the abstract class `ControllerFactory<T>` in `@foal/core`.
 
@@ -49,16 +49,16 @@ The final code looks like this:
 ```typescript
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { getCallback } from '@foal/express';
+import { getMiddlewares } from '@foal/express';
 import { ModelService, rest } from '@foal/common';
-import { Foal, ObjectType, Service } from '@foal/core';
+import { App, ObjectType, Service } from '@foal/core';
 
 class User {
   name: string;
 }
 
 @Service()
-class UserService implements Partial<ModelService<User>> {
+class UserService implements Partial<ModelService<User, User, { id: string }, string>> {
   private id = 0;
   constructor () {}
 
@@ -68,14 +68,14 @@ class UserService implements Partial<ModelService<User>> {
   }
 }
 
-const foal = new Foal({
+const foal = new App({
   controllers: [ rest.attachService('/users', UserService) ]
 });
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(getCallback(foal));
+app.use(getMiddlewares(foal));
 app.listen(3000, () => console.log('Listening...'));
 // POST /users with { "name": "toto" } should return { "name": "toto", "createdAt": "..." };
 ```
@@ -87,5 +87,3 @@ Paths are specified directly to the controller factory in the module. So:
 - all paths are specified in one place (the module declarations).
 
 Some foal services, such as `SequelizeModelService` in `@foal/sequelize`, already implement the `ModelService` interface. So they can be used directly to create a REST endpoint.
-
-You can throw `HttpError` exceptions in your service methods. Current supported exceptions are: `HttpResponseBadRequest`, `HttpResponseUnauthorized`, `HttpResponseForbidden`, `HttpResponseNotFound`, `HttpResponseMethodNotAllowed`, `HttpResponseConflict`, `HttpResponseInternalServerError`, `HttpResponseNotImplemented`

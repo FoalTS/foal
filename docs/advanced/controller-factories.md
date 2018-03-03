@@ -1,6 +1,12 @@
 # Controller factories
 
-Controller factories let you create a controller from a given service. Some already exist such as `rest` or `view` in the `@foal/common` package. But you can also create your own.
+Controller factories are objects that create controllers from services or functions. They should be the only the way to create them.
+
+## The `basic` controller factory
+
+## The service controller factories
+
+Some already exist such as `rest` or `view` in the `@foal/common` package. But you can also create your own.
 
 First define the interface of the `Service`s you will use. For example:
 
@@ -15,41 +21,36 @@ Then create your controller factory from the `ControllerFactory` abstract class.
 ```typescript
 import { HttpResponseMethodNotAllowed } from '@foal/common';
 import {
-  Context,
-  ControllerFactory,
+  ServiceControllerFactory,
+  HttpResponseMethodNotAllowed,
+  HttpResponseOK,
   Route
 } from '@foal/core';
 
 import { MyService } from '../services';
 
-interface Options {
+export interface Options {
   addFive?: boolean;
 }
 
-export class MyControllerFactory extends ControllerFactory<MyService, Options> {
-  public getRoutes(service: MyService, options: Options = {}): Route[] {
-    return [
-      {
-        httpMethod: 'GET',
-        middleware: (context: Context) => {
-          if (options.addFive) {
-            return service.giveMeANumber(5, 10) + 5;
-          }
-          return service.giveMeANumber(5, 10);
-        },
-        path: '/',
-        serviceMethodName: 'giveMeANumber',
-        successStatus: 200,
-      },
-      {
-        httpMethod: 'POST',
-        middleware: (context: Context) => new HttpResponseMethodNotAllowed(),
-        path: '/',
-        serviceMethodName: null,
-        successStatus: 200,
+export type RouteName = 'my-route-name' | 'my-route-name2';
+
+export class MyControllerFactory extends ServiceControllerFactory<
+    MyService, RouteName, Options
+  > {
+
+  public defineController(controller: Controller<RouteName>,
+                          ServiceClass: Class<IService>,
+                          options: Options = {}): void {
+    controller.addRoute('my-route-name', 'GET', '/', () => {
+      if (options.addFive) {
+        return new HttpResponseOK(service.giveMeANumber(5, 10) + 5);
       }
-    ];
+      return new HttpResponseOK(service.giveMeANumber(5, 10));
+    });
+    controller.addRoute('my-route-name2', 'POST', '/', () => new HttpResponseMethodNotAllowed());
   }
+
 }
 
 export const myControllerFactory = new MyControllerFactory();

@@ -1,8 +1,7 @@
 # Authentication
 
 **This doc is in progress.**
-
-You can use passport for authentication as you would do with a regular express app. For access control you may use the package [`@foal/common`](../packages/common.md) which provides interesting hooks such as `@restrictAccessToAdmin` or `@restrictAccessToAuthenticated`.
+For access control you may use the package [`@foal/common`](../packages/common.md) which provides interesting hooks such as `@restrictAccessToAdmin` or `@restrictAccessToAuthenticated`.
 
 ## Example
 
@@ -107,7 +106,3 @@ export class UserService extends SequelizeModelService<User> {
 ```
 
 Note that you should delete the password attribute before sending the user back to the client.
-
-### Passport implementation
-
-**TODO**
