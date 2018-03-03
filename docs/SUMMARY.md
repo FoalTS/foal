@@ -21,7 +21,6 @@
 
 ### Advanced
 
-* [Contexts](./advanced/contexts.md)
 * [Controller factories](./advanced/controller-factories.md)
 
 ### Packages
