@@ -20,7 +20,7 @@ const expect = chai.expect;
 describe('rest', () => {
 
   @Service()
-  class EmptyMockService implements Partial<ModelService<any>> {
+  class EmptyMockService implements Partial<ModelService<any, any, any, any>> {
     constructor() {}
   }
 
@@ -56,7 +56,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndRemove is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async findByIdAndRemove(id: any): Promise<void> {}
         }
@@ -77,7 +77,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndRemove throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public findByIdAndRemove(id: any): void {
             throw new ObjectDoesNotExist();
@@ -106,7 +106,7 @@ describe('rest', () => {
 
       it('when service.findAll is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async findAll(query: ObjectType) {
             return [];
@@ -148,7 +148,7 @@ describe('rest', () => {
 
       it('when service.findById is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async findById(id: any) {}
         }
@@ -169,7 +169,7 @@ describe('rest', () => {
 
       it('when service.findById throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public findById(id: any) {
             throw new ObjectDoesNotExist();
@@ -209,7 +209,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndUpdate is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async findByIdAndUpdate(id: any, data: any) {}
         }
@@ -234,7 +234,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndUpdate throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public findByIdAndUpdate(id: any, data: any) {
             throw new ObjectDoesNotExist();
@@ -263,7 +263,7 @@ describe('rest', () => {
 
       it('when service.createOne is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async createOne(data: any) {}
         }
@@ -324,7 +324,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndReplace is a function.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public async findByIdAndReplace(id: any, data: any) {}
         }
@@ -349,7 +349,7 @@ describe('rest', () => {
 
       it('when service.findByIdAndReplace throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<ModelService<any>> {
+        class MockService implements Partial<ModelService<any, any, any, any>> {
           constructor() {}
           public findByIdAndReplace(id: any, data: any) {
             throw new ObjectDoesNotExist();
