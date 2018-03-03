@@ -12,12 +12,8 @@ export function sendResponse(res, response: HttpResponse) {
     if (typeof response.content === 'number') {
       response.content = response.content.toString();
     }
-    if (response.content) {
-      res.status(response.statusCode).send(response.content);
-    } else {
-      res.sendStatus(response.statusCode);
-    }
+    res.status(response.statusCode).send(response.content);
   } else if (response instanceof HttpResponseRedirect) {
-    res.redirect(response.path);
+    res.status(response.statusCode).redirect(response.path);
   }
 }
