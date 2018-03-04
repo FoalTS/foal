@@ -39,7 +39,7 @@ export class MyControllerFactory extends ServiceControllerFactory<
     MyService, RouteName, Options
   > {
 
-  public defineController(controller: Controller<RouteName>,
+  protected defineController(controller: Controller<RouteName>,
                           ServiceClass: Class<IService>,
                           options: Options = {}): void {
     controller.addRoute('my-route-name', 'GET', '/', () => {

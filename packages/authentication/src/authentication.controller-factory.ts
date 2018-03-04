@@ -15,9 +15,9 @@ export interface Options {
 }
 
 export class AuthenticationFactory extends ServiceControllerFactory<AuthenticatorService<any>, 'main', Options> {
-  public defineController(controller: Controller<'main'>,
-                          ServiceClass: Class<AuthenticatorService<any>>,
-                          options: Options = {}): void {
+  protected defineController(controller: Controller<'main'>,
+                             ServiceClass: Class<AuthenticatorService<any>>,
+                             options: Options = {}): void {
     controller.addRoute('main', 'POST', '/', async (ctx, services) => {
       const user = await services.get(ServiceClass).authenticate(ctx.body);
 

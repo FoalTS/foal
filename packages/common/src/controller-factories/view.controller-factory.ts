@@ -8,7 +8,7 @@ import {
 import { ViewService } from '../services';
 
 export class ViewControllerFactory extends ServiceControllerFactory<ViewService, 'main'> {
-  public defineController(controller: Controller<'main'>, ServiceClass: Class<ViewService>): void {
+  protected defineController(controller: Controller<'main'>, ServiceClass: Class<ViewService>): void {
     controller.addRoute('main', 'GET', '/', async (ctx, services) => {
       return new HttpResponseOK(
         await services.get(ServiceClass).render(ctx.state.locals || {})

@@ -13,9 +13,9 @@ export interface Options {
 
 export class MultipleViewsFactory extends ServiceControllerFactory<MultipleViewsService,
     string, Options> {
-  public defineController(controller: Controller<string>,
-                          ServiceClass: Class<MultipleViewsService>,
-                          options?: Options): void {
+  protected defineController(controller: Controller<string>,
+                             ServiceClass: Class<MultipleViewsService>,
+                             options?: Options): void {
     if (!options) {
       throw new Error('Options must be given to the multipleViews controller factory.');
     }

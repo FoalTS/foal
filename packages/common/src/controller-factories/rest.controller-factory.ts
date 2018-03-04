@@ -18,8 +18,8 @@ export type RouteName = 'deleteAll' | 'deleteById' | 'getAll' | 'getById' | 'pat
 export class RestControllerFactory extends ServiceControllerFactory<
     Partial<ModelService<any, any, any, any>>, RouteName
   > {
-  public defineController(controller: Controller<RouteName>,
-                          ServiceClass: Class<Partial<ModelService<any, any, any, any>>>): void {
+  protected defineController(controller: Controller<RouteName>,
+                             ServiceClass: Class<Partial<ModelService<any, any, any, any>>>): void {
     controller.addRoute('deleteAll', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('deleteById', 'DELETE', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);

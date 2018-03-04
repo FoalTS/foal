@@ -22,9 +22,9 @@ describe('ControllerFactory', () => {
   class ConcreteServiceControllerFactory extends ServiceControllerFactory<
       ServiceInterface, 'main', Options> {
 
-    public defineController(controller: Controller<'main'>,
-                            ServiceClass: Class<ServiceInterface>,
-                            options?: Options) {
+    protected defineController(controller: Controller<'main'>,
+                               ServiceClass: Class<ServiceInterface>,
+                               options?: Options) {
       controller.addRoute('main', 'POST', '/foo', (ctx, services) => {
         return new HttpResponseOK(services.get(ServiceClass).getFoo());
       });
@@ -48,13 +48,17 @@ describe('ControllerFactory', () => {
       chai.spy.on(factory, 'defineController');
 
       let controller = factory.attachService('/', ConcreteService);
-      expect(factory.defineController).to.have.been.called.with.exactly(controller, ConcreteService, undefined);
+      // HACK: force access to a protected method.
+      expect((factory as any).defineController)
+        .to.have.been.called.with.exactly(controller, ConcreteService, undefined);
 
       const options: Options = {
         option: 'option 1'
       };
       controller = factory.attachService('/', ConcreteService, options);
-      expect(factory.defineController).to.have.been.called.with.exactly(controller, ConcreteService, options);
+      // HACK: force access to a protected method.
+      expect((factory as any).defineController)
+        .to.have.been.called.with.exactly(controller, ConcreteService, options);
     });
 
     it('should add the given path to each route of the returned controller.', () => {
