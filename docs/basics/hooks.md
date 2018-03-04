@@ -1,87 +1,155 @@
 # Hooks
 
-Hooks are an elegant way to deal with access control, input validation or sanitization.
+Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. There are two kinds of hooks:
+- the pre-hooks which are executed before the routes handlers (defined by the controller factory)
+- and the post-hooks which are executed after.
 
-They are TypeScript decorators used on either a service method, a service class or in the `hooks` attribute of a module. They're only executed when the regarded service is used by a controller. So if the method is called from an http request, the controller decorators will be executed. If it is called from the service itself or another one, they'll be skipped.
+Pre-hooks are usually used to restrict access and to check and sanitize data received by the server. Post-hooks are less used and serve purpose such as removing critical fields before returning data to the client (ex: the password of the a user).
 
-They are two types of hooks: `pre-hooks` which are executed before the service method (ex: access control, data parser) and `post-hooks` which are executed after (ex: remove some attributes before returning an object to the client). By convention, post-hooks should start with `afterThat`.
+They takes two parameters:
+- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `result` property which may be undefined or a `HttpResponse` dependending on if the pre-hooks or route handler returned one.
+- the service manager that lets access other services within the hook.
+
+If an `HttpResponse` is returned (or rejected) in a pre-hook then the processing of the request is stopped for the pre-hooks and route handler and the server responds with the `statusCode` and optional `content` of the returned object.
+
+> *Note*: A pre-hook may also be registered within the `preHooks` property of a module. If so it applies to all the controllers of the modul
 
 ## How to create one
-
-To create a hook two things are required:
-- a sync or async function called `middleware` which takes two parameters `ctx: Context` and `services: ServiceManager`,
-- and either the `preHook` or `postHook` functions.
-
-The context `ctx` contains the following properties:
-
-```typescript
-interface Context {
-  session: any;
-  params: ObjectType;
-  body: any;
-  query: ObjectType;
-  result: any;
-  state: ObjectType;
-  user: ant|undefined;
-  getHeader(field: string): string;
-}
-```
-
-The `services` have a `get(ServiceClass: Class<T>): T` method which retreives any desired service.
-
-Note that the `middleware` may take an async function (or a function which returns a promise) which lets you easily deal with async programming.
 
 ```typescript
 import {
   Context,
-  Service,
+  PostContext,
   ServiceManager,
-  postHook,
-  preHook,
+  PostHook,
+  PreHook,
 } from '@foal/core';
 
-export function myLoggerPreHook(message: string) {
-  return preHook((ctx: Context, services: ServiceManager) => console.log(message));
+export function myLoggerPreHook(message: string): PreHook {
+  return (ctx: Context, services: ServiceManager) => { console.log(message) };
 }
 
-export function myLoggerPostHook(message: string) {
-  return postHook((ctx: Context, services: ServiceManager) => console.log(message));
+export function myLoggerPostHook(message: string): PostHook {
+  return (ctx: PostContext, services: ServiceManager) => { console.log(message) };
 }
-
-@Service()
-@myLoggerPreHook('hello world')
-@myLoggerPostHook('hello world (post)')
-class MyController {}
-
 ```
 
-## Example
+## How to bind the hook to a route.
 
-You can either bind your hook to a controller method, its class or a module. Attaching a hook to a class is equivalent to attaching it to all its methods. Providing a hook to a module is equivalent to attaching it to all its controllers.
+Hooks can either be bound to one, several or all the routes of a controller. They may even apply to all the controllers of a module and its child modules if you register it within the `preHooks` property of the top-level module.
+
+### Specific routes of a controller
+
+Each controller factory gives a different name to each of its route.
 
 ```typescript
-import { ModelService } from '@foal/common';
-import { Context, ObjectType, preHook, Service } from '@foal/core';
+import { rest } from '@foal/common';
+import {
+  Module,
+  PreHook
+} from '@foal/core';
 
-function contextLogger(context: Context): Promise<any> {
-  console.log(context);
+import { MyModelService } from './my-model-service';
+
+const logContext: PreHook = ctx => {
+  console.log(ctx);
 }
 
-interface User {
-  name: string;
+const logPostContext: PostHook = ctx => {
+  console.log(ctx);
 }
 
-@Service()
-class MyController extends Partial<ModelService<User>> {
-  private id = 0;
+export const MyModule: Module = {
+  controllers: [
+    rest
+      .attachService('/', MyModelService)
+      .withPreHook(logContext, 'getAll', 'getById')
+      // or withPreHooks([ logContext ], 'getAll', 'getById')
+      .withPreHook(ctx => { console.log('Second pre-hook executed!'); }, 'getAll', 'getById')
+      .withPostHook(logPostContext, 'getAll', 'getById')
+      // or withPostHooks([ logContext ], 'getAll', 'getById')
+  ]
+}
+```
 
-  constructor() {}
+### All the routes of a controller
 
-  @preHook(contextLogger)
-  public create(data: User): User & { id: string } {
-    this.id++;
-    return { ...data, id: this.id };
-  }
+```typescript
+import { rest } from '@foal/common';
+import {
+  Module,
+  PreHook
+} from '@foal/core';
+
+import { MyModelService } from './my-model-service';
+
+const logContext: PreHook = ctx => {
+  console.log(ctx);
+}
+
+const logPostContext: PostHook = ctx => {
+  console.log(ctx);
+}
+
+export const MyModule: Module = {
+  controllers: [
+    rest
+      .attachService('/', MyModelService)
+      .withPreHook(logContext)
+      .withPreHook(ctx => { console.log('Second pre-hook executed!'); })
+      // or withPreHooks([ logContext ])
+      .withPostHook(logPostContext)
+      // or withPostHooks([ logContext ], 'getAll', 'getById')
+  ]
+}
+```
+
+### All the routes of all the controllers of a module and its children
+
+```typescript
+import { rest } from '@foal/common';
+import {
+  Module,
+  PreHook
+} from '@foal/core';
+
+import { MyModelService } from './my-model-service';
+import { MyModelService2 } from './my-model-service2';
+import { MyModelService3 } from './my-model-service2';
+
+const logContext: PreHook = ctx => {
+  console.log(ctx);
+}
+
+const logPostContext: PostHook = ctx => {
+  console.log(ctx);
+}
+
+export const ChildModule: Module = {
+  path: '/foobar',
+  controllers: [
+    rest
+      .attachService('/', MyModelService), 
+  ]
+}
+
+export const MyModule: Module = {
+  controllers: [
+    rest
+      .attachService('/foo', MyModelService),
+    rest
+      .attachService('/bar', MyModelService2),
+  ],
+  modules: [
+    ChildModule
+  ]
+  preHooks: [
+    logContext,
+    ctx => { console.log('Second pre-hook executed!'); }
+  ],
+  postHooks: [
+    logPostContext
+  ]
 }
 ```
 
@@ -90,8 +158,7 @@ class MyController extends Partial<ModelService<User>> {
 You can combine several hooks into one thanks to `combineHooks`.
 
 ```typescript
-import { ModelService } from '@foal/common';
-import { combineHooks, Service } from '@foal/core';
+import { combineHooks } from '@foal/core';
 
 function myCombinedPreHooks() {
   return combineHooks([
@@ -100,30 +167,32 @@ function myCombinedPreHooks() {
   ])
 }
 
-@Service()
-@myCombinedPreHooks()
-export class Foobar implements Partial<ModelService<any>> {
-  constructor() {}
-}
-
 ```
 
 ## Testing a hook
 
-To test a hook you can use the `getPreMiddleware` and `getPostMiddeware` utils from `@foal/core`;
-
-## Testing a service with hooks
-
-When testing service methods, hooks are skipped. So with the previous example you have:
+Hooks are just mere functions. Test them as this.
 
 ```typescript
-import { expect } from 'chai';
+import {
+  createEmptyContext,
+  PreHook,
+  ServiceManager
+} from '@foal/core';
+import * as expect from 'chai';
 
-function test() {
-  const myService = new MyService();
-  const actual = myService.create({}, { query: {} });
-  expect(actual).to.equal('Created');
-}
+const preHook: PreHook = ctx => { ctx.state.foo = 'bar'; };
 
-test();
+describe('preHook', () => {
+  
+  it('should add a foo property to the context state.', () => {
+    const ctx = createEmptyContext();
+    
+    preHook(ctx, new ServiceManager());
+
+    expect(ctx.state.foo).to.equal('bar');
+  })
+
+});
+
 ```
