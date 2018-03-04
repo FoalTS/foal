@@ -344,7 +344,7 @@ describe('rest', () => {
           params: { id: 1 }
         };
         await actual.handler(ctx, services);
-        expect(mock.findByIdAndReplace).to.have.been.called.with(ctx.params.id, ctx.body);
+        expect(mock.findByIdAndReplace).to.have.been.called.with.exactly(ctx.params.id, ctx.body);
       });
 
       it('when service.findByIdAndReplace throws an ObjectDoesNotExist error.', async () => {
