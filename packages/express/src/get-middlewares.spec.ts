@@ -39,7 +39,7 @@ describe('getMiddlewares', () => {
             throw new Error();
           })
         ]
-      }), { debugMode: false });
+      }), { debugMode: false }, [], () => {});
 
       const app = express();
       app.use(middlewares);

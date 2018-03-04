@@ -28,7 +28,7 @@ describe('handleErrors', () => {
     it('should send a response with a 500 status.', () => {
       const app = express();
       app.use((req, res, next) => { throw new Error(); });
-      app.use(handleErrors(false));
+      app.use(handleErrors(false, () => {}));
       return request(app)
         .get('/')
         .expect(500);
@@ -37,7 +37,7 @@ describe('handleErrors', () => {
     it('should send the default html 500 page with no stack if debugMode is false.', () => {
       const app = express();
       app.use((req, res, next) => { throw new Error(); });
-      app.use(handleErrors(false));
+      app.use(handleErrors(false, () => {}));
       return request(app)
         .get('/')
         .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
@@ -49,7 +49,7 @@ describe('handleErrors', () => {
 
       const app = express();
       app.use((req, res, next) => { throw err; });
-      app.use(handleErrors(true));
+      app.use(handleErrors(true, () => {}));
 
       const stack = `<pre>${err.stack}</pre>`;
       const info = 'You are seeing this error because you have debugMode set to true in your src/config file.';
