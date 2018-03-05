@@ -1,9 +1,11 @@
-import { authenticate } from '@foal/authentication';
+import {
+  authenticate,
+  restrictAccessToAdmin,
+  restrictAccessToAuthenticated,
+} from '@foal/authentication';
 import {
   afterThatRemoveField,
   rest,
-  restrictAccessToAdmin,
-  restrictAccessToAuthenticated,
 } from '@foal/common';
 import { Module } from '@foal/core';
 

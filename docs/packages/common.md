@@ -125,14 +125,6 @@ const AppModule: Module = {
 }
 ```
 
-### `restrictAccessToAuthenticated()`
-
-Returns a 401 status if the user is not authenticated.
-
-### `restrictAccessToAdmin()`
-
-Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
-
 ## Services (interfaces)
 
 ### `ModelService`

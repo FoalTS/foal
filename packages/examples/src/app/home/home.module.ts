@@ -1,4 +1,5 @@
-import { restrictAccessToAuthenticated, view } from '@foal/common';
+import { restrictAccessToAuthenticated } from '@foal/authentication';
+import { view } from '@foal/common';
 import { Module } from '@foal/core';
 import { HomeViewService } from './home-view.service';
 
