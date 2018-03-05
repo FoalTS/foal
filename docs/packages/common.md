@@ -120,7 +120,7 @@ const AppModule: Module = {
   controllers: [
     rest
       .attachService('/', MyModelService)
-      .withPreHook(methodNotAllowed(), 'deleteById')
+      .withPreHook(methodNotAllowed(), 'DELETE /:id')
   ]
 }
 ```

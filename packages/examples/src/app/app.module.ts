@@ -20,9 +20,9 @@ export const AppModule: Module = {
       .attachService('/users', UserService)
       .withPreHooks([
         ctx => { ctx.body.isAdmin = false; },
-      ], 'postAll')
-      .withPreHook(restrictAccessToAuthenticated(), 'getAll', 'getById')
-      .withPreHook(restrictAccessToAdmin(), 'putById', 'patchById', 'deleteById')
+      ], 'POST /')
+      .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
+      .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
       .withPostHook(afterThatRemoveField('password'))
   ],
   modules: [

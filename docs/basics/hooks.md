@@ -12,7 +12,7 @@ They takes two parameters:
 
 If an `HttpResponse` is returned (or rejected) in a pre-hook then the processing of the request is stopped for the pre-hooks and route handler and the server responds with the `statusCode` and optional `content` of the returned object.
 
-> *Note*: A pre-hook may also be registered within the `preHooks` property of a module. If so it applies to all the controllers of the modul
+> *Note*: A pre-hook (or post-hook) may also be registered within the `preHooks` (or `postHooks`) property of a module. If so it applies to all the controllers of the module.
 
 ## How to create one
 
@@ -63,11 +63,11 @@ export const MyModule: Module = {
   controllers: [
     rest
       .attachService('/', MyModelService)
-      .withPreHook(logContext, 'getAll', 'getById')
-      // or withPreHooks([ logContext ], 'getAll', 'getById')
-      .withPreHook(ctx => { console.log('Second pre-hook executed!'); }, 'getAll', 'getById')
-      .withPostHook(logPostContext, 'getAll', 'getById')
-      // or withPostHooks([ logContext ], 'getAll', 'getById')
+      .withPreHook(logContext, 'GET /', 'GET /:id')
+      // or withPreHooks([ logContext ], 'GET /', 'GET /:id')
+      .withPreHook(ctx => { console.log('Second pre-hook executed!'); }, 'GET /', 'GET /:id')
+      .withPostHook(logPostContext, 'GET /', 'GET /:id')
+      // or withPostHooks([ logContext ], 'GET /', 'GET /:id')
   ]
 }
 ```
@@ -99,7 +99,7 @@ export const MyModule: Module = {
       .withPreHook(ctx => { console.log('Second pre-hook executed!'); })
       // or withPreHooks([ logContext ])
       .withPostHook(logPostContext)
-      // or withPostHooks([ logContext ], 'getAll', 'getById')
+      // or withPostHooks([ logContext ])
   ]
 }
 ```

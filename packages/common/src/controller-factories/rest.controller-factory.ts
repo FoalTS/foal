@@ -12,16 +12,16 @@ import {
 import { ObjectDoesNotExist } from '../object-does-not-exist';
 import { ModelService } from '../services';
 
-export type RouteName = 'deleteAll' | 'deleteById' | 'getAll' | 'getById' | 'patchAll' | 'patchById'
-  | 'postAll' | 'postById' | 'putAll' | 'putById' ;
+export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
+  | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
 export class RestControllerFactory extends ServiceControllerFactory<
     Partial<ModelService<any, any, any, any>>, RouteName
   > {
   protected defineController(controller: Controller<RouteName>,
                              ServiceClass: Class<Partial<ModelService<any, any, any, any>>>): void {
-    controller.addRoute('deleteAll', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
-    controller.addRoute('deleteById', 'DELETE', '/:id', async (ctx, services) => {
+    controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.findByIdAndRemove) {
         return new HttpResponseNotImplemented();
@@ -35,14 +35,14 @@ export class RestControllerFactory extends ServiceControllerFactory<
         throw err;
       }
     });
-    controller.addRoute('getAll', 'GET', '/', async (ctx, services) => {
+    controller.addRoute('GET /', 'GET', '/', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.findAll) {
         return new HttpResponseNotImplemented();
       }
       return new HttpResponseOK(await service.findAll(ctx.state.query || {}));
     });
-    controller.addRoute('getById', 'GET', '/:id', async (ctx, services) => {
+    controller.addRoute('GET /:id', 'GET', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.findById) {
         return new HttpResponseNotImplemented();
@@ -56,8 +56,8 @@ export class RestControllerFactory extends ServiceControllerFactory<
         throw err;
       }
     });
-    controller.addRoute('patchAll', 'PATCH', '/', ctx => new HttpResponseMethodNotAllowed());
-    controller.addRoute('patchById', 'PATCH', '/:id', async (ctx, services) => {
+    controller.addRoute('PATCH /', 'PATCH', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PATCH /:id', 'PATCH', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.findByIdAndUpdate) {
         return new HttpResponseNotImplemented();
@@ -71,16 +71,16 @@ export class RestControllerFactory extends ServiceControllerFactory<
         throw err;
       }
     });
-    controller.addRoute('postAll', 'POST', '/', async (ctx, services) => {
+    controller.addRoute('POST /', 'POST', '/', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.createOne) {
         return new HttpResponseNotImplemented();
       }
       return new HttpResponseOK(await new HttpResponseCreated(await service.createOne(ctx.body)));
     });
-    controller.addRoute('postById', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
-    controller.addRoute('putAll', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
-    controller.addRoute('putById', 'PUT', '/:id', async (ctx, services) => {
+    controller.addRoute('POST /:id', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PUT /:id', 'PUT', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
       if (!service.findByIdAndReplace) {
         return new HttpResponseNotImplemented();

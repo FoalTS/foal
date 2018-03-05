@@ -66,7 +66,7 @@ export const AppModule: FoalModule = {
       .attachService('/tasks', TaskService)
       .withPreHook(
         [ validateTask, preventXSS ],
-        'postAll', 'patchById', 'putById'
+        'POST /', 'PATCH /:id', 'PUT /:id'
       )
   ],
 };
