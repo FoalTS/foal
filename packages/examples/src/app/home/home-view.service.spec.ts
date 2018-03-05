@@ -12,7 +12,7 @@ describe('HomeViewService', () => {
 
   describe('when render is called', () => {
 
-    it('should return the rendered template.', async () => {
+    xit('should return the rendered template.', async () => {
       const actual = await service.render({});
       const expected = '';
 
