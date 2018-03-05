@@ -10,7 +10,7 @@ import { config } from './config';
 const app = express();
 const foalApp = new App(AppModule);
 
-app.use(express.static('public'));
+app.use(express.static('public/'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

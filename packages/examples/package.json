@@ -3,6 +3,7 @@
   "version": "0.4.0-alpha.3",
   "description": "FoalTs examples",
   "scripts": {
+    "shell": "node --require ts-node/register",
     "assets": "cp -r ./node_modules/bootstrap/dist ./public/assets/bootstrap",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",

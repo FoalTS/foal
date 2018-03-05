@@ -10,9 +10,9 @@ import { User } from './user.interface';
 export class UserService extends SequelizeModelService<User> implements CheckPassword<User> {
   constructor(protected connection: ConnectionService) {
     super('users', {
+      email: { type: Sequelize.STRING, unique: true, allowNull: false },
       isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
       password: { type: Sequelize.STRING, allowNull: false },
-      username: { type: Sequelize.STRING, unique: true, allowNull: false },
     }, connection);
   }
 
