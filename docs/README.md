@@ -28,6 +28,10 @@ Open a terminal and then run the following command:
 yo foal my-app
 ```
 
+Some prompts should show up. Answer the questions as below.
+
+![Prompts](./cli_prompts.png)
+
 A new folder `my-app` should now appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
 ## 3. Serve the application
@@ -55,7 +59,7 @@ Read the [official guide](./guide/1-introduction.md) to learn more on `FoalTS`!
 
 ## Structure of the project
 
-Let’s take a look at what `yo foal:app ` created:
+Let’s take a look at what `yo foal my-app` created:
 
 ### The `src` folder
 
