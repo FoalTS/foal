@@ -4,7 +4,7 @@
 
 ## Prerequisities
 
-To use these services you need to install the package (`@foal/sequelize`) along with its <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) client<!--s-->. <!--If you have already specified which database you are using while creating the project they should already been installed.-->If you have already specified that you are using a database while creating the project they should already been installed.
+To use these services you need to install the package (`@foal/sequelize`) along with its <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) client<!--s-->. <!--If you have already specified which database you are using while creating the project they should already been installed.-->If you have already specified that you are using a PostgreSQL while creating the project they should already been installed.
 
 > To install a `npm` package you need to run this command: `npm install --save <package_name>`.
 
@@ -37,12 +37,18 @@ export interface User {
 @Service()
 export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: Connection) {
-    super('users', {
-      username: Sequelize.STRING
-    }, connection);
+    super(
+      'users', // Name of the table
+      {
+        username: Sequelize.STRING // Sequelize schema
+      },
+      connection // Connection service
+    );
   }
 }
 ```
+
+> *Note*: The `SequelizeModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>` class implements the `ModelService` interface.
 
 ## Testing
 
