@@ -1,6 +1,6 @@
 # @foal/ejs
 
-`@foal/ejs` provides abstract classes to render ejs templates.
+`@foal/ejs` provides abstract classes to render [EJS](http://ejs.co/) templates.
 
 ## `EjsTemplateService`
 
@@ -63,10 +63,8 @@ It implements the `MultipleViewsService` interface.
 import { Service } from '@foal/core';
 import { MultipleEjsTemplatesService } from '@foal/ejs';
 
-export type View = 'billing' | 'users';
-
 @Service()
-export class AdminViewsService extends MultipleEjsTemplatesService<View> {
+export class AdminViewsService extends MultipleEjsTemplatesService {
   constructor() {
     super({
       billing: './templates/billing.html',
@@ -76,7 +74,7 @@ export class AdminViewsService extends MultipleEjsTemplatesService<View> {
 }
 ```
 
-> Note that the path `./templates/index.html` is relative to the directory from where you launch your node process. If you want it to be relative to the directory of `index-view.service.ts`, you must import the `path` package and write instead `path.join(__dirname, 'templates/index.html')`.
+> Note that the path `./templates/*.html` are relative to the directory from where you launch your node process. If you want it to be relative to the directory of `index-view.service.ts`, you must import the `path` package and write instead `path.join(__dirname, 'templates/*.html')`.
 
 `app.module.ts`
 ```typescript
