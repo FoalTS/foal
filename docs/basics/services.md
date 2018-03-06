@@ -5,7 +5,7 @@ Services are the core of FoalTS. They are used to perform many different tasks s
 Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
 
 ```typescript
-import { Service, ServiceManager } from '@foal/core';
+import { App, Service } from '@foal/core';
 
 @Service()
 class ServiceA {
@@ -13,20 +13,18 @@ class ServiceA {
   constructor() {}
 }
 
-const foal = new Foal({
-  services: [ ServiceA ]
-});
+const app = new App({});
 
-const myServiceA = new ServiceManager().get(ServiceA);
+const myServiceA = app.services.get(ServiceA);
 console.log(myServiceA.name);
 ```
 
 ## Nested services
 
-If you want to call a service from another one, you need to declare it in the constructor as follows.
+If you want to call a service from another one, you need to declare it in the constructor as follow.
 
 ```typescript
-import { Service, ServiceManager } from '@foal/core';
+import { App, Service } from '@foal/core';
 
 @Service()
 class ServiceA {
@@ -40,11 +38,9 @@ class ServiceB {
   constructor(public serviceA: ServiceA) {}
 }
 
-const foal = new App({
-  services: [ ServiceA, ServiceB ]
-});
+const app = new App({});
 
-const myServiceB = new ServiceManager().get(ServiceB);
+const myServiceB = app.services.get(ServiceB);
 console.log(myServiceB.name);
 console.log(myServiceB.serviceA.name);
 ```
