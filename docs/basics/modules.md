@@ -1,6 +1,6 @@
 # Modules
 
-Every app starts with a module. A module binds the controllers to the request handler. It may also have pre-hooks (or post-hooks) executed before (or after) every controller.
+Every app starts with a module. A module binds the controllers to the request handler. It may have pre-hooks (or post-hooks) executed before (or after) every controller.
 
 ## Example
 
@@ -13,9 +13,11 @@ const AppModule: Module = {
   controllers: [
     rest.attachService('/my_resources', MyModelService)
   ],
-  hooks: [
+  preHooks: [
     myFirstPreHook(),
     mySecondPreHook(),
+  ],
+  postHooks: [
     myPostHook()
   ]
 }
@@ -23,7 +25,7 @@ const AppModule: Module = {
 
 ## Nested modules
 
-When your app grows up, you may be interested in splitting your app into several modules. Here's an example on how to embed your modules:
+When your app grows up, you may be interested in splitting your app into several modules (authentication, admin, home, public, etc). Here's an example on how to embed your modules:
 
 ```typescript
 const Module1: Module = {
