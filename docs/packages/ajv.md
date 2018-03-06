@@ -22,7 +22,7 @@ export const AppModule: Module = {
         console.log(ctx.body.firstName, ctx.body.lastName);
       })
       .withPreHook(validate({
-        noAdditionalProperties: true,
+        additionalProperties: false,
         properties: {
           firstName: { type: 'string' },
           lastName: { type: 'string' },

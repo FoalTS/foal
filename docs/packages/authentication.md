@@ -1,6 +1,6 @@
 # @foal/authentication
 
-This package is dedicated to authentication and authorization.
+This package is dedicated to authentication and authorization. You'll find a complete example at the end of the page.
 
 ## Authentication
 
@@ -9,28 +9,102 @@ Authentication is divided in three parts in FoalTS:
 - the `authentication` controller factory,
 - and the `authenticate` pre-hook.
 
+> *Note*: FoalTS authentication requires the use of sessions.
+
 ### The `Authenticator` interface
+
+```typescript
+interface AuthenticatorService<User> {
+  authenticate(credentials: any): User | null | Promise<User|null>;
+}
+```
+
+A service implementing the `AuthenticatorService` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
 - `LocalAuthenticatorService` (email and password)
 
+`LocalAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+
+Its constructor takes a user service that must implement the `ModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
+
+*Example*:
+```typescript
+import { LocalAuthenticatorService } from '@foal/authentication';
+import { Service } from '@foal/core';
+
+import { User } from './user.interface';
+import { MyUserService } from './my-user.service.ts';
+
+@Service()
+export class MyAuthenticatorService<User> extends LocalAuthenticatorService {
+
+  constructor(userService: MyUserService) {
+    super(userService);
+  }
+
+}
+```
+
+
 ### The `authentication` controller factory
 
-### The `authenticate` pre-hook
+The `authentication` controller factory attaches an `Authenticator` service to the request handler. It accepts optional options `{ failureRedirect?: string, successRedirect?: string }`.
+
+When the authentication succeeds it returns an `HttpResponseOK` with the user if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
+
+When the authentication fails it returns an `HttpResponseUnauthorized` if `failureRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 ```typescript
 import { Module } from '@foal/core';
+import { authentication } from '@foal/authentication';
+
+import { MyAuthenticatorService } from './my-authenticator.service';
+
+export const AuthModule: Module = {
+  controllers: [
+    authentication
+      .attachService('/login', MyAuthenticatorService, {
+        failureRedirect: '/login?invalid_credentials=true',
+        successRedirect: '/home'
+      })
+      .withPreHook(/* You must add here a pre-hook to validate the input data. You may use the `validate` pre-hook from @foal/ajv.*/)
+  ]
+}
+```
+
+### The `authenticate` pre-hook
+
+The `authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `authentication` controller factory), then the `user context` will be defined.
+
+Usually it is registered once within the `AppModule` `preHooks`.
+
+*Example:*
+```typescript
+import { basic, Module } from '@foal/core';
 import { authenticate } from '@foal/authentication';
 
 export const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('GET', '/foo', ctx => {
+        console.log('In handler: ', ctx.user);
+      })
+      .withPreHook(ctx => {
+        console.log('In pre-hook: ', ctx.user);
+      })
+      .withPostHook(ctx => {
+        console.log('In post-hook: ', ctx.user);
+      })
+  ]
   preHooks: [
     authenticate(),
-    ctx => { console.log(ctx.user); }
   ]
 }
-
 ```
 
 ### Logging out
+
+Currently there is no built-in function that supports the "log out" feature. You need to implement it on your own as follow.
 
 ```typescript
 basic
@@ -40,13 +114,195 @@ basic
   })
 ```
 
-## Authorization
+Note that the use of `POST`, `/logout` and `/login` is up to you.
 
+## Authorization
 
 ### `restrictAccessToAuthenticated()`
 
-Returns a 401 status if the user is not authenticated.
+`restrictAccessToAuthenticated` is a pre-hook to restrict the access to authenticated users.
+
+If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+
+*Example*:
+```typescript
+import { authenticate, restrictAccessToAuthenticated } from '@foal/authentication';
+import { basic, Module } from '@foal/core';
+
+export const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('POST', '/user', ctx => {
+        console.log(ctx.user);
+      })
+      .withPreHook(restrictAccessToAuthenticated()),
+  ],
+  preHooks: [
+    authenticate()
+  ]
+}
+```
 
 ### `restrictAccessToAdmin()`
 
-Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
+`restrictAccessToAdmin` is a pre-hook to restrict the access to admin users.
+
+If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+
+If the user is not an admin, namely it has no property `isAdmin` or this property is false, then the pre-hook returns an `HttpResponseForbidden`.
+
+*Example*:
+```typescript
+import { authenticate, restrictAccessToAdmin } from '@foal/authentication';
+import { basic, Module } from '@foal/core';
+
+export const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('POST', '/user', ctx => {
+        console.log(ctx.user);
+      })
+      .withPreHook(restrictAccessToAdmin()),
+  ],
+  preHooks: [
+    authenticate()
+  ]
+}
+```
+
+## A complete example
+
+**Warning**: this example does not include the csrf protection.
+
+```
+- src
+  '- app
+    |- auth
+    | |- auth.module.ts
+    | '- auth.service.ts
+    |- shared
+    | '- user.service.ts
+    | '- user.interface.ts
+    '-app.module.ts
+```
+
+```typescript
+// app.module.ts
+import { authenticate, restrictToAuthenticated } from '@foal/authentication';
+import { basic, Module } from '@foal/core';
+
+import { AuthModule } from './auth/auth.module';
+
+export const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('GET', '/foo', ctx => {
+        console.log(ctx.user);
+      })
+      .withPreHook(restrictToAuthenticated())
+  ],
+  modules: [
+    AuthModule
+  ],
+  preHooks: [
+    authenticate()
+  ]
+}
+```
+
+```typescript
+// auth.module.ts
+import { validate } from '@foal/ajv';
+import { authentication } from '@foal/authentication';
+import { basic, HttpResponseOK, Module } from '@foal/core';
+
+import { AuthService } from './auth.service';
+
+export const AuthModule: Module = {
+  controllers: [
+    authentication
+      .attachService('/login', AuthService)
+      .withPreHook(validate({
+        additionalProperties: false,
+        properties: [
+          email: { type: 'string', format: 'email' },
+          password: { type: 'string' }
+        ],
+        required: [ 'email', 'password' ],
+        type: 'object'
+      })),
+    // In practice we would use below the view controller
+    // factory with a template.
+    basic
+      .attachHandlingFunction('GET', '/login', () => {
+        return new HttpResponseOK(`
+          <form method="POST" action="/login">
+            Email: <input type="email" name="email">
+            <br>
+            Password: <input type="password" name="password">
+            <br>
+            <button type="submit">Log in</button>
+          </form>
+        `);
+      })
+  ]
+}
+```
+
+```typescript
+// auth.service.ts
+import { LocalAuthenticatorService } from '@foal/authentication';
+import { Service } from '@foal/core';
+
+import { User } from '../shared/user.interface';
+import { UserService } from '../shared/user.service.ts';
+
+@Service()
+export class AuthService<User> extends LocalAuthenticatorService {
+
+  constructor(userService: UserService) {
+    super(userService);
+  }
+
+}
+```
+
+```typescript
+// user.interface.ts
+export interface User {
+  email: string;
+  password: string;
+  name: string;
+  isAdmin: boolean;
+}
+```
+
+```typescript
+// user.service.ts
+import { CheckPassword } from '@foal/authentication';
+import { Service } from '@foal/core';
+import * as bcrypt from 'bcrypt-nodejs';
+// other imports...
+
+import { User } from './user.interface';
+
+@Service()
+export class UserService extends ... implements CheckPassword<User> {
+  constructor(...) {
+    ...
+  }
+
+  public createOne(data: User): ... {
+    return super.createOne({
+      ...data,
+      password: bcrypt.hashSync(data.password)
+    });
+  }
+
+  public checkPassword(user: User, password: string): boolean {
+    return bcrypt.compareSync(password, user.password);
+  }
+
+}
+
+```
