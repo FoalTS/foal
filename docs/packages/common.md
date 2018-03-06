@@ -113,7 +113,7 @@ const AppModule: Module = {
 
 ### `methodNotAllowed()`
 
-Throws a HttpResponseMethodNotAllowed. The client gets a `405 Method Not Allowed`.
+Returns an HttpResponseMethodNotAllowed..
 
 ```typescript
 const AppModule: Module = {
@@ -133,7 +133,23 @@ See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authenticati
 
 ### `MultipleViewsService`
 
+```typescript
+import { ObjectType } from '@foal/core';
+
+export interface MultipleViewsService {
+  render(name: string, locals: ObjectType): Promise<string>|string;
+}
+```
+
 ### `ViewService`
+
+```typescript
+import { ObjectType } from '@foal/core';
+
+export interface ViewService {
+  render(locals: ObjectType): Promise<string>|string;
+}
+```
 
 ## Utils
 
