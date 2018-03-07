@@ -1,7 +1,7 @@
-import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { Class, PreHook } from '@foal/core';
 
-export function authenticate(UserModelService: Class<ModelService<any, any, any, any>>): PreHook {
+export function authenticate(UserModelService: Class<IModelService<any, any, any, any>>): PreHook {
   return async (ctx, services) => {
     if (!ctx.session) {
       throw new Error('authenticate pre-hook requires session management.');

@@ -25,7 +25,7 @@ A service implementing the `AuthenticatorService` interface aims to authenticate
 
 `LocalAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes a user service that must implement the `ModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
+Its constructor takes a user service that must implement the `IModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
 
 *Example*:
 ```typescript

@@ -4,7 +4,7 @@ import { ObjectType } from '@foal/core';
  * Every model service that is connected to a table or a collection of a database should implement
  * this interface.
  *
- * The `ModelService` is a common interface that is used by many components in FoalTS such as the
+ * The `IModelService` is a common interface that is used by many components in FoalTS such as the
  * `rest` controller factory or some authenticators.
  *
  * Each method can be synchronous or asynchronous which means that it can return a promise if needed.
@@ -13,7 +13,7 @@ import { ObjectType } from '@foal/core';
  * namely if several accesses to the database are required when executing the function.
  *
  * @export
- * @interface ModelService
+ * @interface IModelService
  * @template IModel Interface to describe the fields of the objects without their ids and timestamps.
  * @template ICreatingModel Interface to describe the minimum required fields to pass to create an object.
  * @template IIdAndTimeStamps Interface to describe the field id and the timestamp fields of the objects.
@@ -34,9 +34,9 @@ import { ObjectType } from '@foal/core';
  *   createdAt: Date;
  *   updateAt: Date;
  * }
- * class MyModelService implements ModelService<Task, CreatingTask, IdAndTimeStamps, string> {}
+ * class MyModelService implements IModelService<Task, CreatingTask, IdAndTimeStamps, string> {}
  */
-export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
+export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
 
   // Create
 
@@ -46,7 +46,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {ICreatingModel} data Support data that is used to create the object.
    * @returns {(IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>} The created object with
    * its id and timestamps.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   createOne(data: ICreatingModel): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
@@ -56,7 +56,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {ICreatingModel[]} records Array of support data that is used to create the objects.
    * @returns {((IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>)} The created objects
    * with their ids and timestamps.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   createMany(records: ICreatingModel[]): (IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>;
 
@@ -69,7 +69,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The matching object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findById(id: IdType): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
@@ -84,7 +84,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The matching object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findOne(query: ObjectType): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
@@ -97,7 +97,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {ObjectType} query Query used to find the objects.
    * @returns {((IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>)} The matching
    * objects with their ids and timestamps.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findAll(query: ObjectType): (IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>;
 
@@ -114,7 +114,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The updated object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findByIdAndUpdate(id: IdType, data: Partial<IModel & IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -135,7 +135,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The updated object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -150,7 +150,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {ObjectType} query Query used to find the objects.
    * @param {(Partial<IModel & IIdAndTimeStamps>)} data Object with the keys/values to update.
    * @returns {(void | Promise<void>)} Returns nothing.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): void | Promise<void>;
 
@@ -165,7 +165,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The new object with
    * its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findByIdAndReplace(id: IdType, data: IModel & Partial<IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -184,7 +184,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The new object with
    * its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
@@ -197,7 +197,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {IdType} id Unique id used to unambiguously find the object.
    * @returns {(void | Promise<void>)} Returns nothing.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given id.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findByIdAndRemove(id: IdType): void | Promise<void>;
 
@@ -211,7 +211,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    * @param {ObjectType} query Query used to unambiguously find the object.
    * @returns {(void | Promise<void>)} Returns nothing.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   findOneAndRemove(query: ObjectType): void | Promise<void>;
 
@@ -222,7 +222,7 @@ export interface ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> 
    *
    * @param {ObjectType} query Query use to find the objects.
    * @returns {(void | Promise<void>)} Returns nothing.
-   * @memberof ModelService
+   * @memberof IModelService
    */
   removeMany(query: ObjectType): void | Promise<void>;
 }

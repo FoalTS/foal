@@ -1,4 +1,4 @@
-import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 
 import { AuthenticatorService } from '../authenticator-service.interface';
 
@@ -19,7 +19,7 @@ export interface CheckPassword<User> {
 export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>
     implements AuthenticatorService<User> {
 
-  constructor(protected userModelService: ModelService<User, any, any, any> & CheckPassword<User>) {}
+  constructor(protected userModelService: IModelService<User, any, any, any> & CheckPassword<User>) {}
 
   public async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;

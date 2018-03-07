@@ -1,4 +1,4 @@
-import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { ObjectType } from '@foal/core';
 import { expect } from 'chai';
 
@@ -15,7 +15,7 @@ describe('LocalAuthenticatorService', () => {
   class ConcreteClass extends LocalAuthenticatorService<User> {}
   let service: ConcreteClass;
 
-  class UserModelService implements ModelService<User, ObjectType, ObjectType, any>, CheckPassword<User> {
+  class UserModelService implements IModelService<User, ObjectType, ObjectType, any>, CheckPassword<User> {
     public createOne(): any {}
     public createMany(): any {}
 

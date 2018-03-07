@@ -11,7 +11,7 @@ const expect = chai.expect;
 
 describe('ControllerFactory', () => {
 
-  interface ServiceInterface {
+  interface IService {
     getFoo(): string;
   }
 
@@ -20,10 +20,10 @@ describe('ControllerFactory', () => {
   }
 
   class ConcreteServiceControllerFactory extends ServiceControllerFactory<
-      ServiceInterface, 'main', Options> {
+      IService, 'main', Options> {
 
     protected defineController(controller: Controller<'main'>,
-                               ServiceClass: Class<ServiceInterface>,
+                               ServiceClass: Class<IService>,
                                options?: Options) {
       controller.addRoute('main', 'POST', '/foo', (ctx, services) => {
         return new HttpResponseOK(services.get(ServiceClass).getFoo());
@@ -32,7 +32,7 @@ describe('ControllerFactory', () => {
 
   }
 
-  class ConcreteService implements ServiceInterface {
+  class ConcreteService implements IService {
     public getFoo(): string {
       return 'bar';
     }

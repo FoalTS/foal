@@ -48,7 +48,7 @@ export class UserService extends SequelizeModelService<User> {
 }
 ```
 
-> *Note*: The `SequelizeModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>` class implements the `ModelService` interface.
+> *Note*: The `SequelizeModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>` class implements the `IModelService` interface.
 
 ## Testing
 

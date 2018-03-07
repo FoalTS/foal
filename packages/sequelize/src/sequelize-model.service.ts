@@ -1,4 +1,4 @@
-import { ModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { ObjectType } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
@@ -11,7 +11,7 @@ export interface DefaultIdAndTimeStamps {
 
 export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>
-    implements ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
+    implements IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
   protected model: any;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService,

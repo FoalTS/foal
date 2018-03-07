@@ -38,7 +38,7 @@ const AppModule: Module = {
 
 ```typescript
 // my-model-service
-import { ModelService } from '@foal/common';
+import { IModelService } from '@foal/common';
 import { ObjectType, Service } from '@foal/core';
 
 class User {
@@ -46,7 +46,7 @@ class User {
 }
 
 @Service()
-class UserService implements Partial<ModelService<User>> {
+class UserService implements Partial<IModelService<User>> {
   private id = 0;
   constructor () {}
 
