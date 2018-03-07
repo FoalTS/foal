@@ -10,7 +10,7 @@ FoalTS is the framework you need to build the backend of small to large web appl
 
 Let's get started!
 
-> This tutorial assumes that you have already PostgreSQL or MySQL installed on your host.
+> This tutorial assumes that you have already PostgreSQL <!--or MySQL -->installed on your host.
 
 ## 1. Set up the Development Environment
 
