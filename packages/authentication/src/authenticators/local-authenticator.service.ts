@@ -13,7 +13,7 @@ export interface CheckPassword<User> {
  * @export
  * @abstract
  * @class LocalAuthenticatorService
- * @implements {AuthenticatorService<User>}
+ * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
 export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>

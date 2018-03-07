@@ -14,12 +14,12 @@ Authentication is divided in three parts in FoalTS:
 ### The `Authenticator` interface
 
 ```typescript
-interface AuthenticatorService<User> {
+interface IAuthenticator<User> {
   authenticate(credentials: any): User | null | Promise<User|null>;
 }
 ```
 
-A service implementing the `AuthenticatorService` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
+A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
 - `LocalAuthenticatorService` (email and password)
 
