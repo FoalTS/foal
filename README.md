@@ -1,4 +1,4 @@
-# ![Logo](./docs/logo_64.png) FoalTS
+# FoalTS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/FoalTS/foal/blob/master/LICENSE)
 ![node version](https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg)
@@ -6,7 +6,13 @@
 [![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
 [![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)](https://snyk.io/test/github/foalts/foal)
 
-A Node.js framework for building robust web apps.
+<p align="center">
+  <a href="https://foalts.org" target="blank">
+    <img src="./docs/logo_400.png" height="125px" alt="Logo" />
+  </a>
+</p>
+
+FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript.
 
 FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript. Read the docs now to learn more about all FoalTS features!
 
