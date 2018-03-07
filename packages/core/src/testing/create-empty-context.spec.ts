@@ -10,10 +10,9 @@ describe('createEmptyContext', () => {
     expect(actual.body).to.equal(undefined);
     expect(actual.params).to.deep.equal({});
     expect(actual.query).to.deep.equal({});
-    expect(actual.result).to.equal(undefined);
     expect(actual.session).to.equal(undefined);
     expect(actual.state).to.deep.equal({});
-    expect(actual.user).to.equal(undefined);
+    expect(actual.user).to.equal(null);
   });
 
 });

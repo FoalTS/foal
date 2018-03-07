@@ -1,19 +1,16 @@
+import { HttpResponse } from '../classes';
 import { ObjectType } from './utils';
 
-export interface RSUContext<Result, Session, User> {
-  session: Session;
+export interface Context<User = any> {
+  session: any;
   params: ObjectType;
   body: any;
   query: ObjectType;
-  result: Result;
   state: ObjectType;
-  user: User|undefined;
+  user: User | null;
   getHeader(field: string): string;
 }
-export type RSContext<Result, Session> = RSUContext<Result, Session, any>;
-export type RUContext<Result, User> = RSUContext<Result, any, User>;
-export type SUContext<Session, User> = RSUContext<any, Session, User>;
-export type RContext<Result> = RSUContext<Result, any, any>;
-export type SContext<Session> = RSUContext<any, Session, any>;
-export type UContext<User> = RSUContext<any, any, User>;
-export type Context = RSUContext<any, any, any>;
+
+export interface PostContext extends Context {
+  result: HttpResponse | undefined;
+}

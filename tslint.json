@@ -7,7 +7,7 @@
     "rules": {
       "quotemark": [true, "single"],
       "no-console": false,
-      "interface-name": [true, "never-prefix"],
+      "interface-name": false,
       "max-classes-per-file": false,
       "array-type": [true, "array"],
       "arrow-parens": [true, "ban-single-arg-parens"],

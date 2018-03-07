@@ -1,8 +1,6 @@
-import { ModelService } from '@foal/common';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import {
   createEmptyContext,
-  getPreMiddleware,
-  NotFoundError,
   ObjectType,
   Service,
   ServiceManager,
@@ -14,7 +12,7 @@ import { authenticate } from './authenticate.pre-hook';
 describe('authenticate', () => {
 
   @Service()
-  class UserModelService implements ModelService<any, ObjectType, ObjectType, any> {
+  class UserModelService implements IModelService<any, ObjectType, ObjectType, any> {
 
     constructor() {}
 
@@ -30,7 +28,7 @@ describe('authenticate', () => {
           username: 'John',
         };
       }
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     public findOne() {}
     public findAll(): any {}
@@ -49,11 +47,11 @@ describe('authenticate', () => {
   }
 
   it('should throw an Error if there is no session.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const preHook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     try {
-      await middleware(ctx, new ServiceManager());
+      await preHook(ctx, new ServiceManager());
       throw new Error('No error was thrown by the middleware');
     } catch (err) {
       expect(err).to.be.instanceOf(Error).with.property(
@@ -64,18 +62,18 @@ describe('authenticate', () => {
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const preHook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {};
-    await middleware(ctx, new ServiceManager());
+    await preHook(ctx, new ServiceManager());
 
     ctx.session.authentication = {};
-    await middleware(ctx, new ServiceManager());
+    await preHook(ctx, new ServiceManager());
   });
 
-  it('should not throw an Error if no user is found in the database matching the given id.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+  it('should set ctx.user to null if no user is found in the database matching the given id.', async () => {
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {
@@ -83,11 +81,13 @@ describe('authenticate', () => {
         userId: 2
       }
     };
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
+
+    expect(ctx.user).to.equal(null);
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {
-    const middleware = getPreMiddleware(authenticate(UserModelService));
+    const hook = authenticate(UserModelService);
     const ctx = createEmptyContext();
 
     ctx.session = {
@@ -95,7 +95,7 @@ describe('authenticate', () => {
         userId: 1
       }
     };
-    await middleware(ctx, new ServiceManager());
+    await hook(ctx, new ServiceManager());
 
     expect(ctx.user).to.deep.equal({
       email: 'john@foalts.org',

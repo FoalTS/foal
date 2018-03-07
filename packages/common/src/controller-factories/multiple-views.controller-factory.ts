@@ -1,18 +1,34 @@
-import { Context, ControllerFactory, HttpMethod, Route } from '@foal/core';
+import {
+  Class,
+  Controller,
+  HttpResponseOK,
+  ServiceControllerFactory,
+} from '@foal/core';
 
-import { MultipleViewsService } from '../services';
+import { IMultipleViews } from '../services';
 
-export class MultipleViewsFactory extends ControllerFactory<MultipleViewsService, undefined> {
-  public getRoutes(service: MultipleViewsService): Route[] {
-    return service.names().map(name => {
-      return {
-        httpMethod: 'GET' as HttpMethod,
-        middleware: (context: Context) => service.render(name, context.state.locals || {}),
-        path: `/${name}`,
-        serviceMethodName: 'render',
-        successStatus: 200,
-      };
-    });
+export interface Options {
+  views: Record<string, string>;
+}
+
+export class MultipleViewsFactory extends ServiceControllerFactory<IMultipleViews,
+    string, Options> {
+  protected defineController(controller: Controller<string>,
+                             ServiceClass: Class<IMultipleViews>,
+                             options?: Options): void {
+    if (!options) {
+      throw new Error('Options must be given to the multipleViews controller factory.');
+    }
+    for (const name in options.views) {
+      if (options.views.hasOwnProperty(name)) {
+        controller.addRoute(name, 'GET', options.views[name], async (ctx, services) => {
+          const service = services.get(ServiceClass);
+          return new HttpResponseOK(
+            await service.render(name, ctx.state.locals || {})
+          );
+        });
+      }
+    }
   }
 }
 

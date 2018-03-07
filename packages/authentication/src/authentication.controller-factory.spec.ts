@@ -1,103 +1,146 @@
-import { createEmptyContext, HttpRedirect, ObjectType, UnauthorizedError } from '@foal/core';
+import {
+  createEmptyContext,
+  HttpResponseOK,
+  HttpResponseRedirect,
+  HttpResponseUnauthorized,
+  ObjectType,
+  Service,
+  ServiceManager,
+} from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { authentication, AuthenticationFactory, Options } from './authentication.controller-factory';
-import { AuthenticatorService } from './authenticator-service.interface';
+import { authentication, AuthenticationFactory } from './authentication.controller-factory';
+import { IAuthenticator } from './authenticator.interface';
 
 chai.use(spies);
 const expect = chai.expect;
 
 describe('authentication', () => {
 
-  let mock: AuthenticatorService<any>;
+  @Service()
+  class MockAuthenticatorService implements IAuthenticator<any> {
+    constructor() {}
 
-  beforeEach(() => {
-    mock = {
-      authenticate(credentials: ObjectType) {
-        if (credentials.username === 'John') {
-          return {
-            id: 1,
-            username: 'John',
-          };
-        }
-        return null;
+    public authenticate(credentials: ObjectType) {
+      if (credentials.username === 'John') {
+        return {
+          id: 1,
+          username: 'John',
+        };
       }
-    };
-  });
+      return null;
+    }
+  }
 
   it('should be an instance of AuthenticationFactory', () => {
     expect(authentication).to.an.instanceOf(AuthenticationFactory);
   });
 
-  describe('when getRoutes(service: AuthenticatorService): Route[] is called with the mock service', () => {
+  describe('when attachService is called', () => {
 
-    it('should return the proper Route array when there are no options.', async () => {
-      const actual = authentication.getRoutes(mock);
-      chai.spy.on(mock, 'authenticate');
+    describe('should return a controller with a proper `main` route that', () => {
 
-      expect(actual).to.be.an('array').and.to.have.lengthOf(1);
-      expect(actual[0].httpMethod).to.equal('POST');
-      expect(actual[0].path).to.equal('/');
-      expect(actual[0].serviceMethodName).to.equal('authenticate');
-      expect(actual[0].successStatus).to.equal(200);
+      it('should handles requests at POST /.', () => {
+        const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
 
-      const ctx = createEmptyContext();
-      ctx.session = {};
-      ctx.body = { username: 'John' };
-      const result = await actual[0].middleware(ctx);
-      expect(mock.authenticate).to.have.been.called.with(ctx.body);
-      expect(result).to.deep.equal({
-        id: 1,
-        username: 'John',
-      });
-      expect(ctx.session.authentication).to.deep.equal({
-        userId: 1
+        expect(route.httpMethod).to.equal('POST');
+        expect(route.path).to.equal('/');
       });
 
-      const ctx2 = createEmptyContext();
-      ctx2.session = {};
-      ctx2.body = { username: 'Jack' };
-      try {
-        await actual[0].middleware(ctx2);
-        throw  new Error('No error was thrown in the middleware.');
-      } catch (err) {
-        expect(err).to.be.instanceOf(UnauthorizedError);
-        expect(err).to.have.deep.property('details', {
-          message: 'Bad credentials.'
+      describe('when the authentication succeeds', () => {
+
+        it('should return an HttpResponseOK with the matching user if options.successRedirect '
+           + 'is undefined.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
+
+          const result = await route.handler(ctx, new ServiceManager());
+
+          expect(result).to.be.an.instanceOf(HttpResponseOK);
+          expect((result as HttpResponseOK).content).to.deep.equal({
+            id: 1,
+            username: 'John',
+          });
         });
-      }
-    });
 
-    it('should return the proper Route array when there are options.', async () => {
-      const options: Options = {
-        failureRedirect: '/failure',
-        successRedirect: '/success',
-      };
-      const actual = authentication.getRoutes(mock, options);
-      chai.spy.on(mock, 'authenticate');
+        it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService, {
+            successRedirect: '/foo'
+          }).getRoute('main');
 
-      expect(actual).to.be.an('array').and.to.have.lengthOf(1);
-      expect(actual[0].httpMethod).to.equal('POST');
-      expect(actual[0].path).to.equal('/');
-      expect(actual[0].serviceMethodName).to.equal('authenticate');
-      expect(actual[0].successStatus).to.equal(200);
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
 
-      const ctx = createEmptyContext();
-      ctx.session = {};
-      ctx.body = { username: 'John' };
-      const result = await actual[0].middleware(ctx);
-      expect(mock.authenticate).to.have.been.called.with(ctx.body);
-      expect(result).to.be.an.instanceOf(HttpRedirect).with.property('path', '/success');
-      expect(ctx.session.authentication).to.deep.equal({
-        userId: 1
+          const result = await route.handler(ctx, new ServiceManager());
+
+          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+        });
+
+        it('should create or update ctx.session.authentication to include the userId.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'John' };
+
+          await route.handler(ctx, new ServiceManager());
+
+          expect(ctx.session.authentication).to.deep.equal({
+            userId: 1
+          });
+
+          ctx.session.authentication.foo = 'bar';
+
+          await route.handler(ctx, new ServiceManager());
+
+          expect(ctx.session.authentication).to.deep.equal({
+            foo: 'bar',
+            userId: 1
+          });
+        });
+
       });
 
-      const ctx2 = createEmptyContext();
-      ctx2.session = {};
-      ctx2.body = { username: 'Jack' };
-      const result2 = await actual[0].middleware(ctx2);
-      expect(result2).to.be.an.instanceOf(HttpRedirect).with.property('path', '/failure');
+      describe('when the authentication fails', () => {
+
+        it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'Jack' };
+
+          const result = await route.handler(ctx, new ServiceManager());
+
+          expect(result).to.be.an.instanceOf(HttpResponseUnauthorized);
+          expect((result as HttpResponseUnauthorized).content).to.deep.equal({
+            message: 'Bad credentials.'
+          });
+        });
+
+        it('should return an HttpResponseRedirect if options.failureRedirect is not empty.', async () => {
+          const route = authentication.attachService('/', MockAuthenticatorService, {
+            failureRedirect: '/foo'
+          }).getRoute('main');
+
+          const ctx = createEmptyContext();
+          ctx.session = {};
+          ctx.body = { username: 'Jack' };
+
+          const result = await route.handler(ctx, new ServiceManager());
+
+          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+        });
+
+      });
+
     });
 
   });

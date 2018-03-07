@@ -1,5 +1,5 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType } from '@foal/core';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { ObjectType } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
@@ -11,7 +11,7 @@ export interface DefaultIdAndTimeStamps {
 
 export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>
-    implements ModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
+    implements IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType> {
   protected model: any;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService,
@@ -45,7 +45,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
     const result = await this.model.findById(id);
     if (result === null) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result.dataValues;
   }
@@ -57,7 +57,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: query
     });
     if (result === null) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result.dataValues;
   }
@@ -82,7 +82,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: { id },
     });
     if (result[0] === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result[1].map(e => e.dataValues)[0];
   }
@@ -99,7 +99,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: query,
     });
     if (result[0] === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result[1].map(e => e.dataValues)[0];
   }
@@ -124,7 +124,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: { id },
     });
     if (result[0] === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result[1].map(e => e.dataValues)[0];
   }
@@ -141,7 +141,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: query,
     });
     if (result[0] === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     return result[1].map(e => e.dataValues)[0];
   }
@@ -153,7 +153,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: { id }
     });
     if (result === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
   }
 
@@ -165,7 +165,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
       where: query
     });
     if (result === 0) {
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
   }
 

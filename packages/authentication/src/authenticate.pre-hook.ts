@@ -1,8 +1,8 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, preHook, Type} from '@foal/core';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { Class, PreHook } from '@foal/core';
 
-export function authenticate(UserModelService: Type<ModelService<any, any, any, any>>) {
-  return preHook(async (ctx, services) => {
+export function authenticate(UserModelService: Class<IModelService<any, any, any, any>>): PreHook {
+  return async (ctx, services) => {
     if (!ctx.session) {
       throw new Error('authenticate pre-hook requires session management.');
     }
@@ -12,9 +12,9 @@ export function authenticate(UserModelService: Type<ModelService<any, any, any, 
     try {
       ctx.user = await services.get(UserModelService).findById(ctx.session.authentication.userId);
     } catch (err) {
-      if (!(err instanceof NotFoundError)) {
+      if (!(err instanceof ObjectDoesNotExist)) {
         throw err;
       }
     }
-  });
+  };
 }

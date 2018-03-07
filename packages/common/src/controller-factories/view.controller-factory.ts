@@ -1,22 +1,19 @@
 import {
-  Context,
-  ControllerFactory,
-  Route
+  Class,
+  Controller,
+  HttpResponseOK,
+  ServiceControllerFactory,
 } from '@foal/core';
 
-import { ViewService } from '../services';
+import { IView } from '../services';
 
-export class ViewControllerFactory extends ControllerFactory<ViewService, undefined> {
-  public getRoutes(service: ViewService): Route[] {
-    return [
-      {
-        httpMethod: 'GET',
-        middleware: (context: Context) => service.render(context.state.locals || {}),
-        path: '/',
-        serviceMethodName: 'render',
-        successStatus: 200,
-      }
-    ];
+export class ViewControllerFactory extends ServiceControllerFactory<IView, 'main'> {
+  protected defineController(controller: Controller<'main'>, ServiceClass: Class<IView>): void {
+    controller.addRoute('main', 'GET', '/', async (ctx, services) => {
+      return new HttpResponseOK(
+        await services.get(ServiceClass).render(ctx.state.locals || {})
+      );
+    });
   }
 }
 

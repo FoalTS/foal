@@ -1,7 +1,6 @@
+import { ObjectDoesNotExist } from '@foal/common';
 import { expect } from 'chai';
 import * as Sequelize from 'sequelize';
-
-import { NotFoundError } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 import { SequelizeModelService } from './sequelize-model.service';
@@ -156,12 +155,12 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findById(666);
           throw  new Error('No error was thrown in findById().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -192,12 +191,12 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findOne({ firstName: 'Jack' });
           throw  new Error('No error was thrown in findOne().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -287,12 +286,12 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findByIdAndUpdate(666, { firstName: 'Jack' });
           throw  new Error('No error was thrown in findByIdAndUpdate().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -333,12 +332,12 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findOneAndUpdate({ firstName: 'Adele' }, { firstName: 'Jack' });
           throw  new Error('No error was thrown in findOneAndUpdate().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -417,7 +416,7 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findByIdAndReplace(666, {
             firstName: 'Napoleon',
@@ -426,7 +425,7 @@ function testSuite(dbName: string, uri: string) {
           });
           throw  new Error('No error was thrown in findByIdAndReplace().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -474,7 +473,7 @@ function testSuite(dbName: string, uri: string) {
         });
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findOneAndReplace({ firstName: 'Jack' }, {
             firstName: 'Napoleon',
@@ -483,7 +482,7 @@ function testSuite(dbName: string, uri: string) {
           });
           throw  new Error('No error was thrown in findOneAndReplace().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -511,12 +510,12 @@ function testSuite(dbName: string, uri: string) {
         expect(users[0].get('id')).not.to.equal(user1.get('id'));
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findByIdAndRemove(666);
           throw  new Error('No error was thrown in findByIdAndRemove().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 
@@ -544,12 +543,12 @@ function testSuite(dbName: string, uri: string) {
         expect(users[0].get('firstName')).not.to.equal(user2.get('firstName'));
       });
 
-      it('should throw a NotFoundError if no suitable user exists in the database.', async () => {
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', async () => {
         try {
           await service.findOneAndRemove({ firstName: 'Jack' });
           throw  new Error('No error was thrown in findByIdAndRemove().');
         } catch (err) {
-          expect(err).to.be.instanceof(NotFoundError);
+          expect(err).to.be.instanceof(ObjectDoesNotExist);
         }
       });
 

@@ -21,19 +21,14 @@
 
 ### Advanced
 
-* [Contexts](./advanced/contexts.md)
 * [Controller factories](./advanced/controller-factories.md)
 
 ### Packages
 
 * [@foal/ajv](./packages/ajv.md)
+* [@foal/authentication](./packages/authentication.md)
 * [@foal/common](./packages/common.md)
 * [@foal/core](./packages/core.md)
 * [@foal/ejs](./packages/ejs.md)
 * [@foal/express](./packages/express.md)
 * [@foal/sequelize](./packages/sequelize.md)
-
-### Cookbook
-
-* [Authentication](./cookbook/authentication.md)
- 

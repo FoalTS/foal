@@ -1,7 +1,6 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType } from '@foal/core';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
 
-import { AuthenticatorService } from '../authenticator-service.interface';
+import { IAuthenticator } from '../authenticator.interface';
 
 export interface CheckPassword<User> {
   checkPassword(user: User, password: string): boolean;
@@ -14,13 +13,13 @@ export interface CheckPassword<User> {
  * @export
  * @abstract
  * @class LocalAuthenticatorService
- * @implements {AuthenticatorService<User>}
+ * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
 export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>
-    implements AuthenticatorService<User> {
+    implements IAuthenticator<User> {
 
-  constructor(protected userModelService: ModelService<User, ObjectType, ObjectType, any> & CheckPassword<User>) {}
+  constructor(protected userModelService: IModelService<User, any, any, any> & CheckPassword<User>) {}
 
   public async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;
@@ -28,7 +27,7 @@ export abstract class LocalAuthenticatorService<User extends { email: string, pa
     try {
       user = await this.userModelService.findOne({ email });
     } catch (err) {
-      if (err instanceof NotFoundError) {
+      if (err instanceof ObjectDoesNotExist) {
         return null;
       }
       throw err;

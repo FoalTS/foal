@@ -1,39 +1,22 @@
 # @foal/express
 
-Foal package to run the app with express.
+FoalTS needs [Express](http://expressjs.com/) to run. This package aims connect the foal app to an express application.
 
-## `getCallback(foal: Foal, stateDef: { req: string, ctx: string }[] = [])`
+## `getMiddlewares`
 
-Returns an express middleware from the foal application. It's an adapter to make foal work with express.
+This function returns from a given foal app the express middlewares to include in the express application.
 
-**stateDef:** Optional array to forward data from the express `req` object to the foal `state` `context`.
-
-**Note:** Errors are not processed by this middleware. This means that any errors thrown or rejected in the foal app will have to be handled then by an express error-handling middleware. Express already integrates a default one but you can also use `handleErrors` for a higher flexibility.
-
-**Example**
-```typescript
-const foalApp = new Foal({
-  controllers: []
-});
-
-app.use(getCallack(foalApp));
-```
-
-## `handleErrors(options: { logs?: 'none'|'500'|'all', sendStack?: boolean } = {}, logFn = console.error)`
-
-Returns an express middleware to handle errors thrown in previous middlewares.
-
-**Options:**
-- `logs: 'none'|'500'|'all'` - specifies which errors should be logged (with their traceback). `none` prevents the errors from being logged. `500` logs only internal server errors (such as `Error` or `InternalServerError`). `all` logs all errors (including `NotFoundError`, `BadRequestError`, etc). Default: `none`.
-- `sendStack: boolean` - specifies if the error stack should be sent in the response. Use it only in development. Default: `false`.
-- `logFn` - function used to log the errors. Default: `console.error`.
+**Params**:
+- `app: App` The foal application.
+- `{ debugMode }: { debugMode: boolean }` If `debugMode` is true then errors thrown or rejected in the app will be displayed in the browser with their traceback. If it is false then the browser will display a standard 500 INTERNAL SERVER ERROR.
+- `stateDef: { req: string, state: string }[] = []` Optional array to forward data from the express `req` object to the foal `context` `state`.
+- `logFn = console.error` Log function used to print the traceback of the errors thrown or rejected in the application. 
 
 **Example**
 ```typescript
-const foalApp = new Foal({
+const foalApp = new App({
   controllers: []
 });
 
-app.use(getCallack(foalApp));
-app.use(handleErrors({ logs: '500' }));
+app.use(getMiddlewares(foalApp, { debugMode: true }));
 ```

@@ -1,5 +1,5 @@
-import { ModelService } from '@foal/common';
-import { NotFoundError, ObjectType } from '@foal/core';
+import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { ObjectType } from '@foal/core';
 import { expect } from 'chai';
 
 import { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
@@ -15,7 +15,7 @@ describe('LocalAuthenticatorService', () => {
   class ConcreteClass extends LocalAuthenticatorService<User> {}
   let service: ConcreteClass;
 
-  class UserModelService implements ModelService<User, ObjectType, ObjectType, any>, CheckPassword<User> {
+  class UserModelService implements IModelService<User, ObjectType, ObjectType, any>, CheckPassword<User> {
     public createOne(): any {}
     public createMany(): any {}
 
@@ -29,7 +29,7 @@ describe('LocalAuthenticatorService', () => {
           username: 'John',
         };
       }
-      throw new NotFoundError();
+      throw new ObjectDoesNotExist();
     }
     public findAll(): any {}
 
@@ -54,8 +54,7 @@ describe('LocalAuthenticatorService', () => {
     service = new ConcreteClass(new UserModelService());
   });
 
-  describe(`when authenticate({ email, password }: { email: string, password: string }):
-            Promise<User> is called`, () => {
+  describe('when authenticate is called', () => {
 
     it('should return null if no user is found for the given email.', async () => {
       const user = await service.authenticate({ email: 'jack@foalts.org', password: 'foo' });

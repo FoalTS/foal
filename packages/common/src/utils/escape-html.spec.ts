@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { escapeHTML } from './escape-html';
 
-describe('escapeHTML(object: ObjectType, propName: string)', () => {
+describe('escapeHTML', () => {
 
   it('should escape the property of the given object if it is a string.', () => {
     const o = {

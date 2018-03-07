@@ -6,24 +6,23 @@
 
 ### `multipleViews`
 
-`multipleViews.attachService(path: string, service: MultipleViewsService)`
+`multipleViews.attachService(path: string, service: IMultipleViews)`
 
-Renders several templates from a `MultipleViewsService`.
+Renders several templates from a `IMultipleViews`.
 
 If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
 ```typescript
-interface MultipleViewsService {
-  names(): string[];
-  render(name: string, locals: ObjectType): Promise<string>|string;
+interface IMultipleViews<View extends string> {
+  render(name: View, locals: ObjectType): Promise<string>|string;
 }
 ```
 
 ### `rest`
 
-`rest.attachService(path: string, service: Partial<ModelService<IModel>>)`
+`rest.attachService(path: string, service: Partial<IModelService<any, any, any, any>>)`
 
-Creates a REST controller from a `Partial<ModelService<IModel>>`.
+Creates a REST controller from a `Partial<IModelService<IModel>>`.
 
 ```
 POST /my_resource -> service.createOne(...)
@@ -34,18 +33,18 @@ PUT /my_resource/:id -> service.findByIdAndUpdate(...)
 DELETE /my_resources/:id -> service.findByIdAndRemove(...)
 ```
 
-You will find more docs on the `ModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
+You will find more docs on the `IModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
 
 ### `view`
 
-`view.attachService(path: string, service: ViewService)`
+`view.attachService(path: string, service: IView)`
 
 If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
-Renders one template from a `ViewService`.
+Renders one template from a `IView`.
 
 ```typescript
-interface ViewService {
+interface IView {
   render(locals: ObjectType): Promise<string>|string;
 }
 ```
@@ -58,9 +57,13 @@ Logs the message with the given log function (default is console.log).
 
 Example:
 ```typescript
-@Service()
-@afterThatLog('A method has been called!')
-class Service {}
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/', () => {})
+      .withPostHook(afterThatLog('Hello world'))
+  ]
+}
 ```
 
 ### `afterThatRemoveField(name: string)`
@@ -69,21 +72,25 @@ Removes the given field from the context result. If the context result is an arr
 
 Example:
 ```typescript
-@Service()
-class UserService {
-
-  @afterThatRemoveField('password')
-  public getUser() {
-    return { username: 'foobar', password: 'my_crypted_password' };
-  }
-
-  @afterThatRemoveField('password')
-  public getUsers() {
-    return [
-      { username: 'foobar', password: 'my_crypted_password' },
-      { username: 'barfoo', password: 'my_other_crypted_password' }
-    ];
-  }
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/foo', () => {
+        return new HttpSuccessResponseOK({
+          username: 'foobar',
+          password: 'my_crypted_password'
+        });
+      })
+      .withPostHook(afterThatRemoveField('password')),
+    basic
+      .attachHandlingFunction('/bar', () => {
+        return new HttpSuccessResponseOK([
+          { username: 'foobar', password: 'my_crypted_password' },
+          { username: 'barfoo', password: 'my_other_crypted_password' }
+        ]);
+      })
+      .withPostHook(afterThatRemoveField('password')),
+  ]
 }
 ```
 
@@ -95,43 +102,54 @@ Logs the message with the given log function (default is console.log).
 
 Example:
 ```typescript
-@Service()
-@log('A method has been called!')
-class Service {}
+const AppModule: Module = {
+  controllers: [
+    basic
+      .attachHandlingFunction('/', () => {})
+      .withPreHook(log('Hello world'))
+  ]
+}
 ```
 
 ### `methodNotAllowed()`
 
-Throws a MethodNotAllowedError. The client gets a `405 Method Not Allowed`.
+Returns an HttpResponseMethodNotAllowed..
 
 ```typescript
-@Service()
-class OrganizationService {
-
-  @methodNotAllowed()
-  public delete(id) {
-    // Deletes the org.
-  }
+const AppModule: Module = {
+  controllers: [
+    rest
+      .attachService('/', MyModelService)
+      .withPreHook(methodNotAllowed(), 'DELETE /:id')
+  ]
 }
 ```
 
-### `restrictAccessToAuthenticated()`
-
-Returns a 401 status if the user is not authenticated.
-
-### `restrictAccessToAdmin()`
-
-Returns a 401 status if the user is not authenticated and a 403 if `ctx.user.isAdmin` is not truthy.
-
 ## Services (interfaces)
 
-### `ModelService`
+### `IModelService`
 
 See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
 
-### `MultipleViewsService`
+### `IMultipleViews`
 
-### `ViewService`
+```typescript
+import { ObjectType } from '@foal/core';
+
+export interface IMultipleViews {
+  render(name: string, locals: ObjectType): Promise<string>|string;
+}
+```
+
+### `IView`
+
+```typescript
+import { ObjectType } from '@foal/core';
+
+export interface IView {
+  render(locals: ObjectType): Promise<string>|string;
+}
+```
 
 ## Utils
 
