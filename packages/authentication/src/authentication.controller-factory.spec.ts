@@ -11,7 +11,7 @@ import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
 import { authentication, AuthenticationFactory } from './authentication.controller-factory';
-import { AuthenticatorService } from './authenticator-service.interface';
+import { IAuthenticator } from './authenticator.interface';
 
 chai.use(spies);
 const expect = chai.expect;
@@ -19,7 +19,7 @@ const expect = chai.expect;
 describe('authentication', () => {
 
   @Service()
-  class MockAuthenticatorService implements AuthenticatorService<any> {
+  class MockAuthenticatorService implements IAuthenticator<any> {
     constructor() {}
 
     public authenticate(credentials: ObjectType) {

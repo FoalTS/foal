@@ -1,6 +1,6 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 
-import { AuthenticatorService } from '../authenticator-service.interface';
+import { IAuthenticator } from '../authenticator.interface';
 
 export interface CheckPassword<User> {
   checkPassword(user: User, password: string): boolean;
@@ -17,7 +17,7 @@ export interface CheckPassword<User> {
  * @template User An user interface that includes an `email` and a `password` fields.
  */
 export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>
-    implements AuthenticatorService<User> {
+    implements IAuthenticator<User> {
 
   constructor(protected userModelService: IModelService<User, any, any, any> & CheckPassword<User>) {}
 
