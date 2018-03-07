@@ -36,7 +36,7 @@ import { User } from './user.interface';
 import { MyUserService } from './my-user.service.ts';
 
 @Service()
-export class MyAuthenticatorService<User> extends LocalAuthenticatorService {
+export class MyAuthenticatorService extends LocalAuthenticatorService<User> {
 
   constructor(userService: MyUserService) {
     super(userService);
