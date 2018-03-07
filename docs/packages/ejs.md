@@ -56,7 +56,7 @@ export const AppModule: Module = {
 
 ## `MultipleEjsTemplatesService`
 
-It implements the `MultipleViewsService` interface.
+It implements the `IMultipleViews` interface.
 
 `admin-views.service.ts`
 ```typescript

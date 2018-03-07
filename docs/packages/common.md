@@ -6,14 +6,14 @@
 
 ### `multipleViews`
 
-`multipleViews.attachService(path: string, service: MultipleViewsService)`
+`multipleViews.attachService(path: string, service: IMultipleViews)`
 
-Renders several templates from a `MultipleViewsService`.
+Renders several templates from a `IMultipleViews`.
 
 If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
 ```typescript
-interface MultipleViewsService<View extends string> {
+interface IMultipleViews<View extends string> {
   render(name: View, locals: ObjectType): Promise<string>|string;
 }
 ```
@@ -131,12 +131,12 @@ const AppModule: Module = {
 
 See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
 
-### `MultipleViewsService`
+### `IMultipleViews`
 
 ```typescript
 import { ObjectType } from '@foal/core';
 
-export interface MultipleViewsService {
+export interface IMultipleViews {
   render(name: string, locals: ObjectType): Promise<string>|string;
 }
 ```

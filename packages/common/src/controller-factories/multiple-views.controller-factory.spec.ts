@@ -7,13 +7,13 @@ import {
 } from '@foal/core';
 import { expect } from 'chai';
 
-import { MultipleViewsService } from '../services';
+import { IMultipleViews } from '../services';
 import { multipleViews, MultipleViewsFactory } from './multiple-views.controller-factory';
 
 describe('multipleViews', () => {
 
   @Service()
-  class MockService implements MultipleViewsService {
+  class MockService implements IMultipleViews {
     constructor() {}
     public async render(name: string, locals: ObjectType): Promise<string> {
       return `${name} ${locals.name || 'bar'}`;

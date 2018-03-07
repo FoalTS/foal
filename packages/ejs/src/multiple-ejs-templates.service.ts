@@ -1,10 +1,10 @@
-import { MultipleViewsService } from '@foal/common';
+import { IMultipleViews } from '@foal/common';
 import { ObjectType } from '@foal/core';
 import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-export abstract class MultipleEjsTemplatesService implements MultipleViewsService {
+export abstract class MultipleEjsTemplatesService implements IMultipleViews {
   constructor(private templates: ObjectType) {}
 
   public async render(name: string, locals: ObjectType): Promise<string> {

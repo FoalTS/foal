@@ -5,16 +5,16 @@ import {
   ServiceControllerFactory,
 } from '@foal/core';
 
-import { MultipleViewsService } from '../services';
+import { IMultipleViews } from '../services';
 
 export interface Options {
   views: Record<string, string>;
 }
 
-export class MultipleViewsFactory extends ServiceControllerFactory<MultipleViewsService,
+export class MultipleViewsFactory extends ServiceControllerFactory<IMultipleViews,
     string, Options> {
   protected defineController(controller: Controller<string>,
-                             ServiceClass: Class<MultipleViewsService>,
+                             ServiceClass: Class<IMultipleViews>,
                              options?: Options): void {
     if (!options) {
       throw new Error('Options must be given to the multipleViews controller factory.');
