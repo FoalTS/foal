@@ -1,5 +1,5 @@
 import { ObjectType } from '@foal/core';
 
-export interface ViewService {
+export interface IView {
   render(locals: ObjectType): Promise<string>|string;
 }

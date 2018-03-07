@@ -37,14 +37,14 @@ You will find more docs on the `IModelService` interface [here](https://github.c
 
 ### `view`
 
-`view.attachService(path: string, service: ViewService)`
+`view.attachService(path: string, service: IView)`
 
 If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
 
-Renders one template from a `ViewService`.
+Renders one template from a `IView`.
 
 ```typescript
-interface ViewService {
+interface IView {
   render(locals: ObjectType): Promise<string>|string;
 }
 ```
@@ -141,12 +141,12 @@ export interface IMultipleViews {
 }
 ```
 
-### `ViewService`
+### `IView`
 
 ```typescript
 import { ObjectType } from '@foal/core';
 
-export interface ViewService {
+export interface IView {
   render(locals: ObjectType): Promise<string>|string;
 }
 ```

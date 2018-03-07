@@ -6,13 +6,13 @@ import {
 } from '@foal/core';
 import { expect } from 'chai';
 
-import { ViewService } from '../services';
+import { IView } from '../services';
 import { view, ViewControllerFactory } from './view.controller-factory';
 
 describe('view', () => {
 
   @Service()
-  class MockService implements ViewService {
+  class MockService implements IView {
     constructor() {}
     public async render(locals: { name: string }): Promise<string> {
       return locals.name || 'bar';

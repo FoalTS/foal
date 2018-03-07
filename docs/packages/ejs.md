@@ -4,7 +4,7 @@
 
 ## `EjsTemplateService`
 
-It implements the `ViewService` interface.
+It implements the `IView` interface.
 
 `index-view.service.ts`
 ```typescript
