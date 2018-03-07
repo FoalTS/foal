@@ -12,24 +12,24 @@ export class ServiceManager {
 
   constructor() {}
 
-  public get<T>(Service: Class<T>): T {
+  public get<Service>(ServiceClass: Class<Service>): Service {
     // Get the service if it exists.
-    if (this.map.get(Service)) {
-      return this.map.get(Service);
+    if (this.map.get(ServiceClass)) {
+      return this.map.get(ServiceClass);
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies = Reflect.getMetadata('design:paramtypes', Service);
+    const dependencies = Reflect.getMetadata('design:paramtypes', ServiceClass);
     if (!Array.isArray(dependencies)) {
-      throw new Error(`${Service.name} has no dependencies. Please check that:
+      throw new Error(`${ServiceClass.name} has no dependencies. Please check that:
         - The service has a constructor.
         - The service has the @Service() decorator.
         - The "emitDecoratorMetadata" is set to true in the tsconfig.json file.`);
     }
-    const service = new Service(...dependencies.map(Dep => this.get(Dep)));
+    const service = new ServiceClass(...dependencies.map(Dep => this.get(Dep)));
 
     // Save and return the service.
-    this.map.set(Service, service);
+    this.map.set(ServiceClass, service);
     return service;
   }
 
