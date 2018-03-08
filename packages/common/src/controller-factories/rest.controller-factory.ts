@@ -9,7 +9,7 @@ import {
   ServiceControllerFactory,
 } from '@foal/core';
 
-import { ObjectDoesNotExist } from '../object-does-not-exist';
+import { isObjectDoesNotExist } from '../object-does-not-exist';
 import { IModelService } from '../services';
 
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
@@ -29,7 +29,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
       try {
         return new HttpResponseOK(await service.findByIdAndRemove(ctx.params.id));
       } catch (err) {
-        if (err instanceof ObjectDoesNotExist) {
+        if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
         }
         throw err;
@@ -50,7 +50,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
       try {
         return new HttpResponseOK(await service.findById(ctx.params.id));
       } catch (err) {
-        if (err instanceof ObjectDoesNotExist) {
+        if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
         }
         throw err;
@@ -65,7 +65,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
       try {
         return new HttpResponseOK(await service.findByIdAndUpdate(ctx.params.id, ctx.body));
       } catch (err) {
-        if (err instanceof ObjectDoesNotExist) {
+        if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
         }
         throw err;
@@ -88,7 +88,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
       try {
         return new HttpResponseOK(await service.findByIdAndReplace(ctx.params.id, ctx.body));
       } catch (err) {
-        if (err instanceof ObjectDoesNotExist) {
+        if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
         }
         throw err;

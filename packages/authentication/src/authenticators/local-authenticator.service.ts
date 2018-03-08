@@ -1,4 +1,4 @@
-import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, isObjectDoesNotExist } from '@foal/common';
 
 import { IAuthenticator } from '../authenticator.interface';
 
@@ -27,7 +27,7 @@ export abstract class LocalAuthenticatorService<User extends { email: string, pa
     try {
       user = await this.userModelService.findOne({ email });
     } catch (err) {
-      if (err instanceof ObjectDoesNotExist) {
+      if (isObjectDoesNotExist(err)) {
         return null;
       }
       throw err;
