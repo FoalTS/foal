@@ -1,16 +1,16 @@
-import { HttpResponseSuccess, PostHook } from '@foal/core';
+import { HttpResponseSuccess, isHttpResponseSuccess, PostHook } from '@foal/core';
 
 export function afterThatRemoveField(name: string): PostHook {
   return ctx => {
-    if (!(ctx.result instanceof HttpResponseSuccess && ctx.result.content)) {
+    if (!(ctx.result && isHttpResponseSuccess(ctx.result) && (ctx.result as HttpResponseSuccess).content)) {
       return;
     }
-    if (Array.isArray(ctx.result.content)) {
-      for (const item of ctx.result.content) {
+    if (Array.isArray((ctx.result as HttpResponseSuccess).content)) {
+      for (const item of (ctx.result as HttpResponseSuccess).content) {
         delete item[name];
       }
     } else {
-      delete ctx.result.content[name];
+      delete (ctx.result as HttpResponseSuccess).content[name];
     }
   };
 }
