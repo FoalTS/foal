@@ -1,6 +1,6 @@
 {
   "name": "@foal/authentication",
-  "version": "0.4.0-alpha.3",
+  "version": "0.4.0-beta.0",
   "description": "Foal components for authentication and authorization",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -41,13 +41,13 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/common": "^0.4.0-alpha.3",
-    "@foal/core": "^0.4.0-alpha.3"
+    "@foal/common": "^0.4.0-beta.0",
+    "@foal/core": "^0.4.0-beta.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
     "@types/chai-spies": "^0.0.0",
+    "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
     "chai-spies": "^1.0.0",
     "del": "^3.0.0",
