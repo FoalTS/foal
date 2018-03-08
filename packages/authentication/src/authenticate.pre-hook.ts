@@ -1,4 +1,4 @@
-import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService, isObjectDoesNotExist } from '@foal/common';
 import { Class, PreHook } from '@foal/core';
 
 export function authenticate(UserModelService: Class<IModelService<any, any, any, any>>): PreHook {
@@ -12,7 +12,7 @@ export function authenticate(UserModelService: Class<IModelService<any, any, any
     try {
       ctx.user = await services.get(UserModelService).findById(ctx.session.authentication.userId);
     } catch (err) {
-      if (!(err instanceof ObjectDoesNotExist)) {
+      if (!isObjectDoesNotExist(err)) {
         throw err;
       }
     }
