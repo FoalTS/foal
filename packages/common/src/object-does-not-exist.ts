@@ -1,3 +1,5 @@
+import { ObjectType } from '@foal/core';
+
 export class ObjectDoesNotExist extends Error {
   public readonly isObjectDoesNotExist = true;
 
@@ -7,6 +9,6 @@ export class ObjectDoesNotExist extends Error {
   }
 }
 
-export function isObjectDoesNotExist(err): boolean {
+export function isObjectDoesNotExist(err: ObjectType): boolean {
   return err instanceof ObjectDoesNotExist || err.isObjectDoesNotExist === true;
 }
