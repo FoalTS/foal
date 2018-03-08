@@ -1,104 +1,99 @@
 import {
-  Context,
-  ControllerFactory,
-  HttpMethod,
-  MethodNotAllowedError,
-  NotImplementedError,
-  Route,
+  Class,
+  Controller,
+  HttpResponseCreated,
+  HttpResponseMethodNotAllowed,
+  HttpResponseNotFound,
+  HttpResponseNotImplemented,
+  HttpResponseOK,
+  ServiceControllerFactory,
 } from '@foal/core';
 
-import { PartialCRUDService } from '../services';
+import { ObjectDoesNotExist } from '../object-does-not-exist';
+import { IModelService } from '../services';
 
-function routeNotAllowed(httpMethod: HttpMethod, path: string): Route {
-  return {
-    httpMethod,
-    middleware: ctx => { throw new MethodNotAllowedError(); },
-    path,
-    serviceMethodName: null,
-    successStatus: 200
-  };
-}
+export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
+  | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
-export class RestControllerFactory extends ControllerFactory<PartialCRUDService> {
-  public getRoutes(service: PartialCRUDService): Route[] {
-    return [
-      routeNotAllowed('DELETE', '/'),
-      {
-        httpMethod: 'DELETE',
-        middleware: (ctx: Context) => {
-          if (!service.delete) {
-            throw new NotImplementedError();
-          }
-          return service.delete(ctx.params.id, ctx.query);
-        },
-        path: '/:id',
-        serviceMethodName: 'delete',
-        successStatus: 200,
-      },
-      {
-        httpMethod: 'GET',
-        middleware: (ctx: Context) => {
-          if (!service.getAll) {
-            throw new NotImplementedError();
-          }
-          return service.getAll(ctx.query);
-        },
-        path: '/',
-        serviceMethodName: 'getAll',
-        successStatus: 200,
-      },
-      {
-        httpMethod: 'GET',
-        middleware: (ctx: Context) => {
-          if (!service.get) {
-            throw new NotImplementedError();
-          }
-          return service.get(ctx.params.id, ctx.query);
-        },
-        path: '/:id',
-        serviceMethodName: 'get',
-        successStatus: 200,
-      },
-      routeNotAllowed('PATCH', '/'),
-      {
-        httpMethod: 'PATCH',
-        middleware: (ctx: Context) => {
-          if (!service.modify) {
-            throw new NotImplementedError();
-          }
-          return service.modify(ctx.params.id, ctx.body, ctx.query);
-        },
-        path: '/:id',
-        serviceMethodName: 'modify',
-        successStatus: 200,
-      },
-      {
-        httpMethod: 'POST',
-        middleware: (ctx: Context) => {
-          if (!service.create) {
-            throw new NotImplementedError();
-          }
-          return service.create(ctx.body, ctx.query);
-        },
-        path: '/',
-        serviceMethodName: 'create',
-        successStatus: 201,
-      },
-      routeNotAllowed('POST', '/:id'),
-      routeNotAllowed('PUT', '/'),
-      {
-        httpMethod: 'PUT',
-        middleware: (ctx: Context) => {
-          if (!service.replace) {
-            throw new NotImplementedError();
-          }
-          return service.replace(ctx.params.id, ctx.body, ctx.query);
-        },
-        path: '/:id',
-        serviceMethodName: 'replace',
-        successStatus: 200,
-      },
-    ];
+export class RestControllerFactory extends ServiceControllerFactory<
+    Partial<IModelService<any, any, any, any>>, RouteName
+  > {
+  protected defineController(controller: Controller<RouteName>,
+                             ServiceClass: Class<Partial<IModelService<any, any, any, any>>>): void {
+    controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.findByIdAndRemove) {
+        return new HttpResponseNotImplemented();
+      }
+      try {
+        return new HttpResponseOK(await service.findByIdAndRemove(ctx.params.id));
+      } catch (err) {
+        if (err instanceof ObjectDoesNotExist) {
+          return new HttpResponseNotFound();
+        }
+        throw err;
+      }
+    });
+    controller.addRoute('GET /', 'GET', '/', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.findAll) {
+        return new HttpResponseNotImplemented();
+      }
+      return new HttpResponseOK(await service.findAll(ctx.state.query || {}));
+    });
+    controller.addRoute('GET /:id', 'GET', '/:id', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.findById) {
+        return new HttpResponseNotImplemented();
+      }
+      try {
+        return new HttpResponseOK(await service.findById(ctx.params.id));
+      } catch (err) {
+        if (err instanceof ObjectDoesNotExist) {
+          return new HttpResponseNotFound();
+        }
+        throw err;
+      }
+    });
+    controller.addRoute('PATCH /', 'PATCH', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PATCH /:id', 'PATCH', '/:id', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.findByIdAndUpdate) {
+        return new HttpResponseNotImplemented();
+      }
+      try {
+        return new HttpResponseOK(await service.findByIdAndUpdate(ctx.params.id, ctx.body));
+      } catch (err) {
+        if (err instanceof ObjectDoesNotExist) {
+          return new HttpResponseNotFound();
+        }
+        throw err;
+      }
+    });
+    controller.addRoute('POST /', 'POST', '/', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.createOne) {
+        return new HttpResponseNotImplemented();
+      }
+      return new HttpResponseOK(await new HttpResponseCreated(await service.createOne(ctx.body)));
+    });
+    controller.addRoute('POST /:id', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
+    controller.addRoute('PUT /:id', 'PUT', '/:id', async (ctx, services) => {
+      const service = services.get(ServiceClass);
+      if (!service.findByIdAndReplace) {
+        return new HttpResponseNotImplemented();
+      }
+      try {
+        return new HttpResponseOK(await service.findByIdAndReplace(ctx.params.id, ctx.body));
+      } catch (err) {
+        if (err instanceof ObjectDoesNotExist) {
+          return new HttpResponseNotFound();
+        }
+        throw err;
+      }
+    });
   }
 }
 

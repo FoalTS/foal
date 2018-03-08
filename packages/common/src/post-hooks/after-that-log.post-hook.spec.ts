@@ -1,16 +1,17 @@
-import { createEmptyContext, getPostMiddleware, ServiceManager } from '@foal/core';
+import { createEmptyPostContext, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
+
 import { afterThatLog } from './after-that-log.post-hook';
 
-describe('afterThatLog(message: string, logFn = console.log)', () => {
+describe('afterThatLog', () => {
 
   it('should log the message with the given log function.', () => {
     let called = false;
     const logFn = msg => called = true;
-    const middleware = getPostMiddleware(afterThatLog('foo', logFn));
-    const ctx = createEmptyContext();
+    const hook = afterThatLog('foo', logFn);
 
-    middleware(ctx, new ServiceManager());
+    const ctx = createEmptyPostContext();
+    hook(ctx, new ServiceManager());
 
     expect(called).to.equal(true);
   });

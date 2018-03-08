@@ -10,7 +10,7 @@ FoalTS is the framework you need to build the backend of small to large web appl
 
 Let's get started!
 
-> This tutorial assumes that you have already PostgreSQL or MySQL installed on your host.
+> This tutorial assumes that you have already PostgreSQL <!--or MySQL -->installed on your host.
 
 ## 1. Set up the Development Environment
 
@@ -34,9 +34,9 @@ Open a terminal and then run the following command:
 yo foal my-app
 ```
 
-Fill up the given prompts.
+Some prompts should show up. Answer the questions as below.
 
-> If you don't know which URI to use, you can leave it blank for now.
+![Prompts](./cli_prompts.png)
 
 A new folder `my-app` should now appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
@@ -65,12 +65,12 @@ Read the [official guide](./guide/1-introduction.md) to learn more on `FoalTS`!
 
 ## Structure of the project
 
-Let’s take a look at what `yo foal:app ` created:
+Let’s take a look at what `yo foal my-app` created:
 
 ### The `src` folder
 
 The `src` contains all the code of your app.
 
-### The `root` folder
+### The parent folder
 
-All files in `root` which don't belong to `src` are configuration files to build and lint your app.
+All files in the parent directory which don't belong to `src` are configuration files to build and lint your app.

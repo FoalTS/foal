@@ -1,7 +1,7 @@
 {
   "name": "@foal/core",
-  "version": "0.4.0-alpha.3",
-  "description": "A Node.js framework for building robust web apps.",
+  "version": "0.4.0-beta.0",
+  "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -44,8 +44,10 @@
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/chai-spies": "0.0.0",
     "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
+    "chai-spies": "^1.0.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",

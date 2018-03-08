@@ -1,16 +1,12 @@
 # @foal/sequelize
 
-`@foal/sequelize` is a Foal integration of the ORM `Sequelize`. It lets you connect to a PostgreSQL or a MySQL database.
+`@foal/sequelize` provides a connection and a model service to connect to a PostreSQL<!-- or MySQL--> database. It is based on the [Sequelize](http://docs.sequelizejs.com/) ORM.
 
-## Prerequisities 
+## Prerequisities
 
-```typescript
-npm install --save express @foal/core @foal/express @foal/sequelize
+To use these services you need to install the package (`@foal/sequelize`) along with its <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) client<!--s-->. <!--If you have already specified which database you are using while creating the project they should already been installed.-->If you have already specified that you are using a PostgreSQL while creating the project they should already been installed.
 
-# And one of the following:
-$ npm install --save pg@6 pg-hstore
-$ npm install --save mysql2
-```
+> To install a `npm` package you need to run this command: `npm install --save <package_name>`.
 
 ## Setting up a connection
 
@@ -30,93 +26,29 @@ export class Connection extends SequelizeConnectionService {
 
 ```typescript
 import { Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { Connection } from './connection.service';
 
+export interface User {
+  username: string;
+}
+
 @Service()
-export class User extends SequelizeService {
+export class UserService extends SequelizeModelService<User> {
   constructor(protected connection: Connection) {
-    super('users', {
-      username: Sequelize.STRING
-    }, connection);
+    super(
+      'users', // Name of the table
+      {
+        username: Sequelize.STRING // Sequelize schema
+      },
+      connection // Connection service
+    );
   }
 }
 ```
 
-## Serve your service as an API (optional)
-
-```typescript
-import * as bodyParser from 'body-parser';
-import * as express from 'express';
-import { getCallback } from '@foal/express';
-import { rest } from '@foal/common';
-import { Foal } from '@foal/core';
-
-import { Connection } from './connection.service';
-import { User } from './user.service';
-
-const foal = new Foal({
-  controllers: [ rest.attachService('/users', User) ]
-});
-
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(getCallback(foal));
-app.listen(3000, () => console.log('Listening...'));
-```
-
-## Restriction
-
-Let's say that we want to forbid to use the method `delete` when using the service as a controller.
-
-```typescript
-import { methodNotAllowed } from '@foal/common';
-import { Service, ObjectType } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
-
-import { Connection } from './connection.service';
-
-@Service()
-export class User extends SequelizeService {
-  constructor(protected connection: Connection) {
-    super('users', {
-      username: Sequelize.STRING
-    }, connection);
-  }
-
-  @methodNotAllowed()
-  public delete(id: any, query: ObjectType): Promise<any> {
-    return super.delete(id, query);
-  }
-}
-```
-
-## Extending methods
-
-Let's say that we want to return all the users when updating one.
-
-```typescript
-import { Service, ObjectType } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
-
-import { Connection } from './connection.service';
-
-@Service()
-export class User extends SequelizeService {
-  constructor(protected connection: Connection) {
-    super('users', {
-      username: Sequelize.STRING
-    }, connection);
-  }
-
-  public async update(id: any, data: any, query: ObjectType): Promise<any> {
-    await super.update(id, data, params);
-    return this.getAll({})
-  }
-}
-```
+> *Note*: The `SequelizeModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>` class implements the `IModelService` interface.
 
 ## Testing
 
@@ -124,9 +56,9 @@ If you have overrided some methods and want to test them, you can do it with a f
 
 ```typescript
 import { Connection } from './connection.service';
-import { User } from './user.service';
+import { UserService } from './user.service';
 
-const userService = new User(new Connection('myFakeDBURI'));
+const userService = new UserService(new Connection('myFakeDBURI'));
 
 // Then test userService as a mere service.
 ```

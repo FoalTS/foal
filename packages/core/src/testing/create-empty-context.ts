@@ -6,9 +6,8 @@ export function createEmptyContext(): Context {
     getHeader: (field: string) => field,
     params: {},
     query: {},
-    result: undefined,
     session: undefined,
     state: {},
-    user: undefined
+    user: null
   };
 }

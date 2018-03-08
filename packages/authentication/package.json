@@ -1,0 +1,60 @@
+{
+  "name": "@foal/authentication",
+  "version": "0.4.0-beta.0",
+  "description": "Foal components for authentication and authorization",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
+    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "backend",
+    "node",
+    "typescript",
+    "server",
+    "foal",
+    "authorization",
+    "authentication"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "@foal/common": "^0.4.0-beta.0",
+    "@foal/core": "^0.4.0-beta.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/chai-spies": "^0.0.0",
+    "@types/mocha": "^2.2.43",
+    "chai": "^4.1.2",
+    "chai-spies": "^1.0.0",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.9",
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
+  }
+}

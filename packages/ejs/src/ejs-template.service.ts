@@ -1,11 +1,10 @@
-import { ViewService } from '@foal/common';
-import { ObjectType, Service } from '@foal/core';
+import { IView } from '@foal/common';
+import { ObjectType } from '@foal/core';
 import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-@Service()
-export abstract class EjsTemplateService implements ViewService {
+export abstract class EjsTemplateService implements IView {
   constructor(private filePath: string) {}
 
   public async render(locals: ObjectType): Promise<string> {

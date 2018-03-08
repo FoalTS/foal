@@ -23,23 +23,17 @@ class LoggerService {
 >
 > \``[${kind}] ${message}`\` is called a template literal. It is a syntactic sugar to write `'[' + kind + '] ' + message` in a more readable way.
 
-Now go back to `task.service.ts`, import the `LoggerService`, add `public logger: LoggerService` to the constructor and extend the `create` method with some logging.
+Now go back to `task.service.ts`, import the `LoggerService`, add `public logger: LoggerService` to the constructor and extend the `createOne` method with some logging.
 
 ```typescript
-import { escapeHTML } from '@foal/common';
-import { ObjectType, preHook, Service } from '@foal/core';
-import { Sequelize, SequelizeService } from '@foal/sequelize';
+import { Service } from '@foal/core';
+import { Sequelize, SequelizeModelService } from '@foal/sequelize';
 
 import { ConnectionService } from './connection.service';
 import { LoggerService } from './logger.service';
 
 @Service()
-@preHook(ctx => {
-  if (ctx.body && typeof ctx.body.text === 'string') {
-    escapeHTML(ctx.body, 'text');
-  }
-})
-export class TaskService extends SequelizeService<any> {
+export class TaskService extends SequelizeModelService<any> {
   constructor(protected connection: ConnectionService, public logger: LoggerService) {
     super('tasks', {
       completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
@@ -47,9 +41,9 @@ export class TaskService extends SequelizeService<any> {
     }, connection);
   }
 
-  public create(data: any, query: ObjectType) {
+  public createOne(data) {
     this.logger.log('info', 'Create called with ' + JSON.stringify(data));
-    return super.create(data, query)
+    return super.create(data)
   }
 
 }

@@ -5,7 +5,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "lint": "tslint -p tslint.json"
+    "lint": "tslint -c tslint.json --project tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
-    "@types/mocha": "^2.2.43",
-    "lerna": "^2.4.0",
-    "mocha": "^4.0.1",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "@types/mocha": "^2.2.48",
+    "lerna": "^2.9.0",
+    "mocha": "^4.1.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
   }
 }

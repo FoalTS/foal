@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { escape } from './escape';
 
-describe('escape(str: string): string', () => {
+describe('escape', () => {
 
   it('should escape &.', () => {
     const actual = escape('foo& &');
