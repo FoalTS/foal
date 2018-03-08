@@ -55,6 +55,26 @@ describe('isHttpResponse', () => {
 
 });
 
+describe('isHttpResponseSuccess', () => {
+
+  it('should return true if the given object is an instance of HttpResponseSuccess.', () => {
+    const err = new HttpResponseCreated();
+    expect(isHttpResponseSuccess(err)).to.equal(true);
+  });
+
+  it('should return true if the given object has an isHttpResponseSuccess property equal to true.', () => {
+    const err = { isHttpResponseSuccess: true };
+    expect(isHttpResponseSuccess(err)).to.equal(true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseSuccess and if it '
+      + 'has no property isHttpResponseSuccess.', () => {
+    const err = {};
+    expect(isHttpResponseSuccess(err)).to.equal(false);
+  });
+
+});
+
 describe('HttpResponseOK', () => {
 
   it('should inherit from HttpResponseSuccess and HttpResponse', () => {
