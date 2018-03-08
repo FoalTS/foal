@@ -1,9 +1,6 @@
 import {
   HttpResponse,
-  HttpResponseClientError,
   HttpResponseRedirect,
-  HttpResponseServerError,
-  HttpResponseSuccess,
   isHttpResponseClientError,
   isHttpResponseRedirect,
   isHttpResponseServerError,

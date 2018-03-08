@@ -1,4 +1,4 @@
-import { HttpResponse, isHttpResponse } from '../classes/http-responses';
+import { isHttpResponse } from '../classes/http-responses';
 import { ServiceManager } from '../classes/service-manager';
 import { Context, PreHook } from '../interfaces';
 
