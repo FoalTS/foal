@@ -4,4 +4,4 @@ export * from './pre-hooks';
 export * from './services';
 export * from './utils';
 
-export { ObjectDoesNotExist } from './object-does-not-exist';
+export { isObjectDoesNotExist, ObjectDoesNotExist } from './object-does-not-exist';
