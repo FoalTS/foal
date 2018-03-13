@@ -182,8 +182,6 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
-    // In the docs: specify the no atomicity with MySQL and SQLite.
-
     if (this.dialect === 'postgres') {
       const result = await this.model.update(data, {
         limit: 1,
