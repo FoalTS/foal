@@ -50,6 +50,8 @@ export class UserService extends SequelizeModelService<User> {
 
 > *Note*: The `SequelizeModelService<IModel, ICreatingModel = IModel, IIdAndTimeStamps extends { id: any } = DefaultIdAndTimeStamps, IdType = number>` class implements the `IModelService` interface.
 
+> *Note*: If you are using a SQLite database, the methods `findByIdAndUpdate`, `findByOneAndUpdate`, `findByIdAndReplace` and `findByOneAndReplace` are not atomic (they need to make several requests to the database).
+
 ## Testing
 
 If you have overrided some methods and want to test them, you can do it with a fake DB thanks to the injection of the connection.
