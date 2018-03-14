@@ -1,8 +1,10 @@
 import {
   createEmptyContext,
+  HttpResponseCreated,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
+  HttpResponseOK,
   ObjectType,
   Service,
   ServiceManager,
@@ -71,7 +73,8 @@ describe('rest', () => {
         expect(actual.path).to.equal('/:id');
 
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', undefined);
         expect(mock.findByIdAndRemove).to.have.been.called.with.exactly(ctx.params.id);
       });
 
@@ -105,11 +108,12 @@ describe('rest', () => {
       });
 
       it('when service.findAll is a function.', async () => {
+        const all = [];
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
           public async findAll(query: ObjectType) {
-            return [];
+            return all;
           }
         }
         const services = new ServiceManager();
@@ -123,11 +127,13 @@ describe('rest', () => {
         expect(actual.path).to.equal('/');
 
         const ctx = createEmptyContext();
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', all);
         expect(mock.findAll).to.have.been.called.with.exactly({});
 
         ctx.state.query = { foo: 3 };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', all);
         expect(mock.findAll).to.have.been.called.with.exactly(ctx.state.query);
       });
 
@@ -147,10 +153,13 @@ describe('rest', () => {
       });
 
       it('when service.findById is a function.', async () => {
+        const obj = {};
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
-          public async findById(id: any) {}
+          public async findById(id: any) {
+            return obj;
+          }
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -163,7 +172,8 @@ describe('rest', () => {
         expect(actual.path).to.equal('/:id');
 
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', obj);
         expect(mock.findById).to.have.been.called.with.exactly(ctx.params.id);
       });
 
@@ -208,10 +218,13 @@ describe('rest', () => {
       });
 
       it('when service.findByIdAndUpdate is a function.', async () => {
+        const obj = {};
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
-          public async findByIdAndUpdate(id: any, data: any) {}
+          public async findByIdAndUpdate(id: any, data: any) {
+            return obj;
+          }
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -228,7 +241,8 @@ describe('rest', () => {
           body: { foo: 'bar' },
           params: { id: 1 }
         };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', obj);
         expect(mock.findByIdAndUpdate).to.have.been.called.with.exactly(ctx.params.id, ctx.body);
       });
 
@@ -262,10 +276,13 @@ describe('rest', () => {
       });
 
       it('when service.createOne is a function.', async () => {
+        const obj = {};
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
-          public async createOne(data: any) {}
+          public async createOne(data: any) {
+            return obj;
+          }
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -281,7 +298,8 @@ describe('rest', () => {
           ...createEmptyContext(),
           body: { foo: 'bar' },
         };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseCreated)
+          .with.property('content', obj);
         expect(mock.createOne).to.have.been.called.with.exactly(ctx.body);
       });
 
@@ -323,10 +341,13 @@ describe('rest', () => {
       });
 
       it('when service.findByIdAndReplace is a function.', async () => {
+        const obj = {};
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
-          public async findByIdAndReplace(id: any, data: any) {}
+          public async findByIdAndReplace(id: any, data: any) {
+            return obj;
+          }
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -343,7 +364,8 @@ describe('rest', () => {
           body: { foo: 'bar' },
           params: { id: 1 }
         };
-        await actual.handler(ctx, services);
+        expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', obj);
         expect(mock.findByIdAndReplace).to.have.been.called.with.exactly(ctx.params.id, ctx.body);
       });
 
