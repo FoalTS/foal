@@ -19,7 +19,7 @@ The user will be able to:
 
 ## Prerequities
 
-Before going further you need to install PostgreSQL<!-- or MySQL--> and to [create a new project](../README.md) if it is not already done.
+Before going further you need to install PostgreSQL<!-- or MySQL--> (if you don't want to use SQLite) and to [create a new project](../README.md) if it is not already done.
 
 Then [download the frontend code](https://foalts.org/guide-frontend.zip), unzip the bundle and paste all the files in the `public/` directory. You will only focus on the backend of the application in this tutorial.
 
