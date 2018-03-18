@@ -1,6 +1,6 @@
 # 2. Set up a database connection
 
-Let's get started by a setting up a connection to the database. We assume that you have already *PostgreSQL* <!--or *MySQL* -->installed on your host with a database called `foal_examples_todo_list`.
+Let's get started by setting up a connection to the database. If you do not use SQLite, we assume that you have already *PostgreSQL* <!--or *MySQL* -->installed on your host with a database called `foal_examples_todo_list`.
 
 > **How to create a database in postgres**
 >
@@ -43,9 +43,12 @@ This class inherits from the `SequelizeConnectionService` and is just a wrapper 
 
 You can find such file in the directory `src/config`. Open `config.ts` and change the string `'my_uri'` in the `developpement` configuration.
 
-> You don't know what URI you should use? Here <!--are some examples-->is an example:
+> You don't know what URI you should use? Here are some examples:
 >
 > PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
+>
+> SQLite: `sqlite://foal_examples_todo_list.db`
+
 <!--
 >
 > MySQL: `mysql://root:my_password@localhost:3306/foal_examples_todo_list`

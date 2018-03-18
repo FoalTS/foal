@@ -14,12 +14,10 @@ import { EjsTemplateService } from '@foal/ejs';
 @Service()
 export class IndexViewService extends EjsTemplateService {
   constructor() {
-    super('./templates/index.html');
+    super(__dirname + '/templates/index.html');
   }
 }
 ```
-
-> Note that the path `./templates/index.html` is relative to the directory from where you launch your node process. If you want it to be relative to the directory of `index-view.service.ts`, you must import the `path` package and write instead `path.join(__dirname, 'templates/index.html')`.
 
 `templates/index.html`
 ```html
@@ -67,14 +65,12 @@ import { MultipleEjsTemplatesService } from '@foal/ejs';
 export class AdminViewsService extends MultipleEjsTemplatesService {
   constructor() {
     super({
-      billing: './templates/billing.html',
-      users: './templates/users.html'
+      billing: __dirname + '/templates/billing.html',
+      users: __dirname + '/templates/users.html'
     });
   }
 }
 ```
-
-> Note that the path `./templates/*.html` are relative to the directory from where you launch your node process. If you want it to be relative to the directory of `index-view.service.ts`, you must import the `path` package and write instead `path.join(__dirname, 'templates/*.html')`.
 
 `app.module.ts`
 ```typescript

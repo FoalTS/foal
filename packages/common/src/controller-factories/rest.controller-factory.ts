@@ -76,7 +76,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
       if (!service.createOne) {
         return new HttpResponseNotImplemented();
       }
-      return new HttpResponseOK(await new HttpResponseCreated(await service.createOne(ctx.body)));
+      return new HttpResponseCreated(await service.createOne(ctx.body));
     });
     controller.addRoute('POST /:id', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());

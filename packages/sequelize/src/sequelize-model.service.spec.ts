@@ -593,6 +593,9 @@ describe('SequelizeModelService<User>', () => {
   const password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
   testSuite('PostgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
 
+  // SQLite
+  testSuite('SQLite', 'sqlite://foal_sequelize_test.db');
+
   // MySQL
   // user = process.env.mysql_user !== undefined ? process.env.mysql_user : 'root';
   // password = process.env.mysql_password !== undefined ? process.env.mysql_password : 'password';
