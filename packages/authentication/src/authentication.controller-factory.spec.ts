@@ -3,7 +3,6 @@ import {
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  ObjectType,
   Service,
   ServiceManager,
 } from '@foal/core';
@@ -22,7 +21,7 @@ describe('authentication', () => {
   class MockAuthenticatorService implements IAuthenticator<any> {
     constructor() {}
 
-    public authenticate(credentials: ObjectType) {
+    public authenticate(credentials: { username?: string }) {
       if (credentials.username === 'John') {
         return {
           id: 1,

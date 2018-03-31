@@ -39,7 +39,7 @@ const AppModule: Module = {
 ```typescript
 // my-model-service
 import { IModelService } from '@foal/common';
-import { ObjectType, Service } from '@foal/core';
+import { Service } from '@foal/core';
 
 class User {
   name: string;

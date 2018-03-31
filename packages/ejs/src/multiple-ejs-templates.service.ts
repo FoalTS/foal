@@ -1,13 +1,12 @@
 import { IMultipleViews } from '@foal/common';
-import { ObjectType } from '@foal/core';
 import * as ejs from 'ejs';
 import * as fs from 'fs';
 import { promisify } from 'util';
 
 export abstract class MultipleEjsTemplatesService implements IMultipleViews {
-  constructor(private templates: ObjectType) {}
+  constructor(private templates: object) {}
 
-  public async render(name: string, locals: ObjectType): Promise<string> {
+  public async render(name: string, locals: object): Promise<string> {
     if (!this.templates.hasOwnProperty(name)) {
       throw new Error(`Template ${name} does not exist.`);
     }

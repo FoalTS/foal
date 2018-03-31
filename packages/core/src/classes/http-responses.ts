@@ -1,5 +1,3 @@
-import { ObjectType } from '../interfaces';
-
 export abstract class HttpResponse {
   public readonly isHttpResponse = true;
 
@@ -9,8 +7,8 @@ export abstract class HttpResponse {
   constructor(public content?: any) {}
 }
 
-export function isHttpResponse(obj: ObjectType): boolean {
-  return obj instanceof HttpResponse || obj.isHttpResponse === true;
+export function isHttpResponse(obj: object): boolean {
+  return obj instanceof HttpResponse || (obj as any).isHttpResponse === true;
 }
 
 /* 2xx Success */
@@ -22,8 +20,8 @@ export abstract class HttpResponseSuccess extends HttpResponse {
   }
 }
 
-export function isHttpResponseSuccess(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseSuccess || obj.isHttpResponseSuccess === true;
+export function isHttpResponseSuccess(obj: object): boolean {
+  return obj instanceof HttpResponseSuccess || (obj as any).isHttpResponseSuccess === true;
 }
 
 export class HttpResponseOK extends HttpResponseSuccess {
@@ -35,8 +33,8 @@ export class HttpResponseOK extends HttpResponseSuccess {
   }
 }
 
-export function isHttpResponseOK(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseOK || obj.isHttpResponseOK === true;
+export function isHttpResponseOK(obj: object): boolean {
+  return obj instanceof HttpResponseOK || (obj as any).isHttpResponseOK === true;
 }
 
 export class HttpResponseCreated extends HttpResponseSuccess {
@@ -48,8 +46,8 @@ export class HttpResponseCreated extends HttpResponseSuccess {
   }
 }
 
-export function isHttpResponseCreated(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseCreated || obj.isHttpResponseCreated === true;
+export function isHttpResponseCreated(obj: object): boolean {
+  return obj instanceof HttpResponseCreated || (obj as any).isHttpResponseCreated === true;
 }
 
 /* 3xx Redirection */
@@ -61,8 +59,8 @@ export abstract class HttpResponseRedirection extends HttpResponse {
   }
 }
 
-export function isHttpResponseRedirection(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseRedirection || obj.isHttpResponseRedirection === true;
+export function isHttpResponseRedirection(obj: object): boolean {
+  return obj instanceof HttpResponseRedirection || (obj as any).isHttpResponseRedirection === true;
 }
 
 export class HttpResponseRedirect extends HttpResponseRedirection {
@@ -74,8 +72,8 @@ export class HttpResponseRedirect extends HttpResponseRedirection {
   }
 }
 
-export function isHttpResponseRedirect(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseRedirect || obj.isHttpResponseRedirect === true;
+export function isHttpResponseRedirect(obj: object): boolean {
+  return obj instanceof HttpResponseRedirect || (obj as any).isHttpResponseRedirect === true;
 }
 
 /* 4xx Client Error */
@@ -87,8 +85,8 @@ export abstract class HttpResponseClientError extends HttpResponse {
   }
 }
 
-export function isHttpResponseClientError(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseClientError || obj.isHttpResponseClientError === true;
+export function isHttpResponseClientError(obj: object): boolean {
+  return obj instanceof HttpResponseClientError || (obj as any).isHttpResponseClientError === true;
 }
 
 export class HttpResponseBadRequest extends HttpResponseClientError {
@@ -100,8 +98,8 @@ export class HttpResponseBadRequest extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseBadRequest(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseBadRequest || obj.isHttpResponseBadRequest === true;
+export function isHttpResponseBadRequest(obj: object): boolean {
+  return obj instanceof HttpResponseBadRequest || (obj as any).isHttpResponseBadRequest === true;
 }
 
 export class HttpResponseUnauthorized extends HttpResponseClientError {
@@ -116,8 +114,8 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseUnauthorized(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseUnauthorized || obj.isHttpResponseUnauthorized === true;
+export function isHttpResponseUnauthorized(obj: object): boolean {
+  return obj instanceof HttpResponseUnauthorized || (obj as any).isHttpResponseUnauthorized === true;
 }
 
 export class HttpResponseForbidden extends HttpResponseClientError {
@@ -129,8 +127,8 @@ export class HttpResponseForbidden extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseForbidden(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseForbidden || obj.isHttpResponseForbidden === true;
+export function isHttpResponseForbidden(obj: object): boolean {
+  return obj instanceof HttpResponseForbidden || (obj as any).isHttpResponseForbidden === true;
 }
 
 export class HttpResponseNotFound extends HttpResponseClientError {
@@ -142,8 +140,8 @@ export class HttpResponseNotFound extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseNotFound(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseNotFound || obj.isHttpResponseNotFound === true;
+export function isHttpResponseNotFound(obj: object): boolean {
+  return obj instanceof HttpResponseNotFound || (obj as any).isHttpResponseNotFound === true;
 }
 
 export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
@@ -155,8 +153,8 @@ export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseMethodNotAllowed(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseMethodNotAllowed || obj.isHttpResponseMethodNotAllowed === true;
+export function isHttpResponseMethodNotAllowed(obj: object): boolean {
+  return obj instanceof HttpResponseMethodNotAllowed || (obj as any).isHttpResponseMethodNotAllowed === true;
 }
 
 export class HttpResponseConflict extends HttpResponseClientError {
@@ -168,8 +166,8 @@ export class HttpResponseConflict extends HttpResponseClientError {
   }
 }
 
-export function isHttpResponseConflict(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseConflict || obj.isHttpResponseConflict === true;
+export function isHttpResponseConflict(obj: object): boolean {
+  return obj instanceof HttpResponseConflict || (obj as any).isHttpResponseConflict === true;
 }
 
 /* 5xx Server Error */
@@ -181,8 +179,8 @@ export abstract class HttpResponseServerError extends HttpResponse {
   }
 }
 
-export function isHttpResponseServerError(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseServerError || obj.isHttpResponseServerError === true;
+export function isHttpResponseServerError(obj: object): boolean {
+  return obj instanceof HttpResponseServerError || (obj as any).isHttpResponseServerError === true;
 }
 
 export class HttpResponseInternalServerError extends HttpResponseServerError {
@@ -194,8 +192,8 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
   }
 }
 
-export function isHttpResponseInternalServerError(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseInternalServerError || obj.isHttpResponseInternalServerError === true;
+export function isHttpResponseInternalServerError(obj: object): boolean {
+  return obj instanceof HttpResponseInternalServerError || (obj as any).isHttpResponseInternalServerError === true;
 }
 
 export class HttpResponseNotImplemented extends HttpResponseServerError {
@@ -207,6 +205,6 @@ export class HttpResponseNotImplemented extends HttpResponseServerError {
   }
 }
 
-export function isHttpResponseNotImplemented(obj: ObjectType): boolean {
-  return obj instanceof HttpResponseNotImplemented || obj.isHttpResponseNotImplemented === true;
+export function isHttpResponseNotImplemented(obj: object): boolean {
+  return obj instanceof HttpResponseNotImplemented || (obj as any).isHttpResponseNotImplemented === true;
 }

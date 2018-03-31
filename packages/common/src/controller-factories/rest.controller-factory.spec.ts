@@ -5,7 +5,6 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  ObjectType,
   Service,
   ServiceManager,
 } from '@foal/core';
@@ -112,7 +111,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService<any, any, any, any>> {
           constructor() {}
-          public async findAll(query: ObjectType) {
+          public async findAll(query: object) {
             return all;
           }
         }

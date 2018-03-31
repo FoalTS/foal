@@ -1,5 +1,3 @@
-import { ObjectType } from '@foal/core';
-
 /**
  * Every model service that is connected to a table or a collection of a database should implement
  * this interface.
@@ -80,13 +78,13 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    * depending on the service implementation. In any case, `findOne` always returns an object and does
    * not return an array of objects.
    *
-   * @param {ObjectType} query Query used to unambiguously find the object.
+   * @param {object} query Query used to unambiguously find the object.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The matching object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof IModelService
    */
-  findOne(query: ObjectType): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
+  findOne(query: object): (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
   /**
    * Finds all the objects in the database matching the given query and returns them with their ids and
@@ -94,12 +92,12 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    *
    * Note that no error is thrown if no object is found. The method returns an empty array in this case.
    *
-   * @param {ObjectType} query Query used to find the objects.
+   * @param {object} query Query used to find the objects.
    * @returns {((IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>)} The matching
    * objects with their ids and timestamps.
    * @memberof IModelService
    */
-  findAll(query: ObjectType): (IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>;
+  findAll(query: object): (IModel & IIdAndTimeStamps)[] | Promise<(IModel & IIdAndTimeStamps)[]>;
 
   // Update
 
@@ -130,14 +128,14 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    * depends on the service implementation. In any case, `findOneAndUpdate` always returns an object and does
    * not return an array of objects.
    *
-   * @param {ObjectType} query Query used to unambiguously find the object.
+   * @param {object} query Query used to unambiguously find the object.
    * @param {(Partial<IModel & IIdAndTimeStamps>)} data Object with the keys/values to update.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The updated object
    * with its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof IModelService
    */
-  findOneAndUpdate(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>):
+  findOneAndUpdate(query: object, data: Partial<IModel & IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
   /**
@@ -147,12 +145,12 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    *
    * Note that no error is thrown if no object is found.
    *
-   * @param {ObjectType} query Query used to find the objects.
+   * @param {object} query Query used to find the objects.
    * @param {(Partial<IModel & IIdAndTimeStamps>)} data Object with the keys/values to update.
    * @returns {(void | Promise<void>)} Returns nothing.
    * @memberof IModelService
    */
-  updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): void | Promise<void>;
+  updateMany(query: object, data: Partial<IModel & IIdAndTimeStamps>): void | Promise<void>;
 
   // Replace
 
@@ -179,14 +177,14 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    * depends on the service implementation. In any case, `findOneAndReplace` always returns an object and does
    * not return an array of objects.
    *
-   * @param {ObjectType} query Query used to unambiguously find the object.
+   * @param {object} query Query used to unambiguously find the object.
    * @param {(IModel & Partial<IIdAndTimeStamps>)} data The new object to replace the current one.
    * @returns {((IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>)} The new object with
    * its id and timestamps.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof IModelService
    */
-  findOneAndReplace(query: ObjectType, data: IModel & Partial<IIdAndTimeStamps>):
+  findOneAndReplace(query: object, data: IModel & Partial<IIdAndTimeStamps>):
     (IModel & IIdAndTimeStamps) | Promise<IModel & IIdAndTimeStamps>;
 
   // Delete
@@ -208,21 +206,21 @@ export interface IModelService<IModel, ICreatingModel, IIdAndTimeStamps, IdType>
    * An exception may or may not be thrown. All objects matching the query might be removed as well. It
    * depends on the service implementation.
    *
-   * @param {ObjectType} query Query used to unambiguously find the object.
+   * @param {object} query Query used to unambiguously find the object.
    * @returns {(void | Promise<void>)} Returns nothing.
    * @throws {HttpResponseNotFound} Throws an error if no object was found in the database for the given query.
    * @memberof IModelService
    */
-  findOneAndRemove(query: ObjectType): void | Promise<void>;
+  findOneAndRemove(query: object): void | Promise<void>;
 
   /**
    * Removes all the objects from the database matching the given query.
    *
    * Note that no error is thrown if no object is found.
    *
-   * @param {ObjectType} query Query use to find the objects.
+   * @param {object} query Query use to find the objects.
    * @returns {(void | Promise<void>)} Returns nothing.
    * @memberof IModelService
    */
-  removeMany(query: ObjectType): void | Promise<void>;
+  removeMany(query: object): void | Promise<void>;
 }

@@ -1,5 +1,4 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
-import { ObjectType } from '@foal/core';
 import { expect } from 'chai';
 
 import { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
@@ -15,12 +14,12 @@ describe('LocalAuthenticatorService', () => {
   class ConcreteClass extends LocalAuthenticatorService<User> {}
   let service: ConcreteClass;
 
-  class UserModelService implements IModelService<User, ObjectType, ObjectType, any>, CheckPassword<User> {
+  class UserModelService implements IModelService<User, object, object, any>, CheckPassword<User> {
     public createOne(): any {}
     public createMany(): any {}
 
     public findById(): any {}
-    public findOne(query: ObjectType): User & { id: number } {
+    public findOne(query: { email?: string }): User & { id: number } {
       if (query.email === 'john@foalts.org') {
         return {
           email: 'john@foalts.org',

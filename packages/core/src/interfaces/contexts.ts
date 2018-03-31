@@ -1,13 +1,12 @@
 import { HttpResponse } from '../classes';
-import { ObjectType } from './utils';
 
-export interface Context<User = any> {
+export interface Context<User = any, State = { [key: string]: any }> {
   session: any;
-  params: ObjectType;
+  params: { [key: string]: any };
   body: any;
-  query: ObjectType;
-  state: ObjectType;
-  user: User | null;
+  query: { [key: string]: any };
+  state: State;
+  user: User;
   getHeader(field: string): string;
 }
 

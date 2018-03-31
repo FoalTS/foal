@@ -1,5 +1,4 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
-import { ObjectType } from '@foal/core';
 
 import { SequelizeConnectionService } from './sequelize-connection.service';
 
@@ -16,7 +15,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   protected dialect: string;
 
   constructor(name: string, schema: any, connection: SequelizeConnectionService,
-              options: ObjectType = {}) {
+              options: object = {}) {
     this.model = connection.sequelize.define(name, schema, options);
     this.dialect = connection.sequelize.getDialect();
   }
@@ -52,7 +51,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async findOne(query: ObjectType): Promise<IModel & IIdAndTimeStamps> {
+  public async findOne(query: object): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
 
     const result = await this.model.findOne({
@@ -64,7 +63,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async findAll(query: ObjectType): Promise<(IModel & IIdAndTimeStamps)[]> {
+  public async findAll(query: object): Promise<(IModel & IIdAndTimeStamps)[]> {
     await this.model.sync();
 
     const models = await this.model.findAll({
@@ -99,7 +98,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
   }
 
-  public async findOneAndUpdate(query: ObjectType,
+  public async findOneAndUpdate(query: object,
                                 data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -142,7 +141,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): Promise<void> {
+  public async updateMany(query: object, data: Partial<IModel & IIdAndTimeStamps>): Promise<void> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
@@ -177,7 +176,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
   }
 
-  public async findOneAndReplace(query: ObjectType,
+  public async findOneAndReplace(query: object,
                                  data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -232,7 +231,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     }
   }
 
-  public async findOneAndRemove(query: ObjectType): Promise<void> {
+  public async findOneAndRemove(query: object): Promise<void> {
     await this.model.sync();
 
     const result = await this.model.destroy({
@@ -244,7 +243,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     }
   }
 
-  public async removeMany(query: ObjectType): Promise<void> {
+  public async removeMany(query: object): Promise<void> {
     await this.model.sync();
 
     await this.model.destroy({
@@ -252,10 +251,10 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     });
   }
 
-  protected removeIdAndTimeStamps(o: ObjectType): void {
-    delete o.id;
-    delete o.createdAt;
-    delete o.updateAt;
+  protected removeIdAndTimeStamps(o: object): void {
+    delete (o as any).id;
+    delete (o as any).createdAt;
+    delete (o as any).updatedAt;
   }
 
 }

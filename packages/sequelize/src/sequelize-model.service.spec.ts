@@ -166,7 +166,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('when findOne(query: ObjectType): Promise<IModel & IIdAndTimeStamps> is called', () => {
+    describe('when findOne(query: object): Promise<IModel & IIdAndTimeStamps> is called', () => {
 
       it('should return the suitable user from the database with its id and timestamps.', async () => {
         await service.getSequelizeModel().create({
@@ -202,7 +202,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('when findAll(query: ObjectType): Promise<(IModel & IIdAndTimeStamps)[]> is called', () => {
+    describe('when findAll(query: object): Promise<(IModel & IIdAndTimeStamps)[]> is called', () => {
 
       it('should return all the suitable users from the database with their ids and timestamps.', async () => {
         const user1 = await service.getSequelizeModel().create({
@@ -297,7 +297,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe(`when findOneAndUpdate(query: ObjectType,
+    describe(`when findOneAndUpdate(query: object,
                data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> is called`, () => {
 
       it('should update the suitable user and return it with its id and timestamps.', async () => {
@@ -343,7 +343,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('updateMany(query: ObjectType, data: Partial<IModel & IIdAndTimeStamps>): Promise<void>', () => {
+    describe('updateMany(query: object, data: Partial<IModel & IIdAndTimeStamps>): Promise<void>', () => {
 
       it('should update the suitable users.', async () => {
         const user1 = await service.getSequelizeModel().create({
@@ -431,7 +431,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe(`when findOneAndReplace(query: ObjectType,
+    describe(`when findOneAndReplace(query: object,
                data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> is called`, () => {
 
       it('should replace the suitable user and return it with its id and timestamps.', async () => {
@@ -521,7 +521,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('when findOneAndRemove(query: ObjectType): Promise<void> is called', () => {
+    describe('when findOneAndRemove(query: object): Promise<void> is called', () => {
 
       it('should delete the suitable user.', async () => {
         await service.getSequelizeModel().create({
@@ -554,7 +554,7 @@ function testSuite(dbName: string, uri: string) {
 
     });
 
-    describe('when removeMany(query: ObjectType): Promise<void> is called', () => {
+    describe('when removeMany(query: object): Promise<void> is called', () => {
 
       it('should delete the suitable users.', async () => {
         await service.getSequelizeModel().create({

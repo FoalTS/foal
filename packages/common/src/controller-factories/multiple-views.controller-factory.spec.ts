@@ -1,7 +1,6 @@
 import {
   createEmptyContext,
   HttpResponseOK,
-  ObjectType,
   Service,
   ServiceManager
 } from '@foal/core';
@@ -15,7 +14,7 @@ describe('multipleViews', () => {
   @Service()
   class MockService implements IMultipleViews {
     constructor() {}
-    public async render(name: string, locals: ObjectType): Promise<string> {
+    public async render(name: string, locals: { name?: string }): Promise<string> {
       return `${name} ${locals.name || 'bar'}`;
     }
   }
