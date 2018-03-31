@@ -1,0 +1,38 @@
+# Use postgres/example user/password credentials
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./testing/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: foal_sequelize_test
+    ports:
+      - 3306:3306
+  
+  mssql:
+    image: microsoft/mssql-server-linux
+    restart: always
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: yourStrong(!)Password
+    ports:
+      - 1433:1433
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

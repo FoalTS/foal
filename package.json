@@ -5,7 +5,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "lint": "tslint -c tslint.json --project tsconfig.json"
+    "lint": "tslint -c tslint.json --project tsconfig.json",
+    "start-docker": "docker stack deploy -c stack.yml dev",
+    "stop-docker": "docker stack rm dev"
   },
   "repository": {
     "type": "git",

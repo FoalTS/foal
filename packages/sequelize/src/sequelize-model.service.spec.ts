@@ -601,4 +601,9 @@ describe('SequelizeModelService<User>', () => {
   // password = process.env.mysql_password !== undefined ? process.env.mysql_password : 'password';
   // testSuite('MySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
 
+  // MySQL
+  // user = process.env.mssql_user !== undefined ? process.env.mssql_user : 'sa';
+  // password = process.env.mssql_password !== undefined ? process.env.mssql_password : 'yourStrong(!)Password';
+  // testSuite('Microsoft SQL Server', `mssql://${user}:${password}@localhost:1433/foal_sequelize_test`);
+
 });
