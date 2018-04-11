@@ -24,10 +24,9 @@ services:
   
   mssql:
     image: microsoft/mssql-server-linux
-    restart: always
     environment:
       ACCEPT_EULA: 'Y'
-      SA_PASSWORD: yourStrong(!)Password
+      MSSQL_SA_PASSWORD: strongPassword1
     ports:
       - 1433:1433
 
