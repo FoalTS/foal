@@ -56,7 +56,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { Module } from '@foal/core';
-import { authentication } from '@foal/authentication';
+import { authentication, validateLocalCredentialsFormat } from '@foal/authentication';
 
 import { MyAuthenticatorService } from './my-authenticator.service';
 
@@ -67,7 +67,7 @@ export const AuthModule: Module = {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
-      .withPreHook(/* You must add here a pre-hook to validate the input data. You may use the `validate` pre-hook from @foal/ajv.*/)
+      .withPreHook(validateLocalCredentialsFormat())
   ]
 }
 ```
@@ -212,8 +212,7 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { validate } from '@foal/ajv';
-import { authentication } from '@foal/authentication';
+import { authentication, validateLocalCredentialsFormat } from '@foal/authentication';
 import { basic, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -222,15 +221,7 @@ export const AuthModule: Module = {
   controllers: [
     authentication
       .attachService('/login', AuthService)
-      .withPreHook(validate({
-        additionalProperties: false,
-        properties: [
-          email: { type: 'string', format: 'email' },
-          password: { type: 'string' }
-        ],
-        required: [ 'email', 'password' ],
-        type: 'object'
-      })),
+      .withPreHook(validateLocalCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
     basic

@@ -41,6 +41,7 @@
     "dist/"
   ],
   "dependencies": {
+    "@foal/ajv": "^0.4.0-beta.1",
     "@foal/common": "^0.4.0-beta.2",
     "@foal/core": "^0.4.0-beta.1"
   },
