@@ -589,8 +589,8 @@ function testSuite(dbName: string, uri: string) {
 describe('SequelizeModelService<User>', () => {
 
   // Postgres
-  let user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
-  let password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
+  const user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
+  const password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
   testSuite('PostgreSQL', `postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
 
   // SQLite
@@ -602,8 +602,8 @@ describe('SequelizeModelService<User>', () => {
   // testSuite('MySQL', `mysql://${user}:${password}@localhost:3306/foal_sequelize_test`);
 
   // MSSQL
-  user = process.env.mssql_user !== undefined ? process.env.mssql_user : 'SA';
-  password = process.env.mssql_password !== undefined ? process.env.mssql_password : 'strongPassword1';
-  testSuite('Microsoft SQL Server', `mssql://${user}:${password}@localhost:1433`);
+  if (!process.env.no_mssql_tests) {
+    testSuite('Microsoft SQL Server', `mssql://SA:strongPassword1@localhost:1433`);
+  }
 
 });
