@@ -21,22 +21,22 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
-- `LocalAuthenticatorService` (email and password)
+- `EmailAuthenticatorService` (email and password)
 
-`LocalAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+`EmailAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
 Its constructor takes a user service that must implement the `IModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
 
 *Example*:
 ```typescript
-import { LocalAuthenticatorService } from '@foal/authentication';
+import { EmailAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User } from './user.interface';
 import { MyUserService } from './my-user.service.ts';
 
 @Service()
-export class MyAuthenticatorService extends LocalAuthenticatorService<User> {
+export class MyAuthenticatorService extends EmailAuthenticatorService<User> {
 
   constructor(userService: MyUserService) {
     super(userService);
@@ -56,7 +56,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { Module } from '@foal/core';
-import { authentication, validateLocalCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
 
 import { MyAuthenticatorService } from './my-authenticator.service';
 
@@ -67,7 +67,7 @@ export const AuthModule: Module = {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
-      .withPreHook(validateLocalCredentialsFormat())
+      .withPreHook(validateEmailCredentialsFormat())
   ]
 }
 ```
@@ -212,7 +212,7 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { authentication, validateLocalCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
 import { basic, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -221,7 +221,7 @@ export const AuthModule: Module = {
   controllers: [
     authentication
       .attachService('/login', AuthService)
-      .withPreHook(validateLocalCredentialsFormat()),
+      .withPreHook(validateEmailCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
     basic
@@ -242,14 +242,14 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { LocalAuthenticatorService } from '@foal/authentication';
+import { EmailAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User } from '../shared/user.interface';
 import { UserService } from '../shared/user.service.ts';
 
 @Service()
-export class AuthService<User> extends LocalAuthenticatorService {
+export class AuthService<User> extends EmailAuthenticatorService {
 
   constructor(userService: UserService) {
     super(userService);

@@ -1,1 +1,1 @@
-export { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
+export { CheckPassword, EmailAuthenticatorService } from './email-authenticator.service';
