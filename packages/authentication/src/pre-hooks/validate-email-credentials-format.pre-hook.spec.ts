@@ -1,12 +1,12 @@
 import { createEmptyContext, HttpResponseBadRequest, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
-import { validateLocalCredentialsFormat } from './validate-local-credentials-format.pre-hook';
+import { validateEmailCredentialsFormat } from './validate-email-credentials-format.pre-hook';
 
-describe('validateLocalCredentialsFormat', () => {
+describe('validateEmailCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the email property is missing.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       password: 'myPassword',
@@ -27,7 +27,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should return an HttpResponseBadRequest if the password property is missing.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 'john@jack.com',
@@ -48,7 +48,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should return an HttpResponseBadRequest if the email property is not a string.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 1,
@@ -70,7 +70,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should return an HttpResponseBadRequest if the password property is not a string.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 'john@jack.com',
@@ -92,7 +92,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should return an HttpResponseBadRequest if the email property does not contain a valid email.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 'johnjack.com',
@@ -114,7 +114,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should return an HttpResponseBadRequest if there are additional properties.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 'john@jack.com',
@@ -137,7 +137,7 @@ describe('validateLocalCredentialsFormat', () => {
   });
 
   it('should not return anything if the input is correct.', () => {
-    const preHook = validateLocalCredentialsFormat();
+    const preHook = validateEmailCredentialsFormat();
     const ctx = createEmptyContext();
     ctx.body = {
       email: 'john@jack.com',

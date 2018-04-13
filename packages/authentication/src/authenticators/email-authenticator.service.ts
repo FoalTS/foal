@@ -12,11 +12,11 @@ export interface CheckPassword<User> {
  *
  * @export
  * @abstract
- * @class LocalAuthenticatorService
+ * @class EmailAuthenticatorService
  * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
-export abstract class LocalAuthenticatorService<User extends { email: string, password: string }>
+export abstract class EmailAuthenticatorService<User extends { email: string, password: string }>
     implements IAuthenticator<User> {
 
   constructor(protected userModelService: IModelService<User, any, any, any> & CheckPassword<User>) {}

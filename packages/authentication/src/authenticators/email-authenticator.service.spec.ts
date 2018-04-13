@@ -1,9 +1,9 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { expect } from 'chai';
 
-import { CheckPassword, LocalAuthenticatorService } from './local-authenticator.service';
+import { CheckPassword, EmailAuthenticatorService } from './email-authenticator.service';
 
-describe('LocalAuthenticatorService', () => {
+describe('EmailAuthenticatorService', () => {
 
   interface User {
     email: string;
@@ -11,7 +11,7 @@ describe('LocalAuthenticatorService', () => {
     username: string;
   }
 
-  class ConcreteClass extends LocalAuthenticatorService<User> {}
+  class ConcreteClass extends EmailAuthenticatorService<User> {}
   let service: ConcreteClass;
 
   class UserModelService implements IModelService<User, object, object, any>, CheckPassword<User> {
