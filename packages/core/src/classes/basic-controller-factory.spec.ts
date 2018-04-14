@@ -13,7 +13,7 @@ describe('basic', () => {
 
     it('should return a controller with one "main" route matching the given parameters.', () => {
       const handlingFunction = () => {};
-      const controller = basic.attachHandlingFunction('POST', '/foo', handlingFunction);
+      const { controller } = basic.attachHandlingFunction('POST', '/foo', handlingFunction);
 
       const expected: Route = {
         handler: handlingFunction,

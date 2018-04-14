@@ -17,7 +17,10 @@ describe('App', () => {
       const controller1 = new Controller();
       const controller2 = new Controller();
       const app = new App({
-        controllers: [ controller1, controller2 ]
+        controllers: [
+          { controller: controller1 },
+          { controller: controller2 }
+        ]
       });
       expect(app.controllers).to.deep.equal([ controller1, controller2 ]);
     });
@@ -29,14 +32,14 @@ describe('App', () => {
       const app = new App({
         modules: [
           {
-            controllers: [ controller1 ],
+            controllers: [ { controller: controller1 } ],
             modules: []
           },
           {
-            controllers: [ controller2 ],
+            controllers: [ { controller: controller2 } ],
             modules: [
               {
-                controllers: [ controller3 ]
+                controllers: [ { controller: controller3 } ]
               }
             ]
           }
@@ -45,6 +48,28 @@ describe('App', () => {
       expect(app.controllers).to.deep.equal([ controller1, controller2, controller3 ]);
     });
 
+  });
+
+  it('should add the controller paths to the controllers.', () => {
+    const controller1 = new Controller();
+    controller1.addRoute('main', 'POST', '/controller1', () => {});
+    const controller2 = new Controller();
+    controller2.addRoute('main', 'POST', '/controller2', () => {});
+    const controller3 = new Controller();
+    controller3.addRoute('main', 'POST', '/controller3', () => {});
+
+    // tslint:disable-next-line:no-unused-expression
+    new App({
+      controllers: [
+        { path: '/foo', controller: controller1 },
+        { path: '/bar', controller: controller2 },
+        { controller: controller3 },
+      ],
+    });
+
+    expect(controller1.getRoute('main').path).to.equal('/foo/controller1');
+    expect(controller2.getRoute('main').path).to.equal('/bar/controller2');
+    expect(controller3.getRoute('main').path).to.equal('/controller3');
   });
 
   it('should add the module paths to the controllers.', () => {
@@ -59,20 +84,20 @@ describe('App', () => {
 
     // tslint:disable-next-line:no-unused-expression
     new App({
-      controllers: [ controller1 ],
+      controllers: [ { controller: controller1 } ],
       modules: [
         {
-          controllers: [ controller2 ],
+          controllers: [ { controller: controller2 } ],
           modules: [
             {
-              controllers: [ controller3 ],
+              controllers: [ { controller: controller3 } ],
               path: '/bar',
             }
           ],
           path: '/',
         },
         {
-          controllers: [ controller4 ]
+          controllers: [ { controller: controller4 } ]
         }
       ],
       path: '/foo',
@@ -103,20 +128,20 @@ describe('App', () => {
 
     // tslint:disable-next-line:no-unused-expression
     new App({
-      controllers: [ controller1 ],
+      controllers: [ { controller: controller1 } ],
       modules: [
         {
-          controllers: [ controller2 ],
+          controllers: [ { controller: controller2 } ],
           modules: [
             {
-              controllers: [ controller3 ],
+              controllers: [ { controller: controller3 } ],
               preHooks: [ preHookC, preHookD ],
             }
           ],
           preHooks: [],
         },
         {
-          controllers: [ controller4 ]
+          controllers: [ { controller: controller4 } ]
         }
       ],
       preHooks: [ preHookA, preHookB ],
@@ -147,20 +172,20 @@ describe('App', () => {
 
     // tslint:disable-next-line:no-unused-expression
     new App({
-      controllers: [ controller1 ],
+      controllers: [ { controller: controller1 } ],
       modules: [
         {
-          controllers: [ controller2 ],
+          controllers: [ { controller: controller2 } ],
           modules: [
             {
-              controllers: [ controller3 ],
+              controllers: [ { controller: controller3 } ],
               postHooks: [ postHookC, postHookD ],
             }
           ],
           postHooks: [],
         },
         {
-          controllers: [ controller4 ]
+          controllers: [ { controller: controller4 } ]
         }
       ],
       postHooks: [ postHookA, postHookB ],

@@ -41,7 +41,7 @@ describe('authentication', () => {
     describe('should return a controller with a proper `main` route that', () => {
 
       it('should handles requests at POST /.', () => {
-        const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+        const route = authentication.attachService('/', MockAuthenticatorService).controller.getRoute('main');
 
         expect(route.httpMethod).to.equal('POST');
         expect(route.path).to.equal('/');
@@ -51,7 +51,7 @@ describe('authentication', () => {
 
         it('should return an HttpResponseOK with the matching user if options.successRedirect '
            + 'is undefined.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = authentication.attachService('/', MockAuthenticatorService).controller.getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -69,7 +69,7 @@ describe('authentication', () => {
         it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
           const route = authentication.attachService('/', MockAuthenticatorService, {
             successRedirect: '/foo'
-          }).getRoute('main');
+          }).controller.getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -82,7 +82,7 @@ describe('authentication', () => {
         });
 
         it('should create or update ctx.session.authentication to include the userId.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = authentication.attachService('/', MockAuthenticatorService).controller.getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -109,7 +109,7 @@ describe('authentication', () => {
       describe('when the authentication fails', () => {
 
         it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = authentication.attachService('/', MockAuthenticatorService).controller.getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -126,7 +126,7 @@ describe('authentication', () => {
         it('should return an HttpResponseRedirect if options.failureRedirect is not empty.', async () => {
           const route = authentication.attachService('/', MockAuthenticatorService, {
             failureRedirect: '/foo'
-          }).getRoute('main');
+          }).controller.getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
