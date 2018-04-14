@@ -2,7 +2,7 @@ import {
   Class,
   Controller,
   HttpResponseOK,
-  ServiceControllerFactory,
+  IServiceControllerFactory,
 } from '@foal/core';
 
 import { IMultipleViews } from '../services';
@@ -11,14 +11,10 @@ export interface Options {
   views: Record<string, string>;
 }
 
-export class MultipleViewsFactory extends ServiceControllerFactory<IMultipleViews,
-    string, Options> {
-  protected defineController(controller: Controller<string>,
-                             ServiceClass: Class<IMultipleViews>,
-                             options?: Options): void {
-    if (!options) {
-      throw new Error('Options must be given to the multipleViews controller factory.');
-    }
+export class MultipleViewsFactory implements IServiceControllerFactory {
+  public attachService(path: string, ServiceClass: Class<IMultipleViews>,
+                       options: Options): { path: string, controller: Controller } {
+    const controller = new Controller();
     for (const name in options.views) {
       if (options.views.hasOwnProperty(name)) {
         controller.addRoute(name, 'GET', options.views[name], async (ctx, services) => {
@@ -29,6 +25,7 @@ export class MultipleViewsFactory extends ServiceControllerFactory<IMultipleView
         });
       }
     }
+    return { path, controller };
   }
 }
 
