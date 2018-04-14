@@ -6,7 +6,7 @@ import {
   Route
 } from '../interfaces';
 
-export class Controller<RouteName extends string> {
+export class Controller<RouteName extends string = string> {
   private routes: Map<RouteName, Route> = new Map();
 
   public addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
