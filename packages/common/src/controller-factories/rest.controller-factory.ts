@@ -6,7 +6,7 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  ServiceControllerFactory,
+  IServiceControllerFactory,
 } from '@foal/core';
 
 import { isObjectDoesNotExist } from '../object-does-not-exist';
@@ -15,11 +15,10 @@ import { IModelService } from '../services';
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
-export class RestControllerFactory extends ServiceControllerFactory<
-    Partial<IModelService<any, any, any, any>>, RouteName
-  > {
-  protected defineController(controller: Controller<RouteName>,
-                             ServiceClass: Class<Partial<IModelService<any, any, any, any>>>): void {
+export class RestControllerFactory implements IServiceControllerFactory {
+  public attachService(path: string, ServiceClass: Class<Partial<IModelService<any, any, any, any>>>):
+                        { path: string, controller: Controller<RouteName> } {
+    const controller = new Controller<RouteName>();
     controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
@@ -94,6 +93,7 @@ export class RestControllerFactory extends ServiceControllerFactory<
         throw err;
       }
     });
+    return { path, controller };
   }
 }
 

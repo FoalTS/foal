@@ -2,18 +2,21 @@ import {
   Class,
   Controller,
   HttpResponseOK,
-  ServiceControllerFactory,
+  IServiceControllerFactory,
 } from '@foal/core';
 
 import { IView } from '../services';
 
-export class ViewControllerFactory extends ServiceControllerFactory<IView, 'main'> {
-  protected defineController(controller: Controller<'main'>, ServiceClass: Class<IView>): void {
+export class ViewControllerFactory implements IServiceControllerFactory {
+  public attachService(path: string, ServiceClass: Class<IView>):
+                       { path: string, controller: Controller<'main'> } {
+    const controller = new Controller<'main'>();
     controller.addRoute('main', 'GET', '/', async (ctx, services) => {
       return new HttpResponseOK(
         await services.get(ServiceClass).render(ctx.state.locals || {})
       );
     });
+    return { path, controller };
   }
 }
 
