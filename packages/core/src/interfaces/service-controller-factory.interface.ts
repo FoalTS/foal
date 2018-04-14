@@ -2,5 +2,5 @@ import { Controller } from '../classes';
 import { Class } from './utils';
 
 export interface IServiceControllerFactory {
-  attachService(path: string, ServiceClass: Class): { path: string, controller: Controller };
+  attachService(path: string, ServiceClass: Class, options: object): { path: string, controller: Controller };
 }
