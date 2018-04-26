@@ -15,7 +15,7 @@ export class Controller<RouteName extends string> {
     this.routes.set(name, {
       handler,
       httpMethod,
-      path: (this.prePath ? `${this.prePath}/${path}` : path).replace(/(\/)+/g, '/'),
+      path: (this.prePath ? `${this.prePath}${path}` : path).replace(/(\/)+/g, '/'),
       postHooks: [],
       preHooks: [],
     });
@@ -86,7 +86,7 @@ export class Controller<RouteName extends string> {
   }
 
   public addPathAtTheBeginning(path: string) {
-    this.routes.forEach(route => route.path = `${path}/${route.path}`.replace(/(\/)+/g, '/'));
+    this.routes.forEach(route => route.path = `${path}${route.path}`.replace(/(\/)+/g, '/'));
   }
 
   public getRoutes(): Route[] {
