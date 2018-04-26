@@ -26,6 +26,20 @@ describe('Controller', () => {
       expect(controller.getRoute('create')).to.deep.equal(expected);
     });
 
+    it('should add at the beginning of the route path the controller pre-path when it exists.', () => {
+      controller = new Controller<RouteName>('/bar');
+      controller.addRoute('create', 'POST', '/foo', () => {});
+
+      expect(controller.getRoute('create').path).to.equal('/bar/foo');
+    });
+
+    it('should remove duplicate slashes from the route path.', () => {
+      controller = new Controller<RouteName>('/bar/');
+      controller.addRoute('create', 'POST', '//foo/', () => {});
+
+      expect(controller.getRoute('create').path).to.equal('/bar/foo/');
+    });
+
     it('should throw an exception if we try to get a route that does not exist.', () => {
       expect(() => controller.getRoute('update')).to.throw('No route called update could be found.');
     });
@@ -211,12 +225,12 @@ describe('Controller', () => {
     });
 
     it('should remove duplicate slashes.', () => {
-      controller.addRoute('create', 'POST', '/foo', () => {});
+      controller.addRoute('create', 'POST', '/foo/', () => {});
       controller.addPathAtTheBeginning('/');
       controller.addPathAtTheBeginning('/foobar');
       controller.addPathAtTheBeginning('///');
 
-      expect(controller.getRoute('create').path).to.equal('/foobar/foo');
+      expect(controller.getRoute('create').path).to.equal('/foobar/foo/');
     });
 
   });

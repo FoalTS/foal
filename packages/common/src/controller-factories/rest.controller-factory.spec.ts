@@ -32,11 +32,11 @@ describe('rest', () => {
   describe('when attachService is called', () => {
 
     it('should return a controller with a proper "DELETE /" route.', async () => {
-      const controller = rest.attachService('/', EmptyMockService);
+      const controller = rest.attachService('/foobar', EmptyMockService);
       const actual = controller.getRoute('DELETE /');
 
       expect(actual.httpMethod).to.equal('DELETE');
-      expect(actual.path).to.equal('/');
+      expect(actual.path).to.equal('/foobar/');
 
       const ctx = createEmptyContext();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
@@ -45,11 +45,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "DELETE /:id" route that handles requests', () => {
 
       it('when service.findByIdAndRemove is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('DELETE /:id');
 
         expect(actual.httpMethod).to.equal('DELETE');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -65,11 +65,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findByIdAndRemove');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('DELETE /:id');
 
         expect(actual.httpMethod).to.equal('DELETE');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
@@ -86,7 +86,7 @@ describe('rest', () => {
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/', MockService).getRoute('DELETE /:id')
+        const actual = await rest.attachService('/foobar', MockService).getRoute('DELETE /:id')
                                  .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
@@ -96,11 +96,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "GET /" route that handles requests', () => {
 
       it('when service.findAll is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('GET /');
 
         expect(actual.httpMethod).to.equal('GET');
-        expect(actual.path).to.equal('/');
+        expect(actual.path).to.equal('/foobar/');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -119,11 +119,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findAll');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('GET /');
 
         expect(actual.httpMethod).to.equal('GET');
-        expect(actual.path).to.equal('/');
+        expect(actual.path).to.equal('/foobar/');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
@@ -141,11 +141,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "GET /:id" route that handles requests', () => {
 
       it('when service.findById is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('GET /:id');
 
         expect(actual.httpMethod).to.equal('GET');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -164,11 +164,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findById');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('GET /:id');
 
         expect(actual.httpMethod).to.equal('GET');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
@@ -185,7 +185,7 @@ describe('rest', () => {
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/', MockService).getRoute('GET /:id')
+        const actual = await rest.attachService('/foobar', MockService).getRoute('GET /:id')
                                  .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
@@ -193,11 +193,11 @@ describe('rest', () => {
     });
 
     it('should return an array of which one item handles PATCH /.', async () => {
-      const controller = rest.attachService('/', EmptyMockService);
+      const controller = rest.attachService('/foobar', EmptyMockService);
       const actual = controller.getRoute('PATCH /');
 
       expect(actual.httpMethod).to.equal('PATCH');
-      expect(actual.path).to.equal('/');
+      expect(actual.path).to.equal('/foobar/');
 
       const ctx = createEmptyContext();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
@@ -206,11 +206,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "PATCH /:id" route that handles requests', () => {
 
       it('when service.findByIdAndUpdate is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('PATCH /:id');
 
         expect(actual.httpMethod).to.equal('PATCH');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -229,11 +229,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findByIdAndUpdate');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('PATCH /:id');
 
         expect(actual.httpMethod).to.equal('PATCH');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = {
           ...createEmptyContext(),
@@ -254,7 +254,7 @@ describe('rest', () => {
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/', MockService).getRoute('PATCH /:id')
+        const actual = await rest.attachService('/foobar', MockService).getRoute('PATCH /:id')
                                  .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
@@ -264,11 +264,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "POST /" route that handles requests', () => {
 
       it('when service.createOne is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('POST /');
 
         expect(actual.httpMethod).to.equal('POST');
-        expect(actual.path).to.equal('/');
+        expect(actual.path).to.equal('/foobar/');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -287,11 +287,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'createOne');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('POST /');
 
         expect(actual.httpMethod).to.equal('POST');
-        expect(actual.path).to.equal('/');
+        expect(actual.path).to.equal('/foobar/');
 
         const ctx = {
           ...createEmptyContext(),
@@ -305,22 +305,22 @@ describe('rest', () => {
     });
 
     it('should return an array of which one item handles POST /:id.', async () => {
-      const controller = rest.attachService('/', EmptyMockService);
+      const controller = rest.attachService('/foobar', EmptyMockService);
       const actual = controller.getRoute('POST /:id');
 
       expect(actual.httpMethod).to.equal('POST');
-      expect(actual.path).to.equal('/:id');
+      expect(actual.path).to.equal('/foobar/:id');
 
       const ctx = createEmptyContext();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
     it('should return an array of which one item handles PUT /.', async () => {
-      const controller = rest.attachService('/', EmptyMockService);
+      const controller = rest.attachService('/foobar', EmptyMockService);
       const actual = controller.getRoute('PUT /');
 
       expect(actual.httpMethod).to.equal('PUT');
-      expect(actual.path).to.equal('/');
+      expect(actual.path).to.equal('/foobar/');
 
       const ctx = createEmptyContext();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
@@ -329,11 +329,11 @@ describe('rest', () => {
     describe('should return a controller with a proper "PUT /:id" route that handles requests', () => {
 
       it('when service.findByIdAndReplace is undefined.', async () => {
-        const controller = rest.attachService('/', EmptyMockService);
+        const controller = rest.attachService('/foobar', EmptyMockService);
         const actual = controller.getRoute('PUT /:id');
 
         expect(actual.httpMethod).to.equal('PUT');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = createEmptyContext();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
@@ -352,11 +352,11 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findByIdAndReplace');
 
-        const controller = rest.attachService('/', MockService);
+        const controller = rest.attachService('/foobar', MockService);
         const actual = controller.getRoute('PUT /:id');
 
         expect(actual.httpMethod).to.equal('PUT');
-        expect(actual.path).to.equal('/:id');
+        expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = {
           ...createEmptyContext(),
@@ -377,7 +377,7 @@ describe('rest', () => {
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/', MockService).getRoute('PUT /:id')
+        const actual = await rest.attachService('/foobar', MockService).getRoute('PUT /:id')
                                  .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
