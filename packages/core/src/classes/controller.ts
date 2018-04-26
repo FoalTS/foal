@@ -9,11 +9,13 @@ import {
 export class Controller<RouteName extends string> {
   private routes: Map<RouteName, Route> = new Map();
 
+  constructor(private prePath?: string) {}
+
   public addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
     this.routes.set(name, {
       handler,
       httpMethod,
-      path,
+      path: (this.prePath ? `${this.prePath}/${path}` : path).replace(/(\/)+/g, '/'),
       postHooks: [],
       preHooks: [],
     });
