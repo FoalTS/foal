@@ -1,3 +1,3 @@
-export interface Class<T> {
+export interface Class<T = any> {
   new (...args: any[]): T;
 }
