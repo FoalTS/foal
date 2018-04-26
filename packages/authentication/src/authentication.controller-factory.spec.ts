@@ -41,10 +41,10 @@ describe('authentication', () => {
     describe('should return a controller with a proper `main` route that', () => {
 
       it('should handles requests at POST /.', () => {
-        const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+        const route = authentication.attachService('/foobar', MockAuthenticatorService).getRoute('main');
 
         expect(route.httpMethod).to.equal('POST');
-        expect(route.path).to.equal('/');
+        expect(route.path).to.equal('/foobar');
       });
 
       describe('when the authentication succeeds', () => {

@@ -4,21 +4,17 @@ import {
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  ServiceControllerFactory,
+  IServiceControllerFactory,
 } from '@foal/core';
 
 import { IAuthenticator } from './authenticator.interface';
 
-export interface Options {
-  failureRedirect?: string;
-  successRedirect?: string;
-}
-
-export class AuthenticationFactory extends ServiceControllerFactory<IAuthenticator<any>, 'main', Options> {
-  protected defineController(controller: Controller<'main'>,
-                             ServiceClass: Class<IAuthenticator<any>>,
-                             options: Options = {}): void {
-    controller.addRoute('main', 'POST', '/', async (ctx, services) => {
+export class AuthenticationFactory implements IServiceControllerFactory {
+  public attachService(path: string, ServiceClass: Class<IAuthenticator<any>>,
+                       options: { failureRedirect?: string, successRedirect?: string } = {}):
+                       Controller<'main'> {
+    const controller = new Controller<'main'>(path);
+    controller.addRoute('main', 'POST', '', async (ctx, services) => {
       const user = await services.get(ServiceClass).authenticate(ctx.body);
 
       if (user === null) {
@@ -36,6 +32,7 @@ export class AuthenticationFactory extends ServiceControllerFactory<IAuthenticat
       }
       return new HttpResponseOK(user);
     });
+    return controller;
   }
 }
 
