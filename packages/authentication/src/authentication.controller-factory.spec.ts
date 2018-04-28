@@ -1,5 +1,6 @@
 import {
   createEmptyContext,
+  HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
@@ -197,7 +198,7 @@ describe('authentication', () => {
         await route.handler(ctx, new ServiceManager());
       });
 
-      it('should return an HttpResponseOK if options.redirect is undefined.', async () => {
+      it('should return an HttpResponseNoContent if options.redirect is undefined.', async () => {
         const route = authentication.attachLogout('/').getRoute('main');
 
         const ctx = createEmptyContext();
@@ -205,7 +206,7 @@ describe('authentication', () => {
 
         const result = await route.handler(ctx, new ServiceManager());
 
-        expect(result).to.be.an.instanceOf(HttpResponseOK);
+        expect(result).to.be.an.instanceOf(HttpResponseNoContent);
       });
 
       it('should return an HttpResponseRedirect if options.redirect is not empty.', async () => {

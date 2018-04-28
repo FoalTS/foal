@@ -1,6 +1,7 @@
 import {
   Class,
   Controller,
+  HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
@@ -43,7 +44,7 @@ export class AuthenticationFactory implements IServiceControllerFactory {
       if (options.redirect) {
         return new HttpResponseRedirect(options.redirect);
       }
-      return new HttpResponseOK();
+      return new HttpResponseNoContent();
     });
     return controller;
   }
