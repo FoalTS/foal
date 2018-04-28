@@ -50,6 +50,19 @@ export function isHttpResponseCreated(obj: object): boolean {
   return obj instanceof HttpResponseCreated || (obj as any).isHttpResponseCreated === true;
 }
 
+export class HttpResponseNoContent extends HttpResponseSuccess {
+  public readonly isHttpResponseNoContent = true;
+  public statusCode = 204;
+  public statusMessage = 'NO CONTENT';
+  constructor() {
+    super();
+  }
+}
+
+export function isHttpResponseNoContent(obj: object): boolean {
+  return obj instanceof HttpResponseNoContent || (obj as any).isHttpResponseNoContent === true;
+}
+
 /* 3xx Redirection */
 
 export abstract class HttpResponseRedirection extends HttpResponse {
