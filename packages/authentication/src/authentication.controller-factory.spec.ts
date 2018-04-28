@@ -1,7 +1,6 @@
 import {
   createEmptyContext,
   HttpResponseNoContent,
-  HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   Service,
@@ -50,8 +49,7 @@ describe('authentication', () => {
 
       describe('when the authentication succeeds', () => {
 
-        it('should return an HttpResponseOK with the matching user if options.successRedirect '
-           + 'is undefined.', async () => {
+        it('should return an HttpResponseNoContent if options.successRedirect is undefined.', async () => {
           const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
 
           const ctx = createEmptyContext();
@@ -60,11 +58,7 @@ describe('authentication', () => {
 
           const result = await route.handler(ctx, new ServiceManager());
 
-          expect(result).to.be.an.instanceOf(HttpResponseOK);
-          expect((result as HttpResponseOK).content).to.deep.equal({
-            id: 1,
-            username: 'John',
-          });
+          expect(result).to.be.an.instanceOf(HttpResponseNoContent);
         });
 
         it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
