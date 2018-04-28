@@ -104,17 +104,12 @@ export const AppModule: Module = {
 
 ### Logging out
 
-Currently there is no built-in function that supports the "log out" feature. You need to implement it on your own as follow.
+To log out the user, you need to use the `attachLogout` function.
 
 ```typescript
-basic
-  .attachHandlingFunction('POST', '/logout', ctx => {
-    delete ctx.session.authentication;
-    return new HttpResponseRedirect('/login');
-  })
+authentication
+  .attachLogout('/logout', { redirect: '/login' });
 ```
-
-Note that the use of `POST`, `/logout` and `/login` is up to you.
 
 ## Authorization
 

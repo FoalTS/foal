@@ -30,7 +30,20 @@ export class AuthenticationFactory implements IServiceControllerFactory {
       if (options.successRedirect) {
         return new HttpResponseRedirect(options.successRedirect);
       }
-      return new HttpResponseOK(user);
+      return new HttpResponseOK(user); // C'est pas tip top le user la.
+    });
+    return controller;
+  }
+
+  public attachLogout(path: string,
+                      options: { redirect?: string, httpMethod?: 'GET'|'POST' } = {}): Controller<'main'> {
+    const controller = new Controller<'main'>(path);
+    controller.addRoute('main', options.httpMethod || 'GET', '', async ctx => {
+      delete ctx.session.authentication;
+      if (options.redirect) {
+        return new HttpResponseRedirect(options.redirect);
+      }
+      return new HttpResponseOK();
     });
     return controller;
   }
