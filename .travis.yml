@@ -5,7 +5,7 @@ services:
   - postgresql
   - mysql
 env:
-  - postgres_password='' mysql_password=''
+  - postgres_password='' mysql_password='' no_mssql_tests='true'
 before_install:
   - npm install -g lerna
 install:

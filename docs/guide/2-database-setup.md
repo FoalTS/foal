@@ -1,6 +1,6 @@
 # 2. Set up a database connection
 
-Let's get started by setting up a connection to the database. If you do not use SQLite, we assume that you have already *PostgreSQL* <!--or *MySQL* -->installed on your host with a database called `foal_examples_todo_list`.
+Let's get started by setting up a connection to the database. If you do not use SQLite, we assume that you have already *PostgreSQL* or *MSSQL* <!--or *MySQL* -->installed on your host with a database called `foal_examples_todo_list`.
 
 > **How to create a database in postgres**
 >
@@ -8,6 +8,10 @@ Let's get started by setting up a connection to the database. If you do not use 
 > 2. Connect to `psql` by running `psql -U postgres`.
 > 3. Enter `CREATE DATABASE foal_examples_todo_list;`.
 > 4. Quit `psql` by taping `\q`.
+
+> **How to create a database in MSSQL**
+>
+> Follow [these instructions](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-develop-use-vscode) to create a database called `foal_examples_todo_list`.
 
 <!--
 > **How to create a database in mysql**
@@ -48,6 +52,8 @@ You can find such file in the directory `src/config`. Open `config.ts` and chang
 > PostgreSQL: `postgres://postgres:my_password@localhost:5432/foal_examples_todo_list`
 >
 > SQLite: `sqlite://foal_examples_todo_list.db`
+>
+> MSSQL: `mssql://sa:strongPassword1@localhost:1433/foal_examples_todo_list`
 
 <!--
 >
