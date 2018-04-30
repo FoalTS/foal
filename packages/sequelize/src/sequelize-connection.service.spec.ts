@@ -26,6 +26,14 @@ describe('SequelizeConnectionService', () => {
     });
   });
 
+  // describe('with Microsoft SQL Server', () => {
+  //   it('should create a Sequelize connection for the given uri.', () => {
+  //     const uri = 'mssql://sa:yourStrong(!)Password@localhost:1433/foal_sequelize_test`';
+  //     const service = new ConcreteSequelizeConnectionService(uri);
+  //     expect(service.sequelize).to.be.an.instanceOf(Sequelize);
+  //   });
+  // });
+
   // Testing the options and default options is not obvious.
 
 });
