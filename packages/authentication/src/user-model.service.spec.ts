@@ -7,15 +7,19 @@ describe('UserModelService', () => {
   let connection: SequelizeConnectionService;
   let service: UserModelService<any>;
 
+  const user = process.env.postgres_user !== undefined ?  process.env.postgres_user :  'postgres';
+  const password = process.env.postgres_password !== undefined ? process.env.postgres_password : 'password';
+
   class ConnectionService extends SequelizeConnectionService {
     constructor() {
-      super('sqlite://foal_sequelize_test.db');
+      super(`postgres://${user}:${password}@localhost:5432/foal_sequelize_test`);
     }
   }
 
   class UserService extends UserModelService<any> {
-    constructor(connection: SequelizeConnectionService, schema: object = {}) {
-      super(schema, connection);
+    constructor(connection: SequelizeConnectionService, schema: object = {},
+                parsers: ((data: any) => void)[] = [] = []) {
+      super(schema, connection, parsers);
     }
   }
 
@@ -52,7 +56,7 @@ describe('UserModelService', () => {
         await service.createOne({ isAdmin: 'a string' });
         throw new Error('Column "isAdmin" should only accept boolean values.');
       } catch (err) {
-        if (!(err instanceof Sequelize.ValidationError)) {
+        if (!(err instanceof Sequelize.DatabaseError)) {
           throw err;
         }
       }
@@ -85,7 +89,7 @@ describe('UserModelService', () => {
       isAdmin: { type: Sequelize.BOOLEAN, allowNull: true },
       username: Sequelize.STRING,
     });
-    service.getSequelizeModel().sync({ force: true });
+    await service.getSequelizeModel().sync({ force: true });
 
     await service.createOne({ username: 'Jack', isAdmin: false });
     const users = await service.findAll({});
@@ -105,6 +109,32 @@ describe('UserModelService', () => {
     }
   });
 
-  // parser executed in both methods.
+  describe('should accept parser functions that', () => {
+
+    beforeEach(async () => {
+      const parser1 = data => {
+        data.password += 'bar';
+      };
+      const parser2 = data => {
+        data.password += 'foobar';
+      };
+      service = new UserService(connection, {
+        password: Sequelize.STRING
+      }, [ parser1, parser2 ]);
+      await service.getSequelizeModel().sync({ force: true });
+    });
+
+    it('are executed upon createOne call.', async () => {
+      const user = await service.createOne({ password: 'foo' });
+      expect(user.password).to.equal('foobarfoobar');
+    });
+
+    it('are executed upon createMany call.', async () => {
+      const users = await service.createMany([{ password: 'foo' }]);
+      expect(users).to.be.an('array').and.to.have.lengthOf(1);
+      expect(users[0].password).to.equal('foobarfoobar');
+    });
+
+  });
 
 });
