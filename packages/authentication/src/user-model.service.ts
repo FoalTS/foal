@@ -5,6 +5,10 @@ import {
   SequelizeModelService
 } from '@foal/sequelize';
 
+export interface BaseUser {
+  isAdmin: boolean;
+}
+
 export abstract class UserModelService<User, CreatingUser = User,
                                        IIdAndTimeStamps extends { id: any; } = DefaultIdAndTimeStamps, IdType = number>
                                        extends SequelizeModelService<User, CreatingUser, IIdAndTimeStamps, IdType> {
