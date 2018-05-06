@@ -1,30 +1,18 @@
-import { CheckPassword } from '@foal/authentication';
+import {
+  BaseUser,
+  EmailAndPassword,
+  emailAndPasswordSchema,
+  parsePassword,
+  UserModelService
+} from '@foal/authentication';
 import { Service } from '@foal/core';
-import { DefaultIdAndTimeStamps, Sequelize, SequelizeModelService } from '@foal/sequelize';
-import * as bcrypt from 'bcrypt-nodejs';
-
 import { ConnectionService } from './connection.service';
-import { User } from './user.interface';
+
+export type User = BaseUser & EmailAndPassword;
 
 @Service()
-export class UserService extends SequelizeModelService<User> implements CheckPassword<User> {
-  constructor(protected connection: ConnectionService) {
-    super('users', {
-      email: { type: Sequelize.STRING, unique: true, allowNull: false },
-      isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
-      password: { type: Sequelize.STRING, allowNull: false },
-    }, connection);
+export class UserService extends UserModelService<User> {
+  constructor(connection: ConnectionService) {
+    super(emailAndPasswordSchema, connection, [ parsePassword ]);
   }
-
-  public createOne(data: User): Promise<User & DefaultIdAndTimeStamps> {
-    return super.createOne({
-      ...data,
-      password: bcrypt.hashSync(data.password)
-    });
-  }
-
-  public checkPassword(user: User, password: string): boolean {
-    return bcrypt.compareSync(password, user.password);
-  }
-
 }

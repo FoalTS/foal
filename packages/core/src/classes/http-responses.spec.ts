@@ -9,6 +9,7 @@ import {
   HttpResponseForbidden,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
+  HttpResponseNoContent,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
@@ -25,6 +26,7 @@ import {
   isHttpResponseForbidden,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
+  isHttpResponseNoContent,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
   isHttpResponseOK,
@@ -161,6 +163,42 @@ describe('isHttpResponseCreated', () => {
       + 'has no property isHttpResponseCreated.', () => {
     const err = {};
     expect(isHttpResponseCreated(err)).to.equal(false);
+  });
+
+});
+
+describe('HttpResponseNoContent', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseNoContent();
+    expect(httpResponse).to.be.an.instanceOf(HttpResponse);
+    expect(httpResponse).to.be.an.instanceOf(HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNoContent();
+    expect(httpResponse.statusCode).to.equal(204);
+    expect(httpResponse.statusMessage).to.equal('NO CONTENT');
+  });
+
+});
+
+describe('isHttpResponseNoContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNoContent.', () => {
+    const err = new HttpResponseNoContent();
+    expect(isHttpResponseNoContent(err)).to.equal(true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNoContent property equal to true.', () => {
+    const err = { isHttpResponseNoContent: true };
+    expect(isHttpResponseNoContent(err)).to.equal(true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNoContent and if it '
+      + 'has no property isHttpResponseNoContent.', () => {
+    const err = {};
+    expect(isHttpResponseNoContent(err)).to.equal(false);
   });
 
 });

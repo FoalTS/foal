@@ -1,6 +1,5 @@
-import { validate } from '@foal/ajv';
-import { authentication } from '@foal/authentication';
-import { basic, HttpResponseRedirect, Module } from '@foal/core';
+import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
+import { Module } from '@foal/core';
 
 import { view } from '@foal/common';
 import { AuthenticatorService } from './authenticator.service';
@@ -13,19 +12,11 @@ export const AuthModule: Module = {
         failureRedirect: '/auth?invalid_credentials=true',
         successRedirect: '/home',
       })
-      .withPreHook(validate({
-        additionalProperties: false,
-        properties: {
-          email: { type: 'string', format: 'email' },
-          password: { type: 'string' }
-        },
-        required: [ 'email', 'password' ],
-        type: 'object',
-      })),
-    basic
-      .attachHandlingFunction('POST', 'logout', ctx => {
-        delete ctx.session.authentication;
-        return new HttpResponseRedirect('/auth');
+      .withPreHook(validateEmailCredentialsFormat()),
+    authentication
+      .attachLogout('/logout', {
+        httpMethod: 'POST',
+        redirect: '/auth',
       }),
     view
       .attachService('/', LoginViewService)
