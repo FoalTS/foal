@@ -13,21 +13,25 @@ export abstract class UserModelService<User, CreatingUser = User,
                                        IIdAndTimeStamps extends { id: any; } = DefaultIdAndTimeStamps, IdType = number>
                                        extends SequelizeModelService<User, CreatingUser, IIdAndTimeStamps, IdType> {
   constructor(schema: object, connection: SequelizeConnectionService,
-              private parsers: ((data: CreatingUser) => void)[] = []) {
+              private parsers: ((data: CreatingUser) => void|Promise<void>)[] = []) {
     super('users', {
       ...schema,
       isAdmin: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false }
     }, connection);
   }
 
-  public createOne(data: CreatingUser): Promise<User & IIdAndTimeStamps> {
-    this.parsers.forEach(parser => parser(data));
+  public async createOne(data: CreatingUser): Promise<User & IIdAndTimeStamps> {
+    for (const parser of this.parsers) {
+      await parser(data);
+    }
     return super.createOne(data);
   }
 
-  public createMany(records: CreatingUser[]): Promise<(User & IIdAndTimeStamps)[]> {
+  public async createMany(records: CreatingUser[]): Promise<(User & IIdAndTimeStamps)[]> {
     for (const record of records) {
-      this.parsers.forEach(parser => parser(record));
+      for (const parser of this.parsers) {
+        await parser(record);
+      }
     }
     return super.createMany(records);
   }
