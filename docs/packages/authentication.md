@@ -21,7 +21,7 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
-- `EmailAndPasswordAuthenticatorService` (email and password)
+- `EmailAndPasswordAuthenticatorService`
 
 `EmailAndPasswordAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
