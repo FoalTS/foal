@@ -265,28 +265,15 @@ export interface User {
 
 ```typescript
 // user.service.ts
-import { CheckPassword } from '@foal/authentication';
 import { Service } from '@foal/core';
-import * as bcrypt from 'bcrypt-nodejs';
 // other imports...
 
 import { User } from './user.interface';
 
 @Service()
-export class UserService extends ... implements CheckPassword<User> {
+export class UserService extends ... {
   constructor(...) {
     ...
-  }
-
-  public createOne(data: User): ... {
-    return super.createOne({
-      ...data,
-      password: bcrypt.hashSync(data.password)
-    });
-  }
-
-  public checkPassword(user: User, password: string): boolean {
-    return bcrypt.compareSync(password, user.password);
   }
 
 }
