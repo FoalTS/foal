@@ -1,7 +1,7 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { expect } from 'chai';
 
-import { CheckPassword, EmailAuthenticatorService } from './email-authenticator.service';
+import { CheckPassword, EmailAuthenticatorService } from './email-and-password-authenticator.service';
 
 describe('EmailAuthenticatorService', () => {
 
