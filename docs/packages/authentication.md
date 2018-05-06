@@ -4,9 +4,10 @@ This package is dedicated to authentication and authorization. You'll find a com
 
 ## Authentication
 
-Authentication is divided in three parts in FoalTS:
+Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services,
 - the `authentication` controller factory,
+- the `UserModelService` service,
 - and the `authenticate` pre-hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
@@ -25,20 +26,19 @@ A service implementing the `IAuthenticator` interface aims to authenticate a use
 
 `EmailAndPasswordAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes a user service that must implement the `IModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
+Its constructor takes a user service that must implement the `IModelService` interface.
 
 *Example*:
 ```typescript
 import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
-import { User } from './user.interface';
-import { MyUserService } from './my-user.service.ts';
+import { User, UserService } from './user.service.ts';
 
 @Service()
-export class MyAuthenticatorService extends EmailAndPasswordAuthenticatorService<User> {
+export class AuthenticatorService extends EmailAndPasswordAuthenticatorService<User> {
 
-  constructor(userService: MyUserService) {
+  constructor(userService: UserService) {
     super(userService);
   }
 
@@ -50,7 +50,7 @@ export class MyAuthenticatorService extends EmailAndPasswordAuthenticatorService
 
 The `authentication` controller factory attaches an `Authenticator` service to the request handler. It accepts optional options `{ failureRedirect?: string, successRedirect?: string }`.
 
-When the authentication succeeds it returns an `HttpResponseOK` with the user if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
+When the authentication succeeds it returns an `HttpResponseNoContent` if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 When the authentication fails it returns an `HttpResponseUnauthorized` if `failureRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
@@ -58,12 +58,12 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 import { Module } from '@foal/core';
 import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
 
-import { MyAuthenticatorService } from './my-authenticator.service';
+import { AuthenticatorService } from './authenticator.service';
 
 export const AuthModule: Module = {
   controllers: [
     authentication
-      .attachService('/login', MyAuthenticatorService, {
+      .attachService('/login', AuthenticatorService, {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
@@ -102,6 +102,13 @@ export const AppModule: Module = {
 }
 ```
 
+### The abstract class `UserModelService`
+
+Its constructor takes three arguments:
+- a sequelize schema that will extend a default one,
+- a connection,
+- and an optional array of parsers (see the full example at the end of the page).
+
 ### Logging out
 
 To log out the user, you need to use the `attachLogout` function.
@@ -110,6 +117,8 @@ To log out the user, you need to use the `attachLogout` function.
 authentication
   .attachLogout('/logout', { redirect: '/login' });
 ```
+
+When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 ## Authorization
 
@@ -240,8 +249,7 @@ export const AuthModule: Module = {
 import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
-import { User } from '../shared/user.interface';
-import { UserService } from '../shared/user.service.ts';
+import { User, UserService } from '../shared/user.service.ts';
 
 @Service()
 export class AuthService<User> extends EmailAndPasswordAuthenticatorService {
@@ -254,26 +262,18 @@ export class AuthService<User> extends EmailAndPasswordAuthenticatorService {
 ```
 
 ```typescript
-// user.interface.ts
-export interface User {
-  email: string;
-  password: string;
-  name: string;
-  isAdmin: boolean;
-}
-```
-
-```typescript
 // user.service.ts
 import { Service } from '@foal/core';
-// other imports...
+// other imports... (ConnectionService, etc)
 
-import { User } from './user.interface';
+import { BaseUser, EmailAndPassword, emailAndPasswordSchema, parsePassword } from '@foal/authentication';
+
+export type User = BaseUser & EmailAndPassword;
 
 @Service()
-export class UserService extends ... {
-  constructor(...) {
-    ...
+export class UserService extends UserModelService<User> {
+  constructor(connection: ConnectionService) {
+    super(emailAndPasswordSchema, connection, [ parsePassword ]);
   }
 
 }
