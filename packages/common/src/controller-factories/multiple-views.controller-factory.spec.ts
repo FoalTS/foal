@@ -1,7 +1,6 @@
 import {
   createEmptyContext,
   HttpResponseOK,
-  ObjectType,
   Service,
   ServiceManager
 } from '@foal/core';
@@ -15,7 +14,7 @@ describe('multipleViews', () => {
   @Service()
   class MockService implements IMultipleViews {
     constructor() {}
-    public async render(name: string, locals: ObjectType): Promise<string> {
+    public async render(name: string, locals: { name?: string }): Promise<string> {
       return `${name} ${locals.name || 'bar'}`;
     }
   }
@@ -26,13 +25,8 @@ describe('multipleViews', () => {
 
   describe('when attachService is called', () => {
 
-    it('should throw an Error if no options are given.', () => {
-      expect(() => multipleViews.attachService('/', MockService))
-        .to.throw('Options must be given to the multipleViews controller factory.');
-    });
-
     it('should return a controller with proper routes.', async () => {
-      const controller = multipleViews.attachService('/', MockService, {
+      const controller = multipleViews.attachService('/foobar', MockService, {
         views: {
           bar: '/barfoo',
           foo: '/foo',
@@ -41,7 +35,7 @@ describe('multipleViews', () => {
       const actual = controller.getRoute('foo');
 
       expect(actual.httpMethod).to.equal('GET');
-      expect(actual.path).to.equal('/foo');
+      expect(actual.path).to.equal('/foobar/foo');
 
       const ctx = createEmptyContext();
       let result = await actual.handler(ctx, new ServiceManager());
@@ -56,7 +50,7 @@ describe('multipleViews', () => {
       const actual2 = controller.getRoute('bar');
 
       expect(actual2.httpMethod).to.equal('GET');
-      expect(actual2.path).to.equal('/barfoo');
+      expect(actual2.path).to.equal('/foobar/barfoo');
 
       const ctx2 = createEmptyContext();
       const result2 = await actual2.handler(ctx2, new ServiceManager());

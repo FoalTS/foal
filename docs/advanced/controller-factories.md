@@ -10,9 +10,9 @@ See [Controllers](../basics/controllers.md) to learn how to use it.
 
 ## The service controller factories
 
-`ServiceControllerFactory` is an abstract class from `@foal/core` that aims to create controller factories. All classes inheriting it have a public method `attachService` that instantiates the controllers and implement a protected method `defineController`.
+`IServiceControllerFactory` is an interface from `@foal/core` that aims to create controller factories. All classes implementing it have a public method `attachService` that instantiates the controllers.
 
-> In `@foal/common`, `rest`, `view`, `multipleViews` are singletons of classes inheriting the `ServiceControllerFactory`.
+> In `@foal/common`, `rest`, `view`, `multipleViews` are singletons of classes implementing the `IServiceControllerFactory`.
 
 Let's see how to create one.
 
@@ -24,7 +24,7 @@ interface MyService {
 }
 ```
 
-Then create your controller factory from the `ServiceControllerFactory` abstract class.
+Then create your controller factory from the `IServiceControllerFactory` interface.
 
 ```typescript
 import { HttpResponseMethodNotAllowed } from '@foal/common';
@@ -47,13 +47,12 @@ export interface Options {
 // when registering pre and post hooks.
 export type RouteName = 'my-route-name' | 'my-route-name2';
 
-export class MyControllerFactory extends ServiceControllerFactory<
-    MyService, RouteName, Options
-  > {
+export class MyControllerFactory implements IServiceControllerFactory {
 
-  protected defineController(controller: Controller<RouteName>,
-                             ServiceClass: Class<IService>,
-                             options: Options = {}): void {
+  public attachService(path: string, ServiceClass: Class<IService>,
+                       options: Options = {}): Controller<RouteName> {
+    const controller = new Controller<RouteName>(path);
+
     controller.addRoute('my-route-name', 'GET', '/', (ctx, services) => {
       // We return here directly an HttpResponse but we could also
       // return a resolved promise with an HttpResponse.
@@ -62,7 +61,10 @@ export class MyControllerFactory extends ServiceControllerFactory<
       }
       return new HttpResponseOK(service.get(ServiceClass).giveMeANumber(5, 10));
     });
+
     controller.addRoute('my-route-name2', 'POST', '/', () => new HttpResponseMethodNotAllowed());
+
+    return controller;
   }
 
 }

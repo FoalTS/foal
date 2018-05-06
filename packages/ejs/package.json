@@ -1,6 +1,6 @@
 {
   "name": "@foal/ejs",
-  "version": "0.4.0-beta.2",
+  "version": "0.4.0-beta.3",
   "description": "Foal package to render ejs templates",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -41,8 +41,8 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/common": "^0.4.0-beta.2",
-    "@foal/core": "^0.4.0-beta.1",
+    "@foal/common": "^0.4.0-beta.3",
+    "@foal/core": "^0.4.0-beta.3",
     "ejs": "^2.5.7"
   },
   "devDependencies": {

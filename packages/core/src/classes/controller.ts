@@ -9,11 +9,13 @@ import {
 export class Controller<RouteName extends string> {
   private routes: Map<RouteName, Route> = new Map();
 
+  constructor(private prePath?: string) {}
+
   public addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
     this.routes.set(name, {
       handler,
       httpMethod,
-      path,
+      path: (this.prePath ? `${this.prePath}${path}` : path).replace(/(\/)+/g, '/'),
       postHooks: [],
       preHooks: [],
     });
@@ -84,7 +86,7 @@ export class Controller<RouteName extends string> {
   }
 
   public addPathAtTheBeginning(path: string) {
-    this.routes.forEach(route => route.path = `${path}/${route.path}`.replace(/(\/)+/g, '/'));
+    this.routes.forEach(route => route.path = `${path}${route.path}`.replace(/(\/)+/g, '/'));
   }
 
   public getRoutes(): Route[] {

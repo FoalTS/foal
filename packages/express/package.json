@@ -1,6 +1,6 @@
 {
   "name": "@foal/express",
-  "version": "0.4.0-beta.1",
+  "version": "0.4.0-beta.3",
   "description": "Foal util to connect a foal application to express",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -40,7 +40,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@foal/core": "^0.4.0-beta.1"
+    "@foal/core": "^0.4.0-beta.3"
   },
   "peerDependencies": {
     "express": "4.x"

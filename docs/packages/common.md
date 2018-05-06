@@ -14,7 +14,7 @@ If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the
 
 ```typescript
 interface IMultipleViews<View extends string> {
-  render(name: View, locals: ObjectType): Promise<string>|string;
+  render(name: View, locals: object): Promise<string>|string;
 }
 ```
 
@@ -45,7 +45,7 @@ Renders one template from a `IView`.
 
 ```typescript
 interface IView {
-  render(locals: ObjectType): Promise<string>|string;
+  render(locals: object): Promise<string>|string;
 }
 ```
 
@@ -134,20 +134,16 @@ See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authenticati
 ### `IMultipleViews`
 
 ```typescript
-import { ObjectType } from '@foal/core';
-
 export interface IMultipleViews {
-  render(name: string, locals: ObjectType): Promise<string>|string;
+  render(name: string, locals: object): Promise<string>|string;
 }
 ```
 
 ### `IView`
 
 ```typescript
-import { ObjectType } from '@foal/core';
-
 export interface IView {
-  render(locals: ObjectType): Promise<string>|string;
+  render(locals: object): Promise<string>|string;
 }
 ```
 
@@ -157,7 +153,7 @@ export interface IView {
 
 Escapes HTML and returns a new string.
 
-### `escapeHTML(object: ObjectType, propName: string): void`
+### `escapeHTML(object: object, propName: string): void`
 
 Escapes HTML for the given property.
 

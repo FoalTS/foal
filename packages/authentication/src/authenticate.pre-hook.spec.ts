@@ -1,7 +1,6 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import {
   createEmptyContext,
-  ObjectType,
   Service,
   ServiceManager,
 } from '@foal/core';
@@ -12,7 +11,7 @@ import { authenticate } from './authenticate.pre-hook';
 describe('authenticate', () => {
 
   @Service()
-  class UserModelService implements IModelService<any, ObjectType, ObjectType, any> {
+  class UserModelService implements IModelService<any, object, object, any> {
 
     constructor() {}
 

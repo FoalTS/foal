@@ -4,7 +4,7 @@
 
 ## Prerequisities
 
-To use these services you need to install the package (`@foal/sequelize`) along with its SQLite (`sqlite3`) or <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) clients. If you have already specified which database you are using while creating the project they should already been installed.
+To use these services you need to install the package (`@foal/sequelize`) along with its SQLite (`sqlite3`), MSSQL (`tedious`) or <!--MySQL (`mysql2`) or -->PostgreSQL (`pg@6 pg-hstore`) clients. If you have already specified which database you are using while creating the project they should already been installed.
 
 > To install a `npm` package you need to run this command: `npm install --save <package_name>`.
 

@@ -35,7 +35,7 @@ You may return an `HttpResponse` in a pre-hook or in an handler. This will stop 
 
 The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `content` which is used in the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
 
-### `ServiceControllerFactory<IService, RouteName extends string, Options = undefined>`
+### `IServiceControllerFactory`
 
 ### `ServiceManager`
 

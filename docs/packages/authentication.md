@@ -4,9 +4,10 @@ This package is dedicated to authentication and authorization. You'll find a com
 
 ## Authentication
 
-Authentication is divided in three parts in FoalTS:
+Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services,
 - the `authentication` controller factory,
+- the `UserModelService` service,
 - and the `authenticate` pre-hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
@@ -21,24 +22,23 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
-- `LocalAuthenticatorService` (email and password)
+- `EmailAndPasswordAuthenticatorService`
 
-`LocalAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+`EmailAndPasswordAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes a user service that must implement the `IModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
+Its constructor takes a user service that must implement the `IModelService` interface.
 
 *Example*:
 ```typescript
-import { LocalAuthenticatorService } from '@foal/authentication';
+import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
-import { User } from './user.interface';
-import { MyUserService } from './my-user.service.ts';
+import { User, UserService } from './user.service.ts';
 
 @Service()
-export class MyAuthenticatorService extends LocalAuthenticatorService<User> {
+export class AuthenticatorService extends EmailAndPasswordAuthenticatorService<User> {
 
-  constructor(userService: MyUserService) {
+  constructor(userService: UserService) {
     super(userService);
   }
 
@@ -50,24 +50,24 @@ export class MyAuthenticatorService extends LocalAuthenticatorService<User> {
 
 The `authentication` controller factory attaches an `Authenticator` service to the request handler. It accepts optional options `{ failureRedirect?: string, successRedirect?: string }`.
 
-When the authentication succeeds it returns an `HttpResponseOK` with the user if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
+When the authentication succeeds it returns an `HttpResponseNoContent` if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 When the authentication fails it returns an `HttpResponseUnauthorized` if `failureRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 ```typescript
 import { Module } from '@foal/core';
-import { authentication } from '@foal/authentication';
+import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
 
-import { MyAuthenticatorService } from './my-authenticator.service';
+import { AuthenticatorService } from './authenticator.service';
 
 export const AuthModule: Module = {
   controllers: [
     authentication
-      .attachService('/login', MyAuthenticatorService, {
+      .attachService('/login', AuthenticatorService, {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
-      .withPreHook(/* You must add here a pre-hook to validate the input data. You may use the `validate` pre-hook from @foal/ajv.*/)
+      .withPreHook(validateEmailCredentialsFormat())
   ]
 }
 ```
@@ -102,19 +102,23 @@ export const AppModule: Module = {
 }
 ```
 
+### The abstract class `UserModelService`
+
+Its constructor takes three arguments:
+- a sequelize schema that will extend a default one,
+- a connection,
+- and an optional array of parsers (see the full example at the end of the page).
+
 ### Logging out
 
-Currently there is no built-in function that supports the "log out" feature. You need to implement it on your own as follow.
+To log out the user, you need to use the `attachLogout` function.
 
 ```typescript
-basic
-  .attachHandlingFunction('POST', '/logout', ctx => {
-    delete ctx.session.authentication;
-    return new HttpResponseRedirect('/login');
-  })
+authentication
+  .attachLogout('/logout', { redirect: '/login' });
 ```
 
-Note that the use of `POST`, `/logout` and `/login` is up to you.
+When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 ## Authorization
 
@@ -212,8 +216,7 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { validate } from '@foal/ajv';
-import { authentication } from '@foal/authentication';
+import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
 import { basic, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -222,15 +225,7 @@ export const AuthModule: Module = {
   controllers: [
     authentication
       .attachService('/login', AuthService)
-      .withPreHook(validate({
-        additionalProperties: false,
-        properties: [
-          email: { type: 'string', format: 'email' },
-          password: { type: 'string' }
-        ],
-        required: [ 'email', 'password' ],
-        type: 'object'
-      })),
+      .withPreHook(validateEmailCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
     basic
@@ -251,14 +246,13 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { LocalAuthenticatorService } from '@foal/authentication';
+import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
-import { User } from '../shared/user.interface';
-import { UserService } from '../shared/user.service.ts';
+import { User, UserService } from '../shared/user.service.ts';
 
 @Service()
-export class AuthService<User> extends LocalAuthenticatorService {
+export class AuthService<User> extends EmailAndPasswordAuthenticatorService {
 
   constructor(userService: UserService) {
     super(userService);
@@ -268,39 +262,18 @@ export class AuthService<User> extends LocalAuthenticatorService {
 ```
 
 ```typescript
-// user.interface.ts
-export interface User {
-  email: string;
-  password: string;
-  name: string;
-  isAdmin: boolean;
-}
-```
-
-```typescript
 // user.service.ts
-import { CheckPassword } from '@foal/authentication';
 import { Service } from '@foal/core';
-import * as bcrypt from 'bcrypt-nodejs';
-// other imports...
+// other imports... (ConnectionService, etc)
 
-import { User } from './user.interface';
+import { BaseUser, EmailAndPassword, emailAndPasswordSchema, parsePassword } from '@foal/authentication';
+
+export type User = BaseUser & EmailAndPassword;
 
 @Service()
-export class UserService extends ... implements CheckPassword<User> {
-  constructor(...) {
-    ...
-  }
-
-  public createOne(data: User): ... {
-    return super.createOne({
-      ...data,
-      password: bcrypt.hashSync(data.password)
-    });
-  }
-
-  public checkPassword(user: User, password: string): boolean {
-    return bcrypt.compareSync(password, user.password);
+export class UserService extends UserModelService<User> {
+  constructor(connection: ConnectionService) {
+    super(emailAndPasswordSchema, connection, [ parsePassword ]);
   }
 
 }
