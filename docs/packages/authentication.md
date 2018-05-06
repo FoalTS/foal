@@ -21,22 +21,22 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
-- `EmailAuthenticatorService` (email and password)
+- `EmailAndPasswordAuthenticatorService` (email and password)
 
-`EmailAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+`EmailAndPasswordAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
 Its constructor takes a user service that must implement the `IModelService` interface and have a `checkPassword(user: User, password: string): boolean` method.
 
 *Example*:
 ```typescript
-import { EmailAuthenticatorService } from '@foal/authentication';
+import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User } from './user.interface';
 import { MyUserService } from './my-user.service.ts';
 
 @Service()
-export class MyAuthenticatorService extends EmailAuthenticatorService<User> {
+export class MyAuthenticatorService extends EmailAndPasswordAuthenticatorService<User> {
 
   constructor(userService: MyUserService) {
     super(userService);
@@ -237,14 +237,14 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { EmailAuthenticatorService } from '@foal/authentication';
+import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User } from '../shared/user.interface';
 import { UserService } from '../shared/user.service.ts';
 
 @Service()
-export class AuthService<User> extends EmailAuthenticatorService {
+export class AuthService<User> extends EmailAndPasswordAuthenticatorService {
 
   constructor(userService: UserService) {
     super(userService);
