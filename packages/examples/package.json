@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.4.0-beta.2",
+  "version": "0.4.0-beta.3",
   "description": "FoalTs examples",
   "scripts": {
     "shell": "node --require ts-node/register",
@@ -31,13 +31,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/ajv": "^0.4.0-beta.1",
-    "@foal/authentication": "^0.4.0-beta.2",
-    "@foal/common": "^0.4.0-beta.2",
-    "@foal/core": "^0.4.0-beta.1",
-    "@foal/ejs": "^0.4.0-beta.2",
-    "@foal/express": "^0.4.0-beta.1",
-    "@foal/sequelize": "^0.4.0-beta.2",
+    "@foal/ajv": "^0.4.0-beta.3",
+    "@foal/authentication": "^0.4.0-beta.3",
+    "@foal/common": "^0.4.0-beta.3",
+    "@foal/core": "^0.4.0-beta.3",
+    "@foal/ejs": "^0.4.0-beta.3",
+    "@foal/express": "^0.4.0-beta.3",
+    "@foal/sequelize": "^0.4.0-beta.3",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
     "express": "^4.16.2",
