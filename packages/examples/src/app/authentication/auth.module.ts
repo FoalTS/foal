@@ -1,5 +1,5 @@
 import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
-import { basic, HttpResponseRedirect, Module } from '@foal/core';
+import { Module } from '@foal/core';
 
 import { view } from '@foal/common';
 import { AuthenticatorService } from './authenticator.service';
