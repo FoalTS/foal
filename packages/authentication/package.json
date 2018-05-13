@@ -1,6 +1,6 @@
 {
   "name": "@foal/authentication",
-  "version": "0.4.0-beta.3",
+  "version": "0.4.0-beta.4",
   "description": "Foal components for authentication and authorization",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

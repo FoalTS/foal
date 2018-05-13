@@ -1,7 +1,7 @@
 import { validate } from '@foal/ajv';
 import { PreHook } from '@foal/core';
 
-export function validateEmailCredentialsFormat(): PreHook {
+export function validateEmailAndPasswordCredentialsFormat(): PreHook {
   return validate({
     additionalProperties: false,
     properties: {

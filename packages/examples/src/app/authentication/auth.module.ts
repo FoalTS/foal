@@ -1,4 +1,4 @@
-import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
 import { Module } from '@foal/core';
 
 import { view } from '@foal/common';
@@ -12,7 +12,7 @@ export const AuthModule: Module = {
         failureRedirect: '/auth?invalid_credentials=true',
         successRedirect: '/home',
       })
-      .withPreHook(validateEmailCredentialsFormat()),
+      .withPreHook(validateEmailAndPasswordCredentialsFormat()),
     authentication
       .attachLogout('/logout', {
         httpMethod: 'POST',
