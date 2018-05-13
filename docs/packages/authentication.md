@@ -56,7 +56,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { Module } from '@foal/core';
-import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
 
 import { AuthenticatorService } from './authenticator.service';
 
@@ -67,7 +67,7 @@ export const AuthModule: Module = {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
-      .withPreHook(validateEmailCredentialsFormat())
+      .withPreHook(validateEmailAndPasswordCredentialsFormat())
   ]
 }
 ```
@@ -216,7 +216,7 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { authentication, validateEmailCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
 import { basic, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -225,7 +225,7 @@ export const AuthModule: Module = {
   controllers: [
     authentication
       .attachService('/login', AuthService)
-      .withPreHook(validateEmailCredentialsFormat()),
+      .withPreHook(validateEmailAndPasswordCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
     basic
