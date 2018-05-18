@@ -1,9 +1,8 @@
 import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
-import { Module } from '@foal/core';
+import { Module, route } from '@foal/core';
+import { render } from '@foal/ejs';
 
-import { view } from '@foal/common';
 import { AuthenticatorService } from './authenticator.service';
-import { LoginViewService } from './login-view.service';
 
 export const AuthModule: Module = {
   controllers: [
@@ -18,8 +17,8 @@ export const AuthModule: Module = {
         httpMethod: 'POST',
         redirect: '/auth',
       }),
-    view
-      .attachService('/', LoginViewService)
+    route
+      .attachHandler('GET', '/', () => render(require('./templates/login.html'), { name: 'FoalTS' })),
   ],
   path: '/auth',
 };

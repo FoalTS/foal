@@ -1,3 +1,5 @@
+import 'source-map-support/register';
+
 import { App } from '@foal/core';
 import { getMiddlewares } from '@foal/express';
 import * as bodyParser from 'body-parser';
