@@ -1,5 +1,5 @@
 export { App } from './app';
-export { basic, BasicControllerFactory } from './basic-controller-factory';
+export { route, RouteControllerFactory } from './route-controller-factory';
 export { Controller } from './controller';
 export * from './http-responses';
 export { IServiceControllerFactory } from './service-controller-factory.interface';

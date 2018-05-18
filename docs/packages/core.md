@@ -6,7 +6,7 @@ Core package of the framework.
 
 ### `App`
 
-### `basic` controller factory
+### `route` controller factory
 
 ### `Controller`
 
