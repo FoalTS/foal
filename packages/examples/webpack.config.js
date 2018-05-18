@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const StartServerPlugin = require('start-server-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -22,6 +23,11 @@ module.exports = {
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
+  plugins: [
+    new StartServerPlugin({
+      name: 'bundle.js',
+    })
+  ],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
