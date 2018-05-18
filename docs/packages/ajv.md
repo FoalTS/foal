@@ -11,12 +11,12 @@ You can provide your own instance of Ajv.
 *Example*:
 ```typescript
 import { validate } from '@foal/ajv';
-import { basic, Module } from '@foal/core';
+import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('POST', '/user', ctx => {
+    route
+      .attachHandler('POST', '/user', ctx => {
         // In this function we are sure that firstName and lastName
         // are defined thanks to the below pre-hook.
         console.log(ctx.body.firstName, ctx.body.lastName);

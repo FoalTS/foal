@@ -1,4 +1,4 @@
-import { App, basic, HttpMethod, HttpResponseOK } from '@foal/core';
+import { App, route, HttpMethod, HttpResponseOK } from '@foal/core';
 import * as express from 'express';
 import * as request from 'supertest';
 
@@ -14,7 +14,7 @@ function httpMethodTest(httpMethod: HttpMethod) {
       app = express();
       const foalApp = new App({
         controllers: [
-          basic.attachHandlingFunction(httpMethod, '/foo/bar', ctx => new HttpResponseOK('Success'))
+          route.attachHandler(httpMethod, '/foo/bar', ctx => new HttpResponseOK('Success'))
         ]
       });
       app.use(getAppRouter(foalApp));
@@ -119,7 +119,7 @@ describe('getAppRouter', () => {
         app = express();
         const foalApp = new App({
           controllers: [
-            basic.attachHandlingFunction('GET', '/foo/:id/bar/:id2', ctx => new HttpResponseOK('Success'))
+            route.attachHandler('GET', '/foo/:id/bar/:id2', ctx => new HttpResponseOK('Success'))
           ]
         });
         app.use(getAppRouter(foalApp));

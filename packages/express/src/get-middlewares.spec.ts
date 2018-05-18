@@ -1,4 +1,4 @@
-import { App, basic, HttpResponseCreated } from '@foal/core';
+import { App, HttpResponseCreated, route } from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
@@ -19,7 +19,7 @@ describe('getMiddlewares', () => {
     it('should 201 on a successful "CREATED" request.', () => {
       const middlewares = getMiddlewares(new App({
         controllers: [
-          basic.attachHandlingFunction('GET', '/create', () => new HttpResponseCreated('Created!'))
+          route.attachHandler('GET', '/create', () => new HttpResponseCreated('Created!'))
         ]
       }), { debugMode: false });
 
@@ -35,7 +35,7 @@ describe('getMiddlewares', () => {
     it('should 500 if an error is thrown in a controller of the app.', () => {
       const middlewares = getMiddlewares(new App({
         controllers: [
-          basic.attachHandlingFunction('GET', '/delete', () => {
+          route.attachHandler('GET', '/delete', () => {
             throw new Error();
           })
         ]
