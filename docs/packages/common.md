@@ -4,20 +4,6 @@
 
 ## Controller factories
 
-### `multipleViews`
-
-`multipleViews.attachService(path: string, service: IMultipleViews)`
-
-Renders several templates from a `IMultipleViews`.
-
-If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
-
-```typescript
-interface IMultipleViews<View extends string> {
-  render(name: View, locals: object): Promise<string>|string;
-}
-```
-
 ### `rest`
 
 `rest.attachService(path: string, service: Partial<IModelService<any, any, any, any>>)`
@@ -34,20 +20,6 @@ DELETE /my_resources/:id -> service.findByIdAndRemove(...)
 ```
 
 You will find more docs on the `IModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
-
-### `view`
-
-`view.attachService(path: string, service: IView)`
-
-If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
-
-Renders one template from a `IView`.
-
-```typescript
-interface IView {
-  render(locals: object): Promise<string>|string;
-}
-```
 
 ## Post-hooks
 
@@ -130,22 +102,6 @@ const AppModule: Module = {
 ### `IModelService`
 
 See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
-
-### `IMultipleViews`
-
-```typescript
-export interface IMultipleViews {
-  render(name: string, locals: object): Promise<string>|string;
-}
-```
-
-### `IView`
-
-```typescript
-export interface IView {
-  render(locals: object): Promise<string>|string;
-}
-```
 
 ## Utils
 
