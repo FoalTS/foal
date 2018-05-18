@@ -80,13 +80,13 @@ Usually it is registered once within the `AppModule` `preHooks`.
 
 *Example:*
 ```typescript
-import { basic, Module } from '@foal/core';
+import { route, Module } from '@foal/core';
 import { authenticate } from '@foal/authentication';
 
 export const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('GET', '/foo', ctx => {
+    route
+      .attachHandler('GET', '/foo', ctx => {
         console.log('In handler: ', ctx.user);
       })
       .withPreHook(ctx => {
@@ -131,12 +131,12 @@ If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 *Example*:
 ```typescript
 import { authenticate, restrictAccessToAuthenticated } from '@foal/authentication';
-import { basic, Module } from '@foal/core';
+import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('POST', '/user', ctx => {
+    route
+      .attachHandler('POST', '/user', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictAccessToAuthenticated()),
@@ -158,12 +158,12 @@ If the user is not an admin, namely it has no property `isAdmin` or this propert
 *Example*:
 ```typescript
 import { authenticate, restrictAccessToAdmin } from '@foal/authentication';
-import { basic, Module } from '@foal/core';
+import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('POST', '/user', ctx => {
+    route
+      .attachHandler('POST', '/user', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictAccessToAdmin()),
@@ -193,14 +193,14 @@ export const AppModule: Module = {
 ```typescript
 // app.module.ts
 import { authenticate, restrictToAuthenticated } from '@foal/authentication';
-import { basic, Module } from '@foal/core';
+import { route, Module } from '@foal/core';
 
 import { AuthModule } from './auth/auth.module';
 
 export const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('GET', '/foo', ctx => {
+    route
+      .attachHandler('GET', '/foo', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictToAuthenticated())
@@ -217,7 +217,7 @@ export const AppModule: Module = {
 ```typescript
 // auth.module.ts
 import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
-import { basic, HttpResponseOK, Module } from '@foal/core';
+import { route, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
 
@@ -228,8 +228,8 @@ export const AuthModule: Module = {
       .withPreHook(validateEmailAndPasswordCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
-    basic
-      .attachHandlingFunction('GET', '/login', () => {
+    route
+      .attachHandler('GET', '/login', () => {
         return new HttpResponseOK(`
           <form method="POST" action="/login">
             Email: <input type="email" name="email">
