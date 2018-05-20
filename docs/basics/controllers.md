@@ -2,15 +2,15 @@
 
 Controllers are created by *controller factories* and have to be registered within a module.
 
-## Create a controller from an "handling function"
+## Create a controller from an handler function
 
 ```typescript
-import { basic, HttpResponseOK, Module } from '@foal/core';
+import { route, HttpResponseOK, Module } from '@foal/core';
 
 const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('GET', '/:id', (ctx, services) => {
+    route
+      .attachHandler('GET', '/:id', (ctx, services) => {
         return new HttpResponseOK({
           name: 'John',
           id: ctx.params.id

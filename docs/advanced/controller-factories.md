@@ -2,9 +2,9 @@
 
 Controller factories are objects that create controllers from services or functions. They should be the only way to create them.
 
-## The `basic` controller factory
+## The `route` controller factory
 
-`basic` is a low-level controller factory. It should only serve special cases. Prefer using the service controller factories below.
+`route` is a low-level controller factory. It should only serve special cases. Prefer using the service controller factories below.
 
 See [Controllers](../basics/controllers.md) to learn how to use it.
 

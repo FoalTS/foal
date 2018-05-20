@@ -4,20 +4,6 @@
 
 ## Controller factories
 
-### `multipleViews`
-
-`multipleViews.attachService(path: string, service: IMultipleViews)`
-
-Renders several templates from a `IMultipleViews`.
-
-If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
-
-```typescript
-interface IMultipleViews<View extends string> {
-  render(name: View, locals: object): Promise<string>|string;
-}
-```
-
 ### `rest`
 
 `rest.attachService(path: string, service: Partial<IModelService<any, any, any, any>>)`
@@ -35,20 +21,6 @@ DELETE /my_resources/:id -> service.findByIdAndRemove(...)
 
 You will find more docs on the `IModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
 
-### `view`
-
-`view.attachService(path: string, service: IView)`
-
-If `ctx.state.locals` is defined it will be used to call `render`. Otherwise the function will be called with an empty object.
-
-Renders one template from a `IView`.
-
-```typescript
-interface IView {
-  render(locals: object): Promise<string>|string;
-}
-```
-
 ## Post-hooks
 
 ### `afterThatLog(message: string, logFn = console.log)`
@@ -59,8 +31,8 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('/', () => {})
+    route
+      .attachHandler('/', () => {})
       .withPostHook(afterThatLog('Hello world'))
   ]
 }
@@ -74,16 +46,16 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('/foo', () => {
+    route
+      .attachHandler('/foo', () => {
         return new HttpSuccessResponseOK({
           username: 'foobar',
           password: 'my_crypted_password'
         });
       })
       .withPostHook(afterThatRemoveField('password')),
-    basic
-      .attachHandlingFunction('/bar', () => {
+    route
+      .attachHandler('/bar', () => {
         return new HttpSuccessResponseOK([
           { username: 'foobar', password: 'my_crypted_password' },
           { username: 'barfoo', password: 'my_other_crypted_password' }
@@ -104,8 +76,8 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    basic
-      .attachHandlingFunction('/', () => {})
+    route
+      .attachHandler('/', () => {})
       .withPreHook(log('Hello world'))
   ]
 }
@@ -130,22 +102,6 @@ const AppModule: Module = {
 ### `IModelService`
 
 See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts).
-
-### `IMultipleViews`
-
-```typescript
-export interface IMultipleViews {
-  render(name: string, locals: object): Promise<string>|string;
-}
-```
-
-### `IView`
-
-```typescript
-export interface IView {
-  render(locals: object): Promise<string>|string;
-}
-```
 
 ## Utils
 
