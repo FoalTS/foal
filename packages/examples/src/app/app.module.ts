@@ -7,11 +7,10 @@ import {
   afterThatRemoveField,
   rest,
 } from '@foal/common';
-import { Module } from '@foal/core';
+import { Module, route } from '@foal/core';
+import { render } from '@foal/ejs';
 
 import { AuthModule } from './authentication';
-import { HomeModule } from './home';
-import { PublicModule } from './public';
 import { UserService } from './shared';
 
 export const AppModule: Module = {
@@ -23,12 +22,19 @@ export const AppModule: Module = {
       ], 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(afterThatRemoveField('password'))
+      .withPostHook(afterThatRemoveField('password')),
+    route
+      .attachHandler('GET', '/', () => render(require('./templates/index.html'), { name: 'FoalTS' })),
+    route
+      .attachHandler('GET', '/', () => render(require('./templates/home.html')))
+      .withPreHook(restrictAccessToAuthenticated()),
+    route
+      .attachHandler('GET', '/error', () => {
+        throw new Error('This is an error.');
+      })
   ],
   modules: [
     AuthModule,
-    HomeModule,
-    PublicModule,
   ],
   preHooks: [
     authenticate(UserService)

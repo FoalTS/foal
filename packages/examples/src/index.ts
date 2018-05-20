@@ -1,3 +1,5 @@
+import 'source-map-support/register';
+
 import { App } from '@foal/core';
 import { getMiddlewares } from '@foal/express';
 import * as bodyParser from 'body-parser';
@@ -19,4 +21,4 @@ app.use(session({ secret: 'my secret', resave: true, saveUninitialized: true }))
 // TODO: Add CSRF protection
 app.use(getMiddlewares(foalApp, { debugMode: config.debugMode }));
 
-app.listen(3000, () => console.log(`Listening on port 3000`));
+app.listen(3000, () => console.log('Listening on port 3000'));
