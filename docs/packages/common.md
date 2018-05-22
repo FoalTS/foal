@@ -6,20 +6,18 @@
 
 ### `rest`
 
-`rest.attachService(path: string, service: Partial<IModelService<any, any, any, any>>)`
+`rest.attachService(path: string, service: Partial<IModelService>)`
 
-Creates a REST controller from a `Partial<IModelService<IModel>>`.
+Creates a REST controller from a `Partial<IModelService>`.
 
 ```
 POST /my_resource -> service.createOne(...)
-GET /my_resource -> service.findAll(...)
-GET /my_resource/:id -> service.findById(...)
-PATCH /my_resource/:id -> service.findByIdAndReplace(...)
-PUT /my_resource/:id -> service.findByIdAndUpdate(...)
-DELETE /my_resources/:id -> service.findByIdAndRemove(...)
+GET /my_resource -> service.findMany(...)
+GET /my_resource/:id -> service.findOne(...)
+PATCH /my_resource/:id -> service.updateOne(...)
+PUT /my_resource/:id -> service.updateOn(...)
+DELETE /my_resources/:id -> service.removeOne(...)
 ```
-
-You will find more docs on the `IModelService` interface [here](https://github.com/FoalTS/foal/blob/model-usermodel-authentication/packages/common/src/services/model-service.interface.ts)
 
 ## Post-hooks
 

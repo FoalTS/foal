@@ -16,17 +16,16 @@ export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PAT
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
 export class RestControllerFactory implements IServiceControllerFactory {
-  public attachService(path: string, ServiceClass: Class<Partial<IModelService<any, any, any, any>>>):
-      Controller<RouteName> {
+  public attachService(path: string, ServiceClass: Class<Partial<IModelService>>): Controller<RouteName> {
     const controller = new Controller<RouteName>(path);
     controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
-      if (!service.findByIdAndRemove) {
+      if (!service.removeOne) {
         return new HttpResponseNotImplemented();
       }
       try {
-        return new HttpResponseOK(await service.findByIdAndRemove(ctx.params.id));
+        return new HttpResponseOK(await service.removeOne({ id: ctx.params.id }));
       } catch (err) {
         if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
@@ -36,18 +35,18 @@ export class RestControllerFactory implements IServiceControllerFactory {
     });
     controller.addRoute('GET /', 'GET', '/', async (ctx, services) => {
       const service = services.get(ServiceClass);
-      if (!service.findAll) {
+      if (!service.findMany) {
         return new HttpResponseNotImplemented();
       }
-      return new HttpResponseOK(await service.findAll(ctx.state.query || {}));
+      return new HttpResponseOK(await service.findMany(ctx.state.query || {}));
     });
     controller.addRoute('GET /:id', 'GET', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
-      if (!service.findById) {
+      if (!service.findOne) {
         return new HttpResponseNotImplemented();
       }
       try {
-        return new HttpResponseOK(await service.findById(ctx.params.id));
+        return new HttpResponseOK(await service.findOne({ id: ctx.params.id }));
       } catch (err) {
         if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
@@ -58,11 +57,11 @@ export class RestControllerFactory implements IServiceControllerFactory {
     controller.addRoute('PATCH /', 'PATCH', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('PATCH /:id', 'PATCH', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
-      if (!service.findByIdAndUpdate) {
+      if (!service.updateOne) {
         return new HttpResponseNotImplemented();
       }
       try {
-        return new HttpResponseOK(await service.findByIdAndUpdate(ctx.params.id, ctx.body));
+        return new HttpResponseOK(await service.updateOne(ctx.body, { id: ctx.params.id }));
       } catch (err) {
         if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
@@ -81,11 +80,11 @@ export class RestControllerFactory implements IServiceControllerFactory {
     controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('PUT /:id', 'PUT', '/:id', async (ctx, services) => {
       const service = services.get(ServiceClass);
-      if (!service.findByIdAndReplace) {
+      if (!service.updateOne) {
         return new HttpResponseNotImplemented();
       }
       try {
-        return new HttpResponseOK(await service.findByIdAndReplace(ctx.params.id, ctx.body));
+        return new HttpResponseOK(await service.updateOne(ctx.body, { id: ctx.params.id }));
       } catch (err) {
         if (isObjectDoesNotExist(err)) {
           return new HttpResponseNotFound();
