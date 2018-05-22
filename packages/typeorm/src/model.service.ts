@@ -1,5 +1,5 @@
 import { IModelService } from '@foal/common';
-import { Class, Service } from '@foal/core';
+import { Class } from '@foal/core';
 
 export class ModelService<Entity> implements IModelService {
 

@@ -73,7 +73,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   }
 
   async findByIdAndUpdate(id: IdType,
-                                 data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
+                          data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
@@ -99,7 +99,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   }
 
   async findOneAndUpdate(query: object,
-                                data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
+                         data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
@@ -151,7 +151,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   }
 
   async findByIdAndReplace(id: IdType,
-                                  data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
+                           data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
@@ -177,7 +177,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
   }
 
   async findOneAndReplace(query: object,
-                                 data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
+                          data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 

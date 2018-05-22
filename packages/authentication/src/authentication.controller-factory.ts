@@ -11,8 +11,7 @@ import { IAuthenticator } from './authenticator.interface';
 
 export class AuthenticationFactory implements IServiceControllerFactory {
   attachService(path: string, ServiceClass: Class<IAuthenticator<any>>,
-                       options: { failureRedirect?: string, successRedirect?: string } = {}):
-                       Controller<'main'> {
+                options: { failureRedirect?: string, successRedirect?: string } = {}): Controller<'main'> {
     const controller = new Controller<'main'>(path);
     controller.addRoute('main', 'POST', '', async (ctx, services) => {
       const user = await services.get(ServiceClass).authenticate(ctx.body);
@@ -36,7 +35,7 @@ export class AuthenticationFactory implements IServiceControllerFactory {
   }
 
   attachLogout(path: string,
-                      options: { redirect?: string, httpMethod?: 'GET'|'POST' } = {}): Controller<'main'> {
+               options: { redirect?: string, httpMethod?: 'GET'|'POST' } = {}): Controller<'main'> {
     const controller = new Controller<'main'>(path);
     controller.addRoute('main', options.httpMethod || 'GET', '', async ctx => {
       delete ctx.session.authentication;
