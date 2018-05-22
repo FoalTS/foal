@@ -1,37 +1,45 @@
-# Use postgres/example user/password credentials
 version: '3'
-
 services:
 
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: password
-    volumes:
-      - ./testing/postgres:/docker-entrypoint-initdb.d
-    ports:
-      - 5432:5432
-
   mysql:
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: foal_sequelize_test
+    image: "mysql:5.7.10"
     ports:
-      - 3306:3306
-  
-  mssql:
-    image: microsoft/mssql-server-linux
+      - "3306:3306"
     environment:
-      ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: strongPassword1
-    ports:
-      - 1433:1433
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
 
-  adminer:
-    image: adminer
-    restart: always
+  mariadb:
+    image: "mariadb:10.1.16"
     ports:
-      - 8080:8080
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+
+  postgres:
+    image: "postgres:9.6.1"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: "test"
+
+  mssql:
+    image: "microsoft/mssql-server-linux:2017-GA"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Admin12345"
+      ACCEPT_EULA: "Y"
+
+  mongodb:
+    image: "mongo:3.4.1"
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
