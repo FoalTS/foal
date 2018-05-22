@@ -10,23 +10,23 @@ describe('IServiceControllerFactory.attachService', () => {
     }
 
     class Service1 implements IService1 {
-      public foo() {}
+      foo() {}
     }
 
     class Foo implements IServiceControllerFactory {
-      public attachService(path: string, ServiceClass: Class<IService1>) {
+      attachService(path: string, ServiceClass: Class<IService1>) {
         return new Controller(path);
       }
     }
 
     class Bar implements IServiceControllerFactory {
-      public attachService(path: string, ServiceClass: Class<IService1>, options: { foobar: string }) {
+      attachService(path: string, ServiceClass: Class<IService1>, options: { foobar: string }) {
         return new Controller(path);
       }
     }
 
     class BarFoo implements IServiceControllerFactory {
-      public attachService(path: string, ServiceClass: Class<IService1>, options?: { foobar: string }) {
+      attachService(path: string, ServiceClass: Class<IService1>, options?: { foobar: string }) {
         return new Controller(path);
       }
     }

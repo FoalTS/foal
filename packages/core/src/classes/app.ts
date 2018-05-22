@@ -3,8 +3,8 @@ import { Controller } from './controller';
 import { ServiceManager } from './service-manager';
 
 export class App {
-  public readonly services: ServiceManager;
-  public readonly controllers: Controller<string>[] = [];
+  readonly services: ServiceManager;
+  readonly controllers: Controller<string>[] = [];
 
   constructor(rootModule: Module) {
     this.services = new ServiceManager();

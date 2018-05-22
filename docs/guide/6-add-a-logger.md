@@ -8,7 +8,7 @@ import { Service } from '@foal/core';
 @Service()
 class LoggerService {
 
-  public log(kind: 'info'|'debug', message: string) {
+  log(kind: 'info'|'debug', message: string) {
     console.log(`[${kind}] ${message}`);
   }
 
@@ -41,7 +41,7 @@ export class TaskService extends SequelizeModelService<any> {
     }, connection);
   }
 
-  public createOne(data) {
+  createOne(data) {
     this.logger.log('info', 'Create called with ' + JSON.stringify(data));
     return super.create(data)
   }

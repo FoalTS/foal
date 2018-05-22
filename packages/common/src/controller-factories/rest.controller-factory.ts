@@ -16,7 +16,7 @@ export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PAT
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
 export class RestControllerFactory implements IServiceControllerFactory {
-  public attachService(path: string, ServiceClass: Class<Partial<IModelService>>): Controller<RouteName> {
+  attachService(path: string, ServiceClass: Class<Partial<IModelService>>): Controller<RouteName> {
     const controller = new Controller<RouteName>(path);
     controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
     controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {

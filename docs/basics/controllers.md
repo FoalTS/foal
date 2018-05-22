@@ -50,7 +50,7 @@ class UserService implements Partial<IModelService<User>> {
   private id = 0;
   constructor () {}
 
-  public createOne(data: User): User & { id: string } {
+  createOne(data: User): User & { id: string } {
     this.id++;
     return { ...data, id: this.id };
   }

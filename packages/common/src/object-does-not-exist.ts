@@ -1,5 +1,5 @@
 export class ObjectDoesNotExist extends Error {
-  public readonly isObjectDoesNotExist = true;
+  readonly isObjectDoesNotExist = true;
 
   constructor() {
     super();

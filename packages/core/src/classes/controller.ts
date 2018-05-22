@@ -11,7 +11,7 @@ export class Controller<RouteName extends string> {
 
   constructor(private prePath?: string) {}
 
-  public addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
+  addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
     this.routes.set(name, {
       handler,
       httpMethod,
@@ -21,7 +21,7 @@ export class Controller<RouteName extends string> {
     });
   }
 
-  public getRoute(name: RouteName): Route {
+  getRoute(name: RouteName): Route {
     const route = this.routes.get(name);
     if (!route) {
       throw new Error(`No route called ${name} could be found.`);
@@ -29,11 +29,11 @@ export class Controller<RouteName extends string> {
     return route;
   }
 
-  public addPreHooksAtTheTop(preHooks: PreHook[]): void {
+  addPreHooksAtTheTop(preHooks: PreHook[]): void {
     this.routes.forEach(route => route.preHooks.unshift(...preHooks));
   }
 
-  public addPostHooksAtTheBottom(postHooks: PostHook[]): void {
+  addPostHooksAtTheBottom(postHooks: PostHook[]): void {
     this.routes.forEach(route => route.postHooks.push(...postHooks));
   }
 
@@ -43,7 +43,7 @@ export class Controller<RouteName extends string> {
    * @param routeNames Routes where to add the pre-hook. If empty, the pre-hook is added
    * to all routes.
    */
-  public withPreHook(preHook: PreHook, ...routeNames: RouteName[]): Controller<RouteName> {
+  withPreHook(preHook: PreHook, ...routeNames: RouteName[]): Controller<RouteName> {
     if (routeNames.length === 0) {
       this.routes.forEach(route => route.preHooks.push(preHook));
     } else {
@@ -58,7 +58,7 @@ export class Controller<RouteName extends string> {
    * @param routeNames Routes where to add the pre-hooks. If empty, the pre-hooks are added
    * to all routes.
    */
-  public withPreHooks(preHooks: PreHook[], ...routeNames: RouteName[]): Controller<RouteName> {
+  withPreHooks(preHooks: PreHook[], ...routeNames: RouteName[]): Controller<RouteName> {
     if (routeNames.length === 0) {
       this.routes.forEach(route => route.preHooks.push(...preHooks));
     } else {
@@ -67,7 +67,7 @@ export class Controller<RouteName extends string> {
     return this;
   }
 
-  public withPostHook(postHook: PostHook, ...routeNames: RouteName[]): Controller<RouteName> {
+  withPostHook(postHook: PostHook, ...routeNames: RouteName[]): Controller<RouteName> {
     if (routeNames.length === 0) {
       this.routes.forEach(route => route.postHooks.push(postHook));
     } else {
@@ -76,7 +76,7 @@ export class Controller<RouteName extends string> {
     return this;
   }
 
-  public withPostHooks(postHooks: PostHook[], ...routeNames: RouteName[]): Controller<RouteName> {
+  withPostHooks(postHooks: PostHook[], ...routeNames: RouteName[]): Controller<RouteName> {
     if (routeNames.length === 0) {
       this.routes.forEach(route => route.postHooks.push(...postHooks));
     } else {
@@ -85,11 +85,11 @@ export class Controller<RouteName extends string> {
     return this;
   }
 
-  public addPathAtTheBeginning(path: string) {
+  addPathAtTheBeginning(path: string) {
     this.routes.forEach(route => route.path = `${path}${route.path}`.replace(/(\/)+/g, '/'));
   }
 
-  public getRoutes(): Route[] {
+  getRoutes(): Route[] {
     return Array.from(this.routes, e => e[1]);
   }
 

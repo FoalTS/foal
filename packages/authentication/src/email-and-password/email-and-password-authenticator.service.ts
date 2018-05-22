@@ -19,7 +19,7 @@ export abstract class EmailAndPasswordAuthenticatorService<User extends { email:
 
   constructor(protected userModelService: IModelService<User, any, any, any>) {}
 
-  public async checkPassword(user: User, password: string): Promise<boolean> {
+  async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {
       throw new Error('Password format is incorrect or not supported.');
     }
@@ -35,7 +35,7 @@ export abstract class EmailAndPasswordAuthenticatorService<User extends { email:
     return derivedKey === (await promisify(pbkdf2)(password, salt, iterations, keylen, digest)).toString('hex');
   }
 
-  public async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
+  async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;
 
     try {

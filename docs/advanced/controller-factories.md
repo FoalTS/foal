@@ -49,7 +49,7 @@ export type RouteName = 'my-route-name' | 'my-route-name2';
 
 export class MyControllerFactory implements IServiceControllerFactory {
 
-  public attachService(path: string, ServiceClass: Class<IService>,
+  attachService(path: string, ServiceClass: Class<IService>,
                        options: Options = {}): Controller<RouteName> {
     const controller = new Controller<RouteName>(path);
 
@@ -85,7 +85,7 @@ import { MyService } from './my-service.interface';
 class ServiceA implements MyService {
   constructor() {}
 
-  public giveMeANumber(start: number, end: number): number {
+  giveMeANumber(start: number, end: number): number {
     return (start + end) / 2;
   }
 }

@@ -21,7 +21,7 @@ describe('authentication', () => {
   class MockAuthenticatorService implements IAuthenticator<any> {
     constructor() {}
 
-    public authenticate(credentials: { username?: string }) {
+    authenticate(credentials: { username?: string }) {
       if (credentials.username === 'John') {
         return {
           id: 1,

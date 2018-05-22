@@ -15,10 +15,10 @@ describe('authenticate', () => {
 
     constructor() {}
 
-    public createOne(): any {}
-    public createMany(): any {}
+    createOne(): any {}
+    createMany(): any {}
 
-    public findById(id): any {
+    findById(id): any {
       if (id === 1) {
         return {
           email: 'john@foalts.org',
@@ -29,20 +29,20 @@ describe('authenticate', () => {
       }
       throw new ObjectDoesNotExist();
     }
-    public findOne() {}
-    public findAll(): any {}
+    findOne() {}
+    findAll(): any {}
 
-    public findByIdAndUpdate(): any {}
-    public findOneAndUpdate(): any {}
-    public updateMany(): void {}
+    findByIdAndUpdate(): any {}
+    findOneAndUpdate(): any {}
+    updateMany(): void {}
 
-    public findByIdAndReplace(): any {}
-    public findOneAndReplace(): any {}
+    findByIdAndReplace(): any {}
+    findOneAndReplace(): any {}
 
-    public findByIdAndRemove(): any {}
-    public findOneAndRemove(): any {}
+    findByIdAndRemove(): any {}
+    findOneAndRemove(): any {}
 
-    public removeMany(): void {}
+    removeMany(): void {}
   }
 
   it('should throw an Error if there is no session.', async () => {

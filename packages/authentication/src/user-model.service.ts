@@ -20,14 +20,14 @@ export abstract class UserModelService<User, CreatingUser = User,
     }, connection);
   }
 
-  public async createOne(data: CreatingUser): Promise<User & IIdAndTimeStamps> {
+  async createOne(data: CreatingUser): Promise<User & IIdAndTimeStamps> {
     for (const parser of this.parsers) {
       await parser(data);
     }
     return super.createOne(data);
   }
 
-  public async createMany(records: CreatingUser[]): Promise<(User & IIdAndTimeStamps)[]> {
+  async createMany(records: CreatingUser[]): Promise<(User & IIdAndTimeStamps)[]> {
     for (const record of records) {
       for (const parser of this.parsers) {
         await parser(record);

@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 
 export abstract class SequelizeConnectionService {
-  public sequelize: Sequelize;
+  sequelize: Sequelize;
 
   constructor(uri: string, options: object = {}) {
     this.sequelize = new Sequelize(uri, Object.assign({

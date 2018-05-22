@@ -59,7 +59,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async removeOne(query: object): Promise<void> {}
+          async removeOne(query: object): Promise<void> {}
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
@@ -81,7 +81,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public removeOne(query: object): void {
+          removeOne(query: object): void {
             throw new ObjectDoesNotExist();
           }
         }
@@ -111,7 +111,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async findMany(query: object) {
+          async findMany(query: object) {
             return all;
           }
         }
@@ -156,7 +156,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async findOne(query: object) {
+          async findOne(query: object) {
             return obj;
           }
         }
@@ -180,7 +180,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public findOne(query: object) {
+          findOne(query: object) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -221,7 +221,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async updateOne(record: object, query: object) {
+          async updateOne(record: object, query: object) {
             return obj;
           }
         }
@@ -249,7 +249,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public updateOne(record: object, query: object) {
+          updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -279,7 +279,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async createOne(record: object) {
+          async createOne(record: object) {
             return obj;
           }
         }
@@ -344,7 +344,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public async updateOne(record: object, query: object) {
+          async updateOne(record: object, query: object) {
             return obj;
           }
         }
@@ -372,7 +372,7 @@ describe('rest', () => {
         @Service()
         class MockService implements Partial<IModelService> {
           constructor() {}
-          public updateOne(record: object, query: object) {
+          updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }
         }

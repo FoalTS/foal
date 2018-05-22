@@ -20,18 +20,18 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     this.dialect = connection.sequelize.getDialect();
   }
 
-  public getSequelizeModel() {
+  getSequelizeModel() {
     return this.model;
   }
 
-  public async createOne(data: ICreatingModel): Promise<IModel & IIdAndTimeStamps> {
+  async createOne(data: ICreatingModel): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
 
     const model = await this.model.create(data);
     return model.dataValues;
   }
 
-  public async createMany(records: ICreatingModel[]): Promise<(IModel & IIdAndTimeStamps)[]> {
+  async createMany(records: ICreatingModel[]): Promise<(IModel & IIdAndTimeStamps)[]> {
     await this.model.sync();
 
     const result = await this.model.bulkCreate(records, {
@@ -41,7 +41,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.map(e => e.dataValues);
   }
 
-  public async findById(id: IdType): Promise<IModel & IIdAndTimeStamps> {
+  async findById(id: IdType): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
 
     const result = await this.model.findById(id);
@@ -51,7 +51,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async findOne(query: object): Promise<IModel & IIdAndTimeStamps> {
+  async findOne(query: object): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
 
     const result = await this.model.findOne({
@@ -63,7 +63,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async findAll(query: object): Promise<(IModel & IIdAndTimeStamps)[]> {
+  async findAll(query: object): Promise<(IModel & IIdAndTimeStamps)[]> {
     await this.model.sync();
 
     const models = await this.model.findAll({
@@ -72,7 +72,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return models.map(e => e.dataValues);
   }
 
-  public async findByIdAndUpdate(id: IdType,
+  async findByIdAndUpdate(id: IdType,
                                  data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -98,7 +98,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
   }
 
-  public async findOneAndUpdate(query: object,
+  async findOneAndUpdate(query: object,
                                 data: Partial<IModel & IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -141,7 +141,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async updateMany(query: object, data: Partial<IModel & IIdAndTimeStamps>): Promise<void> {
+  async updateMany(query: object, data: Partial<IModel & IIdAndTimeStamps>): Promise<void> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
 
@@ -150,7 +150,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     });
   }
 
-  public async findByIdAndReplace(id: IdType,
+  async findByIdAndReplace(id: IdType,
                                   data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -176,7 +176,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
 
   }
 
-  public async findOneAndReplace(query: object,
+  async findOneAndReplace(query: object,
                                  data: IModel & Partial<IIdAndTimeStamps>): Promise<IModel & IIdAndTimeStamps> {
     await this.model.sync();
     this.removeIdAndTimeStamps(data);
@@ -220,7 +220,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     return result.dataValues;
   }
 
-  public async findByIdAndRemove(id: IdType): Promise<void> {
+  async findByIdAndRemove(id: IdType): Promise<void> {
     await this.model.sync();
 
     const result = await this.model.destroy({
@@ -231,7 +231,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     }
   }
 
-  public async findOneAndRemove(query: object): Promise<void> {
+  async findOneAndRemove(query: object): Promise<void> {
     await this.model.sync();
 
     const result = await this.model.destroy({
@@ -243,7 +243,7 @@ export abstract class SequelizeModelService<IModel, ICreatingModel = IModel,
     }
   }
 
-  public async removeMany(query: object): Promise<void> {
+  async removeMany(query: object): Promise<void> {
     await this.model.sync();
 
     await this.model.destroy({

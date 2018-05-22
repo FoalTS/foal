@@ -8,11 +8,11 @@ export function Service() {
 
 export class ServiceManager {
 
-  public map: Map<Class<any>, any>  = new Map();
+  map: Map<Class<any>, any>  = new Map();
 
   constructor() {}
 
-  public get<Service>(ServiceClass: Class<Service>): Service {
+  get<Service>(ServiceClass: Class<Service>): Service {
     // Get the service if it exists.
     if (this.map.get(ServiceClass)) {
       return this.map.get(ServiceClass);

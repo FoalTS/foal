@@ -1,8 +1,8 @@
 export abstract class HttpResponse {
-  public readonly isHttpResponse = true;
+  readonly isHttpResponse = true;
 
-  public abstract statusCode: number;
-  public abstract statusMessage: string;
+  abstract statusCode: number;
+  abstract statusMessage: string;
 
   constructor(public content?: any) {}
 }
@@ -14,7 +14,7 @@ export function isHttpResponse(obj: object): boolean {
 /* 2xx Success */
 
 export abstract class HttpResponseSuccess extends HttpResponse {
-  public readonly isHttpResponseSuccess = true;
+  readonly isHttpResponseSuccess = true;
   constructor(content?: any) {
     super(content);
   }
@@ -25,9 +25,9 @@ export function isHttpResponseSuccess(obj: object): boolean {
 }
 
 export class HttpResponseOK extends HttpResponseSuccess {
-  public readonly isHttpResponseOK = true;
-  public statusCode = 200;
-  public statusMessage = 'OK';
+  readonly isHttpResponseOK = true;
+  statusCode = 200;
+  statusMessage = 'OK';
   constructor(content?: any) {
     super(content);
   }
@@ -38,9 +38,9 @@ export function isHttpResponseOK(obj: object): boolean {
 }
 
 export class HttpResponseCreated extends HttpResponseSuccess {
-  public readonly isHttpResponseCreated = true;
-  public statusCode = 201;
-  public statusMessage = 'CREATED';
+  readonly isHttpResponseCreated = true;
+  statusCode = 201;
+  statusMessage = 'CREATED';
   constructor(content?: any) {
     super(content);
   }
@@ -51,9 +51,9 @@ export function isHttpResponseCreated(obj: object): boolean {
 }
 
 export class HttpResponseNoContent extends HttpResponseSuccess {
-  public readonly isHttpResponseNoContent = true;
-  public statusCode = 204;
-  public statusMessage = 'NO CONTENT';
+  readonly isHttpResponseNoContent = true;
+  statusCode = 204;
+  statusMessage = 'NO CONTENT';
   constructor() {
     super();
   }
@@ -66,7 +66,7 @@ export function isHttpResponseNoContent(obj: object): boolean {
 /* 3xx Redirection */
 
 export abstract class HttpResponseRedirection extends HttpResponse {
-  public readonly isHttpResponseRedirection = true;
+  readonly isHttpResponseRedirection = true;
   constructor(content?: any) {
     super(content);
   }
@@ -77,9 +77,9 @@ export function isHttpResponseRedirection(obj: object): boolean {
 }
 
 export class HttpResponseRedirect extends HttpResponseRedirection {
-  public readonly isHttpResponseRedirect = true;
-  public statusCode = 302;
-  public statusMessage = 'FOUND';
+  readonly isHttpResponseRedirect = true;
+  statusCode = 302;
+  statusMessage = 'FOUND';
   constructor(public path: string, content?: any) {
     super(content);
   }
@@ -92,7 +92,7 @@ export function isHttpResponseRedirect(obj: object): boolean {
 /* 4xx Client Error */
 
 export abstract class HttpResponseClientError extends HttpResponse {
-  public readonly isHttpResponseClientError = true;
+  readonly isHttpResponseClientError = true;
   constructor(content?: any) {
     super(content);
   }
@@ -103,9 +103,9 @@ export function isHttpResponseClientError(obj: object): boolean {
 }
 
 export class HttpResponseBadRequest extends HttpResponseClientError {
-  public readonly isHttpResponseBadRequest = true;
-  public statusCode = 400;
-  public statusMessage = 'BAD REQUEST';
+  readonly isHttpResponseBadRequest = true;
+  statusCode = 400;
+  statusMessage = 'BAD REQUEST';
   constructor(content?: any) {
     super(content);
   }
@@ -116,10 +116,10 @@ export function isHttpResponseBadRequest(obj: object): boolean {
 }
 
 export class HttpResponseUnauthorized extends HttpResponseClientError {
-  public readonly isHttpResponseUnauthorized = true;
-  public statusCode = 401;
-  public statusMessage = 'UNAUTHORIZED';
-  public headers = {
+  readonly isHttpResponseUnauthorized = true;
+  statusCode = 401;
+  statusMessage = 'UNAUTHORIZED';
+  headers = {
     'WWW-Authenticate': ''
   };
   constructor(content?: any) {
@@ -132,9 +132,9 @@ export function isHttpResponseUnauthorized(obj: object): boolean {
 }
 
 export class HttpResponseForbidden extends HttpResponseClientError {
-  public readonly isHttpResponseForbidden = true;
-  public statusCode = 403;
-  public statusMessage = 'FORBIDDEN';
+  readonly isHttpResponseForbidden = true;
+  statusCode = 403;
+  statusMessage = 'FORBIDDEN';
   constructor(content?: any) {
     super(content);
   }
@@ -145,9 +145,9 @@ export function isHttpResponseForbidden(obj: object): boolean {
 }
 
 export class HttpResponseNotFound extends HttpResponseClientError {
-  public readonly isHttpResponseNotFound = true;
-  public statusCode = 404;
-  public statusMessage = 'NOT FOUND';
+  readonly isHttpResponseNotFound = true;
+  statusCode = 404;
+  statusMessage = 'NOT FOUND';
   constructor(content?: any) {
     super(content);
   }
@@ -158,9 +158,9 @@ export function isHttpResponseNotFound(obj: object): boolean {
 }
 
 export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
-  public readonly isHttpResponseMethodNotAllowed = true;
-  public statusCode = 405;
-  public statusMessage = 'METHOD NOT ALLOWED';
+  readonly isHttpResponseMethodNotAllowed = true;
+  statusCode = 405;
+  statusMessage = 'METHOD NOT ALLOWED';
   constructor(content?: any) {
     super(content);
   }
@@ -171,9 +171,9 @@ export function isHttpResponseMethodNotAllowed(obj: object): boolean {
 }
 
 export class HttpResponseConflict extends HttpResponseClientError {
-  public readonly isHttpResponseConflict = true;
-  public statusCode = 409;
-  public statusMessage = 'CONFLICT';
+  readonly isHttpResponseConflict = true;
+  statusCode = 409;
+  statusMessage = 'CONFLICT';
   constructor(content?: any) {
     super(content);
   }
@@ -186,7 +186,7 @@ export function isHttpResponseConflict(obj: object): boolean {
 /* 5xx Server Error */
 
 export abstract class HttpResponseServerError extends HttpResponse {
-  public readonly isHttpResponseServerError = true;
+  readonly isHttpResponseServerError = true;
   constructor(content?: any) {
     super(content);
   }
@@ -197,9 +197,9 @@ export function isHttpResponseServerError(obj: object): boolean {
 }
 
 export class HttpResponseInternalServerError extends HttpResponseServerError {
-  public readonly isHttpResponseInternalServerError = true;
-  public statusCode = 500;
-  public statusMessage = 'INTERNAL SERVER ERROR';
+  readonly isHttpResponseInternalServerError = true;
+  statusCode = 500;
+  statusMessage = 'INTERNAL SERVER ERROR';
   constructor(content?: any) {
     super(content);
   }
@@ -210,9 +210,9 @@ export function isHttpResponseInternalServerError(obj: object): boolean {
 }
 
 export class HttpResponseNotImplemented extends HttpResponseServerError {
-  public readonly isHttpResponseNotImplemented = true;
-  public statusCode = 501;
-  public statusMessage = 'NOT IMPLEMENTED';
+  readonly isHttpResponseNotImplemented = true;
+  statusCode = 501;
+  statusMessage = 'NOT IMPLEMENTED';
   constructor(content?: any) {
     super(content);
   }

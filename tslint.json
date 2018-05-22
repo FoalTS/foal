@@ -16,7 +16,8 @@
       "trailing-comma": false,
       "no-empty-interface": false,
       "no-unused-variable": true,
-      "no-duplicate-imports": true
+      "no-duplicate-imports": true,
+      "member-access": [true, "no-public"]
     },
     "rulesDirectory": []
 }

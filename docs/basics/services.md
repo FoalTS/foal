@@ -9,7 +9,7 @@ import { App, Service } from '@foal/core';
 
 @Service()
 class ServiceA {
-  public name = 'Service A';
+  name = 'Service A';
   constructor() {}
 }
 
@@ -28,13 +28,13 @@ import { App, Service } from '@foal/core';
 
 @Service()
 class ServiceA {
-  public name = 'Service A';
+  name = 'Service A';
   constructor() {}
 }
 
 @Service()
 class ServiceB {
-  public name = 'Service B';
+  name = 'Service B';
   constructor(public serviceA: ServiceA) {}
 }
 
@@ -59,13 +59,13 @@ import { expect } from 'chai';
 
 @Service()
 class ServiceA {
-  public name = 'Service A';
+  name = 'Service A';
   constructor() {}
 }
 
 @Service()
 class ServiceB {
-  public name = 'Service B';
+  name = 'Service B';
   constructor(public serviceA: ServiceA) {}
 }
 

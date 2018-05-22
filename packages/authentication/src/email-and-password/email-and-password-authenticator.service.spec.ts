@@ -25,11 +25,11 @@ describe('EmailAndPasswordAuthenticatorService', () => {
   let service: ConcreteClass;
 
   class UserModelService implements IModelService<User, object, object, any> {
-    public createOne(): any {}
-    public createMany(): any {}
+    createOne(): any {}
+    createMany(): any {}
 
-    public findById(): any {}
-    public findOne(query: { email?: string }): User & { id: number } {
+    findById(): any {}
+    findOne(query: { email?: string }): User & { id: number } {
       if (query.email === 'john@foalts.org') {
         return {
           email: 'john@foalts.org',
@@ -56,19 +56,19 @@ describe('EmailAndPasswordAuthenticatorService', () => {
       }
       throw new ObjectDoesNotExist();
     }
-    public findAll(): any {}
+    findAll(): any {}
 
-    public findByIdAndUpdate(): any {}
-    public findOneAndUpdate(): any {}
-    public updateMany(): void {}
+    findByIdAndUpdate(): any {}
+    findOneAndUpdate(): any {}
+    updateMany(): void {}
 
-    public findByIdAndReplace(): any {}
-    public findOneAndReplace(): any {}
+    findByIdAndReplace(): any {}
+    findOneAndReplace(): any {}
 
-    public findByIdAndRemove(): any {}
-    public findOneAndRemove(): any {}
+    findByIdAndRemove(): any {}
+    findOneAndRemove(): any {}
 
-    public removeMany(): void {}
+    removeMany(): void {}
   }
 
   it('should instantiate.', () => {
