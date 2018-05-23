@@ -35,7 +35,6 @@ function testSuite(title: string, connectionName: string) {
     beforeEach(async () => {
       const queryBuilder = getConnection(connectionName).createQueryRunner();
       await queryBuilder.query('DELETE from user');
-      console.log('onde');
     });
 
     describe('when createOne is called', () => {
