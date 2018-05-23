@@ -12,28 +12,34 @@ module.exports = [
     entities: [ User ],
     synchronize: true,
   },
-  // {
-  //   "name": "mariadb-connection",
-  //   "type": "mariadb",
-  //   "host": "localhost",
-  //   "port": 3307,
-  //   "username": "test",
-  //   "password": "test",
-  //   "database": "test"
-  // },
-  // {
-  //   "name": "postgres-connection",
-  //   "type": "postgres",
-  //   "host": "localhost",
-  //   "port": 5432,
-  //   "username": "test",
-  //   "password": "test",
-  //   "database": "test"
-  // },
-  // {
-  //   "name": "sqlite-connection",
-  //   "type": "sqlite",
-  //   "database": "./test_db.sqlite"
-  // }
+  {
+    name: "mariadb-connection",
+    type: "mariadb",
+    host: "localhost",
+    port: 3307,
+    username: "test",
+    password: "test",
+    database: "test",
+    entities: [ User ],
+    synchronize: true,
+  },
+  {
+    name: "postgres-connection",
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "test",
+    password: "test",
+    database: "test",
+    entities: [ User ],
+    synchronize: true,
+  },
+  {
+    name: "sqlite-connection",
+    type: "sqlite",
+    database: "./test_db.sqlite",
+    entities: [ User ],
+    synchronize: true,
+  }
   // mssql://SA:strongPassword1@localhost:1433
 ];
