@@ -30,16 +30,16 @@ services:
       POSTGRES_PASSWORD: "test"
       POSTGRES_DB: "test"
 
-  mssql:
-    image: "microsoft/mssql-server-linux:2017-GA"
-    ports:
-      - "1433:1433"
-    environment:
-      SA_PASSWORD: "Admin12345"
-      ACCEPT_EULA: "Y"
+  # mssql:
+  #   image: "microsoft/mssql-server-linux:2017-GA"
+  #   ports:
+  #     - "1433:1433"
+  #   environment:
+  #     SA_PASSWORD: "Admin12345"
+  #     ACCEPT_EULA: "Y"
 
-  mongodb:
-    image: "mongo:3.4.1"
-    container_name: "mongodb"
-    ports:
-      - "27017:27017"
+  # mongodb:
+  #   image: "mongo:3.4.1"
+  #   container_name: "mongodb"
+  #   ports:
+  #     - "27017:27017"
