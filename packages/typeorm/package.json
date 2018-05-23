@@ -46,13 +46,20 @@
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^2.2.43",
+    "@types/node": "^10.1.2",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "mysql": "^2.15.0",
+    "pg": "^7.4.3",
+    "mssql": "^4.1.0",
+    "sqlite3": "^4.0.0"
   }
 }

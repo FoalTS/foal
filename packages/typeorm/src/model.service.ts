@@ -1,52 +1,57 @@
-import { getManager } from 'typeorm';
+import { EntityManager, getManager } from 'typeorm';
 
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { Class } from '@foal/core';
 
 export class ModelService<Entity> implements IModelService {
-  private manager = getManager();
 
-  constructor(private Entity: Class<Entity>) {}
+  constructor(
+    private Entity: Class<Entity>,
+    private connectionName = 'default'
+  ) {}
 
   createOne(record: object): Promise<Entity> {
-    const entity = this.manager.create(this.Entity, record);
-    return this.manager.save(entity);
+    const entity = this.getManager().create(this.Entity, record);
+    return this.getManager().save(entity);
   }
 
   createMany(records: object[]): Promise<Entity[]> {
-    const entities = records.map(record => this.manager.create(this.Entity, record));
-    return this.manager.save(entities);
+    const entities = records.map(record => this.getManager().create(this.Entity, record));
+    return this.getManager().save(entities);
   }
 
   async findOne(query: object): Promise<Entity> {
-    const entity = await this.manager.findOne(this.Entity, query);
+    const entity = await this.getManager().findOne(this.Entity, query);
     if (!entity) {
       throw new ObjectDoesNotExist();
     }
-    return entity;
+    return entity as Entity;
   }
 
-  findMany(query: object): Promise<Entity[]> {
-    return this.manager.find(this.Entity, query);
+  async findMany(query: object): Promise<Entity[]> {
+    return this.getManager().find(this.Entity, query);
   }
 
-  async updateOne(record: object, query: object): Promise<void> {
-    await this.manager.update(this.Entity, query, record);
-  }
-
-  async updateMany(records: object[], queries: object[]): Promise<void> {
-    await this.manager.transaction(manager => Promise.all(
-      records.map((record, i) => {
-        return this.manager.update(this.Entity, queries[i], record);
-      })
-    ));
+  async updateOne(query: object, record: object): Promise<void> {
+    const result = await this.getManager().update(
+      this.Entity,
+      query,
+      record
+    );
+    if (result.raw.affectedRows === 0) {
+      throw new ObjectDoesNotExist();
+    }
   }
 
   async removeOne(query: object): Promise<void> {
-    await this.manager.delete(this.Entity, query);
+    const result = await this.getManager().delete(this.Entity, query);
+    if (result.raw.affectedRows === 0) {
+      throw new ObjectDoesNotExist();
+    }
   }
 
-  async removeMany(query: object): Promise<void> {
-    await this.manager.delete(this.Entity, query);
+  private getManager() {
+    return getManager(this.connectionName);
   }
+
 }
