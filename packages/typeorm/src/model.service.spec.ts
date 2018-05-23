@@ -34,7 +34,8 @@ function testSuite(title: string, connectionName: string) {
 
     beforeEach(async () => {
       const queryBuilder = getConnection(connectionName).createQueryRunner();
-      queryBuilder.clearTable('user');
+      await queryBuilder.query('DELETE from user');
+      console.log('onde');
     });
 
     describe('when createOne is called', () => {
@@ -56,6 +57,26 @@ function testSuite(title: string, connectionName: string) {
         expect(user.lastName).to.equal('Smith');
         expect(user.isAdmin).to.equal(false);
         expect(user.id).not.to.equal(undefined);
+      });
+
+      xit('should not replace an existing user (if an id is given).', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+        await getManager(connectionName).save(user1);
+
+        expect(user1.id).not.to.equal(undefined);
+
+        const result = await service.createOne({
+          firstName: 'John',
+          id: user1.id,
+          lastName: 'Smith'
+        });
+
+        const users = await getManager(connectionName).find(User);
+
+        expect(users).to.be.an('array').and.to.have.lengthOf(2);
       });
 
     });
@@ -107,6 +128,26 @@ function testSuite(title: string, connectionName: string) {
           isAdmin: true,
           lastName: 'Hugo',
         });
+      });
+
+      xit('should not replace an existing user (if an id is given).', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+        await getManager(connectionName).save(user1);
+
+        expect(user1.id).not.to.equal(undefined);
+
+        const result = await service.createMany([{
+          firstName: 'John',
+          id: user1.id,
+          lastName: 'Smith'
+        }]);
+
+        const users = await getManager(connectionName).find(User);
+
+        expect(users).to.be.an('array').and.to.have.lengthOf(2);
       });
 
     });

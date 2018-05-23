@@ -11,12 +11,18 @@ export class ModelService<Entity> implements IModelService {
   ) {}
 
   createOne(record: object): Promise<Entity> {
+    record = Object.assign({}, record);
+    delete (record as any).id;
     const entity = this.getManager().create(this.Entity, record);
     return this.getManager().save(entity);
   }
 
   createMany(records: object[]): Promise<Entity[]> {
-    const entities = records.map(record => this.getManager().create(this.Entity, record));
+    const entities = records.map(record => {
+      record = Object.assign({}, record);
+      delete (record as any).id;
+      return this.getManager().create(this.Entity, record);
+    });
     return this.getManager().save(entities);
   }
 
@@ -25,10 +31,10 @@ export class ModelService<Entity> implements IModelService {
     if (!entity) {
       throw new ObjectDoesNotExist();
     }
-    return entity as Entity;
+    return entity;
   }
 
-  async findMany(query: object): Promise<Entity[]> {
+  findMany(query: object): Promise<Entity[]> {
     return this.getManager().find(this.Entity, query);
   }
 
