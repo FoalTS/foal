@@ -5,9 +5,7 @@ export interface IModelService {
   findOne(query: object);
   findMany(query: object);
 
-  updateOne(record: object, query: object);
-  updateMany(records: object[], queries: object[]);
+  updateOne(query: object, record: object);
 
   removeOne(query: object);
-  removeMany(query: object);
 }
