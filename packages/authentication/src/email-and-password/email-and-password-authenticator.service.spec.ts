@@ -3,7 +3,20 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
+import { Class } from '@foal/core';
+function titi(): Class {
+  return class Toto {};
+}
 
+function f() {
+  return target => {};
+}
+
+const toto = {
+  controller:; @f() class {
+
+  }
+}
 const expect = chai.expect;
 
 import { EmailAndPasswordAuthenticatorService } from './email-and-password-authenticator.service';
@@ -24,7 +37,7 @@ describe('EmailAndPasswordAuthenticatorService', () => {
   class ConcreteClass extends EmailAndPasswordAuthenticatorService<User> {}
   let service: ConcreteClass;
 
-  class UserModelService implements IModelService<User, object, object, any> {
+  class UserModelService implements IModelService {
     createOne(): any {}
     createMany(): any {}
 

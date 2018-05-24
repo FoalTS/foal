@@ -5,48 +5,33 @@ import {
   ServiceManager,
 } from '@foal/core';
 import { expect } from 'chai';
+import { Column, getManager } from 'typeorm';
 
+import { AbstractUser } from './abstract-user';
 import { authenticate } from './authenticate.pre-hook';
 
 describe('authenticate', () => {
 
-  @Service()
-  class UserModelService implements IModelService<any, object, object, any> {
+  class User extends AbstractUser {
+    @Column()
+    email: string;
 
-    constructor() {}
+    @Column()
+    password: string;
 
-    createOne(): any {}
-    createMany(): any {}
-
-    findById(id): any {
-      if (id === 1) {
-        return {
-          email: 'john@foalts.org',
-          id: 1,
-          password: 'strongPassword',
-          username: 'John',
-        };
-      }
-      throw new ObjectDoesNotExist();
-    }
-    findOne() {}
-    findAll(): any {}
-
-    findByIdAndUpdate(): any {}
-    findOneAndUpdate(): any {}
-    updateMany(): void {}
-
-    findByIdAndReplace(): any {}
-    findOneAndReplace(): any {}
-
-    findByIdAndRemove(): any {}
-    findOneAndRemove(): any {}
-
-    removeMany(): void {}
+    @Column()
+    username: string;
   }
 
+  before(() => getManager().create(User, {
+    email: 'john@foalts.org',
+    id: 1,
+    password: 'strongPassword',
+    username: 'John',
+  }));
+
   it('should throw an Error if there is no session.', async () => {
-    const preHook = authenticate(UserModelService);
+    const preHook = authenticate(User);
     const ctx = createEmptyContext();
 
     try {
@@ -61,7 +46,7 @@ describe('authenticate', () => {
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const preHook = authenticate(UserModelService);
+    const preHook = authenticate(User);
     const ctx = createEmptyContext();
 
     ctx.session = {};
@@ -72,7 +57,7 @@ describe('authenticate', () => {
   });
 
   it('should set ctx.user to null if no user is found in the database matching the given id.', async () => {
-    const hook = authenticate(UserModelService);
+    const hook = authenticate(User);
     const ctx = createEmptyContext();
 
     ctx.session = {
@@ -86,7 +71,7 @@ describe('authenticate', () => {
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {
-    const hook = authenticate(UserModelService);
+    const hook = authenticate(User);
     const ctx = createEmptyContext();
 
     ctx.session = {

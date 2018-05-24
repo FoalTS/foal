@@ -2,7 +2,9 @@ import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
 
 import { IModelService, isObjectDoesNotExist } from '@foal/common';
+import { Class } from '@foal/core';
 
+import { getManager } from 'typeorm';
 import { IAuthenticator } from '../authenticator.interface';
 
 /**
@@ -17,7 +19,7 @@ import { IAuthenticator } from '../authenticator.interface';
 export abstract class EmailAndPasswordAuthenticatorService<User extends { email: string, password: string }>
     implements IAuthenticator<User> {
 
-  constructor(protected userModelService: IModelService<User, any, any, any>) {}
+  abstract UserClass: Class<User>;
 
   async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {
@@ -38,13 +40,9 @@ export abstract class EmailAndPasswordAuthenticatorService<User extends { email:
   async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User;
 
-    try {
-      user = await this.userModelService.findOne({ email });
-    } catch (err) {
-      if (isObjectDoesNotExist(err)) {
-        return null;
-      }
-      throw err;
+    user = await getManager().findOne(this.UserClass, { email, password });
+    if (!user) {
+      return null;
     }
 
     if (!(await this.checkPassword(user, password))) {
