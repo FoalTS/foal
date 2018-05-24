@@ -15,12 +15,11 @@ import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('POST', '/user', ctx => {
-        // In this function we are sure that firstName and lastName
-        // are defined thanks to the below pre-hook.
-        console.log(ctx.body.firstName, ctx.body.lastName);
-      })
+    route('POST', '/user', ctx => {
+      // In this function we are sure that firstName and lastName
+      // are defined thanks to the below pre-hook.
+      console.log(ctx.body.firstName, ctx.body.lastName);
+    })
       .withPreHook(validate({
         additionalProperties: false,
         properties: {

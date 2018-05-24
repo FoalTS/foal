@@ -14,7 +14,7 @@ function httpMethodTest(httpMethod: HttpMethod) {
       app = express();
       const foalApp = new App({
         controllers: [
-          route.attachHandler(httpMethod, '/foo/bar', ctx => new HttpResponseOK('Success'))
+          route(httpMethod, '/foo/bar', ctx => new HttpResponseOK('Success'))
         ]
       });
       app.use(getAppRouter(foalApp));
@@ -119,7 +119,7 @@ describe('getAppRouter', () => {
         app = express();
         const foalApp = new App({
           controllers: [
-            route.attachHandler('GET', '/foo/:id/bar/:id2', ctx => new HttpResponseOK('Success'))
+            route('GET', '/foo/:id/bar/:id2', ctx => new HttpResponseOK('Success'))
           ]
         });
         app.use(getAppRouter(foalApp));

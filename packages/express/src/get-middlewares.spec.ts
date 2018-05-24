@@ -19,7 +19,7 @@ describe('getMiddlewares', () => {
     it('should 201 on a successful "CREATED" request.', () => {
       const middlewares = getMiddlewares(new App({
         controllers: [
-          route.attachHandler('GET', '/create', () => new HttpResponseCreated('Created!'))
+          route('GET', '/create', () => new HttpResponseCreated('Created!'))
         ]
       }), { debugMode: false });
 
@@ -35,7 +35,7 @@ describe('getMiddlewares', () => {
     it('should 500 if an error is thrown in a controller of the app.', () => {
       const middlewares = getMiddlewares(new App({
         controllers: [
-          route.attachHandler('GET', '/delete', () => {
+          route('GET', '/delete', () => {
             throw new Error();
           })
         ]

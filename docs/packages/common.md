@@ -29,8 +29,7 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('/', () => {})
+    route('/', () => {})
       .withPostHook(afterThatLog('Hello world'))
   ]
 }
@@ -44,16 +43,14 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('/foo', () => {
+    route('/foo', () => {
         return new HttpSuccessResponseOK({
           username: 'foobar',
           password: 'my_crypted_password'
         });
       })
       .withPostHook(afterThatRemoveField('password')),
-    route
-      .attachHandler('/bar', () => {
+    route('/bar', () => {
         return new HttpSuccessResponseOK([
           { username: 'foobar', password: 'my_crypted_password' },
           { username: 'barfoo', password: 'my_other_crypted_password' }
@@ -74,8 +71,7 @@ Example:
 ```typescript
 const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('/', () => {})
+    route('/', () => {})
       .withPreHook(log('Hello world'))
   ]
 }

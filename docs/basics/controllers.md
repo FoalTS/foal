@@ -9,13 +9,12 @@ import { route, HttpResponseOK, Module } from '@foal/core';
 
 const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('GET', '/:id', (ctx, services) => {
-        return new HttpResponseOK({
-          name: 'John',
-          id: ctx.params.id
-        });
-      })
+    route('GET', '/:id', (ctx, services) => {
+      return new HttpResponseOK({
+        name: 'John',
+        id: ctx.params.id
+      });
+    })
   ]
 };
 ```

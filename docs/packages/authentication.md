@@ -85,8 +85,7 @@ import { authenticate } from '@foal/authentication';
 
 export const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('GET', '/foo', ctx => {
+    route('GET', '/foo', ctx => {
         console.log('In handler: ', ctx.user);
       })
       .withPreHook(ctx => {
@@ -135,8 +134,7 @@ import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('POST', '/user', ctx => {
+    route('POST', '/user', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictAccessToAuthenticated()),
@@ -162,8 +160,7 @@ import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('POST', '/user', ctx => {
+    route('POST', '/user', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictAccessToAdmin()),
@@ -199,8 +196,7 @@ import { AuthModule } from './auth/auth.module';
 
 export const AppModule: Module = {
   controllers: [
-    route
-      .attachHandler('GET', '/foo', ctx => {
+    route('GET', '/foo', ctx => {
         console.log(ctx.user);
       })
       .withPreHook(restrictToAuthenticated())
@@ -228,8 +224,7 @@ export const AuthModule: Module = {
       .withPreHook(validateEmailAndPasswordCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.
-    route
-      .attachHandler('GET', '/login', () => {
+    route('GET', '/login', () => {
         return new HttpResponseOK(`
           <form method="POST" action="/login">
             Email: <input type="email" name="email">
