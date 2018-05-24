@@ -10,8 +10,8 @@ import {
 import { Module, route } from '@foal/core';
 import { render } from '@foal/ejs';
 
-import { AuthModule } from './authentication';
-import { UserService } from './shared';
+import { AuthModule } from './modules/authentication';
+import { UserService } from './services';
 
 export const AppModule: Module = {
   controllers: [

@@ -1,0 +1,7 @@
+{
+  "name": "sqlite-connection",
+  "type": "sqlite",
+  "database": "./test_db.sqlite",
+  "entities": "./src/**/*.model.ts",
+  "synchronize": true
+}

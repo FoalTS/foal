@@ -39,14 +39,14 @@
     "@foal/core": "^0.4.0-beta.3",
     "@foal/ejs": "^0.4.0-beta.3",
     "@foal/express": "^0.4.0-beta.3",
-    "@foal/sequelize": "^0.4.0-beta.3",
+    "@foal/typeorm": "^0.4.0-beta.3",
     "source-map-support": "^0.5.6",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
-    "pg": "^7.3.0",
-    "pg-hstore": "^2.3.2"
+    "sqlite3": "^4.0.0",
+    "typeorm": "^0.2.6"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
