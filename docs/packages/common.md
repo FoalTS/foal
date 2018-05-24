@@ -84,8 +84,7 @@ Returns an HttpResponseMethodNotAllowed..
 ```typescript
 const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/', MyModelService)
+    rest('/', MyModelService)
       .withPreHook(methodNotAllowed(), 'DELETE /:id')
   ]
 }
