@@ -12,10 +12,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 'myPassword',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '',
       keyword: 'required',
       message: 'should have required property \'email\'',
@@ -33,10 +33,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       email: 'john@jack.com',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '',
       keyword: 'required',
       message: 'should have required property \'password\'',
@@ -55,10 +55,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 'myPassword',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '.email',
       keyword: 'type',
       message: 'should be string',
@@ -77,10 +77,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 1,
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '.password',
       keyword: 'type',
       message: 'should be string',
@@ -99,10 +99,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 'myPassword',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '.email',
       keyword: 'format',
       message: 'should match format "email"',
@@ -122,10 +122,10 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 'myPassword',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.be.instanceOf(HttpResponseBadRequest);
-    expect((result as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
-    expect((result as HttpResponseBadRequest).content[0]).to.deep.equal({
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.be.instanceOf(HttpResponseBadRequest);
+    expect((response as HttpResponseBadRequest).content).to.be.an('array').and.to.have.lengthOf(1);
+    expect((response as HttpResponseBadRequest).content[0]).to.deep.equal({
       dataPath: '',
       keyword: 'additionalProperties',
       message: 'should NOT have additional properties',
@@ -144,8 +144,8 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
       password: 'myPassword',
     };
 
-    const result = preHook(ctx, new ServiceManager());
-    expect(result).to.equal(undefined);
+    const response = preHook(ctx, new ServiceManager());
+    expect(response).to.equal(undefined);
   });
 
 });

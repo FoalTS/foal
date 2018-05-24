@@ -69,9 +69,9 @@ describe('logout', () => {
         const ctx = createEmptyContext();
         ctx.session = {};
 
-        const result = await route.handler(ctx, new ServiceManager());
+        const response = await route.handler(ctx, new ServiceManager());
 
-        expect(result).to.be.an.instanceOf(HttpResponseNoContent);
+        expect(response).to.be.an.instanceOf(HttpResponseNoContent);
       });
 
       it('should return an HttpResponseRedirect if options.redirect is not empty.', async () => {
@@ -82,10 +82,10 @@ describe('logout', () => {
         const ctx = createEmptyContext();
         ctx.session = {};
 
-        const result = await route.handler(ctx, new ServiceManager());
+        const response = await route.handler(ctx, new ServiceManager());
 
-        expect(result).to.be.an.instanceOf(HttpResponseRedirect);
-        expect((result as HttpResponseRedirect).path).to.equal('/foo');
+        expect(response).to.be.an.instanceOf(HttpResponseRedirect);
+        expect((response as HttpResponseRedirect).path).to.equal('/foo');
       });
 
     });

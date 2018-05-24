@@ -12,7 +12,7 @@ Core package of the framework.
 
 ### The `HttpReponse`s
 
-You may return an `HttpResponse` in a pre-hook or in an handler. This will stop the execution of the pre-hooks and the handler and the returned value will be assigned to `ctx.result`. It may be read or modified in a post-hook. This result is then used to generate the request response.
+You may return an `HttpResponse` in a pre-hook or in an handler. This will stop the execution of the pre-hooks and the handler and the returned value will be assigned to `ctx.response`. It may be read or modified in a post-hook. This response is then used as the request response.
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)
@@ -55,7 +55,7 @@ interface Context<User = any> {
 }
 
 interface PostContext extends Context {
-  result: HttpResponse | undefined;
+  response: HttpResponse | undefined;
 }
 ```
 

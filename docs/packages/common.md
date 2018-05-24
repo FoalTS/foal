@@ -37,7 +37,7 @@ const AppModule: Module = {
 
 ### `afterThatRemoveField(name: string)`
 
-Removes the given field from the context result. If the context result is an array, it removes the field from each of its items.
+Removes the given field from the context response.
 
 Example:
 ```typescript

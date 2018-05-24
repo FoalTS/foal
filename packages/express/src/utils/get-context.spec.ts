@@ -29,7 +29,7 @@ describe('getContext', () => {
     expect(actual.getHeader('')).to.equal('bar');
     expect(actual.params).to.deep.equal({ id: 1 });
     expect(actual.query).to.deep.equal({ id: 2 });
-    expect(actual.result).to.equal(undefined);
+    expect(actual.response).to.equal(undefined);
     expect(actual.session).to.deep.equal({ userId: 4 });
     expect(actual.state).to.deep.equal({});
     expect(actual.user).to.equal(null);

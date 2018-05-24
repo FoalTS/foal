@@ -11,5 +11,5 @@ export interface Context<User = any, State = { [key: string]: any }> {
 }
 
 export interface PostContext extends Context {
-  result: HttpResponse | undefined;
+  response: HttpResponse | undefined;
 }

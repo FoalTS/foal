@@ -8,9 +8,9 @@ import {
 export async function getResponse(route: Route, ctx: PostContext,
                                   services: ServiceManager): Promise<void | HttpResponse> {
   for (const preHook of route.preHooks.concat(route.handler)) {
-    const result = await preHook(ctx, services);
-    if (result) {
-      ctx.result = result;
+    const response = await preHook(ctx, services);
+    if (response) {
+      ctx.response = response;
       break;
     }
   }
@@ -19,5 +19,5 @@ export async function getResponse(route: Route, ctx: PostContext,
     await postHook(ctx, services);
   }
 
-  return ctx.result;
+  return ctx.response;
 }

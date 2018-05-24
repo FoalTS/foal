@@ -52,9 +52,9 @@ describe('login', () => {
           ctx.session = {};
           ctx.body = { username: 'John' };
 
-          const result = await route.handler(ctx, new ServiceManager());
+          const response = await route.handler(ctx, new ServiceManager());
 
-          expect(result).to.be.an.instanceOf(HttpResponseNoContent);
+          expect(response).to.be.an.instanceOf(HttpResponseNoContent);
         });
 
         it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
@@ -66,10 +66,10 @@ describe('login', () => {
           ctx.session = {};
           ctx.body = { username: 'John' };
 
-          const result = await route.handler(ctx, new ServiceManager());
+          const response = await route.handler(ctx, new ServiceManager());
 
-          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
-          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+          expect(response).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((response as HttpResponseRedirect).path).to.equal('/foo');
         });
 
         it('should create or update ctx.session.authentication to include the userId.', async () => {
@@ -106,10 +106,10 @@ describe('login', () => {
           ctx.session = {};
           ctx.body = { username: 'Jack' };
 
-          const result = await route.handler(ctx, new ServiceManager());
+          const response = await route.handler(ctx, new ServiceManager());
 
-          expect(result).to.be.an.instanceOf(HttpResponseUnauthorized);
-          expect((result as HttpResponseUnauthorized).content).to.deep.equal({
+          expect(response).to.be.an.instanceOf(HttpResponseUnauthorized);
+          expect((response as HttpResponseUnauthorized).content).to.deep.equal({
             message: 'Bad credentials.'
           });
         });
@@ -123,10 +123,10 @@ describe('login', () => {
           ctx.session = {};
           ctx.body = { username: 'Jack' };
 
-          const result = await route.handler(ctx, new ServiceManager());
+          const response = await route.handler(ctx, new ServiceManager());
 
-          expect(result).to.be.an.instanceOf(HttpResponseRedirect);
-          expect((result as HttpResponseRedirect).path).to.equal('/foo');
+          expect(response).to.be.an.instanceOf(HttpResponseRedirect);
+          expect((response as HttpResponseRedirect).path).to.equal('/foo');
         });
 
       });

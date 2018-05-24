@@ -6,7 +6,7 @@ export function getContext(req, stateDef: { req: string, state: string }[]): Pos
     getHeader: req.get.bind(req),
     params: req.params,
     query: req.query,
-    result: undefined,
+    response: undefined,
     session: req.session,
     state: {},
     user: null,

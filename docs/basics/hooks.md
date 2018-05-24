@@ -7,7 +7,7 @@ Hooks are an elegant way to deal with access control, input validation or saniti
 Pre-hooks are usually used to restrict access or to check and sanitize data received by the server. Post-hooks are less used and serve purpose such as removing critical fields before returning data to the client (ex: the password of a user).
 
 They takes two parameters:
-- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `result` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or route handler returned one.
+- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `response` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or route handler returned one.
 - The service manager that lets access other services within the hook.
 
 If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing of the request is stopped for the pre-hooks and route handler and the server responds with the `statusCode` and optional `content` of the returned object.

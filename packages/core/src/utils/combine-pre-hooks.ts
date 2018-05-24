@@ -5,9 +5,9 @@ import { Context, PreHook } from '../interfaces';
 export function combinePreHooks(preHooks: PreHook[]): PreHook {
   return async (ctx: Context, services: ServiceManager) => {
     for (const preHook of preHooks) {
-      const result = await preHook(ctx, services);
-      if (result && isHttpResponse(result)) {
-        return result;
+      const response = await preHook(ctx, services);
+      if (response && isHttpResponse(response)) {
+        return response;
       }
     }
   };

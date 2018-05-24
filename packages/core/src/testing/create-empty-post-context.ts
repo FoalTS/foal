@@ -6,7 +6,7 @@ export function createEmptyPostContext(): PostContext {
     getHeader: (field: string) => field,
     params: {},
     query: {},
-    result: undefined,
+    response: undefined,
     session: undefined,
     state: {},
     user: null
