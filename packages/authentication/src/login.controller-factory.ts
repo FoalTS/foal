@@ -4,7 +4,6 @@ import {
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  IServiceControllerFactory,
 } from '@foal/core';
 
 import { IAuthenticator } from './authenticator.interface';
