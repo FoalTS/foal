@@ -9,13 +9,13 @@ import {
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { authentication, AuthenticationFactory } from './authentication.controller-factory';
 import { IAuthenticator } from './authenticator.interface';
+import { login } from './login.controller-factory';
 
 chai.use(spies);
 const expect = chai.expect;
 
-describe('authentication', () => {
+describe('login', () => {
 
   @Service()
   class MockAuthenticatorService implements IAuthenticator<any> {
@@ -32,16 +32,12 @@ describe('authentication', () => {
     }
   }
 
-  it('should be an instance of AuthenticationFactory', () => {
-    expect(authentication).to.an.instanceOf(AuthenticationFactory);
-  });
-
-  describe('when attachService is called', () => {
+  describe('when it is called', () => {
 
     describe('should return a controller with a proper `main` route that', () => {
 
       it('should handle requests at POST /.', () => {
-        const route = authentication.attachService('/foobar', MockAuthenticatorService).getRoute('main');
+        const route = login('/foobar', MockAuthenticatorService).getRoute('main');
 
         expect(route.httpMethod).to.equal('POST');
         expect(route.path).to.equal('/foobar');
@@ -50,7 +46,7 @@ describe('authentication', () => {
       describe('when the authentication succeeds', () => {
 
         it('should return an HttpResponseNoContent if options.successRedirect is undefined.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', MockAuthenticatorService).getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -62,7 +58,7 @@ describe('authentication', () => {
         });
 
         it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService, {
+          const route = login('/', MockAuthenticatorService, {
             successRedirect: '/foo'
           }).getRoute('main');
 
@@ -77,7 +73,7 @@ describe('authentication', () => {
         });
 
         it('should create or update ctx.session.authentication to include the userId.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', MockAuthenticatorService).getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -104,7 +100,7 @@ describe('authentication', () => {
       describe('when the authentication fails', () => {
 
         it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', MockAuthenticatorService).getRoute('main');
 
           const ctx = createEmptyContext();
           ctx.session = {};
@@ -119,7 +115,7 @@ describe('authentication', () => {
         });
 
         it('should return an HttpResponseRedirect if options.failureRedirect is not empty.', async () => {
-          const route = authentication.attachService('/', MockAuthenticatorService, {
+          const route = login('/', MockAuthenticatorService, {
             failureRedirect: '/foo'
           }).getRoute('main');
 
@@ -133,88 +129,6 @@ describe('authentication', () => {
           expect((result as HttpResponseRedirect).path).to.equal('/foo');
         });
 
-      });
-
-    });
-
-  });
-
-  describe('when attachLogout is called', () => {
-
-    describe('should return a controller with a proper `main` route that', () => {
-
-      it('should handle requests at GET / if options.httpMethod is undefined.', () => {
-        const route = authentication.attachLogout('/foobar').getRoute('main');
-
-        expect(route.httpMethod).to.equal('GET');
-        expect(route.path).to.equal('/foobar');
-      });
-
-      it('should handle requests at GET / if options.httpMethod equals "GET".', () => {
-        const route = authentication.attachLogout('/foobar', {
-          httpMethod: 'GET'
-        }).getRoute('main');
-
-        expect(route.httpMethod).to.equal('GET');
-        expect(route.path).to.equal('/foobar');
-      });
-
-      it('should handle requests at POST / if options.httpMethod equals "POST".', () => {
-        const route = authentication.attachLogout('/foobar', {
-          httpMethod: 'POST'
-        }).getRoute('main');
-
-        expect(route.httpMethod).to.equal('POST');
-        expect(route.path).to.equal('/foobar');
-      });
-
-      it('should delete ctx.session.authentication if it exists.', async () => {
-        const route = authentication.attachLogout('/').getRoute('main');
-
-        const ctx = createEmptyContext();
-        ctx.session = {
-          authentication: {
-            userId: 1
-          }
-        };
-
-        await route.handler(ctx, new ServiceManager());
-
-        expect(ctx.session).to.deep.equal({});
-      });
-
-      it('should not throw an error if ctx.session.authentication is undefined.', async () => {
-        const route = authentication.attachLogout('/').getRoute('main');
-
-        const ctx = createEmptyContext();
-        ctx.session = {};
-
-        await route.handler(ctx, new ServiceManager());
-      });
-
-      it('should return an HttpResponseNoContent if options.redirect is undefined.', async () => {
-        const route = authentication.attachLogout('/').getRoute('main');
-
-        const ctx = createEmptyContext();
-        ctx.session = {};
-
-        const result = await route.handler(ctx, new ServiceManager());
-
-        expect(result).to.be.an.instanceOf(HttpResponseNoContent);
-      });
-
-      it('should return an HttpResponseRedirect if options.redirect is not empty.', async () => {
-        const route = authentication.attachLogout('/', {
-          redirect: '/foo'
-        }).getRoute('main');
-
-        const ctx = createEmptyContext();
-        ctx.session = {};
-
-        const result = await route.handler(ctx, new ServiceManager());
-
-        expect(result).to.be.an.instanceOf(HttpResponseRedirect);
-        expect((result as HttpResponseRedirect).path).to.equal('/foo');
       });
 
     });
