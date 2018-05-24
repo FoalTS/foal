@@ -6,7 +6,6 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  IServiceControllerFactory,
 } from '@foal/core';
 
 import { isObjectDoesNotExist } from '../object-does-not-exist';
