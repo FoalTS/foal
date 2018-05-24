@@ -46,6 +46,7 @@
     "express": "4.x"
   },
   "devDependencies": {
+    "@foal/common": "^0.4.0-beta.3",
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "@types/supertest": "^2.0.3",
