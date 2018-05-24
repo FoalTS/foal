@@ -39,7 +39,7 @@ There are several ways to contribute.
 - @foal/core
 - @foal/ejs
 - @foal/express
-- @foal/sequelize
+- @foal/typeorm
 
 ## License
 
