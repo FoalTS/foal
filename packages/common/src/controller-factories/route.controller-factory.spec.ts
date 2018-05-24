@@ -1,7 +1,7 @@
 import { Route } from '@foal/core';
 import { expect } from 'chai';
 
-import { route } from './route-controller-factory';
+import { route } from './route.controller-factory';
 
 describe('route', () => {
 
