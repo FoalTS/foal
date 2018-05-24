@@ -4,19 +4,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
 import { Class } from '@foal/core';
-function titi(): Class {
-  return class Toto {};
-}
 
-function f() {
-  return target => {};
-}
-
-const toto = {
-  controller:; @f() class {
-
-  }
-}
 const expect = chai.expect;
 
 import { EmailAndPasswordAuthenticatorService } from './email-and-password-authenticator.service';
