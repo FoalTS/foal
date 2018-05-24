@@ -56,14 +56,13 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { Module } from '@foal/core';
-import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
+import { login, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
 
 import { AuthenticatorService } from './authenticator.service';
 
 export const AuthModule: Module = {
   controllers: [
-    authentication
-      .attachService('/login', AuthenticatorService, {
+    login('/login', AuthenticatorService, {
         failureRedirect: '/login?invalid_credentials=true',
         successRedirect: '/home'
       })
@@ -110,11 +109,10 @@ Its constructor takes three arguments:
 
 ### Logging out
 
-To log out the user, you need to use the `attachLogout` function.
+To log out the user, you need to use the `logout` function.
 
 ```typescript
-authentication
-  .attachLogout('/logout', { redirect: '/login' });
+logout('/logout', { redirect: '/login' });
 ```
 
 When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.
@@ -219,8 +217,7 @@ import { AuthService } from './auth.service';
 
 export const AuthModule: Module = {
   controllers: [
-    authentication
-      .attachService('/login', AuthService)
+    login('/login', AuthService)
       .withPreHook(validateEmailAndPasswordCredentialsFormat()),
     // In practice we would use below the view controller
     // factory with a template.

@@ -62,8 +62,7 @@ const preventXSS = ctx => { escapeHTML(ctx.body, 'text'); };
 
 export const AppModule: FoalModule = {
   controllers: [
-    rest
-      .attachService('/tasks', TaskService)
+    rest('/tasks', TaskService)
       .withPreHook(
         [ validateTask, preventXSS ],
         'POST /', 'PATCH /:id', 'PUT /:id'

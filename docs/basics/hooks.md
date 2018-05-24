@@ -61,8 +61,7 @@ const logPostContext: PostHook = ctx => {
 
 export const MyModule: Module = {
   controllers: [
-    rest
-      .attachService('/', MyModelService)
+    rest('/', MyModelService)
       .withPreHook(logContext, 'GET /', 'GET /:id')
       // or withPreHooks([ logContext ], 'GET /', 'GET /:id')
       .withPreHook(ctx => { console.log('Second pre-hook executed!'); }, 'GET /', 'GET /:id')
@@ -93,8 +92,7 @@ const logPostContext: PostHook = ctx => {
 
 export const MyModule: Module = {
   controllers: [
-    rest
-      .attachService('/', MyModelService)
+    rest('/', MyModelService)
       .withPreHook(logContext)
       .withPreHook(ctx => { console.log('Second pre-hook executed!'); })
       // or withPreHooks([ logContext ])
@@ -128,17 +126,14 @@ const logPostContext: PostHook = ctx => {
 export const ChildModule: Module = {
   path: '/foobar',
   controllers: [
-    rest
-      .attachService('/', MyModelService), 
+    rest('/', MyModelService), 
   ]
 }
 
 export const MyModule: Module = {
   controllers: [
-    rest
-      .attachService('/foo', MyModelService),
-    rest
-      .attachService('/bar', MyModelService2),
+    rest('/foo', MyModelService),
+    rest('/bar', MyModelService2),
   ],
   modules: [
     ChildModule

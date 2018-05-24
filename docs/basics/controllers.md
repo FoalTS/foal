@@ -29,8 +29,7 @@ import { MyModelService } from './my-model-service';
 
 const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/foo', MyModelService)
+    rest('/foo', MyModelService)
   ]
 };
 ```
@@ -58,30 +57,6 @@ class UserService implements Partial<IModelService<User>> {
 }
 ```
 
-## Create a controller from a View or MultipleViews service
-
-```typescript
-import { view, multipleViews } from '@foal/common';
-import { HttpResponseOK, Module } from '@foal/core';
-
-import { MyViewService } from './my-view-service';
-import { MyMultipleViewsService } from './my-multiple-views-service';
-
-const AppModule: Module = {
-  controllers: [
-    view
-      .attachService('/foo', MyViewService),
-    multipleViews
-      .attachService('/bar', MyMultipleViewsService, {
-        views: {
-          myFirstView: '/bar',
-          mySecondView: '/foo'
-        }
-      })
-  ]
-};
-```
-
 ## Create a authenticating controller from a Authenticator service
 
 ```typescript
@@ -92,11 +67,10 @@ import { MyAuthenticatorService } from './my-authenticator-service';
 
 const AppModule: Module = {
   controllers: [
-    authentication
-      .attachService('/auth', MyAuthenticatorService, {
-        failureRedirect: '/auth?invalide_credentials=true', // Optional
-        successRedirect: '/home' // Optional
-      })
+    login('/auth', MyAuthenticatorService, {
+      failureRedirect: '/auth?invalide_credentials=true', // Optional
+      successRedirect: '/home' // Optional
+    })
   ]
 };
 ```
