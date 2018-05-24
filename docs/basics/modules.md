@@ -11,7 +11,7 @@ import { Module } from '@foal/core';
 
 const AppModule: Module = {
   controllers: [
-    rest.attachService('/my_resources', MyModelService)
+    rest('/my_resources', MyModelService)
   ],
   preHooks: [
     myFirstPreHook(),
@@ -30,20 +30,20 @@ When your app grows up, you may be interested in splitting your app into several
 ```typescript
 const Module1: Module = {
   controllers: [
-    rest.attachService('/my_resources', MyModelService)
+    rest('/my_resources', MyModelService)
   ]
 };
 
 const Module2: Module = {
   path: '/foo',
   controllers: [
-    rest.attachService('/my_resources2', MyModelService2)
+    rest('/my_resources2', MyModelService2)
   ]
 };
 
 const AppModule: Module = {
   controllers: [
-    rest.attachService('/my_resources3', MyModelService3)
+    rest('/my_resources3', MyModelService3)
   ],
   modules: [
     Module1,

@@ -12,7 +12,7 @@ import { TaskService } from './task.service';
 
 export const AppModule: FoalModule = {
   controllers: [
-    rest.attachService('/tasks', TaskService)
+    rest('/tasks', TaskService)
   ],
 };
 

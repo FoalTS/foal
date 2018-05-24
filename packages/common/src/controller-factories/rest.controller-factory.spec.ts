@@ -13,7 +13,7 @@ import * as spies from 'chai-spies';
 
 import { ObjectDoesNotExist } from '../object-does-not-exist';
 import { IModelService } from '../services';
-import { rest, RestControllerFactory } from './rest.controller-factory';
+import { rest } from './rest.controller-factory';
 
 chai.use(spies);
 const expect = chai.expect;
@@ -22,17 +22,13 @@ describe('rest', () => {
 
   @Service()
   class EmptyMockService {
-    constructor() {}
+    constructor() { }
   }
 
-  it('should be an instance of RestControllerFactory', () => {
-    expect(rest).to.an.instanceOf(RestControllerFactory);
-  });
-
-  describe('when attachService is called', () => {
+  describe('when it is called', () => {
 
     it('should return a controller with a proper "DELETE /" route.', async () => {
-      const controller = rest.attachService('/foobar', EmptyMockService);
+      const controller = rest('/foobar', EmptyMockService);
       const actual = controller.getRoute('DELETE /');
 
       expect(actual.httpMethod).to.equal('DELETE');
@@ -45,7 +41,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "DELETE /:id" route that handles requests', () => {
 
       it('when service.removeOne is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('DELETE /:id');
 
         expect(actual.httpMethod).to.equal('DELETE');
@@ -58,14 +54,14 @@ describe('rest', () => {
       it('when service.removeOne is a function.', async () => {
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
-          async removeOne(query: object): Promise<void> {}
+          constructor() { }
+          async removeOne(query: object): Promise<void> { }
         }
         const services = new ServiceManager();
         const mock = services.get(MockService);
         chai.spy.on(mock, 'removeOne');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('DELETE /:id');
 
         expect(actual.httpMethod).to.equal('DELETE');
@@ -80,14 +76,14 @@ describe('rest', () => {
       it('when service.removeOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           removeOne(query: object): void {
             throw new ObjectDoesNotExist();
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/foobar', MockService).getRoute('DELETE /:id')
-                                 .handler(ctx, new ServiceManager());
+        const actual = await rest('/foobar', MockService).getRoute('DELETE /:id')
+          .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 
@@ -96,7 +92,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "GET /" route that handles requests', () => {
 
       it('when service.findMany is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('GET /');
 
         expect(actual.httpMethod).to.equal('GET');
@@ -110,7 +106,7 @@ describe('rest', () => {
         const all = [];
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           async findMany(query: object) {
             return all;
           }
@@ -119,7 +115,7 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findMany');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('GET /');
 
         expect(actual.httpMethod).to.equal('GET');
@@ -141,7 +137,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "GET /:id" route that handles requests', () => {
 
       it('when service.findOne is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('GET /:id');
 
         expect(actual.httpMethod).to.equal('GET');
@@ -155,7 +151,7 @@ describe('rest', () => {
         const obj = {};
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           async findOne(query: object) {
             return obj;
           }
@@ -164,7 +160,7 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'findOne');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('GET /:id');
 
         expect(actual.httpMethod).to.equal('GET');
@@ -179,21 +175,21 @@ describe('rest', () => {
       it('when service.findOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           findOne(query: object) {
             throw new ObjectDoesNotExist();
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/foobar', MockService).getRoute('GET /:id')
-                                 .handler(ctx, new ServiceManager());
+        const actual = await rest('/foobar', MockService).getRoute('GET /:id')
+          .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 
     });
 
     it('should return an array of which one item handles PATCH /.', async () => {
-      const controller = rest.attachService('/foobar', EmptyMockService);
+      const controller = rest('/foobar', EmptyMockService);
       const actual = controller.getRoute('PATCH /');
 
       expect(actual.httpMethod).to.equal('PATCH');
@@ -206,7 +202,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "PATCH /:id" route that handles requests', () => {
 
       it('when service.updateOne is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('PATCH /:id');
 
         expect(actual.httpMethod).to.equal('PATCH');
@@ -220,7 +216,7 @@ describe('rest', () => {
         const obj = {};
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           async updateOne(record: object, query: object) {
             return obj;
           }
@@ -229,7 +225,7 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'updateOne');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('PATCH /:id');
 
         expect(actual.httpMethod).to.equal('PATCH');
@@ -248,14 +244,14 @@ describe('rest', () => {
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/foobar', MockService).getRoute('PATCH /:id')
-                                 .handler(ctx, new ServiceManager());
+        const actual = await rest('/foobar', MockService).getRoute('PATCH /:id')
+          .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 
@@ -264,7 +260,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "POST /" route that handles requests', () => {
 
       it('when service.createOne is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('POST /');
 
         expect(actual.httpMethod).to.equal('POST');
@@ -278,7 +274,7 @@ describe('rest', () => {
         const obj = {};
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           async createOne(record: object) {
             return obj;
           }
@@ -287,7 +283,7 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'createOne');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('POST /');
 
         expect(actual.httpMethod).to.equal('POST');
@@ -305,7 +301,7 @@ describe('rest', () => {
     });
 
     it('should return an array of which one item handles POST /:id.', async () => {
-      const controller = rest.attachService('/foobar', EmptyMockService);
+      const controller = rest('/foobar', EmptyMockService);
       const actual = controller.getRoute('POST /:id');
 
       expect(actual.httpMethod).to.equal('POST');
@@ -316,7 +312,7 @@ describe('rest', () => {
     });
 
     it('should return an array of which one item handles PUT /.', async () => {
-      const controller = rest.attachService('/foobar', EmptyMockService);
+      const controller = rest('/foobar', EmptyMockService);
       const actual = controller.getRoute('PUT /');
 
       expect(actual.httpMethod).to.equal('PUT');
@@ -329,7 +325,7 @@ describe('rest', () => {
     describe('should return a controller with a proper "PUT /:id" route that handles requests', () => {
 
       it('when service.updateOne is undefined.', async () => {
-        const controller = rest.attachService('/foobar', EmptyMockService);
+        const controller = rest('/foobar', EmptyMockService);
         const actual = controller.getRoute('PUT /:id');
 
         expect(actual.httpMethod).to.equal('PUT');
@@ -343,7 +339,7 @@ describe('rest', () => {
         const obj = {};
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           async updateOne(record: object, query: object) {
             return obj;
           }
@@ -352,7 +348,7 @@ describe('rest', () => {
         const mock = services.get(MockService);
         chai.spy.on(mock, 'updateOne');
 
-        const controller = rest.attachService('/foobar', MockService);
+        const controller = rest('/foobar', MockService);
         const actual = controller.getRoute('PUT /:id');
 
         expect(actual.httpMethod).to.equal('PUT');
@@ -371,14 +367,14 @@ describe('rest', () => {
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
         class MockService implements Partial<IModelService> {
-          constructor() {}
+          constructor() { }
           updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }
         }
         const ctx = { ...createEmptyContext(), params: { id: 1 } };
-        const actual = await rest.attachService('/foobar', MockService).getRoute('PUT /:id')
-                                 .handler(ctx, new ServiceManager());
+        const actual = await rest('/foobar', MockService).getRoute('PUT /:id')
+          .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 

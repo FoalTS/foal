@@ -6,7 +6,7 @@
 
 ### `rest`
 
-`rest.attachService(path: string, service: Partial<IModelService>)`
+`rest(path: string, service: Partial<IModelService>)`
 
 Creates a REST controller from a `Partial<IModelService>`.
 
