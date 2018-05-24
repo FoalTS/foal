@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 
-import { HttpResponseOK, ServiceManager } from '../classes';
+import { Context, HttpResponseOK, ServiceManager } from '../classes';
 import { PreHook } from '../interfaces';
-import { createEmptyContext } from '../testing';
 import { combinePreHooks } from './combine-pre-hooks';
 
 describe('combinePreHooks', () => {
@@ -23,7 +22,7 @@ describe('combinePreHooks', () => {
 
     const preHook: PreHook = combinePreHooks([ hook1, hook2, hook3, hook4 ]);
 
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.state.foo = '';
 
     await preHook(ctx, new ServiceManager());
@@ -49,7 +48,7 @@ describe('combinePreHooks', () => {
 
     const preHook: PreHook = combinePreHooks([ hook1, hook2, hook3, hook4 ]);
 
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.state.foo = '';
 
     const actual = await preHook(ctx, new ServiceManager());

@@ -44,17 +44,9 @@ The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerErro
 ### `Context`
 
 ```typescript
-interface Context<User = any> {
-  session: any;
-  params: ObjectType;
-  body: any;
-  query: ObjectType;
-  state: ObjectType;
-  user: User | null;
-  getHeader(field: string): string;
-}
+class Context { ... }
 
-interface PostContext extends Context {
+class PostContext extends Context {
   response: HttpResponse | undefined;
 }
 ```
@@ -78,16 +70,6 @@ interface Module {
   preHooks?: PreHook[];
 }
 ```
-
-## Testing
-
-### `createEmptyContext()`
-
-Creates an empty `Context`. This util is useful when testing a pre-hook.
-
-### `createEmptyPostContext()`
-
-Creates an empty `PostContext`. This util is useful when testing a post-hook.
 
 ## Utils
 

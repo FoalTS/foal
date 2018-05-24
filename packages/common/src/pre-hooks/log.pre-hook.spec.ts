@@ -1,4 +1,4 @@
-import { createEmptyContext, ServiceManager } from '@foal/core';
+import { Context, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
 import { log } from './log.pre-hook';
@@ -10,7 +10,7 @@ describe('log', () => {
     const logFn = msg => called = true;
     const hook = log('foo', logFn);
 
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     hook(ctx, new ServiceManager());
 
     expect(called).to.equal(true);

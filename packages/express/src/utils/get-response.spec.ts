@@ -1,8 +1,8 @@
 import {
-  createEmptyPostContext,
   Handler,
   HttpResponse,
   HttpResponseBadRequest,
+  PostContext,
   PostHook,
   PreHook,
   ServiceManager,
@@ -14,7 +14,7 @@ import { getResponse } from './get-response';
 describe('getResponse', () => {
 
   it('should execute the pre-hooks, the handler and the post-hooks in the right order.', async () => {
-    const ctx = createEmptyPostContext();
+    const ctx = new PostContext();
     ctx.state = { text: '' };
 
     const preHook1: PreHook = ctx => { ctx.state.text += 'a'; };
@@ -42,7 +42,7 @@ describe('getResponse', () => {
 
   it('should stop the execution of the remaining pre-hooks and the handler if an HttpResponse is '
      + 'returned by a pre-hook. This response should be assigned to the context response.', async () => {
-      const ctx = createEmptyPostContext();
+      const ctx = new PostContext();
       ctx.state = { text: '' };
       const response = new HttpResponseBadRequest();
       let responseInPostHook: undefined | HttpResponse;
@@ -78,7 +78,7 @@ describe('getResponse', () => {
   });
 
   it('should return the context response.', async () => {
-    const ctx = createEmptyPostContext();
+    const ctx = new PostContext();
     ctx.response = new HttpResponseBadRequest();
 
     const expected = ctx.response;

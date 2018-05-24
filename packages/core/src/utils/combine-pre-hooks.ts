@@ -1,6 +1,5 @@
-import { isHttpResponse } from '../classes/http-responses';
-import { ServiceManager } from '../classes/service-manager';
-import { Context, PreHook } from '../interfaces';
+import { Context, isHttpResponse, ServiceManager } from '../classes';
+import { PreHook } from '../interfaces';
 
 export function combinePreHooks(preHooks: PreHook[]): PreHook {
   return async (ctx: Context, services: ServiceManager) => {

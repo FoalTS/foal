@@ -38,9 +38,9 @@ export abstract class EmailAndPasswordAuthenticatorService<User extends { email:
   }
 
   async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
-    let user: User;
+    let user: User|undefined;
 
-    user = await getManager().findOne(this.UserClass, { email, password });
+    user = await getManager().findOne(this.UserClass, { email, password } as any);
     if (!user) {
       return null;
     }

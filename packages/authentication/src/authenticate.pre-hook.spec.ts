@@ -1,6 +1,6 @@
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import {
-  createEmptyContext,
+  Context,
   Service,
   ServiceManager,
 } from '@foal/core';
@@ -32,7 +32,7 @@ describe('authenticate', () => {
 
   it('should throw an Error if there is no session.', async () => {
     const preHook = authenticate(User);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     try {
       await preHook(ctx, new ServiceManager());
@@ -47,7 +47,7 @@ describe('authenticate', () => {
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
     const preHook = authenticate(User);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     ctx.session = {};
     await preHook(ctx, new ServiceManager());
@@ -58,7 +58,7 @@ describe('authenticate', () => {
 
   it('should set ctx.user to null if no user is found in the database matching the given id.', async () => {
     const hook = authenticate(User);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     ctx.session = {
       authentication: {
@@ -72,7 +72,7 @@ describe('authenticate', () => {
 
   it('should add a user property if a user matches the given id in the database.', async () => {
     const hook = authenticate(User);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     ctx.session = {
       authentication: {

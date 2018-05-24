@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 
-import { ServiceManager } from '../classes';
+import { PostContext, ServiceManager } from '../classes';
 import { PostHook } from '../interfaces';
-import { createEmptyPostContext } from '../testing';
 import { combinePostHooks } from './combine-post-hooks';
 
 describe('combinePostHooks', () => {
@@ -23,7 +22,7 @@ describe('combinePostHooks', () => {
 
     const postHook: PostHook = combinePostHooks([ hook1, hook2, hook3, hook4 ]);
 
-    const ctx = createEmptyPostContext();
+    const ctx = new PostContext();
     ctx.state.foo = '';
 
     await postHook(ctx, new ServiceManager());

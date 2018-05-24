@@ -1,5 +1,5 @@
 import {
-  createEmptyContext,
+  Context,
   HttpResponseNoContent,
   HttpResponseRedirect,
   ServiceManager
@@ -42,7 +42,7 @@ describe('logout', () => {
       it('should delete ctx.session.authentication if it exists.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         ctx.session = {
           authentication: {
             userId: 1
@@ -57,7 +57,7 @@ describe('logout', () => {
       it('should not throw an error if ctx.session.authentication is undefined.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         ctx.session = {};
 
         await route.handler(ctx, new ServiceManager());
@@ -66,7 +66,7 @@ describe('logout', () => {
       it('should return an HttpResponseNoContent if options.redirect is undefined.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         ctx.session = {};
 
         const response = await route.handler(ctx, new ServiceManager());
@@ -79,7 +79,7 @@ describe('logout', () => {
           redirect: '/foo'
         }).getRoute('main');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         ctx.session = {};
 
         const response = await route.handler(ctx, new ServiceManager());

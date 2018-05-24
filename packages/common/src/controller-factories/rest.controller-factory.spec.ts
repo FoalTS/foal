@@ -1,5 +1,5 @@
 import {
-  createEmptyContext,
+  Context,
   HttpResponseCreated,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
@@ -34,7 +34,7 @@ describe('rest', () => {
       expect(actual.httpMethod).to.equal('DELETE');
       expect(actual.path).to.equal('/foobar/');
 
-      const ctx = createEmptyContext();
+      const ctx = new Context();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -47,7 +47,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('DELETE');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -67,7 +67,8 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('DELETE');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', undefined);
         expect(mock.removeOne).to.have.been.called.with.exactly({ id: ctx.params.id });
@@ -81,7 +82,8 @@ describe('rest', () => {
             throw new ObjectDoesNotExist();
           }
         }
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('DELETE /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -98,7 +100,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/foobar/');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -121,7 +123,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/foobar/');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', all);
         expect(mock.findMany).to.have.been.called.with.exactly({});
@@ -143,7 +145,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -166,7 +168,8 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('GET');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.findOne).to.have.been.called.with.exactly({ id: ctx.params.id });
@@ -180,7 +183,9 @@ describe('rest', () => {
             throw new ObjectDoesNotExist();
           }
         }
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('GET /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -195,7 +200,7 @@ describe('rest', () => {
       expect(actual.httpMethod).to.equal('PATCH');
       expect(actual.path).to.equal('/foobar/');
 
-      const ctx = createEmptyContext();
+      const ctx = new Context();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -208,7 +213,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('PATCH');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -231,11 +236,9 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('PATCH');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = {
-          ...createEmptyContext(),
-          body: { foo: 'bar' },
-          params: { id: 1 }
-        };
+        const ctx = new Context();
+        ctx.body = { foo: 'bar' };
+        ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.updateOne).to.have.been.called.with.exactly(ctx.body, { id: ctx.params.id });
@@ -249,7 +252,9 @@ describe('rest', () => {
             throw new ObjectDoesNotExist();
           }
         }
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('PATCH /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -266,7 +271,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('POST');
         expect(actual.path).to.equal('/foobar/');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -289,10 +294,8 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('POST');
         expect(actual.path).to.equal('/foobar/');
 
-        const ctx = {
-          ...createEmptyContext(),
-          body: { foo: 'bar' },
-        };
+        const ctx = new Context();
+        ctx.body = { foo: 'bar' };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseCreated)
           .with.property('content', obj);
         expect(mock.createOne).to.have.been.called.with.exactly(ctx.body);
@@ -307,7 +310,7 @@ describe('rest', () => {
       expect(actual.httpMethod).to.equal('POST');
       expect(actual.path).to.equal('/foobar/:id');
 
-      const ctx = createEmptyContext();
+      const ctx = new Context();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -318,7 +321,7 @@ describe('rest', () => {
       expect(actual.httpMethod).to.equal('PUT');
       expect(actual.path).to.equal('/foobar/');
 
-      const ctx = createEmptyContext();
+      const ctx = new Context();
       expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -331,7 +334,7 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('PUT');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = createEmptyContext();
+        const ctx = new Context();
         expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseNotImplemented);
       });
 
@@ -354,11 +357,9 @@ describe('rest', () => {
         expect(actual.httpMethod).to.equal('PUT');
         expect(actual.path).to.equal('/foobar/:id');
 
-        const ctx = {
-          ...createEmptyContext(),
-          body: { foo: 'bar' },
-          params: { id: 1 }
-        };
+        const ctx = new Context();
+        ctx.body = { foo: 'bar' };
+        ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.updateOne).to.have.been.called.with.exactly(ctx.body, { id: ctx.params.id });
@@ -372,7 +373,9 @@ describe('rest', () => {
             throw new ObjectDoesNotExist();
           }
         }
-        const ctx = { ...createEmptyContext(), params: { id: 1 } };
+
+        const ctx = new Context();
+        ctx.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('PUT /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);

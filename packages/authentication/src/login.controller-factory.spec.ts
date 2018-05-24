@@ -1,5 +1,5 @@
 import {
-  createEmptyContext,
+  Context,
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
@@ -48,7 +48,7 @@ describe('login', () => {
         it('should return an HttpResponseNoContent if options.successRedirect is undefined.', async () => {
           const route = login('/', MockAuthenticatorService).getRoute('main');
 
-          const ctx = createEmptyContext();
+          const ctx = new Context();
           ctx.session = {};
           ctx.body = { username: 'John' };
 
@@ -62,7 +62,7 @@ describe('login', () => {
             successRedirect: '/foo'
           }).getRoute('main');
 
-          const ctx = createEmptyContext();
+          const ctx = new Context();
           ctx.session = {};
           ctx.body = { username: 'John' };
 
@@ -75,7 +75,7 @@ describe('login', () => {
         it('should create or update ctx.session.authentication to include the userId.', async () => {
           const route = login('/', MockAuthenticatorService).getRoute('main');
 
-          const ctx = createEmptyContext();
+          const ctx = new Context();
           ctx.session = {};
           ctx.body = { username: 'John' };
 
@@ -102,7 +102,7 @@ describe('login', () => {
         it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
           const route = login('/', MockAuthenticatorService).getRoute('main');
 
-          const ctx = createEmptyContext();
+          const ctx = new Context();
           ctx.session = {};
           ctx.body = { username: 'Jack' };
 
@@ -119,7 +119,7 @@ describe('login', () => {
             failureRedirect: '/foo'
           }).getRoute('main');
 
-          const ctx = createEmptyContext();
+          const ctx = new Context();
           ctx.session = {};
           ctx.body = { username: 'Jack' };
 

@@ -1,5 +1,5 @@
 import {
-  createEmptyContext,
+  Context,
   HttpResponseMethodNotAllowed,
   ServiceManager
 } from '@foal/core';
@@ -11,7 +11,7 @@ describe('methodNotAllowed', () => {
 
   it('should return an HttpResponseMethodNotAllowed.', () => {
     const hook = methodNotAllowed();
-    expect(hook(createEmptyContext(), new ServiceManager())).to.be.instanceOf(HttpResponseMethodNotAllowed);
+    expect(hook(new Context(), new ServiceManager())).to.be.instanceOf(HttpResponseMethodNotAllowed);
   });
 
 });

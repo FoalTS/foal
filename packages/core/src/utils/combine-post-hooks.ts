@@ -1,5 +1,5 @@
-import { ServiceManager } from '../classes';
-import { PostContext, PostHook } from '../interfaces';
+import { PostContext, ServiceManager } from '../classes';
+import { PostHook } from '../interfaces';
 
 export function combinePostHooks(postHooks: PostHook[]): PostHook {
   return async (ctx: PostContext, services: ServiceManager) => {

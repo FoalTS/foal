@@ -1,4 +1,4 @@
-import { createEmptyContext, HttpResponseBadRequest, ServiceManager } from '@foal/core';
+import { Context, HttpResponseBadRequest, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
 import { validateEmailAndPasswordCredentialsFormat } from './validate-email-and-password-credentials-format.pre-hook';
@@ -7,7 +7,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the email property is missing.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       password: 'myPassword',
     };
@@ -28,7 +28,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the password property is missing.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 'john@jack.com',
     };
@@ -49,7 +49,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the email property is not a string.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 1,
       password: 'myPassword',
@@ -71,7 +71,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the password property is not a string.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 'john@jack.com',
       password: 1,
@@ -93,7 +93,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if the email property does not contain a valid email.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 'johnjack.com',
       password: 'myPassword',
@@ -115,7 +115,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should return an HttpResponseBadRequest if there are additional properties.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 'john@jack.com',
       foo: 'bar',
@@ -138,7 +138,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
 
   it('should not return anything if the input is correct.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       email: 'john@jack.com',
       password: 'myPassword',

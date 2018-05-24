@@ -1,4 +1,4 @@
-import { createEmptyContext, HttpResponseBadRequest, ServiceManager } from '@foal/core';
+import { Context, HttpResponseBadRequest, ServiceManager } from '@foal/core';
 import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
@@ -14,7 +14,7 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       foo: 3
     };
@@ -31,7 +31,7 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     function context(body) {
       return { ...ctx, body };
@@ -54,7 +54,7 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = createEmptyContext();
+    const ctx = new Context();
 
     const actual = hook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseBadRequest);
@@ -69,7 +69,7 @@ describe('validate', () => {
       },
       type: 'object',
     };
-    const ctx = createEmptyContext();
+    const ctx = new Context();
     ctx.body = {
       foo: 3,
     };

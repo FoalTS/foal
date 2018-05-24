@@ -170,7 +170,7 @@ Hooks are just mere functions. Test them as is.
 
 ```typescript
 import {
-  createEmptyContext,
+  Context,
   PreHook,
   ServiceManager
 } from '@foal/core';
@@ -181,7 +181,7 @@ const preHook: PreHook = ctx => { ctx.state.foo = 'bar'; };
 describe('preHook', () => {
   
   it('should add a foo property to the context state.', () => {
-    const ctx = createEmptyContext();
+    const ctx = Context();
     
     preHook(ctx, new ServiceManager());
 
