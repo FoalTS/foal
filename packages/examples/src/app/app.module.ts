@@ -15,8 +15,7 @@ import { UserService } from './shared';
 
 export const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/users', UserService)
+    rest('/users', UserService)
       .withPreHooks([
         ctx => { ctx.body.isAdmin = false; },
       ], 'POST /')
