@@ -1,1 +1,1 @@
-export const someThing = 1;
+export { ModelService } from './model.service';
