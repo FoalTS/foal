@@ -5,8 +5,8 @@
   "scripts": {
     "shell": "ts-node -i",
     "test": "",
-    "start": "node ./dist/server.js",
-    "start:w": "node-dev ./dist/server.js --no-notify",
+    "start": "node ./lib/server.js",
+    "start:w": "node-dev ./lib/server.js --no-notify",
     "build": "webpack --config webpack.prod.js",
     "build:dev": "webpack --config webpack.dev.js",
     "build:dev:w": "webpack --config webpack.dev.js --watch",
@@ -19,7 +19,7 @@
     "access": "public"
   },
   "files": [
-    "dist/"
+    "lib/"
   ],
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -38,13 +38,10 @@
     "@foal/common": "^0.4.0-beta.3",
     "@foal/core": "^0.4.0-beta.3",
     "@foal/ejs": "^0.4.0-beta.3",
-    "@foal/express": "^0.4.0-beta.3",
+    "@foal/platform": "^0.4.0-beta.3",
     "@foal/typeorm": "^0.4.0-beta.3",
     "source-map-support": "^0.5.6",
-    "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
     "sqlite3": "^4.0.0",
     "typeorm": "^0.2.6"
   },

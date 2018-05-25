@@ -2,8 +2,8 @@
   "name": "@foal/ejs",
   "version": "0.4.0-beta.3",
   "description": "Foal package to render ejs templates",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
@@ -38,7 +38,7 @@
   ],
   "license": "MIT",
   "files": [
-    "dist/"
+    "lib/"
   ],
   "dependencies": {
     "@foal/common": "^0.4.0-beta.3",

@@ -5,14 +5,14 @@ const fs = require('fs');
 const del = require('del');
 
 gulp.task('clean', () => {
-  return del(['dist/']);
+  return del(['lib/']);
 });
 
 gulp.task('add-header', () => {
-  gulp.src([ './dist/**/*.js', './dist/**/*.d.ts' ])
+  gulp.src([ './lib/**/*.js', './lib/**/*.d.ts' ])
     .pipe(header(fs.readFileSync('../../header.txt', 'utf8'), { 
       pkg,
       today: new Date().getFullYear()
     }))
-    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./lib/'))
 });
