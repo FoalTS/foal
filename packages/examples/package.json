@@ -7,7 +7,7 @@
     "test": "",
     "start": "node ./lib/server.js",
     "start:w": "node-dev ./lib/server.js --no-notify",
-    "build": "webpack --config webpack.prod.js",
+    "build": "foal build",
     "build:dev": "webpack --config webpack.dev.js",
     "build:dev:w": "webpack --config webpack.dev.js --watch",
     "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\""
@@ -49,6 +49,7 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
+    "@foal/cli": "^0.4.0-beta.3",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "typescript": "^2.5.3",
