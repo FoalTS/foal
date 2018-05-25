@@ -59,7 +59,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.updateOne(ctx.body, { id: ctx.params.id }));
+      return new HttpResponseOK(await service.updateOne({ id: ctx.params.id }, ctx.body));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();

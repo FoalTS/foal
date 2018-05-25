@@ -31,10 +31,11 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = new Context();
 
     function context(body) {
-      return { ...ctx, body };
+      const ctx = new Context();
+      ctx.body = body;
+      return ctx;
     }
 
     expect(hook(context(null), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);

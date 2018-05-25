@@ -241,7 +241,7 @@ describe('rest', () => {
         ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
-        expect(mock.updateOne).to.have.been.called.with.exactly(ctx.body, { id: ctx.params.id });
+        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.params.id }, ctx.body);
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
@@ -362,7 +362,7 @@ describe('rest', () => {
         ctx.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
-        expect(mock.updateOne).to.have.been.called.with.exactly(ctx.body, { id: ctx.params.id });
+        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.params.id }, ctx.body);
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
