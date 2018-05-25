@@ -6,10 +6,12 @@ import {
 import {
   afterThatRemoveField,
   rest,
+  route,
 } from '@foal/common';
-import { Module, route } from '@foal/core';
+import { Module } from '@foal/core';
 import { render } from '@foal/ejs';
 
+import { User } from './models/user.model';
 import { AuthModule } from './modules/authentication';
 import { UserService } from './services';
 
@@ -22,13 +24,10 @@ export const AppModule: Module = {
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
       .withPostHook(afterThatRemoveField('password')),
-    route
-      .attachHandler('GET', '/', () => render(require('./templates/index.html'), { name: 'FoalTS' })),
-    route
-      .attachHandler('GET', '/', () => render(require('./templates/home.html')))
+    route('GET', '/', () => render(require('./templates/index.html'), { name: 'FoalTS' })),
+    route('GET', '/', () => render(require('./templates/home.html')))
       .withPreHook(restrictAccessToAuthenticated()),
-    route
-      .attachHandler('GET', '/error', () => {
+    route('GET', '/error', () => {
         throw new Error('This is an error.');
       })
   ],
@@ -36,6 +35,6 @@ export const AppModule: Module = {
     AuthModule,
   ],
   preHooks: [
-    authenticate(UserService)
+    authenticate(User)
   ]
 };
