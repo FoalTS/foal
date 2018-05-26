@@ -12,7 +12,7 @@ export function login(path: string, ServiceClass: Class<IAuthenticator<any>>,
                       options: { failureRedirect?: string, successRedirect?: string } = {}): Controller<'main'> {
   const controller = new Controller<'main'>(path);
   controller.addRoute('main', 'POST', '', async (ctx, services) => {
-    const user = await services.get(ServiceClass).authenticate(ctx.body);
+    const user = await services.get(ServiceClass).authenticate(ctx.request.body);
 
     if (user === null) {
       if (options.failureRedirect) {

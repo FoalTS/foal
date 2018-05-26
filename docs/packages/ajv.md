@@ -18,7 +18,7 @@ export const AppModule: Module = {
     route('POST', '/user', ctx => {
       // In this function we are sure that firstName and lastName
       // are defined thanks to the below pre-hook.
-      console.log(ctx.body.firstName, ctx.body.lastName);
+      console.log(ctx.request.body.firstName, ctx.request.body.lastName);
     })
       .withPreHook(validate({
         additionalProperties: false,

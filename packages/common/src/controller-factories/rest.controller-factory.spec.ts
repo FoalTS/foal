@@ -65,10 +65,10 @@ describe('rest', () => {
         expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', undefined);
-        expect(mock.removeOne).to.have.been.called.with.exactly({ id: ctx.params.id });
+        expect(mock.removeOne).to.have.been.called.with.exactly({ id: ctx.request.params.id });
       });
 
       it('when service.removeOne throws an ObjectDoesNotExist error.', async () => {
@@ -79,7 +79,7 @@ describe('rest', () => {
           }
         }
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('DELETE /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -163,10 +163,10 @@ describe('rest', () => {
         expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
-        expect(mock.findOne).to.have.been.called.with.exactly({ id: ctx.params.id });
+        expect(mock.findOne).to.have.been.called.with.exactly({ id: ctx.request.params.id });
       });
 
       it('when service.findOne throws an ObjectDoesNotExist error.', async () => {
@@ -178,7 +178,7 @@ describe('rest', () => {
         }
 
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('GET /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -229,11 +229,11 @@ describe('rest', () => {
         expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = new Context();
-        ctx.body = { foo: 'bar' };
-        ctx.params = { id: 1 };
+        ctx.request.body = { foo: 'bar' };
+        ctx.request.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
-        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.params.id }, ctx.body);
+        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.request.params.id }, ctx.request.body);
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
@@ -245,7 +245,7 @@ describe('rest', () => {
         }
 
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('PATCH /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
@@ -285,10 +285,10 @@ describe('rest', () => {
         expect(actual.path).to.equal('/foobar/');
 
         const ctx = new Context();
-        ctx.body = { foo: 'bar' };
+        ctx.request.body = { foo: 'bar' };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseCreated)
           .with.property('content', obj);
-        expect(mock.createOne).to.have.been.called.with.exactly(ctx.body);
+        expect(mock.createOne).to.have.been.called.with.exactly(ctx.request.body);
       });
 
     });
@@ -347,11 +347,11 @@ describe('rest', () => {
         expect(actual.path).to.equal('/foobar/:id');
 
         const ctx = new Context();
-        ctx.body = { foo: 'bar' };
-        ctx.params = { id: 1 };
+        ctx.request.body = { foo: 'bar' };
+        ctx.request.params = { id: 1 };
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
-        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.params.id }, ctx.body);
+        expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.request.params.id }, ctx.request.body);
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
@@ -363,7 +363,7 @@ describe('rest', () => {
         }
 
         const ctx = new Context();
-        ctx.params = { id: 1 };
+        ctx.request.params = { id: 1 };
         const actual = await rest('/foobar', MockService).getRoute('PUT /:id')
           .handler(ctx, new ServiceManager());
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);

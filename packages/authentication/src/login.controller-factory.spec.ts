@@ -48,7 +48,7 @@ describe('login', () => {
 
           const ctx = new Context();
           ctx.session = {};
-          ctx.body = { username: 'John' };
+          ctx.request.body = { username: 'John' };
 
           const response = await route.handler(ctx, new ServiceManager());
 
@@ -62,7 +62,7 @@ describe('login', () => {
 
           const ctx = new Context();
           ctx.session = {};
-          ctx.body = { username: 'John' };
+          ctx.request.body = { username: 'John' };
 
           const response = await route.handler(ctx, new ServiceManager());
 
@@ -75,7 +75,7 @@ describe('login', () => {
 
           const ctx = new Context();
           ctx.session = {};
-          ctx.body = { username: 'John' };
+          ctx.request.body = { username: 'John' };
 
           await route.handler(ctx, new ServiceManager());
 
@@ -102,7 +102,7 @@ describe('login', () => {
 
           const ctx = new Context();
           ctx.session = {};
-          ctx.body = { username: 'Jack' };
+          ctx.request.body = { username: 'Jack' };
 
           const response = await route.handler(ctx, new ServiceManager());
 
@@ -119,7 +119,7 @@ describe('login', () => {
 
           const ctx = new Context();
           ctx.session = {};
-          ctx.body = { username: 'Jack' };
+          ctx.request.body = { username: 'Jack' };
 
           const response = await route.handler(ctx, new ServiceManager());
 

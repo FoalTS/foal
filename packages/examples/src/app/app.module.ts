@@ -19,7 +19,7 @@ export const AppModule: Module = {
   controllers: [
     rest('/users', UserService)
       .withPreHooks([
-        ctx => { ctx.body.isAdmin = false; },
+        ctx => { ctx.request.body.isAdmin = false; },
       ], 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')

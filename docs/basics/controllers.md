@@ -12,7 +12,7 @@ const AppModule: Module = {
     route('GET', '/:id', (ctx, services) => {
       return new HttpResponseOK({
         name: 'John',
-        id: ctx.params.id
+        id: ctx.request.params.id
       });
     })
   ]

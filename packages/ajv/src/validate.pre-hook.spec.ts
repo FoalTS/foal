@@ -6,7 +6,7 @@ import { validate } from './validate.pre-hook';
 
 describe('validate', () => {
 
-  it('should not return an HttpResponseBadRequest if ctx.body is validated by ajv for the given schema.', () => {
+  it('should not return an HttpResponseBadRequest if ctx.request.body is validated by ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -15,7 +15,7 @@ describe('validate', () => {
     };
     const hook = validate(schema);
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       foo: 3
     };
 
@@ -23,7 +23,7 @@ describe('validate', () => {
     expect(actual).not.to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest if ctx.body is not validated by ajv for the given schema.', () => {
+  it('should return an HttpResponseBadRequest if ctx.request.body is not validated by ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -34,7 +34,7 @@ describe('validate', () => {
 
     function context(body) {
       const ctx = new Context();
-      ctx.body = body;
+      ctx.request.body = body;
       return ctx;
     }
 
@@ -46,7 +46,7 @@ describe('validate', () => {
     expect(hook(context({ foo: '3' }), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest with a defined `content` property if ctx.body is'
+  it('should return an HttpResponseBadRequest with a defined `content` property if ctx.request.body is'
       + ' not validated by ajv.', () => {
     const schema = {
       properties: {
@@ -71,17 +71,17 @@ describe('validate', () => {
       type: 'object',
     };
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       foo: 3,
     };
 
     let hook = validate(schema);
     hook(ctx, new ServiceManager());
-    expect(ctx.body.bar).to.equal(undefined);
+    expect(ctx.request.body.bar).to.equal(undefined);
 
     hook = validate(schema, new Ajv({ useDefaults: true }));
     hook(ctx, new ServiceManager());
-    expect(ctx.body.bar).to.equal(4);
+    expect(ctx.request.body.bar).to.equal(4);
   });
 
 });

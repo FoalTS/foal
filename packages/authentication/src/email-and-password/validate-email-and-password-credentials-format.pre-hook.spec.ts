@@ -8,7 +8,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if the email property is missing.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       password: 'myPassword',
     };
 
@@ -29,7 +29,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if the password property is missing.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 'john@jack.com',
     };
 
@@ -50,7 +50,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if the email property is not a string.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 1,
       password: 'myPassword',
     };
@@ -72,7 +72,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if the password property is not a string.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 'john@jack.com',
       password: 1,
     };
@@ -94,7 +94,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if the email property does not contain a valid email.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 'johnjack.com',
       password: 'myPassword',
     };
@@ -116,7 +116,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should return an HttpResponseBadRequest if there are additional properties.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 'john@jack.com',
       foo: 'bar',
       password: 'myPassword',
@@ -139,7 +139,7 @@ describe('validateEmailAndPasswordCredentialsFormat', () => {
   it('should not return anything if the input is correct.', () => {
     const preHook = validateEmailAndPasswordCredentialsFormat();
     const ctx = new Context();
-    ctx.body = {
+    ctx.request.body = {
       email: 'john@jack.com',
       password: 'myPassword',
     };

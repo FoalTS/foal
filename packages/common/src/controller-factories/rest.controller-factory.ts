@@ -23,7 +23,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.removeOne({ id: ctx.params.id }));
+      return new HttpResponseOK(await service.removeOne({ id: ctx.request.params.id }));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -44,7 +44,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.findOne({ id: ctx.params.id }));
+      return new HttpResponseOK(await service.findOne({ id: ctx.request.params.id }));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -59,7 +59,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.updateOne({ id: ctx.params.id }, ctx.body));
+      return new HttpResponseOK(await service.updateOne({ id: ctx.request.params.id }, ctx.request.body));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -72,7 +72,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
     if (!service.createOne) {
       return new HttpResponseNotImplemented();
     }
-    return new HttpResponseCreated(await service.createOne(ctx.body));
+    return new HttpResponseCreated(await service.createOne(ctx.request.body));
   });
   controller.addRoute('POST /:id', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
   controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
@@ -82,7 +82,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.updateOne({ id: ctx.params.id }, ctx.body));
+      return new HttpResponseOK(await service.updateOne({ id: ctx.request.params.id }, ctx.request.body));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
