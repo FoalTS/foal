@@ -3,12 +3,10 @@ import { EntityManager, getManager } from 'typeorm';
 import { IModelService, ObjectDoesNotExist } from '@foal/common';
 import { Class } from '@foal/core';
 
-export class ModelService<Entity> implements IModelService {
+export abstract class ModelService<Entity> implements IModelService {
 
-  constructor(
-    private Entity: Class<Entity>,
-    private connectionName = 'default'
-  ) {}
+  abstract readonly Entity: Class<Entity>;
+  readonly connectionName: string = 'default';
 
   createOne(record: object): Promise<Entity> {
     record = Object.assign({}, record);
