@@ -83,8 +83,6 @@ import { MyService } from './my-service.interface';
 
 @Service()
 class ServiceA implements MyService {
-  constructor() {}
-
   giveMeANumber(start: number, end: number): number {
     return (start + end) / 2;
   }

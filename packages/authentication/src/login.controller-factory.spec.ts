@@ -19,8 +19,6 @@ describe('login', () => {
 
   @Service()
   class MockAuthenticatorService implements IAuthenticator<any> {
-    constructor() {}
-
     authenticate(credentials: { username?: string }) {
       if (credentials.username === 'John') {
         return {

@@ -10,7 +10,6 @@ import { App, Service } from '@foal/core';
 @Service()
 class ServiceA {
   name = 'Service A';
-  constructor() {}
 }
 
 const app = new App({});
@@ -29,7 +28,6 @@ import { App, Service } from '@foal/core';
 @Service()
 class ServiceA {
   name = 'Service A';
-  constructor() {}
 }
 
 @Service()
@@ -60,7 +58,6 @@ import { expect } from 'chai';
 @Service()
 class ServiceA {
   name = 'Service A';
-  constructor() {}
 }
 
 @Service()

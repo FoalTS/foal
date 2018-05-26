@@ -15,7 +15,8 @@ describe('ServiceManager', () => {
 
   describe('when get is called', () => {
 
-    it('should throw an exception if the given Service is not a service class.', () => {
+    it('should not throw an exception if the given class does not have the Service decorator '
+        + 'and/or has no constructor.', () => {
       class Foo {}
 
       @Service()
@@ -25,9 +26,9 @@ describe('ServiceManager', () => {
         constructor() {}
       }
 
-      expect(() => serviceManager.get(Foo)).to.throw();
-      expect(() => serviceManager.get(Bar)).to.throw();
-      expect(() => serviceManager.get(Barfoo)).to.throw();
+      expect(() => serviceManager.get(Foo)).not.to.throw();
+      expect(() => serviceManager.get(Bar)).not.to.throw();
+      expect(() => serviceManager.get(Barfoo)).not.to.throw();
     });
 
     it('should return an instance of the given Service.', () => {

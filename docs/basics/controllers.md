@@ -46,7 +46,6 @@ class User {
 @Service()
 class UserService implements Partial<IModelService<User>> {
   private id = 0;
-  constructor () {}
 
   createOne(data: User): User & { id: string } {
     this.id++;
