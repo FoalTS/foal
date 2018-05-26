@@ -9,7 +9,7 @@ import {
   route,
 } from '@foal/common';
 import { Module } from '@foal/core';
-import { render } from '@foal/ejs';
+import { render, view } from '@foal/ejs';
 
 import { User } from './models/user.model';
 import { AuthModule } from './modules/authentication';
@@ -24,8 +24,8 @@ export const AppModule: Module = {
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
       .withPostHook(afterThatRemoveField('password')),
-    route('GET', '/', () => render(require('./templates/index.html'), { name: 'FoalTS' })),
-    route('GET', '/', () => render(require('./templates/home.html')))
+    view('/', require('./templates/index.html'), { name: 'FoalTS' }),
+    view('/home', require('./templates/home.html'))
       .withPreHook(restrictAccessToAuthenticated()),
     route('GET', '/error', () => {
         throw new Error('This is an error.');
