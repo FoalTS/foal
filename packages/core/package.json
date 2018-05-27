@@ -40,7 +40,6 @@
     "lib/"
   ],
   "dependencies": {
-    "ajv": "^6.5.0",
     "typeorm": "^0.2.6",
     "reflect-metadata": "^0.1.10",
     "lodash.merge": "^4.6.1",
