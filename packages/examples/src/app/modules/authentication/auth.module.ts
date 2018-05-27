@@ -1,6 +1,6 @@
 import { route } from '@foal/common';
-import { HttpResponseSuccess, Module, view } from '@foal/core';
-import { login, logout, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
+import { HttpResponseSuccess, login, logout, Module, view } from '@foal/core';
+import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
 import { AuthenticatorService } from './services/authenticator.service';
 

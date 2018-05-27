@@ -55,8 +55,8 @@ When the authentication succeeds it returns an `HttpResponseNoContent` if `succe
 When the authentication fails it returns an `HttpResponseUnauthorized` if `failureRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 ```typescript
-import { Module } from '@foal/core';
-import { login, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
+import { login, Module } from '@foal/core';
+import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
 import { AuthenticatorService } from './authenticator.service';
 
@@ -210,8 +210,8 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
-import { route, HttpResponseOK, Module } from '@foal/core';
+import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
+import { route, HttpResponseOK, login, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
 
