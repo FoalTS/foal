@@ -23,7 +23,7 @@ const commonConfig = {
   },
   output: {
     filename: 'server.js',
-    path: path.resolve(__dirname, 'lib'),
+    path: path.resolve(process.cwd(), 'lib'),
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
