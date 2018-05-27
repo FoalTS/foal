@@ -8,8 +8,8 @@ import {
   Module,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
+  view
 } from '@foal/core';
-import { render, view } from '@foal/ejs';
 
 import { User } from './models/user.model';
 import { AuthModule } from './modules/authentication';

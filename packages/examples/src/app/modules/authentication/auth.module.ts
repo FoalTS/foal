@@ -1,7 +1,6 @@
-import { login, logout, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 import { route } from '@foal/common';
-import { HttpResponseSuccess, Module } from '@foal/core';
-import { view } from '@foal/ejs';
+import { HttpResponseSuccess, Module, view } from '@foal/core';
+import { login, logout, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
 import { AuthenticatorService } from './services/authenticator.service';
 
