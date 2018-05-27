@@ -1,14 +1,12 @@
 import {
   afterThatRemoveField,
-  rest,
-  route,
-} from '@foal/common';
-import {
   authenticate,
-  Module,
   initDB,
+  Module,
+  rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
+  route,
   view,
 } from '@foal/core';
 

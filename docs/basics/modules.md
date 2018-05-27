@@ -5,8 +5,7 @@ Every app starts with a module. A module binds the controllers to the request ha
 ## Example
 
 ```typescript
-import { rest } from '@foal/common';
-import { Module } from '@foal/core';
+import { Module , rest} from '@foal/core';
 // module and service imports...
 
 const AppModule: Module = {

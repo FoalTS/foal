@@ -43,10 +43,10 @@ Hooks can either be bound to one, several or all the routes of a controller. The
 Each controller factory gives a different name to each of its route.
 
 ```typescript
-import { rest } from '@foal/common';
 import {
   Module,
-  PreHook
+  PreHook,
+  rest
 } from '@foal/core';
 
 import { MyModelService } from './my-model-service';
@@ -74,10 +74,10 @@ export const MyModule: Module = {
 ### All the routes of a controller
 
 ```typescript
-import { rest } from '@foal/common';
 import {
   Module,
-  PreHook
+  PreHook,
+  rest
 } from '@foal/core';
 
 import { MyModelService } from './my-model-service';
@@ -105,10 +105,10 @@ export const MyModule: Module = {
 ### All the routes of all the controllers of a module and its children
 
 ```typescript
-import { rest } from '@foal/common';
 import {
   Module,
-  PreHook
+  PreHook,
+  rest
 } from '@foal/core';
 
 import { MyModelService } from './my-model-service';

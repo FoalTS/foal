@@ -35,7 +35,6 @@
   "dependencies": {
     "@foal/ajv": "^0.4.0-beta.3",
     "@foal/password": "^0.4.0-beta.4",
-    "@foal/common": "^0.4.0-beta.3",
     "@foal/core": "^0.4.0-beta.3",
     "@foal/ejs": "^0.4.0-beta.3",
     "@foal/platform": "^0.4.0-beta.3",

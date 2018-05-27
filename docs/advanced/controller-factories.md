@@ -12,7 +12,7 @@ See [Controllers](../basics/controllers.md) to learn how to use it.
 
 `IServiceControllerFactory` is an interface from `@foal/core` that aims to create controller factories. All classes implementing it have a public method `attachService` that instantiates the controllers.
 
-> In `@foal/common`, `rest`, `view`, `multipleViews` are singletons of classes implementing the `IServiceControllerFactory`.
+> In `@foal/core`, `rest`, `view`, `multipleViews` are singletons of classes implementing the `IServiceControllerFactory`.
 
 Let's see how to create one.
 
@@ -27,7 +27,6 @@ interface MyService {
 Then create your controller factory from the `IServiceControllerFactory` interface.
 
 ```typescript
-import { HttpResponseMethodNotAllowed } from '@foal/common';
 import {
   ServiceControllerFactory,
   HttpResponseMethodNotAllowed,

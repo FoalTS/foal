@@ -22,8 +22,7 @@ const AppModule: Module = {
 ## Create a REST controller from a Model service
 
 ```typescript
-import { rest } from '@foal/common';
-import { HttpResponseOK, Module } from '@foal/core';
+import { HttpResponseOK, Module, rest } from '@foal/core';
 
 import { MyModelService } from './my-model-service';
 

@@ -5,8 +5,7 @@ Almost there! The last thing we need to create our REST API is to create and reg
 Open `src/app/app.module.ts` and replace it with:
 
 ```typescript
-import { rest } from '@foal/common';
-import { FoalModule } from '@foal/core';
+import { FoalModule, rest } from '@foal/core';
 
 import { TaskService } from './task.service';
 

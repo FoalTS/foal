@@ -35,7 +35,6 @@ There are several ways to contribute.
 
 - @foal/ajv
 - @foal/password
-- @foal/common
 - @foal/core
 - @foal/ejs
 - @foal/express 

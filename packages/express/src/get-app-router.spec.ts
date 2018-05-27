@@ -1,5 +1,4 @@
-import { route } from '@foal/common';
-import { App, HttpMethod, HttpResponseOK } from '@foal/core';
+import { App, HttpMethod, HttpResponseOK, route } from '@foal/core';
 import * as express from 'express';
 import * as request from 'supertest';
 
