@@ -1,4 +1,4 @@
-import { ObjectDoesNotExist } from '@foal/common';
+import { ObjectDoesNotExist } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
