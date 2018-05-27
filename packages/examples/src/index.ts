@@ -1,7 +1,6 @@
 import 'source-map-support/register';
 
-import { App } from '@foal/core';
-import { foal } from '@foal/platform';
+import { App, foal } from '@foal/core';
 import * as http from 'http';
 
 import { AppModule } from './app/app.module';

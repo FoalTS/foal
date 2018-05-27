@@ -1,7 +1,6 @@
 import * as path from 'path';
 
-import { App, Config } from '@foal/core';
-import { getMiddlewares } from '@foal/express';
+import { App, Config, getMiddlewares } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';

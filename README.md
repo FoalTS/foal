@@ -37,7 +37,6 @@ There are several ways to contribute.
 - @foal/password
 - @foal/core
 - @foal/ejs
-- @foal/express 
 
 ## License
 
