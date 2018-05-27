@@ -43,6 +43,7 @@
     "ajv": "^6.5.0",
     "typeorm": "^0.2.6",
     "reflect-metadata": "^0.1.10",
+    "lodash.merge": "^4.6.1",
     "@foal/ejs": "^0.4.0-beta.3"
   },
   "devDependencies": {
