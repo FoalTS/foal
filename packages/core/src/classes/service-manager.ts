@@ -8,7 +8,7 @@ export function Service() {
 
 export class ServiceManager {
 
-  map: Map<Class<any>, any>  = new Map();
+  readonly map: Map<Class<any>, any>  = new Map();
 
   get<Service>(ServiceClass: Class<Service>): Service {
     // Get the service if it exists.
