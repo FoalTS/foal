@@ -1,7 +1,8 @@
 import { EntityManager, getManager } from 'typeorm';
 
-import { IModelService } from '@foal/common';
-import { Class, ObjectDoesNotExist } from '@foal/core';
+import { Class } from '../interfaces';
+import { ObjectDoesNotExist } from '../utils';
+import { IModelService } from './model-service.interface';
 
 export abstract class ModelService<Entity> implements IModelService {
 

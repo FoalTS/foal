@@ -1,5 +1,4 @@
-import { Service } from '@foal/core';
-import { ModelService } from '@foal/typeorm';
+import { ModelService, Service } from '@foal/core';
 
 import { User } from '../models';
 

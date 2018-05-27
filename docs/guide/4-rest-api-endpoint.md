@@ -22,7 +22,7 @@ That's it! We now have a REST API at the endpoint `/tasks`. Go back to your brow
 
 ## What have we just done?
 
-First we imported the controller factory `rest` from the `@foal/common` package. A controller factory creates controllers from services that implement a specific interface. For instance, the `rest` factory takes those which implement the `Partial<IModelService>` interface.
+First we imported the controller factory `rest` from the `@foal/core` package. A controller factory creates controllers from services that implement a specific interface. For instance, the `rest` factory takes those which implement the `Partial<IModelService>` interface.
 
 Once a controller is created (with the `attachService` method), it needs to be registered within a module. Every app starts with a module which in this case is the `AppModule`. That's all you need to know for the moment.
 

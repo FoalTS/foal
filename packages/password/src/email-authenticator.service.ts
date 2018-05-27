@@ -1,8 +1,7 @@
 import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
 
-import { IModelService } from '@foal/common';
-import { AbstractUser, Class, IAuthenticator, isObjectDoesNotExist } from '@foal/core';
+import { AbstractUser, Class, IAuthenticator, IModelService, isObjectDoesNotExist } from '@foal/core';
 import { getManager } from 'typeorm';
 
 /**

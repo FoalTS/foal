@@ -1,5 +1,4 @@
-import { IModelService } from '@foal/common';
-import { AbstractUser, Class, ObjectDoesNotExist } from '@foal/core';
+import { AbstractUser, Class, IModelService, ObjectDoesNotExist } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 

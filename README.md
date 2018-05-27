@@ -38,8 +38,7 @@ There are several ways to contribute.
 - @foal/common
 - @foal/core
 - @foal/ejs
-- @foal/express
-- @foal/typeorm
+- @foal/express 
 
 ## License
 

@@ -6,10 +6,9 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  IModelService,
   isObjectDoesNotExist,
 } from '@foal/core';
-
-import { IModelService } from '../services';
 
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;

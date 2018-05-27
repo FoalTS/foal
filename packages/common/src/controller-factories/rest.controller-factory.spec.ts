@@ -5,6 +5,7 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  IModelService,
   ObjectDoesNotExist,
   Service,
   ServiceManager,
@@ -12,7 +13,6 @@ import {
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { IModelService } from '../services';
 import { rest } from './rest.controller-factory';
 
 chai.use(spies);
