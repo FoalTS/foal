@@ -1,14 +1,14 @@
 import {
-  authenticate,
-  restrictAccessToAdmin,
-  restrictAccessToAuthenticated,
-} from '@foal/authentication';
-import {
   afterThatRemoveField,
   rest,
   route,
 } from '@foal/common';
-import { Module } from '@foal/core';
+import {
+  authenticate,
+  Module,
+  restrictAccessToAdmin,
+  restrictAccessToAuthenticated,
+} from '@foal/core';
 import { render, view } from '@foal/ejs';
 
 import { User } from './models/user.model';

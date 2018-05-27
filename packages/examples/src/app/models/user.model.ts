@@ -1,8 +1,5 @@
-import {
-  AbstractUser,
-  parsePassword
-} from '@foal/authentication';
-import { Service } from '@foal/core';
+import { parsePassword } from '@foal/authentication';
+import { AbstractUser, Service } from '@foal/core';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
