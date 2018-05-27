@@ -1,4 +1,3 @@
-import { ObjectDoesNotExist } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
@@ -9,6 +8,8 @@ import {
   getManager,
   PrimaryGeneratedColumn
 } from 'typeorm';
+
+import { ObjectDoesNotExist } from '../utils';
 
 chai.use(chaiAsPromised);
 
