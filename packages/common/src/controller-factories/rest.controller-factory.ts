@@ -6,9 +6,9 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  isObjectDoesNotExist,
 } from '@foal/core';
 
-import { isObjectDoesNotExist } from '../object-does-not-exist';
 import { IModelService } from '../services';
 
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
