@@ -15,7 +15,7 @@ export interface IConfig {
   debugMode: boolean;
 }
 
-export function foal(app: App) {
+export function createApp(app: App) {
   const config = new Config<IConfig>('base').config;
   const expressApp = express();
 

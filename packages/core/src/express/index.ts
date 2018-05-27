@@ -1,2 +1,2 @@
 export { getMiddlewares } from './get-middlewares';
-export { foal } from './foal';
+export { createApp } from './create-app';
