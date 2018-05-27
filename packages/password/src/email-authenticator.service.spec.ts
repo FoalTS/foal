@@ -7,9 +7,9 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-import { EmailAndPasswordAuthenticatorService } from './email-and-password-authenticator.service';
+import { AbstractEmailAuthenticator } from './email-authenticator.service';
 
-describe('EmailAndPasswordAuthenticatorService', () => {
+describe('AbstractEmailAuthenticator', () => {
 
   class User extends AbstractUser {
     email: string;
@@ -22,7 +22,7 @@ describe('EmailAndPasswordAuthenticatorService', () => {
   + 'eb96ff7e947816f74908abc687926fec7e9a84c7e6c9a0c3d5d3cb718bc9'
   + '479410815c7b38cace114ec995354defe1e3511f3c103ed4356d457cb98bffc8d559';
 
-  class ConcreteClass extends EmailAndPasswordAuthenticatorService<User> {
+  class ConcreteClass extends AbstractEmailAuthenticator<User> {
     UserClass = User;
   }
   let service: ConcreteClass;

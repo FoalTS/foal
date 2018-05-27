@@ -22,21 +22,21 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
 
-- `EmailAndPasswordAuthenticatorService`
+- `AbstractEmailAuthenticator`
 
-`EmailAndPasswordAuthenticatorService` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+`AbstractEmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
 Its constructor takes a user service that must implement the `IModelService` interface.
 
 *Example*:
 ```typescript
-import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
+import { AbstractEmailAuthenticator } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User, UserService } from './user.service.ts';
 
 @Service()
-export class AuthenticatorService extends EmailAndPasswordAuthenticatorService<User> {
+export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
 
   constructor(userService: UserService) {
     super(userService);
@@ -238,13 +238,13 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { EmailAndPasswordAuthenticatorService } from '@foal/authentication';
+import { AbstractEmailAuthenticator } from '@foal/authentication';
 import { Service } from '@foal/core';
 
 import { User, UserService } from '../shared/user.service.ts';
 
 @Service()
-export class AuthService<User> extends EmailAndPasswordAuthenticatorService {
+export class AuthService<User> extends AbstractEmailAuthenticator {
 
   constructor(userService: UserService) {
     super(userService);

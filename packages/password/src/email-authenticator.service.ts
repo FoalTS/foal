@@ -2,21 +2,19 @@ import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
 
 import { IModelService } from '@foal/common';
-import { AbstractUser, Class, isObjectDoesNotExist } from '@foal/core';
-
+import { AbstractUser, Class, IAuthenticator, isObjectDoesNotExist } from '@foal/core';
 import { getManager } from 'typeorm';
-import { IAuthenticator } from '../authenticator.interface';
 
 /**
  * Authenticator with email and password. A user model service should be passed to the constructor.
  *
  * @export
  * @abstract
- * @class EmailAndPasswordAuthenticatorService
+ * @class AbstractEmailAuthenticator
  * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
-export abstract class EmailAndPasswordAuthenticatorService<
+export abstract class AbstractEmailAuthenticator<
       User extends { email: string, password: string } & AbstractUser>
     implements IAuthenticator<User> {
 
