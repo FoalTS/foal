@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { App } from '@foal/core';
+import { App, Config } from '@foal/core';
 import { getMiddlewares } from '@foal/express';
 import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
@@ -9,14 +9,15 @@ import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
-export interface Config {
+export interface IConfig {
   staticUrl: string;
   session: any;
   csrfProtection: boolean;
   debugMode: boolean;
 }
 
-export function foal(app: App, config: Config) {
+export function foal(app: App) {
+  const config = new Config<IConfig>('base').config;
   const expressApp = express();
 
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
