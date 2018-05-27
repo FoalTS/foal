@@ -21,7 +21,7 @@ export function foal(app: App) {
   const expressApp = express();
 
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
-  expressApp.use(express.static(path.join(__dirname, config.staticUrl)));
+  expressApp.use(express.static(path.join(process.cwd(), config.staticUrl)));
   expressApp.use(helmet());
   expressApp.use(bodyParser.json());
   expressApp.use(bodyParser.urlencoded({ extended: false }));
@@ -55,5 +55,5 @@ export function foal(app: App) {
     }
   ]));
 
-  return expressApp();
+  return expressApp;
 }
