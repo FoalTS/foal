@@ -1,4 +1,3 @@
-import { HttpResponseOK } from '@foal/core';
 import { expect } from 'chai';
 
 import { renderToString } from './index';
