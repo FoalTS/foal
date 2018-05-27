@@ -5,13 +5,13 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  ObjectDoesNotExist,
   Service,
   ServiceManager,
 } from '@foal/core';
 import * as chai from 'chai';
 import * as spies from 'chai-spies';
 
-import { ObjectDoesNotExist } from '../object-does-not-exist';
 import { IModelService } from '../services';
 import { rest } from './rest.controller-factory';
 
