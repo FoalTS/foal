@@ -1,12 +1,13 @@
 import * as path from 'path';
 
-import { App, Config, getMiddlewares } from '@foal/core';
+import { Config, getMiddlewares, Module } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
+import { App } from '..';
 
 export interface IConfig {
   staticUrl: string;
@@ -15,7 +16,7 @@ export interface IConfig {
   debugMode: boolean;
 }
 
-export function createApp(app: App) {
+export function createApp(rootModule: Module) {
   const config = new Config<IConfig>('base').config;
   const expressApp = express();
 
@@ -47,7 +48,7 @@ export function createApp(app: App) {
     }
   });
 
-  expressApp.use(getMiddlewares(app, { debugMode: config.debugMode }, [
+  expressApp.use(getMiddlewares(new App(rootModule), { debugMode: config.debugMode }, [
     {
       req: 'csrfToken',
       state: 'csrfToken'
