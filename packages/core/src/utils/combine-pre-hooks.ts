@@ -1,4 +1,5 @@
-import { Context, isHttpResponse, ServiceManager } from '../classes';
+import { Context, ServiceManager } from '../classes';
+import { isHttpResponse } from '../http';
 import { PreHook } from '../interfaces';
 
 export function combinePreHooks(preHooks: PreHook[]): PreHook {
