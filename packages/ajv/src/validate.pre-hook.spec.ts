@@ -6,7 +6,8 @@ import { validate } from './validate.pre-hook';
 
 describe('validate', () => {
 
-  it('should not return an HttpResponseBadRequest if ctx.request.body is validated by ajv for the given schema.', () => {
+  it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
+      + ' by ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -23,7 +24,8 @@ describe('validate', () => {
     expect(actual).not.to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest if ctx.request.body is not validated by ajv for the given schema.', () => {
+  it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
+      + ' ajv for the given schema.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
@@ -46,8 +48,8 @@ describe('validate', () => {
     expect(hook(context({ foo: '3' }), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest with a defined `content` property if ctx.request.body is'
-      + ' not validated by ajv.', () => {
+  it('should return an HttpResponseBadRequest with a defined `content` property if '
+      + 'ctx.request.body is not validated by ajv.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
