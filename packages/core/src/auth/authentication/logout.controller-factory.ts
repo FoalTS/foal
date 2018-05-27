@@ -1,4 +1,5 @@
-import { Controller, HttpResponseNoContent, HttpResponseRedirect } from '@foal/core';
+import { Controller } from '../../classes';
+import { HttpResponseNoContent, HttpResponseRedirect } from '../../http';
 
 export function logout(path: string,
                        options: { redirect?: string, httpMethod?: 'GET'|'POST' } = {}): Controller<'main'> {

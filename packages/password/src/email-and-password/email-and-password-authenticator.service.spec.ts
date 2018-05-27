@@ -1,9 +1,9 @@
-import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { IModelService } from '@foal/common';
+import { AbstractUser, Class, ObjectDoesNotExist } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
 chai.use(chaiAsPromised);
-import { Class } from '@foal/core';
 
 const expect = chai.expect;
 
@@ -11,7 +11,7 @@ import { EmailAndPasswordAuthenticatorService } from './email-and-password-authe
 
 describe('EmailAndPasswordAuthenticatorService', () => {
 
-  interface User {
+  class User extends AbstractUser {
     email: string;
     password: string;
     username: string;
@@ -22,54 +22,39 @@ describe('EmailAndPasswordAuthenticatorService', () => {
   + 'eb96ff7e947816f74908abc687926fec7e9a84c7e6c9a0c3d5d3cb718bc9'
   + '479410815c7b38cace114ec995354defe1e3511f3c103ed4356d457cb98bffc8d559';
 
-  class ConcreteClass extends EmailAndPasswordAuthenticatorService<User> {}
+  class ConcreteClass extends EmailAndPasswordAuthenticatorService<User> {
+    UserClass = User;
+  }
   let service: ConcreteClass;
 
   class UserModelService implements IModelService {
-    createOne(): any {}
-    createMany(): any {}
-
-    findById(): any {}
-    findOne(query: { email?: string }): User & { id: number } {
+    createOne(query: { email?: string }): User & { id: number } {
       if (query.email === 'john@foalts.org') {
-        return {
-          email: 'john@foalts.org',
-          id: 1,
-          password: encryptedPassword,
-          username: 'John',
-        };
+        const john = new User();
+        john.email = 'john@foalts.org';
+        john.id = 1;
+        john.password = encryptedPassword;
+        john.username = 'John';
+        return john;
       }
       if (query.email === 'jack@foalts.org') {
-        return {
-          email: 'jack@foalts.org',
-          id: 2,
-          password: 'bcrypt_mypassword',
-          username: 'Jack',
-        };
+        const jack = new User();
+        jack.email = 'jack@foalts.org';
+        jack.id = 2;
+        jack.password = 'bcrypt_mypassword';
+        jack.username = 'Jack';
+        return jack;
       }
       if (query.email === 'sam@foalts.org') {
-        return {
-          email: 'sam@foalts.org',
-          id: 3,
-          password: 'pbkdf2_sha256$hello_world',
-          username: 'Sam',
-        };
+        const sam = new User();
+        sam.email = 'sam@foalts.org';
+        sam.id = 3;
+        sam.password = 'pbkdf2_sha256$hello_world';
+        sam.username = 'Sam';
+        return sam;
       }
       throw new ObjectDoesNotExist();
     }
-    findAll(): any {}
-
-    findByIdAndUpdate(): any {}
-    findOneAndUpdate(): any {}
-    updateMany(): void {}
-
-    findByIdAndReplace(): any {}
-    findOneAndReplace(): any {}
-
-    findByIdAndRemove(): any {}
-    findOneAndRemove(): any {}
-
-    removeMany(): void {}
   }
 
   it('should instantiate.', () => {

@@ -1,10 +1,13 @@
+import { expect } from 'chai';
+
 import {
   Context,
+  ServiceManager
+} from '../../classes';
+import {
   HttpResponseNoContent,
   HttpResponseRedirect,
-  ServiceManager
-} from '@foal/core';
-import { expect } from 'chai';
+} from '../../http';
 
 import { logout } from './logout.controller-factory';
 

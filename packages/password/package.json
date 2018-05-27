@@ -1,5 +1,5 @@
 {
-  "name": "@foal/authentication",
+  "name": "@foal/password",
   "version": "0.4.0-beta.4",
   "description": "Foal components for authentication and authorization",
   "main": "./lib/index.js",

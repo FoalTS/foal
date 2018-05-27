@@ -1,10 +1,14 @@
 import {
-  Class,
   Controller,
+} from '../../classes';
+import {
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '@foal/core';
+} from '../../http';
+import {
+  Class,
+} from '../../interfaces';
 
 import { IAuthenticator } from './authenticator.interface';
 

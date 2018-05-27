@@ -5,7 +5,11 @@ export abstract class AbstractUser extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: false })
-  isAdmin: boolean;
+  @Column('simple-array')
+  roles: string[];
+
+  hasRole(role: string): boolean {
+    return this.roles.includes(role);
+  }
 
 }

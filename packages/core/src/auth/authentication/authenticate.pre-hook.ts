@@ -1,8 +1,8 @@
-import { IModelService, isObjectDoesNotExist } from '@foal/common';
-import { Class, PreHook } from '@foal/core';
 import { getManager } from 'typeorm';
 
-import { AbstractUser } from './abstract-user';
+import { Class, PreHook } from '../../interfaces';
+import { isObjectDoesNotExist } from '../../utils';
+import { AbstractUser } from '../models';
 
 export function authenticate(UserEntity: Class<AbstractUser>): PreHook {
   return async ctx => {
@@ -12,12 +12,6 @@ export function authenticate(UserEntity: Class<AbstractUser>): PreHook {
     if (!ctx.session.authentication || !ctx.session.authentication.hasOwnProperty('userId')) {
       return;
     }
-    try {
-      ctx.user = await getManager().findOne(UserEntity, ctx.session.authentication.userId);
-    } catch (err) {
-      if (!isObjectDoesNotExist(err)) {
-        throw err;
-      }
-    }
+    ctx.user = await getManager().findOne(UserEntity, ctx.session.authentication.userId);
   };
 }

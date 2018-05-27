@@ -1,13 +1,16 @@
+import * as chai from 'chai';
+import * as spies from 'chai-spies';
+
 import {
   Context,
+  Service,
+  ServiceManager,
+} from '../../classes';
+import {
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  Service,
-  ServiceManager,
-} from '@foal/core';
-import * as chai from 'chai';
-import * as spies from 'chai-spies';
+} from '../../http';
 
 import { IAuthenticator } from './authenticator.interface';
 import { login } from './login.controller-factory';

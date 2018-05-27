@@ -1,13 +1,12 @@
-import { IModelService, ObjectDoesNotExist } from '@foal/common';
+import { expect } from 'chai';
+import { Column, getManager } from 'typeorm';
+
 import {
   Context,
   Service,
   ServiceManager,
-} from '@foal/core';
-import { expect } from 'chai';
-import { Column, getManager } from 'typeorm';
-
-import { AbstractUser } from './abstract-user';
+} from '../../classes';
+import { AbstractUser } from '../models';
 import { authenticate } from './authenticate.pre-hook';
 
 describe('authenticate', () => {
