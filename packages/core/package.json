@@ -40,6 +40,12 @@
     "lib/"
   ],
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "csurf": "^1.9.0",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "helmet": "^3.12.1",
+    "morgan": "^1.9.0",
     "typeorm": "^0.2.6",
     "reflect-metadata": "^0.1.10",
     "lodash.merge": "^4.6.1",
