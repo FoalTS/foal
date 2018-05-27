@@ -4,7 +4,7 @@ import {
   PostHook,
   PreHook,
   Route
-} from '../interfaces';
+} from './interfaces';
 
 export class Controller<RouteName extends string> {
   private routes: Map<RouteName, Route> = new Map();

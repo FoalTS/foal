@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
-import { PostContext, ServiceManager } from '../classes';
+import { PostContext } from '../contexts';
 import { PostHook } from '../interfaces';
+import { ServiceManager } from '../service-manager';
 import { combinePostHooks } from './combine-post-hooks';
 
 describe('combinePostHooks', () => {

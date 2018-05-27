@@ -1,10 +1,10 @@
+import { expect } from 'chai';
+
 import {
   Context,
   HttpResponseMethodNotAllowed,
   ServiceManager
-} from '@foal/core';
-import { expect } from 'chai';
-
+} from '../../core';
 import { methodNotAllowed } from './method-not-allowed.pre-hook';
 
 describe('methodNotAllowed', () => {

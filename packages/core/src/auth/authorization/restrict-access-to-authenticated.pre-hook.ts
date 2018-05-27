@@ -1,9 +1,7 @@
 import {
   HttpResponseUnauthorized,
-} from '../../http';
-import {
   PreHook,
-} from '../../interfaces';
+} from '../../core';
 
 export function restrictAccessToAuthenticated(): PreHook {
   return ctx => {

@@ -1,5 +1,4 @@
-import { Controller } from '../../classes';
-import { HttpResponseNoContent, HttpResponseRedirect } from '../../http';
+import { Controller, HttpResponseNoContent, HttpResponseRedirect } from '../../core';
 
 export function logout(path: string,
                        options: { redirect?: string, httpMethod?: 'GET'|'POST' } = {}): Controller<'main'> {

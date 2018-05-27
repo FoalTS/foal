@@ -1,7 +1,6 @@
 import { renderToString } from '@foal/ejs';
 
-import { Controller } from '../../classes';
-import { HttpResponseOK } from '../../http';
+import { Controller, HttpResponseOK } from '../../core';
 
 export function render(template: string, locals?: object): HttpResponseOK {
   return new HttpResponseOK(renderToString(template, locals));

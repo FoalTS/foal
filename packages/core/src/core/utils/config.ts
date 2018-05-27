@@ -2,10 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
 
-import * as Ajv from 'ajv';
 import * as merge from 'lodash.merge';
-
-const ajv = new Ajv();
 
 export class Config<Config> {
 
@@ -30,6 +27,7 @@ export class Config<Config> {
 
   private loadFile(filename: string): Config|undefined {
     if (fs.existsSync(`./config/${filename}.js`)) {
+      // Note: require has a cache. So once a config file is loaded, it is kept in cache.
       return require(path.join(process.cwd(), `config/${filename}.js`));
     }
   }

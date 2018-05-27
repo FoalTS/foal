@@ -5,7 +5,7 @@ import {
   Context,
   Service,
   ServiceManager,
-} from '../../classes';
+} from '../../core';
 import { AbstractUser } from '../models';
 import { authenticate } from './authenticate.pre-hook';
 

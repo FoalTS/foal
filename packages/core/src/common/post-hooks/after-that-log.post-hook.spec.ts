@@ -1,6 +1,6 @@
-import { PostContext, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
+import { PostContext, ServiceManager } from '../../core';
 import { afterThatLog } from './after-that-log.post-hook';
 
 describe('afterThatLog', () => {

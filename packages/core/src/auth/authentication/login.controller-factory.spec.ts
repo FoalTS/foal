@@ -3,15 +3,12 @@ import * as spies from 'chai-spies';
 
 import {
   Context,
-  Service,
-  ServiceManager,
-} from '../../classes';
-import {
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../http';
-
+  Service,
+  ServiceManager,
+} from '../../core';
 import { IAuthenticator } from './authenticator.interface';
 import { login } from './login.controller-factory';
 

@@ -1,9 +1,7 @@
 import {
   HttpResponseMethodNotAllowed,
-} from '../../http';
-import {
   PreHook,
-} from '../../interfaces';
+} from '../../core';
 
 export function methodNotAllowed(): PreHook {
   return () => new HttpResponseMethodNotAllowed();

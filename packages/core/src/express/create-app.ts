@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import { Config, getMiddlewares, Module } from '@foal/core';
 import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
@@ -8,6 +7,9 @@ import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 import { App } from '..';
+
+import { Config, Module } from '../core';
+import { getMiddlewares } from './get-middlewares';
 
 export interface IConfig {
   staticUrl: string;

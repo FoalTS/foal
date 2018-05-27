@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Class } from '../interfaces';
+import { Class } from './interfaces';
 
 export function Service() {
   return function decorator(target: any) {};

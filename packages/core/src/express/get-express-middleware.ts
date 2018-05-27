@@ -2,7 +2,7 @@ import {
   PostContext,
   Route,
   ServiceManager,
-} from '@foal/core';
+} from '../core';
 import { getResponse, sendResponse } from './utils';
 
 export function getExpressMiddleware(route: Route, services: ServiceManager,

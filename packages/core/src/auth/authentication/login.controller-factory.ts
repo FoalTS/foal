@@ -1,14 +1,10 @@
 import {
+  Class,
   Controller,
-} from '../../classes';
-import {
   HttpResponseNoContent,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../http';
-import {
-  Class,
-} from '../../interfaces';
+} from '../../core';
 
 import { IAuthenticator } from './authenticator.interface';
 

@@ -2,12 +2,10 @@ import { expect } from 'chai';
 
 import {
   Context,
-  ServiceManager
-} from '../../classes';
-import {
   HttpResponseNoContent,
   HttpResponseRedirect,
-} from '../../http';
+  ServiceManager
+} from '../../core';
 
 import { logout } from './logout.controller-factory';
 

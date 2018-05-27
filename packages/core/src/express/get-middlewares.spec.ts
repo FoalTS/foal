@@ -1,8 +1,9 @@
-import { App, HttpResponseCreated, route } from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 
+import { route } from '../common';
+import { App, HttpResponseCreated } from '../core';
 import { getMiddlewares } from './get-middlewares';
 
 describe('getMiddlewares', () => {

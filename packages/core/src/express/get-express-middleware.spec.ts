@@ -1,12 +1,12 @@
-import {
-  HttpResponseOK,
-  Route,
-  ServiceManager
-} from '@foal/core';
 import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 
+import {
+  HttpResponseOK,
+  Route,
+  ServiceManager
+} from '../core';
 import { getExpressMiddleware } from './get-express-middleware';
 
 describe(`getExpressMiddleware`, () => {

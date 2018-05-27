@@ -1,4 +1,4 @@
-import { Controller } from '../classes';
+import { Controller } from '../controller';
 import { PostHook, PreHook } from './hooks';
 
 export interface Module {

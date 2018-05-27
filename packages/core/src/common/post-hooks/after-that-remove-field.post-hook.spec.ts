@@ -1,11 +1,11 @@
+import { expect } from 'chai';
+
 import {
   HttpResponseBadRequest,
   HttpResponseOK,
   PostContext,
   ServiceManager,
-} from '@foal/core';
-import { expect } from 'chai';
-
+} from '../../core';
 import { afterThatRemoveField } from './after-that-remove-field.post-hook';
 
 describe('afterThatRemoveField', () => {

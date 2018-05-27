@@ -3,7 +3,7 @@ import {
   PostContext,
   Route,
   ServiceManager
-} from '@foal/core';
+} from '../../core';
 
 export async function getResponse(route: Route, ctx: PostContext,
                                   services: ServiceManager): Promise<void | HttpResponse> {

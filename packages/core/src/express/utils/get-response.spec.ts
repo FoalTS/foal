@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import {
   Handler,
   HttpResponse,
@@ -6,9 +8,7 @@ import {
   PostHook,
   PreHook,
   ServiceManager,
-} from '@foal/core';
-import { expect } from 'chai';
-
+} from '../../core';
 import { getResponse } from './get-response';
 
 describe('getResponse', () => {

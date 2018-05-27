@@ -1,4 +1,4 @@
-import { Controller, Handler, HttpMethod } from '@foal/core';
+import { Controller, Handler, HttpMethod } from '../../core';
 
 export function route(httpMethod: HttpMethod, path: string, handler: Handler): Controller<'main'> {
   const controller = new Controller<'main'>();

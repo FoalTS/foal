@@ -1,6 +1,6 @@
-import { Context, ServiceManager } from '@foal/core';
 import { expect } from 'chai';
 
+import { Context, ServiceManager } from '../../core';
 import { log } from './log.pre-hook';
 
 describe('log', () => {

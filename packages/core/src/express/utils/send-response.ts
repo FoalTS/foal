@@ -5,7 +5,7 @@ import {
   isHttpResponseRedirect,
   isHttpResponseServerError,
   isHttpResponseSuccess,
-} from '@foal/core';
+} from '../../core';
 
 export function sendResponse(res, response: HttpResponse) {
   if (isHttpResponseSuccess(response) || isHttpResponseClientError(response) || isHttpResponseServerError(response)) {

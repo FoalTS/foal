@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { HttpResponseOK } from '../../http';
+import { HttpResponseOK } from '../../core';
 import { render } from './view.controller-factory';
 
 describe('render', () => {

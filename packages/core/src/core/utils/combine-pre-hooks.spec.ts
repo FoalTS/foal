@@ -1,7 +1,9 @@
 import { expect } from 'chai';
 
-import { Context, HttpResponseOK, ServiceManager } from '../classes';
+import { Context } from '../contexts';
+import { HttpResponseOK } from '../http';
 import { PreHook } from '../interfaces';
+import { ServiceManager } from '../service-manager';
 import { combinePreHooks } from './combine-pre-hooks';
 
 describe('combinePreHooks', () => {

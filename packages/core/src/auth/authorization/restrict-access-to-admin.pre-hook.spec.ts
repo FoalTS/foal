@@ -2,14 +2,12 @@ import { expect } from 'chai';
 
 import {
   Context,
-  ServiceManager,
-} from '../../classes';
-import {
   HttpResponse,
   HttpResponseForbidden,
-  HttpResponseUnauthorized
-} from '../../http';
-import { PreHook } from '../../interfaces';
+  HttpResponseUnauthorized,
+  PreHook,
+  ServiceManager,
+} from '../../core';
 import { AbstractUser } from '../models';
 import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
 

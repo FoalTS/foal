@@ -1,10 +1,8 @@
 import {
   HttpResponseForbidden,
   HttpResponseUnauthorized,
-} from '../../http';
-import {
   PreHook,
-} from '../../interfaces';
+} from '../../core';
 
 export function restrictAccessToAdmin(): PreHook {
   return ctx => {

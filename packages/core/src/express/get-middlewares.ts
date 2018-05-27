@@ -1,5 +1,4 @@
-import { App } from '@foal/core';
-
+import { App } from '../core';
 import { getAppRouter } from './get-app-router';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';

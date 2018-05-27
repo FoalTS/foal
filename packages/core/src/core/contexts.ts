@@ -1,10 +1,10 @@
 import { AbstractUser } from '../auth';
-import { HttpRequest, HttpResponse } from '../http';
+import { HttpRequest, HttpResponse } from './http';
 
 export class Context<User extends AbstractUser = AbstractUser> {
   readonly request: HttpRequest;
-  readonly session: any = undefined;
-  readonly state: { [key: string]: any } = {};
+  session: any = undefined;
+  state: { [key: string]: any } = {};
   user: User|undefined = undefined;
 
   constructor(expressRequest?, stateDef?: { req: string, state: string }[]) {

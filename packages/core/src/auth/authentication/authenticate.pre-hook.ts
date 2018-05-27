@@ -1,7 +1,6 @@
 import { getManager } from 'typeorm';
 
-import { Class, PreHook } from '../../interfaces';
-import { isObjectDoesNotExist } from '../../utils';
+import { Class, PreHook } from '../../core';
 import { AbstractUser } from '../models';
 
 export function authenticate(UserEntity: Class<AbstractUser>): PreHook {

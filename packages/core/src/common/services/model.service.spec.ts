@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm';
 
-import { ObjectDoesNotExist } from '../utils';
+import { ObjectDoesNotExist } from './object-does-not-exist';
 
 chai.use(chaiAsPromised);
 

@@ -1,3 +1,6 @@
+import * as chai from 'chai';
+import * as spies from 'chai-spies';
+
 import {
   Context,
   HttpResponseCreated,
@@ -5,14 +8,13 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  IModelService,
-  ObjectDoesNotExist,
   Service,
   ServiceManager,
-} from '@foal/core';
-import * as chai from 'chai';
-import * as spies from 'chai-spies';
-
+} from '../../core';
+import {
+  IModelService,
+  ObjectDoesNotExist,
+} from '../services';
 import { rest } from './rest.controller-factory';
 
 chai.use(spies);

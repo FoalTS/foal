@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { Route } from '../interfaces';
 import { Controller } from './controller';
+import { Route } from './interfaces';
 
 describe('Controller', () => {
 

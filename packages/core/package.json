@@ -63,6 +63,7 @@
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
+    "supertest": "^3.1.0",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"

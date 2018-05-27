@@ -1,4 +1,4 @@
-import { HttpResponseSuccess, isHttpResponseSuccess, PostHook } from '@foal/core';
+import { HttpResponseSuccess, isHttpResponseSuccess, PostHook } from '../../core';
 
 export function afterThatRemoveField(name: string): PostHook {
   return ctx => {

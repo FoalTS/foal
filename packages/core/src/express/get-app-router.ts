@@ -1,6 +1,6 @@
-import { App } from '@foal/core';
 import { Router } from 'express';
 
+import { App } from '../core';
 import { getExpressMiddleware } from './get-express-middleware';
 
 export function getAppRouter(app: App, stateDef: { req: string, state: string }[] = []) {
