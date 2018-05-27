@@ -59,7 +59,7 @@ class UserService implements Partial<IModelService<User>> {
 ## Create a authenticating controller from a Authenticator service
 
 ```typescript
-import { authentication } from '@foal/authentication';
+import { authentication } from '@foal/password';
 import { HttpResponseOK, Module } from '@foal/core';
 
 import { MyAuthenticatorService } from './my-authenticator-service';

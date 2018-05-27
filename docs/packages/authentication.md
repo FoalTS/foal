@@ -1,4 +1,4 @@
-# @foal/authentication
+# @foal/password
 
 This package is dedicated to authentication and authorization. You'll find a complete example at the end of the page.
 
@@ -30,7 +30,7 @@ Its constructor takes a user service that must implement the `IModelService` int
 
 *Example*:
 ```typescript
-import { AbstractEmailAuthenticator } from '@foal/authentication';
+import { AbstractEmailAuthenticator } from '@foal/password';
 import { Service } from '@foal/core';
 
 import { User, UserService } from './user.service.ts';
@@ -56,7 +56,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { Module } from '@foal/core';
-import { login, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
+import { login, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
 import { AuthenticatorService } from './authenticator.service';
 
@@ -80,7 +80,7 @@ Usually it is registered once within the `AppModule` `preHooks`.
 *Example:*
 ```typescript
 import { route, Module } from '@foal/core';
-import { authenticate } from '@foal/authentication';
+import { authenticate } from '@foal/password';
 
 export const AppModule: Module = {
   controllers: [
@@ -127,7 +127,7 @@ If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAuthenticated } from '@foal/authentication';
+import { authenticate, restrictAccessToAuthenticated } from '@foal/password';
 import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
@@ -153,7 +153,7 @@ If the user is not an admin, namely it has no property `isAdmin` or this propert
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAdmin } from '@foal/authentication';
+import { authenticate, restrictAccessToAdmin } from '@foal/password';
 import { route, Module } from '@foal/core';
 
 export const AppModule: Module = {
@@ -187,7 +187,7 @@ export const AppModule: Module = {
 
 ```typescript
 // app.module.ts
-import { authenticate, restrictToAuthenticated } from '@foal/authentication';
+import { authenticate, restrictToAuthenticated } from '@foal/password';
 import { route, Module } from '@foal/core';
 
 import { AuthModule } from './auth/auth.module';
@@ -210,7 +210,7 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/authentication';
+import { authentication, validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 import { route, HttpResponseOK, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -238,7 +238,7 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { AbstractEmailAuthenticator } from '@foal/authentication';
+import { AbstractEmailAuthenticator } from '@foal/password';
 import { Service } from '@foal/core';
 
 import { User, UserService } from '../shared/user.service.ts';
@@ -258,7 +258,7 @@ export class AuthService<User> extends AbstractEmailAuthenticator {
 import { Service } from '@foal/core';
 // other imports... (ConnectionService, etc)
 
-import { BaseUser, EmailAndPassword, emailAndPasswordSchema, parsePassword } from '@foal/authentication';
+import { BaseUser, EmailAndPassword, emailAndPasswordSchema, parsePassword } from '@foal/password';
 
 export type User = BaseUser & EmailAndPassword;
 

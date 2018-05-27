@@ -34,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "@foal/ajv": "^0.4.0-beta.3",
-    "@foal/authentication": "^0.4.0-beta.4",
+    "@foal/password": "^0.4.0-beta.4",
     "@foal/common": "^0.4.0-beta.3",
     "@foal/core": "^0.4.0-beta.3",
     "@foal/ejs": "^0.4.0-beta.3",
