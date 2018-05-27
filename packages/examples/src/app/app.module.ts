@@ -6,9 +6,10 @@ import {
 import {
   authenticate,
   Module,
+  initDB,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
-  view
+  view,
 } from '@foal/core';
 
 import { User } from './models/user.model';
@@ -35,6 +36,7 @@ export const AppModule: Module = {
     AuthModule,
   ],
   preHooks: [
+    initDB(),
     authenticate(User)
   ]
 };
