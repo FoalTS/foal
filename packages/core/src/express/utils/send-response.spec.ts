@@ -7,7 +7,7 @@ import {
   HttpResponseInternalServerError,
   HttpResponseOK,
   HttpResponseRedirect
-} from '@foal/core';
+} from '../../core';
 import { sendResponse } from './send-response';
 
 describe('sendResponse', () => {
