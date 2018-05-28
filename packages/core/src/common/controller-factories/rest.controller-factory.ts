@@ -22,7 +22,9 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.removeOne({ id: ctx.request.params.id }));
+      return new HttpResponseOK(await service.removeOne(
+        Object.assign({}, ctx.state.query, { id: ctx.request.params.id })
+      ));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -43,7 +45,9 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.findOne({ id: ctx.request.params.id }));
+      return new HttpResponseOK(await service.findOne(
+        Object.assign({}, ctx.state.query, { id: ctx.request.params.id })
+      ));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -58,7 +62,10 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.updateOne({ id: ctx.request.params.id }, ctx.request.body));
+      return new HttpResponseOK(await service.updateOne(
+        Object.assign({}, ctx.state.query, { id: ctx.request.params.id }),
+        ctx.request.body
+      ));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();
@@ -81,7 +88,10 @@ export function rest(path: string, ModelServiceClass: Class<Partial<IModelServic
       return new HttpResponseNotImplemented();
     }
     try {
-      return new HttpResponseOK(await service.updateOne({ id: ctx.request.params.id }, ctx.request.body));
+      return new HttpResponseOK(await service.updateOne(
+        Object.assign({}, ctx.state.query, { id: ctx.request.params.id }),
+        ctx.request.body
+      ));
     } catch (err) {
       if (isObjectDoesNotExist(err)) {
         return new HttpResponseNotFound();

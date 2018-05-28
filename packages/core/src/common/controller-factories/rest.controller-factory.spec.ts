@@ -69,6 +69,10 @@ describe('rest', () => {
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', undefined);
         expect(mock.removeOne).to.have.been.called.with.exactly({ id: ctx.request.params.id });
+
+        ctx.state.query = { userId: 1, id: 2 };
+        await actual.handler(ctx, services);
+        expect(mock.removeOne).to.have.been.called.with.exactly({ id: ctx.request.params.id, userId: 1 });
       });
 
       it('when service.removeOne throws an ObjectDoesNotExist error.', async () => {
@@ -167,6 +171,10 @@ describe('rest', () => {
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.findOne).to.have.been.called.with.exactly({ id: ctx.request.params.id });
+
+        ctx.state.query = { userId: 1, id: 2 };
+        await actual.handler(ctx, services);
+        expect(mock.findOne).to.have.been.called.with.exactly({ id: ctx.request.params.id, userId: 1 });
       });
 
       it('when service.findOne throws an ObjectDoesNotExist error.', async () => {
@@ -234,6 +242,13 @@ describe('rest', () => {
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.request.params.id }, ctx.request.body);
+
+        ctx.state.query = { userId: 1, id: 2 };
+        await actual.handler(ctx, services);
+        expect(mock.updateOne).to.have.been.called.with.exactly(
+          { id: ctx.request.params.id, userId: 1 },
+          ctx.request.body
+        );
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
@@ -352,6 +367,13 @@ describe('rest', () => {
         expect(await actual.handler(ctx, services)).to.be.an.instanceOf(HttpResponseOK)
           .with.property('content', obj);
         expect(mock.updateOne).to.have.been.called.with.exactly({ id: ctx.request.params.id }, ctx.request.body);
+
+        ctx.state.query = { userId: 1, id: 2 };
+        await actual.handler(ctx, services);
+        expect(mock.updateOne).to.have.been.called.with.exactly(
+          { id: ctx.request.params.id, userId: 1 },
+          ctx.request.body
+        );
       });
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
