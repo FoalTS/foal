@@ -19,6 +19,8 @@ export abstract class AbstractEmailAuthenticator<
 
   abstract UserClass: Class<User>;
 
+  validate(credentials: any) {}
+
   async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {
       throw new Error('Password format is incorrect or not supported.');

@@ -19,6 +19,7 @@ describe('login', () => {
 
   @Service()
   class Authenticator implements IAuthenticator<any> {
+    validate(credentials) {}
     authenticate(credentials: { username?: string }) {
       if (credentials.username === 'John') {
         return {
