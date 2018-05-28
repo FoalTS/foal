@@ -47,8 +47,7 @@
     "helmet": "^3.12.1",
     "morgan": "^1.9.0",
     "reflect-metadata": "^0.1.10",
-    "lodash.merge": "^4.6.1",
-    "@foal/ejs": "^0.4.0-beta.3"
+    "lodash.merge": "^4.6.1"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
@@ -59,6 +58,7 @@
     "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
+    "@foal/ejs": "^0.4.0-beta.3",
     "chai": "^4.1.2",
     "chai-spies": "^1.0.0",
     "chai-as-promised": "^7.1.1",
