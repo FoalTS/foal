@@ -1,6 +1,8 @@
 export abstract class HttpResponse {
   readonly isHttpResponse = true;
 
+  headers: { [key: string]: string } = {};
+
   abstract statusCode: number;
   abstract statusMessage: string;
 

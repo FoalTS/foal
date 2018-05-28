@@ -12,8 +12,10 @@ export function sendResponse(res, response: HttpResponse) {
     if (typeof response.content === 'number') {
       response.content = response.content.toString();
     }
+    res.set(response.headers);
     res.status(response.statusCode).send(response.content);
   } else if (isHttpResponseRedirect(response)) {
+    res.set(response.headers);
     res.status(response.statusCode).redirect((response as HttpResponseRedirect).path);
   }
 }
