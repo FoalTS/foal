@@ -6,7 +6,7 @@ This package is dedicated to authentication and authorization. You'll find a com
 
 Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services,
-- the `authentication` controller factory,
+- the `login` controller factory,
 - the `UserModelService` service,
 - and the `authenticate` pre-hook.
 
@@ -46,9 +46,9 @@ export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
 ```
 
 
-### The `authentication` controller factory
+### The `login` controller factory
 
-The `authentication` controller factory attaches an `Authenticator` service to the request handler. It accepts optional options `{ failureRedirect?: string, successRedirect?: string }`.
+The `login` controller factory attaches an `Authenticator` service to the request handler. It accepts optional options `{ failureRedirect?: string, successRedirect?: string }`.
 
 When the authentication succeeds it returns an `HttpResponseNoContent` if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
@@ -63,9 +63,9 @@ import { AuthenticatorService } from './authenticator.service';
 export const AuthModule: Module = {
   controllers: [
     login('/login', AuthenticatorService, {
-        failureRedirect: '/login?invalid_credentials=true',
-        successRedirect: '/home'
-      })
+      failureRedirect: '/login?invalid_credentials=true',
+      successRedirect: '/home'
+    })
       .withPreHook(validateEmailAndPasswordCredentialsFormat())
   ]
 }
@@ -73,7 +73,7 @@ export const AuthModule: Module = {
 
 ### The `authenticate` pre-hook
 
-The `authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `authentication` controller factory), then the `user context` will be defined.
+The `authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
 Usually it is registered once within the `AppModule` `preHooks`.
 
@@ -95,7 +95,7 @@ export const AppModule: Module = {
       })
   ]
   preHooks: [
-    authenticate(),
+    authenticate(User),
   ]
 }
 ```
@@ -203,7 +203,7 @@ export const AppModule: Module = {
     AuthModule
   ],
   preHooks: [
-    authenticate()
+    authenticate(User)
   ]
 }
 ```
