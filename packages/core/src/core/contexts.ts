@@ -2,7 +2,7 @@ import { AbstractUser } from '../auth';
 import { HttpRequest, HttpResponse } from './http';
 
 export class Context<User extends AbstractUser = AbstractUser> {
-  readonly request: HttpRequest;
+  request: HttpRequest;
   session: any = undefined;
   state: { [key: string]: any } = {};
   user: User|undefined = undefined;
