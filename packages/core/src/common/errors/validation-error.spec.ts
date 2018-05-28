@@ -1,6 +1,19 @@
 import { expect } from 'chai';
 import { isValidationError, ValidationError } from './validation-error';
 
+describe('ValidationError', () => {
+
+  it('should accept an optional content.', () => {
+    let err = new ValidationError();
+    expect(err.content).to.equal(undefined);
+
+    const content = { foo: 'bar' };
+    err = new ValidationError(content);
+    expect(err.content).to.equal(content);
+  });
+
+});
+
 describe('isValidationError', () => {
 
   it('should return true if the given object is an instance of ValidationError.', () => {

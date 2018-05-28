@@ -1,7 +1,7 @@
 export class ValidationError extends Error {
   readonly isValidationError = true;
 
-  constructor() {
+  constructor(public content?: any) {
     super();
     Object.setPrototypeOf(this, ValidationError.prototype);
   }
