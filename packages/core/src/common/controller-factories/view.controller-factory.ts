@@ -1,9 +1,8 @@
 import { Controller, getConfig, HttpResponseOK } from '../../core';
 
-const { templateEngine } = getConfig('base');
-
 export function render(template: string, locals?: object): HttpResponseOK {
-  const { renderToString } = require(templateEngine);
+  const { templateEngine } = getConfig('base');
+  const { renderToString } = require(templateEngine || '@foal/ejs');
   if (!renderToString) {
     throw new Error(`${templateEngine} is not a template engine.`);
   }
