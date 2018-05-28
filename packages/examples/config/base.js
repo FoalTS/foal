@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  csrfProtection: false,
+  csrf: false,
   debug: true,
   session: { secret: 'my secret', resave: true, saveUninitialized: true },
   staticUrl: 'public/',

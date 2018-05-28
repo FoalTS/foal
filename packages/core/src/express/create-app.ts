@@ -14,7 +14,7 @@ import { getMiddlewares } from './get-middlewares';
 export interface IConfig {
   staticUrl: string;
   session: any;
-  csrfProtection: boolean;
+  csrf: boolean;
   debug: boolean;
 }
 
@@ -29,7 +29,7 @@ export function createApp(rootModule: Module) {
   expressApp.use(bodyParser.urlencoded({ extended: false }));
   expressApp.use(session(config.session));
 
-  if (config.csrfProtection) {
+  if (config.csrf) {
     expressApp.use(csurf());
     expressApp.use((req, res, next) => {
       req.csrfToken = req.csrfToken();
