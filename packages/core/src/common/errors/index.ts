@@ -1,2 +1,2 @@
 export { ObjectDoesNotExist, isObjectDoesNotExist } from './object-does-not-exist';
-export { ValidationError } from './validation-error';
+export { ValidationError, isValidationError } from './validation-error';
