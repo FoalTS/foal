@@ -14,7 +14,7 @@ export function getConfig(configName: string): any {
   const env = process.env.NODE_ENV || 'production';
   return merge(
     {},
-    this.loadFile(this.configName),
-    this.loadFile(`${this.configName}.${env}`),
+    loadFile(this.configName),
+    loadFile(`${this.configName}.${env}`),
   );
 }
