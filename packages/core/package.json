@@ -46,10 +46,12 @@
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
     "morgan": "^1.9.0",
-    "typeorm": "^0.2.6",
     "reflect-metadata": "^0.1.10",
     "lodash.merge": "^4.6.1",
     "@foal/ejs": "^0.4.0-beta.3"
+  },
+  "peerDependencies": {
+    "typeorm": "^0.2.6"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
@@ -66,6 +68,7 @@
     "supertest": "^3.1.0",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typeorm": "^0.2.6"
   }
 }

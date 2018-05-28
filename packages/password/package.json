@@ -42,7 +42,9 @@
   ],
   "dependencies": {
     "@foal/ajv": "^0.4.0-beta.3",
-    "@foal/core": "^0.4.0-beta.3",
+    "@foal/core": "^0.4.0-beta.3"
+  },
+  "peerDependencies": {
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
@@ -59,6 +61,7 @@
     "gulp-header": "^1.8.9",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typeorm": "^0.2.6"
   }
 }
