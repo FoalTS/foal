@@ -1,4 +1,4 @@
-import { AbstractUser, Class, IModelService, ObjectDoesNotExist } from '@foal/core';
+import { AbstractUser } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { Column, Connection, createConnection, Entity } from 'typeorm';

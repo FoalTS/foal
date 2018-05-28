@@ -1,4 +1,4 @@
-import { EntityManager, getManager } from 'typeorm';
+import { getManager } from 'typeorm';
 
 import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';

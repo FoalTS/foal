@@ -1,5 +1,4 @@
-import { AbstractUser, Service } from '@foal/core';
-import { parsePassword } from '@foal/password';
+import { AbstractUser } from '@foal/core';
 import { Column, Entity } from 'typeorm';
 
 @Entity()

@@ -1,12 +1,9 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
-  Column,
   createConnections,
-  Entity,
   getConnection,
   getManager,
-  PrimaryGeneratedColumn
 } from 'typeorm';
 
 import { ObjectDoesNotExist } from '../errors';
@@ -40,7 +37,7 @@ function testSuite(title: string, connectionName: string) {
     describe('when createOne is called', () => {
 
       it('should create one user into the database and then return it.', async () => {
-        const result = await service.createOne({
+        await service.createOne({
           firstName: 'Donald',
           lastName: 'Smith'
         });
@@ -67,7 +64,7 @@ function testSuite(title: string, connectionName: string) {
 
         expect(user1.id).not.to.equal(undefined);
 
-        const result = await service.createOne({
+        await service.createOne({
           firstName: 'John',
           id: user1.id,
           lastName: 'Smith'
@@ -138,7 +135,7 @@ function testSuite(title: string, connectionName: string) {
 
         expect(user1.id).not.to.equal(undefined);
 
-        const result = await service.createMany([{
+        await service.createMany([{
           firstName: 'John',
           id: user1.id,
           lastName: 'Smith'

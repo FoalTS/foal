@@ -4,7 +4,6 @@ import { Column, Connection, createConnection, Entity, getManager } from 'typeor
 
 import {
   Context,
-  Service,
   ServiceManager,
 } from '../../core';
 import { AbstractUser } from '../models';

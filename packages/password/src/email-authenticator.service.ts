@@ -5,8 +5,6 @@ import {
   AbstractUser,
   Class,
   IAuthenticator,
-  IModelService,
-  isObjectDoesNotExist,
   ValidationError
 } from '@foal/core';
 import { getManager } from 'typeorm';
