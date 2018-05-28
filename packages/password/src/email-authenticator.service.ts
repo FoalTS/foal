@@ -1,8 +1,20 @@
 import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
 
-import { AbstractUser, Class, IAuthenticator, IModelService, isObjectDoesNotExist } from '@foal/core';
+import {
+  AbstractUser,
+  Class,
+  IAuthenticator,
+  IModelService,
+  isObjectDoesNotExist,
+  ValidationError
+} from '@foal/core';
 import { getManager } from 'typeorm';
+
+export interface EmailUser extends AbstractUser {
+  email: string;
+  password: string;
+}
 
 /**
  * Authenticator with email and password. A user model service should be passed to the constructor.
@@ -13,13 +25,27 @@ import { getManager } from 'typeorm';
  * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
-export abstract class AbstractEmailAuthenticator<
-      User extends { email: string, password: string } & AbstractUser>
+export abstract class AbstractEmailAuthenticator<User extends EmailUser>
     implements IAuthenticator<User> {
 
   abstract UserClass: Class<User>;
 
-  validate(credentials: any) {}
+  validate(credentials: any): { email: string, password: string } {
+    if (typeof credentials !== 'object' || credentials === null) {
+      throw new ValidationError({ message: 'Credentials should be an object.' });
+    }
+    if (!credentials.hasOwnProperty('email') || typeof credentials.username !== 'string') {
+      throw new ValidationError({
+        message: 'Credentials should has a correct username property.'
+      });
+    }
+    if (!credentials.hasOwnProperty('password') || typeof credentials.password !== 'string') {
+      throw new ValidationError({
+        message: 'Credentials should has a correct password property.'
+      });
+    }
+    return { email: credentials.email, password: credentials.password };
+  }
 
   async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {

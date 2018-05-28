@@ -1,6 +1,7 @@
 import { AbstractUser, Class, IModelService, ObjectDoesNotExist } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
+import { Column, Connection, createConnection, Entity } from 'typeorm';
 
 chai.use(chaiAsPromised);
 
@@ -10,9 +11,15 @@ import { AbstractEmailAuthenticator } from './email-authenticator.service';
 
 describe('AbstractEmailAuthenticator', () => {
 
+  @Entity()
   class User extends AbstractUser {
+    @Column({ unique: true })
     email: string;
+
+    @Column()
     password: string;
+
+    @Column()
     username: string;
   }
 
@@ -24,40 +31,57 @@ describe('AbstractEmailAuthenticator', () => {
   class ConcreteClass extends AbstractEmailAuthenticator<User> {
     UserClass = User;
   }
-  let service: ConcreteClass;
 
-  class UserService implements IModelService {
-    createOne(query: { email?: string }): User & { id: number } {
-      if (query.email === 'john@foalts.org') {
-        const john = new User();
-        john.email = 'john@foalts.org';
-        john.id = 1;
-        john.password = encryptedPassword;
-        john.username = 'John';
-        return john;
-      }
-      if (query.email === 'jack@foalts.org') {
-        const jack = new User();
-        jack.email = 'jack@foalts.org';
-        jack.id = 2;
-        jack.password = 'bcrypt_mypassword';
-        jack.username = 'Jack';
-        return jack;
-      }
-      if (query.email === 'sam@foalts.org') {
-        const sam = new User();
-        sam.email = 'sam@foalts.org';
-        sam.id = 3;
-        sam.password = 'pbkdf2_sha256$hello_world';
-        sam.username = 'Sam';
-        return sam;
-      }
-      throw new ObjectDoesNotExist();
-    }
-  }
+  let connection: Connection;
+  let service: AbstractEmailAuthenticator<User>;
+
+  beforeEach(async () => {
+    connection = await createConnection({
+      database: 'test',
+      dropSchema: true,
+      entities: [ User ],
+      password: 'test',
+      synchronize: true,
+      type: 'mysql',
+      username: 'test',
+    });
+  });
+
+  afterEach(async () => {
+    await connection.close();
+  });
+
+  beforeEach(() => {
+    const john = new User();
+    john.email = 'john@foalts.org';
+    john.id = 1;
+    john.password = encryptedPassword;
+    john.roles = [];
+    john.username = 'John';
+
+    const jack = new User();
+    jack.email = 'jack@foalts.org';
+    jack.id = 2;
+    jack.password = 'bcrypt_mypassword';
+    jack.roles = [];
+    jack.username = 'Jack';
+
+    const sam = new User();
+    sam.email = 'sam@foalts.org';
+    sam.id = 3;
+    sam.password = 'pbkdf2_sha256$hello_world';
+    sam.roles = [];
+    sam.username = 'Sam';
+
+    return Promise.all([
+      john.save(),
+      jack.save(),
+      sam.save()
+    ]);
+  });
 
   it('should instantiate.', () => {
-    service = new ConcreteClass(new UserService());
+    service = new ConcreteClass();
   });
 
   describe('when authenticate is called', () => {
