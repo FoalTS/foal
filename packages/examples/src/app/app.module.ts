@@ -1,8 +1,8 @@
 import {
-  onSuccessRemoveField,
   authenticate,
   initDB,
   Module,
+  onSuccessRemoveField,
   rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
