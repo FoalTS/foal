@@ -45,7 +45,7 @@ This class is a *Service*. Basically a service can be any class that serves a re
 
 This class inherits from the `SequelizeConnectionService` and is just a wrapper of Sequelize, a largly-used ORM, to set up a connection to a database. You must specify the URI of the database you want to connect to. You could pass it directly to the `super` function here but let's start using good practices and write it an config file.
 
-You can find such file in the directory `src/config`. Open `config.ts` and change the string `'my_uri'` in the `developpement` configuration.
+You can find such file in the directory `config/`. Open `base.js` and change the string `'my_uri'` in the `developpement` configuration.
 
 > You don't know what URI you should use? Here are some examples:
 >

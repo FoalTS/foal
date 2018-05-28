@@ -53,7 +53,7 @@ Open you browser on `http://localhost:3000` and find our welcoming message!
 
 > **Port 3000 already in use?**
 >
-> You can modify in `src/config.ts` which port the application is using.
+> You can modify in `config/base.js` which port the application is using.
 
 ## Next steps
 
