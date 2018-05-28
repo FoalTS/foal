@@ -15,7 +15,7 @@ export interface IConfig {
   staticUrl: string;
   session: any;
   csrfProtection: boolean;
-  debugMode: boolean;
+  debug: boolean;
 }
 
 export function createApp(rootModule: Module) {
@@ -50,7 +50,7 @@ export function createApp(rootModule: Module) {
     }
   });
 
-  expressApp.use(getMiddlewares(new App(rootModule), { debugMode: config.debugMode }, [
+  expressApp.use(getMiddlewares(new App(rootModule), { debug: config.debug }, [
     {
       req: 'csrfToken',
       state: 'csrfToken'

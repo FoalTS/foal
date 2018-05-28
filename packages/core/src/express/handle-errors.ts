@@ -9,15 +9,15 @@ function renderDebug500(stack): string {
     + '<body>'
     +  '<h1>500 - INTERNAL SERVER ERROR</h1>'
     + `<pre>${stack}</pre>`
-    + 'You are seeing this error because you have debugMode set to true in your src/config file.'
+    + 'You are seeing this error because you have debug set to true in your src/config file.'
     + '</body>'
     + '</html>';
 }
 
-export function handleErrors(debugMode: boolean, logFn = console.error) {
+export function handleErrors(debug: boolean, logFn = console.error) {
   return (err, req, res, next) => {
     logFn(err.stack);
-    if (debugMode) {
+    if (debug) {
       res.status(500)
          .send(renderDebug500(err.stack));
     } else {

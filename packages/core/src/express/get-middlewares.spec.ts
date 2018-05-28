@@ -9,7 +9,7 @@ import { getMiddlewares } from './get-middlewares';
 describe('getMiddlewares', () => {
 
   it('should return an array of three middlewares', () => {
-    const actual = getMiddlewares(new App({}), { debugMode: false });
+    const actual = getMiddlewares(new App({}), { debug: false });
     expect(actual).to.be.an('array').and.to.have.lengthOf(3);
   });
 
@@ -22,7 +22,7 @@ describe('getMiddlewares', () => {
         controllers: [
           route('GET', '/create', () => new HttpResponseCreated('Created!'))
         ]
-      }), { debugMode: false });
+      }), { debug: false });
 
       const app = express();
       app.use(middlewares);
@@ -40,7 +40,7 @@ describe('getMiddlewares', () => {
             throw new Error();
           })
         ]
-      }), { debugMode: false }, [], () => {});
+      }), { debug: false }, [], () => {});
 
       const app = express();
       app.use(middlewares);
@@ -51,7 +51,7 @@ describe('getMiddlewares', () => {
     });
 
     it('should 404 on a wrong URL.', () => {
-      const middlewares = getMiddlewares(new App({}), { debugMode: false });
+      const middlewares = getMiddlewares(new App({}), { debug: false });
 
       const app = express();
       app.use(middlewares);
