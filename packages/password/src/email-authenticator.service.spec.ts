@@ -26,7 +26,7 @@ describe('AbstractEmailAuthenticator', () => {
   }
   let service: ConcreteClass;
 
-  class UserModelService implements IModelService {
+  class UserService implements IModelService {
     createOne(query: { email?: string }): User & { id: number } {
       if (query.email === 'john@foalts.org') {
         const john = new User();
@@ -57,7 +57,7 @@ describe('AbstractEmailAuthenticator', () => {
   }
 
   it('should instantiate.', () => {
-    service = new ConcreteClass(new UserModelService());
+    service = new ConcreteClass(new UserService());
   });
 
   describe('when authenticate is called', () => {

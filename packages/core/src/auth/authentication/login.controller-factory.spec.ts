@@ -18,7 +18,7 @@ const expect = chai.expect;
 describe('login', () => {
 
   @Service()
-  class MockAuthenticatorService implements IAuthenticator<any> {
+  class Authenticator implements IAuthenticator<any> {
     authenticate(credentials: { username?: string }) {
       if (credentials.username === 'John') {
         return {
@@ -35,7 +35,7 @@ describe('login', () => {
     describe('should return a controller with a proper `main` route that', () => {
 
       it('should handle requests at POST /.', () => {
-        const route = login('/foobar', MockAuthenticatorService).getRoute('main');
+        const route = login('/foobar', Authenticator).getRoute('main');
 
         expect(route.httpMethod).to.equal('POST');
         expect(route.path).to.equal('/foobar');
@@ -44,7 +44,7 @@ describe('login', () => {
       describe('when the authentication succeeds', () => {
 
         it('should return an HttpResponseNoContent if options.successRedirect is undefined.', async () => {
-          const route = login('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', Authenticator).getRoute('main');
 
           const ctx = new Context();
           ctx.session = {};
@@ -56,7 +56,7 @@ describe('login', () => {
         });
 
         it('should return an HttpResponseRedirect if options.successRedirect is not empty.', async () => {
-          const route = login('/', MockAuthenticatorService, {
+          const route = login('/', Authenticator, {
             successRedirect: '/foo'
           }).getRoute('main');
 
@@ -71,7 +71,7 @@ describe('login', () => {
         });
 
         it('should create or update ctx.session.authentication to include the userId.', async () => {
-          const route = login('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', Authenticator).getRoute('main');
 
           const ctx = new Context();
           ctx.session = {};
@@ -98,7 +98,7 @@ describe('login', () => {
       describe('when the authentication fails', () => {
 
         it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
-          const route = login('/', MockAuthenticatorService).getRoute('main');
+          const route = login('/', Authenticator).getRoute('main');
 
           const ctx = new Context();
           ctx.session = {};
@@ -113,7 +113,7 @@ describe('login', () => {
         });
 
         it('should return an HttpResponseRedirect if options.failureRedirect is not empty.', async () => {
-          const route = login('/', MockAuthenticatorService, {
+          const route = login('/', Authenticator, {
             failureRedirect: '/foo'
           }).getRoute('main');
 

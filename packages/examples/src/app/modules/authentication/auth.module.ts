@@ -1,11 +1,11 @@
 import { HttpResponseSuccess, login, logout, Module, route, view } from '@foal/core';
 import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
-import { AuthenticatorService } from './services/authenticator.service';
+import { Authenticator } from './services/authenticator.service';
 
 export const AuthModule: Module = {
   controllers: [
-    login('/local', AuthenticatorService, {
+    login('/local', Authenticator, {
       failureRedirect: '/auth?invalid_credentials=true',
       successRedirect: '/home',
     }),
