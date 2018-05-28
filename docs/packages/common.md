@@ -102,12 +102,12 @@ See docs [here](https://github.com/FoalTS/foal/blob/model-usermodel-authenticati
 
 Escapes HTML and returns a new string.
 
-### `escapeHTML(object: object, propName: string): void`
+### `escapeProp(object: object, propName: string): void`
 
 Escapes HTML for the given property.
 
 ```typescript
-escapeHTML(myObject, 'foobar')
+escapeProp(myObject, 'foobar')
 ```
 is equivalent to
 ```typescript

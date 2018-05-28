@@ -33,9 +33,9 @@ const validateTask = validate({
 To escape the field `text` of the created/updated/replaced task, we are going to write it on our own.
 
 ```typescript
-import { escapeHTML } from '@foal/rest';
+import { escapeProp } from '@foal/rest';
 
-const preventXSS = ctx => { escapeHTML(ctx.request.body, 'text'); };
+const preventXSS = ctx => { escapeProp(ctx.request.body, 'text'); };
 ```
 
 Now that the pre-hooks are defined, it is time to attach them to regarded routes.
@@ -57,7 +57,7 @@ const validateTask = validate({
   type: 'object'
 });
 
-const preventXSS = ctx => { escapeHTML(ctx.request.body, 'text'); };
+const preventXSS = ctx => { escapeProp(ctx.request.body, 'text'); };
 
 export const AppModule: Module = {
   controllers: [
