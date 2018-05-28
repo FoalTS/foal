@@ -12,24 +12,24 @@ import { restrictAccessToAuthenticated } from './restrict-access-to-authenticate
 
 describe('restrictAccessToAuthenticated', () => {
 
-  let hook: PreHook;
+  let preHook: PreHook;
 
   class User extends AbstractUser {}
 
   before(() => {
-    hook = restrictAccessToAuthenticated();
+    preHook = restrictAccessToAuthenticated();
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
     const ctx = new Context();
-    const actual = hook(ctx, new ServiceManager());
+    const actual = preHook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
   });
 
   it('should not return any HttpResponse if the user is authenticated.', () => {
     const ctx = new Context();
     ctx.user = new User();
-    const actual = hook(ctx, new ServiceManager());
+    const actual = preHook(ctx, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);
   });
 
