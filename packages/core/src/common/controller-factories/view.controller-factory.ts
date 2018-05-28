@@ -1,6 +1,6 @@
-import { Controller, HttpResponseOK, readConfig } from '../../core';
+import { Controller, getConfig, HttpResponseOK } from '../../core';
 
-const { templateEngine } = readConfig('base');
+const { templateEngine } = getConfig('base');
 
 export function render(template: string, locals?: object): HttpResponseOK {
   const { renderToString } = require(templateEngine);

@@ -8,7 +8,7 @@ import * as helmet from 'helmet';
 import * as logger from 'morgan';
 import { App } from '..';
 
-import { Config, Module } from '../core';
+import { getConfig, Module } from '../core';
 import { getMiddlewares } from './get-middlewares';
 
 export interface IConfig {
@@ -19,7 +19,7 @@ export interface IConfig {
 }
 
 export function createApp(rootModule: Module) {
-  const config = new Config<IConfig>('base').config;
+  const config = getConfig('base') as IConfig;
   const expressApp = express();
 
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));

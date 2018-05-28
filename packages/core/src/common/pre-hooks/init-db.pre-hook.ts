@@ -1,10 +1,10 @@
 import { Connection, ConnectionOptions, createConnections } from 'typeorm';
 
-import { Config, PreHook } from '../../core';
+import { getConfig, PreHook } from '../../core';
 
 export function initDB(): PreHook {
   let connections: Connection[];
-  const config = new Config<{ databases: ConnectionOptions[] }>('base').config;
+  const config = getConfig('base') as { databases: ConnectionOptions[] };
   return async () => {
     if (!connections) {
       connections = await createConnections(config.databases);
