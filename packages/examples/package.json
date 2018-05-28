@@ -6,7 +6,7 @@
     "shell": "ts-node -i",
     "test": "",
     "start": "node ./lib/server.js",
-    "start:w": "node-dev ./lib/server.js --no-notify",
+    "start:w": "node-dev ./lib/server.js --notify=false",
     "build": "foal build --mode prod",
     "build:dev": "foal build --mode dev",
     "build:dev:w": "foal build --mode dev --watch",

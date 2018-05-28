@@ -35,7 +35,7 @@ const AppModule: Module = {
 }
 ```
 
-### `onSuccessRemoveField(name: string)`
+### `onSuccessKeepFields<ResourceClass>(fields: (keyof ResourceClass)[])`
 
 Removes the given field from the context response.
 
@@ -49,14 +49,14 @@ const AppModule: Module = {
           password: 'my_crypted_password'
         });
       })
-      .withPostHook(onSuccessRemoveField('password')),
+      .withPostHook(onSuccessKeepFields(['username'])),
     route('/bar', () => {
         return new HttpSuccessResponseOK([
           { username: 'foobar', password: 'my_crypted_password' },
           { username: 'barfoo', password: 'my_other_crypted_password' }
         ]);
       })
-      .withPostHook(onSuccessRemoveField('password')),
+      .withPostHook(onSuccessKeepFields(['username'])),
   ]
 }
 ```

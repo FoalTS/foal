@@ -1,8 +1,9 @@
 import {
   authenticate,
+  HttpResponseOK,
   initDB,
   Module,
-  onSuccessRemoveField,
+  onSuccessKeepFields,
   rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
@@ -22,13 +23,18 @@ export const AppModule: Module = {
       ], 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(onSuccessRemoveField('password')),
+      .withPostHook(onSuccessKeepFields<User>([ 'id', 'email', 'roles' ])),
     view('/', require('./templates/index.html'), { name: 'FoalTS' }),
     view('/home', require('./templates/home.html'))
       .withPreHook(restrictAccessToAuthenticated()),
     route('GET', '/error', () => {
         throw new Error('This is an error.');
-      })
+      }),
+    route('GET', '/one_user', ctx => {
+      const user = new User();
+      user.roles = [ 'admin' ];
+      return new HttpResponseOK(user);
+    })
   ],
   modules: [
     AuthModule,
