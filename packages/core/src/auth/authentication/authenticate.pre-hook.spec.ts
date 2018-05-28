@@ -1,5 +1,6 @@
-import { expect } from 'chai';
-import { Column, getManager } from 'typeorm';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import { Column, Connection, createConnection, Entity, getManager } from 'typeorm';
 
 import {
   Context,
@@ -9,8 +10,12 @@ import {
 import { AbstractUser } from '../models';
 import { authenticate } from './authenticate.pre-hook';
 
+chai.use(chaiAsPromised);
+const expect = chai.expect;
+
 describe('authenticate', () => {
 
+  @Entity()
   class User extends AbstractUser {
     @Column()
     email: string;
@@ -22,26 +27,41 @@ describe('authenticate', () => {
     username: string;
   }
 
-  before(() => getManager().create(User, {
-    email: 'john@foalts.org',
-    id: 1,
-    password: 'strongPassword',
-    username: 'John',
-  }));
+  let connection: Connection;
 
-  it('should throw an Error if there is no session.', async () => {
+  beforeEach(async () => {
+    connection = await createConnection({
+      database: 'test',
+      dropSchema: true,
+      entities: [ User ],
+      password: 'test',
+      synchronize: true,
+      type: 'mysql',
+      username: 'test',
+    });
+  });
+
+  afterEach(async () => {
+    await connection.close();
+  });
+
+  beforeEach(async () => {
+    const user = getManager().create(User, {
+      email: 'john@foalts.org',
+      id: 1,
+      password: 'strongPassword',
+      roles: [],
+      username: 'John',
+    });
+    await user.save();
+  });
+
+  it('should throw an Error if there is no session.', () => {
     const preHook = authenticate(User);
     const ctx = new Context();
 
-    try {
-      await preHook(ctx, new ServiceManager());
-      throw new Error('No error was thrown by the middleware');
-    } catch (err) {
-      expect(err).to.be.instanceOf(Error).with.property(
-        'message',
-        'authenticate pre-hook requires session management.'
-      );
-    }
+    return expect(preHook(ctx, new ServiceManager()))
+      .to.be.rejectedWith('authenticate pre-hook requires session management.');
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
@@ -55,7 +75,7 @@ describe('authenticate', () => {
     await preHook(ctx, new ServiceManager());
   });
 
-  it('should set ctx.user to null if no user is found in the database matching the given id.', async () => {
+  it('should set ctx.user to undefined if no user is found in the database matching the given id.', async () => {
     const hook = authenticate(User);
     const ctx = new Context();
 
@@ -66,7 +86,7 @@ describe('authenticate', () => {
     };
     await hook(ctx, new ServiceManager());
 
-    expect(ctx.user).to.equal(null);
+    expect(ctx.user).to.equal(undefined);
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {
@@ -80,10 +100,11 @@ describe('authenticate', () => {
     };
     await hook(ctx, new ServiceManager());
 
-    expect(ctx.user).to.deep.equal({
+    expect(ctx.user).to.deep.include({
       email: 'john@foalts.org',
       id: 1,
       password: 'strongPassword',
+      roles: [],
       username: 'John',
     });
   });
