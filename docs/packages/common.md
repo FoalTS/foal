@@ -35,7 +35,7 @@ const AppModule: Module = {
 }
 ```
 
-### `afterThatRemoveField(name: string)`
+### `onSuccessRemoveField(name: string)`
 
 Removes the given field from the context response.
 
@@ -49,14 +49,14 @@ const AppModule: Module = {
           password: 'my_crypted_password'
         });
       })
-      .withPostHook(afterThatRemoveField('password')),
+      .withPostHook(onSuccessRemoveField('password')),
     route('/bar', () => {
         return new HttpSuccessResponseOK([
           { username: 'foobar', password: 'my_crypted_password' },
           { username: 'barfoo', password: 'my_other_crypted_password' }
         ]);
       })
-      .withPostHook(afterThatRemoveField('password')),
+      .withPostHook(onSuccessRemoveField('password')),
   ]
 }
 ```

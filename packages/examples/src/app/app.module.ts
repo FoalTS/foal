@@ -1,5 +1,5 @@
 import {
-  afterThatRemoveField,
+  onSuccessRemoveField,
   authenticate,
   initDB,
   Module,
@@ -22,7 +22,7 @@ export const AppModule: Module = {
       ], 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(afterThatRemoveField('password')),
+      .withPostHook(onSuccessRemoveField('password')),
     view('/', require('./templates/index.html'), { name: 'FoalTS' }),
     view('/home', require('./templates/home.html'))
       .withPreHook(restrictAccessToAuthenticated()),

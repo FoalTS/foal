@@ -1,6 +1,6 @@
 import { HttpResponseSuccess, isHttpResponseSuccess, PostHook } from '../../core';
 
-export function afterThatRemoveField(name: string): PostHook {
+export function onSuccessRemoveField(name: string): PostHook {
   return ctx => {
     if (!(ctx.response && isHttpResponseSuccess(ctx.response) && (ctx.response as HttpResponseSuccess).content)) {
       return;

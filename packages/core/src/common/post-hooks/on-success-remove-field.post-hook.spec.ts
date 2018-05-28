@@ -6,19 +6,19 @@ import {
   PostContext,
   ServiceManager,
 } from '../../core';
-import { afterThatRemoveField } from './after-that-remove-field.post-hook';
+import { onSuccessRemoveField } from './on-success-remove-field.post-hook';
 
-describe('afterThatRemoveField', () => {
+describe('onSuccessRemoveField', () => {
 
   it('should not throw an Error if ctx.response is undefined.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
 
     expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
   });
 
   it('should not throw an Error if ctx.response.content is undefined.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseOK();
 
@@ -27,7 +27,7 @@ describe('afterThatRemoveField', () => {
 
   it('should not modify ctx.response.content if ctx.response is not an instance'
       + ' of HttpResponseSuccess.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseBadRequest({
       foo: 'bar'
@@ -40,7 +40,7 @@ describe('afterThatRemoveField', () => {
 
   it('should not throw an Error if ctx.response is an instance of HttpResponseSuccess'
       + ' and the object ctx.response.content does not have the given field.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseOK({});
 
@@ -49,7 +49,7 @@ describe('afterThatRemoveField', () => {
 
   it('should not throw an Error if ctx.response is an instance of HttpResponseSuccess'
       + ' and one item of the array ctx.response.content does not have the given field.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseOK([{}]);
     expect(() => postHook(ctx, new ServiceManager())).not.to.throw();
@@ -57,7 +57,7 @@ describe('afterThatRemoveField', () => {
 
   it('should remove the given field from the object context.response.content if context.response'
       + ' is an instance of HttpResponseSuccess.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseOK({
       bar: 'foobar2',
@@ -70,7 +70,7 @@ describe('afterThatRemoveField', () => {
 
   it('should remove the given field from each item of the array context.response.content if'
       + ' context.response is an instance of HttpResponseSuccess.', () => {
-    const postHook = afterThatRemoveField('foo');
+    const postHook = onSuccessRemoveField('foo');
     const ctx = new PostContext();
     ctx.response = new HttpResponseOK([
       {
