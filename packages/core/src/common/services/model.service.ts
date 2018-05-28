@@ -1,8 +1,8 @@
 import { EntityManager, getManager } from 'typeorm';
 
 import { Class } from '../../core';
+import { ObjectDoesNotExist } from '../errors';
 import { IModelService } from './model-service.interface';
-import { ObjectDoesNotExist } from './object-does-not-exist';
 
 export abstract class ModelService<Entity> implements IModelService {
 

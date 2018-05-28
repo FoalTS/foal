@@ -7,10 +7,8 @@ import {
   HttpResponseNotImplemented,
   HttpResponseOK,
 } from '../../core';
-import {
-  IModelService,
-  isObjectDoesNotExist,
-} from '../services';
+import { isObjectDoesNotExist } from '../errors';
+import { IModelService } from '../services';
 
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;

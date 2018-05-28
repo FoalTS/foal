@@ -11,10 +11,8 @@ import {
   Service,
   ServiceManager,
 } from '../../core';
-import {
-  IModelService,
-  ObjectDoesNotExist,
-} from '../services';
+import { ObjectDoesNotExist } from '../errors';
+import { IModelService } from '../services';
 import { rest } from './rest.controller-factory';
 
 chai.use(spies);
