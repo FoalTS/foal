@@ -1,5 +1,8 @@
+import * as Ajv from 'ajv';
 import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
+
+const ajv = new Ajv();
 
 import {
   AbstractUser,
@@ -7,12 +10,22 @@ import {
   IAuthenticator,
   ValidationError
 } from '@foal/core';
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 
 export interface EmailUser extends AbstractUser {
   email: string;
   password: string;
 }
+
+const schema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' }
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
 
 /**
  * Authenticator with email and password. A user model service should be passed to the constructor.
@@ -29,18 +42,9 @@ export abstract class AbstractEmailAuthenticator<User extends EmailUser>
   abstract UserClass: Class<User>;
 
   validate(credentials: any): { email: string, password: string } {
-    if (typeof credentials !== 'object' || credentials === null) {
-      throw new ValidationError({ message: 'Credentials should be an object.' });
-    }
-    if (!credentials.hasOwnProperty('email') || typeof credentials.username !== 'string') {
-      throw new ValidationError({
-        message: 'Credentials should has a correct username property.'
-      });
-    }
-    if (!credentials.hasOwnProperty('password') || typeof credentials.password !== 'string') {
-      throw new ValidationError({
-        message: 'Credentials should has a correct password property.'
-      });
+    const isValid = ajv.validate(schema, credentials);
+    if (!isValid) {
+      throw new ValidationError(ajv.errors);
     }
     return { email: credentials.email, password: credentials.password };
   }
@@ -64,7 +68,7 @@ export abstract class AbstractEmailAuthenticator<User extends EmailUser>
   async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User|undefined;
 
-    user = await getManager().findOne(this.UserClass, { email, password } as any);
+    user = await getManager().findOne(this.UserClass, { where: { email } });
     if (!user) {
       return null;
     }
