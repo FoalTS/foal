@@ -217,9 +217,9 @@ describe('AbstractEmailAuthenticator', () => {
       sam.username = 'Sam';
 
       await Promise.all([
-        getManager().save(john),
-        getManager().save(jack),
-        getManager().save(sam)
+        john.save(),
+        jack.save(),
+        sam.save(),
       ]);
     });
 
@@ -245,7 +245,6 @@ describe('AbstractEmailAuthenticator', () => {
 
     it('should return the authenticated user if the given email and password are correct.', async () => {
       const user = await service.authenticate({ email: 'john@foalts.org', password });
-      console.log(user);
       expect(user).to.deep.include({
         email: 'john@foalts.org',
         id: 1,
