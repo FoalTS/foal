@@ -43,3 +43,7 @@ services:
   #   container_name: "mongodb"
   #   ports:
   #     - "27017:27017"
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
