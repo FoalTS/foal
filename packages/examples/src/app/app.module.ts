@@ -40,7 +40,7 @@ export const AppModule: Module = {
     AuthModule,
   ],
   preHooks: [
-    initDB(),
+    initDB([ User ]),
     authenticate(User)
   ]
 };
