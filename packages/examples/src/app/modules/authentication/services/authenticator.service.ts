@@ -1,5 +1,4 @@
-import { Service } from '@foal/core';
-import { AbstractEmailAuthenticator } from '@foal/password';
+import { AbstractEmailAuthenticator, Service } from '@foal/core';
 
 import { User } from '../../../models';
 

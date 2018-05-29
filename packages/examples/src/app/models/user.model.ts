@@ -1,5 +1,5 @@
-import { AbstractUser } from '@foal/core';
-import { Column, Entity } from 'typeorm';
+import { AbstractUser, parsePassword } from '@foal/core';
+import { BeforeInsert, Column, Entity } from 'typeorm';
 
 @Entity()
 export class User extends AbstractUser {
@@ -9,5 +9,10 @@ export class User extends AbstractUser {
 
   @Column()
   password: string;
+
+  @BeforeInsert()
+  hashPassword() {
+    parsePassword(this);
+  }
 
 }

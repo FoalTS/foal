@@ -1,16 +1,14 @@
 import * as Ajv from 'ajv';
 import { pbkdf2 } from 'crypto';
+import { getManager, getRepository } from 'typeorm';
 import { promisify } from 'util';
 
-const ajv = new Ajv();
+import { ValidationError } from '../../../common';
+import { Class } from '../../../core';
+import { AbstractUser } from '../../models';
+import { IAuthenticator } from '../authenticator.interface';
 
-import {
-  AbstractUser,
-  Class,
-  IAuthenticator,
-  ValidationError
-} from '@foal/core';
-import { getManager, getRepository } from 'typeorm';
+const ajv = new Ajv();
 
 export interface EmailUser extends AbstractUser {
   email: string;

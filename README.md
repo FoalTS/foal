@@ -34,7 +34,6 @@ There are several ways to contribute.
 ## Packages
 
 - @foal/ajv
-- @foal/password
 - @foal/core
 - @foal/ejs
 

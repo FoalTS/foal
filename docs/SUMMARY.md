@@ -26,7 +26,6 @@
 ### Packages
 
 * [@foal/ajv](./packages/ajv.md)
-* [@foal/password](./packages/authentication.md)
 * [@foal/common](./packages/common.md)
 * [@foal/core](./packages/core.md)
 * [@foal/ejs](./packages/ejs.md)

@@ -1,4 +1,3 @@
-import { AbstractUser, ValidationError } from '@foal/core';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { Column, Connection, createConnection, Entity, getManager } from 'typeorm';
@@ -7,6 +6,8 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
+import { ValidationError } from '../../../common';
+import { AbstractUser } from '../../models';
 import { AbstractEmailAuthenticator } from './email-authenticator.service';
 
 describe('AbstractEmailAuthenticator', () => {
