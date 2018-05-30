@@ -37,22 +37,35 @@ import {
   isHttpResponseUnauthorized
 } from './http-responses';
 
+describe('HttpResponse', () => {
+
+  it('should have a headers properties.', () => {
+    class ConcreteClass extends HttpResponse {
+      statusMessage = 'foo';
+      statusCode = 0;
+    }
+    const response = new ConcreteClass();
+    expect(response.headers).to.deep.equal({});
+  });
+
+});
+
 describe('isHttpResponse', () => {
 
   it('should return true if the given object is an instance of HttpResponse.', () => {
-    const err = new HttpResponseCreated();
-    expect(isHttpResponse(err)).to.equal(true);
+    const response = new HttpResponseCreated();
+    expect(isHttpResponse(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponse property equal to true.', () => {
-    const err = { isHttpResponse: true };
-    expect(isHttpResponse(err)).to.equal(true);
+    const response = { isHttpResponse: true };
+    expect(isHttpResponse(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponse and if it '
       + 'has no property isHttpResponse.', () => {
-    const err = {};
-    expect(isHttpResponse(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponse(response)).to.equal(false);
   });
 
 });
@@ -60,19 +73,19 @@ describe('isHttpResponse', () => {
 describe('isHttpResponseSuccess', () => {
 
   it('should return true if the given object is an instance of HttpResponseSuccess.', () => {
-    const err = new HttpResponseCreated();
-    expect(isHttpResponseSuccess(err)).to.equal(true);
+    const response = new HttpResponseCreated();
+    expect(isHttpResponseSuccess(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseSuccess property equal to true.', () => {
-    const err = { isHttpResponseSuccess: true };
-    expect(isHttpResponseSuccess(err)).to.equal(true);
+    const response = { isHttpResponseSuccess: true };
+    expect(isHttpResponseSuccess(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseSuccess and if it '
       + 'has no property isHttpResponseSuccess.', () => {
-    const err = {};
-    expect(isHttpResponseSuccess(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseSuccess(response)).to.equal(false);
   });
 
 });
@@ -105,19 +118,19 @@ describe('HttpResponseOK', () => {
 describe('isHttpResponseOK', () => {
 
   it('should return true if the given object is an instance of HttpResponseOK.', () => {
-    const err = new HttpResponseOK();
-    expect(isHttpResponseOK(err)).to.equal(true);
+    const response = new HttpResponseOK();
+    expect(isHttpResponseOK(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseOK property equal to true.', () => {
-    const err = { isHttpResponseOK: true };
-    expect(isHttpResponseOK(err)).to.equal(true);
+    const response = { isHttpResponseOK: true };
+    expect(isHttpResponseOK(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseOK and if it '
       + 'has no property isHttpResponseOK.', () => {
-    const err = {};
-    expect(isHttpResponseOK(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseOK(response)).to.equal(false);
   });
 
 });
@@ -150,19 +163,19 @@ describe('HttpResponseCreated', () => {
 describe('isHttpResponseCreated', () => {
 
   it('should return true if the given object is an instance of HttpResponseCreated.', () => {
-    const err = new HttpResponseCreated();
-    expect(isHttpResponseCreated(err)).to.equal(true);
+    const response = new HttpResponseCreated();
+    expect(isHttpResponseCreated(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseCreated property equal to true.', () => {
-    const err = { isHttpResponseCreated: true };
-    expect(isHttpResponseCreated(err)).to.equal(true);
+    const response = { isHttpResponseCreated: true };
+    expect(isHttpResponseCreated(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseCreated and if it '
       + 'has no property isHttpResponseCreated.', () => {
-    const err = {};
-    expect(isHttpResponseCreated(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseCreated(response)).to.equal(false);
   });
 
 });
@@ -186,19 +199,19 @@ describe('HttpResponseNoContent', () => {
 describe('isHttpResponseNoContent', () => {
 
   it('should return true if the given object is an instance of HttpResponseNoContent.', () => {
-    const err = new HttpResponseNoContent();
-    expect(isHttpResponseNoContent(err)).to.equal(true);
+    const response = new HttpResponseNoContent();
+    expect(isHttpResponseNoContent(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseNoContent property equal to true.', () => {
-    const err = { isHttpResponseNoContent: true };
-    expect(isHttpResponseNoContent(err)).to.equal(true);
+    const response = { isHttpResponseNoContent: true };
+    expect(isHttpResponseNoContent(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseNoContent and if it '
       + 'has no property isHttpResponseNoContent.', () => {
-    const err = {};
-    expect(isHttpResponseNoContent(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseNoContent(response)).to.equal(false);
   });
 
 });
@@ -206,19 +219,19 @@ describe('isHttpResponseNoContent', () => {
 describe('isHttpResponseRedirection', () => {
 
   it('should return true if the given object is an instance of HttpResponseRedirection.', () => {
-    const err = new HttpResponseRedirect('/foo');
-    expect(isHttpResponseRedirection(err)).to.equal(true);
+    const response = new HttpResponseRedirect('/foo');
+    expect(isHttpResponseRedirection(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseRedirection property equal to true.', () => {
-    const err = { isHttpResponseRedirection: true };
-    expect(isHttpResponseRedirection(err)).to.equal(true);
+    const response = { isHttpResponseRedirection: true };
+    expect(isHttpResponseRedirection(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseRedirection and if it '
       + 'has no property isHttpResponseRedirection.', () => {
-    const err = {};
-    expect(isHttpResponseRedirection(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseRedirection(response)).to.equal(false);
   });
 
 });
@@ -252,19 +265,19 @@ describe('HttpResponseRedirect', () => {
 describe('isHttpResponseRedirect', () => {
 
   it('should return true if the given object is an instance of HttpResponseRedirect.', () => {
-    const err = new HttpResponseRedirect('/foo');
-    expect(isHttpResponseRedirect(err)).to.equal(true);
+    const response = new HttpResponseRedirect('/foo');
+    expect(isHttpResponseRedirect(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseRedirect property equal to true.', () => {
-    const err = { isHttpResponseRedirect: true };
-    expect(isHttpResponseRedirect(err)).to.equal(true);
+    const response = { isHttpResponseRedirect: true };
+    expect(isHttpResponseRedirect(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseRedirect and if it '
       + 'has no property isHttpResponseRedirect.', () => {
-    const err = {};
-    expect(isHttpResponseRedirect(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseRedirect(response)).to.equal(false);
   });
 
 });
@@ -272,19 +285,19 @@ describe('isHttpResponseRedirect', () => {
 describe('isHttpResponseClientError', () => {
 
   it('should return true if the given object is an instance of HttpResponseClientError.', () => {
-    const err = new HttpResponseBadRequest();
-    expect(isHttpResponseClientError(err)).to.equal(true);
+    const response = new HttpResponseBadRequest();
+    expect(isHttpResponseClientError(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseClientError property equal to true.', () => {
-    const err = { isHttpResponseClientError: true };
-    expect(isHttpResponseClientError(err)).to.equal(true);
+    const response = { isHttpResponseClientError: true };
+    expect(isHttpResponseClientError(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseClientError and if it '
       + 'has no property isHttpResponseClientError.', () => {
-    const err = {};
-    expect(isHttpResponseClientError(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseClientError(response)).to.equal(false);
   });
 
 });
@@ -317,19 +330,19 @@ describe('HttpResponseBadRequest', () => {
 describe('isHttpResponseBadRequest', () => {
 
   it('should return true if the given object is an instance of HttpResponseBadRequest.', () => {
-    const err = new HttpResponseBadRequest();
-    expect(isHttpResponseBadRequest(err)).to.equal(true);
+    const response = new HttpResponseBadRequest();
+    expect(isHttpResponseBadRequest(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseBadRequest property equal to true.', () => {
-    const err = { isHttpResponseBadRequest: true };
-    expect(isHttpResponseBadRequest(err)).to.equal(true);
+    const response = { isHttpResponseBadRequest: true };
+    expect(isHttpResponseBadRequest(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseBadRequest and if it '
       + 'has no property isHttpResponseBadRequest.', () => {
-    const err = {};
-    expect(isHttpResponseBadRequest(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseBadRequest(response)).to.equal(false);
   });
 
 });
@@ -362,19 +375,19 @@ describe('HttpResponseUnauthorized', () => {
 describe('isHttpResponseUnauthorized', () => {
 
   it('should return true if the given object is an instance of HttpResponseUnauthorized.', () => {
-    const err = new HttpResponseUnauthorized();
-    expect(isHttpResponseUnauthorized(err)).to.equal(true);
+    const response = new HttpResponseUnauthorized();
+    expect(isHttpResponseUnauthorized(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseUnauthorized property equal to true.', () => {
-    const err = { isHttpResponseUnauthorized: true };
-    expect(isHttpResponseUnauthorized(err)).to.equal(true);
+    const response = { isHttpResponseUnauthorized: true };
+    expect(isHttpResponseUnauthorized(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseUnauthorized and if it '
       + 'has no property isHttpResponseUnauthorized.', () => {
-    const err = {};
-    expect(isHttpResponseUnauthorized(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseUnauthorized(response)).to.equal(false);
   });
 
 });
@@ -407,19 +420,19 @@ describe('HttpResponseForbidden', () => {
 describe('isHttpResponseForbidden', () => {
 
   it('should return true if the given object is an instance of HttpResponseForbidden.', () => {
-    const err = new HttpResponseForbidden();
-    expect(isHttpResponseForbidden(err)).to.equal(true);
+    const response = new HttpResponseForbidden();
+    expect(isHttpResponseForbidden(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseForbidden property equal to true.', () => {
-    const err = { isHttpResponseForbidden: true };
-    expect(isHttpResponseForbidden(err)).to.equal(true);
+    const response = { isHttpResponseForbidden: true };
+    expect(isHttpResponseForbidden(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseForbidden and if it '
       + 'has no property isHttpResponseForbidden.', () => {
-    const err = {};
-    expect(isHttpResponseForbidden(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseForbidden(response)).to.equal(false);
   });
 
 });
@@ -452,19 +465,19 @@ describe('HttpResponseNotFound', () => {
 describe('isHttpResponseNotFound', () => {
 
   it('should return true if the given object is an instance of HttpResponseNotFound.', () => {
-    const err = new HttpResponseNotFound();
-    expect(isHttpResponseNotFound(err)).to.equal(true);
+    const response = new HttpResponseNotFound();
+    expect(isHttpResponseNotFound(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseNotFound property equal to true.', () => {
-    const err = { isHttpResponseNotFound: true };
-    expect(isHttpResponseNotFound(err)).to.equal(true);
+    const response = { isHttpResponseNotFound: true };
+    expect(isHttpResponseNotFound(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseNotFound and if it '
       + 'has no property isHttpResponseNotFound.', () => {
-    const err = {};
-    expect(isHttpResponseNotFound(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseNotFound(response)).to.equal(false);
   });
 
 });
@@ -497,19 +510,19 @@ describe('HttpResponseMethodNotAllowed', () => {
 describe('isHttpResponseMethodNotAllowed', () => {
 
   it('should return true if the given object is an instance of HttpResponseMethodNotAllowed.', () => {
-    const err = new HttpResponseMethodNotAllowed();
-    expect(isHttpResponseMethodNotAllowed(err)).to.equal(true);
+    const response = new HttpResponseMethodNotAllowed();
+    expect(isHttpResponseMethodNotAllowed(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseMethodNotAllowed property equal to true.', () => {
-    const err = { isHttpResponseMethodNotAllowed: true };
-    expect(isHttpResponseMethodNotAllowed(err)).to.equal(true);
+    const response = { isHttpResponseMethodNotAllowed: true };
+    expect(isHttpResponseMethodNotAllowed(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseMethodNotAllowed and if it '
       + 'has no property isHttpResponseMethodNotAllowed.', () => {
-    const err = {};
-    expect(isHttpResponseMethodNotAllowed(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseMethodNotAllowed(response)).to.equal(false);
   });
 
 });
@@ -542,19 +555,19 @@ describe('HttpResponseConflict', () => {
 describe('isHttpResponseConflict', () => {
 
   it('should return true if the given object is an instance of HttpResponseConflict.', () => {
-    const err = new HttpResponseConflict();
-    expect(isHttpResponseConflict(err)).to.equal(true);
+    const response = new HttpResponseConflict();
+    expect(isHttpResponseConflict(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseConflict property equal to true.', () => {
-    const err = { isHttpResponseConflict: true };
-    expect(isHttpResponseConflict(err)).to.equal(true);
+    const response = { isHttpResponseConflict: true };
+    expect(isHttpResponseConflict(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseConflict and if it '
       + 'has no property isHttpResponseConflict.', () => {
-    const err = {};
-    expect(isHttpResponseConflict(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseConflict(response)).to.equal(false);
   });
 
 });
@@ -562,19 +575,19 @@ describe('isHttpResponseConflict', () => {
 describe('isHttpResponseServerError', () => {
 
   it('should return true if the given object is an instance of HttpResponseServerError.', () => {
-    const err = new HttpResponseInternalServerError();
-    expect(isHttpResponseServerError(err)).to.equal(true);
+    const response = new HttpResponseInternalServerError();
+    expect(isHttpResponseServerError(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseServerError property equal to true.', () => {
-    const err = { isHttpResponseServerError: true };
-    expect(isHttpResponseServerError(err)).to.equal(true);
+    const response = { isHttpResponseServerError: true };
+    expect(isHttpResponseServerError(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseServerError and if it '
       + 'has no property isHttpResponseServerError.', () => {
-    const err = {};
-    expect(isHttpResponseServerError(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseServerError(response)).to.equal(false);
   });
 
 });
@@ -607,19 +620,19 @@ describe('HttpResponseInternalServerError', () => {
 describe('isHttpResponseInternalServerError', () => {
 
   it('should return true if the given object is an instance of HttpResponseInternalServerError.', () => {
-    const err = new HttpResponseInternalServerError();
-    expect(isHttpResponseInternalServerError(err)).to.equal(true);
+    const response = new HttpResponseInternalServerError();
+    expect(isHttpResponseInternalServerError(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseInternalServerError property equal to true.', () => {
-    const err = { isHttpResponseInternalServerError: true };
-    expect(isHttpResponseInternalServerError(err)).to.equal(true);
+    const response = { isHttpResponseInternalServerError: true };
+    expect(isHttpResponseInternalServerError(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseInternalServerError and if it '
       + 'has no property isHttpResponseInternalServerError.', () => {
-    const err = {};
-    expect(isHttpResponseInternalServerError(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseInternalServerError(response)).to.equal(false);
   });
 
 });
@@ -652,19 +665,19 @@ describe('HttpResponseNotImplemented', () => {
 describe('isHttpResponseNotImplemented', () => {
 
   it('should return true if the given object is an instance of HttpResponseNotImplemented.', () => {
-    const err = new HttpResponseNotImplemented();
-    expect(isHttpResponseNotImplemented(err)).to.equal(true);
+    const response = new HttpResponseNotImplemented();
+    expect(isHttpResponseNotImplemented(response)).to.equal(true);
   });
 
   it('should return true if the given object has an isHttpResponseNotImplemented property equal to true.', () => {
-    const err = { isHttpResponseNotImplemented: true };
-    expect(isHttpResponseNotImplemented(err)).to.equal(true);
+    const response = { isHttpResponseNotImplemented: true };
+    expect(isHttpResponseNotImplemented(response)).to.equal(true);
   });
 
   it('should return false if the given object is not an instance of HttpResponseNotImplemented and if it '
       + 'has no property isHttpResponseNotImplemented.', () => {
-    const err = {};
-    expect(isHttpResponseNotImplemented(err)).to.equal(false);
+    const response = {};
+    expect(isHttpResponseNotImplemented(response)).to.equal(false);
   });
 
 });
