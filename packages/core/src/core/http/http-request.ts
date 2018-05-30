@@ -19,7 +19,7 @@ export class HttpRequest {
 
   getHeader(field: string): string {
     if (this.expressRequest) {
-      return this.expressRequest.getHeader(field);
+      return this.expressRequest.get(field);
     }
     return field;
   }
