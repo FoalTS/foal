@@ -7,9 +7,7 @@ describe('ServiceManager', () => {
   let serviceManager: ServiceManager;
 
   @Service()
-  class Foobar {
-    constructor() {}
-  }
+  class Foobar {}
 
   beforeEach(() => serviceManager = new ServiceManager());
 
