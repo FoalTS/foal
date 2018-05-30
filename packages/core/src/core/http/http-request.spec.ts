@@ -15,7 +15,7 @@ describe('HttpRequest', () => {
     expect(actual.query).to.deep.equal({});
   });
 
-  it('should instantiate with suitable properties from the express request.', () => {
+  it('should instantiate with suitable properties from the given express request.', () => {
     const req = {
       body: {
         msg: 'foo'

@@ -1,63 +1,86 @@
-// import { expect } from 'chai';
+import { expect } from 'chai';
 
-// import { getContext } from './get-context';
+import { Context, PostContext } from './contexts';
+import { HttpRequest } from './http';
 
-// describe('getContext', () => {
+describe('Context', () => {
 
-//   it('should properly return a context from the given express request.', () => {
-//     const req = {
-//       body: {
-//         msg: 'foo'
-//       },
-//       foo: 'bar',
-//       params: {
-//         id: 1
-//       },
-//       query: {
-//         id: 2
-//       },
-//       session: {
-//         userId: 4
-//       },
-//       get(str: string): string {
-//         return this.foo;
-//       }
-//     };
-//     const actual = getContext(req, []);
+  it('should instantiate with suitable default properties if no express request '
+      + 'is given.', () => {
+    const actual = new Context();
+    expect(actual.request).to.be.an.instanceOf(HttpRequest);
+    expect(actual.session).to.equal(undefined);
+    expect(actual.state).to.deep.equal({});
+    expect(actual.user).to.equal(undefined);
+  });
 
-//     expect(actual.body).to.deep.equal({ msg: 'foo' });
-//     expect(actual.getHeader('')).to.equal('bar');
-//     expect(actual.params).to.deep.equal({ id: 1 });
-//     expect(actual.query).to.deep.equal({ id: 2 });
-//     expect(actual.response).to.equal(undefined);
-//     expect(actual.session).to.deep.equal({ userId: 4 });
-//     expect(actual.state).to.deep.equal({});
-//     expect(actual.user).to.equal(null);
-//   });
+  it('should instantiate with suitable properties from the given express request.', () => {
+    const req = {
+      body: {
+        msg: 'foo'
+      },
+      foo: 'bar',
+      method: 'POST',
+      params: {
+        id: 1
+      },
+      path: '/users',
+      query: {
+        id: 2
+      },
+      session: {
+        userId: 4
+      },
+      get(str: string): string {
+        return this.foo;
+      }
+    };
+    const actual = new Context(req, []);
 
-//   it('should properly return a context from the given state definition.', () => {
-//     const req = {
-//       crsfToken: 'xxx',
-//       key1: 'yyy',
-//       get(str: string): string {
-//         return this.foo;
-//       }
-//     };
-//     const actual = getContext(req, [
-//       {
-//         req: 'crsfToken',
-//         state: 'token'
-//       },
-//       {
-//         req: 'key1',
-//         state: 'key2'
-//       }
-//     ]);
+    expect(actual.request.body).to.deep.equal({ msg: 'foo' });
+    expect(actual.session).to.deep.equal({ userId: 4 });
+    expect(actual.state).to.deep.equal({});
+    expect(actual.user).to.equal(undefined);
+  });
 
-//     expect(actual.state).to.deep.equal({
-//       key2: 'yyy',
-//       token: 'xxx'
-//     });
-//   });
+  it('should instantiate from the given state definition.', () => {
+    const req = {
+      crsfToken: 'xxx',
+      key1: 'yyy',
+      get(str: string): string {
+        return this.foo;
+      }
+    };
+    const actual = new Context(req, [
+      {
+        req: 'crsfToken',
+        state: 'token'
+      },
+      {
+        req: 'key1',
+        state: 'key2'
+      }
+    ]);
 
-// });
+    expect(actual.state).to.deep.equal({
+      key2: 'yyy',
+      token: 'xxx'
+    });
+  });
+
+});
+
+describe('PostContext', () => {
+
+  it('should inherit from Context.', () => {
+    const ctx = new PostContext();
+    expect(ctx).to.be.an.instanceOf(Context);
+  });
+
+  it('should has a response property whose value is undefined.', () => {
+    const ctx = new PostContext();
+    expect(ctx.hasOwnProperty('response')).to.equal(true);
+    expect(ctx.response).to.equal(undefined);
+  });
+
+});
