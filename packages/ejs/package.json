@@ -7,8 +7,8 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
-    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
+    "build": "webpack",
+    "prepublish": "webpack"
   },
   "engines": {
     "node": ">=8"
@@ -47,9 +47,11 @@
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.4",
+    "webpack-node-externals": "^1.7.2",
+    "clean-webpack-plugin": "^0.1.19",
+    "ts-loader": "^4.3.0",
     "mocha": "^3.5.3",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"

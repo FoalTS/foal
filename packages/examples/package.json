@@ -3,6 +3,7 @@
   "version": "0.4.0-beta.4",
   "description": "FoalTs examples",
   "scripts": {
+    "a": "foal generate",
     "shell": "ts-node -i",
     "test": "",
     "start": "node ./lib/server.js",
