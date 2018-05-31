@@ -1,4 +1,4 @@
-import { Controller, getConfig, HttpResponseOK } from '../../core';
+import { Context, Controller, getConfig, HttpResponseOK } from '../../core';
 
 export function render(template: string, locals?: object): HttpResponseOK {
   const { templateEngine } = getConfig('base');
@@ -9,8 +9,13 @@ export function render(template: string, locals?: object): HttpResponseOK {
   return new HttpResponseOK(renderToString(template, locals));
 }
 
-export function view(path: string, template: string, locals?: object): Controller<'main'> {
+export function view(path: string, template: string,
+                     locals?: object|((ctx: Context) => object)): Controller<'main'> {
   const controller = new Controller<'main'>();
-  controller.addRoute('main', 'GET', path, ctx => render(template, locals));
+  if (typeof locals === 'function') {
+    controller.addRoute('main', 'GET', path, ctx => render(template, locals(ctx)));
+  } else {
+    controller.addRoute('main', 'GET', path, ctx => render(template, locals));
+  }
   return controller;
 }
