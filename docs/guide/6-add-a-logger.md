@@ -26,22 +26,19 @@ class LoggerService {
 Now go back to `task.service.ts`, import the `LoggerService`, add `public logger: LoggerService` to the constructor and extend the `createOne` method with some logging.
 
 ```typescript
-import { Service } from '@foal/core';
-import { Sequelize, SequelizeModelService } from '@foal/sequelize';
-
-import { ConnectionService } from './connection.service';
 import { LoggerService } from './logger.service';
 
-@Service()
-export class TaskService extends SequelizeModelService<any> {
-  constructor(protected connection: ConnectionService, public logger: LoggerService) {
-    super('tasks', {
-      completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
-      text: { type: Sequelize.STRING, allowNull: false, defaultValue: '' }
-    }, connection);
-  }
+import { ModelService, Service } from '@foal/core';
 
-  createOne(data) {
+import { Task } from './task.model';
+
+@Service()
+export class TaskService extends ModelService<Task> {
+  EntityClass = Task;
+
+  constructor(private logger: LoggerService) {}
+
+  createOne(record: Partial<Task>): Task {
     this.logger.log('info', 'Create called with ' + JSON.stringify(data));
     return super.create(data)
   }
@@ -52,4 +49,4 @@ export class TaskService extends SequelizeModelService<any> {
 
 Create a new task in the browser and then take a look at the terminal from where you launched the app. New logs should appear.
 
-By writting `public logger: LoggerService` we injected the logger service in the task one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
+By writting `private logger: LoggerService` we injected the logger service in the task one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.

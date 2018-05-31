@@ -5,7 +5,6 @@
 This guide covers the basics of `FoalTS`. You will learn how to quickly build a web application using the core concepts of the framework.
 
 For this example you are going to create a todo-app and be taught how to:
-- set up a connection database,
 - create a model service,
 - serve a REST API,
 - control input data,

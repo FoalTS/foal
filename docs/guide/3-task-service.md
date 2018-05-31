@@ -2,23 +2,18 @@
 
 Now that the database connection is set up, you can create a `Task` model service. This service aims to perform any CRUD operations (Create, Read, Update, Delete) to the `tasks` table.
 
-Run `yo foal:service task` and choose `Sequelize model`.
+Run `foal generate service task` and choose `Model service`.
 
 Open the new created `task.service.ts` file. It shoud look like this:
 
 ```typescript
-import { Service } from '@foal/core';
-import { SequelizeModelService } from '@foal/sequelize';
+import { ModelService, Service } from '@foal/core';
 
-import { ConnectionService } from './connection.service';
+import { Task } from './task.model';
 
 @Service()
-export class TaskService extends SequelizeModelService<any> {
-  constructor(protected connection: ConnectionService) {
-    super('tasks', {
-      // Schema
-    }, connection);
-  }
+export class TaskService extends ModelService<Task> {
+  EntityClass = Task;
 }
 
 ```
@@ -28,10 +23,13 @@ export class TaskService extends SequelizeModelService<any> {
 Let's define the schema of our tasks. Import `Sequelize` from `@foal/sequelize` and update the second argument with the given fields:
 
 ```typescript
-{
-  completed: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
-  text: { type: Sequelize.STRING, allowNull: false, defaultValue: '' }
-}
+@Column({ default: false})
+completed: boolean;
+
+@Column()
+text: string;
 ```
 
-> *Note:* You can find more data types [here](http://docs.sequelizejs.com/manual/tutorial/models-definition.html).
+Add to `initDB`.
+
+> *Note:* You can find more data types [here](http://typeorm.io/#/entities/column-types-for-mysql--mariadb).

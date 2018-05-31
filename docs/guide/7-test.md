@@ -7,7 +7,6 @@ Before testing all your those you need to update `task.service.spec.ts` to take 
 ```typescript
 import { TaskService } from './task.service';
 
-import { ConnectionService } from './connection.service';
 import { LoggerService } from './logger.service';
 
 describe('TaskService', () => {
@@ -17,7 +16,7 @@ describe('TaskService', () => {
 
   it('should instantiate.', () => {
     connection = new ConnectionService();
-    service = new TaskService(connection, new LoggerService());
+    service = new TaskService(new LoggerService());
   });
 });
 ```
