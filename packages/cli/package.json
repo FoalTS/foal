@@ -14,7 +14,7 @@
     "node": ">=8"
   },
   "bin": {
-    "foal": "./bin/cli.js"
+    "foal": "./lib/index.js"
   },
   "publishConfig": {
     "access": "public"

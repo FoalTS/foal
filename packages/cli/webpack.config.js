@@ -34,6 +34,7 @@ module.exports = {
   mode: 'production',
   plugins: [
     new CleanWebpackPlugin([ 'lib' ]),
-    new BannerPlugin(fs.readFileSync('../../header.txt', 'utf8'))
+    new BannerPlugin(fs.readFileSync('../../header.txt', 'utf8')),
+    new BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
   ],
 };
