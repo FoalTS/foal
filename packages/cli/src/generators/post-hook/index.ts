@@ -12,10 +12,10 @@ export async function generatePostHook() {
     console.error('You must provide a name.');
     return;
   }
-  renderTemplates(name);
+  renderPostHookTemplates(name);
 }
 
-export function renderTemplates(name: string) {
+export function renderPostHookTemplates(name: string) {
   const names = getNames(name);
   const postHookTemplate = require('./templates/post-hook.ts-t');
   const postHookSpecTemplate = require('./templates/post-hook.spec.ts-t');

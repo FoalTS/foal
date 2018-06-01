@@ -12,10 +12,10 @@ export async function generatePreHook() {
     console.error('You must provide a name.');
     return;
   }
-  renderTemplates(name);
+  renderPreHookTemplates(name);
 }
 
-export function renderTemplates(name: string) {
+export function renderPreHookTemplates(name: string) {
   const names = getNames(name);
   const preHookTemplate = require('./templates/pre-hook.ts-t');
   const preHookSpecTemplate = require('./templates/pre-hook.spec.ts-t');

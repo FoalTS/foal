@@ -12,10 +12,10 @@ export async function generateModule() {
     console.error('You must provide a name.');
     return;
   }
-  renderTemplates(name);
+  renderModuleTemplates(name);
 }
 
-export function renderTemplates(name: string) {
+export function renderModuleTemplates(name: string) {
   const names = getNames(name);
   const indexTemplate = require('./templates/index.ts-t');
   const moduleTemplate = require('./templates/module.ts-t');
