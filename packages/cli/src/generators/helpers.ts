@@ -18,9 +18,9 @@ export function getNames(name: string): Names {
   };
 }
 
-export function writeFile(path: string, template: string, locals: object) {
+export function writeFile(dir: string|undefined, path: string, template: string, locals: object) {
   writeFileSync(
-    join(process.cwd(), path),
+    join(dir || process.cwd(), path),
     render(template, locals)
   );
 }

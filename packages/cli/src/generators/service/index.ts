@@ -1,3 +1,5 @@
+import { prompt } from 'inquirer';
+
 import { getNames, Names, writeFile } from '../helpers';
 
 export type Type = 'empty'|'model'|'email-authenticator'|'authenticator';
@@ -7,7 +9,7 @@ function choice(name: string, value: Type) {
 }
 
 export async function generateService() {
-  const { name, type } = await this.prompt([
+  const { name, type } = await prompt([
     {
       message: 'Name',
       name: 'name',
@@ -43,30 +45,30 @@ export async function generateService() {
   }
 }
 
-export function renderAuthenticatorServiceTemplates(name: string) {
+export function renderAuthenticatorServiceTemplates(name: string, dir?: string) {
   const names = getNames(name);
   const template = require('./templates/authenticator.service.ts-t');
   const specTemplate = require('./templates/authenticator.service.spec.ts-t');
-  writeFile(`${names.kebabName}.service.ts`, template, names);
-  writeFile(`${names.kebabName}.service.spec.ts`, specTemplate, names);
+  writeFile(dir, `${names.kebabName}.service.ts`, template, names);
+  writeFile(dir, `${names.kebabName}.service.spec.ts`, specTemplate, names);
 }
 
-export function renderEmailAuthenticatorServiceTemplates(name: string) {
+export function renderEmailAuthenticatorServiceTemplates(name: string, dir?: string) {
   const names = getNames(name);
   const template = require('./templates/email-authenticator.service.ts-t');
-  writeFile(`${names.kebabName}.service.ts`, template, names);
+  writeFile(dir, `${names.kebabName}.service.ts`, template, names);
 }
 
-export function renderEmptyServiceTemplates(name: string) {
+export function renderEmptyServiceTemplates(name: string, dir?: string) {
   const names = getNames(name);
   const template = require('./templates/empty.service.ts-t');
   const specTemplate = require('./templates/empty.service.spec.ts-t');
-  writeFile(`${names.kebabName}.service.ts`, template, names);
-  writeFile(`${names.kebabName}.service.spec.ts`, specTemplate, names);
+  writeFile(dir, `${names.kebabName}.service.ts`, template, names);
+  writeFile(dir, `${names.kebabName}.service.spec.ts`, specTemplate, names);
 }
 
-export function renderModelServiceTemplates(name: string) {
+export function renderModelServiceTemplates(name: string, dir?: string) {
   const names = getNames(name);
   const template = require('./templates/model.service.ts-t');
-  writeFile(`${names.kebabName}.service.ts`, template, names);
+  writeFile(dir, `${names.kebabName}.service.ts`, template, names);
 }
