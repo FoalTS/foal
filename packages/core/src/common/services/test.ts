@@ -1,0 +1,1 @@
+import './model.service.spec';
