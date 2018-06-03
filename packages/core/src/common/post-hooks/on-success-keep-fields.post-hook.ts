@@ -15,11 +15,10 @@ export function onSuccessKeepFields<ResourceClass = any>(fields: (keyof Resource
     if (!ctx.response || !isHttpResponseSuccess(ctx.response) || !ctx.response.content) {
       return;
     }
-    console.log('not returned');
     if (Array.isArray(ctx.response.content)) {
-      ctx.response.content = ctx.response.content.map(item => fromFields(item, fields));
+      ctx.response.content = ctx.response.content.map(item => fromFields(item, fields as string[]));
     } else {
-      ctx.response.content = fromFields(ctx.response.content, fields);
+      ctx.response.content = fromFields(ctx.response.content, fields as string[]);
     }
   };
 }
