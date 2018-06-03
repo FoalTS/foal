@@ -15,12 +15,15 @@ describe('AbstractEmailAuthenticator', () => {
   @Entity()
   class User extends AbstractUser {
     @Column({ unique: true })
+    // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
     email: string;
 
     @Column()
+    // @ts-ignore : Property 'password' has no initializer and is not definitely assigned in theconstructor.
     password: string;
 
     @Column()
+    // @ts-ignore : Property 'username' has no initializer and is not definitely assigned in theconstructor.
     username: string;
   }
 
