@@ -44,8 +44,30 @@ const prodConfig = merge(commonConfig, {
   ],
 });
 
-export function build(watch: boolean, mode: 'dev'|'prod') {
-  const compiler = webpack(mode === 'dev' ? devConfig : prodConfig);
+const testConfig = merge(commonConfig, {
+  devtool: 'inline-source-map',
+  entry: './src/test.ts',
+  mode: 'development',
+  output: {
+    filename: 'test.js',
+  }
+});
+
+export function build(watch: boolean, mode: 'dev'|'prod'|'test') {
+  let compiler;
+  switch (mode) {
+    case 'dev':
+      compiler = webpack(devConfig);
+      break;
+    case 'prod':
+      compiler = webpack(prodConfig);
+      break;
+    case 'test':
+      compiler = webpack(testConfig);
+      break;
+    default:
+      throw new Error('Given mode is incorrect. It should be dev, prod or test.');
+  }
   if (!watch) {
     compiler.run((err, stats) => {
       if (err) {
