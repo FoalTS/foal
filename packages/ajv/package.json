@@ -51,6 +51,7 @@
     "@types/chai": "^4.0.4",
     "mocha": "^3.5.3",
     "@types/mocha": "^2.2.43",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }
