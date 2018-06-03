@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { Column, Connection, createConnection, Entity, getManager } from 'typeorm';
+import { Column, Connection, createConnection, Entity } from 'typeorm';
 
 chai.use(chaiAsPromised);
 

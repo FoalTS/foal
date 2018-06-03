@@ -1,6 +1,6 @@
 import * as Ajv from 'ajv';
 import { pbkdf2 } from 'crypto';
-import { getManager, getRepository } from 'typeorm';
+import { getManager } from 'typeorm';
 import { promisify } from 'util';
 
 import { ValidationError } from '../../../common';
