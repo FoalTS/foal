@@ -14,11 +14,6 @@ module.exports = {
         exclude: /node_modules/,
         test: /\.ts$/,
         use: 'ts-loader',
-      },
-      {
-        exclude: /node_modules/,
-        test: /\.ts-t$/,
-        use: 'raw-loader',
       }
     ]
   },
@@ -35,6 +30,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin([ 'lib' ]),
     new BannerPlugin(fs.readFileSync('../../header.txt', 'utf8')),
+    new BannerPlugin({ banner: 'require(\'source-map-support\').install();', raw: true }),
     new BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
   ],
 };
