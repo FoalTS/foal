@@ -7,8 +7,8 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "webpack",
-    "prepublish": "webpack"
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
   },
   "engines": {
     "node": ">=8"
@@ -44,15 +44,11 @@
     "ejs": "^2.5.7"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
     "chai": "^4.1.2",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.4",
-    "webpack-node-externals": "^1.7.2",
-    "clean-webpack-plugin": "^0.1.19",
-    "ts-loader": "^4.3.0",
+    "@types/chai": "^4.0.4",
     "mocha": "^3.5.3",
+    "@types/mocha": "^2.2.43",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }
