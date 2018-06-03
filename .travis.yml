@@ -1,6 +1,7 @@
 sudo: required
 language: node_js
 node_js:
+  - 9
   - 8
 
 services:
@@ -9,7 +10,7 @@ services:
 before_script:
   - sudo service mysql stop
   - sudo service postgresql stop
-  - npm run start-docker
+  - docker-compose up -d
 
 before_install:
   - npm install -g lerna
