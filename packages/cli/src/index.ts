@@ -1,3 +1,9 @@
+/**
+ * FoalTS
+ * Copyright(c) 2017-2018 Loïc Poullain <loic.poullain@centraliens.net>
+ * Released under the MIT License.
+ */
+
 import * as program from 'commander';
 
 // tslint:disable-next-line:no-var-requires
