@@ -22,7 +22,7 @@ First install [Node.Js and npm](https://nodejs.org/en/download/) if they are not
 Then install the FoalTS command line interface `@foal/cli`.
 
 ```sh
-npm install -g @foal/cli
+npm install -g yo generator-foal
 ```
 
 ## 2. Create a new project
