@@ -48,7 +48,7 @@ describe('Context', () => {
       crsfToken: 'xxx',
       key1: 'yyy',
       get(str: string): string {
-        return this.foo;
+        return str;
       }
     };
     const actual = new Context(req, [
