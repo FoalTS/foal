@@ -26,7 +26,7 @@ const commonConfig = {
     path: path.resolve(process.cwd(), 'lib'),
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ]
+    extensions: [ '.ts', '.js', '.html' ]
   },
   target: 'node',
 };
