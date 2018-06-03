@@ -2,12 +2,12 @@
 
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./logo_400.png" alt="Logo" height="125px"/>
+    <img src="./logo_400.png" alt="Logo" height="200px"/>
   </a>
 </p>
 
-FoalTS is a high-level Node.JS to quickly buil web apps in TypeScript. Why should you use it?
-- It is natively written in TypeScript and aims to be used with this language with all its features.
+FoalTS is a high-level Node.JS to quickly build web apps in TypeScript:
+- It is natively written in TypeScript and aims to be used in this language with all its features.
 - It is designed to fastly bootstrap and develop an application. Authentication, REST API, developing tools, you don't need to re-invent the wheel anymore while programming with Node.JS.
 - Its architecture can support growing app espacially when it deals with structuring the code. 
 
@@ -15,11 +15,11 @@ Let's get started!
 
 ## 1. Set up the Development Environment
 
-Before starting anything, you need to set up your development environment.
+To start a project you need to set up your development environment.
 
 First install [Node.Js and npm](https://nodejs.org/en/download/) if they are not already installed on your host.
 
-Then install the FoalTS command line interface `@foal/cli`.
+Then install the FoalTS generator.
 
 ```sh
 npm install -g yo generator-foal
@@ -35,11 +35,7 @@ Open a terminal and then run the following command:
 yo foal my-app
 ```
 
-Some prompts should show up. Answer the questions as below.
-
-![Prompts](./cli_prompts.png)
-
-A new folder `my-app` should now appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
+A new folder `my-app` should appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
 ## 3. Serve the application
 
