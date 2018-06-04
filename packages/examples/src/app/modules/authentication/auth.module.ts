@@ -16,7 +16,11 @@ export const AuthModule: Module = {
       redirect: '/auth',
     }),
 
-    view('/', require('./templates/login.html'), { name: 'FoalTS' })
+    view('/', require('./templates/login.html'), ctx => {
+      return {
+        csrfToken: ctx.state.csrfToken,
+      };
+    })
   ],
   path: '/auth'
 };
