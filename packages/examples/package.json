@@ -6,7 +6,7 @@
     "shell": "ts-node -i",
     "start": "node ./lib/server.js",
     "start:w": "supervisor -w ./lib/server.js ./lib/server.js",
-    "test": "mocha ./lib/test.js",
+    "test": "npm run build:test && mocha ./lib/test.js",
     "test:w": "mocha -w ./lib/test.js",
     "build": "foal build --mode=prod",
     "build:dev": "foal build --mode=dev",
