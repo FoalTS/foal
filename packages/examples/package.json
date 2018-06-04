@@ -4,13 +4,17 @@
   "description": "FoalTs examples",
   "scripts": {
     "shell": "ts-node -i",
-    "test": "",
     "start": "node ./lib/server.js",
     "start:w": "supervisor -w ./lib/server.js ./lib/server.js",
+    "test": "mocha ./lib/test.js",
+    "test:w": "mocha -w ./lib/test.js",
     "build": "foal build --mode=prod",
     "build:dev": "foal build --mode=dev",
     "build:dev:w": "foal build --mode=dev --watch",
-    "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\""
+    "build:test": "foal build --mode=test",
+    "build:test:w": "foal build --mode=test --watch",
+    "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\"",
+    "develop:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run test:w\""
   },
   "engines": {
     "node": ">=8"
