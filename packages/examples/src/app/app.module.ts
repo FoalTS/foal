@@ -1,6 +1,5 @@
 import {
   authenticate,
-  HttpResponseOK,
   Module,
   onSuccessKeepFields,
   rest,
