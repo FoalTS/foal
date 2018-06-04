@@ -1,13 +1,11 @@
-# @foal/password
-
-This package is dedicated to authentication and authorization. You'll find a complete example at the end of the page.
+# Authentication and authorization
 
 ## Authentication
 
 Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services,
 - the `login` controller factory,
-- the `UserModelService` service,
+- the `User` model,
 - and the `authenticate` pre-hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
@@ -33,15 +31,11 @@ Its constructor takes a user service that must implement the `IModelService` int
 import { AbstractEmailAuthenticator } from '@foal/password';
 import { Service } from '@foal/core';
 
-import { User, UserService } from './user.service.ts';
+import { User } from './user.model.ts';
 
 @Service()
 export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
-
-  constructor(userService: UserService) {
-    super(userService);
-  }
-
+  UserClass = User;
 }
 ```
 
@@ -244,7 +238,7 @@ import { Service } from '@foal/core';
 import { User, UserService } from '../shared/user.service.ts';
 
 @Service()
-export class AuthService<User> extends AbstractEmailAuthenticator {
+export class AuthService<User> extends AbstractEmailAuthenticator<User> {
 
   constructor(userService: UserService) {
     super(userService);
