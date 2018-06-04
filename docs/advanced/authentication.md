@@ -35,7 +35,7 @@ import { User } from './user.model.ts';
 
 @Service()
 export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
-  UserClass = User;
+  UserModel = User;
 }
 ```
 

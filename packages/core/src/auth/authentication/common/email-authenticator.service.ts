@@ -37,7 +37,7 @@ const schema = {
 export abstract class AbstractEmailAuthenticator<User extends EmailUser>
     implements IAuthenticator<User> {
 
-  abstract UserClass: Class<User>;
+  abstract UserModel: Class<User>;
 
   validate(credentials: any): { email: string, password: string } {
     const isValid = ajv.validate(schema, credentials);
@@ -66,7 +66,7 @@ export abstract class AbstractEmailAuthenticator<User extends EmailUser>
   async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User|undefined;
 
-    user = await getManager().findOne(this.UserClass, { where: { email } });
+    user = await getManager().findOne(this.UserModel, { where: { email } });
     if (!user) {
       return null;
     }

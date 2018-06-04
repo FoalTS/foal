@@ -28,7 +28,7 @@ describe('AbstractEmailAuthenticator', () => {
   }
 
   class ConcreteClass extends AbstractEmailAuthenticator<User> {
-    UserClass = User;
+    UserModel = User;
   }
 
   let service: AbstractEmailAuthenticator<User>;
