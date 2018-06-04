@@ -23,7 +23,7 @@ function testSuite(title: string, connectionName: string) {
 
     before(() => {
       class UserService extends ModelService<User> {
-        Entity = User;
+        Model = User;
         connectionName = connectionName;
       }
       service = new UserService();

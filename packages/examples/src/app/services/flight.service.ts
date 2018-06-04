@@ -4,5 +4,5 @@ import { Flight } from '../models';
 
 @Service()
 export class FlightService extends ModelService<Flight> {
-  Entity = Flight;
+  Model = Flight;
 }
