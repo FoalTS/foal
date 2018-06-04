@@ -12,9 +12,10 @@ import {
 } from '@foal/core';
 
 import { getAirport } from './handlers';
+import { Flight } from './models';
 import { User } from './models/user.model';
 import { AuthModule } from './modules/authentication';
-import { UserService } from './services';
+import { FlightService, UserService } from './services';
 
 export const AppModule: Module = {
   controllers: [
@@ -30,12 +31,13 @@ export const AppModule: Module = {
       .withPreHook(restrictAccessToAuthenticated()),
 
     route('GET', '/airport', getAirport),
+    rest('/flights', FlightService),
   ],
   modules: [
     AuthModule,
   ],
   preHooks: [
-    initDB([ User ]),
+    initDB([ Flight, User ]),
     authenticate(User)
-  ]
+  ],
 };
