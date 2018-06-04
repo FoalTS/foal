@@ -11,6 +11,39 @@ describe('App', () => {
     expect(app.services).to.be.an.instanceOf(ServiceManager);
   });
 
+  describe('should have a `models` attribute which', () => {
+
+    it('contains the models of the root module and its children.', () => {
+      class Model1 {}
+      class Model2 {}
+      class Model3 {}
+      class Model4 {}
+      class Model5 {}
+      const app = new App({
+        models: [ Model1 ],
+        modules: [
+          {
+            models: [ Model2 ],
+            modules: []
+          },
+          {
+            models: [ Model3, Model4 ],
+            modules: [
+              {
+                models: [ Model5 ]
+              }
+            ]
+          }
+        ]
+      });
+      expect(app.models).to.have.lengthOf(5);
+      expect(app.models).to.have.members([
+        Model1, Model2, Model3, Model4, Model5
+      ]);
+    });
+
+  });
+
   describe('should have a `controllers` attribute which', () => {
 
     it('contains the root module controllers.', () => {

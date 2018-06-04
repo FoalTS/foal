@@ -1,7 +1,6 @@
 import {
   authenticate,
   HttpResponseOK,
-  initDB,
   Module,
   onSuccessKeepFields,
   rest,
@@ -33,11 +32,13 @@ export const AppModule: Module = {
     route('GET', '/airport', getAirport),
     rest('/flights', FlightService),
   ],
+  models: [
+    Flight, User
+  ],
   modules: [
     AuthModule,
   ],
   preHooks: [
-    initDB([ Flight, User ]),
     authenticate(User)
   ],
 };

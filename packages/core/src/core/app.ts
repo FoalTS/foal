@@ -1,10 +1,11 @@
 import { Controller } from './controller';
-import { Module } from './interfaces';
+import { Class, Module } from './interfaces';
 import { ServiceManager } from './service-manager';
 
 export class App {
   readonly services: ServiceManager;
   readonly controllers: Controller<string>[] = [];
+  readonly models: Class[] = [];
 
   constructor(rootModule: Module) {
     this.services = new ServiceManager();
@@ -26,6 +27,10 @@ export class App {
       controller.addPathAtTheBeginning(path);
       controller.addPreHooksAtTheTop(preHooks);
       controller.addPostHooksAtTheBottom(postHooks);
+    }
+
+    if (parentModule.models) {
+      this.models.push(...parentModule.models);
     }
 
     return controllers;

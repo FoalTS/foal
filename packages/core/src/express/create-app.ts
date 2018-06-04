@@ -6,9 +6,9 @@ import * as express from 'express';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
-import { App } from '..';
 
-import { getConfig, Module } from '../core';
+import { initDB } from '../common';
+import { App, getConfig, Module } from '../core';
 import { getMiddlewares } from './get-middlewares';
 
 export interface IConfig {
@@ -20,6 +20,13 @@ export interface IConfig {
 
 export function createApp(rootModule: Module) {
   const config = getConfig('base') as IConfig;
+
+  const app = new App(rootModule);
+  const preHook = initDB(app.models);
+  app.controllers.forEach(controller => {
+    controller.addPreHooksAtTheTop([ preHook ]);
+  });
+
   const expressApp = express();
 
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
@@ -50,7 +57,7 @@ export function createApp(rootModule: Module) {
     }
   });
 
-  expressApp.use(getMiddlewares(new App(rootModule), { debug: config.debug }, [
+  expressApp.use(getMiddlewares(app, { debug: config.debug }, [
     {
       req: 'csrfToken',
       state: 'csrfToken'
