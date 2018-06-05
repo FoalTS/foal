@@ -5,7 +5,7 @@
 ### Guide
 
 * [1. Introduction](./guide/1-introduction.md)
-* [2. Set up a database connection](./guide/2-database-setup.md)
+* [2. Handle a request](./guide/2-handle-a-request.md)
 * [3. Add a Task service](./guide/3-task-service.md)
 * [4. Create the REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Control input data](./guide/5-control-input-data.md)
@@ -21,13 +21,15 @@
 
 ### Advanced
 
+* [Authentication](./advanced/authentication.md)
 * [Controller factories](./advanced/controller-factories.md)
+* [Databases](./advanced/databases.md)
+* [Dependency injection](./advanced/dependency-injection.md)
+* [Environments and production](./advanced/environments-and-production.md)<!-- * [Serverless](./advanced/environments-and-production.md) -->
+* [Migrations](./advanced/migrations.md)
+* [Template engine](./advanced/template-engine.md)
+* [Utils](./advanced/utils.md)
 
-### Packages
+### FAQ
 
-* [@foal/ajv](./packages/ajv.md)
-* [@foal/common](./packages/common.md)
-* [@foal/core](./packages/core.md)
-* [@foal/ejs](./packages/ejs.md)
-* [@foal/express](./packages/express.md)
-* [@foal/sequelize](./packages/sequelize.md)
+* [FAQ](./advanced/faq.md)
