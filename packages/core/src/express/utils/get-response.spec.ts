@@ -4,6 +4,7 @@ import {
   Handler,
   HttpResponse,
   HttpResponseBadRequest,
+  HttpResponseOK,
   PostContext,
   PostHook,
   PreHook,
@@ -19,7 +20,10 @@ describe('getResponse', () => {
 
     const preHook1: PreHook = ctx => { ctx.state.text += 'a'; };
     const preHook2: PreHook = async ctx => { ctx.state.text += 'b'; };
-    const handler: Handler = async ctx => { ctx.state.text += 'c'; };
+    const handler: Handler = async ctx => {
+      ctx.state.text += 'c';
+      return new HttpResponseOK();
+    };
     const postHook1: PostHook = ctx => { ctx.state.text += 'd'; };
     const postHook2: PostHook = async ctx => { ctx.state.text += 'e'; };
 
@@ -50,7 +54,10 @@ describe('getResponse', () => {
       const preHook1: PreHook = async ctx => { ctx.state.text += 'a'; };
       const preHook2: PreHook = ctx => response;
       const preHook3: PreHook = async ctx => { ctx.state.text += 'b'; };
-      const handler: Handler = async ctx => { ctx.state.text += 'c'; };
+      const handler: Handler = async ctx => {
+        ctx.state.text += 'c';
+        return new HttpResponseOK();
+      };
       const postHook1: PostHook = ctx => {
         responseInPostHook = ctx.response;
         ctx.state.text += 'd';
@@ -79,18 +86,18 @@ describe('getResponse', () => {
 
   it('should return the context response.', async () => {
     const ctx = new PostContext();
-    ctx.response = new HttpResponseBadRequest();
+    const response = new HttpResponseBadRequest();
 
-    const expected = ctx.response;
     const actual = await getResponse({
-      handler: () => {},
+      handler: () => response,
       httpMethod: 'GET',
       path: '',
       postHooks: [],
       preHooks: [],
     }, ctx, new ServiceManager());
 
-    expect(actual).to.equal(expected);
+    expect(ctx.response).to.equal(response);
+    expect(actual).to.equal(response);
   });
 
 });

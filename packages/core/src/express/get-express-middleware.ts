@@ -11,9 +11,7 @@ export function getExpressMiddleware(route: Route, services: ServiceManager,
     try {
       const ctx = new PostContext(req, stateDef);
       const response = await getResponse(route, ctx, services);
-      if (response) {
-        sendResponse(res, response);
-      }
+      sendResponse(res, response);
     } catch (err) {
       next(err);
     }

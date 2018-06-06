@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
 import { Controller } from './controller';
+import { HttpResponseOK } from './http';
 import { Route } from './interfaces';
 
 describe('Controller', () => {
@@ -13,7 +14,7 @@ describe('Controller', () => {
   describe('when addRoute/getRoute are called', () => {
 
     it('should add and return the given route.', () => {
-      const handler = () => {};
+      const handler = () => new HttpResponseOK();
       controller.addRoute('create', 'POST', '/foo', handler);
 
       const expected: Route = {
@@ -28,14 +29,14 @@ describe('Controller', () => {
 
     it('should add at the beginning of the route path the controller pre-path when it exists.', () => {
       controller = new Controller<RouteName>('/bar');
-      controller.addRoute('create', 'POST', '/foo', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
 
       expect(controller.getRoute('create').path).to.equal('/bar/foo');
     });
 
     it('should remove duplicate slashes from the route path.', () => {
       controller = new Controller<RouteName>('/bar/');
-      controller.addRoute('create', 'POST', '//foo/', () => {});
+      controller.addRoute('create', 'POST', '//foo/', () => new HttpResponseOK());
 
       expect(controller.getRoute('create').path).to.equal('/bar/foo/');
     });
@@ -53,8 +54,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.addPreHooksAtTheTop([ hook1, hook2 ]);
       controller.addPreHooksAtTheTop([ hook3, hook4 ]);
@@ -72,8 +73,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.addPostHooksAtTheBottom([ hook1, hook2 ]);
       controller.addPostHooksAtTheBottom([ hook3, hook4 ]);
@@ -89,8 +90,8 @@ describe('Controller', () => {
     it('should add the pre-hook at the bottom of the pre-hooks of each route if there is no route name.', () => {
       const hook1 = () => {};
       const hook2 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPreHook(hook1);
       controller.withPreHook(hook2);
@@ -102,8 +103,8 @@ describe('Controller', () => {
     it('should add the pre-hook at the bottom of the pre-hooks of the specified routes.', () => {
       const hook1 = () => {};
       const hook2 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPreHook(hook1, 'create');
       controller.withPreHook(hook2, 'create', 'update');
@@ -121,8 +122,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPreHooks([ hook1, hook2 ]);
       controller.withPreHooks([ hook3, hook4 ]);
@@ -136,8 +137,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPreHooks([ hook1, hook2 ], 'create');
       controller.withPreHooks([ hook3, hook4 ], 'create', 'update');
@@ -153,8 +154,8 @@ describe('Controller', () => {
     it('should add the post-hook at the bottom of the post-hooks of each route if there is no route name.', () => {
       const hook1 = () => {};
       const hook2 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPostHook(hook1);
       controller.withPostHook(hook2);
@@ -166,8 +167,8 @@ describe('Controller', () => {
     it('should add the post-hook at the bottom of the post-hooks of the specified routes.', () => {
       const hook1 = () => {};
       const hook2 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPostHook(hook1, 'create');
       controller.withPostHook(hook2, 'create', 'update');
@@ -185,8 +186,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPostHooks([ hook1, hook2 ]);
       controller.withPostHooks([ hook3, hook4 ]);
@@ -200,8 +201,8 @@ describe('Controller', () => {
       const hook2 = () => {};
       const hook3 = () => {};
       const hook4 = () => {};
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.withPostHooks([ hook1, hook2 ], 'create');
       controller.withPostHooks([ hook3, hook4 ], 'create', 'update');
@@ -215,8 +216,8 @@ describe('Controller', () => {
   describe('when addPathAtTheBeginning is called', () => {
 
     it('should add the path at the beginning of the path of each route.', () => {
-      controller.addRoute('create', 'POST', '/foo', () => {});
-      controller.addRoute('update', 'GET', '/bar', () => {});
+      controller.addRoute('create', 'POST', '/foo', () => new HttpResponseOK());
+      controller.addRoute('update', 'GET', '/bar', () => new HttpResponseOK());
 
       controller.addPathAtTheBeginning('/foobar');
 
@@ -225,7 +226,7 @@ describe('Controller', () => {
     });
 
     it('should remove duplicate slashes.', () => {
-      controller.addRoute('create', 'POST', '/foo/', () => {});
+      controller.addRoute('create', 'POST', '/foo/', () => new HttpResponseOK());
       controller.addPathAtTheBeginning('/');
       controller.addPathAtTheBeginning('/foobar');
       controller.addPathAtTheBeginning('///');
@@ -238,9 +239,9 @@ describe('Controller', () => {
   describe('when getRoutes is called', () => {
 
     it('should return an array of the routes.', () => {
-      const handler1 = () => {};
+      const handler1 = () => new HttpResponseOK();
       controller.addRoute('create', 'POST', '/foo', handler1);
-      const handler2 = () => {};
+      const handler2 = () => new HttpResponseOK();
       controller.addRoute('update', 'GET', '/bar', handler2);
 
       const expected: Route[] = [

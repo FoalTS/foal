@@ -2,6 +2,7 @@ import { expect } from 'chai';
 
 import { App } from './app';
 import { Controller } from './controller';
+import { HttpResponseOK } from './http';
 import { ServiceManager } from './service-manager';
 
 describe('App', () => {
@@ -82,13 +83,13 @@ describe('App', () => {
 
   it('should add the module paths to the controllers.', () => {
     const controller1 = new Controller();
-    controller1.addRoute('main', 'POST', '/controller1', () => {});
+    controller1.addRoute('main', 'POST', '/controller1', () => new HttpResponseOK());
     const controller2 = new Controller();
-    controller2.addRoute('main', 'POST', '/controller2', () => {});
+    controller2.addRoute('main', 'POST', '/controller2', () => new HttpResponseOK());
     const controller3 = new Controller();
-    controller3.addRoute('main', 'POST', '/controller3', () => {});
+    controller3.addRoute('main', 'POST', '/controller3', () => new HttpResponseOK());
     const controller4 = new Controller();
-    controller4.addRoute('main', 'POST', '/controller4', () => {});
+    controller4.addRoute('main', 'POST', '/controller4', () => new HttpResponseOK());
 
     // tslint:disable-next-line:no-unused-expression
     new App({
@@ -125,13 +126,13 @@ describe('App', () => {
     const preHookE = () => {};
 
     const controller1 = new Controller();
-    controller1.addRoute('main', 'POST', '/controller1', () => {});
+    controller1.addRoute('main', 'POST', '/controller1', () => new HttpResponseOK());
     const controller2 = new Controller();
-    controller2.addRoute('main', 'POST', '/controller2', () => {});
+    controller2.addRoute('main', 'POST', '/controller2', () => new HttpResponseOK());
     const controller3 = new Controller();
-    controller3.addRoute('main', 'POST', '/controller3', () => {});
+    controller3.addRoute('main', 'POST', '/controller3', () => new HttpResponseOK());
     const controller4 = new Controller();
-    controller4.addRoute('main', 'POST', '/controller4', () => {});
+    controller4.addRoute('main', 'POST', '/controller4', () => new HttpResponseOK());
     controller4.withPreHook(preHookE, 'main');
 
     // tslint:disable-next-line:no-unused-expression
@@ -169,13 +170,13 @@ describe('App', () => {
     const postHookE = () => {};
 
     const controller1 = new Controller();
-    controller1.addRoute('main', 'POST', '/controller1', () => {});
+    controller1.addRoute('main', 'POST', '/controller1', () => new HttpResponseOK());
     const controller2 = new Controller();
-    controller2.addRoute('main', 'POST', '/controller2', () => {});
+    controller2.addRoute('main', 'POST', '/controller2', () => new HttpResponseOK());
     const controller3 = new Controller();
-    controller3.addRoute('main', 'POST', '/controller3', () => {});
+    controller3.addRoute('main', 'POST', '/controller3', () => new HttpResponseOK());
     const controller4 = new Controller();
-    controller4.addRoute('main', 'POST', '/controller4', () => {});
+    controller4.addRoute('main', 'POST', '/controller4', () => new HttpResponseOK());
     controller4.withPostHook(postHookE, 'main');
 
     // tslint:disable-next-line:no-unused-expression
