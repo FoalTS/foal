@@ -10,6 +10,8 @@ That's why official component do not let you write config in files. Instead they
 
 Take a look at the get method and show the supported types.
 
+Explain auto-conversion.
+
 Explain the process :
 - first check the variable environments (tell convention camel -> upper snake)
 - if not found check `config/name.env.json`. env is evaluated with the NODE_ENV variable env. Default to development.

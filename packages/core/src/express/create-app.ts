@@ -8,19 +8,10 @@ import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
 import { initDB } from '../common';
-import { App, getConfig, Module } from '../core';
+import { App, Config, Module } from '../core';
 import { getMiddlewares } from './get-middlewares';
 
-export interface IConfig {
-  staticUrl: string;
-  session: any;
-  csrf: boolean;
-  debug: boolean;
-}
-
 export function createApp(rootModule: Module) {
-  const config = getConfig('base') as IConfig;
-
   const app = new App(rootModule);
   const preHook = initDB(app.models);
   app.controllers.forEach(controller => {
@@ -30,13 +21,17 @@ export function createApp(rootModule: Module) {
   const expressApp = express();
 
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
-  expressApp.use(express.static(path.join(process.cwd(), config.staticUrl)));
+  expressApp.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
   expressApp.use(helmet());
   expressApp.use(bodyParser.json());
   expressApp.use(bodyParser.urlencoded({ extended: false }));
-  expressApp.use(session(config.session));
+  expressApp.use(session({
+    resave: Config.get('settings', 'sessionResave', false),
+    saveUninitialized: Config.get('settings', 'sessionSaveUninitialized', true),
+    secret: Config.get('settings', 'sessionSecret', ''),
+  }));
 
-  if (config.csrf) {
+  if (Config.get('settings', 'csrf', false) as boolean) {
     expressApp.use(csurf());
     expressApp.use((req, res, next) => {
       req.csrfToken = req.csrfToken();
@@ -57,7 +52,7 @@ export function createApp(rootModule: Module) {
     }
   });
 
-  expressApp.use(getMiddlewares(app, { debug: config.debug }, [
+  expressApp.use(getMiddlewares(app, { debug: Config.get('settings', 'debug', false) as boolean }, [
     {
       req: 'csrfToken',
       state: 'csrfToken'

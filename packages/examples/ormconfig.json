@@ -1,0 +1,5 @@
+{
+  "type": "sqlite",
+  "database": "./test_db.sqlite",
+  "synchronize": true
+}

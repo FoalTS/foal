@@ -47,8 +47,7 @@
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
     "morgan": "^1.9.0",
-    "reflect-metadata": "^0.1.10",
-    "lodash.merge": "^4.6.1"
+    "reflect-metadata": "^0.1.10"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
