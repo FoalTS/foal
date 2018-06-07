@@ -16,7 +16,7 @@ Locals may be an object or a function executed when processing the request.
 
 By default FoalTS uses [ejs](http://ejs.co/) as template engine but you can use a different one.
 
-To do so, you need to create a package that exports a function `renderToString(template: string, locals?: object): string` and then add your package name in `config/base.js` as follows:
+To do so, you need to create a package that exports a function `renderToString(template: string, locals?: object): string` and then add your package name in `config/settings.js` as follows:
 
 ```json
 {

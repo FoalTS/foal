@@ -23,9 +23,7 @@ export class User extends AbstractUser {
 // To run with ts-node
 
 // async function createUser(data: Partial<User>) {
-//   refaire avec host et tout.
-//   const config = getConfig('base');
-//   const connection = await createConnection(config.database);
+//   const connection = await createConnection();
 //   const user = connection.getRepository(User).create(data);
 //   await user.save();
 // }

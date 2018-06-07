@@ -52,7 +52,7 @@ describe('handleErrors', () => {
       app.use(handleErrors(true, () => {}));
 
       const stack = `<pre>${err.stack}</pre>`;
-      const info = 'You are seeing this error because you have debug set to true in your config/base.js file.';
+      const info = 'You are seeing this error because you have debug set to true in your config/settings.js file.';
       return request(app)
         .get('/')
         .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
