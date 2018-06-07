@@ -26,6 +26,14 @@ export function createApp(rootModule: Module) {
   expressApp.use(bodyParser.json());
   expressApp.use(bodyParser.urlencoded({ extended: false }));
   expressApp.use(session({
+    cookie: {
+      domain: Config.get('settings', 'sessionCookieDomain'),
+      httpOnly: Config.get('settings', 'sessionCookieHttpOnly'),
+      maxAge: Config.get('settings', 'sessionCookieMaxAge'),
+      path: Config.get('settings', 'sessionCookiePath'),
+      secure: Config.get('settings', 'sessionCookieSecure'),
+    },
+    name: Config.get('settings', 'sessionName'),
     resave: Config.get('settings', 'sessionResave', false),
     saveUninitialized: Config.get('settings', 'sessionSaveUninitialized', true),
     secret: Config.get('settings', 'sessionSecret', ''),
