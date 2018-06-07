@@ -1,5 +1,5 @@
-import { AbstractUser, Config, parsePassword } from '@foal/core';
-import { BeforeInsert, Column, createConnection, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AbstractUser, parsePassword } from '@foal/core';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User extends AbstractUser {

@@ -1,6 +1,6 @@
 import { ConnectionOptions, createConnection, getConnectionOptions } from 'typeorm';
 
-import { Class, Config, PreHook } from '../../core';
+import { Class, PreHook } from '../../core';
 
 export function initDB(entities: Class[] = []): PreHook {
   let connectionOptions: ConnectionOptions;
