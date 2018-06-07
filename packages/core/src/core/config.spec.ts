@@ -85,9 +85,16 @@ describe('Config', () => {
 
     });
 
-    it('should return undefined is there is no matching property or environment variable.' , () => {
+    it('should return undefined if there is no matching property or environment variable and '
+        + 'if no default option is provided.' , () => {
       expect(Config.get('b', 'foo')).to.equal(undefined);
       expect(Config.get('c', 'foo')).to.equal(undefined);
+    });
+
+    it('should return a default value if one is provided and there is no matching property '
+        + 'or environment variable and if no default option is provided.', () => {
+      expect(Config.get('b', 'foo', 46)).to.equal(46);
+      expect(Config.get('c', 'foo', 46)).to.equal(46);
     });
 
     it('should handle properly overriding in case there are several matching properties and/or '
