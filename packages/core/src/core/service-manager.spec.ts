@@ -60,4 +60,14 @@ describe('ServiceManager', () => {
 
   });
 
+  describe('when set is called', () => {
+
+    it('should register the given service instance.', () => {
+      const service = new Foobar();
+      serviceManager.set(Foobar, service);
+      expect(serviceManager.get(Foobar)).to.equal(service);
+    });
+
+  });
+
 });

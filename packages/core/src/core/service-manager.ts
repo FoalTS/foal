@@ -10,6 +10,10 @@ export class ServiceManager {
 
   readonly map: Map<Class<any>, any>  = new Map();
 
+  set<Service>(ServiceClass: Class<Service>, service: any): void {
+    this.map.set(ServiceClass, service);
+  }
+
   get<Service>(ServiceClass: Class<Service>): Service {
     // Get the service if it exists.
     if (this.map.get(ServiceClass)) {
