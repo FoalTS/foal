@@ -52,10 +52,6 @@ export class Config {
     }
     const config = require(filePath);
 
-    if (typeof config !== 'object' || config === null) {
-      throw new Error(`Config: ${filename} should export an object.`);
-    }
-
     const propType = typeof config[propName];
     if (!['string', 'number', 'boolean', 'undefined'].includes(propType)) {
       throw new Error(

@@ -67,6 +67,7 @@
     "mysql": "^2.15.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2",
-    "typeorm": "^0.2.6"
+    "typeorm": "^0.2.6",
+    "rimraf": "^2.6.2"
   }
 }

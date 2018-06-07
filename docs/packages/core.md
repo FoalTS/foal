@@ -4,11 +4,6 @@ Core package of the framework.
 
 ## Classes
 
-### `App`
-
-### `route` controller factory
-
-### `Controller`
 
 ### The `HttpReponse`s
 
@@ -35,12 +30,6 @@ You may return an `HttpResponse` in a pre-hook or in an handler. This will stop 
 
 The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `content` which is used in the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
 
-### `IServiceControllerFactory`
-
-### `ServiceManager`
-
-## Interfaces
-
 ### `Context`
 
 ```typescript
@@ -55,7 +44,7 @@ class PostContext extends Context {
 
 ```typescript
 type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
-type Handler = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
+type Handler = (ctx: Context, services: ServiceManager) => HttpResponse | Promise<HttpResponse>;
 type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
 ```
 
@@ -70,9 +59,3 @@ interface Module {
   preHooks?: PreHook[];
 }
 ```
-
-## Utils
-
-### `conbinePostHooks`
-
-### `conbinePreHooks`

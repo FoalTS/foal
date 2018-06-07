@@ -30,7 +30,7 @@ const validateTask = validate({
 ...
 ```
 
-To escape the field `text` of the created/updated/replaced task, we are going to write it on our own.
+To escape the field `text` of the created/updated/replaced flight, we are going to write it on our own.
 
 ```typescript
 import { escapeProp } from '@foal/rest';
@@ -43,7 +43,7 @@ Now that the pre-hooks are defined, it is time to attach them to regarded routes
 ```typescript
 import { Module, rest } from '@foal/core';
 
-import { TaskService } from './task.service';
+import { FlightService } from './flight.service';
 
 // Usually the pre-hooks would be defined in a seperate file.
 
@@ -61,7 +61,7 @@ const preventXSS = ctx => { escapeProp(ctx.request.body, 'text'); };
 
 export const AppModule: Module = {
   controllers: [
-    rest('/tasks', TaskService)
+    rest('/flights', FlightService)
       .withPreHook(
         [ validateTask, preventXSS ],
         'POST /', 'PATCH /:id', 'PUT /:id'
@@ -70,4 +70,4 @@ export const AppModule: Module = {
 };
 ```
 
-Data sent to your server is now controlled and sanitized! If you try to create a task with no `text` field, the server should respond with a 400 status and the details on what went wrong.
+Data sent to your server is now controlled and sanitized! If you try to create a flight with no `text` field, the server should respond with a 400 status and the details on what went wrong.

@@ -12,10 +12,8 @@ import { LoggerService } from './logger.service';
 describe('TaskService', () => {
 
   let service: TaskService;
-  let connection: ConnectionService;
 
   it('should instantiate.', () => {
-    connection = new ConnectionService();
     service = new TaskService(new LoggerService());
   });
 });
@@ -23,4 +21,4 @@ describe('TaskService', () => {
 
 Now you can run `npm run build` and then `npm run test`.
 
-During developpement you may be interested as well by the `npm run dev:test` command. It works the same way as `npm run dev:app` expect that it is used to execute the tests and not to launch the app.
+During developpement you may be interested as well by the `npm run dev:test` command. It works the same way as `npm run develop` expect that it is used to execute the tests and not to launch the app.

@@ -1,75 +1,106 @@
+import { join } from 'path';
+
 import { expect } from 'chai';
 
 import { Config } from './config';
 
-describe('Config', () => {
+console.log(process.env.NODE_ENV, typeof process.env.NODE_ENV);
 
-  describe('when get is called', () => {
+// xdescribe('Config', () => {
 
-    describe('if there is a matching environment variable', () => {
+//   let initialRoot: string;
+//   let initialEnv: string|undefined;
 
-      after(() => {
-        delete process.env.FOO_BAR_BARFOO;
-      });
+//   beforeEach(() => {
+//     initialRoot = Config.root;
+//     initialEnv = process.env.NODE_ENV;
+//     console.log(typeof initialEnv);
+//     Config.root = join(__dirname, './config.spec');
+//   });
 
-      it('should return it (string).', () => {
-        process.env.FOO_BAR_BARFOO = 'foo';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal('foo');
-      });
+//   afterEach(() => {
+//     console.log(typeof initialEnv);
+//     if (initialEnv === undefined) {
+//       // Assigning undefined to process.env.NODE_ENV makes process.env.NODE_ENV equal to "undefined"!
+//       delete process.env.NODE_ENV;
+//     } else {
+//       process.env.NODE_ENV = initialEnv;
+//     }
+//     Config.root = initialRoot;
+//   });
 
-      it('should return it (boolean).', () => {
-        process.env.FOO_BAR_BARFOO = 'true';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(true);
-        process.env.FOO_BAR_BARFOO = 'false';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(false);
-      });
+//   describe('when get is called', () => {
 
-      it('should return it (number).', () => {
-        process.env.FOO_BAR_BARFOO = '15';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(15);
-      });
+//     describe('if there is a matching environment variable', () => {
 
-    });
+//       afterEach(() => {
+//         delete process.env.FOO_BAR_BARFOO;
+//       });
 
-    // Change config root.
+//       it('should return it (string).', () => {
+//         process.env.FOO_BAR_BARFOO = 'foo';
+//         expect(Config.get('Foo', 'barBarfoo')).to.equal('foo');
+//       });
 
-    describe('if there is a matching property in a json file (env)', () => {
+//       it('should return it (boolean).', () => {
+//         process.env.FOO_BAR_BARFOO = 'true';
+//         expect(Config.get('Foo', 'barBarfoo')).to.equal(true);
+//         process.env.FOO_BAR_BARFOO = 'false';
+//         expect(Config.get('Foo', 'barBarfoo')).to.equal(false);
+//       });
 
-      it('should return it.', () => {
-        // test with NODE_ENV = undefined and production
-      });
+//       it('should return it (number).', () => {
+//         process.env.FOO_BAR_BARFOO = '15';
+//         expect(Config.get('Foo', 'barBarfoo')).to.equal(15);
+//       });
 
-      it('should not return it if its type is neither a number, a string nor a boolean.', () => {
+//     });
 
-      });
+//     describe('if there is a matching property in a json file (env)', () => {
 
-    });
+//       it('should return it.', () => {
+//         delete process.env.NODE_ENV;
+//         expect(Config.get('a', 'foo')).to.equal(1);
+//         process.env.NODE_ENV = 'production';
+//         expect(Config.get('a', 'foo')).to.equal(2);
+//       });
 
-    describe('if there is a matching property in a json file', () => {
+//       it('should throw an Error it if its type is neither a number, a string nor a boolean.', () => {
+//         process.env.NODE_ENV = 'development';
+//         expect(() => Config.get('a', 'bar')).to.throw(
+//           'Config: only string, number and boolean values are supported. bar type is "object" in a.development.json.'
+//         );
+//       });
 
-      it('should return it.', () => {
+//     });
 
-      });
+//     describe('if there is a matching property in a json file', () => {
 
-      it('should not return it if its type is neither a number, a string nor a boolean.', () => {
+//       it('should return it.', () => {
+//         expect(Config.get('b', 'bar')).to.equal(true);
+//       });
 
-      });
+//       it('should not return it if its type is neither a number, a string nor a boolean.', () => {
+//         expect(() => Config.get('b', 'barfoo')).to.throw(
+//           'Config: only string, number and boolean values are supported. barfoo type is "object" in b.json.'
+//         );
+//       });
 
-    });
+//     });
 
-    it('should throw an error if there is an invalid json file.', () => {
-      // test null, undefined
-    });
+//     it('should return undefined is there is no matching property or environment variable.' , () => {
+//       expect(Config.get('b', 'foo')).to.equal(undefined);
+//       expect(Config.get('c', 'foo')).to.equal(undefined);
+//     });
 
-    it('should return undefined is there is no matching property or environment variable.' , () => {
+//     it('should handle properly overriding in case there are several matching properties and/or '
+//         + 'environment variable.', () => {
+//       process.env.D_FOO = '1';
+//       expect(Config.get('d', 'foo')).to.equal(1);
+//       expect(Config.get('d', 'bar')).to.equal(2);
+//       delete process.env.D_FOO;
+//     });
 
-    });
+//   });
 
-    it('should handle properly overriding in case there are several matching properties and/or '
-       + 'environment variable.', () => {
-
-    });
-
-  });
-
-});
+// });

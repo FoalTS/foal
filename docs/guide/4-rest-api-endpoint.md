@@ -7,17 +7,17 @@ Open `src/app/app.module.ts` and replace it with:
 ```typescript
 import { FoalModule, rest } from '@foal/core';
 
-import { TaskService } from './task.service';
+import { FlightService } from './flight.service';
 
 export const AppModule: FoalModule = {
   controllers: [
-    rest('/tasks', TaskService)
+    rest('/flights', FlightService)
   ],
 };
 
 ```
 
-That's it! We now have a REST API at the endpoint `/tasks`. Go back to your browser, refresh the page and play with your todo-list!
+That's it! We now have a REST API at the endpoint `/flights`. Go back to your browser, refresh the page and play with your todo-list!
 
 ## What have we just done?
 

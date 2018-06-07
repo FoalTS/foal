@@ -8,13 +8,13 @@ Controller factories are objects that create controllers from services or functi
 
 See [Controllers](../basics/controllers.md) to learn how to use it.
 
-## The service controller factories
+## The `rest` controller factory
 
-`IServiceControllerFactory` is an interface from `@foal/core` that aims to create controller factories. All classes implementing it have a public method `attachService` that instantiates the controllers.
+## The `view` controller factory
 
-> In `@foal/core`, `rest`, `view`, `multipleViews` are singletons of classes implementing the `IServiceControllerFactory`.
+## The `authentication` controller factory
 
-Let's see how to create one.
+## Custom controller factories
 
 First define the interface of the services that can be "attached" by your controller-factory. For example:
 
