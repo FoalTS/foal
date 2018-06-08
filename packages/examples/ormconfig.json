@@ -1,5 +1,9 @@
 {
   "type": "sqlite",
   "database": "./test_db.sqlite",
-  "synchronize": true
+  "entities": ["src/app/**/*.model.ts"],
+  "migrations": ["migration/*.js"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
 }
