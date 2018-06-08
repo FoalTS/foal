@@ -1,5 +1,3 @@
-import { join } from 'path';
-
 import { ConnectionOptions, ConnectionOptionsReader, createConnection } from 'typeorm';
 
 import { Class, PreHook } from '../../core';
@@ -9,7 +7,7 @@ export function initDB(entities: Class[] = [], connectionName = 'default'): PreH
   return async () => {
     if (!connectionOptions) {
       const reader = new ConnectionOptionsReader({
-        root: join(process.cwd(), './config')
+        root: process.cwd()
       });
       connectionOptions = await reader.get(connectionName);
       await createConnection({
