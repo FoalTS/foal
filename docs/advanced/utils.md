@@ -1,18 +1,20 @@
 # Utils
 
-FoalTS provides some handy utils to ...
+## `combinePostHooks(postHooks: PostHook[]): PostHook`
 
-### `combinePostHooks`
+Merges several post hooks into one.
 
-### `combinePreHooks`
+## `combinePreHooks(ppreHooks: PreHook[]): PreHook`
 
-### `escape(str: string): string`
+Merges several pre hooks into one.
+
+## `escape(str: string): string`
 
 Escapes HTML and returns a new string.
 
-### `escapeProp(object: object, propName: string): void`
+## `escapeProp(object: object, propName: string): void`
 
-Escapes HTML for the given property.
+Escapes HTML in the given property.
 
 ```typescript
 escapeProp(myObject, 'foobar')

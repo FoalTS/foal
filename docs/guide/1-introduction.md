@@ -6,10 +6,10 @@ This guide covers the basics of `FoalTS`. You will learn how to quickly build a 
 
 For this example you are going to create an app that lists the airplanes at departure from a given airport. You will learn to:
 - answer simple requests,
+- use services,
 - create a model and a model service,
 - serve a REST API,
-- control input data,
-- use hooks and services together,
+- control input data with hooks,
 - and test your components.
 
 ## Prerequities
