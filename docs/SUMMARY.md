@@ -31,6 +31,12 @@
 * [Unit testing]('./advanced/unit-testing.md)
 * [Utils](./advanced/utils.md)
 
+### Common
+
+* [Controller factories](./common/controller-factories.md)
+* [Post hooks](./common/post-hooks.md)
+* [Pre hooks](./common/pre-hooks.md)
+
 ### FAQ
 
 * [FAQ](./faq.md)
