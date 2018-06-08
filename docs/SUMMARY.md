@@ -14,10 +14,10 @@
 
 ### Basics
 
-* [Services](./basics/services.md)
 * [Controllers](./basics/controllers.md)
-* [Modules](./basics/modules.md)
+* [Services](./basics/services.md)
 * [Hooks](./basics/hooks.md)
+* [Modules](./basics/modules.md)
 
 ### Advanced
 
