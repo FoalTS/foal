@@ -26,6 +26,8 @@ export class Flight {
 
 This class is a *Service*. Basically a service can be any class that serves a restricted and well-defined purpose. It requires to be surrounded by the `Service` decorator from the `@foal/core` package.
 
+We'll get back later on other ways to use services.
+
 Add to `models: []`.
 
 This service aims to perform any CRUD operations (Create, Read, Update, Delete) to the `tasks` table.

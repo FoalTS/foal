@@ -5,11 +5,11 @@
 This guide covers the basics of `FoalTS`. You will learn how to quickly build a web application using the core concepts of the framework.
 
 For this example you are going to create an app that lists the airplanes at departure from a given airport. You will learn to:
-- answer simple requests,
-- use services,
-- create a model and a model service,
-- serve a REST API,
-- control input data with hooks,
+- respond to simple requests,
+- add a model,
+- create a REST API endpoint,
+- control input data with pre-hooks,
+- create a custom logger with a service,
 - and test your components.
 
 ## Prerequities
