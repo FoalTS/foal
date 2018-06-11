@@ -26,6 +26,7 @@
 * [Controller factories](./fundamentals/controller-factories.md)
 * [Databases](./fundamentals/databases.md)
 * [Dependency injection](./fundamentals/dependency-injection.md)
+* [HTTP](./fundamentals/http.md)
 * [Migrations](./fundamentals/migrations.md)
 * [Template engine](./fundamentals/template-engine.md)
 * [Unit testing]('./fundamentals/unit-testing.md)

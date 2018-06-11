@@ -1,9 +1,4 @@
-# @foal/core
-
-Core package of the framework.
-
-## Classes
-
+# HTTP
 
 ### The `HttpReponse`s
 
@@ -40,22 +35,6 @@ class PostContext extends Context {
 }
 ```
 
-### Hooks
-
 ```typescript
-type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
 type Handler = (ctx: Context, services: ServiceManager) => HttpResponse | Promise<HttpResponse>;
-type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
-```
-
-### `Module`
-
-```typescript
-interface Module {
-  controllers?: Controller<string>[];
-  modules?: Module[];
-  path?: string;
-  postHooks?: PostHook[];
-  preHooks?: PreHook[];
-}
 ```
