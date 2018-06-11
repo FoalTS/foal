@@ -29,13 +29,13 @@
 * [Migrations](./fundamentals/migrations.md)
 * [Template engine](./fundamentals/template-engine.md)
 * [Unit testing]('./fundamentals/unit-testing.md)
-* [Utils](./fundamentals/utils.md)
 
 ### Common
 
 * [Controller factories](./common/controller-factories.md)
 * [Post hooks](./common/post-hooks.md)
 * [Pre hooks](./common/pre-hooks.md)
+* [Utils](./common/utils.md)
 
 ### FAQ
 
