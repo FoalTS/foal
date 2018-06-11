@@ -2,19 +2,7 @@
 
 Controller factories are objects that create controllers from services or functions. They should be the only way to create them.
 
-## The `route` controller factory
-
-`route` is a low-level controller factory. It should only serve special cases. Prefer using the service controller factories below.
-
-See [Controllers](../basics/controllers.md) to learn how to use it.
-
-## The `rest` controller factory
-
-## The `view` controller factory
-
-## The `authentication` controller factory
-
-## Custom controller factories
+You'll find in [this page]() the common controller factories provided by FoalTS.
 
 First define the interface of the services that can be "attached" by your controller-factory. For example:
 

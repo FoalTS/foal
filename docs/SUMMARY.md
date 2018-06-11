@@ -6,7 +6,7 @@
 
 * [1. Introduction](./guide/1-introduction.md)
 * [2. Handle a request](./guide/2-handle-a-request.md)
-* [3. Add a Flight model](./guide/3-flight-service.md)
+* [3. Add a model](./guide/3-flight-service.md)
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Control input data](./guide/5-control-input-data.md)
 * [6. Add a logger](./guide/6-add-a-logger.md) <!-- 6bis Add authentication -->
@@ -19,17 +19,17 @@
 * [Hooks](./basics/hooks.md)
 * [Modules](./basics/modules.md)
 
-### Advanced
+### Fundamentals
 
-* [Authentication](./advanced/authentication.md)
-* [Config and environments](./advanced/config-and-environments.md)<!-- * [Serverless](./advanced/serverless.md) -->
-* [Controller factories](./advanced/controller-factories.md)
-* [Databases](./advanced/databases.md)
-* [Dependency injection](./advanced/dependency-injection.md)
-* [Migrations](./advanced/migrations.md)
-* [Template engine](./advanced/template-engine.md)
-* [Unit testing]('./advanced/unit-testing.md)
-* [Utils](./advanced/utils.md)
+* [Authentication](./fundamentals/authentication.md)
+* [Config and environments](./fundamentals/config-and-environments.md)<!-- * [Serverless](./fundamentals/serverless.md) -->
+* [Controller factories](./fundamentals/controller-factories.md)
+* [Databases](./fundamentals/databases.md)
+* [Dependency injection](./fundamentals/dependency-injection.md)
+* [Migrations](./fundamentals/migrations.md)
+* [Template engine](./fundamentals/template-engine.md)
+* [Unit testing]('./fundamentals/unit-testing.md)
+* [Utils](./fundamentals/utils.md)
 
 ### Common
 

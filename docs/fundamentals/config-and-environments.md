@@ -14,6 +14,6 @@ Explain auto-conversion.
 
 Explain the process :
 - first check the variable environments (tell convention camel -> upper snake)
-- if not found check `config/name.env.json`. env is evaluated with the NODE_ENV variable env. Default to development.
+- if not found check `config/name.[env].json`. env is evaluated with the NODE_ENV variable env. Default to development.
 - if not found (property or file), check `config/name.json`
 - if not return the default value.
