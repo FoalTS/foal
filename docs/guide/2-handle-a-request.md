@@ -16,7 +16,7 @@ export const getAirport: Handler = (ctx, services) => {
 
 ```
 
-One the handler is implemented, you'll have to bind it to a route. Go to `app.module.ts` and update the following lines.
+Once the handler is implemented, you'll have to bind it to a route. Go to `app.module.ts` and update the following lines.
 
 ```typescript
 import { Module } from '@foal/core';
