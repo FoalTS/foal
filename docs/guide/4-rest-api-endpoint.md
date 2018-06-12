@@ -1,28 +1,48 @@
 # 4. Create the REST API endpoint
 
-Almost there! The last thing we need to create our REST API is to create and register a controller.
+Alright, the next step is to deal with the requests that list, create and delete flights. You could directly use *handlers* for that but this would be tedious work. You would have to add the different routes, call the methods of the model, create the appropriate `HttpResponse` dependending on the status or handle errors when the object is not found.
 
-Open `src/app/app.module.ts` and replace it with:
+That's why FoalTS provides a handy function `rest` to quickly build REST endpoints. This kind of function is called a *controller factory*. You have already met one at the beginning of this tutorial. `route` is the simpliest *controller factory* that you can find in the FoalTS. It takes a *handler* as parameter and returns a controller. As for the `rest` factory, it takes any *service* that implements the `IModelService` interface and uses it to create the API.
+
+In FoalTS, a *service* can be any class that serves a restricted and well-defined purpose. Services behave independently of the http process and are instantiated as singleton by the framework. They are usually the best place to put the business logic.
+
+That's a lot of concepts to take in. Let's translate it into the code.
+
+Go to `src/app/services` with your terminal/console, run `yo foal:service flight` and choose `Model service (TypeORM)`.
+
+Open the new created `flight.service.ts` file and specify the model.
 
 ```typescript
-import { FoalModule, rest } from '@foal/core';
+import { ModelService, Service } from '@foal/core';
 
-import { FlightService } from './flight.service';
+import { Flight } from '../models/flight.model';
 
-export const AppModule: FoalModule = {
+@Service()
+export class FlightService extends ModelService<Flight> {
+  Model = Flight;
+}
+
+```
+
+The abstract class `ModelService` implements the `IModelService` methods based on the provided model.
+
+Once done, you need to create and register your REST controller from this new service. Open `src/app/app.module.ts` and replace it with:
+
+```typescript
+import { Module, rest } from '@foal/core';
+
+import { getAirport } from './handlers/get-airport';
+import { FlightService } from './services/flight.service';
+
+export const AppModule: Module = {
   controllers: [
-    rest('/flights', FlightService)
+    route('GET', '/airport', getAirport),
+    rest('/flights', FlightService),
   ],
 };
 
 ```
 
-That's it! We now have a REST API at the endpoint `/flights`. Go back to your browser, refresh the page and play with your todo-list!
-
-## What have we just done?
-
-First we imported the controller factory `rest` from the `@foal/core` package. A controller factory creates controllers from services that implement a specific interface. For instance, the `rest` factory takes those which implement the `Partial<IModelService>` interface.
-
-Once a controller is created, it needs to be registered within a module. Every app starts with a module which in this case is the `AppModule`. That's all you need to know for the moment.
+That's it! We now have a REST API working at the endpoint `/flights`. Go back to your browser, refresh the page and play with your board!
 
 Now take a time and look at your code. You ended setting up a REST API with just a few lines! No need to reinvent the wheel every time!
