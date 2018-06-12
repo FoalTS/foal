@@ -1,21 +1,22 @@
 # 2. Handle you first request
 
-Now that all is set up, let's handle the first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
+Now that all is set up, let's handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
-To do so, you'll need to create a handler function. Go to the `src/app/handlers` directory and add a new file named `get-airport.ts`.
+To do so, you'll need to create a *handler*. A *handler* is a simple function, that may be synchronous or asynchronous, which returns an `HttpResponse`. It takes two parameters: a `context` which provides information about the request, the session or the authenticated user, and a service manager `services` which gives access to services (we'll come back to this concept later).
+
+Go to the `src/app/handlers` directory and add a new file named `get-airport.ts`.
 
 ```typescript
 import { Handler, HttpResponseOK } from '@foal/core';
 
 export const getAirport: Handler = (ctx, services) => {
+  // Returns { name: 'JFK' } with status 200
   return new HttpResponseOK({ name: 'JFK' });
 };
 
 ```
 
-This little function is called a handler and should return a `HttpResponse` (or a promise). In this case, it returns a 200 status with the expected object.
-
-Now it's time you connected it to a route. Go to `app.module.ts` and update the following lines.
+One the handler is implemented, you'll have to bind it to a route. Go to `app.module.ts` and update the following lines.
 
 ```typescript
 import { Module } from '@foal/core';
