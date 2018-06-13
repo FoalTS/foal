@@ -2,13 +2,13 @@
   "name": "@foal/ajv",
   "version": "0.4.0-beta.3",
   "description": "Foal integration of Ajv (json schema validator).",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
-    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
   },
   "engines": {
     "node": ">=8"
@@ -39,20 +39,19 @@
   ],
   "license": "MIT",
   "files": [
-    "dist/"
+    "lib/"
   ],
   "dependencies": {
     "@foal/core": "^0.4.0-beta.3",
     "ajv": "^5.5.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
+    "@types/node": "^10.1.2",
     "chai": "^4.1.2",
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9",
+    "@types/chai": "^4.0.4",
     "mocha": "^3.5.3",
+    "@types/mocha": "^2.2.43",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }

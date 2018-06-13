@@ -3,14 +3,20 @@
   "version": "0.4.0-beta.4",
   "description": "FoalTs examples",
   "scripts": {
-    "shell": "ts-node -i",
+    "start": "node ./lib/server.js",
+    "start:w": "supervisor -w ./lib/server.js ./lib/server.js",
     "test": "",
-    "start": "node ./dist/server.js",
-    "start:w": "node-dev ./dist/server.js --no-notify",
-    "build": "webpack --config webpack.prod.js",
-    "build:dev": "webpack --config webpack.dev.js",
-    "build:dev:w": "webpack --config webpack.dev.js --watch",
-    "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\""
+    "test:w": "mocha -w ./lib/test.js",
+    "build": "foal build --mode=prod",
+    "build:dev": "foal build --mode=dev",
+    "build:dev:w": "foal build --mode=dev --watch",
+    "build:test": "foal build --mode=test",
+    "build:test:w": "foal build --mode=test --watch",
+    "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\"",
+    "develop:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run test:w\"",
+    "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
+    "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
+    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert"
   },
   "engines": {
     "node": ">=8"
@@ -19,7 +25,7 @@
     "access": "public"
   },
   "files": [
-    "dist/"
+    "lib/"
   ],
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -34,24 +40,18 @@
   "license": "MIT",
   "dependencies": {
     "@foal/ajv": "^0.4.0-beta.3",
-    "@foal/authentication": "^0.4.0-beta.4",
-    "@foal/common": "^0.4.0-beta.3",
     "@foal/core": "^0.4.0-beta.3",
     "@foal/ejs": "^0.4.0-beta.3",
-    "@foal/express": "^0.4.0-beta.3",
-    "@foal/sequelize": "^0.4.0-beta.3",
     "source-map-support": "^0.5.6",
-    "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
-    "pg": "^7.3.0",
-    "pg-hstore": "^2.3.2"
+    "sqlite3": "^4.0.0",
+    "typeorm": "^0.2.6"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
+    "@foal/cli": "^0.4.0-beta.3",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "typescript": "^2.5.3",
@@ -63,6 +63,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "webpack-merge": "^4.1.2",
     "concurrently": "^3.5.1",
-    "node-dev": "^3.1.3"
+    "supervisor": "^0.12.0",
+    "ts-node": "^6.1.0"
   }
 }

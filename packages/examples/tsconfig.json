@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./lib/",
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "commonjs",
@@ -16,7 +16,6 @@
     ]
   },
   "include": [
-    "./index.ts",
     "./src/**/*.ts"
   ]
 }

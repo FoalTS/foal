@@ -1,42 +1,43 @@
 import {
   authenticate,
+  Module,
+  onSuccessKeepFields,
+  rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
-} from '@foal/authentication';
-import {
-  afterThatRemoveField,
-  rest,
-} from '@foal/common';
-import { Module, route } from '@foal/core';
-import { render } from '@foal/ejs';
+  route,
+  view,
+} from '@foal/core';
 
-import { AuthModule } from './authentication';
-import { UserService } from './shared';
+import { getAirport } from './handlers';
+import { Flight } from './models';
+import { User } from './models/user.model';
+import { AuthModule } from './modules/authentication';
+import { FlightService, UserService } from './services';
 
 export const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/users', UserService)
-      .withPreHooks([
-        ctx => { ctx.body.isAdmin = false; },
-      ], 'POST /')
+    rest('/users', UserService)
+      .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(afterThatRemoveField('password')),
-    route
-      .attachHandler('GET', '/', () => render(require('./templates/index.html'), { name: 'FoalTS' })),
-    route
-      .attachHandler('GET', '/', () => render(require('./templates/home.html')))
+      .withPostHook(onSuccessKeepFields<User>([ 'id', 'email', 'roles' ])),
+
+    view('/', require('./templates/index.html'), { name: 'FoalTS' }),
+
+    view('/home', require('./templates/home.html'))
       .withPreHook(restrictAccessToAuthenticated()),
-    route
-      .attachHandler('GET', '/error', () => {
-        throw new Error('This is an error.');
-      })
+
+    route('GET', '/airport', getAirport),
+    rest('/flights', FlightService),
+  ],
+  models: [
+    Flight, User
   ],
   modules: [
     AuthModule,
   ],
   preHooks: [
-    authenticate(UserService)
-  ]
+    authenticate(User)
+  ],
 };

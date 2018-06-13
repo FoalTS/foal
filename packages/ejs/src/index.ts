@@ -1,11 +1,11 @@
-import { HttpResponseOK } from '@foal/core';
-import { render as renderEjs } from 'ejs';
+/**
+ * FoalTS
+ * Copyright(c) 2017-2018 Loïc Poullain <loic.poullain@centraliens.net>
+ * Released under the MIT License.
+ */
 
-// Use types.
+import { render } from 'ejs';
+
 export function renderToString(template: string, locals?: object): string {
-  return renderEjs(template, locals);
-}
-
-export function render(template: string, locals?: object): HttpResponseOK {
-  return new HttpResponseOK(renderToString(template, locals));
+  return render(template, locals);
 }

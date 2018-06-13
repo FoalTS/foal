@@ -1,0 +1,49 @@
+version: '3'
+services:
+
+  mysql:
+    image: "mysql:5.7.10"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+
+  mariadb:
+    image: "mariadb:10.1.16"
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      MYSQL_USER: "test"
+      MYSQL_PASSWORD: "test"
+      MYSQL_DATABASE: "test"
+
+  postgres:
+    image: "postgres:9.6.1"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: "test"
+
+  # mssql:
+  #   image: "microsoft/mssql-server-linux:2017-GA"
+  #   ports:
+  #     - "1433:1433"
+  #   environment:
+  #     SA_PASSWORD: "Admin12345"
+  #     ACCEPT_EULA: "Y"
+
+  # mongodb:
+  #   image: "mongo:3.4.1"
+  #   container_name: "mongodb"
+  #   ports:
+  #     - "27017:27017"
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080

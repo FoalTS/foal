@@ -1,28 +1,29 @@
 # 1. Introduction
 
-## A Todo-list
+This tutorial will teach you how to create a web app using the core concepts of FoalTS. Through this you are going to create a board to manage the flights departing from the JFK airport. You'll be able to display the name of the airport, list the flights and add or remove some.
 
-This guide covers the basics of `FoalTS`. You will learn how to quickly build a web application using the core concepts of the framework.
+As most of nowdays apps use rich-client interface, you'll use a precompiled frontend app made with Angular and Bootstrap. Note that you don't need to use Angular as frontend framework to use FoalTS. You can use whatever client technology you feel confortable with (angular, vue, react, mobile app, etc). This tutorial though will use a prepared bundle to handle the client-side as frontend development is out of the scope of this guide.
 
-For this example you are going to create a todo-app and be taught how to:
-- set up a connection database,
-- create a model service,
-- serve a REST API,
-- control input data,
-- use several services together,
-- and test your components.
+First create a new project by following [these instructions](../README.md).
 
-The user will be able to:
-- add a task,
-- mark a task as completed,
-- delete a task.
+Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and copy paste its content in the `public` directory of your project.
 
-## Prerequities
+If you refresh the page at `http://localhost:3000` you should now see this.
 
-Before going further you need to [create a new project](../README.md) if it is not already done. In this tutorial we are going to use SQLite as database because it does not require any installation. But feel free to use `PostgreSQL` or `MSSQL` if you want.
+> If the server is not running, enter the command `npm run develop` in your console/terminal.
 
-Then [download the frontend code](https://foalts.org/guide-frontend.zip), unzip the bundle and paste all the files in the `public/` directory. You will only focus on the backend of the application in this tutorial.
+![App image](./app.png)
 
-At this point you should normally see the below interface at `http://localhost:3000`. If it is not, please check that `npm run dev:app` is running properly with no errors.
+> Some errors should show up in the page. This is perfectly normal as we haven't implemented the backend API yet. If you try to add a flight you'll see another http error displaying.
 
-![Todo-list image](./todo-list1.png)
+Now that the front side is set up, let's see what requests should be handled by the server.
+
+*Get the airport name*: `GET /airport` -> `{ "name": "JFK" }` (status: 200)
+
+*Get all the flights*: `GET /flights` -> `[ { "id": 1, "destination": "CDG" }, { "id": 2, "destination": "CPH" } ]` (status 200)
+
+*Add a new flight*: `POST /flights { "destination": "SFO" }` -> `{ "id": 3, "destination": "SFO" }` (status 201)
+
+*Delete a flight*: `DELETE /flights/4` -> status 200 or status 404
+
+Let's get started!
