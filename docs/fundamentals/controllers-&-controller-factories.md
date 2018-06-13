@@ -1,80 +1,32 @@
 # Controller factories
 
-Controller factories are objects that create controllers from services or functions. They should be the only way to create them.
+Controller factories are functions that create controllers from services or functions. They should be the only way to create them.
 
-You'll find in [this page]() the common controller factories provided by FoalTS.
+## Common controller factories
 
-First define the interface of the services that can be "attached" by your controller-factory. For example:
+You'll find in [this page](../common/controller-factories) the common controller factories provided by FoalTS.
 
+## Create a custom controller factory
+
+To create a custom controller factory you need to create a function that returns a `Controller<RouteName extends string>`. Usually this function takes as first parameter a path.
+
+Example:
 ```typescript
-interface MyService {
-  giveMeANumber(start: number, end: number): number;
-}
-```
-
-Then create your controller factory from the `IServiceControllerFactory` interface.
-
-```typescript
-import {
-  ServiceControllerFactory,
-  HttpResponseMethodNotAllowed,
-  HttpResponseOK,
-  Route
-} from '@foal/core';
-
-import { MyService } from '../services';
-
-// Options are not mandatory. They can be used to pass
-// more information to the `attachService`.
-export interface Options {
-  addFive?: boolean;
+export interface IFoobarService {
+  compute(x: number);
 }
 
-class MyController extends Controller<keyof MyController> {
-  constructor(private ServiceClass: Class<IService>) {
-    super(path)
-  }
+function myCustomControllerFactory(path: string, Foobar: Class<FoobarService>): Controller<'main'> {
+  const controller = new Controller<'main'>(path);
 
-  @Get('/')
-  myRouteName(ctx, services) {
-    if (options.addFive) {
-      return new HttpResponseOK(services.get(ServiceClass).giveMeANumber(5, 10) + 5);
+  controller.addRoute('POST', '/compute', (ctx, services) => {
+    if (!ctx.request.body || typeof ctx.request.body.x !== 'number') {
+      return new HttpResponseBadRequest();
     }
-    return new HttpResponseOK(service.get(ServiceClass).giveMeANumber(5, 10));
-  }
+    const x = ctx.request.body.x;
+    return new HttpResponseOK(services.get(Foobar).compute(x));
+  });
 
-  @Post('/')
-  myRouteName(ctx, services) {
-    return new HttpResponseMethodNotAllowed()
-  }
-}
-
-export function myControllerFactory(path: string, ServiceClass: Class<IService>): MyController {
-  return new MyController(path, ServiceClass);
-} 
-```
-
-Now let's use it.
-
-```typescript
-import { Module, Service } from '@foal/core';
-
-import { myControllerFactory } from './my.controller-factory';
-import { MyService } from './my-service.interface';
-
-@Service()
-class ServiceA implements MyService {
-  giveMeANumber(start: number, end: number): number {
-    return (start + end) / 2;
-  }
-}
-
-const AppModule: Module = {
-  controllers: [
-    myControllerFactory('/foo', ServiceA),
-    myControllerFactory('/bar', ServiceA, {
-      addFive: true
-    })
-  ]
+  return controller;
 }
 ```
