@@ -24,17 +24,3 @@ You may return an `HttpResponse` in a pre-hook or in a handler. This will stop t
 - `class HttpResponseNotImplemented` (501)
 
 The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `content` which is used in the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
-
-### `Context`
-
-```typescript
-class Context { ... }
-
-class PostContext extends Context {
-  response: HttpResponse | undefined;
-}
-```
-
-```typescript
-type Handler = (ctx: Context, services: ServiceManager) => HttpResponse | Promise<HttpResponse>;
-```
