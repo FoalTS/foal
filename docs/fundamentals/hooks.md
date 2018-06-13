@@ -1,12 +1,12 @@
 # Hooks
 
-TODO: explain conventions with onSuccess, onError, onClientError and onServorError.
-
 Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. There are two kinds of hooks:
 - the pre-hooks which are executed before the routes handlers (defined by the controller factory)
 - and the post-hooks which are executed after.
 
 Pre-hooks are usually used to restrict access or to check and sanitize data received by the server. Post-hooks are less used and serve purpose such as removing critical fields before returning data to the client (ex: the password of a user).
+
+> By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.
 
 They takes two parameters:
 - the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `response` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or route handler returned one.
