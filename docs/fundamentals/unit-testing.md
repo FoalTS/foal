@@ -1,6 +1,6 @@
 # Unit testing
 
-A word on the `test.ts` files.
+All tests must be imported in the main `test.ts` file.
 
 ## Services
 
