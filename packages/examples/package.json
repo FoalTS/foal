@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.5.0-alpha.2",
+  "version": "0.5.0-alpha.3",
   "description": "FoalTs examples",
   "scripts": {
     "start": "node ./lib/server.js",
@@ -48,7 +48,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/cli": "^0.5.0-alpha.2",
+    "@foal/cli": "^0.5.0-alpha.3",
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
