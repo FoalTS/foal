@@ -16,7 +16,7 @@ interface Module {
 ## Example
 
 ```typescript
-import { Module , rest} from '@foal/core';
+import { Module , rest } from '@foal/core';
 // module and service imports...
 
 const AppModule: Module = {
