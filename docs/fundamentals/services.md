@@ -1,8 +1,8 @@
 # Services
 
-Services are the core of FoalTS. They are used to perform many different tasks such as logging or fetching and writing data from and to a database.
+Services are one of core concepts of FoalTS. They are used to perform many different tasks such as logging, compute data, fetching and writing data from and to a database, etc.
 
-Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top. Once done the service must be provided to a module so that it can be instantiated as a singleton.
+Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top.
 
 ```typescript
 import { App, Service } from '@foal/core';
@@ -17,16 +17,6 @@ const app = new App({});
 const myServiceA = app.services.get(ServiceA);
 console.log(myServiceA.name);
 ```
-
-// Tell instantiated as singleton with a global `ServiceManager`
-
-// where to store services
-
-// call a service from a handler, hook
-
-// call a service from another service
-
-// Test a service
 
 ## Nested services
 
