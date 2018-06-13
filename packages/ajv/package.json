@@ -1,6 +1,6 @@
 {
   "name": "@foal/ajv",
-  "version": "0.4.0-alpha.1.0",
+  "version": "0.5.0-alpha.1.0",
   "description": "Foal integration of Ajv (json schema validator).",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,7 +42,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.4.0-alpha.1.0",
+    "@foal/core": "^0.5.0-alpha.1.0",
     "ajv": "^5.5.2"
   },
   "devDependencies": {
