@@ -1,19 +1,17 @@
 # Config and environments
 
-Rappel: different envionments. Explain why.
+Configuration should be strictly separated from the codebase. Thus storing credentials or other values varying between deploys is not allowed in FoalTS. Instead a static class `Config` is provided to read config values from separate config files or environment variables.
 
-Don't put keys and config in code. Explain why.
+Let's take an example:
 
-What we usually do: put in separate config files or environments variables.
+```typescript
+const password = Config.get('database', 'strongPassword', 'xxx');
+```
 
-That's why official component do not let you write config in files. Instead they use a static class `Config` to access environment variables and configuration files.
+FoalTS fetches the password in this order:
+- If there is a env variable called `DATABASE_STRONG_PASSWORD` then its value is returned.
+- If the file `config/database.[env].json` exists (with `env === process.env.NODE_ENV`) then the value of the property `strongPassword` is returned.
+- If the file `config/database.json` exists then the value of the property `strongPassword` is returned.
+- Else `'xxx'` is returned.
 
-Take a look at the get method and show the supported types.
-
-Explain auto-conversion.
-
-Explain the process :
-- first check the variable environments (tell convention camel -> upper snake)
-- if not found check `config/name.[env].json`. env is evaluated with the NODE_ENV variable env. Default to development.
-- if not found (property or file), check `config/name.json`
-- if not return the default value.
+> If the value of an env variable can be converted to a number or a boolean then it is converted.
