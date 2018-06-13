@@ -9,7 +9,7 @@
 FoalTS is a high-level Node.JS to quickly build web apps in TypeScript:
 - It is natively written in TypeScript and aims to be used in this language with all its features.
 - It is designed to fastly bootstrap and develop an application. Authentication, REST API, developing tools, you don't need to re-invent the wheel anymore while programming with Node.JS.
-- Its architecture can support growing app espacially when it deals with structuring the code. 
+- Its architecture can support growing app especially when it deals with structuring the code. 
 
 Let's get started!
 
