@@ -4,9 +4,7 @@ FoalTS supports several databases thanks to TypeORM features. When creating a pr
 
 To use a database you need to install a driver that depends on the database you are connecting to.
 
-Explain what the env var with the ormconfig.json. Give a link to ormconfig.io
-
-Quote the models
+Database configuration and credentials are stored in a config file `ormconfig` or in environment variables. Find more details [here](http://typeorm.io/#/using-ormconfig).
 
 *Note: Having several databases is currently not supported.*
 
