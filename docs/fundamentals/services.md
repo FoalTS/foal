@@ -18,6 +18,16 @@ const myServiceA = app.services.get(ServiceA);
 console.log(myServiceA.name);
 ```
 
+// Tell instantiated as singleton with a global `ServiceManager`
+
+// where to store services
+
+// call a service from a handler, hook
+
+// call a service from another service
+
+// Test a service
+
 ## Nested services
 
 If you want to call a service from another one, you need to declare it in the constructor as follow.

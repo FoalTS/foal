@@ -2,6 +2,17 @@
 
 Every app starts with a module. A module binds the controllers to the request handler. It may have pre-hooks (or post-hooks) executed before (or after) every controller.
 
+```typescript
+interface Module {
+  controllers?: Controller<string>[];
+  models?: Class[];
+  modules?: Module[];
+  path?: string;
+  postHooks?: PostHook[];
+  preHooks?: PreHook[];
+}
+```
+
 ## Example
 
 ```typescript

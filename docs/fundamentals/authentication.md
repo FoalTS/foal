@@ -4,7 +4,7 @@
 
 Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services,
-- the `login` controller factory,
+- the `login` and `logout` controller factories,
 - the `User` model,
 - and the `authenticate` pre-hook.
 
@@ -50,7 +50,6 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ```typescript
 import { login, Module } from '@foal/core';
-import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 
 import { AuthenticatorService } from './authenticator.service';
 
@@ -60,7 +59,6 @@ export const AuthModule: Module = {
       failureRedirect: '/login?invalid_credentials=true',
       successRedirect: '/home'
     })
-      .withPreHook(validateEmailAndPasswordCredentialsFormat())
   ]
 }
 ```
@@ -204,7 +202,6 @@ export const AppModule: Module = {
 
 ```typescript
 // auth.module.ts
-import { validateEmailAndPasswordCredentialsFormat } from '@foal/password';
 import { route, HttpResponseOK, login, Module } from '@foal/core';
 
 import { AuthService } from './auth.service';
@@ -212,20 +209,9 @@ import { AuthService } from './auth.service';
 export const AuthModule: Module = {
   controllers: [
     login('/login', AuthService)
-      .withPreHook(validateEmailAndPasswordCredentialsFormat()),
-    // In practice we would use below the view controller
-    // factory with a template.
-    route('GET', '/login', () => {
-        return new HttpResponseOK(`
-          <form method="POST" action="/login">
-            Email: <input type="email" name="email">
-            <br>
-            Password: <input type="password" name="password">
-            <br>
-            <button type="submit">Log in</button>
-          </form>
-        `);
-      })
+    view('/login', require('./templates/login.html'), ctx => {
+      return { csrfToken: ctx.state.csrfToken };
+    });
   ]
 }
 ```

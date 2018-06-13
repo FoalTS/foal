@@ -16,6 +16,11 @@ If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing
 
 > *Note*: A pre-hook (or post-hook) may also be registered within the `preHooks` (or `postHooks`) property of a module. If so it applies to all the controllers of the module.
 
+```typescript
+type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
+type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
+```
+
 ## How to create one
 
 ```typescript
