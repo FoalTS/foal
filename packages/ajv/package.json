@@ -1,6 +1,6 @@
 {
   "name": "@foal/ajv",
-  "version": "0.4.0-beta.3",
+  "version": "0.4.0-alpha.1.0",
   "description": "Foal integration of Ajv (json schema validator).",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,15 +42,15 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.4.0-beta.3",
+    "@foal/core": "^0.4.0-alpha.1.0",
     "ajv": "^5.5.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "chai": "^4.1.2",
-    "@types/chai": "^4.0.4",
     "mocha": "^3.5.3",
-    "@types/mocha": "^2.2.43",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
