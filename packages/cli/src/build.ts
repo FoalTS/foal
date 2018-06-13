@@ -16,11 +16,13 @@ const commonConfig = {
         use: 'ts-loader',
       },
       {
-        options: {
-          attrs: false
-        },
         test: /\.html$/,
-        use: 'html-loader',
+        use: {
+          loader: 'html-loader',
+          options: {
+            attrs: false
+          }
+        },
       }
     ]
   },
