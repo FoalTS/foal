@@ -3,7 +3,7 @@
 ## Authentication
 
 Authentication is divided in four parts in FoalTS:
-- the `Authenticator` services,
+- the `Authenticator` services (strategies),
 - the `login` and `logout` controller factories,
 - the `User` model,
 - and the `authenticate` pre-hook.
@@ -14,22 +14,22 @@ Authentication is divided in four parts in FoalTS:
 
 ```typescript
 interface IAuthenticator<User> {
+  validate(credentials: any): any;
   authenticate(credentials: any): User | null | Promise<User|null>;
 }
 ```
 
-A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
+A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`. The `validate` method is used to check the format of the credentials received by the server.
 
 - `AbstractEmailAuthenticator`
 
 `AbstractEmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes a user service that must implement the `IModelService` interface.
+Its constructor takes an user model.
 
 *Example*:
 ```typescript
-import { AbstractEmailAuthenticator } from '@foal/password';
-import { Service } from '@foal/core';
+import { AbstractEmailAuthenticator, Service } from '@foal/core';
 
 import { User } from './user.model.ts';
 
@@ -38,7 +38,6 @@ export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
   UserModel = User;
 }
 ```
-
 
 ### The `login` controller factory
 
@@ -71,8 +70,9 @@ Usually it is registered once within the `AppModule` `preHooks`.
 
 *Example:*
 ```typescript
-import { route, Module } from '@foal/core';
-import { authenticate } from '@foal/password';
+import { authenticate, route, Module } from '@foal/core';
+
+import { User } from './models/user';
 
 export const AppModule: Module = {
   controllers: [
@@ -88,16 +88,12 @@ export const AppModule: Module = {
   ]
   preHooks: [
     authenticate(User),
+  ],
+  models: [
+    User
   ]
 }
 ```
-
-### The abstract class `UserModelService`
-
-Its constructor takes three arguments:
-- a sequelize schema that will extend a default one,
-- a connection,
-- and an optional array of parsers (see the full example at the end of the page).
 
 ### Logging out
 
@@ -119,8 +115,9 @@ If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAuthenticated } from '@foal/password';
-import { route, Module } from '@foal/core';
+import { authenticate, restrictAccessToAuthenticated , route, Module } from '@foal/core';
+
+import { User } from './models/user';
 
 export const AppModule: Module = {
   controllers: [
@@ -130,7 +127,10 @@ export const AppModule: Module = {
       .withPreHook(restrictAccessToAuthenticated()),
   ],
   preHooks: [
-    authenticate()
+    authenticate(User),
+  ],
+  models: [
+    User
   ]
 }
 ```
@@ -145,8 +145,9 @@ If the user is not an admin, namely it has no property `isAdmin` or this propert
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAdmin } from '@foal/password';
-import { route, Module } from '@foal/core';
+import { authenticate, restrictAccessToAdmin, route, Module } from '@foal/core';
+
+import { User } from './models/user';
 
 export const AppModule: Module = {
   controllers: [
@@ -156,33 +157,37 @@ export const AppModule: Module = {
       .withPreHook(restrictAccessToAdmin()),
   ],
   preHooks: [
-    authenticate()
+    authenticate(User),
+  ],
+  models: [
+    User
   ]
 }
 ```
 
 ## A complete example
 
-**Warning**: this example does not include the csrf protection.
-
 ```
 - src
   '- app
-    |- auth
-    | |- auth.module.ts
-    | '- auth.service.ts
-    |- shared
-    | '- user.service.ts
-    | '- user.interface.ts
+    |- modules
+    | '- auth
+    |   |- auth.module.ts
+    |   |- services
+    |   | '- auth.service.ts
+    |   '- templates
+    |     '- login.html
+    |- models
+    | '- user.model.ts
     '-app.module.ts
 ```
 
 ```typescript
 // app.module.ts
-import { authenticate, restrictToAuthenticated } from '@foal/password';
-import { route, Module } from '@foal/core';
+import { authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
 
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './module/auth/auth.module';
+import { User } from './models/user.model';
 
 export const AppModule: Module = {
   controllers: [
@@ -196,7 +201,27 @@ export const AppModule: Module = {
   ],
   preHooks: [
     authenticate(User)
+  ],
+  models: [
+    User
   ]
+}
+```
+
+```typescript
+// user.model.ts
+import { AbstractUser } from '@foal/core';
+import { Column, Entity } from 'typeorm';
+
+@Entity()
+export class User extends AbstractUser {
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
 }
 ```
 
@@ -204,7 +229,7 @@ export const AppModule: Module = {
 // auth.module.ts
 import { route, HttpResponseOK, login, Module } from '@foal/core';
 
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 
 export const AuthModule: Module = {
   controllers: [
@@ -218,36 +243,26 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { AbstractEmailAuthenticator } from '@foal/password';
-import { Service } from '@foal/core';
+import { AbstractEmailAuthenticator, Service } from '@foal/core';
 
-import { User, UserService } from '../shared/user.service.ts';
+import { User } from '../../../models/user.model.ts';
 
 @Service()
-export class AuthService<User> extends AbstractEmailAuthenticator<User> {
-
-  constructor(userService: UserService) {
-    super(userService);
-  }
-
+export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
+  UserModel = User;
 }
 ```
 
-```typescript
-// user.service.ts
-import { Service } from '@foal/core';
-// other imports... (ConnectionService, etc)
-
-import { BaseUser, EmailAndPassword, emailAndPasswordSchema, parsePassword } from '@foal/password';
-
-export type User = BaseUser & EmailAndPassword;
-
-@Service()
-export class UserService extends UserModelService<User> {
-  constructor(connection: ConnectionService) {
-    super(emailAndPasswordSchema, connection, [ parsePassword ]);
-  }
-
-}
-
+```html
+<html>
+  <head>
+    <title>Login</title>
+  </head>
+  <form action="login" method="POST">
+    <input type="text" value="<%= csrfToken %>" style="display: none">
+    <input type="text" name="email">
+    <input type="password" name="password">
+    <button type="submit">Log in</button>
+  </form>
+</html>
 ```
