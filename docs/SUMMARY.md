@@ -5,30 +5,34 @@
 ### Guide
 
 * [1. Introduction](./guide/1-introduction.md)
-* [2. Set up a database connection](./guide/2-database-setup.md)
-* [3. Add a Task service](./guide/3-task-service.md)
-* [4. Create the REST API endpoint](./guide/4-rest-api-endpoint.md)
+* [2. Handle a request](./guide/2-handle-a-request.md)
+* [3. Add a model](./guide/3-flight-model.md)
+* [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Control input data](./guide/5-control-input-data.md)
 * [6. Add a logger](./guide/6-add-a-logger.md) <!-- 6bis Add authentication -->
 * [7. Test](./guide/7-test.md)
 
-### Basics
+### Fundamentals
 
-* [Services](./basics/services.md)
-* [Controllers](./basics/controllers.md)
-* [Modules](./basics/modules.md)
-* [Hooks](./basics/hooks.md)
+* [Authentication](./fundamentals/authentication.md)
+* [Config and environments](./fundamentals/config-and-environments.md)<!-- * [Serverless](./fundamentals/serverless.md) -->
+* [Controllers & controller factories](./fundamentals/controllers-&-controller-factories.md)
+* [Databases](./fundamentals/databases.md)
+* [Hooks](./fundamentals/hooks.md)
+* [HTTP](./fundamentals/http.md)
+* [Migrations](./fundamentals/migrations.md)
+* [Modules](./fundamentals/modules.md)
+* [Services](./fundamentals/services.md)
+* [Template engine](./fundamentals/template-engine.md)
+* [Unit testing]('./fundamentals/unit-testing.md)
 
-### Advanced
+### Common
 
-* [Controller factories](./advanced/controller-factories.md)
+* [Controller factories](./common/controller-factories.md)
+* [Post hooks](./common/post-hooks.md)
+* [Pre hooks](./common/pre-hooks.md)
+* [Utils](./common/utils.md)
 
-### Packages
+### FAQ
 
-* [@foal/ajv](./packages/ajv.md)
-* [@foal/authentication](./packages/authentication.md)
-* [@foal/common](./packages/common.md)
-* [@foal/core](./packages/core.md)
-* [@foal/ejs](./packages/ejs.md)
-* [@foal/express](./packages/express.md)
-* [@foal/sequelize](./packages/sequelize.md)
+* [FAQ](./faq.md)

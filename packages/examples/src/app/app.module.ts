@@ -1,36 +1,43 @@
 import {
   authenticate,
+  Module,
+  onSuccessKeepFields,
+  rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
-} from '@foal/authentication';
-import {
-  afterThatRemoveField,
-  rest,
-} from '@foal/common';
-import { Module } from '@foal/core';
+  route,
+  view,
+} from '@foal/core';
 
-import { AuthModule } from './authentication';
-import { HomeModule } from './home';
-import { PublicModule } from './public';
-import { UserService } from './shared';
+import { getAirport } from './handlers';
+import { Flight } from './models';
+import { User } from './models/user.model';
+import { AuthModule } from './modules/authentication';
+import { FlightService, UserService } from './services';
 
 export const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/users', UserService)
-      .withPreHooks([
-        ctx => { ctx.body.isAdmin = false; },
-      ], 'POST /')
+    rest('/users', UserService)
+      .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(afterThatRemoveField('password'))
+      .withPostHook(onSuccessKeepFields<User>([ 'id', 'email', 'roles' ])),
+
+    view('/', require('./templates/index.html'), { name: 'FoalTS' }),
+
+    view('/home', require('./templates/home.html'))
+      .withPreHook(restrictAccessToAuthenticated()),
+
+    route('GET', '/airport', getAirport),
+    rest('/flights', FlightService),
+  ],
+  models: [
+    Flight, User
   ],
   modules: [
     AuthModule,
-    HomeModule,
-    PublicModule,
   ],
   preHooks: [
-    authenticate(UserService)
-  ]
+    authenticate(User)
+  ],
 };

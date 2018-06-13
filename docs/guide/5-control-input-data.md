@@ -1,6 +1,6 @@
 # 5. Control and sanitize input data
 
-Of course, input data received by the server cannot be trusted. That's why we need to add control and sanitization tools. These are called pre-hooks.
+Since input data received by the server cannot be trusted, we need to add control and sanitization tools. These are called pre-hooks.
 
 A pre-hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. It takes two parameters:
 - the `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist,
@@ -21,49 +21,47 @@ import { validate } from '@foal/ajv';
 const validateTask = validate({
   additionnalProperties: false,
   properties: {
-    completed: { type: 'boolean' },
-    text: { type: 'string' },
+    destination: { type: 'string' },
   },
-  required: [ 'text' ],
+  required: [ 'destination' ],
   type: 'object'
 });
 ...
 ```
 
-To escape the field `text` of the created/updated/replaced task, we are going to write it on our own.
+To escape the field `destination` of the created/updated/replaced flight, we are going to write it on our own.
 
 ```typescript
-import { escapeHTML } from '@foal/common';
+import { escapeProp } from '@foal/rest';
 
-const preventXSS = ctx => { escapeHTML(ctx.body, 'text'); };
+const preventXSS = ctx => { escapeProp(ctx.request.body, 'destination'); };
 ```
 
-Now that the pre-hooks are defined, it is time to attach them to regarded routes.
+Now that the pre-hooks are defined, it is time to attach them to the regarded routes.
 
 ```typescript
-import { rest } from '@foal/common';
-import { FoalModule } from '@foal/core';
+import { Module, rest } from '@foal/core';
 
-import { TaskService } from './task.service';
+import { getAirport } from './handlers/get-airport';
+import { FlightService } from './services/flight.service';
 
-// Usually the pre-hooks would be defined in a seperate file.
+// Usually the pre-hooks would be defined in a separate file in the pre-hooks folder.
 
 const validateTask = validate({
   additionnalProperties: false,
   properties: {
-    completed: { type: 'boolean' },
-    text: { type: 'string' },
+    destination: { type: 'string' },
   },
-  required: [ 'text' ],
+  required: [ 'destination' ],
   type: 'object'
 });
 
-const preventXSS = ctx => { escapeHTML(ctx.body, 'text'); };
+const preventXSS = ctx => { escapeProp(ctx.request.body, 'destination'); };
 
-export const AppModule: FoalModule = {
+export const AppModule: Module = {
   controllers: [
-    rest
-      .attachService('/tasks', TaskService)
+    route('GET', '/airport', getAirport),
+    rest('/flights', FlightService)
       .withPreHook(
         [ validateTask, preventXSS ],
         'POST /', 'PATCH /:id', 'PUT /:id'
@@ -72,4 +70,4 @@ export const AppModule: FoalModule = {
 };
 ```
 
-Data sent to your server is now controlled and sanitized! If you try to create a task with no `text` field, the server should respond with a 400 status and the details on what went wrong.
+Data sent to your server is now controlled and sanitized! If you try to create a flight with no `destination` field, the server should respond with a 400 status and the details on what went wrong.

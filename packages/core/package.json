@@ -1,14 +1,14 @@
 {
   "name": "@foal/core",
-  "version": "0.4.0-beta.3",
+  "version": "0.4.0-alpha.1.0",
   "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "gulp clean && tsc -p tsconfig-build.json && gulp add-header",
-    "prepublish": "gulp clean && tsc -p tsconfig-build.json && gulp add-header"
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
   },
   "engines": {
     "node": ">=8"
@@ -37,22 +37,37 @@
   ],
   "license": "MIT",
   "files": [
-    "dist/"
+    "lib/"
   ],
   "dependencies": {
+    "ajv": "^6.5.0",
+    "body-parser": "^1.18.2",
+    "csurf": "^1.9.0",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "helmet": "^3.12.1",
+    "morgan": "^1.9.0",
     "reflect-metadata": "^0.1.10"
   },
+  "peerDependencies": {
+    "typeorm": "^0.2.6"
+  },
   "devDependencies": {
+    "@foal/ejs": "^0.4.0-alpha.1.0",
     "@types/chai": "^4.0.4",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/chai-spies": "0.0.0",
     "@types/mocha": "^2.2.43",
+    "@types/node": "^10.1.2",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.0.0",
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-header": "^1.8.9",
     "mocha": "^3.5.3",
+    "mysql": "^2.15.0",
+    "rimraf": "^2.6.2",
+    "supertest": "^3.1.0",
     "ts-node": "^3.3.0",
+    "typeorm": "^0.2.6",
     "typescript": "^2.5.2"
   }
 }

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./lib/",
+    "sourceMap": true,
     "noImplicitAny": false,
     "module": "commonjs",
     "target": "es2017",
@@ -8,14 +9,13 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "baseUrl": ".",
-    "declaration": true,
+    // "declaration": true,
     "lib": [
       "es2017",
       "dom"
     ]
   },
   "include": [
-    "./index.ts",
     "./src/**/*.ts"
   ]
 }

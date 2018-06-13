@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": false,
+    "outDir": "lib/",
     "module": "commonjs",
     "target": "es2017",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "baseUrl": ".",
+    "strict": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
     "declaration": true,
     "lib": [
       "es2017",
@@ -15,7 +15,6 @@
     ]
   },
   "include": [
-    "./index.ts",
     "./src/**/*.ts"
   ]
 }

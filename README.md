@@ -34,12 +34,8 @@ There are several ways to contribute.
 ## Packages
 
 - @foal/ajv
-- @foal/authentication
-- @foal/common
 - @foal/core
 - @foal/ejs
-- @foal/express
-- @foal/sequelize
 
 ## License
 

@@ -1,0 +1,10 @@
+{
+  "csrf": false,
+  "debug": true,
+  "port": 3000,
+  "sessionSecret": "my secret",
+  "sessionResave": true,
+  "sessionSaveUninitialized": true,
+  "staticUrl": "public/",
+  "templateEngine": "@foal/ejs"
+}
