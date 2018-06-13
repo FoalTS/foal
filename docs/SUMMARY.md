@@ -18,7 +18,6 @@
 * [Config and environments](./fundamentals/config-and-environments.md)<!-- * [Serverless](./fundamentals/serverless.md) -->
 * [Controllers & controller factories](./fundamentals/controllers-&-controller-factories.md)
 * [Databases](./fundamentals/databases.md)
-* [Deployment](./fundamentals/deployment.md)
 * [Hooks](./fundamentals/hooks.md)
 * [HTTP](./fundamentals/http.md)
 * [Migrations](./fundamentals/migrations.md)
