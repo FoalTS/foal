@@ -341,7 +341,15 @@ describe('ModelService', () => {
   });
   // We'll need to wait for this issue to be fixed before supporting both postgres and sqlite:
   // https://github.com/typeorm/typeorm/issues/1308
-  // testSuite('SQLite', 'sqlite-connection');
-  // testSuite('MariaDB', 'postgres-connection');
+  // testSuite('SQLite', {
+  //   database: './test_db.sqlite',
+  //   type: 'sqlite',
+  // });
+  // testSuite('PostgreSQL', {
+  //   database: 'test',
+  //   password: 'test',
+  //   type: 'postgres',
+  //   username: 'test',
+  // });
 
 });
