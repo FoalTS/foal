@@ -16,11 +16,11 @@ FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript
 
 FoalTS is the framework you need to build the backend of small to large web applications. As a brief overview, FoalTS lets you quickly set up a connection to a DB and then create, read, update or delete its data through a REST API. All of that in TypeScript. Read the docs now to learn more about all FoalTS features!
 
-[>> Get started <<](https://foalts.gitbooks.io/docs/content/)
+[>> Get started <<](https://foalts.gitbook.io/docs/content/)
 
 ## Documentation
 
-Find docs [here](https://foalts.gitbooks.io/docs/content/).
+Find docs [here](https://foalts.gitbook.io/docs/content/).
 
 ## Contributing
 
