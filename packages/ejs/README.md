@@ -14,4 +14,4 @@ Twitter: [https://twitter.com/FoalTs](https://twitter.com/FoalTs)
 
 Website: [https://foalts.org/](https://foalts.org/)
 
-Documentation: [https://foalts.gitbooks.io/docs/](https://foalts.gitbooks.io/docs/)
+Documentation: [https://foalts.gitbook.io/docs/](https://foalts.gitbook.io/docs/)
