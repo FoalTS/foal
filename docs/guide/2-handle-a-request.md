@@ -1,6 +1,6 @@
 # 2. Handle you first request
 
-Now that all is set up, let's handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
+Now that all is set up, you are going to handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
 To do so, you'll need to create a *handler*. A *handler* is a simple function, that may be synchronous or asynchronous, which returns an `HttpResponse`. It takes two parameters: a `context` which provides information about the request, the session or the authenticated user, and a service manager `services` which gives access to services (we'll come back to this concept later).
 

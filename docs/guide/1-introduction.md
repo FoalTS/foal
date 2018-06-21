@@ -1,12 +1,13 @@
 # 1. Introduction
 
-This tutorial will teach you how to create a web app using the core concepts of FoalTS. Through this you are going to create a board to manage the flights departing from the JFK airport. You'll be able to display the name of the airport, list the flights and add or remove some.
+This tutorial will teach you how to create a web app using the core concepts of FoalTS. Through this one you are going to create a board to manage the flights departing from the JFK airport. The page will display the name of the airport, list the flights and let the user add or remove some.
 
-As most of nowdays apps use rich-client interface, you'll use a precompiled frontend app made with Angular and Bootstrap. Note that you don't need to use Angular as frontend framework to use FoalTS. You can use whatever client technology you feel confortable with (angular, vue, react, mobile app, etc). This tutorial though will use a prepared bundle to handle the client-side as frontend development is out of the scope of this guide.
 
-First create a new project by following [these instructions](../README.md).
+To get started create a new project by following [these instructions](../README.md).
 
 Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and replace the `public/` directory and the `src/app/templates/index.html` template with the downloaded files.
+
+> FoalTS can either interact with rich-client interfaces (Angular, Vue, React, etc) or use classical templating mechanisms. In this tutorial, the frontend part will be handled by a precompiled Angular app.
 
 If you refresh the page at `http://localhost:3000` you should now see this.
 
@@ -14,7 +15,7 @@ If you refresh the page at `http://localhost:3000` you should now see this.
 
 ![App image](./app.png)
 
-> Some errors should show up in the page. This is perfectly normal as we haven't implemented the backend API yet. If you try to add a flight you'll see another http error displaying.
+> Some errors should show up in the page. This is perfectly normal as we haven't yet implemented the backend API. If you try to add a flight you'll see another http error displaying.
 
 Now that the front side is set up, let's see what requests should be handled by the server.
 
@@ -26,4 +27,4 @@ Now that the front side is set up, let's see what requests should be handled by 
 
 *Delete a flight*: `DELETE /flights/4` -> status 200 or status 404
 
-Let's get started!
+Let's get handle your first request!
