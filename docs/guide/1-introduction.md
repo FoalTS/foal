@@ -6,7 +6,7 @@ As most of nowdays apps use rich-client interface, you'll use a precompiled fron
 
 First create a new project by following [these instructions](../README.md).
 
-Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and replace the `public/` directory and the `src/app/templates/index.html` file with its content.
+Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and replace the `public/` directory and the `src/app/templates/index.html` template with the downloaded files.
 
 If you refresh the page at `http://localhost:3000` you should now see this.
 
