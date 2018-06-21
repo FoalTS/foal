@@ -1,11 +1,5 @@
 # Get started
 
-<p align="center">
-  <a href="https://foalts.org" target="blank">
-    <img src="./logo_400.png" alt="Logo" height="200px"/>
-  </a>
-</p>
-
 FoalTS is a high-level Node.JS to quickly build web apps in TypeScript:
 - It is natively written in TypeScript and aims to be used in this language with all its features.
 - It is designed to fastly bootstrap and develop an application. Authentication, REST API, developing tools, you don't need to re-invent the wheel anymore while programming with Node.JS.
