@@ -1,9 +1,14 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
+  Column,
+  Connection,
+  ConnectionOptions,
+  createConnection,
   createConnections,
-  getConnection,
+  Entity,
   getManager,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { ObjectDoesNotExist } from '../errors';
@@ -13,13 +18,33 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 import { ModelService } from './model.service';
-import { User } from './user.entity.spec';
 
-function testSuite(title: string, connectionName: string) {
+function testSuite(title: string, options: ConnectionOptions) {
 
   describe(`with ${title}`, () => {
 
     let service: ModelService<User>;
+    const connectionName = 'my-connection';
+    let connection: Connection;
+
+    @Entity()
+    class User {
+      @PrimaryGeneratedColumn()
+      // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
+      id: number;
+
+      @Column()
+      // @ts-ignore : Property 'firstName' has no initializer and is not definitely assigned in theconstructor.
+      firstName: string;
+
+      @Column()
+      // @ts-ignore : Property 'lastName' has no initializer and is not definitely assigned in theconstructor.
+      lastName: string;
+
+      @Column({ default: false })
+      // @ts-ignore : Property 'isAdmin' has no initializer and is not definitely assigned in theconstructor.
+      isAdmin: boolean;
+    }
 
     before(() => {
       class UserService extends ModelService<User> {
@@ -30,9 +55,16 @@ function testSuite(title: string, connectionName: string) {
     });
 
     beforeEach(async () => {
-      const queryBuilder = getConnection(connectionName).createQueryRunner();
-      await queryBuilder.query('DELETE from user');
+      connection = await createConnection({
+        ...options,
+        dropSchema: true,
+        entities: [ User ],
+        name: connectionName,
+        synchronize: true,
+      });
     });
+
+    afterEach(() => connection.close());
 
     describe('when createOne is called', () => {
 
@@ -293,22 +325,31 @@ function testSuite(title: string, connectionName: string) {
 
 }
 
-xdescribe('ModelService', () => {
+describe('ModelService', () => {
 
-  before(() => createConnections());
-
-  testSuite('MySQL', 'mysql-connection');
-  testSuite('MariaDB', 'mariadb-connection');
+  testSuite('MySQL', {
+    database: 'test',
+    password: 'test',
+    type: 'mysql',
+    username: 'test',
+  });
+  testSuite('MariaDB', {
+    database: 'test',
+    password: 'test',
+    type: 'mariadb',
+    username: 'test',
+  });
   // We'll need to wait for this issue to be fixed before supporting both postgres and sqlite:
   // https://github.com/typeorm/typeorm/issues/1308
-  // testSuite('SQLite', 'sqlite-connection');
-  // testSuite('MariaDB', 'postgres-connection');
-
-  after(() => Promise.all([
-    getConnection('mysql-connection').close(),
-    getConnection('mariadb-connection').close(),
-    // getConnection('sqlite-connection').close(),
-    // getConnection('postgres-connection').close(),
-  ]));
+  // testSuite('SQLite', {
+  //   database: './test_db.sqlite',
+  //   type: 'sqlite',
+  // });
+  // testSuite('PostgreSQL', {
+  //   database: 'test',
+  //   password: 'test',
+  //   type: 'postgres',
+  //   username: 'test',
+  // });
 
 });
