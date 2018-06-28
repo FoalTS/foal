@@ -12,6 +12,8 @@
   </a>
 </p>
 
+**This work is in progress and is currently not ready for production.**
+
 FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript. Thanks to its architecture, packages and tools you can now bootstrap and develop entreprise-grade apps.
 
 ```shell
