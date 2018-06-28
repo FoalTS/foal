@@ -9,7 +9,7 @@ import {
   view,
 } from '@foal/core';
 
-import { getAirport } from './handlers';
+import { getAirport } from './controllers';
 import { Flight } from './models';
 import { User } from './models/user.model';
 import { AuthModule } from './modules/authentication';
