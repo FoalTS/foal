@@ -17,6 +17,7 @@
 * [Authentication](./fundamentals/authentication.md)
 * [Config and environments](./fundamentals/config-and-environments.md)<!-- * [Serverless](./fundamentals/serverless.md) -->
 * [Controllers & controller factories](./fundamentals/controllers-&-controller-factories.md)
+* [Deployment (prod)](./fundamentals/deployment-prod.md)
 * [Databases](./fundamentals/databases.md)
 * [Hooks](./fundamentals/hooks.md)
 * [HTTP](./fundamentals/http.md)
