@@ -22,6 +22,7 @@
 * [Hooks](./fundamentals/hooks.md)
 * [HTTP](./fundamentals/http.md)
 * [Migrations](./fundamentals/migrations.md)
+* [Models](./fundamentals/models.md)
 * [Modules](./fundamentals/modules.md)
 * [Services](./fundamentals/services.md)
 * [Template engine](./fundamentals/template-engine.md)
