@@ -14,6 +14,13 @@
 
 FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript. Thanks to its architecture, packages and tools you can now bootstrap and develop entreprise-grade apps.
 
+```shell
+$ npm install -g yo generator-foal
+$ yo foal my-app
+$ cd my-app
+$ npm run develop
+```
+
 [>> Get started <<](https://foalts.gitbooks.io/docs/content/)
 
 ## Features
