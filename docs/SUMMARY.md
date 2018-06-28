@@ -17,14 +17,16 @@
 * [Authentication](./fundamentals/authentication.md)
 * [Config and environments](./fundamentals/config-and-environments.md)<!-- * [Serverless](./fundamentals/serverless.md) -->
 * [Controllers & controller factories](./fundamentals/controllers-&-controller-factories.md)
+* [Deployment (prod)](./fundamentals/deployment-prod.md)
 * [Databases](./fundamentals/databases.md)
 * [Hooks](./fundamentals/hooks.md)
 * [HTTP](./fundamentals/http.md)
 * [Migrations](./fundamentals/migrations.md)
+* [Models](./fundamentals/models.md)
 * [Modules](./fundamentals/modules.md)
 * [Services](./fundamentals/services.md)
 * [Template engine](./fundamentals/template-engine.md)
-* [Unit testing]('./fundamentals/unit-testing.md)
+* [Unit testing](./fundamentals/unit-testing.md)
 
 ### Common
 
