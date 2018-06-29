@@ -1,5 +1,4 @@
 import {
-  Handler,
   HttpMethod,
   PostHook,
   PreHook,
@@ -11,7 +10,7 @@ export class Controller<RouteName extends string> {
 
   constructor(private prePath?: string) {}
 
-  addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler: Handler): void {
+  addRoute(name: RouteName, httpMethod: HttpMethod, path: string, handler): void {
     this.routes.set(name, {
       handler,
       httpMethod,
