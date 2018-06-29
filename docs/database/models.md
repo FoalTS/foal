@@ -6,3 +6,5 @@ To generate a model with the command-line interface:
 ```shell
 yo foal:model my-model
 ```
+
+-> need to be registered within a module

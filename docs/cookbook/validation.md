@@ -1,31 +1,4 @@
-# Common pre-hooks
-
-## `log(message: string, logFn = console.log)`
-
-Logs the message with the given log function (default is `console.log`).
-
-Example:
-```typescript
-const AppModule: Module = {
-  controllers: [
-    route('/', () => {})
-      .withPreHook(log('Hello world'))
-  ]
-}
-```
-
-## `methodNotAllowed()`
-
-Returns an `HttpResponseMethodNotAllowed`.
-
-```typescript
-const AppModule: Module = {
-  controllers: [
-    rest('/', MyModelService)
-      .withPreHook(methodNotAllowed(), 'DELETE /:id')
-  ]
-}
-```
+# Validation
 
 ## `validate(schema: object, ajv = defaultInstance)`
 

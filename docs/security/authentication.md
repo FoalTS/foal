@@ -266,3 +266,21 @@ export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
   </form>
 </html>
 ```
+
+====
+## Create an authenticating controller from a Authenticator service
+
+```typescript
+import { login, Module } from '@foal/core';
+
+import { MyAuthenticatorService } from './services/my-authenticator.service';
+
+export const AppModule: Module = {
+  controllers: [
+    login('/auth', MyAuthenticatorService, {
+      failureRedirect: '/auth?invalide_credentials=true', // Optional
+      successRedirect: '/home' // Optional
+    })
+  ]
+};
+```

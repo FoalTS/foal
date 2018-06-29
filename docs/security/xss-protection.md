@@ -1,12 +1,6 @@
-# Utils
+# XSS protection
 
-## `combinePostHooks(postHooks: PostHook[]): PostHook`
-
-Merges several post hooks into one.
-
-## `combinePreHooks(ppreHooks: PreHook[]): PreHook`
-
-Merges several pre hooks into one.
+-> specify header.
 
 ## `escape(str: string): string`
 

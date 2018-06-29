@@ -25,3 +25,18 @@ To do so, you need to create a package that exports a function `renderToString(t
   ...
 }
 ```
+
+
+## Create a view controller
+
+```typescript
+import { view, Module } from '@foal/core';
+
+import { MyAuthenticatorService } from './services/my-authenticator.service';
+
+export const AppModule: Module = {
+  controllers: [
+    view('/foo', '<html><%= content %></html>', { content: '<body></body>' })
+  ]
+};
+```
