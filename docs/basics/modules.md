@@ -1,5 +1,7 @@
 # Modules
 
+// Add a little get-started (some code or a cli command)
+
 // Modules can be seen as controller groups.
 
 Every app starts with a module. A module binds the controllers to the request handler. It may have pre-hooks (or post-hooks) executed before (or after) every controller.

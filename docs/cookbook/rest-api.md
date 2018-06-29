@@ -1,5 +1,5 @@
 # REST API
-
+// Add a little get-started (some code or a cli command)
 ## Create a REST controller from a `Partial<IModelService>`
 
 

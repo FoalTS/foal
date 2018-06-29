@@ -1,5 +1,7 @@
 # Hooks
 
+// Add a little get-started (some code or a cli command)
+
 Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. There are two kinds of hooks:
 - the pre-hooks which are executed before the routes handlers (defined by the controller factory)
 - and the post-hooks which are executed after.

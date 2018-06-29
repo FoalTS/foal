@@ -1,5 +1,7 @@
 # Controllers
 
+// Add a little get-started (some code or a cli command)
+
 Controller factories are functions that create controllers from services or functions. They should be the only way to create them.
 
 ## Common controller factories

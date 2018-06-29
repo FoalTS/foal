@@ -1,5 +1,5 @@
 # Validation
-
+// Add a little get-started (some code or a cli command)
 ## `validate(schema: object, ajv = defaultInstance)`
 
 `validate` is a pre-hook to control the data received by the server. [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator, validates the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.

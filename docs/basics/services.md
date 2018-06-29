@@ -1,5 +1,7 @@
 # Services
 
+// Add a little get-started (some code or a cli command)
+
 Services are one of core concepts of FoalTS. They are used to perform many different tasks such as logging, compute data, fetching and writing data from and to a database, etc.
 
 Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top.

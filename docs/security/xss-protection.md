@@ -1,5 +1,5 @@
 # XSS protection
-
+// Add a little get-started (some code or a cli command)
 -> specify header.
 
 ## `escape(str: string): string`

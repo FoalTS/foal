@@ -1,5 +1,5 @@
 # Template engine
-
+// Add a little get-started (some code or a cli command)
 FoalTS comes up with several tools to render templates.
 
 ## `render(template: string, locals?: object): HttpResponseOK`
