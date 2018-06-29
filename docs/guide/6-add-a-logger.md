@@ -1,6 +1,6 @@
 # 6. Add a logger
 
-Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `yo foal:service logger` and select the `Empty` type. Open the file and add the below `log` method.
+Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `foal generate service logger` and select the `Empty` type. Open the file and add the below `log` method.
 
 ```typescript
 import { Service } from '@foal/core';

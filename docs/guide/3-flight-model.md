@@ -9,7 +9,7 @@ Great! So far you learnt how to process a simple request and statically return a
 First go to `src/app/models` and create a model.
 
 ```
-yo foal:model flight
+foal generate model flight
 ```
 
 Open the generated file and replace the content with the following code.

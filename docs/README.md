@@ -13,10 +13,10 @@ To start a project you need to set up your development environment.
 
 First install [Node.Js and npm](https://nodejs.org/en/download/) if they are not already installed on your host.
 
-Then install the FoalTS generator.
+Then install the FoalTS cli.
 
 ```sh
-npm install -g yo generator-foal
+npm install -g @foal/cli
 ```
 
 ## 2. Create a new project
@@ -26,10 +26,10 @@ You are now ready to create your first foal project.
 Open a terminal and then run the following command:
 
 ```sh
-yo foal my-app
+foal createapp my-app
 ```
 
-A new folder `my-app` should appear in your current directory with the dependencies installed. The foal generator automatically created the basic structure of your app with a set of developpment tools to easily get started.
+A new folder `my-app` should appear in your current directory with the dependencies installed. The foal cli automatically created the basic structure of your app with a set of developpment tools to easily get started.
 
 ## 3. Serve the application
 
@@ -56,7 +56,7 @@ Read the [official guide](./guide/1-introduction.md) to learn more on `FoalTS`!
 
 ## Structure of the project
 
-Let’s take a look at what `yo foal my-app` created:
+Let’s take a look at what `foal createapp my-app` created:
 
 ### The `src` folder
 

@@ -8,7 +8,7 @@ In FoalTS, a *service* can be any class that serves a restricted and well-define
 
 That's a lot of concepts to take in. Let's translate it into the code.
 
-Go to `src/app/services` with your terminal/console, run `yo foal:service flight` and choose `Model service (TypeORM)`.
+Go to `src/app/services` with your terminal/console, run `foal generate service flight` and choose `Model service (TypeORM)`.
 
 Open the new created `flight.service.ts` file and specify the model.
 
