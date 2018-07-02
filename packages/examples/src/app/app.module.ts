@@ -1,7 +1,6 @@
 import {
   authenticate,
   Module,
-  onSuccessKeepFields,
   rest,
   restrictAccessToAdmin,
   restrictAccessToAuthenticated,
@@ -20,8 +19,7 @@ export const AppModule: Module = {
     rest('/users', UserService)
       .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
       .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
-      .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(onSuccessKeepFields<User>([ 'id', 'email', 'roles' ])),
+      .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id'),
 
     view('/', require('./templates/index.html'), { name: 'FoalTS' }),
 
