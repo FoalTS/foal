@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*.ts\" lib/generate/templates",
+    "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
   "engines": {
