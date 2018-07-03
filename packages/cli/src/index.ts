@@ -5,13 +5,24 @@
  * Released under the MIT License.
  */
 
+// 3p
 import * as program from 'commander';
+import { prompt, Separator } from 'inquirer';
+
+// FoalTS
+import { build } from './build';
+import {
+  ControllerType,
+  createController,
+  createEntity,
+  createHook,
+  createModule,
+  createService,
+  ServiceType
+} from './generate';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
-
-import { build } from './build';
-import { createModule } from './generate';
 
 program
   .version(pkg.version, '-v, --version');
@@ -35,25 +46,47 @@ program
 //   });
 
 program
-  .command('generate <type>')
-  .description('Generates files (accepted types: module, post-hook, pre-hook, service).')
+  .command('generate <type> <name>')
+  .description('Generates files (type: controller|entity|hook|module|service).')
   .alias('g')
-  .action((type: string) => {
+  .action(async (type: string, name: string) => {
     switch (type) {
+      case 'controller':
+        const controllerChoices: ControllerType[] = [ 'Empty', 'REST', 'GraphQL' ];
+        const controllerAnswers = await prompt([
+          { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
+        ]);
+        createController({ name, type: controllerAnswers.type });
+        break;
+      case 'entity':
+        createEntity({ name });
+        break;
+      case 'hook':
+        createHook({ name });
+        break;
       case 'module':
-        createModule({ name: 'toto' });
-        break;
-      case 'post-hook':
-        // env.run('foal post-hook', (err, data) => console.log(err, data));
-        break;
-      case 'pre-hook':
-        // env.run('foal pre-hook', (err, data) => console.log(err, data));
+        createModule({ name });
         break;
       case 'service':
-        // env.run('foal service', (err, data) => console.log(err, data));
+        const serviceChoices: ServiceType[] = [
+          'Empty',
+          new Separator(),
+          'Serializer',
+          'ModelSerializer',
+          new Separator(),
+          'GraphQLResolver',
+          new Separator(),
+          'Authenticator',
+          'EmailAuthenticator',
+          new Separator(),
+        ];
+        const serviceAnswers = await prompt([
+          { choices: serviceChoices, name: 'type', type: 'list', message: 'Type', pageSize: 10 }
+        ]);
+        createService({ name, type: serviceAnswers.type });
         break;
       default:
-        console.error('Please provide a valid type: module, post-hook, pre-hook or service.');
+        console.error('Please provide a valid type: controller|entity|hook|module|service.');
     }
   });
 

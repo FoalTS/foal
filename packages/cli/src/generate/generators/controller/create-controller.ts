@@ -1,6 +1,8 @@
 import { getNames, renderTemplate } from '../../utils';
 
-export function createController({ name, type }: { name: string, type: 'Empty'|'REST'|'GraphQL' }) {
+export type ControllerType = 'Empty'|'REST'|'GraphQL';
+
+export function createController({ name, type }: { name: string, type: ControllerType }) {
   const names = getNames(name);
 
   switch (type) {

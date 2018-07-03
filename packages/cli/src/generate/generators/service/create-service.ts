@@ -1,8 +1,8 @@
 import { getNames, renderTemplate } from '../../utils';
 
-export function createService({ name, type }: {
-  name: string, type: 'Empty'|'Serializer'|'ModelSerializer'|'GraphQLResolver'|'Authenticator'|'EmailAuthenticator'
-}) {
+export type ServiceType = 'Empty'|'Serializer'|'ModelSerializer'|'GraphQLResolver'|'Authenticator'|'EmailAuthenticator';
+
+export function createService({ name, type }: { name: string, type: ServiceType }) {
   const names = getNames(name);
 
   switch (type) {

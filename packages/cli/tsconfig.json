@@ -18,6 +18,6 @@
     "./src/**/*.ts"
   ],
   "exclude": [
-    "./src/generators/templates/**/*.ts"
+    "./src/generate/templates/**/*.ts"
   ]
 }

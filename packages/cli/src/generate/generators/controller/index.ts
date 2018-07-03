@@ -1,1 +1,1 @@
-export { createController } from './create-controller';
+export { ControllerType, createController } from './create-controller';

@@ -1,1 +1,1 @@
-export { createService } from './create-service';
+export { createService, ServiceType } from './create-service';
