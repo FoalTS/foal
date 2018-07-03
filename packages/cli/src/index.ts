@@ -13,6 +13,7 @@ import { prompt, Separator } from 'inquirer';
 import { build } from './build';
 import {
   ControllerType,
+  createApp,
   createController,
   createEntity,
   createHook,
@@ -38,12 +39,12 @@ program
     build(watch, mode);
   });
 
-// program
-//   .command('createapp')
-//   .description('Creates a new directory with a new FoalTS app.')
-//   .action(() => {
-//     console.log('hello');
-//   });
+program
+  .command('createapp <name>')
+  .description('Creates a new directory with a new FoalTS app.')
+  .action((name: string) => {
+    createApp({ name });
+  });
 
 program
   .command('generate <type> <name>')
