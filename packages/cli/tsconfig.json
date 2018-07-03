@@ -16,5 +16,8 @@
   },
   "include": [
     "./src/**/*.ts"
+  ],
+  "exclude": [
+    "./src/generators/templates/**/*.ts"
   ]
 }

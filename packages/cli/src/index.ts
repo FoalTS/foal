@@ -11,6 +11,7 @@ import * as program from 'commander';
 const pkg = require('../package.json');
 
 import { build } from './build';
+import { createModule } from './generate';
 
 program
   .version(pkg.version, '-v, --version');
@@ -27,29 +28,33 @@ program
   });
 
 // program
-//   .command('createapp', 'Creates a new directory with a new FoalTS app.')
-//   .action(() => env.run('foal app', (err, data) => console.log(err, data)));
-
-// program
-//   .command('generate <type>', 'Generates files (accepted types: module, post-hook, pre-hook, service).')
-//   .alias('g')
-//   .action((type: string) => {
-//     switch (type) {
-//       case 'module':
-//         env.run('foal module', (err, data) => console.log(err, data));
-//         break;
-//       case 'post-hook':
-//         env.run('foal post-hook', (err, data) => console.log(err, data));
-//         break;
-//       case 'pre-hook':
-//         env.run('foal pre-hook', (err, data) => console.log(err, data));
-//         break;
-//       case 'service':
-//         env.run('foal service', (err, data) => console.log(err, data));
-//         break;
-//       default:
-//         console.error('Please provide a valid type: module, post-hook, pre-hook or service.');
-//     }
+//   .command('createapp')
+//   .description('Creates a new directory with a new FoalTS app.')
+//   .action(() => {
+//     console.log('hello');
 //   });
+
+program
+  .command('generate <type>')
+  .description('Generates files (accepted types: module, post-hook, pre-hook, service).')
+  .alias('g')
+  .action((type: string) => {
+    switch (type) {
+      case 'module':
+        createModule({ name: 'toto' });
+        break;
+      case 'post-hook':
+        // env.run('foal post-hook', (err, data) => console.log(err, data));
+        break;
+      case 'pre-hook':
+        // env.run('foal pre-hook', (err, data) => console.log(err, data));
+        break;
+      case 'service':
+        // env.run('foal service', (err, data) => console.log(err, data));
+        break;
+      default:
+        console.error('Please provide a valid type: module, post-hook, pre-hook or service.');
+    }
+  });
 
 program.parse(process.argv);
