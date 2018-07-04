@@ -3,7 +3,7 @@ import {
   Module,
   rest,
   restrictAccessToAdmin,
-  restrictAccessToAuthenticated,
+  LoginRequired,
   route,
   view,
 } from '@foal/core';
@@ -18,13 +18,13 @@ export const AppModule: Module = {
   controllers: [
     rest('/users', UserService)
       .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
-      .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
+      .withPreHook(LoginRequired(), 'GET /', 'GET /:id')
       .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id'),
 
     view('/', require('./templates/index.html'), { name: 'FoalTS' }),
 
     view('/home', require('./templates/home.html'))
-      .withPreHook(restrictAccessToAuthenticated()),
+      .withPreHook(LoginRequired()),
 
     route('GET', '/airport', getAirport),
     rest('/flights', FlightService),

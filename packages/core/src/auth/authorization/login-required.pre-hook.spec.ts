@@ -8,16 +8,16 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser } from '../models';
-import { restrictAccessToAuthenticated } from './restrict-access-to-authenticated.pre-hook';
+import { LoginRequired } from './login-required.pre-hook';
 
-describe('restrictAccessToAuthenticated', () => {
+describe('LoginRequired', () => {
 
   let preHook: PreHook;
 
   class User extends AbstractUser {}
 
   before(() => {
-    preHook = restrictAccessToAuthenticated();
+    preHook = LoginRequired();
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
