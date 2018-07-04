@@ -44,7 +44,7 @@ export function copyFileFromNodeModules(src: string, dest: string, log: boolean 
   if (log) {
     console.log(`CREATE ${dest}`);
   }
-  fs.copyFileSync(join('./node_modules', src), dest);
+  fs.copyFileSync(join(__dirname, '../../node_modules', src), dest);
 }
 
 export function copyFileFromTemplates(src: string, dest: string, log: boolean = true) {
@@ -59,7 +59,7 @@ export function readFileFromTemplatesSpec(src: string): string {
 }
 
 export function readFileFromNodeModules(src: string): string {
-  return fs.readFileSync(join('./node_modules', src), 'utf8');
+  return fs.readFileSync(join(__dirname, '../../node_modules', src), 'utf8');
 }
 
 export function readFileFromRoot(src: string): string {
