@@ -15,7 +15,7 @@ export class AppModule implements IModule {
 
   ];
 
-  models = [
+  entities = [
 
   ];
 }

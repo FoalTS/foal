@@ -10,7 +10,7 @@ export class /* upperFirstCamelName */Module implements IModule {
 
   ];
 
-  models = [
+  entities = [
 
   ];
 }

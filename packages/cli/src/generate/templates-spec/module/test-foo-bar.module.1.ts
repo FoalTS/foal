@@ -10,7 +10,7 @@ export class TestFooBarModule implements IModule {
 
   ];
 
-  models = [
+  entities = [
 
   ];
 }
