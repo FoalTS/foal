@@ -2,7 +2,13 @@
 import * as crypto from 'crypto';
 
 // FoalTS
-import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
+import {
+    copyFileFromNodeModules,
+    copyFileFromTemplates,
+    getNames,
+    mkdirIfNotExists,
+    renderTemplate
+} from '../../utils';
 
 export function createApp({ name, sessionSecret, log = true }:
     { name: string, sessionSecret?: string, log?: boolean }) {
@@ -58,6 +64,7 @@ export function createApp({ name, sessionSecret, log = true }:
     // Public
     mkdirIfNotExists(`${names.kebabName}/public`, log);
     copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`, log);
+    copyFileFromNodeModules('bootstrap/dist/css/bootstrap.min.css', `${names.kebabName}/public/bootstrap.min.css`, log);
 
     // Src
     mkdirIfNotExists(`${names.kebabName}/src`, log);

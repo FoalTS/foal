@@ -58,6 +58,10 @@ export function readFileFromTemplatesSpec(src: string): string {
   return fs.readFileSync(join(__dirname, './templates-spec', src), 'utf8');
 }
 
+export function readFileFromNodeModules(src: string): string {
+  return fs.readFileSync(join('./node_modules', src), 'utf8');
+}
+
 export function readFileFromRoot(src: string): string {
   return fs.readFileSync(src, 'utf8');
 }

@@ -2,7 +2,13 @@
 import { expect } from 'chai';
 
 // FoalTS
-import { readFileFromRoot, readFileFromTemplatesSpec, rmdirIfExists, rmfileIfExists } from '../../utils';
+import {
+  readFileFromNodeModules,
+  readFileFromRoot,
+  readFileFromTemplatesSpec,
+  rmdirIfExists,
+  rmfileIfExists
+} from '../../utils';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -27,6 +33,7 @@ describe('createApp', () => {
 
     // Public
     rmfileIfExists('test-foo-bar/public/logo.png');
+    rmfileIfExists('test-foo-bar/public/bootstrap.min.css');
     rmdirIfExists('test-foo-bar/public');
 
     // Src
@@ -99,6 +106,14 @@ describe('createApp', () => {
 
     const expected = readFileFromTemplatesSpec('app/public/logo.1.png');
     const actual = readFileFromRoot('test-foo-bar/public/logo.png');
+    expect(actual).to.equal(expected);
+
+  });
+
+  it('should copy the bootstrap css file.', () => {
+
+    const expected = readFileFromNodeModules('bootstrap/dist/css/bootstrap.min.css');
+    const actual = readFileFromRoot('test-foo-bar/public/bootstrap.min.css');
     expect(actual).to.equal(expected);
 
   });
