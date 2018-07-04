@@ -50,6 +50,7 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
 
     // Public
     mkdirIfNotExists(`${names.kebabName}/public`);
+    copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`);
 
     // Src
     mkdirIfNotExists(`${names.kebabName}/src`);

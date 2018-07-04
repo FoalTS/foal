@@ -39,6 +39,12 @@ describe('createApp', () => {
 
   it('should copy the logo image.', () => {
 
+    createApp({ name: 'test-fooBar' });
+
+    const expected = readFileFromTemplatesSpec('app/public/logo.1.png');
+    const actual = readFileFromRoot('test-foo-bar/public/logo.png');
+    expect(actual).to.equal(expected);
+
   });
 
   it('should render the src/app/controllers templates.', () => {
