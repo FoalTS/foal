@@ -7,6 +7,12 @@ import { createModule } from './create-module';
 
 describe('createModule', () => {
 
+  afterEach(() => {
+    rmfileIfExists('test-foo-bar/index.ts');
+    rmfileIfExists('test-foo-bar/test-foo-bar.module.ts');
+    rmdirIfExists('test-foo-bar');
+  });
+
   it('should render the templates.', () => {
 
     createModule({ name: 'test-fooBar' });
@@ -18,10 +24,6 @@ describe('createModule', () => {
     expected = readFileFromTemplatesSpec('module/test-foo-bar.module.1.ts');
     actual = readFileFromRoot('test-foo-bar/test-foo-bar.module.ts');
     expect(actual).to.equal(expected);
-
-    rmfileIfExists('test-foo-bar/index.ts');
-    rmfileIfExists('test-foo-bar/test-foo-bar.module.ts');
-    rmdirIfExists('test-foo-bar');
 
   });
 

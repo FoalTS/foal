@@ -7,6 +7,8 @@ import { createEntity } from './create-entity';
 
 describe('createEntity', () => {
 
+  afterEach(() => rmfileIfExists('test-foo-bar.entity.ts'));
+
   it('should render the templates.', () => {
 
     createEntity({ name: 'test-fooBar' });
@@ -14,8 +16,6 @@ describe('createEntity', () => {
     const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
     const actual = readFileFromRoot('test-foo-bar.entity.ts');
     expect(actual).to.equal(expected);
-
-    rmfileIfExists('test-foo-bar.entity.ts');
 
   });
 

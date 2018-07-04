@@ -9,6 +9,64 @@ describe('createApp', () => {
 
   beforeEach(() => createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', log: false }));
 
+  afterEach(() => {
+    rmfileIfExists('test-foo-bar/.gitignore');
+    rmfileIfExists('test-foo-bar/ormconfig.json');
+    rmfileIfExists('test-foo-bar/package.json');
+    rmfileIfExists('test-foo-bar/tsconfig.json');
+    rmfileIfExists('test-foo-bar/tslint.json');
+
+    // Config
+    rmfileIfExists('test-foo-bar/config/app.development.json');
+    rmfileIfExists('test-foo-bar/config/app.production.json');
+    rmfileIfExists('test-foo-bar/config/app.test.json');
+    rmfileIfExists('test-foo-bar/config/settings.development.json');
+    rmfileIfExists('test-foo-bar/config/settings.json');
+    rmfileIfExists('test-foo-bar/config/settings.production.json');
+    rmdirIfExists('test-foo-bar/config');
+
+    // Public
+    rmfileIfExists('test-foo-bar/public/logo.png');
+    rmdirIfExists('test-foo-bar/public');
+
+    // Src
+    rmfileIfExists('test-foo-bar/src/app/controllers/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/controllers/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/controllers');
+
+    rmfileIfExists('test-foo-bar/src/app/hooks/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/hooks/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/hooks');
+
+    rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/entities');
+
+    rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/sub-modules/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/sub-modules');
+
+    rmfileIfExists('test-foo-bar/src/app/services/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/services/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/services');
+
+    rmfileIfExists('test-foo-bar/src/app/templates/index.html');
+    rmfileIfExists('test-foo-bar/src/app/templates/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/templates/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/templates');
+
+    rmfileIfExists('test-foo-bar/src/app/app.module.ts');
+    rmfileIfExists('test-foo-bar/src/app/test.ts');
+    rmdirIfExists('test-foo-bar/src/app');
+
+    rmfileIfExists('test-foo-bar/src/index.ts');
+    rmfileIfExists('test-foo-bar/src/test.ts');
+    rmdirIfExists('test-foo-bar/src');
+
+    // Root
+    rmdirIfExists('test-foo-bar');
+  });
+
   it('should render the config templates.', () => {
 
     let expected = readFileFromTemplatesSpec('app/config/app.development.1.json');
@@ -167,64 +225,6 @@ describe('createApp', () => {
     actual = readFileFromRoot('test-foo-bar/tslint.json');
     expect(actual).to.equal(expected);
 
-  });
-
-  afterEach(() => {
-    rmfileIfExists('test-foo-bar/.gitignore');
-    rmfileIfExists('test-foo-bar/ormconfig.json');
-    rmfileIfExists('test-foo-bar/package.json');
-    rmfileIfExists('test-foo-bar/tsconfig.json');
-    rmfileIfExists('test-foo-bar/tslint.json');
-
-    // Config
-    rmfileIfExists('test-foo-bar/config/app.development.json');
-    rmfileIfExists('test-foo-bar/config/app.production.json');
-    rmfileIfExists('test-foo-bar/config/app.test.json');
-    rmfileIfExists('test-foo-bar/config/settings.development.json');
-    rmfileIfExists('test-foo-bar/config/settings.json');
-    rmfileIfExists('test-foo-bar/config/settings.production.json');
-    rmdirIfExists('test-foo-bar/config');
-
-    // Public
-    rmfileIfExists('test-foo-bar/public/logo.png');
-    rmdirIfExists('test-foo-bar/public');
-
-    // Src
-    rmfileIfExists('test-foo-bar/src/app/controllers/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/controllers/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/controllers');
-
-    rmfileIfExists('test-foo-bar/src/app/hooks/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/hooks/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/hooks');
-
-    rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/entities');
-
-    rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/sub-modules/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/sub-modules');
-
-    rmfileIfExists('test-foo-bar/src/app/services/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/services/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/services');
-
-    rmfileIfExists('test-foo-bar/src/app/templates/index.html');
-    rmfileIfExists('test-foo-bar/src/app/templates/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/templates/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/templates');
-
-    rmfileIfExists('test-foo-bar/src/app/app.module.ts');
-    rmfileIfExists('test-foo-bar/src/app/test.ts');
-    rmdirIfExists('test-foo-bar/src/app');
-
-    rmfileIfExists('test-foo-bar/src/index.ts');
-    rmfileIfExists('test-foo-bar/src/test.ts');
-    rmdirIfExists('test-foo-bar/src');
-
-    // Root
-    rmdirIfExists('test-foo-bar');
   });
 
 });

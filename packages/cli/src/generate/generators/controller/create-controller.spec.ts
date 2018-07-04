@@ -7,6 +7,8 @@ import { createController } from './create-controller';
 
 describe('createController', () => {
 
+  afterEach(() => rmfileIfExists('test-foo-bar.controller.ts'));
+
   it('should render the empty templates.', () => {
 
     createController({ name: 'test-fooBar', type: 'Empty' });
@@ -14,8 +16,6 @@ describe('createController', () => {
     const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
     const actual = readFileFromRoot('test-foo-bar.controller.ts');
     expect(actual).to.equal(expected);
-
-    rmfileIfExists('test-foo-bar.controller.ts');
 
   });
 
@@ -27,8 +27,6 @@ describe('createController', () => {
     const actual = readFileFromRoot('test-foo-bar.controller.ts');
     expect(actual).to.equal(expected);
 
-    rmfileIfExists('test-foo-bar.controller.ts');
-
   });
 
   it('should render the GraphQL templates.', () => {
@@ -38,8 +36,6 @@ describe('createController', () => {
     const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
     const actual = readFileFromRoot('test-foo-bar.controller.ts');
     expect(actual).to.equal(expected);
-
-    rmfileIfExists('test-foo-bar.controller.ts');
 
   });
 
