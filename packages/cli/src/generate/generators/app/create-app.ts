@@ -48,6 +48,8 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
 
     // Src
     mkdirIfNotExists(`${names.kebabName}/src`);
+    copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`);
+    copyFileFromTemplates('app/src/test.ts', `${names.kebabName}/src/test.ts`);
 
     mkdirIfNotExists(`${names.kebabName}/src/app`);
     copyFileFromTemplates('app/src/app/app.module.ts', `${names.kebabName}/src/app/app.module.ts`);
