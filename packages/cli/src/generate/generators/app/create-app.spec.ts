@@ -157,7 +157,39 @@ describe('createApp', () => {
 
   });
 
+  it('should render the root templates.', () => {
+
+    createApp({ name: 'test-fooBar' });
+
+    let expected = readFileFromTemplatesSpec('app/gitignore.1');
+    let actual = readFileFromRoot('test-foo-bar/.gitignore');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/ormconfig.1.json');
+    actual = readFileFromRoot('test-foo-bar/ormconfig.json');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/package.1.json');
+    actual = readFileFromRoot('test-foo-bar/package.json');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/tsconfig.1.json');
+    actual = readFileFromRoot('test-foo-bar/tsconfig.json');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/tslint.1.json');
+    actual = readFileFromRoot('test-foo-bar/tslint.json');
+    expect(actual).to.equal(expected);
+
+  });
+
   afterEach(() => {
+    rmfileIfExists('test-foo-bar/.gitignore');
+    rmfileIfExists('test-foo-bar/ormconfig.json');
+    rmfileIfExists('test-foo-bar/package.json');
+    rmfileIfExists('test-foo-bar/tsconfig.json');
+    rmfileIfExists('test-foo-bar/tslint.json');
+
     // Config
     rmfileIfExists('test-foo-bar/config/app.development.json');
     rmfileIfExists('test-foo-bar/config/app.production.json');

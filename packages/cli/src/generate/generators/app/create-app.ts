@@ -21,6 +21,11 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
 
     // Root
     mkdirIfNotExists(names.kebabName);
+    copyFileFromTemplates('app/gitignore', `${names.kebabName}/.gitignore`);
+    copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`);
+    renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals);
+    copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`);
+    copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`);
 
     // Config
     mkdirIfNotExists(`${names.kebabName}/config`);
