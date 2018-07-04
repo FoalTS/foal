@@ -1,8 +1,10 @@
 import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
 
-export function createApp({ name, sessionSecret }: { name: string, sessionSecret?: string }) {
+export function createApp({ name, sessionSecret, log = true }:
+    { name: string, sessionSecret?: string, log?: boolean }) {
     const names = getNames(name);
-    console.log(
+    if (log) {
+        console.log(
 `
      _______   ________   ____        ___     _________   _______
     /  ____/  / ____  /  / _  |      /  /    /___  ___/  / _____/
@@ -12,7 +14,8 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
 /__/      /_______/  /_/    |_|  /_______/   /_/     /______/
 
 `
-    );
+        );
+    }
 
     const locals = {
       ...names,
@@ -20,73 +23,74 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
     };
 
     // Root
-    mkdirIfNotExists(names.kebabName);
-    copyFileFromTemplates('app/gitignore', `${names.kebabName}/.gitignore`);
-    copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`);
-    renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals);
-    copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`);
-    copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`);
+    mkdirIfNotExists(names.kebabName, log);
+    copyFileFromTemplates('app/gitignore', `${names.kebabName}/.gitignore`, log);
+    copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`, log);
+    renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals, log);
+    copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`, log);
+    copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`, log);
 
     // Config
-    mkdirIfNotExists(`${names.kebabName}/config`);
-    renderTemplate('app/config/app.development.json', `${names.kebabName}/config/app.development.json`, locals);
-    renderTemplate('app/config/app.production.json', `${names.kebabName}/config/app.production.json`, locals);
-    renderTemplate('app/config/app.test.json', `${names.kebabName}/config/app.test.json`, locals);
+    mkdirIfNotExists(`${names.kebabName}/config`, log);
+    renderTemplate('app/config/app.development.json', `${names.kebabName}/config/app.development.json`, locals, log);
+    renderTemplate('app/config/app.production.json', `${names.kebabName}/config/app.production.json`, locals, log);
+    renderTemplate('app/config/app.test.json', `${names.kebabName}/config/app.test.json`, locals, log);
     renderTemplate(
         'app/config/settings.json',
         `${names.kebabName}/config/settings.json`,
-        locals
+        locals, log
     );
     renderTemplate(
         'app/config/settings.development.json',
         `${names.kebabName}/config/settings.development.json`,
-        locals
+        locals, log
     );
     renderTemplate(
         'app/config/settings.production.json',
         `${names.kebabName}/config/settings.production.json`,
-        locals
+        locals, log
     );
 
     // Public
-    mkdirIfNotExists(`${names.kebabName}/public`);
-    copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`);
+    mkdirIfNotExists(`${names.kebabName}/public`, log);
+    copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`, log);
 
     // Src
-    mkdirIfNotExists(`${names.kebabName}/src`);
-    copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`);
-    copyFileFromTemplates('app/src/test.ts', `${names.kebabName}/src/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src`, log);
+    copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`, log);
+    copyFileFromTemplates('app/src/test.ts', `${names.kebabName}/src/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app`);
-    copyFileFromTemplates('app/src/app/app.module.ts', `${names.kebabName}/src/app/app.module.ts`);
-    copyFileFromTemplates('app/src/app/test.ts', `${names.kebabName}/src/app/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app`, log);
+    copyFileFromTemplates('app/src/app/app.module.ts', `${names.kebabName}/src/app/app.module.ts`, log);
+    copyFileFromTemplates('app/src/app/test.ts', `${names.kebabName}/src/app/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/controllers`);
-    copyFileFromTemplates('app/src/app/controllers/index.ts', `${names.kebabName}/src/app/controllers/index.ts`);
-    copyFileFromTemplates('app/src/app/controllers/test.ts', `${names.kebabName}/src/app/controllers/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/controllers`, log);
+    copyFileFromTemplates('app/src/app/controllers/index.ts', `${names.kebabName}/src/app/controllers/index.ts`, log);
+    copyFileFromTemplates('app/src/app/controllers/test.ts', `${names.kebabName}/src/app/controllers/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/hooks`);
-    copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`);
-    copyFileFromTemplates('app/src/app/hooks/test.ts', `${names.kebabName}/src/app/hooks/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/hooks`, log);
+    copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`, log);
+    copyFileFromTemplates('app/src/app/hooks/test.ts', `${names.kebabName}/src/app/hooks/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/entities`);
-    copyFileFromTemplates('app/src/app/entities/index.ts', `${names.kebabName}/src/app/entities/index.ts`);
-    copyFileFromTemplates('app/src/app/entities/test.ts', `${names.kebabName}/src/app/entities/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/entities`, log);
+    copyFileFromTemplates('app/src/app/entities/index.ts', `${names.kebabName}/src/app/entities/index.ts`, log);
+    copyFileFromTemplates('app/src/app/entities/test.ts', `${names.kebabName}/src/app/entities/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`);
-    copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`);
-    copyFileFromTemplates('app/src/app/sub-modules/test.ts', `${names.kebabName}/src/app/sub-modules/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`, log);
+    copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`, log);
+    copyFileFromTemplates('app/src/app/sub-modules/test.ts', `${names.kebabName}/src/app/sub-modules/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/services`);
-    copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`);
-    copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/services`, log);
+    copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`, log);
+    copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`, log);
 
-    mkdirIfNotExists(`${names.kebabName}/src/app/templates`);
-    copyFileFromTemplates('app/src/app/templates/index.html', `${names.kebabName}/src/app/templates/index.html`);
-    copyFileFromTemplates('app/src/app/templates/index.ts', `${names.kebabName}/src/app/templates/index.ts`);
-    copyFileFromTemplates('app/src/app/templates/test.ts', `${names.kebabName}/src/app/templates/test.ts`);
+    mkdirIfNotExists(`${names.kebabName}/src/app/templates`, log);
+    copyFileFromTemplates('app/src/app/templates/index.html', `${names.kebabName}/src/app/templates/index.html`), log;
+    copyFileFromTemplates('app/src/app/templates/index.ts', `${names.kebabName}/src/app/templates/index.ts`, log);
+    copyFileFromTemplates('app/src/app/templates/test.ts', `${names.kebabName}/src/app/templates/test.ts`, log);
 
-    console.log(
+    if (log) {
+        console.log(
 `
 Install dependencies:
 $ cd ${names.kebabName}
@@ -95,5 +99,6 @@ $ npm install
 Run the app:
 $ npm run develop
 `
-    );
+        );
+    }
 }

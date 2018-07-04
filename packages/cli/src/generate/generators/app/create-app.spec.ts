@@ -7,9 +7,9 @@ import { createApp } from './create-app';
 
 describe('createApp', () => {
 
-  it('should render the config templates.', () => {
+  beforeEach(() => createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', log: false }));
 
-    createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+  it('should render the config templates.', () => {
 
     let expected = readFileFromTemplatesSpec('app/config/app.development.1.json');
     let actual = readFileFromRoot('test-foo-bar/config/app.development.json');
@@ -39,8 +39,6 @@ describe('createApp', () => {
 
   it('should copy the logo image.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     const expected = readFileFromTemplatesSpec('app/public/logo.1.png');
     const actual = readFileFromRoot('test-foo-bar/public/logo.png');
     expect(actual).to.equal(expected);
@@ -48,8 +46,6 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/controllers templates.', () => {
-
-    createApp({ name: 'test-fooBar' });
 
     let expected = readFileFromTemplatesSpec('app/src/app/controllers/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/controllers/index.ts');
@@ -63,8 +59,6 @@ describe('createApp', () => {
 
   it('should render the src/app/hooks templates.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     let expected = readFileFromTemplatesSpec('app/src/app/hooks/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/hooks/index.ts');
     expect(actual).to.equal(expected);
@@ -76,8 +70,6 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/entities templates.', () => {
-
-    createApp({ name: 'test-fooBar' });
 
     let expected = readFileFromTemplatesSpec('app/src/app/entities/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/entities/index.ts');
@@ -91,8 +83,6 @@ describe('createApp', () => {
 
   it('should render the src/app/sub-modules templates.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     let expected = readFileFromTemplatesSpec('app/src/app/sub-modules/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/sub-modules/index.ts');
     expect(actual).to.equal(expected);
@@ -105,8 +95,6 @@ describe('createApp', () => {
 
   it('should render the src/app/services templates.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     let expected = readFileFromTemplatesSpec('app/src/app/services/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/services/index.ts');
     expect(actual).to.equal(expected);
@@ -118,8 +106,6 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/templates templates.', () => {
-
-    createApp({ name: 'test-fooBar' });
 
     let expected = readFileFromTemplatesSpec('app/src/app/templates/index.1.html');
     let actual = readFileFromRoot('test-foo-bar/src/app/templates/index.html');
@@ -137,8 +123,6 @@ describe('createApp', () => {
 
   it('should render the src/app templates.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     let expected = readFileFromTemplatesSpec('app/src/app/app.module.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/app/app.module.ts');
     expect(actual).to.equal(expected);
@@ -151,8 +135,6 @@ describe('createApp', () => {
 
   it('should render the src templates.', () => {
 
-    createApp({ name: 'test-fooBar' });
-
     let expected = readFileFromTemplatesSpec('app/src/index.1.ts');
     let actual = readFileFromRoot('test-foo-bar/src/index.ts');
     expect(actual).to.equal(expected);
@@ -164,8 +146,6 @@ describe('createApp', () => {
   });
 
   it('should render the root templates.', () => {
-
-    createApp({ name: 'test-fooBar' });
 
     let expected = readFileFromTemplatesSpec('app/gitignore.1');
     let actual = readFileFromRoot('test-foo-bar/.gitignore');
