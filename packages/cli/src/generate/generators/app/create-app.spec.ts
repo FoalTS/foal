@@ -69,16 +69,16 @@ describe('createApp', () => {
 
   });
 
-  it('should render the src/app/models templates.', () => {
+  it('should render the src/app/entities templates.', () => {
 
     createApp({ name: 'test-fooBar' });
 
-    let expected = readFileFromTemplatesSpec('app/src/app/models/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/app/models/index.ts');
+    let expected = readFileFromTemplatesSpec('app/src/app/entities/index.1.ts');
+    let actual = readFileFromRoot('test-foo-bar/src/app/entities/index.ts');
     expect(actual).to.equal(expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/models/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/models/test.ts');
+    expected = readFileFromTemplatesSpec('app/src/app/entities/test.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/entities/test.ts');
     expect(actual).to.equal(expected);
 
   });
@@ -134,9 +134,9 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/src/app/hooks/test.ts');
     rmdirIfExists('test-foo-bar/src/app/hooks');
 
-    rmfileIfExists('test-foo-bar/src/app/models/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/models/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/models');
+    rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/entities');
 
     rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
     rmfileIfExists('test-foo-bar/src/app/sub-modules/test.ts');
