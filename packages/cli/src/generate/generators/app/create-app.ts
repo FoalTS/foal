@@ -1,3 +1,7 @@
+// std
+import * as crypto from 'crypto';
+
+// FoalTS
 import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
 
 export function createApp({ name, sessionSecret, log = true }:
@@ -19,7 +23,7 @@ export function createApp({ name, sessionSecret, log = true }:
 
     const locals = {
       ...names,
-      sessionSecret: sessionSecret ? sessionSecret : 'foobar'
+      sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
     };
 
     // Root
