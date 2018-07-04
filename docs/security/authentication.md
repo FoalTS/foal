@@ -107,15 +107,15 @@ When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is 
 
 ## Authorization
 
-### `restrictAccessToAuthenticated()`
+### `LoginRequired()`
 
-`restrictAccessToAuthenticated` is a pre-hook to restrict the access to authenticated users.
+`LoginRequired` is a pre-hook to restrict the access to authenticated users.
 
 If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAuthenticated , route, Module } from '@foal/core';
+import { authenticate, LoginRequired , route, Module } from '@foal/core';
 
 import { User } from './models/user';
 
@@ -124,7 +124,7 @@ export const AppModule: Module = {
     route('POST', '/user', ctx => {
         console.log(ctx.user);
       })
-      .withPreHook(restrictAccessToAuthenticated()),
+      .withPreHook(LoginRequired()),
   ],
   preHooks: [
     authenticate(User),

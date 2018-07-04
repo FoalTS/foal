@@ -3,7 +3,7 @@ import {
   PreHook,
 } from '../../core';
 
-export function restrictAccessToAuthenticated(): PreHook {
+export function LoginRequired(): PreHook {
   return ctx => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
