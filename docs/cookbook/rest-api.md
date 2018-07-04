@@ -1,5 +1,11 @@
 # REST API
 // Add a little get-started (some code or a cli command)
+
+Three points:
+- a REST controller
+- a serializer
+- and a (several) model(s)
+
 ## Create a REST controller from a `Partial<IModelService>`
 
 

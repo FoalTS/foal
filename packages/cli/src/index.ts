@@ -5,12 +5,25 @@
  * Released under the MIT License.
  */
 
+// 3p
 import * as program from 'commander';
+import { prompt, Separator } from 'inquirer';
+
+// FoalTS
+import { build } from './build';
+import {
+  ControllerType,
+  createApp,
+  createController,
+  createEntity,
+  createHook,
+  createModule,
+  createService,
+  ServiceType
+} from './generate';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
-
-import { build } from './build';
 
 program
   .version(pkg.version, '-v, --version');
@@ -26,30 +39,56 @@ program
     build(watch, mode);
   });
 
-// program
-//   .command('createapp', 'Creates a new directory with a new FoalTS app.')
-//   .action(() => env.run('foal app', (err, data) => console.log(err, data)));
+program
+  .command('createapp <name>')
+  .description('Creates a new directory with a new FoalTS app.')
+  .action((name: string) => {
+    createApp({ name });
+  });
 
-// program
-//   .command('generate <type>', 'Generates files (accepted types: module, post-hook, pre-hook, service).')
-//   .alias('g')
-//   .action((type: string) => {
-//     switch (type) {
-//       case 'module':
-//         env.run('foal module', (err, data) => console.log(err, data));
-//         break;
-//       case 'post-hook':
-//         env.run('foal post-hook', (err, data) => console.log(err, data));
-//         break;
-//       case 'pre-hook':
-//         env.run('foal pre-hook', (err, data) => console.log(err, data));
-//         break;
-//       case 'service':
-//         env.run('foal service', (err, data) => console.log(err, data));
-//         break;
-//       default:
-//         console.error('Please provide a valid type: module, post-hook, pre-hook or service.');
-//     }
-//   });
+program
+  .command('generate <type> <name>')
+  .description('Generates files (type: controller|entity|hook|module|service).')
+  .alias('g')
+  .action(async (type: string, name: string) => {
+    switch (type) {
+      case 'controller':
+        const controllerChoices: ControllerType[] = [ 'Empty', 'REST', 'GraphQL' ];
+        const controllerAnswers = await prompt([
+          { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
+        ]);
+        createController({ name, type: controllerAnswers.type });
+        break;
+      case 'entity':
+        createEntity({ name });
+        break;
+      case 'hook':
+        createHook({ name });
+        break;
+      case 'module':
+        createModule({ name });
+        break;
+      case 'service':
+        const serviceChoices: ServiceType[] = [
+          'Empty',
+          new Separator(),
+          'Serializer',
+          'ModelSerializer',
+          new Separator(),
+          'GraphQLResolver',
+          new Separator(),
+          'Authenticator',
+          'EmailAuthenticator',
+          new Separator(),
+        ];
+        const serviceAnswers = await prompt([
+          { choices: serviceChoices, name: 'type', type: 'list', message: 'Type', pageSize: 10 }
+        ]);
+        createService({ name, type: serviceAnswers.type });
+        break;
+      default:
+        console.error('Please provide a valid type: controller|entity|hook|module|service.');
+    }
+  });
 
 program.parse(process.argv);
