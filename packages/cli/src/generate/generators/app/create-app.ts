@@ -71,6 +71,11 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
     copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`);
     copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`);
 
+    mkdirIfNotExists(`${names.kebabName}/src/app/templates`);
+    copyFileFromTemplates('app/src/app/templates/index.html', `${names.kebabName}/src/app/templates/index.html`);
+    copyFileFromTemplates('app/src/app/templates/index.ts', `${names.kebabName}/src/app/templates/index.ts`);
+    copyFileFromTemplates('app/src/app/templates/test.ts', `${names.kebabName}/src/app/templates/test.ts`);
+
     console.log(
 `
 Install dependencies:
