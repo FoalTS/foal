@@ -129,6 +129,20 @@ describe('createApp', () => {
 
   });
 
+  it('should render the src/app templates.', () => {
+
+    createApp({ name: 'test-fooBar' });
+
+    let expected = readFileFromTemplatesSpec('app/src/app/app.module.1.ts');
+    let actual = readFileFromRoot('test-foo-bar/src/app/app.module.ts');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/src/app/test.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/test.ts');
+    expect(actual).to.equal(expected);
+
+  });
+
   afterEach(() => {
     // Config
     rmfileIfExists('test-foo-bar/config/app.development.json');
