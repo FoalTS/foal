@@ -6,6 +6,7 @@ import { join } from 'path';
 import { camelCase, kebabCase, upperFirst } from 'lodash';
 
 export function mkdirIfNotExists(path: string) {
+  console.log(`CREATE ${path}`);
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
   }

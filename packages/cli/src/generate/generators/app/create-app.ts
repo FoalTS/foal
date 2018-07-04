@@ -1,4 +1,4 @@
-import { getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
+import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
 
 export function createApp({ name, sessionSecret }: { name: string, sessionSecret?: string }) {
     const names = getNames(name);
@@ -48,6 +48,28 @@ export function createApp({ name, sessionSecret }: { name: string, sessionSecret
 
     // Src
     mkdirIfNotExists(`${names.kebabName}/src`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app/controllers`);
+    copyFileFromTemplates('app/src/app/controllers/index.ts', `${names.kebabName}/src/app/controllers/index.ts`);
+    copyFileFromTemplates('app/src/app/controllers/test.ts', `${names.kebabName}/src/app/controllers/test.ts`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app/hooks`);
+    copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`);
+    copyFileFromTemplates('app/src/app/hooks/test.ts', `${names.kebabName}/src/app/hooks/test.ts`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app/models`);
+    copyFileFromTemplates('app/src/app/models/index.ts', `${names.kebabName}/src/app/models/index.ts`);
+    copyFileFromTemplates('app/src/app/models/test.ts', `${names.kebabName}/src/app/models/test.ts`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`);
+    copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`);
+    copyFileFromTemplates('app/src/app/sub-modules/test.ts', `${names.kebabName}/src/app/sub-modules/test.ts`);
+
+    mkdirIfNotExists(`${names.kebabName}/src/app/services`);
+    copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`);
+    copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`);
 
     console.log(
 `
