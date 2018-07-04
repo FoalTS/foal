@@ -85,7 +85,7 @@ export function createApp({ name, sessionSecret, log = true }:
     copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`, log);
 
     mkdirIfNotExists(`${names.kebabName}/src/app/templates`, log);
-    copyFileFromTemplates('app/src/app/templates/index.html', `${names.kebabName}/src/app/templates/index.html`), log;
+    copyFileFromTemplates('app/src/app/templates/index.html', `${names.kebabName}/src/app/templates/index.html`, log);
     copyFileFromTemplates('app/src/app/templates/index.ts', `${names.kebabName}/src/app/templates/index.ts`, log);
     copyFileFromTemplates('app/src/app/templates/test.ts', `${names.kebabName}/src/app/templates/test.ts`, log);
 
