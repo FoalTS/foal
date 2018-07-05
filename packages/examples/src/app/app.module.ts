@@ -1,10 +1,9 @@
 import {
   authenticate,
+  LoginRequired,
   Module,
   rest,
   restrictAccessToAdmin,
-  LoginRequired,
-  route,
   view,
 } from '@foal/core';
 
@@ -26,7 +25,7 @@ export const AppModule: Module = {
     view('/home', require('./templates/home.html'))
       .withPreHook(LoginRequired()),
 
-    route('GET', '/airport', getAirport),
+    // route('GET', '/airport', getAirport),
     rest('/flights', FlightService),
   ],
   models: [

@@ -16,7 +16,8 @@ export async function getResponse(route: Route, ctx: PostContext,
   }
 
   if (!ctx.response) {
-    ctx.response = await route.handler(ctx, services);
+    // TODO: Remove as HttpResponse
+    ctx.response = await route.handler(ctx, services) as HttpResponse;
   }
 
   for (const postHook of route.postHooks) {

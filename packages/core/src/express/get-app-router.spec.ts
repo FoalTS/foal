@@ -1,10 +1,15 @@
 import * as express from 'express';
 import * as request from 'supertest';
 
-import { route } from '../common';
-import { App, HttpMethod, HttpResponseOK } from '../core';
+import { App, Controller, HttpMethod, HttpResponseOK } from '../core';
 
 import { getAppRouter } from './get-app-router';
+
+function route(httpMethod: HttpMethod, path: string, handler): Controller<'main'> {
+  const controller = new Controller<'main'>();
+  controller.addRoute('main', httpMethod, path, handler);
+  return controller;
+}
 
 function httpMethodTest(httpMethod: HttpMethod) {
   describe(`when route.httpMethod === "${httpMethod}", route.path === "/foo/bar" and the route returns `

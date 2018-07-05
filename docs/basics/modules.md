@@ -20,49 +20,48 @@ interface Module {
 ## Example
 
 ```typescript
-import { Module , rest } from '@foal/core';
+import { controller, IModule, Module, rest } from '@foal/core';
 // module and service imports...
 
-const AppModule: Module = {
-  controllers: [
-    rest('/my_resources', MyModelService)
-  ],
-  preHooks: [
-    myFirstPreHook(),
-    mySecondPreHook(),
-  ],
-  postHooks: [
-    myPostHook()
-  ]
+@Module()
+@MyFirstHook()
+@MySecondHook()
+export class AppModule implements IModule {
+  controllers  = [
+    controller('/my_resources', MyController)
+  ];
 }
 ```
 
-## Nested modules
+## Sub-modules
 
 When your app grows up, you may be interested in splitting your app into several modules (authentication, admin, home, public, etc). Here's an example on how to embed your modules:
 
 ```typescript
-const Module1: Module = {
-  controllers: [
-    rest('/my_resources', MyModelService)
-  ]
+@Module()
+class Module1 implements IModule {
+  controllers  = [
+    controller('/my_resources', MyController)
+  ];
 };
 
-const Module2: Module = {
-  path: '/foo',
-  controllers: [
-    rest('/my_resources2', MyModelService2)
-  ]
+@Module()
+class Module2 implements IModule {
+  controllers  = [
+    controller('/my_resources2', MyController2)
+  ];
 };
 
-const AppModule: Module = {
-  controllers: [
-    rest('/my_resources3', MyModelService3)
-  ],
-  modules: [
-    Module1,
-    Module2,
-  ]
+@Module()
+class AppModule implements IModule {
+  controllers = [
+    controller('/my_resources3', MyController3)
+  ];
+
+  subModules = [
+    subModule('', Module1),
+    subModule('/foo', Module2),
+  ];
 }
 
 /**

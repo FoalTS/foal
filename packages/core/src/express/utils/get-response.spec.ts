@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 
 import {
-  Handler,
   HttpResponse,
   HttpResponseBadRequest,
   HttpResponseOK,
@@ -20,7 +19,7 @@ describe('getResponse', () => {
 
     const preHook1: PreHook = ctx => { ctx.state.text += 'a'; };
     const preHook2: PreHook = async ctx => { ctx.state.text += 'b'; };
-    const handler: Handler = async ctx => {
+    const handler = async ctx => {
       ctx.state.text += 'c';
       return new HttpResponseOK();
     };
@@ -54,7 +53,7 @@ describe('getResponse', () => {
       const preHook1: PreHook = async ctx => { ctx.state.text += 'a'; };
       const preHook2: PreHook = ctx => response;
       const preHook3: PreHook = async ctx => { ctx.state.text += 'b'; };
-      const handler: Handler = async ctx => {
+      const handler = async ctx => {
         ctx.state.text += 'c';
         return new HttpResponseOK();
       };

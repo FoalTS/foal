@@ -2,9 +2,14 @@ import { expect } from 'chai';
 import * as express from 'express';
 import * as request from 'supertest';
 
-import { route } from '../common';
-import { App, HttpResponseCreated } from '../core';
+import { App, Controller, HttpMethod, HttpResponseCreated } from '../core';
 import { getMiddlewares } from './get-middlewares';
+
+function route(httpMethod: HttpMethod, path: string, handler): Controller<'main'> {
+  const controller = new Controller<'main'>();
+  controller.addRoute('main', httpMethod, path, handler);
+  return controller;
+}
 
 describe('getMiddlewares', () => {
 
