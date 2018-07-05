@@ -8,9 +8,9 @@ const expect = chai.expect;
 
 import { ValidationError } from '../../../common';
 import { AbstractUser } from '../../models';
-import { AbstractEmailAuthenticator } from './email-authenticator.service';
+import { EmailAuthenticator } from './email-authenticator.service';
 
-describe('AbstractEmailAuthenticator', () => {
+describe('EmailAuthenticator', () => {
 
   @Entity()
   class User extends AbstractUser {
@@ -27,11 +27,11 @@ describe('AbstractEmailAuthenticator', () => {
     username: string;
   }
 
-  class ConcreteClass extends AbstractEmailAuthenticator<User> {
+  class ConcreteClass extends EmailAuthenticator<User> {
     UserModel = User;
   }
 
-  let service: AbstractEmailAuthenticator<User>;
+  let service: EmailAuthenticator<User>;
 
   it('should instantiate.', () => {
     service = new ConcreteClass();

@@ -21,20 +21,20 @@ interface IAuthenticator<User> {
 
 A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`. The `validate` method is used to check the format of the credentials received by the server.
 
-- `AbstractEmailAuthenticator`
+- `EmailAuthenticator`
 
-`AbstractEmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
+`EmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
 Its constructor takes an user model.
 
 *Example*:
 ```typescript
-import { AbstractEmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator, Service } from '@foal/core';
 
 import { User } from './user.model.ts';
 
 @Service()
-export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
+export class AuthenticatorService extends EmailAuthenticator<User> {
   UserModel = User;
 }
 ```
@@ -243,12 +243,12 @@ export const AuthModule: Module = {
 
 ```typescript
 // auth.service.ts
-import { AbstractEmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator, Service } from '@foal/core';
 
 import { User } from '../../../models/user.model.ts';
 
 @Service()
-export class AuthenticatorService extends AbstractEmailAuthenticator<User> {
+export class AuthenticatorService extends EmailAuthenticator<User> {
   UserModel = User;
 }
 ```

@@ -30,11 +30,11 @@ const schema = {
  *
  * @export
  * @abstract
- * @class AbstractEmailAuthenticator
+ * @class EmailAuthenticator
  * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
  */
-export abstract class AbstractEmailAuthenticator<User extends EmailUser>
+export abstract class EmailAuthenticator<User extends EmailUser>
     implements IAuthenticator<User> {
 
   abstract UserModel: Class<User>;

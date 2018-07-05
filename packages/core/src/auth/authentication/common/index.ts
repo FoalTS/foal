@@ -1,2 +1,2 @@
-export { AbstractEmailAuthenticator } from './email-authenticator.service';
+export { EmailAuthenticator } from './email-authenticator.service';
 export { parsePassword } from './parse-password.parser';
