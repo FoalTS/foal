@@ -8,8 +8,7 @@ You can provide your own instance of Ajv.
 
 *Example*:
 ```typescript
-import { validate } from '@foal/ajv';
-import { route, Module } from '@foal/core';
+import { route, Module, validate } from '@foal/core';
 
 export const AppModule: Module = {
   controllers: [

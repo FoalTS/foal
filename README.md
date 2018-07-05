@@ -66,8 +66,8 @@ There are several ways to contribute.
 
 ## Packages
 
-- @foal/ajv
 - @foal/core
+- @foal/cli
 - @foal/ejs
 
 ## License

@@ -1,7 +1,7 @@
-import { Context, HttpResponseBadRequest, ServiceManager } from '@foal/core';
 import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
+import { Context, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { validate } from './validate.pre-hook';
 
 describe('validate', () => {

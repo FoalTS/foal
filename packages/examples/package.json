@@ -39,7 +39,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/ajv": "^0.5.0-alpha.2",
     "@foal/core": "^0.5.0-alpha.2",
     "@foal/ejs": "^0.5.0-alpha.2",
     "bootstrap": "^4.0.0",

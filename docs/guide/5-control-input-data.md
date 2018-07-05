@@ -15,7 +15,7 @@ In our case we would like to check that the input data has the correct shape and
 To check that the request body matches a proper schema, we are going to use the `validate` pre-hook which implements the [Ajv](https://github.com/epoberezkin/ajv) library.
 
 ```typescript
-import { validate } from '@foal/ajv';
+import { validate } from '@foal/core';
 
 ...
 const validateTask = validate({

@@ -1,5 +1,6 @@
-import { HttpResponseBadRequest, PreHook } from '@foal/core';
 import * as Ajv from 'ajv';
+
+import { HttpResponseBadRequest, PreHook } from '../../core';
 
 const defaultInstance = new Ajv();
 
