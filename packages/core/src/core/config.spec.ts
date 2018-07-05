@@ -23,7 +23,6 @@ describe('Config', () => {
     } else {
       process.env.NODE_ENV = initialEnv;
     }
-    console.log(process.env.NODE_ENV, typeof process.env.NODE_ENV);
   });
 
   describe('when get is called', () => {
