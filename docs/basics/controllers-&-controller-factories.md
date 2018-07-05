@@ -5,6 +5,12 @@
 
 Controller factories are functions that create controllers from services or functions. They should be the only way to create them.
 
+What should do controller?
+- handle HTTP stuff
+- validate input data
+- call the appropriate service methods
+- convert exceptions (ValidationErrors, etc) to HttpResponse or GraphQL errors.
+
 ## Common controller factories
 
 You'll find in [this page](../common/controller-factories) the common controller factories provided by FoalTS.
