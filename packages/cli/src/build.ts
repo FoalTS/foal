@@ -16,6 +16,11 @@ const commonConfig = {
         use: 'ts-loader',
       },
       {
+        exclude: /node_modules/,
+        test: /\.graphql$/,
+        use: 'raw-loader',
+      },
+      {
         test: /\.html$/,
         use: {
           loader: 'html-loader',

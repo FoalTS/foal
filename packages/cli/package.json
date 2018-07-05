@@ -50,6 +50,7 @@
     "inquirer": "^6.0.0",
     "lodash": "^4.17.10",
     "html-loader": "^0.5.5",
+    "raw-loader": "^0.5.1",
     "ts-loader": "^4.3.0",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.4",
