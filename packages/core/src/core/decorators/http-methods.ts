@@ -1,3 +1,4 @@
+// 3p
 import 'reflect-metadata';
 
 export function Get(path?: string) {

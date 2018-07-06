@@ -1,5 +1,6 @@
 // 3p
 import { expect } from 'chai';
+import 'reflect-metadata';
 
 // FoalTS
 import { Hook, HookFunction } from './hook';
