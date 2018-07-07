@@ -1,5 +1,5 @@
+import { Class } from '../class.interface';
 import { Controller } from '../controller';
-import { Class } from './class';
 import { PostHook, PreHook } from './hooks';
 
 export interface Module {

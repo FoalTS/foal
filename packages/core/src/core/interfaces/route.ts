@@ -1,6 +1,5 @@
-import { Controller } from '../controller';
+import { Class } from '../class.interface';
 import { HookFunction } from '../hooks';
-import { Class } from './class';
 import { Handler, PostHook, PreHook } from './hooks';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
