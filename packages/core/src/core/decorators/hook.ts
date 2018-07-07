@@ -10,14 +10,9 @@ export type HookFunction = (ctx: Context, services: ServiceManager, next: () => 
 
 export function Hook(hookFunction: HookFunction) {
   return (target: any, propertyKey?: string) => {
-    if (propertyKey) {
-      const hooks: HookFunction[] = Reflect.getMetadata('hooks', target, propertyKey) || [];
-      hooks.unshift(hookFunction);
-      Reflect.defineMetadata('hooks', hooks, target, propertyKey);
-    } else {
-      const hooks: HookFunction[] = Reflect.getMetadata('hooks', target) || [];
-      hooks.unshift(hookFunction);
-      Reflect.defineMetadata('hooks', hooks, target);
-    }
+    // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
+    const hooks: HookFunction[] = Reflect.getMetadata('hooks', target, propertyKey as string) || [];
+    hooks.unshift(hookFunction);
+    Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
   };
 }
