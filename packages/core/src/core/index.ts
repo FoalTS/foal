@@ -1,5 +1,4 @@
 export * from './class.interface';
-export * from './http-methods';
 export * from './http';
 export * from './hooks';
 export * from './routes';
