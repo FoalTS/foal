@@ -1,5 +1,6 @@
 import { Controller } from '../controller';
-import { HookFunction } from '../decorators';
+import { HookFunction } from '../hooks';
+import { Class } from './class';
 import { Handler, PostHook, PreHook } from './hooks';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
@@ -16,7 +17,7 @@ export interface RouteData {
   httpMethod: HttpMethod;
   path: string;
   hooks: HookFunction[];
-  controller: Controller<string>[];
+  controller: Class;
   propertyKey: string;
   // Todo: add `parameters`
 }

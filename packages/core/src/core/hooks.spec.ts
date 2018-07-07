@@ -1,10 +1,40 @@
+// 3p
 import { expect } from 'chai';
+import 'reflect-metadata';
 
-import { Context } from '../contexts';
-import { HttpResponseOK } from '../http';
-import { PreHook } from '../interfaces';
-import { ServiceManager } from '../service-manager';
-import { combinePreHooks } from './combine-pre-hooks';
+// FoalTS
+import { Context } from './contexts';
+import { combinePreHooks, Hook, HookFunction } from './hooks';
+import { HttpResponseOK } from './http';
+import { PreHook } from './interfaces';
+import { ServiceManager } from './service-manager';
+
+describe('Hook', () => {
+
+  const hook1: HookFunction = () => {};
+  const hook2: HookFunction = () => {};
+
+  it('should add the hook to the metadata hooks on the method class.', () => {
+    class Foobar {
+      @Hook(hook1)
+      @Hook(hook2)
+      barfoo() {}
+    }
+
+    const actual = Reflect.getMetadata('hooks', Foobar.prototype, 'barfoo');
+    expect(actual).to.deep.equal([ hook1, hook2 ]);
+  });
+
+  it('should add the hook to the metadata hooks on the class.', () => {
+    @Hook(hook1)
+    @Hook(hook2)
+    class Foobar {}
+
+    const actual = Reflect.getMetadata('hooks', Foobar);
+    expect(actual).to.deep.equal([ hook1, hook2 ]);
+  });
+
+});
 
 describe('combinePreHooks', () => {
 

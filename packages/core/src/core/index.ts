@@ -1,7 +1,6 @@
 export * from './decorators';
 export * from './http';
 export * from './interfaces';
-export * from './utils';
 export { App } from './app';
 export { Config } from './config';
 export { Context, PostContext } from './contexts';

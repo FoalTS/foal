@@ -2,8 +2,10 @@
 import 'reflect-metadata';
 
 // FoalTS
-import { Context } from '../contexts';
-import { ServiceManager } from '../service-manager';
+import { Context } from './contexts';
+import { isHttpResponse } from './http';
+import { PreHook } from './interfaces';
+import { ServiceManager } from './service-manager';
 
 // not void. HttpResponse or HttpResponse | void (same with promises)
 export type HookFunction = (ctx: Context, services: ServiceManager, next: () => Promise<void>) => void;
@@ -14,5 +16,16 @@ export function Hook(hookFunction: HookFunction) {
     const hooks: HookFunction[] = Reflect.getMetadata('hooks', target, propertyKey as string) || [];
     hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
+  };
+}
+
+export function combinePreHooks(preHooks: PreHook[]): PreHook {
+  return async (ctx: Context, services: ServiceManager) => {
+    for (const preHook of preHooks) {
+      const response = await preHook(ctx, services);
+      if (response && isHttpResponse(response)) {
+        return response;
+      }
+    }
   };
 }
