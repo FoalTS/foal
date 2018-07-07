@@ -1,5 +1,6 @@
+import { Class } from './class.interface';
 import { Controller } from './controller';
-import { Class, Module } from './interfaces';
+import { Module } from './interfaces';
 import { ServiceManager } from './service-manager';
 
 export class App {
