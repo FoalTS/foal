@@ -10,9 +10,3 @@ export interface Module {
   postHooks?: PostHook[];
   preHooks?: PreHook[];
 }
-
-export interface IModule {
-  controllers?: Controller<string>[];
-  subModules?: IModule[];
-  entities?: Class[];
-}

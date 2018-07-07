@@ -3,12 +3,12 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
-import { Controller } from './class';
+import { Module } from './modules';
 
-describe('Controller', () => {
+describe('Module', () => {
 
   it('should define the metadata path=${path} on the class.', () => {
-    @Controller('/foo')
+    @Module('/foo')
     class Foobar {}
 
     const actual = Reflect.getMetadata('path', Foobar);
