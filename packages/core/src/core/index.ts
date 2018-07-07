@@ -1,4 +1,4 @@
-export * from './decorators';
+export * from './http-methods';
 export * from './http';
 export * from './interfaces';
 export { App } from './app';
