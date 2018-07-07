@@ -5,7 +5,7 @@ import {
 import {
   HttpMethod,
   Route
-} from './interfaces';
+} from './routes';
 
 export class Controller<RouteName extends string> {
   private routes: Map<RouteName, Route> = new Map();

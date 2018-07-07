@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { Controller } from './controller';
 import { HttpResponseOK } from './http';
-import { Route } from './interfaces';
+import { Route } from './routes';
 
 describe('Controller', () => {
 
