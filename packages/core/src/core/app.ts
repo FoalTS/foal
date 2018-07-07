@@ -1,7 +1,16 @@
 import { Class } from './class.interface';
 import { Controller } from './controller';
-import { Module } from './interfaces';
+import { PostHook, PreHook } from './hooks';
 import { ServiceManager } from './service-manager';
+
+interface Module {
+  controllers?: Controller<string>[];
+  modules?: Module[];
+  models?: Class[];
+  path?: string;
+  postHooks?: PostHook[];
+  preHooks?: PreHook[];
+}
 
 export class App {
   readonly services: ServiceManager;
