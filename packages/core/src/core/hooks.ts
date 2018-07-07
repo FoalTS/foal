@@ -2,12 +2,15 @@
 import 'reflect-metadata';
 
 // FoalTS
-import { Context, isHttpResponse } from './http';
-import { PreHook } from './interfaces';
+import { Context, HttpResponse, isHttpResponse, PostContext } from './http';
 import { ServiceManager } from './service-manager';
 
 // not void. HttpResponse or HttpResponse | void (same with promises)
 export type HookFunction = (ctx: Context, services: ServiceManager, next: () => Promise<void>) => void;
+
+// TODO: delete this.
+export type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
+export type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
 
 export function Hook(hookFunction: HookFunction) {
   return (target: any, propertyKey?: string) => {
