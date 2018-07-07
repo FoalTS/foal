@@ -159,7 +159,7 @@ export const MyModule: Module = {
 
 ## Combination
 
-You can combine several hooks into one with `combinePreHooks` and `combinePostHooks`.
+You can combine several hooks into one with `combinePreHooks`.
 
 ```typescript
 import { combinePreHooks } from '@foal/core';
@@ -200,10 +200,6 @@ describe('preHook', () => {
 });
 
 ```
-
-## `combinePostHooks(postHooks: PostHook[]): PostHook`
-
-Merges several post hooks into one.
 
 ## `combinePreHooks(ppreHooks: PreHook[]): PreHook`
 
