@@ -3,9 +3,8 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
-import { Context } from './contexts';
 import { combinePreHooks, Hook, HookFunction } from './hooks';
-import { HttpResponseOK } from './http';
+import { Context, HttpResponseOK } from './http';
 import { PreHook } from './interfaces';
 import { ServiceManager } from './service-manager';
 

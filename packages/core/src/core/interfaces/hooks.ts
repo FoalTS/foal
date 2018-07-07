@@ -1,5 +1,4 @@
-import { Context, PostContext } from '../contexts';
-import { HttpResponse } from '../http';
+import { Context, HttpResponse , PostContext } from '../http';
 import { ServiceManager } from '../service-manager';
 
 export type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;

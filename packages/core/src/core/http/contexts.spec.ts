@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { Context, PostContext } from './contexts';
-import { HttpRequest } from './http';
+import { HttpRequest } from './http-request';
 
 describe('Context', () => {
 
