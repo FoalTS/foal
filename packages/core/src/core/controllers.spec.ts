@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
-import { Controller } from './class';
+import { Controller } from './controllers';
 
 describe('Controller', () => {
 
