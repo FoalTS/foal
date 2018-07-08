@@ -15,7 +15,7 @@ export type PostHook = (ctx: PostContext, services: ServiceManager) => void | Pr
 export function Hook(hookFunction: HookFunction) {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
-    const hooks: HookFunction[] = Reflect.getMetadata('hooks', target, propertyKey as string) || [];
+    const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
     hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
   };

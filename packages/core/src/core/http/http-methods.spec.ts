@@ -13,7 +13,7 @@ describe('Get', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('GET');
   });
 
@@ -23,7 +23,7 @@ describe('Get', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('path', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('/foo');
   });
 
@@ -37,7 +37,7 @@ describe('Post', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('POST');
   });
 
@@ -47,7 +47,7 @@ describe('Post', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('path', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('/foo');
   });
 
@@ -61,7 +61,7 @@ describe('Put', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('PUT');
   });
 
@@ -71,7 +71,7 @@ describe('Put', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('path', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('/foo');
   });
 
@@ -85,7 +85,7 @@ describe('Patch', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('PATCH');
   });
 
@@ -95,7 +95,7 @@ describe('Patch', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('path', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('/foo');
   });
 
@@ -109,7 +109,7 @@ describe('Delete', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('DELETE');
   });
 
@@ -119,7 +119,7 @@ describe('Delete', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('path', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
     expect(actual).to.equal('/foo');
   });
 

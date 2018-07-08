@@ -11,7 +11,7 @@ describe('Controller', () => {
     @Controller('/foo')
     class Foobar {}
 
-    const actual = Reflect.getMetadata('path', Foobar);
+    const actual = Reflect.getOwnMetadata('path', Foobar);
     expect(actual).to.equal('/foo');
   });
 

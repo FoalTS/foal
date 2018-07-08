@@ -19,7 +19,7 @@ describe('Hook', () => {
       barfoo() {}
     }
 
-    const actual = Reflect.getMetadata('hooks', Foobar.prototype, 'barfoo');
+    const actual = Reflect.getOwnMetadata('hooks', Foobar.prototype, 'barfoo');
     expect(actual).to.deep.equal([ hook1, hook2 ]);
   });
 
@@ -28,7 +28,7 @@ describe('Hook', () => {
     @Hook(hook2)
     class Foobar {}
 
-    const actual = Reflect.getMetadata('hooks', Foobar);
+    const actual = Reflect.getOwnMetadata('hooks', Foobar);
     expect(actual).to.deep.equal([ hook1, hook2 ]);
   });
 
