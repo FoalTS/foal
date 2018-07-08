@@ -1,6 +1,8 @@
 // 3p
 import 'reflect-metadata';
 
+export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+
 export function Get(path?: string) {
   return (target: any, propertyKey: string) => {
     Reflect.defineMetadata('httpMethod', 'GET', target, propertyKey);

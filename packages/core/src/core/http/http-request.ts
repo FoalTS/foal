@@ -1,4 +1,4 @@
-import { HttpMethod } from '../routes';
+import { HttpMethod } from './http-methods';
 
 export class HttpRequest {
   params: { [key: string]: any } = {};

@@ -1,7 +1,5 @@
-import { Class } from '../class.interface';
 import { HookFunction, PostHook, PreHook } from '../hooks';
-
-export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+import { HttpMethod } from '../http';
 
 export interface Route {
   httpMethod: HttpMethod;

@@ -2,8 +2,8 @@ import {
   PostHook,
   PreHook,
 } from './hooks';
+import { HttpMethod } from './http';
 import {
-  HttpMethod,
   Route
 } from './routes';
 
