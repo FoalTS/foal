@@ -11,6 +11,6 @@ export function getMetadata(metadataKey: string, target: Class, propertyKey?: st
   return Reflect.getMetadata(metadataKey, target.prototype, propertyKey);
 }
 
-export function join(...paths: string[]): string {
+export function join(...paths: (string|undefined)[]): string {
   return paths.join('').replace(/(\/)+/g, '/');
 }

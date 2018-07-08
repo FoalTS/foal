@@ -35,4 +35,10 @@ describe('join', () => {
     expect(actual).to.equal('/foobar/foo/bar/');
   });
 
+  it('should ignore undefined values', () => {
+    const actual = join('a', undefined, 'b', undefined, 'c');
+
+    expect(actual).to.equal('abc');
+  });
+
 });
