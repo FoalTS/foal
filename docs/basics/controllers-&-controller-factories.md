@@ -2,6 +2,7 @@
 
 // Add a little get-started (some code or a cli command)
 // Controllers are the front-door of your app.
+// Explain inheritance (restricted)
 
 Controller factories are functions that create controllers from services or functions. They should be the only way to create them.
 

@@ -1,5 +1,5 @@
 import { Class } from '../class.interface';
-import { Handler, HookFunction, PostHook, PreHook } from '../hooks';
+import { HookFunction, PostHook, PreHook } from '../hooks';
 
 export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -8,7 +8,7 @@ export interface Route {
   path: string;
   preHooks: PreHook[];
   postHooks: PostHook[];
-  handler: Handler;
+  handler: (...args: any[]) => {};
 }
 
 export interface RouteData {
