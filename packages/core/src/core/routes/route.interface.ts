@@ -15,7 +15,7 @@ export interface RouteData {
   httpMethod: HttpMethod;
   path: string;
   hooks: HookFunction[];
-  controller: Class;
+  controller: any;
   propertyKey: string;
   // Todo: add `parameters`
 }
