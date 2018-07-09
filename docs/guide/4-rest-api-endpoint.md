@@ -2,7 +2,7 @@
 
 Alright, the next step is to take care of the requests that list, create and delete flights. You could directly use *handlers* for that but this would be tedious work. You would have to add the different routes, call the methods of the model, create the appropriate `HttpResponse` dependending on the status or handle errors when the object is not found.
 
-That's why FoalTS provides a handy function `rest` to quickly build REST endpoints. This kind of function is called a *controller factory*. You have already met one at the beginning of this tutorial. `route` is the simpliest *controller factory* that you can find in the FoalTS. It takes a *handler* as parameter and returns a controller. As for the `rest` factory, it takes any *service* that implements the `IModelService` interface and uses it to create the API.
+That's why FoalTS provides a handy function `rest` to quickly build REST endpoints. This kind of function is called a *controller factory*. The `rest` factory takes any *service* that implements the `IModelService` interface and uses it to create the API.
 
 In FoalTS, a *service* can be any class that serves a restricted and well-defined purpose. Services behave independently of the http process and are instantiated as singleton by the framework. They are usually the best place to put the business logic.
 

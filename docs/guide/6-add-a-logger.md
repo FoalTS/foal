@@ -52,16 +52,24 @@ Create a new flight in the browser and then take a look at the terminal from whe
 
 By writting `private logger: LoggerService` we injected the logger service in the flight one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
 
-You can do the same with your handler:
+You can do the same with your controller:
 
 ```typescript
-import { Handler, HttpResponseOK } from '@foal/core';
+import { Controller, Get, HttpResponseOK } from '@foal/core';
 
 import { LoggerService } from '../services/logger.service';
 
-export const getAirport: Handler = (ctx, services) => {
-  services.get(LoggerService).log('info', 'Getting the aiport name...');
-  // Returns { name: 'JFK' } with status 200
-  return new HttpResponseOK({ name: 'JFK' });
-};
+@Controller()
+export class AirportController {
+
+  constructor(private logger: LoggerService) {}
+
+  @Get()
+  get(ctx, services) {
+    this.logger.log('info', 'Getting the aiport name...');
+    // Returns { name: 'JFK' } with status 200
+    return new HttpResponseOK({ name: 'JFK' });
+  }
+}
+
 ```

@@ -43,7 +43,7 @@ function myCustomControllerFactory(path: string, Foobar: Class<FoobarService>): 
 
 ### The `HttpReponse`s
 
-You may return an `HttpResponse` in a pre-hook or in a handler. This will stop the execution of the pre-hooks and the handler and the returned value will be assigned to `ctx.response`. It may be read or modified in a post-hook. This response is then used as the request response.
+You may return an `HttpResponse` in a pre-hook or in a controller method. This will stop the execution of the pre-hooks and the controller method and the returned value will be assigned to `ctx.response`. It may be read or modified in a post-hook. This response is then used as the request response.
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)

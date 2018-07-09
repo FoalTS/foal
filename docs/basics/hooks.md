@@ -11,10 +11,10 @@ Pre-hooks are usually used to restrict access or to check and sanitize data rece
 > By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.
 
 They takes two parameters:
-- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `response` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or route handler returned one.
+- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `response` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or controller method returned one.
 - The service manager that lets access other services within the hook.
 
-If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing of the request is stopped for the pre-hooks and route handler and the server responds with the `statusCode` and optional `content` of the returned object.
+If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing of the request is stopped for the pre-hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
 
 > *Note*: A pre-hook (or post-hook) may also be registered within the `preHooks` (or `postHooks`) property of a module. If so it applies to all the controllers of the module.
 
