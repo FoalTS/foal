@@ -143,7 +143,6 @@ describe('makeControllerRoutes', () => {
 
     const routes = makeControllerRoutes('', [], FoobarController2, new ServiceManager());
 
-    console.log(routes);
     expect(routes).to.have.lengthOf(2);
 
     // barfoo
