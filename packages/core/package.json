@@ -7,6 +7,8 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "dev:test:auth": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/auth/**/*.spec.ts\"",
+    "dev:test:common": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/common/**/*.spec.ts\"",
     "dev:test:core": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/core/**/*.spec.ts\"",
     "dev:test:express": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/express/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
