@@ -1,6 +1,6 @@
 import { ModelService, Service } from '@foal/core';
 
-import { Flight } from '../models';
+import { Flight } from '../entities';
 
 @Service()
 export class FlightService extends ModelService<Flight> {

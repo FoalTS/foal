@@ -8,8 +8,7 @@ import {
 } from '@foal/core';
 
 import { getAirport } from './controllers';
-import { Flight } from './models';
-import { User } from './models/user.model';
+import { Flight, User } from './entities';
 import { AuthModule } from './modules/authentication';
 import { FlightService, UserService } from './services';
 
@@ -28,7 +27,7 @@ export const AppModule: Module = {
     // route('GET', '/airport', getAirport),
     rest('/flights', FlightService),
   ],
-  models: [
+  entities: [
     Flight, User
   ],
   modules: [
