@@ -12,17 +12,17 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-import { ModelService } from './model.service';
+import { EntitySerializer } from './entity-serializer.service';
 import { User } from './user.entity.spec';
 
 function testSuite(title: string, connectionName: string) {
 
   describe(`with ${title}`, () => {
 
-    let service: ModelService<User>;
+    let service: EntitySerializer<User>;
 
     before(() => {
-      class UserService extends ModelService<User> {
+      class UserService extends EntitySerializer<User> {
         Model = User;
         connectionName = connectionName;
       }
@@ -293,7 +293,7 @@ function testSuite(title: string, connectionName: string) {
 
 }
 
-xdescribe('ModelService', () => {
+xdescribe('EntitySerializer', () => {
 
   before(() => createConnections());
 

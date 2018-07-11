@@ -29,12 +29,12 @@ Now go back to `flight.service.ts`, import the `LoggerService`, add `private log
 ```typescript
 import { LoggerService } from './logger.service';
 
-import { ModelService, Service } from '@foal/core';
+import { EntitySerializer, Service } from '@foal/core';
 
 import { Flight } from '../models/flight.model';
 
 @Service()
-export class FlightService extends ModelService<Flight> {
+export class FlightService extends EntitySerializer<Flight> {
   Model = Flight;
 
   constructor(private logger: LoggerService) {}

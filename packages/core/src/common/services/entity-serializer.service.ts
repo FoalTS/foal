@@ -4,7 +4,7 @@ import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from './serializer.interface';
 
-export abstract class ModelService<Model> implements ISerializer {
+export abstract class EntitySerializer<Model> implements ISerializer {
 
   abstract readonly Model: Class<Model>;
   readonly connectionName: string = 'default';
