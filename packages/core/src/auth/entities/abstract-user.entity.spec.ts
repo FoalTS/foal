@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { BaseEntity } from 'typeorm';
 
-import { AbstractUser } from './abstract-user';
+import { AbstractUser } from './abstract-user.entity';
 
 describe('AbstractUser', () => {
 
