@@ -6,7 +6,7 @@ import { Context, HttpResponse, isHttpResponse, PostContext } from './http';
 import { ServiceManager } from './service-manager';
 
 // not void. HttpResponse or HttpResponse | void (same with promises)
-export type HookFunction = (ctx: Context, services: ServiceManager, next: () => Promise<void>) => void;
+export type HookFunction = (ctx: Context, services: ServiceManager) => any;
 
 // TODO: delete this.
 export type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
