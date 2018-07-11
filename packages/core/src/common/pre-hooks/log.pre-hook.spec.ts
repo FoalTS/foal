@@ -10,7 +10,7 @@ describe('log', () => {
     const logFn = msg => called = true;
     const hook = log('foo', logFn);
 
-    const ctx = new Context();
+    const ctx = new Context({});
     hook(ctx, new ServiceManager());
 
     expect(called).to.equal(true);

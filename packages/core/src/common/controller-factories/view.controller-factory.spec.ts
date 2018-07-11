@@ -43,7 +43,7 @@ describe('view', () => {
       const expected = `Hello ${name}! How are you?`;
 
       const controller = view('/foo', template2, { name });
-      expect(controller.getRoute('main').handler(new Context(), new ServiceManager()))
+      expect(controller.getRoute('main').handler(new Context({}), new ServiceManager()))
         .to.be.an.instanceOf(HttpResponseOK)
         .with.property('content', expected);
     });
@@ -51,7 +51,7 @@ describe('view', () => {
     it('should render the ejs template (HttpResponseOK) with the given locals (function).', () => {
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
-      const ctx = new Context();
+      const ctx = new Context({});
       ctx.state = { name };
 
       const controller = view('/foo', template2, ctx => ctx.state);

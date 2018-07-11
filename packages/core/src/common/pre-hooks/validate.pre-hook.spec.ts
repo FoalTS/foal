@@ -15,7 +15,7 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = new Context();
+    const ctx = new Context({});
     ctx.request.body = {
       foo: 3
     };
@@ -35,7 +35,7 @@ describe('validate', () => {
     const hook = validate(schema);
 
     function context(body) {
-      const ctx = new Context();
+      const ctx = new Context({});
       ctx.request.body = body;
       return ctx;
     }
@@ -57,7 +57,7 @@ describe('validate', () => {
       type: 'object',
     };
     const hook = validate(schema);
-    const ctx = new Context();
+    const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseBadRequest);
@@ -72,7 +72,7 @@ describe('validate', () => {
       },
       type: 'object',
     };
-    const ctx = new Context();
+    const ctx = new Context({});
     ctx.request.body = {
       foo: 3,
     };

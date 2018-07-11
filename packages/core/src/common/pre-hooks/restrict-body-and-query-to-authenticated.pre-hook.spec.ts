@@ -10,7 +10,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
 
   it('should throw an Error if no user is authenticated.', () => {
     const preHook = restrictBodyAndQueryToAuthenticated();
-    const ctx = new Context();
+    const ctx = new Context({});
 
     expect(() => preHook(ctx, new ServiceManager()))
       .to.throw('No user is authenticated.');
@@ -18,7 +18,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
 
   it('should add the suitable userId to ctx.request.body if it is an object.', () => {
     const preHook = restrictBodyAndQueryToAuthenticated();
-    const ctx = new Context();
+    const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;
     ctx.request.body = { foo: 'bar' };
@@ -30,7 +30,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
 
   it('should leave ctx.body undefined is it is undefined.', () => {
     const preHook = restrictBodyAndQueryToAuthenticated();
-    const ctx = new Context();
+    const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;
 
@@ -42,7 +42,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
   it('should add the suitable userId to ctx.state.query whether this object already '
       + 'exists or not.', () => {
     const preHook = restrictBodyAndQueryToAuthenticated();
-    const ctx = new Context();
+    const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;
 

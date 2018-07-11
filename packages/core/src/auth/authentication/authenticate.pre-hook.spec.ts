@@ -60,7 +60,7 @@ describe('authenticate', () => {
 
   it('should throw an Error if there is no session.', () => {
     const preHook = authenticate(User);
-    const ctx = new Context();
+    const ctx = new Context({});
 
     return expect(preHook(ctx, new ServiceManager()))
       .to.be.rejectedWith('authenticate pre-hook requires session management.');
@@ -68,20 +68,20 @@ describe('authenticate', () => {
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
     const preHook = authenticate(User);
-    const ctx = new Context();
+    const ctx = new Context({});
 
-    ctx.session = {};
+    ctx.request.session = {};
     await preHook(ctx, new ServiceManager());
 
-    ctx.session.authentication = {};
+    ctx.request.session.authentication = {};
     await preHook(ctx, new ServiceManager());
   });
 
   it('should set ctx.user to undefined if no user is found in the database matching the given id.', async () => {
     const hook = authenticate(User);
-    const ctx = new Context();
+    const ctx = new Context({});
 
-    ctx.session = {
+    ctx.request.session = {
       authentication: {
         userId: 2
       }
@@ -93,9 +93,9 @@ describe('authenticate', () => {
 
   it('should add a user property if a user matches the given id in the database.', async () => {
     const hook = authenticate(User);
-    const ctx = new Context();
+    const ctx = new Context({});
 
-    ctx.session = {
+    ctx.request.session = {
       authentication: {
         userId: 1
       }
