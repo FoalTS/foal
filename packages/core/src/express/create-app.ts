@@ -8,7 +8,9 @@ import * as logger from 'morgan';
 
 import { initDB } from '../common';
 import { App, Config, IModule } from '../core';
-import { getMiddlewares } from './get-middlewares';
+import { getAppRouter } from './get-app-router';
+import { handleErrors } from './handle-errors';
+import { notFound } from './not-found';
 
 export function createApp(rootModuleClass: IModule) {
   const app = new App(rootModuleClass);
@@ -58,12 +60,14 @@ export function createApp(rootModuleClass: IModule) {
     }
   });
 
-  expressApp.use(getMiddlewares(app, { debug: Config.get('settings', 'debug', false) as boolean }, [
+  expressApp.use(getAppRouter(app, [
     {
       req: 'csrfToken',
       state: 'csrfToken'
     }
   ]));
+  expressApp.use(notFound());
+  expressApp.use(handleErrors(Config.get('settings', 'debug', false) as boolean, console.error));
 
   return expressApp;
 }
