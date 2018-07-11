@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import * as bodyParser from 'body-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
@@ -8,11 +7,11 @@ import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
 import { initDB } from '../common';
-import { App, Config, Module } from '../core';
+import { App, Config, IModule } from '../core';
 import { getMiddlewares } from './get-middlewares';
 
-export function createApp(rootModule: Module) {
-  const app = new App(rootModule);
+export function createApp(rootModuleClass: IModule) {
+  const app = new App(rootModuleClass);
   const preHook = initDB(app.models);
   app.controllers.forEach(controller => {
     controller.addPreHooksAtTheTop([ preHook ]);
@@ -23,8 +22,7 @@ export function createApp(rootModule: Module) {
   expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
   expressApp.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
   expressApp.use(helmet());
-  expressApp.use(bodyParser.json());
-  expressApp.use(bodyParser.urlencoded({ extended: false }));
+  expressApp.use(express.json());
   expressApp.use(session({
     cookie: {
       domain: Config.get('settings', 'sessionCookieDomain'),

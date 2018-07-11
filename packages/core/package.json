@@ -43,7 +43,6 @@
   ],
   "dependencies": {
     "ajv": "^6.5.0",
-    "body-parser": "^1.18.2",
     "csurf": "^1.9.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
