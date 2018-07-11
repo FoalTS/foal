@@ -2,9 +2,9 @@ import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
 import { Context, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { validate } from './validate.pre-hook';
+import { Validate } from './validate.pre-hook';
 
-describe('validate', () => {
+describe('Validate', () => {
 
   it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
       + ' by ajv for the given schema.', () => {
@@ -14,7 +14,7 @@ describe('validate', () => {
       },
       type: 'object',
     };
-    const hook = validate(schema);
+    const hook = Validate(schema);
     const ctx = new Context({});
     ctx.request.body = {
       foo: 3
@@ -32,7 +32,7 @@ describe('validate', () => {
       },
       type: 'object',
     };
-    const hook = validate(schema);
+    const hook = Validate(schema);
 
     function context(body) {
       const ctx = new Context({});
@@ -56,7 +56,7 @@ describe('validate', () => {
       },
       type: 'object',
     };
-    const hook = validate(schema);
+    const hook = Validate(schema);
     const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
@@ -77,11 +77,11 @@ describe('validate', () => {
       foo: 3,
     };
 
-    let hook = validate(schema);
+    let hook = Validate(schema);
     hook(ctx, new ServiceManager());
     expect(ctx.request.body.bar).to.equal(undefined);
 
-    hook = validate(schema, new Ajv({ useDefaults: true }));
+    hook = Validate(schema, new Ajv({ useDefaults: true }));
     hook(ctx, new ServiceManager());
     expect(ctx.request.body.bar).to.equal(4);
   });

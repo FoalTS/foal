@@ -1,6 +1,6 @@
 # Validation
 // Add a little get-started (some code or a cli command)
-## `validate(schema: object, ajv = defaultInstance)`
+## `Validate(schema: object, ajv = defaultInstance)`
 
 `validate` is a pre-hook to control the data received by the server. [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator, validates the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
 
@@ -17,7 +17,7 @@ export const AppModule: Module = {
       // are defined thanks to the below pre-hook.
       console.log(ctx.request.body.firstName, ctx.request.body.lastName);
     })
-      .withPreHook(validate({
+      .withPreHook(Validate({
         additionalProperties: false,
         properties: {
           firstName: { type: 'string' },

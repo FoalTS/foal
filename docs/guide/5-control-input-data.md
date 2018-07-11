@@ -18,7 +18,7 @@ To check that the request body matches a proper schema, we are going to use the 
 import { validate } from '@foal/core';
 
 ...
-const validateTask = validate({
+const validateTask = Validate({
   additionnalProperties: false,
   properties: {
     destination: { type: 'string' },
@@ -47,7 +47,7 @@ import { FlightService } from './services/flight.service';
 
 // Usually the pre-hooks would be defined in a separate file in the pre-hooks folder.
 
-const validateTask = validate({
+const ValidateTask = Validate({
   additionnalProperties: false,
   properties: {
     destination: { type: 'string' },
@@ -63,7 +63,7 @@ export const AppModule: Module = {
     route('GET', '/airport', getAirport),
     rest('/flights', FlightService)
       .withPreHook(
-        [ validateTask, preventXSS ],
+        [ ValidateTask, preventXSS ],
         'POST /', 'PATCH /:id', 'PUT /:id'
       )
   ],
