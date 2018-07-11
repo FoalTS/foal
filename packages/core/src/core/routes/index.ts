@@ -1,2 +1,2 @@
 export * from './route.interface';
-export { makeRoutes } from './make-routes';
+export { makeModuleRoutes } from './make-module-routes';
