@@ -43,8 +43,8 @@ describe('logout', () => {
       it('should delete ctx.session.authentication if it exists.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {
+        const ctx = new Context({});
+        ctx.request.session = {
           authentication: {
             userId: 1
           }
@@ -52,14 +52,14 @@ describe('logout', () => {
 
         await route.handler(ctx, new ServiceManager());
 
-        expect(ctx.session).to.deep.equal({});
+        expect(ctx.request.session).to.deep.equal({});
       });
 
       it('should not throw an error if ctx.session.authentication is undefined.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {};
+        const ctx = new Context({});
+        ctx.request.session = {};
 
         await route.handler(ctx, new ServiceManager());
       });
@@ -67,8 +67,8 @@ describe('logout', () => {
       it('should return an HttpResponseNoContent if options.redirect is undefined.', async () => {
         const route = logout('/').getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {};
+        const ctx = new Context({});
+        ctx.request.session = {};
 
         const response = await route.handler(ctx, new ServiceManager());
 
@@ -80,8 +80,8 @@ describe('logout', () => {
           redirect: '/foo'
         }).getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {};
+        const ctx = new Context({});
+        ctx.request.session = {};
 
         const response = await route.handler(ctx, new ServiceManager());
 

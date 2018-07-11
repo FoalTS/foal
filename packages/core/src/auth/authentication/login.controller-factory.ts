@@ -33,8 +33,8 @@ export function login(path: string, AuthenticatorClass: Class<IAuthenticator<any
       return new HttpResponseUnauthorized({ message: 'Bad credentials.' });
     }
 
-    ctx.session.authentication = ctx.session.authentication || {};
-    ctx.session.authentication.userId = user.id || user._id;
+    ctx.request.session.authentication = ctx.request.session.authentication || {};
+    ctx.request.session.authentication.userId = user.id || user._id;
 
     if (options.successRedirect) {
       return new HttpResponseRedirect(options.successRedirect);

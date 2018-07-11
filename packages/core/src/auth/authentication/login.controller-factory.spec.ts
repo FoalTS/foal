@@ -58,8 +58,8 @@ describe('login', () => {
           + 'to call Authenticator.authenticate.', async () => {
         const route = login('/', Authenticator).getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {};
+        const ctx = new Context({});
+        ctx.request.session = {};
         ctx.request.body = { username: 'John' };
 
         const services = new ServiceManager();
@@ -79,8 +79,8 @@ describe('login', () => {
           + 'a ValidationError.', async () => {
         const route = login('/', Authenticator).getRoute('main');
 
-        const ctx = new Context();
-        ctx.session = {};
+        const ctx = new Context({});
+        ctx.request.session = {};
         ctx.request.body = {};
 
         const response = await route.handler(ctx, new ServiceManager());
@@ -96,8 +96,8 @@ describe('login', () => {
         it('should return an HttpResponseNoContent if options.successRedirect is undefined.', async () => {
           const route = login('/', Authenticator).getRoute('main');
 
-          const ctx = new Context();
-          ctx.session = {};
+          const ctx = new Context({});
+          ctx.request.session = {};
           ctx.request.body = { username: 'John' };
 
           const response = await route.handler(ctx, new ServiceManager());
@@ -110,8 +110,8 @@ describe('login', () => {
             successRedirect: '/foo'
           }).getRoute('main');
 
-          const ctx = new Context();
-          ctx.session = {};
+          const ctx = new Context({});
+          ctx.request.session = {};
           ctx.request.body = { username: 'John' };
 
           const response = await route.handler(ctx, new ServiceManager());
@@ -123,21 +123,21 @@ describe('login', () => {
         it('should create or update ctx.session.authentication to include the userId.', async () => {
           const route = login('/', Authenticator).getRoute('main');
 
-          const ctx = new Context();
-          ctx.session = {};
+          const ctx = new Context({});
+          ctx.request.session = {};
           ctx.request.body = { username: 'John' };
 
           await route.handler(ctx, new ServiceManager());
 
-          expect(ctx.session.authentication).to.deep.equal({
+          expect(ctx.request.session.authentication).to.deep.equal({
             userId: 1
           });
 
-          ctx.session.authentication.foo = 'bar';
+          ctx.request.session.authentication.foo = 'bar';
 
           await route.handler(ctx, new ServiceManager());
 
-          expect(ctx.session.authentication).to.deep.equal({
+          expect(ctx.request.session.authentication).to.deep.equal({
             foo: 'bar',
             userId: 1
           });
@@ -150,8 +150,8 @@ describe('login', () => {
         it('should return an HttpResponseUnauthorized if options.failureRedirect is undefined.', async () => {
           const route = login('/', Authenticator).getRoute('main');
 
-          const ctx = new Context();
-          ctx.session = {};
+          const ctx = new Context({});
+          ctx.request.session = {};
           ctx.request.body = { username: 'Jack' };
 
           const response = await route.handler(ctx, new ServiceManager());
@@ -167,8 +167,8 @@ describe('login', () => {
             failureRedirect: '/foo'
           }).getRoute('main');
 
-          const ctx = new Context();
-          ctx.session = {};
+          const ctx = new Context({});
+          ctx.request.session = {};
           ctx.request.body = { username: 'Jack' };
 
           const response = await route.handler(ctx, new ServiceManager());
