@@ -101,7 +101,7 @@ function httpMethodTest(httpMethod: HttpMethod) {
   });
 }
 
-describe('getAppRouter', () => {
+xdescribe('getAppRouter', () => {
 
   // The below items are more end-to-end tests than unit ones.
 
