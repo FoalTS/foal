@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Context, PostContext } from './contexts';
+import { Context } from './contexts';
 
 describe('Context', () => {
 
@@ -11,15 +11,6 @@ describe('Context', () => {
     expect(actual.response).to.equal(undefined);
     expect(actual.state).to.deep.equal({});
     expect(actual.user).to.equal(undefined);
-  });
-
-});
-
-describe('PostContext', () => {
-
-  it('should inherit from Context.', () => {
-    const ctx = new PostContext({});
-    expect(ctx).to.be.an.instanceOf(Context);
   });
 
 });

@@ -8,5 +8,3 @@ export class Context<User extends AbstractUser = AbstractUser> {
 
   constructor(public request) {}
 }
-
-export class PostContext extends Context {}
