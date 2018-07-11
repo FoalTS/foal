@@ -7,7 +7,7 @@ import {
   PreHook,
   ServiceManager,
 } from '../../core';
-import { AbstractUser } from '../models';
+import { AbstractUser } from '../entities';
 import { LoginRequired } from './login-required.pre-hook';
 
 describe('LoginRequired', () => {

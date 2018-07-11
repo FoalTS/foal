@@ -1,4 +1,4 @@
-import { AbstractUser } from '../models';
+import { AbstractUser } from '../entities';
 
 export interface IAuthenticator<User extends AbstractUser> {
   validate(credentials: any): any;

@@ -8,7 +8,7 @@ import {
   PreHook,
   ServiceManager,
 } from '../../core';
-import { AbstractUser } from '../models';
+import { AbstractUser } from '../entities';
 import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
 
 describe('restrictAccessToAdmin', () => {

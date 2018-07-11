@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 import { ValidationError } from '../../../common';
-import { AbstractUser } from '../../models';
+import { AbstractUser } from '../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
 describe('EmailAuthenticator', () => {

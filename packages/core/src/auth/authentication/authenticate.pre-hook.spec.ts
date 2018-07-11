@@ -6,7 +6,7 @@ import {
   Context,
   ServiceManager,
 } from '../../core';
-import { AbstractUser } from '../models';
+import { AbstractUser } from '../entities';
 import { authenticate } from './authenticate.pre-hook';
 
 chai.use(chaiAsPromised);

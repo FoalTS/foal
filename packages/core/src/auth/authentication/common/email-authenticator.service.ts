@@ -5,7 +5,7 @@ import { promisify } from 'util';
 
 import { ValidationError } from '../../../common';
 import { Class } from '../../../core';
-import { AbstractUser } from '../../models';
+import { AbstractUser } from '../../entities';
 import { IAuthenticator } from '../authenticator.interface';
 
 const ajv = new Ajv();
