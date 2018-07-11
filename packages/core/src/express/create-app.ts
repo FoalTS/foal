@@ -7,25 +7,19 @@ import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
 import { initDB } from '../common';
-import { App, Config, IModule } from '../core';
-import { getAppRouter } from './get-app-router';
+import { Class, Config, HttpResponseForbidden, IModule, makeModuleRoutes, ServiceManager } from '../core';
+import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-export function createApp(rootModuleClass: IModule) {
-  const app = new App(rootModuleClass);
-  const preHook = initDB(app.models);
-  app.controllers.forEach(controller => {
-    controller.addPreHooksAtTheTop([ preHook ]);
-  });
+export function createApp(rootModuleClass: Class<IModule>) {
+  const app = express();
 
-  const expressApp = express();
-
-  expressApp.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
-  expressApp.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
-  expressApp.use(helmet());
-  expressApp.use(express.json());
-  expressApp.use(session({
+  app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
+  app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
+  app.use(helmet());
+  app.use(express.json());
+  app.use(session({
     cookie: {
       domain: Config.get('settings', 'sessionCookieDomain'),
       httpOnly: Config.get('settings', 'sessionCookieHttpOnly'),
@@ -40,34 +34,47 @@ export function createApp(rootModuleClass: IModule) {
   }));
 
   if (Config.get('settings', 'csrf', false) as boolean) {
-    expressApp.use(csurf());
-    expressApp.use((req, res, next) => {
-      req.csrfToken = req.csrfToken();
-      next();
+    app.use(csurf());
+  }
+  app.use((err, req, res, next) => {
+    if (err.code === 'EBADCSRFTOKEN') {
+      err = new HttpResponseForbidden('Bad csrf token.');
+    }
+    next(err);
+  });
+
+  const entities = []; // TODO: Get the entities from the module.
+  const hooks = [
+    initDB(entities),
+  ];
+  if (Config.get('settings', 'csrf', false) as boolean) {
+    hooks.push(ctx => {
+      ctx.state.csrfToken = ctx.request.csrfToken();
     });
   }
-  expressApp.use((req, res, next) => {
-    if (req.body) {
-      delete req.body._csrf;
+  const services = new ServiceManager();
+  const routes = makeModuleRoutes('', hooks, rootModuleClass, services);
+  for (const route of routes) {
+    switch (route.httpMethod) {
+      case 'DELETE':
+        app.delete(route.path, createMiddleware(route, services));
+        break;
+      case 'GET':
+        app.get(route.path, createMiddleware(route, services));
+        break;
+      case 'PATCH':
+        app.patch(route.path, createMiddleware(route, services));
+        break;
+      case 'POST':
+        app.post(route.path, createMiddleware(route, services));
+        break;
+      case 'PUT':
+        app.put(route.path, createMiddleware(route, services));
+        break;
     }
-    next();
-  });
-  expressApp.use((err, req, res, next) => {
-    if (err.code === 'EBADCSRFTOKEN') {
-      res.status(403).send('Bad csrf token.');
-    } else {
-      next(err);
-    }
-  });
+  }
+  app.use(notFound());
+  app.use(handleErrors(Config.get('settings', 'debug', false) as boolean, console.error));
 
-  expressApp.use(getAppRouter(app, [
-    {
-      req: 'csrfToken',
-      state: 'csrfToken'
-    }
-  ]));
-  expressApp.use(notFound());
-  expressApp.use(handleErrors(Config.get('settings', 'debug', false) as boolean, console.error));
-
-  return expressApp;
+  return app;
 }
