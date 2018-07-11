@@ -12,7 +12,7 @@ import {
   HttpResponseInternalServerError,
   HttpResponseOK,
   HttpResponseRedirect,
-  RouteData,
+  Route,
   ServiceManager
 } from '../core';
 import { createMiddleware } from './create-middleware';
@@ -21,7 +21,7 @@ describe('createMiddleware', () => {
 
   describe('should create a middleware that', () => {
 
-    function route(fn): RouteData {
+    function route(fn): Route {
       return {
         controller: { fn },
         hooks: [],
@@ -33,7 +33,7 @@ describe('createMiddleware', () => {
 
     it('should call the controller method with a context created from the request.', async () => {
       let body = {};
-      const route: RouteData = {
+      const route: Route = {
         controller: { bar: (ctx: Context) => {
           body = ctx.request.body;
           return new HttpResponseOK();
@@ -58,7 +58,7 @@ describe('createMiddleware', () => {
       let str = '';
       const expectedServiceManager = new ServiceManager();
       let actualServiceManager: ServiceManager|undefined;
-      const route: RouteData = {
+      const route: Route = {
         controller: { bar: (ctx: Context) => {
           str = `${ctx.state.str}c`;
           return new HttpResponseOK();

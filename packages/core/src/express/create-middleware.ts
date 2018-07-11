@@ -4,11 +4,11 @@ import {
   HttpResponseRedirect,
   isHttpResponse,
   isHttpResponseRedirect,
-  RouteData,
+  Route,
   ServiceManager
 } from '../core';
 
-export function createMiddleware(route: RouteData, services: ServiceManager): (...args) => any {
+export function createMiddleware(route: Route, services: ServiceManager): (...args) => any {
   return async (req, res, next) => {
     try {
       const ctx = new Context(req);

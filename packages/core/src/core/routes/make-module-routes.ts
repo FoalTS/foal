@@ -7,12 +7,12 @@ import { HookFunction } from '../hooks';
 import { IModule } from '../modules';
 import { ServiceManager } from '../service-manager';
 import { makeControllerRoutes } from './make-controller-routes';
-import { RouteData } from './route.interface';
+import { Route } from './route.interface';
 import { getMetadata, join } from './utils';
 
 export function makeModuleRoutes(parentPath: string, parentHooks: HookFunction[],
-                                 moduleClass: Class<IModule>, services: ServiceManager): RouteData[] {
-  const routes: RouteData[] = [];
+                                 moduleClass: Class<IModule>, services: ServiceManager): Route[] {
+  const routes: Route[] = [];
 
   const moduleHooks = getMetadata('hooks', moduleClass) || [];
   const modulePath = getMetadata('path', moduleClass);

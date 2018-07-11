@@ -2,7 +2,7 @@
 import { Class } from '../class.interface';
 import { HookFunction } from '../hooks';
 import { ServiceManager } from '../service-manager';
-import { RouteData } from './route.interface';
+import { Route } from './route.interface';
 import { getMetadata, join } from './utils';
 
 function getMethods(obj: object|null): string[] {
@@ -11,8 +11,8 @@ function getMethods(obj: object|null): string[] {
 }
 
 export function makeControllerRoutes(parentPath: string, parentHooks: HookFunction[],
-                                     controllerClass: Class, services: ServiceManager): RouteData[] {
-  const routes: RouteData[] = [];
+                                     controllerClass: Class, services: ServiceManager): Route[] {
+  const routes: Route[] = [];
 
   const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
