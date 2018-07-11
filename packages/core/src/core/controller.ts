@@ -3,9 +3,14 @@ import {
   PreHook,
 } from './hooks';
 import { HttpMethod } from './http';
-import {
-  Route
-} from './routes';
+
+export interface Route {
+  httpMethod: HttpMethod;
+  path: string;
+  preHooks: PreHook[];
+  postHooks: PostHook[];
+  handler: (...args: any[]) => {};
+}
 
 export class Controller<RouteName extends string> {
   private routes: Map<RouteName, Route> = new Map();
