@@ -12,7 +12,7 @@ import {
   ServiceManager,
 } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
-import { IModelService } from '../services';
+import { ISerializer } from '../services';
 import { rest } from './rest.controller-factory';
 
 chai.use(spies);
@@ -51,7 +51,7 @@ describe('rest', () => {
 
       it('when service.removeOne is a function.', async () => {
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async removeOne(query: object): Promise<void> { }
         }
         const services = new ServiceManager();
@@ -77,7 +77,7 @@ describe('rest', () => {
 
       it('when service.removeOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           removeOne(query: object): void {
             throw new ObjectDoesNotExist();
           }
@@ -107,7 +107,7 @@ describe('rest', () => {
       it('when service.findMany is a function.', async () => {
         const all = [];
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async findMany(query: object) {
             return all;
           }
@@ -151,7 +151,7 @@ describe('rest', () => {
       it('when service.findOne is a function.', async () => {
         const obj = {};
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async findOne(query: object) {
             return obj;
           }
@@ -179,7 +179,7 @@ describe('rest', () => {
 
       it('when service.findOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           findOne(query: object) {
             throw new ObjectDoesNotExist();
           }
@@ -221,7 +221,7 @@ describe('rest', () => {
       it('when service.updateOne is a function.', async () => {
         const obj = {};
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async updateOne(record: object, query: object) {
             return obj;
           }
@@ -253,7 +253,7 @@ describe('rest', () => {
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }
@@ -284,7 +284,7 @@ describe('rest', () => {
       it('when service.createOne is a function.', async () => {
         const obj = {};
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async createOne(record: object) {
             return obj;
           }
@@ -346,7 +346,7 @@ describe('rest', () => {
       it('when service.updateOne is a function.', async () => {
         const obj = {};
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           async updateOne(record: object, query: object) {
             return obj;
           }
@@ -378,7 +378,7 @@ describe('rest', () => {
 
       it('when service.updateOne throws an ObjectDoesNotExist error.', async () => {
         @Service()
-        class MockService implements Partial<IModelService> {
+        class MockService implements Partial<ISerializer> {
           updateOne(record: object, query: object) {
             throw new ObjectDoesNotExist();
           }

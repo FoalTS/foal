@@ -2,9 +2,9 @@ import { getManager } from 'typeorm';
 
 import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
-import { IModelService } from './model-service.interface';
+import { ISerializer } from './serializer.interface';
 
-export abstract class ModelService<Model> implements IModelService {
+export abstract class ModelService<Model> implements ISerializer {
 
   abstract readonly Model: Class<Model>;
   readonly connectionName: string = 'default';

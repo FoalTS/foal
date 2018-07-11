@@ -8,12 +8,12 @@ import {
   HttpResponseOK,
 } from '../../core';
 import { isObjectDoesNotExist } from '../errors';
-import { IModelService } from '../services';
+import { ISerializer } from '../services';
 
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
-export function rest(path: string, ModelServiceClass: Class<Partial<IModelService>>): Controller<RouteName> {
+export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>>): Controller<RouteName> {
   const controller = new Controller<RouteName>(path);
   controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
   controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {

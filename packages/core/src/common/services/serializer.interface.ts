@@ -1,4 +1,4 @@
-export interface IModelService {
+export interface ISerializer {
   createOne(record: object);
   createMany(records: object[]);
 

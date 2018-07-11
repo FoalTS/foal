@@ -2,7 +2,7 @@
 
 Alright, the next step is to take care of the requests that list, create and delete flights. You could directly use *handlers* for that but this would be tedious work. You would have to add the different routes, call the methods of the model, create the appropriate `HttpResponse` dependending on the status or handle errors when the object is not found.
 
-That's why FoalTS provides a handy function `rest` to quickly build REST endpoints. This kind of function is called a *controller factory*. The `rest` factory takes any *service* that implements the `IModelService` interface and uses it to create the API.
+That's why FoalTS provides a handy function `rest` to quickly build REST endpoints. This kind of function is called a *controller factory*. The `rest` factory takes any *service* that implements the `ISerializer` interface and uses it to create the API.
 
 In FoalTS, a *service* can be any class that serves a restricted and well-defined purpose. Services behave independently of the http process and are instantiated as singleton by the framework. They are usually the best place to put the business logic.
 
@@ -24,7 +24,7 @@ export class FlightService extends ModelService<Flight> {
 
 ```
 
-The abstract class `ModelService` implements the `IModelService` methods based on the provided model.
+The abstract class `ModelService` implements the `ISerializer` methods based on the provided model.
 
 Once done, you need to create and register your REST controller from this new service. Open `src/app/app.module.ts` and replace it with:
 
