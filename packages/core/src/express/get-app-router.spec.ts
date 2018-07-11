@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as request from 'supertest';
 
-import { App, Controller, HttpMethod, HttpResponseOK } from '../core';
+import { Controller, HttpMethod, HttpResponseOK } from '../core';
 
 import { getAppRouter } from './get-app-router';
 
@@ -19,11 +19,11 @@ function httpMethodTest(httpMethod: HttpMethod) {
 
     beforeEach(() => {
       app = express();
-      const foalApp = new App({
+      const foalApp = {
         controllers: [
           route(httpMethod, '/foo/bar', ctx => new HttpResponseOK('Success'))
         ]
-      });
+      };
       app.use(getAppRouter(foalApp));
       app.use((req, res) => res.sendStatus(404));
     });
@@ -124,11 +124,11 @@ xdescribe('getAppRouter', () => {
 
       beforeEach(() => {
         app = express();
-        const foalApp = new App({
+        const foalApp = {
           controllers: [
             route('GET', '/foo/:id/bar/:id2', ctx => new HttpResponseOK('Success'))
           ]
-        });
+        };
         app.use(getAppRouter(foalApp));
         app.use((req, res) => res.sendStatus(404));
       });

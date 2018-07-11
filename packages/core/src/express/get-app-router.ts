@@ -1,8 +1,6 @@
 import { Router } from 'express';
 
-import { App } from '../core';
-
-export function getAppRouter(app: App, stateDef: { req: string, state: string }[] = []) {
+export function getAppRouter(app: any, stateDef: { req: string, state: string }[] = []) {
   const router = Router();
   for (const controller of app.controllers) {
     for (const route of controller.getRoutes()) {
