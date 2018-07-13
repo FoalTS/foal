@@ -3,10 +3,10 @@ import { pbkdf2 } from 'crypto';
 import { getManager } from 'typeorm';
 import { promisify } from 'util';
 
-import { ValidationError } from '../../../common';
-import { Class } from '../../../core';
-import { AbstractUser } from '../../entities';
-import { IAuthenticator } from '../authenticator.interface';
+import { ValidationError } from '../../../../common';
+import { Class } from '../../../../core';
+import { AbstractUser } from '../../../entities';
+import { IAuthenticator } from '../../authenticator.interface';
 
 const ajv = new Ajv();
 
