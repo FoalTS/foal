@@ -10,22 +10,28 @@ export class ServiceManager {
 
   readonly map: Map<Class<any>, any>  = new Map();
 
-  set<Service>(ServiceClass: Class<Service>, service: any): void {
-    this.map.set(ServiceClass, service);
+  set<Service>(serviceClass: Class<Service>, service: any): void {
+    this.map.set(serviceClass, service);
   }
 
-  get<Service>(ServiceClass: Class<Service>): Service {
+  get<Service>(serviceClass: Class<Service>): Service {
+    // The ts-ignores fix TypeScript bugs.
+    // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
+    if (serviceClass === ServiceManager) {
+      // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
+      return this;
+    }
     // Get the service if it exists.
-    if (this.map.get(ServiceClass)) {
-      return this.map.get(ServiceClass);
+    if (this.map.get(serviceClass)) {
+      return this.map.get(serviceClass);
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies = Reflect.getOwnMetadata('design:paramtypes', ServiceClass) || [];
-    const service = new ServiceClass(...dependencies.map(Dep => this.get(Dep)));
+    const dependencies = Reflect.getOwnMetadata('design:paramtypes', serviceClass) || [];
+    const service = new serviceClass(...dependencies.map(Dep => this.get(Dep)));
 
     // Save and return the service.
-    this.map.set(ServiceClass, service);
+    this.map.set(serviceClass, service);
     return service;
   }
 

@@ -13,6 +13,10 @@ describe('ServiceManager', () => {
 
   describe('when get is called', () => {
 
+    it('should return itself if the given serviceClass is ServiceManager.', () => {
+      expect(serviceManager.get(ServiceManager)).to.equal(serviceManager);
+    });
+
     it('should not throw an exception if the given class does not have the Service decorator '
         + 'and/or has no constructor.', () => {
       class Foo {}
