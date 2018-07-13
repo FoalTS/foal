@@ -11,10 +11,7 @@ export const AuthModule: Module = {
       // .withPreHook(validateEmailAndPassword())
       // .withPostHook(returnCurrentUserOnSuccess([ 'username', 'id' ])),
 
-    logout('/logout', {
-      httpMethod: 'POST',
-      redirect: '/auth',
-    }),
+    // TODO: logout to /auth
 
     view('/', require('./templates/login.html'), ctx => {
       return {
