@@ -1,29 +1,15 @@
-import * as Ajv from 'ajv';
 import { pbkdf2 } from 'crypto';
 import { getManager } from 'typeorm';
 import { promisify } from 'util';
 
-import { ValidationError } from '../../../../common';
 import { Class } from '../../../../core';
 import { AbstractUser } from '../../../entities';
 import { IAuthenticator } from '../../authenticator.interface';
-
-const ajv = new Ajv();
 
 export interface EmailUser extends AbstractUser {
   email: string;
   password: string;
 }
-
-const schema = {
-  additionalProperties: false,
-  properties: {
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string' }
-  },
-  required: [ 'email', 'password' ],
-  type: 'object',
-};
 
 /**
  * Authenticator with email and password. A user model service should be passed to the constructor.
