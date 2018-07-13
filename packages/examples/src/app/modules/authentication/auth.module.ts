@@ -4,12 +4,9 @@ import { Authenticator } from './services/authenticator.service';
 
 export const AuthModule: Module = {
   controllers: [
-    login('/local', Authenticator, {
-      failureRedirect: '/auth?invalid_credentials=true',
-      successRedirect: '/home',
-    }),
-      // .withPreHook(validateEmailAndPassword())
-      // .withPostHook(returnCurrentUserOnSuccess([ 'username', 'id' ])),
+    // TODO : strategy('local', Authenticator)
+    // and redirect.success = /home'
+    // and redirect.failure = '/auth?invalid_credentials=true'
 
     // TODO: logout to /auth
 

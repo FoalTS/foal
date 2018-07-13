@@ -2,15 +2,30 @@
 import { expect } from 'chai';
 
 // FoalTS
-import { Context, Controller, getHttpMethod, getPath, HttpResponseNoContent, HttpResponseRedirect } from '../../core';
-import { LoginController } from './login.controller';
+import {
+  Context,
+  getHttpMethod,
+  getPath,
+  HttpResponseBadRequest,
+  HttpResponseNoContent,
+  HttpResponseNotFound,
+  HttpResponseRedirect,
+  HttpResponseUnauthorized,
+  Service,
+  ServiceManager
+} from '../../core';
+import { AbstractUser } from '../entities';
+import { IAuthenticator } from './authenticator.interface';
+import { LoginController, strategy } from './login.controller';
 
 describe('LoginController', () => {
 
   describe('has a "logout" method that', () => {
     // @Controller()
     // TODO: uncomment the above line.
-    class ConcreteController extends LoginController {}
+    class ConcreteController extends LoginController {
+      strategies = [];
+    }
 
     it('should handle requests at GET /logout.', () => {
       expect(getHttpMethod(ConcreteController, 'logout')).to.equal('GET');
@@ -25,7 +40,7 @@ describe('LoginController', () => {
         }
       };
 
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       await controller.logout(ctx);
 
       expect(ctx.request.session).to.deep.equal({});
@@ -35,7 +50,7 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       await controller.logout(ctx);
     });
 
@@ -43,7 +58,7 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       const response = await controller.logout(ctx);
 
       expect(response).to.be.an.instanceOf(HttpResponseNoContent);
@@ -56,16 +71,188 @@ describe('LoginController', () => {
       // @Controller()
       // TODO: uncomment the above line.
       class ConcreteController2 extends LoginController {
+        strategies = [];
         redirect = {
           logout: '/foo'
         };
       }
 
-      const controller = new ConcreteController2();
+      const controller = new ConcreteController2(new ServiceManager());
       const response = await controller.logout(ctx);
 
       expect(response).to.be.an.instanceOf(HttpResponseRedirect);
       expect((response as HttpResponseRedirect).path).to.equal('/foo');
+    });
+
+  });
+
+  describe('has a "login" method that', () => {
+    const schema = {
+      properties: {
+        email: { type: 'string' }
+      },
+      type: 'object',
+    };
+    @Service()
+    class Authenticator implements IAuthenticator {
+      validate() {}
+      async authenticate({ email }: { email: string }) {
+        return email === 'john@foalts.org' ? { id: 1 } as AbstractUser : null;
+      }
+
+    }
+
+    // @Controller()
+    // TODO: uncomment the above line.
+    class ConcreteController extends LoginController {
+      strategies = [
+        { name: 'email', authenticatorClass: Authenticator, schema }
+      ];
+    }
+
+    it('should handle requests at POST /:strategy.', () => {
+      expect(getHttpMethod(ConcreteController, 'login')).to.equal('POST');
+      expect(getPath(ConcreteController, 'login')).to.equal('/:strategy');
+    });
+
+    it('should return an HttpResponseNotFound if no strategy with the given name is found.', async () => {
+      const ctx = new Context({
+        params: {
+          strategy: 'foobar'
+        }
+      });
+
+      const controller = new ConcreteController(new ServiceManager());
+      const response = await controller.login(ctx);
+
+      expect(response).to.be.an.instanceOf(HttpResponseNotFound);
+    });
+
+    it('should return an HttpResponseBadRequest with the ajv errors if ctx.request.body does'
+        + ' not fit the schema.', async () => {
+      const ctx = new Context({
+        body: {
+          email: 3
+        },
+        params: {
+          strategy: 'email'
+        },
+      });
+
+      const controller = new ConcreteController(new ServiceManager());
+      const response = await controller.login(ctx);
+
+      expect(response).to.be.an.instanceOf(HttpResponseBadRequest)
+        .with.deep.property('content', [
+          {
+            dataPath: '.email',
+            keyword: 'type',
+            message: 'should be string',
+            params: {
+              type: 'string',
+            },
+            schemaPath: '#/properties/email/type',
+          }
+        ]);
+    });
+
+    describe('when the authenticator finds a user fitting the given credentials (ctx.request.body)', () => {
+
+      let ctx: Context;
+      beforeEach(() => ctx = new Context({
+        body: {
+          email: 'john@foalts.org'
+        },
+        params: {
+          strategy: 'email'
+        },
+        session: {}
+      }));
+
+      it('should return an HttpResponseNoContent if redirect.success is undefined.', async () => {
+        const controller = new ConcreteController(new ServiceManager());
+        const response = await controller.login(ctx);
+
+        expect(response).to.be.an.instanceOf(HttpResponseNoContent);
+      });
+
+      it('should return an HttpResponseRedirect if redirect.success is not empty.', async () => {
+        // @Controller()
+        // TODO: uncomment the above line.
+        class ConcreteController2 extends LoginController {
+          redirect = {
+            success: '/foo'
+          };
+          strategies = [
+            { name: 'email', authenticatorClass: Authenticator, schema }
+          ];
+        }
+
+        const controller = new ConcreteController2(new ServiceManager());
+        const response = await controller.login(ctx);
+
+        expect(response).to.be.an.instanceOf(HttpResponseRedirect)
+          .with.property('path', '/foo');
+      });
+
+      it('should create or update ctx.session.authentication to include the userId.', async () => {
+        const controller = new ConcreteController(new ServiceManager());
+        await controller.login(ctx);
+
+        expect(ctx.request.session.authentication).to.deep.equal({
+          userId: 1
+        });
+
+        ctx.request.session.authentication.foo = 'bar';
+
+        await controller.login(ctx);
+
+        expect(ctx.request.session.authentication).to.deep.equal({
+          foo: 'bar',
+          userId: 1
+        });
+      });
+
+    });
+
+    describe('when the authenticator does not find a user fitting the given credentials (ctx.request.body)', () => {
+
+      let ctx: Context;
+      beforeEach(() => ctx = new Context({
+        body: {
+          email: 'jack@foalts.org'
+        },
+        params: {
+          strategy: 'email'
+        },
+      }));
+
+      it('should return an HttpResponseUnauthorized if redirect.failure is undefined.', async () => {
+        const controller = new ConcreteController(new ServiceManager());
+        const response = await controller.login(ctx);
+
+        expect(response).to.be.an.instanceOf(HttpResponseUnauthorized);
+      });
+
+      it('should return an HttpResponseRedirect if redirect.failure is not empty.', async () => {
+        // @Controller()
+        // TODO: uncomment the above line.
+        class ConcreteController2 extends LoginController {
+          redirect = {
+            failure: '/foo'
+          };
+          strategies = [
+            { name: 'email', authenticatorClass: Authenticator, schema }
+          ];
+        }
+
+        const controller = new ConcreteController2(new ServiceManager());
+        const response = await controller.login(ctx);
+
+        expect(response).to.be.an.instanceOf(HttpResponseRedirect)
+          .with.property('path', '/foo');
+      });
+
     });
 
   });
