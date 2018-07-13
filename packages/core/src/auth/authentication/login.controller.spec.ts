@@ -95,7 +95,6 @@ describe('LoginController', () => {
     };
     @Service()
     class Authenticator implements IAuthenticator {
-      validate() {}
       async authenticate({ email }: { email: string }) {
         return email === 'john@foalts.org' ? { id: 1 } as AbstractUser : null;
       }

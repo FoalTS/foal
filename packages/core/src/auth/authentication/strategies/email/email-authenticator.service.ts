@@ -39,14 +39,6 @@ export abstract class EmailAuthenticator<User extends EmailUser>
 
   abstract UserModel: Class<User>;
 
-  validate(credentials: any): { email: string, password: string } {
-    const isValid = ajv.validate(schema, credentials);
-    if (!isValid) {
-      throw new ValidationError(ajv.errors);
-    }
-    return { email: credentials.email, password: credentials.password };
-  }
-
   async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {
       throw new Error('Password format is incorrect or not supported.');
