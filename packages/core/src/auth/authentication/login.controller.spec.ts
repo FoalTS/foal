@@ -18,6 +18,27 @@ import { AbstractUser } from '../entities';
 import { IAuthenticator } from './authenticator.interface';
 import { LoginController, strategy } from './login.controller';
 
+describe('strategy', () => {
+  it('should create a strategy from the given parameters.', () => {
+    const name = 'foo';
+
+    @Service()
+    class Authenticator implements IAuthenticator {
+      authenticate() {
+        return null;
+      }
+    }
+
+    const schema = {};
+
+    expect(strategy(name, Authenticator, schema)).to.deep.equal({
+      authenticatorClass: Authenticator,
+      name,
+      schema,
+    });
+  });
+});
+
 describe('LoginController', () => {
 
   describe('has a "logout" method that', () => {
