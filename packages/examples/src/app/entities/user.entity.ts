@@ -13,6 +13,10 @@ export class User extends AbstractUser {
   @Column()
   password: string;
 
+  setPassword(password: string) {
+    // TODO: use setPassword instead of BeforeInsert
+  }
+
   @BeforeInsert()
   hashPassword() {
     parsePassword(this);
