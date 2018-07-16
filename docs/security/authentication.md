@@ -135,17 +135,17 @@ export const AppModule: Module = {
 }
 ```
 
-### `restrictAccessToAdmin()`
+### `PermissionRequired(perm: string)`
 
-`restrictAccessToAdmin` is a pre-hook to restrict the access to admin users.
+`PermissionRequired` is a pre-hook to restrict the access to users with a given permission.
 
 If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 
-If the user is not an admin, namely it has no property `isAdmin` or this property is false, then the pre-hook returns an `HttpResponseForbidden`.
+If the user does not have the required permission then the pre-hook returns an `HttpResponseForbidden`.
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAdmin, route, Module } from '@foal/core';
+import { authenticate, PermissionRequired, route, Module } from '@foal/core';
 
 import { User } from './models/user';
 
@@ -154,7 +154,7 @@ export const AppModule: Module = {
     route('POST', '/user', ctx => {
         console.log(ctx.user);
       })
-      .withPreHook(restrictAccessToAdmin()),
+      .withPreHook(PermissionRequired('my-perm')),
   ],
   preHooks: [
     authenticate(User),

@@ -10,8 +10,8 @@ export abstract class AbstractUser extends BaseEntity {
   // @ts-ignore : Property 'permissions' has no initializer and is not definitely assigned in theconstructor.
   permissions: string[];
 
-  hasPerm(role: string): boolean {
-    return this.permissions.includes(role);
+  hasPerm(perm: string): boolean {
+    return this.permissions.includes(perm);
   }
 
 }

@@ -2,8 +2,8 @@ import {
   authenticate,
   LoginRequired,
   Module,
+  PermissionRequired,
   rest,
-  restrictAccessToAdmin,
   view,
 } from '@foal/core';
 
@@ -17,7 +17,7 @@ export const AppModule: Module = {
     rest('/users', UserService)
       .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
       .withPreHook(LoginRequired(), 'GET /', 'GET /:id')
-      .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id'),
+      .withPreHook(PermissionRequired('admin'), 'PUT /:id', 'PATCH /:id', 'DELETE /:id'),
 
     view('/', require('./templates/index.html'), { name: 'FoalTS' }),
 

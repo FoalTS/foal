@@ -9,16 +9,16 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser } from '../entities';
-import { restrictAccessToAdmin } from './restrict-access-to-admin.pre-hook';
+import { PermissionRequired } from './permission-required.pre-hook';
 
-describe('restrictAccessToAdmin', () => {
+describe('PermissionRequired', () => {
 
   let preHook: PreHook;
 
   class User extends AbstractUser {}
 
   before(() => {
-    preHook = restrictAccessToAdmin();
+    preHook = PermissionRequired('bar');
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
@@ -27,18 +27,18 @@ describe('restrictAccessToAdmin', () => {
     expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
   });
 
-  it('should return an HttpResponseForbidden if the user is not an admin.', () => {
+  it('should return an HttpResponseForbidden if the user does not have the required permission.', () => {
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.permissions = [];
+    ctx.user.permissions = [ 'foo' ];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseForbidden);
   });
 
-  it('should not return any HttpResponse if the user is authenticated and is an admin.', () => {
+  it('should not return any HttpResponse if the user is authenticated and has the required permission.', () => {
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.permissions = [ 'admin' ];
+    ctx.user.permissions = [ 'bar' ];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);
   });

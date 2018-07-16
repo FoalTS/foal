@@ -4,12 +4,12 @@ import {
   PreHook,
 } from '../../core';
 
-export function restrictAccessToAdmin(): PreHook {
+export function PermissionRequired(perm: string): PreHook {
   return ctx => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
-    if (!ctx.user.hasPerm('admin')) {
+    if (!ctx.user.hasPerm(perm)) {
       return new HttpResponseForbidden();
     }
   };
