@@ -9,7 +9,7 @@ export function restrictAccessToAdmin(): PreHook {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
-    if (!ctx.user.hasRole('admin')) {
+    if (!ctx.user.hasPerm('admin')) {
       return new HttpResponseForbidden();
     }
   };

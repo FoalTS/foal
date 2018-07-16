@@ -65,21 +65,21 @@ describe('EmailAuthenticator', () => {
       john.email = 'john@foalts.org';
       john.id = 1;
       john.password = encryptedPassword;
-      john.roles = [];
+      john.permissions = [];
       john.username = 'John';
 
       const jack = new User();
       jack.email = 'jack@foalts.org';
       jack.id = 2;
       jack.password = 'bcrypt_mypassword';
-      jack.roles = [];
+      jack.permissions = [];
       jack.username = 'Jack';
 
       const sam = new User();
       sam.email = 'sam@foalts.org';
       sam.id = 3;
       sam.password = 'pbkdf2_sha256$hello_world';
-      sam.roles = [];
+      sam.permissions = [];
       sam.username = 'Sam';
 
       await Promise.all([
@@ -115,7 +115,7 @@ describe('EmailAuthenticator', () => {
         email: 'john@foalts.org',
         id: 1,
         password: encryptedPassword,
-        roles: [],
+        permissions: [],
         username: 'John',
       });
     });

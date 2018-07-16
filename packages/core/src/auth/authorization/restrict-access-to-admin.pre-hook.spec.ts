@@ -30,7 +30,7 @@ describe('restrictAccessToAdmin', () => {
   it('should return an HttpResponseForbidden if the user is not an admin.', () => {
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.roles = [];
+    ctx.user.permissions = [];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseForbidden);
   });
@@ -38,7 +38,7 @@ describe('restrictAccessToAdmin', () => {
   it('should not return any HttpResponse if the user is authenticated and is an admin.', () => {
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.roles = [ 'admin' ];
+    ctx.user.permissions = [ 'admin' ];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);
   });

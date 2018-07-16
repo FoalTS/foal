@@ -52,7 +52,7 @@ describe('authenticate', () => {
       email: 'john@foalts.org',
       id: 1,
       password: 'strongPassword',
-      roles: [],
+      permissions: [],
       username: 'John',
     });
     await user.save();
@@ -106,7 +106,7 @@ describe('authenticate', () => {
       email: 'john@foalts.org',
       id: 1,
       password: 'strongPassword',
-      roles: [],
+      permissions: [],
       username: 'John',
     });
   });

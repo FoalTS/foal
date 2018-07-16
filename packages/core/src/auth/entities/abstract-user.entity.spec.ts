@@ -11,13 +11,13 @@ describe('AbstractUser', () => {
     expect(new User()).to.be.an.instanceOf(BaseEntity);
   });
 
-  describe('when hasRole is called', () => {
+  describe('when hasPerm is called', () => {
 
-    it('should return true if the user has the given role and false otherwise.', () => {
+    it('should return true if the user has the given permission and false otherwise.', () => {
       const user = new User();
-      user.roles = [ 'admin' ];
-      expect(user.hasRole('admin')).to.equal(true);
-      expect(user.hasRole('superuser')).to.equal(false);
+      user.permissions = [ 'admin' ];
+      expect(user.hasPerm('admin')).to.equal(true);
+      expect(user.hasPerm('superuser')).to.equal(false);
     });
 
   });

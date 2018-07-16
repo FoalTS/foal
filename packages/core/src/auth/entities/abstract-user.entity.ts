@@ -7,11 +7,11 @@ export abstract class AbstractUser extends BaseEntity {
   id: number;
 
   @Column('simple-array')
-  // @ts-ignore : Property 'roles' has no initializer and is not definitely assigned in theconstructor.
-  roles: string[];
+  // @ts-ignore : Property 'permissions' has no initializer and is not definitely assigned in theconstructor.
+  permissions: string[];
 
-  hasRole(role: string): boolean {
-    return this.roles.includes(role);
+  hasPerm(role: string): boolean {
+    return this.permissions.includes(role);
   }
 
 }
