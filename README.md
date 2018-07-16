@@ -12,14 +12,51 @@
   </a>
 </p>
 
+<p align="center">
+  <i>Get ready to create enterprise-grade Node.JS applications</i>
+</p>
 **This work is in progress and is currently not ready for production.**
 
-FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript. Thanks to its architecture, packages and tools you can now bootstrap and develop entreprise-grade apps.
-
+## Install the command line interface
 ```shell
 $ npm install -g @foal/cli
+```
+## Create a new app
+```shell
 $ foal createapp my-app
-$ cd my-app
+$ cd my-app && npm install
+```
+## Create a model
+```shell
+$ foal g model flight
+```
+## Create a model serializer
+```shell
+$ foal g serializer flight
+> Model Serializer
+```
+## Create a REST controller
+```shell
+$ foal g controller flight
+> REST
+```
+## Register your controller
+And now register you controller in the `src/app/app.module.ts` file.
+```typescript
+...
+import { controller } from '@foal/core';
+import { FlightController } from './controllers/flight.controller';
+...
+export class AppModule implements IModule {
+  controllers = [
+    controller('/flights', FlightController)
+  ]
+}
+```
+
+## Start the app!
+
+```bash
 $ npm run develop
 ```
 
