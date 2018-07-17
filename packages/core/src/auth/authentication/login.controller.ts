@@ -16,7 +16,7 @@ import {
 } from '../../core';
 import { IAuthenticator } from './authenticator.interface';
 
-const ajv = new Ajv();
+const ajv = new Ajv({ removeAdditional: true });
 
 export interface Strategy {
   name: string;

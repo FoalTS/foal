@@ -116,8 +116,11 @@ describe('LoginController', () => {
     };
     @Service()
     class Authenticator implements IAuthenticator {
-      async authenticate({ email }: { email: string }) {
-        return email === 'john@foalts.org' ? { id: 1 } as AbstractUser : null;
+      async authenticate(credentials: { email: string }) {
+        if (credentials.hasOwnProperty('additionalField')) {
+          throw new Error('authenticate was called with an unexpected additional field.');
+        }
+        return credentials.email === 'john@foalts.org' ? { id: 1 } as AbstractUser : null;
       }
 
     }
@@ -174,6 +177,43 @@ describe('LoginController', () => {
             schemaPath: '#/properties/email/type',
           }
         ]);
+    });
+
+    it('should remove any additional field (ajv schema) before calling authenticator.authenticate'
+        + ' if schema.additionalProperties === false', done => {
+      // @Controller()
+      // TODO: uncomment the above line.
+      class ConcreteController extends LoginController {
+        strategies = [
+          {
+            authenticatorClass: Authenticator,
+            name: 'email',
+            schema: { ...schema, additionalProperties: false }
+          }
+        ];
+      }
+
+      const ctx = new Context({
+        body: {
+          additionalField: 'foobar',
+          email: 'a@foalts.org',
+        },
+        params: {
+          strategy: 'email'
+        },
+      });
+
+      const controller = new ConcreteController(new ServiceManager());
+      controller.login(ctx)
+        .then(response => {
+          if (response instanceof HttpResponseBadRequest) {
+            done(response);
+            return;
+          }
+          done();
+        })
+        // Authenticator.authenticate rejects an Error if it was called with the field 'additionalField'.
+        .catch(err => done(err));
     });
 
     describe('when the authenticator finds a user fitting the given credentials (ctx.request.body)', () => {
