@@ -4,6 +4,7 @@ import { expect } from 'chai';
 // FoalTS
 import {
   Context,
+  Controller,
   getHttpMethod,
   getPath,
   HttpResponseBadRequest,
@@ -42,8 +43,7 @@ describe('strategy', () => {
 describe('LoginController', () => {
 
   describe('has a "logout" method that', () => {
-    // @Controller()
-    // TODO: uncomment the above line.
+    @Controller()
     class ConcreteController extends LoginController {
       strategies = [];
     }
@@ -89,8 +89,7 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      // @Controller()
-      // TODO: uncomment the above line.
+      @Controller()
       class ConcreteController2 extends LoginController {
         strategies = [];
         redirect = {
@@ -125,8 +124,7 @@ describe('LoginController', () => {
 
     }
 
-    // @Controller()
-    // TODO: uncomment the above line.
+    @Controller()
     class ConcreteController extends LoginController {
       strategies = [
         { name: 'email', authenticatorClass: Authenticator, schema }
@@ -181,8 +179,7 @@ describe('LoginController', () => {
 
     it('should remove any additional field (ajv schema) before calling authenticator.authenticate'
         + ' if schema.additionalProperties === false', done => {
-      // @Controller()
-      // TODO: uncomment the above line.
+      @Controller()
       class ConcreteController extends LoginController {
         strategies = [
           {
@@ -237,8 +234,7 @@ describe('LoginController', () => {
       });
 
       it('should return an HttpResponseRedirect if redirect.success is not empty.', async () => {
-        // @Controller()
-        // TODO: uncomment the above line.
+        @Controller()
         class ConcreteController2 extends LoginController {
           redirect = {
             success: '/foo'
@@ -295,8 +291,7 @@ describe('LoginController', () => {
       });
 
       it('should return an HttpResponseRedirect if redirect.failure is not empty.', async () => {
-        // @Controller()
-        // TODO: uncomment the above line.
+        @Controller()
         class ConcreteController2 extends LoginController {
           redirect = {
             failure: '/foo'

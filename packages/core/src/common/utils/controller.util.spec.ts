@@ -9,16 +9,14 @@ import { controller } from './controller.util';
 describe('controller util', () => {
 
   it('should return the given controller class.', () => {
-    // TODO: uncomment the line below
-    // @Controller()
+    @Controller()
     class Foobar {}
 
     expect(controller('', Foobar)).to.equal(Foobar);
   });
 
   it('should define the metadata path={path} of the controller class.', () => {
-    // TODO: uncomment the line below
-    // @Controller()
+    @Controller()
     class Foobar {}
 
     controller('/foo', Foobar);
