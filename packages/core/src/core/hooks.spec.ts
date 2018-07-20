@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
-import { combinePreHooks, Hook, HookFunction, PreHook } from './hooks';
+import { combinePreHooks, getHookFunction, Hook, HookFunction, PreHook } from './hooks';
 import { Context, HttpResponseOK } from './http';
 import { ServiceManager } from './service-manager';
 
@@ -30,6 +30,17 @@ describe('Hook', () => {
 
     const actual = Reflect.getOwnMetadata('hooks', Foobar);
     expect(actual).to.deep.equal([ hook1, hook2 ]);
+  });
+
+});
+
+describe('getHookFunction', () => {
+
+  it('should take a hook decorator and return its hook function.', () => {
+    const hookFunction = () => {};
+    const hook = Hook(hookFunction);
+
+    expect(getHookFunction(hook)).to.equal(hookFunction);
   });
 
 });

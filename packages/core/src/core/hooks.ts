@@ -21,6 +21,13 @@ export function Hook(hookFunction: HookFunction) {
   };
 }
 
+export function getHookFunction(hook: (target: any, propertyKey?: string) => any): HookFunction {
+  @hook
+  class Foo {}
+
+  return Reflect.getOwnMetadata('hooks', Foo)[0];
+}
+
 export function combinePreHooks(preHooks: PreHook[]): PreHook {
   return async (ctx: Context, services: ServiceManager) => {
     for (const preHook of preHooks) {
