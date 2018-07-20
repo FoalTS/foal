@@ -1,4 +1,4 @@
-import { HookFunction, PostHook, PreHook } from '../hooks';
+import { HookFunction } from '../hooks';
 import { HttpMethod } from '../http';
 
 export interface Route {

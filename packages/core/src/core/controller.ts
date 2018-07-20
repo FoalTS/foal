@@ -1,8 +1,10 @@
 import {
-  PostHook,
   PreHook,
 } from './hooks';
-import { HttpMethod } from './http';
+import { Context, HttpMethod } from './http';
+import { ServiceManager } from './service-manager';
+
+export type PostHook = (ctx: Context, services: ServiceManager) => void | Promise<void>;
 
 export interface Route {
   httpMethod: HttpMethod;
