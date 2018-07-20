@@ -1,4 +1,4 @@
-import { Config, Context, Controller, HttpResponseOK } from '../../core';
+import { Config, Context, Controller2, HttpResponseOK } from '../../core';
 
 export function render(template: string, locals?: object): HttpResponseOK {
   const templateEngine = Config.get('settings', 'templateEngine', '@foal/ejs') as string;
@@ -10,8 +10,8 @@ export function render(template: string, locals?: object): HttpResponseOK {
 }
 
 export function view(path: string, template: string,
-                     locals?: object|((ctx: Context) => object)): Controller<'main'> {
-  const controller = new Controller<'main'>();
+                     locals?: object|((ctx: Context) => object)): Controller2<'main'> {
+  const controller = new Controller2<'main'>();
   if (typeof locals === 'function') {
     controller.addRoute('main', 'GET', path, ctx => render(template, locals(ctx)));
   } else {

@@ -1,6 +1,6 @@
 import {
   Class,
-  Controller,
+  Controller2,
   HttpResponseCreated,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
@@ -13,8 +13,8 @@ import { ISerializer } from '../services';
 export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PATCH /' | 'PATCH /:id'
   | 'POST /' | 'POST /:id' | 'PUT /' | 'PUT /:id' ;
 
-export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>>): Controller<RouteName> {
-  const controller = new Controller<RouteName>(path);
+export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>>): Controller2<RouteName> {
+  const controller = new Controller2<RouteName>(path);
   controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
   controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
     const service = services.get(ModelServiceClass);
