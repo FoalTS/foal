@@ -16,9 +16,9 @@ import { EntitySerializer } from './entity-serializer.service';
 // TODO: remove user.entity.spec file.
 import { User } from './user.entity.spec';
 
-function testSuite(title: string, connectionName: string) {
+function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: string) {
 
-  describe(`with ${title}`, () => {
+  describe(`with ${type}`, () => {
 
     let service: EntitySerializer<User>;
 
@@ -30,16 +30,44 @@ function testSuite(title: string, connectionName: string) {
       service = new UserService();
     });
 
-    beforeEach(() => createConnection({
-      database: 'test',
-      dropSchema: true,
-      entities: [ User ],
-      name: connectionName,
-      password: 'test',
-      synchronize: true,
-      type: 'mysql',
-      username: 'test',
-    }));
+    beforeEach(() => {
+      switch (type) {
+        case 'mysql':
+        case 'mariadb':
+          return createConnection({
+            database: 'test',
+            dropSchema: true,
+            entities: [ User ],
+            name: connectionName,
+            password: 'test',
+            synchronize: true,
+            type,
+            username: 'test',
+          });
+        case 'postgres':
+          return createConnection({
+            database: 'test',
+            dropSchema: true,
+            entities: [ User ],
+            name: connectionName,
+            password: 'test',
+            synchronize: true,
+            type,
+            username: 'test',
+          });
+        case 'sqlite':
+          return createConnection({
+            database: 'test_db.sqlite',
+            dropSchema: true,
+            entities: [ User ],
+            name: connectionName,
+            synchronize: true,
+            type,
+          });
+        default:
+          break;
+      }
+    });
 
     afterEach(() => getConnection(connectionName).close());
 
@@ -304,11 +332,11 @@ function testSuite(title: string, connectionName: string) {
 
 describe('EntitySerializer', () => {
 
-  testSuite('MySQL', 'mysql-connection');
-  // testSuite('MariaDB', 'mariadb-connection');
+  testSuite('mysql', 'mysql-connection');
+  testSuite('mariadb', 'mariadb-connection');
   // We'll need to wait for this issue to be fixed before supporting both postgres and sqlite:
   // https://github.com/typeorm/typeorm/issues/1308
-  // testSuite('SQLite', 'sqlite-connection');
-  // testSuite('PostgreSQL', 'postgres-connection');
+  // testSuite('sqlite', 'sqlite-connection');
+  // testSuite('postgres', 'postgres-connection');
 
 });
