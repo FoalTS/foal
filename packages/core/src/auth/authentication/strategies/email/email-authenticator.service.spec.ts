@@ -1,12 +1,12 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { Column, Connection, createConnection, Entity } from 'typeorm';
+import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-import { AbstractUser } from '../../../entities';
+import { AbstractUser, Group, Permission } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
 describe('EmailAuthenticator', () => {
@@ -37,30 +37,22 @@ describe('EmailAuthenticator', () => {
   });
 
   describe('when authenticate is called', () => {
-    let connection: Connection;
-
     const password = 'foobar';
     const encryptedPassword = 'pbkdf2_sha256$100000$c678be5a273eee3938de7656071264b2$'
     + 'eb96ff7e947816f74908abc687926fec7e9a84c7e6c9a0c3d5d3cb718bc9'
     + '479410815c7b38cace114ec995354defe1e3511f3c103ed4356d457cb98bffc8d559';
 
-    beforeEach(async () => {
-      connection = await createConnection({
-        database: 'test',
-        dropSchema: true,
-        entities: [ User ],
-        password: 'test',
-        synchronize: true,
-        type: 'mysql',
-        username: 'test',
-      });
-    });
+    beforeEach(() => createConnection({
+      database: 'test',
+      dropSchema: true,
+      entities: [ User, Group, Permission ],
+      password: 'test',
+      synchronize: true,
+      type: 'mysql',
+      username: 'test',
+    }));
 
-    afterEach(async () => {
-      await connection.close();
-    });
-
-    beforeEach(async () => {
+    beforeEach(() => {
       const john = new User();
       john.email = 'john@foalts.org';
       john.id = 1;
@@ -82,12 +74,10 @@ describe('EmailAuthenticator', () => {
       sam.permissions = [];
       sam.username = 'Sam';
 
-      await Promise.all([
-        john.save(),
-        jack.save(),
-        sam.save(),
-      ]);
+      return getManager().save([ john, sam, jack ]);
     });
+
+    afterEach(() => getConnection().close());
 
     it('should return null if no user is found for the given email.', async () => {
       const user = await service.authenticate({ email: 'jack2@foalts.org', password: 'foo' });

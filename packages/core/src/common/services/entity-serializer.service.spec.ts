@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
-  createConnections,
+  createConnection,
   getConnection,
   getManager,
 } from 'typeorm';
@@ -13,6 +13,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 import { EntitySerializer } from './entity-serializer.service';
+// TODO: remove user.entity.spec file.
 import { User } from './user.entity.spec';
 
 function testSuite(title: string, connectionName: string) {
@@ -29,10 +30,18 @@ function testSuite(title: string, connectionName: string) {
       service = new UserService();
     });
 
-    beforeEach(async () => {
-      const queryBuilder = getConnection(connectionName).createQueryRunner();
-      await queryBuilder.query('DELETE from user');
-    });
+    beforeEach(() => createConnection({
+      database: 'test',
+      dropSchema: true,
+      entities: [ User ],
+      name: connectionName,
+      password: 'test',
+      synchronize: true,
+      type: 'mysql',
+      username: 'test',
+    }));
+
+    afterEach(() => getConnection(connectionName).close());
 
     describe('when createOne is called', () => {
 
@@ -293,22 +302,13 @@ function testSuite(title: string, connectionName: string) {
 
 }
 
-xdescribe('EntitySerializer', () => {
-
-  before(() => createConnections());
+describe('EntitySerializer', () => {
 
   testSuite('MySQL', 'mysql-connection');
-  testSuite('MariaDB', 'mariadb-connection');
+  // testSuite('MariaDB', 'mariadb-connection');
   // We'll need to wait for this issue to be fixed before supporting both postgres and sqlite:
   // https://github.com/typeorm/typeorm/issues/1308
   // testSuite('SQLite', 'sqlite-connection');
-  // testSuite('MariaDB', 'postgres-connection');
-
-  after(() => Promise.all([
-    getConnection('mysql-connection').close(),
-    getConnection('mariadb-connection').close(),
-    // getConnection('sqlite-connection').close(),
-    // getConnection('postgres-connection').close(),
-  ]));
+  // testSuite('PostgreSQL', 'postgres-connection');
 
 });

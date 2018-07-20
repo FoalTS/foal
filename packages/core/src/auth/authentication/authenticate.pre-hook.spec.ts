@@ -1,12 +1,12 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { Column, Connection, createConnection, Entity, getManager } from 'typeorm';
+import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 import {
   Context,
   ServiceManager,
 } from '../../core';
-import { AbstractUser } from '../entities';
+import { AbstractUser, Group, Permission } from '../entities';
 import { authenticate } from './authenticate.pre-hook';
 
 chai.use(chaiAsPromised);
@@ -29,34 +29,28 @@ describe('authenticate', () => {
     username: string;
   }
 
-  let connection: Connection;
+  beforeEach(() => createConnection({
+    database: 'test',
+    dropSchema: true,
+    entities: [ User, Group, Permission ],
+    password: 'test',
+    synchronize: true,
+    type: 'mysql',
+    username: 'test',
+  }));
 
-  beforeEach(async () => {
-    connection = await createConnection({
-      database: 'test',
-      dropSchema: true,
-      entities: [ User ],
-      password: 'test',
-      synchronize: true,
-      type: 'mysql',
-      username: 'test',
-    });
+  beforeEach(() => {
+    const user = new User();
+    user.email = 'john@foalts.org';
+    user.id = 1;
+    user.password = 'strongPassword';
+    user.permissions = [];
+    user.username = 'John';
+
+    return getManager().save(user);
   });
 
-  afterEach(async () => {
-    await connection.close();
-  });
-
-  beforeEach(async () => {
-    const user = getManager().create(User, {
-      email: 'john@foalts.org',
-      id: 1,
-      password: 'strongPassword',
-      permissions: [],
-      username: 'John',
-    });
-    await user.save();
-  });
+  afterEach(() => getConnection().close());
 
   it('should throw an Error if there is no session.', () => {
     const preHook = authenticate(User);
