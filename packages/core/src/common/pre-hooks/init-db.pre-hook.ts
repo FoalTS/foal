@@ -1,10 +1,10 @@
 import { ConnectionOptions, ConnectionOptionsReader, createConnection } from 'typeorm';
 
-import { Class, PreHook } from '../../core';
+import { Class, Hook, HookDecorator } from '../../core';
 
-export function initDB(entities: Class[] = [], connectionName = 'default'): PreHook {
+export function initDB(entities: Class[] = [], connectionName = 'default'): HookDecorator {
   let connectionOptions: ConnectionOptions;
-  return async () => {
+  return Hook(async () => {
     if (!connectionOptions) {
       const reader = new ConnectionOptionsReader({
         root: process.cwd()
@@ -15,5 +15,5 @@ export function initDB(entities: Class[] = [], connectionName = 'default'): PreH
         entities,
       });
     }
-  };
+  });
 }
