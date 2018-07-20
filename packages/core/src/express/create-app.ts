@@ -7,7 +7,15 @@ import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
 import { initDB } from '../common';
-import { Class, Config, HttpResponseForbidden, IModule, makeModuleRoutes, ServiceManager } from '../core';
+import {
+  Class,
+  Config,
+  getHookFunction,
+  HttpResponseForbidden,
+  IModule,
+  makeModuleRoutes,
+  ServiceManager
+} from '../core';
 import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
@@ -45,7 +53,7 @@ export function createApp(rootModuleClass: Class<IModule>) {
 
   const entities = []; // TODO: Get the entities from the module.
   const hooks = [
-    initDB(entities),
+    getHookFunction(initDB(entities)),
   ];
   if (Config.get('settings', 'csrf', false) as boolean) {
     hooks.push(ctx => {
