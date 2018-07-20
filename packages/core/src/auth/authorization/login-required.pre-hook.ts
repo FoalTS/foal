@@ -1,12 +1,13 @@
 import {
+  Hook,
+  HookDecorator,
   HttpResponseUnauthorized,
-  PreHook,
 } from '../../core';
 
-export function LoginRequired(): PreHook {
-  return ctx => {
+export function LoginRequired(): HookDecorator {
+  return Hook(ctx => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
-  };
+  });
 }

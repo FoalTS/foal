@@ -2,9 +2,10 @@ import { expect } from 'chai';
 
 import {
   Context,
+  getHookFunction,
+  HookFunction,
   HttpResponse,
   HttpResponseUnauthorized,
-  PreHook,
   ServiceManager,
 } from '../../core';
 import { AbstractUser } from '../entities';
@@ -12,12 +13,12 @@ import { LoginRequired } from './login-required.pre-hook';
 
 describe('LoginRequired', () => {
 
-  let preHook: PreHook;
+  let preHook: HookFunction;
 
   class User extends AbstractUser {}
 
   before(() => {
-    preHook = LoginRequired();
+    preHook = getHookFunction(LoginRequired());
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
