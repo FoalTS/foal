@@ -67,6 +67,8 @@
     "chai-spies": "^1.0.0",
     "mocha": "^3.5.3",
     "mysql": "^2.15.0",
+    "pg": "^7.4.3",
+    "sqlite3": "^4.0.2",
     "node-mocks-http": "^1.7.0",
     "rimraf": "^2.6.2",
     "supertest": "^3.1.0",
