@@ -3,9 +3,7 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
-import { getHookFunction, Hook, HookFunction, PreHook } from './hooks';
-import { Context, HttpResponseOK } from './http';
-import { ServiceManager } from './service-manager';
+import { getHookFunction, Hook, HookFunction } from './hooks';
 
 describe('Hook', () => {
 
