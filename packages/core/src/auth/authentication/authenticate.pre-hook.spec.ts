@@ -4,6 +4,7 @@ import { Column, createConnection, Entity, getConnection, getManager } from 'typ
 
 import {
   Context,
+  getHookFunction,
   ServiceManager,
 } from '../../core';
 import { AbstractUser, Group, Permission } from '../entities';
@@ -53,7 +54,7 @@ describe('authenticate', () => {
   afterEach(() => getConnection().close());
 
   it('should throw an Error if there is no session.', () => {
-    const preHook = authenticate(User);
+    const preHook = getHookFunction(authenticate(User));
     const ctx = new Context({});
 
     return expect(preHook(ctx, new ServiceManager()))
@@ -61,7 +62,7 @@ describe('authenticate', () => {
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const preHook = authenticate(User);
+    const preHook = getHookFunction(authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {};
@@ -72,7 +73,7 @@ describe('authenticate', () => {
   });
 
   it('should set ctx.user to undefined if no user is found in the database matching the given id.', async () => {
-    const hook = authenticate(User);
+    const hook = getHookFunction(authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {
@@ -86,7 +87,7 @@ describe('authenticate', () => {
   });
 
   it('should add a user property if a user matches the given id in the database.', async () => {
-    const hook = authenticate(User);
+    const hook = getHookFunction(authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {

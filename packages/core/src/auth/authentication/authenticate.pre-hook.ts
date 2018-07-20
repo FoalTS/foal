@@ -1,10 +1,10 @@
 import { getManager } from 'typeorm';
 
-import { Class, PreHook } from '../../core';
+import { Class, Hook, HookDecorator } from '../../core';
 import { AbstractUser } from '../entities';
 
-export function authenticate(UserEntity: Class<AbstractUser>): PreHook {
-  return async ctx => {
+export function authenticate(UserEntity: Class<AbstractUser>): HookDecorator {
+  return Hook(async ctx => {
     if (!ctx.request.session) {
       throw new Error('authenticate pre-hook requires session management.');
     }
@@ -12,5 +12,5 @@ export function authenticate(UserEntity: Class<AbstractUser>): PreHook {
       return;
     }
     ctx.user = await getManager().findOne(UserEntity, ctx.request.session.authentication.userId);
-  };
+  });
 }
