@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { Context, HttpResponseOK, ServiceManager } from '../../core';
+import { Context, getHttpMethod, getPath, HttpResponseOK, ServiceManager } from '../../core';
 import { render, view } from './view.controller-factory';
 
 const template1 = 'Hi!';
@@ -30,20 +30,24 @@ describe('render', () => {
 
 describe('view', () => {
 
-  describe('should return a controller with one "main" route that', () => {
+  describe('should return a controller with a "render" method that', () => {
 
-    it('should respond to the GET /${path} requests', () => {
-      const controller = view('/foo', template1, {});
-      expect(controller.getRoute('main').path).to.equal('/foo');
-      expect(controller.getRoute('main').httpMethod).to.equal('GET');
+    it('should handle requests at GET /${path}.', () => {
+      const controllerClass = view('/foo', template1, {});
+      expect(getHttpMethod(controllerClass, 'render')).to.equal('GET');
+      expect(getPath(controllerClass, 'render')).to.equal('/foo');
     });
 
     it('should render the ejs template (HttpResponseOK) with the given locals (object).', () => {
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
 
-      const controller = view('/foo', template2, { name });
-      expect(controller.getRoute('main').handler(new Context({}), new ServiceManager()))
+      const controllerClass = view('/foo', template2, { name });
+      const controller = new controllerClass();
+
+      const ctx = new Context({});
+
+      expect(controller.render(ctx))
         .to.be.an.instanceOf(HttpResponseOK)
         .with.property('content', expected);
     });
@@ -51,11 +55,14 @@ describe('view', () => {
     it('should render the ejs template (HttpResponseOK) with the given locals (function).', () => {
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
+
+      const controllerClass = view('/foo', template2, ctx => ctx.state);
+      const controller = new controllerClass();
+
       const ctx = new Context({});
       ctx.state = { name };
 
-      const controller = view('/foo', template2, ctx => ctx.state);
-      expect(controller.getRoute('main').handler(ctx, new ServiceManager()))
+      expect(controller.render(ctx))
         .to.be.an.instanceOf(HttpResponseOK)
         .with.property('content', expected);
     });

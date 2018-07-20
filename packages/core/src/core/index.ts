@@ -1,5 +1,5 @@
 export * from './class.interface';
-// export { Controller } from './controllers';
+export { Controller } from './controllers';
 export * from './http';
 export * from './hooks';
 export * from './routes';
