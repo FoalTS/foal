@@ -1,7 +1,7 @@
-import { PreHook } from '../../core';
+import { Hook, HookDecorator } from '../../core';
 
-export function restrictBodyAndQueryToAuthenticated(): PreHook {
-  return (ctx, services) => {
+export function restrictBodyAndQueryToAuthenticated(): HookDecorator {
+  return Hook((ctx, services) => {
     if (!ctx.user) {
       throw new Error('No user is authenticated.');
     }
@@ -9,5 +9,5 @@ export function restrictBodyAndQueryToAuthenticated(): PreHook {
       ctx.request.body.userId = ctx.user.id;
     }
     ctx.state.query = { ...ctx.state.query, userId: ctx.user.id };
-  };
+  });
 }

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { AbstractUser } from '../../auth';
-import { Context, ServiceManager } from '../../core';
+import { Context, getHookFunction, ServiceManager } from '../../core';
 import { restrictBodyAndQueryToAuthenticated } from './restrict-body-and-query-to-authenticated.pre-hook';
 
 describe('restrictBodyAndQueryToAuthenticated', () => {
@@ -9,7 +9,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
   class User extends AbstractUser {}
 
   it('should throw an Error if no user is authenticated.', () => {
-    const preHook = restrictBodyAndQueryToAuthenticated();
+    const preHook = getHookFunction(restrictBodyAndQueryToAuthenticated());
     const ctx = new Context({});
 
     expect(() => preHook(ctx, new ServiceManager()))
@@ -17,7 +17,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
   });
 
   it('should add the suitable userId to ctx.request.body if it is an object.', () => {
-    const preHook = restrictBodyAndQueryToAuthenticated();
+    const preHook = getHookFunction(restrictBodyAndQueryToAuthenticated());
     const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;
@@ -29,7 +29,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
   });
 
   it('should leave ctx.body undefined is it is undefined.', () => {
-    const preHook = restrictBodyAndQueryToAuthenticated();
+    const preHook = getHookFunction(restrictBodyAndQueryToAuthenticated());
     const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;
@@ -41,7 +41,7 @@ describe('restrictBodyAndQueryToAuthenticated', () => {
 
   it('should add the suitable userId to ctx.state.query whether this object already '
       + 'exists or not.', () => {
-    const preHook = restrictBodyAndQueryToAuthenticated();
+    const preHook = getHookFunction(restrictBodyAndQueryToAuthenticated());
     const ctx = new Context({});
     ctx.user = new User();
     ctx.user.id = 1;

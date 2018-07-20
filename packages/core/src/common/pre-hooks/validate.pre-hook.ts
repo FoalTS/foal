@@ -1,14 +1,14 @@
 import * as Ajv from 'ajv';
 
-import { HttpResponseBadRequest, PreHook } from '../../core';
+import { Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 
 const defaultInstance = new Ajv();
 
-export function Validate(schema: object, ajv = defaultInstance): PreHook {
+export function Validate(schema: object, ajv = defaultInstance): HookDecorator {
   const isValid = ajv.compile(schema);
-  return ctx => {
+  return Hook(ctx => {
     if (!isValid(ctx.request.body)) {
       return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
     }
-  };
+  });
 }
