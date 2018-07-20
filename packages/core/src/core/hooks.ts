@@ -7,12 +7,13 @@ import { ServiceManager } from './service-manager';
 
 // not void. HttpResponse or HttpResponse | void (same with promises)
 export type HookFunction = (ctx: Context, services: ServiceManager) => any;
+export type HookDecorator = (target: any, propertyKey?: string) => any;
 
 // TODO: delete this.
 export type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
 export type PostHook = (ctx: Context, services: ServiceManager) => void | Promise<void>;
 
-export function Hook(hookFunction: HookFunction) {
+export function Hook(hookFunction: HookFunction): HookDecorator {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
     const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
@@ -21,7 +22,7 @@ export function Hook(hookFunction: HookFunction) {
   };
 }
 
-export function getHookFunction(hook: (target: any, propertyKey?: string) => any): HookFunction {
+export function getHookFunction(hook: HookDecorator): HookFunction {
   @hook
   class Foo {}
 
