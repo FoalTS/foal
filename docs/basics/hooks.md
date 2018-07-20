@@ -2,6 +2,17 @@
 
 // Add a little get-started (some code or a cli command)
 
+```sh
+foal generate hook my-hook
+```
+
+> Difference between a hook and an express middleware?
+> - sync or async
+> - do not use res, but return, resolves a HttpResponse
+> - pas de next. Si pas de valeur retounée ou d'erreur levée/rejetée, on va à l'étape suivante
+> - ctx est un peu différent de req avec le state notamment
+> - purpose: not to be at the end of the chain. It's really in the middle.
+
 Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. There are two kinds of hooks:
 - the pre-hooks which are executed before the routes handlers (defined by the controller factory)
 - and the post-hooks which are executed after.
@@ -17,11 +28,6 @@ They takes two parameters:
 If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing of the request is stopped for the pre-hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
 
 > *Note*: A pre-hook (or post-hook) may also be registered within the `preHooks` (or `postHooks`) property of a module. If so it applies to all the controllers of the module.
-
-```typescript
-type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
-type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
-```
 
 ## How to create one
 
@@ -157,22 +163,6 @@ export const MyModule: Module = {
 }
 ```
 
-## Combination
-
-You can combine several hooks into one with `combinePreHooks`.
-
-```typescript
-import { combinePreHooks } from '@foal/core';
-
-function myCombinedPreHooks() {
-  return combinePreHooks([
-    myPreHook1()
-    myPreHook2()
-  ])
-}
-
-```
-
 ## Testing a hook
 
 Hooks are just mere functions. Test them as is.
@@ -200,7 +190,3 @@ describe('preHook', () => {
 });
 
 ```
-
-## `combinePreHooks(ppreHooks: PreHook[]): PreHook`
-
-Merges several pre hooks into one.
