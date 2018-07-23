@@ -1,6 +1,19 @@
-import { LoginRequired } from '../../auth';
-import { Class, Controller, Delete, Get, HttpResponseMethodNotAllowed, HttpResponseNotImplemented, Patch, Post, Put, ServiceManager } from '../../core';
+import {
+  Class,
+  Context,
+  Controller,
+  Delete,
+  Get,
+  HttpResponseCreated,
+  HttpResponseMethodNotAllowed,
+  HttpResponseNotImplemented,
+  Patch,
+  Post,
+  Put,
+  ServiceManager
+} from '../../core';
 import { ISerializer } from '../services';
+import { okOrNotFound } from '../utils';
 
 @Controller()
 export abstract class RestController {
@@ -20,9 +33,9 @@ export abstract class RestController {
   //   post: [ LoginRequired(), /*AssignUserId()*/ ]
   // };
 
-  // getQuery(ctx): object {
-  //   return {};
-  // }
+  getQuery(ctx: Context): object {
+    return {};
+  }
 
   @Delete('/')
   delete() {
@@ -30,27 +43,38 @@ export abstract class RestController {
   }
 
   @Delete('/:id')
-  deleteById() {
+  deleteById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.removeOne) {
       return new HttpResponseNotImplemented();
     }
+
+    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
+    return okOrNotFound(serializer.removeOne(query));
   }
 
   @Get('/')
-  get() {
+  get(ctx: Context) {
+    // schema and id
+    // hooks
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.findMany) {
       return new HttpResponseNotImplemented();
     }
+
+    const query = this.getQuery(ctx);
+    return okOrNotFound(serializer.findMany(query));
   }
 
   @Get('/:id')
-  getById() {
+  getById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.findOne) {
       return new HttpResponseNotImplemented();
     }
+
+    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
+    return okOrNotFound(serializer.findOne(query));
   }
 
   @Patch('/')
@@ -59,19 +83,26 @@ export abstract class RestController {
   }
 
   @Patch('/:id')
-  patchById() {
+  patchById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }
+
+    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
+    return okOrNotFound(serializer.updateOne(
+      query, ctx.request.body
+    ));
   }
 
   @Post('/')
-  post() {
+  async post(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.createOne) {
       return new HttpResponseNotImplemented();
     }
+
+    return new HttpResponseCreated(await serializer.createOne(ctx.request.body));
   }
 
   @Post('/:id')
@@ -85,11 +116,16 @@ export abstract class RestController {
   }
 
   @Put('/:id')
-  putById() {
+  putById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }
+
+    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
+    return okOrNotFound(serializer.updateOne(
+      query, ctx.request.body
+    ));
   }
 
 }

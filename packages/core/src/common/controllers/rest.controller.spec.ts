@@ -4,14 +4,19 @@ import * as chaiAsPromised from 'chai-as-promised';
 
 // FoalTS
 import {
+  Context,
   Controller,
   getHttpMethod,
   getPath,
+  HttpResponseCreated,
   HttpResponseMethodNotAllowed,
+  HttpResponseNotFound,
   HttpResponseNotImplemented,
+  HttpResponseOK,
   Service,
   ServiceManager
 } from '../../core';
+import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
 
@@ -24,6 +29,11 @@ describe('RestController', () => {
   class ConcreteController extends RestController {
     serializerClass = class {};
   }
+
+  it('has a getQuery method that should return an empty object', () => {
+    const controller = new ConcreteController(new ServiceManager());
+    expect(controller.getQuery(new Context({}))).to.deep.equal({});
+  });
 
   describe('has a "delete" method that', () => {
 
@@ -46,7 +56,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'deleteById')).to.equal('/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', () => {
+    it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', async () => {
       @Service()
       class Serializer implements Partial<ISerializer> {
         createMany() {}
@@ -62,7 +72,74 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.deleteById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.deleteById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    describe('when serializer.removeOne is defined', () => {
+
+      it('should return an HttpResponseOK if serializer.removeOne resolves.', async () => {
+        const query = { foo: 'bar' };
+        const objects = [ { bar: 'bar' }];
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async removeOne(query) {
+            return objects;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+
+          getQuery(ctx) {
+            return query;
+          }
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+        const serializer = services.get(Serializer);
+
+        chai.spy.on(controller, 'getQuery');
+        chai.spy.on(serializer, 'removeOne');
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.deleteById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', objects);
+        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
+        expect(serializer.removeOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
+      });
+
+      it('should return a HttpResponseNotFound if serializer.removeOne rejects an ObjectDoesNotExist.', async () => {
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async removeOne(query) {
+            throw new ObjectDoesNotExist();
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.deleteById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
     });
 
   });
@@ -74,7 +151,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'get')).to.equal('/');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.findMany is undefined.', () => {
+    it('should return an HttpResponseNotImplemented if serializer.findMany is undefined.', async () => {
       @Service()
       class Serializer implements Partial<ISerializer> {
         createMany() {}
@@ -90,7 +167,66 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.get()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.get(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    describe('when serializer.findMany is defined', () => {
+
+      it('should return an HttpResponseOK if serializer.findMany resolves.', async () => {
+        const query = { foo: 'bar' };
+        const objects = [ { bar: 'bar' }];
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async findMany(query) {
+            return objects;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+
+          getQuery(ctx) {
+            return query;
+          }
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+        const serializer = services.get(Serializer);
+
+        chai.spy.on(controller, 'getQuery');
+        chai.spy.on(serializer, 'findMany');
+
+        const ctx = new Context({});
+
+        const actual = await controller.get(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', objects);
+        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
+        expect(serializer.findMany).to.have.been.called.with.exactly(query);
+      });
+
+      it('should return a HttpResponseNotFound if serializer.findMany rejects an ObjectDoesNotExist.', async () => {
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async findMany(query) {
+            throw new ObjectDoesNotExist();
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({});
+
+        const actual = await controller.get(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
     });
 
   });
@@ -102,7 +238,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'getById')).to.equal('/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', () => {
+    it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', async () => {
 
       @Service()
       class Serializer implements Partial<ISerializer> {
@@ -119,7 +255,74 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.getById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.getById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    describe('when serializer.findOne is defined', () => {
+
+      it('should return an HttpResponseOK if serializer.findOne resolves.', async () => {
+        const query = { foo: 'bar' };
+        const objects = [ { bar: 'bar' }];
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async findOne(query) {
+            return objects;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+
+          getQuery(ctx) {
+            return query;
+          }
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+        const serializer = services.get(Serializer);
+
+        chai.spy.on(controller, 'getQuery');
+        chai.spy.on(serializer, 'findOne');
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.getById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', objects);
+        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
+        expect(serializer.findOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
+      });
+
+      it('should return a HttpResponseNotFound if serializer.findOne rejects an ObjectDoesNotExist.', async () => {
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async findOne(query) {
+            throw new ObjectDoesNotExist();
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.getById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
     });
 
   });
@@ -145,7 +348,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'patchById')).to.equal('/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', () => {
+    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
       @Service()
       class Serializer implements Partial<ISerializer> {
         createMany() {}
@@ -161,7 +364,83 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.patchById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.patchById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    describe('when serializer.updateOne is defined', () => {
+
+      it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
+        const query = { foo: 'bar' };
+        const objects = [ { bar: 'bar' }];
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query, record) {
+            return objects;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+
+          getQuery(ctx) {
+            return query;
+          }
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+        const serializer = services.get(Serializer);
+
+        chai.spy.on(controller, 'getQuery');
+        chai.spy.on(serializer, 'updateOne');
+
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+          params: {
+            id: 1
+          },
+        });
+
+        const actual = await controller.patchById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', objects);
+        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
+        expect(serializer.updateOne).to.have.been.called.with.exactly(
+          { foo: 'bar', id: 1 },
+          { foobar: 'foo' }
+        );
+      });
+
+      it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query, record) {
+            throw new ObjectDoesNotExist();
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.patchById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
     });
 
   });
@@ -173,7 +452,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'post')).to.equal('/');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', () => {
+    it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', async () => {
       @Service()
       class Serializer implements Partial<ISerializer> {
         createMany() {}
@@ -189,7 +468,38 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.post()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.post(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    it('should return an HttpResponseCreated if serializer.createOne is defined.', async () => {
+      const objects = [ { bar: 'bar' }];
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        async createOne(record) {
+          return objects;
+        }
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const services = new ServiceManager();
+      const controller = new ConcreteController(services);
+      const serializer = services.get(Serializer);
+
+      chai.spy.on(serializer, 'createOne');
+
+      const ctx = new Context({
+        body: {
+          foobar: 'foo'
+        },
+      });
+
+      const actual = await controller.post(ctx);
+      expect(actual).to.be.an.instanceOf(HttpResponseCreated)
+        .with.property('content', objects);
+      expect(serializer.createOne).to.have.been.called.with.exactly({ foobar: 'foo' });
     });
 
   });
@@ -229,7 +539,7 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'putById')).to.equal('/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', () => {
+    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
       @Service()
       class Serializer implements Partial<ISerializer> {
         createMany() {}
@@ -245,7 +555,83 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.putById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+      expect(await controller.putById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
+    describe('when serializer.updateOne is defined', () => {
+
+      it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
+        const query = { foo: 'bar' };
+        const objects = [ { bar: 'bar' }];
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query, record) {
+            return objects;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+
+          getQuery(ctx) {
+            return query;
+          }
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+        const serializer = services.get(Serializer);
+
+        chai.spy.on(controller, 'getQuery');
+        chai.spy.on(serializer, 'updateOne');
+
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+          params: {
+            id: 1
+          },
+        });
+
+        const actual = await controller.putById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseOK)
+          .with.property('content', objects);
+        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
+        expect(serializer.updateOne).to.have.been.called.with.exactly(
+          { foo: 'bar', id: 1 },
+          { foobar: 'foo' }
+        );
+      });
+
+      it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query, record) {
+            throw new ObjectDoesNotExist();
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+          params: {
+            id: 1
+          }
+        });
+
+        const actual = await controller.putById(ctx);
+        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
     });
 
   });
