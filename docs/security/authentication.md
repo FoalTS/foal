@@ -227,16 +227,22 @@ export class User extends AbstractUser {
 
 ```typescript
 // auth.module.ts
-import { route, HttpResponseOK, login, Module } from '@foal/core';
+import { controller, Get, Controller, render, Login, Module } from '@foal/core';
 
 import { AuthService } from './services/auth.service';
 
+@Controller()
+class LoginViewController {
+  @Get()
+  index(ctx) {
+    return render(require('./templates/login.html'), { csrfToken: ctx.state.csrfToken });
+  }
+}
+
 export const AuthModule: Module = {
   controllers: [
-    login('/login', AuthService)
-    view('/login', require('./templates/login.html'), ctx => {
-      return { csrfToken: ctx.state.csrfToken };
-    });
+    login('/login', AuthService),
+    controller('/login', LoginViewController)
   ]
 }
 ```

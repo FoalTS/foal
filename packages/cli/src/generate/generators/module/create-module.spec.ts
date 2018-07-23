@@ -10,6 +10,9 @@ describe('createModule', () => {
   beforeEach(() => createModule({ name: 'test-fooBar', log: false }));
 
   afterEach(() => {
+    rmfileIfExists('test-foo-bar/controllers/templates/index.ts');
+    rmfileIfExists('test-foo-bar/controllers/templates/test.ts');
+    rmdirIfExists('test-foo-bar/controllers/templates');
     rmfileIfExists('test-foo-bar/controllers/index.ts');
     rmfileIfExists('test-foo-bar/controllers/test.ts');
     rmdirIfExists('test-foo-bar/controllers');
@@ -29,10 +32,6 @@ describe('createModule', () => {
     rmfileIfExists('test-foo-bar/services/index.ts');
     rmfileIfExists('test-foo-bar/services/test.ts');
     rmdirIfExists('test-foo-bar/services');
-
-    rmfileIfExists('test-foo-bar/templates/index.ts');
-    rmfileIfExists('test-foo-bar/templates/test.ts');
-    rmdirIfExists('test-foo-bar/templates');
 
     rmfileIfExists('test-foo-bar/test-foo-bar.module.ts');
     rmfileIfExists('test-foo-bar/index.ts');
@@ -119,12 +118,12 @@ describe('createModule', () => {
 
   it('should render the templates templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('module/templates/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/templates/index.ts');
+    let expected = readFileFromTemplatesSpec('module/controllers/templates/index.1.ts');
+    let actual = readFileFromRoot('test-foo-bar/controllers/templates/index.ts');
     expect(actual).to.equal(expected);
 
-    expected = readFileFromTemplatesSpec('module/templates/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/templates/test.ts');
+    expected = readFileFromTemplatesSpec('module/controllers/templates/test.1.ts');
+    actual = readFileFromRoot('test-foo-bar/controllers/templates/test.ts');
     expect(actual).to.equal(expected);
 
   });

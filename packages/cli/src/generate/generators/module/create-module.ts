@@ -12,6 +12,17 @@ export function createModule({ name, log }: { name: string, log?: boolean }) {
   mkdirIfNotExists(`${names.kebabName}/controllers`, log);
   copyFileFromTemplates('module/controllers/index.ts', `${names.kebabName}/controllers/index.ts`, log);
   copyFileFromTemplates('module/controllers/test.ts', `${names.kebabName}/controllers/test.ts`, log);
+  mkdirIfNotExists(`${names.kebabName}/controllers/templates`, log);
+  copyFileFromTemplates(
+    'module/controllers/templates/index.ts',
+    `${names.kebabName}/controllers/templates/index.ts`,
+    log
+  );
+  copyFileFromTemplates(
+    'module/controllers/templates/test.ts',
+    `${names.kebabName}/controllers/templates/test.ts`,
+    log
+  );
 
   mkdirIfNotExists(`${names.kebabName}/hooks`, log);
   copyFileFromTemplates('module/hooks/index.ts', `${names.kebabName}/hooks/index.ts`, log);
@@ -28,8 +39,4 @@ export function createModule({ name, log }: { name: string, log?: boolean }) {
   mkdirIfNotExists(`${names.kebabName}/services`, log);
   copyFileFromTemplates('module/services/index.ts', `${names.kebabName}/services/index.ts`, log);
   copyFileFromTemplates('module/services/test.ts', `${names.kebabName}/services/test.ts`, log);
-
-  mkdirIfNotExists(`${names.kebabName}/templates`, log);
-  copyFileFromTemplates('module/templates/index.ts', `${names.kebabName}/templates/index.ts`, log);
-  copyFileFromTemplates('module/templates/test.ts', `${names.kebabName}/templates/test.ts`, log);
 }

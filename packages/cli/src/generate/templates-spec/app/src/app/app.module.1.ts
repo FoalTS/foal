@@ -1,14 +1,11 @@
-import { Config, IModule, Module, view } from '@foal/core';
+import { controller, IModule, Module } from '@foal/core';
 
-import { index } from './templates';
+import { ViewController } from './controllers';
 
 @Module()
 export class AppModule implements IModule {
   controllers = [
-    view('/', index, ctx => ({
-      appName: Config.get('app', 'name'),
-      csrfToken: ctx.state.csrfToken,
-    }))
+    controller('/', ViewController),
   ];
 
   subModules = [
