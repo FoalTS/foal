@@ -18,6 +18,6 @@ export class Group {
   @ManyToMany(type => Permission)
   @JoinTable()
   // @ts-ignore : Property 'permissions' has no initializer and is not definitely assigned in theconstructor.
-  permissions: string;
+  permissions: Permission[];
 
 }

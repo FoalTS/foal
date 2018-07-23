@@ -51,8 +51,8 @@ describe('Permission', () => {
         'ER_NO_DEFAULT_FOR_FIELD: Field \'codeName\' doesn\'t have a default value'
       );
 
-    permission.codeName = 'this is a very long long long long long long long line'
-      + 'this is a very long long long long long long long line';
+    permission.codeName = 'This is a very long long long long long long line.'
+      + 'This is a very long long long long long long line.1';
 
     await expect(getManager().save(permission))
       .to.be.rejectedWith(
