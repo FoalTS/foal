@@ -1,5 +1,5 @@
 // 3p
-import { Column, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -25,7 +25,6 @@ export abstract class AbstractUser {
   userPermissions: Permission[];
 
   hasPerm(codeName: string): boolean {
-    // return this.permissions.includes(codeName);
     for (const permission of this.userPermissions || []) {
       if (permission.codeName === codeName) {
         return true;

@@ -1,7 +1,7 @@
 // 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
 import { AbstractUser } from './abstract-user.entity';
