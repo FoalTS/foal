@@ -8,7 +8,6 @@ describe('Context', () => {
     const request = {};
     const actual = new Context(request);
     expect(actual.request).to.be.equal(request);
-    expect(actual.response).to.equal(undefined);
     expect(actual.state).to.deep.equal({});
     expect(actual.user).to.equal(undefined);
   });
