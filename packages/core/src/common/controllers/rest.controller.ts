@@ -1,5 +1,5 @@
 import { LoginRequired } from '../../auth';
-import { Class, Controller, Delete, Get, Patch, Post, Put } from '../../core';
+import { Class, Controller, Delete, Get, HttpResponseMethodNotAllowed, Patch, Post, Put } from '../../core';
 import { ISerializer } from '../services';
 
 @Controller()
@@ -23,7 +23,9 @@ export abstract class RestController {
   // }
 
   @Delete('/')
-  delete() {}
+  delete() {
+    return new HttpResponseMethodNotAllowed();
+  }
 
   @Delete('/:id')
   deleteById() {}
@@ -35,7 +37,9 @@ export abstract class RestController {
   getById() {}
 
   @Patch('/')
-  patch() {}
+  patch() {
+    return new HttpResponseMethodNotAllowed();
+  }
 
   @Patch('/:id')
   patchById() {}
@@ -44,10 +48,14 @@ export abstract class RestController {
   post() {}
 
   @Post('/:id')
-  postById() {}
+  postById() {
+    return new HttpResponseMethodNotAllowed();
+  }
 
   @Put('/')
-  put() {}
+  put() {
+    return new HttpResponseMethodNotAllowed();
+  }
 
   @Put('/:id')
   putById() {}

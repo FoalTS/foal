@@ -4,7 +4,6 @@ import * as spies from 'chai-spies';
 import {
   Context,
   HttpResponseCreated,
-  HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
@@ -24,17 +23,6 @@ describe('rest', () => {
   class EmptyMockService {}
 
   describe('when it is called', () => {
-
-    it('should return a controller with a proper "DELETE /" route.', async () => {
-      const controller = rest('/foobar', EmptyMockService);
-      const actual = controller.getRoute('DELETE /');
-
-      expect(actual.httpMethod).to.equal('DELETE');
-      expect(actual.path).to.equal('/foobar/');
-
-      const ctx = new Context({});
-      expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
-    });
 
     describe('should return a controller with a proper "DELETE /:id" route that handles requests', () => {
 
@@ -194,17 +182,6 @@ describe('rest', () => {
 
     });
 
-    it('should return an array of which one item handles PATCH /.', async () => {
-      const controller = rest('/foobar', EmptyMockService);
-      const actual = controller.getRoute('PATCH /');
-
-      expect(actual.httpMethod).to.equal('PATCH');
-      expect(actual.path).to.equal('/foobar/');
-
-      const ctx = new Context({});
-      expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
-    });
-
     describe('should return a controller with a proper "PATCH /:id" route that handles requests', () => {
 
       it('when service.updateOne is undefined.', async () => {
@@ -306,28 +283,6 @@ describe('rest', () => {
         expect(mock.createOne).to.have.been.called.with.exactly(ctx.request.body);
       });
 
-    });
-
-    it('should return an array of which one item handles POST /:id.', async () => {
-      const controller = rest('/foobar', EmptyMockService);
-      const actual = controller.getRoute('POST /:id');
-
-      expect(actual.httpMethod).to.equal('POST');
-      expect(actual.path).to.equal('/foobar/:id');
-
-      const ctx = new Context({});
-      expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
-    });
-
-    it('should return an array of which one item handles PUT /.', async () => {
-      const controller = rest('/foobar', EmptyMockService);
-      const actual = controller.getRoute('PUT /');
-
-      expect(actual.httpMethod).to.equal('PUT');
-      expect(actual.path).to.equal('/foobar/');
-
-      const ctx = new Context({});
-      expect(await actual.handler(ctx, new ServiceManager())).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
     describe('should return a controller with a proper "PUT /:id" route that handles requests', () => {

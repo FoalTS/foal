@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
 // FoalTS
-import { Controller, getHttpMethod, getPath } from '../../core';
+import { Controller, getHttpMethod, getPath, HttpResponseMethodNotAllowed } from '../../core';
 import { RestController } from './rest.controller';
 
 chai.use(chaiAsPromised);
@@ -21,6 +21,11 @@ describe('RestController', () => {
     it('should handle requests at DELETE /.', () => {
       expect(getHttpMethod(ConcreteController, 'delete')).to.equal('DELETE');
       expect(getPath(ConcreteController, 'delete')).to.equal('/');
+    });
+
+    it('should return a HttpResponseMethodNotAllowed.', () => {
+      const controller = new ConcreteController();
+      expect(controller.delete()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
   });
@@ -59,6 +64,11 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'patch')).to.equal('/');
     });
 
+    it('should return a HttpResponseMethodNotAllowed.', () => {
+      const controller = new ConcreteController();
+      expect(controller.patch()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+    });
+
   });
 
   describe('has a "patchById" method that', () => {
@@ -86,6 +96,11 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'postById')).to.equal('/:id');
     });
 
+    it('should return a HttpResponseMethodNotAllowed.', () => {
+      const controller = new ConcreteController();
+      expect(controller.postById()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+    });
+
   });
 
   describe('has a "put" method that', () => {
@@ -93,6 +108,11 @@ describe('RestController', () => {
     it('should handle requests at PUT /.', () => {
       expect(getHttpMethod(ConcreteController, 'put')).to.equal('PUT');
       expect(getPath(ConcreteController, 'put')).to.equal('/');
+    });
+
+    it('should return a HttpResponseMethodNotAllowed.', () => {
+      const controller = new ConcreteController();
+      expect(controller.put()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
   });

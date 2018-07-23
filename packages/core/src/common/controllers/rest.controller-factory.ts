@@ -15,7 +15,7 @@ export type RouteName = 'DELETE /' | 'DELETE /:id' | 'GET /' | 'GET /:id' | 'PAT
 
 export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>>): Controller2<RouteName> {
   const controller = new Controller2<RouteName>(path);
-  controller.addRoute('DELETE /', 'DELETE', '/', ctx => new HttpResponseMethodNotAllowed());
+
   controller.addRoute('DELETE /:id', 'DELETE', '/:id', async (ctx, services) => {
     const service = services.get(ModelServiceClass);
     if (!service.removeOne) {
@@ -55,7 +55,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>
       throw err;
     }
   });
-  controller.addRoute('PATCH /', 'PATCH', '/', ctx => new HttpResponseMethodNotAllowed());
+
   controller.addRoute('PATCH /:id', 'PATCH', '/:id', async (ctx, services) => {
     const service = services.get(ModelServiceClass);
     if (!service.updateOne) {
@@ -80,8 +80,7 @@ export function rest(path: string, ModelServiceClass: Class<Partial<ISerializer>
     }
     return new HttpResponseCreated(await service.createOne(ctx.request.body));
   });
-  controller.addRoute('POST /:id', 'POST', '/:id', ctx => new HttpResponseMethodNotAllowed());
-  controller.addRoute('PUT /', 'PUT', '/', ctx => new HttpResponseMethodNotAllowed());
+
   controller.addRoute('PUT /:id', 'PUT', '/:id', async (ctx, services) => {
     const service = services.get(ModelServiceClass);
     if (!service.updateOne) {
