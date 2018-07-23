@@ -1,4 +1,4 @@
-export * from './controller-factories';
+export * from './controllers';
 export * from './errors';
 export * from './pre-hooks';
 export * from './services';
