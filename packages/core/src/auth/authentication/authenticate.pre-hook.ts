@@ -11,6 +11,10 @@ export function authenticate(UserEntity: Class<AbstractUser>): HookDecorator {
     if (!ctx.request.session.authentication || !ctx.request.session.authentication.hasOwnProperty('userId')) {
       return;
     }
-    ctx.user = await getManager().findOne(UserEntity, ctx.request.session.authentication.userId);
+    ctx.user = await getManager().findOne(
+      UserEntity,
+      ctx.request.session.authentication.userId,
+      { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }
+    );
   });
 }
