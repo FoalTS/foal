@@ -11,8 +11,8 @@ import {
 
 import { AirportController, ViewController } from './controllers';
 import { Flight, User } from './entities';
-import { AuthModule } from './modules/authentication';
 import { FlightService, UserService } from './services';
+import { AuthModule } from './sub-modules/authentication';
 
 @Module()
 @authenticate(User)
