@@ -1,10 +1,12 @@
 import { LoginRequired } from '../../auth';
-import { Class, Controller, Delete, Get, HttpResponseMethodNotAllowed, Patch, Post, Put } from '../../core';
+import { Class, Controller, Delete, Get, HttpResponseMethodNotAllowed, HttpResponseNotImplemented, Patch, Post, Put, ServiceManager } from '../../core';
 import { ISerializer } from '../services';
 
 @Controller()
 export abstract class RestController {
   abstract serializerClass: Class<Partial<ISerializer>>;
+
+  constructor(private services: ServiceManager) { }
   // schema = {
   //   id: { type: 'number' }
   // };
@@ -28,13 +30,28 @@ export abstract class RestController {
   }
 
   @Delete('/:id')
-  deleteById() {}
+  deleteById() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.removeOne) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
   @Get('/')
-  get() {}
+  get() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.findMany) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
   @Get('/:id')
-  getById() {}
+  getById() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.findOne) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
   @Patch('/')
   patch() {
@@ -42,10 +59,20 @@ export abstract class RestController {
   }
 
   @Patch('/:id')
-  patchById() {}
+  patchById() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.updateOne) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
   @Post('/')
-  post() {}
+  post() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.createOne) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
   @Post('/:id')
   postById() {
@@ -58,6 +85,11 @@ export abstract class RestController {
   }
 
   @Put('/:id')
-  putById() {}
+  putById() {
+    const serializer = this.services.get(this.serializerClass);
+    if (!serializer.updateOne) {
+      return new HttpResponseNotImplemented();
+    }
+  }
 
 }

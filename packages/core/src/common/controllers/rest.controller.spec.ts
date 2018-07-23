@@ -3,7 +3,16 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
 // FoalTS
-import { Controller, getHttpMethod, getPath, HttpResponseMethodNotAllowed } from '../../core';
+import {
+  Controller,
+  getHttpMethod,
+  getPath,
+  HttpResponseMethodNotAllowed,
+  HttpResponseNotImplemented,
+  Service,
+  ServiceManager
+} from '../../core';
+import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
 
 chai.use(chaiAsPromised);
@@ -24,7 +33,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       expect(controller.delete()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -37,6 +46,25 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'deleteById')).to.equal('/:id');
     });
 
+    it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', () => {
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        createOne() {}
+        findMany() {}
+        findOne() {}
+        // removeOne() {}
+        updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.deleteById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
   });
 
   describe('has a "get" method that', () => {
@@ -46,6 +74,25 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'get')).to.equal('/');
     });
 
+    it('should return a HttpResponseNotImplemented if serializer.findMany is undefined.', () => {
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        createOne() {}
+        // findMany() {}
+        findOne() {}
+        removeOne() {}
+        updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.get()).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
   });
 
   describe('has a "getById" method that', () => {
@@ -53,6 +100,26 @@ describe('RestController', () => {
     it('should handle requests at GET /:id.', () => {
       expect(getHttpMethod(ConcreteController, 'getById')).to.equal('GET');
       expect(getPath(ConcreteController, 'getById')).to.equal('/:id');
+    });
+
+    it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', () => {
+
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        createOne() {}
+        findMany() {}
+        // findOne() {}
+        removeOne() {}
+        updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.getById()).to.be.an.instanceOf(HttpResponseNotImplemented);
     });
 
   });
@@ -65,7 +132,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       expect(controller.patch()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -78,6 +145,25 @@ describe('RestController', () => {
       expect(getPath(ConcreteController, 'patchById')).to.equal('/:id');
     });
 
+    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', () => {
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        createOne() {}
+        findMany() {}
+        findOne() {}
+        removeOne() {}
+        // updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.patchById()).to.be.an.instanceOf(HttpResponseNotImplemented);
+    });
+
   });
 
   describe('has a "post" method that', () => {
@@ -85,6 +171,25 @@ describe('RestController', () => {
     it('should handle requests at POST /.', () => {
       expect(getHttpMethod(ConcreteController, 'post')).to.equal('POST');
       expect(getPath(ConcreteController, 'post')).to.equal('/');
+    });
+
+    it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', () => {
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        // createOne() {}
+        findMany() {}
+        findOne() {}
+        removeOne() {}
+        updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.post()).to.be.an.instanceOf(HttpResponseNotImplemented);
     });
 
   });
@@ -97,7 +202,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       expect(controller.postById()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -111,7 +216,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController();
+      const controller = new ConcreteController(new ServiceManager());
       expect(controller.put()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
     });
 
@@ -122,6 +227,25 @@ describe('RestController', () => {
     it('should handle requests at PUT /:id.', () => {
       expect(getHttpMethod(ConcreteController, 'putById')).to.equal('PUT');
       expect(getPath(ConcreteController, 'putById')).to.equal('/:id');
+    });
+
+    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', () => {
+      @Service()
+      class Serializer implements Partial<ISerializer> {
+        createMany() {}
+        createOne() {}
+        findMany() {}
+        findOne() {}
+        removeOne() {}
+        // updateOne() {}
+      }
+      @Controller()
+      class ConcreteController extends RestController {
+        serializerClass = Serializer;
+      }
+
+      const controller = new ConcreteController(new ServiceManager());
+      expect(controller.putById()).to.be.an.instanceOf(HttpResponseNotImplemented);
     });
 
   });
