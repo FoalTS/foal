@@ -32,7 +32,6 @@ describe('AbstractUser', () => {
     const user = new User();
     user.groups = [];
     user.userPermissions = [];
-    user.permissions = [];
     await getManager().save(user);
     expect(user.id).not.to.equal(undefined);
   });
@@ -44,7 +43,6 @@ describe('AbstractUser', () => {
     await getManager().save(permission);
 
     const user = new User();
-    user.permissions = [];
     user.groups = [];
     user.userPermissions = [
       permission
@@ -66,7 +64,6 @@ describe('AbstractUser', () => {
     await getManager().save(group);
 
     const user = new User();
-    user.permissions = [];
     user.groups = [ group ];
     user.userPermissions = [];
 

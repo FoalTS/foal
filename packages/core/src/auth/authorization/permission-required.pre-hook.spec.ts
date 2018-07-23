@@ -9,7 +9,7 @@ import {
   HttpResponseUnauthorized,
   ServiceManager,
 } from '../../core';
-import { AbstractUser } from '../entities';
+import { AbstractUser, Permission } from '../entities';
 import { PermissionRequired } from './permission-required.pre-hook';
 
 describe('PermissionRequired', () => {
@@ -29,17 +29,25 @@ describe('PermissionRequired', () => {
   });
 
   it('should return an HttpResponseForbidden if the user does not have the required permission.', () => {
+    const permission = new Permission();
+    permission.name = '';
+    permission.codeName = 'foo';
+
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.permissions = [ 'foo' ];
+    ctx.user.userPermissions = [ permission ];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).to.be.instanceOf(HttpResponseForbidden);
   });
 
   it('should not return any HttpResponse if the user is authenticated and has the required permission.', () => {
+    const permission = new Permission();
+    permission.name = '';
+    permission.codeName = 'bar';
+
     const ctx = new Context({});
     ctx.user = new User();
-    ctx.user.permissions = [ 'bar' ];
+    ctx.user.userPermissions = [ permission ];
     const actual = preHook(ctx, new ServiceManager());
     expect(actual).not.to.be.instanceOf(HttpResponse);
   });

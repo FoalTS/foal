@@ -11,9 +11,6 @@ export abstract class AbstractUser {
   // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 
-  // TODO: remove this
-  permissions: string[] = [];
-
   @ManyToMany(type => Group)
   @JoinTable()
   // @ts-ignore : Property 'groups' has no initializer and is not definitely assigned in theconstructor.

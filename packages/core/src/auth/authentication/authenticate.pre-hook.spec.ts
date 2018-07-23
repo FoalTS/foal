@@ -45,7 +45,6 @@ describe('authenticate', () => {
     user.email = 'john@foalts.org';
     user.id = 1;
     user.password = 'strongPassword';
-    user.permissions = [];
     user.username = 'John';
 
     return getManager().save(user);
@@ -101,7 +100,6 @@ describe('authenticate', () => {
       email: 'john@foalts.org',
       id: 1,
       password: 'strongPassword',
-      permissions: [],
       username: 'John',
     });
   });
