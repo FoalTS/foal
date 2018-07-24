@@ -2,40 +2,142 @@
 import { expect } from 'chai';
 
 // FoalTS
-import { readFileFromRoot, readFileFromTemplatesSpec, rmfileIfExists } from '../../utils';
+import {
+  mkdirIfNotExists,
+  readFileFromRoot,
+  readFileFromTemplatesSpec,
+  rmdirIfExists,
+  rmfileIfExists
+} from '../../utils';
 import { createController } from './create-controller';
 
 describe('createController', () => {
 
-  afterEach(() => rmfileIfExists('test-foo-bar.controller.ts'));
+  afterEach(() => {
+    rmfileIfExists('src/app/controllers/test-foo-bar.controller.ts');
+    rmdirIfExists('src/app/controllers');
+    rmdirIfExists('src/app');
+    // We cannot remove src/ since the generator code lives within. This is bad testing
+    // approach.
+    // rmdirIfExists('src');
 
-  it('should render the empty templates.', () => {
+    rmfileIfExists('controllers/test-foo-bar.controller.ts');
+    rmdirIfExists('controllers');
 
-    createController({ name: 'test-fooBar', type: 'Empty' });
+    rmfileIfExists('test-foo-bar.controller.ts');
+  });
 
-    const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
-    const actual = readFileFromRoot('test-foo-bar.controller.ts');
-    expect(actual).to.equal(expected);
+  describe('should render the empty templates', () => {
+
+    it('in src/app/controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('src', false);
+      mkdirIfNotExists('src/app', false);
+      mkdirIfNotExists('src/app/controllers', false);
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
+      const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('controllers', false);
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
+      const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in the current directory otherwise.', () => {
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
+      const actual = readFileFromRoot('test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
 
   });
 
-  it('should render the REST templates.', () => {
+  describe('should render the REST templates.', () => {
 
-    createController({ name: 'test-fooBar', type: 'REST' });
+    it('in src/app/controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('src', false);
+      mkdirIfNotExists('src/app', false);
+      mkdirIfNotExists('src/app/controllers', false);
 
-    const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
-    const actual = readFileFromRoot('test-foo-bar.controller.ts');
-    expect(actual).to.equal(expected);
+      createController({ name: 'test-fooBar', type: 'REST' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
+      const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('controllers', false);
+
+      createController({ name: 'test-fooBar', type: 'REST' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
+      const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in the current directory otherwise.', () => {
+
+      createController({ name: 'test-fooBar', type: 'REST' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
+      const actual = readFileFromRoot('test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
 
   });
 
-  it('should render the GraphQL templates.', () => {
+  describe('should render the GraphQL templates.', () => {
 
-    createController({ name: 'test-fooBar', type: 'GraphQL' });
+    it('in src/app/controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('src', false);
+      mkdirIfNotExists('src/app', false);
+      mkdirIfNotExists('src/app/controllers', false);
 
-    const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
-    const actual = readFileFromRoot('test-foo-bar.controller.ts');
-    expect(actual).to.equal(expected);
+      createController({ name: 'test-fooBar', type: 'GraphQL' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
+      const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('controllers', false);
+
+      createController({ name: 'test-fooBar', type: 'GraphQL' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
+      const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
+
+    it('in the current directory otherwise.', () => {
+
+      createController({ name: 'test-fooBar', type: 'GraphQL' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
+      const actual = readFileFromRoot('test-foo-bar.controller.ts');
+      expect(actual).to.equal(expected);
+
+    });
 
   });
 
