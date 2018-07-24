@@ -5,7 +5,7 @@
 Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services (strategies),
 - the `login` and `logout` controller factories,
-- the `User` model,
+- the `User` entity,
 - and the `Authenticate` hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
@@ -25,13 +25,13 @@ A service implementing the `IAuthenticator` interface aims to authenticate a use
 
 `EmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes an user model.
+Its constructor takes an user entity.
 
 *Example*:
 ```typescript
 import { EmailAuthenticator, Service } from '@foal/core';
 
-import { User } from './user.model.ts';
+import { User } from './user.entity';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
@@ -72,8 +72,10 @@ Usually it is registered once within the `AppModule` `preHooks`.
 ```typescript
 import { Authenticate, route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user.entity';
 
+@InitDB([ Permission, Group, User ])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('GET', '/foo', ctx => {
@@ -85,12 +87,6 @@ export const AppModule: Module = {
       .withPostHook(ctx => {
         console.log('In hook: ', ctx.user);
       })
-  ]
-  preHooks: [
-    Authenticate(User),
-  ],
-  models: [
-    User
   ]
 }
 ```
@@ -117,8 +113,10 @@ If no user is authenticated the hook returns an `HttpResponseUnauthorized`.
 ```typescript
 import { Authenticate, LoginRequired , route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user.entity';
 
+@InitDB([ Permission, Group, User ])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('POST', '/user', ctx => {
@@ -126,12 +124,6 @@ export const AppModule: Module = {
       })
       .withPreHook(LoginRequired()),
   ],
-  preHooks: [
-    Authenticate(User),
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
@@ -147,8 +139,10 @@ If the user does not have the required permission then the hook returns an `Http
 ```typescript
 import { Authenticate, PermissionRequired, route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user';
 
+@InitDB([ Permission, Group, User])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('POST', '/user', ctx => {
@@ -156,12 +150,6 @@ export const AppModule: Module = {
       })
       .withPreHook(PermissionRequired('my-perm')),
   ],
-  preHooks: [
-    Authenticate(User),
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
@@ -170,15 +158,15 @@ export const AppModule: Module = {
 ```
 - src
   '- app
-    |- modules
+    |- sub-modules
     | '- auth
     |   |- auth.module.ts
     |   |- services
     |   | '- auth.service.ts
     |   '- templates
     |     '- login.html
-    |- models
-    | '- user.model.ts
+    |- entities
+    | '- user.entity.ts
     '-app.module.ts
 ```
 
@@ -187,8 +175,10 @@ export const AppModule: Module = {
 import { Authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
 
 import { AuthModule } from './module/auth/auth.module';
-import { User } from './models/user.model';
+import { User } from './entities/user.entity';
 
+@Authenticate(User)
+@InitDB([ Group, Permission, User])
 export const AppModule: Module = {
   controllers: [
     route('GET', '/foo', ctx => {
@@ -199,17 +189,11 @@ export const AppModule: Module = {
   modules: [
     AuthModule
   ],
-  preHooks: [
-    Authenticate(User)
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
 ```typescript
-// user.model.ts
+// user.entity.ts
 import { AbstractUser } from '@foal/core';
 import { Column, Entity } from 'typeorm';
 
@@ -251,7 +235,7 @@ export const AuthModule: Module = {
 // auth.service.ts
 import { EmailAuthenticator, Service } from '@foal/core';
 
-import { User } from '../../../models/user.model.ts';
+import { User } from '../../../entities/user.entity.ts';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {

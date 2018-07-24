@@ -12,7 +12,7 @@ export interface EmailUser extends AbstractUser {
 }
 
 /**
- * Authenticator with email and password. A user model service should be passed to the constructor.
+ * Authenticator with email and password.
  *
  * @export
  * @abstract

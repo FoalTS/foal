@@ -28,12 +28,12 @@ $ cd my-app && npm install
 ```
 ## Create a model
 ```shell
-$ foal g model flight
+$ foal g entity flight
 ```
 ## Create a model serializer
 ```shell
-$ foal g serializer flight
-> Model Serializer
+$ foal g service flight
+> Entity Serializer
 ```
 ## Create a REST controller
 ```shell

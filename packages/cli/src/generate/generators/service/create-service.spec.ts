@@ -43,7 +43,7 @@ describe('createService', () => {
 
   });
 
-  it('should render the model graphql templates.', () => {
+  it('should render the graphql templates.', () => {
 
     createService({ name: 'test-fooBar', type: 'GraphQLResolver' });
 
@@ -53,7 +53,7 @@ describe('createService', () => {
 
   });
 
-  it('should render the model authenticator templates.', () => {
+  it('should render the authenticator templates.', () => {
 
     createService({ name: 'test-fooBar', type: 'Authenticator' });
 
@@ -63,7 +63,7 @@ describe('createService', () => {
 
   });
 
-  it('should render the model email authenticator templates.', () => {
+  it('should render the email authenticator templates.', () => {
 
     createService({ name: 'test-fooBar', type: 'EmailAuthenticator' });
 

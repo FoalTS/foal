@@ -10,12 +10,12 @@ That's a lot of concepts to take in. Let's translate it into the code.
 
 Go to `src/app/services` with your terminal/console, run `foal generate service flight` and choose `Model service (TypeORM)`.
 
-Open the new created `flight.service.ts` file and specify the model.
+Open the new created `flight.service.ts` file and specify the entity class.
 
 ```typescript
 import { EntitySerializer, Service } from '@foal/core';
 
-import { Flight } from '../models/flight.model';
+import { Flight } from '../entities/flight.entity';
 
 @Service()
 export class FlightService extends EntitySerializer<Flight> {
@@ -24,7 +24,7 @@ export class FlightService extends EntitySerializer<Flight> {
 
 ```
 
-The abstract class `EntitySerializer` implements the `ISerializer` methods based on the provided model.
+The abstract class `EntitySerializer` implements the `ISerializer` methods based on the provided entity class.
 
 Once done, you need to create and register your REST controller from this new service. Open `src/app/app.module.ts` and replace it with:
 

@@ -31,7 +31,7 @@ import { LoggerService } from './logger.service';
 
 import { EntitySerializer, Service } from '@foal/core';
 
-import { Flight } from '../models/flight.model';
+import { Flight } from '../entities/flight.entity';
 
 @Service()
 export class FlightService extends EntitySerializer<Flight> {
