@@ -105,6 +105,7 @@ describe('makeControllerRoutes', () => {
 
     @Controller()
     class FoobarController {
+      // tslint:disable-next-line:no-unused-variable
       constructor(private service1: Service1, private service2: Service2) {}
 
       @Get()

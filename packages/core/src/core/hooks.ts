@@ -2,7 +2,7 @@
 import 'reflect-metadata';
 
 // FoalTS
-import { Context, HttpResponse, isHttpResponse } from './http';
+import { Context } from './http';
 import { ServiceManager } from './service-manager';
 
 // not void. HttpResponse or HttpResponse | void (same with promises)
