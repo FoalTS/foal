@@ -51,14 +51,8 @@ export function createApp(rootModuleClass: Class<IModule>) {
     next(err);
   });
 
-  const hooks: HookFunction[] = [];
-  if (Config.get('settings', 'csrf', false) as boolean) {
-    hooks.push(ctx => {
-      ctx.state.csrfToken = ctx.request.csrfToken();
-    });
-  }
   const services = new ServiceManager();
-  const routes = makeModuleRoutes('', hooks, rootModuleClass, services);
+  const routes = makeModuleRoutes('', [], rootModuleClass, services);
   for (const route of routes) {
     switch (route.httpMethod) {
       case 'DELETE':

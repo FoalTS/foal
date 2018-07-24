@@ -235,7 +235,7 @@ import { AuthService } from './services/auth.service';
 class LoginViewController {
   @Get()
   index(ctx) {
-    return render(require('./templates/login.html'), { csrfToken: ctx.state.csrfToken });
+    return render(require('./templates/login.html'), { csrfToken: ctx.request.csrfToken() });
   }
 }
 

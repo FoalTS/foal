@@ -9,7 +9,7 @@ export class ViewController {
   index(ctx) {
     return render(index, {
       appName: Config.get('app', 'name'),
-      csrfToken: ctx.state.csrfToken,
+      csrfToken: ctx.request.csrfToken(),
     });
   }
 
