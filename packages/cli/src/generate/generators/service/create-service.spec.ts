@@ -33,11 +33,11 @@ describe('createService', () => {
 
   });
 
-  it('should render the model serializer templates.', () => {
+  it('should render the entity serializer templates.', () => {
 
-    createService({ name: 'test-fooBar', type: 'ModelSerializer' });
+    createService({ name: 'test-fooBar', type: 'EntitySerializer' });
 
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.model-serializer.ts');
+    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-serializer.ts');
     const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');
     expect(actual).to.equal(expected);
 

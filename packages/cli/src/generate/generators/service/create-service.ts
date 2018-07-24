@@ -1,6 +1,7 @@
 import { getNames, renderTemplate } from '../../utils';
 
-export type ServiceType = 'Empty'|'Serializer'|'ModelSerializer'|'GraphQLResolver'|'Authenticator'|'EmailAuthenticator';
+export type ServiceType = 'Empty'|'Serializer'|'EntitySerializer'|'GraphQLResolver'
+  |'Authenticator'|'EmailAuthenticator';
 
 export function createService({ name, type }: { name: string, type: ServiceType }) {
   const names = getNames(name);
@@ -12,8 +13,8 @@ export function createService({ name, type }: { name: string, type: ServiceType 
     case 'Serializer':
       renderTemplate('service/service.serializer.ts', `${names.kebabName}-serializer.service.ts`, names);
       break;
-    case 'ModelSerializer':
-      renderTemplate('service/service.model-serializer.ts', `${names.kebabName}-serializer.service.ts`, names);
+    case 'EntitySerializer':
+      renderTemplate('service/service.entity-serializer.ts', `${names.kebabName}-serializer.service.ts`, names);
       break;
     case 'GraphQLResolver':
       renderTemplate('service/service.graphql-resolver.ts', `${names.kebabName}-resolver.service.ts`, names);
