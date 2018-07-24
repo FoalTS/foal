@@ -8,12 +8,12 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser, Group, Permission } from '../entities';
-import { authenticate } from './authenticate.pre-hook';
+import { Authenticate } from './authenticate.pre-hook';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
-describe('authenticate', () => {
+describe('Authenticate', () => {
 
   @Entity()
   class User extends AbstractUser {
@@ -57,15 +57,15 @@ describe('authenticate', () => {
   afterEach(() => getConnection().close());
 
   it('should throw an Error if there is no session.', () => {
-    const preHook = getHookFunction(authenticate(User));
+    const preHook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
     return expect(preHook(ctx, new ServiceManager()))
-      .to.be.rejectedWith('authenticate pre-hook requires session management.');
+      .to.be.rejectedWith('Authenticate pre-hook requires session management.');
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const preHook = getHookFunction(authenticate(User));
+    const preHook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {};
@@ -76,7 +76,7 @@ describe('authenticate', () => {
   });
 
   it('should set ctx.user to undefined if no user is found in the database matching the given id.', async () => {
-    const hook = getHookFunction(authenticate(User));
+    const hook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {
@@ -91,7 +91,7 @@ describe('authenticate', () => {
 
   it('should add a user property (with all its groups and permissions) if a user matches'
       + ' the given id in the database.', async () => {
-    const hook = getHookFunction(authenticate(User));
+    const hook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
     ctx.request.session = {

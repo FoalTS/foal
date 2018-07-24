@@ -1,5 +1,5 @@
 import {
-  authenticate,
+  Authenticate,
   controller,
   IModule,
   InitDB,
@@ -17,7 +17,7 @@ import { AuthModule } from './sub-modules/authentication';
 
 @Module()
 @InitDB([ Flight, User ])
-@authenticate(User)
+@Authenticate(User)
 export class AppModule implements IModule {
   controllers = [
     rest('/users', UserService)

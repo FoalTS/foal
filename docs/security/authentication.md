@@ -6,7 +6,7 @@ Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services (strategies),
 - the `login` and `logout` controller factories,
 - the `User` model,
-- and the `authenticate` pre-hook.
+- and the `Authenticate` pre-hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
 
@@ -62,15 +62,15 @@ export const AuthModule: Module = {
 }
 ```
 
-### The `authenticate` pre-hook
+### The `Authenticate` pre-hook
 
-The `authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
+The `Authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
 Usually it is registered once within the `AppModule` `preHooks`.
 
 *Example:*
 ```typescript
-import { authenticate, route, Module } from '@foal/core';
+import { Authenticate, route, Module } from '@foal/core';
 
 import { User } from './models/user';
 
@@ -87,7 +87,7 @@ export const AppModule: Module = {
       })
   ]
   preHooks: [
-    authenticate(User),
+    Authenticate(User),
   ],
   models: [
     User
@@ -115,7 +115,7 @@ If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
-import { authenticate, LoginRequired , route, Module } from '@foal/core';
+import { Authenticate, LoginRequired , route, Module } from '@foal/core';
 
 import { User } from './models/user';
 
@@ -127,7 +127,7 @@ export const AppModule: Module = {
       .withPreHook(LoginRequired()),
   ],
   preHooks: [
-    authenticate(User),
+    Authenticate(User),
   ],
   models: [
     User
@@ -145,7 +145,7 @@ If the user does not have the required permission then the pre-hook returns an `
 
 *Example*:
 ```typescript
-import { authenticate, PermissionRequired, route, Module } from '@foal/core';
+import { Authenticate, PermissionRequired, route, Module } from '@foal/core';
 
 import { User } from './models/user';
 
@@ -157,7 +157,7 @@ export const AppModule: Module = {
       .withPreHook(PermissionRequired('my-perm')),
   ],
   preHooks: [
-    authenticate(User),
+    Authenticate(User),
   ],
   models: [
     User
@@ -184,7 +184,7 @@ export const AppModule: Module = {
 
 ```typescript
 // app.module.ts
-import { authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
+import { Authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
 
 import { AuthModule } from './module/auth/auth.module';
 import { User } from './models/user.model';
@@ -200,7 +200,7 @@ export const AppModule: Module = {
     AuthModule
   ],
   preHooks: [
-    authenticate(User)
+    Authenticate(User)
   ],
   models: [
     User
