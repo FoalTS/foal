@@ -6,14 +6,16 @@ import {
   Get,
   HttpResponseCreated,
   HttpResponseMethodNotAllowed,
+  HttpResponseNotFound,
   HttpResponseNotImplemented,
+  HttpResponseOK,
   Patch,
   Post,
   Put,
   ServiceManager
 } from '../../core';
+import { isObjectDoesNotExist } from '../errors';
 import { ISerializer } from '../services';
-import { okOrNotFound } from '../utils';
 
 @Controller()
 export abstract class RestController {
@@ -43,18 +45,25 @@ export abstract class RestController {
   }
 
   @Delete('/:id')
-  deleteById(ctx: Context) {
+  async deleteById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.removeOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
-    return okOrNotFound(serializer.removeOne(query));
+    try {
+      return new HttpResponseOK(await serializer.removeOne(query));
+    } catch (error) {
+      if (isObjectDoesNotExist(error)) {
+        return new HttpResponseNotFound();
+      }
+      throw error;
+    }
   }
 
   @Get('/')
-  get(ctx: Context) {
+  async get(ctx: Context) {
     // schema and id
     // hooks
     const serializer = this.services.get(this.serializerClass);
@@ -63,18 +72,25 @@ export abstract class RestController {
     }
 
     const query = this.getQuery(ctx);
-    return okOrNotFound(serializer.findMany(query));
+    return new HttpResponseOK(await serializer.findMany(query));
   }
 
   @Get('/:id')
-  getById(ctx: Context) {
+  async getById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.findOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
-    return okOrNotFound(serializer.findOne(query));
+    try {
+      return new HttpResponseOK(await serializer.findOne(query));
+    } catch (error) {
+      if (isObjectDoesNotExist(error)) {
+        return new HttpResponseNotFound();
+      }
+      throw error;
+    }
   }
 
   @Patch('/')
@@ -83,16 +99,23 @@ export abstract class RestController {
   }
 
   @Patch('/:id')
-  patchById(ctx: Context) {
+  async patchById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
-    return okOrNotFound(serializer.updateOne(
-      query, ctx.request.body
-    ));
+    try {
+      return new HttpResponseOK(await serializer.updateOne(
+        query, ctx.request.body
+      ));
+    } catch (error) {
+      if (isObjectDoesNotExist(error)) {
+        return new HttpResponseNotFound();
+      }
+      throw error;
+    }
   }
 
   @Post('/')
@@ -116,16 +139,23 @@ export abstract class RestController {
   }
 
   @Put('/:id')
-  putById(ctx: Context) {
+  async putById(ctx: Context) {
     const serializer = this.services.get(this.serializerClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
-    return okOrNotFound(serializer.updateOne(
-      query, ctx.request.body
-    ));
+    try {
+      return new HttpResponseOK(await serializer.updateOne(
+        query, ctx.request.body
+      ));
+    } catch (error) {
+      if (isObjectDoesNotExist(error)) {
+        return new HttpResponseNotFound();
+      }
+      throw error;
+    }
   }
 
 }

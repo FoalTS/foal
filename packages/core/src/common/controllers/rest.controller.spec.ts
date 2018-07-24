@@ -1,5 +1,6 @@
 // 3p
 import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 import * as spies from 'chai-spies';
 
 // FoalTS
@@ -21,6 +22,7 @@ import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
 
 chai.use(spies);
+chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 describe('RestController', () => {
@@ -140,6 +142,32 @@ describe('RestController', () => {
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 
+      it('should rejects an error if serializer.removeOne rejects one which'
+          + ' is not an ObjectDoesNotExist.', () => {
+        const err = new Error();
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async removeOne(query) {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return expect(controller.deleteById(ctx)).to.be.rejectedWith(err);
+      });
+
     });
 
   });
@@ -204,27 +232,6 @@ describe('RestController', () => {
           .with.property('content', objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.findMany).to.have.been.called.with.exactly(query);
-      });
-
-      it('should return a HttpResponseNotFound if serializer.findMany rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Serializer implements Partial<ISerializer> {
-          async findMany(query) {
-            throw new ObjectDoesNotExist();
-          }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          serializerClass = Serializer;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({});
-
-        const actual = await controller.get(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
       });
 
     });
@@ -321,6 +328,32 @@ describe('RestController', () => {
 
         const actual = await controller.getById(ctx);
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
+      it('should rejects an error if serializer.findOne rejects one which'
+          + ' is not an ObjectDoesNotExist.', () => {
+        const err = new Error();
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async findOne(query) {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return expect(controller.getById(ctx)).to.be.rejectedWith(err);
       });
 
     });
@@ -439,6 +472,32 @@ describe('RestController', () => {
 
         const actual = await controller.patchById(ctx);
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
+      it('should rejects an error if serializer.updateOne rejects one which'
+          + ' is not an ObjectDoesNotExist.', () => {
+        const err = new Error();
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query) {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return expect(controller.patchById(ctx)).to.be.rejectedWith(err);
       });
 
     });
@@ -630,6 +689,32 @@ describe('RestController', () => {
 
         const actual = await controller.putById(ctx);
         expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+      });
+
+      it('should rejects an error if serializer.updateOne rejects one which'
+          + ' is not an ObjectDoesNotExist.', () => {
+        const err = new Error();
+        @Service()
+        class Serializer implements Partial<ISerializer> {
+          async updateOne(query) {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          serializerClass = Serializer;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return expect(controller.putById(ctx)).to.be.rejectedWith(err);
       });
 
     });
