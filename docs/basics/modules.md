@@ -28,7 +28,6 @@ Every app starts with a module. A module binds the controllers to the request ha
 interface IModule {
   controllers?: Class[];
   subModules?: Class<IModule>[];
-  entities?: Class[];
 }
 ```
 

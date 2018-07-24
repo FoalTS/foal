@@ -9,8 +9,4 @@ export class /* upperFirstCamelName */Module implements IModule {
   subModules = [
 
   ];
-
-  entities = [
-
-  ];
 }

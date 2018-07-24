@@ -11,8 +11,4 @@ export class AppModule implements IModule {
   subModules = [
 
   ];
-
-  entities = [
-
-  ];
 }

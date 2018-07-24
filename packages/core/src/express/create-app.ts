@@ -10,7 +10,7 @@ import { initDB } from '../common';
 import {
   Class,
   Config,
-  getHookFunction,
+  HookFunction,
   HttpResponseForbidden,
   IModule,
   makeModuleRoutes,
@@ -51,10 +51,7 @@ export function createApp(rootModuleClass: Class<IModule>) {
     next(err);
   });
 
-  const entities = []; // TODO: Get the entities from the module.
-  const hooks = [
-    getHookFunction(initDB(entities)),
-  ];
+  const hooks: HookFunction[] = [];
   if (Config.get('settings', 'csrf', false) as boolean) {
     hooks.push(ctx => {
       ctx.state.csrfToken = ctx.request.csrfToken();

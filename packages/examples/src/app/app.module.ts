@@ -2,6 +2,7 @@ import {
   authenticate,
   controller,
   IModule,
+  initDB,
   LoginRequired,
   Module,
   PermissionRequired,
@@ -15,6 +16,7 @@ import { FlightService, UserService } from './services';
 import { AuthModule } from './sub-modules/authentication';
 
 @Module()
+@initDB([ Flight, User ])
 @authenticate(User)
 export class AppModule implements IModule {
   controllers = [
@@ -26,10 +28,6 @@ export class AppModule implements IModule {
     controller('/airport', AirportController),
     controller('', ViewController),
     rest('/flights', FlightService),
-  ];
-
-  entities = [
-    Flight, User
   ];
 
   subModules = [

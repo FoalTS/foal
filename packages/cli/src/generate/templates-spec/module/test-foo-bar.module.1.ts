@@ -9,8 +9,4 @@ export class TestFooBarModule implements IModule {
   subModules = [
 
   ];
-
-  entities = [
-
-  ];
 }
