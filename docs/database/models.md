@@ -9,4 +9,4 @@ To generate an entity (simple model) with the command-line interface:
 foal generate entity my-entity
 ```
 
--> need to be registered within a module
+-> need to be registered within the InitDB hook
