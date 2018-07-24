@@ -1,3 +1,14 @@
+import { createApp } from './create-app';
+
+describe('createApp', () => {
+  it('should be tested.', () => {
+    // TODO: Add tests.
+    createApp(class {});
+  });
+});
+
+// TODO: Add tests
+
 // import * as express from 'express';
 // import * as request from 'supertest';
 
