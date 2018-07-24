@@ -21,5 +21,3 @@ install:
 script:
   - npm run lint
   - lerna run test
-
-after_success: cd packages/core && npm run coverage
