@@ -1,6 +1,6 @@
 // 3p
 import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+import * as spies from 'chai-spies';
 
 // FoalTS
 import {
@@ -20,7 +20,7 @@ import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
 
-chai.use(chaiAsPromised);
+chai.use(spies);
 const expect = chai.expect;
 
 describe('RestController', () => {
