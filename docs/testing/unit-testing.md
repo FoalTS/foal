@@ -4,12 +4,10 @@ All tests must be imported in the main `test.ts` file.
 
 ## Services
 
-## Handlers
+## Controllers
 
-## Pre-hooks
+## Hooks
 
-## Post-hooks
-
-## Controller factories
+`getHookFunction` util.
 
 ## Templates

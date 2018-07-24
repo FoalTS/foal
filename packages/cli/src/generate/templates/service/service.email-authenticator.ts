@@ -4,5 +4,5 @@ import { User } from 'somewhere';
 
 @Service()
 export class /* upperFirstCamelName */ extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }

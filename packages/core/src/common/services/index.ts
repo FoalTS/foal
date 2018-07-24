@@ -1,2 +1,2 @@
-export { IModelService } from './model-service.interface';
-export { ModelService } from './model.service';
+export { ISerializer } from './serializer.interface';
+export { EntitySerializer } from './entity-serializer.service';

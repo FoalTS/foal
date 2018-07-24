@@ -1,48 +1,87 @@
 # Controllers
 
-// Add a little get-started (some code or a cli command)
-// Controllers are the front-door of your app.
+```sh
+foal generate controller my-controller
+```
 
-Controller factories are functions that create controllers from services or functions. They should be the only way to create them.
-
-What should do controller?
-- handle HTTP stuff
-- validate input data
-- call the appropriate service methods
-- convert exceptions (ValidationErrors, etc) to HttpResponse or GraphQL errors.
-
-## Common controller factories
-
-You'll find in [this page](../common/controller-factories) the common controller factories provided by FoalTS.
-
-## Create a custom controller factory
-
-To create a custom controller factory you need to create a function that returns a `Controller<RouteName extends string>`. Usually this function takes as first parameter a path.
-
-Example:
 ```typescript
-export interface IFoobarService {
-  compute(x: number);
-}
+import { Context, Controller, Get, HttpResponseOk } from '@foal/core';
 
-function myCustomControllerFactory(path: string, Foobar: Class<FoobarService>): Controller<'main'> {
-  const controller = new Controller<'main'>(path);
+@Controller()
+export class MyController {
 
-  controller.addRoute('POST', '/compute', (ctx, services) => {
-    if (!ctx.request.body || typeof ctx.request.body.x !== 'number') {
-      return new HttpResponseBadRequest();
-    }
-    const x = ctx.request.body.x;
-    return new HttpResponseOK(services.get(Foobar).compute(x));
-  });
+  @Get('/flight')
+  getFlights(ctx: Context) {
+    return new HttpResponseOk([]);
+  }
 
-  return controller;
 }
 ```
 
-### The `HttpReponse`s
+## What for?
 
-You may return an `HttpResponse` in a pre-hook or in a handler. This will stop the execution of the pre-hooks and the handler and the returned value will be assigned to `ctx.response`. It may be read or modified in a post-hook. This response is then used as the request response.
+Controllers are the front door of your application. They catch all the incoming requests and it is through them that answers are returned to the client. Controllers aim to decode and validate the incoming data but not to treat it. This task is delegated to the services which can be called from the controllers. Thus their code should be concise as they have nothing to do with the business logic.
+
+## How to?
+
+### Creating a controller
+
+Formally a controller is a single class that is instantiated as a singleton. The class itself is surrounded by the `Controller` decorator. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
+
+```typescript
+import { Context, Controller, Get, HttpResponseOk } from '@foal/core';
+
+@Controller()
+export class MyController {
+  private flights = [
+    { id: 1, from: 'SFO', to: 'NYC' }
+  ];
+
+  @Get('/flight')
+  getFlights(ctx: Context) {
+    return new HttpResponseOk(this.flights);
+  }
+
+}
+```
+
+In the above example the request handler will respond to the following routes:
+- `GET /foo`
+
+Note that we didn't validate the incoming data. A malicious attacker could send whatever "flight" he/she likes and ...
+
+### Registering the controller
+
+```typescript
+import { controller, IModule, Module } from '@foal/core';
+
+import { MyController } from './controllers/my-controller';
+
+@Module()
+export class AppModule implements IModule {
+  controllers = [
+    MyController
+  ];
+}
+```
+
+## Accessing request data, session or current user
+
+## Calling service methods
+
+## Testing
+
+## Inheriting controllers
+
+// Explain inheritance (restricted)
+
+## Common controllers
+
+FoalTS provides some common controllers to [log in](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
+
+## Responding with special status or headers
+
+You may return an `HttpResponse` in a hook or in a controller method. This will stop the execution of the hooks and the controller method and the returned value will be used as the request response.
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)

@@ -29,13 +29,13 @@ Now go back to `flight.service.ts`, import the `LoggerService`, add `private log
 ```typescript
 import { LoggerService } from './logger.service';
 
-import { ModelService, Service } from '@foal/core';
+import { EntitySerializer, Service } from '@foal/core';
 
-import { Flight } from '../models/flight.model';
+import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightService extends ModelService<Flight> {
-  Model = Flight;
+export class FlightService extends EntitySerializer<Flight> {
+  entityClass = Flight;
 
   constructor(private logger: LoggerService) {}
 
@@ -52,16 +52,24 @@ Create a new flight in the browser and then take a look at the terminal from whe
 
 By writting `private logger: LoggerService` we injected the logger service in the flight one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
 
-You can do the same with your handler:
+You can do the same with your controller:
 
 ```typescript
-import { Handler, HttpResponseOK } from '@foal/core';
+import { Controller, Get, HttpResponseOK } from '@foal/core';
 
 import { LoggerService } from '../services/logger.service';
 
-export const getAirport: Handler = (ctx, services) => {
-  services.get(LoggerService).log('info', 'Getting the aiport name...');
-  // Returns { name: 'JFK' } with status 200
-  return new HttpResponseOK({ name: 'JFK' });
-};
+@Controller()
+export class AirportController {
+
+  constructor(private logger: LoggerService) {}
+
+  @Get()
+  get(ctx, services) {
+    this.logger.log('info', 'Getting the aiport name...');
+    // Returns { name: 'JFK' } with status 200
+    return new HttpResponseOK({ name: 'JFK' });
+  }
+}
+
 ```

@@ -66,6 +66,8 @@ describe('isHttpResponse', () => {
       + 'has no property isHttpResponse.', () => {
     const response = {};
     expect(isHttpResponse(response)).to.equal(false);
+    expect(isHttpResponse(undefined)).to.equal(false);
+    expect(isHttpResponse(null)).to.equal(false);
   });
 
 });
@@ -86,6 +88,8 @@ describe('isHttpResponseSuccess', () => {
       + 'has no property isHttpResponseSuccess.', () => {
     const response = {};
     expect(isHttpResponseSuccess(response)).to.equal(false);
+    expect(isHttpResponseSuccess(undefined)).to.equal(false);
+    expect(isHttpResponseSuccess(null)).to.equal(false);
   });
 
 });
@@ -131,6 +135,8 @@ describe('isHttpResponseOK', () => {
       + 'has no property isHttpResponseOK.', () => {
     const response = {};
     expect(isHttpResponseOK(response)).to.equal(false);
+    expect(isHttpResponseOK(undefined)).to.equal(false);
+    expect(isHttpResponseOK(null)).to.equal(false);
   });
 
 });
@@ -176,6 +182,8 @@ describe('isHttpResponseCreated', () => {
       + 'has no property isHttpResponseCreated.', () => {
     const response = {};
     expect(isHttpResponseCreated(response)).to.equal(false);
+    expect(isHttpResponseCreated(undefined)).to.equal(false);
+    expect(isHttpResponseCreated(null)).to.equal(false);
   });
 
 });
@@ -212,6 +220,8 @@ describe('isHttpResponseNoContent', () => {
       + 'has no property isHttpResponseNoContent.', () => {
     const response = {};
     expect(isHttpResponseNoContent(response)).to.equal(false);
+    expect(isHttpResponseNoContent(undefined)).to.equal(false);
+    expect(isHttpResponseNoContent(null)).to.equal(false);
   });
 
 });
@@ -232,6 +242,8 @@ describe('isHttpResponseRedirection', () => {
       + 'has no property isHttpResponseRedirection.', () => {
     const response = {};
     expect(isHttpResponseRedirection(response)).to.equal(false);
+    expect(isHttpResponseRedirection(undefined)).to.equal(false);
+    expect(isHttpResponseRedirection(null)).to.equal(false);
   });
 
 });
@@ -278,6 +290,8 @@ describe('isHttpResponseRedirect', () => {
       + 'has no property isHttpResponseRedirect.', () => {
     const response = {};
     expect(isHttpResponseRedirect(response)).to.equal(false);
+    expect(isHttpResponseRedirect(undefined)).to.equal(false);
+    expect(isHttpResponseRedirect(null)).to.equal(false);
   });
 
 });
@@ -298,6 +312,8 @@ describe('isHttpResponseClientError', () => {
       + 'has no property isHttpResponseClientError.', () => {
     const response = {};
     expect(isHttpResponseClientError(response)).to.equal(false);
+    expect(isHttpResponseClientError(undefined)).to.equal(false);
+    expect(isHttpResponseClientError(null)).to.equal(false);
   });
 
 });
@@ -343,6 +359,8 @@ describe('isHttpResponseBadRequest', () => {
       + 'has no property isHttpResponseBadRequest.', () => {
     const response = {};
     expect(isHttpResponseBadRequest(response)).to.equal(false);
+    expect(isHttpResponseBadRequest(undefined)).to.equal(false);
+    expect(isHttpResponseBadRequest(null)).to.equal(false);
   });
 
 });
@@ -388,6 +406,8 @@ describe('isHttpResponseUnauthorized', () => {
       + 'has no property isHttpResponseUnauthorized.', () => {
     const response = {};
     expect(isHttpResponseUnauthorized(response)).to.equal(false);
+    expect(isHttpResponseUnauthorized(undefined)).to.equal(false);
+    expect(isHttpResponseUnauthorized(null)).to.equal(false);
   });
 
 });
@@ -433,6 +453,8 @@ describe('isHttpResponseForbidden', () => {
       + 'has no property isHttpResponseForbidden.', () => {
     const response = {};
     expect(isHttpResponseForbidden(response)).to.equal(false);
+    expect(isHttpResponseForbidden(undefined)).to.equal(false);
+    expect(isHttpResponseForbidden(null)).to.equal(false);
   });
 
 });
@@ -478,6 +500,8 @@ describe('isHttpResponseNotFound', () => {
       + 'has no property isHttpResponseNotFound.', () => {
     const response = {};
     expect(isHttpResponseNotFound(response)).to.equal(false);
+    expect(isHttpResponseNotFound(undefined)).to.equal(false);
+    expect(isHttpResponseNotFound(null)).to.equal(false);
   });
 
 });
@@ -523,6 +547,8 @@ describe('isHttpResponseMethodNotAllowed', () => {
       + 'has no property isHttpResponseMethodNotAllowed.', () => {
     const response = {};
     expect(isHttpResponseMethodNotAllowed(response)).to.equal(false);
+    expect(isHttpResponseMethodNotAllowed(undefined)).to.equal(false);
+    expect(isHttpResponseMethodNotAllowed(null)).to.equal(false);
   });
 
 });
@@ -568,6 +594,8 @@ describe('isHttpResponseConflict', () => {
       + 'has no property isHttpResponseConflict.', () => {
     const response = {};
     expect(isHttpResponseConflict(response)).to.equal(false);
+    expect(isHttpResponseConflict(undefined)).to.equal(false);
+    expect(isHttpResponseConflict(null)).to.equal(false);
   });
 
 });
@@ -588,6 +616,8 @@ describe('isHttpResponseServerError', () => {
       + 'has no property isHttpResponseServerError.', () => {
     const response = {};
     expect(isHttpResponseServerError(response)).to.equal(false);
+    expect(isHttpResponseServerError(undefined)).to.equal(false);
+    expect(isHttpResponseServerError(null)).to.equal(false);
   });
 
 });
@@ -633,6 +663,8 @@ describe('isHttpResponseInternalServerError', () => {
       + 'has no property isHttpResponseInternalServerError.', () => {
     const response = {};
     expect(isHttpResponseInternalServerError(response)).to.equal(false);
+    expect(isHttpResponseInternalServerError(undefined)).to.equal(false);
+    expect(isHttpResponseInternalServerError(null)).to.equal(false);
   });
 
 });
@@ -678,6 +710,8 @@ describe('isHttpResponseNotImplemented', () => {
       + 'has no property isHttpResponseNotImplemented.', () => {
     const response = {};
     expect(isHttpResponseNotImplemented(response)).to.equal(false);
+    expect(isHttpResponseNotImplemented(undefined)).to.equal(false);
+    expect(isHttpResponseNotImplemented(null)).to.equal(false);
   });
 
 });

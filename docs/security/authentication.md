@@ -5,8 +5,8 @@
 Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services (strategies),
 - the `login` and `logout` controller factories,
-- the `User` model,
-- and the `authenticate` pre-hook.
+- the `User` entity,
+- and the `Authenticate` hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
 
@@ -25,17 +25,17 @@ A service implementing the `IAuthenticator` interface aims to authenticate a use
 
 `EmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
 
-Its constructor takes an user model.
+Its constructor takes an user entity.
 
 *Example*:
 ```typescript
 import { EmailAuthenticator, Service } from '@foal/core';
 
-import { User } from './user.model.ts';
+import { User } from './user.entity';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }
 ```
 
@@ -62,35 +62,31 @@ export const AuthModule: Module = {
 }
 ```
 
-### The `authenticate` pre-hook
+### The `Authenticate` hook
 
-The `authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
+The `Authenticate` hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
 Usually it is registered once within the `AppModule` `preHooks`.
 
 *Example:*
 ```typescript
-import { authenticate, route, Module } from '@foal/core';
+import { Authenticate, route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user.entity';
 
+@InitDB([ Permission, Group, User ])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('GET', '/foo', ctx => {
         console.log('In handler: ', ctx.user);
       })
       .withPreHook(ctx => {
-        console.log('In pre-hook: ', ctx.user);
+        console.log('In hook: ', ctx.user);
       })
       .withPostHook(ctx => {
-        console.log('In post-hook: ', ctx.user);
+        console.log('In hook: ', ctx.user);
       })
-  ]
-  preHooks: [
-    authenticate(User),
-  ],
-  models: [
-    User
   ]
 }
 ```
@@ -109,16 +105,18 @@ When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is 
 
 ### `LoginRequired()`
 
-`LoginRequired` is a pre-hook to restrict the access to authenticated users.
+`LoginRequired` is a hook to restrict the access to authenticated users.
 
-If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+If no user is authenticated the hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
-import { authenticate, LoginRequired , route, Module } from '@foal/core';
+import { Authenticate, LoginRequired , route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user.entity';
 
+@InitDB([ Permission, Group, User ])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('POST', '/user', ctx => {
@@ -126,42 +124,32 @@ export const AppModule: Module = {
       })
       .withPreHook(LoginRequired()),
   ],
-  preHooks: [
-    authenticate(User),
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
-### `restrictAccessToAdmin()`
+### `PermissionRequired(perm: string)`
 
-`restrictAccessToAdmin` is a pre-hook to restrict the access to admin users.
+`PermissionRequired` is a hook to restrict the access to users with a given permission.
 
-If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+If no user is authenticated the hook returns an `HttpResponseUnauthorized`.
 
-If the user is not an admin, namely it has no property `isAdmin` or this property is false, then the pre-hook returns an `HttpResponseForbidden`.
+If the user does not have the required permission then the hook returns an `HttpResponseForbidden`.
 
 *Example*:
 ```typescript
-import { authenticate, restrictAccessToAdmin, route, Module } from '@foal/core';
+import { Authenticate, PermissionRequired, route, Module } from '@foal/core';
 
-import { User } from './models/user';
+import { User } from './entities/user';
 
+@InitDB([ Permission, Group, User])
+@Authenticate(User)
 export const AppModule: Module = {
   controllers: [
     route('POST', '/user', ctx => {
         console.log(ctx.user);
       })
-      .withPreHook(restrictAccessToAdmin()),
+      .withPreHook(PermissionRequired('my-perm')),
   ],
-  preHooks: [
-    authenticate(User),
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
@@ -170,25 +158,27 @@ export const AppModule: Module = {
 ```
 - src
   '- app
-    |- modules
+    |- sub-modules
     | '- auth
     |   |- auth.module.ts
     |   |- services
     |   | '- auth.service.ts
     |   '- templates
     |     '- login.html
-    |- models
-    | '- user.model.ts
+    |- entities
+    | '- user.entity.ts
     '-app.module.ts
 ```
 
 ```typescript
 // app.module.ts
-import { authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
+import { Authenticate, restrictToAuthenticated, route, Module } from '@foal/core';
 
 import { AuthModule } from './module/auth/auth.module';
-import { User } from './models/user.model';
+import { User } from './entities/user.entity';
 
+@Authenticate(User)
+@InitDB([ Group, Permission, User])
 export const AppModule: Module = {
   controllers: [
     route('GET', '/foo', ctx => {
@@ -199,17 +189,11 @@ export const AppModule: Module = {
   modules: [
     AuthModule
   ],
-  preHooks: [
-    authenticate(User)
-  ],
-  models: [
-    User
-  ]
 }
 ```
 
 ```typescript
-// user.model.ts
+// user.entity.ts
 import { AbstractUser } from '@foal/core';
 import { Column, Entity } from 'typeorm';
 
@@ -227,16 +211,22 @@ export class User extends AbstractUser {
 
 ```typescript
 // auth.module.ts
-import { route, HttpResponseOK, login, Module } from '@foal/core';
+import { controller, Get, Controller, render, Login, Module } from '@foal/core';
 
 import { AuthService } from './services/auth.service';
 
+@Controller()
+class LoginViewController {
+  @Get()
+  index(ctx) {
+    return render(require('./templates/login.html'), { csrfToken: ctx.request.csrfToken() });
+  }
+}
+
 export const AuthModule: Module = {
   controllers: [
-    login('/login', AuthService)
-    view('/login', require('./templates/login.html'), ctx => {
-      return { csrfToken: ctx.state.csrfToken };
-    });
+    login('/login', AuthService),
+    controller('/login', LoginViewController)
   ]
 }
 ```
@@ -245,11 +235,11 @@ export const AuthModule: Module = {
 // auth.service.ts
 import { EmailAuthenticator, Service } from '@foal/core';
 
-import { User } from '../../../models/user.model.ts';
+import { User } from '../../../entities/user.entity.ts';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }
 ```
 

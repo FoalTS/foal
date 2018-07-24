@@ -14,7 +14,7 @@ Revert a migration
 npm run migration:revert
 ```
 
-Generate a migration from the changes in your models
+Generate a migration from the changes in your entities
 ```
 npm run migration:generate -- -n my-migration
 ```

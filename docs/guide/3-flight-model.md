@@ -6,10 +6,10 @@ Great! So far you learnt how to process a simple request and statically return a
 
 > *Note 2:* Database configuration and credentials are specified in `ormconfig.json` or in environment variables. You'll find more details in the official [TypeORM website](http://typeorm.io/#/using-ormconfig), the ORM of which FoalTS is based on.
 
-First go to `src/app/models` and create a model.
+First go to `src/app/entities` and create an entity.
 
 ```
-foal generate model flight
+foal generate entity flight
 ```
 
 Open the generated file and replace the content with the following code.
@@ -31,6 +31,6 @@ export class Flight {
 
 This class will create a new table in the database called `flight`.
 
-The last thing you need to do is to register your entity in a module (in this case the `AppModule`) by adding the line `models: [ Flight ]`.
+The last thing you need to do is to register your entity in a module (in this case the `AppModule`) by adding the line `entities: [ Flight ]`.
 
 That's it, you just created your model.

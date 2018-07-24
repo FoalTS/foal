@@ -6,12 +6,12 @@ Three points:
 - a serializer
 - and a (several) model(s)
 
-## Create a REST controller from a `Partial<IModelService>`
+## Create a REST controller from a `Partial<ISerializer>`
 
 
 ```typescript
 // ./services/train.service.ts
-import { IModelService, Service } from '@foal/core';
+import { ISerializer, Service } from '@foal/core';
 
 export interface Train {
   id: string
@@ -19,7 +19,7 @@ export interface Train {
 }
 
 @Service()
-export class TrainService implements Partial<IModelService> {
+export class TrainService implements Partial<ISerializer> {
   private id = 0;
 
   createOne(data: Partial<Train>): Train {

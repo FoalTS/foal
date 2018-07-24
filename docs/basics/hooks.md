@@ -2,26 +2,30 @@
 
 // Add a little get-started (some code or a cli command)
 
-Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. There are two kinds of hooks:
-- the pre-hooks which are executed before the routes handlers (defined by the controller factory)
-- and the post-hooks which are executed after.
+```sh
+foal generate hook my-hook
+```
 
-Pre-hooks are usually used to restrict access or to check and sanitize data received by the server. Post-hooks are less used and serve purpose such as removing critical fields before returning data to the client (ex: the password of a user).
+> Difference between a hook and an express middleware?
+> - sync or async
+> - do not use res, but return, resolves a HttpResponse
+> - pas de next. Si pas de valeur retounée ou d'erreur levée/rejetée, on va à l'étape suivante
+> - ctx est un peu différent de req avec le state notamment
+> - purpose: not to be at the end of the chain. It's really in the middle.
 
-> By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.
+Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller.
+
+Hooks are usually used to restrict access or to check and sanitize data received by the server.
+
+<!-- > By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.-->
 
 They takes two parameters:
-- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist. The post contexts also include a `response` property which may be undefined or an `HttpResponse` dependending on if the pre-hooks or route handler returned one.
+- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist.
 - The service manager that lets access other services within the hook.
 
-If an `HttpResponse` is returned (or resolved) in a pre-hook then the processing of the request is stopped for the pre-hooks and route handler and the server responds with the `statusCode` and optional `content` of the returned object.
+If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
 
-> *Note*: A pre-hook (or post-hook) may also be registered within the `preHooks` (or `postHooks`) property of a module. If so it applies to all the controllers of the module.
-
-```typescript
-type PreHook = (ctx: Context, services: ServiceManager) => void | HttpResponse | Promise<void | HttpResponse>;
-type PostHook = (ctx: PostContext, services: ServiceManager) => void | Promise<void>;
-```
+> *Note*: A hook may also decorate a module. If so it applies to all the controllers of the module.
 
 ## How to create one
 
@@ -73,7 +77,7 @@ export const MyModule: Module = {
     rest('/', MyModelService)
       .withPreHook(logContext, 'GET /', 'GET /:id')
       // or withPreHooks([ logContext ], 'GET /', 'GET /:id')
-      .withPreHook(ctx => { console.log('Second pre-hook executed!'); }, 'GET /', 'GET /:id')
+      .withPreHook(ctx => { console.log('Second hook executed!'); }, 'GET /', 'GET /:id')
       .withPostHook(logPostContext, 'GET /', 'GET /:id')
       // or withPostHooks([ logContext ], 'GET /', 'GET /:id')
   ]
@@ -103,7 +107,7 @@ export const MyModule: Module = {
   controllers: [
     rest('/', MyModelService)
       .withPreHook(logContext)
-      .withPreHook(ctx => { console.log('Second pre-hook executed!'); })
+      .withPreHook(ctx => { console.log('Second hook executed!'); })
       // or withPreHooks([ logContext ])
       .withPostHook(logPostContext)
       // or withPostHooks([ logContext ])
@@ -149,28 +153,12 @@ export const MyModule: Module = {
   ]
   preHooks: [
     logContext,
-    ctx => { console.log('Second pre-hook executed!'); }
+    ctx => { console.log('Second hook executed!'); }
   ],
   postHooks: [
     logPostContext
   ]
 }
-```
-
-## Combination
-
-You can combine several hooks into one with `combinePreHooks` and `combinePostHooks`.
-
-```typescript
-import { combinePreHooks } from '@foal/core';
-
-function myCombinedPreHooks() {
-  return combinePreHooks([
-    myPreHook1()
-    myPreHook2()
-  ])
-}
-
 ```
 
 ## Testing a hook
@@ -200,11 +188,3 @@ describe('preHook', () => {
 });
 
 ```
-
-## `combinePostHooks(postHooks: PostHook[]): PostHook`
-
-Merges several post hooks into one.
-
-## `combinePreHooks(ppreHooks: PreHook[]): PreHook`
-
-Merges several pre hooks into one.

@@ -37,8 +37,14 @@ describe('createApp', () => {
     rmdirIfExists('test-foo-bar/public');
 
     // Src
+    rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.html');
+    rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.ts');
+    rmfileIfExists('test-foo-bar/src/app/controllers/templates/test.ts');
+    rmdirIfExists('test-foo-bar/src/app/controllers/templates');
+
     rmfileIfExists('test-foo-bar/src/app/controllers/index.ts');
     rmfileIfExists('test-foo-bar/src/app/controllers/test.ts');
+    rmfileIfExists('test-foo-bar/src/app/controllers/view.controller.ts');
     rmdirIfExists('test-foo-bar/src/app/controllers');
 
     rmfileIfExists('test-foo-bar/src/app/hooks/index.ts');
@@ -47,6 +53,7 @@ describe('createApp', () => {
 
     rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
     rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
+    rmfileIfExists('test-foo-bar/src/app/entities/user.entity.ts');
     rmdirIfExists('test-foo-bar/src/app/entities');
 
     rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
@@ -56,11 +63,6 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/src/app/services/index.ts');
     rmfileIfExists('test-foo-bar/src/app/services/test.ts');
     rmdirIfExists('test-foo-bar/src/app/services');
-
-    rmfileIfExists('test-foo-bar/src/app/templates/index.html');
-    rmfileIfExists('test-foo-bar/src/app/templates/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/templates/test.ts');
-    rmdirIfExists('test-foo-bar/src/app/templates');
 
     rmfileIfExists('test-foo-bar/src/app/app.module.ts');
     rmfileIfExists('test-foo-bar/src/app/test.ts');
@@ -128,6 +130,10 @@ describe('createApp', () => {
     actual = readFileFromRoot('test-foo-bar/src/app/controllers/test.ts');
     expect(actual).to.equal(expected);
 
+    expected = readFileFromTemplatesSpec('app/src/app/controllers/view.controller.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/controllers/view.controller.ts');
+    expect(actual).to.equal(expected);
+
   });
 
   it('should render the src/app/hooks templates.', () => {
@@ -150,6 +156,10 @@ describe('createApp', () => {
 
     expected = readFileFromTemplatesSpec('app/src/app/entities/test.1.ts');
     actual = readFileFromRoot('test-foo-bar/src/app/entities/test.ts');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/src/app/entities/user.entity.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/entities/user.entity.ts');
     expect(actual).to.equal(expected);
 
   });
@@ -178,18 +188,18 @@ describe('createApp', () => {
 
   });
 
-  it('should render the src/app/templates templates.', () => {
+  it('should render the src/app/controllers/templates templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/templates/index.1.html');
-    let actual = readFileFromRoot('test-foo-bar/src/app/templates/index.html');
+    let expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/index.1.html');
+    let actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.html');
     expect(actual).to.equal(expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/templates/index.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/templates/index.ts');
+    expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/index.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.ts');
     expect(actual).to.equal(expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/templates/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/templates/test.ts');
+    expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/test.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/test.ts');
     expect(actual).to.equal(expected);
 
   });

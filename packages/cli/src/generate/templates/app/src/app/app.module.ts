@@ -1,21 +1,16 @@
-import { Config, IModule, Module, view } from '@foal/core';
+import { controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
 
-import { index } from './templates';
+import { ViewController } from './controllers';
+import { User } from './entities';
 
 @Module()
+@InitDB([ Group, Permission, User ])
 export class AppModule implements IModule {
   controllers = [
-    view('/', index, ctx => ({
-      appName: Config.get('app', 'name'),
-      csrfToken: ctx.state.csrfToken,
-    }))
+    controller('/', ViewController),
   ];
 
   subModules = [
-
-  ];
-
-  entities = [
 
   ];
 }

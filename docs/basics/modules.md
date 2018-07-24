@@ -2,20 +2,44 @@
 
 // Add a little get-started (some code or a cli command)
 
-// Modules can be seen as controller groups.
-
-Every app starts with a module. A module binds the controllers to the request handler. It may have pre-hooks (or post-hooks) executed before (or after) every controller.
+```sh
+foal generate module my-module
+```
 
 ```typescript
-interface Module {
-  controllers?: Controller<string>[];
-  models?: Class[];
-  modules?: Module[];
-  path?: string;
-  postHooks?: PostHook[];
-  preHooks?: PreHook[];
+import { Module, IModule, PermissionRequired } from '@foal/core';
+
+import { MyController } from './controllers/my-controller';
+
+@Module()
+@PermissionRequired('admin-permission')
+export class MyModule implements IModule {
+  controllers = [
+    controller('/my-controller', MyController)
+  ];
 }
 ```
+
+Modules can be seen as controller groups. Every app consists of at least one module usualy called the `AppModule`.
+
+Every app starts with a module. A module binds the controllers to the request handler. It may have hooks executed before every controller.
+
+```typescript
+interface IModule {
+  controllers?: Class[];
+  subModules?: Class<IModule>[];
+}
+```
+
+## Controllers
+
+## Entities
+
+## SubModules
+
+## Hook
+
+like controllers or methods
 
 ## Example
 
