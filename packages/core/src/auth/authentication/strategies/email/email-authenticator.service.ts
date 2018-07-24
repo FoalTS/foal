@@ -23,7 +23,7 @@ export interface EmailUser extends AbstractUser {
 export abstract class EmailAuthenticator<User extends EmailUser>
     implements IAuthenticator<User> {
 
-  abstract UserModel: Class<User>;
+  abstract entityClass: Class<User>;
 
   async checkPassword(user: User, password: string): Promise<boolean> {
     if (!(user.password.startsWith('pbkdf2_'))) {
@@ -44,7 +44,7 @@ export abstract class EmailAuthenticator<User extends EmailUser>
   async authenticate({ email, password }: { email: string, password: string }): Promise<User|null> {
     let user: User|undefined;
 
-    user = await getManager().findOne(this.UserModel, { where: { email } });
+    user = await getManager().findOne(this.entityClass, { where: { email } });
     if (!user) {
       return null;
     }

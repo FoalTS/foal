@@ -4,5 +4,5 @@ import { User } from '../../../entities';
 
 @Service()
 export class Authenticator extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }

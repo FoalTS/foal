@@ -4,5 +4,5 @@ import { User } from 'somewhere';
 
 @Service()
 export class TestFooBar extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }

@@ -35,7 +35,7 @@ import { User } from './user.model.ts';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }
 ```
 
@@ -255,7 +255,7 @@ import { User } from '../../../models/user.model.ts';
 
 @Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
-  UserModel = User;
+  entityClass = User;
 }
 ```
 
