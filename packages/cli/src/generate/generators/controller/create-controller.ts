@@ -1,5 +1,7 @@
+// std
 import { existsSync } from 'fs';
 
+// FoalTS
 import { getNames, renderTemplate } from '../../utils';
 
 export type ControllerType = 'Empty'|'REST'|'GraphQL';
