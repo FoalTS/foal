@@ -53,7 +53,7 @@ program
   .action(async (type: string, name: string) => {
     switch (type) {
       case 'controller':
-        const controllerChoices: ControllerType[] = [ 'Empty', 'REST', 'GraphQL' ];
+        const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/ ];
         const controllerAnswers = await prompt([
           { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
         ]);
@@ -74,8 +74,8 @@ program
           new Separator(),
           'Serializer',
           'ModelSerializer',
-          new Separator(),
-          'GraphQLResolver',
+          // new Separator(),
+          // 'GraphQLResolver',
           new Separator(),
           'Authenticator',
           'EmailAuthenticator',

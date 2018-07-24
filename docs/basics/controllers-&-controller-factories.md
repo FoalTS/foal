@@ -77,7 +77,7 @@ export class AppModule implements IModule {
 
 ## Common controllers
 
-FoalTS provides some common controllers to [log in](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) or [GraphQL](../cookbook/graphql.md) API.
+FoalTS provides some common controllers to [log in](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
 ## Responding with special status or headers
 

@@ -29,7 +29,7 @@
 
 * [Validation](./cookbook/validation.md)
 * [REST API](./cookbook/rest-api.md)
-* [GraphQL API](./cookbook/graphql.md)
+<!-- * [GraphQL API](./cookbook/graphql.md) -->
 * [Templates](./cookbook/template-engine.md)
 * [Basic logging](./cookbook/basic-logging.md)
 
