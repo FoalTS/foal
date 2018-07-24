@@ -24,7 +24,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     before(() => {
       class UserService extends EntitySerializer<User> {
-        Model = User;
+        entityClass = User;
         connectionName = connectionName;
       }
       service = new UserService();

@@ -4,42 +4,42 @@ import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from './serializer.interface';
 
-export abstract class EntitySerializer<Model> implements ISerializer {
+export abstract class EntitySerializer<Entity> implements ISerializer {
 
-  abstract readonly Model: Class<Model>;
+  abstract readonly entityClass: Class<Entity>;
   readonly connectionName: string = 'default';
 
-  createOne(record: object): Promise<Model> {
+  createOne(record: object): Promise<Entity> {
     record = Object.assign({}, record);
     delete (record as any).id;
-    const entity = this.getManager().create(this.Model, record);
+    const entity = this.getManager().create(this.entityClass, record);
     return this.getManager().save(entity);
   }
 
-  createMany(records: object[]): Promise<Model[]> {
+  createMany(records: object[]): Promise<Entity[]> {
     const entities = records.map(record => {
       record = Object.assign({}, record);
       delete (record as any).id;
-      return this.getManager().create(this.Model, record);
+      return this.getManager().create(this.entityClass, record);
     });
     return this.getManager().save(entities);
   }
 
-  async findOne(query: object): Promise<Model> {
-    const entity = await this.getManager().findOne(this.Model, query);
+  async findOne(query: object): Promise<Entity> {
+    const entity = await this.getManager().findOne(this.entityClass, query);
     if (!entity) {
       throw new ObjectDoesNotExist();
     }
     return entity;
   }
 
-  findMany(query: object): Promise<Model[]> {
-    return this.getManager().find(this.Model, query);
+  findMany(query: object): Promise<Entity[]> {
+    return this.getManager().find(this.entityClass, query);
   }
 
   async updateOne(query: object, record: object): Promise<void> {
     const result = await this.getManager().update(
-      this.Model,
+      this.entityClass,
       query,
       record
     );
@@ -49,7 +49,7 @@ export abstract class EntitySerializer<Model> implements ISerializer {
   }
 
   async removeOne(query: object): Promise<void> {
-    const result = await this.getManager().delete(this.Model, query);
+    const result = await this.getManager().delete(this.entityClass, query);
     if (result.raw.affectedRows === 0) {
       throw new ObjectDoesNotExist();
     }

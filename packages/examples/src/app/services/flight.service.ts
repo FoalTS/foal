@@ -4,5 +4,5 @@ import { Flight } from '../entities';
 
 @Service()
 export class FlightService extends EntitySerializer<Flight> {
-  Model = Flight;
+  entityClass = Flight;
 }
