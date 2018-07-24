@@ -22,7 +22,7 @@ export class MyModule implements IModule {
 
 Modules can be seen as controller groups. Every app consists of at least one module usualy called the `AppModule`.
 
-Every app starts with a module. A module binds the controllers to the request handler. It may have pre-hooks (or post-hooks) executed before (or after) every controller.
+Every app starts with a module. A module binds the controllers to the request handler. It may have hooks executed before every controller.
 
 ```typescript
 interface IModule {

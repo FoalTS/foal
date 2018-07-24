@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { AbstractUser } from '../../auth';
 import { Context, getHookFunction, ServiceManager } from '../../core';
-import { restrictBodyAndQueryToAuthenticated } from './restrict-body-and-query-to-authenticated.pre-hook';
+import { restrictBodyAndQueryToAuthenticated } from './restrict-body-and-query-to-authenticated.hook';
 
 describe('restrictBodyAndQueryToAuthenticated', () => {
 

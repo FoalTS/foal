@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { Context, getHookFunction, ServiceManager } from '../../core';
-import { Log } from './log.pre-hook';
+import { Log } from './log.hook';
 
 describe('Log', () => {
 

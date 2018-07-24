@@ -81,7 +81,7 @@ FoalTS provides some common controllers to [log in](../security/authentication.m
 
 ## Responding with special status or headers
 
-You may return an `HttpResponse` in a pre-hook or in a controller method. This will stop the execution of the pre-hooks and the controller method and the returned value will be assigned to `ctx.response`. It may be read or modified in a post-hook. This response is then used as the request response.
+You may return an `HttpResponse` in a hook or in a controller method. This will stop the execution of the hooks and the controller method and the returned value will be used as the request response.
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)

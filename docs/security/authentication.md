@@ -6,7 +6,7 @@ Authentication is divided in four parts in FoalTS:
 - the `Authenticator` services (strategies),
 - the `login` and `logout` controller factories,
 - the `User` model,
-- and the `Authenticate` pre-hook.
+- and the `Authenticate` hook.
 
 > *Note*: FoalTS authentication requires the use of sessions.
 
@@ -62,9 +62,9 @@ export const AuthModule: Module = {
 }
 ```
 
-### The `Authenticate` pre-hook
+### The `Authenticate` hook
 
-The `Authenticate` pre-hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
+The `Authenticate` hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
 Usually it is registered once within the `AppModule` `preHooks`.
 
@@ -80,10 +80,10 @@ export const AppModule: Module = {
         console.log('In handler: ', ctx.user);
       })
       .withPreHook(ctx => {
-        console.log('In pre-hook: ', ctx.user);
+        console.log('In hook: ', ctx.user);
       })
       .withPostHook(ctx => {
-        console.log('In post-hook: ', ctx.user);
+        console.log('In hook: ', ctx.user);
       })
   ]
   preHooks: [
@@ -109,9 +109,9 @@ When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is 
 
 ### `LoginRequired()`
 
-`LoginRequired` is a pre-hook to restrict the access to authenticated users.
+`LoginRequired` is a hook to restrict the access to authenticated users.
 
-If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+If no user is authenticated the hook returns an `HttpResponseUnauthorized`.
 
 *Example*:
 ```typescript
@@ -137,11 +137,11 @@ export const AppModule: Module = {
 
 ### `PermissionRequired(perm: string)`
 
-`PermissionRequired` is a pre-hook to restrict the access to users with a given permission.
+`PermissionRequired` is a hook to restrict the access to users with a given permission.
 
-If no user is authenticated the pre-hook returns an `HttpResponseUnauthorized`.
+If no user is authenticated the hook returns an `HttpResponseUnauthorized`.
 
-If the user does not have the required permission then the pre-hook returns an `HttpResponseForbidden`.
+If the user does not have the required permission then the hook returns an `HttpResponseForbidden`.
 
 *Example*:
 ```typescript

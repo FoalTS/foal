@@ -9,7 +9,7 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser } from '../entities';
-import { LoginRequired } from './login-required.pre-hook';
+import { LoginRequired } from './login-required.hook';
 
 describe('LoginRequired', () => {
 

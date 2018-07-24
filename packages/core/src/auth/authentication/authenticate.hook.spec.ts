@@ -8,7 +8,7 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser, Group, Permission } from '../entities';
-import { Authenticate } from './authenticate.pre-hook';
+import { Authenticate } from './authenticate.hook';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -61,7 +61,7 @@ describe('Authenticate', () => {
     const ctx = new Context({});
 
     return expect(preHook(ctx, new ServiceManager()))
-      .to.be.rejectedWith('Authenticate pre-hook requires session management.');
+      .to.be.rejectedWith('Authenticate hook requires session management.');
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {

@@ -2,7 +2,7 @@ import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { Validate } from './validate.pre-hook';
+import { Validate } from './validate.hook';
 
 describe('Validate', () => {
 

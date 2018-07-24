@@ -10,7 +10,7 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser, Permission } from '../entities';
-import { PermissionRequired } from './permission-required.pre-hook';
+import { PermissionRequired } from './permission-required.hook';
 
 describe('PermissionRequired', () => {
 
