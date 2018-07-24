@@ -53,6 +53,7 @@ describe('createApp', () => {
 
     rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
     rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
+    rmfileIfExists('test-foo-bar/src/app/entities/user.entity.ts');
     rmdirIfExists('test-foo-bar/src/app/entities');
 
     rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
@@ -155,6 +156,10 @@ describe('createApp', () => {
 
     expected = readFileFromTemplatesSpec('app/src/app/entities/test.1.ts');
     actual = readFileFromRoot('test-foo-bar/src/app/entities/test.ts');
+    expect(actual).to.equal(expected);
+
+    expected = readFileFromTemplatesSpec('app/src/app/entities/user.entity.1.ts');
+    actual = readFileFromRoot('test-foo-bar/src/app/entities/user.entity.ts');
     expect(actual).to.equal(expected);
 
   });

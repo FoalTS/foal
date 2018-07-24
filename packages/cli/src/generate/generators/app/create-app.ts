@@ -107,6 +107,11 @@ export function createApp({ name, sessionSecret, log = true }:
   mkdirIfNotExists(`${names.kebabName}/src/app/entities`, log);
   copyFileFromTemplates('app/src/app/entities/index.ts', `${names.kebabName}/src/app/entities/index.ts`, log);
   copyFileFromTemplates('app/src/app/entities/test.ts', `${names.kebabName}/src/app/entities/test.ts`, log);
+  copyFileFromTemplates(
+    'app/src/app/entities/user.entity.ts',
+    `${names.kebabName}/src/app/entities/user.entity.ts`,
+    log
+  );
 
   mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`, log);
   copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`, log);
