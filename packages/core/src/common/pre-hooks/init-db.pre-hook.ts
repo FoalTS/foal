@@ -2,7 +2,7 @@ import { ConnectionOptions, ConnectionOptionsReader, createConnection } from 'ty
 
 import { Class, Hook, HookDecorator } from '../../core';
 
-export function initDB(entities: Class[] = [], connectionName = 'default'): HookDecorator {
+export function InitDB(entities: Class[] = [], connectionName = 'default'): HookDecorator {
   let connectionOptions: ConnectionOptions;
   return Hook(async () => {
     if (!connectionOptions) {

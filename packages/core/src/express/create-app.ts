@@ -6,7 +6,7 @@ import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
-import { initDB } from '../common';
+import { InitDB } from '../common';
 import {
   Class,
   Config,

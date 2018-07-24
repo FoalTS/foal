@@ -2,7 +2,7 @@ import {
   authenticate,
   controller,
   IModule,
-  initDB,
+  InitDB,
   LoginRequired,
   Module,
   PermissionRequired,
@@ -16,7 +16,7 @@ import { FlightService, UserService } from './services';
 import { AuthModule } from './sub-modules/authentication';
 
 @Module()
-@initDB([ Flight, User ])
+@InitDB([ Flight, User ])
 @authenticate(User)
 export class AppModule implements IModule {
   controllers = [
