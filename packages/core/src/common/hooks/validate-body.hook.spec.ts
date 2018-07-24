@@ -2,9 +2,9 @@ import * as Ajv from 'ajv';
 import { expect } from 'chai';
 
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { Validate } from './validate.hook';
+import { ValidateBody } from './validate-body.hook';
 
-describe('Validate', () => {
+describe('ValidateBody', () => {
 
   it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
       + ' by ajv for the given schema.', () => {
@@ -14,7 +14,7 @@ describe('Validate', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(Validate(schema));
+    const hook = getHookFunction(ValidateBody(schema));
     const ctx = new Context({});
     ctx.request.body = {
       foo: 3
@@ -32,7 +32,7 @@ describe('Validate', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(Validate(schema));
+    const hook = getHookFunction(ValidateBody(schema));
 
     function context(body) {
       const ctx = new Context({});
@@ -56,7 +56,7 @@ describe('Validate', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(Validate(schema));
+    const hook = getHookFunction(ValidateBody(schema));
     const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
@@ -77,11 +77,11 @@ describe('Validate', () => {
       foo: 3,
     };
 
-    let hook = getHookFunction(Validate(schema));
+    let hook = getHookFunction(ValidateBody(schema));
     hook(ctx, new ServiceManager());
     expect(ctx.request.body.bar).to.equal(undefined);
 
-    hook = getHookFunction(Validate(schema, new Ajv({ useDefaults: true })));
+    hook = getHookFunction(ValidateBody(schema, new Ajv({ useDefaults: true })));
     hook(ctx, new ServiceManager());
     expect(ctx.request.body.bar).to.equal(4);
   });

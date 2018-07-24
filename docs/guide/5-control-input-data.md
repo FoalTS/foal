@@ -12,13 +12,13 @@ If an `HttpResponse` is returned (or rejected) in the hook then the processing o
 
 In our case we would like to check that the input data has the correct shape and to escape its content to prevent [XSS attacks](https://en.wikipedia.org/wiki/Cross-site_scripting).
 
-To check that the request body matches a proper schema, we are going to use the `Validate` hook which implements the [Ajv](https://github.com/epoberezkin/ajv) library.
+To check that the request body matches a proper schema, we are going to use the `ValidateBody` hook which implements the [Ajv](https://github.com/epoberezkin/ajv) library.
 
 ```typescript
-import { Validate } from '@foal/core';
+import { ValidateBody } from '@foal/core';
 
 ...
-const validateTask = Validate({
+const validateTask = ValidateBody({
   additionnalProperties: false,
   properties: {
     destination: { type: 'string' },
@@ -47,7 +47,7 @@ import { FlightService } from './services/flight.service';
 
 // Usually the hooks would be defined in a separate file in the hooks folder.
 
-const ValidateTask = Validate({
+const ValidateTask = ValidateBody({
   additionnalProperties: false,
   properties: {
     destination: { type: 'string' },

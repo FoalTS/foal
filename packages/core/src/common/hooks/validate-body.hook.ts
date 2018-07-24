@@ -4,7 +4,7 @@ import { Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 
 const defaultInstance = new Ajv();
 
-export function Validate(schema: object, ajv = defaultInstance): HookDecorator {
+export function ValidateBody(schema: object, ajv = defaultInstance): HookDecorator {
   const isValid = ajv.compile(schema);
   return Hook(ctx => {
     if (!isValid(ctx.request.body)) {
