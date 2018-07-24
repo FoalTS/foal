@@ -1,5 +1,5 @@
 import { AbstractUser, parsePassword } from '@foal/core';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User extends AbstractUser {
@@ -14,12 +14,9 @@ export class User extends AbstractUser {
   password: string;
 
   setPassword(password: string) {
-    // TODO: use setPassword instead of BeforeInsert
-  }
-
-  @BeforeInsert()
-  hashPassword() {
-    parsePassword(this);
+    const o = { password };
+    parsePassword(o);
+    this.password = o.password;
   }
 
 }
