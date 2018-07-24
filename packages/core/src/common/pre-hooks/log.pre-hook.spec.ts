@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 
 import { Context, getHookFunction, ServiceManager } from '../../core';
-import { log } from './log.pre-hook';
+import { Log } from './log.pre-hook';
 
-describe('log', () => {
+describe('Log', () => {
 
   it('should log the message with the given log function.', () => {
     let called = false;
     const logFn = msg => called = true;
-    const hook = getHookFunction(log('foo', logFn));
+    const hook = getHookFunction(Log('foo', logFn));
 
     const ctx = new Context({});
     hook(ctx, new ServiceManager());

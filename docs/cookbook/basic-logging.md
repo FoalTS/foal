@@ -2,7 +2,7 @@
 
 // Add a little get-started (some code or a cli command)
 
-## `log(message: string, logFn = console.log)`
+## `Log(message: string, logFn = console.log)`
 
 Logs the message with the given log function (default is `console.log`).
 
