@@ -1,7 +1,6 @@
 import { Controller, Get, LoginRequired, render } from '@foal/core';
 
-import home = require('./templates/home.html');
-import index = require('./templates/index.html');
+import { home, index } from './templates';
 
 @Controller()
 export class ViewController {
