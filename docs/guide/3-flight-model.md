@@ -6,13 +6,13 @@ Great! So far you learnt how to process a simple request and statically return a
 
 > *Note 2:* Database configuration and credentials are specified in `ormconfig.json` or in environment variables. You'll find more details in the official [TypeORM website](http://typeorm.io/#/using-ormconfig), the ORM of which FoalTS is based on.
 
-First go to `src/app/entities` and create an entity.
+Create an entity.
 
 ```
 foal generate entity flight
 ```
 
-Open the generated file and replace the content with the following code.
+Open the generated file `src/app/entities/flight.entity.ts` and the `destination` column.
 
 ```typescript
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -21,16 +21,24 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Flight {
 
   @PrimaryGeneratedColumn()
+  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 
   @Column()
+  // @ts-ignore : Property 'destination' has no initializer and is not definitely assigned in theconstructor.
   destination: string;
 
 }
 ```
 
-This class will create a new table in the database called `flight`.
+This class is an entity and can be regarded as a simple model. It is linked to a table called `flight` in the database.
 
-The last thing you need to do is to register your entity in a module (in this case the `AppModule`) by adding the line `entities: [ Flight ]`.
+To be able to use this model you need to register it just like you would do with controllers. Go to `app.module.ts` and add the `Flight` entity to `InitDB`.
+
+```typescript
+...
+@InitDB([ Permission, Group, User, Flight ])
+...
+```
 
 That's it, you just created your model.
