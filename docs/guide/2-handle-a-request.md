@@ -34,8 +34,9 @@ Now that your controller is created you need to bind it to the request handler. 
 ```typescript
 import { controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
 
-import { User } from './entities';
 import { AirportController } from './controllers/airport.controller';
+
+import { User } from './entities';
 
 @Module()
 @InitDB([ Permission, Group, User ])
