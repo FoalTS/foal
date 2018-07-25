@@ -1,4 +1,4 @@
-# 3. Add `Flight` model service
+# 3. Add `Flight` model
 
 Great! So far you learnt how to process a simple request and statically return a json object. Now you are going to go a bit further and talk to a database.
 
