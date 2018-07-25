@@ -1,4 +1,23 @@
-# 6. Add a logger
+# 5. Add some logging
+
+## The `Log` hook
+
+Since input data received by the server cannot be trusted, we need to add control and sanitization tools. These are called hooks.
+
+A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. It takes two parameters:
+- the `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist,
+- the service manager that lets access other services within the hook.
+
+If an `HttpResponse` is returned (or rejected) in the hook then the processing of the request is stopped and the server responds with the `statusCode` and optional `content` of the returned object.
+
+> *Note*: A hook may also decorate a module. If so it applies to all the controllers of the module.
+
+Example : `ValidateBody` to validate the format of the request body, `PermissionRequired` or `LoginRequired` to restrict the route access to certain users.
+
+Now that the hooks are defined, it is time to attach them to the regarded routes.
+## Creating a custom hook
+
+## Using a logger service
 
 Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `foal generate service logger` and select the `Empty` type. Open the file and add the below `log` method.
 

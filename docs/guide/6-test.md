@@ -22,3 +22,5 @@ describe('FlightService', () => {
 Now you can run `npm run build:test` and then `npm run test`.
 
 During developpement you may be interested as well by the `npm run develop:test` command. It works the same way as `npm run develop` expect that it is used to execute the tests and not to launch the app.
+
+// TODO: explain that hooks are not executed
