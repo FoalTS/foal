@@ -1,4 +1,4 @@
-# 2. Handle you first request
+# 2. Handle your first request
 
 Now that all is set up, you are going to handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
