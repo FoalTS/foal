@@ -2,9 +2,18 @@
 
 Now that all is set up, you are going to handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
-To do so you'll need to create a *controller*. A *controller* is a simple class which methods, that may be synchronous or asynchronous, return an `HttpResponse`. Each method takes two parameters: a `context` which provides information about the request, the session or the authenticated user, and a service manager `services` which gives access to services (we'll come back to this concept later).
+To do so you'll need to create a *controller*. A *controller* is a simple class which methods return an `HttpResponse` or a `Promise<HttpResponse>`. Each of them takes a `Context` as parameter which provides information about the request ans the authenticated user.
 
-Go to the `src/app/controllers` directory and add a new file named `airport.controller.ts`.
+Create the controller using the FoalTS CLI.
+
+```shell
+foal g controller airport
+> Empty
+```
+
+This commands creates a file `airport.controller.ts` in `src/app/controllers`.
+
+Open this file and add the `getAirport` method.
 
 ```typescript
 import { Controller, Get, HttpResponseOK } from '@foal/core';
@@ -20,7 +29,7 @@ export class AirportController {
 
 ```
 
-Once the `getAirport` method is implemented, you'll have to bind the controller to a route. Go to `app.module.ts` and update the following lines.
+Now that your controller is created you need to bind it to the request handler. Go to `src/app/app.module.ts` and update the following lines.
 
 ```typescript
 import { controller, IModule, Module } from '@foal/core';
@@ -36,6 +45,7 @@ export class AppModule implements IModule {
 
 ```
 
-Every controller needs to be registered into a module. We're using here the `AppModule` which is the entry point of every FoalTS app.
+The `AppModule` is the entry point of every FoalTS app. 
+> A *module* can be seen as a controller group. It registers the controllers and may include sub modules.
 
-Save the file and refresh the web page. You should now read `Flights from JFK airport` in your header.
+Save the file and refresh the web page. You should now read `Flights from JFK airport` in your header. That's great, it means that the app properly serves the `GET /airport` route!
