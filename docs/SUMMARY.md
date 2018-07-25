@@ -40,7 +40,7 @@
 ## Security
 
 * [Authentication](./security/authentication.md)
-* [Permissions](./security/permissions.md)
+* [Authorization](./security/authorization.md)
 * [CSRF protection](./security/csrf-protection.md)
 * [XSS Protection](./security/xss-protection.md)
 
