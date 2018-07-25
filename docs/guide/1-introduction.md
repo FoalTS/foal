@@ -26,4 +26,4 @@ Now that the front side is set up, let's see what requests it needs the server t
 | Add a new flight | `POST /flights` | `{ "destination": "SFO" }` | `{ "id": 3, "destination": "SFO" }` | 201 |
 | Delete flight  | `DELETE /flights/4` | | | 200 or 404 |
 
-Let's get handle your first request!
+Let's handle your first request!
