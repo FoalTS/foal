@@ -13,7 +13,7 @@
 
 ## The basics
 
-* [Controllers](./basics/controllers-&-controller-factories.md)
+* [Controllers](./basics/controllers.md)
 * [Modules](./basics/modules.md)
 * [Hooks](./basics/hooks.md)
 * [Services](./basics/services.md)
