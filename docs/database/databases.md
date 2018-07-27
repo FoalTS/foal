@@ -1,8 +1,6 @@
 # Databases
 
-// Add a little get-started (some code or a cli command)
-
-FoalTS supports several databases thanks to TypeORM features. When creating a project `SQLite` is used by default as it is does not require any further installation. However though this database fits the need for prototyping, you may need to use other ones for larger projects.
+FoalTS supports several databases thanks to [TypeORM](typeorm.io/) features. When creating a project `SQLite` is used by default as it is does not require any further installation. However though this database fits the need for prototyping, you may need to use other ones for larger projects.
 
 To use a database you need to install a driver that depends on the database you are connecting to.
 
