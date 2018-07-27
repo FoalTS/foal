@@ -1,5 +1,13 @@
 # Config and environments
-// Add a little get-started (some code or a cli command)
+
+```
+|- config
+| |- settings.json
+| |- ...
+| '- my-other-config-file.json
+'- src
+```
+
 Configuration should be strictly separated from the codebase. Thus storing credentials or other values varying between deploys is not allowed in FoalTS. Instead a static class `Config` is provided to read config values from separate config files or environment variables.
 
 Let's take an example:
