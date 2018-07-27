@@ -1,12 +1,6 @@
 # Basic logging
 
-// Add a little get-started (some code or a cli command)
-
-## `Log(message: string, logFn = console.log)`
-
-Logs the message with the given log function (default is `console.log`).
-
-// Add other examples with controller class and methods
+FoalTS provides a convenient hook to log basic messages: `Log(message: string, logFn = console.log)`
 
 Example:
 ```typescript
