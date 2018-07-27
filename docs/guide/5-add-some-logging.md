@@ -1,94 +1,83 @@
 # 5. Add some logging
 
+Now that the application is serving properly our REST API, we'd like to add some custom logging.
+
 ## The `Log` hook
 
-Since input data received by the server cannot be trusted, we need to add control and sanitization tools. These are called hooks.
+For that you are going to use the `Log` hook. Hooks are decorators that aim to perform actions before the execution of the controller methods. They can serve many purposes, they are especially useful to control user access or to validate the format of the request data.
 
-A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller. It takes two parameters:
-- the `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist,
-- the service manager that lets access other services within the hook.
+Hooks can decorate a controller method, the controller itself or a module. A hook decorating a controller applies to all the controller methods and a hook decorating a module applies to all its controllers and sub-modules.
 
-If an `HttpResponse` is returned (or rejected) in the hook then the processing of the request is stopped and the server responds with the `statusCode` and optional `content` of the returned object.
+Let's see how it works.
 
-> *Note*: A hook may also decorate a module. If so it applies to all the controllers of the module.
-
-Example : `ValidateBody` to validate the format of the request body, `PermissionRequired` or `LoginRequired` to restrict the route access to certain users.
-
-Now that the hooks are defined, it is time to attach them to the regarded routes.
-## Creating a custom hook
-
-## Using a logger service
-
-Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `foal generate service logger` and select the `Empty` type. Open the file and add the below `log` method.
-
-```typescript
-import { Service } from '@foal/core';
-
-@Service()
-class LoggerService {
-
-  log(kind: 'info'|'debug', message: string) {
-    const date = new Date().toISOString();
-    console.log(`[${date}][${kind}] ${message}`);
-  }
-
-}
-```
-
-> **Note:** TypeScript types
->
-> `'info'|'debug'` defines a string type that can only take two values `'info'` or `'debug'`.
-
-> **Note:** Template literals
->
-> \``[${date}][${kind}] ${message}`\` is called a template literal. It is a syntactic sugar to write `'[' + date + ']' +'[' + kind + '] ' + message` in a more readable way.
-
-Now go back to `flight.service.ts`, import the `LoggerService`, add `private logger: LoggerService` to the constructor and extend the `createOne` method with some logging.
-
-```typescript
-import { LoggerService } from './logger.service';
-
-import { EntitySerializer, Service } from '@foal/core';
-
-import { Flight } from '../entities/flight.entity';
-
-@Service()
-export class FlightService extends EntitySerializer<Flight> {
-  entityClass = Flight;
-
-  constructor(private logger: LoggerService) {}
-
-  createOne(record: Partial<Flight>): Promise<Flight> {
-    this.logger.log('info', 'Adding a flight: ' + JSON.stringify(data));
-    return super.createOne(data);
-  }
-
-}
-
-```
-
-Create a new flight in the browser and then take a look at the terminal from where you launched the app. New logs should appear.
-
-By writting `private logger: LoggerService` we injected the logger service in the flight one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
-
-You can do the same with your controller:
+We'd like to print a custom message when `GET /airport` or one of the REST API endpoints is called.
 
 ```typescript
 import { Controller, Get, HttpResponseOK } from '@foal/core';
 
-import { LoggerService } from '../services/logger.service';
-
 @Controller()
 export class AirportController {
-
-  constructor(private logger: LoggerService) {}
-
   @Get()
-  get(ctx, services) {
-    this.logger.log('info', 'Getting the aiport name...');
+  @Log('Someone reads to the airport name.')
+  getAirport() {
     // Returns { name: 'JFK' } with status 200
     return new HttpResponseOK({ name: 'JFK' });
   }
 }
-
 ```
+
+```typescript
+import { Controller, RestController } from '@foal/core';
+
+import { FlightSerializer } from '../services/flight-serializer.service';
+
+@Controller()
+@Log('Someone creates, reads, updates or deletes flight(s).')
+export class FlightController extends RestController {
+  serializerClass = FlightSerializer;
+}
+```
+
+Go to your browser and add a new flight. You should see new logs appear in your terminal/console.
+
+## Creating a custom hook
+
+Great, you added some logging. Now you are going to go further and print the data that you received in the request.
+
+This cannot be done with the basic `Log` hook. That's why you're going to create one of your own.
+
+```shell
+foal g hook log-request-data
+```
+
+Open the generated file `src/app/hooks/log-request-data.hook.ts`.
+
+```typescript
+import { Hook } from '@foal/core';
+
+export function LogRequestData() {
+  return Hook(async (ctx, services) => {
+
+  });
+}
+```
+
+As you can see, to create a hook, you need to provide a hook function. (which may be synchronous or asynchronous). It takes two parameters:
+- a `Context` object which provides some information on the http request as well as the authenticated user if it exists,
+- and the service manager that lets you access the app services within the hook.
+
+In this example you are going to print the request body. Update the file with the following lines.
+
+```typescript
+import { Hook } from '@foal/core';
+
+export function LogRequestData(msg: string) {
+  return Hook((ctx, services) => {
+    console.log(`Msg: ${msg}. Request body: ${JSON.parse(ctx.request.body)}`);
+  });
+}
+```
+
+Go back to `airport.controller.ts` and `flight.controller.ts` and replace the `Log` hook with `LogRequestData`. Logs that appear in the console should now look different.
+
+You just ended our get-started guide!

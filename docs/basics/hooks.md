@@ -13,6 +13,8 @@ foal generate hook my-hook
 > - ctx est un peu différent de req avec le state notamment
 > - purpose: not to be at the end of the chain. It's really in the middle.
 
+Example : `ValidateBody` to validate the format of the request body, `PermissionRequired` or `LoginRequired` to restrict the route access to certain users.
+
 Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller.
 
 Hooks are usually used to restrict access or to check and sanitize data received by the server.

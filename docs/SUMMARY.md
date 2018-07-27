@@ -9,7 +9,6 @@
 * [3. Add a model](./guide/3-flight-model.md)
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Add some logging](./guide/5-add-some-logging.md)
-* [6. Test](./guide/6-test.md)
 
 ## The basics
 
