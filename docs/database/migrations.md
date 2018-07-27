@@ -1,7 +1,5 @@
 # Migrations
 
-// Add a little get-started (some code or a cli command)
-
 Migrations are stored in the `migrations` directory.
 
 Run a migration
