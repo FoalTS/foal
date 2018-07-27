@@ -1,7 +1,7 @@
-import { hook } from '@foal/core';
+import { Hook } from '@foal/core';
 
 export function /* upperFirstCamelName */() {
-  return hook(async (ctx, services, next) => {
+  return Hook(async (ctx, services) => {
 
   });
 }
