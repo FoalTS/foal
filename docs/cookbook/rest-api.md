@@ -1,13 +1,48 @@
 # REST API
-// Add a little get-started (some code or a cli command)
 
-Three points:
-- a REST controller
-- a serializer
-- and a (several) model(s)
+## Create a REST controller from an entity (simple model)
 
-## Create a REST controller from a `Partial<ISerializer>`
+### Create the entity
 
+```sh
+foal g entity flight
+```
+
+### Create the serializer
+
+```sh
+foal g service flight
+> EntitySerializer
+```
+
+### Create the controller
+
+```sh
+foal g controller flight
+> REST
+```
+
+### Register the controller within a module
+
+```typescript
+...
+
+@Module()
+export class AppModule implements IModule {
+  controllers = [
+    controller('/flights', FlightController),
+  ];
+}
+```
+
+## Create a REST controller from another serializer
+
+- `POST /` -> service.createOne(...)
+- `GET /` -> service.findMany(...)
+- `GET /:id` -> service.findOne(...)
+- `PATCH /:id` -> service.updateOne(...)
+- `PUT /:id` -> service.updateOne(...)
+- `DELETE /:id` -> service.removeOne(...)
 
 ```typescript
 // ./services/train.service.ts
@@ -31,23 +66,3 @@ export class TrainService implements Partial<ISerializer> {
 }
 ```
 
-```typescript
-import { Module, rest } from '@foal/core';
-
-import { TrainService } from './services/train.service';
-
-export const AppModule: Module = {
-  controllers: [
-    rest('/trains', TrainService)
-  ]
-};
-```
-
-```
-POST /my_resource -> service.createOne(...)
-GET /my_resource -> service.findMany(...)
-GET /my_resource/:id -> service.findOne(...)
-PATCH /my_resource/:id -> service.updateOne(...)
-PUT /my_resource/:id -> service.updateOne(...)
-DELETE /my_resources/:id -> service.removeOne(...)
-```

@@ -1,6 +1,4 @@
 # Validation
-// Add a little get-started (some code or a cli command)
-## `ValidateBody(schema: object, ajv = defaultInstance)`
 
 `ValidateBody` is a hook to control the data received by the server. [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator, validates the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
 
@@ -23,7 +21,7 @@ export class MyController {
   })
   postUser(ctx: Context) {
     // In this function we are sure that firstName and lastName
-    // are defined thanks to the below hook.
+    // are defined thanks to the above hook.
     console.log(ctx.request.body.firstName, ctx.request.body.lastName);
   }
 

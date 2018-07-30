@@ -1,5 +1,5 @@
 # Deploy on production
-// Add a little get-started (some code or a cli command)
+
 When deploying an application to production you need to:
 - use https (or set `sessionCookieSecure` to `false` in `config/settings.production.json`),
 - set the `NODE_ENV` environment variable to `production`,

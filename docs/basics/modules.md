@@ -1,7 +1,5 @@
 # Modules
 
-// Add a little get-started (some code or a cli command)
-
 ```sh
 foal generate module my-module
 ```
@@ -20,40 +18,14 @@ export class MyModule implements IModule {
 }
 ```
 
-Modules can be seen as controller groups. Every app consists of at least one module usualy called the `AppModule`.
+Modules can be seen as controller groups. Every app consists of at least one module that is called the `AppModule`.
 
-Every app starts with a module. A module binds the controllers to the request handler. It may have hooks executed before every controller.
+A module binds the controllers to the request handler and can also have sub-modules. If some hooks decorate it then they apply to each controller and each sub-module.
 
 ```typescript
 interface IModule {
   controllers?: Class[];
   subModules?: Class<IModule>[];
-}
-```
-
-## Controllers
-
-## Entities
-
-## SubModules
-
-## Hook
-
-like controllers or methods
-
-## Example
-
-```typescript
-import { controller, IModule, Module, rest } from '@foal/core';
-// module and service imports...
-
-@Module()
-@MyFirstHook()
-@MySecondHook()
-export class AppModule implements IModule {
-  controllers  = [
-    controller('/my_resources', MyController)
-  ];
 }
 ```
 

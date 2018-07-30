@@ -1,186 +1,135 @@
 # Hooks
 
-// Add a little get-started (some code or a cli command)
-
 ```sh
 foal generate hook my-hook
 ```
 
+Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is made of small function, synchronous or asynchronous, that aims to be executed before a controller method.
+
+This function takes two parameters:
+- The `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist.
+- The service manager that lets access other services within the hook.
+
+If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
+
+<!--
+// TODO: Write this.
 > Difference between a hook and an express middleware?
 > - sync or async
 > - do not use res, but return, resolves a HttpResponse
 > - pas de next. Si pas de valeur retounée ou d'erreur levée/rejetée, on va à l'étape suivante
 > - ctx est un peu différent de req avec le state notamment
 > - purpose: not to be at the end of the chain. It's really in the middle.
-
-Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is a small function, synchronous or asynchronous, that aims to be connected to one, several or all the routes of a controller.
-
-Hooks are usually used to restrict access or to check and sanitize data received by the server.
+>
+-->
 
 <!-- > By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.-->
 
-They takes two parameters:
-- the `Context|PostContext` object which provides some information on the http request as well as the session object and the authenticated user if they exist.
-- The service manager that lets access other services within the hook.
+## Some common hooks
 
-If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
-
-> *Note*: A hook may also decorate a module. If so it applies to all the controllers of the module.
+- `ValidateBody` validates the format of the request body.
+- `PermissionRequired` or `LoginRequired` restrict the route access to certain users.
 
 ## How to create one
 
 ```typescript
 import {
   Context,
-  PostContext,
   ServiceManager,
-  PostHook,
-  PreHook,
+  Hook
 } from '@foal/core';
 
-export function myLoggerPreHook(message: string): PreHook {
-  return (ctx: Context, services: ServiceManager) => { console.log(message) };
+export function HelloWorld(smiley: string){
+  return Hook((ctx: Context, services: ServiceManager) => {
+    console.log('Hello world ' + smiley);
+  });
 }
 
-export function myLoggerPostHook(message: string): PostHook {
-  return (ctx: PostContext, services: ServiceManager) => { console.log(message) };
-}
 ```
 
 ## How to bind the hook to a route
 
-Hooks can either be bound to one, several or all the routes of a controller. They may even apply to all the controllers of a module and its child modules if you register it within the `preHooks` or `postHooks` properties of the top-level module.
-
-### Specific routes of a controller
-
-Each controller factory gives a different name to each of its route.
+Hooks can either be bound to one, several or all the routes of a controller. They may even apply to all the controllers of a module and its sub-modules.
 
 ```typescript
 import {
-  Module,
-  PreHook,
-  rest
+  Controller, Get, HttpResponseOK, IModule, Module
 } from '@foal/core';
 
-import { MyModelService } from './my-model-service';
+import { HelloWorld } from './hello-world.hook';
 
-const logContext: PreHook = ctx => {
-  console.log(ctx);
+@Controller()
+@HelloWorld(':)')
+class MyController {
+  @Get('/foo')
+  @HelloWorld(':/')
+  foo() {
+    return new HttpResponseOK();
+  }
+
+  @Get('/bar')
+  bar() {
+    return new HttpResponseOK();
+  }
 }
 
-const logPostContext: PostHook = ctx => {
-  console.log(ctx);
+@Controller()
+class MyController2 {
+  @Get('/foobar')
+  foobar() {
+    return new HttpResponseOK();
+  }
 }
 
-export const MyModule: Module = {
-  controllers: [
-    rest('/', MyModelService)
-      .withPreHook(logContext, 'GET /', 'GET /:id')
-      // or withPreHooks([ logContext ], 'GET /', 'GET /:id')
-      .withPreHook(ctx => { console.log('Second hook executed!'); }, 'GET /', 'GET /:id')
-      .withPostHook(logPostContext, 'GET /', 'GET /:id')
-      // or withPostHooks([ logContext ], 'GET /', 'GET /:id')
-  ]
-}
-```
-
-### All the routes of a controller
-
-```typescript
-import {
-  Module,
-  PreHook,
-  rest
-} from '@foal/core';
-
-import { MyModelService } from './my-model-service';
-
-const logContext: PreHook = ctx => {
-  console.log(ctx);
-}
-
-const logPostContext: PostHook = ctx => {
-  console.log(ctx);
-}
-
-export const MyModule: Module = {
-  controllers: [
-    rest('/', MyModelService)
-      .withPreHook(logContext)
-      .withPreHook(ctx => { console.log('Second hook executed!'); })
-      // or withPreHooks([ logContext ])
-      .withPostHook(logPostContext)
-      // or withPostHooks([ logContext ])
-  ]
-}
-```
-
-### All the routes of all the controllers of a module and its children
-
-```typescript
-import {
-  Module,
-  PreHook,
-  rest
-} from '@foal/core';
-
-import { MyModelService } from './my-model-service';
-import { MyModelService2 } from './my-model-service2';
-import { MyModelService3 } from './my-model-service2';
-
-const logContext: PreHook = ctx => {
-  console.log(ctx);
-}
-
-const logPostContext: PostHook = ctx => {
-  console.log(ctx);
-}
-
-export const ChildModule: Module = {
-  path: '/foobar',
-  controllers: [
-    rest('/', MyModelService), 
+@Module()
+@HelloWorld(':D')
+export class AppModule implements IModule {
+  controllers = [
+    controller('/a', MyController),
+    controller('/b', MyController2)
   ]
 }
 
-export const MyModule: Module = {
-  controllers: [
-    rest('/foo', MyModelService),
-    rest('/bar', MyModelService2),
-  ],
-  modules: [
-    ChildModule
-  ]
-  preHooks: [
-    logContext,
-    ctx => { console.log('Second hook executed!'); }
-  ],
-  postHooks: [
-    logPostContext
-  ]
-}
+/*
+GET /a/foo
+"Hello world :D"
+"Hello world :)"
+"Hello world :/"
+
+GET /a/bar
+"Hello world :D"
+"Hello world :)"
+
+GET /b/foobar
+"Hello world :D"
+*/
+
 ```
 
 ## Testing a hook
 
-Hooks are just mere functions. Test them as is.
-
 ```typescript
 import {
   Context,
-  PreHook,
+  getHookFunction,
+  Hook,
   ServiceManager
 } from '@foal/core';
 import * as expect from 'chai';
 
-const preHook: PreHook = ctx => { ctx.state.foo = 'bar'; };
+function MyHook() {
+  return Hook(ctx => {
+    ctx.state.foo = 'bar';
+  });
+}
 
 describe('preHook', () => {
   
   it('should add a foo property to the context state.', () => {
     const ctx = Context();
+    const hook = getHookFunction(MyHook())
     
-    preHook(ctx, new ServiceManager());
+    hook(ctx, new ServiceManager());
 
     expect(ctx.state.foo).to.equal('bar');
   })

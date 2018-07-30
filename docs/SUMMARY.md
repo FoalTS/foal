@@ -8,13 +8,11 @@
 * [2. Handle a request](./guide/2-handle-a-request.md)
 * [3. Add a model](./guide/3-flight-model.md)
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
-* [5. Control input data](./guide/5-control-input-data.md)
-* [6. Add a logger](./guide/6-add-a-logger.md) <!-- 6bis Add authentication -->
-* [7. Test](./guide/7-test.md)
+* [5. Add some logging](./guide/5-add-some-logging.md)
 
 ## The basics
 
-* [Controllers](./basics/controllers-&-controller-factories.md)
+* [Controllers](./basics/controllers.md)
 * [Modules](./basics/modules.md)
 * [Hooks](./basics/hooks.md)
 * [Services](./basics/services.md)
@@ -41,7 +39,7 @@
 ## Security
 
 * [Authentication](./security/authentication.md)
-* [Permissions](./security/permissions.md)
+* [Authorization](./security/authorization.md)
 * [CSRF protection](./security/csrf-protection.md)
 * [XSS Protection](./security/xss-protection.md)
 
