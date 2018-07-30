@@ -27,7 +27,7 @@ export abstract class RestController {
   // };
 
   // requiredFields = {
-  //   post: [ 'id' ],
+  //   post: [], // do not include the id in post.
   //   put: [ 'id' ]
   // };
 
