@@ -1,7 +1,7 @@
-import { hook } from '@foal/core';
+import { Hook } from '@foal/core';
 
 export function TestFooBar() {
-  return hook(async (ctx, services, next) => {
+  return Hook(async (ctx, services) => {
 
   });
 }

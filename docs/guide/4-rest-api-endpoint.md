@@ -43,7 +43,7 @@ import { EntitySerializer, Service } from '@foal/core';
 import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightSerializer extends EntitySerializer<Flight> {
+export class FlightSerializer extends EntitySerializer {
   entityClass = Flight;
 }
 

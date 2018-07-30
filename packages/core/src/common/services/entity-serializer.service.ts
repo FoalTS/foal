@@ -4,19 +4,30 @@ import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from './serializer.interface';
 
-export abstract class EntitySerializer<Entity> implements ISerializer {
+/**
+ * Create, read, update or delete entities and return representations
+ * of them.
+ *
+ * @export
+ * @abstract
+ * @class EntitySerializer
+ * @implements {ISerializer}
+ * @template Entity
+ */
+export abstract class EntitySerializer implements ISerializer {
 
-  abstract readonly entityClass: Class<Entity>;
+  abstract readonly entityClass: Class;
+  // abstract readonly fields: string[];
   readonly connectionName: string = 'default';
 
-  createOne(record: object): Promise<Entity> {
+  createOne(record: object): Promise<object> {
     record = Object.assign({}, record);
     delete (record as any).id;
     const entity = this.getManager().create(this.entityClass, record);
     return this.getManager().save(entity);
   }
 
-  createMany(records: object[]): Promise<Entity[]> {
+  createMany(records: object[]): Promise<object[]> {
     const entities = records.map(record => {
       record = Object.assign({}, record);
       delete (record as any).id;
@@ -25,7 +36,7 @@ export abstract class EntitySerializer<Entity> implements ISerializer {
     return this.getManager().save(entities);
   }
 
-  async findOne(query: object): Promise<Entity> {
+  async findOne(query: object): Promise<object> {
     const entity = await this.getManager().findOne(this.entityClass, query);
     if (!entity) {
       throw new ObjectDoesNotExist();
@@ -33,7 +44,7 @@ export abstract class EntitySerializer<Entity> implements ISerializer {
     return entity;
   }
 
-  findMany(query: object): Promise<Entity[]> {
+  findMany(query: object): Promise<object[]> {
     return this.getManager().find(this.entityClass, query);
   }
 

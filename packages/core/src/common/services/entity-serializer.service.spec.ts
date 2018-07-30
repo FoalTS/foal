@@ -40,10 +40,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
   describe(`with ${type}`, () => {
 
-    let service: EntitySerializer<User>;
+    let service: EntitySerializer;
 
     before(() => {
-      class UserService extends EntitySerializer<User> {
+      class UserService extends EntitySerializer {
         entityClass = User;
         connectionName = connectionName;
       }

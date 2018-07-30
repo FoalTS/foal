@@ -1,6 +1,6 @@
 # XSS protection
-// Add a little get-started (some code or a cli command)
--> specify header.
+
+FoalTS provides some utils to protect you against XSS attacks.
 
 ## `escape(str: string): string`
 
