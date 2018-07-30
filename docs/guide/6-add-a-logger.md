@@ -34,12 +34,12 @@ import { EntitySerializer, Service } from '@foal/core';
 import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightService extends EntitySerializer<Flight> {
+export class FlightService extends EntitySerializer {
   entityClass = Flight;
 
   constructor(private logger: LoggerService) {}
 
-  createOne(record: Partial<Flight>): Promise<Flight> {
+  createOne(record: Partial<Flight>): Promise<object> {
     this.logger.log('info', 'Adding a flight: ' + JSON.stringify(data));
     return super.createOne(data);
   }
