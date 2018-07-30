@@ -13,7 +13,7 @@ Let's see how it works.
 We'd like to print a custom message when `GET /airport` or one of the REST API endpoints is called.
 
 ```typescript
-import { Controller, Get, HttpResponseOK } from '@foal/core';
+import { Controller, Get, HttpResponseOK, Log } from '@foal/core';
 
 @Controller()
 export class AirportController {
@@ -27,7 +27,7 @@ export class AirportController {
 ```
 
 ```typescript
-import { Controller, RestController } from '@foal/core';
+import { Controller, Log, RestController } from '@foal/core';
 
 import { FlightSerializer } from '../services/flight-serializer.service';
 
@@ -73,11 +73,11 @@ import { Hook } from '@foal/core';
 
 export function LogRequestData(msg: string) {
   return Hook((ctx, services) => {
-    console.log(`Msg: ${msg}. Request body: ${JSON.parse(ctx.request.body)}`);
+    console.log(`Msg: ${msg}. Request body: ${JSON.stringify(ctx.request.body)}`);
   });
 }
 ```
 
 Go back to `airport.controller.ts` and `flight.controller.ts` and replace the `Log` hook with `LogRequestData`. Logs that appear in the console should now look different.
 
-You just ended our get-started guide!
+You're done, you just ended the get-started guide!

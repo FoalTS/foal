@@ -12,7 +12,7 @@ Create an entity.
 foal generate entity flight
 ```
 
-Open the generated file `src/app/entities/flight.entity.ts` and the `destination` column.
+Open the generated file `src/app/entities/flight.entity.ts` and add the `destination` column.
 
 ```typescript
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';

@@ -2,7 +2,7 @@
 
 Now that all is set up, you are going to handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
-To do so you'll need to create a *controller*. A *controller* is a simple class which methods return an `HttpResponse` or a `Promise<HttpResponse>`. Each of them takes a `Context` as parameter which provides information about the request ans the authenticated user.
+To do so you'll need to create a *controller*. A *controller* is a simple class whose methods return an `HttpResponse` or a `Promise<HttpResponse>`. Each of them takes a `Context` as parameter which provides information about the request and the authenticated user.
 
 Create the controller using the FoalTS CLI.
 
@@ -34,6 +34,7 @@ Now that your controller is created you need to bind it to the request handler. 
 ```typescript
 import { controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
 
+import { ViewController } from './controllers';
 import { AirportController } from './controllers/airport.controller';
 
 import { User } from './entities';
@@ -42,6 +43,7 @@ import { User } from './entities';
 @InitDB([ Permission, Group, User ])
 export class AppModule implements IModule {
   controllers = [
+    controller('/', ViewController),
     controller('/airport', AirportController),
   ];
 }
