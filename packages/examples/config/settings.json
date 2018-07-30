@@ -1,5 +1,5 @@
 {
-  "csrf": false,
+  "csrf": true,
   "debug": true,
   "port": 3000,
   "sessionSecret": "my secret",

@@ -1,36 +1,54 @@
-# 2. Handle you first request
+# 2. Handle your first request
 
 Now that all is set up, you are going to handle your first request. The frontend expects to get a json object with the name of the airport when making a request to `GET /airport`.
 
-To do so, you'll need to create a *handler*. A *handler* is a simple function, that may be synchronous or asynchronous, which returns an `HttpResponse`. It takes two parameters: a `context` which provides information about the request, the session or the authenticated user, and a service manager `services` which gives access to services (we'll come back to this concept later).
+To do so you'll need to create a *controller*. A *controller* is a simple class which methods return an `HttpResponse` or a `Promise<HttpResponse>`. Each of them takes a `Context` as parameter which provides information about the request ans the authenticated user.
 
-Go to the `src/app/handlers` directory and add a new file named `get-airport.ts`.
+Create the controller using the FoalTS CLI.
+
+```shell
+foal g controller airport
+> Empty
+```
+
+This commands creates a file `airport.controller.ts` in `src/app/controllers`.
+
+Open this file and add the `getAirport` method.
 
 ```typescript
-import { Handler, HttpResponseOK } from '@foal/core';
+import { Controller, Get, HttpResponseOK } from '@foal/core';
 
-export const getAirport: Handler = (ctx, services) => {
-  // Returns { name: 'JFK' } with status 200
-  return new HttpResponseOK({ name: 'JFK' });
-};
+@Controller()
+export class AirportController {
+  @Get()
+  getAirport() {
+    // Returns { name: 'JFK' } with status 200
+    return new HttpResponseOK({ name: 'JFK' });
+  }
+}
 
 ```
 
-Once the handler is implemented, you'll have to bind it to a route. Go to `app.module.ts` and update the following lines.
+Now that your controller is created you need to bind it to the request handler. Go to `src/app/app.module.ts` and update the following lines.
 
 ```typescript
-import { Module } from '@foal/core';
+import { controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
 
-import { getAirport } from './handlers/get-airport';
+import { AirportController } from './controllers/airport.controller';
 
-export const AppModule: Module = {
-  controllers: [
-    route('GET', '/airport', getAirport),
-  ],
-};
+import { User } from './entities';
+
+@Module()
+@InitDB([ Permission, Group, User ])
+export class AppModule implements IModule {
+  controllers = [
+    controller('/airport', AirportController),
+  ];
+}
 
 ```
 
-The `route` function creates a controller from the `getAirport` handler to process requests sent to `GET /airport`. This controller is then registered into a module, the `AppModule`, which the entry point of every FoalTS app.
+The `AppModule` is the entry point of every FoalTS app. 
+> A *module* can be seen as a controller group. It registers the controllers and may include sub modules.
 
-Save the file and refresh the web page. You should now read `Flights from JFK airport` in your header.
+Save the file and refresh the web page. You should now read `Flights from JFK airport` in your header. That's great, it means that the app properly serves the `GET /airport` route!
