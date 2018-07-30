@@ -15,7 +15,7 @@
 <p align="center">
   <i>Get ready to create enterprise-grade Node.JS applications</i>
 </p>
-**This work is in progress and is currently not ready for production.**
+*This work is in progress and is currently not ready for production.*
 
 ## Install the command line interface
 ```shell
