@@ -6,6 +6,8 @@
 [![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
 [![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg?targetFile=packages%2Fcli%2Fpackage.json)](https://snyk.io/test/github/foalts/foal?targetFile=packages%2Fcli%2Fpackage.json)
 
+**This work is in progress and is currently not ready for production.**
+
 FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript.
 
 Github: [https://github.com/FoalTS/foal](https://github.com/FoalTS/foal)
