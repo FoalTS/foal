@@ -1,43 +1,29 @@
 import {
-  authenticate,
+  Authenticate,
+  controller,
+  Group,
+  IModule,
+  InitDB,
   Module,
-  onSuccessKeepFields,
-  rest,
-  restrictAccessToAdmin,
-  restrictAccessToAuthenticated,
-  route,
-  view,
+  Permission,
+  subModule,
 } from '@foal/core';
 
-import { getAirport } from './handlers';
-import { Flight } from './models';
-import { User } from './models/user.model';
-import { AuthModule } from './modules/authentication';
-import { FlightService, UserService } from './services';
+import { AirportController, FlightController, ViewController } from './controllers';
+import { Flight, User } from './entities';
+import { AuthModule } from './sub-modules/authentication';
 
-export const AppModule: Module = {
-  controllers: [
-    rest('/users', UserService)
-      .withPreHook(ctx => { ctx.request.body.isAdmin = false; }, 'POST /')
-      .withPreHook(restrictAccessToAuthenticated(), 'GET /', 'GET /:id')
-      .withPreHook(restrictAccessToAdmin(), 'PUT /:id', 'PATCH /:id', 'DELETE /:id')
-      .withPostHook(onSuccessKeepFields<User>([ 'id', 'email', 'roles' ])),
+@Module()
+@InitDB([ Permission, Group, User, Flight ])
+@Authenticate(User)
+export class AppModule implements IModule {
+  controllers = [
+    controller('/airport', AirportController),
+    controller('', ViewController),
+    controller('/flights', FlightController)
+  ];
 
-    view('/', require('./templates/index.html'), { name: 'FoalTS' }),
-
-    view('/home', require('./templates/home.html'))
-      .withPreHook(restrictAccessToAuthenticated()),
-
-    route('GET', '/airport', getAirport),
-    rest('/flights', FlightService),
-  ],
-  models: [
-    Flight, User
-  ],
-  modules: [
-    AuthModule,
-  ],
-  preHooks: [
-    authenticate(User)
-  ],
-};
+  subModules = [
+    subModule('/auth', AuthModule),
+  ];
+}

@@ -1,8 +1,8 @@
-import { ModelService, Service } from '@foal/core';
+import { EntitySerializer, Service } from '@foal/core';
 
-import { User } from '../models';
+import { User } from '../entities';
 
 @Service()
-export class UserService extends ModelService<User> {
-  Model = User;
+export class UserService extends EntitySerializer {
+  entityClass = User;
 }

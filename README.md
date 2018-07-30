@@ -12,18 +12,55 @@
   </a>
 </p>
 
+<p align="center">
+  <i>Get ready to create enterprise-grade Node.JS applications</i>
+</p>
 **This work is in progress and is currently not ready for production.**
 
-FoalTS is a high-level Node.JS framework to quickly build web apps in TypeScript. Thanks to its architecture, packages and tools you can now bootstrap and develop entreprise-grade apps.
-
+## Install the command line interface
 ```shell
-$ npm install -g yo generator-foal
-$ yo foal my-app
-$ cd my-app
+$ npm install -g @foal/cli
+```
+## Create a new app
+```shell
+$ foal createapp my-app
+$ cd my-app && npm install
+```
+## Create a model
+```shell
+$ foal g entity flight
+```
+## Create a model serializer
+```shell
+$ foal g service flight
+> Entity Serializer
+```
+## Create a REST controller
+```shell
+$ foal g controller flight
+> REST
+```
+## Register your controller
+And now register you controller in the `src/app/app.module.ts` file.
+```typescript
+...
+import { controller } from '@foal/core';
+import { FlightController } from './controllers/flight.controller';
+...
+export class AppModule implements IModule {
+  controllers = [
+    controller('/flights', FlightController)
+  ]
+}
+```
+
+## Start the app!
+
+```bash
 $ npm run develop
 ```
 
-[>> Get started <<](https://foalts.gitbooks.io/docs/content/)
+[>> Get started <<](https://foalts.gitbook.io/docs/content/)
 
 ## Features
 
@@ -53,7 +90,7 @@ Security is everyone's business. To help you ship secure apps FoalTS provides so
 
 ## Documentation
 
-Find docs [here](https://foalts.gitbooks.io/docs/content/).
+Find docs [here](https://foalts.gitbook.io/docs/content/).
 
 ## Contributing
 
@@ -66,8 +103,8 @@ There are several ways to contribute.
 
 ## Packages
 
-- @foal/ajv
 - @foal/core
+- @foal/cli
 - @foal/ejs
 
 ## License

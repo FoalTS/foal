@@ -1,8 +1,8 @@
-import { ModelService, Service } from '@foal/core';
+import { EntitySerializer, Service } from '@foal/core';
 
-import { Flight } from '../models';
+import { Flight } from '../entities';
 
 @Service()
-export class FlightService extends ModelService<Flight> {
-  Model = Flight;
+export class FlightService extends EntitySerializer {
+  entityClass = Flight;
 }

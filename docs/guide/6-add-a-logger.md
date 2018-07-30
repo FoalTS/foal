@@ -1,6 +1,6 @@
 # 6. Add a logger
 
-Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `yo foal:service logger` and select the `Empty` type. Open the file and add the below `log` method.
+Now that we have an app running, we would like to log some information with a custom logger. Let's add a new service for that to display messages such as `[{date}][info] Adding a flight...`. Create it by tapping in your terminal the command `foal generate service logger` and select the `Empty` type. Open the file and add the below `log` method.
 
 ```typescript
 import { Service } from '@foal/core';
@@ -29,17 +29,17 @@ Now go back to `flight.service.ts`, import the `LoggerService`, add `private log
 ```typescript
 import { LoggerService } from './logger.service';
 
-import { ModelService, Service } from '@foal/core';
+import { EntitySerializer, Service } from '@foal/core';
 
-import { Flight } from '../models/flight.model';
+import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightService extends ModelService<Flight> {
-  Model = Flight;
+export class FlightService extends EntitySerializer {
+  entityClass = Flight;
 
   constructor(private logger: LoggerService) {}
 
-  createOne(record: Partial<Flight>): Promise<Flight> {
+  createOne(record: Partial<Flight>): Promise<object> {
     this.logger.log('info', 'Adding a flight: ' + JSON.stringify(data));
     return super.createOne(data);
   }
@@ -52,16 +52,24 @@ Create a new flight in the browser and then take a look at the terminal from whe
 
 By writting `private logger: LoggerService` we injected the logger service in the flight one. You don't need to instantiate the logger yourself, `FoalTS` takes care of it.
 
-You can do the same with your handler:
+You can do the same with your controller:
 
 ```typescript
-import { Handler, HttpResponseOK } from '@foal/core';
+import { Controller, Get, HttpResponseOK } from '@foal/core';
 
 import { LoggerService } from '../services/logger.service';
 
-export const getAirport: Handler = (ctx, services) => {
-  services.get(LoggerService).log('info', 'Getting the aiport name...');
-  // Returns { name: 'JFK' } with status 200
-  return new HttpResponseOK({ name: 'JFK' });
-};
+@Controller()
+export class AirportController {
+
+  constructor(private logger: LoggerService) {}
+
+  @Get()
+  get(ctx, services) {
+    this.logger.log('info', 'Getting the aiport name...');
+    // Returns { name: 'JFK' } with status 200
+    return new HttpResponseOK({ name: 'JFK' });
+  }
+}
+
 ```

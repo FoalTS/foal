@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Log in</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 40px;
+      }
+      #credentialsAlert {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body class="text-center bg-light">
+    <div class="container">
+      <form action="/auth/local" method="POST">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <div id="credentialsAlert" class="alert alert-danger" role="alert">
+          Invalid email or password. Please try again.
+        </div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control mb-3" placeholder="Email address" name="email" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control mb-3" placeholder="Password" name="password" required>
+        <button class="btn btn-lg btn-primary" type="submit">Sign in</button>
+      </form>
+    </div>
+    <script>
+      if (new URL(window.location.href).searchParams.get('invalid_credentials') === 'true') {
+        document.getElementById('credentialsAlert').style.display = 'block';
+      }
+    </script>
+  </body>
+</html>

@@ -6,4 +6,4 @@
 
 - [ ] Add/update/check docs.
 - [ ] Add/update/check tests.
-- [ ] Update/check foal generator repo.
+- [ ] Update/check the cli generators.
