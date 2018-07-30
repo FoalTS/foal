@@ -5,7 +5,7 @@ This tutorial will teach you how to create a web app using the core concepts of 
 
 To get started create a new project by following [these instructions](../README.md).
 
-Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and replace the `public/` directory and the `src/app/templates/index.html` template with the downloaded files.
+Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip the bundle and replace the `public/` directory and the `src/app/controllers/templates/index.html` template with the downloaded files.
 
 > FoalTS can either interact with rich-client interfaces (Angular, Vue, React, etc) or use classical templating mechanisms. In this tutorial, the frontend part will be handled by a precompiled Angular app.
 
