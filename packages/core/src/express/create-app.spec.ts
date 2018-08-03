@@ -1,13 +1,38 @@
+// 3p
+import * as request from 'supertest';
+
+// FoalTS
 import { createApp } from './create-app';
 
 describe('createApp', () => {
-  it('should be tested.', () => {
-    // TODO: Add tests.
-    createApp(class {});
-  });
-});
 
-// TODO: Add tests
+  it('should return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with bad'
+      + ' csrf token.', () => {
+    process.env.SETTINGS_CSRF = 'true';
+    const app = createApp(class {});
+    const promise = Promise.all([
+      request(app).post('/').expect(403).expect('Bad csrf token.'),
+      request(app).patch('/').expect(403).expect('Bad csrf token.'),
+      request(app).put('/').expect(403).expect('Bad csrf token.'),
+      request(app).delete('/').expect(403).expect('Bad csrf token.'),
+    ]);
+    process.env.SETTINGS_CSRF = 'false'; // Not great: assumption about the default param here.
+    return promise;
+  });
+
+  it('should return 404 "Not Found" on requests that have no handlers.', () => {
+    const app = createApp(class {});
+    return Promise.all([
+      request(app).get('/foo').expect(404),
+      request(app).post('/foo').expect(404),
+      request(app).patch('/foo').expect(404),
+      request(app).put('/foo').expect(404),
+      request(app).delete('/foo').expect(404),
+    ]);
+  });
+
+  // TODO: Add tests.
+});
 
 // import * as express from 'express';
 // import * as request from 'supertest';
