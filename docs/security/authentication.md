@@ -26,9 +26,7 @@ export class Flight {
   password: string;
 
   setPassword(password: string) {
-    const o = { password };
-    parsePassword(o);
-    this.password = o.password;
+    this.password = parsePassword(password);
   }
 
 }
