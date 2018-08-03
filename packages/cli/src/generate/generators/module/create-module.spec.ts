@@ -61,7 +61,7 @@ describe('createModule', () => {
   describe('should render the root templates', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/index.ts`);
@@ -78,14 +78,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -98,7 +98,7 @@ describe('createModule', () => {
   describe('should render the controllers templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/index.ts`);
@@ -110,14 +110,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -130,7 +130,7 @@ describe('createModule', () => {
   describe('should render the hooks templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/index.ts`);
@@ -142,14 +142,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -162,7 +162,7 @@ describe('createModule', () => {
   describe('should render the entities templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/entities/index.ts`);
@@ -174,14 +174,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -194,7 +194,7 @@ describe('createModule', () => {
   describe('should render the sub-modules templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/index.ts`);
@@ -206,14 +206,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -226,7 +226,7 @@ describe('createModule', () => {
   describe('should render the services templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/services/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
@@ -238,14 +238,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 
@@ -258,7 +258,7 @@ describe('createModule', () => {
   describe('should render the templates templates.', () => {
 
     function test(prefix = '') {
-      createModule({ name: 'test-fooBar', log: false });
+      createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/controllers/templates/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/index.ts`);
@@ -270,14 +270,14 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/sub-modules', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
 
     it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules', false);
+      mkdirIfNotExists('sub-modules');
       test('sub-modules/');
     });
 

@@ -2,8 +2,8 @@
 import * as fs from 'fs';
 import { join } from 'path';
 
-export function mkdirIfNotExists(path: string, log: boolean = true) {
-  if (log) {
+export function mkdirIfNotExists(path: string) {
+  if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${path}`);
   }
   if (!fs.existsSync(path)) {
@@ -23,8 +23,8 @@ export function rmdirIfExists(path: string) {
   }
 }
 
-export function renderTemplate(src: string, dest: string, locals: object, log: boolean = true) {
-  if (log) {
+export function renderTemplate(src: string, dest: string, locals: object) {
+  if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${dest}`);
   }
   const template = fs.readFileSync(join(__dirname, './templates', src), 'utf8');
@@ -37,15 +37,15 @@ export function renderTemplate(src: string, dest: string, locals: object, log: b
   fs.writeFileSync(dest, content, 'utf8');
 }
 
-export function copyFileFromNodeModules(src: string, dest: string, log: boolean = true) {
-  if (log) {
+export function copyFileFromNodeModules(src: string, dest: string) {
+  if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${dest}`);
   }
   fs.copyFileSync(join(__dirname, '../../node_modules', src), dest);
 }
 
-export function copyFileFromTemplates(src: string, dest: string, log: boolean = true) {
-  if (log) {
+export function copyFileFromTemplates(src: string, dest: string) {
+  if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${dest}`);
   }
   fs.copyFileSync(join(__dirname, './templates', src), dest);

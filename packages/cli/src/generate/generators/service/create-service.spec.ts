@@ -33,9 +33,9 @@ describe('createService', () => {
   describe('should render the empty templates.', () => {
 
     it('in src/app/services/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/services', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/services');
 
       createService({ name: 'test-fooBar', type: 'Empty' });
 
@@ -46,7 +46,7 @@ describe('createService', () => {
     });
 
     it('in services/ if the directory exists.', () => {
-      mkdirIfNotExists('services', false);
+      mkdirIfNotExists('services');
 
       createService({ name: 'test-fooBar', type: 'Empty' });
 

@@ -13,7 +13,7 @@ import { createApp } from './create-app';
 
 describe('createApp', () => {
 
-  beforeEach(() => createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', log: false }));
+  beforeEach(() => createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' }));
 
   afterEach(() => {
     rmfileIfExists('test-foo-bar/.gitignore');

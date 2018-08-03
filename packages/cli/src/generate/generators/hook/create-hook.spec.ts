@@ -30,9 +30,9 @@ describe('createHook', () => {
   describe('should render the templates.', () => {
 
     it('in src/app/hooks/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/hooks', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/hooks');
 
       createHook({ name: 'test-fooBar' });
 
@@ -43,7 +43,7 @@ describe('createHook', () => {
     });
 
     it('in src/app/hooks/ if the directory exists.', () => {
-      mkdirIfNotExists('hooks', false);
+      mkdirIfNotExists('hooks');
 
       createHook({ name: 'test-fooBar' });
 
