@@ -6,20 +6,10 @@ import { parsePassword } from './parse-password.parser';
 
 describe('parsePassword', () => {
 
-  it('should not throw an exception or add a password property to the data if it originally'
-      + 'does not exist.', async () => {
-    const user = {};
-    await parsePassword(user);
-    expect(user.hasOwnProperty('password')).to.equal(false);
-  });
-
   it('should hash and salt the plain password if it exists.', async () => {
-    const user = {
-      password: 'my_strong_password'
-    };
-    await parsePassword(user);
-    expect(user.password).to.be.an('string');
-    const arr = user.password.split('$');
+    const actual = await parsePassword('my_strong_password');
+    expect(actual).to.be.an('string');
+    const arr = actual.split('$');
     expect(arr).to.have.lengthOf(4);
     const password = {
       algorithm: arr[0],
