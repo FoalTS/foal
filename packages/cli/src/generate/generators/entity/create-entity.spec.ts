@@ -30,9 +30,9 @@ describe('createEntity', () => {
   describe('should render the templates.', () => {
 
     it('in src/app/entities/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/entities', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/entities');
 
       createEntity({ name: 'test-fooBar' });
 
@@ -43,7 +43,7 @@ describe('createEntity', () => {
     });
 
     it('in entities/ if the directory exists.', () => {
-      mkdirIfNotExists('entities', false);
+      mkdirIfNotExists('entities');
 
       createEntity({ name: 'test-fooBar' });
 

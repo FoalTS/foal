@@ -31,6 +31,9 @@ const commonConfig = {
       }
     ]
   },
+  optimization: {
+    nodeEnv: false
+  },
   output: {
     filename: 'server.js',
     path: path.resolve(process.cwd(), 'lib'),

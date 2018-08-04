@@ -5,3 +5,5 @@ import { Entity } from 'typeorm';
 export class User extends AbstractUser {
 
 }
+
+export { Group, Permission } from '@foal/core';

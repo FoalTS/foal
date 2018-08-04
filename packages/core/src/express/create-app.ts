@@ -9,7 +9,6 @@ import * as logger from 'morgan';
 import {
   Class,
   Config,
-  HttpResponseForbidden,
   IModule,
   makeModuleRoutes,
   ServiceManager
@@ -36,7 +35,7 @@ export function createApp(rootModuleClass: Class<IModule>) {
     name: Config.get('settings', 'sessionName'),
     resave: Config.get('settings', 'sessionResave', false),
     saveUninitialized: Config.get('settings', 'sessionSaveUninitialized', true),
-    secret: Config.get('settings', 'sessionSecret', ''),
+    secret: Config.get('settings', 'sessionSecret', 'default_secret'),
   }));
 
   if (Config.get('settings', 'csrf', false) as boolean) {
@@ -44,7 +43,8 @@ export function createApp(rootModuleClass: Class<IModule>) {
   }
   app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {
-      err = new HttpResponseForbidden('Bad csrf token.');
+      res.status(403).send('Bad csrf token.');
+      return;
     }
     next(err);
   });

@@ -30,9 +30,9 @@ describe('createController', () => {
   describe('should render the empty templates', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/controllers', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/controllers');
 
       createController({ name: 'test-fooBar', type: 'Empty' });
 
@@ -43,7 +43,7 @@ describe('createController', () => {
     });
 
     it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers', false);
+      mkdirIfNotExists('controllers');
 
       createController({ name: 'test-fooBar', type: 'Empty' });
 
@@ -68,9 +68,9 @@ describe('createController', () => {
   describe('should render the REST templates.', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/controllers', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/controllers');
 
       createController({ name: 'test-fooBar', type: 'REST' });
 
@@ -81,7 +81,7 @@ describe('createController', () => {
     });
 
     it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers', false);
+      mkdirIfNotExists('controllers');
 
       createController({ name: 'test-fooBar', type: 'REST' });
 
@@ -106,9 +106,9 @@ describe('createController', () => {
   describe('should render the GraphQL templates.', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src', false);
-      mkdirIfNotExists('src/app', false);
-      mkdirIfNotExists('src/app/controllers', false);
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/controllers');
 
       createController({ name: 'test-fooBar', type: 'GraphQL' });
 
@@ -119,7 +119,7 @@ describe('createController', () => {
     });
 
     it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers', false);
+      mkdirIfNotExists('controllers');
 
       createController({ name: 'test-fooBar', type: 'GraphQL' });
 

@@ -1,12 +1,12 @@
 {
   "name": "@foal/cli",
-  "version": "0.6.0-alpha.1",
+  "version": "0.6.0-alpha.2",
   "description": "Foal command line interface",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "test": "NODE_ENV=test mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "NODE_ENV=test mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
