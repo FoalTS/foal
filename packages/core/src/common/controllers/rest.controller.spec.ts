@@ -1,9 +1,5 @@
 // std
-import { deepStrictEqual, ok, strict, strictEqual } from 'assert';
-
-// 3p
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -22,9 +18,6 @@ import {
 import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 describe('RestController', () => {
 
@@ -166,7 +159,9 @@ describe('RestController', () => {
           }
         });
 
-        return expect(controller.deleteById(ctx)).to.be.rejectedWith(err);
+        return controller.deleteById(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
@@ -354,7 +349,9 @@ describe('RestController', () => {
           }
         });
 
-        return expect(controller.getById(ctx)).to.be.rejectedWith(err);
+        return controller.getById(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
@@ -498,7 +495,9 @@ describe('RestController', () => {
           }
         });
 
-        return expect(controller.patchById(ctx)).to.be.rejectedWith(err);
+        return controller.patchById(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
@@ -714,7 +713,9 @@ describe('RestController', () => {
           }
         });
 
-        return expect(controller.putById(ctx)).to.be.rejectedWith(err);
+        return controller.putById(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
