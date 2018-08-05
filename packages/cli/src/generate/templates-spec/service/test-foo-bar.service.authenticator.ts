@@ -1,6 +1,6 @@
 import { IAuthenticator, Service } from '@foal/core';
 
-import { User } from 'somewhere';
+import { User } from '../entities';
 
 @Service()
 export class TestFooBar implements IAuthenticator<User> {
