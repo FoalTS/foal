@@ -1,10 +1,9 @@
 // std
-import { deepStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, ok, strict, strictEqual } from 'assert';
 
 // 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import * as spies from 'chai-spies';
 
 // FoalTS
 import {
@@ -24,7 +23,6 @@ import { ObjectDoesNotExist } from '../errors';
 import { ISerializer } from '../services';
 import { RestController } from './rest.controller';
 
-chai.use(spies);
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -85,9 +83,12 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if serializer.removeOne resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let removeOneQuery;
+        let getQueryCtx;
         @Service()
         class Serializer implements Partial<ISerializer> {
           async removeOne(query) {
+            removeOneQuery = query;
             return objects;
           }
         }
@@ -96,16 +97,13 @@ describe('RestController', () => {
           serializerClass = Serializer;
 
           getQuery(ctx) {
+            getQueryCtx = ctx;
             return query;
           }
         }
 
         const services = new ServiceManager();
         const controller = new ConcreteController(services);
-        const serializer = services.get(Serializer);
-
-        chai.spy.on(controller, 'getQuery');
-        chai.spy.on(serializer, 'removeOne');
 
         const ctx = new Context({
           params: {
@@ -116,8 +114,8 @@ describe('RestController', () => {
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
-        expect(serializer.removeOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
+        strictEqual(getQueryCtx, ctx);
+        deepStrictEqual(removeOneQuery, { foo: 'bar', id: 1 });
       });
 
       it('should return a HttpResponseNotFound if serializer.removeOne rejects an ObjectDoesNotExist.', async () => {
@@ -206,9 +204,12 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if serializer.findMany resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let findManyQuery;
+        let getQueryCtx;
         @Service()
         class Serializer implements Partial<ISerializer> {
           async findMany(query) {
+            findManyQuery = query;
             return objects;
           }
         }
@@ -217,24 +218,21 @@ describe('RestController', () => {
           serializerClass = Serializer;
 
           getQuery(ctx) {
+            getQueryCtx = ctx;
             return query;
           }
         }
 
         const services = new ServiceManager();
         const controller = new ConcreteController(services);
-        const serializer = services.get(Serializer);
-
-        chai.spy.on(controller, 'getQuery');
-        chai.spy.on(serializer, 'findMany');
 
         const ctx = new Context({});
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
-        expect(serializer.findMany).to.have.been.called.with.exactly(query);
+        strictEqual(getQueryCtx, ctx);
+        strictEqual(findManyQuery, query);
       });
 
     });
@@ -273,9 +271,12 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if serializer.findOne resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let findOneQuery;
+        let getQueryCtx;
         @Service()
         class Serializer implements Partial<ISerializer> {
           async findOne(query) {
+            findOneQuery = query;
             return objects;
           }
         }
@@ -284,16 +285,13 @@ describe('RestController', () => {
           serializerClass = Serializer;
 
           getQuery(ctx) {
+            getQueryCtx = ctx;
             return query;
           }
         }
 
         const services = new ServiceManager();
         const controller = new ConcreteController(services);
-        const serializer = services.get(Serializer);
-
-        chai.spy.on(controller, 'getQuery');
-        chai.spy.on(serializer, 'findOne');
 
         const ctx = new Context({
           params: {
@@ -304,8 +302,8 @@ describe('RestController', () => {
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
-        expect(serializer.findOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
+        strictEqual(getQueryCtx, ctx);
+        deepStrictEqual(findOneQuery, { foo: 'bar', id: 1 });
       });
 
       it('should return a HttpResponseNotFound if serializer.findOne rejects an ObjectDoesNotExist.', async () => {
@@ -408,9 +406,14 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let updateOneQuery;
+        let updateOneRecord;
+        let getQueryCtx;
         @Service()
         class Serializer implements Partial<ISerializer> {
           async updateOne(query, record) {
+            updateOneQuery = query;
+            updateOneRecord = record;
             return objects;
           }
         }
@@ -419,16 +422,13 @@ describe('RestController', () => {
           serializerClass = Serializer;
 
           getQuery(ctx) {
+            getQueryCtx = ctx;
             return query;
           }
         }
 
         const services = new ServiceManager();
         const controller = new ConcreteController(services);
-        const serializer = services.get(Serializer);
-
-        chai.spy.on(controller, 'getQuery');
-        chai.spy.on(serializer, 'updateOne');
 
         const ctx = new Context({
           body: {
@@ -442,11 +442,9 @@ describe('RestController', () => {
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
-        expect(serializer.updateOne).to.have.been.called.with.exactly(
-          { foo: 'bar', id: 1 },
-          { foobar: 'foo' }
-        );
+        strictEqual(getQueryCtx, ctx);
+        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(updateOneRecord, ctx.request.body);
       });
 
       it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
@@ -535,9 +533,11 @@ describe('RestController', () => {
 
     it('should return an HttpResponseCreated if serializer.createOne is defined.', async () => {
       const objects = [ { bar: 'bar' }];
+      let createOneRecord;
       @Service()
       class Serializer implements Partial<ISerializer> {
         async createOne(record) {
+          createOneRecord = record;
           return objects;
         }
       }
@@ -548,9 +548,6 @@ describe('RestController', () => {
 
       const services = new ServiceManager();
       const controller = new ConcreteController(services);
-      const serializer = services.get(Serializer);
-
-      chai.spy.on(serializer, 'createOne');
 
       const ctx = new Context({
         body: {
@@ -561,7 +558,7 @@ describe('RestController', () => {
       const actual = await controller.post(ctx);
       ok(actual instanceof HttpResponseCreated);
       strictEqual(actual.content, objects);
-      expect(serializer.createOne).to.have.been.called.with.exactly({ foobar: 'foo' });
+      strictEqual(createOneRecord, ctx.request.body);
     });
 
   });
@@ -625,9 +622,14 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let updateOneQuery;
+        let updateOneRecord;
+        let getQueryCtx;
         @Service()
         class Serializer implements Partial<ISerializer> {
           async updateOne(query, record) {
+            updateOneQuery = query;
+            updateOneRecord = record;
             return objects;
           }
         }
@@ -636,16 +638,13 @@ describe('RestController', () => {
           serializerClass = Serializer;
 
           getQuery(ctx) {
+            getQueryCtx = ctx;
             return query;
           }
         }
 
         const services = new ServiceManager();
         const controller = new ConcreteController(services);
-        const serializer = services.get(Serializer);
-
-        chai.spy.on(controller, 'getQuery');
-        chai.spy.on(serializer, 'updateOne');
 
         const ctx = new Context({
           body: {
@@ -659,11 +658,9 @@ describe('RestController', () => {
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
-        expect(serializer.updateOne).to.have.been.called.with.exactly(
-          { foo: 'bar', id: 1 },
-          { foobar: 'foo' }
-        );
+        strictEqual(getQueryCtx, ctx);
+        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(updateOneRecord, ctx.request.body);
       });
 
       it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
