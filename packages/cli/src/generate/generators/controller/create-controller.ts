@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 // FoalTS
 import { getNames, renderTemplate } from '../../utils';
 
-export type ControllerType = 'Empty'|'REST'|'GraphQL';
+export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
 
 export function createController({ name, type }: { name: string, type: ControllerType }) {
   const names = getNames(name);
@@ -26,6 +26,9 @@ export function createController({ name, type }: { name: string, type: Controlle
       break;
     case 'GraphQL':
       renderTemplate('controller/controller.graphql.ts', path, names);
+      break;
+    case 'Login':
+      renderTemplate('controller/controller.login.ts', path, names);
       break;
   }
 

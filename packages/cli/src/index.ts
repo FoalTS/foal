@@ -53,7 +53,7 @@ program
   .action(async (type: string, name: string) => {
     switch (type) {
       case 'controller':
-        const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/ ];
+        const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/, 'Login' ];
         const controllerAnswers = await prompt([
           { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
         ]);
