@@ -3,7 +3,6 @@ import { strictEqual } from 'assert';
 
 // FoalTS
 import {
-  readFileFromNodeModules,
   readFileFromRoot,
   readFileFromTemplatesSpec,
   rmdirIfExists,

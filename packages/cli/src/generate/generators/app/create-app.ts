@@ -3,7 +3,6 @@ import * as crypto from 'crypto';
 
 // FoalTS
 import {
-  copyFileFromNodeModules,
   copyFileFromTemplates,
   getNames,
   mkdirIfNotExists,
