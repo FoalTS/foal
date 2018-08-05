@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { Controller } from '../../core';
@@ -12,7 +12,7 @@ describe('controller util', () => {
     @Controller()
     class Foobar {}
 
-    expect(controller('', Foobar)).to.equal(Foobar);
+    strictEqual(controller('', Foobar), Foobar);
   });
 
   it('should define the metadata path={path} of the controller class.', () => {
@@ -21,7 +21,7 @@ describe('controller util', () => {
 
     controller('/foo', Foobar);
 
-    expect(getMetadata('path', Foobar)).to.equal('/foo');
+    strictEqual(getMetadata('path', Foobar), '/foo');
   });
 
 });
