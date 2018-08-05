@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -38,7 +38,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
       const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -49,7 +49,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
       const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -59,7 +59,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
       const actual = readFileFromRoot('test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -76,7 +76,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
       const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -87,7 +87,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
       const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -97,7 +97,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
       const actual = readFileFromRoot('test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -114,7 +114,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
       const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -125,7 +125,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
       const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -135,7 +135,7 @@ describe('createController', () => {
 
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
       const actual = readFileFromRoot('test-foo-bar.controller.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 

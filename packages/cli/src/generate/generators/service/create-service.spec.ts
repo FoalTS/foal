@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -41,7 +41,7 @@ describe('createService', () => {
 
       const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
       const actual = readFileFromRoot('src/app/services/test-foo-bar.service.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -52,7 +52,7 @@ describe('createService', () => {
 
       const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
       const actual = readFileFromRoot('services/test-foo-bar.service.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -62,7 +62,7 @@ describe('createService', () => {
 
       const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
       const actual = readFileFromRoot('test-foo-bar.service.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -74,7 +74,7 @@ describe('createService', () => {
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.serializer.ts');
     const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');
-    expect(actual).to.equal(expected);
+    strictEqual(actual, expected);
 
   });
 
@@ -84,7 +84,7 @@ describe('createService', () => {
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-serializer.ts');
     const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');
-    expect(actual).to.equal(expected);
+    strictEqual(actual, expected);
 
   });
 
@@ -94,7 +94,7 @@ describe('createService', () => {
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.graphql-resolver.ts');
     const actual = readFileFromRoot('test-foo-bar-resolver.service.ts');
-    expect(actual).to.equal(expected);
+    strictEqual(actual, expected);
 
   });
 
@@ -104,7 +104,7 @@ describe('createService', () => {
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.authenticator.ts');
     const actual = readFileFromRoot('test-foo-bar.service.ts');
-    expect(actual).to.equal(expected);
+    strictEqual(actual, expected);
 
   });
 
@@ -114,7 +114,7 @@ describe('createService', () => {
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.email-authenticator.ts');
     const actual = readFileFromRoot('test-foo-bar.service.ts');
-    expect(actual).to.equal(expected);
+    strictEqual(actual, expected);
 
   });
 
