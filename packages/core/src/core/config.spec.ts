@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual, throws } from 'assert';
+import { strictEqual, throws } from 'assert';
 import { join } from 'path';
 
 // FoalTS
