@@ -1,5 +1,7 @@
-import { expect } from 'chai';
+// std
+import { strictEqual, throws } from 'assert';
 
+// FoalTS
 import { escapeProp } from './escape-prop';
 
 describe('escapeProp', () => {
@@ -9,12 +11,15 @@ describe('escapeProp', () => {
       foobar: '<script>alert(\'XSS\')</script>'
     };
     escapeProp(o, 'foobar');
-    expect(o.foobar).to.equal('&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;&#x2F;script&gt;');
+    strictEqual(o.foobar, '&lt;script&gt;alert(&#x27;XSS&#x27;)&lt;&#x2F;script&gt;');
   });
 
   it('should throw an error if the property is not a string (potentially undefined).', () => {
     const o = {};
-    expect(() => escapeProp(o, 'foobar')).to.throw(TypeError, 'foobar should be a string (got undefined).');
+    throws(
+      () => escapeProp(o, 'foobar'),
+      err => err instanceof TypeError && err.message === 'foobar should be a string (got undefined).',
+    );
   });
 
 });
