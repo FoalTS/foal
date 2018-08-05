@@ -33,7 +33,6 @@ describe('createApp', () => {
 
     // Public
     rmfileIfExists('test-foo-bar/public/logo.png');
-    rmfileIfExists('test-foo-bar/public/bootstrap.min.css');
     rmdirIfExists('test-foo-bar/public');
 
     // Src
@@ -108,14 +107,6 @@ describe('createApp', () => {
 
     const expected = readFileFromTemplatesSpec('app/public/logo.1.png');
     const actual = readFileFromRoot('test-foo-bar/public/logo.png');
-    strictEqual(actual, expected);
-
-  });
-
-  it('should copy the bootstrap css file.', () => {
-
-    const expected = readFileFromNodeModules('bootstrap/dist/css/bootstrap.min.css');
-    const actual = readFileFromRoot('test-foo-bar/public/bootstrap.min.css');
     strictEqual(actual, expected);
 
   });

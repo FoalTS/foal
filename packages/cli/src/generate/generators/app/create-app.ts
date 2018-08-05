@@ -64,7 +64,6 @@ export function createApp({ name, sessionSecret }:
   // Public
   mkdirIfNotExists(`${names.kebabName}/public`);
   copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`);
-  copyFileFromNodeModules('bootstrap/dist/css/bootstrap.min.css', `${names.kebabName}/public/bootstrap.min.css`);
 
   // Src
   mkdirIfNotExists(`${names.kebabName}/src`);
