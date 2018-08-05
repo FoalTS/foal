@@ -169,19 +169,15 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         notStrictEqual(user2.id, undefined);
 
         // The returned users should have the above fields.
-        deepStrictEqual(result[0], {
-          firstName: 'Donald',
-          id: user1.id,
-          isAdmin: false,
-          lastName: 'Smith',
-        });
+        strictEqual((result[0] as any).firstName, 'Donald');
+        strictEqual((result[0] as any).id, user1.id);
+        strictEqual((result[0] as any).isAdmin, false);
+        strictEqual((result[0] as any).lastName, 'Smith');
 
-        deepStrictEqual(result[1], {
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result[1] as any).firstName, 'Victor');
+        strictEqual((result[1] as any).id, user2.id);
+        strictEqual((result[1] as any).isAdmin, true);
+        strictEqual((result[1] as any).lastName, 'Hugo');
       });
 
       xit('should not replace an existing user (if an id is given).', async () => {
@@ -224,12 +220,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         const result = await service.findOne({ firstName: 'Victor' });
 
-        deepStrictEqual(result, {
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result as any).firstName, 'Victor');
+        strictEqual((result as any).id, user2.id);
+        strictEqual((result as any).isAdmin, true);
+        strictEqual((result as any).lastName, 'Hugo');
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
@@ -259,19 +253,16 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         let result = await service.findMany({});
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
-        deepStrictEqual(result[0], {
-          firstName: 'Donald',
-          id: user1.id,
-          isAdmin: false,
-          lastName: 'Smith',
-        });
 
-        deepStrictEqual(result[1], {
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result[0] as any).firstName, 'Donald');
+        strictEqual((result[0] as any).id, user1.id);
+        strictEqual((result[0] as any).isAdmin, false);
+        strictEqual((result[0] as any).lastName, 'Smith');
+
+        strictEqual((result[1] as any).firstName, 'Victor');
+        strictEqual((result[1] as any).id, user2.id);
+        strictEqual((result[1] as any).isAdmin, true);
+        strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
         result = await service.findMany({ firstName: 'Victor' });
