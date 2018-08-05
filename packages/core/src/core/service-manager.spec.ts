@@ -1,5 +1,7 @@
-import { expect } from 'chai';
+// std
+import { doesNotThrow, ok, strictEqual } from 'assert';
 
+// FoalTS
 import { Service, ServiceManager } from './service-manager';
 
 describe('ServiceManager', () => {
@@ -14,7 +16,7 @@ describe('ServiceManager', () => {
   describe('when get is called', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
-      expect(serviceManager.get(ServiceManager)).to.equal(serviceManager);
+      strictEqual(serviceManager.get(ServiceManager), serviceManager);
     });
 
     it('should not throw an exception if the given class does not have the Service decorator '
@@ -28,17 +30,17 @@ describe('ServiceManager', () => {
         constructor() {}
       }
 
-      expect(() => serviceManager.get(Foo)).not.to.throw();
-      expect(() => serviceManager.get(Bar)).not.to.throw();
-      expect(() => serviceManager.get(Barfoo)).not.to.throw();
+      doesNotThrow(() => serviceManager.get(Foo));
+      doesNotThrow(() => serviceManager.get(Bar));
+      doesNotThrow(() => serviceManager.get(Barfoo));
     });
 
     it('should return an instance of the given Service.', () => {
-      expect(serviceManager.get(Foobar)).to.be.an.instanceof(Foobar);
+      ok(serviceManager.get(Foobar) instanceof Foobar);
     });
 
     it('should always return the same value for the same given Service.', () => {
-      expect(serviceManager.get(Foobar)).to.equal(serviceManager.get(Foobar));
+      strictEqual(serviceManager.get(Foobar), serviceManager.get(Foobar));
     });
 
     it('should return an instance of the given Service which dependencies are instances that can be retreived'
@@ -58,8 +60,8 @@ describe('ServiceManager', () => {
       const foobar3 = serviceManager.get(Foobar3);
       const foobar2 = serviceManager.get(Foobar2);
 
-      expect(foobar3.foobar).to.equal(foobar);
-      expect(foobar3.foobar2).to.equal(foobar2);
+      strictEqual(foobar3.foobar, foobar);
+      strictEqual(foobar3.foobar2, foobar2);
     });
 
   });
@@ -69,7 +71,7 @@ describe('ServiceManager', () => {
     it('should register the given service instance.', () => {
       const service = new Foobar();
       serviceManager.set(Foobar, service);
-      expect(serviceManager.get(Foobar)).to.equal(service);
+      strictEqual(serviceManager.get(Foobar), service);
     });
 
   });
