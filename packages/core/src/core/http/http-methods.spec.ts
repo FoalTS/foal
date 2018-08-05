@@ -1,5 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
-import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
@@ -14,7 +16,7 @@ describe('Get', () => {
     }
 
     const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('GET');
+    strictEqual(actual, 'GET');
   });
 
   it('should define the metadata path=${path} on the method class.', () => {
@@ -24,7 +26,7 @@ describe('Get', () => {
     }
 
     const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });
@@ -38,7 +40,7 @@ describe('Post', () => {
     }
 
     const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('POST');
+    strictEqual(actual, 'POST');
   });
 
   it('should define the metadata path=${path} on the method class.', () => {
@@ -48,7 +50,7 @@ describe('Post', () => {
     }
 
     const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });
@@ -62,7 +64,7 @@ describe('Put', () => {
     }
 
     const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('PUT');
+    strictEqual(actual, 'PUT');
   });
 
   it('should define the metadata path=${path} on the method class.', () => {
@@ -72,7 +74,7 @@ describe('Put', () => {
     }
 
     const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });
@@ -86,7 +88,7 @@ describe('Patch', () => {
     }
 
     const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('PATCH');
+    strictEqual(actual, 'PATCH');
   });
 
   it('should define the metadata path=${path} on the method class.', () => {
@@ -96,7 +98,7 @@ describe('Patch', () => {
     }
 
     const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });
@@ -110,7 +112,7 @@ describe('Delete', () => {
     }
 
     const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('DELETE');
+    strictEqual(actual, 'DELETE');
   });
 
   it('should define the metadata path=${path} on the method class.', () => {
@@ -120,7 +122,7 @@ describe('Delete', () => {
     }
 
     const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });
