@@ -1,17 +1,12 @@
 // std
-import { strictEqual } from 'assert';
+import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 import { createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
 import { Permission } from './permission.entity';
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 describe('Group', () => {
 
@@ -32,25 +27,27 @@ describe('Group', () => {
     group.name = '';
     group.permissions = [];
     await getManager().save(group);
-    expect(group.id).not.to.equal(undefined);
+    notStrictEqual(group.id, undefined);
   });
 
   it('should have a "name" and whose length is 80.', async () => {
     const group = new Group();
     group.permissions = [];
-    await expect(getManager().save(group))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_NO_DEFAULT_FOR_FIELD: Field \'name\' doesn\'t have a default value'
-      );
+    await getManager().save(group)
+      .then(() => fail('This promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_NO_DEFAULT_FOR_FIELD: Field \'name\' doesn\'t have a default value');
+      });
 
     group.name = 'This is a very long long long long long long long long long long long long line1.';
 
-    await expect(getManager().save(group))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_DATA_TOO_LONG: Data too long for column \'name\' at row 1'
-      );
+    await getManager().save(group)
+      .then(() => fail('This promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_DATA_TOO_LONG: Data too long for column \'name\' at row 1');
+      });
   });
 
   it('should have "permissions" which take Permission instances.', async () => {
@@ -72,7 +69,9 @@ describe('Group', () => {
       throw new Error('Group should have been saved.');
     }
     strictEqual(group2.name, 'group1');
-    expect(group2.permissions).to.be.an('array').and.to.have.lengthOf(1);
+
+    ok(Array.isArray(group2.permissions));
+    strictEqual(group2.permissions.length, 1);
     strictEqual(group2.permissions[0].name, 'permission1');
   });
 
