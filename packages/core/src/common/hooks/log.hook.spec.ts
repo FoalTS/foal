@@ -1,5 +1,7 @@
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
+// FoalTS
 import { Context, getHookFunction, ServiceManager } from '../../core';
 import { Log } from './log.hook';
 
@@ -13,7 +15,7 @@ describe('Log', () => {
     const ctx = new Context({});
     hook(ctx, new ServiceManager());
 
-    expect(called).to.equal(true);
+    strictEqual(called, true);
   });
 
 });
