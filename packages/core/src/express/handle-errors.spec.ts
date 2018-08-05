@@ -1,7 +1,11 @@
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import * as express from 'express';
 import * as request from 'supertest';
 
+// FoalTS
 import { handleErrors } from './handle-errors';
 
 describe('handleErrors', () => {
@@ -21,7 +25,7 @@ describe('handleErrors', () => {
       return request(app)
         .get('/')
         .then(res => {
-          expect(str).to.equal(err.stack);
+          strictEqual(str, err.stack);
         });
     });
 
