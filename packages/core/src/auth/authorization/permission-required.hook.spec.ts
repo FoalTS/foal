@@ -1,5 +1,7 @@
-import { expect } from 'chai';
+// std
+import { ok, strictEqual } from 'assert';
 
+// FoalTS
 import {
   Context,
   getHookFunction,
@@ -25,7 +27,7 @@ describe('PermissionRequired', () => {
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
     const ctx = new Context({});
     const actual = preHook(ctx, new ServiceManager());
-    expect(actual).to.be.instanceOf(HttpResponseUnauthorized);
+    ok(actual instanceof HttpResponseUnauthorized);
   });
 
   it('should return an HttpResponseForbidden if the user does not have the required permission.', () => {
@@ -37,7 +39,7 @@ describe('PermissionRequired', () => {
     ctx.user = new User();
     ctx.user.userPermissions = [ permission ];
     const actual = preHook(ctx, new ServiceManager());
-    expect(actual).to.be.instanceOf(HttpResponseForbidden);
+    ok(actual instanceof HttpResponseForbidden);
   });
 
   it('should not return any HttpResponse if the user is authenticated and has the required permission.', () => {
@@ -49,7 +51,7 @@ describe('PermissionRequired', () => {
     ctx.user = new User();
     ctx.user.userPermissions = [ permission ];
     const actual = preHook(ctx, new ServiceManager());
-    expect(actual).not.to.be.instanceOf(HttpResponse);
+    strictEqual(actual instanceof HttpResponse, false);
   });
 
 });
