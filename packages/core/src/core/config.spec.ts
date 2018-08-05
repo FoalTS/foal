@@ -1,7 +1,8 @@
+// std
+import { strictEqual, throws } from 'assert';
 import { join } from 'path';
 
-import { expect } from 'chai';
-
+// FoalTS
 import { Config } from './config';
 
 describe('Config', () => {
@@ -35,19 +36,19 @@ describe('Config', () => {
 
       it('should return it (string).', () => {
         process.env.FOO_BAR_BARFOO = 'foo';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal('foo');
+        strictEqual(Config.get('Foo', 'barBarfoo'), 'foo');
       });
 
       it('should return it (boolean).', () => {
         process.env.FOO_BAR_BARFOO = 'true';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(true);
+        strictEqual(Config.get('Foo', 'barBarfoo'), true);
         process.env.FOO_BAR_BARFOO = 'false';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(false);
+        strictEqual(Config.get('Foo', 'barBarfoo'), false);
       });
 
       it('should return it (number).', () => {
         process.env.FOO_BAR_BARFOO = '15';
-        expect(Config.get('Foo', 'barBarfoo')).to.equal(15);
+        strictEqual(Config.get('Foo', 'barBarfoo'), 15);
       });
 
     });
@@ -56,15 +57,16 @@ describe('Config', () => {
 
       it('should return it.', () => {
         delete process.env.NODE_ENV;
-        expect(Config.get('a', 'foo')).to.equal(1);
+        strictEqual(Config.get('a', 'foo'), 1);
         process.env.NODE_ENV = 'production';
-        expect(Config.get('a', 'foo')).to.equal(2);
+        strictEqual(Config.get('a', 'foo'), 2);
       });
 
       it('should throw an Error it if its type is neither a number, a string nor a boolean.', () => {
         process.env.NODE_ENV = 'development';
-        expect(() => Config.get('a', 'bar')).to.throw(
-          'Config: only string, number and boolean values are supported. bar type is "object" in a.development.json.'
+        throws(
+          () => Config.get('a', 'bar'),
+          /Config: only string, number and boolean values are supported\. bar type is "object" in a\.development\.json./
         );
       });
 
@@ -73,12 +75,13 @@ describe('Config', () => {
     describe('if there is a matching property in a json file', () => {
 
       it('should return it.', () => {
-        expect(Config.get('b', 'bar')).to.equal(true);
+        strictEqual(Config.get('b', 'bar'), true);
       });
 
       it('should not return it if its type is neither a number, a string nor a boolean.', () => {
-        expect(() => Config.get('b', 'barfoo')).to.throw(
-          'Config: only string, number and boolean values are supported. barfoo type is "object" in b.json.'
+        throws(
+          () => Config.get('b', 'barfoo'),
+          /Config: only string, number and boolean values are supported\. barfoo type is "object" in b\.json\./
         );
       });
 
@@ -86,21 +89,21 @@ describe('Config', () => {
 
     it('should return undefined if there is no matching property or environment variable and '
         + 'if no default option is provided.' , () => {
-      expect(Config.get('b', 'foo')).to.equal(undefined);
-      expect(Config.get('c', 'foo')).to.equal(undefined);
+      strictEqual(Config.get('b', 'foo'), undefined);
+      strictEqual(Config.get('c', 'foo'), undefined);
     });
 
     it('should return a default value if one is provided and there is no matching property '
         + 'or environment variable and if no default option is provided.', () => {
-      expect(Config.get('b', 'foo', 46)).to.equal(46);
-      expect(Config.get('c', 'foo', 46)).to.equal(46);
+      strictEqual(Config.get('b', 'foo', 46), 46);
+      strictEqual(Config.get('c', 'foo', 46), 46);
     });
 
     it('should handle properly overriding in case there are several matching properties and/or '
         + 'environment variable.', () => {
       process.env.D_FOO = '1';
-      expect(Config.get('d', 'foo')).to.equal(1);
-      expect(Config.get('d', 'bar')).to.equal(2);
+      strictEqual(Config.get('d', 'foo'), 1);
+      strictEqual(Config.get('d', 'bar'), 2);
       delete process.env.D_FOO;
     });
 
