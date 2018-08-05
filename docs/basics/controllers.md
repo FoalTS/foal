@@ -116,9 +116,11 @@ class MyController() {
 ```
 
 ```typescript
+import { ok } from 'assert';
+
 const controller = new Controller();
 const ctx = new Context({});
-expect(controller.foo(ctx)).to.be.an.instanceOf(HttpResponseOK);
+ok(controller.foo(ctx) instanceof HttpResponseOK);
 ```
 
 ## Inheriting controllers
