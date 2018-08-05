@@ -1,4 +1,4 @@
-import { Controller, LoginController, strategy } from '@foal/core';
+import { Controller, LoginController } from '@foal/core';
 
 @Controller()
 export class TestFooBarController extends LoginController {
