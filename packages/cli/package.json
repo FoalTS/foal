@@ -44,7 +44,6 @@
     "bin/"
   ],
   "dependencies": {
-    "bootstrap": "^4.1.1",
     "clean-webpack-plugin": "^0.1.19",
     "commander": "^2.15.1",
     "html-loader": "^0.5.5",
