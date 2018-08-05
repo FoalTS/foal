@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, fail, notStrictEqual, ok, strictEqual } from 'assert';
+import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import {
@@ -268,12 +268,11 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         result = await service.findMany({ firstName: 'Victor' });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
-        deepStrictEqual(result[0], {
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+
+        strictEqual((result[0] as any).firstName, 'Victor');
+        strictEqual((result[0] as any).id, user2.id);
+        strictEqual((result[0] as any).isAdmin, true);
+        strictEqual((result[0] as any).lastName, 'Hugo');
 
       });
 
