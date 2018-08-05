@@ -1,3 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import {
@@ -9,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+// FoalTS
 import { ObjectDoesNotExist } from '../errors';
 
 chai.use(chaiAsPromised);
@@ -106,9 +111,9 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const user = users[0];
 
         // ... with the proper values.
-        expect(user.firstName).to.equal('Donald');
-        expect(user.lastName).to.equal('Smith');
-        expect(user.isAdmin).to.equal(false);
+        strictEqual(user.firstName, 'Donald');
+        strictEqual(user.lastName, 'Smith');
+        strictEqual(user.isAdmin, false);
         expect(user.id).not.to.equal(undefined);
       });
 
@@ -157,14 +162,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const user2 = users[1];
 
         // ... with the proper values.
-        expect(user1.firstName).to.equal('Donald');
-        expect(user1.lastName).to.equal('Smith');
-        expect(user1.isAdmin).to.equal(false);
+        strictEqual(user1.firstName, 'Donald');
+        strictEqual(user1.lastName, 'Smith');
+        strictEqual(user1.isAdmin, false);
         expect(user1.id).not.to.equal(undefined);
 
-        expect(user2.firstName).to.equal('Victor');
-        expect(user2.lastName).to.equal('Hugo');
-        expect(user2.isAdmin).to.equal(true);
+        strictEqual(user2.firstName, 'Victor');
+        strictEqual(user2.lastName, 'Hugo');
+        strictEqual(user2.isAdmin, true);
         expect(user2.id).not.to.equal(undefined);
 
         // The returned users should have the above fields.
@@ -303,12 +308,12 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
         if (!user) { throw new Error(); }
-        expect(user.firstName).to.equal('John');
+        strictEqual(user.firstName, 'John');
 
         // The other users should not be updated in the database.
         const userbis = await getManager(connectionName).findOne(User, user1.id);
         if (!userbis) { throw new Error(); }
-        expect(userbis.firstName).to.equal('Donald');
+        strictEqual(userbis.firstName, 'Donald');
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
@@ -336,7 +341,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         const users = await getManager(connectionName).find(User);
         expect(users).to.be.an('array').and.to.have.lengthOf(1);
-        expect(users[0].firstName).to.equal(user1.firstName);
+        strictEqual(users[0].firstName, user1.firstName);
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {

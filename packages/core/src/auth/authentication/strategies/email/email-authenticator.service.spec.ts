@@ -1,3 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
@@ -6,6 +10,7 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
+// FoalTS
 import { AbstractUser, Group, Permission } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
@@ -78,12 +83,12 @@ describe('EmailAuthenticator', () => {
 
     it('should return null if no user is found for the given email.', async () => {
       const user = await service.authenticate({ email: 'jack2@foalts.org', password: 'foo' });
-      expect(user).to.equal(null);
+      strictEqual(user, null);
     });
 
     it('should return null if the given password is incorrect.', async () => {
       const user = await service.authenticate({ email: 'john@foalts.org', password: 'wrongPassword'});
-      expect(user).to.equal(null);
+      strictEqual(user, null);
     });
 
     it('should throw an error if the encrypted user password format is neither correct nor supported.', () => {

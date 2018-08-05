@@ -1,3 +1,6 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -68,9 +71,9 @@ describe('Group', () => {
     if (!group2) {
       throw new Error('Group should have been saved.');
     }
-    expect(group2.name).to.equal('group1');
+    strictEqual(group2.name, 'group1');
     expect(group2.permissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(group2.permissions[0].name).to.equal('permission1');
+    strictEqual(group2.permissions[0].name, 'permission1');
   });
 
 });

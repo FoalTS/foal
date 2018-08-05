@@ -1,3 +1,6 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -55,7 +58,7 @@ describe('AbstractUser', () => {
       throw new Error('User should have been saved.');
     }
     expect(user2.userPermissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(user2.userPermissions[0].name).to.equal('permission1');
+    strictEqual(user2.userPermissions[0].name, 'permission1');
   });
 
   it('should have "groups" which take Group instances.', async () => {
@@ -74,7 +77,7 @@ describe('AbstractUser', () => {
       throw new Error('User should have been saved.');
     }
     expect(user2.groups).to.be.an('array').and.to.have.lengthOf(1);
-    expect(user2.groups[0].name).to.equal('group1');
+    strictEqual(user2.groups[0].name, 'group1');
   });
 
   describe('when hasPerm is called', () => {
@@ -86,7 +89,7 @@ describe('AbstractUser', () => {
       const user = new User();
       user.userPermissions = [ permission ];
 
-      expect(user.hasPerm('admin')).to.equal(true);
+      strictEqual(user.hasPerm('admin'), true);
     });
 
     it('should return true if the user has a group which has the given permission.', () => {
@@ -99,13 +102,13 @@ describe('AbstractUser', () => {
       const user = new User();
       user.groups = [ group ];
 
-      expect(user.hasPerm('admin')).to.equal(true);
+      strictEqual(user.hasPerm('admin'), true);
     });
 
     it('should return false if neither the user nor its groups have the given permission.', () => {
       const user = new User();
 
-      expect(user.hasPerm('admin')).to.equal(false);
+      strictEqual(user.hasPerm('admin'), false);
     });
 
   });

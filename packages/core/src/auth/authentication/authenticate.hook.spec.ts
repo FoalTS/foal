@@ -1,7 +1,11 @@
-import * as chai from 'chai';
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import * as chaiAsPromised from 'chai-as-promised';
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
+// FoalTS
 import {
   Context,
   getHookFunction,
@@ -86,7 +90,7 @@ describe('Authenticate', () => {
     };
     await hook(ctx, new ServiceManager());
 
-    expect(ctx.user).to.equal(undefined);
+    strictEqual(ctx.user, undefined);
   });
 
   it('should add a user property (with all its groups and permissions) if a user matches'
@@ -104,17 +108,17 @@ describe('Authenticate', () => {
     if (!ctx.user) {
       throw new Error('ctx.user should be defined');
     }
-    expect(ctx.user.id).to.equal(1);
-    expect((ctx.user as User).email).to.equal('john@foalts.org');
+    strictEqual(ctx.user.id, 1);
+    strictEqual((ctx.user as User).email, 'john@foalts.org');
 
     expect(ctx.user.userPermissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.userPermissions[0].codeName).to.equal('permission2');
+    strictEqual(ctx.user.userPermissions[0].codeName, 'permission2');
 
     expect(ctx.user.groups).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.groups[0].name).to.equal('group1');
+    strictEqual(ctx.user.groups[0].name, 'group1');
 
     expect(ctx.user.groups[0].permissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.groups[0].permissions[0].codeName).to.equal('permission1');
+    strictEqual(ctx.user.groups[0].permissions[0].codeName, 'permission1');
   });
 
 });

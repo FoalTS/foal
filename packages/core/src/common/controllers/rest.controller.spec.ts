@@ -1,3 +1,6 @@
+// std
+import { deepStrictEqual, ok, strictEqual } from 'assert';
+
 // 3p
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -34,19 +37,19 @@ describe('RestController', () => {
 
   it('has a getQuery method that should return an empty object', () => {
     const controller = new ConcreteController(new ServiceManager());
-    expect(controller.getQuery(new Context({}))).to.deep.equal({});
+    deepStrictEqual(controller.getQuery(new Context({})), {});
   });
 
   describe('has a "delete" method that', () => {
 
     it('should handle requests at DELETE /.', () => {
-      expect(getHttpMethod(ConcreteController, 'delete')).to.equal('DELETE');
-      expect(getPath(ConcreteController, 'delete')).to.equal('/');
+      strictEqual(getHttpMethod(ConcreteController, 'delete'), 'DELETE');
+      strictEqual(getPath(ConcreteController, 'delete'), '/');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.delete()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+      ok(controller.delete() instanceof HttpResponseMethodNotAllowed);
     });
 
   });
@@ -54,8 +57,8 @@ describe('RestController', () => {
   describe('has a "deleteById" method that', () => {
 
     it('should handle requests at DELETE /:id.', () => {
-      expect(getHttpMethod(ConcreteController, 'deleteById')).to.equal('DELETE');
-      expect(getPath(ConcreteController, 'deleteById')).to.equal('/:id');
+      strictEqual(getHttpMethod(ConcreteController, 'deleteById'), 'DELETE');
+      strictEqual(getPath(ConcreteController, 'deleteById'), '/:id');
     });
 
     it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', async () => {
@@ -74,7 +77,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.deleteById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.deleteById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     describe('when serializer.removeOne is defined', () => {
@@ -111,8 +114,8 @@ describe('RestController', () => {
         });
 
         const actual = await controller.deleteById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseOK)
-          .with.property('content', objects);
+        ok(actual instanceof HttpResponseOK);
+        strictEqual(actual.content, objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.removeOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
       });
@@ -139,7 +142,7 @@ describe('RestController', () => {
         });
 
         const actual = await controller.deleteById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+        ok(actual instanceof HttpResponseNotFound);
       });
 
       it('should rejects an error if serializer.removeOne rejects one which'
@@ -175,8 +178,8 @@ describe('RestController', () => {
   describe('has a "get" method that', () => {
 
     it('should handle requests at GET /.', () => {
-      expect(getHttpMethod(ConcreteController, 'get')).to.equal('GET');
-      expect(getPath(ConcreteController, 'get')).to.equal('/');
+      strictEqual(getHttpMethod(ConcreteController, 'get'), 'GET');
+      strictEqual(getPath(ConcreteController, 'get'), '/');
     });
 
     it('should return an HttpResponseNotImplemented if serializer.findMany is undefined.', async () => {
@@ -195,7 +198,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.get(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.get(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     describe('when serializer.findMany is defined', () => {
@@ -228,8 +231,8 @@ describe('RestController', () => {
         const ctx = new Context({});
 
         const actual = await controller.get(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseOK)
-          .with.property('content', objects);
+        ok(actual instanceof HttpResponseOK);
+        strictEqual(actual.content, objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.findMany).to.have.been.called.with.exactly(query);
       });
@@ -241,8 +244,8 @@ describe('RestController', () => {
   describe('has a "getById" method that', () => {
 
     it('should handle requests at GET /:id.', () => {
-      expect(getHttpMethod(ConcreteController, 'getById')).to.equal('GET');
-      expect(getPath(ConcreteController, 'getById')).to.equal('/:id');
+      strictEqual(getHttpMethod(ConcreteController, 'getById'), 'GET');
+      strictEqual(getPath(ConcreteController, 'getById'), '/:id');
     });
 
     it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', async () => {
@@ -262,7 +265,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.getById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.getById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     describe('when serializer.findOne is defined', () => {
@@ -299,8 +302,8 @@ describe('RestController', () => {
         });
 
         const actual = await controller.getById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseOK)
-          .with.property('content', objects);
+        ok(actual instanceof HttpResponseOK);
+        strictEqual(actual.content, objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.findOne).to.have.been.called.with.exactly({ foo: 'bar', id: 1 });
       });
@@ -327,7 +330,7 @@ describe('RestController', () => {
         });
 
         const actual = await controller.getById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+        ok(actual instanceof HttpResponseNotFound);
       });
 
       it('should rejects an error if serializer.findOne rejects one which'
@@ -363,13 +366,13 @@ describe('RestController', () => {
   describe('has a "patch" method that', () => {
 
     it('should handle requests at PATCH /.', () => {
-      expect(getHttpMethod(ConcreteController, 'patch')).to.equal('PATCH');
-      expect(getPath(ConcreteController, 'patch')).to.equal('/');
+      strictEqual(getHttpMethod(ConcreteController, 'patch'), 'PATCH');
+      strictEqual(getPath(ConcreteController, 'patch'), '/');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.patch()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+      ok(controller.patch() instanceof HttpResponseMethodNotAllowed);
     });
 
   });
@@ -377,8 +380,8 @@ describe('RestController', () => {
   describe('has a "patchById" method that', () => {
 
     it('should handle requests at PATCH /:id.', () => {
-      expect(getHttpMethod(ConcreteController, 'patchById')).to.equal('PATCH');
-      expect(getPath(ConcreteController, 'patchById')).to.equal('/:id');
+      strictEqual(getHttpMethod(ConcreteController, 'patchById'), 'PATCH');
+      strictEqual(getPath(ConcreteController, 'patchById'), '/:id');
     });
 
     it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
@@ -397,7 +400,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.patchById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.patchById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     describe('when serializer.updateOne is defined', () => {
@@ -437,8 +440,8 @@ describe('RestController', () => {
         });
 
         const actual = await controller.patchById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseOK)
-          .with.property('content', objects);
+        ok(actual instanceof HttpResponseOK);
+        strictEqual(actual.content, objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.updateOne).to.have.been.called.with.exactly(
           { foo: 'bar', id: 1 },
@@ -471,7 +474,7 @@ describe('RestController', () => {
         });
 
         const actual = await controller.patchById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+        ok(actual instanceof HttpResponseNotFound);
       });
 
       it('should rejects an error if serializer.updateOne rejects one which'
@@ -507,8 +510,8 @@ describe('RestController', () => {
   describe('has a "post" method that', () => {
 
     it('should handle requests at POST /.', () => {
-      expect(getHttpMethod(ConcreteController, 'post')).to.equal('POST');
-      expect(getPath(ConcreteController, 'post')).to.equal('/');
+      strictEqual(getHttpMethod(ConcreteController, 'post'), 'POST');
+      strictEqual(getPath(ConcreteController, 'post'), '/');
     });
 
     it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', async () => {
@@ -527,7 +530,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.post(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     it('should return an HttpResponseCreated if serializer.createOne is defined.', async () => {
@@ -556,8 +559,8 @@ describe('RestController', () => {
       });
 
       const actual = await controller.post(ctx);
-      expect(actual).to.be.an.instanceOf(HttpResponseCreated)
-        .with.property('content', objects);
+      ok(actual instanceof HttpResponseCreated);
+      strictEqual(actual.content, objects);
       expect(serializer.createOne).to.have.been.called.with.exactly({ foobar: 'foo' });
     });
 
@@ -566,13 +569,13 @@ describe('RestController', () => {
   describe('has a "postById" method that', () => {
 
     it('should handle requests at POST /:id.', () => {
-      expect(getHttpMethod(ConcreteController, 'postById')).to.equal('POST');
-      expect(getPath(ConcreteController, 'postById')).to.equal('/:id');
+      strictEqual(getHttpMethod(ConcreteController, 'postById'), 'POST');
+      strictEqual(getPath(ConcreteController, 'postById'), '/:id');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.postById()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+      ok(controller.postById() instanceof HttpResponseMethodNotAllowed);
     });
 
   });
@@ -580,13 +583,13 @@ describe('RestController', () => {
   describe('has a "put" method that', () => {
 
     it('should handle requests at PUT /.', () => {
-      expect(getHttpMethod(ConcreteController, 'put')).to.equal('PUT');
-      expect(getPath(ConcreteController, 'put')).to.equal('/');
+      strictEqual(getHttpMethod(ConcreteController, 'put'), 'PUT');
+      strictEqual(getPath(ConcreteController, 'put'), '/');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
       const controller = new ConcreteController(new ServiceManager());
-      expect(controller.put()).to.be.an.instanceOf(HttpResponseMethodNotAllowed);
+      ok(controller.put() instanceof HttpResponseMethodNotAllowed);
     });
 
   });
@@ -594,8 +597,8 @@ describe('RestController', () => {
   describe('has a "putById" method that', () => {
 
     it('should handle requests at PUT /:id.', () => {
-      expect(getHttpMethod(ConcreteController, 'putById')).to.equal('PUT');
-      expect(getPath(ConcreteController, 'putById')).to.equal('/:id');
+      strictEqual(getHttpMethod(ConcreteController, 'putById'), 'PUT');
+      strictEqual(getPath(ConcreteController, 'putById'), '/:id');
     });
 
     it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
@@ -614,7 +617,7 @@ describe('RestController', () => {
       }
 
       const controller = new ConcreteController(new ServiceManager());
-      expect(await controller.putById(new Context({}))).to.be.an.instanceOf(HttpResponseNotImplemented);
+      ok(await controller.putById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
     describe('when serializer.updateOne is defined', () => {
@@ -654,8 +657,8 @@ describe('RestController', () => {
         });
 
         const actual = await controller.putById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseOK)
-          .with.property('content', objects);
+        ok(actual instanceof HttpResponseOK);
+        strictEqual(actual.content, objects);
         expect(controller.getQuery).to.have.been.called.with.exactly(ctx);
         expect(serializer.updateOne).to.have.been.called.with.exactly(
           { foo: 'bar', id: 1 },
@@ -688,7 +691,7 @@ describe('RestController', () => {
         });
 
         const actual = await controller.putById(ctx);
-        expect(actual).to.be.an.instanceOf(HttpResponseNotFound);
+        ok(actual instanceof HttpResponseNotFound);
       });
 
       it('should rejects an error if serializer.updateOne rejects one which'
