@@ -1,6 +1,6 @@
-import { Hook } from '@foal/core';
+import { Hook, HookDecorator } from '@foal/core';
 
-export function /* upperFirstCamelName */() {
+export function /* upperFirstCamelName */(): HookDecorator {
   return Hook(async (ctx, services) => {
 
   });
