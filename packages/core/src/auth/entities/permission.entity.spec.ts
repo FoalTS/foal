@@ -1,13 +1,11 @@
+// std
+import { fail, notStrictEqual, ok, strictEqual } from 'assert';
+
 // 3p
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 import { createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Permission } from './permission.entity';
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 describe('Permission', () => {
 
@@ -28,37 +26,40 @@ describe('Permission', () => {
     permission.name = '';
     permission.codeName = '';
     await getManager().save(permission);
-    expect(permission.id).not.to.equal(undefined);
+    notStrictEqual(permission.id, undefined);
   });
 
   it('should have a "name".', () => {
     const permission = new Permission();
     permission.codeName = '';
-    return expect(getManager().save(permission))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_NO_DEFAULT_FOR_FIELD: Field \'name\' doesn\'t have a default value'
-      );
+    return getManager().save(permission)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_NO_DEFAULT_FOR_FIELD: Field \'name\' doesn\'t have a default value');
+      });
   });
 
   it('should have a "codeName" which is unique and whose length is 100.', async () => {
     const permission = new Permission();
     permission.name = '';
 
-    await expect(getManager().save(permission))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_NO_DEFAULT_FOR_FIELD: Field \'codeName\' doesn\'t have a default value'
-      );
+    await getManager().save(permission)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_NO_DEFAULT_FOR_FIELD: Field \'codeName\' doesn\'t have a default value');
+      });
 
     permission.codeName = 'This is a very long long long long long long line.'
       + 'This is a very long long long long long long line.1';
 
-    await expect(getManager().save(permission))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_DATA_TOO_LONG: Data too long for column \'codeName\' at row 1'
-      );
+    await getManager().save(permission)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_DATA_TOO_LONG: Data too long for column \'codeName\' at row 1');
+      });
 
     permission.codeName = 'foo';
     await getManager().save(permission);
@@ -66,11 +67,12 @@ describe('Permission', () => {
     const permission2 = new Permission();
     permission2.name = '';
     permission2.codeName = 'foo';
-    await expect(getManager().save(permission2))
-      .to.be.rejectedWith(
-        QueryFailedError,
-        'ER_DUP_ENTRY: Duplicate entry \'foo\' for key '
-      );
+    await getManager().save(permission2)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message.startsWith('ER_DUP_ENTRY: Duplicate entry \'foo\' for key '), true);
+      });
   });
 
 });

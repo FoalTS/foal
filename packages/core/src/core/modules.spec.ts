@@ -1,5 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
-import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
@@ -12,7 +14,7 @@ describe('Module', () => {
     class Foobar {}
 
     const actual = Reflect.getOwnMetadata('path', Foobar);
-    expect(actual).to.equal('/foo');
+    strictEqual(actual, '/foo');
   });
 
 });

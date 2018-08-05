@@ -1,6 +1,8 @@
+// std
+import { deepStrictEqual, strictEqual } from 'assert';
+
 // 3p
 import * as Ajv from 'ajv';
-import { expect } from 'chai';
 
 // FoalTS
 import { emailSchema } from './email.schema';
@@ -16,9 +18,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '',
         keyword: 'required',
@@ -37,9 +39,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '',
         keyword: 'required',
@@ -59,9 +61,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '.email',
         keyword: 'type',
@@ -81,9 +83,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '.password',
         keyword: 'type',
@@ -103,9 +105,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '.email',
         keyword: 'format',
@@ -126,9 +128,9 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(false);
+    strictEqual(isValid, false);
 
-    expect(ajv.errors).to.deep.equal([
+    deepStrictEqual(ajv.errors, [
       {
         dataPath: '',
         keyword: 'additionalProperties',
@@ -148,6 +150,6 @@ describe('emailSchema', () => {
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
-    expect(isValid).to.equal(true);
+    strictEqual(isValid, true);
   });
 });

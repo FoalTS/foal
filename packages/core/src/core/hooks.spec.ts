@@ -1,5 +1,7 @@
+// std
+import { deepStrictEqual, strictEqual } from 'assert';
+
 // 3p
-import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
@@ -18,7 +20,7 @@ describe('Hook', () => {
     }
 
     const actual = Reflect.getOwnMetadata('hooks', Foobar.prototype, 'barfoo');
-    expect(actual).to.deep.equal([ hook1, hook2 ]);
+    deepStrictEqual(actual, [ hook1, hook2 ]);
   });
 
   it('should add the hook to the metadata hooks on the class.', () => {
@@ -27,7 +29,7 @@ describe('Hook', () => {
     class Foobar {}
 
     const actual = Reflect.getOwnMetadata('hooks', Foobar);
-    expect(actual).to.deep.equal([ hook1, hook2 ]);
+    deepStrictEqual(actual, [ hook1, hook2 ]);
   });
 
 });
@@ -38,7 +40,7 @@ describe('getHookFunction', () => {
     const hookFunction = () => {};
     const hook = Hook(hookFunction);
 
-    expect(getHookFunction(hook)).to.equal(hookFunction);
+    strictEqual(getHookFunction(hook), hookFunction);
   });
 
 });

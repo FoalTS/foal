@@ -1,7 +1,10 @@
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+// std
+import { fail, ok, strictEqual } from 'assert';
+
+// 3p
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
+// FoalTS
 import {
   Context,
   getHookFunction,
@@ -9,9 +12,6 @@ import {
 } from '../../core';
 import { AbstractUser, Group, Permission } from '../entities';
 import { Authenticate } from './authenticate.hook';
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 describe('Authenticate', () => {
 
@@ -60,8 +60,9 @@ describe('Authenticate', () => {
     const preHook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
-    return expect(preHook(ctx, new ServiceManager()))
-      .to.be.rejectedWith('Authenticate hook requires session management.');
+    return preHook(ctx, new ServiceManager())
+      .then(() => fail('The promise should be rejected'))
+      .catch(err => strictEqual(err.message, 'Authenticate hook requires session management.'));
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
@@ -86,7 +87,7 @@ describe('Authenticate', () => {
     };
     await hook(ctx, new ServiceManager());
 
-    expect(ctx.user).to.equal(undefined);
+    strictEqual(ctx.user, undefined);
   });
 
   it('should add a user property (with all its groups and permissions) if a user matches'
@@ -104,17 +105,20 @@ describe('Authenticate', () => {
     if (!ctx.user) {
       throw new Error('ctx.user should be defined');
     }
-    expect(ctx.user.id).to.equal(1);
-    expect((ctx.user as User).email).to.equal('john@foalts.org');
+    strictEqual(ctx.user.id, 1);
+    strictEqual((ctx.user as User).email, 'john@foalts.org');
 
-    expect(ctx.user.userPermissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.userPermissions[0].codeName).to.equal('permission2');
+    ok(Array.isArray(ctx.user.userPermissions));
+    strictEqual(ctx.user.userPermissions.length, 1);
+    strictEqual(ctx.user.userPermissions[0].codeName, 'permission2');
 
-    expect(ctx.user.groups).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.groups[0].name).to.equal('group1');
+    ok(Array.isArray(ctx.user.groups));
+    strictEqual(ctx.user.groups.length, 1);
+    strictEqual(ctx.user.groups[0].name, 'group1');
 
-    expect(ctx.user.groups[0].permissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(ctx.user.groups[0].permissions[0].codeName).to.equal('permission1');
+    ok(Array.isArray(ctx.user.groups[0].permissions));
+    strictEqual(ctx.user.groups[0].permissions.length, 1);
+    strictEqual(ctx.user.groups[0].permissions[0].codeName, 'permission1');
   });
 
 });

@@ -1,5 +1,7 @@
+// std
+import { deepStrictEqual, ok, strictEqual } from 'assert';
+
 // 3p
-import { expect } from 'chai';
 import * as express from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
 import * as request from 'supertest';
@@ -50,7 +52,7 @@ describe('createMiddleware', () => {
 
       await middleware(request, response);
 
-      expect(body).to.deep.equal(request.body);
+      deepStrictEqual(body, request.body);
     });
 
     it('should call the sync and async hooks (with the ctx and the given ServiceManager)'
@@ -79,8 +81,8 @@ describe('createMiddleware', () => {
 
       await middleware(request, response);
 
-      expect(str).to.equal('abc');
-      expect(actualServiceManager).to.equal(expectedServiceManager);
+      strictEqual(str, 'abc');
+      strictEqual(actualServiceManager, expectedServiceManager);
     });
 
     describe('when the controller method returns or resolves an instance of HttpResponseSuccess,'
@@ -148,7 +150,7 @@ describe('createMiddleware', () => {
             request(app)
               .get('/d')
               .then(response => {
-                expect(response.body).to.deep.equal({});
+                deepStrictEqual(response.body, {});
               })
           ]);
         });
@@ -225,8 +227,8 @@ describe('createMiddleware', () => {
         app.get('/a', createMiddleware(route(() => ({})), new ServiceManager()));
         app.use((err, req, res, next) => {
           try {
-            expect(err).to.be.an.instanceOf(Error)
-              .with.property('message', 'The controller method "fn" should return an HttpResponse.');
+            ok(err instanceof Error);
+            strictEqual(err.message, 'The controller method "fn" should return an HttpResponse.');
             done();
           } catch (err) {
             done(err);
@@ -251,8 +253,8 @@ describe('createMiddleware', () => {
       }, new ServiceManager()));
       app.use((err, req, res, next) => {
         try {
-          expect(err).to.be.an.instanceOf(Error)
-            .with.property('message', 'Error thrown in a hook.');
+          ok(err instanceof Error);
+          strictEqual(err.message, 'Error thrown in a hook.');
           done();
         } catch (err) {
           done(err);
@@ -271,8 +273,8 @@ describe('createMiddleware', () => {
         );
         app.use((err, req, res, next) => {
           try {
-            expect(err).to.be.an.instanceOf(Error)
-              .with.property('message', 'Error thrown in a controller method.');
+            ok(err instanceof Error);
+            strictEqual(err.message, 'Error thrown in a controller method.');
             done();
           } catch (err) {
             done(err);
@@ -295,8 +297,8 @@ describe('createMiddleware', () => {
       }, new ServiceManager()));
       app.use((err, req, res, next) => {
         try {
-          expect(err).to.be.an.instanceOf(Error)
-            .with.property('message', 'Error rejected in a hook.');
+          ok(err instanceof Error);
+          strictEqual(err.message, 'Error rejected in a hook.');
           done();
         } catch (err) {
           done(err);
@@ -315,8 +317,8 @@ describe('createMiddleware', () => {
         );
         app.use((err, req, res, next) => {
           try {
-            expect(err).to.be.an.instanceOf(Error)
-              .with.property('message', 'Error rejected in a controller method.');
+            ok(err instanceof Error);
+            strictEqual(err.message, 'Error rejected in a controller method.');
             done();
           } catch (err) {
             done(err);
@@ -351,7 +353,7 @@ describe('createMiddleware', () => {
       return request(app)
         .get('/a')
         .then(() => {
-          expect(str).to.equal('a');
+          strictEqual(str, 'a');
         });
     });
 

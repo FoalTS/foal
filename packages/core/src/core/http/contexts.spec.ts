@@ -1,5 +1,7 @@
-import { expect } from 'chai';
+// std
+import { deepStrictEqual, strictEqual } from 'assert';
 
+// FoalTS
 import { Context } from './contexts';
 
 describe('Context', () => {
@@ -7,9 +9,9 @@ describe('Context', () => {
   it('should instantiate with suitable properties.', () => {
     const request = {};
     const actual = new Context(request);
-    expect(actual.request).to.be.equal(request);
-    expect(actual.state).to.deep.equal({});
-    expect(actual.user).to.equal(undefined);
+    strictEqual(actual.request, request);
+    deepStrictEqual(actual.state, {});
+    strictEqual(actual.user, undefined);
   });
 
 });

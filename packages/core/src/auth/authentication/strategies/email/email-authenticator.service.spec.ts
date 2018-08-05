@@ -1,11 +1,10 @@
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+// std
+import { fail, strictEqual } from 'assert';
+
+// 3p
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
-chai.use(chaiAsPromised);
-
-const expect = chai.expect;
-
+// FoalTS
 import { AbstractUser, Group, Permission } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
@@ -78,32 +77,35 @@ describe('EmailAuthenticator', () => {
 
     it('should return null if no user is found for the given email.', async () => {
       const user = await service.authenticate({ email: 'jack2@foalts.org', password: 'foo' });
-      expect(user).to.equal(null);
+      strictEqual(user, null);
     });
 
     it('should return null if the given password is incorrect.', async () => {
       const user = await service.authenticate({ email: 'john@foalts.org', password: 'wrongPassword'});
-      expect(user).to.equal(null);
+      strictEqual(user, null);
     });
 
     it('should throw an error if the encrypted user password format is neither correct nor supported.', () => {
-      return expect(service.authenticate({ email: 'jack@foalts.org', password }))
-        .to.be.rejectedWith('Password format is incorrect or not supported.');
+      return service.authenticate({ email: 'jack@foalts.org', password })
+        .then(() => fail('This promise should be rejected.'))
+        .catch(err => strictEqual(err.message, 'Password format is incorrect or not supported.'));
     });
 
     it('should throw an error if the encrypted user password format (pbkdf2) is not supported.', () => {
-      return expect(service.authenticate({ email: 'sam@foalts.org', password }))
-        .to.be.rejectedWith('Password format is incorrect (pbkdf2).');
+      return service.authenticate({ email: 'sam@foalts.org', password })
+        .then(() => fail('This promise should be rejected.'))
+        .catch(err => strictEqual(err.message, 'Password format is incorrect (pbkdf2).'));
     });
 
     it('should return the authenticated user if the given email and password are correct.', async () => {
       const user = await service.authenticate({ email: 'john@foalts.org', password });
-      expect(user).to.deep.include({
-        email: 'john@foalts.org',
-        id: 1,
-        password: encryptedPassword,
-        username: 'John',
-      });
+      if (!user) {
+        throw new Error('The returned user should not be null.');
+      }
+      strictEqual(user.email, 'john@foalts.org');
+      strictEqual(user.id, 1);
+      strictEqual(user.password, encryptedPassword);
+      strictEqual(user.username, 'John');
     });
 
   });

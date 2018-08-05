@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -38,7 +38,7 @@ describe('createEntity', () => {
 
       const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
       const actual = readFileFromRoot('src/app/entities/test-foo-bar.entity.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -49,7 +49,7 @@ describe('createEntity', () => {
 
       const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
       const actual = readFileFromRoot('entities/test-foo-bar.entity.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -59,7 +59,7 @@ describe('createEntity', () => {
 
       const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
       const actual = readFileFromRoot('test-foo-bar.entity.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 

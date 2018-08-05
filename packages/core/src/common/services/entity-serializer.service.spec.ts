@@ -1,5 +1,7 @@
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+// std
+import { fail, notStrictEqual, ok, strictEqual } from 'assert';
+
+// 3p
 import {
   Column,
   createConnection,
@@ -9,12 +11,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+// FoalTS
 import { ObjectDoesNotExist } from '../errors';
-
-chai.use(chaiAsPromised);
-
-const expect = chai.expect;
-
 import { EntitySerializer } from './entity-serializer.service';
 
 @Entity()
@@ -102,14 +100,15 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const users = await getManager(connectionName).find(User);
 
         // A user should be created in the database ...
-        expect(users).to.be.an('array').and.to.have.lengthOf(1);
+        ok(Array.isArray(users));
+        strictEqual(users.length, 1);
         const user = users[0];
 
         // ... with the proper values.
-        expect(user.firstName).to.equal('Donald');
-        expect(user.lastName).to.equal('Smith');
-        expect(user.isAdmin).to.equal(false);
-        expect(user.id).not.to.equal(undefined);
+        strictEqual(user.firstName, 'Donald');
+        strictEqual(user.lastName, 'Smith');
+        strictEqual(user.isAdmin, false);
+        notStrictEqual(user.id, undefined);
       });
 
       xit('should not replace an existing user (if an id is given).', async () => {
@@ -119,7 +118,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         });
         await getManager(connectionName).save(user1);
 
-        expect(user1.id).not.to.equal(undefined);
+        notStrictEqual(user1.id, undefined);
 
         await service.createOne({
           firstName: 'John',
@@ -129,7 +128,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         const users = await getManager(connectionName).find(User);
 
-        expect(users).to.be.an('array').and.to.have.lengthOf(2);
+        ok(Array.isArray(users));
+        strictEqual(users.length, 2);
       });
 
     });
@@ -152,35 +152,32 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const users = await getManager(connectionName).find(User);
 
         // Two users should be created in the database ...
-        expect(users).to.be.an('array').and.to.have.lengthOf(2);
+        ok(Array.isArray(users));
+        strictEqual(users.length, 2);
         const user1 = users[0];
         const user2 = users[1];
 
         // ... with the proper values.
-        expect(user1.firstName).to.equal('Donald');
-        expect(user1.lastName).to.equal('Smith');
-        expect(user1.isAdmin).to.equal(false);
-        expect(user1.id).not.to.equal(undefined);
+        strictEqual(user1.firstName, 'Donald');
+        strictEqual(user1.lastName, 'Smith');
+        strictEqual(user1.isAdmin, false);
+        notStrictEqual(user1.id, undefined);
 
-        expect(user2.firstName).to.equal('Victor');
-        expect(user2.lastName).to.equal('Hugo');
-        expect(user2.isAdmin).to.equal(true);
-        expect(user2.id).not.to.equal(undefined);
+        strictEqual(user2.firstName, 'Victor');
+        strictEqual(user2.lastName, 'Hugo');
+        strictEqual(user2.isAdmin, true);
+        notStrictEqual(user2.id, undefined);
 
         // The returned users should have the above fields.
-        expect(result[0]).to.deep.equal({
-          firstName: 'Donald',
-          id: user1.id,
-          isAdmin: false,
-          lastName: 'Smith',
-        });
+        strictEqual((result[0] as any).firstName, 'Donald');
+        strictEqual((result[0] as any).id, user1.id);
+        strictEqual((result[0] as any).isAdmin, false);
+        strictEqual((result[0] as any).lastName, 'Smith');
 
-        expect(result[1]).to.deep.equal({
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result[1] as any).firstName, 'Victor');
+        strictEqual((result[1] as any).id, user2.id);
+        strictEqual((result[1] as any).isAdmin, true);
+        strictEqual((result[1] as any).lastName, 'Hugo');
       });
 
       xit('should not replace an existing user (if an id is given).', async () => {
@@ -190,7 +187,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         });
         await getManager(connectionName).save(user1);
 
-        expect(user1.id).not.to.equal(undefined);
+        notStrictEqual(user1.id, undefined);
 
         await service.createMany([{
           firstName: 'John',
@@ -200,7 +197,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         const users = await getManager(connectionName).find(User);
 
-        expect(users).to.be.an('array').and.to.have.lengthOf(2);
+        ok(Array.isArray(users));
+        strictEqual(users.length, 2);
       });
 
     });
@@ -222,17 +220,16 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         const result = await service.findOne({ firstName: 'Victor' });
 
-        expect(result).to.deep.equal({
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result as any).firstName, 'Victor');
+        strictEqual((result as any).id, user2.id);
+        strictEqual((result as any).isAdmin, true);
+        strictEqual((result as any).lastName, 'Hugo');
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return expect(service.findOne({ firstName: 'Jack' }))
-          .to.be.rejectedWith(ObjectDoesNotExist);
+        return service.findOne({ firstName: 'Jack' })
+          .then(() => fail('The promise should be rejected.'))
+          .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
 
     });
@@ -254,30 +251,28 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         // With an empty query
         let result = await service.findMany({});
-        expect(result).to.be.an('array').and.to.have.lengthOf(2);
-        expect(result[0]).to.deep.equal({
-          firstName: 'Donald',
-          id: user1.id,
-          isAdmin: false,
-          lastName: 'Smith',
-        });
+        ok(Array.isArray(result));
+        strictEqual(result.length, 2);
 
-        expect(result[1]).to.deep.equal({
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        strictEqual((result[0] as any).firstName, 'Donald');
+        strictEqual((result[0] as any).id, user1.id);
+        strictEqual((result[0] as any).isAdmin, false);
+        strictEqual((result[0] as any).lastName, 'Smith');
+
+        strictEqual((result[1] as any).firstName, 'Victor');
+        strictEqual((result[1] as any).id, user2.id);
+        strictEqual((result[1] as any).isAdmin, true);
+        strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
         result = await service.findMany({ firstName: 'Victor' });
-        expect(result).to.be.an('array').and.to.have.lengthOf(1);
-        expect(result[0]).to.deep.equal({
-          firstName: 'Victor',
-          id: user2.id,
-          isAdmin: true,
-          lastName: 'Hugo',
-        });
+        ok(Array.isArray(result));
+        strictEqual(result.length, 1);
+
+        strictEqual((result[0] as any).firstName, 'Victor');
+        strictEqual((result[0] as any).id, user2.id);
+        strictEqual((result[0] as any).isAdmin, true);
+        strictEqual((result[0] as any).lastName, 'Hugo');
 
       });
 
@@ -303,17 +298,18 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
         if (!user) { throw new Error(); }
-        expect(user.firstName).to.equal('John');
+        strictEqual(user.firstName, 'John');
 
         // The other users should not be updated in the database.
         const userbis = await getManager(connectionName).findOne(User, user1.id);
         if (!userbis) { throw new Error(); }
-        expect(userbis.firstName).to.equal('Donald');
+        strictEqual(userbis.firstName, 'Donald');
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return expect(service.updateOne({ firstName: 'Jack' }, { firstName: 'Adele' }))
-          .to.be.rejectedWith(ObjectDoesNotExist);
+        return service.updateOne({ firstName: 'Jack' }, { firstName: 'Adele' })
+          .then(() => fail('The promise should be rejected.'))
+          .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
 
     });
@@ -335,13 +331,17 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await service.removeOne({ firstName: user2.firstName });
 
         const users = await getManager(connectionName).find(User);
-        expect(users).to.be.an('array').and.to.have.lengthOf(1);
-        expect(users[0].firstName).to.equal(user1.firstName);
+
+        ok(Array.isArray(users));
+        strictEqual(users.length, 1);
+
+        strictEqual(users[0].firstName, user1.firstName);
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return expect(service.removeOne({ firstName: 'Jack' }))
-          .to.be.rejectedWith(ObjectDoesNotExist);
+        return service.removeOne({ firstName: 'Jack' })
+          .then(() => fail('The promise should be rejected.'))
+          .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
 
     });

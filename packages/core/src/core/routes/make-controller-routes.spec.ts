@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Controller } from '../controllers';
@@ -26,14 +26,14 @@ describe('makeControllerRoutes', () => {
 
     const routes = makeControllerRoutes('', [], FoobarController, new ServiceManager());
 
-    expect(routes).to.have.lengthOf(1);
+    strictEqual(routes.length, 1);
 
     // bar() {}
-    expect(routes[0].controller).to.be.an.instanceOf(FoobarController);
-    expect(routes[0].hooks).to.deep.equal([]);
-    expect(routes[0].httpMethod).to.equal('GET');
-    expect(routes[0].path).to.equal('');
-    expect(routes[0].propertyKey).to.equal('bar');
+    ok(routes[0].controller instanceof FoobarController);
+    deepStrictEqual(routes[0].hooks, []);
+    strictEqual(routes[0].httpMethod, 'GET');
+    strictEqual(routes[0].path, '');
+    strictEqual(routes[0].propertyKey, 'bar');
   });
 
   it('should return the routes from a controller with the parent, controller and method paths.', () => {
@@ -44,10 +44,10 @@ describe('makeControllerRoutes', () => {
     }
     const routes = makeControllerRoutes('barfoo', [], FoobarController, new ServiceManager());
 
-    expect(routes).to.have.lengthOf(1);
+    strictEqual(routes.length, 1);
 
     // bar() {}
-    expect(routes[0].path).to.equal('barfoo/foo/bar');
+    strictEqual(routes[0].path, 'barfoo/foo/bar');
   });
 
   it('should return the routes from a controller with the parent, controller and method hooks.', () => {
@@ -62,10 +62,10 @@ describe('makeControllerRoutes', () => {
     }
     const routes = makeControllerRoutes('', [ hook1, hook2 ], FoobarController, new ServiceManager());
 
-    expect(routes).to.have.lengthOf(1);
+    strictEqual(routes.length, 1);
 
     // bar() {}
-    expect(routes[0].hooks).to.deep.equal([ hook1, hook2, hook3, hook4, hook5, hook6 ]);
+    deepStrictEqual(routes[0].hooks, [ hook1, hook2, hook3, hook4, hook5, hook6 ]);
   });
 
   it('should return the routes from the controller methods that have a http-method decorator.', () => {
@@ -84,15 +84,15 @@ describe('makeControllerRoutes', () => {
 
     const routes = makeControllerRoutes('', [], FoobarController, new ServiceManager());
 
-    expect(routes).to.have.lengthOf(2);
+    strictEqual(routes.length, 2);
 
     // bar() {}
-    expect(routes[0].httpMethod).to.equal('GET');
-    expect(routes[0].propertyKey).to.equal('bar');
+    strictEqual(routes[0].httpMethod, 'GET');
+    strictEqual(routes[0].propertyKey, 'bar');
 
     // barfoo() {}
-    expect(routes[1].httpMethod).to.equal('POST');
-    expect(routes[1].propertyKey).to.equal('barfoo');
+    strictEqual(routes[1].httpMethod, 'POST');
+    strictEqual(routes[1].propertyKey, 'barfoo');
   });
 
   it('should properly instantiate a controller that has dependencies.', () => {
@@ -115,12 +115,12 @@ describe('makeControllerRoutes', () => {
     const services = new ServiceManager();
     const routes = makeControllerRoutes('', [], FoobarController, services);
 
-    expect(routes).to.have.lengthOf(1);
+    strictEqual(routes.length, 1);
 
     // bar
-    expect(routes[0].controller).to.be.an.instanceOf(FoobarController);
-    expect(routes[0].controller.service1).to.equal(services.get(Service1));
-    expect(routes[0].controller.service2).to.equal(services.get(Service2));
+    ok(routes[0].controller instanceof FoobarController);
+    strictEqual(routes[0].controller.service1, services.get(Service1));
+    strictEqual(routes[0].controller.service2, services.get(Service2));
   });
 
   it('should return all the routes of the prototype chain of an inherited controller.', () => {
@@ -144,21 +144,21 @@ describe('makeControllerRoutes', () => {
 
     const routes = makeControllerRoutes('', [], FoobarController2, new ServiceManager());
 
-    expect(routes).to.have.lengthOf(2);
+    strictEqual(routes.length, 2);
 
     // barfoo
-    expect(routes[0].controller).to.be.an.instanceOf(FoobarController2);
-    expect(routes[0].hooks).to.deep.equal([ hook2, hook3 ]);
-    expect(routes[0].httpMethod).to.equal('POST');
-    expect(routes[0].path).to.equal('/foo/barfoo');
-    expect(routes[0].propertyKey).to.equal('barfoo');
+    ok(routes[0].controller instanceof FoobarController2);
+    deepStrictEqual(routes[0].hooks, [ hook2, hook3 ]);
+    strictEqual(routes[0].httpMethod, 'POST');
+    strictEqual(routes[0].path, '/foo/barfoo');
+    strictEqual(routes[0].propertyKey, 'barfoo');
 
     // bar
-    expect(routes[1].controller).to.be.an.instanceOf(FoobarController2);
-    expect(routes[1].hooks).to.deep.equal([ hook2, hook1 ]);
-    expect(routes[1].httpMethod).to.equal('GET');
-    expect(routes[1].path).to.equal('/foo/bar');
-    expect(routes[1].propertyKey).to.equal('bar');
+    ok(routes[1].controller instanceof FoobarController2);
+    deepStrictEqual(routes[1].hooks, [ hook2, hook1 ]);
+    strictEqual(routes[1].httpMethod, 'GET');
+    strictEqual(routes[1].path, '/foo/bar');
+    strictEqual(routes[1].propertyKey, 'bar');
 
   });
 

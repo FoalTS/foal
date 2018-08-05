@@ -48,10 +48,8 @@
   },
   "devDependencies": {
     "@foal/cli": "^0.6.0-alpha.2",
-    "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
-    "chai": "^4.1.2",
     "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^3.5.1",
     "html-loader": "^0.5.5",

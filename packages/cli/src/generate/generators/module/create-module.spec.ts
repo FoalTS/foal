@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -65,15 +65,15 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/test-foo-bar.module.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     }
 
@@ -102,11 +102,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/controllers/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
@@ -134,11 +134,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/hooks/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
@@ -166,11 +166,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/entities/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/entities/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/entities/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
@@ -198,11 +198,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/sub-modules/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
@@ -230,11 +230,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/services/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/services/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/services/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
@@ -262,11 +262,11 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/controllers/templates/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/index.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/controllers/templates/test.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/test.ts`);
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
