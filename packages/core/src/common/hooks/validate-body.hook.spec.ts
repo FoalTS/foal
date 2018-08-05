@@ -25,7 +25,7 @@ describe('ValidateBody', () => {
     };
 
     const actual = hook(ctx, new ServiceManager());
-    ok(actual instanceof HttpResponseBadRequest);
+    strictEqual(actual instanceof HttpResponseBadRequest, false);
   });
 
   it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
