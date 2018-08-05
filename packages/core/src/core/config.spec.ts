@@ -1,5 +1,5 @@
 // std
-import { strictEqual, throws } from 'assert';
+import { ok, strictEqual, throws } from 'assert';
 import { join } from 'path';
 
 // FoalTS
@@ -66,7 +66,8 @@ describe('Config', () => {
         process.env.NODE_ENV = 'development';
         throws(
           () => Config.get('a', 'bar'),
-          /Config: only string, number and boolean values are supported\. bar type is "object" in a\.development\.json./
+          err => err.message === 'Config: only string, number and boolean values are supported.'
+            + ' bar type is "object" in a.development.json.'
         );
       });
 
@@ -81,7 +82,8 @@ describe('Config', () => {
       it('should not return it if its type is neither a number, a string nor a boolean.', () => {
         throws(
           () => Config.get('b', 'barfoo'),
-          /Config: only string, number and boolean values are supported\. barfoo type is "object" in b\.json\./
+          err => err.message === 'Config: only string, number and boolean values are supported.'
+            + ' barfoo type is "object" in b.json.'
         );
       });
 
