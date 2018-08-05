@@ -7,6 +7,7 @@ import {
   getHookFunction,
   HookFunction,
   HttpResponse,
+  HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager,
 } from '../../core';
@@ -19,14 +20,25 @@ describe('LoginRequired', () => {
 
   class User extends AbstractUser {}
 
-  before(() => {
+  beforeEach(() => {
     preHook = getHookFunction(LoginRequired());
   });
 
-  it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
+  it('should return an HttpResponseUnauthorized if the user is not authenticated'
+      + ' and no redirect path was given.', () => {
     const ctx = new Context({});
     const actual = preHook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseUnauthorized);
+  });
+
+  it('should return an HttpResponseRedirect if the user is not authenticated'
+      + ' and a redirect path was given.', () => {
+    preHook = getHookFunction(LoginRequired({ redirect: '/login' }));
+
+    const ctx = new Context({});
+    const actual = preHook(ctx, new ServiceManager());
+    ok(actual instanceof HttpResponseRedirect);
+    strictEqual((actual as HttpResponseRedirect).path, '/login');
   });
 
   it('should not return any HttpResponse if the user is authenticated.', () => {
