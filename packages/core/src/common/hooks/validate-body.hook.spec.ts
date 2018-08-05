@@ -1,6 +1,10 @@
-import * as Ajv from 'ajv';
-import { expect } from 'chai';
+// std
+import { notStrictEqual, ok, strictEqual } from 'assert';
 
+// 3p
+import * as Ajv from 'ajv';
+
+// FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { ValidateBody } from './validate-body.hook';
 
@@ -21,7 +25,7 @@ describe('ValidateBody', () => {
     };
 
     const actual = hook(ctx, new ServiceManager());
-    expect(actual).not.to.be.instanceOf(HttpResponseBadRequest);
+    ok(actual instanceof HttpResponseBadRequest);
   });
 
   it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
@@ -40,12 +44,12 @@ describe('ValidateBody', () => {
       return ctx;
     }
 
-    expect(hook(context(null), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
-    expect(hook(context(undefined), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
-    expect(hook(context('foo'), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
-    expect(hook(context(3), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
-    expect(hook(context(true), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
-    expect(hook(context({ foo: '3' }), new ServiceManager())).to.be.instanceOf(HttpResponseBadRequest);
+    ok(hook(context(null), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context(undefined), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context({ foo: '3' }), new ServiceManager()) instanceof HttpResponseBadRequest);
   });
 
   it('should return an HttpResponseBadRequest with a defined `content` property if '
@@ -60,8 +64,8 @@ describe('ValidateBody', () => {
     const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
-    expect(actual).to.be.instanceOf(HttpResponseBadRequest);
-    expect((actual as HttpResponseBadRequest).content).not.to.equal(undefined);
+    ok(actual instanceof HttpResponseBadRequest);
+    notStrictEqual((actual as HttpResponseBadRequest).content, undefined);
   });
 
   it('should use the given ajv instance if it exists.', () => {
@@ -79,11 +83,11 @@ describe('ValidateBody', () => {
 
     let hook = getHookFunction(ValidateBody(schema));
     hook(ctx, new ServiceManager());
-    expect(ctx.request.body.bar).to.equal(undefined);
+    strictEqual(ctx.request.body.bar, undefined);
 
     hook = getHookFunction(ValidateBody(schema, new Ajv({ useDefaults: true })));
     hook(ctx, new ServiceManager());
-    expect(ctx.request.body.bar).to.equal(4);
+    strictEqual(ctx.request.body.bar, 4);
   });
 
 });
