@@ -141,4 +141,42 @@ describe('createController', () => {
 
   });
 
+  describe('should render the Login templates.', () => {
+
+    it('in src/app/controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('src');
+      mkdirIfNotExists('src/app');
+      mkdirIfNotExists('src/app/controllers');
+
+      createController({ name: 'test-fooBar', type: 'Login' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
+      const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
+      strictEqual(actual, expected);
+
+    });
+
+    it('in controllers/ if the directory exists.', () => {
+      mkdirIfNotExists('controllers');
+
+      createController({ name: 'test-fooBar', type: 'Login' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
+      const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
+      strictEqual(actual, expected);
+
+    });
+
+    it('in the current directory otherwise.', () => {
+
+      createController({ name: 'test-fooBar', type: 'Login' });
+
+      const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
+      const actual = readFileFromRoot('test-foo-bar.controller.ts');
+      strictEqual(actual, expected);
+
+    });
+
+  });
+
 });

@@ -14,6 +14,7 @@ Create a new directory with all the required files to get started.
 foal g controller foobar
 > Empty
 > REST
+> Login
 ```
 
 Create a new controller in `./src/app/controllers`, in `./controllers` or in the current directory depending on which folders are found.

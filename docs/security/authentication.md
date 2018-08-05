@@ -59,7 +59,7 @@ You can now call the method `authenticate({ email, password }): Promise<User|nul
 
 ```sh
 foal g controller auth
-> Empty
+> Login
 ```
 
 Replace the content with:
