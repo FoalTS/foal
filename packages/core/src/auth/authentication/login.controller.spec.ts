@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -32,7 +32,7 @@ describe('strategy', () => {
 
     const schema = {};
 
-    expect(strategy(name, Authenticator, schema)).to.deep.equal({
+    deepStrictEqual(strategy(name, Authenticator, schema), {
       authenticatorClass: Authenticator,
       name,
       schema,
@@ -49,8 +49,8 @@ describe('LoginController', () => {
     }
 
     it('should handle requests at GET /logout.', () => {
-      expect(getHttpMethod(ConcreteController, 'logout')).to.equal('GET');
-      expect(getPath(ConcreteController, 'logout')).to.equal('/logout');
+      strictEqual(getHttpMethod(ConcreteController, 'logout'), 'GET');
+      strictEqual(getPath(ConcreteController, 'logout'), '/logout');
     });
 
     it('should delete ctx.session.authentication if it exists.', async () => {
@@ -64,7 +64,7 @@ describe('LoginController', () => {
       const controller = new ConcreteController(new ServiceManager());
       await controller.logout(ctx);
 
-      expect(ctx.request.session).to.deep.equal({});
+      deepStrictEqual(ctx.request.session, {});
     });
 
     it('should not throw an error if ctx.session.authentication is undefined.', async () => {
@@ -82,7 +82,7 @@ describe('LoginController', () => {
       const controller = new ConcreteController(new ServiceManager());
       const response = await controller.logout(ctx);
 
-      expect(response).to.be.an.instanceOf(HttpResponseNoContent);
+      ok(response instanceof HttpResponseNoContent);
     });
 
     it('should return an HttpResponseRedirect if redirect.logout is not empty.', async () => {
@@ -100,8 +100,8 @@ describe('LoginController', () => {
       const controller = new ConcreteController2(new ServiceManager());
       const response = await controller.logout(ctx);
 
-      expect(response).to.be.an.instanceOf(HttpResponseRedirect);
-      expect((response as HttpResponseRedirect).path).to.equal('/foo');
+      ok(response instanceof HttpResponseRedirect);
+      strictEqual((response as HttpResponseRedirect).path, '/foo');
     });
 
   });
@@ -132,8 +132,8 @@ describe('LoginController', () => {
     }
 
     it('should handle requests at POST /:strategy.', () => {
-      expect(getHttpMethod(ConcreteController, 'login')).to.equal('POST');
-      expect(getPath(ConcreteController, 'login')).to.equal('/:strategy');
+      strictEqual(getHttpMethod(ConcreteController, 'login'), 'POST');
+      strictEqual(getPath(ConcreteController, 'login'), '/:strategy');
     });
 
     it('should return an HttpResponseNotFound if no strategy with the given name is found.', async () => {
@@ -146,7 +146,7 @@ describe('LoginController', () => {
       const controller = new ConcreteController(new ServiceManager());
       const response = await controller.login(ctx);
 
-      expect(response).to.be.an.instanceOf(HttpResponseNotFound);
+      ok(response instanceof HttpResponseNotFound);
     });
 
     it('should return an HttpResponseBadRequest with the ajv errors if ctx.request.body does'
@@ -163,18 +163,18 @@ describe('LoginController', () => {
       const controller = new ConcreteController(new ServiceManager());
       const response = await controller.login(ctx);
 
-      expect(response).to.be.an.instanceOf(HttpResponseBadRequest)
-        .with.deep.property('content', [
-          {
-            dataPath: '.email',
-            keyword: 'type',
-            message: 'should be string',
-            params: {
-              type: 'string',
-            },
-            schemaPath: '#/properties/email/type',
-          }
-        ]);
+      ok(response instanceof HttpResponseBadRequest);
+      deepStrictEqual(response.content, [
+        {
+          dataPath: '.email',
+          keyword: 'type',
+          message: 'should be string',
+          params: {
+            type: 'string',
+          },
+          schemaPath: '#/properties/email/type',
+        }
+      ]);
     });
 
     it('should remove any additional field (ajv schema) before calling authenticator.authenticate'
@@ -230,7 +230,7 @@ describe('LoginController', () => {
         const controller = new ConcreteController(new ServiceManager());
         const response = await controller.login(ctx);
 
-        expect(response).to.be.an.instanceOf(HttpResponseNoContent);
+        ok(response instanceof HttpResponseNoContent);
       });
 
       it('should return an HttpResponseRedirect if redirect.success is not empty.', async () => {
@@ -247,15 +247,15 @@ describe('LoginController', () => {
         const controller = new ConcreteController2(new ServiceManager());
         const response = await controller.login(ctx);
 
-        expect(response).to.be.an.instanceOf(HttpResponseRedirect)
-          .with.property('path', '/foo');
+        ok(response instanceof HttpResponseRedirect);
+        strictEqual((response as HttpResponseRedirect).path, '/foo');
       });
 
       it('should create or update ctx.session.authentication to include the userId.', async () => {
         const controller = new ConcreteController(new ServiceManager());
         await controller.login(ctx);
 
-        expect(ctx.request.session.authentication).to.deep.equal({
+        deepStrictEqual(ctx.request.session.authentication, {
           userId: 1
         });
 
@@ -263,7 +263,7 @@ describe('LoginController', () => {
 
         await controller.login(ctx);
 
-        expect(ctx.request.session.authentication).to.deep.equal({
+        deepStrictEqual(ctx.request.session.authentication, {
           foo: 'bar',
           userId: 1
         });
@@ -287,7 +287,7 @@ describe('LoginController', () => {
         const controller = new ConcreteController(new ServiceManager());
         const response = await controller.login(ctx);
 
-        expect(response).to.be.an.instanceOf(HttpResponseUnauthorized);
+        ok(response instanceof HttpResponseUnauthorized);
       });
 
       it('should return an HttpResponseRedirect if redirect.failure is not empty.', async () => {
@@ -304,8 +304,8 @@ describe('LoginController', () => {
         const controller = new ConcreteController2(new ServiceManager());
         const response = await controller.login(ctx);
 
-        expect(response).to.be.an.instanceOf(HttpResponseRedirect)
-          .with.property('path', '/foo');
+        ok(response instanceof HttpResponseRedirect);
+        strictEqual((response as HttpResponseRedirect).path, '/foo');
       });
 
     });
