@@ -71,8 +71,7 @@ describe('Permission', () => {
       .then(() => fail('The promise should be rejected.'))
       .catch(err => {
         ok(err instanceof QueryFailedError);
-        // TODO: this should throw an Error.
-        strictEqual(err.message, 'ER_DUP_ENTRY: Duplicate entry \'foo\' for key ');
+        strictEqual(err.message.startsWith('ER_DUP_ENTRY: Duplicate entry \'foo\' for key '), true);
       });
   });
 
