@@ -1,6 +1,6 @@
 # Validation
 
-`ValidateBody` is a hook to control the data received by the server. [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator, validates the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
+`ValidateBody` and `ValidateQuery` are hooks to control the body and the query of the requests received by the server. [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator, validates the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
 
 You can provide your own instance of Ajv.
 

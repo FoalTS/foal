@@ -14,6 +14,8 @@ A user has `groups`, `userPermissions` and a `hasPerm` method.
 
 ## Hooks
 
-The `LoginRequired()` hook returns a `401 Unauthorized` if no user is authenticated.
+When no user is authenticated, the `LoginRequired(options?: { redirect?: string })` hook:
+- returns a `401 Unauthorized` if `options.redirect` is undefined,
+- redirects the page to the given path if `options.redirect` is defined.
 
 The `PermissionRequired(perm: string)` hook returns a `403 Forbidden` if the user does not have the given permission. Its argument is the `codeName` of the permission.

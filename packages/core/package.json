@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.6.0-alpha.2",
+  "version": "0.6.0-alpha.3",
   "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -73,15 +73,9 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/ejs": "^0.6.0-alpha.1",
-    "@types/chai": "^4.0.4",
-    "@types/chai-as-promised": "^7.1.0",
-    "@types/chai-spies": "0.0.0",
+    "@foal/ejs": "^0.6.0-alpha.3",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "chai-spies": "^1.0.0",
     "mocha": "^3.5.3",
     "mysql": "^2.15.0",
     "node-mocks-http": "^1.7.0",

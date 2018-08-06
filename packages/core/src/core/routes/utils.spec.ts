@@ -1,5 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
-import { expect } from 'chai';
 import 'reflect-metadata';
 
 // FoalTS
@@ -11,7 +13,7 @@ describe('getMetadata', () => {
     @Reflect.metadata('foo', 'bar')
     class Foobar {}
 
-    expect(getMetadata('foo', Foobar)).to.equal('bar');
+    strictEqual(getMetadata('foo', Foobar), 'bar');
   });
 
   it('should return the method metadata if a propertyKey is given.', () => {
@@ -22,7 +24,7 @@ describe('getMetadata', () => {
 
     }
 
-    expect(getMetadata('foo', Foobar, 'barfoo')).to.equal('bar');
+    strictEqual(getMetadata('foo', Foobar, 'barfoo'), 'bar');
   });
 
 });
@@ -33,7 +35,7 @@ describe('getHttpMethod', () => {
     @Reflect.metadata('httpMethod', 'GET')
     class Foobar {}
 
-    expect(getHttpMethod(Foobar)).to.equal('GET');
+    strictEqual(getHttpMethod(Foobar), 'GET');
   });
 
   it('should return the method metadata "httpMethod" if a propertyKey is given.', () => {
@@ -44,7 +46,7 @@ describe('getHttpMethod', () => {
 
     }
 
-    expect(getHttpMethod(Foobar, 'barfoo')).to.equal('GET');
+    strictEqual(getHttpMethod(Foobar, 'barfoo'), 'GET');
   });
 
 });
@@ -55,7 +57,7 @@ describe('getPath', () => {
     @Reflect.metadata('path', '/foo')
     class Foobar {}
 
-    expect(getPath(Foobar)).to.equal('/foo');
+    strictEqual(getPath(Foobar), '/foo');
   });
 
   it('should return the method metadata "path" if a propertyKey is given.', () => {
@@ -66,7 +68,7 @@ describe('getPath', () => {
 
     }
 
-    expect(getPath(Foobar, 'barfoo')).to.equal('/foo');
+    strictEqual(getPath(Foobar, 'barfoo'), '/foo');
   });
 
 });
@@ -76,13 +78,13 @@ describe('join', () => {
   it('should join the given paths and escape duplicate slashed.', () => {
     const actual = join('/foo', 'bar/', '/foo', '/', '/bar/');
 
-    expect(actual).to.equal('/foobar/foo/bar/');
+    strictEqual(actual, '/foobar/foo/bar/');
   });
 
   it('should ignore undefined values', () => {
     const actual = join('a', undefined, 'b', undefined, 'c');
 
-    expect(actual).to.equal('abc');
+    strictEqual(actual, 'abc');
   });
 
 });

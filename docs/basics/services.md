@@ -97,11 +97,14 @@ class MyServiceB {
 
 ## Testing services
 
-As foal uses the inversion of control principle, a service is very easy to test. The testing framework provided by `FoalTS` is [chai](http://www.chaijs.com/).
+As foal uses the inversion of control principle, a service is very easy to test.
 
 ```typescript
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import { Service, ServiceManager } from '@foal/core';
-import { expect } from 'chai';
 
 @Service()
 class ServiceA {
@@ -115,16 +118,16 @@ class ServiceB {
 }
 
 const serviceA = new ServiceA();
-expect(serviceA.name).to.equal('Service A');
+strictEqual(serviceA.name, 'Service A');
 
 const serviceB = new ServiceB(new ServiceA());
-expect(serviceB.serviceA.name).to.equal('Service A');
+strictEqual(serviceB.serviceA.name, 'Service A');
 
 const mock = {} as ServiceA;
 const serviceB2 = new ServiceB(mock);
-expect(serviceB2.name).to.equal('Service B');
+strictEqual(serviceB2.name, 'Service B');
 
 const services = new ServiceManager();
 const serviceB3 = services.get(ServiceB);
-expect(serviceB3.name).to.equal('Service B');
+strictEqual(serviceB3.name, 'Service B');
 ``` 

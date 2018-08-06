@@ -5,64 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="csrf-token" content="<%= csrfToken %>">
   <title><%= appName %></title>
-
-  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="shortcut icon" href="logo.png">
   <style>
-    body {
-      padding-top: 54px;
+    html, body {
+      height: 100%
     }
-    @media (min-width: 992px) {
-      body {
-        padding-top: 56px;
-      }
+    body {
+      padding-top: 100px;
+      background: linear-gradient(to bottom right, #116dd6, #bcd8f9);
+      text-align: center;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    }
+    h1 {
+      color: white;
+      font-weight: bold;
+      margin-bottom: 40px
+    }
+    a {
+      color: white;
+      background-color: #126cda;
+      border-color: #126cda;
+      border-radius: 30px;
+      padding: 0.75rem 2.25rem;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0px 10px;
+    }
+    img{
+      background-color: white;
+      padding: 10px 40px;
+      border-radius: 80px;
+      background-color: #f1f6fc;
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">Welcome to <%= appName %>!</a>
+  <div>
+    <div class="img-container">
+      <img src="logo.png" alt="FoalTS logo">
     </div>
-  </nav>
-  
-  <!-- Page Content -->
-  <div class="container">
-    <div class="row mt-5">
-      <div class="col-lg-12">
-        <img src="logo.png" alt="FoalTS logo" class="mx-auto d-block">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h1 class="mt-3">You have successfully installed FoalTS!</h1>
-        <p class="lead mt-4">You'll find below some useful resources to learn more on FoalTS, a high-level Node.JS framework to quickly build web apps in TypeScript.</p>
-      </div>
-    </div>
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <div class="alert alert-info text-center" role="alert">
-          <h4 class="alert-heading mb-0">
-            <a href="https://foalts.gitbooks.io/docs/">Documentation</a>
-          </h4>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="alert alert-info text-center" role="alert">
-          <h4 class="alert-heading mb-0">
-            <a href="https://twitter.com/FoalTs">Twitter</a>
-          </h4>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="alert alert-info text-center" role="alert">
-          <h4 class="alert-heading mb-0">
-            <a href="https://foalts.org/">FoalTS Website</a>
-          </h4>
-        </div>
-      </div>
+    <h1>You have successfully installed FoalTS!</h1>
+    <div>
+      <a href="https://foalts.gitbook.io/docs/">Documentation</a>
+      <a href="https://twitter.com/FoalTs">Twitter</a>
+      <a href="https://foalts.org/">FoalTS Website</a>
     </div>
   </div>
-  
 </body>
 </html>

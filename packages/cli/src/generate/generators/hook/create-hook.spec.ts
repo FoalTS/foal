@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -38,7 +38,7 @@ describe('createHook', () => {
 
       const expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
       const actual = readFileFromRoot('src/app/hooks/test-foo-bar.hook.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -49,7 +49,7 @@ describe('createHook', () => {
 
       const expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
       const actual = readFileFromRoot('hooks/test-foo-bar.hook.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 
@@ -59,7 +59,7 @@ describe('createHook', () => {
 
       const expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
       const actual = readFileFromRoot('test-foo-bar.hook.ts');
-      expect(actual).to.equal(expected);
+      strictEqual(actual, expected);
 
     });
 

@@ -1,5 +1,5 @@
-// 3p
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { IModule, Module } from '../../core';
@@ -12,7 +12,7 @@ describe('subModule util', () => {
     @Module()
     class Foobar implements IModule {}
 
-    expect(subModule('', Foobar)).to.equal(Foobar);
+    strictEqual(subModule('', Foobar), Foobar);
   });
 
   it('should define the metadata path={path} of the sub-module class.', () => {
@@ -21,7 +21,7 @@ describe('subModule util', () => {
 
     subModule('/foo', Foobar);
 
-    expect(getMetadata('path', Foobar)).to.equal('/foo');
+    strictEqual(getMetadata('path', Foobar), '/foo');
   });
 
 });

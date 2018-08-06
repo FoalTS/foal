@@ -1,7 +1,8 @@
-import { expect } from 'chai';
+// std
+import { strictEqual } from 'assert';
 
 describe('My test', () => {
   it('should work.', () => {
-    expect(true).to.equal(true);
+    strictEqual(true, true);
   });
 });

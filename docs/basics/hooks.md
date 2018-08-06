@@ -109,13 +109,16 @@ GET /b/foobar
 ## Testing a hook
 
 ```typescript
+// std
+import { strictEqual } from 'assert';
+
+// 3p
 import {
   Context,
   getHookFunction,
   Hook,
   ServiceManager
 } from '@foal/core';
-import * as expect from 'chai';
 
 function MyHook() {
   return Hook(ctx => {
@@ -131,7 +134,7 @@ describe('preHook', () => {
     
     hook(ctx, new ServiceManager());
 
-    expect(ctx.state.foo).to.equal('bar');
+    strictEqual(ctx.state.foo, 'bar');
   })
 
 });

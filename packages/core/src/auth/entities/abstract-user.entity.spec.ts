@@ -1,15 +1,13 @@
+// std
+import { notStrictEqual, ok, strictEqual } from 'assert';
+
 // 3p
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
 import { AbstractUser } from './abstract-user.entity';
 import { Group } from './group.entity';
 import { Permission } from './permission.entity';
-
-chai.use(chaiAsPromised);
-const expect = chai.expect;
 
 describe('AbstractUser', () => {
 
@@ -33,7 +31,7 @@ describe('AbstractUser', () => {
     user.groups = [];
     user.userPermissions = [];
     await getManager().save(user);
-    expect(user.id).not.to.equal(undefined);
+    notStrictEqual(user.id, undefined);
   });
 
   it('should have "permissions" which take Permission instances.', async () => {
@@ -54,8 +52,11 @@ describe('AbstractUser', () => {
     if (!user2) {
       throw new Error('User should have been saved.');
     }
-    expect(user2.userPermissions).to.be.an('array').and.to.have.lengthOf(1);
-    expect(user2.userPermissions[0].name).to.equal('permission1');
+
+    ok(Array.isArray(user2.userPermissions));
+    strictEqual(user2.userPermissions.length, 1);
+
+    strictEqual(user2.userPermissions[0].name, 'permission1');
   });
 
   it('should have "groups" which take Group instances.', async () => {
@@ -73,8 +74,10 @@ describe('AbstractUser', () => {
     if (!user2) {
       throw new Error('User should have been saved.');
     }
-    expect(user2.groups).to.be.an('array').and.to.have.lengthOf(1);
-    expect(user2.groups[0].name).to.equal('group1');
+
+    ok(Array.isArray(user2.groups));
+    strictEqual(user2.groups.length, 1);
+    strictEqual(user2.groups[0].name, 'group1');
   });
 
   describe('when hasPerm is called', () => {
@@ -86,7 +89,7 @@ describe('AbstractUser', () => {
       const user = new User();
       user.userPermissions = [ permission ];
 
-      expect(user.hasPerm('admin')).to.equal(true);
+      strictEqual(user.hasPerm('admin'), true);
     });
 
     it('should return true if the user has a group which has the given permission.', () => {
@@ -99,13 +102,13 @@ describe('AbstractUser', () => {
       const user = new User();
       user.groups = [ group ];
 
-      expect(user.hasPerm('admin')).to.equal(true);
+      strictEqual(user.hasPerm('admin'), true);
     });
 
     it('should return false if neither the user nor its groups have the given permission.', () => {
       const user = new User();
 
-      expect(user.hasPerm('admin')).to.equal(false);
+      strictEqual(user.hasPerm('admin'), false);
     });
 
   });

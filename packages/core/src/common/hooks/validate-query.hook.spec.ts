@@ -6,11 +6,11 @@ import * as Ajv from 'ajv';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { ValidateBody } from './validate-body.hook';
+import { ValidateQuery } from './validate-query.hook';
 
-describe('ValidateBody', () => {
+describe('ValidateQuery', () => {
 
-  it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
+  it('should not return an HttpResponseBadRequest if ctx.request.query is validated '
       + ' by ajv for the given schema.', () => {
     const schema = {
       properties: {
@@ -18,9 +18,9 @@ describe('ValidateBody', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateBody(schema));
+    const hook = getHookFunction(ValidateQuery(schema));
     const ctx = new Context({});
-    ctx.request.body = {
+    ctx.request.query = {
       foo: 3
     };
 
@@ -28,7 +28,7 @@ describe('ValidateBody', () => {
     strictEqual(actual instanceof HttpResponseBadRequest, false);
   });
 
-  it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
+  it('should return an HttpResponseBadRequest if ctx.request.query is not validated by '
       + ' ajv for the given schema.', () => {
     const schema = {
       properties: {
@@ -36,11 +36,11 @@ describe('ValidateBody', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateBody(schema));
+    const hook = getHookFunction(ValidateQuery(schema));
 
-    function context(body) {
+    function context(query) {
       const ctx = new Context({});
-      ctx.request.body = body;
+      ctx.request.query = query;
       return ctx;
     }
 
@@ -53,14 +53,14 @@ describe('ValidateBody', () => {
   });
 
   it('should return an HttpResponseBadRequest with a defined `content` property if '
-      + 'ctx.request.body is not validated by ajv.', () => {
+      + 'ctx.request.query is not validated by ajv.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateBody(schema));
+    const hook = getHookFunction(ValidateQuery(schema));
     const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
@@ -77,17 +77,17 @@ describe('ValidateBody', () => {
       type: 'object',
     };
     const ctx = new Context({});
-    ctx.request.body = {
+    ctx.request.query = {
       foo: 3,
     };
 
-    let hook = getHookFunction(ValidateBody(schema));
+    let hook = getHookFunction(ValidateQuery(schema));
     hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.body.bar, undefined);
+    strictEqual(ctx.request.query.bar, undefined);
 
-    hook = getHookFunction(ValidateBody(schema, new Ajv({ useDefaults: true })));
+    hook = getHookFunction(ValidateQuery(schema, new Ajv({ useDefaults: true })));
     hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.body.bar, 4);
+    strictEqual(ctx.request.query.bar, 4);
   });
 
 });

@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "0.6.0-alpha.2",
+  "version": "0.6.0-alpha.3",
   "description": "Foal command line interface",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -44,7 +44,6 @@
     "bin/"
   ],
   "dependencies": {
-    "bootstrap": "^4.1.1",
     "clean-webpack-plugin": "^0.1.19",
     "commander": "^2.15.1",
     "html-loader": "^0.5.5",
@@ -57,10 +56,8 @@
     "webpack-node-externals": "^1.7.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.3",
     "@types/mocha": "^5.2.0",
     "@types/node": "^10.1.2",
-    "chai": "^4.1.2",
     "copyfiles": "^2.0.0",
     "mocha": "^3.5.3",
     "rimraf": "^2.6.2",
