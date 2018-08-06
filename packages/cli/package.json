@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "0.6.0-alpha.2",
+  "version": "0.6.0-alpha.3",
   "description": "Foal command line interface",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
