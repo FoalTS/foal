@@ -1,7 +1,5 @@
 import {
   Context,
-  HttpResponse,
-  HttpResponseRedirect,
   isHttpResponse,
   isHttpResponseRedirect,
   Route,
@@ -27,11 +25,11 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         throw new Error(`The controller method "${route.propertyKey}" should return an HttpResponse.`);
       }
 
-      res.set((response as HttpResponse).headers);
-      res.status((response as HttpResponse).statusCode);
+      res.set(response.headers);
+      res.status(response.statusCode);
 
       if (isHttpResponseRedirect(response)) {
-        res.redirect((response as HttpResponseRedirect).path);
+        res.redirect(response.path);
         return;
       }
 
