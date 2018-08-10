@@ -1,5 +1,6 @@
 // FoalTS
 import { Class } from '../class.interface';
+import { createController } from '../controllers';
 import { HookFunction } from '../hooks';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
@@ -17,10 +18,7 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
   const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
-  const controllerDependencies = getMetadata('design:paramtypes', controllerClass) as Class[] || [];
-  const controller = new controllerClass(
-    ...controllerDependencies.map(serviceClass => services.get(serviceClass))
-  );
+  const controller = createController(controllerClass, services);
 
   getMethods(controllerClass.prototype).forEach(propertyKey => {
     if (propertyKey === 'constructor') { return; }
