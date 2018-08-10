@@ -6,7 +6,7 @@ import 'reflect-metadata';
 
 // FoalTS
 import { Controller, createController } from './controllers';
-import { Service } from './service-manager';
+import { Service, ServiceManager } from './service-manager';
 
 describe('Controller', () => {
 
@@ -59,6 +59,22 @@ describe('createController', () => {
     const controller = createController(ChildController);
     ok(controller instanceof ChildController);
     ok(controller.myService instanceof MyService);
+  });
+
+  it('should instantiate a controller with its dependencies from the given ServiceManager.', () => {
+    @Service()
+    class MyService {}
+
+    @Controller()
+    class MyController {
+      constructor(public myService: MyService) {}
+    }
+    const services = new ServiceManager();
+    const service = services.get(MyService);
+
+    const controller = createController(MyController, services);
+    ok(controller instanceof MyController);
+    strictEqual(controller.myService, service);
   });
 
 });
