@@ -1,9 +1,11 @@
+// std
+import { ok } from 'assert';
+
 // 3p
 import * as request from 'supertest';
+import { Column, createConnection, Entity, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
-import { ok } from 'assert';
-import { Column, createConnection, Entity, getConnection, getRepository } from '../node_modules/typeorm';
 import {
   AbstractUser,
   Authenticate,
