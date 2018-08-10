@@ -78,6 +78,7 @@
     "@foal/ejs": "^0.6.0-alpha.3",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
+    "@types/supertest": "^2.0.5",
     "mocha": "^3.5.3",
     "mysql": "^2.15.0",
     "node-mocks-http": "^1.7.0",

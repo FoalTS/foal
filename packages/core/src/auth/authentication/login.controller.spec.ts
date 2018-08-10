@@ -5,6 +5,7 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 import {
   Context,
   Controller,
+  createController,
   getHttpMethod,
   getPath,
   HttpResponseBadRequest,
@@ -61,7 +62,7 @@ describe('LoginController', () => {
         }
       };
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       await controller.logout(ctx);
 
       deepStrictEqual(ctx.request.session, {});
@@ -71,7 +72,7 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       await controller.logout(ctx);
     });
 
@@ -79,7 +80,7 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       const response = await controller.logout(ctx);
 
       ok(response instanceof HttpResponseNoContent);
@@ -97,7 +98,7 @@ describe('LoginController', () => {
         };
       }
 
-      const controller = new ConcreteController2(new ServiceManager());
+      const controller = createController(ConcreteController2);
       const response = await controller.logout(ctx);
 
       ok(response instanceof HttpResponseRedirect);
@@ -143,7 +144,7 @@ describe('LoginController', () => {
         }
       });
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       const response = await controller.login(ctx);
 
       ok(response instanceof HttpResponseNotFound);
@@ -160,7 +161,7 @@ describe('LoginController', () => {
         },
       });
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       const response = await controller.login(ctx);
 
       ok(response instanceof HttpResponseBadRequest);
@@ -200,7 +201,7 @@ describe('LoginController', () => {
         },
       });
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       controller.login(ctx)
         .then(response => {
           if (response instanceof HttpResponseBadRequest) {
@@ -227,7 +228,7 @@ describe('LoginController', () => {
       }));
 
       it('should return an HttpResponseNoContent if redirect.success is undefined.', async () => {
-        const controller = new ConcreteController(new ServiceManager());
+        const controller = createController(ConcreteController);
         const response = await controller.login(ctx);
 
         ok(response instanceof HttpResponseNoContent);
@@ -244,7 +245,7 @@ describe('LoginController', () => {
           ];
         }
 
-        const controller = new ConcreteController2(new ServiceManager());
+        const controller = createController(ConcreteController2);
         const response = await controller.login(ctx);
 
         ok(response instanceof HttpResponseRedirect);
@@ -252,7 +253,7 @@ describe('LoginController', () => {
       });
 
       it('should create or update ctx.session.authentication to include the userId.', async () => {
-        const controller = new ConcreteController(new ServiceManager());
+        const controller = createController(ConcreteController);
         await controller.login(ctx);
 
         deepStrictEqual(ctx.request.session.authentication, {
@@ -284,7 +285,7 @@ describe('LoginController', () => {
       }));
 
       it('should return an HttpResponseUnauthorized if redirect.failure is undefined.', async () => {
-        const controller = new ConcreteController(new ServiceManager());
+        const controller = createController(ConcreteController);
         const response = await controller.login(ctx);
 
         ok(response instanceof HttpResponseUnauthorized);

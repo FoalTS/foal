@@ -5,3 +5,5 @@ When deploying an application to production you need to:
 - set the `NODE_ENV` environment variable to `production`,
 - specify the name of your domain in `config/settings.production.json` with the property `sessionCookieDomain` (or use the env variable `SETTINGS_SESSION_COOKIE_DOMAIN` for that).
 - use database migrations instead of the TypeORM `synchronize` feature (it auto creates database schema on every application launch). You can disable this feature by setting the env variable `TYPEORM_SYNCHRONIZE` to false.
+
+If you want to use a redis or another DB to store your sessions, you can specify the express session store of your choice in `src/app/index.ts`. By default sessions are stored in the default sqlite database.

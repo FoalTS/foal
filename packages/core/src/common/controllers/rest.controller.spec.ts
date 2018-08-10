@@ -5,6 +5,7 @@ import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 import {
   Context,
   Controller,
+  createController,
   getHttpMethod,
   getPath,
   HttpResponseCreated,
@@ -27,7 +28,7 @@ describe('RestController', () => {
   }
 
   it('has a getQuery method that should return an empty object', () => {
-    const controller = new ConcreteController(new ServiceManager());
+    const controller = createController(ConcreteController);
     deepStrictEqual(controller.getQuery(new Context({})), {});
   });
 
@@ -39,7 +40,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(controller.delete() instanceof HttpResponseMethodNotAllowed);
     });
 
@@ -67,7 +68,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.deleteById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
@@ -190,7 +191,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.get(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
@@ -257,7 +258,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.getById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
@@ -366,7 +367,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(controller.patch() instanceof HttpResponseMethodNotAllowed);
     });
 
@@ -394,7 +395,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.patchById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
@@ -526,7 +527,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
@@ -570,7 +571,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(controller.postById() instanceof HttpResponseMethodNotAllowed);
     });
 
@@ -584,7 +585,7 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(controller.put() instanceof HttpResponseMethodNotAllowed);
     });
 
@@ -612,7 +613,7 @@ describe('RestController', () => {
         serializerClass = Serializer;
       }
 
-      const controller = new ConcreteController(new ServiceManager());
+      const controller = createController(ConcreteController);
       ok(await controller.putById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
