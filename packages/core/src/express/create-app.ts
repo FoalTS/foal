@@ -17,7 +17,11 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-export function createApp(rootModuleClass: Class<IModule>) {
+export interface CreateAppOptions {
+  store?(session): any;
+}
+
+export function createApp(rootModuleClass: Class<IModule>, options: CreateAppOptions = {}) {
   const app = express();
 
   app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
@@ -37,6 +41,7 @@ export function createApp(rootModuleClass: Class<IModule>) {
     resave: Config.get('settings', 'sessionResave', false),
     saveUninitialized: Config.get('settings', 'sessionSaveUninitialized', true),
     secret: Config.get('settings', 'sessionSecret', 'default_secret'),
+    store: options.store ? options.store(session) : undefined,
   }));
 
   if (Config.get('settings', 'csrf', false) as boolean) {
