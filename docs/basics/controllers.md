@@ -126,12 +126,14 @@ ok(controller.foo(ctx) instanceof HttpResponseOK);
 ## Inheriting controllers
 
 ```typescript
+@Controller()
 abstract class ParentController {
   @Get('/foo')
   foo() {
     return new HttpResponseOK();
   }
 }
+
 
 @Controller()
 class ChildController extends ParentController {
@@ -141,6 +143,8 @@ class ChildController extends ParentController {
   }
 }
 ```
+
+You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put` or `Delete` decorator then the parent path and HTTP method are used. If you don't add a hook, then the parent hooks are used. Otherwise they are all discarded.
 
 ## Common controllers
 
