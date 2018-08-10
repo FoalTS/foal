@@ -5,14 +5,14 @@ foal generate controller my-controller
 ```
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOk } from '@foal/core';
+import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
 
 @Controller()
 export class MyController {
 
   @Get('/flight')
   getFlights(ctx: Context) {
-    return new HttpResponseOk([]);
+    return new HttpResponseOK([]);
   }
 
 }
@@ -29,7 +29,7 @@ Controllers are the front door of your application. They catch all the incoming 
 Formally a controller is a single class that is instantiated as a singleton. The class itself is surrounded by the `Controller` decorator. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOk } from '@foal/core';
+import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
 
 @Controller()
 export class MyController {
@@ -39,7 +39,7 @@ export class MyController {
 
   @Get('/flight')
   getFlights(ctx: Context) {
-    return new HttpResponseOk(this.flights);
+    return new HttpResponseOK(this.flights);
   }
 
 }
