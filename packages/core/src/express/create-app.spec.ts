@@ -2,7 +2,7 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Context, HttpResponseOK, Post } from '../core';
+import { Context, Get, HttpResponseOK, Post } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -62,6 +62,21 @@ describe('createApp', () => {
       .post('/foo')
       .send('foo=bar')
       .expect({ body: { foo: 'bar' } });
+  });
+
+  it('should have sessions.', () => {
+    class MyController {
+      @Get('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ session: !!ctx.request.session });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .get('/foo')
+      .expect({ session: true });
   });
 
   // TODO: Add tests.
