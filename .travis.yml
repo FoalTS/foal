@@ -21,3 +21,4 @@ install:
 script:
   - npm run lint
   - lerna run test
+  - lerna run e2e
