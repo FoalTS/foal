@@ -2,6 +2,7 @@
 import * as request from 'supertest';
 
 // FoalTS
+import { Context, HttpResponseOK, Post } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -29,6 +30,38 @@ describe('createApp', () => {
       request(app).put('/foo').expect(404),
       request(app).delete('/foo').expect(404),
     ]);
+  });
+
+  it('should parse incoming request bodies (json)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .post('/foo')
+      .send({ foo: 'bar' })
+      .expect({ body: { foo: 'bar' } });
+  });
+
+  it('should parse incoming request bodies (urlencoded)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .post('/foo')
+      .send('foo=bar')
+      .expect({ body: { foo: 'bar' } });
   });
 
   // TODO: Add tests.

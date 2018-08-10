@@ -24,6 +24,7 @@ export function createApp(rootModuleClass: Class<IModule>) {
   app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
   app.use(helmet());
   app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
   app.use(session({
     cookie: {
       domain: Config.get('settings', 'sessionCookieDomain'),
