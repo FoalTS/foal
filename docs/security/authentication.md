@@ -73,7 +73,7 @@ const login = require('./templates/login.html');
 @Controller()
 export class AuthController extends LoginController {
   strategies = [
-    strategy('/login', Authenticator, emailSchema),
+    strategy('login-with-email', Authenticator, emailSchema),
   ];
 
   redirect = {
@@ -93,7 +93,7 @@ export class AuthController extends LoginController {
 <html>
   <head></head>
   <body>
-    <form action="/login" method="POST">
+    <form action="/login-with-email" method="POST">
       <input style="display: none" value="<%= csrfToken %>">
       <input type="email" name="email">
       <input type="password" name="password">
