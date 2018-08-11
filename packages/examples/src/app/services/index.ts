@@ -1,2 +1,3 @@
-export { FlightService } from './flight.service';
-export { UserService } from './user.service';
+export { Authenticator } from './authenticator.service';
+export { FlightSerializer } from './flight-serializer.service';
+export { UserSerializer } from './user-serializer.service';

@@ -6,12 +6,10 @@ import {
   InitDB,
   Module,
   Permission,
-  subModule,
 } from '@foal/core';
 
 import { AirportController, FlightController, ViewController } from './controllers';
 import { Flight, User } from './entities';
-import { AuthModule } from './sub-modules/authentication';
 
 @Module()
 @InitDB([ Permission, Group, User, Flight ])
@@ -24,6 +22,6 @@ export class AppModule implements IModule {
   ];
 
   subModules = [
-    subModule('/auth', AuthModule),
+
   ];
 }
