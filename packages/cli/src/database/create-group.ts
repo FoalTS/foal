@@ -1,3 +1,4 @@
-export async function createGroup(name: string, codeName: string, permissions: string[]): Promise<string> {
+export async function createGroup(name: string, codeName: string, permissions: string[],
+                                  permissionPath: string): Promise<string> {
   return '';
 }

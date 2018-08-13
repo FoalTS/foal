@@ -1,3 +1,6 @@
+// std
+import { join } from 'path';
+
 // 3p
 import * as program from 'commander';
 
@@ -6,12 +9,14 @@ import { createGroup } from './create-group';
 import { createPermission } from './create-permission';
 import { createUser } from './create-user';
 
+const entitiesPath = join(process.cwd(), 'src/app/entities');
+
 program
   .command('createpermission <name> <codeName>')
   .description('Creates a new permission in the default database.')
   .action(async (name: string, codeName: string) => {
     console.log(
-      await createPermission(name, codeName)
+      await createPermission(name, codeName, entitiesPath)
     );
   });
 
@@ -25,7 +30,7 @@ program
   .action(async (name: string, codeName: string, options) => {
     const permissions = (options.permissions as string || '').split(',').filter(s => s !== '');
     console.log(
-      await createGroup(name, codeName, permissions)
+      await createGroup(name, codeName, permissions, entitiesPath)
     );
   });
 
@@ -51,6 +56,6 @@ program
       return;
     }
     console.log(
-      await createUser(groups, userPermissions, properties)
+      await createUser(groups, userPermissions, properties, entitiesPath)
     );
   });
