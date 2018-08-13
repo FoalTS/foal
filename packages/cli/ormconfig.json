@@ -1,0 +1,6 @@
+{
+  "database": "test_db.sqlite",
+  "dropSchema": "true",
+  "synchronize": "true",
+  "type": "sqlite"
+}
