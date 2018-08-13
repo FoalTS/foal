@@ -35,6 +35,7 @@
 
 - [Build & test](./dev-tools/build-and-test.md)
 - [Generators](./dev-tools/generators.md)
+- [Database](./dev-tools/database.md)
 
 ## Security
 

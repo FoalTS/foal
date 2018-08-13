@@ -1,5 +1,10 @@
 # Generators
 
+```shell
+foal --help
+foal generate --help
+```
+
 ## Create a project
 
 ```shell
