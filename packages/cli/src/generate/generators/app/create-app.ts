@@ -64,6 +64,10 @@ export function createApp({ name, sessionSecret }:
   mkdirIfNotExists(`${names.kebabName}/public`);
   copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`);
 
+  // Scripts
+  mkdirIfNotExists(`${names.kebabName}/scripts`);
+  copyFileFromTemplates('app/scripts/create-users.ts', `${names.kebabName}/scripts/create-users.ts`);
+
   // Src
   mkdirIfNotExists(`${names.kebabName}/src`);
   copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`);

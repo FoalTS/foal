@@ -32,6 +32,8 @@ export class Flight {
 }
 ```
 
+> You can use the `scripts/create-users.ts` to create users. First install `ts-node` with `npm i -g ts-node`. Then simply run `ts-node scripts/create-users.ts`.
+
 ### Create an Authenticator
 
 Create a new strategy (an `IAuthenticator`) to authenticate the user from its credentials. In this case, use the built-in `EmailAuthenticator` (it is based on users which use email and password).
