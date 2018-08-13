@@ -8,7 +8,7 @@ import * as sqliteStoreFactory from 'connect-sqlite3';
 import { AppModule } from './app/app.module';
 
 const app = createApp(AppModule, {
-  store: session => new sqliteStoreFactory(session)({ db: 'test_db.sqlite' })
+  store: session => new (sqliteStoreFactory(session))({ db: 'test_db.sqlite' }),
 });
 
 const httpServer = http.createServer(app);
