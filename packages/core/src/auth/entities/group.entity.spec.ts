@@ -25,6 +25,7 @@ describe('Group', () => {
   it('should have a generated primary key "id".', async () => {
     const group = new Group();
     group.name = '';
+    group.codeName = '';
     group.permissions = [];
     await getManager().save(group);
     notStrictEqual(group.id, undefined);
@@ -32,6 +33,7 @@ describe('Group', () => {
 
   it('should have a "name" and whose length is 80.', async () => {
     const group = new Group();
+    group.codeName = '';
     group.permissions = [];
     await getManager().save(group)
       .then(() => fail('This promise should be rejected.'))
@@ -50,6 +52,41 @@ describe('Group', () => {
       });
   });
 
+  it('should have a "codeName" which is unique and whose length is 100.', async () => {
+    const group = new Group();
+    group.name = '';
+
+    await getManager().save(group)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_NO_DEFAULT_FOR_FIELD: Field \'codeName\' doesn\'t have a default value');
+      });
+
+    group.codeName = 'This is a very long long long long long long line.'
+      + 'This is a very long long long long long long line.1';
+
+    await getManager().save(group)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message, 'ER_DATA_TOO_LONG: Data too long for column \'codeName\' at row 1');
+      });
+
+    group.codeName = 'foo';
+    await getManager().save(group);
+
+    const group2 = new Group();
+    group2.name = '';
+    group2.codeName = 'foo';
+    await getManager().save(group2)
+      .then(() => fail('The promise should be rejected.'))
+      .catch(err => {
+        ok(err instanceof QueryFailedError);
+        strictEqual(err.message.startsWith('ER_DUP_ENTRY: Duplicate entry \'foo\' for key '), true);
+      });
+  });
+
   it('should have "permissions" which take Permission instances.', async () => {
     const permission = new Permission();
     permission.name = 'permission1';
@@ -58,6 +95,7 @@ describe('Group', () => {
 
     const group = new Group();
     group.name = 'group1';
+    group.codeName = '';
     group.permissions = [
       permission
     ];
