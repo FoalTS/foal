@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.6.0-alpha.3",
+  "version": "0.6.0-alpha.4",
   "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
