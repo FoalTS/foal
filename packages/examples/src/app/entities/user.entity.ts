@@ -19,13 +19,3 @@ export class User extends AbstractUser {
   }
 
 }
-
-// To run with ts-node
-
-// async function createUser(data: Partial<User>) {
-//   const connection = await createConnection();
-//   const user = connection.getRepository(User).create(data);
-//   await user.save();
-// }
-
-// createUser({});

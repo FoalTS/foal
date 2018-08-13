@@ -1,19 +1,16 @@
-import { Controller, Get, LoginRequired, render } from '@foal/core';
+import { Context, Controller, Get, LoginRequired, render } from '@foal/core';
 
-import { home, index } from './templates';
+import { home } from './templates';
 
 @Controller()
 export class ViewController {
 
   @Get('/')
-  index() {
-    return render(index, { name: 'FoalTS' });
-  }
-
-  @Get('/home')
-  @LoginRequired()
-  home() {
-    return render(home);
+  @LoginRequired({ redirect: '/login' })
+  home(ctx: Context) {
+    return render(home, {
+      csrfToken: ctx.request.csrfToken()
+    });
   }
 
 }

@@ -6,15 +6,15 @@ import { login } from './templates';
 @Controller()
 export class AuthController extends LoginController {
   strategies = [
-    strategy('/local', Authenticator, emailSchema)
+    strategy('login', Authenticator, emailSchema)
   ];
   redirect = {
-    failure: '/auth?invalid_credentials=true',
-    logout: '/auth',
-    success: '/home',
+    failure: '/login?invalid_credentials=true',
+    logout: '/login',
+    success: '/',
   };
 
-  @Get('/')
+  @Get('/login')
   renderLogin(ctx: Context) {
     return render(login, { csrfToken: ctx.request.csrfToken() });
   }

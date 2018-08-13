@@ -8,17 +8,16 @@ import {
   Permission,
 } from '@foal/core';
 
-import { AirportController, FlightController, ViewController } from './controllers';
-import { Flight, User } from './entities';
+import { AuthController, ViewController } from './controllers';
+import { User } from './entities';
 
 @Module()
-@InitDB([ Permission, Group, User, Flight ])
+@InitDB([ Permission, Group, User ])
 @Authenticate(User)
 export class AppModule implements IModule {
   controllers = [
-    controller('/airport', AirportController),
+    controller('', AuthController),
     controller('', ViewController),
-    controller('/flights', FlightController)
   ];
 
   subModules = [
