@@ -34,6 +34,10 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/public/logo.png');
     rmdirIfExists('test-foo-bar/public');
 
+    // Scripts
+    rmfileIfExists('test-foo-bar/scripts/create-users.ts');
+    rmdirIfExists('test-foo-bar/scripts');
+
     // Src
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.html');
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.ts');
@@ -106,6 +110,14 @@ describe('createApp', () => {
 
     const expected = readFileFromTemplatesSpec('app/public/logo.1.png');
     const actual = readFileFromRoot('test-foo-bar/public/logo.png');
+    strictEqual(actual, expected);
+
+  });
+
+  it('shoud copy the scripts templates.', () => {
+
+    const expected = readFileFromTemplatesSpec('app/scripts/create-users.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/scripts/create-users.ts');
     strictEqual(actual, expected);
 
   });

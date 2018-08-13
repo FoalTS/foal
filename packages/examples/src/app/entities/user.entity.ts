@@ -1,5 +1,6 @@
-import { AbstractUser, parsePassword } from '@foal/core';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+import { AbstractUser, parsePassword } from '@foal/core';
 
 @Entity()
 export class User extends AbstractUser {
@@ -13,18 +14,10 @@ export class User extends AbstractUser {
   @Column()
   password: string;
 
-  setPassword(password: string) {
-    this.password = parsePassword(password);
+  async setPassword(password: string): Promise<void> {
+    this.password = await parsePassword(password);
   }
 
 }
 
-// To run with ts-node
-
-// async function createUser(data: Partial<User>) {
-//   const connection = await createConnection();
-//   const user = connection.getRepository(User).create(data);
-//   await user.save();
-// }
-
-// createUser({});
+export { Group, Permission } from '@foal/core';

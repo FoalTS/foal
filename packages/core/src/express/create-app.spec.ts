@@ -1,7 +1,13 @@
+// std
+import { strictEqual } from 'assert';
+import { promisify } from 'util';
+
 // 3p
+import { MemoryStore } from 'express-session';
 import * as request from 'supertest';
 
 // FoalTS
+import { Context, Get, HttpResponseOK, Post } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -31,21 +37,71 @@ describe('createApp', () => {
     ]);
   });
 
-  // TODO: Add tests.
+  it('should parse incoming request bodies (json)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .post('/foo')
+      .send({ foo: 'bar' })
+      .expect({ body: { foo: 'bar' } });
+  });
+
+  it('should parse incoming request bodies (urlencoded)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .post('/foo')
+      .send('foo=bar')
+      .expect({ body: { foo: 'bar' } });
+  });
+
+  it('should have sessions.', () => {
+    class MyController {
+      @Get('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ session: !!ctx.request.session });
+      }
+    }
+    const app = createApp(class {
+      controllers = [ MyController ];
+    });
+    return request(app)
+      .get('/foo')
+      .expect({ session: true });
+  });
+
+  it('should accept a custom session store.', async () => {
+    const store = new MemoryStore();
+    const app = createApp(class {}, {
+      store: session => {
+        strictEqual(typeof session, 'function');
+        return store;
+      }
+    });
+
+    let sessions = await promisify(store.all.bind(store))();
+    strictEqual(Object.keys(sessions).length, 0);
+
+    await  request(app).get('/foo');
+
+    sessions = await promisify(store.all.bind(store))();
+    strictEqual(Object.keys(sessions).length, 1);
+  });
 });
-
-// import * as express from 'express';
-// import * as request from 'supertest';
-
-// import { Controller, HttpMethod, HttpResponseOK } from '../core';
-
-// import { getAppRouter } from './get-app-router';
-
-// function route(httpMethod: HttpMethod, path: string, handler): Controller<'main'> {
-//   const controller = new Controller<'main'>();
-//   controller.addRoute('main', httpMethod, path, handler);
-//   return controller;
-// }
 
 // function httpMethodTest(httpMethod: HttpMethod) {
 //   describe(`when route.httpMethod === "${httpMethod}", route.path === "/foo/bar" and the route returns `

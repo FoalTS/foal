@@ -1,3 +1,2 @@
-export { AirportController } from './airport.controller';
-export { FlightController } from './flight.controller';
+export { AuthController } from './auth.controller';
 export { ViewController } from './view.controller';

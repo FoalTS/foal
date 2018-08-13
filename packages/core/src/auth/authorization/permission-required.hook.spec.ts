@@ -8,6 +8,7 @@ import {
   HookFunction,
   HttpResponse,
   HttpResponseForbidden,
+  HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager,
 } from '../../core';
@@ -28,6 +29,16 @@ describe('PermissionRequired', () => {
     const ctx = new Context({});
     const actual = preHook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseUnauthorized);
+  });
+
+  it('should return an HttpResponseRedirect if the user is not authenticated'
+      + ' and a redirect path was given.', () => {
+    const preHook = getHookFunction(PermissionRequired('bar', { redirect: '/login' }));
+
+    const ctx = new Context({});
+    const actual = preHook(ctx, new ServiceManager());
+    ok(actual instanceof HttpResponseRedirect);
+    strictEqual((actual as HttpResponseRedirect).path, '/login');
   });
 
   it('should return an HttpResponseForbidden if the user does not have the required permission.', () => {

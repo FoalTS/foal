@@ -15,6 +15,7 @@ describe('createController', () => {
 
   afterEach(() => {
     rmfileIfExists('src/app/controllers/test-foo-bar.controller.ts');
+    rmfileIfExists('src/app/controllers/test-foo-bar.controller.spec.ts');
     rmdirIfExists('src/app/controllers');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
@@ -22,9 +23,11 @@ describe('createController', () => {
     // rmdirIfExists('src');
 
     rmfileIfExists('controllers/test-foo-bar.controller.ts');
+    rmfileIfExists('controllers/test-foo-bar.controller.spec.ts');
     rmdirIfExists('controllers');
 
     rmfileIfExists('test-foo-bar.controller.ts');
+    rmfileIfExists('test-foo-bar.controller.spec.ts');
   });
 
   describe('should render the empty templates', () => {
@@ -40,6 +43,10 @@ describe('createController', () => {
       const actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
       strictEqual(actual, expected);
 
+      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
+      const actual2 = readFileFromRoot('src/app/controllers/test-foo-bar.controller.spec.ts');
+      strictEqual(actual2, expected2);
+
     });
 
     it('in controllers/ if the directory exists.', () => {
@@ -51,6 +58,10 @@ describe('createController', () => {
       const actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
       strictEqual(actual, expected);
 
+      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
+      const actual2 = readFileFromRoot('controllers/test-foo-bar.controller.spec.ts');
+      strictEqual(actual2, expected2);
+
     });
 
     it('in the current directory otherwise.', () => {
@@ -60,6 +71,10 @@ describe('createController', () => {
       const expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
       const actual = readFileFromRoot('test-foo-bar.controller.ts');
       strictEqual(actual, expected);
+
+      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
+      const actual2 = readFileFromRoot('test-foo-bar.controller.spec.ts');
+      strictEqual(actual2, expected2);
 
     });
 
