@@ -1,3 +1,3 @@
-export function createPermission(name: string, codeName: string): string {
+export async function createPermission(name: string, codeName: string): Promise<string> {
   return '';
 }

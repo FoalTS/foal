@@ -9,9 +9,9 @@ import { createUser } from './create-user';
 program
   .command('createpermission <name> <codeName>')
   .description('Creates a new permission in the default database.')
-  .action((name: string, codeName: string) => {
+  .action(async (name: string, codeName: string) => {
     console.log(
-      createPermission(name, codeName)
+      await createPermission(name, codeName)
     );
   });
 
@@ -22,10 +22,10 @@ program
     '-p, --permissions <permissions>',
     'Code names of the group permissions (separated by commas with no spaces).'
   )
-  .action((name: string, codeName: string, options) => {
+  .action(async (name: string, codeName: string, options) => {
     const permissions = (options.permissions as string || '').split(',').filter(s => s !== '');
     console.log(
-      createGroup(name, codeName, permissions)
+      await createGroup(name, codeName, permissions)
     );
   });
 
@@ -38,7 +38,7 @@ program
     'Code names of the user permissions (separated by commas with no spaces).'
   )
   .option('-p, --properties <mode>', 'A JSON object which defines the other properties of the user.')
-  .action(options => {
+  .action(async options => {
     const groups = (options.groups as string || '').split(',').filter(s => s !== '');
     const userPermissions = (options.userPermissions as string || '').split(',').filter(s => s !== '');
     let properties: object;
@@ -51,6 +51,6 @@ program
       return;
     }
     console.log(
-      createUser(groups, userPermissions, properties)
+      await createUser(groups, userPermissions, properties)
     );
   });
