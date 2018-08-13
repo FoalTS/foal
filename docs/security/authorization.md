@@ -6,9 +6,9 @@ Groups are sets of users. A user can belong to several groups and a group can ha
 
 Permissions control the user accesses. It is considered that a user has a given permission if it or one of its has this permission.
 
-A permission has a `name` and an unique `codeName`.
+A permission has a `name` and a unique `codeName`.
 
-A group has a `name` and `permissions`.
+A group has a `name`, a unique `codeName` and `permissions`.
 
 A user has `groups`, `userPermissions` and a `hasPerm` method.
 
