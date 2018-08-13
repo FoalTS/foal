@@ -62,6 +62,7 @@
     "copyfiles": "^2.0.0",
     "mocha": "^3.5.3",
     "rimraf": "^2.6.2",
+    "sqlite3": "^4.0.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   }
