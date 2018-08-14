@@ -4,5 +4,5 @@ import { TestFooBarSerializer } from '../services/test-foo-bar-serializer.servic
 
 @Controller()
 export class TestFooBarController extends RestController {
-  serializerClass = TestFooBarSerializer;
+  collectionClass = TestFooBarSerializer;
 }

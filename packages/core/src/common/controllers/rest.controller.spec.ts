@@ -24,7 +24,7 @@ describe('RestController', () => {
 
   @Controller()
   class ConcreteController extends RestController {
-    serializerClass = class {};
+    collectionClass = class {};
   }
 
   it('has a getQuery method that should return an empty object', () => {
@@ -65,7 +65,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -88,7 +88,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
 
           getQuery(ctx) {
             getQueryCtx = ctx;
@@ -121,7 +121,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -148,7 +148,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -188,7 +188,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -211,7 +211,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
 
           getQuery(ctx) {
             getQueryCtx = ctx;
@@ -255,7 +255,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -278,7 +278,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
 
           getQuery(ctx) {
             getQueryCtx = ctx;
@@ -311,7 +311,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -338,7 +338,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -392,7 +392,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -417,7 +417,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
 
           getQuery(ctx) {
             getQueryCtx = ctx;
@@ -454,7 +454,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -484,7 +484,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -524,7 +524,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -543,7 +543,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const services = new ServiceManager();
@@ -610,7 +610,7 @@ describe('RestController', () => {
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Serializer;
       }
 
       const controller = createController(ConcreteController);
@@ -635,7 +635,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
 
           getQuery(ctx) {
             getQueryCtx = ctx;
@@ -672,7 +672,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();
@@ -702,7 +702,7 @@ describe('RestController', () => {
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Serializer;
         }
 
         const services = new ServiceManager();

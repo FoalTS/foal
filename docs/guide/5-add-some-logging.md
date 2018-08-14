@@ -34,7 +34,7 @@ import { FlightSerializer } from '../services/flight-serializer.service';
 @Controller()
 @Log('Someone creates, reads, updates or deletes flight(s).')
 export class FlightController extends RestController {
-  serializerClass = FlightSerializer;
+  collectionClass = FlightSerializer;
 }
 ```
 

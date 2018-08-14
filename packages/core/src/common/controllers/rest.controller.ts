@@ -19,7 +19,7 @@ import { IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
-  abstract serializerClass: Class<Partial<IResourceCollection>>;
+  abstract collectionClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
   // schema = {
@@ -46,7 +46,7 @@ export abstract class RestController {
 
   @Delete('/:id')
   async deleteById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.removeOne) {
       return new HttpResponseNotImplemented();
     }
@@ -66,7 +66,7 @@ export abstract class RestController {
   async get(ctx: Context) {
     // schema and id
     // hooks
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.findMany) {
       return new HttpResponseNotImplemented();
     }
@@ -77,7 +77,7 @@ export abstract class RestController {
 
   @Get('/:id')
   async getById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.findOne) {
       return new HttpResponseNotImplemented();
     }
@@ -100,7 +100,7 @@ export abstract class RestController {
 
   @Patch('/:id')
   async patchById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }
@@ -120,7 +120,7 @@ export abstract class RestController {
 
   @Post('/')
   async post(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.createOne) {
       return new HttpResponseNotImplemented();
     }
@@ -140,7 +140,7 @@ export abstract class RestController {
 
   @Put('/:id')
   async putById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
+    const serializer = this.services.get(this.collectionClass);
     if (!serializer.updateOne) {
       return new HttpResponseNotImplemented();
     }

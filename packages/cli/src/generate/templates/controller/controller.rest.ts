@@ -4,5 +4,5 @@ import { /* upperFirstCamelName */Serializer } from '../services//* kebabName */
 
 @Controller()
 export class /* upperFirstCamelName */Controller extends RestController {
-  serializerClass = /* upperFirstCamelName */Serializer;
+  collectionClass = /* upperFirstCamelName */Serializer;
 }
