@@ -2,7 +2,7 @@ import { getManager } from 'typeorm';
 
 import { Class } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
-import { ISerializer } from './serializer.interface';
+import { IResourceCollection } from './resource-collection.interface';
 
 /**
  * Create, read, update or delete entities and return representations
@@ -10,11 +10,11 @@ import { ISerializer } from './serializer.interface';
  *
  * @export
  * @abstract
- * @class EntitySerializer
- * @implements {ISerializer}
+ * @class EntityResourceCollection
+ * @implements {IResourceCollection}
  * @template Entity
  */
-export abstract class EntitySerializer implements ISerializer {
+export abstract class EntityResourceCollection implements IResourceCollection {
 
   abstract readonly entityClass: Class;
   // abstract readonly fields: string[];

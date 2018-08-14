@@ -15,11 +15,11 @@ import {
   ServiceManager
 } from '../../core';
 import { isObjectDoesNotExist } from '../errors';
-import { ISerializer } from '../services';
+import { IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
-  abstract serializerClass: Class<Partial<ISerializer>>;
+  abstract collectionClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
   // schema = {
@@ -46,14 +46,14 @@ export abstract class RestController {
 
   @Delete('/:id')
   async deleteById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.removeOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.removeOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.removeOne(query));
+      return new HttpResponseOK(await collection.removeOne(query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -66,25 +66,25 @@ export abstract class RestController {
   async get(ctx: Context) {
     // schema and id
     // hooks
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.findMany) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.findMany) {
       return new HttpResponseNotImplemented();
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await serializer.findMany(query));
+    return new HttpResponseOK(await collection.findMany(query));
   }
 
   @Get('/:id')
   async getById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.findOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.findOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.findOne(query));
+      return new HttpResponseOK(await collection.findOne(query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -100,14 +100,14 @@ export abstract class RestController {
 
   @Patch('/:id')
   async patchById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.updateOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.updateOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.updateOne(
+      return new HttpResponseOK(await collection.updateOne(
         query, ctx.request.body
       ));
     } catch (error) {
@@ -120,12 +120,12 @@ export abstract class RestController {
 
   @Post('/')
   async post(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.createOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.createOne) {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await serializer.createOne(ctx.request.body));
+    return new HttpResponseCreated(await collection.createOne(ctx.request.body));
   }
 
   @Post('/:id')
@@ -140,14 +140,14 @@ export abstract class RestController {
 
   @Put('/:id')
   async putById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.updateOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.updateOne) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.updateOne(
+      return new HttpResponseOK(await collection.updateOne(
         query, ctx.request.body
       ));
     } catch (error) {

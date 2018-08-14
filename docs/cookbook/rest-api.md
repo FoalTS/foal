@@ -8,11 +8,11 @@
 foal g entity flight
 ```
 
-### Create the serializer
+### Create the resource collection
 
 ```sh
 foal g service flight
-> EntitySerializer
+> EntityResourceCollection
 ```
 
 ### Create the controller
@@ -35,7 +35,7 @@ export class AppModule implements IModule {
 }
 ```
 
-## Create a REST controller from another serializer
+## Create a REST controller from another resource collection
 
 - `POST /` -> service.createOne(...)
 - `GET /` -> service.findMany(...)
@@ -46,7 +46,7 @@ export class AppModule implements IModule {
 
 ```typescript
 // ./services/train.service.ts
-import { ISerializer, Service } from '@foal/core';
+import { IResourceCollection, Service } from '@foal/core';
 
 export interface Train {
   id: string
@@ -54,7 +54,7 @@ export interface Train {
 }
 
 @Service()
-export class TrainService implements Partial<ISerializer> {
+export class TrainService implements Partial<IResourceCollection> {
   private id = 0;
 
   createOne(data: Partial<Train>): Train {

@@ -31,10 +31,10 @@ $ cd my-app && npm install
 ```shell
 $ foal g entity flight
 ```
-## Create a model serializer
+## Create a resource collection
 ```shell
 $ foal g service flight
-> Entity Serializer
+> EntityResourceCollection
 ```
 ## Create a REST controller
 ```shell

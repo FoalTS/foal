@@ -1,2 +1,2 @@
-export { ISerializer } from './serializer.interface';
-export { EntitySerializer } from './entity-serializer.service';
+export { IResourceCollection } from './resource-collection.interface';
+export { EntityResourceCollection } from './entity-resource-collection.service';

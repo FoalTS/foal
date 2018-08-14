@@ -1,8 +1,8 @@
 import { Controller, RestController } from '@foal/core';
 
-import { /* upperFirstCamelName */Serializer } from '../services//* kebabName */-serializer.service';
+import { /* upperFirstCamelName */Collection } from '../services//* kebabName */-collection.service';
 
 @Controller()
 export class /* upperFirstCamelName */Controller extends RestController {
-  serializerClass = /* upperFirstCamelName */Serializer;
+  collectionClass = /* upperFirstCamelName */Collection;
 }

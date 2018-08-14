@@ -13,7 +13,7 @@ import {
 
 // FoalTS
 import { ObjectDoesNotExist } from '../errors';
-import { EntitySerializer } from './entity-serializer.service';
+import { EntityResourceCollection } from './entity-resource-collection.service';
 
 @Entity()
 export class User {
@@ -38,10 +38,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
   describe(`with ${type}`, () => {
 
-    let service: EntitySerializer;
+    let service: EntityResourceCollection;
 
     before(() => {
-      class UserService extends EntitySerializer {
+      class UserService extends EntityResourceCollection {
         entityClass = User;
         connectionName = connectionName;
       }
@@ -350,7 +350,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
 }
 
-describe('EntitySerializer', () => {
+describe('EntityResourceCollection', () => {
 
   testSuite('mysql', 'mysql-connection');
   testSuite('mariadb', 'mariadb-connection');

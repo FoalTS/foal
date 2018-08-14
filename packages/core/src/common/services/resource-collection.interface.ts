@@ -2,9 +2,9 @@
  * Service interface. Create, read, update or delete resources and return representations of them.
  *
  * @export
- * @interface ISerializer
+ * @interface IResourceCollection
  */
-export interface ISerializer {
+export interface IResourceCollection {
   createOne(record: object);
   createMany(records: object[]);
 
