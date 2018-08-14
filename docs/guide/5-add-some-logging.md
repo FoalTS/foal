@@ -29,12 +29,12 @@ export class AirportController {
 ```typescript
 import { Controller, Log, RestController } from '@foal/core';
 
-import { FlightSerializer } from '../services/flight-serializer.service';
+import { FlightCollection } from '../services/flight-collection.service';
 
 @Controller()
 @Log('Someone creates, reads, updates or deletes flight(s).')
 export class FlightController extends RestController {
-  collectionClass = FlightSerializer;
+  collectionClass = FlightCollection;
 }
 ```
 

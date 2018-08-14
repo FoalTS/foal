@@ -8,7 +8,7 @@
 foal g entity flight
 ```
 
-### Create the serializer
+### Create the resource collection
 
 ```sh
 foal g service flight
@@ -35,7 +35,7 @@ export class AppModule implements IModule {
 }
 ```
 
-## Create a REST controller from another serializer
+## Create a REST controller from another resource collection
 
 - `POST /` -> service.createOne(...)
 - `GET /` -> service.findMany(...)
