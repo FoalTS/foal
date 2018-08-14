@@ -38,7 +38,7 @@ export class AppModule implements IModule {
 ## Create a REST controller from another resource collection
 
 - `POST /` -> service.createOne(...)
-- `GET /` -> service.findMany(...)
+- `GET /` -> service.find(...)
 - `GET /:id` -> service.findOne(...)
 - `PATCH /:id` -> service.updateOne(...)
 - `PUT /:id` -> service.updateOne(...)

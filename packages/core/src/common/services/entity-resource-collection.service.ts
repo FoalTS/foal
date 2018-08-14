@@ -44,7 +44,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return entity;
   }
 
-  findMany(query: object): Promise<object[]> {
+  find(query: object): Promise<object[]> {
     return this.getManager().find(this.entityClass, query);
   }
 

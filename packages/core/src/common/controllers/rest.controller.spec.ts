@@ -58,7 +58,7 @@ describe('RestController', () => {
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
-        findMany() {}
+        find() {}
         findOne() {}
         // removeOne() {}
         updateOne() {}
@@ -176,12 +176,12 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'get'), '/');
     });
 
-    it('should return an HttpResponseNotImplemented if collection.findMany is undefined.', async () => {
+    it('should return an HttpResponseNotImplemented if collection.find is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
-        // findMany() {}
+        // find() {}
         findOne() {}
         removeOne() {}
         updateOne() {}
@@ -195,17 +195,17 @@ describe('RestController', () => {
       ok(await controller.get(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.findMany is defined', () => {
+    describe('when collection.find is defined', () => {
 
-      it('should return an HttpResponseOK if collection.findMany resolves.', async () => {
+      it('should return an HttpResponseOK if collection.find resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
-        let findManyQuery;
+        let findQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findMany(query) {
-            findManyQuery = query;
+          async find(query) {
+            findQuery = query;
             return objects;
           }
         }
@@ -228,7 +228,7 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        strictEqual(findManyQuery, query);
+        strictEqual(findQuery, query);
       });
 
     });
@@ -248,7 +248,7 @@ describe('RestController', () => {
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
-        findMany() {}
+        find() {}
         // findOne() {}
         removeOne() {}
         updateOne() {}
@@ -385,7 +385,7 @@ describe('RestController', () => {
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
-        findMany() {}
+        find() {}
         findOne() {}
         removeOne() {}
         // updateOne() {}
@@ -517,7 +517,7 @@ describe('RestController', () => {
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         // createOne() {}
-        findMany() {}
+        find() {}
         findOne() {}
         removeOne() {}
         updateOne() {}
@@ -603,7 +603,7 @@ describe('RestController', () => {
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
-        findMany() {}
+        find() {}
         findOne() {}
         removeOne() {}
         // updateOne() {}

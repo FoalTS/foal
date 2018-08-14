@@ -67,12 +67,12 @@ export abstract class RestController {
     // schema and id
     // hooks
     const collection = this.services.get(this.collectionClass);
-    if (!collection.findMany) {
+    if (!collection.find) {
       return new HttpResponseNotImplemented();
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.findMany(query));
+    return new HttpResponseOK(await collection.find(query));
   }
 
   @Get('/:id')

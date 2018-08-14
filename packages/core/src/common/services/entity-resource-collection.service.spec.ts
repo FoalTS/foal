@@ -234,7 +234,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
-    describe('when findMany is called', () => {
+    describe('when find is called', () => {
 
       it('should return all the suitable users from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -250,7 +250,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await getManager(connectionName).save([ user1, user2 ]);
 
         // With an empty query
-        let result = await service.findMany({});
+        let result = await service.find({});
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
 
@@ -265,7 +265,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
-        result = await service.findMany({ firstName: 'Victor' });
+        result = await service.find({ firstName: 'Victor' });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
 
