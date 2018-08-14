@@ -13,7 +13,7 @@ import {
 
 // FoalTS
 import { ObjectDoesNotExist } from '../errors';
-import { EntityResourceCollection } from './entity-serializer.service';
+import { EntityResourceCollection } from './entity-resource-collection.service';
 
 @Entity()
 export class User {
