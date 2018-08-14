@@ -26,7 +26,7 @@ describe('createService', () => {
 
     rmfileIfExists('test-foo-bar.service.ts');
 
-    rmfileIfExists('test-foo-bar-serializer.service.ts');
+    rmfileIfExists('test-foo-bar-collection.service.ts');
     rmfileIfExists('test-foo-bar-resolver.service.ts');
   });
 
@@ -68,22 +68,22 @@ describe('createService', () => {
 
   });
 
-  it('should render the serializer templates.', () => {
+  it('should render the resource collection templates.', () => {
 
-    createService({ name: 'test-fooBar', type: 'Serializer' });
+    createService({ name: 'test-fooBar', type: 'ResourceCollection' });
 
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.serializer.ts');
-    const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');
+    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.resource-collection.ts');
+    const actual = readFileFromRoot('test-foo-bar-collection.service.ts');
     strictEqual(actual, expected);
 
   });
 
-  it('should render the entity serializer templates.', () => {
+  it('should render the entity resource collection templates.', () => {
 
     createService({ name: 'test-fooBar', type: 'EntityResourceCollection' });
 
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-serializer.ts');
-    const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');
+    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-resource-collection.ts');
+    const actual = readFileFromRoot('test-foo-bar-collection.service.ts');
     strictEqual(actual, expected);
 
   });

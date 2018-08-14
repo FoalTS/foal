@@ -72,7 +72,7 @@ program
         const serviceChoices: ServiceType[] = [
           'Empty',
           new Separator(),
-          'Serializer',
+          'ResourceCollection',
           'EntityResourceCollection',
           // new Separator(),
           // 'GraphQLResolver',

@@ -1,6 +1,6 @@
 import { IResourceCollection, Service } from '@foal/core';
 
 @Service()
-export class TestFooBarSerializer implements IResourceCollection {
+export class TestFooBarCollection implements IResourceCollection {
 
 }

@@ -1,8 +1,8 @@
 import { Controller, RestController } from '@foal/core';
 
-import { TestFooBarSerializer } from '../services/test-foo-bar-serializer.service';
+import { TestFooBarCollection } from '../services/test-foo-bar-collection.service';
 
 @Controller()
 export class TestFooBarController extends RestController {
-  collectionClass = TestFooBarSerializer;
+  collectionClass = TestFooBarCollection;
 }
