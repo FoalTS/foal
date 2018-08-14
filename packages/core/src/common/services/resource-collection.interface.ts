@@ -1,3 +1,5 @@
+import { AbstractUser } from '../../auth';
+
 /**
  * Service interface. Create, read, update or delete resources and return representations of them.
  *
@@ -5,13 +7,13 @@
  * @interface IResourceCollection
  */
 export interface IResourceCollection {
-  createOne(record: object);
-  createMany(records: object[]);
+  createOne(user: AbstractUser|undefined, record: object);
+  createMany(user: AbstractUser|undefined, records: object[]);
 
-  findById(query: object);
-  find(query: object);
+  findById(user: AbstractUser|undefined, query: object);
+  find(user: AbstractUser|undefined, query: object);
 
-  updateById(query: object, record: object);
+  updateById(user: AbstractUser|undefined, query: object, record: object);
 
-  deleteById(query: object);
+  deleteById(user: AbstractUser|undefined, query: object);
 }

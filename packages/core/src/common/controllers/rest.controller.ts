@@ -53,7 +53,7 @@ export abstract class RestController {
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.deleteById(query));
+      return new HttpResponseOK(await collection.deleteById(undefined, query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -72,7 +72,7 @@ export abstract class RestController {
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.find(query));
+    return new HttpResponseOK(await collection.find(undefined, query));
   }
 
   @Get('/:id')
@@ -84,7 +84,7 @@ export abstract class RestController {
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.findById(query));
+      return new HttpResponseOK(await collection.findById(undefined, query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -108,7 +108,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        query, ctx.request.body
+        undefined, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
@@ -125,7 +125,7 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.createOne(ctx.request.body));
+    return new HttpResponseCreated(await collection.createOne(undefined, ctx.request.body));
   }
 
   @Post('/:id')
@@ -148,7 +148,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        query, ctx.request.body
+        undefined, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {

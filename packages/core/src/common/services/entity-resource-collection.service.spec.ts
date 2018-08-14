@@ -92,7 +92,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     describe('when createOne is called', () => {
 
       it('should create one user into the database and then return it.', async () => {
-        await service.createOne({
+        await service.createOne(undefined, {
           firstName: 'Donald',
           lastName: 'Smith'
         });
@@ -120,7 +120,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         notStrictEqual(user1.id, undefined);
 
-        await service.createOne({
+        await service.createOne(undefined, {
           firstName: 'John',
           id: user1.id,
           lastName: 'Smith'
@@ -137,7 +137,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     describe('when createMany is called', () => {
 
       it('should create several users into the database and then return them.', async () => {
-        const result = await service.createMany([
+        const result = await service.createMany(undefined, [
           {
             firstName: 'Donald',
             lastName: 'Smith'
@@ -189,7 +189,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         notStrictEqual(user1.id, undefined);
 
-        await service.createMany([{
+        await service.createMany(undefined, [{
           firstName: 'John',
           id: user1.id,
           lastName: 'Smith'
@@ -218,7 +218,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        const result = await service.findById({ firstName: 'Victor' });
+        const result = await service.findById(undefined, { firstName: 'Victor' });
 
         strictEqual((result as any).firstName, 'Victor');
         strictEqual((result as any).id, user2.id);
@@ -227,7 +227,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.findById({ firstName: 'Jack' })
+        return service.findById(undefined, { firstName: 'Jack' })
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
@@ -250,7 +250,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await getManager(connectionName).save([ user1, user2 ]);
 
         // With an empty query
-        let result = await service.find({});
+        let result = await service.find(undefined, {});
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
 
@@ -265,7 +265,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
-        result = await service.find({ firstName: 'Victor' });
+        result = await service.find(undefined, { firstName: 'Victor' });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
 
@@ -293,7 +293,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.updateById({ firstName: 'Victor' }, { firstName: 'John' });
+        await service.updateById(undefined, { firstName: 'Victor' }, { firstName: 'John' });
 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
@@ -307,7 +307,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.updateById({ firstName: 'Jack' }, { firstName: 'Adele' })
+        return service.updateById(undefined, { firstName: 'Jack' }, { firstName: 'Adele' })
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
@@ -328,7 +328,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.deleteById({ firstName: user2.firstName });
+        await service.deleteById(undefined, { firstName: user2.firstName });
 
         const users = await getManager(connectionName).find(User);
 
@@ -339,7 +339,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.deleteById({ firstName: 'Jack' })
+        return service.deleteById(undefined, { firstName: 'Jack' })
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
