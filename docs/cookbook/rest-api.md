@@ -42,7 +42,7 @@ export class AppModule implements IModule {
 - `GET /:id` -> service.findOne(...)
 - `PATCH /:id` -> service.updateOne(...)
 - `PUT /:id` -> service.updateOne(...)
-- `DELETE /:id` -> service.removeOne(...)
+- `DELETE /:id` -> service.deleteById(...)
 
 ```typescript
 // ./services/train.service.ts

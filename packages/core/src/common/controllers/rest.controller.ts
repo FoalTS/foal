@@ -47,13 +47,13 @@ export abstract class RestController {
   @Delete('/:id')
   async deleteById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.removeOne) {
+    if (!collection.deleteById) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.removeOne(query));
+      return new HttpResponseOK(await collection.deleteById(query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();

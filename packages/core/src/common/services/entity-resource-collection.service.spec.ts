@@ -314,7 +314,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
-    describe('when removeOne is called', () => {
+    describe('when deleteById is called', () => {
 
       it('should delete the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -328,7 +328,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.removeOne({ firstName: user2.firstName });
+        await service.deleteById({ firstName: user2.firstName });
 
         const users = await getManager(connectionName).find(User);
 
@@ -339,7 +339,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.removeOne({ firstName: 'Jack' })
+        return service.deleteById({ firstName: 'Jack' })
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });

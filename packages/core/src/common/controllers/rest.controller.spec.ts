@@ -53,14 +53,14 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'deleteById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.removeOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.deleteById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         find() {}
         findOne() {}
-        // removeOne() {}
+        // deleteById() {}
         updateOne() {}
       }
       @Controller()
@@ -72,17 +72,17 @@ describe('RestController', () => {
       ok(await controller.deleteById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.removeOne is defined', () => {
+    describe('when collection.deleteById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.removeOne resolves.', async () => {
+      it('should return an HttpResponseOK if collection.deleteById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
-        let removeOneQuery;
+        let deleteByIdQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
-            removeOneQuery = query;
+          async deleteById(query) {
+            deleteByIdQuery = query;
             return objects;
           }
         }
@@ -109,13 +109,13 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(removeOneQuery, { foo: 'bar', id: 1 });
+        deepStrictEqual(deleteByIdQuery, { foo: 'bar', id: 1 });
       });
 
-      it('should return a HttpResponseNotFound if collection.removeOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.deleteById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
+          async deleteById(query) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -137,12 +137,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.removeOne rejects one which'
+      it('should rejects an error if collection.deleteById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
+          async deleteById(query) {
             throw err;
           }
         }
@@ -183,7 +183,7 @@ describe('RestController', () => {
         createOne() {}
         // find() {}
         findOne() {}
-        removeOne() {}
+        deleteById() {}
         updateOne() {}
       }
       @Controller()
@@ -250,7 +250,7 @@ describe('RestController', () => {
         createOne() {}
         find() {}
         // findOne() {}
-        removeOne() {}
+        deleteById() {}
         updateOne() {}
       }
       @Controller()
@@ -387,7 +387,7 @@ describe('RestController', () => {
         createOne() {}
         find() {}
         findOne() {}
-        removeOne() {}
+        deleteById() {}
         // updateOne() {}
       }
       @Controller()
@@ -519,7 +519,7 @@ describe('RestController', () => {
         // createOne() {}
         find() {}
         findOne() {}
-        removeOne() {}
+        deleteById() {}
         updateOne() {}
       }
       @Controller()
@@ -605,7 +605,7 @@ describe('RestController', () => {
         createOne() {}
         find() {}
         findOne() {}
-        removeOne() {}
+        deleteById() {}
         // updateOne() {}
       }
       @Controller()
