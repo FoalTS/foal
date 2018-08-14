@@ -278,7 +278,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
-    describe('when updateOne is called', () => {
+    describe('when updateById is called', () => {
 
       it('should update the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
