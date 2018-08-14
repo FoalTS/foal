@@ -50,7 +50,7 @@ foal g service foobar
 > Empty
   ──────────────
 > Serializer
-> EntitySerializer
+> EntityResourceCollection
   ──────────────
 > Authenticator
 > EmailAuthenticator

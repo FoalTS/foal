@@ -80,7 +80,7 @@ describe('createService', () => {
 
   it('should render the entity serializer templates.', () => {
 
-    createService({ name: 'test-fooBar', type: 'EntitySerializer' });
+    createService({ name: 'test-fooBar', type: 'EntityResourceCollection' });
 
     const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-serializer.ts');
     const actual = readFileFromRoot('test-foo-bar-serializer.service.ts');

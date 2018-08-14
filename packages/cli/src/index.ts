@@ -73,7 +73,7 @@ program
           'Empty',
           new Separator(),
           'Serializer',
-          'EntitySerializer',
+          'EntityResourceCollection',
           // new Separator(),
           // 'GraphQLResolver',
           new Separator(),

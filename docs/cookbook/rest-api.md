@@ -12,7 +12,7 @@ foal g entity flight
 
 ```sh
 foal g service flight
-> EntitySerializer
+> EntityResourceCollection
 ```
 
 ### Create the controller

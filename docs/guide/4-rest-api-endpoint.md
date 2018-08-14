@@ -26,7 +26,7 @@ export class FlightController extends RestController {
 }
 ```
 
-Every `RestController` requires a serializer (the `FlightSerializer` that we haven't created yet). It is a *service* that helps to create, read, update or delete resources and return representations of them. In this example you will be using an `EntitySerializer` which will simply connect to the `Flight` entity. But projects can be more complex and a REST API endpoint may return a representation of several entities joined together.
+Every `RestController` requires a serializer (the `FlightSerializer` that we haven't created yet). It is a *service* that helps to create, read, update or delete resources and return representations of them. In this example you will be using an `EntityResourceCollection` which will simply connect to the `Flight` entity. But projects can be more complex and a REST API endpoint may return a representation of several entities joined together.
 
 > In FoalTS, a *service* can be any class that serves a restricted and well-defined purpose. Services are instantiated as singleton by the framework. They behave independently of the http process and are usually the best place to put the business logic.
 
@@ -38,12 +38,12 @@ foal g service flight
 ```
 
 ```typescript
-import { EntitySerializer, Service } from '@foal/core';
+import { EntityResourceCollection, Service } from '@foal/core';
 
 import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightSerializer extends EntitySerializer {
+export class FlightSerializer extends EntityResourceCollection {
   entityClass = Flight;
 }
 

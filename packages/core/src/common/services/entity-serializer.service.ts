@@ -10,11 +10,11 @@ import { IResourceCollection } from './resource-collection.interface';
  *
  * @export
  * @abstract
- * @class EntitySerializer
+ * @class EntityResourceCollection
  * @implements {IResourceCollection}
  * @template Entity
  */
-export abstract class EntitySerializer implements IResourceCollection {
+export abstract class EntityResourceCollection implements IResourceCollection {
 
   abstract readonly entityClass: Class;
   // abstract readonly fields: string[];
