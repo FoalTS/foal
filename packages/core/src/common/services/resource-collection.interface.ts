@@ -11,7 +11,7 @@ export interface IResourceCollection {
   findOne(query: object);
   find(query: object);
 
-  updateOne(query: object, record: object);
+  updateById(query: object, record: object);
 
   deleteById(query: object);
 }

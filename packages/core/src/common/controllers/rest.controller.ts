@@ -101,13 +101,13 @@ export abstract class RestController {
   @Patch('/:id')
   async patchById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.updateOne) {
+    if (!collection.updateById) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.updateOne(
+      return new HttpResponseOK(await collection.updateById(
         query, ctx.request.body
       ));
     } catch (error) {
@@ -141,13 +141,13 @@ export abstract class RestController {
   @Put('/:id')
   async putById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.updateOne) {
+    if (!collection.updateById) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.updateOne(
+      return new HttpResponseOK(await collection.updateById(
         query, ctx.request.body
       ));
     } catch (error) {

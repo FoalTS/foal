@@ -48,7 +48,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getManager().find(this.entityClass, query);
   }
 
-  async updateOne(query: object, record: object): Promise<void> {
+  async updateById(query: object, record: object): Promise<void> {
     const result = await this.getManager().update(
       this.entityClass,
       query,
