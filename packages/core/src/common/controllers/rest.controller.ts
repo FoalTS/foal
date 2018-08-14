@@ -15,11 +15,11 @@ import {
   ServiceManager
 } from '../../core';
 import { isObjectDoesNotExist } from '../errors';
-import { ISerializer } from '../services';
+import { IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
-  abstract serializerClass: Class<Partial<ISerializer>>;
+  abstract serializerClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
   // schema = {

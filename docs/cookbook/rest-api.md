@@ -46,7 +46,7 @@ export class AppModule implements IModule {
 
 ```typescript
 // ./services/train.service.ts
-import { ISerializer, Service } from '@foal/core';
+import { IResourceCollection, Service } from '@foal/core';
 
 export interface Train {
   id: string
@@ -54,7 +54,7 @@ export interface Train {
 }
 
 @Service()
-export class TrainService implements Partial<ISerializer> {
+export class TrainService implements Partial<IResourceCollection> {
   private id = 0;
 
   createOne(data: Partial<Train>): Train {

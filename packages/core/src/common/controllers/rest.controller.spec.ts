@@ -17,7 +17,7 @@ import {
   ServiceManager
 } from '../../core';
 import { ObjectDoesNotExist } from '../errors';
-import { ISerializer } from '../services';
+import { IResourceCollection } from '../services';
 import { RestController } from './rest.controller';
 
 describe('RestController', () => {
@@ -55,7 +55,7 @@ describe('RestController', () => {
 
     it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         findMany() {}
@@ -80,7 +80,7 @@ describe('RestController', () => {
         let removeOneQuery;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async removeOne(query) {
             removeOneQuery = query;
             return objects;
@@ -114,7 +114,7 @@ describe('RestController', () => {
 
       it('should return a HttpResponseNotFound if serializer.removeOne rejects an ObjectDoesNotExist.', async () => {
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async removeOne(query) {
             throw new ObjectDoesNotExist();
           }
@@ -141,7 +141,7 @@ describe('RestController', () => {
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async removeOne(query) {
             throw err;
           }
@@ -178,7 +178,7 @@ describe('RestController', () => {
 
     it('should return an HttpResponseNotImplemented if serializer.findMany is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         // findMany() {}
@@ -203,7 +203,7 @@ describe('RestController', () => {
         let findManyQuery;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async findMany(query) {
             findManyQuery = query;
             return objects;
@@ -245,7 +245,7 @@ describe('RestController', () => {
     it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', async () => {
 
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         findMany() {}
@@ -270,7 +270,7 @@ describe('RestController', () => {
         let findOneQuery;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async findOne(query) {
             findOneQuery = query;
             return objects;
@@ -304,7 +304,7 @@ describe('RestController', () => {
 
       it('should return a HttpResponseNotFound if serializer.findOne rejects an ObjectDoesNotExist.', async () => {
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async findOne(query) {
             throw new ObjectDoesNotExist();
           }
@@ -331,7 +331,7 @@ describe('RestController', () => {
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async findOne(query) {
             throw err;
           }
@@ -382,7 +382,7 @@ describe('RestController', () => {
 
     it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         findMany() {}
@@ -408,7 +408,7 @@ describe('RestController', () => {
         let updateOneRecord;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query, record) {
             updateOneQuery = query;
             updateOneRecord = record;
@@ -447,7 +447,7 @@ describe('RestController', () => {
 
       it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query, record) {
             throw new ObjectDoesNotExist();
           }
@@ -477,7 +477,7 @@ describe('RestController', () => {
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query) {
             throw err;
           }
@@ -514,7 +514,7 @@ describe('RestController', () => {
 
     it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         // createOne() {}
         findMany() {}
@@ -535,7 +535,7 @@ describe('RestController', () => {
       const objects = [ { bar: 'bar' }];
       let createOneRecord;
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         async createOne(record) {
           createOneRecord = record;
           return objects;
@@ -600,7 +600,7 @@ describe('RestController', () => {
 
     it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
+      class Serializer implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         findMany() {}
@@ -626,7 +626,7 @@ describe('RestController', () => {
         let updateOneRecord;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query, record) {
             updateOneQuery = query;
             updateOneRecord = record;
@@ -665,7 +665,7 @@ describe('RestController', () => {
 
       it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query, record) {
             throw new ObjectDoesNotExist();
           }
@@ -695,7 +695,7 @@ describe('RestController', () => {
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
+        class Serializer implements Partial<IResourceCollection> {
           async updateOne(query) {
             throw err;
           }
