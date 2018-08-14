@@ -78,13 +78,13 @@ export abstract class RestController {
   @Get('/:id')
   async getById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.findOne) {
+    if (!collection.findById) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.findOne(query));
+      return new HttpResponseOK(await collection.findById(query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();

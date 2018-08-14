@@ -203,7 +203,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
-    describe('when findOne is called', () => {
+    describe('when findById is called', () => {
 
       it('should return the suitable user from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -218,7 +218,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        const result = await service.findOne({ firstName: 'Victor' });
+        const result = await service.findById({ firstName: 'Victor' });
 
         strictEqual((result as any).firstName, 'Victor');
         strictEqual((result as any).id, user2.id);
@@ -227,7 +227,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.findOne({ firstName: 'Jack' })
+        return service.findById({ firstName: 'Jack' })
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });

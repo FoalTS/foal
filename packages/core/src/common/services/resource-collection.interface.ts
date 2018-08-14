@@ -8,7 +8,7 @@ export interface IResourceCollection {
   createOne(record: object);
   createMany(records: object[]);
 
-  findOne(query: object);
+  findById(query: object);
   find(query: object);
 
   updateById(query: object, record: object);

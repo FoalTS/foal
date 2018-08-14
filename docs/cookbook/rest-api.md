@@ -39,7 +39,7 @@ export class AppModule implements IModule {
 
 - `POST /` -> service.createOne(...)
 - `GET /` -> service.find(...)
-- `GET /:id` -> service.findOne(...)
+- `GET /:id` -> service.findById(...)
 - `PATCH /:id` -> service.updateById(...)
 - `PUT /:id` -> service.updateById(...)
 - `DELETE /:id` -> service.deleteById(...)

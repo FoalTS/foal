@@ -59,7 +59,7 @@ describe('RestController', () => {
         createMany() {}
         createOne() {}
         find() {}
-        findOne() {}
+        findById() {}
         // deleteById() {}
         updateById() {}
       }
@@ -182,7 +182,7 @@ describe('RestController', () => {
         createMany() {}
         createOne() {}
         // find() {}
-        findOne() {}
+        findById() {}
         deleteById() {}
         updateById() {}
       }
@@ -242,14 +242,14 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'getById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.findOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.findById is undefined.', async () => {
 
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
         createOne() {}
         find() {}
-        // findOne() {}
+        // findById() {}
         deleteById() {}
         updateById() {}
       }
@@ -262,17 +262,17 @@ describe('RestController', () => {
       ok(await controller.getById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.findOne is defined', () => {
+    describe('when collection.findById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.findOne resolves.', async () => {
+      it('should return an HttpResponseOK if collection.findById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
-        let findOneQuery;
+        let findByIdQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
-            findOneQuery = query;
+          async findById(query) {
+            findByIdQuery = query;
             return objects;
           }
         }
@@ -299,13 +299,13 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(findOneQuery, { foo: 'bar', id: 1 });
+        deepStrictEqual(findByIdQuery, { foo: 'bar', id: 1 });
       });
 
-      it('should return a HttpResponseNotFound if collection.findOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.findById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
+          async findById(query) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -327,12 +327,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.findOne rejects one which'
+      it('should rejects an error if collection.findById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
+          async findById(query) {
             throw err;
           }
         }
@@ -386,7 +386,7 @@ describe('RestController', () => {
         createMany() {}
         createOne() {}
         find() {}
-        findOne() {}
+        findById() {}
         deleteById() {}
         // updateById() {}
       }
@@ -518,7 +518,7 @@ describe('RestController', () => {
         createMany() {}
         // createOne() {}
         find() {}
-        findOne() {}
+        findById() {}
         deleteById() {}
         updateById() {}
       }
@@ -604,7 +604,7 @@ describe('RestController', () => {
         createMany() {}
         createOne() {}
         find() {}
-        findOne() {}
+        findById() {}
         deleteById() {}
         // updateById() {}
       }
