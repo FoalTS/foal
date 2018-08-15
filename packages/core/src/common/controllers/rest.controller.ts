@@ -72,7 +72,7 @@ export abstract class RestController {
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.find(ctx.user, query));
+    return new HttpResponseOK(await collection.find(ctx.user, { query }));
   }
 
   @Get('/:id')

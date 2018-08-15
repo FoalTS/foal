@@ -45,8 +45,8 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return entity;
   }
 
-  find(user: AbstractUser|undefined, query: object): Promise<object[]> {
-    return this.getManager().find(this.entityClass, query);
+  find(user: AbstractUser|undefined, params: { query: object }): Promise<object[]> {
+    return this.getManager().find(this.entityClass, params.query);
   }
 
   async updateById(user: AbstractUser|undefined, id, query: object, record: object): Promise<void> {

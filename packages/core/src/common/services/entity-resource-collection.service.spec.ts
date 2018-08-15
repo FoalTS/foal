@@ -250,7 +250,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await getManager(connectionName).save([ user1, user2 ]);
 
         // With an empty query
-        let result = await service.find(undefined, {});
+        let result = await service.find(undefined, { query: {} });
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
 
@@ -265,7 +265,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
-        result = await service.find(undefined, { firstName: 'Victor' });
+        result = await service.find(undefined, { query: { firstName: 'Victor' } });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
 

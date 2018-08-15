@@ -11,7 +11,7 @@ export interface IResourceCollection {
   createMany(user: AbstractUser|undefined, records: object[]);
 
   findById(user: AbstractUser|undefined, id, query: object);
-  find(user: AbstractUser|undefined, query: object);
+  find(user: AbstractUser|undefined, params: { query: object });
 
   updateById(user: AbstractUser|undefined, id, query: object, record: object);
 

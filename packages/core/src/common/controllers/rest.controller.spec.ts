@@ -210,7 +210,7 @@ describe('RestController', () => {
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async find(user, query) {
+          async find(user, { query }) {
             findUser = user;
             findQuery = query;
             return objects;
