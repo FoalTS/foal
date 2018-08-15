@@ -423,7 +423,7 @@ describe('RestController', () => {
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query, record) {
+          async updateById(user, id, query, record) {
             updateByIdUser = user;
             updateByIdQuery = query;
             updateByIdRecord = record;
@@ -465,7 +465,7 @@ describe('RestController', () => {
       it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query, record) {
+          async updateById(user, id, query, record) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -495,7 +495,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query) {
+          async updateById(user, id, query, record) {
             throw err;
           }
         }
@@ -649,7 +649,7 @@ describe('RestController', () => {
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query, record) {
+          async updateById(user, id, query, record) {
             updateByIdUser = user;
             updateByIdQuery = query;
             updateByIdRecord = record;
@@ -691,7 +691,7 @@ describe('RestController', () => {
       it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query, record) {
+          async updateById(user, id, query, record) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -721,7 +721,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, query) {
+          async updateById(user, id, query, record) {
             throw err;
           }
         }

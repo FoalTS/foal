@@ -13,7 +13,7 @@ export interface IResourceCollection {
   findById(user: AbstractUser|undefined, query: object);
   find(user: AbstractUser|undefined, query: object);
 
-  updateById(user: AbstractUser|undefined, query: object, record: object);
+  updateById(user: AbstractUser|undefined, id, query: object, record: object);
 
   deleteById(user: AbstractUser|undefined, id, query: object);
 }

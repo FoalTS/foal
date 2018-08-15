@@ -108,7 +108,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        ctx.user, query, ctx.request.body
+        ctx.user, undefined, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
@@ -148,7 +148,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        ctx.user, query, ctx.request.body
+        ctx.user, undefined, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
