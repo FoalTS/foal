@@ -89,10 +89,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     afterEach(() => getConnection(connectionName).close());
 
-    describe('when createOne is called', () => {
+    describe('when create is called', () => {
 
       it('should create one user into the database and then return it.', async () => {
-        await service.createOne(undefined, {
+        await service.create(undefined, {
           firstName: 'Donald',
           lastName: 'Smith'
         });
@@ -120,7 +120,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         notStrictEqual(user1.id, undefined);
 
-        await service.createOne(undefined, {
+        await service.create(undefined, {
           firstName: 'John',
           id: user1.id,
           lastName: 'Smith'

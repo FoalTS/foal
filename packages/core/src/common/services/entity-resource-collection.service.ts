@@ -21,7 +21,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   // abstract readonly fields: string[];
   readonly connectionName: string = 'default';
 
-  createOne(user: AbstractUser|undefined, record: object): Promise<object> {
+  create(user: AbstractUser|undefined, record: object): Promise<object> {
     record = Object.assign({}, record);
     delete (record as any).id;
     const entity = this.getManager().create(this.entityClass, record);

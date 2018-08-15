@@ -121,11 +121,11 @@ export abstract class RestController {
   @Post('/')
   async post(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.createOne) {
+    if (!collection.create) {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.createOne(ctx.user, ctx.request.body));
+    return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body));
   }
 
   @Post('/:id')

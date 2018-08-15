@@ -37,7 +37,7 @@ export class AppModule implements IModule {
 
 ## Create a REST controller from another resource collection
 
-- `POST /` -> service.createOne(...)
+- `POST /` -> service.create(...)
 - `GET /` -> service.find(...)
 - `GET /:id` -> service.findById(...)
 - `PATCH /:id` -> service.updateById(...)
@@ -57,7 +57,7 @@ export interface Train {
 export class TrainService implements Partial<IResourceCollection> {
   private id = 0;
 
-  createOne(data: Partial<Train>): Train {
+  create(data: Partial<Train>): Train {
     this.id++;
     return { ...data, id: this.id };
   }

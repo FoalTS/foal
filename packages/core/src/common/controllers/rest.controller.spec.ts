@@ -58,7 +58,7 @@ describe('RestController', () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        createOne() {}
+        create() {}
         find() {}
         findById() {}
         // deleteById() {}
@@ -185,7 +185,7 @@ describe('RestController', () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        createOne() {}
+        create() {}
         // find() {}
         findById() {}
         deleteById() {}
@@ -256,7 +256,7 @@ describe('RestController', () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        createOne() {}
+        create() {}
         find() {}
         // findById() {}
         deleteById() {}
@@ -397,7 +397,7 @@ describe('RestController', () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        createOne() {}
+        create() {}
         find() {}
         findById() {}
         deleteById() {}
@@ -529,11 +529,11 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'post'), '/');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.createOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.create is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        // createOne() {}
+        // create() {}
         find() {}
         findById() {}
         deleteById() {}
@@ -548,15 +548,15 @@ describe('RestController', () => {
       ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    it('should return an HttpResponseCreated if collection.createOne is defined.', async () => {
+    it('should return an HttpResponseCreated if collection.create is defined.', async () => {
       const objects = [ { bar: 'bar' }];
-      let createOneUser;
-      let createOneRecord;
+      let createUser;
+      let createRecord;
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        async createOne(user, record) {
-          createOneUser = user;
-          createOneRecord = record;
+        async create(user, record) {
+          createUser = user;
+          createRecord = record;
           return objects;
         }
       }
@@ -578,8 +578,8 @@ describe('RestController', () => {
       const actual = await controller.post(ctx);
       ok(actual instanceof HttpResponseCreated);
       strictEqual(actual.content, objects);
-      strictEqual(createOneUser, ctx.user);
-      strictEqual(createOneRecord, ctx.request.body);
+      strictEqual(createUser, ctx.user);
+      strictEqual(createRecord, ctx.request.body);
     });
 
   });
@@ -623,7 +623,7 @@ describe('RestController', () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         createMany() {}
-        createOne() {}
+        create() {}
         find() {}
         findById() {}
         deleteById() {}

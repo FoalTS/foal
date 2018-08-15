@@ -7,7 +7,7 @@ import { AbstractUser } from '../../auth';
  * @interface IResourceCollection
  */
 export interface IResourceCollection {
-  createOne(user: AbstractUser|undefined, record: object);
+  create(user: AbstractUser|undefined, record: object);
   createMany(user: AbstractUser|undefined, records: object[]);
 
   findById(user: AbstractUser|undefined, id, query: object);
