@@ -15,5 +15,5 @@ export interface IResourceCollection {
 
   updateById(user: AbstractUser|undefined, query: object, record: object);
 
-  deleteById(user: AbstractUser|undefined, query: object);
+  deleteById(user: AbstractUser|undefined, id, query: object);
 }

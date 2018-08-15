@@ -60,7 +60,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     }
   }
 
-  async deleteById(user: AbstractUser|undefined, query: object): Promise<void> {
+  async deleteById(user: AbstractUser|undefined, id, query: object): Promise<void> {
     const result = await this.getManager().delete(this.entityClass, query);
     if (result.raw.affectedRows === 0) {
       throw new ObjectDoesNotExist();

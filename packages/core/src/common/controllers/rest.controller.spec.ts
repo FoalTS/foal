@@ -83,7 +83,7 @@ describe('RestController', () => {
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, query) {
+          async deleteById(user, id, query) {
             deleteByIdUser = user;
             deleteByIdQuery = query;
             return objects;
@@ -120,7 +120,7 @@ describe('RestController', () => {
       it('should return a HttpResponseNotFound if collection.deleteById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, query) {
+          async deleteById(user, id, query) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -147,7 +147,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, query) {
+          async deleteById(user, id, query) {
             throw err;
           }
         }
