@@ -8,7 +8,6 @@ import { AbstractUser } from '../../auth';
  */
 export interface IResourceCollection {
   create(user: AbstractUser|undefined, record: object);
-  createMany(user: AbstractUser|undefined, records: object[]);
 
   findById(user: AbstractUser|undefined, id, query: object);
   find(user: AbstractUser|undefined, params: { query: object });

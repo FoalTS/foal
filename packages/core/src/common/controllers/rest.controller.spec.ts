@@ -57,7 +57,6 @@ describe('RestController', () => {
     it('should return a HttpResponseNotImplemented if collection.deleteById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         create() {}
         find() {}
         findById() {}
@@ -184,7 +183,6 @@ describe('RestController', () => {
     it('should return an HttpResponseNotImplemented if collection.find is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         create() {}
         // find() {}
         findById() {}
@@ -255,7 +253,6 @@ describe('RestController', () => {
 
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         create() {}
         find() {}
         // findById() {}
@@ -396,7 +393,6 @@ describe('RestController', () => {
     it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         create() {}
         find() {}
         findById() {}
@@ -532,7 +528,6 @@ describe('RestController', () => {
     it('should return a HttpResponseNotImplemented if collection.create is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         // create() {}
         find() {}
         findById() {}
@@ -622,7 +617,6 @@ describe('RestController', () => {
     it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
         create() {}
         find() {}
         findById() {}
