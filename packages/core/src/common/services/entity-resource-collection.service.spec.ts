@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 
 // FoalTS
-import { ObjectDoesNotExist } from '../errors';
+import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { EntityResourceCollection } from './entity-resource-collection.service';
 
 @Entity()
@@ -43,6 +43,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     before(() => {
       class UserService extends EntityResourceCollection {
         entityClass = User;
+        allowedOperations: EntityResourceCollection['allowedOperations']
+          = [ 'create', 'findById', 'find', 'updateById', 'deleteById' ];
         connectionName = connectionName;
       }
       service = new UserService();
@@ -90,6 +92,20 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     afterEach(() => getConnection(connectionName).close());
 
     describe('when create is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "create".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ /*'create',*/ 'findById', 'find', 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.create(undefined, {})
+          .then(() => fail('service.create should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       describe('with an object as data', () => {
 
@@ -209,6 +225,20 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     describe('when findById is called', () => {
 
+      it('should throw a PermissionDenied if service.allowedOperations does not include "findById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', /*'findById',*/ 'find', 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.findById(undefined, undefined, {})
+          .then(() => fail('service.findById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
+
       it('should return the suitable user from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
@@ -239,6 +269,20 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     });
 
     describe('when find is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "find".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', /*'find',*/ 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.find(undefined, { query: {} })
+          .then(() => fail('service.find should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should return all the suitable users from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -284,6 +328,20 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     describe('when updateById is called', () => {
 
+      it('should throw a PermissionDenied if service.allowedOperations does not include "updateById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', /*'updateById',*/ 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.updateById(undefined, undefined, {}, {})
+          .then(() => fail('service.updateById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
+
       it('should update the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
@@ -319,6 +377,20 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     });
 
     describe('when deleteById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "deleteById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', 'updateById'/*, 'deleteById'*/ ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.deleteById(undefined, undefined, {})
+          .then(() => fail('service.deleteById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should delete the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {

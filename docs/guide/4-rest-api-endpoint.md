@@ -45,6 +45,9 @@ import { Flight } from '../entities/flight.entity';
 @Service()
 export class FlightCollection extends EntityResourceCollection {
   entityClass = Flight;
+  allowedOperations: EntityResourceCollection['allowedOperations'] = [
+    'create', 'findById', 'find', 'updateById', 'deleteById'
+  ];
 }
 
 ```

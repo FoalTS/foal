@@ -6,4 +6,7 @@ import { TestFooBar } from '../entities/test-foo-bar.entity';
 export class TestFooBarCollection extends EntityResourceCollection {
   // tslint:disable-next-line:whitespace
   entityClass = TestFooBar;
+  allowedOperations: EntityResourceCollection['allowedOperations'] = [
+    'create', 'findById', 'find', 'updateById', 'deleteById'
+  ];
 }
