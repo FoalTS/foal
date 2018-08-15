@@ -53,7 +53,7 @@ export abstract class RestController {
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.deleteById(undefined, query));
+      return new HttpResponseOK(await collection.deleteById(ctx.user, query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -72,7 +72,7 @@ export abstract class RestController {
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.find(undefined, query));
+    return new HttpResponseOK(await collection.find(ctx.user, query));
   }
 
   @Get('/:id')
@@ -84,7 +84,7 @@ export abstract class RestController {
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.findById(undefined, query));
+      return new HttpResponseOK(await collection.findById(ctx.user, query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -108,7 +108,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        undefined, query, ctx.request.body
+        ctx.user, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
@@ -125,7 +125,7 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.createOne(undefined, ctx.request.body));
+    return new HttpResponseCreated(await collection.createOne(ctx.user, ctx.request.body));
   }
 
   @Post('/:id')
@@ -148,7 +148,7 @@ export abstract class RestController {
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
       return new HttpResponseOK(await collection.updateById(
-        undefined, query, ctx.request.body
+        ctx.user, query, ctx.request.body
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {

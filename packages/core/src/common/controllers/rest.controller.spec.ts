@@ -1,7 +1,8 @@
 // std
-import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
+import { deepStrictEqual, fail, ok, strict, strictEqual } from 'assert';
 
 // FoalTS
+import { AbstractUser } from '../../auth';
 import {
   Context,
   Controller,
@@ -78,10 +79,12 @@ describe('RestController', () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
         let deleteByIdQuery;
+        let deleteByIdUser;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
           async deleteById(user, query) {
+            deleteByIdUser = user;
             deleteByIdQuery = query;
             return objects;
           }
@@ -104,11 +107,13 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
+        strictEqual(deleteByIdUser, ctx.user);
         deepStrictEqual(deleteByIdQuery, { foo: 'bar', id: 1 });
       });
 
@@ -200,11 +205,13 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if collection.find resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let findUser;
         let findQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
           async find(user, query) {
+            findUser = user;
             findQuery = query;
             return objects;
           }
@@ -223,12 +230,14 @@ describe('RestController', () => {
         const controller = new ConcreteController(services);
 
         const ctx = new Context({});
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
         strictEqual(findQuery, query);
+        strictEqual(findUser, ctx.user);
       });
 
     });
@@ -267,11 +276,13 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if collection.findById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let findByIdUser;
         let findByIdQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
           async findById(user, query) {
+            findByIdUser = user;
             findByIdQuery = query;
             return objects;
           }
@@ -294,11 +305,13 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
+        strictEqual(findByIdUser, ctx.user);
         deepStrictEqual(findByIdQuery, { foo: 'bar', id: 1 });
       });
 
@@ -404,12 +417,14 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let updateByIdUser;
         let updateByIdQuery;
         let updateByIdRecord;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
           async updateById(user, query, record) {
+            updateByIdUser = user;
             updateByIdQuery = query;
             updateByIdRecord = record;
             return objects;
@@ -436,11 +451,13 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
+        strictEqual(updateByIdUser, ctx.user);
         deepStrictEqual(updateByIdQuery, { foo: 'bar', id: 1 });
         strictEqual(updateByIdRecord, ctx.request.body);
       });
@@ -533,10 +550,12 @@ describe('RestController', () => {
 
     it('should return an HttpResponseCreated if collection.createOne is defined.', async () => {
       const objects = [ { bar: 'bar' }];
+      let createOneUser;
       let createOneRecord;
       @Service()
       class Collection implements Partial<IResourceCollection> {
         async createOne(user, record) {
+          createOneUser = user;
           createOneRecord = record;
           return objects;
         }
@@ -554,10 +573,12 @@ describe('RestController', () => {
           foobar: 'foo'
         },
       });
+      ctx.user = {} as AbstractUser;
 
       const actual = await controller.post(ctx);
       ok(actual instanceof HttpResponseCreated);
       strictEqual(actual.content, objects);
+      strictEqual(createOneUser, ctx.user);
       strictEqual(createOneRecord, ctx.request.body);
     });
 
@@ -622,12 +643,14 @@ describe('RestController', () => {
       it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
+        let updateByIdUser;
         let updateByIdQuery;
         let updateByIdRecord;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
           async updateById(user, query, record) {
+            updateByIdUser = user;
             updateByIdQuery = query;
             updateByIdRecord = record;
             return objects;
@@ -654,11 +677,13 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
+        strictEqual(updateByIdUser, ctx.user);
         deepStrictEqual(updateByIdQuery, { foo: 'bar', id: 1 });
         strictEqual(updateByIdRecord, ctx.request.body);
       });
