@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, fail, ok, strict, strictEqual } from 'assert';
+import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { AbstractUser } from '../../auth';
