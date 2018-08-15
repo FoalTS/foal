@@ -91,114 +91,118 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     describe('when create is called', () => {
 
-      it('should create one user into the database and then return it.', async () => {
-        await service.create(undefined, {
-          firstName: 'Donald',
-          lastName: 'Smith'
-        });
+      describe('with an object as data', () => {
 
-        const users = await getManager(connectionName).find(User);
-
-        // A user should be created in the database ...
-        ok(Array.isArray(users));
-        strictEqual(users.length, 1);
-        const user = users[0];
-
-        // ... with the proper values.
-        strictEqual(user.firstName, 'Donald');
-        strictEqual(user.lastName, 'Smith');
-        strictEqual(user.isAdmin, false);
-        notStrictEqual(user.id, undefined);
-      });
-
-      xit('should not replace an existing user (if an id is given).', async () => {
-        const user1 = getManager(connectionName).create(User, {
-          firstName: 'Donald',
-          lastName: 'Smith'
-        });
-        await getManager(connectionName).save(user1);
-
-        notStrictEqual(user1.id, undefined);
-
-        await service.create(undefined, {
-          firstName: 'John',
-          id: user1.id,
-          lastName: 'Smith'
-        });
-
-        const users = await getManager(connectionName).find(User);
-
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
-      });
-
-    });
-
-    describe('when createMany is called', () => {
-
-      it('should create several users into the database and then return them.', async () => {
-        const result = await service.createMany(undefined, [
-          {
+        it('should create one user into the database and then return it.', async () => {
+          await service.create(undefined, {
             firstName: 'Donald',
             lastName: 'Smith'
-          },
-          {
-            firstName: 'Victor',
-            isAdmin: true,
-            lastName: 'Hugo',
-          }
-        ]);
+          });
 
-        const users = await getManager(connectionName).find(User);
+          const users = await getManager(connectionName).find(User);
 
-        // Two users should be created in the database ...
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
-        const user1 = users[0];
-        const user2 = users[1];
+          // A user should be created in the database ...
+          ok(Array.isArray(users));
+          strictEqual(users.length, 1);
+          const user = users[0];
 
-        // ... with the proper values.
-        strictEqual(user1.firstName, 'Donald');
-        strictEqual(user1.lastName, 'Smith');
-        strictEqual(user1.isAdmin, false);
-        notStrictEqual(user1.id, undefined);
+          // ... with the proper values.
+          strictEqual(user.firstName, 'Donald');
+          strictEqual(user.lastName, 'Smith');
+          strictEqual(user.isAdmin, false);
+          notStrictEqual(user.id, undefined);
+        });
 
-        strictEqual(user2.firstName, 'Victor');
-        strictEqual(user2.lastName, 'Hugo');
-        strictEqual(user2.isAdmin, true);
-        notStrictEqual(user2.id, undefined);
+        xit('should not replace an existing user (if an id is given).', async () => {
+          const user1 = getManager(connectionName).create(User, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          });
+          await getManager(connectionName).save(user1);
 
-        // The returned users should have the above fields.
-        strictEqual((result[0] as any).firstName, 'Donald');
-        strictEqual((result[0] as any).id, user1.id);
-        strictEqual((result[0] as any).isAdmin, false);
-        strictEqual((result[0] as any).lastName, 'Smith');
+          notStrictEqual(user1.id, undefined);
 
-        strictEqual((result[1] as any).firstName, 'Victor');
-        strictEqual((result[1] as any).id, user2.id);
-        strictEqual((result[1] as any).isAdmin, true);
-        strictEqual((result[1] as any).lastName, 'Hugo');
+          await service.create(undefined, {
+            firstName: 'John',
+            id: user1.id,
+            lastName: 'Smith'
+          });
+
+          const users = await getManager(connectionName).find(User);
+
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+        });
+
       });
 
-      xit('should not replace an existing user (if an id is given).', async () => {
-        const user1 = getManager(connectionName).create(User, {
-          firstName: 'Donald',
-          lastName: 'Smith'
+      describe('with an array as data', () => {
+
+        it('should create several users into the database and then return them.', async () => {
+          const result = await service.create(undefined, [
+            {
+              firstName: 'Donald',
+              lastName: 'Smith'
+            },
+            {
+              firstName: 'Victor',
+              isAdmin: true,
+              lastName: 'Hugo',
+            }
+          ]);
+
+          const users = await getManager(connectionName).find(User);
+
+          // Two users should be created in the database ...
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+          const user1 = users[0];
+          const user2 = users[1];
+
+          // ... with the proper values.
+          strictEqual(user1.firstName, 'Donald');
+          strictEqual(user1.lastName, 'Smith');
+          strictEqual(user1.isAdmin, false);
+          notStrictEqual(user1.id, undefined);
+
+          strictEqual(user2.firstName, 'Victor');
+          strictEqual(user2.lastName, 'Hugo');
+          strictEqual(user2.isAdmin, true);
+          notStrictEqual(user2.id, undefined);
+
+          // The returned users should have the above fields.
+          strictEqual((result[0] as any).firstName, 'Donald');
+          strictEqual((result[0] as any).id, user1.id);
+          strictEqual((result[0] as any).isAdmin, false);
+          strictEqual((result[0] as any).lastName, 'Smith');
+
+          strictEqual((result[1] as any).firstName, 'Victor');
+          strictEqual((result[1] as any).id, user2.id);
+          strictEqual((result[1] as any).isAdmin, true);
+          strictEqual((result[1] as any).lastName, 'Hugo');
         });
-        await getManager(connectionName).save(user1);
 
-        notStrictEqual(user1.id, undefined);
+        xit('should not replace an existing user (if an id is given).', async () => {
+          const user1 = getManager(connectionName).create(User, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          });
+          await getManager(connectionName).save(user1);
 
-        await service.createMany(undefined, [{
-          firstName: 'John',
-          id: user1.id,
-          lastName: 'Smith'
-        }]);
+          notStrictEqual(user1.id, undefined);
 
-        const users = await getManager(connectionName).find(User);
+          await service.create(undefined, [{
+            firstName: 'John',
+            id: user1.id,
+            lastName: 'Smith'
+          }]);
 
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
+          const users = await getManager(connectionName).find(User);
+
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+        });
+
       });
 
     });

@@ -21,20 +21,23 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   // abstract readonly fields: string[];
   readonly connectionName: string = 'default';
 
-  create(user: AbstractUser|undefined, record: object): Promise<object> {
-    record = Object.assign({}, record);
-    delete (record as any).id;
-    const entity = this.getManager().create(this.entityClass, record);
+  create(user: AbstractUser|undefined, data: object): Promise<object> {
+    if (Array.isArray(data)) {
+      const entities = data.map(record => {
+        record = Object.assign({}, record);
+        delete (record as any).id;
+        return this.getManager().create(this.entityClass, record);
+      });
+      return this.getManager().save(entities);
+    }
+    data = Object.assign({}, data);
+    delete (data as any).id;
+    const entity = this.getManager().create(this.entityClass, data);
     return this.getManager().save(entity);
   }
 
-  createMany(user: AbstractUser|undefined, records: object[]): Promise<object[]> {
-    const entities = records.map(record => {
-      record = Object.assign({}, record);
-      delete (record as any).id;
-      return this.getManager().create(this.entityClass, record);
-    });
-    return this.getManager().save(entities);
+  async createMany(user: AbstractUser|undefined, records: object[]): Promise<object[]> {
+    return [];
   }
 
   async findById(user: AbstractUser|undefined, id, query: object): Promise<object> {
