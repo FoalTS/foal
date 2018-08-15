@@ -7,6 +7,6 @@ export class ObjectDoesNotExist extends Error {
   }
 }
 
-export function isObjectDoesNotExist(err: object): boolean {
+export function isObjectDoesNotExist(err: object): err is ObjectDoesNotExist {
   return err instanceof ObjectDoesNotExist || (err as any).isObjectDoesNotExist === true;
 }
