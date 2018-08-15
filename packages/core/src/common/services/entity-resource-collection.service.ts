@@ -37,7 +37,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getManager().save(entities);
   }
 
-  async findById(user: AbstractUser|undefined, query: object): Promise<object> {
+  async findById(user: AbstractUser|undefined, id, query: object): Promise<object> {
     const entity = await this.getManager().findOne(this.entityClass, query);
     if (!entity) {
       throw new ObjectDoesNotExist();

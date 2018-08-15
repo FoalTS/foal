@@ -84,7 +84,7 @@ export abstract class RestController {
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.findById(ctx.user, query));
+      return new HttpResponseOK(await collection.findById(ctx.user, undefined, query));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();

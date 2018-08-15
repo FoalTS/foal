@@ -281,7 +281,7 @@ describe('RestController', () => {
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, query) {
+          async findById(user, id, query) {
             findByIdUser = user;
             findByIdQuery = query;
             return objects;
@@ -318,7 +318,7 @@ describe('RestController', () => {
       it('should return a HttpResponseNotFound if collection.findById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, query) {
+          async findById(user, id, query) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -345,7 +345,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, query) {
+          async findById(user, id, query) {
             throw err;
           }
         }
