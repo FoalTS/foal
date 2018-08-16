@@ -22,18 +22,6 @@ export abstract class RestController {
   abstract collectionClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
-  // schema = {
-  //   id: { type: 'number' }
-  // };
-
-  // requiredFields = {
-  //   post: [], // do not include the id in post.
-  //   put: [ 'id' ]
-  // };
-
-  // hooks = {
-  //   post: [ LoginRequired(), /*AssignUserId()*/ ]
-  // };
 
   getQuery(ctx: Context): object {
     return {};
