@@ -101,13 +101,13 @@ export abstract class RestController {
   @Patch('/:id')
   async patchById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.updateById) {
+    if (!collection.modifyById) {
       return new HttpResponseNotImplemented();
     }
 
     const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.updateById(
+      return new HttpResponseOK(await collection.modifyById(
         ctx.user, undefined, query, ctx.request.body
       ));
     } catch (error) {

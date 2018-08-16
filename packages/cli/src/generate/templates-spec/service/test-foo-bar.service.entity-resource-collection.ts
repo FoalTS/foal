@@ -7,6 +7,6 @@ export class TestFooBarCollection extends EntityResourceCollection {
   // tslint:disable-next-line:whitespace
   entityClass = TestFooBar;
   allowedOperations: EntityResourceCollection['allowedOperations'] = [
-    'create', 'findById', 'find', 'updateById', 'deleteById'
+    'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
   ];
 }

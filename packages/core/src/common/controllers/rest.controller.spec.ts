@@ -61,6 +61,7 @@ describe('RestController', () => {
         find() {}
         findById() {}
         // deleteById() {}
+        modifyById() {}
         updateById() {}
       }
       @Controller()
@@ -187,6 +188,7 @@ describe('RestController', () => {
         // find() {}
         findById() {}
         deleteById() {}
+        modifyById() {}
         updateById() {}
       }
       @Controller()
@@ -257,6 +259,7 @@ describe('RestController', () => {
         find() {}
         // findById() {}
         deleteById() {}
+        modifyById() {}
         updateById() {}
       }
       @Controller()
@@ -390,14 +393,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'patchById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.modifyById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         find() {}
         findById() {}
         deleteById() {}
-        // updateById() {}
+        // modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -405,24 +409,24 @@ describe('RestController', () => {
       }
 
       const controller = createController(ConcreteController);
-      ok(await controller.patchById(new Context({})) instanceof HttpResponseNotImplemented);
+      ok(await controller.patchById(new Context({ params: { id: 1 }})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.updateById is defined', () => {
+    describe('when collection.modifyById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
+      it('should return an HttpResponseOK if collection.modifyById resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
-        let updateByIdUser;
-        let updateByIdQuery;
-        let updateByIdRecord;
+        let modifyByIdUser;
+        let modifyByIdQuery;
+        let modifyByIdRecord;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
-            updateByIdUser = user;
-            updateByIdQuery = query;
-            updateByIdRecord = record;
+          async modifyById(user, id, query, record) {
+            modifyByIdUser = user;
+            modifyByIdQuery = query;
+            modifyByIdRecord = record;
             return objects;
           }
         }
@@ -453,15 +457,15 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        strictEqual(updateByIdUser, ctx.user);
-        deepStrictEqual(updateByIdQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateByIdRecord, ctx.request.body);
+        strictEqual(modifyByIdUser, ctx.user);
+        deepStrictEqual(modifyByIdQuery, { foo: 'bar', id: 1 });
+        strictEqual(modifyByIdRecord, ctx.request.body);
       });
 
-      it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.modifyById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
+          async modifyById(user, id, query, record) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -486,12 +490,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.updateById rejects one which'
+      it('should rejects an error if collection.modifyById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
+          async modifyById(user, id, query, record) {
             throw err;
           }
         }
@@ -532,6 +536,7 @@ describe('RestController', () => {
         find() {}
         findById() {}
         deleteById() {}
+        modifyById() {}
         updateById() {}
       }
       @Controller()
@@ -621,6 +626,7 @@ describe('RestController', () => {
         find() {}
         findById() {}
         deleteById() {}
+        modifyById() {}
         // updateById() {}
       }
       @Controller()

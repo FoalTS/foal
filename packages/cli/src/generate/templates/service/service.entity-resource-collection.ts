@@ -7,6 +7,6 @@ export class /* upperFirstCamelName */Collection extends EntityResourceCollectio
   // tslint:disable-next-line:whitespace
   entityClass = /* upperFirstCamelName */;
   allowedOperations: EntityResourceCollection['allowedOperations'] = [
-    'create', 'findById', 'find', 'updateById', 'deleteById'
+    'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
   ];
 }

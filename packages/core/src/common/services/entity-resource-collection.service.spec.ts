@@ -44,7 +44,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       class UserService extends EntityResourceCollection {
         entityClass = User;
         allowedOperations: EntityResourceCollection['allowedOperations']
-          = [ 'create', 'findById', 'find', 'updateById', 'deleteById' ];
+          = [ 'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
         connectionName = connectionName;
       }
       service = new UserService();
@@ -97,7 +97,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         class UserService extends EntityResourceCollection {
           entityClass = User;
           allowedOperations: EntityResourceCollection['allowedOperations']
-            = [ /*'create',*/ 'findById', 'find', 'updateById', 'deleteById' ];
+            = [ /*'create',*/ 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
           connectionName = connectionName;
         }
         const service = new UserService();
@@ -229,7 +229,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         class UserService extends EntityResourceCollection {
           entityClass = User;
           allowedOperations: EntityResourceCollection['allowedOperations']
-            = [ 'create', /*'findById',*/ 'find', 'updateById', 'deleteById' ];
+            = [ 'create', /*'findById',*/ 'find', 'modifyById', 'updateById', 'deleteById' ];
           connectionName = connectionName;
         }
         const service = new UserService();
@@ -274,7 +274,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         class UserService extends EntityResourceCollection {
           entityClass = User;
           allowedOperations: EntityResourceCollection['allowedOperations']
-            = [ 'create', 'findById', /*'find',*/ 'updateById', 'deleteById' ];
+            = [ 'create', 'findById', /*'find',*/ 'modifyById', 'updateById', 'deleteById' ];
           connectionName = connectionName;
         }
         const service = new UserService();
@@ -326,13 +326,63 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
+    describe('when modifyById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "modifyById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', /*'modifyById',*/ 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.modifyById(undefined, undefined, {}, {})
+          .then(() => fail('service.modifyById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
+
+      it('should update the suitable user.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+        const user2 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1, user2 ]);
+
+        await service.modifyById(undefined, undefined, { firstName: 'Victor' }, { firstName: 'John' });
+
+        // The suitable user should be updated in the database.
+        const user = await getManager(connectionName).findOne(User, user2.id);
+        if (!user) { throw new Error(); }
+        strictEqual(user.firstName, 'John');
+
+        // The other users should not be updated in the database.
+        const userbis = await getManager(connectionName).findOne(User, user1.id);
+        if (!userbis) { throw new Error(); }
+        strictEqual(userbis.firstName, 'Donald');
+      });
+
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
+        return service.modifyById(undefined, undefined, { firstName: 'Jack' }, { firstName: 'Adele' })
+          .then(() => fail('The promise should be rejected.'))
+          .catch(err => ok(err instanceof ObjectDoesNotExist));
+      });
+
+    });
+
     describe('when updateById is called', () => {
 
       it('should throw a PermissionDenied if service.allowedOperations does not include "updateById".', () => {
         class UserService extends EntityResourceCollection {
           entityClass = User;
           allowedOperations: EntityResourceCollection['allowedOperations']
-            = [ 'create', 'findById', 'find', /*'updateById',*/ 'deleteById' ];
+            = [ 'create', 'findById', 'find', 'modifyById', /*'updateById',*/ 'deleteById' ];
           connectionName = connectionName;
         }
         const service = new UserService();
@@ -382,7 +432,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         class UserService extends EntityResourceCollection {
           entityClass = User;
           allowedOperations: EntityResourceCollection['allowedOperations']
-            = [ 'create', 'findById', 'find', 'updateById'/*, 'deleteById'*/ ];
+            = [ 'create', 'findById', 'find', 'modifyById', 'updateById'/*, 'deleteById'*/ ];
           connectionName = connectionName;
         }
         const service = new UserService();

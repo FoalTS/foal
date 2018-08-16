@@ -40,7 +40,7 @@ export class AppModule implements IModule {
 - `POST /` -> service.create(...)
 - `GET /` -> service.find(...)
 - `GET /:id` -> service.findById(...)
-- `PATCH /:id` -> service.updateById(...)
+- `PATCH /:id` -> service.modifyById(...)
 - `PUT /:id` -> service.updateById(...)
 - `DELETE /:id` -> service.deleteById(...)
 
