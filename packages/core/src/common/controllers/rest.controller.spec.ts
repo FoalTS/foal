@@ -269,27 +269,22 @@ describe('RestController', () => {
     describe('when collection.findById is defined', () => {
 
       it('should return an HttpResponseOK if collection.findById resolves.', async () => {
-        const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
         let findByIdUser;
-        let findByIdQuery;
-        let getQueryCtx;
+        let findByIdId;
+        let findByIdParams;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, id, query) {
+          async findById(user, id, params) {
             findByIdUser = user;
-            findByIdQuery = query;
+            findByIdId = id;
+            findByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -305,15 +300,15 @@ describe('RestController', () => {
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
         strictEqual(findByIdUser, ctx.user);
-        deepStrictEqual(findByIdQuery, { foo: 'bar', id: 1 });
+        strictEqual(findByIdId, ctx.request.params.id);
+        deepStrictEqual(findByIdParams, {});
       });
 
       it('should return a HttpResponseNotFound if collection.findById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, id, query) {
+          async findById(user, id, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -340,7 +335,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findById(user, id, query) {
+          async findById(user, id, params) {
             throw err;
           }
         }
