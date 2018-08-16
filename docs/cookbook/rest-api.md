@@ -57,7 +57,7 @@ export interface Train {
 export class TrainService implements Partial<IResourceCollection> {
   private id = 0;
 
-  create(data: Partial<Train>): Train {
+  create(user, data: Partial<Train>, params): Train {
     this.id++;
     return { ...data, id: this.id };
   }

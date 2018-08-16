@@ -102,7 +102,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        return service.create(undefined, {})
+        return service.create(undefined, {}, {})
           .then(() => fail('service.create should rejects an error.'))
           .catch(err => ok(err instanceof PermissionDenied));
       });
@@ -113,7 +113,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           await service.create(undefined, {
             firstName: 'Donald',
             lastName: 'Smith'
-          });
+          }, {});
 
           const users = await getManager(connectionName).find(User);
 
@@ -142,7 +142,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
             firstName: 'John',
             id: user1.id,
             lastName: 'Smith'
-          });
+          }, {});
 
           const users = await getManager(connectionName).find(User);
 
@@ -165,7 +165,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
               isAdmin: true,
               lastName: 'Hugo',
             }
-          ]);
+          ], {});
 
           const users = await getManager(connectionName).find(User);
 
@@ -211,7 +211,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
             firstName: 'John',
             id: user1.id,
             lastName: 'Smith'
-          }]);
+          }], {});
 
           const users = await getManager(connectionName).find(User);
 

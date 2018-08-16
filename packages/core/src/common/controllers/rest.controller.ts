@@ -125,7 +125,7 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body));
+    return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body, {}));
   }
 
   @Post('/:id')

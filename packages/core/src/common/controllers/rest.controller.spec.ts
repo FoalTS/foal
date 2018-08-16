@@ -552,11 +552,13 @@ describe('RestController', () => {
       const objects = [ { bar: 'bar' }];
       let createUser;
       let createData;
+      let createParams;
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        async create(user, data) {
+        async create(user, data, params) {
           createUser = user;
           createData = data;
+          createParams = params;
           return objects;
         }
       }
@@ -580,6 +582,7 @@ describe('RestController', () => {
       strictEqual(actual.content, objects);
       strictEqual(createUser, ctx.user);
       strictEqual(createData, ctx.request.body);
+      deepStrictEqual(createParams, {});
     });
 
   });

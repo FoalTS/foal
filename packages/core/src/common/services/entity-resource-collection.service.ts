@@ -21,7 +21,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   abstract readonly allowedOperations: (keyof IResourceCollection)[];
   readonly connectionName: string = 'default';
 
-  async create(user: AbstractUser|undefined, data: object): Promise<object> {
+  async create(user: AbstractUser|undefined, data: object, params: {}): Promise<object> {
     if (!this.allowedOperations.includes('create')) {
       throw new PermissionDenied();
     }
