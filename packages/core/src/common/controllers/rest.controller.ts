@@ -16,7 +16,7 @@ import {
   Put,
   ServiceManager
 } from '../../core';
-import { isObjectDoesNotExist, isPermissionDenied, isValidationError, ValidationError } from '../errors';
+import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
 import { IResourceCollection } from '../services';
 
 @Controller()
