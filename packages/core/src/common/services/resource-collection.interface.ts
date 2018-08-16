@@ -7,13 +7,13 @@ import { AbstractUser } from '../../auth';
  * @interface IResourceCollection
  */
 export interface IResourceCollection {
-  create(user: AbstractUser|undefined, record: object);
+  create(user: AbstractUser|undefined, data: object);
 
   findById(user: AbstractUser|undefined, id, query: object);
   find(user: AbstractUser|undefined, params: { query: object });
 
-  modifyById(user: AbstractUser|undefined, id, query: object, record: object);
-  updateById(user: AbstractUser|undefined, id, query: object, record: object);
+  modifyById(user: AbstractUser|undefined, id, query: object, data: object);
+  updateById(user: AbstractUser|undefined, id, query: object, data: object);
 
   deleteById(user: AbstractUser|undefined, id, query: object);
 }

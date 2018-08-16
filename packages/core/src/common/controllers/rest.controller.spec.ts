@@ -419,14 +419,14 @@ describe('RestController', () => {
         const objects = [ { bar: 'bar' }];
         let modifyByIdUser;
         let modifyByIdQuery;
-        let modifyByIdRecord;
+        let modifyByIdData;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async modifyById(user, id, query, record) {
+          async modifyById(user, id, query, data) {
             modifyByIdUser = user;
             modifyByIdQuery = query;
-            modifyByIdRecord = record;
+            modifyByIdData = data;
             return objects;
           }
         }
@@ -459,13 +459,13 @@ describe('RestController', () => {
         strictEqual(getQueryCtx, ctx);
         strictEqual(modifyByIdUser, ctx.user);
         deepStrictEqual(modifyByIdQuery, { foo: 'bar', id: 1 });
-        strictEqual(modifyByIdRecord, ctx.request.body);
+        strictEqual(modifyByIdData, ctx.request.body);
       });
 
       it('should return a HttpResponseNotFound if collection.modifyById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async modifyById(user, id, query, record) {
+          async modifyById(user, id, query, data) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -495,7 +495,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async modifyById(user, id, query, record) {
+          async modifyById(user, id, query, data) {
             throw err;
           }
         }
@@ -551,12 +551,12 @@ describe('RestController', () => {
     it('should return an HttpResponseCreated if collection.create is defined.', async () => {
       const objects = [ { bar: 'bar' }];
       let createUser;
-      let createRecord;
+      let createData;
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        async create(user, record) {
+        async create(user, data) {
           createUser = user;
-          createRecord = record;
+          createData = data;
           return objects;
         }
       }
@@ -579,7 +579,7 @@ describe('RestController', () => {
       ok(actual instanceof HttpResponseCreated);
       strictEqual(actual.content, objects);
       strictEqual(createUser, ctx.user);
-      strictEqual(createRecord, ctx.request.body);
+      strictEqual(createData, ctx.request.body);
     });
 
   });
@@ -645,14 +645,14 @@ describe('RestController', () => {
         const objects = [ { bar: 'bar' }];
         let updateByIdUser;
         let updateByIdQuery;
-        let updateByIdRecord;
+        let updateByIdData;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
+          async updateById(user, id, query, data) {
             updateByIdUser = user;
             updateByIdQuery = query;
-            updateByIdRecord = record;
+            updateByIdData = data;
             return objects;
           }
         }
@@ -685,13 +685,13 @@ describe('RestController', () => {
         strictEqual(getQueryCtx, ctx);
         strictEqual(updateByIdUser, ctx.user);
         deepStrictEqual(updateByIdQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateByIdRecord, ctx.request.body);
+        strictEqual(updateByIdData, ctx.request.body);
       });
 
       it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
+          async updateById(user, id, query, data) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -721,7 +721,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, query, record) {
+          async updateById(user, id, query, data) {
             throw err;
           }
         }
