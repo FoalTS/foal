@@ -76,27 +76,22 @@ describe('RestController', () => {
     describe('when collection.deleteById is defined', () => {
 
       it('should return an HttpResponseOK if collection.deleteById resolves.', async () => {
-        const query = { foo: 'bar' };
-        const objects = [ { bar: 'bar' }];
-        let deleteByIdQuery;
+        const objects = [ { bar: 'bar' } ];
+        let deleteByIdParams;
+        let deleteByIdId;
         let deleteByIdUser;
-        let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, id, query) {
+          async deleteById(user, id, params) {
             deleteByIdUser = user;
-            deleteByIdQuery = query;
+            deleteByIdId = id;
+            deleteByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -112,15 +107,15 @@ describe('RestController', () => {
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
         strictEqual(deleteByIdUser, ctx.user);
-        deepStrictEqual(deleteByIdQuery, { foo: 'bar', id: 1 });
+        strictEqual(deleteByIdId, ctx.request.params.id);
+        deepStrictEqual(deleteByIdParams, {});
       });
 
       it('should return a HttpResponseNotFound if collection.deleteById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, id, query) {
+          async deleteById(user, id, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -147,7 +142,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, id, query) {
+          async deleteById(user, id, params) {
             throw err;
           }
         }

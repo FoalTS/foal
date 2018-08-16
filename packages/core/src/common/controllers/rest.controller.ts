@@ -51,9 +51,8 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.deleteById(ctx.user, undefined, query));
+      return new HttpResponseOK(await collection.deleteById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();

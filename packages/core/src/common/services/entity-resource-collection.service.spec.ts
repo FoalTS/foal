@@ -454,7 +454,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.deleteById(undefined, undefined, { firstName: user2.firstName });
+        await service.deleteById(undefined, user2.id, {});
 
         const users = await getManager(connectionName).find(User);
 
@@ -465,7 +465,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.deleteById(undefined, undefined, { firstName: 'Jack' })
+        return service.deleteById(undefined, 1, {})
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
