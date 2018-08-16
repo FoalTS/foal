@@ -1,7 +1,7 @@
 export class ObjectDoesNotExist extends Error {
   readonly isObjectDoesNotExist = true;
 
-  constructor() {
+  constructor(public content?: any) {
     super();
     Object.setPrototypeOf(this, ObjectDoesNotExist.prototype);
   }
