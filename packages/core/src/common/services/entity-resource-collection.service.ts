@@ -68,7 +68,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     await this.getManager().update(this.entityClass, obj, data);
   }
 
-  async updateById(user: AbstractUser|undefined, id, data: object, query: object): Promise<void> {
+  async updateById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<void> {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
