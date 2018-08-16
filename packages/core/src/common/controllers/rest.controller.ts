@@ -22,18 +22,6 @@ export abstract class RestController {
   abstract collectionClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
-  // schema = {
-  //   id: { type: 'number' }
-  // };
-
-  // requiredFields = {
-  //   post: [], // do not include the id in post.
-  //   put: [ 'id' ]
-  // };
-
-  // hooks = {
-  //   post: [ LoginRequired(), /*AssignUserId()*/ ]
-  // };
 
   getQuery(ctx: Context): object {
     return {};
@@ -47,13 +35,12 @@ export abstract class RestController {
   @Delete('/:id')
   async deleteById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.removeOne) {
+    if (!collection.deleteById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.removeOne(query));
+      return new HttpResponseOK(await collection.deleteById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -67,24 +54,23 @@ export abstract class RestController {
     // schema and id
     // hooks
     const collection = this.services.get(this.collectionClass);
-    if (!collection.findMany) {
+    if (!collection.find) {
       return new HttpResponseNotImplemented();
     }
 
     const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.findMany(query));
+    return new HttpResponseOK(await collection.find(ctx.user, { query }));
   }
 
   @Get('/:id')
   async getById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.findOne) {
+    if (!collection.findById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.findOne(query));
+      return new HttpResponseOK(await collection.findById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
         return new HttpResponseNotFound();
@@ -101,14 +87,13 @@ export abstract class RestController {
   @Patch('/:id')
   async patchById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.updateOne) {
+    if (!collection.modifyById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.updateOne(
-        query, ctx.request.body
+      return new HttpResponseOK(await collection.modifyById(
+        ctx.user, ctx.request.params.id , ctx.request.body, {}
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
@@ -121,11 +106,11 @@ export abstract class RestController {
   @Post('/')
   async post(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.createOne) {
+    if (!collection.create) {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.createOne(ctx.request.body));
+    return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body, {}));
   }
 
   @Post('/:id')
@@ -141,14 +126,13 @@ export abstract class RestController {
   @Put('/:id')
   async putById(ctx: Context) {
     const collection = this.services.get(this.collectionClass);
-    if (!collection.updateOne) {
+    if (!collection.updateById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await collection.updateOne(
-        query, ctx.request.body
+      return new HttpResponseOK(await collection.updateById(
+        ctx.user, ctx.request.params.id, ctx.request.body, {}
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {

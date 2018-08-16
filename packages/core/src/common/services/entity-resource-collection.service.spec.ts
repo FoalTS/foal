@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 
 // FoalTS
-import { ObjectDoesNotExist } from '../errors';
+import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { EntityResourceCollection } from './entity-resource-collection.service';
 
 @Entity()
@@ -43,6 +43,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
     before(() => {
       class UserService extends EntityResourceCollection {
         entityClass = User;
+        allowedOperations: EntityResourceCollection['allowedOperations']
+          = [ 'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
         connectionName = connectionName;
       }
       service = new UserService();
@@ -89,121 +91,153 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     afterEach(() => getConnection(connectionName).close());
 
-    describe('when createOne is called', () => {
+    describe('when create is called', () => {
 
-      it('should create one user into the database and then return it.', async () => {
-        await service.createOne({
-          firstName: 'Donald',
-          lastName: 'Smith'
-        });
+      it('should throw a PermissionDenied if service.allowedOperations does not include "create".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ /*'create',*/ 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
 
-        const users = await getManager(connectionName).find(User);
-
-        // A user should be created in the database ...
-        ok(Array.isArray(users));
-        strictEqual(users.length, 1);
-        const user = users[0];
-
-        // ... with the proper values.
-        strictEqual(user.firstName, 'Donald');
-        strictEqual(user.lastName, 'Smith');
-        strictEqual(user.isAdmin, false);
-        notStrictEqual(user.id, undefined);
+        return service.create(undefined, {}, {})
+          .then(() => fail('service.create should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
       });
 
-      xit('should not replace an existing user (if an id is given).', async () => {
-        const user1 = getManager(connectionName).create(User, {
-          firstName: 'Donald',
-          lastName: 'Smith'
-        });
-        await getManager(connectionName).save(user1);
+      describe('with an object as data', () => {
 
-        notStrictEqual(user1.id, undefined);
-
-        await service.createOne({
-          firstName: 'John',
-          id: user1.id,
-          lastName: 'Smith'
-        });
-
-        const users = await getManager(connectionName).find(User);
-
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
-      });
-
-    });
-
-    describe('when createMany is called', () => {
-
-      it('should create several users into the database and then return them.', async () => {
-        const result = await service.createMany([
-          {
+        it('should create one user into the database and then return it.', async () => {
+          await service.create(undefined, {
             firstName: 'Donald',
             lastName: 'Smith'
-          },
-          {
-            firstName: 'Victor',
-            isAdmin: true,
-            lastName: 'Hugo',
-          }
-        ]);
+          }, {});
 
-        const users = await getManager(connectionName).find(User);
+          const users = await getManager(connectionName).find(User);
 
-        // Two users should be created in the database ...
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
-        const user1 = users[0];
-        const user2 = users[1];
+          // A user should be created in the database ...
+          ok(Array.isArray(users));
+          strictEqual(users.length, 1);
+          const user = users[0];
 
-        // ... with the proper values.
-        strictEqual(user1.firstName, 'Donald');
-        strictEqual(user1.lastName, 'Smith');
-        strictEqual(user1.isAdmin, false);
-        notStrictEqual(user1.id, undefined);
+          // ... with the proper values.
+          strictEqual(user.firstName, 'Donald');
+          strictEqual(user.lastName, 'Smith');
+          strictEqual(user.isAdmin, false);
+          notStrictEqual(user.id, undefined);
+        });
 
-        strictEqual(user2.firstName, 'Victor');
-        strictEqual(user2.lastName, 'Hugo');
-        strictEqual(user2.isAdmin, true);
-        notStrictEqual(user2.id, undefined);
+        xit('should not replace an existing user (if an id is given).', async () => {
+          const user1 = getManager(connectionName).create(User, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          });
+          await getManager(connectionName).save(user1);
 
-        // The returned users should have the above fields.
-        strictEqual((result[0] as any).firstName, 'Donald');
-        strictEqual((result[0] as any).id, user1.id);
-        strictEqual((result[0] as any).isAdmin, false);
-        strictEqual((result[0] as any).lastName, 'Smith');
+          notStrictEqual(user1.id, undefined);
 
-        strictEqual((result[1] as any).firstName, 'Victor');
-        strictEqual((result[1] as any).id, user2.id);
-        strictEqual((result[1] as any).isAdmin, true);
-        strictEqual((result[1] as any).lastName, 'Hugo');
+          await service.create(undefined, {
+            firstName: 'John',
+            id: user1.id,
+            lastName: 'Smith'
+          }, {});
+
+          const users = await getManager(connectionName).find(User);
+
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+        });
+
       });
 
-      xit('should not replace an existing user (if an id is given).', async () => {
-        const user1 = getManager(connectionName).create(User, {
-          firstName: 'Donald',
-          lastName: 'Smith'
+      describe('with an array as data', () => {
+
+        it('should create several users into the database and then return them.', async () => {
+          const result = await service.create(undefined, [
+            {
+              firstName: 'Donald',
+              lastName: 'Smith'
+            },
+            {
+              firstName: 'Victor',
+              isAdmin: true,
+              lastName: 'Hugo',
+            }
+          ], {});
+
+          const users = await getManager(connectionName).find(User);
+
+          // Two users should be created in the database ...
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+          const user1 = users[0];
+          const user2 = users[1];
+
+          // ... with the proper values.
+          strictEqual(user1.firstName, 'Donald');
+          strictEqual(user1.lastName, 'Smith');
+          strictEqual(user1.isAdmin, false);
+          notStrictEqual(user1.id, undefined);
+
+          strictEqual(user2.firstName, 'Victor');
+          strictEqual(user2.lastName, 'Hugo');
+          strictEqual(user2.isAdmin, true);
+          notStrictEqual(user2.id, undefined);
+
+          // The returned users should have the above fields.
+          strictEqual((result[0] as any).firstName, 'Donald');
+          strictEqual((result[0] as any).id, user1.id);
+          strictEqual((result[0] as any).isAdmin, false);
+          strictEqual((result[0] as any).lastName, 'Smith');
+
+          strictEqual((result[1] as any).firstName, 'Victor');
+          strictEqual((result[1] as any).id, user2.id);
+          strictEqual((result[1] as any).isAdmin, true);
+          strictEqual((result[1] as any).lastName, 'Hugo');
         });
-        await getManager(connectionName).save(user1);
 
-        notStrictEqual(user1.id, undefined);
+        xit('should not replace an existing user (if an id is given).', async () => {
+          const user1 = getManager(connectionName).create(User, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          });
+          await getManager(connectionName).save(user1);
 
-        await service.createMany([{
-          firstName: 'John',
-          id: user1.id,
-          lastName: 'Smith'
-        }]);
+          notStrictEqual(user1.id, undefined);
 
-        const users = await getManager(connectionName).find(User);
+          await service.create(undefined, [{
+            firstName: 'John',
+            id: user1.id,
+            lastName: 'Smith'
+          }], {});
 
-        ok(Array.isArray(users));
-        strictEqual(users.length, 2);
+          const users = await getManager(connectionName).find(User);
+
+          ok(Array.isArray(users));
+          strictEqual(users.length, 2);
+        });
+
       });
 
     });
 
-    describe('when findOne is called', () => {
+    describe('when findById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "findById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', /*'findById',*/ 'find', 'modifyById', 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.findById(undefined, undefined, {})
+          .then(() => fail('service.findById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should return the suitable user from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -218,7 +252,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        const result = await service.findOne({ firstName: 'Victor' });
+        const result = await service.findById(undefined, user2.id, {});
 
         strictEqual((result as any).firstName, 'Victor');
         strictEqual((result as any).id, user2.id);
@@ -227,14 +261,28 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.findOne({ firstName: 'Jack' })
+        return service.findById(undefined, 3, {})
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
 
     });
 
-    describe('when findMany is called', () => {
+    describe('when find is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "find".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', /*'find',*/ 'modifyById', 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.find(undefined, { query: {} })
+          .then(() => fail('service.find should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should return all the suitable users from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -250,7 +298,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await getManager(connectionName).save([ user1, user2 ]);
 
         // With an empty query
-        let result = await service.findMany({});
+        let result = await service.find(undefined, { query: {} });
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
 
@@ -265,7 +313,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[1] as any).lastName, 'Hugo');
 
         // With a non empty query
-        result = await service.findMany({ firstName: 'Victor' });
+        result = await service.find(undefined, { query: { firstName: 'Victor' } });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
 
@@ -278,7 +326,21 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     });
 
-    describe('when updateOne is called', () => {
+    describe('when modifyById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "modifyById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', /*'modifyById',*/ 'updateById', 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.modifyById(undefined, undefined, {}, {})
+          .then(() => fail('service.modifyById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should update the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -293,7 +355,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.updateOne({ firstName: 'Victor' }, { firstName: 'John' });
+        await service.modifyById(undefined, user2.id, { firstName: 'John' }, {});
 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
@@ -307,14 +369,78 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.updateOne({ firstName: 'Jack' }, { firstName: 'Adele' })
+        return service.modifyById(undefined, 3, { firstName: 'Adele' }, {})
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
 
     });
 
-    describe('when removeOne is called', () => {
+    describe('when updateById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "updateById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', 'modifyById', /*'updateById',*/ 'deleteById' ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.updateById(undefined, undefined, {}, {})
+          .then(() => fail('service.updateById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
+
+      it('should update the suitable user.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+        const user2 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1, user2 ]);
+
+        await service.updateById(undefined, user2.id, { firstName: 'John' }, {});
+
+        // The suitable user should be updated in the database.
+        const user = await getManager(connectionName).findOne(User, user2.id);
+        if (!user) { throw new Error(); }
+        strictEqual(user.firstName, 'John');
+
+        // The other users should not be updated in the database.
+        const userbis = await getManager(connectionName).findOne(User, user1.id);
+        if (!userbis) { throw new Error(); }
+        strictEqual(userbis.firstName, 'Donald');
+      });
+
+      it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
+        return service.updateById(undefined, 3, { firstName: 'Adele' }, {})
+          .then(() => fail('The promise should be rejected.'))
+          .catch(err => ok(err instanceof ObjectDoesNotExist));
+      });
+
+    });
+
+    describe('when deleteById is called', () => {
+
+      it('should throw a PermissionDenied if service.allowedOperations does not include "deleteById".', () => {
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'create', 'findById', 'find', 'modifyById', 'updateById'/*, 'deleteById'*/ ];
+          connectionName = connectionName;
+        }
+        const service = new UserService();
+
+        return service.deleteById(undefined, undefined, {})
+          .then(() => fail('service.deleteById should rejects an error.'))
+          .catch(err => ok(err instanceof PermissionDenied));
+      });
 
       it('should delete the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
@@ -328,7 +454,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.removeOne({ firstName: user2.firstName });
+        await service.deleteById(undefined, user2.id, {});
 
         const users = await getManager(connectionName).find(User);
 
@@ -339,7 +465,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.removeOne({ firstName: 'Jack' })
+        return service.deleteById(undefined, 1, {})
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });

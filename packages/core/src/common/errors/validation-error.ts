@@ -7,6 +7,6 @@ export class ValidationError extends Error {
   }
 }
 
-export function isValidationError(err: object): boolean {
+export function isValidationError(err: object): err is ValidationError {
   return err instanceof ValidationError || (err as any).isValidationError === true;
 }

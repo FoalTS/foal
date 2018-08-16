@@ -2,6 +2,7 @@
 import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
+import { AbstractUser } from '../../auth';
 import {
   Context,
   Controller,
@@ -53,15 +54,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'deleteById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.removeOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.deleteById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        // removeOne() {}
-        updateOne() {}
+        create() {}
+        find() {}
+        findById() {}
+        // deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -72,28 +73,25 @@ describe('RestController', () => {
       ok(await controller.deleteById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.removeOne is defined', () => {
+    describe('when collection.deleteById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.removeOne resolves.', async () => {
-        const query = { foo: 'bar' };
-        const objects = [ { bar: 'bar' }];
-        let removeOneQuery;
-        let getQueryCtx;
+      it('should return an HttpResponseOK if collection.deleteById resolves.', async () => {
+        const objects = [ { bar: 'bar' } ];
+        let deleteByIdParams;
+        let deleteByIdId;
+        let deleteByIdUser;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
-            removeOneQuery = query;
+          async deleteById(user, id, params) {
+            deleteByIdUser = user;
+            deleteByIdId = id;
+            deleteByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -104,18 +102,20 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(removeOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(deleteByIdUser, ctx.user);
+        strictEqual(deleteByIdId, ctx.request.params.id);
+        deepStrictEqual(deleteByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.removeOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.deleteById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
+          async deleteById(user, id, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -137,12 +137,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.removeOne rejects one which'
+      it('should rejects an error if collection.deleteById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async removeOne(query) {
+          async deleteById(user, id, params) {
             throw err;
           }
         }
@@ -176,15 +176,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'get'), '/');
     });
 
-    it('should return an HttpResponseNotImplemented if collection.findMany is undefined.', async () => {
+    it('should return an HttpResponseNotImplemented if collection.find is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        createOne() {}
-        // findMany() {}
-        findOne() {}
-        removeOne() {}
-        updateOne() {}
+        create() {}
+        // find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -195,17 +195,19 @@ describe('RestController', () => {
       ok(await controller.get(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.findMany is defined', () => {
+    describe('when collection.find is defined', () => {
 
-      it('should return an HttpResponseOK if collection.findMany resolves.', async () => {
+      it('should return an HttpResponseOK if collection.find resolves.', async () => {
         const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
-        let findManyQuery;
+        let findUser;
+        let findQuery;
         let getQueryCtx;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findMany(query) {
-            findManyQuery = query;
+          async find(user, { query }) {
+            findUser = user;
+            findQuery = query;
             return objects;
           }
         }
@@ -223,12 +225,14 @@ describe('RestController', () => {
         const controller = new ConcreteController(services);
 
         const ctx = new Context({});
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        strictEqual(findManyQuery, query);
+        strictEqual(findQuery, query);
+        strictEqual(findUser, ctx.user);
       });
 
     });
@@ -242,16 +246,16 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'getById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.findOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.findById is undefined.', async () => {
 
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        // findOne() {}
-        removeOne() {}
-        updateOne() {}
+        create() {}
+        find() {}
+        // findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -262,28 +266,25 @@ describe('RestController', () => {
       ok(await controller.getById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.findOne is defined', () => {
+    describe('when collection.findById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.findOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.findById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let findOneQuery;
-        let getQueryCtx;
+        let findByIdUser;
+        let findByIdId;
+        let findByIdParams;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
-            findOneQuery = query;
+          async findById(user, id, params) {
+            findByIdUser = user;
+            findByIdId = id;
+            findByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -294,18 +295,20 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(findOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(findByIdUser, ctx.user);
+        strictEqual(findByIdId, ctx.request.params.id);
+        deepStrictEqual(findByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.findOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.findById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
+          async findById(user, id, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -327,12 +330,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.findOne rejects one which'
+      it('should rejects an error if collection.findById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async findOne(query) {
+          async findById(user, id, params) {
             throw err;
           }
         }
@@ -380,15 +383,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'patchById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.updateOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.modifyById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        // updateOne() {}
+        create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        // modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -396,33 +399,30 @@ describe('RestController', () => {
       }
 
       const controller = createController(ConcreteController);
-      ok(await controller.patchById(new Context({})) instanceof HttpResponseNotImplemented);
+      ok(await controller.patchById(new Context({ params: { id: 1 }})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.updateOne is defined', () => {
+    describe('when collection.modifyById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.updateOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.modifyById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let updateOneQuery;
-        let updateOneRecord;
-        let getQueryCtx;
+        let modifyByIdUser;
+        let modifyByIdId;
+        let modifyByIdData;
+        let modifyByIdParams;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query, record) {
-            updateOneQuery = query;
-            updateOneRecord = record;
+          async modifyById(user, id, data, params) {
+            modifyByIdUser = user;
+            modifyByIdId = id;
+            modifyByIdData = data;
+            modifyByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -436,19 +436,21 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateOneRecord, ctx.request.body);
+        strictEqual(modifyByIdUser, ctx.user);
+        strictEqual(modifyByIdId, ctx.request.params.id);
+        strictEqual(modifyByIdData, ctx.request.body);
+        deepStrictEqual(modifyByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.updateOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.modifyById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query, record) {
+          async modifyById(user, id, data, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -473,12 +475,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.updateOne rejects one which'
+      it('should rejects an error if collection.modifyById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query) {
+          async modifyById(user, id, data, params) {
             throw err;
           }
         }
@@ -512,15 +514,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'post'), '/');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.createOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.create is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        // createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        updateOne() {}
+        // create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -531,13 +533,17 @@ describe('RestController', () => {
       ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    it('should return an HttpResponseCreated if collection.createOne is defined.', async () => {
+    it('should return an HttpResponseCreated if collection.create is defined.', async () => {
       const objects = [ { bar: 'bar' }];
-      let createOneRecord;
+      let createUser;
+      let createData;
+      let createParams;
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        async createOne(record) {
-          createOneRecord = record;
+        async create(user, data, params) {
+          createUser = user;
+          createData = data;
+          createParams = params;
           return objects;
         }
       }
@@ -554,11 +560,14 @@ describe('RestController', () => {
           foobar: 'foo'
         },
       });
+      ctx.user = {} as AbstractUser;
 
       const actual = await controller.post(ctx);
       ok(actual instanceof HttpResponseCreated);
       strictEqual(actual.content, objects);
-      strictEqual(createOneRecord, ctx.request.body);
+      strictEqual(createUser, ctx.user);
+      strictEqual(createData, ctx.request.body);
+      deepStrictEqual(createParams, {});
     });
 
   });
@@ -598,15 +607,15 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'putById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if collection.updateOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
       @Service()
       class Collection implements Partial<IResourceCollection> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        // updateOne() {}
+        create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        // updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
@@ -617,30 +626,27 @@ describe('RestController', () => {
       ok(await controller.putById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when collection.updateOne is defined', () => {
+    describe('when collection.updateById is defined', () => {
 
-      it('should return an HttpResponseOK if collection.updateOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let updateOneQuery;
-        let updateOneRecord;
-        let getQueryCtx;
+        let updateByIdUser;
+        let updateByIdId;
+        let updateByIdData;
+        let updateByIdParams;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query, record) {
-            updateOneQuery = query;
-            updateOneRecord = record;
+          async updateById(user, id, data, params) {
+            updateByIdUser = user;
+            updateByIdId = id;
+            updateByIdData = data;
+            updateByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -654,19 +660,21 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateOneRecord, ctx.request.body);
+        strictEqual(updateByIdUser, ctx.user);
+        strictEqual(updateByIdId, ctx.request.params.id);
+        strictEqual(updateByIdData, ctx.request.body);
+        deepStrictEqual(updateByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.updateOne rejects an ObjectDoesNotExist.', async () => {
+      it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query, record) {
+          async updateById(user, id, data, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -691,12 +699,12 @@ describe('RestController', () => {
         ok(actual instanceof HttpResponseNotFound);
       });
 
-      it('should rejects an error if collection.updateOne rejects one which'
+      it('should rejects an error if collection.updateById rejects one which'
           + ' is not an ObjectDoesNotExist.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateOne(query) {
+          async updateById(user, id, data, params) {
             throw err;
           }
         }

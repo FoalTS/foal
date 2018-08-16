@@ -37,12 +37,12 @@ export class AppModule implements IModule {
 
 ## Create a REST controller from another resource collection
 
-- `POST /` -> service.createOne(...)
-- `GET /` -> service.findMany(...)
-- `GET /:id` -> service.findOne(...)
-- `PATCH /:id` -> service.updateOne(...)
-- `PUT /:id` -> service.updateOne(...)
-- `DELETE /:id` -> service.removeOne(...)
+- `POST /` -> service.create(...)
+- `GET /` -> service.find(...)
+- `GET /:id` -> service.findById(...)
+- `PATCH /:id` -> service.modifyById(...)
+- `PUT /:id` -> service.updateById(...)
+- `DELETE /:id` -> service.deleteById(...)
 
 ```typescript
 // ./services/train.service.ts
@@ -57,7 +57,7 @@ export interface Train {
 export class TrainService implements Partial<IResourceCollection> {
   private id = 0;
 
-  createOne(data: Partial<Train>): Train {
+  create(user, data: Partial<Train>, params): Train {
     this.id++;
     return { ...data, id: this.id };
   }
