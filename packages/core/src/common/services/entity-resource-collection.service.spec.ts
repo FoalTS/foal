@@ -355,7 +355,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        await service.modifyById(undefined, undefined, { firstName: 'John' }, { firstName: 'Victor' });
+        await service.modifyById(undefined, user2.id, { firstName: 'John' }, {});
 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
@@ -369,7 +369,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
-        return service.modifyById(undefined, undefined, { firstName: 'Adele' }, { firstName: 'Jack' })
+        return service.modifyById(undefined, 3, { firstName: 'Adele' }, {})
           .then(() => fail('The promise should be rejected.'))
           .catch(err => ok(err instanceof ObjectDoesNotExist));
       });
