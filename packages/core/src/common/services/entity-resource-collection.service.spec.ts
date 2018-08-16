@@ -480,9 +480,7 @@ describe('EntityResourceCollection', () => {
 
   testSuite('mysql', 'mysql-connection');
   testSuite('mariadb', 'mariadb-connection');
-  // We'll need to wait for this issue to be fixed before supporting both postgres and sqlite:
-  // https://github.com/typeorm/typeorm/issues/1308
-  // testSuite('sqlite', 'sqlite-connection');
-  // testSuite('postgres', 'postgres-connection');
+  testSuite('sqlite', 'sqlite-connection');
+  testSuite('postgres', 'postgres-connection');
 
 });
