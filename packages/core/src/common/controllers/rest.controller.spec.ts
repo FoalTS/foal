@@ -629,29 +629,24 @@ describe('RestController', () => {
     describe('when collection.updateById is defined', () => {
 
       it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
-        const query = { foo: 'bar' };
         const objects = [ { bar: 'bar' }];
         let updateByIdUser;
-        let updateByIdQuery;
+        let updateByIdId;
         let updateByIdData;
-        let getQueryCtx;
+        let updateByIdParams;
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, data, query) {
+          async updateById(user, id, data, params) {
             updateByIdUser = user;
-            updateByIdQuery = query;
+            updateByIdId = id;
             updateByIdData = data;
+            updateByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
           collectionClass = Collection;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
         }
 
         const services = new ServiceManager();
@@ -670,16 +665,16 @@ describe('RestController', () => {
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
         strictEqual(updateByIdUser, ctx.user);
-        deepStrictEqual(updateByIdQuery, { foo: 'bar', id: 1 });
+        strictEqual(updateByIdId, ctx.request.params.id);
         strictEqual(updateByIdData, ctx.request.body);
+        deepStrictEqual(updateByIdParams, {});
       });
 
       it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, data, query) {
+          async updateById(user, id, data, params) {
             throw new ObjectDoesNotExist();
           }
         }
@@ -709,7 +704,7 @@ describe('RestController', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, data, query) {
+          async updateById(user, id, data, params) {
             throw err;
           }
         }

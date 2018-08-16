@@ -72,14 +72,11 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
-    const result = await this.getManager().update(
-      this.entityClass,
-      query,
-      data
-    );
-    if (result.raw.affectedRows === 0) {
+    const obj = await this.getManager().findOne(this.entityClass, id);
+    if (!obj) {
       throw new ObjectDoesNotExist();
     }
+    await this.getManager().update(this.entityClass, obj, data);
   }
 
   async deleteById(user: AbstractUser|undefined, id, params: {}): Promise<void> {
