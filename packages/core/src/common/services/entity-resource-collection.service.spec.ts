@@ -35,6 +35,7 @@ export class User {
 }
 
 describe('middleware', () => {
+
   it('should return an object with a property, which value is the given middleware,'
       + ' for each given operation.', () => {
     const ware = () => {};
