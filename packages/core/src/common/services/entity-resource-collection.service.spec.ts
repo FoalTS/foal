@@ -1,5 +1,5 @@
 // std
-import { fail, notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import {
@@ -13,7 +13,7 @@ import {
 
 // FoalTS
 import { ObjectDoesNotExist, PermissionDenied } from '../errors';
-import { EntityResourceCollection } from './entity-resource-collection.service';
+import { EntityResourceCollection, middleware } from './entity-resource-collection.service';
 
 @Entity()
 export class User {
@@ -33,6 +33,49 @@ export class User {
   // @ts-ignore : Property 'isAdmin' has no initializer and is not definitely assigned in theconstructor.
   isAdmin: boolean;
 }
+
+describe('middleware', () => {
+  it('should return an object with a property, which value is the given middleware,'
+      + ' for each given operation.', () => {
+    const ware = () => {};
+
+    const actual1 = middleware('findById', ware);
+    deepStrictEqual(actual1, { findById: ware });
+
+    const actual2 = middleware('create|updateById', ware);
+    deepStrictEqual(actual2, { create: ware, updateById: ware });
+  });
+
+  it('should understand that "*" means "all operations".', () => {
+    const ware = () => {};
+
+    const actual = middleware('*', ware);
+    deepStrictEqual(actual, {
+      create: ware,
+      deleteById: ware,
+      find: ware,
+      findById: ware,
+      modifyById: ware,
+      updateById: ware,
+    });
+  });
+
+  it('should throw an Error if a given operation is invalid.', done => {
+    const ware = () => {};
+
+    try {
+      const actual = middleware('foo', ware);
+      done('middleware should throw an Error');
+    } catch (err) {
+      strictEqual(
+        err.message,
+        '"foo" is not a valid operation name.'
+          + ' Allowed values are: *|create|find|findById|updateById|modifyById|deleteById'
+      );
+      done();
+    }
+  });
+});
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: string) {
 
