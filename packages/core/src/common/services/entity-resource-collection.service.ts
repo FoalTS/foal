@@ -96,26 +96,34 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getManager().find(this.entityClass, params.query);
   }
 
-  async modifyById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<void> {
+  async modifyById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<object> {
     if (!this.allowedOperations.includes('modifyById')) {
       throw new PermissionDenied();
     }
-    const obj = await this.getManager().findOne(this.entityClass, id);
-    if (!obj) {
-      throw new ObjectDoesNotExist();
-    }
-    await this.getManager().update(this.entityClass, obj, data);
+    const result = await this.getManager().transaction(async transactionalEntityManager => {
+      const obj = await transactionalEntityManager.findOne(this.entityClass, id);
+      if (!obj) {
+        throw new ObjectDoesNotExist();
+      }
+      await transactionalEntityManager.update(this.entityClass, obj, data);
+      return transactionalEntityManager.findOne(this.entityClass, id);
+    });
+    return result;
   }
 
-  async updateById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<void> {
+  async updateById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<object> {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
-    const obj = await this.getManager().findOne(this.entityClass, id);
-    if (!obj) {
-      throw new ObjectDoesNotExist();
-    }
-    await this.getManager().update(this.entityClass, obj, data);
+    const result = await this.getManager().transaction(async transactionalEntityManager => {
+      const obj = await transactionalEntityManager.findOne(this.entityClass, id);
+      if (!obj) {
+        throw new ObjectDoesNotExist();
+      }
+      await transactionalEntityManager.update(this.entityClass, obj, data);
+      return transactionalEntityManager.findOne(this.entityClass, id);
+    });
+    return result;
   }
 
   async deleteById(user: AbstractUser|undefined, id, params: {}): Promise<void> {
