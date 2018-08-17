@@ -40,6 +40,8 @@ foal g controller flight
 > REST
 ```
 
+> Authorization is handled in the collection service. The controller is only responsible for translating http inputs (cookies, request body, URL params, etc) into understanble inputs to the service methods.
+
 ### Register the controller within a module
 
 ```typescript
