@@ -15,6 +15,24 @@ foal g service flight
 > EntityResourceCollection
 ```
 
+Each method of an `EntityResourceCollection` throws a `PermissionDenied` error by default.
+This serves security purpose, it prevents the access to any logic that you might have exposed by accident. To make an operation available you must provide its name to the `allowedOperations` array.
+
+```typescript
+import { EntityResourceCollection, Service } from '@foal/core';
+
+import { Flight } from '../entities/flight.entity';
+
+@Service()
+export class FlightCollection extends EntityResourceCollection {
+  entityClass = Flight;
+  allowedOperations: EntityResourceCollection['allowedOperations'] = [
+    'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
+  ];
+}
+
+```
+
 ### Create the controller
 
 ```sh
