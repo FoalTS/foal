@@ -323,7 +323,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        return service.find(undefined, { query: {} })
+        return service.find(undefined, {})
           .then(() => fail('service.find should rejects an error.'))
           .catch(err => ok(err instanceof PermissionDenied));
       });
@@ -342,7 +342,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         await getManager(connectionName).save([ user1, user2 ]);
 
         // With an empty query
-        let result = await service.find(undefined, { query: {} });
+        let result = await service.find(undefined, {});
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
 

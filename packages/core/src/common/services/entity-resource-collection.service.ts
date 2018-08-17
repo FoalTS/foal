@@ -89,7 +89,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return entity;
   }
 
-  async find(user: AbstractUser|undefined, params: { query: object }): Promise<object[]> {
+  async find(user: AbstractUser|undefined, params: { query?: object }): Promise<object[]> {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
