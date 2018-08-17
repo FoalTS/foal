@@ -20,7 +20,7 @@ import {
   ServiceManager
 } from '../../core';
 import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
-import { IResourceCollection } from '../services';
+import { CollectionParams, IResourceCollection } from '../services';
 import { RestController } from './rest.controller';
 
 describe('RestController', () => {
@@ -30,9 +30,10 @@ describe('RestController', () => {
     collectionClass = class {};
   }
 
-  it('has a getQuery method that should return an empty object', () => {
+  it('has a extendParams method that should return the given params', () => {
     const controller = createController(ConcreteController);
-    deepStrictEqual(controller.getQuery(new Context({})), {});
+    const params: CollectionParams = {};
+    strictEqual(controller.extendParams(new Context({}), params), params);
   });
 
   describe('has a "delete" method that', () => {
@@ -226,9 +227,9 @@ describe('RestController', () => {
         class ConcreteController extends RestController {
           collectionClass = Collection;
 
-          getQuery(ctx) {
+          extendParams(ctx, params: CollectionParams) {
             getQueryCtx = ctx;
-            return query;
+            return { ...params, query };
           }
         }
 

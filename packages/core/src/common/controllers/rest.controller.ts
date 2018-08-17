@@ -17,7 +17,7 @@ import {
   ServiceManager
 } from '../../core';
 import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
-import { IResourceCollection } from '../services';
+import { CollectionParams, IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
@@ -25,8 +25,8 @@ export abstract class RestController {
 
   constructor(private services: ServiceManager) { }
 
-  getQuery(ctx: Context): object {
-    return {};
+  extendParams(ctx: Context, params: CollectionParams): CollectionParams {
+    return params;
   }
 
   @Delete('/')
@@ -64,9 +64,9 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    const query = this.getQuery(ctx);
+    const params = this.extendParams(ctx, {});
     try {
-      return new HttpResponseOK(await collection.find(ctx.user, { query }));
+      return new HttpResponseOK(await collection.find(ctx.user, params));
     } catch (error) {
       if (isValidationError(error)) {
         return new HttpResponseBadRequest(error.content);

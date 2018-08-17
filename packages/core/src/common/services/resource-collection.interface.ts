@@ -17,3 +17,7 @@ export interface IResourceCollection {
 
   deleteById(user: AbstractUser|undefined, id, params: {});
 }
+
+export interface CollectionParams {
+  query?: object;
+}
