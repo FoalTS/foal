@@ -130,11 +130,13 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('deleteById')) {
       throw new PermissionDenied();
     }
-    const obj = await this.getManager().findOne(this.entityClass, id);
-    if (!obj) {
-      throw new ObjectDoesNotExist();
-    }
-    await this.getManager().delete(this.entityClass, id);
+    await this.getManager().transaction(async transactionalEntityManager => {
+      const obj = await transactionalEntityManager.findOne(this.entityClass, id);
+      if (!obj) {
+        throw new ObjectDoesNotExist();
+      }
+      await transactionalEntityManager.delete(this.entityClass, id);
+    });
   }
 
   private getManager() {
