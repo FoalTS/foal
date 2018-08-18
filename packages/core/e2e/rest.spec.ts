@@ -8,6 +8,7 @@ import {
   createConnection,
   Entity,
   getConnection,
+  getConnectionManager,
   getManager,
   getRepository,
   ManyToOne,
@@ -18,12 +19,23 @@ import {
 import {
   AbstractUser,
   Authenticate,
+  Controller,
+  controller,
   createApp,
+  EntityResourceCollection,
   Group,
+  IAuthenticator,
   IModule,
   InitDB,
+  IResourceCollection,
+  LoginController,
+  middleware,
   Module,
   Permission,
+  PermissionDenied,
+  RestController,
+  Service,
+  strategy,
 } from '../src';
 
 it('REST API with RestController and EntityResourceCollection', async () => {
@@ -96,11 +108,43 @@ it('REST API with RestController and EntityResourceCollection', async () => {
     org: Org;
   }
 
+  @Service()
+  class UserCollection extends EntityResourceCollection {
+    entityClass = User;
+    allowedOperations: (keyof IResourceCollection)[] = [
+      'create', 'deleteById', 'find', 'findById', 'modifyById', 'updateById'
+    ];
+    middlewares = [];
+  }
+
+  @Service()
+  class Authenticator implements IAuthenticator<User> {
+    async authenticate(credentials: { id: number }) {
+      const user = await getRepository(User).findOne({ id: credentials.id });
+      return user || null;
+    }
+  }
+
+  @Controller()
+  class UserController extends RestController {
+    collectionClass = UserCollection;
+  }
+
+  @Controller()
+  class AuthController extends LoginController {
+    strategies = [
+      strategy('login', Authenticator, {})
+    ];
+  }
+
   @Module()
   @InitDB([ User, Permission, Group, Org ])
   @Authenticate(User)
   class AppModule implements IModule {
-    controllers = [];
+    controllers = [
+      controller('/users', UserController),
+      controller('', AuthController),
+    ];
   }
 
   const app = createApp(AppModule);
@@ -185,4 +229,50 @@ it('REST API with RestController and EntityResourceCollection', async () => {
   ]);
 
   await getConnection('create-connection').close();
+
+  let authCookie = '';
+
+  /* Log in as a simple user */
+
+  await request(app)
+    .post('/login')
+    .send({ id: blueSimpleUser1.id })
+    .expect(204)
+    .then(data => {
+      ok(Array.isArray(data.header['set-cookie']));
+      authCookie = data.header['set-cookie'][0];
+    });
+
+  /* [Simple user] Try to create a user */
+
+  await request(app)
+    .post('/users')
+    .set('Cookie', authCookie)
+    .send({
+      name: 'John',
+      phone: '06 00 00 00 54'
+    })
+    .expect(403);
+
+  /* Log in as an admin user */
+
+  await request(app)
+    .post('/login')
+    .send({ id: blueAdminUser.id })
+    .expect(204)
+    .then(data => {
+      ok(Array.isArray(data.header['set-cookie']));
+      authCookie = data.header['set-cookie'][0];
+    });
+
+  /* Log in as a superuser */
+
+  await request(app)
+    .post('/login')
+    .send({ id: superuser.id })
+    .expect(204)
+    .then(data => {
+      ok(Array.isArray(data.header['set-cookie']));
+      authCookie = data.header['set-cookie'][0];
+    });
 });
