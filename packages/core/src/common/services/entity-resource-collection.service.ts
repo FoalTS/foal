@@ -3,9 +3,9 @@ import { getManager } from 'typeorm';
 import { AbstractUser } from '../../auth';
 import { Class } from '../../core';
 import { ObjectDoesNotExist, PermissionDenied } from '../errors';
-import { IResourceCollection } from './resource-collection.interface';
+import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 
-export type Middleware = (context: { user: AbstractUser, resource, data, params: { /* ... */ } }) => any;
+export type Middleware = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => any;
 
 export function middleware(operations: string, middleware: Middleware):
       Partial<Record<keyof IResourceCollection, Middleware>> {
@@ -64,6 +64,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('create')) {
       throw new PermissionDenied();
     }
+    for (const middleware of this.middlewares) {
+      if (!middleware.create) {
+        continue;
+      }
+      await middleware.create({ user, resource: undefined, data, params });
+    }
     if (Array.isArray(data)) {
       const entities = data.map(record => {
         record = Object.assign({}, record);
@@ -86,6 +92,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!entity) {
       throw new ObjectDoesNotExist();
     }
+    // for (const middleware of this.middlewares) {
+    //   if (!middleware.findById) {
+    //     continue;
+    //   }
+    //   await middleware.findById({ user, resource: entity, data: undefined, params });
+    // }
     return entity;
   }
 
@@ -93,6 +105,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
+    // for (const middleware of this.middlewares) {
+    //   if (!middleware.find) {
+    //     continue;
+    //   }
+    //   await middleware.find({ user, resource: undefined, data: undefined, params });
+    // }
     return this.getManager().find(this.entityClass, params.query);
   }
 
@@ -105,6 +123,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       if (!obj) {
         throw new ObjectDoesNotExist();
       }
+      // for (const middleware of this.middlewares) {
+      //   if (!middleware.findOne) {
+      //     continue;
+      //   }
+      //   await middleware.findOne({ user, resource: obj, data, params });
+      // }
       await transactionalEntityManager.update(this.entityClass, obj, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
@@ -120,6 +144,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       if (!obj) {
         throw new ObjectDoesNotExist();
       }
+      // for (const middleware of this.middlewares) {
+      //   if (!middleware.findOne) {
+      //     continue;
+      //   }
+      //   await middleware.findOne({ user, resource: obj, data, params });
+      // }
       await transactionalEntityManager.update(this.entityClass, obj, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
@@ -135,6 +165,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       if (!obj) {
         throw new ObjectDoesNotExist();
       }
+      // for (const middleware of this.middlewares) {
+      //   if (!middleware.deleteById) {
+      //     continue;
+      //   }
+      //   await middleware.deleteById({ user, resource: obj, data: undefined, params });
+      // }
       await transactionalEntityManager.delete(this.entityClass, id);
     });
   }
