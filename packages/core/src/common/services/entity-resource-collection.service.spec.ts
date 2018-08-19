@@ -43,6 +43,10 @@ export class User {
   // @ts-ignore : Property 'lastName' has no initializer and is not definitely assigned in theconstructor.
   lastName: string;
 
+  @Column({ nullable: true })
+  // @ts-ignore : Property 'password' has no initializer and is not definitely assigned in theconstructor.
+  password: string;
+
   @Column({ default: false })
   // @ts-ignore : Property 'isAdmin' has no initializer and is not definitely assigned in theconstructor.
   isAdmin: boolean;
@@ -56,6 +60,11 @@ export class User {
   @JoinColumn()
   // @ts-ignore : Property 'profile' has no initializer and is not definitely assigned in theconstructor.
   profile2: Profile;
+
+  async setPassword(password: string) {
+    await Promise.resolve();
+    this.password = `${password}_encrypted`;
+  }
 }
 
 describe('middleware', () => {
@@ -247,7 +256,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         it('should create one user into the database.', async () => {
           await service.create(undefined, {
             firstName: 'Donald',
-            lastName: 'Smith'
+            lastName: 'Smith',
+            password: 'my_password'
           }, {});
 
           const users = await getManager(connectionName).find(User);
@@ -261,6 +271,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           strictEqual(user.firstName, 'Donald');
           strictEqual(user.lastName, 'Smith');
           strictEqual(user.isAdmin, false);
+          strictEqual(user.password, 'my_password_encrypted');
           notStrictEqual(user.id, undefined);
         });
 
@@ -296,12 +307,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           await service.create(undefined, [
             {
               firstName: 'Donald',
-              lastName: 'Smith'
+              lastName: 'Smith',
+              password: 'my_password1',
             },
             {
               firstName: 'Victor',
               isAdmin: true,
               lastName: 'Hugo',
+              password: 'my_password2',
             }
           ], {});
 
@@ -316,11 +329,13 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           // ... with the proper values.
           strictEqual(user1.firstName, 'Donald');
           strictEqual(user1.lastName, 'Smith');
+          strictEqual(user1.password, 'my_password1_encrypted');
           strictEqual(user1.isAdmin, false);
           notStrictEqual(user1.id, undefined);
 
           strictEqual(user2.firstName, 'Victor');
           strictEqual(user2.lastName, 'Hugo');
+          strictEqual(user2.password, 'my_password2_encrypted');
           strictEqual(user2.isAdmin, true);
           notStrictEqual(user2.id, undefined);
         });

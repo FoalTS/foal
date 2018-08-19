@@ -75,6 +75,13 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     }
 
     const resourceOrResources = this.getManager().create(this.entityClass, data);
+
+    if (Array.isArray(resourceOrResources)) {
+      resourceOrResources.forEach((resource, index) => this.useSetters(resource, data[index]));
+    } else {
+      this.useSetters(resourceOrResources, data);
+    }
+
     await this.getManager().save(resourceOrResources);
     if (!params.fields) {
       return resourceOrResources;
@@ -234,6 +241,16 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       representation[field] = resource[field];
     }
     return representation;
+  }
+
+  private useSetters(resource, data) {
+    // tslint:disable-next-line:forin
+    for (const property in data) {
+      const setterName = 'set' + property.charAt(0).toUpperCase() + property.slice(1);
+      if (typeof resource[setterName] === 'function') {
+        resource[setterName](data[property]);
+      }
+    }
   }
 
 }
