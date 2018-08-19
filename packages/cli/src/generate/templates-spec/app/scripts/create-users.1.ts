@@ -8,12 +8,12 @@ async function main() {
   await createConnection();
 
   const user = new User();
-  user.email = 'john@foalts.org';
-  await user.setPassword('password');
+  // user.email = 'john@foalts.org';
+  // await user.setPassword('password');
 
   const user2 = new User();
-  user2.email = 'jack@foalts.org';
-  await user2.setPassword('password2');
+  // user2.email = 'jack@foalts.org';
+  // await user2.setPassword('password2');
 
   const permission = new Permission();
   permission.name = 'Admin permission';
