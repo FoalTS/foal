@@ -21,4 +21,6 @@ export interface IResourceCollection {
 export interface CollectionParams {
   query?: object;
   fields?: string[];
+  // pagination?
+  // sort?
 }
