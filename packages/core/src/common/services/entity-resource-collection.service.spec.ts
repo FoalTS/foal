@@ -98,7 +98,7 @@ describe('middleware', () => {
     const ware = () => {};
 
     try {
-      const actual = middleware('foo', ware);
+      middleware('foo', ware);
       done('middleware should throw an Error');
     } catch (err) {
       strictEqual(
@@ -904,7 +904,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        const result = await service.modifyById(undefined, user2.id, { firstName: 'John' }, {});
+        await service.modifyById(undefined, user2.id, { firstName: 'John' }, {});
 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
@@ -1070,7 +1070,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        const result = await service.updateById(undefined, user2.id, { firstName: 'John' }, {});
+        await service.updateById(undefined, user2.id, { firstName: 'John' }, {});
 
         // The suitable user should be updated in the database.
         const user = await getManager(connectionName).findOne(User, user2.id);
