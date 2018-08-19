@@ -242,7 +242,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           notStrictEqual(user.id, undefined);
         });
 
-        xit('should not replace an existing user (if an id is given).', async () => {
+        it('should not replace an existing user (if an id is given).', async () => {
           const user1 = getManager(connectionName).create(User, {
             firstName: 'Donald',
             lastName: 'Smith'
@@ -311,7 +311,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           strictEqual((result[1] as any).lastName, 'Hugo');
         });
 
-        xit('should not replace an existing user (if an id is given).', async () => {
+        it('should not replace an existing user (if an id is given).', async () => {
           const user1 = getManager(connectionName).create(User, {
             firstName: 'Donald',
             lastName: 'Smith'
