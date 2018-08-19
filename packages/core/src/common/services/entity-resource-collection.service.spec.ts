@@ -8,6 +8,8 @@ import {
   Entity,
   getConnection,
   getManager,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -15,6 +17,17 @@ import {
 import { AbstractUser } from '../../auth';
 import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { EntityResourceCollection, middleware, Middleware } from './entity-resource-collection.service';
+
+@Entity()
+export class Profile {
+  @PrimaryGeneratedColumn()
+  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
+  id: number;
+
+  @Column()
+  // @ts-ignore : Property 'pseudo' has no initializer and is not definitely assigned in theconstructor.
+  pseudo: string;
+}
 
 @Entity()
 export class User {
@@ -33,6 +46,16 @@ export class User {
   @Column({ default: false })
   // @ts-ignore : Property 'isAdmin' has no initializer and is not definitely assigned in theconstructor.
   isAdmin: boolean;
+
+  @OneToOne(type => Profile)
+  @JoinColumn()
+  // @ts-ignore : Property 'profile' has no initializer and is not definitely assigned in theconstructor.
+  profile1: Profile;
+
+  @OneToOne(type => Profile)
+  @JoinColumn()
+  // @ts-ignore : Property 'profile' has no initializer and is not definitely assigned in theconstructor.
+  profile2: Profile;
 }
 
 describe('middleware', () => {
@@ -85,15 +108,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
     let service: EntityResourceCollection;
 
-    before(() => {
-      class UserService extends EntityResourceCollection {
-        entityClass = User;
-        allowedOperations: EntityResourceCollection['allowedOperations']
-          = [ 'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
-        connectionName = connectionName;
-      }
-      service = new UserService();
-    });
+    class UserService extends EntityResourceCollection {
+      entityClass = User;
+      allowedOperations: EntityResourceCollection['allowedOperations']
+        = [ 'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById' ];
+      connectionName = connectionName;
+    }
+
+    before(() => service = new UserService());
 
     beforeEach(() => {
       switch (type) {
@@ -102,7 +124,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           return createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ User ],
+            entities: [ User, Profile ],
             name: connectionName,
             password: 'test',
             synchronize: true,
@@ -113,7 +135,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           return createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ User ],
+            entities: [ User, Profile ],
             name: connectionName,
             password: 'test',
             synchronize: true,
@@ -124,7 +146,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           return createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
-            entities: [ User ],
+            entities: [ User, Profile ],
             name: connectionName,
             synchronize: true,
             type,
@@ -449,24 +471,67 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
       it('should return a full representation of the suitable user from the database'
           + ' if params.fields is undefined.', async () => {
+        const profile1 = getManager(connectionName).create(Profile, {
+          pseudo: 'foo'
+        });
+        const profile2 = getManager(connectionName).create(Profile, {
+          pseudo: 'bar'
+        });
+        await getManager(connectionName).save([ profile1, profile2 ]);
+
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
-          lastName: 'Smith'
+          lastName: 'Smith',
         });
         const user2 = getManager(connectionName).create(User, {
           firstName: 'Victor',
           isAdmin: true,
           lastName: 'Hugo',
+          profile1,
+          profile2,
         });
-
         await getManager(connectionName).save([ user1, user2 ]);
 
+        // with no relations
         const result = await service.findById(undefined, user2.id, {});
 
         strictEqual((result as any).firstName, 'Victor');
         strictEqual((result as any).id, user2.id);
         strictEqual((result as any).isAdmin, true);
         strictEqual((result as any).lastName, 'Hugo');
+        strictEqual((result as any).profile1, undefined);
+        strictEqual((result as any).profile2, undefined);
+
+        // with a relation
+        let loadedRelationsUser;
+        let loadedRelationsParams;
+        class UserService2 extends UserService {
+          loadedRelations = {
+            findById: (user, params) => {
+              loadedRelationsUser = user;
+              loadedRelationsParams = params;
+              return [ 'profile1' ];
+            }
+          };
+        }
+        const service2 = new UserService2();
+
+        const user = {} as AbstractUser;
+        const params = {};
+
+        const result2 = await service2.findById(user, user2.id, params);
+
+        strictEqual((result2 as any).firstName, 'Victor');
+        strictEqual((result2 as any).id, user2.id);
+        strictEqual((result2 as any).isAdmin, true);
+        strictEqual((result2 as any).lastName, 'Hugo');
+
+        notStrictEqual((result2 as any).profile1, undefined);
+        strictEqual((result2 as any).profile1.pseudo, 'foo');
+        strictEqual((result2 as any).profile2, undefined);
+
+        strictEqual(loadedRelationsUser, user);
+        strictEqual(loadedRelationsParams, params);
       });
 
       it('should return a partial representation of the suitable user from the database'
@@ -585,6 +650,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
       it('should return full representations of the suitable users from the database'
           + ' if params.fields is undefined.', async () => {
+        const profile1 = getManager(connectionName).create(Profile, {
+          pseudo: 'foo'
+        });
+        const profile2 = getManager(connectionName).create(Profile, {
+          pseudo: 'bar'
+        });
+        await getManager(connectionName).save([ profile1, profile2 ]);
+
         const user1 = getManager(connectionName).create(User, {
             firstName: 'Donald',
             lastName: 'Smith'
@@ -593,11 +666,13 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
             firstName: 'Victor',
             isAdmin: true,
             lastName: 'Hugo',
+            profile1,
+            profile2,
         });
 
         await getManager(connectionName).save([ user1, user2 ]);
 
-        // With an empty query
+        // With an empty query and no relations
         let result = await service.find(undefined, {});
         ok(Array.isArray(result));
         strictEqual(result.length, 2);
@@ -606,13 +681,17 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[0] as any).id, user1.id);
         strictEqual((result[0] as any).isAdmin, false);
         strictEqual((result[0] as any).lastName, 'Smith');
+        strictEqual((result[0] as any).profile1, undefined);
+        strictEqual((result[0] as any).profile2, undefined);
 
         strictEqual((result[1] as any).firstName, 'Victor');
         strictEqual((result[1] as any).id, user2.id);
         strictEqual((result[1] as any).isAdmin, true);
         strictEqual((result[1] as any).lastName, 'Hugo');
+        strictEqual((result[1] as any).profile1, undefined);
+        strictEqual((result[1] as any).profile2, undefined);
 
-        // With a non empty query
+        // With a non empty query and no relations
         result = await service.find(undefined, { query: { firstName: 'Victor' } });
         ok(Array.isArray(result));
         strictEqual(result.length, 1);
@@ -622,6 +701,37 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[0] as any).isAdmin, true);
         strictEqual((result[0] as any).lastName, 'Hugo');
 
+        // With a non empty query and a relation
+        let loadedRelationsUser;
+        let loadedRelationsParams;
+        class UserService2 extends UserService {
+          loadedRelations = {
+            find: (user, params) => {
+              loadedRelationsUser = user;
+              loadedRelationsParams = params;
+              return [ 'profile1' ];
+            }
+          };
+        }
+        const service2 = new UserService2();
+
+        const user = {} as AbstractUser;
+        const params = { query: { firstName: 'Victor' } };
+
+        result = await service2.find(user, params);
+        ok(Array.isArray(result));
+        strictEqual(result.length, 1);
+
+        strictEqual((result[0] as any).firstName, 'Victor');
+        strictEqual((result[0] as any).id, user2.id);
+        strictEqual((result[0] as any).isAdmin, true);
+        strictEqual((result[0] as any).lastName, 'Hugo');
+        notStrictEqual((result[0] as any).profile1, undefined, 'Property profile1 should be defined');
+        strictEqual((result[0] as any).profile1.pseudo, 'foo');
+        strictEqual((result[0] as any).profile2, undefined);
+
+        strictEqual(loadedRelationsUser, user);
+        strictEqual(loadedRelationsParams, params);
       });
 
       it('should return partial representations of the suitable users from the database'

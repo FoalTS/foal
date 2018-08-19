@@ -6,6 +6,7 @@ import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 
 export type Middleware = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => any;
+export type RelationLoader = (user: AbstractUser|undefined, params: CollectionParams) => string[];
 
 export function middleware(operations: string, middleware: Middleware):
       Partial<Record<keyof IResourceCollection, Middleware>> {
@@ -58,6 +59,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   abstract readonly entityClass: Class;
   abstract readonly allowedOperations: (keyof IResourceCollection)[];
   readonly middlewares: Partial<Record<keyof IResourceCollection, Middleware>>[] = [];
+  readonly loadedRelations: Partial<Record<'find'|'findById', RelationLoader>> = {};
   readonly connectionName: string = 'default';
 
   async create(user: AbstractUser|undefined, data: object, params: { fields?: string[] }): Promise<object> {
@@ -91,7 +93,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       throw new PermissionDenied();
     }
 
-    const resource = await this.getManager().findOne(this.entityClass, id);
+    let relations: string[] = [];
+    if (this.loadedRelations.findById) {
+      relations = this.loadedRelations.findById(user, params);
+    }
+
+    const resource = await this.getManager().findOne(this.entityClass, id, { relations });
     if (!resource) {
       throw new ObjectDoesNotExist();
     }
@@ -115,6 +122,11 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       throw new PermissionDenied();
     }
 
+    let relations: string[] = [];
+    if (this.loadedRelations.find) {
+      relations = this.loadedRelations.find(user, params);
+    }
+
     for (const middleware of this.middlewares) {
       if (!middleware.find) {
         continue;
@@ -122,7 +134,10 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       await middleware.find({ user, resource: undefined, data: undefined, params });
     }
 
-    const resources = await this.getManager().find(this.entityClass, params.query);
+    const resources = await this.getManager().find(this.entityClass, {
+      relations,
+      where: params.query
+    });
 
     if (!params.fields) {
       return resources;
