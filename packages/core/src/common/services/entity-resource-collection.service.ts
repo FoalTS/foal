@@ -64,45 +64,26 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('create')) {
       throw new PermissionDenied();
     }
+
     for (const middleware of this.middlewares) {
       if (!middleware.create) {
         continue;
       }
       await middleware.create({ user, resource: undefined, data, params });
     }
-    if (Array.isArray(data)) {
-      const resources = data.map(record => {
-        record = Object.assign({}, record);
-        delete (record as any).id;
-        return this.getManager().create(this.entityClass, record);
-      });
-      await this.getManager().save(resources);
-      if (!params.fields) {
-        return resources;
-      }
 
-      return resources.map(resource => {
-        const representation = {};
-        for (const field of params.fields as string[]) {
-          representation[field] = resource[field];
-        }
-        return representation;
-      });
-    }
-    data = Object.assign({}, data);
-    delete (data as any).id;
-
-    const resource = this.getManager().create(this.entityClass, data);
-    await this.getManager().save(resource);
+    const resourceOrResources = this.getManager().create(this.entityClass, data);
+    await this.getManager().save(resourceOrResources);
     if (!params.fields) {
-      return resource;
+      return resourceOrResources;
     }
 
-    const representation = {};
-    for (const field of params.fields) {
-      representation[field] = resource[field];
+    if (Array.isArray(resourceOrResources)) {
+      return resourceOrResources.map(
+        resource => this.getRepresentation(resource, params.fields as string[])
+      );
     }
-    return representation;
+    return this.getRepresentation(resourceOrResources, params.fields);
   }
 
   async findById(user: AbstractUser|undefined, id, params: {}): Promise<object> {
@@ -198,6 +179,14 @@ export abstract class EntityResourceCollection implements IResourceCollection {
 
   private getManager() {
     return getManager(this.connectionName);
+  }
+
+  private getRepresentation(resource, fields: string[]) {
+    const representation = {};
+    for (const field of fields) {
+      representation[field] = resource[field];
+    }
+    return representation;
   }
 
 }

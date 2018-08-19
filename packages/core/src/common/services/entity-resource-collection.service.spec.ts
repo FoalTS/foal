@@ -266,27 +266,6 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           notStrictEqual(user.id, undefined);
         });
 
-        it('should not replace an existing user (if an id is given).', async () => {
-          const user1 = getManager(connectionName).create(User, {
-            firstName: 'Donald',
-            lastName: 'Smith'
-          });
-          await getManager(connectionName).save(user1);
-
-          notStrictEqual(user1.id, undefined);
-
-          await service.create(undefined, {
-            firstName: 'John',
-            id: user1.id,
-            lastName: 'Smith'
-          }, {});
-
-          const users = await getManager(connectionName).find(User);
-
-          ok(Array.isArray(users));
-          strictEqual(users.length, 2);
-        });
-
       });
 
       describe('with an array as data', () => {
@@ -371,27 +350,6 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           notStrictEqual(users[1].id, undefined);
           strictEqual(users[1].isAdmin, undefined);
           strictEqual(users[1].lastName, undefined);
-        });
-
-        it('should not replace an existing user (if an id is given).', async () => {
-          const user1 = getManager(connectionName).create(User, {
-            firstName: 'Donald',
-            lastName: 'Smith'
-          });
-          await getManager(connectionName).save(user1);
-
-          notStrictEqual(user1.id, undefined);
-
-          await service.create(undefined, [{
-            firstName: 'John',
-            id: user1.id,
-            lastName: 'Smith'
-          }], {});
-
-          const users = await getManager(connectionName).find(User);
-
-          ok(Array.isArray(users));
-          strictEqual(users.length, 2);
         });
 
       });
