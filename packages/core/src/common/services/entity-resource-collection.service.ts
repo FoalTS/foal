@@ -88,17 +88,17 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('findById')) {
       throw new PermissionDenied();
     }
-    const entity = await this.getManager().findOne(this.entityClass, id);
-    if (!entity) {
+    const resource = await this.getManager().findOne(this.entityClass, id);
+    if (!resource) {
       throw new ObjectDoesNotExist();
     }
-    // for (const middleware of this.middlewares) {
-    //   if (!middleware.findById) {
-    //     continue;
-    //   }
-    //   await middleware.findById({ user, resource: entity, data: undefined, params });
-    // }
-    return entity;
+    for (const middleware of this.middlewares) {
+      if (!middleware.findById) {
+        continue;
+      }
+      await middleware.findById({ user, resource, data: undefined, params });
+    }
+    return resource;
   }
 
   async find(user: AbstractUser|undefined, params: { query?: object }): Promise<object[]> {

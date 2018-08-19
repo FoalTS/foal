@@ -352,6 +352,81 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           .catch(err => ok(err instanceof PermissionDenied));
       });
 
+      it('should execute the "findById" middlewares in the right order.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        let str = '';
+        const middleware1: Middleware = async ({ user, resource, data, params }) => {
+          await Promise.resolve();
+          str += 'a';
+        };
+        const middleware2: Middleware = async ({ user, resource, data, params }) => {};
+        const middleware3: Middleware = async ({ user, resource, data, params }) => {
+          str += 'b';
+        };
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'findById' ];
+          connectionName = connectionName;
+          middlewares = [
+            middleware('findById', middleware1),
+            middleware('create', middleware2),
+            middleware('findById', middleware3),
+          ];
+        }
+        const service = new UserService();
+
+        await service.findById({} as AbstractUser, user1.id, {});
+
+        strictEqual(str, 'ab');
+      });
+
+      it('should call the "findById" middlewares with the correct parameters.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        let middlewareUser;
+        let middlewareResource;
+        let middlewareData;
+        let middlewareParams;
+        const middleware1: Middleware = async ({ user, resource, data, params }) => {
+          middlewareUser = user;
+          middlewareResource = resource;
+          middlewareData = data;
+          middlewareParams = params;
+        };
+        class UserService extends EntityResourceCollection {
+          entityClass = User;
+          allowedOperations: EntityResourceCollection['allowedOperations']
+            = [ 'findById' ];
+          connectionName = connectionName;
+          middlewares = [
+            middleware('findById', middleware1),
+          ];
+        }
+        const service = new UserService();
+
+        const user = {} as AbstractUser;
+        const params = {};
+
+        await service.findById(user, user1.id, params);
+
+        strictEqual(middlewareUser, user, 'The middleware should be called with the user.');
+        ok(middlewareResource instanceof User, 'The middleware should be called with the resource.');
+        strictEqual(middlewareData, undefined, 'The middleware should be called with undefined as "data".');
+        strictEqual(middlewareParams, params, 'The middleware should be called with the params.');
+      });
+
       it('should return the suitable user from the database.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
