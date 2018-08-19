@@ -86,33 +86,42 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(resourceOrResources, params.fields);
   }
 
-  async findById(user: AbstractUser|undefined, id, params: {}): Promise<object> {
+  async findById(user: AbstractUser|undefined, id, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('findById')) {
       throw new PermissionDenied();
     }
+
     const resource = await this.getManager().findOne(this.entityClass, id);
     if (!resource) {
       throw new ObjectDoesNotExist();
     }
+
     for (const middleware of this.middlewares) {
       if (!middleware.findById) {
         continue;
       }
       await middleware.findById({ user, resource, data: undefined, params });
     }
-    return resource;
+
+    if (!params.fields) {
+      return resource;
+    }
+
+    return this.getRepresentation(resource, params.fields);
   }
 
   async find(user: AbstractUser|undefined, params: { query?: object }): Promise<object[]> {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
+
     for (const middleware of this.middlewares) {
       if (!middleware.find) {
         continue;
       }
       await middleware.find({ user, resource: undefined, data: undefined, params });
     }
+
     return this.getManager().find(this.entityClass, params.query);
   }
 
@@ -120,17 +129,20 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('modifyById')) {
       throw new PermissionDenied();
     }
+
     const result = await this.getManager().transaction(async transactionalEntityManager => {
       const resource = await transactionalEntityManager.findOne(this.entityClass, id);
       if (!resource) {
         throw new ObjectDoesNotExist();
       }
+
       for (const middleware of this.middlewares) {
         if (!middleware.modifyById) {
           continue;
         }
         await middleware.modifyById({ user, resource, data, params });
       }
+
       await transactionalEntityManager.update(this.entityClass, resource, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
@@ -141,17 +153,20 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
+
     const result = await this.getManager().transaction(async transactionalEntityManager => {
       const resource = await transactionalEntityManager.findOne(this.entityClass, id);
       if (!resource) {
         throw new ObjectDoesNotExist();
       }
+
       for (const middleware of this.middlewares) {
         if (!middleware.updateById) {
           continue;
         }
         await middleware.updateById({ user, resource, data, params });
       }
+
       await transactionalEntityManager.update(this.entityClass, resource, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
@@ -162,17 +177,20 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('deleteById')) {
       throw new PermissionDenied();
     }
+
     await this.getManager().transaction(async transactionalEntityManager => {
       const resource = await transactionalEntityManager.findOne(this.entityClass, id);
       if (!resource) {
         throw new ObjectDoesNotExist();
       }
+
       for (const middleware of this.middlewares) {
         if (!middleware.deleteById) {
           continue;
         }
         await middleware.deleteById({ user, resource, data: undefined, params });
       }
+
       await transactionalEntityManager.delete(this.entityClass, id);
     });
   }

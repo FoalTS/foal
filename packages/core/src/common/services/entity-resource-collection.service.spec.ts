@@ -447,7 +447,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual(middlewareParams, params, 'The middleware should be called with the params.');
       });
 
-      it('should return the suitable user from the database.', async () => {
+      it('should return a full representation of the suitable user from the database'
+          + ' if params.fields is undefined.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
           lastName: 'Smith'
@@ -466,6 +467,28 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result as any).id, user2.id);
         strictEqual((result as any).isAdmin, true);
         strictEqual((result as any).lastName, 'Hugo');
+      });
+
+      it('should return a partial representation of the suitable user from the database'
+          + ' if params.fields is defined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Donald',
+          lastName: 'Smith'
+        });
+        const user2 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1, user2 ]);
+
+        const result = await service.findById(undefined, user2.id, { fields: [ 'firstName', 'id' ]});
+
+        strictEqual((result as any).firstName, 'Victor');
+        strictEqual((result as any).id, user2.id);
+        strictEqual((result as any).isAdmin, undefined);
+        strictEqual((result as any).lastName, undefined);
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
