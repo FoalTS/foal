@@ -105,12 +105,12 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
-    // for (const middleware of this.middlewares) {
-    //   if (!middleware.find) {
-    //     continue;
-    //   }
-    //   await middleware.find({ user, resource: undefined, data: undefined, params });
-    // }
+    for (const middleware of this.middlewares) {
+      if (!middleware.find) {
+        continue;
+      }
+      await middleware.find({ user, resource: undefined, data: undefined, params });
+    }
     return this.getManager().find(this.entityClass, params.query);
   }
 
