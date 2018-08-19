@@ -222,7 +222,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
       describe('with an object as data', () => {
 
-        it('should create one user into the database and then return it.', async () => {
+        it('should create one user into the database.', async () => {
           await service.create(undefined, {
             firstName: 'Donald',
             lastName: 'Smith'
@@ -239,6 +239,30 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           strictEqual(user.firstName, 'Donald');
           strictEqual(user.lastName, 'Smith');
           strictEqual(user.isAdmin, false);
+          notStrictEqual(user.id, undefined);
+        });
+
+        it('should return a full representation of the created resource if params.fields is undefined.', async () => {
+          const user = await service.create(undefined, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          }, {}) as User;
+
+          strictEqual(user.firstName, 'Donald');
+          strictEqual(user.lastName, 'Smith');
+          strictEqual(user.isAdmin, false);
+          notStrictEqual(user.id, undefined);
+        });
+
+        it('should return a partial representation of the created resource if params.fields is defined.', async () => {
+          const user = await service.create(undefined, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+          }, { fields: [ 'firstName', 'id' ]}) as User;
+
+          strictEqual(user.firstName, 'Donald');
+          strictEqual(user.lastName, undefined);
+          strictEqual(user.isAdmin, undefined);
           notStrictEqual(user.id, undefined);
         });
 
@@ -267,8 +291,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
 
       describe('with an array as data', () => {
 
-        it('should create several users into the database and then return them.', async () => {
-          const result = await service.create(undefined, [
+        it('should create several users into the database.', async () => {
+          await service.create(undefined, [
             {
               firstName: 'Donald',
               lastName: 'Smith'
@@ -298,17 +322,55 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
           strictEqual(user2.lastName, 'Hugo');
           strictEqual(user2.isAdmin, true);
           notStrictEqual(user2.id, undefined);
+        });
 
-          // The returned users should have the above fields.
-          strictEqual((result[0] as any).firstName, 'Donald');
-          strictEqual((result[0] as any).id, user1.id);
-          strictEqual((result[0] as any).isAdmin, false);
-          strictEqual((result[0] as any).lastName, 'Smith');
+        it('should return a full representation of the created resource if params.fields is undefined.', async () => {
+          const users = await service.create(undefined, [
+            {
+              firstName: 'Donald',
+              lastName: 'Smith'
+            },
+            {
+              firstName: 'Victor',
+              isAdmin: true,
+              lastName: 'Hugo',
+            }
+          ], {}) as User[];
 
-          strictEqual((result[1] as any).firstName, 'Victor');
-          strictEqual((result[1] as any).id, user2.id);
-          strictEqual((result[1] as any).isAdmin, true);
-          strictEqual((result[1] as any).lastName, 'Hugo');
+          strictEqual(users[0].firstName, 'Donald');
+          notStrictEqual(users[0].id, undefined);
+          strictEqual(users[0].isAdmin, false);
+          strictEqual(users[0].lastName, 'Smith');
+
+          strictEqual(users[1].firstName, 'Victor');
+          notStrictEqual(users[1].id, undefined);
+          strictEqual(users[1].isAdmin, true);
+          strictEqual(users[1].lastName, 'Hugo');
+        });
+
+        it('should return a partial representation of the created resources'
+            + ' if params.fields is defined.', async () => {
+          const users = await service.create(undefined, [
+            {
+              firstName: 'Donald',
+              lastName: 'Smith'
+            },
+            {
+              firstName: 'Victor',
+              isAdmin: true,
+              lastName: 'Hugo',
+            }
+          ], { fields: [ 'firstName', 'id' ]}) as User[];
+
+          strictEqual(users[0].firstName, 'Donald');
+          notStrictEqual(users[0].id, undefined);
+          strictEqual(users[0].isAdmin, undefined);
+          strictEqual(users[0].lastName, undefined);
+
+          strictEqual(users[1].firstName, 'Victor');
+          notStrictEqual(users[1].id, undefined);
+          strictEqual(users[1].isAdmin, undefined);
+          strictEqual(users[1].lastName, undefined);
         });
 
         it('should not replace an existing user (if an id is given).', async () => {

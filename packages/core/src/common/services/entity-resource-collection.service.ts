@@ -60,7 +60,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   readonly middlewares: Partial<Record<keyof IResourceCollection, Middleware>>[] = [];
   readonly connectionName: string = 'default';
 
-  async create(user: AbstractUser|undefined, data: object, params: {}): Promise<object> {
+  async create(user: AbstractUser|undefined, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('create')) {
       throw new PermissionDenied();
     }
@@ -71,17 +71,38 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       await middleware.create({ user, resource: undefined, data, params });
     }
     if (Array.isArray(data)) {
-      const entities = data.map(record => {
+      const resources = data.map(record => {
         record = Object.assign({}, record);
         delete (record as any).id;
         return this.getManager().create(this.entityClass, record);
       });
-      return this.getManager().save(entities);
+      await this.getManager().save(resources);
+      if (!params.fields) {
+        return resources;
+      }
+
+      return resources.map(resource => {
+        const representation = {};
+        for (const field of params.fields as string[]) {
+          representation[field] = resource[field];
+        }
+        return representation;
+      });
     }
     data = Object.assign({}, data);
     delete (data as any).id;
-    const entity = this.getManager().create(this.entityClass, data);
-    return this.getManager().save(entity);
+
+    const resource = this.getManager().create(this.entityClass, data);
+    await this.getManager().save(resource);
+    if (!params.fields) {
+      return resource;
+    }
+
+    const representation = {};
+    for (const field of params.fields) {
+      representation[field] = resource[field];
+    }
+    return representation;
   }
 
   async findById(user: AbstractUser|undefined, id, params: {}): Promise<object> {
