@@ -131,7 +131,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return resources.map(resource => this.getRepresentation(resource, params.fields as string[]));
   }
 
-  async modifyById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<object> {
+  async modifyById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('modifyById')) {
       throw new PermissionDenied();
     }
@@ -152,10 +152,14 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       await transactionalEntityManager.update(this.entityClass, resource, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
-    return result;
+
+    if (!params.fields) {
+      return result;
+    }
+    return this.getRepresentation(result, params.fields);
   }
 
-  async updateById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<object> {
+  async updateById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
@@ -176,7 +180,11 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       await transactionalEntityManager.update(this.entityClass, resource, data);
       return transactionalEntityManager.findOne(this.entityClass, id);
     });
-    return result;
+
+    if (!params.fields) {
+      return result;
+    }
+    return this.getRepresentation(result, params.fields);
   }
 
   async deleteById(user: AbstractUser|undefined, id, params: {}): Promise<void> {

@@ -766,7 +766,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual(middlewareParams, params, 'The middleware should be called with the params.');
       });
 
-      it('should update the suitable user and then return its new version.', async () => {
+      it('should update the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
           lastName: 'Smith'
@@ -790,12 +790,42 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const userbis = await getManager(connectionName).findOne(User, user1.id);
         if (!userbis) { throw new Error(); }
         strictEqual(userbis.firstName, 'Donald');
+      });
 
-        // The value returned by the method should be the updated user.
-        strictEqual((result as any).id, user2.id);
+      it('should return a full representation of the modified user if params.fields is undefined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        const result = await service.modifyById(undefined, user1.id, { firstName: 'John' }, {});
+
+        strictEqual((result as any).id, user1.id);
         strictEqual((result as any).firstName, 'John');
         strictEqual((result as any).isAdmin, true);
         strictEqual((result as any).lastName, 'Hugo');
+      });
+
+      it('should return a partial representation of the modified user if params.fields is defined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        const result = await service.modifyById(
+          undefined, user1.id, { firstName: 'John' }, { fields: [ 'firstName', 'id' ] }
+        );
+
+        strictEqual((result as any).id, user1.id);
+        strictEqual((result as any).firstName, 'John');
+        strictEqual((result as any).isAdmin, undefined);
+        strictEqual((result as any).lastName, undefined);
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
@@ -902,7 +932,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual(middlewareParams, params, 'The middleware should be called with the params.');
       });
 
-      it('should update the suitable user and then return its new version.', async () => {
+      it('should update the suitable user.', async () => {
         const user1 = getManager(connectionName).create(User, {
           firstName: 'Donald',
           lastName: 'Smith'
@@ -926,12 +956,42 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         const userbis = await getManager(connectionName).findOne(User, user1.id);
         if (!userbis) { throw new Error(); }
         strictEqual(userbis.firstName, 'Donald');
+      });
 
-        // The value returned by the method should be the updated user.
-        strictEqual((result as any).id, user2.id);
+      it('should return a full representation of the updated user if params.fields is undefined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        const result = await service.updateById(undefined, user1.id, { firstName: 'John' }, {});
+
+        strictEqual((result as any).id, user1.id);
         strictEqual((result as any).firstName, 'John');
         strictEqual((result as any).isAdmin, true);
         strictEqual((result as any).lastName, 'Hugo');
+      });
+
+      it('should return a partial representation of the updated user if params.fields is defined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+          firstName: 'Victor',
+          isAdmin: true,
+          lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1 ]);
+
+        const result = await service.updateById(
+          undefined, user1.id, { firstName: 'John' }, { fields: [ 'firstName', 'id' ] }
+        );
+
+        strictEqual((result as any).id, user1.id);
+        strictEqual((result as any).firstName, 'John');
+        strictEqual((result as any).isAdmin, undefined);
+        strictEqual((result as any).lastName, undefined);
       });
 
       it('should throw a ObjectDoesNotExist if no suitable user exists in the database.', () => {
