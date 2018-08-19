@@ -161,16 +161,16 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       throw new PermissionDenied();
     }
     await this.getManager().transaction(async transactionalEntityManager => {
-      const obj = await transactionalEntityManager.findOne(this.entityClass, id);
-      if (!obj) {
+      const resource = await transactionalEntityManager.findOne(this.entityClass, id);
+      if (!resource) {
         throw new ObjectDoesNotExist();
       }
-      // for (const middleware of this.middlewares) {
-      //   if (!middleware.deleteById) {
-      //     continue;
-      //   }
-      //   await middleware.deleteById({ user, resource: obj, data: undefined, params });
-      // }
+      for (const middleware of this.middlewares) {
+        if (!middleware.deleteById) {
+          continue;
+        }
+        await middleware.deleteById({ user, resource, data: undefined, params });
+      }
       await transactionalEntityManager.delete(this.entityClass, id);
     });
   }
