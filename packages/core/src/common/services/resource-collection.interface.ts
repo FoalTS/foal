@@ -9,7 +9,7 @@ import { AbstractUser } from '../../auth';
 export interface IResourceCollection {
   create(user: AbstractUser|undefined, data: object, params: { fields?: string[] });
 
-  find(user: AbstractUser|undefined, params: { query?: object });
+  find(user: AbstractUser|undefined, params: { query?: object, fields?: string[] });
   findById(user: AbstractUser|undefined, id, params: { fields?: string[] });
 
   modifyById(user: AbstractUser|undefined, id, data: object, params: {});

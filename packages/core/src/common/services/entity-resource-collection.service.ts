@@ -110,7 +110,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(resource, params.fields);
   }
 
-  async find(user: AbstractUser|undefined, params: { query?: object }): Promise<object[]> {
+  async find(user: AbstractUser|undefined, params: { query?: object, fields?: string[] }): Promise<object[]> {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
@@ -122,7 +122,13 @@ export abstract class EntityResourceCollection implements IResourceCollection {
       await middleware.find({ user, resource: undefined, data: undefined, params });
     }
 
-    return this.getManager().find(this.entityClass, params.query);
+    const resources = await this.getManager().find(this.entityClass, params.query);
+
+    if (!params.fields) {
+      return resources;
+    }
+
+    return resources.map(resource => this.getRepresentation(resource, params.fields as string[]));
   }
 
   async modifyById(user: AbstractUser|undefined, id, data: object, params: {}): Promise<object> {

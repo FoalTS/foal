@@ -583,7 +583,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual(middlewareParams, params, 'The middleware should be called with the params.');
       });
 
-      it('should return all the suitable users from the database.', async () => {
+      it('should return full representations of the suitable users from the database'
+          + ' if params.fields is undefined.', async () => {
         const user1 = getManager(connectionName).create(User, {
             firstName: 'Donald',
             lastName: 'Smith'
@@ -620,6 +621,50 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         strictEqual((result[0] as any).id, user2.id);
         strictEqual((result[0] as any).isAdmin, true);
         strictEqual((result[0] as any).lastName, 'Hugo');
+
+      });
+
+      it('should return partial representations of the suitable users from the database'
+          + ' if params.fields is defined.', async () => {
+        const user1 = getManager(connectionName).create(User, {
+            firstName: 'Donald',
+            lastName: 'Smith'
+        });
+        const user2 = getManager(connectionName).create(User, {
+            firstName: 'Victor',
+            isAdmin: true,
+            lastName: 'Hugo',
+        });
+
+        await getManager(connectionName).save([ user1, user2 ]);
+
+        // With an empty query
+        let result = await service.find(undefined, { fields: [ 'firstName', 'id' ] });
+        ok(Array.isArray(result));
+        strictEqual(result.length, 2);
+
+        strictEqual((result[0] as any).firstName, 'Donald');
+        strictEqual((result[0] as any).id, user1.id);
+        strictEqual((result[0] as any).isAdmin, undefined);
+        strictEqual((result[0] as any).lastName, undefined);
+
+        strictEqual((result[1] as any).firstName, 'Victor');
+        strictEqual((result[1] as any).id, user2.id);
+        strictEqual((result[1] as any).isAdmin, undefined);
+        strictEqual((result[1] as any).lastName, undefined);
+
+        // With a non empty query
+        result = await service.find(undefined, {
+          fields: [ 'firstName', 'id' ],
+          query: { firstName: 'Victor' },
+        });
+        ok(Array.isArray(result));
+        strictEqual(result.length, 1);
+
+        strictEqual((result[0] as any).firstName, 'Victor');
+        strictEqual((result[0] as any).id, user2.id);
+        strictEqual((result[0] as any).isAdmin, undefined);
+        strictEqual((result[0] as any).lastName, undefined);
 
       });
 
