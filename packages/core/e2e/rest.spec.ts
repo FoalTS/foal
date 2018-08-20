@@ -1,5 +1,5 @@
 // std
-import { ok } from 'assert';
+import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
@@ -8,7 +8,6 @@ import {
   createConnection,
   Entity,
   getConnection,
-  getConnectionManager,
   getManager,
   getRepository,
   ManyToOne,
@@ -29,6 +28,7 @@ import {
   InitDB,
   IResourceCollection,
   LoginController,
+  LoginRequired,
   middleware,
   Module,
   Permission,
@@ -38,11 +38,10 @@ import {
   strategy,
 } from '../src';
 
-it('REST API with RestController and EntityResourceCollection', async () => {
+xit('REST API with RestController and EntityResourceCollection', async () => {
   /**
    * Test description
    *
-   * // What about which decide who can creates an org?
    *
    * Several organizations. A user belongs to one organization (or none for the superuser).
    *
@@ -114,7 +113,17 @@ it('REST API with RestController and EntityResourceCollection', async () => {
     allowedOperations: (keyof IResourceCollection)[] = [
       'create', 'deleteById', 'find', 'findById', 'modifyById', 'updateById'
     ];
-    middlewares = [];
+  }
+
+  @Service()
+  class OrgCollection extends EntityResourceCollection {
+    entityClass = Org;
+    allowedOperations: (keyof IResourceCollection)[] = [
+      'create', 'deleteById', 'find', 'findById', 'modifyById', 'updateById'
+    ];
+    middlewares = [
+      /* TODO: add the middlewares */
+    ];
   }
 
   @Service()
@@ -126,8 +135,15 @@ it('REST API with RestController and EntityResourceCollection', async () => {
   }
 
   @Controller()
+  @LoginRequired()
   class UserController extends RestController {
     collectionClass = UserCollection;
+  }
+
+  @Controller()
+  @LoginRequired()
+  class OrgController extends RestController {
+    collectionClass = OrgCollection;
   }
 
   @Controller()
@@ -143,6 +159,7 @@ it('REST API with RestController and EntityResourceCollection', async () => {
   class AppModule implements IModule {
     controllers = [
       controller('/users', UserController),
+      controller('/orgs', OrgController),
       controller('', AuthController),
     ];
   }
@@ -232,6 +249,8 @@ it('REST API with RestController and EntityResourceCollection', async () => {
 
   let authCookie = '';
 
+  /************ SIMPLE USER ***************/
+
   /* Log in as a simple user */
 
   await request(app)
@@ -243,16 +262,85 @@ it('REST API with RestController and EntityResourceCollection', async () => {
       authCookie = data.header['set-cookie'][0];
     });
 
-  /* [Simple user] Try to create a user */
+  /* Try to create, read, update or delete an org */
 
-  await request(app)
-    .post('/users')
-    .set('Cookie', authCookie)
-    .send({
-      name: 'John',
-      phone: '06 00 00 00 54'
-    })
-    .expect(403);
+  await Promise.all([
+
+    // should only read its org.
+    request(app)
+      .get('/orgs')
+      .set('Cookie', authCookie)
+      .expect(200)
+      .expect([
+        {
+          id: blueOrg.id,
+          name: blueOrg.name
+        }
+      ]),
+
+    // should not be able to read another org than its.
+    request(app)
+      .get(`/orgs/${redOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(203),
+
+    // should be able to read its org.
+    request(app)
+      .get(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: blueOrg.name
+      }),
+
+    // should not be able to create an org.
+    request(app)
+      .post('/orgs')
+      .set('Cookie', authCookie)
+      .send({
+        name: 'Yellow org'
+      })
+      .expect(203),
+
+    // should not be able to update an org (including its org).
+    request(app)
+      .put(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for my blue org'
+      })
+      .expect(203),
+
+    // should not be able to modify an org (including its org).
+    request(app)
+      .patch(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for my blue org'
+      })
+      .expect(203),
+
+    // should not be able to delete an org (including its org).
+    request(app)
+      .delete(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(203),
+
+  ]);
+
+  /* Try to create a user */
+
+  // await request(app)
+  //   .post('/users')
+  //   .set('Cookie', authCookie)
+  //   .send({
+  //     name: 'John',
+  //     phone: '06 00 00 00 54'
+  //   })
+  //   .expect(403);
+
+  /************ ADMIN USER ***************/
 
   /* Log in as an admin user */
 
@@ -265,6 +353,101 @@ it('REST API with RestController and EntityResourceCollection', async () => {
       authCookie = data.header['set-cookie'][0];
     });
 
+  /* Try to create, read, update or delete an org */
+
+  await Promise.all([
+
+    // should only read its org.
+    request(app)
+      .get('/orgs')
+      .set('Cookie', authCookie)
+      .expect(200)
+      .expect([
+        {
+          id: blueOrg.id,
+          name: blueOrg.name
+        }
+      ]),
+
+    // should not be able to read another org than its.
+    request(app)
+      .get(`/orgs/${redOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(203),
+
+    // should be able to read its org.
+    request(app)
+      .get(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: blueOrg.name
+      }),
+
+    // should not be able to create an org.
+    request(app)
+      .post('/orgs')
+      .set('Cookie', authCookie)
+      .send({
+        name: 'Yellow org'
+      })
+      .expect(203),
+
+    // should not be able to update another org than its.
+    request(app)
+      .put(`/orgs/${redOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for the red org'
+      })
+      .expect(203),
+
+    // should be able to update its org.
+    request(app)
+      .put(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for my blue org'
+      })
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: 'A new name for my blue org'
+      }),
+
+    // should not be able to modify another org than its.
+    request(app)
+      .patch(`/orgs/${redOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for the red org'
+      })
+      .expect(203),
+
+    // should be able to modify its org.
+    request(app)
+      .patch(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'Another new name for my blue org'
+      })
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: 'Another new name for my blue org'
+      }),
+
+    // should not be able to delete an org (including its org).
+    request(app)
+      .delete(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(203),
+
+  ]);
+
+  /************ SUPER USER ***************/
+
   /* Log in as a superuser */
 
   await request(app)
@@ -275,4 +458,91 @@ it('REST API with RestController and EntityResourceCollection', async () => {
       ok(Array.isArray(data.header['set-cookie']));
       authCookie = data.header['set-cookie'][0];
     });
+
+  /* Try to create, read, update or delete an org */
+
+  // should read all the orgs.
+  await request(app)
+    .get('/orgs')
+    .set('Cookie', authCookie)
+    .expect(200)
+    .expect([
+      {
+        id: blueOrg.id,
+        name: blueOrg.name
+      },
+      {
+        id: redOrg.id,
+        name: redOrg.name
+      }
+    ]),
+
+  await Promise.all([
+
+    // should be able to read an org.
+    request(app)
+      .get(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: blueOrg.name
+      }),
+
+    // should be able to create an org.
+    request(app)
+      .post('/orgs')
+      .set('Cookie', authCookie)
+      .send({
+        name: 'Yellow org'
+      })
+      .expect(201)
+      .then(data => {
+        strictEqual(data.body.name, 'Yellow org');
+        notStrictEqual(data.body.id, undefined);
+      }),
+
+    // should be able to update an org.
+    request(app)
+      .put(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for my blue org'
+      })
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: 'A new name for my blue org',
+      }),
+
+    // should be able to modify an org.
+    request(app)
+      .patch(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 'A new name for my blue org'
+      })
+      .expect(200)
+      .expect({
+        id: blueOrg.id,
+        name: 'A new name for my blue org',
+      }),
+
+    // should get a 400 BAD REQUEST if the schema is incorrect when modifying.
+    request(app)
+      .patch(`/orgs/${blueOrg.id}`)
+      .set('Cookie', authCookie)
+      .send({
+        name: 3
+      })
+      .expect(400), // TODO: Check the responde body message
+
+    // should be able to delete an org.
+    request(app)
+      .delete(`/orgs/${redOrg.id}`)
+      .set('Cookie', authCookie)
+      .expect(203),
+
+  ]);
+
 });
