@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.6.0-alpha.4",
+  "version": "0.6.0-beta.0",
   "description": "FoalTs examples",
   "scripts": {
     "start": "node ./lib/server.js",
@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.6.0-alpha.4",
+    "@foal/core": "^0.6.0-beta.0",
     "@foal/ejs": "^0.6.0-alpha.3",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
@@ -48,7 +48,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/cli": "^0.6.0-alpha.4",
+    "@foal/cli": "^0.6.0-beta.0",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
     "clean-webpack-plugin": "^0.1.19",
