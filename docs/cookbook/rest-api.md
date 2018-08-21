@@ -62,11 +62,61 @@ The `EntityResourceCollection` already has its methods implemented to create, re
 > **Note:** Each method of an `EntityResourceCollection` throws a `PermissionDenied` error by default.
 This serves security purpose, it prevents the access to any logic that you might have exposed by accident. To make an operation available you must provide its name to the `allowedOperations` array.
 
-// Décrire les middlewares (à quoi ils servent, quand ils sont exécutés, leur forme)
+The service also provides `middlewares` to handle authorization, input validation and more.
 
-// Expliquer ce que représente chaque param
+```typescript
+...
 
-// Donner l'exemple de `PermissionDenied` and de validate (avec notamment l'id)
+const restrictToAdminUsers = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+  const user = context.user;
+  if (!user || !user.hasPerm('admin-perm')) {
+    throw new PermissionDenied()
+  }
+}
+
+const validateData = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+  if (typeof context.data.myNum !== 'number') {
+    throw new ValidationError({
+      message: 'myNum should be a number'
+    }),
+  }
+}
+
+const onlyReturnName = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+  params.fields = [ 'name' ];
+}
+
+...
+export class FlightCollection extends EntityResourceCollection {
+  ...
+  middlewares = [
+    middleware('*', restrictToAdminUsers),
+    middleware('createById', validateData),
+    middleware('updateById|modifyById', onlyReturnName),
+  ]
+}
+```
+
+> `resource` is defined and represents the entity instance in `findById`, `updateById`, `modifyById` and `deleteById`.
+
+The service also provides the option to load the relations of the entity.
+
+```typescript
+...
+export class FlightCollection extends EntityResourceCollection {
+  ...
+  loadedRelations = {
+    find: (user, params) => [ 'user' ],
+    findById: (user, params) => {
+      if (user.hasPerm('foo-perm')) {
+        return [ 'foo' ];
+      }
+      return [];
+    }
+  }
+}
+```
+
 
 ## The `RestController`
 
@@ -75,8 +125,6 @@ foal g controller flight
 > REST
 ```
 
-// Explain the mapping
-
 - `POST /` -> service.create(...)
 - `GET /` -> service.find(...)
 - `GET /:id` -> service.findById(...)
@@ -84,19 +132,20 @@ foal g controller flight
 - `PUT /:id` -> service.updateById(...)
 - `DELETE /:id` -> service.deleteById(...)
 
-// Explain the extendParams
-
-## A complete example
-
-### Register the controller within a module
+The `extendParams` methods lets you extend the `params` parameter sent to the service
 
 ```typescript
 ...
+export class FlightController extends RestController {
+  collectionClass = FlightCollection;
 
-@Module()
-export class AppModule implements IModule {
-  controllers = [
-    controller('/flights', FlightController),
-  ];
+  extendParams(ctx: Context, params: CollectionParams): CollectionParams {
+    const fields = ctx.query.fields;
+    if (fields && !Array.isArray(fields)) {
+      fields = [ fields ];
+    } 
+    params.fields = fields;
+    return params;
+  }
 }
 ```
