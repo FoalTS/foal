@@ -2,7 +2,7 @@
 import { createConnection, getManager } from 'typeorm';
 
 // App
-import { Permission, User } from '../src/app/entities';
+import { Permission, User } from '../app/entities';
 
 async function main() {
   await createConnection();
