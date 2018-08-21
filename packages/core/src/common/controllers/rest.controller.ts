@@ -4,7 +4,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpResponseBadRequest,
   HttpResponseCreated,
+  HttpResponseForbidden,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
@@ -14,8 +16,8 @@ import {
   Put,
   ServiceManager
 } from '../../core';
-import { isObjectDoesNotExist } from '../errors';
-import { IResourceCollection } from '../services';
+import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
+import { CollectionParams, IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
@@ -23,8 +25,8 @@ export abstract class RestController {
 
   constructor(private services: ServiceManager) { }
 
-  getQuery(ctx: Context): object {
-    return {};
+  extendParams(ctx: Context, params: CollectionParams): CollectionParams {
+    return params;
   }
 
   @Delete('/')
@@ -43,7 +45,11 @@ export abstract class RestController {
       return new HttpResponseOK(await collection.deleteById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -58,8 +64,17 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    const query = this.getQuery(ctx);
-    return new HttpResponseOK(await collection.find(ctx.user, { query }));
+    const params = this.extendParams(ctx, {});
+    try {
+      return new HttpResponseOK(await collection.find(ctx.user, params));
+    } catch (error) {
+      if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
+      }
+      throw error;
+    }
   }
 
   @Get('/:id')
@@ -73,7 +88,11 @@ export abstract class RestController {
       return new HttpResponseOK(await collection.findById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -97,7 +116,11 @@ export abstract class RestController {
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -110,7 +133,16 @@ export abstract class RestController {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body, {}));
+    try {
+      return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body, {}));
+    } catch (error) {
+      if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
+      }
+      throw error;
+    }
   }
 
   @Post('/:id')
@@ -136,7 +168,11 @@ export abstract class RestController {
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }

@@ -9,7 +9,9 @@ import {
   createController,
   getHttpMethod,
   getPath,
+  HttpResponseBadRequest,
   HttpResponseCreated,
+  HttpResponseForbidden,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
@@ -17,8 +19,8 @@ import {
   Service,
   ServiceManager
 } from '../../core';
-import { ObjectDoesNotExist } from '../errors';
-import { IResourceCollection } from '../services';
+import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
+import { CollectionParams, IResourceCollection } from '../services';
 import { RestController } from './rest.controller';
 
 describe('RestController', () => {
@@ -28,9 +30,10 @@ describe('RestController', () => {
     collectionClass = class {};
   }
 
-  it('has a getQuery method that should return an empty object', () => {
+  it('has a extendParams method that should return the given params', () => {
     const controller = createController(ConcreteController);
-    deepStrictEqual(controller.getQuery(new Context({})), {});
+    const params: CollectionParams = {};
+    strictEqual(controller.extendParams(new Context({}), params), params);
   });
 
   describe('has a "delete" method that', () => {
@@ -112,33 +115,42 @@ describe('RestController', () => {
         deepStrictEqual(deleteByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.deleteById rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Collection implements Partial<IResourceCollection> {
-          async deleteById(user, id, params) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.deleteById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async deleteById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          collectionClass = Collection;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.deleteById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.deleteById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
       it('should rejects an error if collection.deleteById rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
@@ -199,7 +211,7 @@ describe('RestController', () => {
 
       it('should return an HttpResponseOK if collection.find resolves.', async () => {
         const query = { foo: 'bar' };
-        const objects = [ { bar: 'bar' }];
+        const objects = [ { bar: 'bar' } ];
         let findUser;
         let findQuery;
         let getQueryCtx;
@@ -215,9 +227,9 @@ describe('RestController', () => {
         class ConcreteController extends RestController {
           collectionClass = Collection;
 
-          getQuery(ctx) {
+          extendParams(ctx, params: CollectionParams) {
             getQueryCtx = ctx;
-            return query;
+            return { ...params, query };
           }
         }
 
@@ -233,6 +245,67 @@ describe('RestController', () => {
         strictEqual(getQueryCtx, ctx);
         strictEqual(findQuery, query);
         strictEqual(findUser, ctx.user);
+      });
+
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.find rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async find() {
+              throw new errorClass(content);
+            }
+          }
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
+          }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.get(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
+        });
+      }
+
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
+
+      it('should rejects an error if collection.find rejects one which'
+          + ' is not a ValidationError nor a PermissionDenied.', () => {
+        const err = new Error();
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async find() {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return controller.get(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
@@ -305,33 +378,42 @@ describe('RestController', () => {
         deepStrictEqual(findByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.findById rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Collection implements Partial<IResourceCollection> {
-          async findById(user, id, params) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.findById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async findById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          collectionClass = Collection;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.getById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.getById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
       it('should rejects an error if collection.findById rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
@@ -447,36 +529,42 @@ describe('RestController', () => {
         deepStrictEqual(modifyByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.modifyById rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Collection implements Partial<IResourceCollection> {
-          async modifyById(user, id, data, params) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.modifyById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async modifyById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          collectionClass = Collection;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          body: {
-            foobar: 'foo'
-          },
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.patchById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.patchById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
       it('should rejects an error if collection.modifyById rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
@@ -533,41 +621,106 @@ describe('RestController', () => {
       ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    it('should return an HttpResponseCreated if collection.create is defined.', async () => {
-      const objects = [ { bar: 'bar' }];
-      let createUser;
-      let createData;
-      let createParams;
-      @Service()
-      class Collection implements Partial<IResourceCollection> {
-        async create(user, data, params) {
-          createUser = user;
-          createData = data;
-          createParams = params;
-          return objects;
+    describe('when collection.create is defined', () => {
+
+      it('should return an HttpResponseCreated if collection.create resolves.', async () => {
+        const objects = [ { bar: 'bar' } ];
+        let createUser;
+        let createData;
+        let createParams;
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async create(user, data, params) {
+            createUser = user;
+            createData = data;
+            createParams = params;
+            return objects;
+          }
         }
-      }
-      @Controller()
-      class ConcreteController extends RestController {
-        collectionClass = Collection;
-      }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
 
-      const services = new ServiceManager();
-      const controller = new ConcreteController(services);
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
 
-      const ctx = new Context({
-        body: {
-          foobar: 'foo'
-        },
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+        });
+        ctx.user = {} as AbstractUser;
+
+        const actual = await controller.post(ctx);
+        ok(actual instanceof HttpResponseCreated);
+        strictEqual(actual.content, objects);
+        strictEqual(createUser, ctx.user);
+        strictEqual(createData, ctx.request.body);
+        deepStrictEqual(createParams, {});
       });
-      ctx.user = {} as AbstractUser;
 
-      const actual = await controller.post(ctx);
-      ok(actual instanceof HttpResponseCreated);
-      strictEqual(actual.content, objects);
-      strictEqual(createUser, ctx.user);
-      strictEqual(createData, ctx.request.body);
-      deepStrictEqual(createParams, {});
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.create rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async create() {
+              throw new errorClass(content);
+            }
+          }
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
+          }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.post(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
+        });
+      }
+
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
+
+      it('should rejects an error if collection.create rejects one which'
+          + ' is not a ValidationError nor a PermissionDenied.', () => {
+        const err = new Error();
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async create() {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return controller.post(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
+      });
+
     });
 
   });
@@ -671,36 +824,42 @@ describe('RestController', () => {
         deepStrictEqual(updateByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if collection.updateById rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Collection implements Partial<IResourceCollection> {
-          async updateById(user, id, data, params) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.updateById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async updateById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          collectionClass = Collection;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          body: {
-            foobar: 'foo'
-          },
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.putById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.putById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
       it('should rejects an error if collection.updateById rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
         class Collection implements Partial<IResourceCollection> {
