@@ -66,11 +66,14 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
 import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { Authenticator } from '../services/authenticator.service';
 
-const login = require('./templates/login.html');
+const login = readFileSync(join(__dirname, './templates/login.html'), 'utf8');
 
 @Controller()
 export class AuthController extends LoginController {
