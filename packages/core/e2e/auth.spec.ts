@@ -75,6 +75,14 @@ it('Authentication and authorization', async () => {
     ];
   }
 
+  await createConnection({
+    database: 'e2e_db.sqlite',
+    dropSchema: true,
+    entities: [ User, Permission, Group ],
+    synchronize: true,
+    type: 'sqlite',
+  });
+
   const app = createApp(AppModule);
 
   /* Create a user */
