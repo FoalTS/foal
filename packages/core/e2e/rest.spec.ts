@@ -25,14 +25,11 @@ import {
   Group,
   IAuthenticator,
   IModule,
-  InitDB,
   IResourceCollection,
   LoginController,
   LoginRequired,
-  middleware,
   Module,
   Permission,
-  PermissionDenied,
   RestController,
   Service,
   strategy,
@@ -154,7 +151,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
   }
 
   @Module()
-  @InitDB([ User, Permission, Group, Org ])
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [

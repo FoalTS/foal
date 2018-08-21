@@ -17,7 +17,6 @@ import {
   Group,
   HttpResponseOK,
   IModule,
-  InitDB,
   LoginController,
   LoginRequired,
   Module,
@@ -68,7 +67,6 @@ it('Authentication and authorization', async () => {
   }
 
   @Module()
-  @InitDB([ User, Permission, Group ])
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [
