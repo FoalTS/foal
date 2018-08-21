@@ -1,17 +1,28 @@
 import 'source-map-support/register';
 
+// std
 import * as http from 'http';
 
+// 3p
 import { Config, createApp } from '@foal/core';
 import * as sqliteStoreFactory from 'connect-sqlite3';
+import { createConnection } from 'typeorm';
 
+// App
 import { AppModule } from './app/app.module';
 
-const app = createApp(AppModule, {
-  store: session => new (sqliteStoreFactory(session))({ db: 'test_db.sqlite' }),
-});
+async function main() {
+  await createConnection();
 
-const httpServer = http.createServer(app);
-httpServer.listen(Config.get('settings', 'port', 3000), () => console.log('Listening...'));
+  const app = createApp(AppModule, {
+    store: session => new (sqliteStoreFactory(session))({ db: 'test_db.sqlite' }),
+  });
 
-// module.exports.handler = serverless(app);
+  const httpServer = http.createServer(app);
+  const port = Config.get('settings', 'port', 3000);
+  httpServer.listen(port, () => {
+    console.log(`Listening on port ${port}...`);
+  });
+}
+
+main();
