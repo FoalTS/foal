@@ -49,8 +49,8 @@ Create a new module with all its files in `./src/app/sub-modules`, in `./sub-mod
 foal g service foobar
 > Empty
   ──────────────
-> Serializer
-> EntitySerializer
+> ResourceCollection
+> EntityResourceCollection
   ──────────────
 > Authenticator
 > EmailAuthenticator

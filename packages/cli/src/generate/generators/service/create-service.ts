@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 // FoalTS
 import { getNames, renderTemplate } from '../../utils';
 
-export type ServiceType = 'Empty'|'Serializer'|'EntitySerializer'|'GraphQLResolver'
+export type ServiceType = 'Empty'|'ResourceCollection'|'EntityResourceCollection'|'GraphQLResolver'
   |'Authenticator'|'EmailAuthenticator';
 
 export function createService({ name, type }: { name: string, type: ServiceType }) {
@@ -22,13 +22,16 @@ export function createService({ name, type }: { name: string, type: ServiceType 
     case 'Empty':
       renderTemplate('service/service.empty.ts', `${prefix}${names.kebabName}.service.ts`, names);
       break;
-    case 'Serializer':
-      renderTemplate('service/service.serializer.ts', `${prefix}${names.kebabName}-serializer.service.ts`, names);
-      break;
-    case 'EntitySerializer':
+    case 'ResourceCollection':
       renderTemplate(
-        'service/service.entity-serializer.ts',
-        `${prefix}${names.kebabName}-serializer.service.ts`,
+        'service/service.resource-collection.ts',
+        `${prefix}${names.kebabName}-collection.service.ts`, names
+      );
+      break;
+    case 'EntityResourceCollection':
+      renderTemplate(
+        'service/service.entity-resource-collection.ts',
+        `${prefix}${names.kebabName}-collection.service.ts`,
         names
       );
       break;

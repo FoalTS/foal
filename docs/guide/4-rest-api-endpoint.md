@@ -18,38 +18,41 @@ Open the generated file `src/app/controllers/flight.controller.ts`.
 ```typescript
 import { Controller, RestController } from '@foal/core';
 
-import { FlightSerializer } from '../services/flight-serializer.service';
+import { FlightCollection } from '../services/flight-collection.service';
 
 @Controller()
 export class FlightController extends RestController {
-  serializerClass = FlightSerializer;
+  collectionClass = FlightCollection;
 }
 ```
 
-Every `RestController` requires a serializer (the `FlightSerializer` that we haven't created yet). It is a *service* that helps to create, read, update or delete resources and return representations of them. In this example you will be using an `EntitySerializer` which will simply connect to the `Flight` entity. But projects can be more complex and a REST API endpoint may return a representation of several entities joined together.
+Every `RestController` requires to set a collection of resources (the `FlightCollection` that we haven't created yet). It is a *service* that helps to create, read, update or delete resources and return representations of them. In this example you will be using an `EntityResourceCollection` which will simply connect to the `Flight` entity. But projects can be more complex and a REST API endpoint may return a representation of several entities joined together.
 
 > In FoalTS, a *service* can be any class that serves a restricted and well-defined purpose. Services are instantiated as singleton by the framework. They behave independently of the http process and are usually the best place to put the business logic.
 
-Let's create this serializer.
+Let's create this collection.
 
 ```shell
 foal g service flight
-> Entity Serializer
+> EntityResourceCollection
 ```
 
 ```typescript
-import { EntitySerializer, Service } from '@foal/core';
+import { EntityResourceCollection, Service } from '@foal/core';
 
 import { Flight } from '../entities/flight.entity';
 
 @Service()
-export class FlightSerializer extends EntitySerializer {
+export class FlightCollection extends EntityResourceCollection {
   entityClass = Flight;
+  allowedOperations: EntityResourceCollection['allowedOperations'] = [
+    'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
+  ];
 }
 
 ```
 
-Here is your serializer. Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
+Here is your collection. Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
 
 ```typescript
 import { User, controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';

@@ -4,7 +4,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpResponseBadRequest,
   HttpResponseCreated,
+  HttpResponseForbidden,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
@@ -14,29 +16,17 @@ import {
   Put,
   ServiceManager
 } from '../../core';
-import { isObjectDoesNotExist } from '../errors';
-import { ISerializer } from '../services';
+import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
+import { CollectionParams, IResourceCollection } from '../services';
 
 @Controller()
 export abstract class RestController {
-  abstract serializerClass: Class<Partial<ISerializer>>;
+  abstract collectionClass: Class<Partial<IResourceCollection>>;
 
   constructor(private services: ServiceManager) { }
-  // schema = {
-  //   id: { type: 'number' }
-  // };
 
-  // requiredFields = {
-  //   post: [], // do not include the id in post.
-  //   put: [ 'id' ]
-  // };
-
-  // hooks = {
-  //   post: [ LoginRequired(), /*AssignUserId()*/ ]
-  // };
-
-  getQuery(ctx: Context): object {
-    return {};
+  extendParams(ctx: Context, params: CollectionParams): CollectionParams {
+    return params;
   }
 
   @Delete('/')
@@ -46,17 +36,20 @@ export abstract class RestController {
 
   @Delete('/:id')
   async deleteById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.removeOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.deleteById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.removeOne(query));
+      return new HttpResponseOK(await collection.deleteById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -66,28 +59,40 @@ export abstract class RestController {
   async get(ctx: Context) {
     // schema and id
     // hooks
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.findMany) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.find) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = this.getQuery(ctx);
-    return new HttpResponseOK(await serializer.findMany(query));
+    const params = this.extendParams(ctx, {});
+    try {
+      return new HttpResponseOK(await collection.find(ctx.user, params));
+    } catch (error) {
+      if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
+      }
+      throw error;
+    }
   }
 
   @Get('/:id')
   async getById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.findOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.findById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.findOne(query));
+      return new HttpResponseOK(await collection.findById(ctx.user, ctx.request.params.id, {}));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -100,19 +105,22 @@ export abstract class RestController {
 
   @Patch('/:id')
   async patchById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.updateOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.modifyById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.updateOne(
-        query, ctx.request.body
+      return new HttpResponseOK(await collection.modifyById(
+        ctx.user, ctx.request.params.id , ctx.request.body, {}
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }
@@ -120,12 +128,21 @@ export abstract class RestController {
 
   @Post('/')
   async post(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.createOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.create) {
       return new HttpResponseNotImplemented();
     }
 
-    return new HttpResponseCreated(await serializer.createOne(ctx.request.body));
+    try {
+      return new HttpResponseCreated(await collection.create(ctx.user, ctx.request.body, {}));
+    } catch (error) {
+      if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
+      }
+      throw error;
+    }
   }
 
   @Post('/:id')
@@ -140,19 +157,22 @@ export abstract class RestController {
 
   @Put('/:id')
   async putById(ctx: Context) {
-    const serializer = this.services.get(this.serializerClass);
-    if (!serializer.updateOne) {
+    const collection = this.services.get(this.collectionClass);
+    if (!collection.updateById) {
       return new HttpResponseNotImplemented();
     }
 
-    const query = { ...this.getQuery(ctx), id: ctx.request.params.id };
     try {
-      return new HttpResponseOK(await serializer.updateOne(
-        query, ctx.request.body
+      return new HttpResponseOK(await collection.updateById(
+        ctx.user, ctx.request.params.id, ctx.request.body, {}
       ));
     } catch (error) {
       if (isObjectDoesNotExist(error)) {
-        return new HttpResponseNotFound();
+        return new HttpResponseNotFound(error.content);
+      } else if (isValidationError(error)) {
+        return new HttpResponseBadRequest(error.content);
+      } else if (isPermissionDenied(error)) {
+        return new HttpResponseForbidden(error.content);
       }
       throw error;
     }

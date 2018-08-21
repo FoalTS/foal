@@ -2,13 +2,16 @@
 import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
+import { AbstractUser } from '../../auth';
 import {
   Context,
   Controller,
   createController,
   getHttpMethod,
   getPath,
+  HttpResponseBadRequest,
   HttpResponseCreated,
+  HttpResponseForbidden,
   HttpResponseMethodNotAllowed,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
@@ -16,20 +19,21 @@ import {
   Service,
   ServiceManager
 } from '../../core';
-import { ObjectDoesNotExist } from '../errors';
-import { ISerializer } from '../services';
+import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
+import { CollectionParams, IResourceCollection } from '../services';
 import { RestController } from './rest.controller';
 
 describe('RestController', () => {
 
   @Controller()
   class ConcreteController extends RestController {
-    serializerClass = class {};
+    collectionClass = class {};
   }
 
-  it('has a getQuery method that should return an empty object', () => {
+  it('has a extendParams method that should return the given params', () => {
     const controller = createController(ConcreteController);
-    deepStrictEqual(controller.getQuery(new Context({})), {});
+    const params: CollectionParams = {};
+    strictEqual(controller.extendParams(new Context({}), params), params);
   });
 
   describe('has a "delete" method that', () => {
@@ -53,47 +57,44 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'deleteById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.removeOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.deleteById is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        // removeOne() {}
-        updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        create() {}
+        find() {}
+        findById() {}
+        // deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
       ok(await controller.deleteById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when serializer.removeOne is defined', () => {
+    describe('when collection.deleteById is defined', () => {
 
-      it('should return an HttpResponseOK if serializer.removeOne resolves.', async () => {
-        const query = { foo: 'bar' };
-        const objects = [ { bar: 'bar' }];
-        let removeOneQuery;
-        let getQueryCtx;
+      it('should return an HttpResponseOK if collection.deleteById resolves.', async () => {
+        const objects = [ { bar: 'bar' } ];
+        let deleteByIdParams;
+        let deleteByIdId;
+        let deleteByIdUser;
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async removeOne(query) {
-            removeOneQuery = query;
+        class Collection implements Partial<IResourceCollection> {
+          async deleteById(user, id, params) {
+            deleteByIdUser = user;
+            deleteByIdId = id;
+            deleteByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -104,51 +105,62 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(removeOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(deleteByIdUser, ctx.user);
+        strictEqual(deleteByIdId, ctx.request.params.id);
+        deepStrictEqual(deleteByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if serializer.removeOne rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Serializer implements Partial<ISerializer> {
-          async removeOne(query) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.deleteById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async deleteById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          serializerClass = Serializer;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.deleteById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.deleteById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
-      it('should rejects an error if serializer.removeOne rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+      it('should rejects an error if collection.deleteById rejects one which'
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async removeOne(query) {
+        class Collection implements Partial<IResourceCollection> {
+          async deleteById(user, id, params) {
             throw err;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -176,46 +188,48 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'get'), '/');
     });
 
-    it('should return an HttpResponseNotImplemented if serializer.findMany is undefined.', async () => {
+    it('should return an HttpResponseNotImplemented if collection.find is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        createOne() {}
-        // findMany() {}
-        findOne() {}
-        removeOne() {}
-        updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        create() {}
+        // find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
       ok(await controller.get(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when serializer.findMany is defined', () => {
+    describe('when collection.find is defined', () => {
 
-      it('should return an HttpResponseOK if serializer.findMany resolves.', async () => {
+      it('should return an HttpResponseOK if collection.find resolves.', async () => {
         const query = { foo: 'bar' };
-        const objects = [ { bar: 'bar' }];
-        let findManyQuery;
+        const objects = [ { bar: 'bar' } ];
+        let findUser;
+        let findQuery;
         let getQueryCtx;
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async findMany(query) {
-            findManyQuery = query;
+        class Collection implements Partial<IResourceCollection> {
+          async find(user, { query }) {
+            findUser = user;
+            findQuery = query;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Collection;
 
-          getQuery(ctx) {
+          extendParams(ctx, params: CollectionParams) {
             getQueryCtx = ctx;
-            return query;
+            return { ...params, query };
           }
         }
 
@@ -223,12 +237,75 @@ describe('RestController', () => {
         const controller = new ConcreteController(services);
 
         const ctx = new Context({});
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
         strictEqual(getQueryCtx, ctx);
-        strictEqual(findManyQuery, query);
+        strictEqual(findQuery, query);
+        strictEqual(findUser, ctx.user);
+      });
+
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.find rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async find() {
+              throw new errorClass(content);
+            }
+          }
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
+          }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.get(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
+        });
+      }
+
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
+
+      it('should rejects an error if collection.find rejects one which'
+          + ' is not a ValidationError nor a PermissionDenied.', () => {
+        const err = new Error();
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async find() {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return controller.get(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
       });
 
     });
@@ -242,48 +319,45 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'getById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.findOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.findById is undefined.', async () => {
 
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        // findOne() {}
-        removeOne() {}
-        updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        create() {}
+        find() {}
+        // findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
       ok(await controller.getById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when serializer.findOne is defined', () => {
+    describe('when collection.findById is defined', () => {
 
-      it('should return an HttpResponseOK if serializer.findOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.findById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let findOneQuery;
-        let getQueryCtx;
+        let findByIdUser;
+        let findByIdId;
+        let findByIdParams;
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async findOne(query) {
-            findOneQuery = query;
+        class Collection implements Partial<IResourceCollection> {
+          async findById(user, id, params) {
+            findByIdUser = user;
+            findByIdId = id;
+            findByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -294,51 +368,62 @@ describe('RestController', () => {
             id: 1
           }
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(findOneQuery, { foo: 'bar', id: 1 });
+        strictEqual(findByIdUser, ctx.user);
+        strictEqual(findByIdId, ctx.request.params.id);
+        deepStrictEqual(findByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if serializer.findOne rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Serializer implements Partial<ISerializer> {
-          async findOne(query) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.findById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async findById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          serializerClass = Serializer;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.getById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.getById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
-      it('should rejects an error if serializer.findOne rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+      it('should rejects an error if collection.findById rejects one which'
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async findOne(query) {
+        class Collection implements Partial<IResourceCollection> {
+          async findById(user, id, params) {
             throw err;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -380,49 +465,46 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'patchById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.modifyById is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        // updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        // modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
-      ok(await controller.patchById(new Context({})) instanceof HttpResponseNotImplemented);
+      ok(await controller.patchById(new Context({ params: { id: 1 }})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when serializer.updateOne is defined', () => {
+    describe('when collection.modifyById is defined', () => {
 
-      it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.modifyById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let updateOneQuery;
-        let updateOneRecord;
-        let getQueryCtx;
+        let modifyByIdUser;
+        let modifyByIdId;
+        let modifyByIdData;
+        let modifyByIdParams;
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query, record) {
-            updateOneQuery = query;
-            updateOneRecord = record;
+        class Collection implements Partial<IResourceCollection> {
+          async modifyById(user, id, data, params) {
+            modifyByIdUser = user;
+            modifyByIdId = id;
+            modifyByIdData = data;
+            modifyByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -436,55 +518,63 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateOneRecord, ctx.request.body);
+        strictEqual(modifyByIdUser, ctx.user);
+        strictEqual(modifyByIdId, ctx.request.params.id);
+        strictEqual(modifyByIdData, ctx.request.body);
+        deepStrictEqual(modifyByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query, record) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.modifyById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async modifyById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          serializerClass = Serializer;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          body: {
-            foobar: 'foo'
-          },
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.patchById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.patchById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
-      it('should rejects an error if serializer.updateOne rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+      it('should rejects an error if collection.modifyById rejects one which'
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query) {
+        class Collection implements Partial<IResourceCollection> {
+          async modifyById(user, id, data, params) {
             throw err;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -512,53 +602,125 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'post'), '/');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.createOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.create is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        // createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        // create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
       ok(await controller.post(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    it('should return an HttpResponseCreated if serializer.createOne is defined.', async () => {
-      const objects = [ { bar: 'bar' }];
-      let createOneRecord;
-      @Service()
-      class Serializer implements Partial<ISerializer> {
-        async createOne(record) {
-          createOneRecord = record;
-          return objects;
+    describe('when collection.create is defined', () => {
+
+      it('should return an HttpResponseCreated if collection.create resolves.', async () => {
+        const objects = [ { bar: 'bar' } ];
+        let createUser;
+        let createData;
+        let createParams;
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async create(user, data, params) {
+            createUser = user;
+            createData = data;
+            createParams = params;
+            return objects;
+          }
         }
-      }
-      @Controller()
-      class ConcreteController extends RestController {
-        serializerClass = Serializer;
-      }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
 
-      const services = new ServiceManager();
-      const controller = new ConcreteController(services);
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
 
-      const ctx = new Context({
-        body: {
-          foobar: 'foo'
-        },
+        const ctx = new Context({
+          body: {
+            foobar: 'foo'
+          },
+        });
+        ctx.user = {} as AbstractUser;
+
+        const actual = await controller.post(ctx);
+        ok(actual instanceof HttpResponseCreated);
+        strictEqual(actual.content, objects);
+        strictEqual(createUser, ctx.user);
+        strictEqual(createData, ctx.request.body);
+        deepStrictEqual(createParams, {});
       });
 
-      const actual = await controller.post(ctx);
-      ok(actual instanceof HttpResponseCreated);
-      strictEqual(actual.content, objects);
-      strictEqual(createOneRecord, ctx.request.body);
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.create rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async create() {
+              throw new errorClass(content);
+            }
+          }
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
+          }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.post(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
+        });
+      }
+
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
+
+      it('should rejects an error if collection.create rejects one which'
+          + ' is not a ValidationError nor a PermissionDenied.', () => {
+        const err = new Error();
+        @Service()
+        class Collection implements Partial<IResourceCollection> {
+          async create() {
+            throw err;
+          }
+        }
+        @Controller()
+        class ConcreteController extends RestController {
+          collectionClass = Collection;
+        }
+
+        const services = new ServiceManager();
+        const controller = new ConcreteController(services);
+
+        const ctx = new Context({
+          params: {
+            id: 1
+          }
+        });
+
+        return controller.post(ctx)
+          .then(() => fail('This promise should be rejected.'))
+          .catch(error => strictEqual(error, err));
+      });
+
     });
 
   });
@@ -598,49 +760,46 @@ describe('RestController', () => {
       strictEqual(getPath(ConcreteController, 'putById'), '/:id');
     });
 
-    it('should return a HttpResponseNotImplemented if serializer.updateOne is undefined.', async () => {
+    it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
       @Service()
-      class Serializer implements Partial<ISerializer> {
-        createMany() {}
-        createOne() {}
-        findMany() {}
-        findOne() {}
-        removeOne() {}
-        // updateOne() {}
+      class Collection implements Partial<IResourceCollection> {
+        create() {}
+        find() {}
+        findById() {}
+        deleteById() {}
+        modifyById() {}
+        // updateById() {}
       }
       @Controller()
       class ConcreteController extends RestController {
-        serializerClass = Serializer;
+        collectionClass = Collection;
       }
 
       const controller = createController(ConcreteController);
       ok(await controller.putById(new Context({})) instanceof HttpResponseNotImplemented);
     });
 
-    describe('when serializer.updateOne is defined', () => {
+    describe('when collection.updateById is defined', () => {
 
-      it('should return an HttpResponseOK if serializer.updateOne resolves.', async () => {
-        const query = { foo: 'bar' };
+      it('should return an HttpResponseOK if collection.updateById resolves.', async () => {
         const objects = [ { bar: 'bar' }];
-        let updateOneQuery;
-        let updateOneRecord;
-        let getQueryCtx;
+        let updateByIdUser;
+        let updateByIdId;
+        let updateByIdData;
+        let updateByIdParams;
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query, record) {
-            updateOneQuery = query;
-            updateOneRecord = record;
+        class Collection implements Partial<IResourceCollection> {
+          async updateById(user, id, data, params) {
+            updateByIdUser = user;
+            updateByIdId = id;
+            updateByIdData = data;
+            updateByIdParams = params;
             return objects;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
-
-          getQuery(ctx) {
-            getQueryCtx = ctx;
-            return query;
-          }
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
@@ -654,55 +813,63 @@ describe('RestController', () => {
             id: 1
           },
         });
+        ctx.user = {} as AbstractUser;
 
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
         strictEqual(actual.content, objects);
-        strictEqual(getQueryCtx, ctx);
-        deepStrictEqual(updateOneQuery, { foo: 'bar', id: 1 });
-        strictEqual(updateOneRecord, ctx.request.body);
+        strictEqual(updateByIdUser, ctx.user);
+        strictEqual(updateByIdId, ctx.request.params.id);
+        strictEqual(updateByIdData, ctx.request.body);
+        deepStrictEqual(updateByIdParams, {});
       });
 
-      it('should return a HttpResponseNotFound if serializer.updateOne rejects an ObjectDoesNotExist.', async () => {
-        @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query, record) {
-            throw new ObjectDoesNotExist();
+      function testErrors(errorClass, httpResponseClass) {
+        it(`should return a ${httpResponseClass.name} if collection.updateById rejects`
+            + ` a ${errorClass.name}.`, async () => {
+          const content = {};
+          @Service()
+          class Collection implements Partial<IResourceCollection> {
+            async updateById() {
+              throw new errorClass(content);
+            }
           }
-        }
-        @Controller()
-        class ConcreteController extends RestController {
-          serializerClass = Serializer;
-        }
-
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
-
-        const ctx = new Context({
-          body: {
-            foobar: 'foo'
-          },
-          params: {
-            id: 1
+          @Controller()
+          class ConcreteController extends RestController {
+            collectionClass = Collection;
           }
+
+          const services = new ServiceManager();
+          const controller = new ConcreteController(services);
+
+          const ctx = new Context({
+            params: {
+              id: 1
+            }
+          });
+
+          const actual = await controller.putById(ctx);
+          ok(actual instanceof httpResponseClass);
+          strictEqual(actual.content, content);
         });
+      }
 
-        const actual = await controller.putById(ctx);
-        ok(actual instanceof HttpResponseNotFound);
-      });
+      testErrors(ObjectDoesNotExist, HttpResponseNotFound);
+      testErrors(ValidationError, HttpResponseBadRequest);
+      testErrors(PermissionDenied, HttpResponseForbidden);
 
-      it('should rejects an error if serializer.updateOne rejects one which'
-          + ' is not an ObjectDoesNotExist.', () => {
+      it('should rejects an error if collection.updateById rejects one which'
+          + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
         @Service()
-        class Serializer implements Partial<ISerializer> {
-          async updateOne(query) {
+        class Collection implements Partial<IResourceCollection> {
+          async updateById(user, id, data, params) {
             throw err;
           }
         }
         @Controller()
         class ConcreteController extends RestController {
-          serializerClass = Serializer;
+          collectionClass = Collection;
         }
 
         const services = new ServiceManager();
