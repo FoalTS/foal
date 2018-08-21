@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
+    "outDir": "lib",
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "commonjs",
