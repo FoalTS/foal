@@ -55,17 +55,15 @@ export class FlightCollection extends EntityResourceCollection {
 Here is your collection. Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
 
 ```typescript
-import { User, controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
+import { controller, IModule, Module } from '@foal/core';
 
 import { ViewController } from './controllers';
 import { AirportController } from './controllers/airport.controller';
 import { FlightController } from './controllers/flight.controller';
 
 import { User } from './entities';
-import { Flight } from './entities/flight.entity';
 
 @Module()
-@InitDB([ Permission, Group, User, Flight ])
 @Authenticate(User)
 export class AppModule implements IModule {
   controllers = [

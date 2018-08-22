@@ -32,7 +32,7 @@ export class AirportController {
 Now that your controller is created you need to bind it to the request handler. Go to `src/app/app.module.ts` and update the following lines.
 
 ```typescript
-import { Authenticate, controller, Group, IModule, InitDB, Module, Permission } from '@foal/core';
+import { Authenticate, controller, IModule, Module } from '@foal/core';
 
 import { ViewController } from './controllers';
 import { AirportController } from './controllers/airport.controller';
@@ -40,7 +40,6 @@ import { AirportController } from './controllers/airport.controller';
 import { User } from './entities';
 
 @Module()
-@InitDB([ Permission, Group, User ])
 @Authenticate(User)
 export class AppModule implements IModule {
   controllers = [

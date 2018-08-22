@@ -33,12 +33,4 @@ export class Flight {
 
 This class is an entity and can be regarded as a simple model. It is linked to a table called `flight` in the database.
 
-To be able to use this model you need to register it just like you would do with controllers. Go to `app.module.ts` and add the `Flight` entity to `InitDB`.
-
-```typescript
-...
-@InitDB([ Permission, Group, User, Flight ])
-...
-```
-
 That's it, you just created your model.

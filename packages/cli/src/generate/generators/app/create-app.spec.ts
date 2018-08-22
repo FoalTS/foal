@@ -34,10 +34,6 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/public/logo.png');
     rmdirIfExists('test-foo-bar/public');
 
-    // Scripts
-    rmfileIfExists('test-foo-bar/scripts/create-users.ts');
-    rmdirIfExists('test-foo-bar/scripts');
-
     // Src
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.html');
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.ts');
@@ -69,6 +65,9 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/src/app/app.module.ts');
     rmfileIfExists('test-foo-bar/src/app/test.ts');
     rmdirIfExists('test-foo-bar/src/app');
+
+    rmfileIfExists('test-foo-bar/src/scripts/create-users.ts');
+    rmdirIfExists('test-foo-bar/src/scripts');
 
     rmfileIfExists('test-foo-bar/src/index.ts');
     rmfileIfExists('test-foo-bar/src/test.ts');
@@ -114,10 +113,10 @@ describe('createApp', () => {
 
   });
 
-  it('shoud copy the scripts templates.', () => {
+  it('shoud copy the src/scripts templates.', () => {
 
-    const expected = readFileFromTemplatesSpec('app/scripts/create-users.1.ts');
-    const actual = readFileFromRoot('test-foo-bar/scripts/create-users.ts');
+    const expected = readFileFromTemplatesSpec('app/src/scripts/create-users.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/scripts/create-users.ts');
     strictEqual(actual, expected);
 
   });

@@ -6,8 +6,6 @@ To use a database you need to install a driver that depends on the database you 
 
 Database configuration and credentials are stored in a config file `ormconfig` or in environment variables. Find more details [here](http://typeorm.io/#/using-ormconfig).
 
-*Note: Having several databases is currently not supported.*
-
 ## SQLite
 
 ```sh

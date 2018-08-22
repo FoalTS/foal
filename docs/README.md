@@ -2,7 +2,7 @@
 
 In this tutorial you will learn how to build and run a simple FoalTS application using the FoalTS CLI.
 
-This command line interface lets you quickly create files and build, run and test your code without any further configuration.
+This command line interface lets you quickly create files and projects and run special scripts.
 
 ## 1. Set up the Development Environment
 

@@ -1,19 +1,20 @@
 {
   "name": "@foal/examples",
-  "version": "0.6.0-beta.0",
+  "version": "0.6.0-beta.1",
   "description": "FoalTs examples",
   "scripts": {
-    "start": "node ./lib/server.js",
-    "start:w": "supervisor -w ./lib/server.js --no-restart-on error ./lib/server.js",
-    "test": "",
-    "test:w": "mocha -w ./lib/test.js",
-    "build": "foal build --mode=prod",
-    "build:dev": "foal build --mode=dev",
-    "build:dev:w": "foal build --mode=dev --watch",
-    "build:test": "foal build --mode=test",
-    "build:test:w": "foal build --mode=test --watch",
-    "develop": "npm run build:dev && concurrently \"npm run build:dev:w\" \"npm run start:w\"",
-    "develop:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run test:w\"",
+    "build": "tsc && copy \"src/**/*.html\" lib",
+    "build:w": "tsc -w",
+    "start": "node ./lib/index.js",
+    "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
+    "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
+    "build:test": "tsc && copy \"src/**/*.html\" lib",
+    "build:test:w": "tsc -w",
+    "start:test": "mocha \"./lib/**/*.spec.js\"",
+    "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
+    "test": "npm run build:test && npm run start:test",
+    "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
     "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
     "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
     "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert"
@@ -39,7 +40,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.0",
+    "@foal/core": "^0.6.0-beta.1",
     "@foal/ejs": "^0.6.0-alpha.3",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
@@ -48,20 +49,14 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/cli": "^0.6.0-beta.0",
+    "@foal/cli": "^0.6.0-beta.1",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
-    "clean-webpack-plugin": "^0.1.19",
     "concurrently": "^3.5.1",
-    "html-loader": "^0.5.5",
+    "copy": "^0.3.2",
     "mocha": "^4.0.1",
     "supervisor": "^0.12.0",
-    "ts-loader": "^4.3.0",
     "ts-node": "^6.1.0",
-    "typescript": "^2.5.3",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3",
-    "webpack-merge": "^4.1.2",
-    "webpack-node-externals": "^1.7.2"
+    "typescript": "^2.5.3"
   }
 }

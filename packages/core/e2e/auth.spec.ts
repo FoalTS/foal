@@ -17,7 +17,6 @@ import {
   Group,
   HttpResponseOK,
   IModule,
-  InitDB,
   LoginController,
   LoginRequired,
   Module,
@@ -68,7 +67,6 @@ it('Authentication and authorization', async () => {
   }
 
   @Module()
-  @InitDB([ User, Permission, Group ])
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [
@@ -76,6 +74,14 @@ it('Authentication and authorization', async () => {
       AuthController
     ];
   }
+
+  await createConnection({
+    database: 'e2e_db.sqlite',
+    dropSchema: true,
+    entities: [ User, Permission, Group ],
+    synchronize: true,
+    type: 'sqlite',
+  });
 
   const app = createApp(AppModule);
 

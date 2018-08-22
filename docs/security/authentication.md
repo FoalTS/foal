@@ -32,7 +32,7 @@ export class Flight {
 }
 ```
 
-> You can use the `scripts/create-users.ts` to create users. First install `ts-node` with `npm i -g ts-node`. Then simply run `ts-node scripts/create-users.ts`.
+> You can use the `scripts/create-users.ts` to create users. Simply run `npm run build && node lib/scripts/create-users.js`.
 
 ### Create an Authenticator
 
@@ -66,11 +66,14 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
 import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { Authenticator } from '../services/authenticator.service';
 
-const login = require('./templates/login.html');
+const login = readFileSync(join(__dirname, './templates/login.html'), 'utf8');
 
 @Controller()
 export class AuthController extends LoginController {
