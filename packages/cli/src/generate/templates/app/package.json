@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc && copy \"src/**/*.html\" lib",
+    "build": "tsc && copy-cli \"src/**/*.html\" lib",
     "build:w": "tsc -w",
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
 
-    "build:test": "tsc && copy \"src/**/*.html\" lib",
+    "build:test": "tsc && copy-cli \"src/**/*.html\" lib",
     "build:test:w": "tsc -w",
     "start:test": "mocha \"./lib/**/*.spec.js\"",
     "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
