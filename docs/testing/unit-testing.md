@@ -1,6 +1,6 @@
 # Unit testing
-// Add a little get-started (some code or a cli command)
-All tests must be imported in the main `test.ts` file.
+
+FoalTS uses dependency injection to keep the code loosely coupled and so enhance testatibility.
 
 ## Services
 
