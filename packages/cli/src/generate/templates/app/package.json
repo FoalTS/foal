@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.47",
-    "@foal/cli": "^0.6.0-beta.1",
     "mocha": "^5.2.0",
     "@types/mocha": "^5.2.1",
     "concurrently": "^3.5.1",
