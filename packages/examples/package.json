@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.6.0-beta.0",
+  "version": "0.6.0-beta.1",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy \"src/**/*.html\" lib",
@@ -8,14 +8,12 @@
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
-
     "build:test": "tsc && copy \"src/**/*.html\" lib",
     "build:test:w": "tsc -w",
     "start:test": "mocha \"./lib/**/*.spec.js\"",
     "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
-
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
     "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
@@ -42,7 +40,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.0",
+    "@foal/core": "^0.6.0-beta.1",
     "@foal/ejs": "^0.6.0-alpha.3",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
@@ -51,7 +49,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/cli": "^0.6.0-beta.0",
+    "@foal/cli": "^0.6.0-beta.1",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
     "concurrently": "^3.5.1",
