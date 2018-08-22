@@ -24,7 +24,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.0",
+    "@foal/core": "^0.6.0-beta.1",
     "@foal/ejs": "^0.6.0-alpha.3",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.0.47",
-    "@foal/cli": "^0.6.0-beta.0",
+    "@foal/cli": "^0.6.0-beta.1",
     "mocha": "^5.2.0",
     "@types/mocha": "^5.2.1",
     "concurrently": "^3.5.1",
