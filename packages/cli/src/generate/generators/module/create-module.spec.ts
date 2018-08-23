@@ -83,7 +83,7 @@ describe('createModule', () => {
 
   });
 
-  describe('should create the controllers directory.', () => {
+  describe('should render the controllers templates.', () => {
 
     function test(prefix = '') {
       createModule({ name: 'test-fooBar' });
