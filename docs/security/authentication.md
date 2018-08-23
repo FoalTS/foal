@@ -73,8 +73,6 @@ import { Controller, emailSchema, Get, LoginController, render, strategy } from 
 
 import { Authenticator } from '../services/authenticator.service';
 
-const login = readFileSync(join(__dirname, './templates/login.html'), 'utf8');
-
 @Controller()
 export class AuthController extends LoginController {
   strategies = [
@@ -89,7 +87,7 @@ export class AuthController extends LoginController {
 
   @Get('/login')
   renderLogin(ctx) {
-    return render(login, { csrfToken: ctx.request.csrfToken() });
+    return render('./templates/login.html', { csrfToken: ctx.request.csrfToken() }, __dirname);
   }
 }
 ```

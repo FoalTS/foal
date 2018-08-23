@@ -10,15 +10,13 @@ You can get the csrf token by calling the `csrfToken` method of the context `req
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const index = readFileSync(join(__dirname, './templates/index.html'), 'utf8'); 
-
 @Controller()
 export class ViewController {
   @Get('/')
   index(ctx) {
-    return render(index, {
+    return render('./templates/index.html', {
       csrfToken: ctx.request.csrfToken()
-    });
+    }, __dirname);
   }
 }
 ```
