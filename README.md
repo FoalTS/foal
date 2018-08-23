@@ -61,7 +61,9 @@ export class AppModule implements IModule {
 $ npm run develop
 ```
 
-[>> Get started <<](https://foalts.gitbook.io/docs/content/)
+`http://localhost:3000/flights` should now display an empty array!
+
+[>> Continue with the tutorial <<](https://foalts.gitbook.io/docs/content/)
 
 ## Features
 
