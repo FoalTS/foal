@@ -19,6 +19,7 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/ormconfig.json');
     rmfileIfExists('test-foo-bar/package.json');
     rmfileIfExists('test-foo-bar/tsconfig.json');
+    rmfileIfExists('test-foo-bar/tsconfig.app.json');
     rmfileIfExists('test-foo-bar/tslint.json');
 
     // Config
@@ -245,6 +246,10 @@ describe('createApp', () => {
 
     expected = readFileFromTemplatesSpec('app/tsconfig.1.json');
     actual = readFileFromRoot('test-foo-bar/tsconfig.json');
+    strictEqual(actual, expected);
+
+    expected = readFileFromTemplatesSpec('app/tsconfig.app.1.json');
+    actual = readFileFromRoot('test-foo-bar/tsconfig.app.json');
     strictEqual(actual, expected);
 
     expected = readFileFromTemplatesSpec('app/tslint.1.json');

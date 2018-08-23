@@ -37,6 +37,7 @@ export function createApp({ name, sessionSecret }:
   copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`);
   renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals);
   copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`);
+  copyFileFromTemplates('app/tsconfig.app.json', `${names.kebabName}/tsconfig.app.json`);
   copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`);
 
   // Config
