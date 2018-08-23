@@ -20,5 +20,8 @@
     "no-var-requires": false,
     "member-access": [true, "no-public"]
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": "src/migrations/*.ts"
+  }
 }
