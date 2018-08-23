@@ -37,6 +37,7 @@ export function createApp({ name, sessionSecret }:
   copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`);
   renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals);
   copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`);
+  copyFileFromTemplates('app/tsconfig.app.json', `${names.kebabName}/tsconfig.app.json`);
   copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`);
 
   // Config
@@ -67,18 +68,15 @@ export function createApp({ name, sessionSecret }:
   // Src
   mkdirIfNotExists(`${names.kebabName}/src`);
   copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`);
-  copyFileFromTemplates('app/src/test.ts', `${names.kebabName}/src/test.ts`);
 
   mkdirIfNotExists(`${names.kebabName}/src/scripts`);
   copyFileFromTemplates('app/src/scripts/create-users.ts', `${names.kebabName}/src/scripts/create-users.ts`);
 
   mkdirIfNotExists(`${names.kebabName}/src/app`);
   copyFileFromTemplates('app/src/app/app.module.ts', `${names.kebabName}/src/app/app.module.ts`);
-  copyFileFromTemplates('app/src/app/test.ts', `${names.kebabName}/src/app/test.ts`);
 
   mkdirIfNotExists(`${names.kebabName}/src/app/controllers`);
   copyFileFromTemplates('app/src/app/controllers/index.ts', `${names.kebabName}/src/app/controllers/index.ts`);
-  copyFileFromTemplates('app/src/app/controllers/test.ts', `${names.kebabName}/src/app/controllers/test.ts`);
   copyFileFromTemplates(
     'app/src/app/controllers/view.controller.ts',
     `${names.kebabName}/src/app/controllers/view.controller.ts`
@@ -92,18 +90,12 @@ export function createApp({ name, sessionSecret }:
     'app/src/app/controllers/templates/index.ts',
     `${names.kebabName}/src/app/controllers/templates/index.ts`
   );
-  copyFileFromTemplates(
-    'app/src/app/controllers/templates/test.ts',
-    `${names.kebabName}/src/app/controllers/templates/test.ts`
-  );
 
   mkdirIfNotExists(`${names.kebabName}/src/app/hooks`);
   copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`);
-  copyFileFromTemplates('app/src/app/hooks/test.ts', `${names.kebabName}/src/app/hooks/test.ts`);
 
   mkdirIfNotExists(`${names.kebabName}/src/app/entities`);
   copyFileFromTemplates('app/src/app/entities/index.ts', `${names.kebabName}/src/app/entities/index.ts`);
-  copyFileFromTemplates('app/src/app/entities/test.ts', `${names.kebabName}/src/app/entities/test.ts`);
   copyFileFromTemplates(
     'app/src/app/entities/user.entity.ts',
     `${names.kebabName}/src/app/entities/user.entity.ts`
@@ -111,11 +103,9 @@ export function createApp({ name, sessionSecret }:
 
   mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`);
   copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`);
-  copyFileFromTemplates('app/src/app/sub-modules/test.ts', `${names.kebabName}/src/app/sub-modules/test.ts`);
 
   mkdirIfNotExists(`${names.kebabName}/src/app/services`);
   copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`);
-  copyFileFromTemplates('app/src/app/services/test.ts', `${names.kebabName}/src/app/services/test.ts`);
 
   if (process.env.NODE_ENV !== 'test') {
     console.log(

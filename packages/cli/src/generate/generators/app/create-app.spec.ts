@@ -19,6 +19,7 @@ describe('createApp', () => {
     rmfileIfExists('test-foo-bar/ormconfig.json');
     rmfileIfExists('test-foo-bar/package.json');
     rmfileIfExists('test-foo-bar/tsconfig.json');
+    rmfileIfExists('test-foo-bar/tsconfig.app.json');
     rmfileIfExists('test-foo-bar/tslint.json');
 
     // Config
@@ -37,40 +38,32 @@ describe('createApp', () => {
     // Src
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.html');
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/controllers/templates/test.ts');
     rmdirIfExists('test-foo-bar/src/app/controllers/templates');
 
     rmfileIfExists('test-foo-bar/src/app/controllers/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/controllers/test.ts');
     rmfileIfExists('test-foo-bar/src/app/controllers/view.controller.ts');
     rmdirIfExists('test-foo-bar/src/app/controllers');
 
     rmfileIfExists('test-foo-bar/src/app/hooks/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/hooks/test.ts');
     rmdirIfExists('test-foo-bar/src/app/hooks');
 
     rmfileIfExists('test-foo-bar/src/app/entities/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/entities/test.ts');
     rmfileIfExists('test-foo-bar/src/app/entities/user.entity.ts');
     rmdirIfExists('test-foo-bar/src/app/entities');
 
     rmfileIfExists('test-foo-bar/src/app/sub-modules/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/sub-modules/test.ts');
     rmdirIfExists('test-foo-bar/src/app/sub-modules');
 
     rmfileIfExists('test-foo-bar/src/app/services/index.ts');
-    rmfileIfExists('test-foo-bar/src/app/services/test.ts');
     rmdirIfExists('test-foo-bar/src/app/services');
 
     rmfileIfExists('test-foo-bar/src/app/app.module.ts');
-    rmfileIfExists('test-foo-bar/src/app/test.ts');
     rmdirIfExists('test-foo-bar/src/app');
 
     rmfileIfExists('test-foo-bar/src/scripts/create-users.ts');
     rmdirIfExists('test-foo-bar/src/scripts');
 
     rmfileIfExists('test-foo-bar/src/index.ts');
-    rmfileIfExists('test-foo-bar/src/test.ts');
     rmdirIfExists('test-foo-bar/src');
 
     // Root
@@ -127,10 +120,6 @@ describe('createApp', () => {
     let actual = readFileFromRoot('test-foo-bar/src/app/controllers/index.ts');
     strictEqual(actual, expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/controllers/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/controllers/test.ts');
-    strictEqual(actual, expected);
-
     expected = readFileFromTemplatesSpec('app/src/app/controllers/view.controller.1.ts');
     actual = readFileFromRoot('test-foo-bar/src/app/controllers/view.controller.ts');
     strictEqual(actual, expected);
@@ -139,12 +128,8 @@ describe('createApp', () => {
 
   it('should render the src/app/hooks templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/hooks/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/app/hooks/index.ts');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/app/hooks/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/hooks/test.ts');
+    const expected = readFileFromTemplatesSpec('app/src/app/hooks/index.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/app/hooks/index.ts');
     strictEqual(actual, expected);
 
   });
@@ -155,10 +140,6 @@ describe('createApp', () => {
     let actual = readFileFromRoot('test-foo-bar/src/app/entities/index.ts');
     strictEqual(actual, expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/entities/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/entities/test.ts');
-    strictEqual(actual, expected);
-
     expected = readFileFromTemplatesSpec('app/src/app/entities/user.entity.1.ts');
     actual = readFileFromRoot('test-foo-bar/src/app/entities/user.entity.ts');
     strictEqual(actual, expected);
@@ -167,24 +148,16 @@ describe('createApp', () => {
 
   it('should render the src/app/sub-modules templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/sub-modules/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/app/sub-modules/index.ts');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/app/sub-modules/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/sub-modules/test.ts');
+    const expected = readFileFromTemplatesSpec('app/src/app/sub-modules/index.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/app/sub-modules/index.ts');
     strictEqual(actual, expected);
 
   });
 
   it('should render the src/app/services templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/services/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/app/services/index.ts');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/app/services/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/services/test.ts');
+    const expected = readFileFromTemplatesSpec('app/src/app/services/index.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/app/services/index.ts');
     strictEqual(actual, expected);
 
   });
@@ -199,32 +172,20 @@ describe('createApp', () => {
     actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.ts');
     strictEqual(actual, expected);
 
-    expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/test.ts');
-    strictEqual(actual, expected);
-
   });
 
   it('should render the src/app templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/app.module.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/app/app.module.ts');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/app/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/test.ts');
+    const expected = readFileFromTemplatesSpec('app/src/app/app.module.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/app/app.module.ts');
     strictEqual(actual, expected);
 
   });
 
   it('should render the src templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/index.1.ts');
-    let actual = readFileFromRoot('test-foo-bar/src/index.ts');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/test.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/test.ts');
+    const expected = readFileFromTemplatesSpec('app/src/index.1.ts');
+    const actual = readFileFromRoot('test-foo-bar/src/index.ts');
     strictEqual(actual, expected);
 
   });
@@ -245,6 +206,10 @@ describe('createApp', () => {
 
     expected = readFileFromTemplatesSpec('app/tsconfig.1.json');
     actual = readFileFromRoot('test-foo-bar/tsconfig.json');
+    strictEqual(actual, expected);
+
+    expected = readFileFromTemplatesSpec('app/tsconfig.app.1.json');
+    actual = readFileFromRoot('test-foo-bar/tsconfig.app.json');
     strictEqual(actual, expected);
 
     expected = readFileFromTemplatesSpec('app/tslint.1.json');

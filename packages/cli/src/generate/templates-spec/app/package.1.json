@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc && copy-cli \"src/**/*.html\" lib",
-    "build:w": "tsc -w",
+    "build": "tsc -p tsconfig.app.json && copy-cli \"src/**/*.html\" lib",
+    "build:w": "tsc -p tsconfig.app.json -w",
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
