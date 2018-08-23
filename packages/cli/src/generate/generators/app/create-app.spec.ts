@@ -37,7 +37,6 @@ describe('createApp', () => {
 
     // Src
     rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.html');
-    rmfileIfExists('test-foo-bar/src/app/controllers/templates/index.ts');
     rmdirIfExists('test-foo-bar/src/app/controllers/templates');
 
     rmfileIfExists('test-foo-bar/src/app/controllers/index.ts');
@@ -164,12 +163,8 @@ describe('createApp', () => {
 
   it('should render the src/app/controllers/templates templates.', () => {
 
-    let expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/index.1.html');
-    let actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.html');
-    strictEqual(actual, expected);
-
-    expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/index.1.ts');
-    actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.ts');
+    const expected = readFileFromTemplatesSpec('app/src/app/controllers/templates/index.1.html');
+    const actual = readFileFromRoot('test-foo-bar/src/app/controllers/templates/index.html');
     strictEqual(actual, expected);
 
   });

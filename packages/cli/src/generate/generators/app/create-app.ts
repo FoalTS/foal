@@ -86,10 +86,6 @@ export function createApp({ name, sessionSecret }:
     'app/src/app/controllers/templates/index.html',
     `${names.kebabName}/src/app/controllers/templates/index.html`
   );
-  copyFileFromTemplates(
-    'app/src/app/controllers/templates/index.ts',
-    `${names.kebabName}/src/app/controllers/templates/index.ts`
-  );
 
   mkdirIfNotExists(`${names.kebabName}/src/app/hooks`);
   copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`);
