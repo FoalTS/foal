@@ -1,5 +1,6 @@
 // std
 import { strictEqual } from 'assert';
+import { existsSync } from 'fs';
 
 // FoalTS
 import {
@@ -12,7 +13,6 @@ import {
 import { createModule } from './create-module';
 
 function removeFiles(prefix: string = '') {
-  rmfileIfExists(`${prefix}test-foo-bar/controllers/templates/index.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/controllers/templates`);
   rmfileIfExists(`${prefix}test-foo-bar/controllers/index.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/controllers`);
@@ -83,7 +83,7 @@ describe('createModule', () => {
 
   });
 
-  describe('should render the controllers templates.', () => {
+  describe('should create the controllers directory.', () => {
 
     function test(prefix = '') {
       createModule({ name: 'test-fooBar' });
@@ -223,14 +223,14 @@ describe('createModule', () => {
 
   });
 
-  describe('should render the templates templates.', () => {
+  describe('should create the controllers/templates directory.', () => {
 
     function test(prefix = '') {
       createModule({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/controllers/templates/index.1.ts');
-      const actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/index.ts`);
-      strictEqual(actual, expected);
+      if (!existsSync(`${prefix}test-foo-bar/controllers/templates`)) {
+        throw new Error('The controllers/templates directory should be created.');
+      }
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {

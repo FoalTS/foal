@@ -1,7 +1,6 @@
 import { Context, Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { Authenticator } from '../services/authenticator.service';
-import { login } from './templates';
 
 @Controller()
 export class AuthController extends LoginController {
@@ -16,6 +15,6 @@ export class AuthController extends LoginController {
 
   @Get('/login')
   renderLogin(ctx: Context) {
-    return render(login, { csrfToken: ctx.request.csrfToken() });
+    return render('./templates/login.html', { csrfToken: ctx.request.csrfToken() }, __dirname);
   }
 }

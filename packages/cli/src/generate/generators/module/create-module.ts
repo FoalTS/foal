@@ -24,10 +24,6 @@ export function createModule({ name }: { name: string }) {
   mkdirIfNotExists(`${prefix}${names.kebabName}/controllers`);
   copyFileFromTemplates('module/controllers/index.ts', `${prefix}${names.kebabName}/controllers/index.ts`);
   mkdirIfNotExists(`${prefix}${names.kebabName}/controllers/templates`);
-  copyFileFromTemplates(
-    'module/controllers/templates/index.ts',
-    `${prefix}${names.kebabName}/controllers/templates/index.ts`,
-  );
   mkdirIfNotExists(`${prefix}${names.kebabName}/hooks`);
   copyFileFromTemplates('module/hooks/index.ts', `${prefix}${names.kebabName}/hooks/index.ts`);
 

@@ -1,16 +1,14 @@
 import { Config, Controller, Get, render } from '@foal/core';
 
-import { index } from './templates';
-
 @Controller()
 export class ViewController {
 
   @Get()
   index(ctx) {
-    return render(index, {
+    return render('./templates/index.html', {
       appName: Config.get('app', 'name'),
       csrfToken: ctx.request.csrfToken(),
-    });
+    }, __dirname);
   }
 
 }
