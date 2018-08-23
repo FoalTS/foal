@@ -1,6 +1,6 @@
 # Migrations
 
-Migrations are stored in the `migrations` directory.
+Migrations are stored in the `src/migrations` directory.
 
 Run a migration
 ```sh
