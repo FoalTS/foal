@@ -1,5 +1,5 @@
 // std
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 
 // FoalTS
 import { getNames, renderTemplate } from '../../utils';
@@ -11,13 +11,16 @@ export function createController({ name, type }: { name: string, type: Controlle
 
   let path = `${names.kebabName}.controller.ts`;
   let testPath  = `${names.kebabName}.controller.spec.ts`;
+  let indexPath = 'index.ts';
 
   if (existsSync('src/app/controllers')) {
     path = `src/app/controllers/${path}`;
     testPath = `src/app/controllers/${testPath}`;
+    indexPath = `src/app/controllers/${indexPath}`;
   } else if (existsSync('controllers')) {
     path = `controllers/${path}`;
     testPath = `controllers/${testPath}`;
+    indexPath = `controllers/${indexPath}`;
   }
 
   switch (type) {
@@ -36,4 +39,7 @@ export function createController({ name, type }: { name: string, type: Controlle
       break;
   }
 
+  let indexContent = readFileSync(indexPath, 'utf8');
+  indexContent += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
+  writeFileSync(indexPath, indexContent, 'utf8');
 }
