@@ -1,6 +1,6 @@
 
 // 3p
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 
 // FoalTS
 import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
@@ -9,11 +9,14 @@ export function createModule({ name }: { name: string }) {
   const names = getNames(name);
 
   let prefix = '';
+  let indexPath = 'index.ts';
 
   if (existsSync('src/app/sub-modules')) {
     prefix = 'src/app/sub-modules/';
+    indexPath = `src/app/sub-modules/${indexPath}`;
   } else if (existsSync('sub-modules')) {
     prefix = 'sub-modules/';
+    indexPath = `sub-modules/${indexPath}`;
   }
 
   mkdirIfNotExists(`${prefix}${names.kebabName}`);
@@ -35,4 +38,8 @@ export function createModule({ name }: { name: string }) {
 
   mkdirIfNotExists(`${prefix}${names.kebabName}/services`);
   copyFileFromTemplates('module/services/index.ts', `${prefix}${names.kebabName}/services/index.ts`);
+
+  let indexContent = readFileSync(indexPath, 'utf8');
+  indexContent += `export { ${names.upperFirstCamelName}Module } from './${names.kebabName}';\n`;
+  writeFileSync(indexPath, indexContent, 'utf8');
 }
