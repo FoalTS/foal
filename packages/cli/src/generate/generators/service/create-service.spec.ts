@@ -39,8 +39,6 @@ describe('createService', () => {
   describe('should render the empty templates.', () => {
 
     it('in src/app/services/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/services');
       writeFileSync('src/app/services/index.ts', indexInitialContent, 'utf8');
 

@@ -39,8 +39,6 @@ describe('createController', () => {
   describe('should render the empty templates', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/controllers');
       writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
 
@@ -101,8 +99,6 @@ describe('createController', () => {
   describe('should render the REST templates.', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/controllers');
       writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
 
@@ -151,8 +147,6 @@ describe('createController', () => {
   describe('should render the GraphQL templates.', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/controllers');
       writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
 
@@ -201,8 +195,6 @@ describe('createController', () => {
   describe('should render the Login templates.', () => {
 
     it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/controllers');
       writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
 

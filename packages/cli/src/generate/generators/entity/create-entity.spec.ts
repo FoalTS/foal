@@ -8,7 +8,8 @@ import {
   readFileFromRoot,
   readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  validateGeneratedFile
 } from '../../utils';
 import { createEntity } from './create-entity';
 
@@ -36,20 +37,19 @@ describe('createEntity', () => {
     const indexInitialContent = 'export { BarFoo } from \'./bar-foo.entity\';\n';
 
     it('in src/app/entities/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/entities');
       writeFileSync('src/app/entities/index.ts', indexInitialContent, 'utf8');
 
       createEntity({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      let actual = readFileFromRoot('src/app/entities/test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('entity/index.1.ts');
-      actual = readFileFromRoot('src/app/entities/index.ts');
-      strictEqual(actual, expected);
+      validateGeneratedFile(
+        'src/app/entities/test-foo-bar.entity.ts',
+        'entity/test-foo-bar.entity.1.ts'
+      );
+      validateGeneratedFile(
+        'src/app/entities/index.ts',
+        'entity/index.1.ts'
+      );
     });
 
     it('in entities/ if the directory exists.', () => {

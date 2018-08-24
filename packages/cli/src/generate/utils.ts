@@ -1,4 +1,5 @@
 // std
+import { strictEqual } from 'assert';
 import * as fs from 'fs';
 import { join } from 'path';
 
@@ -6,8 +7,13 @@ export function mkdirIfNotExists(path: string) {
   if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${path}`);
   }
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
+  const paths = path.split('/');
+  const paths2: string[] = [];
+  while (paths.length > 0) {
+    paths2.push(paths.shift() as string);
+    if (!fs.existsSync(paths2.join('/'))) {
+      fs.mkdirSync(paths2.join('/'));
+    }
   }
 }
 
@@ -35,6 +41,12 @@ export function renderTemplate(src: string, dest: string, locals: object) {
     }
   }
   fs.writeFileSync(dest, content, 'utf8');
+}
+
+export function validateGeneratedFile(filePath: string, templateSpecPath: string) {
+  const expected = readFileFromTemplatesSpec(templateSpecPath);
+  const actual = readFileFromRoot(filePath);
+  strictEqual(actual, expected);
 }
 
 export function updateFile(path: string, cb: (content: string) => string) {

@@ -75,8 +75,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -105,8 +103,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -135,8 +131,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -165,8 +159,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -195,8 +187,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -225,8 +215,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -255,8 +243,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });

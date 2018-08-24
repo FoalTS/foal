@@ -1,14 +1,12 @@
 // std
-import { strictEqual } from 'assert';
 import { writeFileSync } from 'fs';
 
 // FoalTS
 import {
   mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  validateGeneratedFile
 } from '../../utils';
 import { createHook } from './create-hook';
 
@@ -36,20 +34,19 @@ describe('createHook', () => {
     const indexInitialContent = 'export { BarFoo } from \'./bar-foo.hook\';\n';
 
     it('in src/app/hooks/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/hooks');
       writeFileSync('src/app/hooks/index.ts', indexInitialContent, 'utf8');
 
       createHook({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
-      let actual = readFileFromRoot('src/app/hooks/test-foo-bar.hook.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('hook/index.1.ts');
-      actual = readFileFromRoot('src/app/hooks/index.ts');
-      strictEqual(actual, expected);
+      validateGeneratedFile(
+        'src/app/hooks/test-foo-bar.hook.ts',
+        'hook/test-foo-bar.hook.1.ts'
+      );
+      validateGeneratedFile(
+        'src/app/hooks/index.ts',
+        'hook/index.1.ts'
+      );
     });
 
     it('in src/app/hooks/ if the directory exists.', () => {
@@ -58,13 +55,14 @@ describe('createHook', () => {
 
       createHook({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
-      let actual = readFileFromRoot('hooks/test-foo-bar.hook.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('hook/index.1.ts');
-      actual = readFileFromRoot('hooks/index.ts');
-      strictEqual(actual, expected);
+      validateGeneratedFile(
+        'hooks/test-foo-bar.hook.ts',
+        'hook/test-foo-bar.hook.1.ts'
+      );
+      validateGeneratedFile(
+        'hooks/index.ts',
+        'hook/index.1.ts'
+      );
     });
 
     it('in the current directory otherwise.', () => {
@@ -72,13 +70,14 @@ describe('createHook', () => {
 
       createHook({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('hook/test-foo-bar.hook.1.ts');
-      let actual = readFileFromRoot('test-foo-bar.hook.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('hook/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
+      validateGeneratedFile(
+        'test-foo-bar.hook.ts',
+        'hook/test-foo-bar.hook.1.ts'
+      );
+      validateGeneratedFile(
+        'index.ts',
+        'hook/index.1.ts'
+      );
     });
 
   });
