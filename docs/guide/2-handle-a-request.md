@@ -34,8 +34,7 @@ Now that your controller is created you need to bind it to the request handler. 
 ```typescript
 import { Authenticate, controller, IModule, Module } from '@foal/core';
 
-import { ViewController } from './controllers';
-import { AirportController } from './controllers/airport.controller';
+import { AirportController, ViewController } from './controllers';
 
 import { User } from './entities';
 
