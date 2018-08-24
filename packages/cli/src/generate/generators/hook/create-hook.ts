@@ -1,8 +1,8 @@
 // std
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate } from '../../utils';
+import { getNames, renderTemplate, updateFile } from '../../utils';
 
 export function createHook({ name }: { name: string }) {
   const names = getNames(name);
@@ -20,7 +20,8 @@ export function createHook({ name }: { name: string }) {
 
   renderTemplate('hook/hook.ts', path, names);
 
-  let indexContent = readFileSync(indexPath, 'utf8');
-  indexContent += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.hook';\n`;
-  writeFileSync(indexPath, indexContent, 'utf8');
+  updateFile(indexPath, content => {
+    content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.hook';\n`;
+    return content;
+  });
 }

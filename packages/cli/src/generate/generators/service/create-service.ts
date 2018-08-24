@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate } from '../../utils';
+import { getNames, renderTemplate, updateFile } from '../../utils';
 
 export type ServiceType = 'Empty'|'ResourceCollection'|'EntityResourceCollection'|'GraphQLResolver'
   |'Authenticator'|'EmailAuthenticator';
@@ -49,25 +49,24 @@ export function createService({ name, type }: { name: string, type: ServiceType 
       break;
   }
 
-  let indexContent = readFileSync(indexPath, 'utf8');
-
-  switch (type) {
-    case 'Empty':
-    case 'Authenticator':
-    case 'EmailAuthenticator':
-      indexContent += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.service';\n`;
-      break;
-    case 'ResourceCollection':
-    case 'EntityResourceCollection':
-      indexContent += `export { ${names.upperFirstCamelName}Collection }`;
-      indexContent += ` from './${names.kebabName}-collection.service';\n`;
-      break;
-    case 'GraphQLResolver':
-      indexContent = readFileSync(indexPath, 'utf8');
-      indexContent += `export { ${names.upperFirstCamelName}Resolver } from './${names.kebabName}-resolver.service';\n`;
-      break;
-  }
-
-  writeFileSync(indexPath, indexContent, 'utf8');
+  updateFile(indexPath, content => {
+    switch (type) {
+      case 'Empty':
+      case 'Authenticator':
+      case 'EmailAuthenticator':
+        content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.service';\n`;
+        break;
+      case 'ResourceCollection':
+      case 'EntityResourceCollection':
+        content += `export { ${names.upperFirstCamelName}Collection }`;
+        content += ` from './${names.kebabName}-collection.service';\n`;
+        break;
+      case 'GraphQLResolver':
+        content = readFileSync(indexPath, 'utf8');
+        content += `export { ${names.upperFirstCamelName}Resolver } from './${names.kebabName}-resolver.service';\n`;
+        break;
+    }
+    return content;
+  });
 
 }

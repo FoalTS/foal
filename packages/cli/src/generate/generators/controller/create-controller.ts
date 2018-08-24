@@ -1,8 +1,8 @@
 // std
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate } from '../../utils';
+import { getNames, renderTemplate, updateFile } from '../../utils';
 
 export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
 
@@ -39,7 +39,8 @@ export function createController({ name, type }: { name: string, type: Controlle
       break;
   }
 
-  let indexContent = readFileSync(indexPath, 'utf8');
-  indexContent += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
-  writeFileSync(indexPath, indexContent, 'utf8');
+  updateFile(indexPath, content => {
+    content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
+    return content;
+  });
 }

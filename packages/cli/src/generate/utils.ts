@@ -37,6 +37,11 @@ export function renderTemplate(src: string, dest: string, locals: object) {
   fs.writeFileSync(dest, content, 'utf8');
 }
 
+export function updateFile(path: string, cb: (content: string) => string) {
+  const content = fs.readFileSync(path, 'utf8');
+  fs.writeFileSync(path, cb(content), 'utf8');
+}
+
 export function copyFileFromNodeModules(src: string, dest: string) {
   if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${dest}`);
