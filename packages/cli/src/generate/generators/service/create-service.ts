@@ -1,5 +1,5 @@
 // std
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 
 // FoalTS
 import { getNames, renderTemplate, updateFile } from '../../utils';
