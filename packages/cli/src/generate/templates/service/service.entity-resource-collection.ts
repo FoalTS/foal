@@ -1,6 +1,6 @@
 import { EntityResourceCollection, Service } from '@foal/core';
 
-import { /* upperFirstCamelName */ } from '../entities//* kebabName */.entity';
+import { /* upperFirstCamelName */ } from '../entities';
 
 @Service()
 export class /* upperFirstCamelName */Collection extends EntityResourceCollection {
