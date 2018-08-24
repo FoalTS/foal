@@ -1,5 +1,5 @@
 // std
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
 // FoalTS
 import { getNames, renderTemplate, updateFile } from '../../utils';
@@ -62,7 +62,6 @@ export function createService({ name, type }: { name: string, type: ServiceType 
         content += ` from './${names.kebabName}-collection.service';\n`;
         break;
       case 'GraphQLResolver':
-        content = readFileSync(indexPath, 'utf8');
         content += `export { ${names.upperFirstCamelName}Resolver } from './${names.kebabName}-resolver.service';\n`;
         break;
     }
