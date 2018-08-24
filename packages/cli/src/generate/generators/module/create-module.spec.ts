@@ -1,6 +1,6 @@
 // std
 import { strictEqual } from 'assert';
-import { existsSync } from 'fs';
+import { existsSync, writeFileSync } from 'fs';
 
 // FoalTS
 import {
@@ -33,6 +33,7 @@ function removeFiles(prefix: string = '') {
   rmfileIfExists(`${prefix}test-foo-bar/index.ts`);
 
   rmdirIfExists(`${prefix}test-foo-bar`);
+  rmfileIfExists(`${prefix}index.ts`);
 }
 
 describe('createModule', () => {
@@ -51,9 +52,13 @@ describe('createModule', () => {
     removeFiles();
   });
 
+  const indexInitialContent = 'export { BarFooModule } from \'./bar-foo\';\n';
+
   describe('should render the root templates', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/index.1.ts');
@@ -62,6 +67,10 @@ describe('createModule', () => {
 
       expected = readFileFromTemplatesSpec('module/test-foo-bar.module.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
+      strictEqual(actual, expected);
+
+      expected = readFileFromTemplatesSpec('module/index.parent.ts');
+      actual = readFileFromRoot(`${prefix}index.ts`);
       strictEqual(actual, expected);
     }
 
@@ -86,6 +95,8 @@ describe('createModule', () => {
   describe('should render the controllers templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       const expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
@@ -114,6 +125,8 @@ describe('createModule', () => {
   describe('should render the hooks templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       const expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
@@ -142,6 +155,8 @@ describe('createModule', () => {
   describe('should render the entities templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       const expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
@@ -170,6 +185,8 @@ describe('createModule', () => {
   describe('should render the sub-modules templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       const expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
@@ -198,6 +215,8 @@ describe('createModule', () => {
   describe('should render the services templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       const expected = readFileFromTemplatesSpec('module/services/index.1.ts');
@@ -226,6 +245,8 @@ describe('createModule', () => {
   describe('should create the controllers/templates directory.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       if (!existsSync(`${prefix}test-foo-bar/controllers/templates`)) {

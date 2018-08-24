@@ -1,6 +1,6 @@
 import { EntityResourceCollection, Service } from '@foal/core';
 
-import { TestFooBar } from '../entities/test-foo-bar.entity';
+import { TestFooBar } from '../entities';
 
 @Service()
 export class TestFooBarCollection extends EntityResourceCollection {

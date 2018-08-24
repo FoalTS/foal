@@ -18,7 +18,7 @@ Open the generated file `src/app/controllers/flight.controller.ts`.
 ```typescript
 import { Controller, RestController } from '@foal/core';
 
-import { FlightCollection } from '../services/flight-collection.service';
+import { FlightCollection } from '../services';
 
 @Controller()
 export class FlightController extends RestController {
@@ -40,7 +40,7 @@ foal g service flight
 ```typescript
 import { EntityResourceCollection, Service } from '@foal/core';
 
-import { Flight } from '../entities/flight.entity';
+import { Flight } from '../entities';
 
 @Service()
 export class FlightCollection extends EntityResourceCollection {
@@ -57,9 +57,7 @@ Here is your collection. Now you need to register your REST controller. Open `sr
 ```typescript
 import { controller, IModule, Module } from '@foal/core';
 
-import { ViewController } from './controllers';
-import { AirportController } from './controllers/airport.controller';
-import { FlightController } from './controllers/flight.controller';
+import { AirportController, FlightController, ViewController } from './controllers';
 
 import { User } from './entities';
 
