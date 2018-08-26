@@ -41,7 +41,7 @@ export class TestEnvironment {
   validateSpec(specPath: string, filePath?: string) {
     filePath = filePath || specPath;
     const spec = readFileSync(
-      join(__dirname, '../templates-spec', this.generatorName, specPath),
+      join(__dirname, '../specs', this.generatorName, specPath),
       'utf8'
     );
     const actual = readFileSync(
@@ -55,7 +55,7 @@ export class TestEnvironment {
   validateFileSpec(specPath: string, filePath?: string) {
     filePath = filePath || specPath;
     const spec = readFileSync(
-      join(__dirname, '../templates-spec', this.generatorName, specPath),
+      join(__dirname, '../specs', this.generatorName, specPath),
     );
     const actual = readFileSync(
       join(this.root, filePath),

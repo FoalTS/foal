@@ -34,7 +34,7 @@ export function rmdirIfExists(path: string) {
 }
 
 export function readFileFromTemplatesSpec(src: string): string {
-  return fs.readFileSync(join(__dirname, '../templates-spec', src), 'utf8');
+  return fs.readFileSync(join(__dirname, '../specs', src), 'utf8');
 }
 
 export function readFileFromRoot(src: string): string {
