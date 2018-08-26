@@ -5,6 +5,7 @@ import { join } from 'path';
 export { Generator } from './generator';
 export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 export { TestEnvironment } from './test-environment';
+export { getNames } from './get-names';
 
 export function mkdirIfNotExists(path: string) {
   if (process.env.NODE_ENV !== 'test') {
@@ -38,12 +39,4 @@ export function readFileFromTemplatesSpec(src: string): string {
 
 export function readFileFromRoot(src: string): string {
   return fs.readFileSync(src, 'utf8');
-}
-
-export function getNames(name: string): { camelName: string, kebabName: string, upperFirstCamelName: string } {
-  const camelName = name.replace(/-([a-z])/gi, g => g[1].toUpperCase());
-  const kebabName = name.replace(/([a-z][A-Z])/g, g => `${g[0]}-${g[1].toLowerCase()}`);
-  const upperFirstCamelName = camelName.charAt(0).toUpperCase() + camelName.slice(1);
-
-  return { camelName, kebabName, upperFirstCamelName };
 }
