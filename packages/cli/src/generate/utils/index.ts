@@ -3,6 +3,10 @@ import { strictEqual } from 'assert';
 import * as fs from 'fs';
 import { join } from 'path';
 
+export { Generator } from './generator';
+export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
+export { TestEnvironment } from './test-environment';
+
 export function mkdirIfNotExists(path: string) {
   if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${path}`);
@@ -54,13 +58,6 @@ export function updateFile(path: string, cb: (content: string) => string) {
   fs.writeFileSync(path, cb(content), 'utf8');
 }
 
-export function copyFileFromNodeModules(src: string, dest: string) {
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`CREATE ${dest}`);
-  }
-  fs.copyFileSync(join(__dirname, '../../../node_modules', src), dest);
-}
-
 export function copyFileFromTemplates(src: string, dest: string) {
   if (process.env.NODE_ENV !== 'test') {
     console.log(`CREATE ${dest}`);
@@ -70,10 +67,6 @@ export function copyFileFromTemplates(src: string, dest: string) {
 
 export function readFileFromTemplatesSpec(src: string): string {
   return fs.readFileSync(join(__dirname, '../templates-spec', src), 'utf8');
-}
-
-export function readFileFromNodeModules(src: string): string {
-  return fs.readFileSync(join(__dirname, '../../../node_modules', src), 'utf8');
 }
 
 export function readFileFromRoot(src: string): string {
