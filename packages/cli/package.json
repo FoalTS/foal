@@ -45,7 +45,8 @@
   ],
   "dependencies": {
     "commander": "^2.15.1",
-    "inquirer": "^6.0.0"
+    "inquirer": "^6.0.0",
+    "typescript": "^2.7.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
@@ -53,7 +54,6 @@
     "copyfiles": "^2.0.0",
     "mocha": "^3.5.3",
     "rimraf": "^2.6.2",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "ts-node": "^3.3.0"
   }
 }
