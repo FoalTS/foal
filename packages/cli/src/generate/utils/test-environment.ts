@@ -7,27 +7,29 @@ import { join } from 'path';
 import { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 
 export class TestEnvironment {
-  constructor(private generatorName: string) {}
+  constructor(private generatorName: string, private root: string) {}
 
   /* Create environment */
-  mkdirIfDoesNotExist(path: string) {
-    mkdirIfDoesNotExist(path);
-  }
-  copyFileFromMocks(srcPath: string, destPath?: string) {
-    destPath = destPath || srcPath;
-    copyFileSync(
-      join(__dirname, '../mocks', this.generatorName, srcPath),
-      join(destPath)
-    );
-  }
+  // mkdirIfDoesNotExist(path: string) {
+  //   mkdirIfDoesNotExist(path);
+  // }
+  // copyFileFromMocks(srcPath: string, destPath?: string) {
+  //   destPath = destPath || srcPath;
+  //   copyFileSync(
+  //     join(__dirname, '../mocks', this.generatorName, srcPath),
+  //     join(destPath)
+  //   );
+  // }
 
   /* Remove environment */
   rmdirIfExists(path: string) {
+    path = join(this.root, path);
     if (existsSync(path)) {
       rmdirSync(path);
     }
   }
   rmfileIfExists(path: string) {
+    path = join(this.root, path);
     if (existsSync(path)) {
       unlinkSync(path);
     }
@@ -41,7 +43,7 @@ export class TestEnvironment {
       'utf8'
     );
     const actual = readFileSync(
-      filePath,
+      join(this.root, filePath),
       'utf8'
     );
     strictEqual(actual, spec);
@@ -54,7 +56,7 @@ export class TestEnvironment {
       join(__dirname, '../templates-spec', this.generatorName, specPath),
     );
     const actual = readFileSync(
-      filePath,
+      join(this.root, filePath),
     );
     ok(actual.equals(spec));
     return this;
