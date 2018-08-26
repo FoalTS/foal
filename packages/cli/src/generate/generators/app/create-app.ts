@@ -3,10 +3,9 @@ import * as crypto from 'crypto';
 
 // FoalTS
 import {
-  copyFileFromTemplates,
+  Generator,
   getNames,
-  mkdirIfNotExists,
-  renderTemplate
+  mkdirIfDoesNotExist,
 } from '../../utils';
 
 export function createApp({ name, sessionSecret }:
@@ -31,77 +30,55 @@ export function createApp({ name, sessionSecret }:
     sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
   };
 
-  // Root
-  mkdirIfNotExists(names.kebabName);
-  copyFileFromTemplates('app/gitignore', `${names.kebabName}/.gitignore`);
-  copyFileFromTemplates('app/ormconfig.json', `${names.kebabName}/ormconfig.json`);
-  renderTemplate('app/package.json', `${names.kebabName}/package.json`, locals);
-  copyFileFromTemplates('app/tsconfig.json', `${names.kebabName}/tsconfig.json`);
-  copyFileFromTemplates('app/tsconfig.app.json', `${names.kebabName}/tsconfig.app.json`);
-  copyFileFromTemplates('app/tslint.json', `${names.kebabName}/tslint.json`);
+  mkdirIfDoesNotExist(names.kebabName);
 
-  // Config
-  mkdirIfNotExists(`${names.kebabName}/config`);
-  renderTemplate('app/config/app.development.json', `${names.kebabName}/config/app.development.json`, locals);
-  renderTemplate('app/config/app.production.json', `${names.kebabName}/config/app.production.json`, locals);
-  renderTemplate('app/config/app.test.json', `${names.kebabName}/config/app.test.json`, locals);
-  renderTemplate(
-    'app/config/settings.json',
-    `${names.kebabName}/config/settings.json`,
-    locals
-  );
-  renderTemplate(
-    'app/config/settings.development.json',
-    `${names.kebabName}/config/settings.development.json`,
-    locals
-  );
-  renderTemplate(
-    'app/config/settings.production.json',
-    `${names.kebabName}/config/settings.production.json`,
-    locals
-  );
-
-  // Public
-  mkdirIfNotExists(`${names.kebabName}/public`);
-  copyFileFromTemplates('app/public/logo.png', `${names.kebabName}/public/logo.png`);
-
-  // Src
-  mkdirIfNotExists(`${names.kebabName}/src`);
-  copyFileFromTemplates('app/src/index.ts', `${names.kebabName}/src/index.ts`);
-
-  mkdirIfNotExists(`${names.kebabName}/src/scripts`);
-  copyFileFromTemplates('app/src/scripts/create-users.ts', `${names.kebabName}/src/scripts/create-users.ts`);
-
-  mkdirIfNotExists(`${names.kebabName}/src/app`);
-  copyFileFromTemplates('app/src/app/app.module.ts', `${names.kebabName}/src/app/app.module.ts`);
-
-  mkdirIfNotExists(`${names.kebabName}/src/app/controllers`);
-  copyFileFromTemplates('app/src/app/controllers/index.ts', `${names.kebabName}/src/app/controllers/index.ts`);
-  copyFileFromTemplates(
-    'app/src/app/controllers/view.controller.ts',
-    `${names.kebabName}/src/app/controllers/view.controller.ts`
-  );
-  mkdirIfNotExists(`${names.kebabName}/src/app/controllers/templates`);
-  copyFileFromTemplates(
-    'app/src/app/controllers/templates/index.html',
-    `${names.kebabName}/src/app/controllers/templates/index.html`
-  );
-
-  mkdirIfNotExists(`${names.kebabName}/src/app/hooks`);
-  copyFileFromTemplates('app/src/app/hooks/index.ts', `${names.kebabName}/src/app/hooks/index.ts`);
-
-  mkdirIfNotExists(`${names.kebabName}/src/app/entities`);
-  copyFileFromTemplates('app/src/app/entities/index.ts', `${names.kebabName}/src/app/entities/index.ts`);
-  copyFileFromTemplates(
-    'app/src/app/entities/user.entity.ts',
-    `${names.kebabName}/src/app/entities/user.entity.ts`
-  );
-
-  mkdirIfNotExists(`${names.kebabName}/src/app/sub-modules`);
-  copyFileFromTemplates('app/src/app/sub-modules/index.ts', `${names.kebabName}/src/app/sub-modules/index.ts`);
-
-  mkdirIfNotExists(`${names.kebabName}/src/app/services`);
-  copyFileFromTemplates('app/src/app/services/index.ts', `${names.kebabName}/src/app/services/index.ts`);
+  new Generator('app', names.kebabName)
+    .copyFileFromTemplates('gitignore', '.gitignore')
+    .copyFileFromTemplates('ormconfig.json')
+    .renderTemplate('package.json', locals)
+    .copyFileFromTemplates('tsconfig.app.json')
+    .copyFileFromTemplates('tsconfig.json')
+    .copyFileFromTemplates('tslint.json')
+      // Config
+      .mkdirIfDoesNotExist('config')
+      .renderTemplate('config/app.development.json', locals)
+      .renderTemplate('config/app.production.json', locals)
+      .renderTemplate('config/app.test.json', locals)
+      .renderTemplate('config/settings.json', locals)
+      .renderTemplate('config/settings.development.json', locals)
+      .renderTemplate('config/settings.production.json', locals)
+      // Public
+      .mkdirIfDoesNotExist('public')
+      .copyFileFromTemplates('public/logo.png')
+      // Src
+      .mkdirIfDoesNotExist('src')
+      .copyFileFromTemplates('src/index.ts')
+        // App
+        .mkdirIfDoesNotExist('src/app')
+        .copyFileFromTemplates('src/app/app.module.ts')
+          // Controllers
+          .mkdirIfDoesNotExist('src/app/controllers')
+          .copyFileFromTemplates('src/app/controllers/index.ts')
+          .copyFileFromTemplates('src/app/controllers/view.controller.ts')
+            // Templates
+            .mkdirIfDoesNotExist('src/app/controllers/templates')
+            .copyFileFromTemplates('src/app/controllers/templates/index.html')
+          // Entities
+          .mkdirIfDoesNotExist('src/app/entities')
+          .copyFileFromTemplates('src/app/entities/index.ts')
+          .copyFileFromTemplates('src/app/entities/user.entity.ts')
+          // Hooks
+          .mkdirIfDoesNotExist('src/app/hooks')
+          .copyFileFromTemplates('src/app/hooks/index.ts')
+          // Services
+          .mkdirIfDoesNotExist('src/app/services')
+          .copyFileFromTemplates('src/app/services/index.ts')
+          // Sub-modules
+          .mkdirIfDoesNotExist('src/app/sub-modules')
+          .copyFileFromTemplates('src/app/sub-modules/index.ts')
+        // Scripts
+        .mkdirIfDoesNotExist('src/scripts')
+        .copyFileFromTemplates('src/scripts/create-users.ts');
 
   if (process.env.NODE_ENV !== 'test') {
     console.log(

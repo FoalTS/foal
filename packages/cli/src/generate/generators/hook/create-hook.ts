@@ -2,26 +2,23 @@
 import { existsSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate, updateFile } from '../../utils';
+import { Generator, getNames } from '../../utils';
 
 export function createHook({ name }: { name: string }) {
   const names = getNames(name);
 
-  let path = `${names.kebabName}.hook.ts`;
-  let indexPath = 'index.ts';
+  let root = '';
 
   if (existsSync('src/app/hooks')) {
-    path = `src/app/hooks/${path}`;
-    indexPath = `src/app/hooks/${indexPath}`;
+    root = 'src/app/hooks';
   } else if (existsSync('hooks')) {
-    path = `hooks/${path}`;
-    indexPath = `hooks/${indexPath}`;
+    root = 'hooks';
   }
 
-  renderTemplate('hook/hook.ts', path, names);
-
-  updateFile(indexPath, content => {
-    content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.hook';\n`;
-    return content;
-  });
+  new Generator('hook', root)
+    .renderTemplate('hook.ts', names, `${names.kebabName}.hook.ts`)
+    .updateFile('index.ts', content => {
+      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.hook';\n`;
+      return content;
+    });
 }
