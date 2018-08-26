@@ -1,12 +1,5 @@
-// std
-import { strictEqual } from 'assert';
-import { writeFileSync } from 'fs';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
   rmfileIfExists,
   TestEnvironment
