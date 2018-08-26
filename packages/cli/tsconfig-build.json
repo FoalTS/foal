@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "exclude": [
     "./src/**/*.spec.ts",
-    "./src/generate/templates/**/*.ts",
-    "./src/generate/specs/**/*.ts"
+    "./src/generate/mocks/**/*.ts",
+    "./src/generate/specs/**/*.ts",
+    "./src/generate/templates/**/*.ts"
   ]
 } 
