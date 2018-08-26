@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { ok, strictEqual } from 'assert';
 import { copyFileSync, existsSync, readFileSync, rmdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
@@ -45,5 +45,18 @@ export class TestEnvironment {
       'utf8'
     );
     strictEqual(actual, spec);
+    return this;
+  }
+
+  validateFileSpec(specPath: string, filePath?: string) {
+    filePath = filePath || specPath;
+    const spec = readFileSync(
+      join(__dirname, '../templates-spec', this.generatorName, specPath),
+    );
+    const actual = readFileSync(
+      filePath,
+    );
+    ok(actual.equals(spec));
+    return this;
   }
 }
