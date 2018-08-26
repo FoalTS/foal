@@ -2,7 +2,7 @@
 import { existsSync } from 'fs';
 
 // FoalTS
-import { Generator, getNames, renderTemplate, updateFile } from '../../utils';
+import { Generator, getNames } from '../../utils';
 
 export type ServiceType = 'Empty'|'ResourceCollection'|'EntityResourceCollection'|'GraphQLResolver'
   |'Authenticator'|'EmailAuthenticator';

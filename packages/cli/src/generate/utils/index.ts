@@ -1,5 +1,4 @@
 // std
-import { strictEqual } from 'assert';
 import * as fs from 'fs';
 import { join } from 'path';
 
@@ -31,38 +30,6 @@ export function rmdirIfExists(path: string) {
   if (fs.existsSync(path)) {
     fs.rmdirSync(path);
   }
-}
-
-export function renderTemplate(src: string, dest: string, locals: object) {
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`CREATE ${dest}`);
-  }
-  const template = fs.readFileSync(join(__dirname, '../templates', src), 'utf8');
-  let content = template;
-  for (const key in locals) {
-    if (locals.hasOwnProperty(key)) {
-      content = content.split(`/* ${key} */`).join(locals[key]);
-    }
-  }
-  fs.writeFileSync(dest, content, 'utf8');
-}
-
-export function validateGeneratedFile(filePath: string, templateSpecPath: string) {
-  const expected = readFileFromTemplatesSpec(templateSpecPath);
-  const actual = readFileFromRoot(filePath);
-  strictEqual(actual, expected);
-}
-
-export function updateFile(path: string, cb: (content: string) => string) {
-  const content = fs.readFileSync(path, 'utf8');
-  fs.writeFileSync(path, cb(content), 'utf8');
-}
-
-export function copyFileFromTemplates(src: string, dest: string) {
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`CREATE ${dest}`);
-  }
-  fs.copyFileSync(join(__dirname, '../templates', src), dest);
 }
 
 export function readFileFromTemplatesSpec(src: string): string {
