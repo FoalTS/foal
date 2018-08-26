@@ -1,12 +1,8 @@
-// std
-import { writeFileSync } from 'fs';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
   rmdirIfExists,
   rmfileIfExists,
-  validateGeneratedFile
+  TestEnvironment,
 } from '../../utils';
 import { createHook } from './create-hook';
 
@@ -29,57 +25,31 @@ describe('createHook', () => {
     rmfileIfExists('index.ts');
   });
 
-  describe('should render the templates.', () => {
+  function test(root: string) {
 
-    const indexInitialContent = 'export { BarFoo } from \'./bar-foo.hook\';\n';
+    describe(`when the directory ${root}/ exists`, () => {
 
-    it('in src/app/hooks/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/hooks');
-      writeFileSync('src/app/hooks/index.ts', indexInitialContent, 'utf8');
+      const testEnv = new TestEnvironment('hook', root);
 
-      createHook({ name: 'test-fooBar' });
+      beforeEach(() => {
+        testEnv.mkRootDirIfDoesNotExist();
+        testEnv.copyFileFromMocks('index.ts');
+      });
 
-      validateGeneratedFile(
-        'src/app/hooks/test-foo-bar.hook.ts',
-        'hook/test-foo-bar.hook.1.ts'
-      );
-      validateGeneratedFile(
-        'src/app/hooks/index.ts',
-        'hook/index.1.ts'
-      );
+      it('should render the templates in the proper directory.', () => {
+        createHook({ name: 'test-fooBar' });
+
+        testEnv
+          .validateSpec('test-foo-bar.hook.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
     });
 
-    it('in src/app/hooks/ if the directory exists.', () => {
-      mkdirIfNotExists('hooks');
-      writeFileSync('hooks/index.ts', indexInitialContent, 'utf8');
+  }
 
-      createHook({ name: 'test-fooBar' });
-
-      validateGeneratedFile(
-        'hooks/test-foo-bar.hook.ts',
-        'hook/test-foo-bar.hook.1.ts'
-      );
-      validateGeneratedFile(
-        'hooks/index.ts',
-        'hook/index.1.ts'
-      );
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createHook({ name: 'test-fooBar' });
-
-      validateGeneratedFile(
-        'test-foo-bar.hook.ts',
-        'hook/test-foo-bar.hook.1.ts'
-      );
-      validateGeneratedFile(
-        'index.ts',
-        'hook/index.1.ts'
-      );
-    });
-
-  });
+  test('src/app/hooks');
+  test('hooks');
+  test('');
 
 });
