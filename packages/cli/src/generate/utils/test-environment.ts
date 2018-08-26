@@ -10,16 +10,18 @@ export class TestEnvironment {
   constructor(private generatorName: string, private root: string) {}
 
   /* Create environment */
-  // mkdirIfDoesNotExist(path: string) {
-  //   mkdirIfDoesNotExist(path);
-  // }
-  // copyFileFromMocks(srcPath: string, destPath?: string) {
-  //   destPath = destPath || srcPath;
-  //   copyFileSync(
-  //     join(__dirname, '../mocks', this.generatorName, srcPath),
-  //     join(destPath)
-  //   );
-  // }
+  mkRootDirIfDoesNotExist() {
+    if (this.root) {
+      mkdirIfDoesNotExist(this.root);
+    }
+  }
+  copyFileFromMocks(srcPath: string, destPath?: string) {
+    destPath = destPath || srcPath;
+    copyFileSync(
+      join(__dirname, '../mocks', this.generatorName, srcPath),
+      join(this.root, destPath)
+    );
+  }
 
   /* Remove environment */
   rmdirIfExists(path: string) {
