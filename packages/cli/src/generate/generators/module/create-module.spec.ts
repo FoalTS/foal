@@ -12,6 +12,8 @@ import {
 } from '../../utils';
 import { createModule } from './create-module';
 
+// TODO: Use TestEnvironment.
+
 function removeFiles(prefix: string = '') {
   rmdirIfExists(`${prefix}test-foo-bar/controllers/templates`);
   rmfileIfExists(`${prefix}test-foo-bar/controllers/index.ts`);

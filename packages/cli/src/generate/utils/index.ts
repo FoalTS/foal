@@ -33,10 +33,12 @@ export function rmdirIfExists(path: string) {
   }
 }
 
+// TODO: remove this.
 export function readFileFromTemplatesSpec(src: string): string {
   return fs.readFileSync(join(__dirname, '../specs', src), 'utf8');
 }
 
+// TODO: remove this.
 export function readFileFromRoot(src: string): string {
   return fs.readFileSync(src, 'utf8');
 }
