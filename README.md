@@ -26,7 +26,13 @@
 
 **This work is in progress and is currently not ready for production.**
 
-[Documentation](https://foalts.gitbook.io/docs/content/) - [Website](https://foalts.org/) - [Twitter](https://twitter.com/foalts)
+<p align="center">
+  <a href="https://foalts.org/">Website</a>
+  -
+  <a href="https://foalts.gitbook.io/docs/content/">Documentation</a>
+  -
+  <a href="https://twitter.com/foalts">Twitter</a>
+</p>
 
 ## Get started with FoalTS
 
