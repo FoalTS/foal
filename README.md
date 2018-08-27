@@ -1,48 +1,58 @@
-# FoalTS
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/FoalTS/foal/blob/master/LICENSE)
-![node version](https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg)
-[![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)](https://badge.fury.io/js/%40foal%2Fcore)
-[![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
-[![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)](https://snyk.io/test/github/foalts/foal)
-
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_400.png" height="125px" alt="Logo" />
+    <img src="./docs/logo_400.png" height="175px" alt="Logo" />
   </a>
+  <br>
+  <h1 align="center">FoalTS</h1>
 </p>
 
 <p align="center">
-  <i>Get ready to create enterprise-grade Node.JS applications</i>
+  <i>A Web framework to create enterprise-grade Node.JS applications</i>
+  <br>
+  <br>
+  <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
+  </a>
+  <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
+  <a href="https://badge.fury.io/js/%40foal%2Fcore">
+    <img src="https://badge.fury.io/js/%40foal%2Fcore.svg" alt="npm version">
+  </a>
+  <a href="https://travis-ci.org/FoalTS/foal">
+    <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
+  </a>
+  <a href="https://snyk.io/test/github/foalts/foal">
+    <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
+  </a>
 </p>
 
 **This work is in progress and is currently not ready for production.**
 
-## Install the command line interface
+## Get started
+
+Install the command line interface.
 ```shell
 $ npm install -g @foal/cli
 ```
-## Create a new app
+Create a new app.
 ```shell
 $ foal createapp my-app
 $ cd my-app && npm install
 ```
-## Create a model
+Create a model.
 ```shell
 $ foal g entity flight
 ```
-## Create a resource collection
+Create a resource collection.
 ```shell
 $ foal g service flight
 > EntityResourceCollection
 ```
-## Create a REST controller
+Create a REST controller.
 ```shell
 $ foal g controller flight
 > REST
 ```
-## Register your controller
-And now register you controller in the `src/app/app.module.ts` file.
+Register you controller in the `src/app/app.module.ts` file.
 ```typescript
 ...
 import { controller } from '@foal/core';
@@ -54,16 +64,14 @@ export class AppModule implements IModule {
   ]
 }
 ```
-
-## Start the app!
-
+And now start the app!
 ```bash
 $ npm run develop
 ```
 
-`http://localhost:3000/flights` should now display an empty array!
+`http://localhost:3000/flights` should display an empty array!
 
-[>> Continue with the tutorial <<](https://foalts.gitbook.io/docs/content/)
+[>> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
 
 ## Features
 
@@ -97,18 +105,7 @@ Find docs [here](https://foalts.gitbook.io/docs/content/).
 
 ## Contributing
 
-There are several ways to contribute.
-
-- Submit a PR to fix typos/grammatical errors.
-- Open an issue to report a bug.
-- Open an issue to suggest a new feature.
-- Improve the docs.
-
-## Packages
-
-- @foal/core
-- @foal/cli
-- @foal/ejs
+See the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD)
 
 ## License
 
