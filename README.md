@@ -30,6 +30,10 @@
 
 ## Get started with FoalTS
 
+### Prerequisites
+
+Install [Node.Js and npm](https://nodejs.org/en/download/).
+
 ### Create a new app
 
 ```shell
@@ -74,6 +78,10 @@ export class AppModule implements IModule {
 The `npm run develop` command rebuilds the app and reloads the server. `http://localhost:3000/flights` now returns an empty array!
 
 [>> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
+
+## Ask a question
+
+Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/foal/issues/new/).
 
 ## Features
 
