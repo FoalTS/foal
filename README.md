@@ -83,6 +83,10 @@ The `npm run develop` command rebuilds the app and reloads the server. `http://l
 
 Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/foal/issues/new/).
 
+## Screenshot
+
+![Screenshot](./docs/screenshot.png)
+
 ## Features
 
 ### Production-ready
