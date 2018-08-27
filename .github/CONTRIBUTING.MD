@@ -1,26 +1,44 @@
 # CONTRIBUTING
 
-## Set up the development/test environment
+Thanks for your interest in FoalTS! There are several ways to contribute. **Writing documentation and reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
+
+- [Submit an issue](#submit-an-issue)
+- [Submit a PR](#submit-a-pr)
+- [Security](#security)
+
+## Submit an issue
+
+If you find a security vulnerability, please do NOT open an issue. Email loic.poullain@centraliens.net instead.
+
+- [Report a bug](https://github.com/FoalTS/foal/issues/new?template=bug_report.md)
+- [Suggest a new feature](https://github.com/FoalTS/foal/issues/new?template=feature_request.md)
+- [Other (ask a question, etc)](https://github.com/FoalTS/foal/issues/new?template=other.md)
+
+## Submit a PR
+
+If the PR is about code (not documentation), please submit an issue first to discuss on this.
+
+### Set up the development/test environment
 
 1. Install [docker](https://www.docker.com/).
 2. Install [lerna](https://lernajs.io/) by running `npm i -g lerna`
 3. Start the dev/test environment by running `npm run start-docker` (to stop use `npm run stop-docker`)
 
-## Install dependencies
+### Install dependencies
 
 Run `lerna bootstrap`.
 
-## Run tests and linting
+### Run tests and linting
 
 Run `lerna run test` and `npm run lint` from the root directory.
 
 You can also run the tests of only one package by going to its directory and running `npm run test` or `npm run dev:test` (watch mode).
 
-## General guidelines
+### General guidelines
 
 - All new code should have tests.
 - Use linting rules.
 
 ## Security
 
-To report a security issue please send me directly an email at loic.poullain@centraliens.net.
+To report a security issue please email directly loic.poullain@centraliens.net.
