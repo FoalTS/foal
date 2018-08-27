@@ -12,6 +12,8 @@ import {
 } from '../../utils';
 import { createModule } from './create-module';
 
+// TODO: Use TestEnvironment.
+
 function removeFiles(prefix: string = '') {
   rmdirIfExists(`${prefix}test-foo-bar/controllers/templates`);
   rmfileIfExists(`${prefix}test-foo-bar/controllers/index.ts`);
@@ -75,8 +77,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -105,8 +105,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -135,8 +133,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -165,8 +161,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -195,8 +189,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -225,8 +217,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -255,8 +245,6 @@ describe('createModule', () => {
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });

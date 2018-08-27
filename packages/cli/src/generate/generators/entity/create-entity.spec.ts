@@ -1,14 +1,8 @@
-// std
-import { strictEqual } from 'assert';
-import { writeFileSync } from 'fs';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  TestEnvironment,
 } from '../../utils';
 import { createEntity } from './create-entity';
 
@@ -31,56 +25,31 @@ describe('createEntity', () => {
     rmfileIfExists('index.ts');
   });
 
-  describe('should render the templates.', () => {
+  function test(root: string) {
 
-    const indexInitialContent = 'export { BarFoo } from \'./bar-foo.entity\';\n';
+    describe(`when the directory ${root}/ exists`, () => {
 
-    it('in src/app/entities/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/entities');
-      writeFileSync('src/app/entities/index.ts', indexInitialContent, 'utf8');
+      const testEnv = new TestEnvironment('entity', root);
 
-      createEntity({ name: 'test-fooBar' });
+      beforeEach(() => {
+        testEnv.mkRootDirIfDoesNotExist();
+        testEnv.copyFileFromMocks('index.ts');
+      });
 
-      let expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      let actual = readFileFromRoot('src/app/entities/test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
+      it('should render the templates in the proper directory.', () => {
+        createEntity({ name: 'test-fooBar' });
 
-      expected = readFileFromTemplatesSpec('entity/index.1.ts');
-      actual = readFileFromRoot('src/app/entities/index.ts');
-      strictEqual(actual, expected);
+        testEnv
+          .validateSpec('test-foo-bar.entity.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
     });
 
-    it('in entities/ if the directory exists.', () => {
-      mkdirIfNotExists('entities');
-      writeFileSync('entities/index.ts', indexInitialContent, 'utf8');
+  }
 
-      createEntity({ name: 'test-fooBar' });
-
-      let expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      let actual = readFileFromRoot('entities/test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('entity/index.1.ts');
-      actual = readFileFromRoot('entities/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createEntity({ name: 'test-fooBar' });
-
-      let expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      let actual = readFileFromRoot('test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('entity/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
-    });
-
-  });
+  test('src/app/entities');
+  test('entities');
+  test('');
 
 });

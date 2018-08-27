@@ -1,14 +1,8 @@
-// std
-import { strictEqual } from 'assert';
-import { writeFileSync } from 'fs';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  TestEnvironment
 } from '../../utils';
 import { createController } from './create-controller';
 
@@ -34,218 +28,56 @@ describe('createController', () => {
     rmfileIfExists('index.ts');
   });
 
-  const indexInitialContent = 'export { BarFooController } from \'./bar-foo.controller\';\n';
+  function test(root: string) {
 
-  describe('should render the empty templates', () => {
+    describe(`when the directory ${root}/ exists`, () => {
 
-    it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/controllers');
-      writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
+      const testEnv = new TestEnvironment('controller', root);
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      beforeEach(() => {
+        testEnv.mkRootDirIfDoesNotExist();
+        testEnv.copyFileFromMocks('index.ts');
+      });
 
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
-      let actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
+      it('should render the empty templates in the proper directory.', () => {
+        createController({ name: 'test-fooBar', type: 'Empty' });
 
-      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
-      const actual2 = readFileFromRoot('src/app/controllers/test-foo-bar.controller.spec.ts');
-      strictEqual(actual2, expected2);
+        testEnv
+          .validateSpec('test-foo-bar.controller.empty.ts', 'test-foo-bar.controller.ts')
+          .validateSpec('test-foo-bar.controller.spec.empty.ts', 'test-foo-bar.controller.spec.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
 
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('src/app/controllers/index.ts');
-      strictEqual(actual, expected);
+      it('should render the REST templates in the proper directory.', () => {
+        createController({ name: 'test-fooBar', type: 'REST' });
+
+        testEnv
+          .validateSpec('test-foo-bar.controller.rest.ts', 'test-foo-bar.controller.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should render the GraphQL templates in the proper directory.', () => {
+        createController({ name: 'test-fooBar', type: 'GraphQL' });
+
+        testEnv
+          .validateSpec('test-foo-bar.controller.graphql.ts', 'test-foo-bar.controller.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should render the Login templates in the proper directory.', () => {
+        createController({ name: 'test-fooBar', type: 'Login' });
+
+        testEnv
+          .validateSpec('test-foo-bar.controller.login.ts', 'test-foo-bar.controller.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
     });
 
-    it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers');
-      writeFileSync('controllers/index.ts', indexInitialContent, 'utf8');
+  }
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
-      let actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
-      const actual2 = readFileFromRoot('controllers/test-foo-bar.controller.spec.ts');
-      strictEqual(actual2, expected2);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'Empty' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.empty.ts');
-      let actual = readFileFromRoot('test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      const expected2 = readFileFromTemplatesSpec('controller/test-foo-bar.controller.spec.empty.ts');
-      const actual2 = readFileFromRoot('test-foo-bar.controller.spec.ts');
-      strictEqual(actual2, expected2);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
-    });
-
-  });
-
-  describe('should render the REST templates.', () => {
-
-    it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/controllers');
-      writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'REST' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
-      let actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('src/app/controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers');
-      writeFileSync('controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'REST' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
-      let actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'REST' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.rest.ts');
-      let actual = readFileFromRoot('test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
-    });
-
-  });
-
-  describe('should render the GraphQL templates.', () => {
-
-    it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/controllers');
-      writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'GraphQL' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
-      let actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('src/app/controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers');
-      writeFileSync('controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'GraphQL' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
-      let actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'GraphQL' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.graphql.ts');
-      let actual = readFileFromRoot('test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
-    });
-
-  });
-
-  describe('should render the Login templates.', () => {
-
-    it('in src/app/controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/controllers');
-      writeFileSync('src/app/controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'Login' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
-      let actual = readFileFromRoot('src/app/controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('src/app/controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in controllers/ if the directory exists.', () => {
-      mkdirIfNotExists('controllers');
-      writeFileSync('controllers/index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'Login' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
-      let actual = readFileFromRoot('controllers/test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('controllers/index.ts');
-      strictEqual(actual, expected);
-    });
-
-    it('in the current directory otherwise.', () => {
-      writeFileSync('index.ts', indexInitialContent, 'utf8');
-
-      createController({ name: 'test-fooBar', type: 'Login' });
-
-      let expected = readFileFromTemplatesSpec('controller/test-foo-bar.controller.login.ts');
-      let actual = readFileFromRoot('test-foo-bar.controller.ts');
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('controller/index.1.ts');
-      actual = readFileFromRoot('index.ts');
-      strictEqual(actual, expected);
-    });
-
-  });
+  test('src/app/controllers');
+  test('controllers');
+  test('');
 
 });

@@ -1,45 +1,45 @@
 
 // 3p
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync } from 'fs';
 
 // FoalTS
-import { copyFileFromTemplates, getNames, mkdirIfNotExists, renderTemplate } from '../../utils';
+import { Generator, getNames } from '../../utils';
 
 export function createModule({ name }: { name: string }) {
   const names = getNames(name);
 
-  let prefix = '';
-  let indexPath = 'index.ts';
+  let root = '';
 
   if (existsSync('src/app/sub-modules')) {
-    prefix = 'src/app/sub-modules/';
-    indexPath = `src/app/sub-modules/${indexPath}`;
+    root = 'src/app/sub-modules';
   } else if (existsSync('sub-modules')) {
-    prefix = 'sub-modules/';
-    indexPath = `sub-modules/${indexPath}`;
+    root = 'sub-modules';
   }
 
-  mkdirIfNotExists(`${prefix}${names.kebabName}`);
+  new Generator('module', root)
+    .mkdirIfDoesNotExist(names.kebabName)
+    .updateFile('index.ts', content => {
+      content += `export { ${names.upperFirstCamelName}Module } from './${names.kebabName}';\n`;
+      return content;
+    });
 
-  renderTemplate('module/index.ts', `${prefix}${names.kebabName}/index.ts`, names);
-  renderTemplate('module/module.ts', `${prefix}${names.kebabName}/${names.kebabName}.module.ts`, names);
-
-  mkdirIfNotExists(`${prefix}${names.kebabName}/controllers`);
-  copyFileFromTemplates('module/controllers/index.ts', `${prefix}${names.kebabName}/controllers/index.ts`);
-  mkdirIfNotExists(`${prefix}${names.kebabName}/controllers/templates`);
-  mkdirIfNotExists(`${prefix}${names.kebabName}/hooks`);
-  copyFileFromTemplates('module/hooks/index.ts', `${prefix}${names.kebabName}/hooks/index.ts`);
-
-  mkdirIfNotExists(`${prefix}${names.kebabName}/entities`);
-  copyFileFromTemplates('module/entities/index.ts', `${prefix}${names.kebabName}/entities/index.ts`);
-
-  mkdirIfNotExists(`${prefix}${names.kebabName}/sub-modules`);
-  copyFileFromTemplates('module/sub-modules/index.ts', `${prefix}${names.kebabName}/sub-modules/index.ts`);
-
-  mkdirIfNotExists(`${prefix}${names.kebabName}/services`);
-  copyFileFromTemplates('module/services/index.ts', `${prefix}${names.kebabName}/services/index.ts`);
-
-  let indexContent = readFileSync(indexPath, 'utf8');
-  indexContent += `export { ${names.upperFirstCamelName}Module } from './${names.kebabName}';\n`;
-  writeFileSync(indexPath, indexContent, 'utf8');
+  new Generator('module', root ? root + '/' + names.kebabName : names.kebabName)
+    .renderTemplate('index.ts', names)
+    .renderTemplate('module.ts', names, `${names.kebabName}.module.ts`)
+      // Controllers
+      .mkdirIfDoesNotExist('controllers')
+      .copyFileFromTemplates('controllers/index.ts')
+      .mkdirIfDoesNotExist('controllers/templates')
+      // Hooks
+      .mkdirIfDoesNotExist('hooks')
+      .copyFileFromTemplates('hooks/index.ts')
+      // Entities
+      .mkdirIfDoesNotExist('entities')
+      .copyFileFromTemplates('entities/index.ts')
+      // Sub-modules
+      .mkdirIfDoesNotExist('sub-modules')
+      .copyFileFromTemplates('sub-modules/index.ts')
+      // Services
+      .mkdirIfDoesNotExist('services')
+      .copyFileFromTemplates('services/index.ts');
 }
