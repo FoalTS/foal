@@ -1,9 +1,10 @@
+<h1 align="center">FoalTS</h1>
+
 <p align="center">
   <a href="https://foalts.org" target="blank">
     <img src="./docs/logo_400.png" height="175px" alt="Logo" />
   </a>
   <br>
-  <h1 align="center">FoalTS</h1>
 </p>
 
 <p align="center">
