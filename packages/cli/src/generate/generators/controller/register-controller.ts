@@ -103,6 +103,6 @@
 //   } else {
 //     addControllerToImportDeclaration(controllerName, importDeclaration as ts.ImportDeclaration);
 //   }
-  
+
 //   return ts.createPrinter().printFile(ast);
 // }
