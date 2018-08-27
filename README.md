@@ -1,5 +1,3 @@
-<h1 align="center">FoalTS</h1>
-
 <p align="center">
   <a href="https://foalts.org" target="blank">
     <img src="./docs/logo_400.png" height="175px" alt="Logo" />
@@ -28,7 +26,7 @@
 
 **This work is in progress and is currently not ready for production.**
 
-## Get started
+## Get started with FoalTS
 
 Install the command line interface.
 ```shell
