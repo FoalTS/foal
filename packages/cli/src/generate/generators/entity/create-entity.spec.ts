@@ -1,13 +1,8 @@
-// std
-import { strictEqual } from 'assert';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  TestEnvironment,
 } from '../../utils';
 import { createEntity } from './create-entity';
 
@@ -15,6 +10,7 @@ describe('createEntity', () => {
 
   afterEach(() => {
     rmfileIfExists('src/app/entities/test-foo-bar.entity.ts');
+    rmfileIfExists('src/app/entities/index.ts');
     rmdirIfExists('src/app/entities');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
@@ -22,47 +18,38 @@ describe('createEntity', () => {
     // rmdirIfExists('src');
 
     rmfileIfExists('entities/test-foo-bar.entity.ts');
+    rmfileIfExists('entities/index.ts');
     rmdirIfExists('entities');
 
     rmfileIfExists('test-foo-bar.entity.ts');
+    rmfileIfExists('index.ts');
   });
 
-  describe('should render the templates.', () => {
+  function test(root: string) {
 
-    it('in src/app/entities/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/entities');
+    describe(`when the directory ${root}/ exists`, () => {
 
-      createEntity({ name: 'test-fooBar' });
+      const testEnv = new TestEnvironment('entity', root);
 
-      const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      const actual = readFileFromRoot('src/app/entities/test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
+      beforeEach(() => {
+        testEnv.mkRootDirIfDoesNotExist();
+        testEnv.copyFileFromMocks('index.ts');
+      });
 
-    });
+      it('should render the templates in the proper directory.', () => {
+        createEntity({ name: 'test-fooBar' });
 
-    it('in entities/ if the directory exists.', () => {
-      mkdirIfNotExists('entities');
-
-      createEntity({ name: 'test-fooBar' });
-
-      const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      const actual = readFileFromRoot('entities/test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
+        testEnv
+          .validateSpec('test-foo-bar.entity.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
 
     });
 
-    it('in the current directory otherwise.', () => {
+  }
 
-      createEntity({ name: 'test-fooBar' });
-
-      const expected = readFileFromTemplatesSpec('entity/test-foo-bar.entity.1.ts');
-      const actual = readFileFromRoot('test-foo-bar.entity.ts');
-      strictEqual(actual, expected);
-
-    });
-
-  });
+  test('src/app/entities');
+  test('entities');
+  test('');
 
 });

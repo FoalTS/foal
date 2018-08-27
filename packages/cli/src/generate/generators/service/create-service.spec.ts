@@ -1,13 +1,8 @@
-// std
-import { strictEqual } from 'assert';
-
 // FoalTS
 import {
-  mkdirIfNotExists,
-  readFileFromRoot,
-  readFileFromTemplatesSpec,
   rmdirIfExists,
-  rmfileIfExists
+  rmfileIfExists,
+  TestEnvironment
 } from '../../utils';
 import { createService } from './create-service';
 
@@ -15,6 +10,9 @@ describe('createService', () => {
 
   afterEach(() => {
     rmfileIfExists('src/app/services/test-foo-bar.service.ts');
+    rmfileIfExists('src/app/services/test-foo-bar-collection.service.ts');
+    rmfileIfExists('src/app/services/test-foo-bar-resolver.service.ts');
+    rmfileIfExists('src/app/services/index.ts');
     rmdirIfExists('src/app/services');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
@@ -22,100 +20,83 @@ describe('createService', () => {
     // rmdirIfExists('src');
 
     rmfileIfExists('services/test-foo-bar.service.ts');
+    rmfileIfExists('services/test-foo-bar-collection.service.ts');
+    rmfileIfExists('services/test-foo-bar-resolver.service.ts');
+    rmfileIfExists('services/index.ts');
     rmdirIfExists('services');
 
     rmfileIfExists('test-foo-bar.service.ts');
-
     rmfileIfExists('test-foo-bar-collection.service.ts');
     rmfileIfExists('test-foo-bar-resolver.service.ts');
+    rmfileIfExists('index.ts');
+
   });
 
-  describe('should render the empty templates.', () => {
+  function test(root: string) {
 
-    it('in src/app/services/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
-      mkdirIfNotExists('src/app/services');
+    describe(`when the directory ${root}/ exists`, () => {
 
-      createService({ name: 'test-fooBar', type: 'Empty' });
+      const testEnv = new TestEnvironment('service', root);
 
-      const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
-      const actual = readFileFromRoot('src/app/services/test-foo-bar.service.ts');
-      strictEqual(actual, expected);
+      beforeEach(() => {
+        testEnv.mkRootDirIfDoesNotExist();
+        testEnv.copyFileFromMocks('index.ts');
+      });
+
+      it('should render the authenticator templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'Authenticator' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.authenticator.ts', 'test-foo-bar.service.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should render the email-authenticator templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'EmailAuthenticator' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.email-authenticator.ts', 'test-foo-bar.service.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should render the empty templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'Empty' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.empty.ts', 'test-foo-bar.service.ts')
+          .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should render the entity-resource-collection templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'EntityResourceCollection' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.entity-resource-collection.ts', 'test-foo-bar-collection.service.ts')
+          .validateSpec('index.collection.ts', 'index.ts');
+      });
+
+      it('should render the graphql-resolver templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'GraphQLResolver' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.graphql-resolver.ts', 'test-foo-bar-resolver.service.ts')
+          .validateSpec('index.resolver.ts', 'index.ts');
+      });
+
+      it('should render the resource-collection templates in the proper directory.', () => {
+        createService({ name: 'test-fooBar', type: 'ResourceCollection' });
+
+        testEnv
+          .validateSpec('test-foo-bar.service.resource-collection.ts', 'test-foo-bar-collection.service.ts')
+          .validateSpec('index.collection.ts', 'index.ts');
+      });
 
     });
 
-    it('in services/ if the directory exists.', () => {
-      mkdirIfNotExists('services');
+  }
 
-      createService({ name: 'test-fooBar', type: 'Empty' });
-
-      const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
-      const actual = readFileFromRoot('services/test-foo-bar.service.ts');
-      strictEqual(actual, expected);
-
-    });
-
-    it('in the current directory otherwise.', () => {
-
-      createService({ name: 'test-fooBar', type: 'Empty' });
-
-      const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.empty.ts');
-      const actual = readFileFromRoot('test-foo-bar.service.ts');
-      strictEqual(actual, expected);
-
-    });
-
-  });
-
-  it('should render the resource collection templates.', () => {
-
-    createService({ name: 'test-fooBar', type: 'ResourceCollection' });
-
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.resource-collection.ts');
-    const actual = readFileFromRoot('test-foo-bar-collection.service.ts');
-    strictEqual(actual, expected);
-
-  });
-
-  it('should render the entity resource collection templates.', () => {
-
-    createService({ name: 'test-fooBar', type: 'EntityResourceCollection' });
-
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.entity-resource-collection.ts');
-    const actual = readFileFromRoot('test-foo-bar-collection.service.ts');
-    strictEqual(actual, expected);
-
-  });
-
-  it('should render the graphql templates.', () => {
-
-    createService({ name: 'test-fooBar', type: 'GraphQLResolver' });
-
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.graphql-resolver.ts');
-    const actual = readFileFromRoot('test-foo-bar-resolver.service.ts');
-    strictEqual(actual, expected);
-
-  });
-
-  it('should render the authenticator templates.', () => {
-
-    createService({ name: 'test-fooBar', type: 'Authenticator' });
-
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.authenticator.ts');
-    const actual = readFileFromRoot('test-foo-bar.service.ts');
-    strictEqual(actual, expected);
-
-  });
-
-  it('should render the email authenticator templates.', () => {
-
-    createService({ name: 'test-fooBar', type: 'EmailAuthenticator' });
-
-    const expected = readFileFromTemplatesSpec('service/test-foo-bar.service.email-authenticator.ts');
-    const actual = readFileFromRoot('test-foo-bar.service.ts');
-    strictEqual(actual, expected);
-
-  });
+  test('src/app/services');
+  test('services');
+  test('');
 
 });

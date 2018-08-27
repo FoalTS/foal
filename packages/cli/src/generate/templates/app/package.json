@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc && copy-cli \"src/**/*.html\" lib",
-    "build:w": "tsc -w",
+    "build": "tsc -p tsconfig.app.json && copy-cli \"src/**/*.html\" lib",
+    "build:w": "tsc -p tsconfig.app.json -w",
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
@@ -24,8 +24,8 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.1",
-    "@foal/ejs": "^0.6.0-alpha.3",
+    "@foal/core": "^0.6.0-beta.3",
+    "@foal/ejs": "^0.6.0-beta.3",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
     "connect-sqlite3": "^0.9.11",

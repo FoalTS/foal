@@ -1,5 +1,6 @@
 // std
 import { strictEqual } from 'assert';
+import { existsSync, writeFileSync } from 'fs';
 
 // FoalTS
 import {
@@ -11,35 +12,30 @@ import {
 } from '../../utils';
 import { createModule } from './create-module';
 
+// TODO: Use TestEnvironment.
+
 function removeFiles(prefix: string = '') {
-  rmfileIfExists(`${prefix}test-foo-bar/controllers/templates/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/controllers/templates/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/controllers/templates`);
   rmfileIfExists(`${prefix}test-foo-bar/controllers/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/controllers/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/controllers`);
 
   rmfileIfExists(`${prefix}test-foo-bar/hooks/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/hooks/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/hooks`);
 
   rmfileIfExists(`${prefix}test-foo-bar/entities/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/entities/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/entities`);
 
   rmfileIfExists(`${prefix}test-foo-bar/sub-modules/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/sub-modules/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/sub-modules`);
 
   rmfileIfExists(`${prefix}test-foo-bar/services/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/services/test.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/services`);
 
   rmfileIfExists(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
   rmfileIfExists(`${prefix}test-foo-bar/index.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/test.ts`);
 
   rmdirIfExists(`${prefix}test-foo-bar`);
+  rmfileIfExists(`${prefix}index.ts`);
 }
 
 describe('createModule', () => {
@@ -58,9 +54,13 @@ describe('createModule', () => {
     removeFiles();
   });
 
+  const indexInitialContent = 'export { BarFooModule } from \'./bar-foo\';\n';
+
   describe('should render the root templates', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
       let expected = readFileFromTemplatesSpec('module/index.1.ts');
@@ -71,15 +71,12 @@ describe('createModule', () => {
       actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
       strictEqual(actual, expected);
 
-      expected = readFileFromTemplatesSpec('module/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/test.ts`);
+      expected = readFileFromTemplatesSpec('module/index.parent.ts');
+      actual = readFileFromRoot(`${prefix}index.ts`);
       strictEqual(actual, expected);
-
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -98,20 +95,16 @@ describe('createModule', () => {
   describe('should render the controllers templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/controllers/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/test.ts`);
+      const expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/index.ts`);
       strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -130,20 +123,16 @@ describe('createModule', () => {
   describe('should render the hooks templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/hooks/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/test.ts`);
+      const expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/index.ts`);
       strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -162,20 +151,16 @@ describe('createModule', () => {
   describe('should render the entities templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/entities/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/entities/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/entities/test.ts`);
+      const expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/entities/index.ts`);
       strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -194,20 +179,16 @@ describe('createModule', () => {
   describe('should render the sub-modules templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/sub-modules/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/test.ts`);
+      const expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/index.ts`);
       strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -226,20 +207,16 @@ describe('createModule', () => {
   describe('should render the services templates.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/services/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/services/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/services/test.ts`);
+      const expected = readFileFromTemplatesSpec('module/services/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
       strictEqual(actual, expected);
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });
@@ -255,23 +232,19 @@ describe('createModule', () => {
 
   });
 
-  describe('should render the templates templates.', () => {
+  describe('should create the controllers/templates directory.', () => {
 
     function test(prefix = '') {
+      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+
       createModule({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/controllers/templates/index.1.ts');
-      let actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/index.ts`);
-      strictEqual(actual, expected);
-
-      expected = readFileFromTemplatesSpec('module/controllers/templates/test.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/templates/test.ts`);
-      strictEqual(actual, expected);
+      if (!existsSync(`${prefix}test-foo-bar/controllers/templates`)) {
+        throw new Error('The controllers/templates directory should be created.');
+      }
     }
 
     it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src');
-      mkdirIfNotExists('src/app');
       mkdirIfNotExists('src/app/sub-modules');
       test('src/app/sub-modules/');
     });

@@ -2,18 +2,23 @@
 import { existsSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate } from '../../utils';
+import { Generator, getNames } from '../../utils';
 
 export function createEntity({ name }: { name: string }) {
   const names = getNames(name);
 
-  let path = `${names.kebabName}.entity.ts`;
+  let root = '';
 
   if (existsSync('src/app/entities')) {
-    path = `src/app/entities/${path}`;
+    root = 'src/app/entities';
   } else if (existsSync('entities')) {
-    path = `entities/${path}`;
+    root = 'entities';
   }
 
-  renderTemplate('entity/entity.ts', path, names);
+  new Generator('entity', root)
+    .renderTemplate('entity.ts', names, `${names.kebabName}.entity.ts`)
+    .updateFile('index.ts', content => {
+      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.entity';\n`;
+      return content;
+    });
 }

@@ -2,7 +2,7 @@
 import { existsSync } from 'fs';
 
 // FoalTS
-import { getNames, renderTemplate } from '../../utils';
+import { Generator, getNames } from '../../utils';
 
 export type ServiceType = 'Empty'|'ResourceCollection'|'EntityResourceCollection'|'GraphQLResolver'
   |'Authenticator'|'EmailAuthenticator';
@@ -10,40 +10,60 @@ export type ServiceType = 'Empty'|'ResourceCollection'|'EntityResourceCollection
 export function createService({ name, type }: { name: string, type: ServiceType }) {
   const names = getNames(name);
 
-  let prefix = '';
+  let root = '';
 
   if (existsSync('src/app/services')) {
-    prefix = 'src/app/services/';
+    root = 'src/app/services';
   } else if (existsSync('services')) {
-    prefix = 'services/';
+    root = 'services';
   }
+
+  const generator = new Generator('service', root);
 
   switch (type) {
     case 'Empty':
-      renderTemplate('service/service.empty.ts', `${prefix}${names.kebabName}.service.ts`, names);
+      generator
+        .renderTemplate('service.empty.ts', names, `${names.kebabName}.service.ts`);
       break;
     case 'ResourceCollection':
-      renderTemplate(
-        'service/service.resource-collection.ts',
-        `${prefix}${names.kebabName}-collection.service.ts`, names
-      );
+      generator
+        .renderTemplate('service.resource-collection.ts', names, `${names.kebabName}-collection.service.ts`);
       break;
     case 'EntityResourceCollection':
-      renderTemplate(
-        'service/service.entity-resource-collection.ts',
-        `${prefix}${names.kebabName}-collection.service.ts`,
-        names
-      );
+      generator
+        .renderTemplate('service.entity-resource-collection.ts', names, `${names.kebabName}-collection.service.ts`);
       break;
     case 'GraphQLResolver':
-      renderTemplate('service/service.graphql-resolver.ts', `${prefix}${names.kebabName}-resolver.service.ts`, names);
+      generator
+        .renderTemplate('service.graphql-resolver.ts', names, `${names.kebabName}-resolver.service.ts`);
       break;
     case 'Authenticator':
-      renderTemplate('service/service.authenticator.ts', `${prefix}${names.kebabName}.service.ts`, names);
+      generator
+        .renderTemplate('service.authenticator.ts', names, `${names.kebabName}.service.ts`);
       break;
     case 'EmailAuthenticator':
-      renderTemplate('service/service.email-authenticator.ts', `${prefix}${names.kebabName}.service.ts`, names);
+      generator
+        .renderTemplate('service.email-authenticator.ts', names, `${names.kebabName}.service.ts`);
       break;
   }
+
+  generator.updateFile('index.ts', content => {
+    switch (type) {
+      case 'Empty':
+      case 'Authenticator':
+      case 'EmailAuthenticator':
+        content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.service';\n`;
+        break;
+      case 'ResourceCollection':
+      case 'EntityResourceCollection':
+        content += `export { ${names.upperFirstCamelName}Collection }`;
+        content += ` from './${names.kebabName}-collection.service';\n`;
+        break;
+      case 'GraphQLResolver':
+        content += `export { ${names.upperFirstCamelName}Resolver } from './${names.kebabName}-resolver.service';\n`;
+        break;
+    }
+    return content;
+  });
 
 }

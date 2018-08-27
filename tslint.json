@@ -19,5 +19,8 @@
       "no-duplicate-imports": true,
       "member-access": [true, "no-public"]
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": "**/src/migrations/*.ts"
+    }
 }
