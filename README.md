@@ -46,7 +46,7 @@ $ npm run develop
 Go to `http://localhost:3000` and find our welcoming page!
 
 
-### Add a REST API
+### Create a REST API
 
 Create a model.
 ```shell
