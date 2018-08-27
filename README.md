@@ -28,15 +28,20 @@
 
 ## Get started with FoalTS
 
-Install the command line interface.
+### Create a new app
+
 ```shell
 $ npm install -g @foal/cli
-```
-Create a new app.
-```shell
 $ foal createapp my-app
 $ cd my-app && npm install
+$ npm run develop
 ```
+
+Go to `http://localhost:3000` and find our welcoming page!
+
+
+### Add a REST API
+
 Create a model.
 ```shell
 $ foal g entity flight
@@ -63,12 +68,8 @@ export class AppModule implements IModule {
   ]
 }
 ```
-And now start the app!
-```bash
-$ npm run develop
-```
 
-`http://localhost:3000/flights` should display an empty array!
+The `npm run develop` command rebuilds the app and reloads the server. `http://localhost:3000/flights` now returns an empty array!
 
 [>> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
 
