@@ -47,8 +47,17 @@ export class Generator {
 
   /* Update files */
 
-  updateFile(path: string, cb: (content: string) => string) {
-    const content = readFileSync(join(this.root, path), 'utf8');
+  updateFile(path: string, cb: (content: string) => string, options: { allowFailure?: boolean } = {}) {
+    let content: string;
+    try {
+      content = readFileSync(join(this.root, path), 'utf8');
+    } catch (err) {
+      if (options.allowFailure) {
+        return this;
+      }
+      throw err;
+    }
+    this.logUpdate(path);
     writeFileSync(join(this.root, path), cb(content), 'utf8');
     return this;
   }
@@ -59,6 +68,15 @@ export class Generator {
     }
     if (process.env.NODE_ENV !== 'test') {
       console.log(`CREATE ${path}`);
+    }
+  }
+
+  private logUpdate(path: string) {
+    if (this.root) {
+      path = this.root + '/' + path;
+    }
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(`UPDATE ${path}`);
     }
   }
 }

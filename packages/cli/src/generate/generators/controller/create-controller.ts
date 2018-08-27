@@ -25,7 +25,10 @@ export function createController({ name, type }: { name: string, type: Controlle
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
-    });
+    })
+    /*.updateFile('../app.module.ts', content => {
+      return registerController(content, `${names.upperFirstCamelName}Controller`);
+    }, { allowFailure: true })*/;
 
   if (type === 'Empty') {
     generator
