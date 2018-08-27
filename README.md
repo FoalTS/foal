@@ -26,6 +26,8 @@
 
 **This work is in progress and is currently not ready for production.**
 
+[Documentation](https://foalts.gitbook.io/docs/content/) - [Website](https://foalts.org/) - [Twitter](https://twitter.com/foalts)
+
 ## Get started with FoalTS
 
 ### Create a new app
@@ -98,10 +100,6 @@ FoalTS doesn't aim to be a closed framework. Some technologies in the Node.Js ec
 ### Security
 
 Security is everyone's business. To help you ship secure apps FoalTS provides some common tools (csrf, xss protections) to take care of it. Moreover all default configurations are set to prevent security failures (cookies, headers, etc).
-
-## Documentation
-
-Find docs [here](https://foalts.gitbook.io/docs/content/).
 
 ## Contributing
 
