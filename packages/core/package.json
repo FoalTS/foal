@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.6.0-beta.1",
+  "version": "0.6.0-beta.3",
   "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -75,7 +75,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/ejs": "^0.6.0-alpha.3",
+    "@foal/ejs": "^0.6.0-beta.3",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
