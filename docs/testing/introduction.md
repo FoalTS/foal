@@ -1,6 +1,6 @@
 # Introduction
 
-Every shipped app should come with a **minimum set of tests**. Writing tests lets you find problems early, facilate changes and document your code. FoalTS is designed to be easily testable and provides the tools you need to write tests right away.
+Every shipped app should come with a **minimum set of tests**. Writing tests lets you find problems early, facilitate changes and document your code. FoalTS is designed to be easily testable and provides the tools you need to write tests right away.
 
 ## The Mocha Framework
 
