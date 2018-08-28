@@ -1,4 +1,4 @@
-# Migrations
+# Generate and Run Migrations
 
 Migrations are stored in the `src/migrations` directory.
 

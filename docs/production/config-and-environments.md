@@ -1,4 +1,4 @@
-# Config and environments
+# Configuration
 
 ```
 |- config

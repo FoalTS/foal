@@ -10,36 +10,38 @@
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Add some logging](./guide/5-add-some-logging.md)
 
-## The basics
+## Developement Environment
+
+- [Build & test](./dev-tools/build-and-test.md)
+- [Code Generation](./dev-tools/generators.md)
+
+## Databases
+
+* [Introduction](./database/databases.md)
+* [Create Models & Queries](./database/models.md)
+* [Generate & Run Migrations](./database/migrations.md)
+
+## The Authentication System
+
+* [Authentication](./security/authentication.md)
+* [Permissions & Authorization](./security/authorization.md)
+
+## Cookbook
+
+* [Validation](./cookbook/validation.md)
+* [REST API](./cookbook/rest-api.md)
+* [Templates](./cookbook/template-engine.md)
+* [Basic logging](./cookbook/basic-logging.md)
+
+## Architecture
 
 * [Controllers](./basics/controllers.md)
 * [Modules](./basics/modules.md)
 * [Hooks](./basics/hooks.md)
 * [Services](./basics/services.md)
 
-## Database
-
-* [TypeORM](./database/databases.md)
-* [Models](./database/models.md)
-* [Migrations](./database/migrations.md)
-
-## Cookbook
-
-* [Validation](./cookbook/validation.md)
-* [REST API](./cookbook/rest-api.md)
-<!-- * [GraphQL API](./cookbook/graphql.md) -->
-* [Templates](./cookbook/template-engine.md)
-* [Basic logging](./cookbook/basic-logging.md)
-
-## Dev tools
-
-- [Build & test](./dev-tools/build-and-test.md)
-- [Generators](./dev-tools/generators.md)
-
 ## Security
 
-* [Authentication](./security/authentication.md)
-* [Authorization](./security/authorization.md)
 * [CSRF protection](./security/csrf-protection.md)
 * [XSS Protection](./security/xss-protection.md)
 
@@ -47,11 +49,7 @@
 
 * [Unit testing](./testing/unit-testing.md)
 
-## Production
+## Deployment & environments
 
-* [Config and environments](./production/config-and-environments.md)
-* [Deployment](./production/deployment-prod.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
-
-### FAQ
-
-* [FAQ](./faq.md)
+* [Configuration](./production/config-and-environments.md)
+* [Ship to Production](./production/deployment-prod.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->

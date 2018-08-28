@@ -1,4 +1,4 @@
-# Authorization
+# Permissions and Authorization
 
 Access control is managed with permissions and groups.
 
