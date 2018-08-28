@@ -47,6 +47,7 @@
 
 ## Testing
 
+* [Introduction](./testing/introduction.md)
 * [Unit testing](./testing/unit-testing.md)
 
 ## Deployment & environments
