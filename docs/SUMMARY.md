@@ -10,48 +10,47 @@
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Add some logging](./guide/5-add-some-logging.md)
 
-## The basics
+## Development Environment
 
-* [Controllers](./basics/controllers.md)
-* [Modules](./basics/modules.md)
-* [Hooks](./basics/hooks.md)
-* [Services](./basics/services.md)
+- [Build & test](./development-environment/build-and-test.md)
+- [Code Generation](./development-environment/code-generation.md)
 
-## Database
+## Databases
 
-* [TypeORM](./database/databases.md)
-* [Models](./database/models.md)
-* [Migrations](./database/migrations.md)
+* [Introduction](./databases/introduction.md)
+* [Create Models & Queries](./databases/create-models-and-queries.md)
+* [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
+
+## The Authentication System
+
+* [Authentication](./the-authentication-system/authentication.md)
+* [Permissions & Authorization](./the-authentication-system/permissions-and-authorization.md)
 
 ## Cookbook
 
 * [Validation](./cookbook/validation.md)
 * [REST API](./cookbook/rest-api.md)
-<!-- * [GraphQL API](./cookbook/graphql.md) -->
 * [Templates](./cookbook/template-engine.md)
 * [Basic logging](./cookbook/basic-logging.md)
 
-## Dev tools
+## Architecture
 
-- [Build & test](./dev-tools/build-and-test.md)
-- [Generators](./dev-tools/generators.md)
+* [Controllers](./architecture/controllers.md)
+* [Modules](./architecture/modules.md)
+* [Services](./architecture/services.md)
+* [Hooks](./architecture/hooks.md)
 
 ## Security
 
-* [Authentication](./security/authentication.md)
-* [Authorization](./security/authorization.md)
 * [CSRF protection](./security/csrf-protection.md)
 * [XSS Protection](./security/xss-protection.md)
 
 ## Testing
 
-* [Unit testing](./testing/unit-testing.md)
+* [Introduction](./testing/introduction.md)
+* [Unit Testing](./testing/unit-testing.md)
 
-## Production
+## Deployment & environments
 
-* [Config and environments](./production/config-and-environments.md)
-* [Deployment](./production/deployment-prod.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
-
-### FAQ
-
-* [FAQ](./faq.md)
+* [Configuration](./deployment-and-environments/configuration.md)
+* [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->

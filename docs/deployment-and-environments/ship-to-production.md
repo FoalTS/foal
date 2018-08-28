@@ -1,4 +1,4 @@
-# Deploy on production
+# Ship to Production
 
 When deploying an application to production you need to:
 - use https (or set `sessionCookieSecure` to `false` in `config/settings.production.json`),

@@ -1,4 +1,4 @@
-# Generators
+# Code Generation
 
 ## Create a project
 

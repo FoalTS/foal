@@ -1,4 +1,4 @@
-# Models
+# Create Models and Queries
 
 ```shell
 foal generate entity my-entity
