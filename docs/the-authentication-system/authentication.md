@@ -11,7 +11,7 @@ Go to `src/app/entities/user.entity` and add two new columns: an email and a pas
 import { Column, Entity, parsePassword, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Flight {
+export class User {
 
   @PrimaryGeneratedColumn()
   // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
