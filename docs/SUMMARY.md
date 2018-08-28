@@ -10,21 +10,21 @@
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Add some logging](./guide/5-add-some-logging.md)
 
-## Developement Environment
+## Development Environment
 
-- [Build & test](./dev-tools/build-and-test.md)
-- [Code Generation](./dev-tools/generators.md)
+- [Build & test](./development-environment/build-and-test.md)
+- [Code Generation](./development-environment/code-generation.md)
 
 ## Databases
 
-* [Introduction](./database/databases.md)
-* [Create Models & Queries](./database/models.md)
-* [Generate & Run Migrations](./database/migrations.md)
+* [Introduction](./databases/introduction.md)
+* [Create Models & Queries](./databases/create-models-and-queries.md)
+* [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
 
 ## The Authentication System
 
-* [Authentication](./security/authentication.md)
-* [Permissions & Authorization](./security/authorization.md)
+* [Authentication](./the-authentication-system/authentication.md)
+* [Permissions & Authorization](./the-authentication-system/permissions-and-authorization.md)
 
 ## Cookbook
 
@@ -35,10 +35,10 @@
 
 ## Architecture
 
-* [Controllers](./basics/controllers.md)
-* [Modules](./basics/modules.md)
-* [Hooks](./basics/hooks.md)
-* [Services](./basics/services.md)
+* [Controllers](./architecture/controllers.md)
+* [Modules](./architecture/modules.md)
+* [Services](./architecture/services.md)
+* [Hooks](./architecture/hooks.md)
 
 ## Security
 
@@ -48,9 +48,9 @@
 ## Testing
 
 * [Introduction](./testing/introduction.md)
-* [Unit testing](./testing/unit-testing.md)
+* [Unit Testing](./testing/unit-testing.md)
 
 ## Deployment & environments
 
-* [Configuration](./production/config-and-environments.md)
-* [Ship to Production](./production/deployment-prod.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
+* [Configuration](./deployment-and-environments/configuration.md)
+* [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
