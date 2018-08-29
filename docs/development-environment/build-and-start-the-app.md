@@ -1,0 +1,9 @@
+## Build and Start the App
+
+FoalTS provides several commands to help you build and develop your app.
+
+- `npm run build` - Build the source code (compile the typescript files and copy the templates).
+- `npm run build:w` - Build the source code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
+- `npm run start` - Start the server from the built files.
+- `npm run start:w` - Start the server from the built files and reload it whenever one of these files changes (watch mode).
+- `npm run develop` - Build the source code and start the server. If a file changes then the code is rebuilt and the server reloads.

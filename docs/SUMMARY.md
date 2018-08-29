@@ -12,8 +12,10 @@
 
 ## Development Environment
 
-- [Build & test](./development-environment/build-and-test.md)
+- [Build & Start the App](./development-environment/build-and-start-the-app.md)
+- [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
 - [Code Generation](./development-environment/code-generation.md)
+- [Linting & Code Style](./development-environment/linting-and-code-style.md)
 - [VS Code](./development-environment/vscode.md)
 
 ## Databases
