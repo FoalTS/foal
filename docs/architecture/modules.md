@@ -18,7 +18,9 @@ export class MyModule implements IModule {
 }
 ```
 
-Modules can be seen as controller groups. Every app consists of at least one module that is called the `AppModule`.
+Modules can be seen as controller groups. They are a way to organize your code and to sub-divise it into smaller parts.
+
+Every app consists of at least one module that is called the `AppModule`.
 
 A module binds the controllers to the request handler and can also have sub-modules. If some hooks decorate it then they apply to each controller and each sub-module.
 
