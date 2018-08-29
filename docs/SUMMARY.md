@@ -14,6 +14,7 @@
 
 - [Build & test](./development-environment/build-and-test.md)
 - [Code Generation](./development-environment/code-generation.md)
+- [VS Code](./development-environment/vscode.md)
 
 ## Databases
 
@@ -35,6 +36,7 @@
 
 ## Architecture
 
+* [Introduction](./architecture/introduction.md)
 * [Controllers](./architecture/controllers.md)
 * [Modules](./architecture/modules.md)
 * [Services](./architecture/services.md)
