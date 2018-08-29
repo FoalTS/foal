@@ -1,6 +1,6 @@
 # Create and Run Scripts
 
-Sometimes we have to execute some tasks from the command line. These tasks can serve different purpose such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is where shell scripts come into play.
+Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is where shell scripts come into play.
 
 # Create Scripts
 
