@@ -1,14 +1,24 @@
 # Unit Testing
 
+## Convention
+
+Every unit test file should be placed next to the file it tests with the same name and the `.spec.ts` extension. If this extension is not present then the file won't be executed when running the test commands.
+
+*Example:*
+```
+'- services
+  |- my-service.service.ts
+  '- my-service.service.spec.ts
+```
+
 ## Write, Build and Run Tests
 
-```sh
-npm run build:test # Build the test code (compile the typescript files and copy the templates).
-npm run build:test:w # Build the test code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
-npm run start:test # Execute the tests from the built files.
-npm run start:test:w # Execute the tests from the built files and do it again whenever one of these files changes (watch mode).
-npm run test # Build the test code and execute the tests. If a file changes then the code is rebuilt and the tests are executed again.
-```
+- `npm run test` - Build the test code and execute the tests. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
+- `npm run build:test` - Build the test code (compile the typescript files and copy the templates).
+- `npm run build:test:w` - Build the test code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
+- `npm run start:test` - Execute the tests from the built files.
+- `npm run start:test:w` - Execute the tests from the built files and do it again whenever one of these files changes (watch mode).
+
 
 ## Testing Controllers and Services
 
