@@ -1,7 +1,7 @@
 {
   "name": "@foal/core",
   "version": "0.6.0-beta.3",
-  "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
+  "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -24,12 +24,24 @@
     "access": "public"
   },
   "keywords": [
-    "backend",
-    "node",
-    "typescript",
-    "server",
+    "TypeScript",
+    "framework",
+    "dependency-injection",
+    "API",
     "foal",
-    "rest"
+    "Nodejs",
+    "nodejs-framework",
+    "auth",
+    "express",
+    "ORM",
+    "REST",
+    "security",
+    "TypeORM",
+    "FoalTS",
+    "typescript-framework",
+    "node",
+    "mvc",
+    "web-framework"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
