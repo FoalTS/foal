@@ -1,7 +1,7 @@
 {
   "name": "@foal/cli",
   "version": "0.6.0-beta.3",
-  "description": "Foal command line interface",
+  "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -20,12 +20,13 @@
     "access": "public"
   },
   "keywords": [
-    "backend",
-    "node",
-    "typescript",
-    "server",
-    "cli",
-    "foal"
+    "foal",
+    "FoalTS",
+    "FoalTS CLI",
+    "devkit",
+    "sdk",
+    "FoalTS DevKit",
+    "foalts-cli"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"

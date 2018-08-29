@@ -1,7 +1,7 @@
 {
   "name": "@foal/ejs",
   "version": "0.6.0-beta.3",
-  "description": "Foal package to render ejs templates",
+  "description": "EJS template package for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -17,13 +17,11 @@
     "access": "public"
   },
   "keywords": [
-    "backend",
-    "node",
-    "typescript",
-    "server",
-    "ejs",
+    "FoalTS",
+    "foal",
     "template",
-    "foal"
+    "templates",
+    "ejs"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
