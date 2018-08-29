@@ -10,14 +10,6 @@
 * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
 * [5. Add some logging](./guide/5-add-some-logging.md)
 
-## Development Environment
-
-- [Build & Start the App](./development-environment/build-and-start-the-app.md)
-- [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
-- [Code Generation](./development-environment/code-generation.md)
-- [Linting & Code Style](./development-environment/linting-and-code-style.md)
-- [VS Code](./development-environment/vscode.md)
-
 ## Databases
 
 * [Introduction](./databases/introduction.md)
@@ -43,6 +35,16 @@
 * [Modules](./architecture/modules.md)
 * [Services](./architecture/services.md)
 * [Hooks](./architecture/hooks.md)
+
+
+## Development Environment
+
+- [Build & Start the App](./development-environment/build-and-start-the-app.md)
+- [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
+- [Code Generation](./development-environment/code-generation.md)
+- [Linting & Code Style](./development-environment/linting-and-code-style.md)
+- [VS Code](./development-environment/vscode.md)
+
 
 ## Security
 
