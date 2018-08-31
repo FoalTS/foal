@@ -24,8 +24,6 @@
   </a>
 </p>
 
-**This work is in progress and is currently not ready for production.**
-
 <p align="center">
   <a href="https://foalts.org/">Website</a>
   -

@@ -1,6 +1,6 @@
 {
   "name": "foal-srcs",
-  "description": "A high-level Node.JS framework to quickly build web apps in TypeScript.",
+  "description": "Web framework to create enterprise-grade Node.JS applications.",
   "directories": {
     "doc": "docs"
   },
