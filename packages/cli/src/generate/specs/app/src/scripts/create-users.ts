@@ -12,7 +12,7 @@ async function main() {
   // await user.setPassword('password');
 
   const user2 = new User();
-  // user2.email = 'jack@foalts.org';
+  // user2.email = 'mary@foalts.org';
   // await user2.setPassword('password2');
 
   const permission = new Permission();
