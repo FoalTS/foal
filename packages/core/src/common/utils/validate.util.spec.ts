@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotThrow, ok, throws } from 'assert';
+import { deepStrictEqual, doesNotThrow, throws } from 'assert';
 
 // FoalTS
 import { ValidationError } from '../errors';
