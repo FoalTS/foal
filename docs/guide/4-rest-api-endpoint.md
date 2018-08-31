@@ -37,10 +37,21 @@ foal g service flight
 > EntityResourceCollection
 ```
 
+A new file is generated. Open it and complete the schema definition.
+
 ```typescript
 import { EntityResourceCollection, Service } from '@foal/core';
 
 import { Flight } from '../entities';
+
+const schema = {
+  additionalProperties: false,
+  properties: {
+    destination: { type: 'string' }
+  },
+  required: [ 'destination' ],
+  type: 'object',
+};
 
 @Service()
 export class FlightCollection extends EntityResourceCollection {
@@ -48,11 +59,15 @@ export class FlightCollection extends EntityResourceCollection {
   allowedOperations: EntityResourceCollection['allowedOperations'] = [
     'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
   ];
+
+  middlewares = [
+    middleware('create|modifyById|updateById', ({ data }) => validate(schema, data))
+  ];
 }
 
 ```
 
-Here is your collection. Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
+Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
 
 ```typescript
 import { controller, IModule, Module } from '@foal/core';
