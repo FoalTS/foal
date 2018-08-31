@@ -6,12 +6,10 @@ import { getCommandLineArguments } from './get-command-line-arguments.util';
 
 describe('getCommandLineArguments', () => {
   it('should convert the arguments to an object.', () => {
-    // foal run-script foo foo=barfoo bar='hello world'
+    // node foo.js foo=barfoo bar='hello world'
     const argv = [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
-      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
-      'foo',
+      '/Users/loicpoullain/projects/FoalTS/foal/foo.js',
       'prod',
       'foo=barfoo',
       'bar=hello world'
@@ -27,9 +25,7 @@ describe('getCommandLineArguments', () => {
   it('should parse the JSON value.', () => {
     const argv = [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
-      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
-      'foo',
+      '/Users/loicpoullain/projects/FoalTS/foal/foo.js',
       'bar={ "foo": "bar" }',
       'foo=3'
     ];
