@@ -277,7 +277,7 @@ describe('LoginController', () => {
       let ctx: Context;
       beforeEach(() => ctx = new Context({
         body: {
-          email: 'jack@foalts.org'
+          email: 'mary@foalts.org'
         },
         params: {
           strategy: 'email'

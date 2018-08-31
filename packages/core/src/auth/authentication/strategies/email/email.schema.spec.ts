@@ -35,7 +35,7 @@ describe('emailSchema', () => {
 
   it('should return an error if the password property is missing.', () => {
     const credentials = {
-      email: 'john@jack.com',
+      email: 'john@mary.com',
     };
     const isValid = ajv.validate(emailSchema, credentials);
 
@@ -78,7 +78,7 @@ describe('emailSchema', () => {
 
   it('should return an error if the password property is not a string.', () => {
     const credentials = {
-      email: 'john@jack.com',
+      email: 'john@mary.com',
       password: 1,
     };
     const isValid = ajv.validate(emailSchema, credentials);
@@ -122,7 +122,7 @@ describe('emailSchema', () => {
 
   it('should return an error if there are additional properties.', () => {
     const credentials = {
-      email: 'john@jack.com',
+      email: 'john@mary.com',
       foo: 'bar',
       password: 'myPassword',
     };
@@ -145,7 +145,7 @@ describe('emailSchema', () => {
 
   it('should not return any error if the input is correct.', () => {
     const credentials = {
-      email: 'john@jack.com',
+      email: 'john@mary.com',
       password: 'myPassword',
     };
     const isValid = ajv.validate(emailSchema, credentials);

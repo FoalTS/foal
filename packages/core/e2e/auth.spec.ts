@@ -114,7 +114,7 @@ it('Authentication and authorization', async () => {
 
   await request(app)
     .post('/login')
-    .send({ email: 'jack@foalts.org', password: 'password' })
+    .send({ email: 'mary@foalts.org', password: 'password' })
     .expect(401);
 
   /* Try to login with a wrong password */
