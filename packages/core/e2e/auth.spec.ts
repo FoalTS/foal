@@ -164,6 +164,7 @@ it('Authentication and authorization', async () => {
 
   const group = new Group();
   group.name = 'Administrators';
+  group.codeName = 'administrators';
   group.permissions = [ perm ];
   await getRepository(Group, 'perm-connection').save(group);
 
