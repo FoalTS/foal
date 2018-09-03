@@ -78,7 +78,6 @@ export function createApp({ name, sessionSecret }:
           .copyFileFromTemplates('src/app/sub-modules/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplates('src/scripts/create-group.spec.ts')
         .copyFileFromTemplates('src/scripts/create-group.ts')
         .copyFileFromTemplates('src/scripts/create-perm.ts')
         .copyFileFromTemplates('src/scripts/create-users.ts');
