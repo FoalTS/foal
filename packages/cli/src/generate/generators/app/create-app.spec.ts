@@ -34,6 +34,7 @@ describe('createApp', () => {
     testEnv.rmdirIfExists('src/app/controllers/templates');
 
     testEnv.rmfileIfExists('src/app/controllers/index.ts');
+    testEnv.rmfileIfExists('src/app/controllers/view.controller.spec.ts');
     testEnv.rmfileIfExists('src/app/controllers/view.controller.ts');
     testEnv.rmdirIfExists('src/app/controllers');
 
@@ -91,6 +92,7 @@ describe('createApp', () => {
   it('should render the src/app/controllers templates.', () => {
     testEnv
       .validateSpec('src/app/controllers/index.ts')
+      .validateSpec('src/app/controllers/view.controller.spec.ts')
       .validateSpec('src/app/controllers/view.controller.ts');
   });
 
