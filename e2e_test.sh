@@ -13,6 +13,11 @@ npm run lint
 npm run build
 npm run build:test
 
+# Test the generators that do not require user interaction
+foal g entity flight
+foal g hook foo-bar
+foal g module bar-foo
+
 # Run the generated unit tests
 npm run start:test
 
