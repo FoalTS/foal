@@ -53,7 +53,9 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('src/app/app.module.ts');
     testEnv.rmdirIfExists('src/app');
 
-    testEnv.rmfileIfExists('src/scripts/create-users.ts');
+    testEnv.rmfileIfExists('src/scripts/create-group.ts');
+    testEnv.rmfileIfExists('src/scripts/create-perm.ts');
+    testEnv.rmfileIfExists('src/scripts/create-user.ts');
     testEnv.rmdirIfExists('src/scripts');
 
     testEnv.rmfileIfExists('src/index.ts');
@@ -80,7 +82,10 @@ describe('createApp', () => {
 
   it('shoud copy the src/scripts templates.', () => {
     testEnv
-      .validateSpec('src/scripts/create-users.ts');
+      .validateSpec('src/scripts/create-group.ts')
+      .validateSpec('src/scripts/create-perm.ts')
+      .validateSpec('src/scripts/create-user.ts');
+
   });
 
   it('should render the src/app/controllers templates.', () => {
