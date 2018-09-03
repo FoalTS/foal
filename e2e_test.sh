@@ -13,6 +13,7 @@ npm run lint
 foal g entity flight
 foal g hook foo-bar
 foal g module bar-foo
+foal g script bar-script
 
 # Test building
 npm run build
