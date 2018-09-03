@@ -60,6 +60,7 @@ export function createApp({ name, sessionSecret }:
           .mkdirIfDoesNotExist('src/app/controllers')
           .copyFileFromTemplates('src/app/controllers/index.ts')
           .copyFileFromTemplates('src/app/controllers/view.controller.ts')
+          .copyFileFromTemplates('src/app/controllers/view.controller.spec.ts')
             // Templates
             .mkdirIfDoesNotExist('src/app/controllers/templates')
             .copyFileFromTemplates('src/app/controllers/templates/index.html')
