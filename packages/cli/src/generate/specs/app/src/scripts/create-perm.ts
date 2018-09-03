@@ -12,8 +12,8 @@ const argSchema = {
   type: 'object',
 };
 
-async function main() {
-  const args = getCommandLineArguments(process.argv);
+async function main(argv) {
+  const args = getCommandLineArguments(argv);
 
   try {
     validate(argSchema, args);
@@ -42,4 +42,4 @@ async function main() {
   }
 }
 
-main();
+main(process.argv);
