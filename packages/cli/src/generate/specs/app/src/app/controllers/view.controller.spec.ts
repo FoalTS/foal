@@ -2,7 +2,7 @@
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { Context, createController, getHttpMethod, getPath, HttpResponseOk } from '@foal/core';
+import { Context, createController, getHttpMethod, getPath, HttpResponseOK } from '@foal/core';
 
 // App
 import { ViewController } from './view.controller';
@@ -16,12 +16,12 @@ describe('ViewController', () => {
       strictEqual(getPath(ViewController, 'index'), '/');
     });
 
-    it('should return a HttpResponseOk.', () => {
+    it('should return a HttpResponseOK.', () => {
       const controller = createController(ViewController);
       const ctx = new Context({
         csrfToken: () => {}
       });
-      ok(controller.index(ctx) instanceof HttpResponseOk);
+      ok(controller.index(ctx) instanceof HttpResponseOK);
     });
 
   });
