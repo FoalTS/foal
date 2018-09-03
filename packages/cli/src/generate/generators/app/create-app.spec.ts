@@ -55,7 +55,7 @@ describe('createApp', () => {
 
     testEnv.rmfileIfExists('src/scripts/create-group.ts');
     testEnv.rmfileIfExists('src/scripts/create-perm.ts');
-    testEnv.rmfileIfExists('src/scripts/create-users.ts');
+    testEnv.rmfileIfExists('src/scripts/create-user.ts');
     testEnv.rmdirIfExists('src/scripts');
 
     testEnv.rmfileIfExists('src/index.ts');
@@ -84,7 +84,7 @@ describe('createApp', () => {
     testEnv
       .validateSpec('src/scripts/create-group.ts')
       .validateSpec('src/scripts/create-perm.ts')
-      .validateSpec('src/scripts/create-users.ts');
+      .validateSpec('src/scripts/create-user.ts');
 
   });
 
