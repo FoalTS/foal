@@ -17,6 +17,7 @@ import {
   createEntity,
   createHook,
   createModule,
+  createScript,
   createService,
   ServiceType
 } from './generate';
@@ -55,6 +56,9 @@ program
         break;
       case 'module':
         createModule({ name });
+        break;
+      case 'script':
+        createScript({ name });
         break;
       case 'service':
         const serviceChoices: ServiceType[] = [

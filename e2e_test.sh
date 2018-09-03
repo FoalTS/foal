@@ -9,14 +9,15 @@ npm install
 # Test linting
 npm run lint
 
-# Test building
-npm run build
-npm run build:test
-
 # Test the generators that do not require user interaction
 foal g entity flight
 foal g hook foo-bar
 foal g module bar-foo
+foal g script bar-script
+
+# Test building
+npm run build
+npm run build:test
 
 # Run the generated unit tests
 npm run start:test

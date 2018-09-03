@@ -32,6 +32,7 @@ async function main() {
 main();
 ```
 
+If you want to create a script that is called with some parameters from the command line, you can use the command `foal g script my-script` to generate such a script.
 
 # Build and Run Scripts
 
