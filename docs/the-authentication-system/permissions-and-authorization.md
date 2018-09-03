@@ -27,8 +27,8 @@ The `PermissionRequired(perm: string)` hook returns a `403 Forbidden` if the use
 ```sh
 npm run build
 
-node lib/scripts/create-permission name="My first permission" codeName="my-first-perm"
-node lib/scripts/create-permission name="My second permission" codeName="my-second-perm"
+node lib/scripts/create-perm name="My first permission" codeName="my-first-perm"
+node lib/scripts/create-perm name="My second permission" codeName="my-second-perm"
 
 node lib/scripts/create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
 
