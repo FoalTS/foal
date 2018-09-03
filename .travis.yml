@@ -18,7 +18,7 @@ before_install:
 install:
   - npm install
   - lerna bootstrap
-  - cd packages/cli && npm link
+  - cd packages/cli && npm link && cd ../..
 
 script:
   - npm run lint
