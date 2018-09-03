@@ -13,10 +13,12 @@ before_script:
 
 before_install:
   - npm install -g lerna
+  - npm install -g pm2
 
 install:
   - npm install
   - lerna bootstrap
+  - cd packages/cli && npm link
 
 script:
   - npm run lint
