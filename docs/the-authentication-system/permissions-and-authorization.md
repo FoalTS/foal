@@ -25,7 +25,7 @@ The `PermissionRequired(perm: string)` hook returns a `403 Forbidden` if the use
 ## Create permissions, groups and users with the shell scripts.
 
 ```sh
-npm run script
+npm run build
 
 node lib/scripts/create-permission name="My first permission" codeName="my-first-perm"
 node lib/scripts/create-permission name="My second permission" codeName="my-second-perm"
