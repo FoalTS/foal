@@ -19,6 +19,12 @@ foal g controller foobar
 
 Create a new controller in `./src/app/controllers`, in `./controllers` or in the current directory depending on which folders are found.
 
+If you are in the root directory and you want to automatically register the controller within the app module you can add the `--register` flag.
+
+```shell
+foal g controller foobar --register
+```
+
 ## Create an entity (simple model)
 
 ```shell

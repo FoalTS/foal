@@ -73,7 +73,7 @@ export class Generator {
 
   private logUpdate(path: string) {
     if (this.root) {
-      path = this.root + '/' + path;
+      path = join(this.root, path);
     }
     if (process.env.NODE_ENV !== 'test') {
       console.log(`UPDATE ${path}`);

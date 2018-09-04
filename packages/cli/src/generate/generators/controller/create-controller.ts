@@ -3,10 +3,11 @@ import { existsSync } from 'fs';
 
 // FoalTS
 import { Generator, getNames } from '../../utils';
+import { registerController } from './register-controller';
 
 export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
 
-export function createController({ name, type }: { name: string, type: ControllerType }) {
+export function createController({ name, type, register }: { name: string, type: ControllerType, register: boolean }) {
   const names = getNames(name);
 
   const fileName = `${names.kebabName}.controller.ts`;
@@ -25,10 +26,15 @@ export function createController({ name, type }: { name: string, type: Controlle
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
-    })
-    /*.updateFile('../app.module.ts', content => {
-      return registerController(content, `${names.upperFirstCamelName}Controller`);
-    }, { allowFailure: true })*/;
+    });
+
+  if (register) {
+    const path = type === 'REST' ? `/${names.kebabName}s` : '/';
+    generator
+      .updateFile('../app.module.ts', content => {
+        return registerController(content, `${names.upperFirstCamelName}Controller`, path);
+      }, { allowFailure: true });
+  }
 
   if (type === 'Empty') {
     generator
