@@ -1,5 +1,3 @@
-import { ControllerType } from './create-controller';
-
 class ImportNotFound extends Error {}
 
 function createNamedImport(specifiers: string[], path: string): string {
