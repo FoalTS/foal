@@ -126,7 +126,7 @@ describe('createController', () => {
         .validateSpec('app.module.empty-property.ts', '../app.module.ts');
     });
 
-    it('should update the "controllers = [ \n \n ]" property in src/app/app.module.ts if it exists.', () => {
+    it('should update the "controllers = [ \\n \\n ]" property in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.empty-spaced-property.ts', '../app.module.ts');
 
       createController({ name: 'test-fooBar', type: 'Empty', register: true });
@@ -135,7 +135,7 @@ describe('createController', () => {
         .validateSpec('app.module.empty-spaced-property.ts', '../app.module.ts');
     });
 
-    it('should update the "controllers = [ \n (.*) \n ]" property in src/app/app.module.ts if it exists.', () => {
+    it('should update the "controllers = [ \\n (.*) \\n ]" property in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.no-empty-property.ts', '../app.module.ts');
 
       createController({ name: 'test-fooBar', type: 'Empty', register: true });
