@@ -1,4 +1,5 @@
 // FoalTS
+import { it } from 'mocha';
 import {
   rmdirIfExists,
   rmfileIfExists,
@@ -13,6 +14,7 @@ describe('createController', () => {
     rmfileIfExists('src/app/controllers/test-foo-bar.controller.spec.ts');
     rmfileIfExists('src/app/controllers/index.ts');
     rmdirIfExists('src/app/controllers');
+    rmfileIfExists('src/app/app.module.ts');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
@@ -79,5 +81,70 @@ describe('createController', () => {
   test('src/app/controllers');
   test('controllers');
   test('');
+
+  describe('when the directory src/app/controllers exists', () => {
+
+    const testEnv = new TestEnvironment('controller', 'src/app/controllers');
+
+    beforeEach(() => {
+      testEnv.mkRootDirIfDoesNotExist();
+      testEnv.copyFileFromMocks('index.ts');
+    });
+
+    it('should update the "controllers" import in src/app/app.module.ts if it exists.', () => {
+      testEnv.copyFileFromMocks('app.module.controller-import.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.controller-import.ts', '../app.module.ts');
+    });
+
+    it('should add a "controllers" import in src/app/app.module.ts if none already exists.', () => {
+      testEnv.copyFileFromMocks('app.module.no-controller-import.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.no-controller-import.ts', '../app.module.ts');
+    });
+
+    it('should update the "@foal/core" import in src/app/app.module.ts if it exists.', () => {
+      testEnv.copyFileFromMocks('app.module.core-import.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.core-import.ts', '../app.module.ts');
+    });
+
+    it('should update the "controllers = []" property in src/app/app.module.ts if it exists.', () => {
+      testEnv.copyFileFromMocks('app.module.empty-property.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.empty-property.ts', '../app.module.ts');
+    });
+
+    it('should update the "controllers = [ \n \n ]" property in src/app/app.module.ts if it exists.', () => {
+      testEnv.copyFileFromMocks('app.module.empty-spaced-property.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.empty-spaced-property.ts', '../app.module.ts');
+    });
+
+    it('should update the "controllers = [ \n (.*) \n ]" property in src/app/app.module.ts if it exists.', () => {
+      testEnv.copyFileFromMocks('app.module.no-empty-property.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty' });
+
+      testEnv
+        .validateSpec('app.module.no-empty-property.ts', '../app.module.ts');
+    });
+
+  });
 
 });

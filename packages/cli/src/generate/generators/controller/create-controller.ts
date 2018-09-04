@@ -3,6 +3,7 @@ import { existsSync } from 'fs';
 
 // FoalTS
 import { Generator, getNames } from '../../utils';
+import { registerController } from './register-controller';
 
 export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
 
@@ -26,9 +27,9 @@ export function createController({ name, type }: { name: string, type: Controlle
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
     })
-    /*.updateFile('../app.module.ts', content => {
+    .updateFile('../app.module.ts', content => {
       return registerController(content, `${names.upperFirstCamelName}Controller`);
-    }, { allowFailure: true })*/;
+    }, { allowFailure: true });
 
   if (type === 'Empty') {
     generator

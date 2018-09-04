@@ -1,108 +1,55 @@
-// import * as ts from 'typescript';
+class ImportNotFound extends Error {}
 
-// function createControllerImportDeclaration(controllerName: string): ts.ImportDeclaration {
-//   const namedImports = ts.createNamedImports(
-//     [ts.createImportSpecifier(undefined, ts.createIdentifier(controllerName))]
-//   );
-//   const importDeclaration = ts.createImportDeclaration(
-//     undefined,
-//     undefined,
-//     ts.createImportClause(undefined, namedImports),
-//     ts.createStringLiteral('./controllers')
-//   );
-//   return importDeclaration;
-// }
+function createNamedImport(specifiers: string[], path: string): string {
+  return `import { ${specifiers.join(', ')} } from '${path}';`;
+}
 
-// function createControllerCall(controllerName: string): ts.CallExpression {
-//   return ts.createCall(
-//     ts.createIdentifier('controller'),
-//     [],
-//     [
-//       ts.createStringLiteral('/'),
-//       ts.createIdentifier(controllerName)
-//     ]
-//   );
-// }
+function addImport(source: string, importDeclaration: string): string {
+  const regex = new RegExp('import (.*) from (.*);', 'g');
+  let lastOccurence;
+  let lastExec;
+  while ((lastExec = regex.exec(source)) !== null) {
+    lastOccurence = lastExec;
+  }
+  const endPos = lastOccurence.index + lastOccurence[0].length;
+  return source.substr(0, endPos) + '\n' + importDeclaration + source.substr(endPos);
+}
 
-// function findControllerImportDeclaration(statements: ts.NodeArray<ts.Statement>): ts.ImportDeclaration|null {
-//   for (const statement of statements) {
-//     if (statement.kind !== ts.SyntaxKind.ImportDeclaration) {
-//       continue;
-//     }
+function addSpecifierToNamedImport(source: string, path: string, specifier: string): string {
+  let namedImportFound = false;
+  const pathRegex = path.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  const result = source
+    .replace(new RegExp(`import {(.*)} from \'${pathRegex}\';`), (str, content: string) => {
+      namedImportFound = true;
 
-//     const importDeclaration = statement as ts.ImportDeclaration;
-//     if (importDeclaration.moduleSpecifier.kind !== ts.SyntaxKind.StringLiteral) {
-//       continue;
-//     }
+      const importSpecifiers = content.split(',').map(imp => imp.trim());
+      importSpecifiers.push(specifier);
+      importSpecifiers.sort((a, b) => a.localeCompare(b));
+      return createNamedImport(importSpecifiers, path);
+    });
+  if (!namedImportFound) {
+    throw new ImportNotFound();
+  }
+  return result;
+}
 
-//     const moduleSpecifier = importDeclaration.moduleSpecifier as ts.StringLiteral;
-//     if (moduleSpecifier.text === './controllers') {
-//       return importDeclaration;
-//     }
-//   }
-//   return null;
-// }
-
-// function addControllerToImportDeclaration(controllerName: string, importDeclaration: ts.ImportDeclaration) {
-//   if (!importDeclaration.importClause) {
-//     console.log('Impossible to update the "controllers" import declaration.');
-//   }
-
-//   const importClause = importDeclaration.importClause as ts.ImportClause;
-//   if (!importClause.namedBindings || ts.isNamespaceImport(importClause.namedBindings)) {
-//     console.log('Impossible to update the "controllers" import declaration.');
-//   }
-
-//   const namedBindings = importClause.namedBindings as ts.NamedImports;
-//   const importSpecifiers = namedBindings.elements.concat(
-//     ts.createImportSpecifier(
-//       undefined, ts.createIdentifier(controllerName)
-//     )
-//   ).sort((a, b) => a.name.text.localeCompare(b.name.text));
-
-//   importClause.namedBindings = ts.updateNamedImports(namedBindings, importSpecifiers);
-// }
-
-// function findModuleClass(statements: ts.NodeArray<ts.Statement>): ts.ClassDeclaration|null {
-//   for (const statement of statements) {
-//     if (ts.isClassDeclaration(statement)) {
-//       return statement as ts.ClassDeclaration;
-//     }
-//   }
-//   return null;
-// }
-
-// function findControllersProperty(classDeclaration: ts.ClassDeclaration): any|null {
-//   return null;
-// }
-
-// function addControllerCallToControllersProperty(controllersProperty: any, controllerCall: ts.CallExpression) {
-
-// }
-
-// function getAST(content: string, fileName: string) {
-//   return ts.createSourceFile(
-//     fileName,
-//     content,
-//     ts.ScriptTarget.Latest,
-//     /*setParentNodes*/ true,
-//     ts.ScriptKind.TS
-//   );
-// }
-
-// export function registerController(moduleContent: string, controllerName: string): string {
-//   const ast = getAST(moduleContent, 'app.module.ts');
-
-//   const importDeclaration = findControllerImportDeclaration(ast.statements);
-
-//   if (importDeclaration === null) {
-//     const newImportDeclaration = createControllerImportDeclaration(controllerName);
-//     let statements: ts.Statement[] = [ newImportDeclaration ];
-//     statements = statements.concat(ast.statements);
-//     ast.statements = ts.createNodeArray(statements);
-//   } else {
-//     addControllerToImportDeclaration(controllerName, importDeclaration as ts.ImportDeclaration);
-//   }
-
-//   return ts.createPrinter().printFile(ast);
-// }
+export function registerController(moduleContent: string, controllerName: string): string {
+  try {
+    moduleContent = addSpecifierToNamedImport(moduleContent, './controllers', controllerName);
+  } catch (err) {
+    const namedImport = createNamedImport([ controllerName ], './controllers');
+    moduleContent = addImport(moduleContent, namedImport);
+  }
+  try {
+    moduleContent = addSpecifierToNamedImport(moduleContent, '@foal/core', 'controller');
+  } catch (err) {}
+  moduleContent = moduleContent
+    .replace(/( *)controllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
+      const regex = new RegExp('controller\((.*)\)', 'g');
+      const controllerCalls = content.match(regex) || [];
+      controllerCalls.push(`controller('/', ${controllerName})`);
+      const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
+      return `${spaces}controllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`
+    })
+  return moduleContent;
+}
