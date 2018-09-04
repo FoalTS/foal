@@ -49,7 +49,7 @@ export function registerController(moduleContent: string, controllerName: string
       const controllerCalls = content.match(regex) || [];
       controllerCalls.push(`controller('/', ${controllerName})`);
       const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
-      return `${spaces}controllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`
-    })
+      return `${spaces}controllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`;
+    });
   return moduleContent;
 }

@@ -17,10 +17,15 @@
       "no-empty-interface": false,
       "no-unused-variable": true,
       "no-duplicate-imports": true,
+      "no-conditional-assignment": false,
       "member-access": [true, "no-public"]
     },
     "rulesDirectory": [],
     "linterOptions": {
-        "exclude": "**/src/migrations/*.ts"
+        "exclude": [
+            "**/src/migrations/*.ts",
+            "**/src/generate/mocks/**/*.ts",
+            "**/src/generate/specs/**/app.module.*.ts"
+        ]
     }
 }
