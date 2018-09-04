@@ -144,6 +144,15 @@ describe('createController', () => {
         .validateSpec('app.module.no-empty-property.ts', '../app.module.ts');
     });
 
+    it('should update the "controllers" property with a special URL if the controller is a REST controller.', () => {
+      testEnv.copyFileFromMocks('app.module.rest.ts', '../app.module.ts');
+
+      createController({ name: 'test-fooBar', type: 'REST', register: true });
+
+      testEnv
+        .validateSpec('app.module.rest.ts', '../app.module.ts');
+    });
+
   });
 
 });

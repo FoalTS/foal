@@ -1,3 +1,5 @@
+import { ControllerType } from './create-controller';
+
 class ImportNotFound extends Error {}
 
 function createNamedImport(specifiers: string[], path: string): string {
@@ -36,7 +38,7 @@ function addSpecifierToNamedImport(source: string, path: string, specifier: stri
   return result;
 }
 
-export function registerController(moduleContent: string, controllerName: string): string {
+export function registerController(moduleContent: string, controllerName: string, path: string): string {
   try {
     moduleContent = addSpecifierToNamedImport(moduleContent, './controllers', controllerName);
   } catch (err) {
@@ -50,7 +52,7 @@ export function registerController(moduleContent: string, controllerName: string
     .replace(/( *)controllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
       const regex = /controller\((.*)\)/g;
       const controllerCalls = content.match(regex) || [];
-      controllerCalls.push(`controller('/', ${controllerName})`);
+      controllerCalls.push(`controller('${path}', ${controllerName})`);
       const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
       return `${spaces}controllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`;
     });
