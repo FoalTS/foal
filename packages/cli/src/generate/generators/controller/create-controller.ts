@@ -7,7 +7,7 @@ import { registerController } from './register-controller';
 
 export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
 
-export function createController({ name, type }: { name: string, type: ControllerType }) {
+export function createController({ name, type, register }: { name: string, type: ControllerType, register: boolean }) {
   const names = getNames(name);
 
   const fileName = `${names.kebabName}.controller.ts`;
@@ -27,9 +27,14 @@ export function createController({ name, type }: { name: string, type: Controlle
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
     })
-    .updateFile('../app.module.ts', content => {
-      return registerController(content, `${names.upperFirstCamelName}Controller`);
-    }, { allowFailure: true });
+  
+  if (register) {
+    generator
+      .updateFile('../app.module.ts', content => {
+        return registerController(content, `${names.upperFirstCamelName}Controller`);
+      }, { allowFailure: true });
+  }
+    
 
   if (type === 'Empty') {
     generator

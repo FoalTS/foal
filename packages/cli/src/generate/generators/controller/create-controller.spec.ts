@@ -41,7 +41,7 @@ describe('createController', () => {
       });
 
       it('should render the empty templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Empty' });
+        createController({ name: 'test-fooBar', type: 'Empty', register: false });
 
         testEnv
           .validateSpec('test-foo-bar.controller.empty.ts', 'test-foo-bar.controller.ts')
@@ -50,7 +50,7 @@ describe('createController', () => {
       });
 
       it('should render the REST templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'REST' });
+        createController({ name: 'test-fooBar', type: 'REST', register: false });
 
         testEnv
           .validateSpec('test-foo-bar.controller.rest.ts', 'test-foo-bar.controller.ts')
@@ -58,7 +58,7 @@ describe('createController', () => {
       });
 
       it('should render the GraphQL templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'GraphQL' });
+        createController({ name: 'test-fooBar', type: 'GraphQL', register: false });
 
         testEnv
           .validateSpec('test-foo-bar.controller.graphql.ts', 'test-foo-bar.controller.ts')
@@ -66,7 +66,7 @@ describe('createController', () => {
       });
 
       it('should render the Login templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Login' });
+        createController({ name: 'test-fooBar', type: 'Login', register: false });
 
         testEnv
           .validateSpec('test-foo-bar.controller.login.ts', 'test-foo-bar.controller.ts')
@@ -81,7 +81,7 @@ describe('createController', () => {
   test('controllers');
   test('');
 
-  describe('when the directory src/app/controllers exists', () => {
+  describe('when the directory src/app/controllers exists and if register is true', () => {
 
     const testEnv = new TestEnvironment('controller', 'src/app/controllers');
 
@@ -93,7 +93,7 @@ describe('createController', () => {
     it('should update the "controllers" import in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.controller-import.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.controller-import.ts', '../app.module.ts');
@@ -102,7 +102,7 @@ describe('createController', () => {
     it('should add a "controllers" import in src/app/app.module.ts if none already exists.', () => {
       testEnv.copyFileFromMocks('app.module.no-controller-import.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.no-controller-import.ts', '../app.module.ts');
@@ -111,7 +111,7 @@ describe('createController', () => {
     it('should update the "@foal/core" import in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.core-import.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.core-import.ts', '../app.module.ts');
@@ -120,7 +120,7 @@ describe('createController', () => {
     it('should update the "controllers = []" property in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.empty-property.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.empty-property.ts', '../app.module.ts');
@@ -129,7 +129,7 @@ describe('createController', () => {
     it('should update the "controllers = [ \n \n ]" property in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.empty-spaced-property.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.empty-spaced-property.ts', '../app.module.ts');
@@ -138,7 +138,7 @@ describe('createController', () => {
     it('should update the "controllers = [ \n (.*) \n ]" property in src/app/app.module.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.module.no-empty-property.ts', '../app.module.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty' });
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
 
       testEnv
         .validateSpec('app.module.no-empty-property.ts', '../app.module.ts');
