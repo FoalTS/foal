@@ -1,5 +1,4 @@
 // FoalTS
-import { it } from 'mocha';
 import {
   rmdirIfExists,
   rmfileIfExists,
