@@ -23,6 +23,9 @@ function addSpecifierToNamedImport(source: string, path: string, specifier: stri
       namedImportFound = true;
 
       const importSpecifiers = content.split(',').map(imp => imp.trim());
+      if (importSpecifiers.includes('controller')) {
+        return str;
+      }
       importSpecifiers.push(specifier);
       importSpecifiers.sort((a, b) => a.localeCompare(b));
       return createNamedImport(importSpecifiers, path);

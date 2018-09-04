@@ -1,5 +1,5 @@
 // 3p
-import {} from 'somewhere';
+import { controller } from '@foal/core';
 
 export class MyModule {
   controllers = [
