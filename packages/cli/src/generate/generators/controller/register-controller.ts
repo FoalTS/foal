@@ -45,7 +45,7 @@ export function registerController(moduleContent: string, controllerName: string
   } catch (err) {}
   moduleContent = moduleContent
     .replace(/( *)controllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
-      const regex = new RegExp('controller\((.*)\)', 'g');
+      const regex = /controller\((.*)\)/g;
       const controllerCalls = content.match(regex) || [];
       controllerCalls.push(`controller('/', ${controllerName})`);
       const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
