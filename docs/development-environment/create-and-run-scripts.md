@@ -1,20 +1,16 @@
 # Create and Run Scripts
 
-Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is where shell scripts come into play.
+Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is when shell scripts come into play.
 
 # Create Scripts
 
-A shell script is just a TypeScript file which is called from the command line.
+A shell script is just a TypeScript file located in the `src/scripts`. It must export a `main` function that is then called when running the script.
 
-They are located in the `src/scripts` directory. Let's create one: `src/scripts/display-users.ts`
+Let's create a new one with the command line: `foal g script display-users`. A new file with a default template should appear in you `src/scripts` directory.
 
 # Write Scripts
 
-Usually a script has a `main` function which is called directly in the file. This lets you easily use async/await keywords when dealing with asynchronous code.
-
-From this file you can import the classes and functions of your app and use them. You can also create a database connection based on the database configuration of your app.
-
-Let's take an example: a script that displays the users stored in the database.
+Remove the content of `src/scripts/display-users.ts` and replace it with the below code.
 
 ```typescript
 // 3p
@@ -23,27 +19,32 @@ import { createConnection } from 'typeorm';
 // App
 import { User } from './app/entities';
 
-async function main() {
-  const connection = await createConnection();
+export async function main() {
+  await createConnection();
   const users = await connection.getRepository(User).find();
   console.log(users);
 }
 
-main();
 ```
 
-If you want to create a script that is called with some parameters from the command line, you can use the command `foal g script my-script` to generate such a script.
+As you can see, we can easily establish a connection to the database in the script as well as import some of the app components (the `User` in this case).
+
+Encapsulating your code in a `main` function without calling it directly in the file has several benefits:
+- You can import and test your `main` function in a separate file.
+- Using a function lets you easily use async/await keywords when dealing with asynchronous code.
 
 # Build and Run Scripts
 
-To run a script you first need  to build it.
+To run a script you first need to build it.
 
 ```sh
 npm run build
 ```
 
-Then you can run it with this command:
+Then you can execute it with this command:
 
 ```sh
-node lib/scripts/my-script.js
+foal run-script my-script
 ```
+
+> You can also provide additionnal arguments to your script (for example: `foal run-script my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
