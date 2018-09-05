@@ -68,7 +68,7 @@ Create a REST controller.
 $ foal g controller flight
 > REST
 ```
-Register you controller in the `src/app/app.module.ts` file.
+Register your controller in the `src/app/app.module.ts` file.
 ```typescript
 ...
 import { controller } from '@foal/core';
