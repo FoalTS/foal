@@ -2,12 +2,12 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-export function runScript(name: string, log = console.log) {
+export function runScript({ name }: { name: string }, log = console.log) {
   if (!existsSync(`lib/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
         `The script "${name}" does not exist in lib/scripts/. But it exists in src/scripts/.`
-          + ' Please build your script first by running the command "npm run build".'
+          + ' Please build your script by running the command "npm run build".'
       );
     } else {
       log(`The script "${name}" does not exist. You can create it by running the command "foal g script ${name}".`);

@@ -21,6 +21,7 @@ import {
   createService,
   ServiceType
 } from './generate';
+import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
@@ -33,6 +34,13 @@ program
   .description('Creates a new directory with a new FoalTS app.')
   .action((name: string) => {
     createApp({ name });
+  });
+
+program
+  .command('run-script <name>')
+  .description('Runs the given script.')
+  .action((name: string) => {
+    runScript({ name });
   });
 
 program

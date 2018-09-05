@@ -20,7 +20,7 @@ describe('runScript', () => {
   it('should log a suitable message if lib/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
     let msg;
     const log = message => msg = message;
-    runScript('my-script', log);
+    runScript({ name: 'my-script' }, log);
 
     strictEqual(
       msg, 'The script "my-script" does not exist. You can create it by running the command "foal g script my-script".'
@@ -34,12 +34,12 @@ describe('runScript', () => {
 
     let msg;
     const log = message => msg = message;
-    runScript('my-script', log);
+    runScript({ name: 'my-script' }, log);
 
     strictEqual(
       msg,
       'The script "my-script" does not exist in lib/scripts/. But it exists in src/scripts/.'
-        + ' Please build your script first by running the command "npm run build".'
+        + ' Please build your script by running the command "npm run build".'
     );
   });
 
@@ -52,7 +52,7 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
 
-    runScript('my-script', log);
+    runScript({ name: 'my-script' }, log);
 
     strictEqual(
       msg,
@@ -70,7 +70,7 @@ module.exports.main = function main(argv) {
 
     delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
 
-    runScript('my-script');
+    runScript({ name: 'my-script' });
 
     if (!existsSync('my-script-temp')) {
       throw new Error('The script was not executed');
