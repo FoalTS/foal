@@ -27,7 +27,10 @@ export class User extends AbstractUser {
   password: string;
 ​
   async setPassword(password: string) {
+<<<<<<< HEAD
     // 'parsePassword' is a Foal built-in function which deals with password encryption. Therefore no password in clear text is saved in the database. 
+=======
+>>>>>>> [Docs] Updating authentication.md
     this.password = await parsePassword(password);
   }​
 }
