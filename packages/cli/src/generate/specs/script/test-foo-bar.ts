@@ -11,7 +11,7 @@ const argSchema = {
   type: 'object',
 };
 
-async function main(argv) {
+export async function main(argv) {
   const args = getCommandLineArguments(argv);
 
   try {
@@ -30,5 +30,3 @@ async function main(argv) {
 
   // Do something.
 }
-
-main(process.argv);
