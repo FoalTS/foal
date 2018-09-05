@@ -27,15 +27,15 @@ The `PermissionRequired(perm: string)` hook returns a `403 Forbidden` if the use
 ```sh
 npm run build
 
-node lib/scripts/create-perm name="My first permission" codeName="my-first-perm"
-node lib/scripts/create-perm name="My second permission" codeName="my-second-perm"
+foal run-script create-perm name="My first permission" codeName="my-first-perm"
+foal run-script create-perm name="My second permission" codeName="my-second-perm"
 
-node lib/scripts/create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
+foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
 
-node lib/scripts/create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 ```
 
 Or if your user has an email and a password:
 ```sh
-node lib/scripts/create-user email="mary@foalts.org" password="my_strong_password" userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+foal run-script create-user email="mary@foalts.org" password="my_strong_password" userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 ```

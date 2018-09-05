@@ -35,9 +35,9 @@ test "$response" -ge 200 && test "$response" -le 299
 pm2 delete index
 
 # Test the default shell scripts to create permissions, groups and users.
-node lib/scripts/create-perm name="My first permission" codeName="my-first-perm"
-node lib/scripts/create-perm name="My second permission" codeName="my-second-perm"
+foal run-script create-perm name="My first permission" codeName="my-first-perm"
+foal run-script create-perm name="My second permission" codeName="my-second-perm"
 
-node lib/scripts/create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
+foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
 
-node lib/scripts/create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
