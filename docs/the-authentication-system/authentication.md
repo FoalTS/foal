@@ -93,6 +93,7 @@ export class AuthController extends LoginController {
 }
 ```
 
+Create a file named `login.html` inside `controllers/templates` with the following content:
 ```html
 <html>
   <head></head>
