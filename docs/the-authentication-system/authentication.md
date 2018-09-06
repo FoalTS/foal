@@ -1,35 +1,36 @@
 # Authentication
 
 
-## How to log in a user
+## How to authenticate a user
 
 ### Create a user
 
 Go to `src/app/entities/user.entity` and add two new columns: an email and a password.
 
 ```typescript
-import { Column, Entity, parsePassword, PrimaryGeneratedColumn } from 'typeorm';
-
+import { AbstractUser, parsePassword } from '@foal/core';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+​
 @Entity()
-export class User {
-
+export class User extends AbstractUser {
+​
   @PrimaryGeneratedColumn()
   // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
-
+​
   @Column({ unique: true })
   // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
   email: string;
-
+​
   @Column()
   // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
   password: string;
-
-  setPassword(password: string) {
-    this.password = parsePassword(password);
-  }
-
+​
+  async setPassword(password: string) {
+    this.password = await parsePassword(password);
+  }​
 }
+
 ```
 
 > You can use the `scripts/create-users.ts` to create users. Simply run `npm run build && node lib/scripts/create-users.js`.
@@ -66,11 +67,11 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
 import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
+import { readFileSync } from 'fs';
+import { join } from 'path';
+​​
 import { Authenticator } from '../services/authenticator.service';
 
 @Controller()
@@ -92,6 +93,7 @@ export class AuthController extends LoginController {
 }
 ```
 
+Create a file named `login.html` inside `controllers/templates` with the following content:
 ```html
 <html>
   <head></head>
