@@ -15,9 +15,9 @@
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
-    "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
-    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert"
+    "migration:generate": "./node_modules/.bin/typeorm migration:generate",
+    "migration:run": "./node_modules/.bin/typeorm migration:run",
+    "migration:revert": "./node_modules/.bin/typeorm migration:revert"
   },
   "engines": {
     "node": ">=8"
@@ -56,7 +56,6 @@
     "copy": "^0.3.2",
     "mocha": "^4.0.1",
     "supervisor": "^0.12.0",
-    "ts-node": "^6.1.0",
     "typescript": "^2.5.3"
   }
 }
