@@ -7,8 +7,7 @@ FoalTS includes a CSRF protection. It is enabled by default and makes your app r
 You can get the csrf token by calling the `csrfToken` method of the context `request`. It is then easy to send it to the client upon page rendering.
 
 ```typescript
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { Controller, Get, render } from '@foal/core';
 
 @Controller()
 export class ViewController {
