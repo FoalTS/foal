@@ -22,6 +22,12 @@
   <a href="https://snyk.io/test/github/foalts/foal">
     <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
   </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
+  </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
+  </a>
 </p>
 
 <p align="center">
