@@ -62,6 +62,7 @@ describe('AbstractUser', () => {
   it('should have "groups" which take Group instances.', async () => {
     const group = new Group();
     group.name = 'group1';
+    group.codeName = 'group1';
     await getManager().save(group);
 
     const user = new User();

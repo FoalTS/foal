@@ -3,29 +3,29 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc -p tsconfig.app.json && copy-cli \"src/**/*.html\" lib",
+    "build": "copy-cli \"src/**/*.html\" lib && tsc -p tsconfig.app.json",
     "build:w": "tsc -p tsconfig.app.json -w",
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
 
-    "build:test": "tsc && copy-cli \"src/**/*.html\" lib",
+    "build:test": "copy-cli \"src/**/*.html\" lib && tsc",
     "build:test:w": "tsc -w",
     "start:test": "mocha \"./lib/**/*.spec.js\"",
     "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
     "test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
 
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "migration:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
-    "migration:run": "ts-node ./node_modules/.bin/typeorm migration:run",
-    "migration:revert": "ts-node ./node_modules/.bin/typeorm migration:revert"
+    "migration:generate": "./node_modules/.bin/typeorm migration:generate",
+    "migration:run": "./node_modules/.bin/typeorm migration:run",
+    "migration:revert": "./node_modules/.bin/typeorm migration:revert"
   },
   "engines": {
     "node": ">=8"
   },
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.3",
-    "@foal/ejs": "^0.6.0-beta.3",
+    "@foal/core": "^0.6.0-beta.4",
+    "@foal/ejs": "^0.6.0-beta.4",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
@@ -39,7 +39,6 @@
     "copy": "^0.3.2",
     "supervisor": "^0.12.0",
     "tslint": "^5.10.0",
-    "typescript": "^2.8.3",
-    "ts-node": "^6.1.0"
+    "typescript": "^2.8.3"
   }
 }

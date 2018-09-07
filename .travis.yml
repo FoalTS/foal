@@ -13,12 +13,15 @@ before_script:
 
 before_install:
   - npm install -g lerna
+  - npm install -g pm2
 
 install:
   - npm install
   - lerna bootstrap
+  - cd packages/cli && npm link && cd ../..
 
 script:
   - npm run lint
   - lerna run test
   - lerna run e2e
+  - ./e2e_test.sh

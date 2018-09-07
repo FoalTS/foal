@@ -24,8 +24,6 @@
   </a>
 </p>
 
-**This work is in progress and is currently not ready for production.**
-
 <p align="center">
   <a href="https://foalts.org/">Website</a>
   -
@@ -65,20 +63,8 @@ $ foal g service flight
 ```
 Create a REST controller.
 ```shell
-$ foal g controller flight
+$ foal g controller flight --register
 > REST
-```
-Register your controller in the `src/app/app.module.ts` file.
-```typescript
-...
-import { controller } from '@foal/core';
-import { FlightController } from './controllers/flight.controller';
-...
-export class AppModule implements IModule {
-  controllers = [
-    controller('/flights', FlightController)
-  ]
-}
 ```
 
 The `npm run develop` command rebuilds the app and reloads the server. `http://localhost:3000/flights` now returns an empty array!

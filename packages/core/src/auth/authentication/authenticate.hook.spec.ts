@@ -43,6 +43,7 @@ describe('Authenticate', () => {
 
     const group = new Group();
     group.name = 'group1';
+    group.codeName = 'group1';
     group.permissions = [ permission1 ];
 
     const user = new User();

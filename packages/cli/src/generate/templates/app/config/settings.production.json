@@ -1,8 +1,6 @@
 {
-  "sessionCookieDomain": "localhost",
   "sessionCookieHttpOnly": true,
   "sessionCookieMaxAge": 3600000,
-  "sessionCookiePath": "/",
   "sessionCookieSecure": true,
-  "sessionName": "sessionId"
+  "sessionName": "id"
 }

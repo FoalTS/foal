@@ -60,6 +60,7 @@ export function createApp({ name, sessionSecret }:
           .mkdirIfDoesNotExist('src/app/controllers')
           .copyFileFromTemplates('src/app/controllers/index.ts')
           .copyFileFromTemplates('src/app/controllers/view.controller.ts')
+          .copyFileFromTemplates('src/app/controllers/view.controller.spec.ts')
             // Templates
             .mkdirIfDoesNotExist('src/app/controllers/templates')
             .copyFileFromTemplates('src/app/controllers/templates/index.html')
@@ -78,7 +79,9 @@ export function createApp({ name, sessionSecret }:
           .copyFileFromTemplates('src/app/sub-modules/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplates('src/scripts/create-users.ts');
+        .copyFileFromTemplates('src/scripts/create-group.ts')
+        .copyFileFromTemplates('src/scripts/create-perm.ts')
+        .copyFileFromTemplates('src/scripts/create-user.ts');
 
   if (process.env.NODE_ENV !== 'test') {
     console.log(

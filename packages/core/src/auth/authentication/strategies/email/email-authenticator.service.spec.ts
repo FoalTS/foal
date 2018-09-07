@@ -58,11 +58,11 @@ describe('EmailAuthenticator', () => {
       john.password = encryptedPassword;
       john.username = 'John';
 
-      const jack = new User();
-      jack.email = 'jack@foalts.org';
-      jack.id = 2;
-      jack.password = 'bcrypt_mypassword';
-      jack.username = 'Jack';
+      const mary = new User();
+      mary.email = 'mary@foalts.org';
+      mary.id = 2;
+      mary.password = 'bcrypt_mypassword';
+      mary.username = 'mary';
 
       const sam = new User();
       sam.email = 'sam@foalts.org';
@@ -70,7 +70,7 @@ describe('EmailAuthenticator', () => {
       sam.password = 'pbkdf2_sha256$hello_world';
       sam.username = 'Sam';
 
-      return getManager().save([ john, sam, jack ]);
+      return getManager().save([ john, sam, mary ]);
     });
 
     afterEach(() => getConnection().close());
@@ -86,7 +86,7 @@ describe('EmailAuthenticator', () => {
     });
 
     it('should throw an error if the encrypted user password format is neither correct nor supported.', () => {
-      return service.authenticate({ email: 'jack@foalts.org', password })
+      return service.authenticate({ email: 'mary@foalts.org', password })
         .then(() => fail('This promise should be rejected.'))
         .catch(err => strictEqual(err.message, 'Password format is incorrect or not supported.'));
     });

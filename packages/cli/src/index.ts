@@ -17,9 +17,11 @@ import {
   createEntity,
   createHook,
   createModule,
+  createScript,
   createService,
   ServiceType
 } from './generate';
+import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
@@ -35,17 +37,25 @@ program
   });
 
 program
+  .command('run-script <name>')
+  .description('Runs the given script.')
+  .action((name: string) => {
+    runScript({ name });
+  });
+
+program
   .command('generate <type> <name>')
   .description('Generates files (type: controller|entity|hook|module|service).')
+  .option('-r, --register', 'Register the controller into app.module.ts (only available if type=controller)')
   .alias('g')
-  .action(async (type: string, name: string) => {
+  .action(async (type: string, name: string, options) => {
     switch (type) {
       case 'controller':
         const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/, 'Login' ];
         const controllerAnswers = await prompt([
           { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
         ]);
-        createController({ name, type: controllerAnswers.type });
+        createController({ name, type: controllerAnswers.type, register: options.register || false  });
         break;
       case 'entity':
         createEntity({ name });
@@ -55,6 +65,9 @@ program
         break;
       case 'module':
         createModule({ name });
+        break;
+      case 'script':
+        createScript({ name });
         break;
       case 'service':
         const serviceChoices: ServiceType[] = [
@@ -72,7 +85,7 @@ program
         const serviceAnswers = await prompt([
           { choices: serviceChoices, name: 'type', type: 'list', message: 'Type', pageSize: 10 }
         ]);
-        createService({ name, type: serviceAnswers.type });
+        createService({ name, type: serviceAnswers.type});
         break;
       default:
         console.error('Please provide a valid type: controller|entity|hook|module|service.');
