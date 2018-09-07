@@ -40,7 +40,7 @@ foal g service flight
 A new file is generated. Open it and complete the schema definition.
 
 ```typescript
-import { EntityResourceCollection, Service } from '@foal/core';
+import { EntityResourceCollection, middleware, Service, validate } from '@foal/core';
 
 import { Flight } from '../entities';
 
@@ -70,7 +70,7 @@ export class FlightCollection extends EntityResourceCollection {
 Now you need to register your REST controller. Open `src/app/app.module.ts` and add the "flight" line:
 
 ```typescript
-import { controller, IModule, Module } from '@foal/core';
+import { Authenticate, controller, IModule, Module } from '@foal/core';
 
 import { AirportController, FlightController, ViewController } from './controllers';
 
