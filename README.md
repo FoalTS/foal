@@ -38,7 +38,7 @@
   <a href="https://twitter.com/foalts">Twitter</a>
 </p>
 
-## Get started with FoalTS
+## :city_sunrise: Get started
 
 ### Prerequisites
 
