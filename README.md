@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <i>A Web framework to create enterprise-grade Node.JS applications</i>
+  <i>:fire: A Web framework to create enterprise-grade Node.JS applications :boom: :rocket:</i>
   <br>
   <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
