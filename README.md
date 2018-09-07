@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_400.png" height="175px" alt="Logo" />
+    <img src="./docs/logo_title.png" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
 
 <p align="center">
-  <i>Web framework to create enterprise-grade Node.JS applications</i>
+  <i>A Web framework to create enterprise-grade Node.JS applications</i>
   <br>
   <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
