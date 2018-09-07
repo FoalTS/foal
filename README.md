@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_400.png" height="175px" alt="Logo" />
+    <img src="./docs/logo_title.png" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
 
 <p align="center">
-  <i>Web framework to create enterprise-grade Node.JS applications</i>
+  <i>:fire: A Web framework to create enterprise-grade Node.JS applications :boom: :rocket:</i>
   <br>
   <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
@@ -21,6 +21,12 @@
   </a>
   <a href="https://snyk.io/test/github/foalts/foal">
     <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
+  </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
+  </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
   </a>
 </p>
 
