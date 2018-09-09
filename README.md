@@ -19,6 +19,9 @@
   <a href="https://travis-ci.org/FoalTS/foal">
     <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
   </a>
+  <a href="https://codecov.io/github/FoalTS/foal">
+    <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
+  </a>
   <a href="https://snyk.io/test/github/foalts/foal">
     <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
   </a>
