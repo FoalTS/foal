@@ -41,7 +41,7 @@
   <a href="https://twitter.com/foalts">Twitter</a>
 </p>
 
-## Description
+## :raised_hands: Description
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
 
