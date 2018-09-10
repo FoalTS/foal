@@ -78,7 +78,7 @@ $ foal g controller flight --register
 
 The `npm run develop` command rebuilds the app and reloads the server. `http://localhost:3000/flights` now returns an empty array!
 
-[>> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
+:point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/content/) :seedling:
 
 ## Ask a question
 
@@ -88,7 +88,7 @@ Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/f
 
 ![Screenshot](./docs/screenshot.png)
 
-## Features
+## :tulip: Features
 
 ### Production-ready
 
