@@ -43,7 +43,7 @@
 
 ## :raised_hands: Description
 
-FoalTS is a high-level Node.JS framework to build robust web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade apps.
+FoalTS is a high-level Node.JS framework to build robust web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
 
 
 ## :city_sunrise: Get started
@@ -59,7 +59,7 @@ $ cd my-app && npm install
 $ npm run develop
 ```
 
-Go to `http://localhost:3000` and find our welcoming page!
+The development server is started! Go to `http://localhost:3000` and find our welcoming page!
 
 :point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/content/) :seedling:
 
