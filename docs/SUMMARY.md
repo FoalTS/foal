@@ -1,5 +1,7 @@
 # Documentation
 
+* [Installation](./README.md)
+
 * [Getting Started]()
   * [1. Introduction](./guide/1-introduction.md)
   * [2. Handle a request](./guide/2-handle-a-request.md)
