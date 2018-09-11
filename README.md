@@ -43,17 +43,12 @@
 
 ## :raised_hands: Description
 
-In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
+FoalTS is a high-level Node.JS framework to build robust web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
 
-But when it comes to setting up a complete and scalable project, things get harder. You have to put everything in place. The authorization system, database migrations, development tools or even encryption of passwords are just the tip of the iceberg. Working on this is time consuming and may slow down the release frequency or even lead to undesired bugs. As the codebase grows up and the complexity increases, it becomes harder and harder to develop new features and maintain the app.
-
-This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
 ## :city_sunrise: Get started
 
-### Prerequisites
-
-Install [Node.Js and npm](https://nodejs.org/en/download/).
+First install [Node.Js and npm](https://nodejs.org/en/download/).
 
 ### Create a new app
 
@@ -64,29 +59,17 @@ $ cd my-app && npm install
 $ npm run develop
 ```
 
-Go to `http://localhost:3000` and find our welcoming page!
-
-
-### Create a REST API
-
-Create a model.
-```shell
-$ foal g entity flight
-```
-Create a resource collection.
-```shell
-$ foal g service flight
-> EntityResourceCollection
-```
-Create a REST controller.
-```shell
-$ foal g controller flight --register
-> REST
-```
-
-The `npm run develop` command rebuilds the app and reloads the server. `http://localhost:3000/flights` now returns an empty array!
+The development server is started! Go to `http://localhost:3000` and find our welcoming page!
 
 :point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/content/) :seedling:
+
+## :dart: Why?
+
+In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
+
+But when it comes to setting up a complete and scalable project, things get harder. You have to put everything in place. The authorization system, database migrations, development tools or even encryption of passwords are just the tip of the iceberg. Working on this is time consuming and may slow down the release frequency or even lead to undesired bugs. As the codebase grows up and the complexity increases, it becomes harder and harder to develop new features and maintain the app.
+
+This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
 ## Ask a question
 
