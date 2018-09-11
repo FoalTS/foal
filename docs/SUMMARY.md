@@ -60,3 +60,7 @@
 
 * [Configuration](./deployment-and-environments/configuration.md)
 * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
+
+## API Reference
+
+* [@foal/core](./api/index.md)
