@@ -9,9 +9,7 @@ Then [download the frontend app](https://foalts.org/guide-frontend.zip), unzip t
 
 > FoalTS can either interact with rich-client interfaces (Angular, Vue, React, etc) or use classical templating mechanisms. In this tutorial, the frontend part will be handled by a precompiled Angular app.
 
-If you refresh the page at `http://localhost:3000` you should now see this.
-
-> If the server is not running, enter the command `npm run develop` in your console/terminal.
+Rerun the command `npm run develop` in your terminal. If you refresh the page at `http://localhost:3000` you should now see this.
 
 ![App image](./app.png)
 
