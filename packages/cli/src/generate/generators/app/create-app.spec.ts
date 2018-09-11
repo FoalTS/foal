@@ -60,6 +60,7 @@ describe('createApp', () => {
     testEnv.rmdirIfExists('src/scripts');
 
     testEnv.rmfileIfExists('src/index.ts');
+    testEnv.rmfileIfExists('src/test.ts');
     testEnv.rmdirIfExists('src');
 
     // Root
@@ -129,7 +130,8 @@ describe('createApp', () => {
 
   it('should render the src templates.', () => {
     testEnv
-      .validateSpec('src/index.ts');
+      .validateSpec('src/index.ts')
+      .validateSpec('src/test.ts');
   });
 
   it('should render the root templates.', () => {

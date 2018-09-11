@@ -53,6 +53,7 @@ export function createApp({ name, sessionSecret }:
       // Src
       .mkdirIfDoesNotExist('src')
       .copyFileFromTemplates('src/index.ts')
+      .copyFileFromTemplates('src/test.ts')
         // App
         .mkdirIfDoesNotExist('src/app')
         .copyFileFromTemplates('src/app/app.module.ts')

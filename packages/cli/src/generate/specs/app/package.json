@@ -11,8 +11,8 @@
 
     "build:test": "copy-cli \"src/**/*.html\" lib && tsc",
     "build:test:w": "tsc -w",
-    "start:test": "mocha \"./lib/**/*.spec.js\"",
-    "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
+    "start:test": "mocha --file \"./lib/test.js\" \"./lib/**/*.spec.js\"",
+    "start:test:w": "mocha --file \"./lib/test.js\" -w \"./lib/**/*.spec.js\"",
     "test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
 
     "lint": "tslint -c tslint.json -p tsconfig.json",
