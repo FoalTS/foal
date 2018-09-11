@@ -31,14 +31,12 @@
   * [Services](./architecture/services.md)
   * [Hooks](./architecture/hooks.md)
 
-
 * Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
   * [Code Generation](./development-environment/code-generation.md)
   * [Linting & Code Style](./development-environment/linting-and-code-style.md)
   * [VS Code](./development-environment/vscode.md)
-
 
 * Security
   * [CSRF protection](./security/csrf-protection.md)
