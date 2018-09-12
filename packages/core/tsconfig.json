@@ -9,6 +9,7 @@
     "noImplicitAny": false,
     "sourceMap": true,
     "declaration": true,
+    "types": [ "node", "mocha" ],
     "lib": [
       "es2017",
       "dom"
