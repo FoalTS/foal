@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && copy-cli \"./src/**.txt\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "engines": {
@@ -43,6 +43,7 @@
     "mocha": "^3.5.3",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "copy": "^0.3.2"
   }
 }
