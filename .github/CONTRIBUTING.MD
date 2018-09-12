@@ -42,3 +42,36 @@ You can also run the tests of only one package by going to its directory and run
 ## Security
 
 To report a security issue please email directly loic.poullain@centraliens.net.
+
+## Project Structure
+
+The FoalTS project consists of several packages. The publication and dependency management is handled by [lerna](https://github.com/lerna/lerna), a tool for managing JavaScript projects with multiple packages.
+
+### `@foal/cli` Package Structure
+
+```sh
+generate # Handles the commands `foal createapp` and `foal generate`
+  |- generators # Contains the code which renders the templates or updates the files
+  |- mocks # Contains some pieces of code used to test the file "updaters"
+  |- specs # Defines how the generated files should look like in different scenarios (specifications)
+  |- templates # Contains the actual templates used to generate the files
+  '- utils # Contains some helpers shared by all the generators
+```
+
+## Conventions
+
+### Import declarations
+
+Import declarations should be organized in three distinct blocks depending on if they refer to the standard library, a 3P package or a FoalTS component.
+
+Example:
+```typescript
+// std
+import { strictEqual } from 'assert';
+
+// 3p
+import { Column } from 'typeorm';
+
+// FoalTS
+import { something } from '../somewhere';
+```
