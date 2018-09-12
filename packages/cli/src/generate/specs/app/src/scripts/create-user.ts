@@ -1,5 +1,6 @@
 // 3p
 import { getCommandLineArguments, Group, Permission, validate, ValidationError } from '@foal/core';
+// import { isCommon } from '@foal/password';
 import { createConnection, getManager, getRepository } from 'typeorm';
 
 // App
@@ -39,6 +40,10 @@ export async function main(argv) {
   user.userPermissions = [];
   user.groups = [];
   // user.email = args.email;
+  // if (await isCommon(args.password)) {
+  //   console.log('This password is too common. Please choose another one.');
+  //   return;
+  // }
   // await user.setPassword(args.password);
 
   await createConnection();
