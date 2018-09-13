@@ -11,7 +11,7 @@ Every unit test file should be placed next to the file it tests with the same na
   '- my-service.service.spec.ts
 ```
 
-## Write, Build and Run Tests
+## Write, Build and Run Unit Tests
 
 - `npm run test` - Build the unit tests code and execute them. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
 - `npm run build:test` - Build the unit tests code (compile the typescript files and copy the templates).

@@ -55,6 +55,7 @@
 
 * [Introduction](./testing/introduction.md)
 * [Unit Testing](./testing/unit-testing.md)
+* [E2E Testing](./testing/e2e-testing.md)
 
 ## Deployment & environments
 
