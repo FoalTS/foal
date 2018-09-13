@@ -34,7 +34,7 @@ export class User extends AbstractUser {
 
 ```
 
-> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build && node lib/scripts/create-user.js`.
+> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build:scripts && foal run-script create-user`.
 
 ### Create an Authenticator
 

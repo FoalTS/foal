@@ -37,11 +37,16 @@ export function createApp({ name, sessionSecret }:
     .copyFileFromTemplates('ormconfig.json')
     .renderTemplate('package.json', locals)
     .copyFileFromTemplates('tsconfig.app.json')
+    .copyFileFromTemplates('tsconfig.e2e.json')
     .copyFileFromTemplates('tsconfig.json')
+    .copyFileFromTemplates('tsconfig.migrations.json')
+    .copyFileFromTemplates('tsconfig.scripts.json')
+    .copyFileFromTemplates('tsconfig.test.json')
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')
       .renderTemplate('config/app.development.json', locals)
+      .renderTemplate('config/app.e2e.json', locals)
       .renderTemplate('config/app.production.json', locals)
       .renderTemplate('config/app.test.json', locals)
       .renderTemplate('config/settings.json', locals)
@@ -52,6 +57,7 @@ export function createApp({ name, sessionSecret }:
       .copyFileFromTemplates('public/logo.png')
       // Src
       .mkdirIfDoesNotExist('src')
+      .copyFileFromTemplates('src/e2e.ts')
       .copyFileFromTemplates('src/index.ts')
       .copyFileFromTemplates('src/test.ts')
         // App
@@ -78,6 +84,9 @@ export function createApp({ name, sessionSecret }:
           // Sub-modules
           .mkdirIfDoesNotExist('src/app/sub-modules')
           .copyFileFromTemplates('src/app/sub-modules/index.ts')
+        // E2E
+        .mkdirIfDoesNotExist('src/e2e')
+        .copyFileFromTemplates('src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
         .copyFileFromTemplates('src/scripts/create-group.ts')

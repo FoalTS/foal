@@ -14,9 +14,9 @@ npm run migration:revert
 
 Generate a migration from the changes in your entities
 ```sh
-npm run build # Build the entities
+npm run build:app # Build the entities
 npm run migration:generate -- -n my-migration # Generate the migration
-npm run build # Build the migrations
+npm run build:migrations # Build the migrations
 npm run migration:run # Run the migrations
 ```
 

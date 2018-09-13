@@ -8,6 +8,7 @@
     "noImplicitAny": false,
     "module": "commonjs",
     "target": "es2017",
+    "rootDir": "src",
     "lib": [
       "es2017",
       "dom"

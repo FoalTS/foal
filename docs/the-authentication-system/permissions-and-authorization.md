@@ -25,7 +25,7 @@ The `PermissionRequired(perm: string)` hook returns a `403 Forbidden` if the use
 ## Create permissions, groups and users with the shell scripts.
 
 ```sh
-npm run build
+npm run build:scripts
 
 foal run-script create-perm name="My first permission" codeName="my-first-perm"
 foal run-script create-perm name="My second permission" codeName="my-second-perm"

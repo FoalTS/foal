@@ -7,7 +7,7 @@ export function runScript({ name }: { name: string }, log = console.log) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
         `The script "${name}" does not exist in lib/scripts/. But it exists in src/scripts/.`
-          + ' Please build your script by running the command "npm run build".'
+          + ' Please build your script by running the command "npm run build:scripts".'
       );
     } else {
       log(`The script "${name}" does not exist. You can create it by running the command "foal g script ${name}".`);
