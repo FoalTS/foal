@@ -22,6 +22,7 @@ describe('createApp', () => {
 
     // Config
     testEnv.rmfileIfExists('config/app.development.json');
+    testEnv.rmfileIfExists('config/app.e2e.json');
     testEnv.rmfileIfExists('config/app.production.json');
     testEnv.rmfileIfExists('config/app.test.json');
     testEnv.rmfileIfExists('config/settings.development.json');
@@ -78,6 +79,7 @@ describe('createApp', () => {
   it('should render the config templates.', () => {
     testEnv
       .validateSpec('config/app.development.json')
+      .validateSpec('config/app.e2e.json')
       .validateSpec('config/app.production.json')
       .validateSpec('config/app.test.json')
       .validateSpec('config/settings.development.json')

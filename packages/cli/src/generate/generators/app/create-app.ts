@@ -46,6 +46,7 @@ export function createApp({ name, sessionSecret }:
       // Config
       .mkdirIfDoesNotExist('config')
       .renderTemplate('config/app.development.json', locals)
+      .renderTemplate('config/app.e2e.json', locals)
       .renderTemplate('config/app.production.json', locals)
       .renderTemplate('config/app.test.json', locals)
       .renderTemplate('config/settings.json', locals)
