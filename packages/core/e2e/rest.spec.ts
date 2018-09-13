@@ -77,30 +77,24 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
   @Entity()
   class Org {
     @PrimaryGeneratedColumn()
-    // @ts-ignore
     id: number;
 
     @Column()
-    // @ts-ignore
     name: string;
   }
 
   @Entity()
   class User extends AbstractUser {
     @Column()
-    // @ts-ignore
     name: string;
 
     @Column({ nullable: true })
-    // @ts-ignore
     phone: string;
 
     @Column({ nullable: true })
-    // @ts-ignore
     origin: string;
 
     @ManyToOne(type => Org)
-    // @ts-ignore
     org: Org;
   }
 

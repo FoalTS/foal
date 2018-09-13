@@ -46,11 +46,9 @@ it('Authentication and authorization', async () => {
   @Entity()
   class User extends AbstractUser {
     @Column({ unique: true })
-    // @ts-ignore
     email: string;
 
     @Column()
-    // @ts-ignore
     password: string;
   }
 
