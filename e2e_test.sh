@@ -15,12 +15,21 @@ foal g hook foo-bar
 foal g module bar-foo
 foal g script bar-script
 
-# Test building
-npm run build
-npm run build:test
+# Build the app
+npm run build:app
 
-# Run the generated unit tests
+# Build and run the unit tests
+npm run build:test
 npm run start:test
+
+# Build and run the e2e tests
+npm run build:e2e
+npm run start:e2e
+
+# Build and run the migrations
+npm run migration:generate -- -n my-migration
+npm run build:migrations
+npm run migration:run
 
 # Test the application when it is started
 pm2 start lib/index.js
@@ -35,6 +44,8 @@ test "$response" -ge 200 && test "$response" -le 299
 pm2 delete index
 
 # Test the default shell scripts to create permissions, groups and users.
+npm run build:scripts
+
 foal run-script create-perm name="My first permission" codeName="my-first-perm"
 foal run-script create-perm name="My second permission" codeName="my-second-perm"
 
