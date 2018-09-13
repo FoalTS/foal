@@ -52,6 +52,7 @@ export function createApp({ name, sessionSecret }:
       .copyFileFromTemplates('public/logo.png')
       // Src
       .mkdirIfDoesNotExist('src')
+      .copyFileFromTemplates('src/e2e.ts')
       .copyFileFromTemplates('src/index.ts')
       .copyFileFromTemplates('src/test.ts')
         // App

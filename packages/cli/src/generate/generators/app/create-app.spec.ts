@@ -59,6 +59,7 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('src/scripts/create-user.ts');
     testEnv.rmdirIfExists('src/scripts');
 
+    testEnv.rmfileIfExists('src/e2e.ts');
     testEnv.rmfileIfExists('src/index.ts');
     testEnv.rmfileIfExists('src/test.ts');
     testEnv.rmdirIfExists('src');
@@ -130,6 +131,7 @@ describe('createApp', () => {
 
   it('should render the src templates.', () => {
     testEnv
+      .validateSpec('src/e2e.ts')
       .validateSpec('src/index.ts')
       .validateSpec('src/test.ts');
   });
