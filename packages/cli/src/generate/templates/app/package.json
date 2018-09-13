@@ -32,11 +32,12 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@types/node": "^8.0.47",
-    "mocha": "^5.2.0",
     "@types/mocha": "^5.2.1",
+    "@types/node": "^8.0.47",
     "concurrently": "^3.5.1",
     "copy": "^0.3.2",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0",
     "supervisor": "^0.12.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
