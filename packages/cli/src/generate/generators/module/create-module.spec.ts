@@ -65,7 +65,7 @@ describe('createModule', () => {
 
       let expected = readFileFromTemplatesSpec('module/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/index.ts`);
-      strictEqual(actual.replace(/\r\n/g, '\n'), expected);
+      strictEqual(actual, expected);
 
       expected = readFileFromTemplatesSpec('module/test-foo-bar.module.1.ts');
       actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.module.ts`);

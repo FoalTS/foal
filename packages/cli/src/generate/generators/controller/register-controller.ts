@@ -47,7 +47,7 @@ export function registerController(moduleContent: string, controllerName: string
     moduleContent = addSpecifierToNamedImport(moduleContent, '@foal/core', 'controller');
   } catch (err) {}
   moduleContent = moduleContent
-    .replace(/( *)controllers = \[((.|\n|\r\n)*)\];/, (str, spaces, content: string) => {
+    .replace(/( *)controllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
       const regex = /controller\((.*)\)/g;
       const controllerCalls = content.match(regex) || [];
       controllerCalls.push(`controller('${path}', ${controllerName})`);
