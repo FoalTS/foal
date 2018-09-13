@@ -21,44 +21,35 @@ import { EntityResourceCollection, middleware, Middleware } from './entity-resou
 @Entity()
 export class Profile {
   @PrimaryGeneratedColumn()
-  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 
   @Column()
-  // @ts-ignore : Property 'pseudo' has no initializer and is not definitely assigned in theconstructor.
   pseudo: string;
 }
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 
   @Column()
-  // @ts-ignore : Property 'firstName' has no initializer and is not definitely assigned in theconstructor.
   firstName: string;
 
   @Column()
-  // @ts-ignore : Property 'lastName' has no initializer and is not definitely assigned in theconstructor.
   lastName: string;
 
   @Column({ nullable: true })
-  // @ts-ignore : Property 'password' has no initializer and is not definitely assigned in theconstructor.
   password: string;
 
   @Column({ default: false })
-  // @ts-ignore : Property 'isAdmin' has no initializer and is not definitely assigned in theconstructor.
   isAdmin: boolean;
 
   @OneToOne(type => Profile)
   @JoinColumn()
-  // @ts-ignore : Property 'profile' has no initializer and is not definitely assigned in theconstructor.
   profile1: Profile;
 
   @OneToOne(type => Profile)
   @JoinColumn()
-  // @ts-ignore : Property 'profile' has no initializer and is not definitely assigned in theconstructor.
   profile2: Profile;
 
   async setPassword(password: string) {

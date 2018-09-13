@@ -5,11 +5,9 @@ import { /*Column, */Entity } from 'typeorm';
 export class User extends AbstractUser {
 
   // @Column({ unique: true })
-  // // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
   // email: string;
 
   // @Column()
-  // // @ts-ignore : Property 'password' has no initializer and is not definitely assigned in theconstructor.
   // password: string;
 
   // async setPassword(password: string) {

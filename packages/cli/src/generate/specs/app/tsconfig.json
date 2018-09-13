@@ -6,6 +6,7 @@
     "emitDecoratorMetadata": true,
     "strict": true,
     "noImplicitAny": false,
+    "strictPropertyInitialization": false,
     "module": "commonjs",
     "target": "es2017",
     "rootDir": "src",
