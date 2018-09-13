@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/app/**/*.ts",
-    "src/index.ts"
+    "src/e2e/**/*.ts",
+    "src/e2e.ts"
   ],
   "exclude": [
     "src/app/**/*.spec.ts"

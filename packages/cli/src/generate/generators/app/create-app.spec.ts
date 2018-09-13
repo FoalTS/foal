@@ -12,8 +12,12 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('.gitignore');
     testEnv.rmfileIfExists('ormconfig.json');
     testEnv.rmfileIfExists('package.json');
-    testEnv.rmfileIfExists('tsconfig.json');
     testEnv.rmfileIfExists('tsconfig.app.json');
+    testEnv.rmfileIfExists('tsconfig.e2e.json');
+    testEnv.rmfileIfExists('tsconfig.json');
+    testEnv.rmfileIfExists('tsconfig.migrations.json');
+    testEnv.rmfileIfExists('tsconfig.scripts.json');
+    testEnv.rmfileIfExists('tsconfig.test.json');
     testEnv.rmfileIfExists('tslint.json');
 
     // Config
@@ -150,6 +154,11 @@ describe('createApp', () => {
       .validateSpec('package.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.app.json')
+      .validateSpec('tsconfig.e2e.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.migrations.json')
+      .validateSpec('tsconfig.scripts.json')
+      .validateSpec('tsconfig.test.json')
       .validateSpec('tslint.json');
   });
 

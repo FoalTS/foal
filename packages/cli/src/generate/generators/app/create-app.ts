@@ -37,7 +37,11 @@ export function createApp({ name, sessionSecret }:
     .copyFileFromTemplates('ormconfig.json')
     .renderTemplate('package.json', locals)
     .copyFileFromTemplates('tsconfig.app.json')
+    .copyFileFromTemplates('tsconfig.e2e.json')
     .copyFileFromTemplates('tsconfig.json')
+    .copyFileFromTemplates('tsconfig.migrations.json')
+    .copyFileFromTemplates('tsconfig.scripts.json')
+    .copyFileFromTemplates('tsconfig.test.json')
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')

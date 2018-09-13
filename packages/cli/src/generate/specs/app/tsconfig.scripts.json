@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/app/**/*.ts",
-    "src/index.ts"
+    "src/scripts/*.ts"
   ],
   "exclude": [
-    "src/app/**/*.spec.ts"
+    "src/app/**/*.spec.ts",
+    "src/scripts/*.spec.ts"
   ]
 }
