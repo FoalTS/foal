@@ -6,17 +6,22 @@ foal createapp my-app
 cd my-app
 npm install
 
-# Test linting
-npm run lint
-
 # Test the generators that do not require user interaction
 foal g entity flight
 foal g hook foo-bar
 foal g module bar-foo
 foal g script bar-script
 
+# Test linting
+npm run lint
+
 # Build the app
 npm run build:app
+
+# Build and run the migrations
+npm run migration:generate -- -n my-migration
+npm run build:migrations
+npm run migration:run
 
 # Build and run the unit tests
 npm run build:test
@@ -25,11 +30,6 @@ npm run start:test
 # Build and run the e2e tests
 npm run build:e2e
 npm run start:e2e
-
-# Build and run the migrations
-npm run migration:generate -- -n my-migration
-npm run build:migrations
-npm run migration:run
 
 # Test the application when it is started
 pm2 start lib/index.js
