@@ -54,6 +54,9 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('src/app/app.module.ts');
     testEnv.rmdirIfExists('src/app');
 
+    testEnv.rmfileIfExists('src/e2e/index.ts');
+    testEnv.rmdirIfExists('src/e2e');
+
     testEnv.rmfileIfExists('src/scripts/create-group.ts');
     testEnv.rmfileIfExists('src/scripts/create-perm.ts');
     testEnv.rmfileIfExists('src/scripts/create-user.ts');
@@ -83,12 +86,16 @@ describe('createApp', () => {
       .validateFileSpec('public/logo.png');
   });
 
+  it('shoud copy the src/e2e templates.', () => {
+    testEnv
+      .validateSpec('src/e2e/index.ts');
+  });
+
   it('shoud copy the src/scripts templates.', () => {
     testEnv
       .validateSpec('src/scripts/create-group.ts')
       .validateSpec('src/scripts/create-perm.ts')
       .validateSpec('src/scripts/create-user.ts');
-
   });
 
   it('should render the src/app/controllers templates.', () => {

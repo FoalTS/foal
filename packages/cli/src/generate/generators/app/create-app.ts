@@ -79,6 +79,9 @@ export function createApp({ name, sessionSecret }:
           // Sub-modules
           .mkdirIfDoesNotExist('src/app/sub-modules')
           .copyFileFromTemplates('src/app/sub-modules/index.ts')
+        // E2E
+        .mkdirIfDoesNotExist('src/e2e')
+        .copyFileFromTemplates('src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
         .copyFileFromTemplates('src/scripts/create-group.ts')
