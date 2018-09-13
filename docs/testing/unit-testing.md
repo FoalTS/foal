@@ -13,11 +13,11 @@ Every unit test file should be placed next to the file it tests with the same na
 
 ## Write, Build and Run Tests
 
-- `npm run test` - Build the test code and execute the tests. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
-- `npm run build:test` - Build the test code (compile the typescript files and copy the templates).
-- `npm run build:test:w` - Build the test code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
-- `npm run start:test` - Execute the tests from the built files.
-- `npm run start:test:w` - Execute the tests from the built files and do it again whenever one of these files changes (watch mode).
+- `npm run test` - Build the unit tests code and execute them. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
+- `npm run build:test` - Build the unit tests code (compile the typescript files and copy the templates).
+- `npm run build:test:w` - Build the unit tests code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
+- `npm run start:test` - Execute the unit tests from the built files.
+- `npm run start:test:w` - Execute the unit tests from the built files and do it again whenever one of these files changes (watch mode).
 
 
 ## Testing Controllers and Services
