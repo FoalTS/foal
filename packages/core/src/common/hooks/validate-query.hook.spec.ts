@@ -68,26 +68,4 @@ describe('ValidateQuery', () => {
     notStrictEqual((actual as HttpResponseBadRequest).content, undefined);
   });
 
-  it('should use the given ajv instance if it exists.', () => {
-    const schema = {
-      properties: {
-        bar: { type: 'integer', default: 4 },
-        foo: { type: 'integer' },
-      },
-      type: 'object',
-    };
-    const ctx = new Context({});
-    ctx.request.query = {
-      foo: 3,
-    };
-
-    let hook = getHookFunction(ValidateQuery(schema));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.query.bar, undefined);
-
-    hook = getHookFunction(ValidateQuery(schema, new Ajv({ useDefaults: true })));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.query.bar, 4);
-  });
-
 });

@@ -68,26 +68,4 @@ describe('ValidateBody', () => {
     notStrictEqual((actual as HttpResponseBadRequest).content, undefined);
   });
 
-  it('should use the given ajv instance if it exists.', () => {
-    const schema = {
-      properties: {
-        bar: { type: 'integer', default: 4 },
-        foo: { type: 'integer' },
-      },
-      type: 'object',
-    };
-    const ctx = new Context({});
-    ctx.request.body = {
-      foo: 3,
-    };
-
-    let hook = getHookFunction(ValidateBody(schema));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.body.bar, undefined);
-
-    hook = getHookFunction(ValidateBody(schema, new Ajv({ useDefaults: true })));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.body.bar, 4);
-  });
-
 });
