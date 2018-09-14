@@ -2,6 +2,9 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
+// FoalTS
+import { getCommandLineArguments } from './get-command-line-arguments.util';
+
 export function runScript({ name }: { name: string }, log = console.log) {
   if (!existsSync(`lib/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
@@ -22,5 +25,6 @@ export function runScript({ name }: { name: string }, log = console.log) {
     return;
   }
 
-  main(process.argv);
+  const args = getCommandLineArguments(process.argv);
+  main(args);
 }

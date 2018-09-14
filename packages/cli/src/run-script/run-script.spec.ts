@@ -60,11 +60,11 @@ describe('runScript', () => {
     );
   });
 
-  it('should call the "main" function of lib/scripts/my-script.js with process.argv.', () => {
+  it('should call the "main" function of lib/scripts/my-script.js with the script arguments.', () => {
     mkdirIfDoesNotExist('lib/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
-module.exports.main = function main(argv) {
-  writeFileSync('my-script-temp', JSON.stringify(argv), 'utf8');
+module.exports.main = function main(args) {
+  writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
 }`;
     writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
 
@@ -76,7 +76,11 @@ module.exports.main = function main(argv) {
       throw new Error('The script was not executed');
     }
     const actual = JSON.parse(readFileSync('my-script-temp', 'utf8'));
-    deepStrictEqual(actual, process.argv);
+
+    // This test depends on how the @foal/cli are triggered. This is not great.
+    deepStrictEqual(actual, {
+      './src/run-script/**/*.spec.ts': true,
+    });
   });
 
 });
