@@ -1,8 +1,8 @@
 // 3p
-import { getCommandLineArguments, Group, Permission, validate, ValidationError } from '@foal/core';
+import { Group, Permission } from '@foal/core';
 import { createConnection, getManager, getRepository } from 'typeorm';
 
-const argSchema = {
+export const schema = {
   additionalProperties: false,
   properties: {
     codeName: { type: 'string', maxLength: 100 },
@@ -13,21 +13,7 @@ const argSchema = {
   type: 'object',
 };
 
-export async function main(argv) {
-  const args = getCommandLineArguments(argv);
-
-  try {
-    validate(argSchema, args);
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      error.content.forEach(err => {
-        console.log(`The command line arguments ${err.message}`);
-      });
-      return;
-    }
-    throw error;
-  }
-
+export async function main(args) {
   args.permissions = args.permissions || [];
 
   const group = new Group();
