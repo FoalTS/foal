@@ -1,6 +1,3 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { ValidationError } from '../errors';
 import { getAjvInstance } from './get-ajv-instance';

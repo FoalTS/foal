@@ -1,9 +1,6 @@
 // std
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { ValidateQuery } from './validate-query.hook';
