@@ -38,9 +38,9 @@ validate(schema, data);
 // => error.content contains the details of the validation error.
 ```
 
-## The `ValidateBody` and `ValidateQuery` hooks
+## The `ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` hooks
 
-`ValidateBody` and `ValidateQuery` are hooks to control the body and the query of the requests received by the server. They validate the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
+`ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate the `context.request.{body|headers|params|query}` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
 
 *Example*:
 ```typescript
