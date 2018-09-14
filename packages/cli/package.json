@@ -5,11 +5,11 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:script",
+    "test": "npm run test:generators && npm run test:run-script",
     "test:generators": "NODE_ENV=test mocha --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "NODE_ENV=test mocha --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
-    "test:script": "NODE_ENV=test mocha --require ts-node/register \"./src/run-script.spec.ts\"",
-    "dev:test:script": "NODE_ENV=test mocha --require ts-node/register --watch --watch-extensions ts \"./src/run-script.spec.ts\"",
+    "test:run-script": "NODE_ENV=test mocha --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
+    "dev:test:run-script": "NODE_ENV=test mocha --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
@@ -48,6 +48,7 @@
     "bin/"
   ],
   "dependencies": {
+    "ajv": "^6.5.0",
     "commander": "^2.15.1",
     "inquirer": "^6.0.0"
   },

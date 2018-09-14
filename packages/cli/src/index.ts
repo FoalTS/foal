@@ -40,7 +40,7 @@ program
   .command('run-script <name>')
   .description('Runs the given script.')
   .action((name: string) => {
-    runScript({ name });
+    runScript({ name }, process.argv);
   });
 
 program
