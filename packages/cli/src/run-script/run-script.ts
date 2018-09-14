@@ -2,10 +2,13 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
+// 3p
+import * as Ajv from 'ajv';
+
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
-export function runScript({ name }: { name: string }, log = console.log) {
+export function runScript({ name }: { name: string }, argv: string[], log = console.log) {
   if (!existsSync(`lib/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
@@ -18,13 +21,24 @@ export function runScript({ name }: { name: string }, log = console.log) {
     return;
   }
 
-  const { main } = require(join(process.cwd(), `./lib/scripts/${name}`));
+  const { main, schema } = require(join(process.cwd(), `./lib/scripts/${name}`));
 
   if (!main) {
     log(`Error: No "main" function was found in lib/scripts/${name}.js.`);
     return;
   }
 
-  const args = getCommandLineArguments(process.argv);
+  const args = getCommandLineArguments(argv);
+
+  if (schema) {
+    const ajv = new Ajv();
+    if (!ajv.validate(schema, args)) {
+      (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
+        log(`Error: The command line arguments ${err.message}.`);
+      });
+      return;
+    }
+  }
+
   main(args);
 }

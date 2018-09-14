@@ -20,7 +20,7 @@ describe('runScript', () => {
   it('should log a suitable message if lib/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
     let msg;
     const log = message => msg = message;
-    runScript({ name: 'my-script' }, log);
+    runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg, 'The script "my-script" does not exist. You can create it by running the command "foal g script my-script".'
@@ -34,7 +34,7 @@ describe('runScript', () => {
 
     let msg;
     const log = message => msg = message;
-    runScript({ name: 'my-script' }, log);
+    runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg,
@@ -52,11 +52,39 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' }, log);
+    runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg,
       'Error: No "main" function was found in lib/scripts/my-script.js.'
+    );
+  });
+
+  it('should validate the process arguments with the schema if it is given.', () => {
+    mkdirIfDoesNotExist('lib/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    module.exports.schema = { type: 'object', additionalProperties: false };
+    module.exports.main = function main(args) {
+      writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
+    }`;
+    writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
+
+    let msg;
+    const log = message => msg = message;
+
+    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+
+    runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run-script',
+      'my-script',
+      'foo=bar',
+    ], log);
+
+    strictEqual(
+      msg,
+      'Error: The command line arguments should NOT have additional properties.'
     );
   });
 
@@ -70,7 +98,13 @@ module.exports.main = function main(args) {
 
     delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' });
+    runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run-script',
+      'my-script',
+      'foo=bar',
+    ]);
 
     if (!existsSync('my-script-temp')) {
       throw new Error('The script was not executed');
@@ -79,7 +113,7 @@ module.exports.main = function main(args) {
 
     // This test depends on how the @foal/cli are triggered. This is not great.
     deepStrictEqual(actual, {
-      './src/run-script/**/*.spec.ts': true,
+      foo: 'bar',
     });
   });
 

@@ -11,7 +11,7 @@ describe('getCommandLineArguments', () => {
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
-      'foo',
+      'my-script',
       'prod',
       'foo=barfoo',
       'bar=hello world'
@@ -29,7 +29,7 @@ describe('getCommandLineArguments', () => {
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
-      'foo',
+      'my-script',
       'bar={ "foo": "bar" }',
       'foo=3'
     ];

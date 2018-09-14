@@ -48,6 +48,7 @@
     "bin/"
   ],
   "dependencies": {
+    "ajv": "^6.5.0",
     "commander": "^2.15.1",
     "inquirer": "^6.0.0"
   },
