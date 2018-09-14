@@ -49,7 +49,7 @@ describe('ValidateQuery', () => {
     ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
     ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
     ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
-    ok(hook(context({ foo: '3' }), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
   });
 
   it('should return an HttpResponseBadRequest with a defined `content` property if '
