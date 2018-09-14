@@ -4,7 +4,7 @@ import { join } from 'path';
 
 // FoalTS
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists } from './generate/utils';
+import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists } from '../generate/utils';
 import { runScript } from './run-script';
 
 describe('runScript', () => {
