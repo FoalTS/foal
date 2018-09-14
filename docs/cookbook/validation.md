@@ -6,6 +6,14 @@ Data sent from client side cannot be trusted. This document shows you different 
 
 FoalTS validation is based on [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](http://epoberezkin.github.io/ajv/). 
 
+FoalTS's [baseline ajv configuration](https://github.com/epoberezkin/ajv#options-to-modify-validated-data) is:
+```typescript
+{
+  coerceTypes: true,  // change data type of data to match type keyword
+  removeAdditional: true, // remove additional properties
+  useDefaults: true, // replace missing properties and items with the values from corresponding default keyword
+}
+```
 
 ## The `validate` util
 
