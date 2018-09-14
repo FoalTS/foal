@@ -31,7 +31,7 @@ export function runScript({ name }: { name: string }, argv: string[], log = cons
   const args = getCommandLineArguments(argv);
 
   if (schema) {
-    const ajv = new Ajv();
+    const ajv = new Ajv({ useDefaults: true });
     if (!ajv.validate(schema, args)) {
       (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
         log(`Error: The command line arguments ${err.message}.`);

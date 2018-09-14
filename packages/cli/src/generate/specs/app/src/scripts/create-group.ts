@@ -7,15 +7,13 @@ export const schema = {
   properties: {
     codeName: { type: 'string', maxLength: 100 },
     name: { type: 'string', maxLength: 80 },
-    permissions: { type: 'array', items: { type: 'string' }, uniqueItems: true }
+    permissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] }
   },
   required: [ 'name', 'codeName' ],
   type: 'object',
 };
 
 export async function main(args) {
-  args.permissions = args.permissions || [];
-
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;

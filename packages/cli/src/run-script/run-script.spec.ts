@@ -88,12 +88,12 @@ describe('runScript', () => {
     );
   });
 
-  it('should call the "main" function of lib/scripts/my-script.js with the script arguments.', () => {
+  it('should call the "main" function of lib/scripts/my-script.js with the script arguments (no schema).', () => {
     mkdirIfDoesNotExist('lib/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
-module.exports.main = function main(args) {
-  writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
-}`;
+    module.exports.main = function main(args) {
+      writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
+    }`;
     writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
 
     delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
@@ -111,9 +111,44 @@ module.exports.main = function main(args) {
     }
     const actual = JSON.parse(readFileSync('my-script-temp', 'utf8'));
 
-    // This test depends on how the @foal/cli are triggered. This is not great.
     deepStrictEqual(actual, {
       foo: 'bar',
+    });
+  });
+
+  it('should call the "main" function of lib/scripts/my-script.js with the script arguments (a schema).', () => {
+    mkdirIfDoesNotExist('lib/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    module.exports.schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+        hello: { type: 'string', default: 'world' },
+      }
+    };
+    module.exports.main = function main(args) {
+      writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
+    }`;
+    writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
+
+    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+
+    runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run-script',
+      'my-script',
+      'foo=bar',
+    ]);
+
+    if (!existsSync('my-script-temp')) {
+      throw new Error('The script was not executed');
+    }
+    const actual = JSON.parse(readFileSync('my-script-temp', 'utf8'));
+
+    deepStrictEqual(actual, {
+      foo: 'bar',
+      hello: 'world',
     });
   });
 

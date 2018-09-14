@@ -10,18 +10,15 @@ export const schema = {
   additionalProperties: false,
   properties: {
     // email: { type: 'string' },
-    groups: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+    groups: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
     // password: { type: 'string' },
-    userPermissions: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+    userPermissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
   },
   required: [ /* 'email', 'password' */ ],
   type: 'object',
 };
 
 export async function main(args) {
-  args.groups = args.groups || [];
-  args.userPermissions = args.userPermissions || [];
-
   const user = new User();
   user.userPermissions = [];
   user.groups = [];
