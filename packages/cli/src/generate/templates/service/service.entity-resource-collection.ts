@@ -11,7 +11,6 @@ const schema = {
   type: 'object',
 };
 
-@Service()
 export class /* upperFirstCamelName */Collection extends EntityResourceCollection {
   // tslint:disable-next-line:whitespace
   entityClass = /* upperFirstCamelName */;

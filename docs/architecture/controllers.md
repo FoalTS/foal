@@ -74,7 +74,6 @@ Each decorated method of a controller takes a `Context` as parameter. This objec
 To call a service you need to inject it in your controller. Here are the two ways to do it:
 
 ```typescript
-@Service()
 class MyService {
   run() {
     console.log('hello world');

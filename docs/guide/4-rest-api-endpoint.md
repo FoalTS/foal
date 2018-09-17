@@ -53,7 +53,6 @@ const schema = {
   type: 'object',
 };
 
-@Service()
 export class FlightCollection extends EntityResourceCollection {
   entityClass = Flight;
   allowedOperations: EntityResourceCollection['allowedOperations'] = [

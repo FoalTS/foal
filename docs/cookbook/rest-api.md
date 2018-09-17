@@ -47,7 +47,6 @@ import { EntityResourceCollection, Service } from '@foal/core';
 
 import { Flight } from '../entities/flight.entity';
 
-@Service()
 export class FlightCollection extends EntityResourceCollection {
   entityClass = Flight;
   allowedOperations: EntityResourceCollection['allowedOperations'] = [

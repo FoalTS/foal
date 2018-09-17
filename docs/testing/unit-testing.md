@@ -29,7 +29,6 @@ import { ok } from 'assert';
 // 3p
 import { Controller, createController, Service } from '@foal/core';
 
-@Service()
 class MyService {
 
 }

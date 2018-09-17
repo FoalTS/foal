@@ -98,7 +98,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     org: Org;
   }
 
-  @Service()
   class UserCollection extends EntityResourceCollection {
     entityClass = User;
     allowedOperations: (keyof IResourceCollection)[] = [
@@ -106,7 +105,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @Service()
   class OrgCollection extends EntityResourceCollection {
     entityClass = Org;
     allowedOperations: (keyof IResourceCollection)[] = [
@@ -117,7 +115,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @Service()
   class Authenticator implements IAuthenticator<User> {
     async authenticate(credentials: { id: number }) {
       const user = await getRepository(User).findOne({ id: credentials.id });

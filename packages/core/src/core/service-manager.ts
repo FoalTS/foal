@@ -2,10 +2,6 @@ import 'reflect-metadata';
 
 import { Class } from './class.interface';
 
-export function Service() {
-  return function decorator(target: any) {};
-}
-
 export interface Dependency {
   propertyKey: string;
   serviceClass: Class;

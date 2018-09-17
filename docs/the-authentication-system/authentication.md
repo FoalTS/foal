@@ -47,7 +47,6 @@ import { EmailAuthenticator, Service } from '@foal/core';
 
 import { User } from '../entities';
 
-@Service()
 export class Authenticator extends EmailAuthenticator<User> {
   entityClass = User;
 }
@@ -139,7 +138,6 @@ import { EmailAuthenticator, Service } from '@foal/core';
 
 import { User } from './user.entity';
 
-@Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
   entityClass = User;
 }

@@ -52,7 +52,6 @@ it('Authentication and authorization', async () => {
     password: string;
   }
 
-  @Service()
   class Authenticator extends EmailAuthenticator<User> {
     entityClass = User;
   }

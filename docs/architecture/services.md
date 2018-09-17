@@ -8,7 +8,6 @@ foal generate service my-service
 ```typescript
 import { Service } from '@foal/core';
 
-@Service()
 export class MyService {
 
 }
@@ -16,14 +15,13 @@ export class MyService {
 
 Services are one of core concepts of FoalTS. They are used to perform many different tasks such as logging, compute data, fetching and writing data from and to a database, etc.
 
-Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top.
+Basically a service can be any class that serves a restricted and well-defined purpose.
 
 ## Accessing services ...
 
 ### ... from controllers
 
 ```typescript
-@Service()
 class MyService {
   run() {
     console.log('hello world');
@@ -52,7 +50,6 @@ class MyController2 {
 ### ... from hooks
 
 ```typescript
-@Service()
 class MyService {
   run() {
     console.log('hello world');
@@ -69,7 +66,6 @@ function MyHook() {
 ### ... from other services
 
 ```typescript
-@Service()
 class MyService {
   run() {
     console.log('hello world');
@@ -106,12 +102,10 @@ import { strictEqual } from 'assert';
 // 3p
 import { Service, ServiceManager } from '@foal/core';
 
-@Service()
 class ServiceA {
   name = 'Service A';
 }
 
-@Service()
 class ServiceB {
   name = 'Service B';
   constructor(public serviceA: ServiceA) {}
