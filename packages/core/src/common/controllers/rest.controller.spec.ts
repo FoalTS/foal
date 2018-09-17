@@ -5,8 +5,8 @@ import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 import { AbstractUser } from '../../auth';
 import {
   Context,
-  Controller,
   createController,
+  dependency,
   getHttpMethod,
   getPath,
   HttpResponseBadRequest,
@@ -25,7 +25,7 @@ import { RestController } from './rest.controller';
 describe('RestController', () => {
 
   class ConcreteController extends RestController {
-    collectionClass = class {};
+    collection = {};
   }
 
   it('has a extendParams method that should return the given params', () => {
@@ -65,7 +65,8 @@ describe('RestController', () => {
         updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -88,11 +89,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -119,11 +120,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -150,11 +151,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -188,7 +189,8 @@ describe('RestController', () => {
         updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -211,7 +213,8 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
 
           extendParams(ctx, params: CollectionParams) {
             getQueryCtx = ctx;
@@ -219,8 +222,7 @@ describe('RestController', () => {
           }
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({});
         ctx.user = {} as AbstractUser;
@@ -243,11 +245,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -273,11 +275,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -311,7 +313,8 @@ describe('RestController', () => {
         updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -334,11 +337,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -365,11 +368,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -396,11 +399,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -448,7 +451,8 @@ describe('RestController', () => {
         updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -473,11 +477,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -508,11 +512,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -539,11 +543,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -577,7 +581,8 @@ describe('RestController', () => {
         updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -600,11 +605,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -631,11 +636,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -661,11 +666,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -727,7 +732,8 @@ describe('RestController', () => {
         // updateById() {}
       }
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -752,11 +758,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -787,11 +793,11 @@ describe('RestController', () => {
             }
           }
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -818,11 +824,11 @@ describe('RestController', () => {
           }
         }
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
