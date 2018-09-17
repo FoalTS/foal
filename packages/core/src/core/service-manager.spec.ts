@@ -2,9 +2,9 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { service, ServiceManager } from './service-manager';
+import { dependency, ServiceManager } from './service-manager';
 
-describe('service', () => {
+describe('dependency', () => {
 
   it('should add the property key and the service class to the class metaproperty "dependencies".', () => {
     class MyService1 {}
@@ -12,17 +12,17 @@ describe('service', () => {
     class MyService3 {}
 
     class MyParentServiceOrController {
-      @service
+      @dependency
       myService1: MyService1;
     }
 
     // The service decorator should support inheritance and "multiple" inherited classes
     class MyChildServiceOrControllerA extends MyParentServiceOrController {
-      @service
+      @dependency
       myService2: MyService2;
     }
     class MyChildServiceOrControllerB extends MyParentServiceOrController {
-      @service
+      @dependency
       myService3: MyService3;
     }
 
@@ -72,10 +72,10 @@ describe('ServiceManager', () => {
       class Foobar2 {}
 
       class Foobar3 {
-        @service
+        @dependency
         foobar: Foobar;
 
-        @service
+        @dependency
         foobar2: Foobar2;
       }
 
@@ -92,12 +92,12 @@ describe('ServiceManager', () => {
       class Foobar2 {}
 
       class ParentService {
-        @service
+        @dependency
         foobar: Foobar;
       }
       class ChildService extends ParentService {}
       class ChildService2 extends ParentService {
-        @service
+        @dependency
         foobar2: Foobar2;
       }
 

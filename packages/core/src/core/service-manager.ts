@@ -11,7 +11,7 @@ export interface Dependency {
   serviceClass: Class;
 }
 
-export function service(target: any, propertyKey: string) {
+export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
   const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
   dependencies.push({ propertyKey, serviceClass });
@@ -41,7 +41,7 @@ export class ServiceManager {
     // If the service has not been instantiated yet then do it.
     const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
     const service = new serviceClass();
-    dependencies.forEach(dependency => service[dependency.propertyKey] = this.get(dependency.serviceClass));
+    dependencies.forEach(dep => service[dep.propertyKey] = this.get(dep.serviceClass));
 
     // Save and return the service.
     this.map.set(serviceClass, service);
