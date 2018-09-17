@@ -47,12 +47,12 @@ describe('dependency', () => {
 
 describe('createService', () => {
 
-  it('should return an instance of the service.', () => {
+  it('should return an instance of the service (no dependencies).', () => {
     class MyService {}
     ok(createService(MyService) instanceof MyService, 'The returned value is not an instance of MyService.');
   });
 
-  describe('when services is undefined', () => {
+  describe('when dependencies is undefined', () => {
 
     it('should create the service with all its dependencies.', () => {
       class MyService1 {}
@@ -72,7 +72,7 @@ describe('createService', () => {
 
   });
 
-  describe('when services is a ServiceManager', () => {
+  describe('when dependencies is a ServiceManager', () => {
 
     it('should create the service with all its dependencies from the ServiceManager.', () => {
       class MyService1 {}
@@ -100,7 +100,7 @@ describe('createService', () => {
 
   });
 
-  describe('when services is a mere object', () => {
+  describe('when dependencies is a mere object', () => {
 
     it('should create the service with ALL its dependencies from the object.', () => {
       class MyService1 {}

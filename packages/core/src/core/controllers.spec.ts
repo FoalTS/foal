@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual } from 'assert';
+import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import 'reflect-metadata';
@@ -10,52 +10,132 @@ import { dependency, ServiceManager } from './service-manager';
 
 describe('createController', () => {
 
-  it('should instantiate a controller (no dependencies).', () => {
+  it('should return an instance of the controller (no dependencies).', () => {
     class MyController {}
-    const controller = createController(MyController);
-    ok(controller instanceof MyController);
+    ok(
+      createController(MyController) instanceof MyController,
+      'The returned value is not an instance of MyController.'
+    );
   });
 
-  it('should instantiate a controller with its dependencies.', () => {
-    class MyService {}
+  describe('when dependencies is undefined', () => {
 
-    class MyController {
-      @dependency
-      myService: MyService;
-    }
-    const controller = createController(MyController);
-    ok(controller instanceof MyController, 'controller should be an instance of MyController');
-    ok(controller.myService instanceof MyService, 'controller.myService should be an instance of MyService');
+    it('should create the controller with all its dependencies.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyController {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const controller = createController(MyController);
+      ok(controller.myService1 instanceof MyService1, `${controller.myService1} should be an instance of MyService1.`);
+      ok(controller.myService2 instanceof MyService2, `${controller.myService2} should be an instance of MyService2.`);
+    });
+
   });
 
-  it('should instantiate an inherited controller with its dependencies.', () => {
-    class MyService {}
+  describe('when dependencies is a ServiceManager', () => {
 
-    class MyController {
-      @dependency
-      myService: MyService;
-    }
+    it('should create the controller with all its dependencies from the ServiceManager.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyController {
+        @dependency
+        myService1: MyService1;
 
-    class ChildController extends MyController {}
+        @dependency
+        myService2: MyService2;
+      }
 
-    const controller = createController(ChildController);
-    ok(controller instanceof ChildController, 'controller should be an instance of ChildController');
-    ok(controller.myService instanceof MyService, 'controller.myService should be an instance of MyService');
+      const myService1 = new MyService1();
+      const myService2 = new MyService2();
+
+      const services = new ServiceManager();
+      services.set(MyService1, myService1);
+      services.set(MyService2, myService2);
+
+      const controller = createController(MyController, services);
+
+      strictEqual(controller.myService1, myService1);
+      strictEqual(controller.myService2, myService2);
+    });
+
   });
 
-  it('should instantiate a controller with its dependencies from the given ServiceManager.', () => {
-    class MyService {}
+  describe('when dependencies is a mere object', () => {
 
-    class MyController {
+    it('should create the controller with ALL its dependencies from the object.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyController {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const myService1 = new MyService1();
+      const myService2 = new MyService2();
+
+      const controller = createController(MyController, {
+        myService1, myService2
+      });
+
+      strictEqual(controller.myService1, myService1);
+      strictEqual(controller.myService2, myService2);
+    });
+
+    it('should create the controller with SOME OF its dependencies from the object.', () => {
+      class MyService1 {}
+      class MyService2 {
+        @dependency
+        myService1: MyService1;
+      }
+      class MyController {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const myService1 = new MyService1();
+
+      const controller = createController(MyController, { myService1 });
+
+      strictEqual(controller.myService1, myService1);
+      ok(controller.myService2 instanceof MyService2, `${controller.myService2} should be an instance of MyService2.`);
+      strictEqual(controller.myService2.myService1, myService1);
+    });
+
+  });
+
+  it('should support inheritance.', () => {
+    class Foobar {}
+    class Foobar2 {}
+
+    class ParentController {
       @dependency
-      myService: MyService;
+      foobar: Foobar;
     }
-    const services = new ServiceManager();
-    const service = services.get(MyService);
+    class ChildController extends ParentController {}
+    class ChildController2 extends ParentController {
+      @dependency
+      foobar2: Foobar2;
+    }
 
-    const controller = createController(MyController, services);
-    ok(controller instanceof MyController, 'controller should be an instance of MyController');
-    strictEqual(controller.myService, service);
+    const childController = createController(ChildController);
+    const childController2 = createController(ChildController2);
+
+    notStrictEqual(childController.foobar, undefined);
+    strictEqual((childController as any).foobar2, undefined);
+    notStrictEqual(childController2.foobar, undefined);
+    notStrictEqual(childController2.foobar2, undefined);
   });
 
 });
