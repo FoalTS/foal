@@ -11,6 +11,9 @@ export interface Dependency {
   serviceClass: Class;
 }
 
+/**
+ * Decorator used to inject a service inside a controller or another service.
+ */
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
   const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
@@ -18,6 +21,9 @@ export function dependency(target: any, propertyKey: string) {
   Reflect.defineMetadata('dependencies', dependencies, target);
 }
 
+/**
+ * Identity Mapper that instantiates and returns service singletons.
+ */
 export class ServiceManager {
 
   readonly map: Map<Class<any>, any>  = new Map();

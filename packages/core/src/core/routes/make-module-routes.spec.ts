@@ -12,13 +12,11 @@ import { makeModuleRoutes } from './make-module-routes';
 describe('makeModuleRoutes', () => {
 
   it('should return the routes of each controller.', () => {
-    @Controller()
     class MyController {
       @Get()
       bar() {}
     }
 
-    @Controller()
     class MyController2 {
       @Post()
       foobar() {}
@@ -48,13 +46,11 @@ describe('makeModuleRoutes', () => {
   });
 
   it('should return the routes of each submodule.', () => {
-    @Controller()
     class MyController {
       @Get()
       bar() {}
     }
 
-    @Controller()
     class MyController2 {
       @Post()
       foobar() {}

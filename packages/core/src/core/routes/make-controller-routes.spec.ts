@@ -5,7 +5,7 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 import { Controller } from '../controllers';
 import { Hook, HookFunction } from '../hooks';
 import { Get, Post } from '../http';
-import { Service, ServiceManager } from '../service-manager';
+import { dependency, ServiceManager } from '../service-manager';
 import { makeControllerRoutes } from './make-controller-routes';
 
 describe('makeControllerRoutes', () => {
@@ -18,7 +18,6 @@ describe('makeControllerRoutes', () => {
   const hook6: HookFunction = () => {};
 
   it('should return the routes from a controller with no paths and hooks.', () => {
-    @Controller()
     class FoobarController {
       @Get()
       bar() {}
@@ -51,7 +50,6 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from a controller with the parent, controller and method hooks.', () => {
-    @Controller()
     @Hook(hook3)
     @Hook(hook4)
     class FoobarController {
@@ -69,8 +67,6 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from the controller methods that have a http-method decorator.', () => {
-
-    @Controller()
     class FoobarController {
       @Get()
       bar() {}
@@ -79,7 +75,6 @@ describe('makeControllerRoutes', () => {
 
       @Post()
       barfoo() {}
-
     }
 
     const routes = makeControllerRoutes('', [], FoobarController, new ServiceManager());
@@ -96,17 +91,16 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should properly instantiate a controller that has dependencies.', () => {
-
-    @Service()
     class Service1 {}
 
-    @Service()
     class Service2 {}
 
-    @Controller()
     class FoobarController {
-      // tslint:disable-next-line:no-unused-variable
-      constructor(private service1: Service1, private service2: Service2) {}
+      @dependency
+      service1: Service1;
+
+      @dependency
+      service2: Service2;
 
       @Get()
       bar() {}
