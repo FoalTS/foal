@@ -26,7 +26,6 @@ class MyService {
   }
 }
 
-@Controller()
 class MyController {
   constructor(private myService: MyService) {}
   @Get('/foo')
@@ -35,7 +34,6 @@ class MyController {
   }
 }
 // OR
-@Controller()
 class MyController2 {
   constructor(private services: ServiceManager) {}
   @Get('/foo')
@@ -70,7 +68,6 @@ class MyService {
   }
 }
 
-@Controller()
 class MyServiceA {
   constructor(private myService: MyService) {}
 
@@ -79,7 +76,6 @@ class MyServiceA {
   }
 }
 // OR
-@Controller()
 class MyServiceB {
   constructor(private services: ServiceManager) {}
 

@@ -5,9 +5,8 @@ foal generate controller my-controller
 ```
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
+import { Context, Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class MyController {
 
   @Get('/flight')
@@ -26,12 +25,11 @@ Controllers are the front door of your application. They catch all the incoming 
 
 ### Creating a controller
 
-Formally a controller is a single class that is instantiated as a singleton. The class itself is surrounded by the `Controller` decorator. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
+Formally a controller is a single class that is instantiated as a singleton. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
+import { Context, Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class MyController {
   private flights = [
     { id: 1, from: 'SFO', to: 'NYC' }
@@ -79,7 +77,6 @@ class MyService {
   }
 }
 
-@Controller()
 class MyController {
   constructor(private myService: MyService) {}
   @Get('/foo')
@@ -88,7 +85,6 @@ class MyController {
   }
 }
 // OR
-@Controller()
 class MyController2 {
   constructor(private services: ServiceManager) {}
   @Get('/foo')
@@ -103,7 +99,6 @@ class MyController2 {
 A controller is a simple class and so can be tested as is. Note that [hooks](./hooks.md) are ignored upon testing.
 
 ```typescript
-@Controller()
 class MyController() {
   @Get('/foo')
   @LoginRequired()
@@ -124,7 +119,6 @@ ok(controller.foo(ctx) instanceof HttpResponseOK);
 ## Inheriting controllers
 
 ```typescript
-@Controller()
 abstract class ParentController {
   @Get('/foo')
   foo() {
@@ -133,7 +127,6 @@ abstract class ParentController {
 }
 
 
-@Controller()
 class ChildController extends ParentController {
   @Post('/bar')
   bar() {

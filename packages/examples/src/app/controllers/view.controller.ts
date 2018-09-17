@@ -1,6 +1,5 @@
-import { Context, Controller, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
+import { Context, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
 
-@Controller()
 export class ViewController {
 
   @Get('/')

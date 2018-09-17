@@ -16,9 +16,8 @@ This commands creates a file `airport.controller.ts` in `src/app/controllers`.
 Open this file and add the `getAirport` method.
 
 ```typescript
-import { Controller, Get, HttpResponseOK } from '@foal/core';
+import { Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class AirportController {
   @Get()
   getAirport() {

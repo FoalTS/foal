@@ -18,7 +18,6 @@ import {
 import {
   AbstractUser,
   Authenticate,
-  Controller,
   controller,
   createApp,
   EntityResourceCollection,
@@ -120,19 +119,16 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     }
   }
 
-  @Controller()
   @LoginRequired()
   class UserController extends RestController {
     collectionClass = UserCollection;
   }
 
-  @Controller()
   @LoginRequired()
   class OrgController extends RestController {
     collectionClass = OrgCollection;
   }
 
-  @Controller()
   class AuthController extends LoginController {
     strategies = [
       strategy('login', Authenticator, {})

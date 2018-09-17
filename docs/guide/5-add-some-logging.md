@@ -13,9 +13,8 @@ Let's see how it works.
 We'd like to print a custom message when `GET /airport` or one of the REST API endpoints is called.
 
 ```typescript
-import { Controller, Get, HttpResponseOK, Log } from '@foal/core';
+import { Get, HttpResponseOK, Log } from '@foal/core';
 
-@Controller()
 export class AirportController {
   @Get()
   @Log('Someone reads to the airport name.')
@@ -27,11 +26,10 @@ export class AirportController {
 ```
 
 ```typescript
-import { Controller, Log, RestController } from '@foal/core';
+import { Log, RestController } from '@foal/core';
 
 import { FlightCollection } from '../services';
 
-@Controller()
 @Log('Someone creates, reads, updates or deletes flight(s).')
 export class FlightController extends RestController {
   collectionClass = FlightCollection;

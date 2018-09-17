@@ -64,14 +64,13 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
-import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
 ​​
 import { Authenticator } from '../services/authenticator.service';
 
-@Controller()
 export class AuthController extends LoginController {
   strategies = [
     strategy('login-with-email', Authenticator, emailSchema),

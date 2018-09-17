@@ -44,7 +44,6 @@ validate(schema, data);
 
 *Example*:
 ```typescript
-@Controller()
 export class MyController {
 
   @Post('/user')
