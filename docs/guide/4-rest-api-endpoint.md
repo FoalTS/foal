@@ -16,12 +16,13 @@ foal g controller flight
 Open the generated file `src/app/controllers/flight.controller.ts`.
 
 ```typescript
-import { RestController } from '@foal/core';
+import { dependency, RestController } from '@foal/core';
 
 import { FlightCollection } from '../services';
 
 export class FlightController extends RestController {
-  collectionClass = FlightCollection;
+  @dependency
+  collection: FlightCollection;
 }
 ```
 

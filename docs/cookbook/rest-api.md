@@ -136,7 +136,8 @@ The `extendParams` methods lets you extend the `params` parameter sent to the se
 ```typescript
 ...
 export class FlightController extends RestController {
-  collectionClass = FlightCollection;
+  @dependency
+  collection: FlightCollection;
 
   extendParams(ctx: Context, params: CollectionParams): CollectionParams {
     const fields = ctx.query.fields;

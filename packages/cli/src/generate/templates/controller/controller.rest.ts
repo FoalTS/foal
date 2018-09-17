@@ -1,7 +1,8 @@
-import { RestController } from '@foal/core';
+import { dependency, RestController } from '@foal/core';
 
 import { /* upperFirstCamelName */Collection } from '../services';
 
 export class /* upperFirstCamelName */Controller extends RestController {
-  collectionClass = /* upperFirstCamelName */Collection;
+  @dependency
+  collection: /* upperFirstCamelName */Collection;
 }

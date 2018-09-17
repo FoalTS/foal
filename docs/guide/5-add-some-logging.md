@@ -26,13 +26,14 @@ export class AirportController {
 ```
 
 ```typescript
-import { Log, RestController } from '@foal/core';
+import { dependency, Log, RestController } from '@foal/core';
 
 import { FlightCollection } from '../services';
 
 @Log('Someone creates, reads, updates or deletes flight(s).')
 export class FlightController extends RestController {
-  collectionClass = FlightCollection;
+  @dependency
+  collection: FlightCollection;
 }
 ```
 
