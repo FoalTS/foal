@@ -1,8 +1,8 @@
 // std
-import { deepStrictEqual, doesNotThrow, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Service, service, ServiceManager } from './service-manager';
+import { service, ServiceManager } from './service-manager';
 
 describe('service', () => {
 
@@ -49,7 +49,6 @@ describe('ServiceManager', () => {
 
   let serviceManager: ServiceManager;
 
-  @Service()
   class Foobar {}
 
   beforeEach(() => serviceManager = new ServiceManager());
@@ -58,22 +57,6 @@ describe('ServiceManager', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
-    });
-
-    it('should not throw an exception if the given class does not have the Service decorator '
-        + 'and/or has no constructor.', () => {
-      class Foo {}
-
-      @Service()
-      class Bar {}
-
-      class Barfoo {
-        constructor() {}
-      }
-
-      doesNotThrow(() => serviceManager.get(Foo));
-      doesNotThrow(() => serviceManager.get(Bar));
-      doesNotThrow(() => serviceManager.get(Barfoo));
     });
 
     it('should return an instance of the given Service.', () => {
@@ -86,14 +69,14 @@ describe('ServiceManager', () => {
 
     it('should return an instance of the given Service which dependencies are instances that can be retreived'
         + ' by the same method.', () => {
-      @Service()
-      class Foobar2 {
-        constructor() {}
-      }
+      class Foobar2 {}
 
-      @Service()
       class Foobar3 {
-        constructor(public foobar: Foobar, public foobar2: Foobar2) {}
+        @service
+        foobar: Foobar;
+
+        @service
+        foobar2: Foobar2;
       }
 
       // foobar3 is "gotten" in the middle on purpose.
@@ -103,6 +86,25 @@ describe('ServiceManager', () => {
 
       strictEqual(foobar3.foobar, foobar);
       strictEqual(foobar3.foobar2, foobar2);
+    });
+
+    it('should support inheritance', () => {
+      class Foobar2 {}
+
+      class ParentService {
+        @service
+        foobar: Foobar;
+      }
+      class ChildService extends ParentService {}
+      class ChildService2 extends ParentService {
+        @service
+        foobar2: Foobar2;
+      }
+
+      notStrictEqual(serviceManager.get(ChildService).foobar, undefined);
+      strictEqual((serviceManager.get(ChildService) as any).foobar2, undefined);
+      notStrictEqual(serviceManager.get(ChildService2).foobar, undefined);
+      notStrictEqual(serviceManager.get(ChildService2).foobar2, undefined);
     });
 
   });

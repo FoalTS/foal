@@ -39,8 +39,9 @@ export class ServiceManager {
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies = Reflect.getOwnMetadata('design:paramtypes', serviceClass) || [];
-    const service = new serviceClass(...dependencies.map(Dep => this.get(Dep)));
+    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+    const service = new serviceClass();
+    dependencies.forEach(dependency => service[dependency.propertyKey] = this.get(dependency.serviceClass));
 
     // Save and return the service.
     this.map.set(serviceClass, service);
