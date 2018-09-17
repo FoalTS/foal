@@ -30,7 +30,6 @@ import {
   LoginRequired,
   Permission,
   RestController,
-  Service,
   strategy,
 } from '../src';
 

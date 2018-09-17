@@ -6,8 +6,6 @@ foal generate service my-service
 ```
 
 ```typescript
-import { Service } from '@foal/core';
-
 export class MyService {
 
 }
@@ -100,7 +98,7 @@ As foal uses the inversion of control principle, a service is very easy to test.
 import { strictEqual } from 'assert';
 
 // 3p
-import { Service, ServiceManager } from '@foal/core';
+import { ServiceManager } from '@foal/core';
 
 class ServiceA {
   name = 'Service A';

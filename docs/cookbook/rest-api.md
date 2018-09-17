@@ -43,7 +43,7 @@ foal g service flight
 ```
 
 ```typescript
-import { EntityResourceCollection, Service } from '@foal/core';
+import { EntityResourceCollection } from '@foal/core';
 
 import { Flight } from '../entities/flight.entity';
 

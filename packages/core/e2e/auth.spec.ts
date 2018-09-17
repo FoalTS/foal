@@ -22,7 +22,6 @@ import {
   parsePassword,
   Permission,
   PermissionRequired,
-  Service,
   strategy
 } from '../src';
 

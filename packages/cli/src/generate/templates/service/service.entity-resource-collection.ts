@@ -1,4 +1,4 @@
-import { EntityResourceCollection, middleware, Service, validate } from '@foal/core';
+import { EntityResourceCollection, middleware, validate } from '@foal/core';
 
 import { /* upperFirstCamelName */ } from '../entities';
 

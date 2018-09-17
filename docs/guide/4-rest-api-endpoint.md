@@ -40,7 +40,7 @@ foal g service flight
 A new file is generated. Open it and complete the schema definition.
 
 ```typescript
-import { EntityResourceCollection, middleware, Service, validate } from '@foal/core';
+import { EntityResourceCollection, middleware, validate } from '@foal/core';
 
 import { Flight } from '../entities';
 

@@ -27,7 +27,7 @@ Every unit test file should be placed next to the file it tests with the same na
 import { ok } from 'assert';
 
 // 3p
-import { Controller, createController, Service } from '@foal/core';
+import { Controller, createController } from '@foal/core';
 
 class MyService {
 

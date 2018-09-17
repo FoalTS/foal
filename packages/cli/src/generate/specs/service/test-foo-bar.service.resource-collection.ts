@@ -1,4 +1,4 @@
-import { IResourceCollection, Service } from '@foal/core';
+import { IResourceCollection } from '@foal/core';
 
 export class TestFooBarCollection implements IResourceCollection {
 

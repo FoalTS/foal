@@ -1,4 +1,4 @@
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from '../entities';
 

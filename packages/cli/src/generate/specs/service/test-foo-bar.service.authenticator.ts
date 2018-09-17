@@ -1,4 +1,4 @@
-import { IAuthenticator, Service } from '@foal/core';
+import { IAuthenticator } from '@foal/core';
 
 import { User } from '../entities';
 

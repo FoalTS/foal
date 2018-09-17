@@ -43,7 +43,7 @@ foal g service authenticator
 ```
 
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -133,7 +133,7 @@ Its constructor takes an user entity.
 
 *Example*:
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from './user.entity';
 
