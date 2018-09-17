@@ -3,11 +3,11 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { ValidateQuery } from './validate-query.hook';
+import { ValidateParams } from './validate-params.hook';
 
-describe('ValidateQuery', () => {
+describe('ValidateParams', () => {
 
-  it('should not return an HttpResponseBadRequest if ctx.request.query is validated '
+  it('should not return an HttpResponseBadRequest if ctx.request.params is validated '
       + ' by ajv for the given schema.', () => {
     const schema = {
       properties: {
@@ -15,9 +15,9 @@ describe('ValidateQuery', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateQuery(schema));
+    const hook = getHookFunction(ValidateParams(schema));
     const ctx = new Context({});
-    ctx.request.query = {
+    ctx.request.params = {
       foo: 3
     };
 
@@ -25,7 +25,7 @@ describe('ValidateQuery', () => {
     strictEqual(actual instanceof HttpResponseBadRequest, false);
   });
 
-  it('should return an HttpResponseBadRequest if ctx.request.query is not validated by '
+  it('should return an HttpResponseBadRequest if ctx.request.params is not validated by '
       + ' ajv for the given schema.', () => {
     const schema = {
       properties: {
@@ -33,11 +33,11 @@ describe('ValidateQuery', () => {
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateQuery(schema));
+    const hook = getHookFunction(ValidateParams(schema));
 
-    function context(query) {
+    function context(params) {
       const ctx = new Context({});
-      ctx.request.query = query;
+      ctx.request.params = params;
       return ctx;
     }
 
@@ -50,14 +50,14 @@ describe('ValidateQuery', () => {
   });
 
   it('should return an HttpResponseBadRequest with a defined `content` property if '
-      + 'ctx.request.query is not validated by ajv.', () => {
+      + 'ctx.request.params is not validated by ajv.', () => {
     const schema = {
       properties: {
         foo: { type: 'integer' }
       },
       type: 'object',
     };
-    const hook = getHookFunction(ValidateQuery(schema));
+    const hook = getHookFunction(ValidateParams(schema));
     const ctx = new Context({});
 
     const actual = hook(ctx, new ServiceManager());
