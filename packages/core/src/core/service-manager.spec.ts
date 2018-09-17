@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { dependency, ServiceManager } from './service-manager';
+import { createService, dependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
 
@@ -41,6 +41,135 @@ describe('dependency', () => {
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
     deepStrictEqual(actualDependenciesB, expectedDependenciesB);
+  });
+
+});
+
+describe('createService', () => {
+
+  it('should return an instance of the service.', () => {
+    class MyService {}
+    ok(createService(MyService) instanceof MyService, 'The returned value is not an instance of MyService.');
+  });
+
+  describe('when services is undefined', () => {
+
+    it('should create the service with all its dependencies.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyService3 {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const service = createService(MyService3);
+      ok(service.myService1 instanceof MyService1, `${service.myService1} should be an instance of MyService1.`);
+      ok(service.myService2 instanceof MyService2, `${service.myService2} should be an instance of MyService2.`);
+    });
+
+  });
+
+  describe('when services is a ServiceManager', () => {
+
+    it('should create the service with all its dependencies from the ServiceManager.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyService3 {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const myService1 = new MyService1();
+      const myService2 = new MyService2();
+
+      const services = new ServiceManager();
+      services.set(MyService1, myService1);
+      services.set(MyService2, myService2);
+
+      const service = createService(MyService3, services);
+
+      strictEqual(service.myService1, myService1);
+      strictEqual(service.myService2, myService2);
+    });
+
+  });
+
+  describe('when services is a mere object', () => {
+
+    it('should create the service with ALL its dependencies from the object.', () => {
+      class MyService1 {}
+      class MyService2 {}
+      class MyService3 {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const myService1 = new MyService1();
+      const myService2 = new MyService2();
+
+      const service = createService(MyService3, {
+        myService1, myService2
+      });
+
+      strictEqual(service.myService1, myService1);
+      strictEqual(service.myService2, myService2);
+    });
+
+    it('should create the service with SOME OF its dependencies from the object.', () => {
+      class MyService1 {}
+      class MyService2 {
+        @dependency
+        myService1: MyService1;
+      }
+      class MyService3 {
+        @dependency
+        myService1: MyService1;
+
+        @dependency
+        myService2: MyService2;
+      }
+
+      const myService1 = new MyService1();
+
+      const service = createService(MyService3, { myService1 });
+
+      strictEqual(service.myService1, myService1);
+      ok(service.myService2 instanceof MyService2, `${service.myService2} should be an instance of MyService2.`);
+      strictEqual(service.myService2.myService1, myService1);
+    });
+
+  });
+
+  it('should support inheritance.', () => {
+    class Foobar {}
+    class Foobar2 {}
+
+    class ParentService {
+      @dependency
+      foobar: Foobar;
+    }
+    class ChildService extends ParentService {}
+    class ChildService2 extends ParentService {
+      @dependency
+      foobar2: Foobar2;
+    }
+
+    const childService = createService(ChildService);
+    const childService2 = createService(ChildService2);
+
+    notStrictEqual(childService.foobar, undefined);
+    strictEqual((childService as any).foobar2, undefined);
+    notStrictEqual(childService2.foobar, undefined);
+    notStrictEqual(childService2.foobar2, undefined);
   });
 
 });
@@ -86,25 +215,6 @@ describe('ServiceManager', () => {
 
       strictEqual(foobar3.foobar, foobar);
       strictEqual(foobar3.foobar2, foobar2);
-    });
-
-    it('should support inheritance', () => {
-      class Foobar2 {}
-
-      class ParentService {
-        @dependency
-        foobar: Foobar;
-      }
-      class ChildService extends ParentService {}
-      class ChildService2 extends ParentService {
-        @dependency
-        foobar2: Foobar2;
-      }
-
-      notStrictEqual(serviceManager.get(ChildService).foobar, undefined);
-      strictEqual((serviceManager.get(ChildService) as any).foobar2, undefined);
-      notStrictEqual(serviceManager.get(ChildService2).foobar, undefined);
-      notStrictEqual(serviceManager.get(ChildService2).foobar2, undefined);
     });
 
   });

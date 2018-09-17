@@ -18,6 +18,34 @@ export function dependency(target: any, propertyKey: string) {
 }
 
 /**
+ * Create a new service with its dependencies.
+ *
+ * @param serviceClass The service class.
+ * @param dependencies Either a ServiceManager or an object which key/values are the service classes/instances.
+ */
+export function createService<Service>(serviceClass: Class<Service>, dependencies?: object|ServiceManager): Service {
+  const serviceDependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+
+  let serviceManager = new ServiceManager();
+
+  const service = new serviceClass();
+
+  if (dependencies instanceof ServiceManager) {
+    serviceManager = dependencies;
+  } else if (typeof dependencies === 'object') {
+    serviceDependencies.forEach(dep => {
+      const serviceMock = dependencies[dep.propertyKey];
+      if (serviceMock) {
+        serviceManager.set(dep.serviceClass, serviceMock);
+      }
+    });
+  }
+  serviceDependencies.forEach(dep => service[dep.propertyKey] = serviceManager.get(dep.serviceClass));
+
+  return service;
+}
+
+/**
  * Identity Mapper that instantiates and returns service singletons.
  */
 export class ServiceManager {
@@ -41,9 +69,7 @@ export class ServiceManager {
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
-    const service = new serviceClass();
-    dependencies.forEach(dep => service[dep.propertyKey] = this.get(dep.serviceClass));
+    const service = createService(serviceClass, this);
 
     // Save and return the service.
     this.map.set(serviceClass, service);
