@@ -16,7 +16,6 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  ServiceManager
 } from '../../core';
 import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
 import { CollectionParams, IResourceCollection } from '../services';

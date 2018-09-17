@@ -2,7 +2,6 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { Controller } from '../../core';
 import { getMetadata } from '../../core/routes/utils';
 import { controller } from './controller.util';
 

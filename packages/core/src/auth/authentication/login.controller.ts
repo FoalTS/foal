@@ -5,7 +5,6 @@ import * as Ajv from 'ajv';
 import {
   Class,
   Context,
-  Controller,
   dependency,
   Get,
   HttpResponseBadRequest,
