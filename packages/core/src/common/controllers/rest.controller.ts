@@ -19,7 +19,6 @@ import {
 import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
 import { CollectionParams, IResourceCollection } from '../services';
 
-@Controller()
 export abstract class RestController {
   abstract collectionClass: Class<Partial<IResourceCollection>>;
 

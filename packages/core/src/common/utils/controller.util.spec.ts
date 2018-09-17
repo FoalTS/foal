@@ -9,14 +9,12 @@ import { controller } from './controller.util';
 describe('controller util', () => {
 
   it('should return the given controller class.', () => {
-    @Controller()
     class Foobar {}
 
     strictEqual(controller('', Foobar), Foobar);
   });
 
   it('should define the metadata path={path} of the controller class.', () => {
-    @Controller()
     class Foobar {}
 
     controller('/foo', Foobar);
