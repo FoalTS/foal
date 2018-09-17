@@ -28,7 +28,6 @@ import {
   IResourceCollection,
   LoginController,
   LoginRequired,
-  Module,
   Permission,
   RestController,
   Service,
@@ -141,7 +140,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @Module()
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [

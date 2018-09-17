@@ -108,7 +108,6 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 ## Authenticate the user on further requests
 
 ```typescript
-@Module()
 @Authenticate(User) // Add user to each context.
 export class AppModule implements IModule {
   ...

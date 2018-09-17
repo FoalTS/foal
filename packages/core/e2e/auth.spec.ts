@@ -19,7 +19,6 @@ import {
   IModule,
   LoginController,
   LoginRequired,
-  Module,
   parsePassword,
   Permission,
   PermissionRequired,
@@ -63,7 +62,6 @@ it('Authentication and authorization', async () => {
     ];
   }
 
-  @Module()
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [

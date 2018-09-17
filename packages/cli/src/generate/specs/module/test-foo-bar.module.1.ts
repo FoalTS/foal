@@ -1,6 +1,5 @@
-import { IModule, Module } from '@foal/core';
+import { IModule } from '@foal/core';
 
-@Module()
 export class TestFooBarModule implements IModule {
   controllers = [
 

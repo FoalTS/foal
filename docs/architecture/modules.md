@@ -5,11 +5,10 @@ foal generate module my-module
 ```
 
 ```typescript
-import { Module, IModule, PermissionRequired } from '@foal/core';
+import { IModule, PermissionRequired } from '@foal/core';
 
 import { MyController } from './controllers/my-controller';
 
-@Module()
 @PermissionRequired('admin-permission')
 export class MyModule implements IModule {
   controllers = [
@@ -36,21 +35,18 @@ interface IModule {
 When your app grows up, you may be interested in splitting your app into several modules (authentication, admin, home, public, etc). Here's an example on how to embed your modules:
 
 ```typescript
-@Module()
 class Module1 implements IModule {
   controllers  = [
     controller('/my_resources', MyController)
   ];
 };
 
-@Module()
 class Module2 implements IModule {
   controllers  = [
     controller('/my_resources2', MyController2)
   ];
 };
 
-@Module()
 class AppModule implements IModule {
   controllers = [
     controller('/my_resources3', MyController3)

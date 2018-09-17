@@ -22,7 +22,6 @@ describe('makeModuleRoutes', () => {
       foobar() {}
     }
 
-    @Module()
     class MyModule implements IModule {
       controllers = [
         MyController,
@@ -56,17 +55,14 @@ describe('makeModuleRoutes', () => {
       foobar() {}
     }
 
-    @Module()
     class Module1 {
       controllers = [ MyController ];
     }
 
-    @Module()
     class Module2 {
       controllers = [ MyController2 ];
     }
 
-    @Module()
     class MyModule implements IModule {
       subModules = [
         Module1,
@@ -110,7 +106,6 @@ describe('makeModuleRoutes', () => {
       foobar() {}
     }
 
-    @Module()
     class Module1 {
       controllers = [ MyController ];
     }

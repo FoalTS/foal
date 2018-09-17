@@ -50,11 +50,10 @@ export class MyController {
 Each controller is attached to the request handler through a module.
 
 ```typescript
-import { controller, IModule, Module } from '@foal/core';
+import { controller, IModule } from '@foal/core';
 
 import { MyController } from './controllers/my-controller';
 
-@Module()
 export class AppModule implements IModule {
   controllers = [
     controller('/', MyController)

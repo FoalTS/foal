@@ -53,7 +53,7 @@ Hooks can either be bound to one, several or all the routes of a controller. The
 
 ```typescript
 import {
-  Controller, Get, HttpResponseOK, IModule, Module
+  Controller, Get, HttpResponseOK, IModule
 } from '@foal/core';
 
 import { HelloWorld } from './hello-world.hook';
@@ -81,7 +81,6 @@ class MyController2 {
   }
 }
 
-@Module()
 @HelloWorld(':D')
 export class AppModule implements IModule {
   controllers = [
