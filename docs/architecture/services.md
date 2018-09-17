@@ -20,6 +20,8 @@ Basically a service can be any class that serves a restricted and well-defined p
 ### ... from controllers
 
 ```typescript
+import { dependency, Get } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
@@ -27,7 +29,9 @@ class MyService {
 }
 
 class MyController {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
+
   @Get('/foo')
   foo(ctx) {
     this.myService.run();
@@ -35,7 +39,9 @@ class MyController {
 }
 // OR
 class MyController2 {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
+
   @Get('/foo')
   foo(ctx) {
     this.services.get(MyService).run();
@@ -62,6 +68,8 @@ function MyHook() {
 ### ... from other services
 
 ```typescript
+import { dependency } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
@@ -69,7 +77,8 @@ class MyService {
 }
 
 class MyServiceA {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
 
   foo() {
     this.myService.run();
@@ -77,7 +86,8 @@ class MyServiceA {
 }
 // OR
 class MyServiceB {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
 
   foo() {
     this.services.get(MyService).run();
@@ -94,7 +104,7 @@ As foal uses the inversion of control principle, a service is very easy to test.
 import { strictEqual } from 'assert';
 
 // 3p
-import { ServiceManager } from '@foal/core';
+import { dependency, ServiceManager } from '@foal/core';
 
 class ServiceA {
   name = 'Service A';
@@ -102,7 +112,9 @@ class ServiceA {
 
 class ServiceB {
   name = 'Service B';
-  constructor(public serviceA: ServiceA) {}
+
+  @dependency
+  serviceA: ServiceA;
 }
 
 const serviceA = new ServiceA();

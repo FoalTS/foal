@@ -71,6 +71,8 @@ Each decorated method of a controller takes a `Context` as parameter. This objec
 To call a service you need to inject it in your controller. Here are the two ways to do it:
 
 ```typescript
+import { dependency, Get } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
@@ -78,7 +80,9 @@ class MyService {
 }
 
 class MyController {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
+
   @Get('/foo')
   foo(ctx) {
     this.myService.run();
@@ -86,7 +90,9 @@ class MyController {
 }
 // OR
 class MyController2 {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
+
   @Get('/foo')
   foo(ctx) {
     this.services.get(MyService).run();
