@@ -1,8 +1,49 @@
 // std
-import { doesNotThrow, ok, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotThrow, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Service, ServiceManager } from './service-manager';
+import { Service, service, ServiceManager } from './service-manager';
+
+describe('service', () => {
+
+  it('should add the property key and the service class to the class metaproperty "dependencies".', () => {
+    class MyService1 {}
+    class MyService2 {}
+    class MyService3 {}
+
+    class MyParentServiceOrController {
+      @service
+      myService1: MyService1;
+    }
+
+    // The service decorator should support inheritance and "multiple" inherited classes
+    class MyChildServiceOrControllerA extends MyParentServiceOrController {
+      @service
+      myService2: MyService2;
+    }
+    class MyChildServiceOrControllerB extends MyParentServiceOrController {
+      @service
+      myService3: MyService3;
+    }
+
+    const expectedDependenciesA = [
+      { propertyKey: 'myService1', serviceClass: MyService1 },
+      { propertyKey: 'myService2', serviceClass: MyService2 },
+    ];
+    const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
+
+    deepStrictEqual(actualDependenciesA, expectedDependenciesA);
+
+    const expectedDependenciesB = [
+      { propertyKey: 'myService1', serviceClass: MyService1 },
+      { propertyKey: 'myService3', serviceClass: MyService3 },
+    ];
+    const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
+
+    deepStrictEqual(actualDependenciesB, expectedDependenciesB);
+  });
+
+});
 
 describe('ServiceManager', () => {
 

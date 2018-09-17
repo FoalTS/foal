@@ -6,6 +6,18 @@ export function Service() {
   return function decorator(target: any) {};
 }
 
+export interface Dependency {
+  propertyKey: string;
+  serviceClass: Class;
+}
+
+export function service(target: any, propertyKey: string) {
+  const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
+  const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+  dependencies.push({ propertyKey, serviceClass });
+  Reflect.defineMetadata('dependencies', dependencies, target);
+}
+
 export class ServiceManager {
 
   readonly map: Map<Class<any>, any>  = new Map();
