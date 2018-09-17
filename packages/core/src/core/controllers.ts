@@ -6,10 +6,6 @@ import { Class } from './class.interface';
 import { getMetadata } from './routes/utils';
 import { Dependency, ServiceManager } from './service-manager';
 
-export function Controller(path?: string) {
-  return Reflect.metadata('path', path);
-}
-
 export function createController<T>(controllerClass: Class<T>, services?: ServiceManager): T {
   const dependencies: Dependency[] = getMetadata('dependencies', controllerClass.prototype) || [];
   if (!services) {

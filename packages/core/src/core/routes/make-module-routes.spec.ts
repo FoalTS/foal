@@ -2,10 +2,9 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Controller } from '../controllers';
 import { Hook } from '../hooks';
 import { Get, Post } from '../http';
-import { IModule, Module } from '../modules';
+import { IModule } from '../modules';
 import { ServiceManager } from '../service-manager';
 import { makeModuleRoutes } from './make-module-routes';
 
@@ -92,14 +91,14 @@ describe('makeModuleRoutes', () => {
     const hook3 = () => {};
     const hook4 = () => {};
 
-    @Controller('/barfoo')
+    @Reflect.metadata('path', '/barfoo')
     @Hook(hook3)
     class MyController {
       @Get()
       bar() {}
     }
 
-    @Controller('/foobar')
+    @Reflect.metadata('path', '/foobar')
     @Hook(hook4)
     class MyController2 {
       @Post()
@@ -110,7 +109,7 @@ describe('makeModuleRoutes', () => {
       controllers = [ MyController ];
     }
 
-    @Module('/foo//')
+    @Reflect.metadata('path', '/foo//')
     @Hook(hook1)
     @Hook(hook2)
     class MyModule implements IModule {

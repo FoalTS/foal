@@ -20,6 +20,7 @@ import {
   Authenticate,
   controller,
   createApp,
+  dependency,
   EntityResourceCollection,
   Group,
   IAuthenticator,
@@ -121,12 +122,14 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
 
   @LoginRequired()
   class UserController extends RestController {
-    collectionClass = UserCollection;
+    @dependency
+    collection: UserCollection;
   }
 
   @LoginRequired()
   class OrgController extends RestController {
-    collectionClass = OrgCollection;
+    @dependency
+    collection: OrgCollection;
   }
 
   class AuthController extends LoginController {

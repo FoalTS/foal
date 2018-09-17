@@ -2,7 +2,6 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Controller } from '../controllers';
 import { Hook, HookFunction } from '../hooks';
 import { Get, Post } from '../http';
 import { dependency, ServiceManager } from '../service-manager';
@@ -36,7 +35,7 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from a controller with the parent, controller and method paths.', () => {
-    @Controller('/foo/')
+    @Reflect.metadata('path', '/foo/')
     class FoobarController {
       @Get('/bar')
       bar() {}
@@ -126,7 +125,7 @@ describe('makeControllerRoutes', () => {
 
     }
 
-    @Controller('/foo')
+    @Reflect.metadata('path', '/foo')
     @Hook(hook2)
     class FoobarController2 extends FoobarController {
 

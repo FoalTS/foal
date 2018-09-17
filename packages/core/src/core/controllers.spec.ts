@@ -5,20 +5,8 @@ import { ok, strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
-import { Controller, createController } from './controllers';
+import { createController } from './controllers';
 import { dependency, ServiceManager } from './service-manager';
-
-describe('Controller', () => {
-
-  it('should define the metadata path=${path} on the class.', () => {
-    @Controller('/foo')
-    class Foobar {}
-
-    const actual = Reflect.getOwnMetadata('path', Foobar);
-    strictEqual(actual, '/foo');
-  });
-
-});
 
 describe('createController', () => {
 

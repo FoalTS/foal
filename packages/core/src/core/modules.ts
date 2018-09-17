@@ -8,7 +8,3 @@ export interface IModule {
   controllers?: Class[];
   subModules?: Class<IModule>[];
 }
-
-export function Module(path?: string) {
-  return Reflect.metadata('path', path);
-}
