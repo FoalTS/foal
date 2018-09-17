@@ -1,5 +1,5 @@
 // 3p
-import { controller } from '@foal/core';
+import { controller, something } from '@foal/core';
 import { TestFooBarController } from './controllers';
 
 export class MyModule {}
