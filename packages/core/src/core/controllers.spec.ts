@@ -6,7 +6,7 @@ import 'reflect-metadata';
 
 // FoalTS
 import { Controller, createController } from './controllers';
-import { Service, ServiceManager } from './service-manager';
+import { dependency, ServiceManager } from './service-manager';
 
 describe('Controller', () => {
 
@@ -23,57 +23,50 @@ describe('Controller', () => {
 describe('createController', () => {
 
   it('should instantiate a controller (no dependencies).', () => {
-    @Controller()
-    class MyController {
-
-    }
+    class MyController {}
     const controller = createController(MyController);
     ok(controller instanceof MyController);
   });
 
   it('should instantiate a controller with its dependencies.', () => {
-    @Service()
     class MyService {}
 
-    @Controller()
     class MyController {
-      constructor(public myService: MyService) {}
+      @dependency
+      myService: MyService;
     }
     const controller = createController(MyController);
-    ok(controller instanceof MyController);
-    ok(controller.myService instanceof MyService);
+    ok(controller instanceof MyController, 'controller should be an instance of MyController');
+    ok(controller.myService instanceof MyService, 'controller.myService should be an instance of MyService');
   });
 
   it('should instantiate an inherited controller with its dependencies.', () => {
-    @Service()
     class MyService {}
 
-    @Controller()
     class MyController {
-      constructor(public myService: MyService) {}
+      @dependency
+      myService: MyService;
     }
 
-    @Controller()
     class ChildController extends MyController {}
 
     const controller = createController(ChildController);
-    ok(controller instanceof ChildController);
-    ok(controller.myService instanceof MyService);
+    ok(controller instanceof ChildController, 'controller should be an instance of ChildController');
+    ok(controller.myService instanceof MyService, 'controller.myService should be an instance of MyService');
   });
 
   it('should instantiate a controller with its dependencies from the given ServiceManager.', () => {
-    @Service()
     class MyService {}
 
-    @Controller()
     class MyController {
-      constructor(public myService: MyService) {}
+      @dependency
+      myService: MyService;
     }
     const services = new ServiceManager();
     const service = services.get(MyService);
 
     const controller = createController(MyController, services);
-    ok(controller instanceof MyController);
+    ok(controller instanceof MyController, 'controller should be an instance of MyController');
     strictEqual(controller.myService, service);
   });
 
