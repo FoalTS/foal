@@ -18,6 +18,9 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
   const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
+  const leftPath = join(parentPath, controllerPath);
+  const leftHooks = parentHooks.concat(controllerHooks);
+
   const controller = createController(controllerClass, services);
 
   getMethods(controllerClass.prototype).forEach(propertyKey => {
@@ -26,11 +29,17 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
     if (httpMethod) {
       const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined;
       const methodHooks = getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [];
-      const path = join(parentPath, controllerPath, methodPath);
-      const hooks = parentHooks.concat(controllerHooks).concat(methodHooks);
+      const path = join(leftPath, methodPath);
+      const hooks = [ ...leftHooks, ...methodHooks ];
       routes.push({ controller, hooks, httpMethod, path, propertyKey });
     }
   });
+
+  for (const controllerClass of controller.subControllers || []) {
+    routes.push(
+      ...makeControllerRoutes(leftPath, leftHooks, controllerClass, services)
+    );
+  }
 
   return routes;
 }

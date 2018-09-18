@@ -9,6 +9,7 @@ import { makeControllerRoutes } from './make-controller-routes';
 
 describe('makeControllerRoutes', () => {
 
+  const hook0: HookFunction = () => {};
   const hook1: HookFunction = () => {};
   const hook2: HookFunction = () => {};
   const hook3: HookFunction = () => {};
@@ -153,6 +154,51 @@ describe('makeControllerRoutes', () => {
     strictEqual(routes[1].path, '/foo/bar');
     strictEqual(routes[1].propertyKey, 'bar');
 
+  });
+
+  it('should recursively return the routes of the subControllers if they exist.', () => {
+    @Reflect.metadata('path', '/api')
+    @Hook(hook2)
+    class ApiController {
+      @Get('/flights')
+      @Hook(hook3)
+      flights() {}
+    }
+
+    @Reflect.metadata('path', '/auth')
+    @Hook(hook4)
+    class AuthController {
+      @Get('/')
+      @Hook(hook5)
+      index() {}
+    }
+
+    @Reflect.metadata('path', '/foo')
+    @Hook(hook1)
+    class AppController {
+      subControllers = [
+        ApiController,
+        AuthController,
+      ];
+    }
+
+    const routes = makeControllerRoutes('bar//', [ hook0 ] , AppController, new ServiceManager());
+
+    strictEqual(routes.length, 2);
+
+    // bar
+    ok(routes[0].controller instanceof ApiController);
+    deepStrictEqual(routes[0].hooks, [ hook0, hook1, hook2, hook3 ]);
+    strictEqual(routes[0].httpMethod, 'GET');
+    strictEqual(routes[0].path, 'bar/foo/api/flights');
+    strictEqual(routes[0].propertyKey, 'flights');
+
+    // foobar
+    ok(routes[1].controller instanceof AuthController);
+    deepStrictEqual(routes[1].hooks, [ hook0, hook1, hook4, hook5 ]);
+    strictEqual(routes[1].httpMethod, 'GET');
+    strictEqual(routes[1].path, 'bar/foo/auth/');
+    strictEqual(routes[1].propertyKey, 'index');
   });
 
 });
