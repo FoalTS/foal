@@ -1,12 +1,18 @@
 # Documentation
 
 * [Installation](./README.md)
+
+## Tutorials
+
 * [Getting Started](./guide/1-introduction.md)
   * [1. Introduction](./guide/1-introduction.md)
   * [2. Handle a request](./guide/2-handle-a-request.md)
   * [3. Add a model](./guide/3-flight-model.md)
   * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
   * [5. Add some logging](./guide/5-add-some-logging.md)
+
+## Topic Guides
+
 * [Databases](./databases/introduction.md)
   * [Introduction](./databases/introduction.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
@@ -40,5 +46,7 @@
 * [Deployment & environments](./deployment-and-environments/configuration.md)
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
-* [API Reference](./api/index.md)
-  * [@foal/core](./api/index.md)
+
+## API Reference
+
+* [@foal/core](./api/index.md)
