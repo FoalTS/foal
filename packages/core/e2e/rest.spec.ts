@@ -24,7 +24,6 @@ import {
   EntityResourceCollection,
   Group,
   IAuthenticator,
-  IModule,
   IResourceCollection,
   LoginController,
   LoginRequired,
@@ -139,15 +138,15 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
   }
 
   @Authenticate(User)
-  class AppModule implements IModule {
-    controllers = [
+  class AppController {
+    subControllers = [
       controller('/users', UserController),
       controller('/orgs', OrgController),
       controller('', AuthController),
     ];
   }
 
-  const app = createApp(AppModule);
+  const app = createApp(AppController);
 
   /* Create orgs, perms, groups and users */
 

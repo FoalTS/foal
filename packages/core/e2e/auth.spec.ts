@@ -15,7 +15,6 @@ import {
   Get,
   Group,
   HttpResponseOK,
-  IModule,
   LoginController,
   LoginRequired,
   parsePassword,
@@ -59,8 +58,8 @@ it('Authentication and authorization', async () => {
   }
 
   @Authenticate(User)
-  class AppModule implements IModule {
-    controllers = [
+  class AppController {
+    subControllers = [
       MyController,
       AuthController
     ];
@@ -74,7 +73,7 @@ it('Authentication and authorization', async () => {
     type: 'sqlite',
   });
 
-  const app = createApp(AppModule);
+  const app = createApp(AppController);
 
   /* Create a user */
 
