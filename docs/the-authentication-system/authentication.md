@@ -108,7 +108,7 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 
 ```typescript
 @Authenticate(User) // Add user to each context.
-export class AppModule implements IModule {
+export class AppController {
   ...
 }
 ```
@@ -150,7 +150,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 The `Authenticate` hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
-Usually it is registered once within the `AppModule.
+Usually it is registered once within the `AppController`.
 
 
 ### Logging out

@@ -28,18 +28,18 @@ export class AirportController {
 
 ```
 
-Now that your controller is created you need to bind it to the request handler. Go to `src/app/app.module.ts` and update the following lines.
+Now that your controller is created you need to bind it to the request handler. Go to `src/app/app.controller.ts` and update the following lines.
 
 ```typescript
-import { Authenticate, controller, IModule } from '@foal/core';
+import { Authenticate, controller } from '@foal/core';
 
 import { AirportController, ViewController } from './controllers';
 
 import { User } from './entities';
 
 @Authenticate(User)
-export class AppModule implements IModule {
-  controllers = [
+export class AppController {
+  subControllers = [
     controller('/', ViewController),
     controller('/airport', AirportController),
   ];
@@ -47,7 +47,6 @@ export class AppModule implements IModule {
 
 ```
 
-The `AppModule` is the entry point of every FoalTS app. 
-> A *module* can be seen as a controller group. It registers the controllers and may include sub modules.
+The `AppController` is the entry point of every FoalTS app. 
 
 Save the file and refresh the web page. You should now read `Flights from JFK airport` in your header. That's great, it means that the app properly serves the `GET /airport` route!

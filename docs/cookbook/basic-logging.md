@@ -4,12 +4,13 @@ FoalTS provides a convenient hook to log basic messages: `Log(message: string, l
 
 Example:
 ```typescript
-import { IModule } from '@foal/core';
+import { Get, HttpResponseOK, Log } from '@foal/core';
 
 @Log('Message')
-export class MyModule implements IModule {
-  controllers = [
-    // the controllers
-  ]
+export class AppController {
+  @Get()
+  index() {
+    return new HttpResponseOK();
+  }
 }
 ```

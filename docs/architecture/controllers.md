@@ -45,15 +45,15 @@ export class MyController {
 
 ### Registering the controller
 
-Each controller is attached to the request handler through a module.
+The entry point of a FoalTS application is the `AppController`. Each controller that is directly or indirectly a `sub-controller` of this class is attached to the request handler.
 
 ```typescript
-import { controller, IModule } from '@foal/core';
+import { controller } from '@foal/core';
 
 import { MyController } from './controllers/my-controller';
 
-export class AppModule implements IModule {
-  controllers = [
+export class AppController {
+  subControllers = [
     controller('/', MyController)
   ];
 }

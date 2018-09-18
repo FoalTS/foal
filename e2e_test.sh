@@ -9,7 +9,7 @@ npm install
 # Test the generators that do not require user interaction
 foal g entity flight
 foal g hook foo-bar
-foal g module bar-foo
+foal g sub-app bar-foo
 foal g script bar-script
 
 # Test linting
