@@ -5,27 +5,27 @@ import { existsSync } from 'fs';
 // FoalTS
 import { Generator, getNames } from '../../utils';
 
-export function createModule({ name }: { name: string }) {
+export function createSubApp({ name }: { name: string }) {
   const names = getNames(name);
 
   let root = '';
 
-  if (existsSync('src/app/sub-modules')) {
-    root = 'src/app/sub-modules';
-  } else if (existsSync('sub-modules')) {
-    root = 'sub-modules';
+  if (existsSync('src/app/sub-apps')) {
+    root = 'src/app/sub-apps';
+  } else if (existsSync('sub-apps')) {
+    root = 'sub-apps';
   }
 
-  new Generator('module', root)
+  new Generator('sub-app', root)
     .mkdirIfDoesNotExist(names.kebabName)
     .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName}Module } from './${names.kebabName}';\n`;
+      content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}';\n`;
       return content;
     });
 
-  new Generator('module', root ? root + '/' + names.kebabName : names.kebabName)
+  new Generator('sub-app', root ? root + '/' + names.kebabName : names.kebabName)
     .renderTemplate('index.ts', names)
-    .renderTemplate('module.ts', names, `${names.kebabName}.module.ts`)
+    .renderTemplate('controller.ts', names, `${names.kebabName}.controller.ts`)
       // Controllers
       .mkdirIfDoesNotExist('controllers')
       .copyFileFromTemplates('controllers/index.ts')
@@ -36,9 +36,9 @@ export function createModule({ name }: { name: string }) {
       // Entities
       .mkdirIfDoesNotExist('entities')
       .copyFileFromTemplates('entities/index.ts')
-      // Sub-modules
-      .mkdirIfDoesNotExist('sub-modules')
-      .copyFileFromTemplates('sub-modules/index.ts')
+      // Sub-apps
+      .mkdirIfDoesNotExist('sub-apps')
+      .copyFileFromTemplates('sub-apps/index.ts')
       // Services
       .mkdirIfDoesNotExist('services')
       .copyFileFromTemplates('services/index.ts');

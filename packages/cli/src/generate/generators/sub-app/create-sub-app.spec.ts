@@ -10,7 +10,7 @@ import {
   rmdirIfExists,
   rmfileIfExists
 } from '../../utils';
-import { createModule } from './create-module';
+import { createSubApp } from './create-sub-app';
 
 // TODO: Use TestEnvironment.
 
@@ -25,65 +25,65 @@ function removeFiles(prefix: string = '') {
   rmfileIfExists(`${prefix}test-foo-bar/entities/index.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/entities`);
 
-  rmfileIfExists(`${prefix}test-foo-bar/sub-modules/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/sub-modules`);
+  rmfileIfExists(`${prefix}test-foo-bar/sub-apps/index.ts`);
+  rmdirIfExists(`${prefix}test-foo-bar/sub-apps`);
 
   rmfileIfExists(`${prefix}test-foo-bar/services/index.ts`);
   rmdirIfExists(`${prefix}test-foo-bar/services`);
 
-  rmfileIfExists(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
+  rmfileIfExists(`${prefix}test-foo-bar/test-foo-bar.controller.ts`);
   rmfileIfExists(`${prefix}test-foo-bar/index.ts`);
 
   rmdirIfExists(`${prefix}test-foo-bar`);
   rmfileIfExists(`${prefix}index.ts`);
 }
 
-describe('createModule', () => {
+describe('createSubApp', () => {
 
   afterEach(() => {
-    removeFiles('src/app/sub-modules/');
-    rmdirIfExists('src/app/sub-modules');
+    removeFiles('src/app/sub-apps/');
+    rmdirIfExists('src/app/sub-apps');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
     // rmdirIfExists('src');
 
-    removeFiles('sub-modules/');
-    rmdirIfExists('sub-modules');
+    removeFiles('sub-apps/');
+    rmdirIfExists('sub-apps');
 
     removeFiles();
   });
 
-  const indexInitialContent = 'export { BarFooModule } from \'./bar-foo\';\n';
+  const indexInitialContent = 'export { BarFooController } from \'./bar-foo\';\n';
 
   describe('should render the root templates', () => {
 
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      let expected = readFileFromTemplatesSpec('module/index.1.ts');
+      let expected = readFileFromTemplatesSpec('sub-app/index.1.ts');
       let actual = readFileFromRoot(`${prefix}test-foo-bar/index.ts`);
       strictEqual(actual, expected);
 
-      expected = readFileFromTemplatesSpec('module/test-foo-bar.module.1.ts');
-      actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.module.ts`);
+      expected = readFileFromTemplatesSpec('sub-app/test-foo-bar.controller.1.ts');
+      actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.controller.ts`);
       strictEqual(actual, expected);
 
-      expected = readFileFromTemplatesSpec('module/index.parent.ts');
+      expected = readFileFromTemplatesSpec('sub-app/index.parent.ts');
       actual = readFileFromRoot(`${prefix}index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -97,21 +97,21 @@ describe('createModule', () => {
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/controllers/index.1.ts');
+      const expected = readFileFromTemplatesSpec('sub-app/controllers/index.1.ts');
       const actual = readFileFromRoot(`${prefix}test-foo-bar/controllers/index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -125,21 +125,21 @@ describe('createModule', () => {
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/hooks/index.1.ts');
+      const expected = readFileFromTemplatesSpec('sub-app/hooks/index.1.ts');
       const actual = readFileFromRoot(`${prefix}test-foo-bar/hooks/index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -153,21 +153,21 @@ describe('createModule', () => {
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/entities/index.1.ts');
+      const expected = readFileFromTemplatesSpec('sub-app/entities/index.1.ts');
       const actual = readFileFromRoot(`${prefix}test-foo-bar/entities/index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -176,26 +176,26 @@ describe('createModule', () => {
 
   });
 
-  describe('should render the sub-modules templates.', () => {
+  describe('should render the sub-apps templates.', () => {
 
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/sub-modules/index.1.ts');
-      const actual = readFileFromRoot(`${prefix}test-foo-bar/sub-modules/index.ts`);
+      const expected = readFileFromTemplatesSpec('sub-app/sub-apps/index.1.ts');
+      const actual = readFileFromRoot(`${prefix}test-foo-bar/sub-apps/index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -209,21 +209,21 @@ describe('createModule', () => {
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
-      const expected = readFileFromTemplatesSpec('module/services/index.1.ts');
+      const expected = readFileFromTemplatesSpec('sub-app/services/index.1.ts');
       const actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
       strictEqual(actual, expected);
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {
@@ -237,21 +237,21 @@ describe('createModule', () => {
     function test(prefix = '') {
       writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
 
-      createModule({ name: 'test-fooBar' });
+      createSubApp({ name: 'test-fooBar' });
 
       if (!existsSync(`${prefix}test-foo-bar/controllers/templates`)) {
         throw new Error('The controllers/templates directory should be created.');
       }
     }
 
-    it('in src/app/sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-modules');
-      test('src/app/sub-modules/');
+    it('in src/app/sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('src/app/sub-apps');
+      test('src/app/sub-apps/');
     });
 
-    it('in sub-modules/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-modules');
-      test('sub-modules/');
+    it('in sub-apps/ if the directory exists.', () => {
+      mkdirIfNotExists('sub-apps');
+      test('sub-apps/');
     });
 
     it('in the current directory otherwise.', () => {

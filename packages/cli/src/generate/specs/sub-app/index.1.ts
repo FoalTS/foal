@@ -1,1 +1,1 @@
-export { TestFooBarModule } from './test-foo-bar.module';
+export { TestFooBarController } from './test-foo-bar.controller';

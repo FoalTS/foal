@@ -36,17 +36,17 @@ function addSpecifierToNamedImport(source: string, path: string, specifier: stri
   return result;
 }
 
-export function registerController(moduleContent: string, controllerName: string, path: string): string {
+export function registerController(parentControllerContent: string, controllerName: string, path: string): string {
   try {
-    moduleContent = addSpecifierToNamedImport(moduleContent, './controllers', controllerName);
+    parentControllerContent = addSpecifierToNamedImport(parentControllerContent, './controllers', controllerName);
   } catch (err) {
     const namedImport = createNamedImport([ controllerName ], './controllers');
-    moduleContent = addImport(moduleContent, namedImport);
+    parentControllerContent = addImport(parentControllerContent, namedImport);
   }
   try {
-    moduleContent = addSpecifierToNamedImport(moduleContent, '@foal/core', 'controller');
+    parentControllerContent = addSpecifierToNamedImport(parentControllerContent, '@foal/core', 'controller');
   } catch (err) {}
-  moduleContent = moduleContent
+  parentControllerContent = parentControllerContent
     .replace(/( *)subControllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
       const regex = /controller\((.*)\)/g;
       const controllerCalls = content.match(regex) || [];
@@ -54,5 +54,5 @@ export function registerController(moduleContent: string, controllerName: string
       const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
       return `${spaces}subControllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`;
     });
-  return moduleContent;
+  return parentControllerContent;
 }

@@ -1,1 +1,1 @@
-export { /* upperFirstCamelName */Module } from './/* kebabName */.module';
+export { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';

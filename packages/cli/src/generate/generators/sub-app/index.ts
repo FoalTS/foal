@@ -1,1 +1,1 @@
-export { createModule } from './create-module';
+export { createSubApp } from './create-sub-app';

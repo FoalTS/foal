@@ -1,2 +1,2 @@
-export { BarFooModule } from './bar-foo';
-export { TestFooBarModule } from './test-foo-bar';
+export { BarFooController } from './bar-foo';
+export { TestFooBarController } from './test-foo-bar';
