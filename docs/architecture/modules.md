@@ -53,8 +53,8 @@ class AppModule implements IModule {
   ];
 
   subModules = [
-    subModule('', Module1),
-    subModule('/foo', Module2),
+    Module1,
+    Module2,
   ];
 }
 
@@ -62,6 +62,6 @@ class AppModule implements IModule {
  * The app serves three REST endpoints:
  * - /my_resources3
  * - /my_resources
- * - /foo/my_resources2
+ * - /my_resources2
  */
 ```
