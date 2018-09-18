@@ -9,8 +9,7 @@ import * as logger from 'morgan';
 import {
   Class,
   Config,
-  IModule,
-  makeModuleRoutes,
+  makeControllerRoutes,
   ServiceManager
 } from '../core';
 import { createMiddleware } from './create-middleware';
@@ -21,7 +20,7 @@ export interface CreateAppOptions {
   store?(session): any;
 }
 
-export function createApp(rootModuleClass: Class<IModule>, options: CreateAppOptions = {}) {
+export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}) {
   const app = express();
 
   app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
@@ -56,7 +55,7 @@ export function createApp(rootModuleClass: Class<IModule>, options: CreateAppOpt
   });
 
   const services = new ServiceManager();
-  const routes = makeModuleRoutes('', [], rootModuleClass, services);
+  const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
     switch (route.httpMethod) {
       case 'DELETE':

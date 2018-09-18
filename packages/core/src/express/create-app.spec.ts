@@ -60,9 +60,7 @@ describe('createApp', () => {
         return new HttpResponseOK('delete');
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return Promise.all([
       request(app).get('/foo').expect('get'),
       request(app).post('/foo').expect('post'),
@@ -79,9 +77,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .post('/foo')
       .send({ foo: 'bar' })
@@ -95,9 +91,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .post('/foo')
       .send('foo=bar')
@@ -111,9 +105,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ session: !!ctx.request.session });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .get('/foo')
       .expect({ session: true });
