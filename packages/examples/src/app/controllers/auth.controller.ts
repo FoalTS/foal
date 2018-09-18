@@ -1,8 +1,7 @@
-import { Context, Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { Context, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { Authenticator } from '../services/authenticator.service';
 
-@Controller()
 export class AuthController extends LoginController {
   strategies = [
     strategy('login', Authenticator, emailSchema)

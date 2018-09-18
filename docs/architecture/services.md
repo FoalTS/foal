@@ -6,9 +6,6 @@ foal generate service my-service
 ```
 
 ```typescript
-import { Service } from '@foal/core';
-
-@Service()
 export class MyService {
 
 }
@@ -16,32 +13,35 @@ export class MyService {
 
 Services are one of core concepts of FoalTS. They are used to perform many different tasks such as logging, compute data, fetching and writing data from and to a database, etc.
 
-Basically a service can be any class that serves a restricted and well-defined purpose. You just need to insert the `@Service()` decorator on its top.
+Basically a service can be any class that serves a restricted and well-defined purpose.
 
 ## Accessing services ...
 
 ### ... from controllers
 
 ```typescript
-@Service()
+import { dependency, Get } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
   }
 }
 
-@Controller()
 class MyController {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
+
   @Get('/foo')
   foo(ctx) {
     this.myService.run();
   }
 }
 // OR
-@Controller()
 class MyController2 {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
+
   @Get('/foo')
   foo(ctx) {
     this.services.get(MyService).run();
@@ -52,7 +52,6 @@ class MyController2 {
 ### ... from hooks
 
 ```typescript
-@Service()
 class MyService {
   run() {
     console.log('hello world');
@@ -69,25 +68,26 @@ function MyHook() {
 ### ... from other services
 
 ```typescript
-@Service()
+import { dependency } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
   }
 }
 
-@Controller()
 class MyServiceA {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
 
   foo() {
     this.myService.run();
   }
 }
 // OR
-@Controller()
 class MyServiceB {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
 
   foo() {
     this.services.get(MyService).run();
@@ -104,17 +104,17 @@ As foal uses the inversion of control principle, a service is very easy to test.
 import { strictEqual } from 'assert';
 
 // 3p
-import { Service, ServiceManager } from '@foal/core';
+import { dependency, ServiceManager } from '@foal/core';
 
-@Service()
 class ServiceA {
   name = 'Service A';
 }
 
-@Service()
 class ServiceB {
   name = 'Service B';
-  constructor(public serviceA: ServiceA) {}
+
+  @dependency
+  serviceA: ServiceA;
 }
 
 const serviceA = new ServiceA();

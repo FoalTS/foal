@@ -1,5 +1,4 @@
 // 3p
-import { Module } from '@foal/core';
+import { something } from '@foal/core';
 
-@Module()
 export class MyModule {}

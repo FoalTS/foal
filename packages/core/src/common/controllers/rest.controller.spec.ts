@@ -5,8 +5,8 @@ import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 import { AbstractUser } from '../../auth';
 import {
   Context,
-  Controller,
   createController,
+  dependency,
   getHttpMethod,
   getPath,
   HttpResponseBadRequest,
@@ -16,8 +16,6 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-  Service,
-  ServiceManager
 } from '../../core';
 import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
 import { CollectionParams, IResourceCollection } from '../services';
@@ -25,9 +23,8 @@ import { RestController } from './rest.controller';
 
 describe('RestController', () => {
 
-  @Controller()
   class ConcreteController extends RestController {
-    collectionClass = class {};
+    collection = {};
   }
 
   it('has a extendParams method that should return the given params', () => {
@@ -58,7 +55,6 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseNotImplemented if collection.deleteById is undefined.', async () => {
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         find() {}
@@ -67,9 +63,9 @@ describe('RestController', () => {
         modifyById() {}
         updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -83,7 +79,6 @@ describe('RestController', () => {
         let deleteByIdParams;
         let deleteByIdId;
         let deleteByIdUser;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async deleteById(user, id, params) {
             deleteByIdUser = user;
@@ -92,13 +87,12 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -119,19 +113,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.deleteById rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async deleteById() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -152,19 +144,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.deleteById rejects one which'
           + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async deleteById(user, id, params) {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -189,7 +179,6 @@ describe('RestController', () => {
     });
 
     it('should return an HttpResponseNotImplemented if collection.find is undefined.', async () => {
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         // find() {}
@@ -198,9 +187,9 @@ describe('RestController', () => {
         modifyById() {}
         updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -215,7 +204,6 @@ describe('RestController', () => {
         let findUser;
         let findQuery;
         let getQueryCtx;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async find(user, { query }) {
             findUser = user;
@@ -223,9 +211,9 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
 
           extendParams(ctx, params: CollectionParams) {
             getQueryCtx = ctx;
@@ -233,8 +221,7 @@ describe('RestController', () => {
           }
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({});
         ctx.user = {} as AbstractUser;
@@ -251,19 +238,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.find rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async find() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -283,19 +268,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.find rejects one which'
           + ' is not a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async find() {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -320,8 +303,6 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseNotImplemented if collection.findById is undefined.', async () => {
-
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         find() {}
@@ -330,9 +311,9 @@ describe('RestController', () => {
         modifyById() {}
         updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -346,7 +327,6 @@ describe('RestController', () => {
         let findByIdUser;
         let findByIdId;
         let findByIdParams;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async findById(user, id, params) {
             findByIdUser = user;
@@ -355,13 +335,12 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -382,19 +361,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.findById rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async findById() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -415,19 +392,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.findById rejects one which'
           + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async findById(user, id, params) {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -466,7 +441,6 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseNotImplemented if collection.modifyById is undefined.', async () => {
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         find() {}
@@ -475,9 +449,9 @@ describe('RestController', () => {
         // modifyById() {}
         updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -492,7 +466,6 @@ describe('RestController', () => {
         let modifyByIdId;
         let modifyByIdData;
         let modifyByIdParams;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async modifyById(user, id, data, params) {
             modifyByIdUser = user;
@@ -502,13 +475,12 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -533,19 +505,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.modifyById rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async modifyById() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -566,19 +536,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.modifyById rejects one which'
           + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async modifyById(user, id, data, params) {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -603,7 +571,6 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseNotImplemented if collection.create is undefined.', async () => {
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         // create() {}
         find() {}
@@ -612,9 +579,9 @@ describe('RestController', () => {
         modifyById() {}
         updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -628,7 +595,6 @@ describe('RestController', () => {
         let createUser;
         let createData;
         let createParams;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async create(user, data, params) {
             createUser = user;
@@ -637,13 +603,12 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -664,19 +629,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.create rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async create() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -696,19 +659,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.create rejects one which'
           + ' is not a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async create() {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {
@@ -761,7 +722,6 @@ describe('RestController', () => {
     });
 
     it('should return a HttpResponseNotImplemented if collection.updateById is undefined.', async () => {
-      @Service()
       class Collection implements Partial<IResourceCollection> {
         create() {}
         find() {}
@@ -770,9 +730,9 @@ describe('RestController', () => {
         modifyById() {}
         // updateById() {}
       }
-      @Controller()
       class ConcreteController extends RestController {
-        collectionClass = Collection;
+        @dependency
+        collection: Collection;
       }
 
       const controller = createController(ConcreteController);
@@ -787,7 +747,6 @@ describe('RestController', () => {
         let updateByIdId;
         let updateByIdData;
         let updateByIdParams;
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async updateById(user, id, data, params) {
             updateByIdUser = user;
@@ -797,13 +756,12 @@ describe('RestController', () => {
             return objects;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           body: {
@@ -828,19 +786,17 @@ describe('RestController', () => {
         it(`should return a ${httpResponseClass.name} if collection.updateById rejects`
             + ` a ${errorClass.name}.`, async () => {
           const content = {};
-          @Service()
           class Collection implements Partial<IResourceCollection> {
             async updateById() {
               throw new errorClass(content);
             }
           }
-          @Controller()
           class ConcreteController extends RestController {
-            collectionClass = Collection;
+            @dependency
+            collection: Collection;
           }
 
-          const services = new ServiceManager();
-          const controller = new ConcreteController(services);
+          const controller = createController(ConcreteController);
 
           const ctx = new Context({
             params: {
@@ -861,19 +817,17 @@ describe('RestController', () => {
       it('should rejects an error if collection.updateById rejects one which'
           + ' is not an ObjectDoesNotExist, a ValidationError nor a PermissionDenied.', () => {
         const err = new Error();
-        @Service()
         class Collection implements Partial<IResourceCollection> {
           async updateById(user, id, data, params) {
             throw err;
           }
         }
-        @Controller()
         class ConcreteController extends RestController {
-          collectionClass = Collection;
+          @dependency
+          collection: Collection;
         }
 
-        const services = new ServiceManager();
-        const controller = new ConcreteController(services);
+        const controller = createController(ConcreteController);
 
         const ctx = new Context({
           params: {

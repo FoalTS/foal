@@ -9,7 +9,6 @@ import { Column, createConnection, Entity, getConnection, getRepository } from '
 import {
   AbstractUser,
   Authenticate,
-  Controller,
   createApp,
   EmailAuthenticator,
   emailSchema,
@@ -19,16 +18,13 @@ import {
   IModule,
   LoginController,
   LoginRequired,
-  Module,
   parsePassword,
   Permission,
   PermissionRequired,
-  Service,
   strategy
 } from '../src';
 
 it('Authentication and authorization', async () => {
-  @Controller()
   class MyController {
     @Get('/foo')
     @LoginRequired()
@@ -52,19 +48,16 @@ it('Authentication and authorization', async () => {
     password: string;
   }
 
-  @Service()
   class Authenticator extends EmailAuthenticator<User> {
     entityClass = User;
   }
 
-  @Controller()
   class AuthController extends LoginController {
     strategies = [
       strategy('login', Authenticator, emailSchema)
     ];
   }
 
-  @Module()
   @Authenticate(User)
   class AppModule implements IModule {
     controllers = [

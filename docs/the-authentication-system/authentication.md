@@ -43,11 +43,10 @@ foal g service authenticator
 ```
 
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from '../entities';
 
-@Service()
 export class Authenticator extends EmailAuthenticator<User> {
   entityClass = User;
 }
@@ -65,14 +64,13 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
-import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
 ​​
 import { Authenticator } from '../services/authenticator.service';
 
-@Controller()
 export class AuthController extends LoginController {
   strategies = [
     strategy('login-with-email', Authenticator, emailSchema),
@@ -109,7 +107,6 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 ## Authenticate the user on further requests
 
 ```typescript
-@Module()
 @Authenticate(User) // Add user to each context.
 export class AppModule implements IModule {
   ...
@@ -135,11 +132,10 @@ Its constructor takes an user entity.
 
 *Example*:
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from './user.entity';
 
-@Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
   entityClass = User;
 }

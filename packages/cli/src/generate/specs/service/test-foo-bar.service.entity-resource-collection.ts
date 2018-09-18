@@ -1,4 +1,4 @@
-import { EntityResourceCollection, middleware, Service, validate } from '@foal/core';
+import { EntityResourceCollection, middleware, validate } from '@foal/core';
 
 import { TestFooBar } from '../entities';
 
@@ -11,7 +11,6 @@ const schema = {
   type: 'object',
 };
 
-@Service()
 export class TestFooBarCollection extends EntityResourceCollection {
   // tslint:disable-next-line:whitespace
   entityClass = TestFooBar;

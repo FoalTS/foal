@@ -1,6 +1,5 @@
-import { IModule, Module } from '@foal/core';
+import { IModule } from '@foal/core';
 
-@Module()
 export class /* upperFirstCamelName */Module implements IModule {
   controllers = [
 
