@@ -145,7 +145,7 @@ You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put` or
 
 ## Common controllers
 
-FoalTS provides some common controllers to [log in](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
+FoalTS provides some common controllers to [authenticate](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
 ## Responding with special status or headers
 

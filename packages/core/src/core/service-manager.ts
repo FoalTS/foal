@@ -56,6 +56,11 @@ export class ServiceManager {
     this.map.set(serviceClass, service);
   }
 
+  /**
+   * Get or create the service singleton.
+   *
+   * @param serviceClass
+   */
   get<Service>(serviceClass: Class<Service>): Service {
     // The ts-ignores fix TypeScript bugs.
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
