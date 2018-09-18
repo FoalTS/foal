@@ -22,7 +22,6 @@
 * [Architecture](./architecture/introduction.md)
   * [Introduction](./architecture/introduction.md)
   * [Controllers](./architecture/controllers.md)
-  * [Modules](./architecture/modules.md)
   * [Services](./architecture/services.md)
   * [Hooks](./architecture/hooks.md)
 * [Development Environment](./development-environment/build-and-start-the-app.md)

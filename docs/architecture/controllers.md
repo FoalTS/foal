@@ -143,6 +143,39 @@ class ChildController extends ParentController {
 
 You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put` or `Delete` decorator then the parent path and HTTP method are used. If you don't add a hook, then the parent hooks are used. Otherwise they are all discarded.
 
+## Using sub-controllers
+
+When your app grows up, you may be interested in splitting your controller into several ones (authentication, admin, home, etc). Here's an example on how to embed your controllers:
+
+```typescript
+class Controller1 {
+  @Get('/my_resources')
+  myResources() {
+    // do something
+  }
+};
+
+class Controller2 {
+  @Get('/my_resources2')
+  myResources2() {
+    // do something
+  }
+};
+
+class AppController {
+  subControllers = [
+    controller('/foo', Controller1)
+    controller('/', Controller2)
+  ];
+}
+
+/**
+ * The app serves three endpoints:
+ * - /foo/my_resources
+ * - /my_resources2
+ */
+```
+
 ## Common controllers
 
 FoalTS provides some common controllers to [authenticate](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
