@@ -2,8 +2,8 @@
 import {} from 'somewhere';
 import { TestFooBarController } from './controllers';
 
-export class MyModule {
-  controllers = [
+export class MyController {
+  subControllers = [
     controller('/', TestFooBarController)
   ];
 }

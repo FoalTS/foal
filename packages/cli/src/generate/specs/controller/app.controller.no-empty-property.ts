@@ -2,8 +2,8 @@
 import { controller } from '@foal/core';
 import { TestFooBarController } from './controllers';
 
-export class MyModule {
-  controllers = [
+export class MyController {
+  subControllers = [
     controller('/', MyController),
     controller('/', MyController2),
     controller('/', TestFooBarController)

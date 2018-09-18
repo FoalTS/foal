@@ -1,6 +1,6 @@
 // 3p
 import {} from 'somewhere';
 
-export class MyModule {
-  controllers = [];
+export class MyController {
+  subControllers = [];
 }
