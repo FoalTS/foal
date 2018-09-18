@@ -62,7 +62,7 @@ export function createApp({ name, sessionSecret }:
       .copyFileFromTemplates('src/test.ts')
         // App
         .mkdirIfDoesNotExist('src/app')
-        .copyFileFromTemplates('src/app/app.module.ts')
+        .copyFileFromTemplates('src/app/app.controller.ts')
           // Controllers
           .mkdirIfDoesNotExist('src/app/controllers')
           .copyFileFromTemplates('src/app/controllers/index.ts')
@@ -81,9 +81,9 @@ export function createApp({ name, sessionSecret }:
           // Services
           .mkdirIfDoesNotExist('src/app/services')
           .copyFileFromTemplates('src/app/services/index.ts')
-          // Sub-modules
-          .mkdirIfDoesNotExist('src/app/sub-modules')
-          .copyFileFromTemplates('src/app/sub-modules/index.ts')
+          // Sub-apps
+          .mkdirIfDoesNotExist('src/app/sub-apps')
+          .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
         .copyFileFromTemplates('src/e2e/index.ts')

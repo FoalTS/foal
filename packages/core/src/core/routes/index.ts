@@ -1,3 +1,3 @@
 export * from './route.interface';
-export { makeModuleRoutes } from './make-module-routes';
+export { makeControllerRoutes } from './make-controller-routes';
 export { getPath, getHttpMethod } from './utils';

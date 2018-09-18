@@ -6,7 +6,7 @@ Now that the application is serving properly our REST API, we'd like to add some
 
 For that you are going to use the `Log` hook. Hooks are decorators that aim to perform actions before the execution of the controller methods. They can serve many purposes, they are especially useful to control user access or to validate the format of the request data.
 
-Hooks can decorate a controller method, the controller itself or a module. A hook decorating a controller applies to all the controller methods and a hook decorating a module applies to all its controllers and sub-modules.
+Hooks can decorate a controller method or the controller itself. A hook decorating a controller applies to all the controller methods and its sub-controllers.
 
 Let's see how it works.
 

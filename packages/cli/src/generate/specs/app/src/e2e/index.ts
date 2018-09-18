@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
 
 // App
-import { AppModule } from '../app/app.module';
+import { AppController } from '../app/app.controller';
 
 describe('The server', () => {
 
@@ -12,7 +12,7 @@ describe('The server', () => {
 
   before(async () => {
     await createConnection();
-    app = createApp(AppModule);
+    app = createApp(AppController);
   });
 
   after(() => getConnection().close());

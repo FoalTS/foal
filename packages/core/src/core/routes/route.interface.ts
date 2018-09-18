@@ -7,5 +7,4 @@ export interface Route {
   hooks: HookFunction[];
   controller: any;
   propertyKey: string;
-  // Todo: add `parameters`
 }

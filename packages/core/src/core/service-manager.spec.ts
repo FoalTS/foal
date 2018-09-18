@@ -16,7 +16,7 @@ describe('dependency', () => {
       myService1: MyService1;
     }
 
-    // The service decorator should support inheritance and "multiple" inherited classes
+    // The dependency decorator should support inheritance and "multiple" inherited classes
     class MyChildServiceOrControllerA extends MyParentServiceOrController {
       @dependency
       myService2: MyService2;
