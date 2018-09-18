@@ -50,13 +50,13 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('src/app/entities/user.entity.ts');
     testEnv.rmdirIfExists('src/app/entities');
 
-    testEnv.rmfileIfExists('src/app/sub-modules/index.ts');
-    testEnv.rmdirIfExists('src/app/sub-modules');
+    testEnv.rmfileIfExists('src/app/sub-apps/index.ts');
+    testEnv.rmdirIfExists('src/app/sub-apps');
 
     testEnv.rmfileIfExists('src/app/services/index.ts');
     testEnv.rmdirIfExists('src/app/services');
 
-    testEnv.rmfileIfExists('src/app/app.module.ts');
+    testEnv.rmfileIfExists('src/app/app.controller.ts');
     testEnv.rmdirIfExists('src/app');
 
     testEnv.rmfileIfExists('src/e2e/index.ts');
@@ -122,9 +122,9 @@ describe('createApp', () => {
       .validateSpec('src/app/entities/user.entity.ts');
   });
 
-  it('should render the src/app/sub-modules templates.', () => {
+  it('should render the src/app/sub-apps templates.', () => {
     testEnv
-      .validateSpec('src/app/sub-modules/index.ts');
+      .validateSpec('src/app/sub-apps/index.ts');
   });
 
   it('should render the src/app/services templates.', () => {
@@ -139,7 +139,7 @@ describe('createApp', () => {
 
   it('should render the src/app templates.', () => {
     testEnv
-      .validateSpec('src/app/app.module.ts');
+      .validateSpec('src/app/app.controller.ts');
   });
 
   it('should render the src templates.', () => {
