@@ -25,7 +25,7 @@
         "exclude": [
             "**/src/migrations/*.ts",
             "**/src/generate/mocks/**/*.ts",
-            "**/src/generate/specs/**/app.module.*.ts"
+            "**/src/generate/specs/**/app.controller.*.ts"
         ]
     }
 }
