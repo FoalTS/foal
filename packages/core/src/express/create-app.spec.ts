@@ -7,7 +7,7 @@ import { MemoryStore } from 'express-session';
 import * as request from 'supertest';
 
 // FoalTS
-import { Context, Get, HttpResponseOK, Post } from '../core';
+import { Context, Delete, Get, HttpResponseOK, Patch, Post, Put } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -37,6 +37,39 @@ describe('createApp', () => {
     ]);
   });
 
+  it('should respond on DELETE, GET, PATCH, POST and PUT requests if a handler exists.', () => {
+    class MyController {
+      @Get('/foo')
+      get() {
+        return new HttpResponseOK('get');
+      }
+      @Post('/foo')
+      post() {
+        return new HttpResponseOK('post');
+      }
+      @Patch('/foo')
+      patch() {
+        return new HttpResponseOK('patch');
+      }
+      @Put('/foo')
+      put() {
+        return new HttpResponseOK('put');
+      }
+      @Delete('/foo')
+      delete() {
+        return new HttpResponseOK('delete');
+      }
+    }
+    const app = createApp(MyController);
+    return Promise.all([
+      request(app).get('/foo').expect('get'),
+      request(app).post('/foo').expect('post'),
+      request(app).patch('/foo').expect('patch'),
+      request(app).put('/foo').expect('put'),
+      request(app).delete('/foo').expect('delete'),
+    ]);
+  });
+
   it('should parse incoming request bodies (json)', () => {
     class MyController {
       @Post('/foo')
@@ -44,9 +77,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .post('/foo')
       .send({ foo: 'bar' })
@@ -60,9 +91,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .post('/foo')
       .send('foo=bar')
@@ -76,9 +105,7 @@ describe('createApp', () => {
         return new HttpResponseOK({ session: !!ctx.request.session });
       }
     }
-    const app = createApp(class {
-      controllers = [ MyController ];
-    });
+    const app = createApp(MyController);
     return request(app)
       .get('/foo')
       .expect({ session: true });

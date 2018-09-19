@@ -1,10 +1,10 @@
 # Table of contents
 
-* [HttpResponseClientError][ClassDeclaration-12]
+* [HttpResponseClientError][ClassDeclaration-13]
     * Constructor
-        * [constructor(content)][Constructor-8]
+        * [constructor(content)][Constructor-7]
     * Properties
-        * [isHttpResponseClientError][PropertyDeclaration-30]
+        * [isHttpResponseClientError][PropertyDeclaration-32]
 
 # HttpResponseClientError
 
@@ -37,6 +37,6 @@ public readonly isHttpResponseClientError: true;
 
 true
 
-[ClassDeclaration-12]: httpresponseclienterror.md#httpresponseclienterror
-[Constructor-8]: httpresponseclienterror.md#constructorcontent
-[PropertyDeclaration-30]: httpresponseclienterror.md#ishttpresponseclienterror
+[ClassDeclaration-13]: httpresponseclienterror.md#httpresponseclienterror
+[Constructor-7]: httpresponseclienterror.md#constructorcontent
+[PropertyDeclaration-32]: httpresponseclienterror.md#ishttpresponseclienterror

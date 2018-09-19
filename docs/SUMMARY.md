@@ -28,7 +28,6 @@
 * [Architecture](./architecture/introduction.md)
   * [Introduction](./architecture/introduction.md)
   * [Controllers](./architecture/controllers.md)
-  * [Modules](./architecture/modules.md)
   * [Services](./architecture/services.md)
   * [Hooks](./architecture/hooks.md)
 * [Development Environment](./development-environment/build-and-start-the-app.md)
@@ -43,6 +42,7 @@
 * [Testing](./testing/introduction.md)
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
+  * [E2E Testing](./testing/e2e-testing.md)
 * [Deployment & environments](./deployment-and-environments/configuration.md)
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->

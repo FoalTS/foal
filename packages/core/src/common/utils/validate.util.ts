@@ -1,12 +1,9 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { ValidationError } from '../errors';
-
-const ajv = new Ajv();
+import { getAjvInstance } from './get-ajv-instance';
 
 export function validate(schema: object, data: any) {
+  const ajv = getAjvInstance();
   if (!ajv.validate(schema, data)) {
     throw new ValidationError(ajv.errors);
   }

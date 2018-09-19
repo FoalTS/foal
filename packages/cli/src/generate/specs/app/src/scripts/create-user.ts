@@ -1,44 +1,32 @@
 // 3p
-import { getCommandLineArguments, Group, Permission, validate, ValidationError } from '@foal/core';
+import { Group, Permission } from '@foal/core';
+// import { isCommon } from '@foal/password';
 import { createConnection, getManager, getRepository } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
 
-const argSchema = {
+export const schema = {
   additionalProperties: false,
   properties: {
     // email: { type: 'string' },
-    groups: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+    groups: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
     // password: { type: 'string' },
-    userPermissions: { type: 'array', items: { type: 'string' }, uniqueItems: true },
+    userPermissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
   },
   required: [ /* 'email', 'password' */ ],
   type: 'object',
 };
 
-export async function main(argv) {
-  const args = getCommandLineArguments(argv);
-
-  try {
-    validate(argSchema, args);
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      error.content.forEach(err => {
-        console.log(`The command line arguments ${err.message}`);
-      });
-      return;
-    }
-    throw error;
-  }
-
-  args.groups = args.groups || [];
-  args.userPermissions = args.userPermissions || [];
-
+export async function main(args) {
   const user = new User();
   user.userPermissions = [];
   user.groups = [];
   // user.email = args.email;
+  // if (await isCommon(args.password)) {
+  //   console.log('This password is too common. Please choose another one.');
+  //   return;
+  // }
   // await user.setPassword(args.password);
 
   await createConnection();

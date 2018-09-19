@@ -8,17 +8,14 @@ import { Permission } from './permission.entity';
 export abstract class AbstractUser {
 
   @PrimaryGeneratedColumn()
-  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 
   @ManyToMany(type => Group)
   @JoinTable()
-  // @ts-ignore : Property 'groups' has no initializer and is not definitely assigned in theconstructor.
   groups: Group[];
 
   @ManyToMany(type => Permission)
   @JoinTable()
-  // @ts-ignore : Property 'userPermissions' has no initializer and is not definitely assigned in theconstructor.
   userPermissions: Permission[];
 
   hasPerm(codeName: string): boolean {

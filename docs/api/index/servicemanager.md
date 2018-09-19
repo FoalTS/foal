@@ -1,13 +1,15 @@
 # Table of contents
 
-* [ServiceManager][ClassDeclaration-28]
+* [ServiceManager][ClassDeclaration-5]
     * Methods
-        * [set(serviceClass, service)][MethodDeclaration-22]
-        * [get(serviceClass)][MethodDeclaration-23]
+        * [set(serviceClass, service)][MethodDeclaration-3]
+        * [get(serviceClass)][MethodDeclaration-4]
     * Properties
-        * [map][PropertyDeclaration-69]
+        * [map][PropertyDeclaration-14]
 
 # ServiceManager
+
+Identity Mapper that instantiates and returns service singletons.
 
 ```typescript
 class ServiceManager
@@ -41,6 +43,8 @@ void
 
 ### get(serviceClass)
 
+Get or create the service singleton.
+
 ```typescript
 public get<Service>(serviceClass: Class<Service>): Service;
 ```
@@ -73,10 +77,10 @@ public readonly map: Map<Class<any>, any>;
 
 Map<[Class][InterfaceDeclaration-1]<any>, any>
 
-[ClassDeclaration-28]: servicemanager.md#servicemanager
-[MethodDeclaration-22]: servicemanager.md#setserviceclass-service
+[ClassDeclaration-5]: servicemanager.md#servicemanager
+[MethodDeclaration-3]: servicemanager.md#setserviceclass-service
 [InterfaceDeclaration-1]: ../index.md#class
-[MethodDeclaration-23]: servicemanager.md#getserviceclass
+[MethodDeclaration-4]: servicemanager.md#getserviceclass
 [InterfaceDeclaration-1]: ../index.md#class
-[PropertyDeclaration-69]: servicemanager.md#map
+[PropertyDeclaration-14]: servicemanager.md#map
 [InterfaceDeclaration-1]: ../index.md#class

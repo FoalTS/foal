@@ -1,13 +1,13 @@
 # Table of contents
 
-* [HttpResponse][ClassDeclaration-8]
+* [HttpResponse][ClassDeclaration-9]
     * Constructor
-        * [constructor(content)][Constructor-4]
+        * [constructor(content)][Constructor-3]
     * Properties
-        * [isHttpResponse][PropertyDeclaration-19]
-        * [headers][PropertyDeclaration-20]
-        * [statusCode][PropertyDeclaration-21]
-        * [statusMessage][PropertyDeclaration-22]
+        * [isHttpResponse][PropertyDeclaration-21]
+        * [headers][PropertyDeclaration-22]
+        * [statusCode][PropertyDeclaration-23]
+        * [statusMessage][PropertyDeclaration-24]
 
 # HttpResponse
 
@@ -76,9 +76,9 @@ public abstract statusMessage: string;
 
 string
 
-[ClassDeclaration-8]: httpresponse.md#httpresponse
-[Constructor-4]: httpresponse.md#constructorcontent
-[PropertyDeclaration-19]: httpresponse.md#ishttpresponse
-[PropertyDeclaration-20]: httpresponse.md#headers
-[PropertyDeclaration-21]: httpresponse.md#statuscode
-[PropertyDeclaration-22]: httpresponse.md#statusmessage
+[ClassDeclaration-9]: httpresponse.md#httpresponse
+[Constructor-3]: httpresponse.md#constructorcontent
+[PropertyDeclaration-21]: httpresponse.md#ishttpresponse
+[PropertyDeclaration-22]: httpresponse.md#headers
+[PropertyDeclaration-23]: httpresponse.md#statuscode
+[PropertyDeclaration-24]: httpresponse.md#statusmessage

@@ -49,16 +49,13 @@ export function HelloWorld(smiley: string){
 
 ## How to bind the hook to a route
 
-Hooks can either be bound to one, several or all the routes of a controller. They may even apply to all the controllers of a module and its sub-modules.
+Hooks can either be bound to one, several or all the routes of a controller.
 
 ```typescript
-import {
-  Controller, Get, HttpResponseOK, IModule, Module
-} from '@foal/core';
+import { Get, HttpResponseOK } from '@foal/core';
 
 import { HelloWorld } from './hello-world.hook';
 
-@Controller()
 @HelloWorld(':)')
 class MyController {
   @Get('/foo')
@@ -73,7 +70,6 @@ class MyController {
   }
 }
 
-@Controller()
 class MyController2 {
   @Get('/foobar')
   foobar() {
@@ -81,10 +77,9 @@ class MyController2 {
   }
 }
 
-@Module()
 @HelloWorld(':D')
-export class AppModule implements IModule {
-  controllers = [
+export class AppController {
+  subControllers = [
     controller('/a', MyController),
     controller('/b', MyController2)
   ]

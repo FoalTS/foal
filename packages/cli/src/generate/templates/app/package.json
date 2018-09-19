@@ -3,19 +3,30 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "build": "copy-cli \"src/**/*.html\" lib && tsc -p tsconfig.app.json",
-    "build:w": "tsc -p tsconfig.app.json -w",
+    "build:app": "copy-cli \"src/**/*.html\" lib && tsc -p tsconfig.app.json",
+    "build:app:w": "tsc -p tsconfig.app.json -w",
     "start": "node ./lib/index.js",
     "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
-    "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
+    "develop": "npm run build:app && concurrently \"npm run build:app:w\" \"npm run start:w\"",
 
-    "build:test": "copy-cli \"src/**/*.html\" lib && tsc",
-    "build:test:w": "tsc -w",
-    "start:test": "mocha \"./lib/**/*.spec.js\"",
-    "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
+    "build:test": "copy-cli \"src/**/*.html\" lib && tsc -p tsconfig.test.json",
+    "build:test:w": "tsc -p tsconfig.test.json -w",
+    "start:test": "mocha --file \"./lib/test.js\" \"./lib/**/*.spec.js\"",
+    "start:test:w": "mocha --file \"./lib/test.js\" -w \"./lib/**/*.spec.js\"",
     "test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
 
+    "build:e2e": "copy-cli \"src/**/*.html\" lib && tsc -p tsconfig.e2e.json",
+    "build:e2e:w": "tsc -p tsconfig.e2e.json -w",
+    "start:e2e": "mocha --file \"./lib/e2e.js\" \"./lib/e2e/**/*.js\"",
+    "start:e2e:w": "mocha --file \"./lib/e2e.js\" -w \"./lib/e2e/**/*.js\"",
+    "e2e": "npm run build:e2e && concurrently \"npm run build:e2e:w\" \"npm run start:e2e:w\"",
+
+    "build:scripts": "tsc -p tsconfig.scripts.json",
+    "build:scripts:w": "tsc -p tsconfig.scripts.json -w",
+
     "lint": "tslint -c tslint.json -p tsconfig.json",
+
+    "build:migrations": "tsc -p tsconfig.migrations.json",
     "migration:generate": "./node_modules/.bin/typeorm migration:generate",
     "migration:run": "./node_modules/.bin/typeorm migration:run",
     "migration:revert": "./node_modules/.bin/typeorm migration:revert"
@@ -24,19 +35,20 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@foal/core": "^0.6.0-beta.4",
-    "@foal/ejs": "^0.6.0-beta.4",
+    "@foal/core": "0.6.0-beta.5",
+    "@foal/ejs": "0.6.0-beta.5",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@types/node": "^8.0.47",
-    "mocha": "^5.2.0",
     "@types/mocha": "^5.2.1",
+    "@types/node": "^8.0.47",
     "concurrently": "^3.5.1",
     "copy": "^0.3.2",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0",
     "supervisor": "^0.12.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"

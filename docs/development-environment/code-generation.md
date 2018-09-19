@@ -19,7 +19,7 @@ foal g controller foobar
 
 Create a new controller in `./src/app/controllers`, in `./controllers` or in the current directory depending on which folders are found.
 
-If you are in the root directory and you want to automatically register the controller within the app module you can add the `--register` flag.
+If you are in the root directory and you want to automatically register the controller within the app controller you can add the `--register` flag.
 
 ```shell
 foal g controller foobar --register
@@ -41,13 +41,13 @@ foal g hook foobar
 
 Create a new controller in `./src/app/hooks`, in `./hooks` or in the current directory depending on which folders are found.
 
-## Create a module
+## Create a sub-app
 
 ```shell
-foal g module foobar
+foal g sub-app foobar
 ```
 
-Create a new module with all its files in `./src/app/sub-modules`, in `./sub-modules` or in the current directory depending on which folders are found.
+Create a new sub-app with all its files in `./src/app/sub-apps`, in `./sub-apps` or in the current directory depending on which folders are found.
 
 ## Create a service
 

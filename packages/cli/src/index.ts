@@ -16,9 +16,9 @@ import {
   createController,
   createEntity,
   createHook,
-  createModule,
   createScript,
   createService,
+  createSubApp,
   ServiceType
 } from './generate';
 import { runScript } from './run-script';
@@ -40,13 +40,13 @@ program
   .command('run-script <name>')
   .description('Runs the given script.')
   .action((name: string) => {
-    runScript({ name });
+    runScript({ name }, process.argv);
   });
 
 program
   .command('generate <type> <name>')
-  .description('Generates files (type: controller|entity|hook|module|service).')
-  .option('-r, --register', 'Register the controller into app.module.ts (only available if type=controller)')
+  .description('Generates files (type: controller|entity|hook|sub-app|service).')
+  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
   .action(async (type: string, name: string, options) => {
     switch (type) {
@@ -63,8 +63,8 @@ program
       case 'hook':
         createHook({ name });
         break;
-      case 'module':
-        createModule({ name });
+      case 'sub-app':
+        createSubApp({ name });
         break;
       case 'script':
         createScript({ name });
@@ -88,7 +88,7 @@ program
         createService({ name, type: serviceAnswers.type});
         break;
       default:
-        console.error('Please provide a valid type: controller|entity|hook|module|service.');
+        console.error('Please provide a valid type: controller|entity|hook|sub-app|service.');
     }
   });
 

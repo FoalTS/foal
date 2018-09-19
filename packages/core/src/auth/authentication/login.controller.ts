@@ -5,7 +5,7 @@ import * as Ajv from 'ajv';
 import {
   Class,
   Context,
-  Controller,
+  dependency,
   Get,
   HttpResponseBadRequest,
   HttpResponseNoContent,
@@ -31,12 +31,12 @@ export function strategy(name: Strategy['name'],
   return { name, authenticatorClass, schema };
 }
 
-@Controller()
 export abstract class LoginController {
   redirect: { logout?: string, success?: string, failure?: string } | undefined;
   abstract strategies: Strategy[];
 
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
 
   @Get('/logout')
   logout(ctx: Context) {

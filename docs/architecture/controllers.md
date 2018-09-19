@@ -5,9 +5,8 @@ foal generate controller my-controller
 ```
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
+import { Context, Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class MyController {
 
   @Get('/flight')
@@ -26,12 +25,11 @@ Controllers are the front door of your application. They catch all the incoming 
 
 ### Creating a controller
 
-Formally a controller is a single class that is instantiated as a singleton. The class itself is surrounded by the `Controller` decorator. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
+Formally a controller is a single class that is instantiated as a singleton. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
 
 ```typescript
-import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
+import { Context, Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class MyController {
   private flights = [
     { id: 1, from: 'SFO', to: 'NYC' }
@@ -47,16 +45,15 @@ export class MyController {
 
 ### Registering the controller
 
-Each controller is attached to the request handler through a module.
+The entry point of a FoalTS application is the `AppController`. Each controller that is directly or indirectly a `sub-controller` of this class is attached to the request handler.
 
 ```typescript
-import { controller, IModule, Module } from '@foal/core';
+import { controller } from '@foal/core';
 
 import { MyController } from './controllers/my-controller';
 
-@Module()
-export class AppModule implements IModule {
-  controllers = [
+export class AppController {
+  subControllers = [
     controller('/', MyController)
   ];
 }
@@ -74,25 +71,28 @@ Each decorated method of a controller takes a `Context` as parameter. This objec
 To call a service you need to inject it in your controller. Here are the two ways to do it:
 
 ```typescript
-@Service()
+import { dependency, Get } from '@foal/core';
+
 class MyService {
   run() {
     console.log('hello world');
   }
 }
 
-@Controller()
 class MyController {
-  constructor(private myService: MyService) {}
+  @dependency
+  myService: MyService;
+
   @Get('/foo')
   foo(ctx) {
     this.myService.run();
   }
 }
 // OR
-@Controller()
 class MyController2 {
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
+
   @Get('/foo')
   foo(ctx) {
     this.services.get(MyService).run();
@@ -105,7 +105,6 @@ class MyController2 {
 A controller is a simple class and so can be tested as is. Note that [hooks](./hooks.md) are ignored upon testing.
 
 ```typescript
-@Controller()
 class MyController() {
   @Get('/foo')
   @LoginRequired()
@@ -126,7 +125,6 @@ ok(controller.foo(ctx) instanceof HttpResponseOK);
 ## Inheriting controllers
 
 ```typescript
-@Controller()
 abstract class ParentController {
   @Get('/foo')
   foo() {
@@ -135,7 +133,6 @@ abstract class ParentController {
 }
 
 
-@Controller()
 class ChildController extends ParentController {
   @Post('/bar')
   bar() {
@@ -146,9 +143,42 @@ class ChildController extends ParentController {
 
 You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put` or `Delete` decorator then the parent path and HTTP method are used. If you don't add a hook, then the parent hooks are used. Otherwise they are all discarded.
 
+## Using sub-controllers
+
+When your app grows up, you may be interested in splitting your controller into several ones (authentication, admin, home, etc). Here's an example on how to embed your controllers:
+
+```typescript
+class Controller1 {
+  @Get('/my_resources')
+  myResources() {
+    // do something
+  }
+};
+
+class Controller2 {
+  @Get('/my_resources2')
+  myResources2() {
+    // do something
+  }
+};
+
+class AppController {
+  subControllers = [
+    controller('/foo', Controller1)
+    controller('/', Controller2)
+  ];
+}
+
+/**
+ * The app serves three endpoints:
+ * - /foo/my_resources
+ * - /my_resources2
+ */
+```
+
 ## Common controllers
 
-FoalTS provides some common controllers to [log in](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
+FoalTS provides some common controllers to [authenticate](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
 ## Responding with special status or headers
 

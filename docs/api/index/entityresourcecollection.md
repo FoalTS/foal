@@ -1,19 +1,19 @@
 # Table of contents
 
-* [EntityResourceCollection][ClassDeclaration-25]
+* [EntityResourceCollection][ClassDeclaration-26]
     * Methods
-        * [create(user, data, params)][MethodDeclaration-16]
-        * [findById(user, id, params)][MethodDeclaration-17]
-        * [find(user, params)][MethodDeclaration-18]
-        * [modifyById(user, id, data, params)][MethodDeclaration-19]
-        * [updateById(user, id, data, params)][MethodDeclaration-20]
-        * [deleteById(user, id, params)][MethodDeclaration-21]
+        * [create(user, data, params)][MethodDeclaration-18]
+        * [findById(user, id, params)][MethodDeclaration-19]
+        * [find(user, params)][MethodDeclaration-20]
+        * [modifyById(user, id, data, params)][MethodDeclaration-21]
+        * [updateById(user, id, data, params)][MethodDeclaration-22]
+        * [deleteById(user, id, params)][MethodDeclaration-23]
     * Properties
-        * [entityClass][PropertyDeclaration-58]
-        * [allowedOperations][PropertyDeclaration-59]
-        * [middlewares][PropertyDeclaration-60]
-        * [loadedRelations][PropertyDeclaration-61]
-        * [connectionName][PropertyDeclaration-62]
+        * [entityClass][PropertyDeclaration-60]
+        * [allowedOperations][PropertyDeclaration-61]
+        * [middlewares][PropertyDeclaration-62]
+        * [loadedRelations][PropertyDeclaration-63]
+        * [connectionName][PropertyDeclaration-64]
 
 # EntityResourceCollection
 
@@ -204,25 +204,25 @@ public readonly connectionName: string;
 
 string
 
-[ClassDeclaration-25]: entityresourcecollection.md#entityresourcecollection
-[MethodDeclaration-16]: entityresourcecollection.md#createuser-data-params
+[ClassDeclaration-26]: entityresourcecollection.md#entityresourcecollection
+[MethodDeclaration-18]: entityresourcecollection.md#createuser-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-17]: entityresourcecollection.md#findbyiduser-id-params
+[MethodDeclaration-19]: entityresourcecollection.md#findbyiduser-id-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-18]: entityresourcecollection.md#finduser-params
+[MethodDeclaration-20]: entityresourcecollection.md#finduser-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-19]: entityresourcecollection.md#modifybyiduser-id-data-params
+[MethodDeclaration-21]: entityresourcecollection.md#modifybyiduser-id-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-20]: entityresourcecollection.md#updatebyiduser-id-data-params
+[MethodDeclaration-22]: entityresourcecollection.md#updatebyiduser-id-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-21]: entityresourcecollection.md#deletebyiduser-id-params
+[MethodDeclaration-23]: entityresourcecollection.md#deletebyiduser-id-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[PropertyDeclaration-58]: entityresourcecollection.md#entityclass
+[PropertyDeclaration-60]: entityresourcecollection.md#entityclass
 [InterfaceDeclaration-1]: ../index.md#class
-[PropertyDeclaration-59]: entityresourcecollection.md#allowedoperations
+[PropertyDeclaration-61]: entityresourcecollection.md#allowedoperations
 [InterfaceDeclaration-4]: ../index.md#iresourcecollection
-[PropertyDeclaration-60]: entityresourcecollection.md#middlewares
+[PropertyDeclaration-62]: entityresourcecollection.md#middlewares
 [InterfaceDeclaration-4]: ../index.md#iresourcecollection
 [TypeAliasDeclaration-1]: ../index.md#middleware
-[PropertyDeclaration-61]: entityresourcecollection.md#loadedrelations
-[PropertyDeclaration-62]: entityresourcecollection.md#connectionname
+[PropertyDeclaration-63]: entityresourcecollection.md#loadedrelations
+[PropertyDeclaration-64]: entityresourcecollection.md#connectionname

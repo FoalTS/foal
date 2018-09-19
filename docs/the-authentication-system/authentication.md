@@ -15,15 +15,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class User extends AbstractUser {
 ​
   @PrimaryGeneratedColumn()
-  // @ts-ignore : Property 'id' has no initializer and is not definitely assigned in theconstructor.
   id: number;
 ​
   @Column({ unique: true })
-  // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
   email: string;
 ​
   @Column()
-  // @ts-ignore : Property 'email' has no initializer and is not definitely assigned in theconstructor.
   password: string;
 ​
   async setPassword(password: string) {
@@ -34,7 +31,7 @@ export class User extends AbstractUser {
 
 ```
 
-> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build && node lib/scripts/create-user.js`.
+> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build:scripts && foal run-script create-user`.
 
 ### Create an Authenticator
 
@@ -46,11 +43,10 @@ foal g service authenticator
 ```
 
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from '../entities';
 
-@Service()
 export class Authenticator extends EmailAuthenticator<User> {
   entityClass = User;
 }
@@ -68,14 +64,13 @@ foal g controller auth
 
 Replace the content with:
 ```typescript
-import { Controller, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
 ​​
 import { Authenticator } from '../services/authenticator.service';
 
-@Controller()
 export class AuthController extends LoginController {
   strategies = [
     strategy('login-with-email', Authenticator, emailSchema),
@@ -112,9 +107,8 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 ## Authenticate the user on further requests
 
 ```typescript
-@Module()
 @Authenticate(User) // Add user to each context.
-export class AppModule implements IModule {
+export class AppController {
   ...
 }
 ```
@@ -138,11 +132,10 @@ Its constructor takes an user entity.
 
 *Example*:
 ```typescript
-import { EmailAuthenticator, Service } from '@foal/core';
+import { EmailAuthenticator } from '@foal/core';
 
 import { User } from './user.entity';
 
-@Service()
 export class AuthenticatorService extends EmailAuthenticator<User> {
   entityClass = User;
 }
@@ -157,7 +150,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 The `Authenticate` hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
 
-Usually it is registered once within the `AppModule.
+Usually it is registered once within the `AppController`.
 
 
 ### Logging out

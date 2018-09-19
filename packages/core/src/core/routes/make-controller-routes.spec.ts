@@ -2,14 +2,14 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Controller } from '../controllers';
 import { Hook, HookFunction } from '../hooks';
 import { Get, Post } from '../http';
-import { Service, ServiceManager } from '../service-manager';
+import { dependency, ServiceManager } from '../service-manager';
 import { makeControllerRoutes } from './make-controller-routes';
 
 describe('makeControllerRoutes', () => {
 
+  const hook0: HookFunction = () => {};
   const hook1: HookFunction = () => {};
   const hook2: HookFunction = () => {};
   const hook3: HookFunction = () => {};
@@ -18,7 +18,6 @@ describe('makeControllerRoutes', () => {
   const hook6: HookFunction = () => {};
 
   it('should return the routes from a controller with no paths and hooks.', () => {
-    @Controller()
     class FoobarController {
       @Get()
       bar() {}
@@ -37,7 +36,7 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from a controller with the parent, controller and method paths.', () => {
-    @Controller('/foo/')
+    @Reflect.metadata('path', '/foo/')
     class FoobarController {
       @Get('/bar')
       bar() {}
@@ -51,7 +50,6 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from a controller with the parent, controller and method hooks.', () => {
-    @Controller()
     @Hook(hook3)
     @Hook(hook4)
     class FoobarController {
@@ -69,8 +67,6 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should return the routes from the controller methods that have a http-method decorator.', () => {
-
-    @Controller()
     class FoobarController {
       @Get()
       bar() {}
@@ -79,7 +75,6 @@ describe('makeControllerRoutes', () => {
 
       @Post()
       barfoo() {}
-
     }
 
     const routes = makeControllerRoutes('', [], FoobarController, new ServiceManager());
@@ -96,17 +91,16 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should properly instantiate a controller that has dependencies.', () => {
-
-    @Service()
     class Service1 {}
 
-    @Service()
     class Service2 {}
 
-    @Controller()
     class FoobarController {
-      // tslint:disable-next-line:no-unused-variable
-      constructor(private service1: Service1, private service2: Service2) {}
+      @dependency
+      service1: Service1;
+
+      @dependency
+      service2: Service2;
 
       @Get()
       bar() {}
@@ -132,7 +126,7 @@ describe('makeControllerRoutes', () => {
 
     }
 
-    @Controller('/foo')
+    @Reflect.metadata('path', '/foo')
     @Hook(hook2)
     class FoobarController2 extends FoobarController {
 
@@ -160,6 +154,51 @@ describe('makeControllerRoutes', () => {
     strictEqual(routes[1].path, '/foo/bar');
     strictEqual(routes[1].propertyKey, 'bar');
 
+  });
+
+  it('should recursively return the routes of the subControllers if they exist.', () => {
+    @Reflect.metadata('path', '/api')
+    @Hook(hook2)
+    class ApiController {
+      @Get('/flights')
+      @Hook(hook3)
+      flights() {}
+    }
+
+    @Reflect.metadata('path', '/auth')
+    @Hook(hook4)
+    class AuthController {
+      @Get('/')
+      @Hook(hook5)
+      index() {}
+    }
+
+    @Reflect.metadata('path', '/foo')
+    @Hook(hook1)
+    class AppController {
+      subControllers = [
+        ApiController,
+        AuthController,
+      ];
+    }
+
+    const routes = makeControllerRoutes('bar//', [ hook0 ] , AppController, new ServiceManager());
+
+    strictEqual(routes.length, 2);
+
+    // bar
+    ok(routes[0].controller instanceof ApiController);
+    deepStrictEqual(routes[0].hooks, [ hook0, hook1, hook2, hook3 ]);
+    strictEqual(routes[0].httpMethod, 'GET');
+    strictEqual(routes[0].path, 'bar/foo/api/flights');
+    strictEqual(routes[0].propertyKey, 'flights');
+
+    // foobar
+    ok(routes[1].controller instanceof AuthController);
+    deepStrictEqual(routes[1].hooks, [ hook0, hook1, hook4, hook5 ]);
+    strictEqual(routes[1].httpMethod, 'GET');
+    strictEqual(routes[1].path, 'bar/foo/auth/');
+    strictEqual(routes[1].propertyKey, 'index');
   });
 
 });

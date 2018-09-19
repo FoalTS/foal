@@ -6,6 +6,14 @@ Data sent from client side cannot be trusted. This document shows you different 
 
 FoalTS validation is based on [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](http://epoberezkin.github.io/ajv/). 
 
+FoalTS's [baseline ajv configuration](https://github.com/epoberezkin/ajv#options-to-modify-validated-data) is:
+```typescript
+{
+  coerceTypes: true,  // change data type of data to match type keyword
+  removeAdditional: true, // remove additional properties
+  useDefaults: true, // replace missing properties and items with the values from corresponding default keyword
+}
+```
 
 ## The `validate` util
 
@@ -30,15 +38,12 @@ validate(schema, data);
 // => error.content contains the details of the validation error.
 ```
 
-## The `ValidateBody` and `ValidateQuery` hooks
+## The `ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` hooks
 
-`ValidateBody` and `ValidateQuery` are hooks to control the body and the query of the requests received by the server. They validate the `context.request.body` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
-
-Note: You can provide your own instance of Ajv.
+`ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate the `context.request.{body|headers|params|query}` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `content`.
 
 *Example*:
 ```typescript
-@Controller()
 export class MyController {
 
   @Post('/user')

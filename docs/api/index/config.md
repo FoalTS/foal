@@ -4,7 +4,7 @@
     * Methods
         * [get(configName, propName, defaultValue)][MethodDeclaration-24]
     * Properties
-        * [root][PropertyDeclaration-70]
+        * [root][PropertyDeclaration-71]
 
 # Config
 
@@ -45,4 +45,4 @@ string
 
 [ClassDeclaration-29]: config.md#config
 [MethodDeclaration-24]: config.md#getconfigname-propname-defaultvalue
-[PropertyDeclaration-70]: config.md#root
+[PropertyDeclaration-71]: config.md#root

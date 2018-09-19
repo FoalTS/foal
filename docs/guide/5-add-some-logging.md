@@ -6,16 +6,15 @@ Now that the application is serving properly our REST API, we'd like to add some
 
 For that you are going to use the `Log` hook. Hooks are decorators that aim to perform actions before the execution of the controller methods. They can serve many purposes, they are especially useful to control user access or to validate the format of the request data.
 
-Hooks can decorate a controller method, the controller itself or a module. A hook decorating a controller applies to all the controller methods and a hook decorating a module applies to all its controllers and sub-modules.
+Hooks can decorate a controller method or the controller itself. A hook decorating a controller applies to all the controller methods and its sub-controllers.
 
 Let's see how it works.
 
 We'd like to print a custom message when `GET /airport` or one of the REST API endpoints is called.
 
 ```typescript
-import { Controller, Get, HttpResponseOK, Log } from '@foal/core';
+import { Get, HttpResponseOK, Log } from '@foal/core';
 
-@Controller()
 export class AirportController {
   @Get()
   @Log('Someone reads to the airport name.')
@@ -27,14 +26,14 @@ export class AirportController {
 ```
 
 ```typescript
-import { Controller, Log, RestController } from '@foal/core';
+import { dependency, Log, RestController } from '@foal/core';
 
 import { FlightCollection } from '../services';
 
-@Controller()
 @Log('Someone creates, reads, updates or deletes flight(s).')
 export class FlightController extends RestController {
-  collectionClass = FlightCollection;
+  @dependency
+  collection: FlightCollection;
 }
 ```
 

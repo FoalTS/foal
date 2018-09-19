@@ -1,11 +1,11 @@
 # Table of contents
 
-* [Context][ClassDeclaration-5]
+* [Context][ClassDeclaration-6]
     * Constructor
-        * [constructor(request)][Constructor-1]
+        * [constructor(request)][Constructor-0]
     * Properties
-        * [state][PropertyDeclaration-13]
-        * [user][PropertyDeclaration-14]
+        * [state][PropertyDeclaration-15]
+        * [user][PropertyDeclaration-16]
 
 # Context
 
@@ -56,9 +56,9 @@ public user: User | undefined;
 
 User | undefined
 
-[ClassDeclaration-5]: context.md#context
+[ClassDeclaration-6]: context.md#context
 [ClassDeclaration-1]: abstractuser.md#abstractuser
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[Constructor-1]: context.md#constructorrequest
-[PropertyDeclaration-13]: context.md#state
-[PropertyDeclaration-14]: context.md#user
+[Constructor-0]: context.md#constructorrequest
+[PropertyDeclaration-15]: context.md#state
+[PropertyDeclaration-16]: context.md#user

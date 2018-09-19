@@ -43,11 +43,10 @@ foal g service flight
 ```
 
 ```typescript
-import { EntityResourceCollection, Service } from '@foal/core';
+import { EntityResourceCollection } from '@foal/core';
 
 import { Flight } from '../entities/flight.entity';
 
-@Service()
 export class FlightCollection extends EntityResourceCollection {
   entityClass = Flight;
   allowedOperations: EntityResourceCollection['allowedOperations'] = [
@@ -137,7 +136,8 @@ The `extendParams` methods lets you extend the `params` parameter sent to the se
 ```typescript
 ...
 export class FlightController extends RestController {
-  collectionClass = FlightCollection;
+  @dependency
+  collection: FlightCollection;
 
   extendParams(ctx: Context, params: CollectionParams): CollectionParams {
     const fields = ctx.query.fields;
