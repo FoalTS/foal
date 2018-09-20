@@ -9,7 +9,7 @@ import { Context, Get, HttpResponseOK } from '@foal/core';
 
 export class MyController {
 
-  @Get('/flight')
+  @Get('/flights')
   getFlights(ctx: Context) {
     return new HttpResponseOK([]);
   }
@@ -35,7 +35,7 @@ export class MyController {
     { id: 1, from: 'SFO', to: 'NYC' }
   ];
 
-  @Get('/flight')
+  @Get('/flights')
   getFlights(ctx: Context) {
     return new HttpResponseOK(this.flights);
   }
@@ -63,7 +63,7 @@ export class AppController {
 
 Each decorated method of a controller takes a `Context` as parameter. This object has three properties:
 - the express `request` which has information on the request as well as the session object and the `csrfToken` method,
-- the `user` property which is undefined or not depedending on if a user were authenticated,
+- the `user` property which is undefined or not depedending on if a user was authenticated,
 - and a `state` object which is a mere object to forward information between [hooks](./hooks.md).
 
 ## Calling service methods
@@ -105,7 +105,7 @@ class MyController2 {
 A controller is a simple class and so can be tested as is. Note that [hooks](./hooks.md) are ignored upon testing.
 
 ```typescript
-class MyController() {
+class MyController {
   @Get('/foo')
   @LoginRequired()
   foo(ctx: Context) {
@@ -117,7 +117,9 @@ class MyController() {
 ```typescript
 import { ok } from 'assert';
 
-const controller = new Controller();
+import { Context, createController, HttpResponseOK } from '@foal/core';
+
+const controller = createController(MyController);
 const ctx = new Context({});
 ok(controller.foo(ctx) instanceof HttpResponseOK);
 ```
@@ -178,7 +180,7 @@ class AppController {
 
 ## Common controllers
 
-FoalTS provides some common controllers to [authenticate](../security/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
+FoalTS provides some common controllers to [authenticate](../the-authentication-system/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
 ## Responding with special status or headers
 

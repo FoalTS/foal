@@ -29,9 +29,11 @@ export class User extends AbstractUser {
   }​
 }
 
+export { Group, Permission } from '@foal/core';
+
 ```
 
-> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build:scripts && foal run-script create-user`.
+> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build:scripts && foal run-script create-user email=mary@foalts.org password=mary_password`.
 
 ### Create an Authenticator
 
@@ -65,9 +67,6 @@ foal g controller auth
 Replace the content with:
 ```typescript
 import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
-
-import { readFileSync } from 'fs';
-import { join } from 'path';
 ​​
 import { Authenticator } from '../services/authenticator.service';
 
@@ -77,9 +76,9 @@ export class AuthController extends LoginController {
   ];
 
   redirect = {
+    failure: '/login', // optional
     logout: '/login', // optional
     success: '/home', // optional
-    failure: '/login', // optional
   };
 
   @Get('/login')
@@ -95,7 +94,7 @@ Create a file named `login.html` inside `controllers/templates` with the followi
   <head></head>
   <body>
     <form action="/login-with-email" method="POST">
-      <input style="display: none" value="<%= csrfToken %>">
+      <input style="display: none" name="_csrf" value="<%= csrfToken %>">
       <input type="email" name="email">
       <input type="password" name="password">
       <button type="submit">Log in</button>

@@ -104,7 +104,7 @@ As foal uses the inversion of control principle, a service is very easy to test.
 import { strictEqual } from 'assert';
 
 // 3p
-import { dependency, ServiceManager } from '@foal/core';
+import { createService, dependency, ServiceManager } from '@foal/core';
 
 class ServiceA {
   name = 'Service A';
@@ -120,11 +120,11 @@ class ServiceB {
 const serviceA = new ServiceA();
 strictEqual(serviceA.name, 'Service A');
 
-const serviceB = new ServiceB(new ServiceA());
+const serviceB = createService(ServiceB);
 strictEqual(serviceB.serviceA.name, 'Service A');
 
 const mock = {} as ServiceA;
-const serviceB2 = new ServiceB(mock);
+const serviceB2 = createService(ServiceB, { serviceA: mock });
 strictEqual(serviceB2.name, 'Service B');
 
 const services = new ServiceManager();
