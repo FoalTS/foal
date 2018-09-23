@@ -40,8 +40,6 @@ async function main() {
     foo: 1
   });
 }
-
-main();
 ```
 
 ### ... with a Shell Script (CLI)
