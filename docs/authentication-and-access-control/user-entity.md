@@ -14,6 +14,8 @@ The primary attributes of the `AbstractUser` are:
 | groups | Group[] | A many-to-many relation with the table group |
 | userPermissions | Permission[] | A many-to-many relation with the table permission |
 
+> In FoalTS you can customize the `User` class to suit your needs. The framework makes no assumptions about the attributes required by the user objects. Maybe you'll need a `firstName` column, maybe not.  Maybe the authentication will be processed with an email and a password or maybe you will use an authentication token. The choice is yours!
+
 ## Creating users ...
 
 There are several ways to create users.
@@ -23,7 +25,7 @@ There are several ways to create users.
 ```typescript
 import { getManager, getRepository } from 'typeorm';
 
-import { User } from 'src/app/entities';
+import { User } from './src/app/entities';
 
 async function main() {
   const user = new User();
@@ -44,13 +46,47 @@ main();
 
 ### ... with a Shell Script (CLI)
 
+You can use the `create-user` shell script (located in `src/scripts`) to create a new user through the command line.
+
+```sh
+npm run build:scripts
+foal run-script create-user
+```
+
 ## Authenticating users
 
-## Email and Password
+In FoalTS authentication is handled with *authenticators*. An authenticator is a service that implements the `IAuthenticator<User>` interface. It has a method `authenticate(credentials: any): User | null | Promise<User | null>` which returns the user if the credentials are correct or null otherwise.
 
-### Create a user
+The choice of the *authenticator* service depends on which authentication mechanism(s) your application support (passwords, OAuth, etc).
 
-Go to `src/app/entities/user.entity` and add two new columns: an email and a password.
+*Example*
+```typescript
+import { dependency } from '@foal/core';
+
+import { MyAuthenticator } from 'somewhere';
+
+export class MyService {
+  @dependency
+  myAuthenticator: MyAuthenticator;
+
+  async logUser(credentials) {
+    const user = await this.myAuthenticator.authenticate(credentials);
+    if (!user) {
+      console.log('Error: The credentials are incorrect.');
+      return;
+    }
+    console.log(user);
+  }
+}
+```
+
+## Using Email and Password
+
+This section describes how to handle authentication with an email and a password.
+
+### The User Entity
+
+Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a password.
 
 ```typescript
 import { AbstractUser, parsePassword } from '@foal/core';
@@ -69,7 +105,7 @@ export class User extends AbstractUser {
   password: string;
 ​
   async setPassword(password: string) {
-    // 'parsePassword' is a Foal built-in function which deals with password encryption. Therefore no password in clear text is saved in the database. 
+    // Encrypt the password before storing it in the database
     this.password = await parsePassword(password);
   }​
 }
@@ -78,11 +114,26 @@ export { Group, Permission } from '@foal/core';
 
 ```
 
-> You can use the `scripts/create-user.ts` to create users. Simply run `npm run build:scripts && foal run-script create-user email=mary@foalts.org password=mary_password`.
+> Note: When creating a new user programmatically you should use the `setPassword` method instead of assigning directly the `password` property. Otherwise the password will be stored in clear text  in the database and the `EmailAuthenticator` won't be able to decode it.
 
-### Create an Authenticator
+### The create-user Shell Script
 
-Create a new strategy (an `IAuthenticator`) to authenticate the user from its credentials. In this case, use the built-in `EmailAuthenticator` (it is based on users which use email and password).
+Running the `create-user` script will result in an error since we do not provide an email and a password as arguments.
+
+Go to `src/scripts/create-user.ts` and uncomment the lines mentionning the emails and passwords.
+
+> To get it work, you will also need to install the `password` package: `npm install --save @foal/password`. The `isCommon` util helps you to detect if a password is too common (ex: 12345) and thus prevents the script from creating a new user with an unsecured password.
+
+You can now create a new user with these commands:
+
+```sh
+npm run build:scripts
+foal run-script create-user email=mary@foalts.org password=mary_password
+```
+
+### The EmailAuthenticator
+
+The `EmailAuthenticator` is designed to authenticate users having an email and a password.
 
 ```sh
 foal g service authenticator
@@ -100,105 +151,26 @@ export class Authenticator extends EmailAuthenticator<User> {
 
 ```
 
-You can now call the method `authenticate({ email, password }): Promise<User|null>` from the `Authenticator` service to authenticate a user. If the credentials are incorrect then the `null` value is returned.
+You can now call the method `authenticate({ email, password }): Promise<User|null>` of the `Authenticator` service to authenticate a user.
 
-### Create a LoginController
-
-```sh
-foal g controller auth
-> Login
-```
-
-Replace the content with:
-```typescript
-import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
-​​
-import { Authenticator } from '../services/authenticator.service';
-
-export class AuthController extends LoginController {
-  strategies = [
-    strategy('login-with-email', Authenticator, emailSchema),
-  ];
-
-  redirect = {
-    failure: '/login', // optional
-    logout: '/login', // optional
-    success: '/home', // optional
-  };
-
-  @Get('/login')
-  renderLogin(ctx) {
-    return render('./templates/login.html', { csrfToken: ctx.request.csrfToken() }, __dirname);
-  }
-}
-```
-
-Create a file named `login.html` inside `controllers/templates` with the following content:
-```html
-<html>
-  <head></head>
-  <body>
-    <form action="/login-with-email" method="POST">
-      <input style="display: none" name="_csrf" value="<%= csrfToken %>">
-      <input type="email" name="email">
-      <input type="password" name="password">
-      <button type="submit">Log in</button>
-    </form>
-  </body>
-</html>
-```
-
-## Authenticate the user on further requests
+*Example*
 
 ```typescript
-@Authenticate(User) // Add user to each context.
+import { Context, dependency, emailSchema, HttpResponseOK, Post } from '@foal/core';
+
+import { Authenticator } from '../services';
+
 export class AppController {
-  ...
+  @dependency
+  authenticator: Authenticator;
+
+  @Post('/log_user')
+  @ValidateBody(emailSchema)
+  async logUser(ctx: Context) {
+    const user = await this.authenticator.authenticate(ctx.request.body);
+    console.log(user);
+    return new HttpResponseOK();
+  }
+
 }
 ```
-<!--
-// TODO: Deal with this.
-### The `Authenticator` interface
-
-```typescript
-interface IAuthenticator<User> {
-  authenticate(credentials: any): User | null | Promise<User|null>;
-}
-```
-
-A service implementing the `IAuthenticator` interface aims to authenticate a user from its credentials. Usual credentials would be an email and a password but it could be anything you want (such Google, Facebook or Twitter credentials for example). If the credentials are invalid no error should be thrown and the `authenticate` method should return `null`.
-
-- `EmailAuthenticator`
-
-`EmailAuthenticator` is an abstract class that implements the `Authenticator` interface. Its `authenticate` method is asynchronous and takes an `{ email: string, password: string }` object as parameter.
-
-Its constructor takes an user entity.
-
-*Example*:
-```typescript
-import { EmailAuthenticator } from '@foal/core';
-
-import { User } from './user.entity';
-
-export class AuthenticatorService extends EmailAuthenticator<User> {
-  entityClass = User;
-}
-```
-
-
-When the authentication succeeds it returns an `HttpResponseNoContent` if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
-
-When the authentication fails it returns an `HttpResponseUnauthorized` if `failureRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
-
-### The `Authenticate` hook
-
-The `Authenticate` hook is used to authenticate the user for each request. If the user has already logged in (thanks to the `login` controller factory), then the `user context` will be defined.
-
-Usually it is registered once within the `AppController`.
-
-
-### Logging out
-
-To log out the user: GET /logout
-
-When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.-->
