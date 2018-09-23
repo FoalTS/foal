@@ -1,7 +1,52 @@
-# Authentication
+# User Entity and `create-user` Script
 
+## The User Entity
 
-## How to authenticate a user
+The `User` entity is the core of the authentication and authorization system. It is a class that represents the `user` table in the database and each of its instances represents a row in this table.
+
+The class definition is usually located in the file `src/app/entities/user.entity.ts`. Its attributes represent the columns of the table. It extends the `AbstractUser` which has some useful utilities to handle authentication and authorization.
+
+The primary attributes of the `AbstractUser` are:
+
+| Property name | Type | Database Link |
+| --- | --- | --- |
+| id | number | Primary auto generated key |
+| groups | Group[] | A many-to-many relation with the table group |
+| userPermissions | Permission[] | A many-to-many relation with the table permission |
+
+## Creating users ...
+
+There are several ways to create users.
+
+### ... programmatically
+
+```typescript
+import { getManager, getRepository } from 'typeorm';
+
+import { User } from 'src/app/entities';
+
+async function main() {
+  const user = new User();
+  user.foo = 1;
+  await getManager().save(user);
+  // OR
+  await getManager().save(User, {
+    foo: 1
+  });
+  // OR
+  await getRepository(User).save({
+    foo: 1
+  });
+}
+
+main();
+```
+
+### ... with a Shell Script (CLI)
+
+## Authenticating users
+
+## Email and Password
 
 ### Create a user
 

@@ -1,5 +1,25 @@
 # Permissions and Authorization
 
+Authorization - also known as Access Control - 
+
+## Simple Scenario
+
+## Permissions
+
+### The Permission Entity and The `hasPerm` Method
+
+### Creating permissions programmatically
+
+### Creating permissions with a Shell Script (CLI)
+
+## Groups
+
+### The Group Entity
+
+### Creating groups programmatically
+
+### Creating groups with a Shell Script (CLI)
+
 Access control is managed with permissions and groups.
 
 Groups are sets of users. A user can belong to several groups and a group can have several users.
