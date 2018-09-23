@@ -69,4 +69,19 @@ export class MyController {
 
 ```
 
+In this example, if you try to POST /user with a JSON object that does not have a `firstName` property, you'll get returned a 400 BAD REQUEST with this body:
+
+```json
+[
+    {
+        "keyword": "required",
+        "dataPath": "",
+        "schemaPath": "#/required",
+        "params": {
+            "missingProperty": "firstName"
+        },
+        "message": "should have required property 'firstName'"
+    }
+]
+```
 
