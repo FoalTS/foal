@@ -97,9 +97,9 @@ Every project needs dev tools. But setting up and maintaining such an environmen
 
 Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
 
-### Plugins (soon)
+### Architecture
 
-FoalTS doesn't aim to be a closed framework. Some technologies in the Node.Js ecosystem are great and you should be able to use them in your apps. To do so FoalTS ecosystem provides separate packages including these technologies.
+FoalTS provides a robust architecture for creating large web apps. Divided into controllers, services and hooks, your code is well organized. FoalTS enforces the separation of concerns, improves testability and makes your code more readable.
 
 ### Security
 
