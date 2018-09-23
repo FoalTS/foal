@@ -180,7 +180,7 @@ class AppController {
 
 ## Common controllers
 
-FoalTS provides some common controllers to [authenticate](../the-authentication-system/authentication.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
+FoalTS provides some common controllers to [authenticate](../authentication-and-access-control/usage-in-web-requests.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
 ## Responding with special status or headers
 
