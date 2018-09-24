@@ -1,9 +1,10 @@
 # Documentation
 
-* [Installation](./README.md)
+* [Introduction](./README.md)
 
 ## Tutorials
 
+* [Installation](./guide/installation.md)
 * [Getting Started](./guide/1-introduction.md)
   * [1. Introduction](./guide/1-introduction.md)
   * [2. Handle a request](./guide/2-handle-a-request.md)
@@ -17,9 +18,10 @@
   * [Introduction](./databases/introduction.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-* [The Authentication System](./the-authentication-system/authentication.md)
-  * [Authentication](./the-authentication-system/authentication.md)
-  * [Permissions & Authorization](./the-authentication-system/permissions-and-authorization.md)
+* [Authentication & Access Control](./authentication-and-access-control/SUMMARY.md)
+  * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
+  * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
+  * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
 * [Cookbook](./cookbook/validation.md)
   * [Validation](./cookbook/validation.md)
   * [REST API](./cookbook/rest-api.md)

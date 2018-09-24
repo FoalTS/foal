@@ -23,10 +23,10 @@ The `validate` util throws a `ValidationError` if the given data does not fit th
 ```typescript
 import { validate } from '@foal/core';
 
-const schema ={
+const schema = {
   properties: {
     a: { type: 'number' }
-  }
+  },
   type: 'object'
 };
 const data = {
@@ -44,6 +44,8 @@ validate(schema, data);
 
 *Example*:
 ```typescript
+import { Context, HttpResponseOK, Post, ValidateBody } from '@foal/core';
+
 export class MyController {
 
   @Post('/user')
@@ -52,7 +54,7 @@ export class MyController {
     properties: {
       firstName: { type: 'string' },
       lastName: { type: 'string' },
-    }
+    },
     required: [ 'firstName', 'lastName' ],
     type: 'object'
   })
@@ -60,10 +62,26 @@ export class MyController {
     // In this function we are sure that firstName and lastName
     // are defined thanks to the above hook.
     console.log(ctx.request.body.firstName, ctx.request.body.lastName);
+    return new HttpResponseOK();
   }
 
 }
 
 ```
 
+In this example, if you try to POST /user with a JSON object that does not have a `firstName` property, you'll get returned a 400 BAD REQUEST with this body:
+
+```json
+[
+    {
+        "keyword": "required",
+        "dataPath": "",
+        "schemaPath": "#/required",
+        "params": {
+            "missingProperty": "firstName"
+        },
+        "message": "should have required property 'firstName'"
+    }
+]
+```
 

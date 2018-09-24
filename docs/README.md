@@ -1,56 +1,76 @@
-# Get started
+<p align="center">
+  <a href="https://foalts.org" target="blank">
+    <img src="./logo_title.png" height="160px" alt="Logo" />
+  </a>
+  <br>
+</p>
 
-In this tutorial you will learn how to build and run a simple FoalTS application using the FoalTS CLI.
+<p align="center">
+  <i>A Web framework to create enterprise-grade Node.JS applications</i>
+  <br>
+  <br>
+  <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
+  </a>
+  <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
+  <a href="https://badge.fury.io/js/%40foal%2Fcore">
+    <img src="https://badge.fury.io/js/%40foal%2Fcore.svg" alt="npm version">
+  </a>
+  <a href="https://travis-ci.org/FoalTS/foal">
+    <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
+  </a>
+  <a href="https://codecov.io/github/FoalTS/foal">
+    <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
+  </a>
+  <a href="https://snyk.io/test/github/foalts/foal">
+    <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
+  </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
+  </a>
+  <a href="https://github.com/FoalTS/foal/commits/master">
+    <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
+  </a>
+</p>
 
-This command line interface lets you quickly create files and projects and run special scripts.
 
-## 1. Set up the Development Environment
+## Description
 
-First of all you need to set up your development environment before creating a new project.
+FoalTS is a high-level Node.JS framework to quickly build robust web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
 
-Install [Node.Js and npm](https://nodejs.org/en/download/) if they are not already installed on your host.
 
-> FoalTS requires version 8 of nodejs or higher.
+## Motivation
 
-Then install the FoalTS CLI.
+In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
 
-```shell
-npm install -g @foal/cli
-```
+But when it comes to setting up a complete and scalable project, things get harder. You have to put everything in place. The authorization system, database migrations, development tools or even encryption of passwords are just the tip of the iceberg. Working on this is time consuming and may slow down the release frequency or even lead to undesired bugs. As the codebase grows up and the complexity increases, it becomes harder and harder to develop new features and maintain the app.
 
-## 2. Create a new project
+This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
-You are now ready to create your first project.
+[=> Continue with the tutorial <3](./guide/1-introduction.md)
 
-```shell
-foal createapp my-app
-```
+## Features
 
-This command creates a new directory `my-app` with the source code of your project along with its config files and build tools.
+### Production-ready
 
-Go to the directory and install the dependencies.
+FoalTS provides an advanced configuration system to smoothly switch between your environments. How you specify the configuration may change between deploys (env variables, json files, etc). But your codebase stays the same.
 
-```shell
-cd my-app
-npm install
-```
+### TypeScript
 
-## 3. Serve the application
+TypeScript brings you optional static type-checking along with the latest ECMAScript features. Writing FoalTS with TypeScript has been and will always be fundamental. Code is more elegant and concise. Most of the silly mistakes are caught at compilation. And autocompletion is well-handled and the API is better documented.
 
-Start the server.
+### Dev tools
 
-```shell
-npm run develop
-```
+Every project needs dev tools. But setting up and maintaining such an environment in Node.Js is often hard or time consuming. FoalTS focuses on helping the developer to code. Generators, watchers, the compiler, linter, bundler and test framework are all provided in FoalTS. No more set up, get started right away.
 
-Open your browser on `http://localhost:3000` and find our welcoming message!
+### Basic components
 
-> `npm run develop` starts the **development server**. It watches at your files and automatically compiles and reloads your code. You don’t need to restart the server each time you make code changes. Note that it is only intended to be used in development, do not use it on production.
+Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
 
-> **Port 3000 already in use?**
->
-> You can modify in `config/settings.js` which port the application is using.
+### Architecture
 
-## Next steps
+FoalTS provides a robust architecture for creating large web apps. Divided into controllers, services and hooks, your code is well organized. FoalTS enforces the separation of concerns, improves testability and makes your code more readable.
 
-You now have a working FoalTS application. Continue with the [official guide](./guide/1-introduction.md) to learn how to set up a basic REST API!
+### Security
+
+Security is everyone's business. To help you ship secure apps FoalTS provides some common tools (csrf, xss protections) to take care of it. Moreover all default configurations are set to prevent security failures (cookies, headers, etc).
