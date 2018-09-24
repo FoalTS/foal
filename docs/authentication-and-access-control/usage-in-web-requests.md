@@ -95,6 +95,7 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ### The MVC Approach
 
+Create a `User` with an email and a password and create an `Authenticator` that extends the `EmailAuthenticator` class.
 
 ```sh
 foal g controller auth --register
