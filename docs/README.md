@@ -1,38 +1,15 @@
-<p align="center">
-  <a href="https://foalts.org" target="blank">
-    <img src="./logo_title.png" height="160px" alt="Logo" />
-  </a>
-  <br>
-</p>
+![Logo](./logo_title.png)
 
-<p align="center">
-  <i>A Web framework to create enterprise-grade Node.JS applications</i>
-  <br>
-  <br>
-  <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
-  </a>
-  <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
-  <a href="https://badge.fury.io/js/%40foal%2Fcore">
-    <img src="https://badge.fury.io/js/%40foal%2Fcore.svg" alt="npm version">
-  </a>
-  <a href="https://travis-ci.org/FoalTS/foal">
-    <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
-  </a>
-  <a href="https://codecov.io/github/FoalTS/foal">
-    <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
-  </a>
-  <a href="https://snyk.io/test/github/foalts/foal">
-    <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
-  </a>
-  <a href="https://github.com/FoalTS/foal/commits/master">
-    <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
-  </a>
-  <a href="https://github.com/FoalTS/foal/commits/master">
-    <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
-  </a>
-</p>
+A Web framework to create enterprise-grade Node.JS applications
 
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![node version](https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg)
+![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)
+![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)
+![Code coverage](https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg)
+![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)
+![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
+![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 
 ## Description
 
