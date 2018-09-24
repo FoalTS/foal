@@ -6,7 +6,7 @@ FoalTS uses sessions and the `Authenticate` hook to authenticate users accross s
 
 It should decorate the `AppController`. If the user has already logged in in a previous request, then it will be available in the `context` with which the controller methods are called.
 
-```typescript
+```ts
 @Authenticate(User)
 export class AppController {
   @Get('/foo')
