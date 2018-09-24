@@ -85,13 +85,7 @@ The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook
 
 The `LoginController` is a handy controller to log a user in or out using one or several authentication mechanisms.
 
-Show CLI command with `--register`
-
-<!-- ### Logging out
-
-To log out the user: GET /logout
-
-When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined. -->
+To log a user out using this controller, simply request GET /logout. When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.
 
 <!--
 When the authentication succeeds it returns an `HttpResponseNoContent` if `successRedirect` is undefined or an `HttpResponseRedirect` if it is defined.
@@ -101,14 +95,9 @@ When the authentication fails it returns an `HttpResponseUnauthorized` if `failu
 
 ### The MVC Approach
 
-### The API Approach
-
-### The Strategies (authenticators)
-
-### An example
 
 ```sh
-foal g controller auth
+foal g controller auth --register
 > Login
 ```
 
@@ -150,3 +139,9 @@ Create a file named `login.html` inside `controllers/templates` with the followi
   </body>
 </html>
 ```
+
+### The API Approach
+
+### The Strategies
+
+- `EmailAuthenticator` and `emailSchema`
