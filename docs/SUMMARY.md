@@ -6,7 +6,7 @@
 
 * [Simple To-Do List](./tutorials/simple-todo-list/1-installation.md)
   * [Installation](./tutorials/simple-todo-list/1-installation.md)
-  * [1. Introduction](./tutorials/simple-todo-list/1-introduction.md)
+  * [Introduction](./tutorials/simple-todo-list/2-introduction.md)
   * [2. Handle a request](./tutorials/simple-todo-list/2-handle-a-request.md)
   * [3. Add a model](./tutorials/simple-todo-list/3-flight-model.md)
   * [4. Create a REST API endpoint](./tutorials/simple-todo-list/4-rest-api-endpoint.md)
