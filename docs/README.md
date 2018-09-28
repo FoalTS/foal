@@ -47,7 +47,7 @@ But when it comes to setting up a complete and scalable project, things get hard
 
 This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
-[=> Continue with the tutorial <3](./guide/1-introduction.md)
+[=> Continue with the tutorial <3](./tutorials/simple-todo-list/1-introduction.md)
 
 ## Features
 

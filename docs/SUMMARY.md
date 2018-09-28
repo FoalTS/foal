@@ -4,13 +4,17 @@
 
 ## Tutorials
 
-* [Installation](./guide/installation.md)
-* [Getting Started](./guide/1-introduction.md)
-  * [1. Introduction](./guide/1-introduction.md)
-  * [2. Handle a request](./guide/2-handle-a-request.md)
-  * [3. Add a model](./guide/3-flight-model.md)
-  * [4. Create a REST API endpoint](./guide/4-rest-api-endpoint.md)
-  * [5. Add some logging](./guide/5-add-some-logging.md)
+* [Simple To-Do List](./tutorials/simple-todo-list/1-installation.md)
+  * [Installation](./tutorials/simple-todo-list/1-installation.md)
+  * [1. Introduction](./tutorials/simple-todo-list/1-introduction.md)
+  * [2. Handle a request](./tutorials/simple-todo-list/2-handle-a-request.md)
+  * [3. Add a model](./tutorials/simple-todo-list/3-flight-model.md)
+  * [4. Create a REST API endpoint](./tutorials/simple-todo-list/4-rest-api-endpoint.md)
+  * [5. Add some logging](./tutorials/simple-todo-list/5-add-some-logging.md)
+<!--
+* [Multi-User To-Do List]()
+* [To-do List & Email Notifications]()
+-->
 
 ## Topic Guides
 
