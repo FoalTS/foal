@@ -12,7 +12,7 @@ Stop and restart the `npm run develop` command and go to `http://localhost:3000`
 
 ![Browser view]()
 
-As you haven't implemented yet the server API, the frontend gets an error when fetching the to-dos. It is displayed in the bottom of the page. If you try to type something in the text input and press Enter to create a new task, you'll get another error.
+As you haven't implemented yet the server API, the frontend gets an error when fetching the to-dos. It is displayed in the bottom of the page. If you try to type something in the text input and press Enter to create a new task, you'll get an error as well.
 
 Let's see the details of the API we want to build.
 
