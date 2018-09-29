@@ -9,7 +9,7 @@
   * [Introduction](./tutorials/simple-todo-list/2-introduction.md)
   * [The Todo Model](./tutorials/simple-todo-list/3-the-todo-model.md)
   * [The Shell Script create-todo](./tutorials/simple-todo-list/4-the-shell-script-create-todo.md)
-  * [4. Create a REST API endpoint](./tutorials/simple-todo-list/4-rest-api-endpoint.md)
+  * [The REST API](./tutorials/simple-todo-list/5-the-rest-api.md)
   * [5. Add some logging](./tutorials/simple-todo-list/5-add-some-logging.md)
 <!--
 * [Multi-User To-Do List]()
