@@ -10,7 +10,7 @@
   * [The Todo Model](./tutorials/simple-todo-list/3-the-todo-model.md)
   * [The Shell Script create-todo](./tutorials/simple-todo-list/4-the-shell-script-create-todo.md)
   * [The REST API](./tutorials/simple-todo-list/5-the-rest-api.md)
-  * [5. Add some logging](./tutorials/simple-todo-list/5-add-some-logging.md)
+  * [Validation & Sanitization](./tutorials/simple-todo-list/6-validation-and-sanitization.md)
 <!--
 * [Multi-User To-Do List]()
 * [To-do List & Email Notifications]()
