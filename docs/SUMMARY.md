@@ -11,6 +11,7 @@
   * [The Shell Script create-todo](./tutorials/simple-todo-list/4-the-shell-script-create-todo.md)
   * [The REST API](./tutorials/simple-todo-list/5-the-rest-api.md)
   * [Validation & Sanitization](./tutorials/simple-todo-list/6-validation-and-sanitization.md)
+  * [Unit Testing](./tutorials/simple-todo-list/7-unit-testing.md)
 <!--
 * [Multi-User To-Do List]()
 * [To-do List & Email Notifications]()
