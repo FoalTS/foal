@@ -88,6 +88,7 @@ describe('ApiController', () => {
 
 > As a controller method returns an `HttpResponse` object, it is really easy to test the status and body of the response.
 
+
 > If the controller method takes a `Context` object as argument, you can instantiate one like this: `new Context({ /* content of the express request object */})`.
 
 Run the tests.

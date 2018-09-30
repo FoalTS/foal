@@ -2,12 +2,13 @@
 
 Good, so far you have a frontend working properly and some todos in your database. Now it is time to code a REST API to link them both.
 
-To do so, you are going to create a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help do that. We will not study the services in this tutorial.
+To do so, you are going to create a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help them do this. We will not study the services in this tutorial.
 
 Create a new controller.
 
 ```sh
 foal generate controller api --register
+> Empty
 ```
 
 Open the new generated file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
@@ -22,7 +23,7 @@ export class ApiController {
     const todos = [
       { id: 1, text: 'My task 1' },
       { id: 2, text: 'My task 2' }
-    ]
+    ];
     return new HttpResponseOK(todos);
   }
 
@@ -116,7 +117,5 @@ export class AppController {
 This controller is the main controller of the application. It is directly called when a request comes in. It may have sub-controllers that go in the `controllers/` directory.
 
 In that case, the `--register` flag directly added a new line to declare the `ApiController` as a sub-controller of `AppController`. The `ViewController` is in charge of rendering the `index.html` template.
-
-A good refactoring would be to replace the `/` path with `/api` in `app.controller.ts` and to replace all `/api/todos` by `/todos` paths in `api.controller.ts`.
 
 > The `Authenticate` decorator is useless here as you will not use authentication in this tutorial. You can remove it if you want.

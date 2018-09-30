@@ -13,7 +13,7 @@ foal generate script create-todo
 A *shell script* is a piece of code intended to be called from the command line. It has access to all the components of your application, including your models. A shell script is divided in two parts:
 
 - a `schema` object which defines the specification of the command line arguments,
-- and a `main` function which gets the arguments as an object and executes some code.
+- and a `main` function which gets these arguments as an object and executes some code.
 
 Open the new generated file in the `src/scripts` directory and update its content.
 
@@ -65,6 +65,6 @@ foal run-script create-todo text="Tell my friends about FoalTS"
 foal run-script create-todo text="Star the project"
 ```
 
-> Note that if you try to create a new to-do without specifying the text argument, you'll get the below error.
+> Note that if you try to create a new to-do without specifying the text argument, you'll get the error below.
 >
 > `Error: The command line arguments should have required property 'text'.`

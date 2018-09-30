@@ -6,13 +6,13 @@ First download the html, css and js files by clicking [here](https://foalts.org/
 
 Put the static files `script.js` and `style.js` in `public/` and move the `index.html` template in `src/app/controllers/templates/`.
 
-> The code executed in the browser will make API calls to view, create and delete the tasks. The only reason why `index.html` is a template is to send the [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery) to the frontend.
+The code executed in the browser will make API calls to the server to view, create and delete the tasks. The only reason why `index.html` is a template is to send the [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery) to the frontend.
 
 Stop and restart the `npm run develop` command and go to `http://localhost:3000`. You should now see this:
 
-![Browser view]()
+![Browser view](./app.png)
 
-As you haven't implemented yet the server API, the frontend gets an error when fetching the to-dos. It is displayed in the bottom of the page. If you try to type something in the text input and press Enter to create a new task, you'll get an error as well.
+> As you haven't implemented yet the server API, the frontend gets an error when fetching the to-dos. It is displayed in the bottom of the page. If you try to type something in the text input and press Enter to create a new task, you'll get an error as well.
 
 Let's see the details of the API we want to build.
 
