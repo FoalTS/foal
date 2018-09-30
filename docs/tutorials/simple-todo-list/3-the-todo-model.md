@@ -8,6 +8,8 @@ foal generate entity todo
 
 > FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapping*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
 
+> Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.
+
 Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
 
 ```typescript

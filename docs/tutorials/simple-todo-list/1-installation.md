@@ -43,7 +43,7 @@ The outer `my-app` root directory is just a container for your project.
   - The inner `app/` directory includes the components of your server (controllers, templates, services, hooks, sub-apps).
   - End-to-end tests are located in the `e2e/` directory.
   - The inner `scripts/` folder contains scripts that aim to be executed from the command line (ex: create-user)
-- The `ormconfig.json` file defines the configuration of the database(s) connection(s).
+- The `ormconfig.json` file defines the configuration and credentials of the database(s) connection(s). They can also be passed through environment variables.
 - The `package.json` lists the dependencies and commands of the project.
 - The `tsconfig.*.json` files list the TypeScript compiler configuration for each `npm` command.
 - Finally the linting configuration can be found in the `tslint.json` file.

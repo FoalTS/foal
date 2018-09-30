@@ -149,3 +149,60 @@ export class FlightController extends RestController {
   }
 }
 ```
+
+## An example
+
+```typescript
+// flight.model.ts
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class Todo {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  destination: string;
+
+}
+```
+
+```typescript
+// flight-collection.service.ts
+import { EntityResourceCollection, middleware, validate } from '@foal/core';
+
+import { Flight } from '../entities';
+
+const schema = {
+  additionalProperties: false,
+  properties: {
+    destination: { type: 'string' }
+  },
+  required: [ 'destination' ],
+  type: 'object',
+};
+
+export class FlightCollection extends EntityResourceCollection {
+  entityClass = Flight;
+  allowedOperations: EntityResourceCollection['allowedOperations'] = [
+    'create', 'findById', 'find', 'modifyById', 'updateById', 'deleteById'
+  ];
+
+  middlewares = [
+    middleware('create|modifyById|updateById', ({ data }) => validate(schema, data))
+  ];
+}
+```
+
+```typescript
+// flight.controller.ts
+import { dependency, RestController } from '@foal/core';
+
+import { FlightCollection } from '../services';
+
+export class FlightController extends RestController {
+  @dependency
+  collection: FlightCollection;
+}
+```
