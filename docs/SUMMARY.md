@@ -14,6 +14,7 @@
   * [Unit Testing](./tutorials/simple-todo-list/7-unit-testing.md)
 * [Multi-User To-Do List](./tutorials/multi-user-todo-list/1-introduction.md)
   * [Introduction](./tutorials/multi-user-todo-list/1-introduction.md)
+  * [The User & Todo Models](./tutorials/multi-user-todo-list/2-the-user-and-todo-models.md)
 
 ## Topic Guides
 
