@@ -1,7 +1,7 @@
 import * as Ajv from 'ajv';
 
 import { Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { getAjvInstance } from '../utils/get-ajv-instance';
+import { getAjvInstance } from '../utils';
 
 /**
  * Hook to validate the query of the request.

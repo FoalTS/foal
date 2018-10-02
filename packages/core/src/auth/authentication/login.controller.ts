@@ -1,7 +1,5 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
+import { getAjvInstance } from '../../common';
 import {
   Class,
   Context,
@@ -16,8 +14,6 @@ import {
   ServiceManager
 } from '../../core';
 import { IAuthenticator } from './authenticator.interface';
-
-const ajv = new Ajv({ removeAdditional: true });
 
 export interface Strategy {
   name: string;
@@ -56,6 +52,7 @@ export abstract class LoginController {
       return new HttpResponseNotFound();
     }
 
+    const ajv = getAjvInstance();
     const isValid = ajv.validate(strategy.schema, ctx.request.body);
     if (!isValid) {
       return new HttpResponseBadRequest(ajv.errors);

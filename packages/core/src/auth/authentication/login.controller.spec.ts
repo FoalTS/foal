@@ -146,7 +146,7 @@ describe('LoginController', () => {
         + ' not fit the schema.', async () => {
       const ctx = new Context({
         body: {
-          email: 3
+          email: {}
         },
         params: {
           strategy: 'email'
