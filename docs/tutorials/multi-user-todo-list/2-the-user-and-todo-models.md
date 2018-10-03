@@ -30,11 +30,11 @@ export class User extends AbstractUser {
 export { Group, Permission } from '@foal/core';
 ```
 
-The `parsePassword` util takes care of the password encryption to not store it as plain text in the database. When setting a password the `setPassword` method should be used instead of assigning directly a value to the password property.
+The `setPassword` method uses `parsePassword` to encrypt passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
 
 ## The Todo Model
 
-The Todo model defined in the previous tutorial now needs an `owner` property to know which user it belongs to.
+The Todo model defined in the previous tutorial now needs a `owner` property to know which user it belongs to.
 
 Replace the content of `todo.entity.ts`.
 
