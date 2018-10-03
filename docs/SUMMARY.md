@@ -16,6 +16,7 @@
   * [Introduction](./tutorials/multi-user-todo-list/1-introduction.md)
   * [The User & Todo Models](./tutorials/multi-user-todo-list/2-the-user-and-todo-models.md)
   * [The Shell Scripts](./tutorials/multi-user-todo-list/3-the-shell-scripts.md)
+  * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
 
 ## Topic Guides
 
