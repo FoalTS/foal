@@ -19,6 +19,7 @@
   * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
   * [Auth Controllers & Hooks](./tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md)
   * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
+  * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)
 
 ## Topic Guides
 
