@@ -64,7 +64,7 @@ describe('The server', () => {
       // Log the user in.
       let cookie = '';
       await request(app)
-        .post('/login')
+        .post('/auth/login')
         // Set the body of the request
         .send({ email: 'john@foalts.org', password: 'john_password' })
         // The response should have the status 302 (redirection)

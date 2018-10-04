@@ -2,9 +2,9 @@
 
 In this tutorial you will learn how to manage users, authentication and authorization in FoalTS. You will also have a quick overview of end-to-end testing.
 
-For that, you are going to create a multi-user to-do list. It extends the application created in the previous tutorial [Simple To-Do List](../simple-todo-list/1-installation.md) that you must follow before going through this one.
+For that, you are going to create a multi-user to-do list. It will extend the application created in the previous tutorial [Simple To-Do List](../simple-todo-list/1-installation.md) that you must follow before going through this one.
 
-The application has three pages:
+The application will have three pages:
 - a sign up page where users can create a new account with an email and a password,
 - a login page that expects an email and a password to sign in,
 - and the todo-list page where the tasks are listed, created and deleted.

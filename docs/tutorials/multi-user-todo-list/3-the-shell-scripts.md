@@ -10,9 +10,8 @@ Open the file and replace its content with the following:
 
 ```typescript
 // 3p
-import { Group, Permission } from '@foal/core';
 import { isCommon } from '@foal/password';
-import { createConnection, getManager } from 'typeorm';
+import { createConnection, getConnection, getManager } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -46,6 +45,8 @@ export async function main(args) {
   } catch (error) {
     console.log(error.message);
   }
+
+  await getConnection().close();
 }
 
 ```
@@ -106,7 +107,7 @@ export async function main(args) {
   const user = await connection.getRepository(User).findOne({ email: args.owner });
 
   if (!user) {
-    console.log('No user was found the the email ' + args.owner);
+    console.log('No user was found with the email ' + args.owner);
     return;
   }
 
@@ -125,7 +126,7 @@ export async function main(args) {
 
 We added an `owner` parameter to know which user the todo belongs to. It expects the email of the user.
 
-The `main` function then tries to get the user that has this email. If he or she does not exist, then the script terminates with a message displayed in the console. It not, the user is added to the todo as her/his owner.
+The `main` function then tries to get the user who has this email. If he or she does not exist, then the script terminates with a message displayed in the console. If not, the user is added to the todo as her/his owner.
 
 Build the script.
 

@@ -1,6 +1,6 @@
 # The EmailAuthenticator
 
-So far, you have defined the `User` template and written a script to create new users with their password and email address. The next step is to find a way to authenticate users from these credentials. You'll use an authenticator for that.
+So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to find a way to authenticate users from these credentials. You'll use an authenticator for that.
 
 > Writting `getRepository(User).findOne({ email: email, password: password })` won't work since the password needs to be decrypted.
 

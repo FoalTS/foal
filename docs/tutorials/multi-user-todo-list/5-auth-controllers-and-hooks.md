@@ -56,7 +56,7 @@ Open your browser and go to `http://localhost:3000/signin`. The login page shoul
 
 ## Login Controllers
 
-The next step is to create a controller that logs the users in or out and redirects them after the operation succeeds or fails. It has two routes `/login` and `/logout`.
+The next step is to create a controller that logs the users in or out and redirects them after the operation succeeds or fails. It needs two routes `/login` and `/logout`.
 
 You could do it by yourself, implementing your own route handlers, but this would be a tedious work. Hopefully, FoalTS has a special controller, the `LoginController`, which takes care of that for you.
 
@@ -124,7 +124,7 @@ Go back to your browser and try to log in with the email `john@foalts.org` and t
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 403 error or redirects the user if no user was logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 401 error or redirects the user if no user was logged in. 
 
 Update the api and view controllers.
 
