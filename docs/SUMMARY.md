@@ -12,6 +12,15 @@
   * [The REST API](./tutorials/simple-todo-list/5-the-rest-api.md)
   * [Validation & Sanitization](./tutorials/simple-todo-list/6-validation-and-sanitization.md)
   * [Unit Testing](./tutorials/simple-todo-list/7-unit-testing.md)
+* [Multi-User To-Do List](./tutorials/multi-user-todo-list/1-introduction.md)
+  * [Introduction](./tutorials/multi-user-todo-list/1-introduction.md)
+  * [The User & Todo Models](./tutorials/multi-user-todo-list/2-the-user-and-todo-models.md)
+  * [The Shell Scripts](./tutorials/multi-user-todo-list/3-the-shell-scripts.md)
+  * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
+  * [Auth Controllers & Hooks](./tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md)
+  * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
+  * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)
+  * [E2E Testing & Auth](./tutorials/multi-user-todo-list/8-e2e-testing-and-authentication.md)
 
 ## Topic Guides
 
