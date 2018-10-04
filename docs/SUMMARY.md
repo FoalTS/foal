@@ -18,6 +18,7 @@
   * [The Shell Scripts](./tutorials/multi-user-todo-list/3-the-shell-scripts.md)
   * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
   * [Auth Controllers & Hooks](./tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md)
+  * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
 
 ## Topic Guides
 
