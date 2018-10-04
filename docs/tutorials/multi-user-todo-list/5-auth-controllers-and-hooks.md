@@ -6,9 +6,9 @@ Now that you have the authenticator, it is time to create a controller to log us
 1. Users can view, create and delete their todos in the page `/`.
 1. When they click the button `Log out`, they are deconnected and redirected to the page `/signin`.
 
-When the user presses the `Log in` button in the login page, the page requests `POST /login` with the credentials as body.
+When the user presses the `Log in` button in the login page, the page requests `POST /auth/login` with the credentials as body.
 
-When the user presses the `Log out` button in the todo-list page, the page requests `GET /logout`.
+When the user presses the `Log out` button in the todo-list page, the page requests `GET /auth/logout`.
 
 > In this scenario, the authentication process is handled with sessions and http redirections. You will not use [JWT tokens](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) which are sometimes used in *Single Page Applications* (SPA).
 
@@ -84,6 +84,25 @@ export class AuthController extends LoginController {
     logout: '/signin',
     success: '/',
   };
+}
+
+```
+
+You also need to update the `app.controller.ts` file to add the `/auth` path.
+
+```typescript
+import { Authenticate, controller } from '@foal/core';
+
+import { ApiController, AuthController, ViewController } from './controllers';
+import { User } from './entities';
+
+@Authenticate(User)
+export class AppController {
+  subControllers = [
+    controller('/', ViewController),
+    controller('/', ApiController),
+    controller('/auth', AuthController),
+  ];
 }
 
 ```

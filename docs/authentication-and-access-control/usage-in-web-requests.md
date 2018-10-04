@@ -22,7 +22,7 @@ If you want to attach an authenticated user to the current session, proceed as f
 
 ```typescript
 ctx.request.session.authentication = ctx.request.session.authentication || {};
-ctx.request.session.authentication.id = user.id;
+ctx.request.session.authentication.userId = user.id;
 ```
 
 To log out a user, delete the `authentication` property of the session:
