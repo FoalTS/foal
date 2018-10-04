@@ -29,7 +29,7 @@ describe('The server', () => {
   before(async () => {
     await createConnection({
       // Choose a test database. You don't want to run your tests on your production data.
-      database: 'e2e_db.sqlite',
+      database: 'e2e_db.sqlite3',
       // Drop the schema when the connection is established.
       dropSchema: true,
       // Register the models that are used.
