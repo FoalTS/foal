@@ -20,6 +20,7 @@
   * [Auth Controllers & Hooks](./tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md)
   * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
   * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)
+  * [E2E Testing & Auth](./tutorials/multi-user-todo-list/8-e2e-testing-and-authentication.md)
 
 ## Topic Guides
 
