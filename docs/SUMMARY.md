@@ -4,7 +4,7 @@
 
 ## Tutorials
 
-* [Simple To-Do List](./tutorials/simple-todo-list/1-installation.md)
+* Simple To-Do List
   * [Installation](./tutorials/simple-todo-list/1-installation.md)
   * [Introduction](./tutorials/simple-todo-list/2-introduction.md)
   * [The Todo Model](./tutorials/simple-todo-list/3-the-todo-model.md)
@@ -12,8 +12,8 @@
   * [The REST API](./tutorials/simple-todo-list/5-the-rest-api.md)
   * [Validation & Sanitization](./tutorials/simple-todo-list/6-validation-and-sanitization.md)
   * [Unit Testing](./tutorials/simple-todo-list/7-unit-testing.md)
-* [Multi-User To-Do List](./tutorials/multi-user-todo-list/1-introduction.md)
-  * [Introduction](./tutorials/multi-user-todo-list/1-introduction.md)
+* Multi-User To-Do List
+  * [Introduction](./tutorials/multi-user-todo-list/1-Introduction.md)
   * [The User & Todo Models](./tutorials/multi-user-todo-list/2-the-user-and-todo-models.md)
   * [The Shell Scripts](./tutorials/multi-user-todo-list/3-the-shell-scripts.md)
   * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
