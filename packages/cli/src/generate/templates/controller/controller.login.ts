@@ -2,7 +2,7 @@ import { LoginController } from '@foal/core';
 
 export class /* upperFirstCamelName */Controller extends LoginController {
   strategies = [
-    // strategy('/login', MyAuthenticator, mySchema)
+    // strategy('login', MyAuthenticator, mySchema)
   ];
 
   redirect = {
