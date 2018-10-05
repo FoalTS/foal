@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, ServiceManager } from '../../core';
