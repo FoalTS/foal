@@ -18,45 +18,10 @@ In order to directly print the tslint errors in VS Code and auto-fix the problem
 
 ## Debugging with VS Code
 
-Create a new folder called `.vscode` in the root directory and add these two files:
+Run the following command to create the suitable debug config files.
 
-*launch.json*
-```json
-{
-  // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
-  // Pointez pour afficher la description des attributs existants.
-  // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Lancer le programme",
-      "program": "${workspaceFolder}/lib/index.js",
-      "preLaunchTask": "build",
-      "outFiles": [
-        "${workspaceFolder}/lib/**/*.js"
-      ]
-    }
-  ]
-}
 ```
-
-*tasks.json*
-```json
-{
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "type": "npm",
-      "script": "build",
-      "label": "build",
-      "problemMatcher": []
-    }
-  ]
-}
+foal generate vscode-config
 ```
 
 Now you can add a breakpoint in your code and start the app in debug mode.

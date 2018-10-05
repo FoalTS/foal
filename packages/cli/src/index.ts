@@ -19,6 +19,7 @@ import {
   createScript,
   createService,
   createSubApp,
+  createVSCodeConfig,
   ServiceType
 } from './generate';
 import { runScript } from './run-script';
@@ -44,11 +45,12 @@ program
   });
 
 program
-  .command('generate <type> <name>')
-  .description('Generates files (type: controller|entity|hook|sub-app|service).')
+  .command('generate <type> [name]')
+  .description('Generates files (type: controller|entity|hook|sub-app|service|vscode-config).')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
   .action(async (type: string, name: string, options) => {
+    name = name || 'no-name';
     switch (type) {
       case 'controller':
         const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/, 'Login' ];
@@ -87,8 +89,11 @@ program
         ]);
         createService({ name, type: serviceAnswers.type});
         break;
+      case 'vscode-config':
+        createVSCodeConfig();
+        break;
       default:
-        console.error('Please provide a valid type: controller|entity|hook|sub-app|service.');
+        console.error('Please provide a valid type: controller|entity|hook|sub-app|service|vscode-config.');
     }
   });
 
