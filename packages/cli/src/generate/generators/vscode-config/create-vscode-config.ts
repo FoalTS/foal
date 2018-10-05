@@ -1,6 +1,3 @@
-// std
-import { existsSync } from 'fs';
-
 // FoalTS
 import { Generator, mkdirIfDoesNotExist } from '../../utils';
 
