@@ -16,11 +16,11 @@ The primary attributes of the `AbstractUser` are:
 
 > In FoalTS you can customize the `User` class to suit your needs. The framework makes no assumptions about the attributes required by the user objects. Maybe you'll need a `firstName` column, maybe not.  Maybe the authentication will be processed with an email and a password or maybe you will use an authentication token. The choice is yours!
 
-## Creating users ...
+## Creating Users ...
 
 There are several ways to create users.
 
-### ... programmatically
+### ... Programmatically
 
 ```typescript
 import { getManager, getRepository } from 'typeorm';
@@ -51,7 +51,7 @@ npm run build:scripts
 foal run-script create-user
 ```
 
-## Authenticating users
+## Authenticating Users
 
 In FoalTS authentication is handled with *authenticators*. An authenticator is a service that implements the `IAuthenticator<User>` interface. It has a method `authenticate(credentials: any): User | null | Promise<User | null>` which returns the user if the credentials are correct or null otherwise.
 

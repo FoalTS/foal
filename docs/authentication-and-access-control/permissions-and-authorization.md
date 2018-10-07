@@ -111,7 +111,7 @@ export class MyService {
 }
 ```
 
-### Creating permissions programmatically
+### Creating Permissions Programmatically
 
 ```typescript
 import { getManager, getRepository } from 'typeorm';
@@ -136,7 +136,7 @@ async function main() {
 }
 ```
 
-### Creating permissions with a Shell Script (CLI)
+### Creating Permissions with a Shell Script (CLI)
 
 ```sh
 npm run build:scripts
@@ -160,7 +160,7 @@ A group can have permissions. They then apply to all its users.
 | codeName | string | Unique, Length: 100 |
 | permissions | Permission[] | A many-to-many relation with the table permission |
 
-### Creating groups programmatically
+### Creating Groups Programmatically
 
 ```typescript
 import { getManager, getRepository } from 'typeorm';
@@ -193,7 +193,7 @@ async function main() {
 }
 ```
 
-### Creating groups with a Shell Script (CLI)
+### Creating Groups with a Shell Script (CLI)
 
 ```sh
 npm run build:scripts
@@ -203,7 +203,7 @@ foal run-script create-group name="Administrators" codeName="admin" permissions=
 
 ## Users
 
-## Relations between users, groups and permissions
+## Relations between Users, Groups and Permissions
 
 ![Permissions, groups and users](./permissions-groups-and-users.png)
 
@@ -213,7 +213,7 @@ The `hasPerm(permissionCodeName: string)` method of the `User` class returns tru
 - The user has the required permission.
 - The user belongs to a group that has the required permission.
 
-## Creating users with groups and permissions with a Shell Script (CLI)
+## Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 ```sh
 npm run build:scripts

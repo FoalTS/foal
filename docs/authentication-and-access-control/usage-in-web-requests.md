@@ -2,7 +2,7 @@
 
 FoalTS uses sessions and the `Authenticate` hook to authenticate users accross several requests.
 
-## The `Authenticate` hook
+## The `Authenticate` Hook
 
 It should decorate the `AppController`. If the user has already logged in in a previous request, then it will be available in the `context` with which the controller methods are called.
 
@@ -16,7 +16,7 @@ export class AppController {
 }
 ```
 
-## How to log a user in or out
+## How to Log a User In or Out
 
 If you want to attach an authenticated user to the current session, proceed as follows:
 
@@ -32,9 +32,9 @@ delete ctx.request.session.authentication;
 
 > Note: The `LoginController` presented below does these steps for you.
 
-## Limiting access to logged-in users
+## Limiting Access to Logged-In Users
 
-### The LoginRequired hook
+### The LoginRequired Hook
 
 When no user is authenticated, the `LoginRequired(options?: { redirect?: string })` hook:
 - returns a `401 Unauthorized` if `options.redirect` is undefined,
@@ -74,7 +74,7 @@ function RoleRequired(role: string) {
 }
 ```
 
-### The PermissionRequired hook
+### The PermissionRequired Hook
 
 The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook:
 - returns a `401 Unauthorized` if no user is authenticated and `options.redirect` is undefined,
