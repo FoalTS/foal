@@ -108,4 +108,4 @@ The output should look like this:
 
 ![E2E tests output](./e2e_output.png)
 
-Congratulations, you reached the end of this tutorial!
+Congratulations, you have reached the end of this tutorial!
