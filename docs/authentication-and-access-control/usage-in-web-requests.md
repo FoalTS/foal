@@ -130,7 +130,7 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 <html>
   <head></head>
   <body>
-    <form action="/login-with-email" method="POST">
+    <form action="/auth/login-with-email" method="POST">
       <input style="display: none" name="_csrf" value="<%= csrfToken %>">
       <input type="email" name="email">
       <input type="password" name="password">

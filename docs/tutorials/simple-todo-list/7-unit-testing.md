@@ -54,8 +54,8 @@ describe('ApiController', () => {
     it('should handle requests at GET /.', () => {
       // Throw an error and make the test fail if the http method of `getTodos` is not GET.
       strictEqual(getHttpMethod(ApiController, 'getTodos'), 'GET');
-      // Throw an error and make the test fail if the path of `getTodos` is not /api/todos.
-      strictEqual(getPath(ApiController, 'getTodos'), '/api/todos');
+      // Throw an error and make the test fail if the path of `getTodos` is not /todos.
+      strictEqual(getPath(ApiController, 'getTodos'), '/todos');
     });
 
     // Define a unit test.

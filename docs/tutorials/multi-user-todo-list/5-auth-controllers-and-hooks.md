@@ -88,25 +88,6 @@ export class AuthController extends LoginController {
 
 ```
 
-You also need to update the `app.controller.ts` file to add the `/auth` path.
-
-```typescript
-import { Authenticate, controller } from '@foal/core';
-
-import { ApiController, AuthController, ViewController } from './controllers';
-import { User } from './entities';
-
-@Authenticate(User)
-export class AppController {
-  subControllers = [
-    controller('/', ViewController),
-    controller('/', ApiController),
-    controller('/auth', AuthController),
-  ];
-}
-
-```
-
 The `LoginController` is based on the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern).
 
 An application may have several ways to authenticate a user. It can be with an email and a password as it the case here. But it also could be by using a google or twitter account.

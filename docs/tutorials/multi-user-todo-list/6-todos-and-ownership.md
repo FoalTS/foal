@@ -5,7 +5,7 @@ Currently the API returns everyone's todos to each user. This is not the expecte
 Go back to the `ApiController` and update the `getTodos` route.
 
 ```typescript
-  @Get('/api/todos')
+  @Get('/todos')
   async getTodos(ctx: Context) {
     const todos = await getRepository(Todo).find({ owner: ctx.user });
     return new HttpResponseOK(todos);
@@ -28,7 +28,7 @@ As for the delete feature, you also need to restrict its access. Users should on
 Update the api controller.
 
 ```typescript
-  @Post('/api/todos')
+  @Post('/todos')
   @ValidateBody({
     ...
   })
@@ -43,7 +43,7 @@ Update the api controller.
     return new HttpResponseCreated(todo);
   }
 
-  @Delete('/api/todos/:id')
+  @Delete('/todos/:id')
   @ValidateParams({
     ...
   })
