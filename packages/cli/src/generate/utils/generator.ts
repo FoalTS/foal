@@ -66,7 +66,7 @@ export class Generator {
 
   private logCreate(path: string) {
     if (this.root) {
-      path = this.root + '/' + path;
+      path = join(this.root, path);
     }
     if (process.env.NODE_ENV !== 'test') {
       console.log(`${green('CREATE')} ${path}`);
