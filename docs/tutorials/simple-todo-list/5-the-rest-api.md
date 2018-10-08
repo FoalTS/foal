@@ -18,7 +18,7 @@ import { Get, HttpResponseOK } from '@foal/core';
 
 export class ApiController {
 
-  @Get('/api/todos')
+  @Get('/todos')
   getTodos() {
     const todos = [
       { id: 1, text: 'My task 1' },
@@ -46,7 +46,7 @@ import { Todo } from '../entities';
 
 export class ApiController {
 
-  @Get('/api/todos')
+  @Get('/todos')
   async getTodos() {
     const todos = await getRepository(Todo).find();
     return new HttpResponseOK(todos);
@@ -60,7 +60,7 @@ If you refresh your browser, you should now see the tasks that we created throug
 Add the create and delete features.
 
 ```typescript
-  @Post('/api/todos')
+  @Post('/todos')
   async postTodo(ctx: Context) {
     // Create a new todo with the body of the HTTP request.
     const todo = new Todo();
@@ -73,7 +73,7 @@ Add the create and delete features.
     return new HttpResponseCreated(todo);
   }
 
-  @Delete('/api/todos/:id')
+  @Delete('/todos/:id')
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
     const todo = await getRepository(Todo).findOne({ id: ctx.request.params.id });
@@ -109,7 +109,7 @@ import { User } from './entities';
 export class AppController {
   subControllers = [
     controller('/', ViewController),
-    controller('/', ApiController)
+    controller('/api', ApiController)
   ];
 }
 ```
