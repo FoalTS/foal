@@ -2,15 +2,13 @@
 import * as fs from 'fs';
 import { join } from 'path';
 
+// FoalTS
 export { Generator } from './generator';
 export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 export { TestEnvironment } from './test-environment';
 export { getNames } from './get-names';
 
 export function mkdirIfNotExists(path: string) {
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`CREATE ${path}`);
-  }
   const paths = path.split('/');
   const paths2: string[] = [];
   while (paths.length > 0) {

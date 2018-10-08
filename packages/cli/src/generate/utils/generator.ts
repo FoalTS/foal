@@ -2,6 +2,9 @@
 import { copyFileSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
+// 3p
+import { cyan, green } from 'colors/safe';
+
 // FoalTS
 import { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 
@@ -11,7 +14,6 @@ export class Generator {
   /* Create architecture */
 
   mkdirIfDoesNotExist(path: string) {
-    this.logCreate(path);
     mkdirIfDoesNotExist(join(this.root, path));
     return this;
   }
@@ -67,7 +69,7 @@ export class Generator {
       path = this.root + '/' + path;
     }
     if (process.env.NODE_ENV !== 'test') {
-      console.log(`CREATE ${path}`);
+      console.log(`${green('CREATE')} ${path}`);
     }
   }
 
@@ -76,7 +78,7 @@ export class Generator {
       path = join(this.root, path);
     }
     if (process.env.NODE_ENV !== 'test') {
-      console.log(`UPDATE ${path}`);
+      console.log(`${cyan('UPDATE')} ${path}`);
     }
   }
 }

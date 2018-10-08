@@ -1,6 +1,9 @@
 // std
 import * as crypto from 'crypto';
 
+// 3p
+import { blue, underline } from 'colors/safe';
+
 // FoalTS
 import {
   Generator,
@@ -12,8 +15,9 @@ export function createApp({ name, sessionSecret }:
   { name: string, sessionSecret?: string }) {
   const names = getNames(name);
   if (process.env.NODE_ENV !== 'test') {
-    console.log(
-      `
+    console.log(blue(
+`====================================================================
+
      _______   ________   ____        ___     _________   _______
     /  ____/  / ____  /  / _  |      /  /    /___  ___/  / _____/
    /  /___   / /   / /  / /_| |     /  /        / /     / /____
@@ -21,8 +25,10 @@ export function createApp({ name, sessionSecret }:
  /  /      / /__ / /  / /   | |   /  /____    / /     _____/ /
 /__/      /_______/  /_/    |_|  /_______/   /_/     /______/
 
+
+====================================================================
 `
-    );
+    ));
   }
 
   const locals = {
@@ -96,11 +102,11 @@ export function createApp({ name, sessionSecret }:
   if (process.env.NODE_ENV !== 'test') {
     console.log(
       `
-Install dependencies:
+${underline('Install dependencies:')}
 $ cd ${names.kebabName}
 $ npm install
 
-Run the app:
+${underline('Run the app:')}
 $ npm run develop
 `
     );
