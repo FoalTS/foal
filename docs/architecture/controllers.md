@@ -205,4 +205,4 @@ Controller methods should return an `HttpResponse`. Here are the available optio
 - `class HttpResponseInternalServerError` (500)
 - `class HttpResponseNotImplemented` (501)
 
-The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `content` which is used in the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
+The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `body` which is used as the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`

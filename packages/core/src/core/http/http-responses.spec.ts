@@ -162,13 +162,13 @@ describe('HttpResponseOK', () => {
     strictEqual(httpResponse.statusMessage, 'OK');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseOK();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseOK(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseOK(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -209,13 +209,13 @@ describe('HttpResponseCreated', () => {
     strictEqual(httpResponse.statusMessage, 'CREATED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseCreated();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseCreated(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseCreated(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -316,14 +316,14 @@ describe('HttpResponseRedirect', () => {
     strictEqual(httpResponse.statusMessage, 'FOUND');
   });
 
-  it('should accept a mandatory path and an optional content.', () => {
+  it('should accept a mandatory path and an optional body.', () => {
     let httpResponse = new HttpResponseRedirect('/foo');
     strictEqual(httpResponse.path, '/foo');
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseRedirect('/foo', content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRedirect('/foo', body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -386,13 +386,13 @@ describe('HttpResponseBadRequest', () => {
     strictEqual(httpResponse.statusMessage, 'BAD REQUEST');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseBadRequest();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseBadRequest(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseBadRequest(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -433,13 +433,13 @@ describe('HttpResponseUnauthorized', () => {
     strictEqual(httpResponse.statusMessage, 'UNAUTHORIZED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseUnauthorized();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseUnauthorized(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnauthorized(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -480,13 +480,13 @@ describe('HttpResponseForbidden', () => {
     strictEqual(httpResponse.statusMessage, 'FORBIDDEN');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseForbidden();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseForbidden(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseForbidden(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -527,13 +527,13 @@ describe('HttpResponseNotFound', () => {
     strictEqual(httpResponse.statusMessage, 'NOT FOUND');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseNotFound();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseNotFound(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotFound(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -574,13 +574,13 @@ describe('HttpResponseMethodNotAllowed', () => {
     strictEqual(httpResponse.statusMessage, 'METHOD NOT ALLOWED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseMethodNotAllowed();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseMethodNotAllowed(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMethodNotAllowed(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -621,13 +621,13 @@ describe('HttpResponseConflict', () => {
     strictEqual(httpResponse.statusMessage, 'CONFLICT');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseConflict();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseConflict(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseConflict(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -690,13 +690,13 @@ describe('HttpResponseInternalServerError', () => {
     strictEqual(httpResponse.statusMessage, 'INTERNAL SERVER ERROR');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseInternalServerError();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseInternalServerError(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseInternalServerError(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -737,13 +737,13 @@ describe('HttpResponseNotImplemented', () => {
     strictEqual(httpResponse.statusMessage, 'NOT IMPLEMENTED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseNotImplemented();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseNotImplemented(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotImplemented(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });

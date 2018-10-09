@@ -17,7 +17,7 @@ export abstract class HttpResponse {
   private cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
   private headers: { [key: string]: string } = {};
 
-  constructor(public content?: any) {}
+  constructor(public body?: any) {}
 
   setHeader(name: string, value: string): void {
     this.headers[name] = value;
@@ -63,8 +63,8 @@ export function isHttpResponse(obj: any): obj is HttpResponse {
 
 export abstract class HttpResponseSuccess extends HttpResponse {
   readonly isHttpResponseSuccess = true;
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -77,8 +77,8 @@ export class HttpResponseOK extends HttpResponseSuccess {
   readonly isHttpResponseOK = true;
   statusCode = 200;
   statusMessage = 'OK';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -91,8 +91,8 @@ export class HttpResponseCreated extends HttpResponseSuccess {
   readonly isHttpResponseCreated = true;
   statusCode = 201;
   statusMessage = 'CREATED';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -119,8 +119,8 @@ export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent 
 
 export abstract class HttpResponseRedirection extends HttpResponse {
   readonly isHttpResponseRedirection = true;
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -133,8 +133,8 @@ export class HttpResponseRedirect extends HttpResponseRedirection {
   readonly isHttpResponseRedirect = true;
   statusCode = 302;
   statusMessage = 'FOUND';
-  constructor(public path: string, content?: any) {
-    super(content);
+  constructor(public path: string, body?: any) {
+    super(body);
   }
 }
 
@@ -147,8 +147,8 @@ export function isHttpResponseRedirect(obj: any): obj is HttpResponseRedirect {
 
 export abstract class HttpResponseClientError extends HttpResponse {
   readonly isHttpResponseClientError = true;
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -161,8 +161,8 @@ export class HttpResponseBadRequest extends HttpResponseClientError {
   readonly isHttpResponseBadRequest = true;
   statusCode = 400;
   statusMessage = 'BAD REQUEST';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -175,8 +175,8 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
   readonly isHttpResponseUnauthorized = true;
   statusCode = 401;
   statusMessage = 'UNAUTHORIZED';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
     this.setHeader('WWW-Authenticate', '');
   }
 }
@@ -190,8 +190,8 @@ export class HttpResponseForbidden extends HttpResponseClientError {
   readonly isHttpResponseForbidden = true;
   statusCode = 403;
   statusMessage = 'FORBIDDEN';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -204,8 +204,8 @@ export class HttpResponseNotFound extends HttpResponseClientError {
   readonly isHttpResponseNotFound = true;
   statusCode = 404;
   statusMessage = 'NOT FOUND';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -218,8 +218,8 @@ export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
   readonly isHttpResponseMethodNotAllowed = true;
   statusCode = 405;
   statusMessage = 'METHOD NOT ALLOWED';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -232,8 +232,8 @@ export class HttpResponseConflict extends HttpResponseClientError {
   readonly isHttpResponseConflict = true;
   statusCode = 409;
   statusMessage = 'CONFLICT';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -246,8 +246,8 @@ export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
 
 export abstract class HttpResponseServerError extends HttpResponse {
   readonly isHttpResponseServerError = true;
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -260,8 +260,8 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
   readonly isHttpResponseInternalServerError = true;
   statusCode = 500;
   statusMessage = 'INTERNAL SERVER ERROR';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 
@@ -274,8 +274,8 @@ export class HttpResponseNotImplemented extends HttpResponseServerError {
   readonly isHttpResponseNotImplemented = true;
   statusCode = 501;
   statusMessage = 'NOT IMPLEMENTED';
-  constructor(content?: any) {
-    super(content);
+  constructor(body?: any) {
+    super(body);
   }
 }
 

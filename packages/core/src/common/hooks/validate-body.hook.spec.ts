@@ -49,7 +49,7 @@ describe('ValidateBody', () => {
     ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest with a defined `content` property if '
+  it('should return an HttpResponseBadRequest with a defined `body` property if '
       + 'ctx.request.body is not validated by ajv.', () => {
     const schema = {
       properties: {
@@ -62,7 +62,7 @@ describe('ValidateBody', () => {
 
     const actual = hook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseBadRequest);
-    notStrictEqual((actual as HttpResponseBadRequest).content, undefined);
+    notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
   });
 
 });

@@ -38,10 +38,10 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         return;
       }
 
-      if (typeof response.content === 'number') {
-        response.content = response.content.toString();
+      if (typeof response.body === 'number') {
+        response.body = response.body.toString();
       }
-      res.send(response.content);
+      res.send(response.body);
     } catch (err) {
       next(err);
     }

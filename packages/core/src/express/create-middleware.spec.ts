@@ -117,7 +117,7 @@ describe('createMiddleware', () => {
           ]);
         });
 
-        it('should send a response with a suitable body depending on response.content.', () => {
+        it('should send a response with a suitable body depending on response.body.', () => {
           const app = express();
 
           app.get('/a', createMiddleware(
