@@ -25,8 +25,13 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         throw new Error(`The controller method "${route.propertyKey}" should return an HttpResponse.`);
       }
 
-      res.set(response.headers);
       res.status(response.statusCode);
+      res.set(response.getHeaders());
+      const cookies = response.getCookies();
+      // tslint:disable-next-line:forin
+      for (const cookieName in cookies) {
+        res.cookie(cookieName, cookies[cookieName].value, cookies[cookieName].options);
+      }
 
       if (isHttpResponseRedirect(response)) {
         res.redirect(response.path);
