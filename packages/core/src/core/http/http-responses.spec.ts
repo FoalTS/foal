@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -41,13 +41,65 @@ import {
 
 describe('HttpResponse', () => {
 
-  it('should have a headers properties.', () => {
-    class ConcreteClass extends HttpResponse {
-      statusMessage = 'foo';
-      statusCode = 0;
-    }
-    const response = new ConcreteClass();
-    deepStrictEqual(response.headers, {});
+  class ConcreteClass extends HttpResponse {
+    statusMessage = 'foo';
+    statusCode = 0;
+  }
+  let response: ConcreteClass;
+
+  beforeEach(() => response = new ConcreteClass());
+
+  it('when setHeader and getHeader are called should set and get custom headers.', () => {
+    response.setHeader('my_header', 'header_value');
+    strictEqual(response.getHeader('my_header'), 'header_value');
+    strictEqual(response.getHeader('my_header2'), undefined);
+  });
+
+  it('when getHeaders is called should return a copy of the headers.', () => {
+    response.setHeader('my_header1', 'header_value1');
+    response.setHeader('my_header2', 'header_value2');
+    const actual1 = response.getHeaders();
+    const actual2 = response.getHeaders();
+    deepStrictEqual(actual1, {
+      my_header1: 'header_value1',
+      my_header2: 'header_value2'
+    });
+    notStrictEqual(actual1, actual2);
+  });
+
+  it('when setCookie and getCookie are called should set and get custom cookies.', () => {
+    response.setCookie('my_cookie', 'cookie_value');
+    const options = { domain: 'foalts.org' };
+    response.setCookie('my_cookie2', 'cookie_value2', options);
+
+    const cookie = response.getCookie('my_cookie');
+    strictEqual(cookie.value, 'cookie_value');
+    deepStrictEqual(cookie.options, {});
+
+    const cookie2  = response.getCookie('my_cookie2');
+    strictEqual(cookie2.value, 'cookie_value2');
+    deepStrictEqual(cookie2.options, options);
+    notStrictEqual(cookie2.options, options);
+
+    const cookie3  = response.getCookie('my_cookie3');
+    strictEqual(cookie3.value, undefined);
+    deepStrictEqual(cookie3.options, {});
+  });
+
+  it('when getCookies is called should return a deep copy of the cookies.', () => {
+    response.setCookie('my_cookie1', 'cookie_value1');
+    const options = { domain: 'foalts.org' };
+    response.setCookie('my_cookie2', 'cookie_value2', options);
+
+    const actual1 = response.getCookies();
+    const actual2 = response.getCookies();
+    deepStrictEqual(actual1, {
+      my_cookie1: { value: 'cookie_value1', options: {} },
+      my_cookie2: { value: 'cookie_value2', options }
+    });
+    notStrictEqual(actual1, actual2);
+    notStrictEqual(actual1.my_cookie1, actual2.my_cookie1);
+    notStrictEqual(actual1.my_cookie2.options, actual2.my_cookie2.options);
   });
 
 });

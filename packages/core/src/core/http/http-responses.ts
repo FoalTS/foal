@@ -1,12 +1,57 @@
+export interface CookieOptions {
+  domain?: string;
+  expires?: Date;
+  httpOnly?: boolean;
+  maxAge?: number;
+  path?: string;
+  secure?: boolean;
+  sameSite?: 'strict'|'lax';
+}
+
 export abstract class HttpResponse {
   readonly isHttpResponse = true;
-
-  headers: { [key: string]: string } = {};
 
   abstract statusCode: number;
   abstract statusMessage: string;
 
+  private cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
+  private headers: { [key: string]: string } = {};
+
   constructor(public content?: any) {}
+
+  setHeader(name: string, value: string): void {
+    this.headers[name] = value;
+  }
+
+  getHeader(name: string): string|undefined {
+    return this.headers[name];
+  }
+
+  getHeaders(): { [key: string]: string } {
+    return { ...this.headers };
+  }
+
+  setCookie(name: string, value: string, options: CookieOptions = {}): void {
+    this.cookies[name] = { value, options };
+  }
+
+  getCookie(name: string): { value: string|undefined, options: CookieOptions } {
+    if (!this.cookies[name]) {
+      return { value: undefined, options: {} };
+    }
+    const { value, options } = this.cookies[name];
+    return { value, options: { ...options } };
+  }
+
+  getCookies(): { [key: string]: { value: string|undefined, options: CookieOptions } } {
+    const cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
+    // tslint:disable-next-line:forin
+    for (const cookieName in this.cookies) {
+      const { value, options } = this.cookies[cookieName];
+      cookies[cookieName] = { value, options: { ...options } };
+    }
+    return cookies;
+  }
 }
 
 export function isHttpResponse(obj: any): obj is HttpResponse {
@@ -130,11 +175,9 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
   readonly isHttpResponseUnauthorized = true;
   statusCode = 401;
   statusMessage = 'UNAUTHORIZED';
-  headers = {
-    'WWW-Authenticate': ''
-  };
   constructor(content?: any) {
     super(content);
+    this.setHeader('WWW-Authenticate', '');
   }
 }
 
