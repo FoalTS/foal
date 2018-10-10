@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -41,13 +41,65 @@ import {
 
 describe('HttpResponse', () => {
 
-  it('should have a headers properties.', () => {
-    class ConcreteClass extends HttpResponse {
-      statusMessage = 'foo';
-      statusCode = 0;
-    }
-    const response = new ConcreteClass();
-    deepStrictEqual(response.headers, {});
+  class ConcreteClass extends HttpResponse {
+    statusMessage = 'foo';
+    statusCode = 0;
+  }
+  let response: ConcreteClass;
+
+  beforeEach(() => response = new ConcreteClass());
+
+  it('when setHeader and getHeader are called should set and get custom headers.', () => {
+    response.setHeader('my_header', 'header_value');
+    strictEqual(response.getHeader('my_header'), 'header_value');
+    strictEqual(response.getHeader('my_header2'), undefined);
+  });
+
+  it('when getHeaders is called should return a copy of the headers.', () => {
+    response.setHeader('my_header1', 'header_value1');
+    response.setHeader('my_header2', 'header_value2');
+    const actual1 = response.getHeaders();
+    const actual2 = response.getHeaders();
+    deepStrictEqual(actual1, {
+      my_header1: 'header_value1',
+      my_header2: 'header_value2'
+    });
+    notStrictEqual(actual1, actual2);
+  });
+
+  it('when setCookie and getCookie are called should set and get custom cookies.', () => {
+    response.setCookie('my_cookie', 'cookie_value');
+    const options = { domain: 'foalts.org' };
+    response.setCookie('my_cookie2', 'cookie_value2', options);
+
+    const cookie = response.getCookie('my_cookie');
+    strictEqual(cookie.value, 'cookie_value');
+    deepStrictEqual(cookie.options, {});
+
+    const cookie2  = response.getCookie('my_cookie2');
+    strictEqual(cookie2.value, 'cookie_value2');
+    deepStrictEqual(cookie2.options, options);
+    notStrictEqual(cookie2.options, options);
+
+    const cookie3  = response.getCookie('my_cookie3');
+    strictEqual(cookie3.value, undefined);
+    deepStrictEqual(cookie3.options, {});
+  });
+
+  it('when getCookies is called should return a deep copy of the cookies.', () => {
+    response.setCookie('my_cookie1', 'cookie_value1');
+    const options = { domain: 'foalts.org' };
+    response.setCookie('my_cookie2', 'cookie_value2', options);
+
+    const actual1 = response.getCookies();
+    const actual2 = response.getCookies();
+    deepStrictEqual(actual1, {
+      my_cookie1: { value: 'cookie_value1', options: {} },
+      my_cookie2: { value: 'cookie_value2', options }
+    });
+    notStrictEqual(actual1, actual2);
+    notStrictEqual(actual1.my_cookie1, actual2.my_cookie1);
+    notStrictEqual(actual1.my_cookie2.options, actual2.my_cookie2.options);
   });
 
 });
@@ -110,13 +162,13 @@ describe('HttpResponseOK', () => {
     strictEqual(httpResponse.statusMessage, 'OK');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseOK();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseOK(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseOK(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -157,13 +209,13 @@ describe('HttpResponseCreated', () => {
     strictEqual(httpResponse.statusMessage, 'CREATED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseCreated();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseCreated(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseCreated(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -264,14 +316,14 @@ describe('HttpResponseRedirect', () => {
     strictEqual(httpResponse.statusMessage, 'FOUND');
   });
 
-  it('should accept a mandatory path and an optional content.', () => {
+  it('should accept a mandatory path and an optional body.', () => {
     let httpResponse = new HttpResponseRedirect('/foo');
     strictEqual(httpResponse.path, '/foo');
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseRedirect('/foo', content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRedirect('/foo', body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -334,13 +386,13 @@ describe('HttpResponseBadRequest', () => {
     strictEqual(httpResponse.statusMessage, 'BAD REQUEST');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseBadRequest();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseBadRequest(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseBadRequest(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -381,13 +433,13 @@ describe('HttpResponseUnauthorized', () => {
     strictEqual(httpResponse.statusMessage, 'UNAUTHORIZED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseUnauthorized();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseUnauthorized(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnauthorized(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -428,13 +480,13 @@ describe('HttpResponseForbidden', () => {
     strictEqual(httpResponse.statusMessage, 'FORBIDDEN');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseForbidden();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseForbidden(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseForbidden(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -475,13 +527,13 @@ describe('HttpResponseNotFound', () => {
     strictEqual(httpResponse.statusMessage, 'NOT FOUND');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseNotFound();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseNotFound(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotFound(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -522,13 +574,13 @@ describe('HttpResponseMethodNotAllowed', () => {
     strictEqual(httpResponse.statusMessage, 'METHOD NOT ALLOWED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseMethodNotAllowed();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseMethodNotAllowed(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMethodNotAllowed(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -569,13 +621,13 @@ describe('HttpResponseConflict', () => {
     strictEqual(httpResponse.statusMessage, 'CONFLICT');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseConflict();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseConflict(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseConflict(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -638,13 +690,13 @@ describe('HttpResponseInternalServerError', () => {
     strictEqual(httpResponse.statusMessage, 'INTERNAL SERVER ERROR');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseInternalServerError();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseInternalServerError(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseInternalServerError(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });
@@ -685,13 +737,13 @@ describe('HttpResponseNotImplemented', () => {
     strictEqual(httpResponse.statusMessage, 'NOT IMPLEMENTED');
   });
 
-  it('should accept an optional content.', () => {
+  it('should accept an optional body.', () => {
     let httpResponse = new HttpResponseNotImplemented();
-    strictEqual(httpResponse.content, undefined);
+    strictEqual(httpResponse.body, undefined);
 
-    const content = { foo: 'bar' };
-    httpResponse = new HttpResponseNotImplemented(content);
-    strictEqual(httpResponse.content, content);
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotImplemented(body);
+    strictEqual(httpResponse.body, body);
   });
 
 });

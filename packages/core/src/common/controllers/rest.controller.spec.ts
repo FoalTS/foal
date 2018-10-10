@@ -103,7 +103,7 @@ describe('RestController', () => {
 
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(deleteByIdUser, ctx.user);
         strictEqual(deleteByIdId, ctx.request.params.id);
         deepStrictEqual(deleteByIdParams, {});
@@ -133,7 +133,7 @@ describe('RestController', () => {
 
           const actual = await controller.deleteById(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 
@@ -228,7 +228,7 @@ describe('RestController', () => {
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(getQueryCtx, ctx);
         strictEqual(findQuery, query);
         strictEqual(findUser, ctx.user);
@@ -258,7 +258,7 @@ describe('RestController', () => {
 
           const actual = await controller.get(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 
@@ -351,7 +351,7 @@ describe('RestController', () => {
 
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(findByIdUser, ctx.user);
         strictEqual(findByIdId, ctx.request.params.id);
         deepStrictEqual(findByIdParams, {});
@@ -381,7 +381,7 @@ describe('RestController', () => {
 
           const actual = await controller.getById(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 
@@ -494,7 +494,7 @@ describe('RestController', () => {
 
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(modifyByIdUser, ctx.user);
         strictEqual(modifyByIdId, ctx.request.params.id);
         strictEqual(modifyByIdData, ctx.request.body);
@@ -525,7 +525,7 @@ describe('RestController', () => {
 
           const actual = await controller.patchById(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 
@@ -619,7 +619,7 @@ describe('RestController', () => {
 
         const actual = await controller.post(ctx);
         ok(actual instanceof HttpResponseCreated);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(createUser, ctx.user);
         strictEqual(createData, ctx.request.body);
         deepStrictEqual(createParams, {});
@@ -649,7 +649,7 @@ describe('RestController', () => {
 
           const actual = await controller.post(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 
@@ -775,7 +775,7 @@ describe('RestController', () => {
 
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);
-        strictEqual(actual.content, objects);
+        strictEqual(actual.body, objects);
         strictEqual(updateByIdUser, ctx.user);
         strictEqual(updateByIdId, ctx.request.params.id);
         strictEqual(updateByIdData, ctx.request.body);
@@ -806,7 +806,7 @@ describe('RestController', () => {
 
           const actual = await controller.putById(ctx);
           ok(actual instanceof httpResponseClass);
-          strictEqual(actual.content, content);
+          strictEqual(actual.body, content);
         });
       }
 

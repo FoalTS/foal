@@ -157,7 +157,7 @@ describe('LoginController', () => {
       const response = await controller.login(ctx);
 
       ok(response instanceof HttpResponseBadRequest);
-      deepStrictEqual(response.content, [
+      deepStrictEqual(response.body, [
         {
           dataPath: '.email',
           keyword: 'type',
