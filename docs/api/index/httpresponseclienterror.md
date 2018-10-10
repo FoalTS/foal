@@ -2,9 +2,9 @@
 
 * [HttpResponseClientError][ClassDeclaration-13]
     * Constructor
-        * [constructor(content)][Constructor-7]
+        * [constructor(body)][Constructor-7]
     * Properties
-        * [isHttpResponseClientError][PropertyDeclaration-32]
+        * [isHttpResponseClientError][PropertyDeclaration-31]
 
 # HttpResponseClientError
 
@@ -13,17 +13,17 @@ abstract class HttpResponseClientError
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -38,5 +38,5 @@ public readonly isHttpResponseClientError: true;
 true
 
 [ClassDeclaration-13]: httpresponseclienterror.md#httpresponseclienterror
-[Constructor-7]: httpresponseclienterror.md#constructorcontent
-[PropertyDeclaration-32]: httpresponseclienterror.md#ishttpresponseclienterror
+[Constructor-7]: httpresponseclienterror.md#constructorbody
+[PropertyDeclaration-31]: httpresponseclienterror.md#ishttpresponseclienterror

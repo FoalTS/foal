@@ -2,11 +2,11 @@
 
 * [HttpResponseForbidden][ClassDeclaration-21]
     * Constructor
-        * [constructor(content)][Constructor-14]
+        * [constructor(body)][Constructor-14]
     * Properties
-        * [isHttpResponseForbidden][PropertyDeclaration-51]
-        * [statusCode][PropertyDeclaration-52]
-        * [statusMessage][PropertyDeclaration-53]
+        * [isHttpResponseForbidden][PropertyDeclaration-49]
+        * [statusCode][PropertyDeclaration-50]
+        * [statusMessage][PropertyDeclaration-51]
 
 # HttpResponseForbidden
 
@@ -15,17 +15,17 @@ class HttpResponseForbidden
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-21]: httpresponseforbidden.md#httpresponseforbidden
-[Constructor-14]: httpresponseforbidden.md#constructorcontent
-[PropertyDeclaration-51]: httpresponseforbidden.md#ishttpresponseforbidden
-[PropertyDeclaration-52]: httpresponseforbidden.md#statuscode
-[PropertyDeclaration-53]: httpresponseforbidden.md#statusmessage
+[Constructor-14]: httpresponseforbidden.md#constructorbody
+[PropertyDeclaration-49]: httpresponseforbidden.md#ishttpresponseforbidden
+[PropertyDeclaration-50]: httpresponseforbidden.md#statuscode
+[PropertyDeclaration-51]: httpresponseforbidden.md#statusmessage

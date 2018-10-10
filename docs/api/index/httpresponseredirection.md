@@ -2,7 +2,7 @@
 
 * [HttpResponseRedirection][ClassDeclaration-8]
     * Constructor
-        * [constructor(content)][Constructor-2]
+        * [constructor(body)][Constructor-2]
     * Properties
         * [isHttpResponseRedirection][PropertyDeclaration-20]
 
@@ -13,17 +13,17 @@ abstract class HttpResponseRedirection
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -38,5 +38,5 @@ public readonly isHttpResponseRedirection: true;
 true
 
 [ClassDeclaration-8]: httpresponseredirection.md#httpresponseredirection
-[Constructor-2]: httpresponseredirection.md#constructorcontent
+[Constructor-2]: httpresponseredirection.md#constructorbody
 [PropertyDeclaration-20]: httpresponseredirection.md#ishttpresponseredirection

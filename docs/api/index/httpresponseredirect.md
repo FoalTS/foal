@@ -2,7 +2,7 @@
 
 * [HttpResponseRedirect][ClassDeclaration-7]
     * Constructor
-        * [constructor(path, content)][Constructor-1]
+        * [constructor(path, body)][Constructor-1]
     * Properties
         * [isHttpResponseRedirect][PropertyDeclaration-17]
         * [statusCode][PropertyDeclaration-18]
@@ -15,18 +15,18 @@ class HttpResponseRedirect
 ```
 ## Constructor
 
-### constructor(path, content)
+### constructor(path, body)
 
 ```typescript
-public constructor(path: string, content?: any);
+public constructor(path: string, body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type   |
-| ------- | ------ |
-| path    | string |
-| content | any    |
+| Name | Type   |
+| ---- | ------ |
+| path | string |
+| body | any    |
 
 ## Properties
 
@@ -65,7 +65,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
-[Constructor-1]: httpresponseredirect.md#constructorpath-content
+[Constructor-1]: httpresponseredirect.md#constructorpath-body
 [PropertyDeclaration-17]: httpresponseredirect.md#ishttpresponseredirect
 [PropertyDeclaration-18]: httpresponseredirect.md#statuscode
 [PropertyDeclaration-19]: httpresponseredirect.md#statusmessage

@@ -2,11 +2,11 @@
 
 * [HttpResponseInternalServerError][ClassDeclaration-28]
     * Constructor
-        * [constructor(content)][Constructor-20]
+        * [constructor(body)][Constructor-20]
     * Properties
-        * [isHttpResponseInternalServerError][PropertyDeclaration-68]
-        * [statusCode][PropertyDeclaration-69]
-        * [statusMessage][PropertyDeclaration-70]
+        * [isHttpResponseInternalServerError][PropertyDeclaration-66]
+        * [statusCode][PropertyDeclaration-67]
+        * [statusMessage][PropertyDeclaration-68]
 
 # HttpResponseInternalServerError
 
@@ -15,17 +15,17 @@ class HttpResponseInternalServerError
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-28]: httpresponseinternalservererror.md#httpresponseinternalservererror
-[Constructor-20]: httpresponseinternalservererror.md#constructorcontent
-[PropertyDeclaration-68]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
-[PropertyDeclaration-69]: httpresponseinternalservererror.md#statuscode
-[PropertyDeclaration-70]: httpresponseinternalservererror.md#statusmessage
+[Constructor-20]: httpresponseinternalservererror.md#constructorbody
+[PropertyDeclaration-66]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
+[PropertyDeclaration-67]: httpresponseinternalservererror.md#statuscode
+[PropertyDeclaration-68]: httpresponseinternalservererror.md#statusmessage

@@ -62,7 +62,7 @@ export class AppController {
 ## Accessing request data, session or current user
 
 Each decorated method of a controller takes a `Context` as parameter. This object has three properties:
-- the express `request` which has information on the request as well as the session object and the `csrfToken` method,
+- the express [request object](http://expressjs.com/en/4x/api.html#req) which has information on the request as well as the session object and the `csrfToken` method,
 - the `user` property which is undefined or not depedending on if a user was authenticated,
 - and a `state` object which is a mere object to forward information between [hooks](./hooks.md).
 
@@ -205,4 +205,23 @@ Controller methods should return an `HttpResponse`. Here are the available optio
 - `class HttpResponseInternalServerError` (500)
 - `class HttpResponseNotImplemented` (501)
 
-The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `content` which is used in the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
+The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` can take an optional argument `body` which is used as the body of the reponse. Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
+
+The `HttpResponse` has also 7 methods to set and get cookies and headers:
+```typescript
+({
+  setHeader(name: string, value: string);
+
+  getHeader(name: string): string|undefined;
+
+  getHeaders(): { [key: string]: string };
+
+  setCookie(name: string, value: string, options: CookieOptions = {}): void;
+
+  getCookie(name: string): { value: string|undefined, options: CookieOptions };
+
+  getCookies(): { [key: string]: { value: string|undefined, options: CookieOptions } };
+})
+```
+
+To check if an object is an instance of `HttpResponse` you can use the `isHttpResponse(obj): boolean`. An analog function exists for each sub-class of `HttpResponse` (`isHttpResponseNotFound`, etc).

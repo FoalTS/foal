@@ -6,6 +6,6 @@ export class MyController {
   subControllers = [
     controller('/', MyController),
     controller('/', MyController2),
-    controller('/', TestFooBarController)
+    controller('/test-foo-bar', TestFooBarController)
   ];
 }

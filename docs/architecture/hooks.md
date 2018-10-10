@@ -10,7 +10,7 @@ This function takes two parameters:
 - The `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist.
 - The service manager that lets access other services within the hook.
 
-If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
+If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `body` of the returned object.
 
 <!--
 // TODO: Write this.

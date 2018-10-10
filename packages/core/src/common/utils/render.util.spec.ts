@@ -34,7 +34,7 @@ describe('render', () => {
     const expected = `Hello ${name}! How are you?`;
     const actual = render('./templates/template.html', { name }, __dirname);
     ok(actual instanceof HttpResponseOK);
-    strictEqual(actual.content, expected);
+    strictEqual(actual.body, expected);
   });
 
   it('should throw an Error if the template and/or locals are incorrect.', () => {

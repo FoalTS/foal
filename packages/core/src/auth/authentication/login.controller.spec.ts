@@ -146,7 +146,7 @@ describe('LoginController', () => {
         + ' not fit the schema.', async () => {
       const ctx = new Context({
         body: {
-          email: 3
+          email: {}
         },
         params: {
           strategy: 'email'
@@ -157,7 +157,7 @@ describe('LoginController', () => {
       const response = await controller.login(ctx);
 
       ok(response instanceof HttpResponseBadRequest);
-      deepStrictEqual(response.content, [
+      deepStrictEqual(response.body, [
         {
           dataPath: '.email',
           keyword: 'type',

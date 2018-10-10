@@ -13,7 +13,7 @@ The `ValidateBody` and `ValidateParams` check respectively the `body` and `param
 Let's add validation and sanitization to your application. In fact, you have already defined the todo schema in the `create-todo` script earlier.
 
 ```typescript
-  @Post('/api/todos')
+  @Post('/todos')
   @ValidateBody({
     // The body request should be an object once parsed by the framework.
     type: 'object',
@@ -36,7 +36,7 @@ Let's add validation and sanitization to your application. In fact, you have alr
     return new HttpResponseCreated(todo);
   }
 
-  @Delete('/api/todos/:id')
+  @Delete('/todos/:id')
   @ValidateParams({
     properties: {
       // The id should be a number. If it is not (the request.params object

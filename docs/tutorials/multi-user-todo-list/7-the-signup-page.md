@@ -5,7 +5,7 @@ The sign up page, that is served in the view controller, makes a request `POST /
 Create a new controller to handle this route.
 
 ```
-foal generate controller sign-up --register
+foal generate controller signup --register
 ```
 
 Open the new file and replace its content.
@@ -19,9 +19,9 @@ import { getRepository } from 'typeorm';
 // App
 import { User } from '../entities';
 
-export class SignUpController {
+export class SignupController {
 
-  @Post('/signup')
+  @Post()
   @ValidateBody(emailSchema)
   async signup(ctx: Context) {
     // Check that the password is not too common.

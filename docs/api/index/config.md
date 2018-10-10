@@ -2,9 +2,9 @@
 
 * [Config][ClassDeclaration-29]
     * Methods
-        * [get(configName, propName, defaultValue)][MethodDeclaration-24]
+        * [get(configName, propName, defaultValue)][MethodDeclaration-30]
     * Properties
-        * [root][PropertyDeclaration-71]
+        * [root][PropertyDeclaration-69]
 
 # Config
 
@@ -44,5 +44,5 @@ public static root: string;
 string
 
 [ClassDeclaration-29]: config.md#config
-[MethodDeclaration-24]: config.md#getconfigname-propname-defaultvalue
-[PropertyDeclaration-71]: config.md#root
+[MethodDeclaration-30]: config.md#getconfigname-propname-defaultvalue
+[PropertyDeclaration-69]: config.md#root

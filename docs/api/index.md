@@ -7,61 +7,68 @@
         * [strategy][FunctionDeclaration-2]
         * [PermissionRequired][FunctionDeclaration-3]
         * [LoginRequired][FunctionDeclaration-4]
-        * [isObjectDoesNotExist][FunctionDeclaration-5]
-        * [isPermissionDenied][FunctionDeclaration-6]
-        * [isValidationError][FunctionDeclaration-7]
-        * [Log][FunctionDeclaration-8]
-        * [ValidateBody][FunctionDeclaration-9]
-        * [ValidateHeaders][FunctionDeclaration-10]
-        * [ValidateParams][FunctionDeclaration-11]
-        * [ValidateQuery][FunctionDeclaration-12]
-        * [middleware][FunctionDeclaration-13]
-        * [controller][FunctionDeclaration-14]
-        * [escapeProp][FunctionDeclaration-15]
-        * [escape][FunctionDeclaration-16]
-        * [render][FunctionDeclaration-17]
-        * [validate][FunctionDeclaration-18]
-        * [Get][FunctionDeclaration-19]
-        * [Post][FunctionDeclaration-20]
-        * [Put][FunctionDeclaration-21]
-        * [Patch][FunctionDeclaration-22]
-        * [Delete][FunctionDeclaration-23]
-        * [isHttpResponse][FunctionDeclaration-24]
-        * [isHttpResponseSuccess][FunctionDeclaration-25]
-        * [isHttpResponseOK][FunctionDeclaration-26]
-        * [isHttpResponseCreated][FunctionDeclaration-27]
-        * [isHttpResponseNoContent][FunctionDeclaration-28]
-        * [isHttpResponseRedirection][FunctionDeclaration-29]
-        * [isHttpResponseRedirect][FunctionDeclaration-30]
-        * [isHttpResponseClientError][FunctionDeclaration-31]
-        * [isHttpResponseBadRequest][FunctionDeclaration-32]
-        * [isHttpResponseUnauthorized][FunctionDeclaration-33]
-        * [isHttpResponseForbidden][FunctionDeclaration-34]
-        * [isHttpResponseNotFound][FunctionDeclaration-35]
-        * [isHttpResponseMethodNotAllowed][FunctionDeclaration-36]
-        * [isHttpResponseConflict][FunctionDeclaration-37]
-        * [isHttpResponseServerError][FunctionDeclaration-38]
-        * [isHttpResponseInternalServerError][FunctionDeclaration-39]
-        * [isHttpResponseNotImplemented][FunctionDeclaration-40]
-        * [Hook][FunctionDeclaration-41]
-        * [getHookFunction][FunctionDeclaration-42]
-        * [makeControllerRoutes][FunctionDeclaration-43]
-        * [getPath][FunctionDeclaration-44]
-        * [getHttpMethod][FunctionDeclaration-45]
-        * [createController][FunctionDeclaration-46]
-        * [createService][FunctionDeclaration-47]
-        * [dependency][FunctionDeclaration-48]
-        * [createApp][FunctionDeclaration-49]
+        * [logIn][FunctionDeclaration-5]
+        * [logOut][FunctionDeclaration-6]
+        * [isObjectDoesNotExist][FunctionDeclaration-7]
+        * [isPermissionDenied][FunctionDeclaration-8]
+        * [isValidationError][FunctionDeclaration-9]
+        * [Log][FunctionDeclaration-10]
+        * [ValidateBody][FunctionDeclaration-11]
+        * [ValidateHeaders][FunctionDeclaration-12]
+        * [ValidateParams][FunctionDeclaration-13]
+        * [ValidateQuery][FunctionDeclaration-14]
+        * [middleware][FunctionDeclaration-15]
+        * [controller][FunctionDeclaration-16]
+        * [escapeProp][FunctionDeclaration-17]
+        * [escape][FunctionDeclaration-18]
+        * [getAjvInstance][FunctionDeclaration-19]
+        * [render][FunctionDeclaration-20]
+        * [validate][FunctionDeclaration-21]
+        * [Get][FunctionDeclaration-22]
+        * [Post][FunctionDeclaration-23]
+        * [Put][FunctionDeclaration-24]
+        * [Patch][FunctionDeclaration-25]
+        * [Delete][FunctionDeclaration-26]
+        * [isHttpResponse][FunctionDeclaration-27]
+        * [isHttpResponseSuccess][FunctionDeclaration-28]
+        * [isHttpResponseOK][FunctionDeclaration-29]
+        * [isHttpResponseCreated][FunctionDeclaration-30]
+        * [isHttpResponseNoContent][FunctionDeclaration-31]
+        * [isHttpResponseRedirection][FunctionDeclaration-32]
+        * [isHttpResponseRedirect][FunctionDeclaration-33]
+        * [isHttpResponseClientError][FunctionDeclaration-34]
+        * [isHttpResponseBadRequest][FunctionDeclaration-35]
+        * [isHttpResponseUnauthorized][FunctionDeclaration-36]
+        * [isHttpResponseForbidden][FunctionDeclaration-37]
+        * [isHttpResponseNotFound][FunctionDeclaration-38]
+        * [isHttpResponseMethodNotAllowed][FunctionDeclaration-39]
+        * [isHttpResponseConflict][FunctionDeclaration-40]
+        * [isHttpResponseServerError][FunctionDeclaration-41]
+        * [isHttpResponseInternalServerError][FunctionDeclaration-42]
+        * [isHttpResponseNotImplemented][FunctionDeclaration-43]
+        * [Hook][FunctionDeclaration-44]
+        * [getHookFunction][FunctionDeclaration-45]
+        * [makeControllerRoutes][FunctionDeclaration-46]
+        * [getPath][FunctionDeclaration-47]
+        * [getHttpMethod][FunctionDeclaration-48]
+        * [createController][FunctionDeclaration-49]
+        * [createService][FunctionDeclaration-50]
+        * [dependency][FunctionDeclaration-51]
+        * [createApp][FunctionDeclaration-52]
     * Interfaces
+        * [EmailUser][InterfaceDeclaration-0]
         * [IAuthenticator][InterfaceDeclaration-2]
         * [Strategy][InterfaceDeclaration-3]
-        * [IResourceCollection][InterfaceDeclaration-4]
-        * [CollectionParams][InterfaceDeclaration-5]
+        * [LogOptions][InterfaceDeclaration-7]
+        * [IResourceCollection][InterfaceDeclaration-5]
+        * [CollectionParams][InterfaceDeclaration-6]
         * [Class][InterfaceDeclaration-1]
-        * [Route][InterfaceDeclaration-6]
-        * [CreateAppOptions][InterfaceDeclaration-7]
+        * [CookieOptions][InterfaceDeclaration-4]
+        * [Route][InterfaceDeclaration-8]
+        * [CreateAppOptions][InterfaceDeclaration-9]
     * Types
         * [Middleware][TypeAliasDeclaration-1]
+        * [RelationLoader][TypeAliasDeclaration-2]
         * [HttpMethod][TypeAliasDeclaration-3]
         * [HookFunction][TypeAliasDeclaration-4]
         * [HookDecorator][TypeAliasDeclaration-0]
@@ -165,6 +172,43 @@ function LoginRequired(options: { redirect?: string | undefined; } = {}): HookDe
 
 ----------
 
+### logIn
+
+```typescript
+function logIn(ctx: Context<AbstractUser>, user: AbstractUser): void;
+```
+
+**Parameters**
+
+| Name | Type                                                              |
+| ---- | ----------------------------------------------------------------- |
+| ctx  | [Context][ClassDeclaration-6]<[AbstractUser][ClassDeclaration-1]> |
+| user | [AbstractUser][ClassDeclaration-1]                                |
+
+**Return type**
+
+void
+
+----------
+
+### logOut
+
+```typescript
+function logOut(ctx: Context<AbstractUser>): void;
+```
+
+**Parameters**
+
+| Name | Type                                                              |
+| ---- | ----------------------------------------------------------------- |
+| ctx  | [Context][ClassDeclaration-6]<[AbstractUser][ClassDeclaration-1]> |
+
+**Return type**
+
+void
+
+----------
+
 ### isObjectDoesNotExist
 
 ```typescript
@@ -221,16 +265,18 @@ err is [ValidationError][ClassDeclaration-25]
 
 ### Log
 
+Logs a message with optional information on the HTTP request.
+
 ```typescript
-function Log(message: string, logFn: { (message?: any, ...optionalParams: any[]): void; (message?: any, ...optionalParams: any[]): voi... = console.log): HookDecorator;
+function Log(message: string, options: LogOptions = {}): HookDecorator;
 ```
 
 **Parameters**
 
-| Name    | Type                                                                                                 | Default value |
-| ------- | ---------------------------------------------------------------------------------------------------- | ------------- |
-| message | string                                                                                               |               |
-| logFn   | { (message?: any, ...optionalParams: any[]): void; (message?: any, ...optionalParams: any[]): voi... | console.log   |
+| Name    | Type                                 | Default value | Description                                                                 |
+| ------- | ------------------------------------ | ------------- | --------------------------------------------------------------------------- |
+| message | string                               |               | The message to print.                                                       |
+| options | [LogOptions][InterfaceDeclaration-7] | {}            | Options to specify which information on the HTTP request should be printed. |
 
 **Return type**
 
@@ -333,7 +379,7 @@ function middleware(operations: string, middleware: Middleware): Partial<Record<
 
 **Return type**
 
-Partial<Record<keyof [IResourceCollection][InterfaceDeclaration-4], [Middleware][TypeAliasDeclaration-1]>>
+Partial<Record<keyof [IResourceCollection][InterfaceDeclaration-5], [Middleware][TypeAliasDeclaration-1]>>
 
 ----------
 
@@ -390,6 +436,18 @@ function escape(str: string): string;
 **Return type**
 
 string
+
+----------
+
+### getAjvInstance
+
+```typescript
+function getAjvInstance(): Ajv;
+```
+
+**Return type**
+
+Ajv
 
 ----------
 
@@ -881,7 +939,7 @@ function makeControllerRoutes(parentPath: string, parentHooks: HookFunction[], c
 
 **Return type**
 
-[Route][InterfaceDeclaration-6][]
+[Route][InterfaceDeclaration-8][]
 
 ----------
 
@@ -1007,13 +1065,35 @@ function createApp(rootControllerClass: Class<any>, options: CreateAppOptions = 
 | Name                | Type                                       | Default value |
 | ------------------- | ------------------------------------------ | ------------- |
 | rootControllerClass | [Class][InterfaceDeclaration-1]<any>       |               |
-| options             | [CreateAppOptions][InterfaceDeclaration-7] | {}            |
+| options             | [CreateAppOptions][InterfaceDeclaration-9] | {}            |
 
 **Return type**
 
 any
 
 ## Interfaces
+
+### EmailUser
+
+```typescript
+interface EmailUser extends AbstractUser {
+    email: string;
+    password: string;
+}
+```
+
+**Extends**
+
+[AbstractUser][ClassDeclaration-1]
+
+**Properties**
+
+| Name     | Type   | Optional |
+| -------- | ------ | -------- |
+| email    | string | false    |
+| password | string | false    |
+
+----------
 
 ### IAuthenticator
 
@@ -1064,6 +1144,30 @@ interface Strategy {
 | name               | string                                                                                                        | false    |
 | authenticatorClass | [Class][InterfaceDeclaration-1]<[IAuthenticator][InterfaceDeclaration-2]<[AbstractUser][ClassDeclaration-1]>> | false    |
 | schema             | object                                                                                                        | false    |
+
+----------
+
+### LogOptions
+
+```typescript
+interface LogOptions {
+    body?: boolean | undefined;
+    params?: boolean | undefined;
+    headers?: string[] | boolean;
+    query?: boolean | undefined;
+    logFn?: typeof ???;
+}
+```
+
+**Properties**
+
+| Name    | Type                     | Optional |
+| ------- | ------------------------ | -------- |
+| body    | boolean &#124; undefined | true     |
+| params  | boolean &#124; undefined | true     |
+| headers | string[] &#124; boolean  | true     |
+| query   | boolean &#124; undefined | true     |
+| logFn   | typeof ???               | true     |
 
 ----------
 
@@ -1233,6 +1337,34 @@ T
 
 ----------
 
+### CookieOptions
+
+```typescript
+interface CookieOptions {
+    domain?: string | undefined;
+    expires?: Date | undefined;
+    httpOnly?: boolean | undefined;
+    maxAge?: number | undefined;
+    path?: string | undefined;
+    secure?: boolean | undefined;
+    sameSite?: "strict" | "lax";
+}
+```
+
+**Properties**
+
+| Name     | Type                     | Optional |
+| -------- | ------------------------ | -------- |
+| domain   | string &#124; undefined  | true     |
+| expires  | Date &#124; undefined    | true     |
+| httpOnly | boolean &#124; undefined | true     |
+| maxAge   | number &#124; undefined  | true     |
+| path     | string &#124; undefined  | true     |
+| secure   | boolean &#124; undefined | true     |
+| sameSite | "strict" &#124; "lax"    | true     |
+
+----------
+
 ### Route
 
 ```typescript
@@ -1292,6 +1424,18 @@ type Middleware = (context: { user: AbstractUser | undefined; resource: any; dat
 **Type**
 
 (context: { user: AbstractUser | undefined; resource: any; data: any; params: CollectionParams; }) => any
+
+----------
+
+### RelationLoader
+
+```typescript
+type RelationLoader = (user: AbstractUser | undefined, params: CollectionParams) => string[];
+```
+
+**Type**
+
+(user: AbstractUser | undefined, params: CollectionParams) => string[]
 
 ----------
 
@@ -1513,98 +1657,109 @@ const emailSchema: { additionalProperties: boolean; properties: { email: { type:
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [FunctionDeclaration-4]: index.md#loginrequired
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-5]: index.md#isobjectdoesnotexist
+[FunctionDeclaration-5]: index.md#login
+[ClassDeclaration-1]: index/abstractuser.md#abstractuser
+[ClassDeclaration-6]: index/context.md#context
+[ClassDeclaration-1]: index/abstractuser.md#abstractuser
+[FunctionDeclaration-6]: index.md#logout
+[ClassDeclaration-1]: index/abstractuser.md#abstractuser
+[ClassDeclaration-6]: index/context.md#context
+[FunctionDeclaration-7]: index.md#isobjectdoesnotexist
 [ClassDeclaration-23]: index/objectdoesnotexist.md#objectdoesnotexist
-[FunctionDeclaration-6]: index.md#ispermissiondenied
+[FunctionDeclaration-8]: index.md#ispermissiondenied
 [ClassDeclaration-24]: index/permissiondenied.md#permissiondenied
-[FunctionDeclaration-7]: index.md#isvalidationerror
+[FunctionDeclaration-9]: index.md#isvalidationerror
 [ClassDeclaration-25]: index/validationerror.md#validationerror
-[FunctionDeclaration-8]: index.md#log
+[FunctionDeclaration-10]: index.md#log
+[InterfaceDeclaration-7]: index.md#logoptions
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-9]: index.md#validatebody
+[FunctionDeclaration-11]: index.md#validatebody
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-10]: index.md#validateheaders
+[FunctionDeclaration-12]: index.md#validateheaders
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-11]: index.md#validateparams
+[FunctionDeclaration-13]: index.md#validateparams
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-12]: index.md#validatequery
+[FunctionDeclaration-14]: index.md#validatequery
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-13]: index.md#middleware
+[FunctionDeclaration-15]: index.md#middleware
 [TypeAliasDeclaration-1]: index.md#middleware
-[InterfaceDeclaration-4]: index.md#iresourcecollection
+[InterfaceDeclaration-5]: index.md#iresourcecollection
 [TypeAliasDeclaration-1]: index.md#middleware
-[FunctionDeclaration-14]: index.md#controller
+[FunctionDeclaration-16]: index.md#controller
 [InterfaceDeclaration-1]: index.md#class
 [InterfaceDeclaration-1]: index.md#class
-[FunctionDeclaration-15]: index.md#escapeprop
-[FunctionDeclaration-16]: index.md#escape
-[FunctionDeclaration-17]: index.md#render
+[FunctionDeclaration-17]: index.md#escapeprop
+[FunctionDeclaration-18]: index.md#escape
+[FunctionDeclaration-19]: index.md#getajvinstance
+[FunctionDeclaration-20]: index.md#render
 [ClassDeclaration-20]: index/httpresponseok.md#httpresponseok
-[FunctionDeclaration-18]: index.md#validate
-[FunctionDeclaration-19]: index.md#get
-[FunctionDeclaration-20]: index.md#post
-[FunctionDeclaration-21]: index.md#put
-[FunctionDeclaration-22]: index.md#patch
-[FunctionDeclaration-23]: index.md#delete
-[FunctionDeclaration-24]: index.md#ishttpresponse
+[FunctionDeclaration-21]: index.md#validate
+[FunctionDeclaration-22]: index.md#get
+[FunctionDeclaration-23]: index.md#post
+[FunctionDeclaration-24]: index.md#put
+[FunctionDeclaration-25]: index.md#patch
+[FunctionDeclaration-26]: index.md#delete
+[FunctionDeclaration-27]: index.md#ishttpresponse
 [ClassDeclaration-9]: index/httpresponse.md#httpresponse
-[FunctionDeclaration-25]: index.md#ishttpresponsesuccess
+[FunctionDeclaration-28]: index.md#ishttpresponsesuccess
 [ClassDeclaration-11]: index/httpresponsesuccess.md#httpresponsesuccess
-[FunctionDeclaration-26]: index.md#ishttpresponseok
+[FunctionDeclaration-29]: index.md#ishttpresponseok
 [ClassDeclaration-20]: index/httpresponseok.md#httpresponseok
-[FunctionDeclaration-27]: index.md#ishttpresponsecreated
+[FunctionDeclaration-30]: index.md#ishttpresponsecreated
 [ClassDeclaration-22]: index/httpresponsecreated.md#httpresponsecreated
-[FunctionDeclaration-28]: index.md#ishttpresponsenocontent
+[FunctionDeclaration-31]: index.md#ishttpresponsenocontent
 [ClassDeclaration-10]: index/httpresponsenocontent.md#httpresponsenocontent
-[FunctionDeclaration-29]: index.md#ishttpresponseredirection
+[FunctionDeclaration-32]: index.md#ishttpresponseredirection
 [ClassDeclaration-8]: index/httpresponseredirection.md#httpresponseredirection
-[FunctionDeclaration-30]: index.md#ishttpresponseredirect
+[FunctionDeclaration-33]: index.md#ishttpresponseredirect
 [ClassDeclaration-7]: index/httpresponseredirect.md#httpresponseredirect
-[FunctionDeclaration-31]: index.md#ishttpresponseclienterror
+[FunctionDeclaration-34]: index.md#ishttpresponseclienterror
 [ClassDeclaration-13]: index/httpresponseclienterror.md#httpresponseclienterror
-[FunctionDeclaration-32]: index.md#ishttpresponsebadrequest
+[FunctionDeclaration-35]: index.md#ishttpresponsebadrequest
 [ClassDeclaration-14]: index/httpresponsebadrequest.md#httpresponsebadrequest
-[FunctionDeclaration-33]: index.md#ishttpresponseunauthorized
+[FunctionDeclaration-36]: index.md#ishttpresponseunauthorized
 [ClassDeclaration-15]: index/httpresponseunauthorized.md#httpresponseunauthorized
-[FunctionDeclaration-34]: index.md#ishttpresponseforbidden
+[FunctionDeclaration-37]: index.md#ishttpresponseforbidden
 [ClassDeclaration-21]: index/httpresponseforbidden.md#httpresponseforbidden
-[FunctionDeclaration-35]: index.md#ishttpresponsenotfound
+[FunctionDeclaration-38]: index.md#ishttpresponsenotfound
 [ClassDeclaration-12]: index/httpresponsenotfound.md#httpresponsenotfound
-[FunctionDeclaration-36]: index.md#ishttpresponsemethodnotallowed
+[FunctionDeclaration-39]: index.md#ishttpresponsemethodnotallowed
 [ClassDeclaration-17]: index/httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[FunctionDeclaration-37]: index.md#ishttpresponseconflict
+[FunctionDeclaration-40]: index.md#ishttpresponseconflict
 [ClassDeclaration-27]: index/httpresponseconflict.md#httpresponseconflict
-[FunctionDeclaration-38]: index.md#ishttpresponseservererror
+[FunctionDeclaration-41]: index.md#ishttpresponseservererror
 [ClassDeclaration-19]: index/httpresponseservererror.md#httpresponseservererror
-[FunctionDeclaration-39]: index.md#ishttpresponseinternalservererror
+[FunctionDeclaration-42]: index.md#ishttpresponseinternalservererror
 [ClassDeclaration-28]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
-[FunctionDeclaration-40]: index.md#ishttpresponsenotimplemented
+[FunctionDeclaration-43]: index.md#ishttpresponsenotimplemented
 [ClassDeclaration-18]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
-[FunctionDeclaration-41]: index.md#hook
+[FunctionDeclaration-44]: index.md#hook
 [TypeAliasDeclaration-4]: index.md#hookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-42]: index.md#gethookfunction
+[FunctionDeclaration-45]: index.md#gethookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [TypeAliasDeclaration-4]: index.md#hookfunction
-[FunctionDeclaration-43]: index.md#makecontrollerroutes
+[FunctionDeclaration-46]: index.md#makecontrollerroutes
 [TypeAliasDeclaration-4]: index.md#hookfunction
 [InterfaceDeclaration-1]: index.md#class
 [ClassDeclaration-5]: index/servicemanager.md#servicemanager
-[InterfaceDeclaration-6]: index.md#route
-[FunctionDeclaration-44]: index.md#getpath
+[InterfaceDeclaration-8]: index.md#route
+[FunctionDeclaration-47]: index.md#getpath
 [InterfaceDeclaration-1]: index.md#class
-[FunctionDeclaration-45]: index.md#gethttpmethod
+[FunctionDeclaration-48]: index.md#gethttpmethod
 [InterfaceDeclaration-1]: index.md#class
-[FunctionDeclaration-46]: index.md#createcontroller
-[InterfaceDeclaration-1]: index.md#class
-[ClassDeclaration-5]: index/servicemanager.md#servicemanager
-[FunctionDeclaration-47]: index.md#createservice
+[FunctionDeclaration-49]: index.md#createcontroller
 [InterfaceDeclaration-1]: index.md#class
 [ClassDeclaration-5]: index/servicemanager.md#servicemanager
-[FunctionDeclaration-48]: index.md#dependency
-[FunctionDeclaration-49]: index.md#createapp
+[FunctionDeclaration-50]: index.md#createservice
 [InterfaceDeclaration-1]: index.md#class
-[InterfaceDeclaration-7]: index.md#createappoptions
+[ClassDeclaration-5]: index/servicemanager.md#servicemanager
+[FunctionDeclaration-51]: index.md#dependency
+[FunctionDeclaration-52]: index.md#createapp
+[InterfaceDeclaration-1]: index.md#class
+[InterfaceDeclaration-9]: index.md#createappoptions
+[InterfaceDeclaration-0]: index.md#emailuser
+[ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [InterfaceDeclaration-2]: index.md#iauthenticator
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
@@ -1612,20 +1767,23 @@ const emailSchema: { additionalProperties: boolean; properties: { email: { type:
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [InterfaceDeclaration-2]: index.md#iauthenticator
 [InterfaceDeclaration-1]: index.md#class
-[InterfaceDeclaration-4]: index.md#iresourcecollection
+[InterfaceDeclaration-7]: index.md#logoptions
+[InterfaceDeclaration-5]: index.md#iresourcecollection
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
 [ClassDeclaration-1]: index/abstractuser.md#abstractuser
-[InterfaceDeclaration-5]: index.md#collectionparams
+[InterfaceDeclaration-6]: index.md#collectionparams
 [InterfaceDeclaration-1]: index.md#class
-[InterfaceDeclaration-6]: index.md#route
+[InterfaceDeclaration-4]: index.md#cookieoptions
+[InterfaceDeclaration-8]: index.md#route
 [TypeAliasDeclaration-3]: index.md#httpmethod
 [TypeAliasDeclaration-4]: index.md#hookfunction
-[InterfaceDeclaration-7]: index.md#createappoptions
+[InterfaceDeclaration-9]: index.md#createappoptions
 [TypeAliasDeclaration-1]: index.md#middleware
+[TypeAliasDeclaration-2]: index.md#relationloader
 [TypeAliasDeclaration-3]: index.md#httpmethod
 [TypeAliasDeclaration-4]: index.md#hookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator

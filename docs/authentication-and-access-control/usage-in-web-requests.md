@@ -21,13 +21,12 @@ export class AppController {
 If you want to attach an authenticated user to the current session, proceed as follows:
 
 ```typescript
-ctx.request.session.authentication = ctx.request.session.authentication || {};
-ctx.request.session.authentication.userId = user.id;
+logIn(ctx, user); // The logIn utility is in the @foal/core package.
 ```
 
-To log out a user, delete the `authentication` property of the session:
+To log out a user, use the `logOut` utility:
 ```typescript
-delete ctx.request.session.authentication;
+logOut(ctx);
 ```
 
 > Note: The `LoginController` presented below does these steps for you.
@@ -131,7 +130,7 @@ Create a file named `login.html` inside `controllers/templates` with the followi
 <html>
   <head></head>
   <body>
-    <form action="/login-with-email" method="POST">
+    <form action="/auth/login-with-email" method="POST">
       <input style="display: none" name="_csrf" value="<%= csrfToken %>">
       <input type="email" name="email">
       <input type="password" name="password">

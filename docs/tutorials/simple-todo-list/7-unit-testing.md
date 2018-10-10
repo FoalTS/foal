@@ -54,8 +54,8 @@ describe('ApiController', () => {
     it('should handle requests at GET /.', () => {
       // Throw an error and make the test fail if the http method of `getTodos` is not GET.
       strictEqual(getHttpMethod(ApiController, 'getTodos'), 'GET');
-      // Throw an error and make the test fail if the path of `getTodos` is not /api/todos.
-      strictEqual(getPath(ApiController, 'getTodos'), '/api/todos');
+      // Throw an error and make the test fail if the path of `getTodos` is not /todos.
+      strictEqual(getPath(ApiController, 'getTodos'), '/todos');
     });
 
     // Define a unit test.
@@ -73,11 +73,11 @@ describe('ApiController', () => {
       const response = await controller.getTodos();
       ok(isHttpResponseOK(response), 'response should be an instance of HttpResponseOK.');
 
-      const content = (response as HttpResponseOK).content;
+      const body = (response as HttpResponseOK).body;
 
-      ok(Array.isArray(content), 'The content of the response should be an array.');
-      strictEqual(content[0].text, 'Todo 1');
-      strictEqual(content[1].text, 'Todo 2');
+      ok(Array.isArray(body), 'The body of the response should be an array.');
+      strictEqual(body[0].text, 'Todo 1');
+      strictEqual(body[1].text, 'Todo 2');
     });
 
   });

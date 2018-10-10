@@ -4,6 +4,6 @@ import { TestFooBarController } from './controllers';
 
 export class MyController {
   subControllers = [
-    controller('/', TestFooBarController)
+    controller('/test-foo-bar', TestFooBarController)
   ];
 }

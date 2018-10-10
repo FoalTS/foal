@@ -2,11 +2,11 @@
 
 * [HttpResponseConflict][ClassDeclaration-27]
     * Constructor
-        * [constructor(content)][Constructor-19]
+        * [constructor(body)][Constructor-19]
     * Properties
-        * [isHttpResponseConflict][PropertyDeclaration-65]
-        * [statusCode][PropertyDeclaration-66]
-        * [statusMessage][PropertyDeclaration-67]
+        * [isHttpResponseConflict][PropertyDeclaration-63]
+        * [statusCode][PropertyDeclaration-64]
+        * [statusMessage][PropertyDeclaration-65]
 
 # HttpResponseConflict
 
@@ -15,17 +15,17 @@ class HttpResponseConflict
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-27]: httpresponseconflict.md#httpresponseconflict
-[Constructor-19]: httpresponseconflict.md#constructorcontent
-[PropertyDeclaration-65]: httpresponseconflict.md#ishttpresponseconflict
-[PropertyDeclaration-66]: httpresponseconflict.md#statuscode
-[PropertyDeclaration-67]: httpresponseconflict.md#statusmessage
+[Constructor-19]: httpresponseconflict.md#constructorbody
+[PropertyDeclaration-63]: httpresponseconflict.md#ishttpresponseconflict
+[PropertyDeclaration-64]: httpresponseconflict.md#statuscode
+[PropertyDeclaration-65]: httpresponseconflict.md#statusmessage
