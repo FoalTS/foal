@@ -182,7 +182,7 @@ class AppController {
 
 FoalTS provides some common controllers to [authenticate](../authentication-and-access-control/usage-in-web-requests.md) users or to create [REST](../cookbook/rest-api.md) <!--or [GraphQL](../cookbook/graphql.md) -->API.
 
-## Responding with special status or headers
+## Responding with special status, headers or cookies
 
 Controller methods should return an `HttpResponse`. Here are the available options.
 
