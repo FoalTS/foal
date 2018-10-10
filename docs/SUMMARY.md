@@ -41,7 +41,7 @@
   * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
 * [Architecture](./architecture/introduction.md)
-  * [Introduction](./architecture/introduction.md)
+  * [Request Lifecycle](./architecture/request-lifecycle.md)
   * [Controllers](./architecture/controllers.md)
   * [Services](./architecture/services.md)
   * [Hooks](./architecture/hooks.md)
