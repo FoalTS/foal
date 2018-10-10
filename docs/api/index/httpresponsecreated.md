@@ -2,11 +2,11 @@
 
 * [HttpResponseCreated][ClassDeclaration-22]
     * Constructor
-        * [constructor(content)][Constructor-15]
+        * [constructor(body)][Constructor-15]
     * Properties
-        * [isHttpResponseCreated][PropertyDeclaration-54]
-        * [statusCode][PropertyDeclaration-55]
-        * [statusMessage][PropertyDeclaration-56]
+        * [isHttpResponseCreated][PropertyDeclaration-52]
+        * [statusCode][PropertyDeclaration-53]
+        * [statusMessage][PropertyDeclaration-54]
 
 # HttpResponseCreated
 
@@ -15,17 +15,17 @@ class HttpResponseCreated
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-22]: httpresponsecreated.md#httpresponsecreated
-[Constructor-15]: httpresponsecreated.md#constructorcontent
-[PropertyDeclaration-54]: httpresponsecreated.md#ishttpresponsecreated
-[PropertyDeclaration-55]: httpresponsecreated.md#statuscode
-[PropertyDeclaration-56]: httpresponsecreated.md#statusmessage
+[Constructor-15]: httpresponsecreated.md#constructorbody
+[PropertyDeclaration-52]: httpresponsecreated.md#ishttpresponsecreated
+[PropertyDeclaration-53]: httpresponsecreated.md#statuscode
+[PropertyDeclaration-54]: httpresponsecreated.md#statusmessage

@@ -2,11 +2,11 @@
 
 * [HttpResponseOK][ClassDeclaration-20]
     * Constructor
-        * [constructor(content)][Constructor-13]
+        * [constructor(body)][Constructor-13]
     * Properties
-        * [isHttpResponseOK][PropertyDeclaration-48]
-        * [statusCode][PropertyDeclaration-49]
-        * [statusMessage][PropertyDeclaration-50]
+        * [isHttpResponseOK][PropertyDeclaration-46]
+        * [statusCode][PropertyDeclaration-47]
+        * [statusMessage][PropertyDeclaration-48]
 
 # HttpResponseOK
 
@@ -15,17 +15,17 @@ class HttpResponseOK
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-20]: httpresponseok.md#httpresponseok
-[Constructor-13]: httpresponseok.md#constructorcontent
-[PropertyDeclaration-48]: httpresponseok.md#ishttpresponseok
-[PropertyDeclaration-49]: httpresponseok.md#statuscode
-[PropertyDeclaration-50]: httpresponseok.md#statusmessage
+[Constructor-13]: httpresponseok.md#constructorbody
+[PropertyDeclaration-46]: httpresponseok.md#ishttpresponseok
+[PropertyDeclaration-47]: httpresponseok.md#statuscode
+[PropertyDeclaration-48]: httpresponseok.md#statusmessage

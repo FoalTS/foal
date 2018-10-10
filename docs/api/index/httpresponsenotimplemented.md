@@ -2,11 +2,11 @@
 
 * [HttpResponseNotImplemented][ClassDeclaration-18]
     * Constructor
-        * [constructor(content)][Constructor-11]
+        * [constructor(body)][Constructor-11]
     * Properties
-        * [isHttpResponseNotImplemented][PropertyDeclaration-44]
-        * [statusCode][PropertyDeclaration-45]
-        * [statusMessage][PropertyDeclaration-46]
+        * [isHttpResponseNotImplemented][PropertyDeclaration-42]
+        * [statusCode][PropertyDeclaration-43]
+        * [statusMessage][PropertyDeclaration-44]
 
 # HttpResponseNotImplemented
 
@@ -15,17 +15,17 @@ class HttpResponseNotImplemented
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,7 +64,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-18]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[Constructor-11]: httpresponsenotimplemented.md#constructorcontent
-[PropertyDeclaration-44]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
-[PropertyDeclaration-45]: httpresponsenotimplemented.md#statuscode
-[PropertyDeclaration-46]: httpresponsenotimplemented.md#statusmessage
+[Constructor-11]: httpresponsenotimplemented.md#constructorbody
+[PropertyDeclaration-42]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
+[PropertyDeclaration-43]: httpresponsenotimplemented.md#statuscode
+[PropertyDeclaration-44]: httpresponsenotimplemented.md#statusmessage

@@ -19,7 +19,7 @@ abstract class EmailAuthenticator<User extends EmailUser> implements IAuthentica
 
 | Name | Constraint                          |
 | ---- | ----------------------------------- |
-| User | EmailUser |
+| User | [EmailUser][InterfaceDeclaration-0] |
 ## Methods
 
 ### checkPassword(user, password)
@@ -70,6 +70,7 @@ public abstract entityClass: Class<User>;
 [Class][InterfaceDeclaration-1]<User>
 
 [ClassDeclaration-0]: emailauthenticator.md#emailauthenticator
+[InterfaceDeclaration-0]: ../index.md#emailuser
 [MethodDeclaration-1]: emailauthenticator.md#checkpassworduser-password
 [MethodDeclaration-2]: emailauthenticator.md#authenticate__0
 [PropertyDeclaration-0]: emailauthenticator.md#entityclass

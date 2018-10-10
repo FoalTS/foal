@@ -3,7 +3,7 @@
 * [LoginController][ClassDeclaration-4]
     * Methods
         * [logout(ctx)][MethodDeclaration-5]
-        * [login(ctx)][MethodDeclaration-6]
+        * [login(ctx)][MethodDeclaration-12]
     * Properties
         * [redirect][PropertyDeclaration-11]
         * [strategies][PropertyDeclaration-12]
@@ -92,7 +92,7 @@ public services: ServiceManager;
 [ClassDeclaration-6]: context.md#context
 [ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
 [ClassDeclaration-10]: httpresponsenocontent.md#httpresponsenocontent
-[MethodDeclaration-6]: logincontroller.md#loginctx
+[MethodDeclaration-12]: logincontroller.md#loginctx
 [ClassDeclaration-1]: abstractuser.md#abstractuser
 [ClassDeclaration-6]: context.md#context
 [ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
