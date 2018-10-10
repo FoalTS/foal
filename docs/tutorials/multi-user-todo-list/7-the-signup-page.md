@@ -6,6 +6,7 @@ Create a new controller to handle this route.
 
 ```
 foal generate controller signup --register
+> Empty
 ```
 
 Open the new file and replace its content.
