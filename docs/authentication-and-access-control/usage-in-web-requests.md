@@ -82,6 +82,8 @@ The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook
 
 ## The LoginController
 
+> *This LoginController is experimental*.
+
 The `LoginController` is a handy controller to log a user in or out using one or several authentication mechanisms.
 
 To log a user out using this controller, simply request GET /logout. When the logout succeeds it returns an `HttpResponseNoContent` if `redirect` is undefined or an `HttpResponseRedirect` if it is defined.

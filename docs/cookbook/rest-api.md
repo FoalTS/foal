@@ -1,5 +1,7 @@
 # REST API
 
+> *This feature is experimental*.
+
 REST API can be created using a `RestController` and a `ResourceCollection` service. They are not mandatory and you can create your REST API by hand by implementing your own controller. But they can be useful to split the logic and the presentation and to avoid writing boilerplate.
 
 - The `RestController` is in charge of converting http inputs (the request query and params, the body, the cookies or sessions) into organized data that is then sent to the `ResourceCollection` service. In a nutshell, RestController lets you separate the presentation from the business logic. It does not make any assumption on what a user is allowed to do or how the resources are actually created, read, update or deleted into the database(s). It just translates the HTTP request into understanble inputs to the service methods. These inputs describe *what the user wants to do*.
