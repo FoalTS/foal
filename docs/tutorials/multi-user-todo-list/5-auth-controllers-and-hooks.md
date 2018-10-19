@@ -132,9 +132,12 @@ export class AuthController {
 > ```
 >
 > However, using the `@dependency` decorator has several advantages.
+>
 > 1. You write less code.
-> 1. The service is instantiated only once.
-> 1. Unit testing is greatly facilitated. With the `createController` and `createService` functions, you can inject mocks in your controllers and services when writing unit tests. This technique, called [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), will be presented in another tutorial.
+>
+> 2. The service is instantiated only once.
+>
+> 3. Unit testing is greatly facilitated. With the `createController` and `createService` functions, you can inject mocks in your controllers and services when writing unit tests. This technique, called [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), will be presented in another tutorial.
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 
