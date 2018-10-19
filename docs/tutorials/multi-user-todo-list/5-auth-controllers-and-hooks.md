@@ -58,46 +58,83 @@ Open your browser and go to `http://localhost:3000/signin`. The login page shoul
 
 The next step is to create a controller that logs the users in or out and redirects them after the operation succeeds or fails. It needs two routes `/login` and `/logout`.
 
-You could do it by yourself, implementing your own route handlers, but this would be a tedious work. Hopefully, FoalTS has a special controller, the `LoginController`, which takes care of that for you.
-
 ```
 foal generate controller auth --register
-> Login
+> Empty
 ```
 
-Open the new file `auth.controller.ts` and complete its properties.
+Open the new file `auth.controller.ts` and replace its content.
 
 ```typescript
 // 3p
-import { emailSchema, LoginController, strategy } from '@foal/core';
+import {
+  Context, dependency, emailSchema, Get, HttpResponseRedirect,
+  logIn, logOut, Post, ValidateBody
+} from '@foal/core';
 
 // App
 import { Authenticator } from '../services';
 
-export class AuthController extends LoginController {
-  strategies = [
-    strategy('login', Authenticator, emailSchema)
-  ];
+export class AuthController {
+  // Make the Authenticator service accessible from the controller.
+  @dependency
+  authenticator: Authenticator;
 
-  redirect = {
-    failure: '/signin?bad_credentials=true',
-    logout: '/signin',
-    success: '/',
-  };
+  @Post('/login')
+  // Validate the request body.
+  @ValidateBody({
+    additionalProperties: false,
+    properties: {
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string' }
+    },
+    required: ['email', 'password'],
+    type: 'object',
+  })
+  async login(ctx: Context) {
+    // Try to authenticate the user from the given credentials (email and password).
+    const user = await this.authenticator.authenticate(ctx.request.body);
+
+    // Redirect the user to /signin if the authentication fails.
+    if (!user) {
+      return new HttpResponseRedirect('/signin?bad_credentials=true');
+    }
+
+    // Add the user to the current session.
+    logIn(ctx, user);
+
+    // Redirect the user to the home page on success.
+    return new HttpResponseRedirect('/');
+  }
+
+  @Get('/logout')
+  logout(ctx) {
+    // Remove the user from the session.
+    logOut(ctx);
+
+    // Redirect the user to the signin page.
+    return new HttpResponseRedirect('/signin');
+  }
 }
 
 ```
 
-The `LoginController` is based on the [strategy pattern](https://en.wikipedia.org/wiki/Strategy_pattern).
-
-An application may have several ways to authenticate a user. It can be with an email and a password as it the case here. But it also could be by using a google or twitter account.
-
-The way users are authenticated is defined by the `authenticator` services. These services are then used as strategies by the controller.
-
-In that case the line `strategy('login', Authenticator, emailSchema)` means:
-- When a POST request is received at `/login`,
-- first validate the body request with the `emailSchema`,
-- and then use the `Authenticator` service to check the credentials and log the user in or not.
+> The `@dependency` decorator lets you access a service from a controller or another service.
+>
+> At first glance, writing the code below would seem more intuitive.
+> ```typescript
+> export class AuthController {
+>   authenticator: Authenticator;
+>   constructor() {
+>     this.authenticator = new Authenticator();
+>   }
+> }
+> ```
+>
+> However, using the `@dependency` decorator has several advantages.
+> 1. You write less code.
+> 1. The service is instantiated only once.
+> 1. Unit testing is greatly facilitated. With the `createController` and `createService` functions, you can inject mocks in your controllers and services when writing unit tests. This technique, called [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), will be presented in another tutorial.
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 
