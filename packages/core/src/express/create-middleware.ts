@@ -1,5 +1,7 @@
 import {
   Context,
+  HookPostFunction,
+  HttpResponse,
   isHttpResponse,
   isHttpResponseRedirect,
   Route,
@@ -10,19 +12,30 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
   return async (req, res, next) => {
     try {
       const ctx = new Context(req);
-      let response;
+      let response: undefined | HttpResponse;
+
+      const hookPostFunctions: HookPostFunction[] = [];
+
       for (const hook of route.hooks) {
-        response = await hook(ctx, services);
-        if (isHttpResponse(response)) {
+        const result = await hook(ctx, services);
+        if (isHttpResponse(result)) {
+          response = result;
           break;
+        } else if (typeof result === 'function') {
+          hookPostFunctions.unshift(result);
         }
       }
+
       if (!isHttpResponse(response)) {
         response = await route.controller[route.propertyKey](ctx);
       }
 
       if (!isHttpResponse(response)) {
         throw new Error(`The controller method "${route.propertyKey}" should return an HttpResponse.`);
+      }
+
+      for (const postFn of hookPostFunctions) {
+        await postFn(ctx, services, response);
       }
 
       res.status(response.statusCode);

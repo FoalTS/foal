@@ -2,11 +2,12 @@
 import 'reflect-metadata';
 
 // FoalTS
-import { Context } from './http';
+import { Context, HttpResponse } from './http';
 import { ServiceManager } from './service-manager';
 
-// not void. HttpResponse or HttpResponse | void (same with promises)
-export type HookFunction = (ctx: Context, services: ServiceManager) => any;
+export type HookPostFunction = (ctx: Context, services: ServiceManager, response: HttpResponse) => void;
+export type HookFunction = (ctx: Context, services: ServiceManager) =>
+  void | HttpResponse | HookPostFunction | Promise <void | HttpResponse | HookPostFunction>;
 export type HookDecorator = (target: any, propertyKey?: string) => any;
 
 export function Hook(hookFunction: HookFunction): HookDecorator {

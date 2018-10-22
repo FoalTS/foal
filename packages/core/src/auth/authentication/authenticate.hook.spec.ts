@@ -60,7 +60,7 @@ describe('Authenticate', () => {
     const preHook = getHookFunction(Authenticate(User));
     const ctx = new Context({});
 
-    return preHook(ctx, new ServiceManager())
+    return (preHook(ctx, new ServiceManager()) as Promise<any>)
       .then(() => fail('The promise should be rejected'))
       .catch(err => strictEqual(err.message, 'Authenticate hook requires session management.'));
   });
