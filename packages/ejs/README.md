@@ -43,6 +43,29 @@ Documentation: [https://foalts.gitbook.io/docs/](https://foalts.gitbook.io/docs/
 
 ## Description
 
+FoalTS is a high-level Node.JS framework to quickly build complete web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
+
+
+## Get started
+
+First install [Node.Js and npm](https://nodejs.org/en/download/).
+
+### Create a new app
+
+```
+$ npm install -g @foal/cli
+$ foal createapp my-app
+$ cd my-app && npm install
+$ npm run develop
+```
+
+The development server is started! Go to `http://localhost:3000` and find our welcoming page!
+
+[=> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
+
+
+## Why?
+
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
 
 But when it comes to setting up a complete and scalable project, things get harder. You have to put everything in place. The authorization system, database migrations, development tools or even encryption of passwords are just the tip of the iceberg. Working on this is time consuming and may slow down the release frequency or even lead to undesired bugs. As the codebase grows up and the complexity increases, it becomes harder and harder to develop new features and maintain the app.
