@@ -32,12 +32,12 @@ export class Todo {
 When running the app, this class will a generate a new table in the `db.sqlite3` database.
 
 ```
-+-------------+--------------+----------------------------+
-|                           todo                          |
-+-------------+--------------+----------------------------+
-| id          | int(11)      | PRIMARY KEY AUTO_INCREMENT |
-| text        | varchar(255) |                            |
-+-------------+--------------+----------------------------+
++------------+-----------+-------------------------------------+
+|                             todo                             |
++------------+-----------+-------------------------------------+
+| id         | integer   | PRIMARY KEY AUTO_INCREMENT NOT NULL |
+| text       | varchar   |                                     |
++------------+-----------+-------------------------------------+
 ```
 
 > Database schema is auto created from the entities definition on every application launch. This behavior is useful during debug and development but is not suitable for a production environment (you could lose production data). Please refer to the [migrations section](../../databases/generate-and-run-migrations.md) to manually update a database schema.

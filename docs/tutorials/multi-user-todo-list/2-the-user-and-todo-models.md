@@ -57,3 +57,15 @@ export class Todo {
 }
 
 ```
+
+In the database the `todo` table will look like this:
+
+```
++------------+-----------+-------------------------------------+
+|                             todo                             |
++------------+-----------+-------------------------------------+
+| id         | integer   | PRIMARY KEY AUTO_INCREMENT NOT NULL |
+| text       | varchar   | NOT NULL                            |
+| ownerId    | integer   | NOT NULL                            |
++------------+-----------+-------------------------------------+
+```
