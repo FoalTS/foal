@@ -9,8 +9,8 @@ import { getHookFunction, Hook, HookFunction } from './hooks';
 
 describe('Hook', () => {
 
-  const hook1: HookFunction = () => {};
-  const hook2: HookFunction = () => {};
+  const hook1: HookFunction = () => { return; };
+  const hook2: HookFunction = () => undefined;
 
   it('should add the hook to the metadata hooks on the method class.', () => {
     class Foobar {
