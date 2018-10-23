@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { Context, HttpResponse } from './http';
 import { ServiceManager } from './service-manager';
 
-export type HookPostFunction = (ctx: Context, services: ServiceManager, response: HttpResponse) => void;
+export type HookPostFunction = (ctx: Context, services: ServiceManager, response: HttpResponse) => void | Promise<void>;
 export type HookFunction = (ctx: Context, services: ServiceManager) =>
   void | HttpResponse | HookPostFunction | Promise <void | HttpResponse | HookPostFunction>;
 export type HookDecorator = (target: any, propertyKey?: string) => any;
