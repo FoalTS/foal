@@ -3,6 +3,7 @@ import { strictEqual } from 'assert';
 import { promisify } from 'util';
 
 // 3p
+import * as express from 'express';
 import { MemoryStore } from 'express-session';
 import * as request from 'supertest';
 
@@ -141,6 +142,14 @@ describe('createApp', () => {
     sessions = await promisify(store.all.bind(store))();
     strictEqual(Object.keys(sessions).length, 1);
   });
+
+  it('should use the optional express instance if one is given.', () => {
+    const expected = express();
+    const actual = createApp(class {}, {}, expected);
+
+    strictEqual(actual, expected);
+  });
+
 });
 
 // function httpMethodTest(httpMethod: HttpMethod) {

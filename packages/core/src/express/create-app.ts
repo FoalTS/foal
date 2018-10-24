@@ -1,11 +1,14 @@
+// std
 import * as path from 'path';
 
+// 3p
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
+// FoalTS
 import {
   Class,
   Config,
@@ -20,8 +23,8 @@ export interface CreateAppOptions {
   store?(session): any;
 }
 
-export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}) {
-  const app = express();
+export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}, expressInstance?) {
+  const app = expressInstance || express();
 
   app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
   app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
