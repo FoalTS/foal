@@ -44,7 +44,6 @@
     "@foal/ejs": "^0.6.0-beta.5",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
-    "mocha": "^5.2.0",
     "source-map-support": "^0.5.6",
     "sqlite3": "^4.0.0",
     "typeorm": "^0.2.6"
@@ -55,7 +54,7 @@
     "@types/node": "^10.1.1",
     "concurrently": "^3.5.1",
     "copy": "^0.3.2",
-    "mocha": "^4.0.1",
+    "mocha": "^5.2.0",
     "supervisor": "^0.12.0",
     "typescript": "^2.5.3"
   }

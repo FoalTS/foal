@@ -81,7 +81,6 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
-    "mocha": "^5.2.0",
     "morgan": "^1.9.0",
     "reflect-metadata": "^0.1.10"
   },
@@ -93,7 +92,7 @@
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
-    "mocha": "^3.5.3",
+    "mocha": "^5.2.0",
     "mysql": "^2.15.0",
     "node-mocks-http": "^1.7.0",
     "nyc": "^12.0.2",
