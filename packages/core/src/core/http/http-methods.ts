@@ -1,7 +1,21 @@
 // 3p
 import 'reflect-metadata';
 
-export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
+export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
+
+export function Head(path?: string) {
+  return (target: any, propertyKey: string) => {
+    Reflect.defineMetadata('httpMethod', 'HEAD', target, propertyKey);
+    Reflect.defineMetadata('path', path, target, propertyKey);
+  };
+}
+
+export function Options(path?: string) {
+  return (target: any, propertyKey: string) => {
+    Reflect.defineMetadata('httpMethod', 'OPTIONS', target, propertyKey);
+    Reflect.defineMetadata('path', path, target, propertyKey);
+  };
+}
 
 export function Get(path?: string) {
   return (target: any, propertyKey: string) => {

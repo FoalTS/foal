@@ -25,7 +25,7 @@ Controllers are the front door of your application. They catch all the incoming 
 
 ### Creating a controller
 
-Formally a controller is a single class that is instantiated as a singleton. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put` or `Delete`. Each method with one of theses decorators is responsible for one route.
+Formally a controller is a single class that is instantiated as a singleton. The methods that handle the requests take also a decorator: `Get`, `Post`, `Patch`, `Put`, `Delete`, `Head` or `Options`. Each method with one of theses decorators is responsible for one route.
 
 ```typescript
 import { Context, Get, HttpResponseOK } from '@foal/core';
@@ -143,7 +143,7 @@ class ChildController extends ParentController {
 }
 ```
 
-You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put` or `Delete` decorator then the parent path and HTTP method are used. If you don't add a hook, then the parent hooks are used. Otherwise they are all discarded.
+You can also override `foo`. If you don't add a `Get`, `Post`, `Patch`, `Put`, `Delete`, `Head` or `Options` decorator then the parent path and HTTP method are used. If you don't add a hook, then the parent hooks are used. Otherwise they are all discarded.
 
 ## Using sub-controllers
 
