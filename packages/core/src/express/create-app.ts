@@ -73,6 +73,12 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
       case 'PUT':
         app.put(route.path, createMiddleware(route, services));
         break;
+      case 'HEAD':
+        app.head(route.path, createMiddleware(route, services));
+        break;
+      case 'OPTIONS':
+        app.options(route.path, createMiddleware(route, services));
+        break;
     }
   }
   app.use(notFound());

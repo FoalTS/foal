@@ -7,7 +7,7 @@ import { MemoryStore } from 'express-session';
 import * as request from 'supertest';
 
 // FoalTS
-import { Context, Delete, Get, HttpResponseOK, Patch, Post, Put } from '../core';
+import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -34,10 +34,12 @@ describe('createApp', () => {
       request(app).patch('/foo').expect(404),
       request(app).put('/foo').expect(404),
       request(app).delete('/foo').expect(404),
+      request(app).head('/foo').expect(404),
+      request(app).options('/foo').expect(404),
     ]);
   });
 
-  it('should respond on DELETE, GET, PATCH, POST and PUT requests if a handler exists.', () => {
+  it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', () => {
     class MyController {
       @Get('/foo')
       get() {
@@ -59,6 +61,15 @@ describe('createApp', () => {
       delete() {
         return new HttpResponseOK('delete');
       }
+      @Head('/foo')
+      head() {
+        // A HEAD response does not have a body.
+        return new HttpResponseOK();
+      }
+      @Options('/foo')
+      options() {
+        return new HttpResponseOK('options');
+      }
     }
     const app = createApp(MyController);
     return Promise.all([
@@ -67,6 +78,8 @@ describe('createApp', () => {
       request(app).patch('/foo').expect('patch'),
       request(app).put('/foo').expect('put'),
       request(app).delete('/foo').expect('delete'),
+      request(app).head('/foo').expect(200),
+      request(app).options('/foo').expect('options'),
     ]);
   });
 
