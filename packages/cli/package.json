@@ -5,11 +5,11 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:script",
+    "test": "npm run test:generators && npm run test:run-script",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
-    "test:script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script.spec.ts\"",
-    "dev:test:script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script.spec.ts\"",
+    "test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
+    "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
