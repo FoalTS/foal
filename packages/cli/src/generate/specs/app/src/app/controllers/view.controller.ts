@@ -1,6 +1,5 @@
-import { Config, Controller, Get, render } from '@foal/core';
+import { Config, Get, render } from '@foal/core';
 
-@Controller()
 export class ViewController {
 
   @Get('/')

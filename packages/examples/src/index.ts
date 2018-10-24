@@ -9,12 +9,12 @@ import * as sqliteStoreFactory from 'connect-sqlite3';
 import { createConnection } from 'typeorm';
 
 // App
-import { AppModule } from './app/app.module';
+import { AppController } from './app/app.controller';
 
 async function main() {
   await createConnection();
 
-  const app = createApp(AppModule, {
+  const app = createApp(AppController, {
     store: session => new (sqliteStoreFactory(session))({ db: 'test_db.sqlite' }),
   });
 

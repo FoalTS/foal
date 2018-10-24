@@ -1,11 +1,9 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
+import { getAjvInstance } from '../../common';
 import {
   Class,
   Context,
-  Controller,
+  dependency,
   Get,
   HttpResponseBadRequest,
   HttpResponseNoContent,
@@ -15,9 +13,8 @@ import {
   Post,
   ServiceManager
 } from '../../core';
+import { logIn, logOut } from '../utils';
 import { IAuthenticator } from './authenticator.interface';
-
-const ajv = new Ajv({ removeAdditional: true });
 
 export interface Strategy {
   name: string;
@@ -31,16 +28,16 @@ export function strategy(name: Strategy['name'],
   return { name, authenticatorClass, schema };
 }
 
-@Controller()
 export abstract class LoginController {
   redirect: { logout?: string, success?: string, failure?: string } | undefined;
   abstract strategies: Strategy[];
 
-  constructor(private services: ServiceManager) {}
+  @dependency
+  services: ServiceManager;
 
   @Get('/logout')
   logout(ctx: Context) {
-    delete ctx.request.session.authentication;
+    logOut(ctx);
     if (this.redirect && this.redirect.logout) {
       return new HttpResponseRedirect(this.redirect.logout);
     }
@@ -56,6 +53,7 @@ export abstract class LoginController {
       return new HttpResponseNotFound();
     }
 
+    const ajv = getAjvInstance();
     const isValid = ajv.validate(strategy.schema, ctx.request.body);
     if (!isValid) {
       return new HttpResponseBadRequest(ajv.errors);
@@ -69,10 +67,7 @@ export abstract class LoginController {
       return redirectPath ? new HttpResponseRedirect(redirectPath) : new HttpResponseUnauthorized();
     }
 
-    ctx.request.session.authentication = {
-      ...ctx.request.session.authentication,
-      userId: user.id
-    };
+    logIn(ctx, user);
 
     const redirectPath = this.redirect && this.redirect.success;
     return redirectPath ? new HttpResponseRedirect(redirectPath) : new HttpResponseNoContent();

@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseNotFound][ClassDeclaration-11]
+* [HttpResponseNotFound][ClassDeclaration-12]
     * Constructor
-        * [constructor(content)][Constructor-7]
+        * [constructor(body)][Constructor-6]
     * Properties
-        * [isHttpResponseNotFound][PropertyDeclaration-27]
-        * [statusCode][PropertyDeclaration-28]
-        * [statusMessage][PropertyDeclaration-29]
+        * [isHttpResponseNotFound][PropertyDeclaration-28]
+        * [statusCode][PropertyDeclaration-29]
+        * [statusMessage][PropertyDeclaration-30]
 
 # HttpResponseNotFound
 
@@ -15,17 +15,17 @@ class HttpResponseNotFound
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
-[Constructor-7]: httpresponsenotfound.md#constructorcontent
-[PropertyDeclaration-27]: httpresponsenotfound.md#ishttpresponsenotfound
-[PropertyDeclaration-28]: httpresponsenotfound.md#statuscode
-[PropertyDeclaration-29]: httpresponsenotfound.md#statusmessage
+[ClassDeclaration-12]: httpresponsenotfound.md#httpresponsenotfound
+[Constructor-6]: httpresponsenotfound.md#constructorbody
+[PropertyDeclaration-28]: httpresponsenotfound.md#ishttpresponsenotfound
+[PropertyDeclaration-29]: httpresponsenotfound.md#statuscode
+[PropertyDeclaration-30]: httpresponsenotfound.md#statusmessage

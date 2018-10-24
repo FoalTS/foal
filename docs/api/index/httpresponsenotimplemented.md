@@ -1,8 +1,8 @@
 # Table of contents
 
-* [HttpResponseNotImplemented][ClassDeclaration-17]
+* [HttpResponseNotImplemented][ClassDeclaration-18]
     * Constructor
-        * [constructor(content)][Constructor-13]
+        * [constructor(body)][Constructor-11]
     * Properties
         * [isHttpResponseNotImplemented][PropertyDeclaration-42]
         * [statusCode][PropertyDeclaration-43]
@@ -15,17 +15,17 @@ class HttpResponseNotImplemented
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[Constructor-13]: httpresponsenotimplemented.md#constructorcontent
+[ClassDeclaration-18]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[Constructor-11]: httpresponsenotimplemented.md#constructorbody
 [PropertyDeclaration-42]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
 [PropertyDeclaration-43]: httpresponsenotimplemented.md#statuscode
 [PropertyDeclaration-44]: httpresponsenotimplemented.md#statusmessage

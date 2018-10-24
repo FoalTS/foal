@@ -17,10 +17,10 @@ Remove the content of `src/scripts/display-users.ts` and replace it with the bel
 import { createConnection } from 'typeorm';
 
 // App
-import { User } from './app/entities';
+import { User } from '../app/entities';
 
 export async function main() {
-  await createConnection();
+  const connection = await createConnection();
   const users = await connection.getRepository(User).find();
   console.log(users);
 }

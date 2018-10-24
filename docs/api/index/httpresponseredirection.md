@@ -1,10 +1,10 @@
 # Table of contents
 
-* [HttpResponseRedirection][ClassDeclaration-7]
+* [HttpResponseRedirection][ClassDeclaration-8]
     * Constructor
-        * [constructor(content)][Constructor-3]
+        * [constructor(body)][Constructor-2]
     * Properties
-        * [isHttpResponseRedirection][PropertyDeclaration-18]
+        * [isHttpResponseRedirection][PropertyDeclaration-20]
 
 # HttpResponseRedirection
 
@@ -13,17 +13,17 @@ abstract class HttpResponseRedirection
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -37,6 +37,6 @@ public readonly isHttpResponseRedirection: true;
 
 true
 
-[ClassDeclaration-7]: httpresponseredirection.md#httpresponseredirection
-[Constructor-3]: httpresponseredirection.md#constructorcontent
-[PropertyDeclaration-18]: httpresponseredirection.md#ishttpresponseredirection
+[ClassDeclaration-8]: httpresponseredirection.md#httpresponseredirection
+[Constructor-2]: httpresponseredirection.md#constructorbody
+[PropertyDeclaration-20]: httpresponseredirection.md#ishttpresponseredirection

@@ -1,16 +1,21 @@
 # Basic logging
 
-FoalTS provides a convenient hook to log basic messages: `Log(message: string, logFn = console.log)`
+FoalTS provides a convenient hook to log basic messages: `Log(message: string, options: LogOptions = {})`
 
 Example:
 ```typescript
-import { IModule, Module } from '@foal/core';
+import { Get, HttpResponseOK, Log } from '@foal/core';
 
-@Module()
-@Log('Message')
-export class MyModule implements IModule {
-  controllers = [
-    // the controllers
-  ]
+@Log('Message', {
+  body: true,
+  headers: [ 'X-CSRF-Token' ],
+  params: true,
+  query: true
+})
+export class AppController {
+  @Get()
+  index() {
+    return new HttpResponseOK();
+  }
 }
 ```

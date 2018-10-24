@@ -22,8 +22,8 @@
   <a href="https://codecov.io/github/FoalTS/foal">
     <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
   </a>
-  <a href="https://snyk.io/test/github/foalts/foal">
-    <img src="https://snyk.io/test/github/foalts/foal/badge.svg" alt="Known Vulnerabilities">
+  <a href="https://snyk.io/test/npm/@foal/core">
+    <img src="https://snyk.io/test/npm/@foal/core/badge.svg" alt="Known Vulnerabilities">
   </a>
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
@@ -43,7 +43,7 @@
 
 ## :raised_hands: Description
 
-FoalTS is a high-level Node.JS framework to build robust web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
+FoalTS is a high-level Node.JS framework to quickly build complete web apps in TypeScript. Thanks to its architecture, packages and tools FoalTS lets you bootstrap and develop entreprise-grade applications.
 
 
 ## :city_sunrise: Get started
@@ -52,7 +52,7 @@ First install [Node.Js and npm](https://nodejs.org/en/download/).
 
 ### Create a new app
 
-```shell
+```
 $ npm install -g @foal/cli
 $ foal createapp my-app
 $ cd my-app && npm install
@@ -97,9 +97,9 @@ Every project needs dev tools. But setting up and maintaining such an environmen
 
 Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
 
-### Plugins (soon)
+### Architecture
 
-FoalTS doesn't aim to be a closed framework. Some technologies in the Node.Js ecosystem are great and you should be able to use them in your apps. To do so FoalTS ecosystem provides separate packages including these technologies.
+FoalTS provides a robust architecture for creating large web apps. Divided into controllers, services and hooks, your code is well organized. FoalTS enforces the separation of concerns, improves testability and makes your code more readable.
 
 ### Security
 

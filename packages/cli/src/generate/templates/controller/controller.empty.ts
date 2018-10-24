@@ -1,6 +1,5 @@
-import { Context, Controller, Get, HttpResponseOK } from '@foal/core';
+import { Context, Get, HttpResponseOK } from '@foal/core';
 
-@Controller()
 export class /* upperFirstCamelName */Controller {
 
   @Get('/')

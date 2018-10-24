@@ -4,7 +4,6 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 // FoalTS
 import {
   Context,
-  Controller,
   createController,
   getHttpMethod,
   getPath,
@@ -13,8 +12,6 @@ import {
   HttpResponseNotFound,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  Service,
-  ServiceManager
 } from '../../core';
 import { AbstractUser } from '../entities';
 import { IAuthenticator } from './authenticator.interface';
@@ -24,7 +21,6 @@ describe('strategy', () => {
   it('should create a strategy from the given parameters.', () => {
     const name = 'foo';
 
-    @Service()
     class Authenticator implements IAuthenticator {
       authenticate() {
         return null;
@@ -44,7 +40,6 @@ describe('strategy', () => {
 describe('LoginController', () => {
 
   describe('has a "logout" method that', () => {
-    @Controller()
     class ConcreteController extends LoginController {
       strategies = [];
     }
@@ -90,7 +85,6 @@ describe('LoginController', () => {
       const ctx = new Context({});
       ctx.request.session = {};
 
-      @Controller()
       class ConcreteController2 extends LoginController {
         strategies = [];
         redirect = {
@@ -114,7 +108,6 @@ describe('LoginController', () => {
       },
       type: 'object',
     };
-    @Service()
     class Authenticator implements IAuthenticator {
       async authenticate(credentials: { email: string }) {
         if (credentials.hasOwnProperty('additionalField')) {
@@ -125,7 +118,6 @@ describe('LoginController', () => {
 
     }
 
-    @Controller()
     class ConcreteController extends LoginController {
       strategies = [
         { name: 'email', authenticatorClass: Authenticator, schema }
@@ -154,7 +146,7 @@ describe('LoginController', () => {
         + ' not fit the schema.', async () => {
       const ctx = new Context({
         body: {
-          email: 3
+          email: {}
         },
         params: {
           strategy: 'email'
@@ -165,7 +157,7 @@ describe('LoginController', () => {
       const response = await controller.login(ctx);
 
       ok(response instanceof HttpResponseBadRequest);
-      deepStrictEqual(response.content, [
+      deepStrictEqual(response.body, [
         {
           dataPath: '.email',
           keyword: 'type',
@@ -180,7 +172,6 @@ describe('LoginController', () => {
 
     it('should remove any additional field (ajv schema) before calling authenticator.authenticate'
         + ' if schema.additionalProperties === false', done => {
-      @Controller()
       class ConcreteController extends LoginController {
         strategies = [
           {
@@ -235,7 +226,6 @@ describe('LoginController', () => {
       });
 
       it('should return an HttpResponseRedirect if redirect.success is not empty.', async () => {
-        @Controller()
         class ConcreteController2 extends LoginController {
           redirect = {
             success: '/foo'
@@ -292,7 +282,6 @@ describe('LoginController', () => {
       });
 
       it('should return an HttpResponseRedirect if redirect.failure is not empty.', async () => {
-        @Controller()
         class ConcreteController2 extends LoginController {
           redirect = {
             failure: '/foo'
@@ -302,7 +291,7 @@ describe('LoginController', () => {
           ];
         }
 
-        const controller = new ConcreteController2(new ServiceManager());
+        const controller = createController(ConcreteController2);
         const response = await controller.login(ctx);
 
         ok(response instanceof HttpResponseRedirect);

@@ -1,8 +1,8 @@
 # Table of contents
 
-* [ValidationError][ClassDeclaration-24]
+* [ValidationError][ClassDeclaration-25]
     * Constructor
-        * [constructor(content)][Constructor-20]
+        * [constructor(content)][Constructor-18]
     * Properties
         * [isValidationError][PropertyDeclaration-57]
 
@@ -37,6 +37,6 @@ public readonly isValidationError: true;
 
 true
 
-[ClassDeclaration-24]: validationerror.md#validationerror
-[Constructor-20]: validationerror.md#constructorcontent
+[ClassDeclaration-25]: validationerror.md#validationerror
+[Constructor-18]: validationerror.md#constructorcontent
 [PropertyDeclaration-57]: validationerror.md#isvalidationerror

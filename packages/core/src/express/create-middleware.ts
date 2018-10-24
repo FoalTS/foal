@@ -1,5 +1,7 @@
 import {
   Context,
+  HookPostFunction,
+  HttpResponse,
   isHttpResponse,
   isHttpResponseRedirect,
   Route,
@@ -10,13 +12,20 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
   return async (req, res, next) => {
     try {
       const ctx = new Context(req);
-      let response;
+      let response: undefined | HttpResponse;
+
+      const hookPostFunctions: HookPostFunction[] = [];
+
       for (const hook of route.hooks) {
-        response = await hook(ctx, services);
-        if (isHttpResponse(response)) {
+        const result = await hook(ctx, services);
+        if (isHttpResponse(result)) {
+          response = result;
           break;
+        } else if (typeof result === 'function') {
+          hookPostFunctions.unshift(result);
         }
       }
+
       if (!isHttpResponse(response)) {
         response = await route.controller[route.propertyKey](ctx);
       }
@@ -25,18 +34,27 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         throw new Error(`The controller method "${route.propertyKey}" should return an HttpResponse.`);
       }
 
-      res.set(response.headers);
+      for (const postFn of hookPostFunctions) {
+        await postFn(ctx, services, response);
+      }
+
       res.status(response.statusCode);
+      res.set(response.getHeaders());
+      const cookies = response.getCookies();
+      // tslint:disable-next-line:forin
+      for (const cookieName in cookies) {
+        res.cookie(cookieName, cookies[cookieName].value, cookies[cookieName].options);
+      }
 
       if (isHttpResponseRedirect(response)) {
         res.redirect(response.path);
         return;
       }
 
-      if (typeof response.content === 'number') {
-        response.content = response.content.toString();
+      if (typeof response.body === 'number') {
+        response.body = response.body.toString();
       }
-      res.send(response.content);
+      res.send(response.body);
     } catch (err) {
       next(err);
     }

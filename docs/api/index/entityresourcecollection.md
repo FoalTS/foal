@@ -1,13 +1,13 @@
 # Table of contents
 
-* [EntityResourceCollection][ClassDeclaration-25]
+* [EntityResourceCollection][ClassDeclaration-26]
     * Methods
-        * [create(user, data, params)][MethodDeclaration-16]
-        * [findById(user, id, params)][MethodDeclaration-17]
-        * [find(user, params)][MethodDeclaration-18]
-        * [modifyById(user, id, data, params)][MethodDeclaration-19]
-        * [updateById(user, id, data, params)][MethodDeclaration-20]
-        * [deleteById(user, id, params)][MethodDeclaration-21]
+        * [create(user, data, params)][MethodDeclaration-24]
+        * [findById(user, id, params)][MethodDeclaration-25]
+        * [find(user, params)][MethodDeclaration-26]
+        * [modifyById(user, id, data, params)][MethodDeclaration-27]
+        * [updateById(user, id, data, params)][MethodDeclaration-28]
+        * [deleteById(user, id, params)][MethodDeclaration-29]
     * Properties
         * [entityClass][PropertyDeclaration-58]
         * [allowedOperations][PropertyDeclaration-59]
@@ -166,7 +166,7 @@ public abstract readonly allowedOperations: (keyof IResourceCollection)[];
 
 **Type**
 
-(keyof [IResourceCollection][InterfaceDeclaration-4])[]
+(keyof [IResourceCollection][InterfaceDeclaration-5])[]
 
 ----------
 
@@ -178,7 +178,7 @@ public readonly middlewares: Partial<Record<keyof IResourceCollection, Middlewar
 
 **Type**
 
-Partial<Record<keyof [IResourceCollection][InterfaceDeclaration-4], [Middleware][TypeAliasDeclaration-1]>>[]
+Partial<Record<keyof [IResourceCollection][InterfaceDeclaration-5], [Middleware][TypeAliasDeclaration-1]>>[]
 
 ----------
 
@@ -190,7 +190,7 @@ public readonly loadedRelations: Partial<Record<"find" | "findById", RelationLoa
 
 **Type**
 
-Partial<Record<"find" | "findById", RelationLoader>>
+Partial<Record<"find" | "findById", [RelationLoader][TypeAliasDeclaration-2]>>
 
 ----------
 
@@ -204,25 +204,26 @@ public readonly connectionName: string;
 
 string
 
-[ClassDeclaration-25]: entityresourcecollection.md#entityresourcecollection
-[MethodDeclaration-16]: entityresourcecollection.md#createuser-data-params
+[ClassDeclaration-26]: entityresourcecollection.md#entityresourcecollection
+[MethodDeclaration-24]: entityresourcecollection.md#createuser-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-17]: entityresourcecollection.md#findbyiduser-id-params
+[MethodDeclaration-25]: entityresourcecollection.md#findbyiduser-id-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-18]: entityresourcecollection.md#finduser-params
+[MethodDeclaration-26]: entityresourcecollection.md#finduser-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-19]: entityresourcecollection.md#modifybyiduser-id-data-params
+[MethodDeclaration-27]: entityresourcecollection.md#modifybyiduser-id-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-20]: entityresourcecollection.md#updatebyiduser-id-data-params
+[MethodDeclaration-28]: entityresourcecollection.md#updatebyiduser-id-data-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
-[MethodDeclaration-21]: entityresourcecollection.md#deletebyiduser-id-params
+[MethodDeclaration-29]: entityresourcecollection.md#deletebyiduser-id-params
 [ClassDeclaration-1]: abstractuser.md#abstractuser
 [PropertyDeclaration-58]: entityresourcecollection.md#entityclass
 [InterfaceDeclaration-1]: ../index.md#class
 [PropertyDeclaration-59]: entityresourcecollection.md#allowedoperations
-[InterfaceDeclaration-4]: ../index.md#iresourcecollection
+[InterfaceDeclaration-5]: ../index.md#iresourcecollection
 [PropertyDeclaration-60]: entityresourcecollection.md#middlewares
-[InterfaceDeclaration-4]: ../index.md#iresourcecollection
+[InterfaceDeclaration-5]: ../index.md#iresourcecollection
 [TypeAliasDeclaration-1]: ../index.md#middleware
 [PropertyDeclaration-61]: entityresourcecollection.md#loadedrelations
+[TypeAliasDeclaration-2]: ../index.md#relationloader
 [PropertyDeclaration-62]: entityresourcecollection.md#connectionname

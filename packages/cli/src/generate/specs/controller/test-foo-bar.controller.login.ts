@@ -1,9 +1,8 @@
-import { Controller, LoginController } from '@foal/core';
+import { LoginController } from '@foal/core';
 
-@Controller()
 export class TestFooBarController extends LoginController {
   strategies = [
-    // strategy('/login', MyAuthenticator, mySchema)
+    // strategy('login', MyAuthenticator, mySchema)
   ];
 
   redirect = {

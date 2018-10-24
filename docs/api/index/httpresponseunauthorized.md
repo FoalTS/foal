@@ -1,13 +1,12 @@
 # Table of contents
 
-* [HttpResponseUnauthorized][ClassDeclaration-14]
+* [HttpResponseUnauthorized][ClassDeclaration-15]
     * Constructor
-        * [constructor(content)][Constructor-10]
+        * [constructor(body)][Constructor-9]
     * Properties
-        * [isHttpResponseUnauthorized][PropertyDeclaration-34]
-        * [statusCode][PropertyDeclaration-35]
-        * [statusMessage][PropertyDeclaration-36]
-        * [headers][PropertyDeclaration-37]
+        * [isHttpResponseUnauthorized][PropertyDeclaration-35]
+        * [statusCode][PropertyDeclaration-36]
+        * [statusMessage][PropertyDeclaration-37]
 
 # HttpResponseUnauthorized
 
@@ -16,17 +15,17 @@ class HttpResponseUnauthorized
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -64,21 +63,8 @@ public statusMessage: string;
 
 string
 
-----------
-
-### headers
-
-```typescript
-public headers: { WWW-Authenticate: string; };
-```
-
-**Type**
-
-{ WWW-Authenticate: string; }
-
-[ClassDeclaration-14]: httpresponseunauthorized.md#httpresponseunauthorized
-[Constructor-10]: httpresponseunauthorized.md#constructorcontent
-[PropertyDeclaration-34]: httpresponseunauthorized.md#ishttpresponseunauthorized
-[PropertyDeclaration-35]: httpresponseunauthorized.md#statuscode
-[PropertyDeclaration-36]: httpresponseunauthorized.md#statusmessage
-[PropertyDeclaration-37]: httpresponseunauthorized.md#headers
+[ClassDeclaration-15]: httpresponseunauthorized.md#httpresponseunauthorized
+[Constructor-9]: httpresponseunauthorized.md#constructorbody
+[PropertyDeclaration-35]: httpresponseunauthorized.md#ishttpresponseunauthorized
+[PropertyDeclaration-36]: httpresponseunauthorized.md#statuscode
+[PropertyDeclaration-37]: httpresponseunauthorized.md#statusmessage

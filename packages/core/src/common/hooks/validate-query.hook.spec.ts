@@ -1,9 +1,6 @@
 // std
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { ValidateQuery } from './validate-query.hook';
@@ -49,10 +46,10 @@ describe('ValidateQuery', () => {
     ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
     ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
     ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
-    ok(hook(context({ foo: '3' }), new ServiceManager()) instanceof HttpResponseBadRequest);
+    ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
   });
 
-  it('should return an HttpResponseBadRequest with a defined `content` property if '
+  it('should return an HttpResponseBadRequest with a defined `body` property if '
       + 'ctx.request.query is not validated by ajv.', () => {
     const schema = {
       properties: {
@@ -65,29 +62,7 @@ describe('ValidateQuery', () => {
 
     const actual = hook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseBadRequest);
-    notStrictEqual((actual as HttpResponseBadRequest).content, undefined);
-  });
-
-  it('should use the given ajv instance if it exists.', () => {
-    const schema = {
-      properties: {
-        bar: { type: 'integer', default: 4 },
-        foo: { type: 'integer' },
-      },
-      type: 'object',
-    };
-    const ctx = new Context({});
-    ctx.request.query = {
-      foo: 3,
-    };
-
-    let hook = getHookFunction(ValidateQuery(schema));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.query.bar, undefined);
-
-    hook = getHookFunction(ValidateQuery(schema, new Ajv({ useDefaults: true })));
-    hook(ctx, new ServiceManager());
-    strictEqual(ctx.request.query.bar, 4);
+    notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
   });
 
 });

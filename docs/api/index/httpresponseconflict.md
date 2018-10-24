@@ -1,8 +1,8 @@
 # Table of contents
 
-* [HttpResponseConflict][ClassDeclaration-26]
+* [HttpResponseConflict][ClassDeclaration-27]
     * Constructor
-        * [constructor(content)][Constructor-21]
+        * [constructor(body)][Constructor-19]
     * Properties
         * [isHttpResponseConflict][PropertyDeclaration-63]
         * [statusCode][PropertyDeclaration-64]
@@ -15,17 +15,17 @@ class HttpResponseConflict
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-26]: httpresponseconflict.md#httpresponseconflict
-[Constructor-21]: httpresponseconflict.md#constructorcontent
+[ClassDeclaration-27]: httpresponseconflict.md#httpresponseconflict
+[Constructor-19]: httpresponseconflict.md#constructorbody
 [PropertyDeclaration-63]: httpresponseconflict.md#ishttpresponseconflict
 [PropertyDeclaration-64]: httpresponseconflict.md#statuscode
 [PropertyDeclaration-65]: httpresponseconflict.md#statusmessage

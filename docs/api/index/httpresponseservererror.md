@@ -1,8 +1,8 @@
 # Table of contents
 
-* [HttpResponseServerError][ClassDeclaration-18]
+* [HttpResponseServerError][ClassDeclaration-19]
     * Constructor
-        * [constructor(content)][Constructor-14]
+        * [constructor(body)][Constructor-12]
     * Properties
         * [isHttpResponseServerError][PropertyDeclaration-45]
 
@@ -13,17 +13,17 @@ abstract class HttpResponseServerError
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -37,6 +37,6 @@ public readonly isHttpResponseServerError: true;
 
 true
 
-[ClassDeclaration-18]: httpresponseservererror.md#httpresponseservererror
-[Constructor-14]: httpresponseservererror.md#constructorcontent
+[ClassDeclaration-19]: httpresponseservererror.md#httpresponseservererror
+[Constructor-12]: httpresponseservererror.md#constructorbody
 [PropertyDeclaration-45]: httpresponseservererror.md#ishttpresponseservererror

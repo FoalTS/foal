@@ -1,8 +1,8 @@
 # Table of contents
 
-* [HttpResponseForbidden][ClassDeclaration-20]
+* [HttpResponseForbidden][ClassDeclaration-21]
     * Constructor
-        * [constructor(content)][Constructor-16]
+        * [constructor(body)][Constructor-14]
     * Properties
         * [isHttpResponseForbidden][PropertyDeclaration-49]
         * [statusCode][PropertyDeclaration-50]
@@ -15,17 +15,17 @@ class HttpResponseForbidden
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[Constructor-16]: httpresponseforbidden.md#constructorcontent
+[ClassDeclaration-21]: httpresponseforbidden.md#httpresponseforbidden
+[Constructor-14]: httpresponseforbidden.md#constructorbody
 [PropertyDeclaration-49]: httpresponseforbidden.md#ishttpresponseforbidden
 [PropertyDeclaration-50]: httpresponseforbidden.md#statuscode
 [PropertyDeclaration-51]: httpresponseforbidden.md#statusmessage

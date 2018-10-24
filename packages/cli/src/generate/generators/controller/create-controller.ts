@@ -29,9 +29,9 @@ export function createController({ name, type, register }: { name: string, type:
     });
 
   if (register) {
-    const path = type === 'REST' ? `/${names.kebabName}s` : '/';
+    const path = `/${names.kebabName}${type === 'REST' ? 's' : ''}`;
     generator
-      .updateFile('../app.module.ts', content => {
+      .updateFile('../app.controller.ts', content => {
         return registerController(content, `${names.upperFirstCamelName}Controller`, path);
       }, { allowFailure: true });
   }

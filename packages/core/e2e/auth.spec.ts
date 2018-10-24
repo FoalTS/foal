@@ -9,26 +9,21 @@ import { Column, createConnection, Entity, getConnection, getRepository } from '
 import {
   AbstractUser,
   Authenticate,
-  Controller,
   createApp,
   EmailAuthenticator,
   emailSchema,
   Get,
   Group,
   HttpResponseOK,
-  IModule,
   LoginController,
   LoginRequired,
-  Module,
   parsePassword,
   Permission,
   PermissionRequired,
-  Service,
   strategy
 } from '../src';
 
 it('Authentication and authorization', async () => {
-  @Controller()
   class MyController {
     @Get('/foo')
     @LoginRequired()
@@ -52,22 +47,19 @@ it('Authentication and authorization', async () => {
     password: string;
   }
 
-  @Service()
   class Authenticator extends EmailAuthenticator<User> {
     entityClass = User;
   }
 
-  @Controller()
   class AuthController extends LoginController {
     strategies = [
       strategy('login', Authenticator, emailSchema)
     ];
   }
 
-  @Module()
   @Authenticate(User)
-  class AppModule implements IModule {
-    controllers = [
+  class AppController {
+    subControllers = [
       MyController,
       AuthController
     ];
@@ -81,7 +73,7 @@ it('Authentication and authorization', async () => {
     type: 'sqlite',
   });
 
-  const app = createApp(AppModule);
+  const app = createApp(AppController);
 
   /* Create a user */
 

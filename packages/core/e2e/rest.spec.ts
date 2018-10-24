@@ -18,20 +18,17 @@ import {
 import {
   AbstractUser,
   Authenticate,
-  Controller,
   controller,
   createApp,
+  dependency,
   EntityResourceCollection,
   Group,
   IAuthenticator,
-  IModule,
   IResourceCollection,
   LoginController,
   LoginRequired,
-  Module,
   Permission,
   RestController,
-  Service,
   strategy,
 } from '../src';
 
@@ -98,7 +95,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     org: Org;
   }
 
-  @Service()
   class UserCollection extends EntityResourceCollection {
     entityClass = User;
     allowedOperations: (keyof IResourceCollection)[] = [
@@ -106,7 +102,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @Service()
   class OrgCollection extends EntityResourceCollection {
     entityClass = Org;
     allowedOperations: (keyof IResourceCollection)[] = [
@@ -117,7 +112,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @Service()
   class Authenticator implements IAuthenticator<User> {
     async authenticate(credentials: { id: number }) {
       const user = await getRepository(User).findOne({ id: credentials.id });
@@ -125,36 +119,34 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     }
   }
 
-  @Controller()
   @LoginRequired()
   class UserController extends RestController {
-    collectionClass = UserCollection;
+    @dependency
+    collection: UserCollection;
   }
 
-  @Controller()
   @LoginRequired()
   class OrgController extends RestController {
-    collectionClass = OrgCollection;
+    @dependency
+    collection: OrgCollection;
   }
 
-  @Controller()
   class AuthController extends LoginController {
     strategies = [
       strategy('login', Authenticator, {})
     ];
   }
 
-  @Module()
   @Authenticate(User)
-  class AppModule implements IModule {
-    controllers = [
+  class AppController {
+    subControllers = [
       controller('/users', UserController),
       controller('/orgs', OrgController),
       controller('', AuthController),
     ];
   }
 
-  const app = createApp(AppModule);
+  const app = createApp(AppController);
 
   /* Create orgs, perms, groups and users */
 

@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseBadRequest][ClassDeclaration-13]
+* [HttpResponseBadRequest][ClassDeclaration-14]
     * Constructor
-        * [constructor(content)][Constructor-9]
+        * [constructor(body)][Constructor-8]
     * Properties
-        * [isHttpResponseBadRequest][PropertyDeclaration-31]
-        * [statusCode][PropertyDeclaration-32]
-        * [statusMessage][PropertyDeclaration-33]
+        * [isHttpResponseBadRequest][PropertyDeclaration-32]
+        * [statusCode][PropertyDeclaration-33]
+        * [statusMessage][PropertyDeclaration-34]
 
 # HttpResponseBadRequest
 
@@ -15,17 +15,17 @@ class HttpResponseBadRequest
 ```
 ## Constructor
 
-### constructor(content)
+### constructor(body)
 
 ```typescript
-public constructor(content?: any);
+public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| content | any  |
+| Name | Type |
+| ---- | ---- |
+| body | any  |
 
 ## Properties
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[Constructor-9]: httpresponsebadrequest.md#constructorcontent
-[PropertyDeclaration-31]: httpresponsebadrequest.md#ishttpresponsebadrequest
-[PropertyDeclaration-32]: httpresponsebadrequest.md#statuscode
-[PropertyDeclaration-33]: httpresponsebadrequest.md#statusmessage
+[ClassDeclaration-14]: httpresponsebadrequest.md#httpresponsebadrequest
+[Constructor-8]: httpresponsebadrequest.md#constructorbody
+[PropertyDeclaration-32]: httpresponsebadrequest.md#ishttpresponsebadrequest
+[PropertyDeclaration-33]: httpresponsebadrequest.md#statuscode
+[PropertyDeclaration-34]: httpresponsebadrequest.md#statusmessage

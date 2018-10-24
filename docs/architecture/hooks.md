@@ -4,13 +4,26 @@
 foal generate hook my-hook
 ```
 
-Hooks are an elegant way to deal with access control, input validation or sanitization. A hook is made of small function, synchronous or asynchronous, that aims to be executed before a controller method.
+Hooks are decorators that execute extra logic before and/or after the method execution.
+
+They are particulary useful in these scenarios:
+- authentication & access control
+- request validation & sanitization
+- logging
+
+They improve code readability and make unit testing easier.
+
+## Structure
+
+A hook is made of small function, synchronous or asynchronous, that is executed before the controller method.
 
 This function takes two parameters:
-- The `Context` object which provides some information on the http request as well as the session object and the authenticated user if they exist.
+- The `Context` object which provides some information on the http request as well as the authenticated user if it exists.
 - The service manager that lets access other services within the hook.
 
-If an `HttpResponse` is returned (or resolved) in a hook then the processing of the request is stopped for the hooks and controller method and the server responds with the `statusCode` and optional `content` of the returned object.
+It may return an `HttpResponse` object. If so, the remaining hooks and the controller method are not executed, and the server responds with this response.
+
+It may also return an `HookPostFunction` that will be executed after the method execution. This takes three parameters: the context, the service manager and the response returned by the controller method.
 
 <!--
 // TODO: Write this.
@@ -45,20 +58,28 @@ export function HelloWorld(smiley: string){
   });
 }
 
+export function LogExecutionTime() {
+  return Hook(() => {
+    const NS_PER_SEC = 1e9;
+    const time = process.hrtime(); 
+    return () => {
+      const diff = process.hrtime(time);
+      console.log(`Benchmark took ${diff[0] * NS_PER_SEC + diff[1]} nanoseconds`);
+    };
+  })
+}
+
 ```
 
 ## How to bind the hook to a route
 
-Hooks can either be bound to one, several or all the routes of a controller. They may even apply to all the controllers of a module and its sub-modules.
+Hooks can either be bound to one, several or all the routes of a controller.
 
 ```typescript
-import {
-  Controller, Get, HttpResponseOK, IModule, Module
-} from '@foal/core';
+import { Get, HttpResponseOK } from '@foal/core';
 
 import { HelloWorld } from './hello-world.hook';
 
-@Controller()
 @HelloWorld(':)')
 class MyController {
   @Get('/foo')
@@ -73,7 +94,6 @@ class MyController {
   }
 }
 
-@Controller()
 class MyController2 {
   @Get('/foobar')
   foobar() {
@@ -81,10 +101,9 @@ class MyController2 {
   }
 }
 
-@Module()
 @HelloWorld(':D')
-export class AppModule implements IModule {
-  controllers = [
+export class AppController {
+  subControllers = [
     controller('/a', MyController),
     controller('/b', MyController2)
   ]
