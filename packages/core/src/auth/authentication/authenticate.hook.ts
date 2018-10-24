@@ -3,10 +3,10 @@ import { getManager } from 'typeorm';
 import { Class, Hook, HookDecorator } from '../../core';
 import { AbstractUser } from '../entities';
 
-export function Authenticate(UserEntity: Class<AbstractUser>): HookDecorator {
+export function AuthenticateWithSessionAndCookie(UserEntity: Class<AbstractUser>): HookDecorator {
   return Hook(async ctx => {
     if (!ctx.request.session) {
-      throw new Error('Authenticate hook requires session management.');
+      throw new Error('AuthenticateWithSessionAndCookie hook requires session management.');
     }
     if (!ctx.request.session.authentication || !ctx.request.session.authentication.hasOwnProperty('userId')) {
       return;

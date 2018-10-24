@@ -11,9 +11,9 @@ import {
   ServiceManager,
 } from '../../core';
 import { AbstractUser, Group, Permission } from '../entities';
-import { Authenticate } from './authenticate.hook';
+import { AuthenticateWithSessionAndCookie } from './authenticate.hook';
 
-describe('Authenticate', () => {
+describe('AuthenticateWithSessionAndCookie', () => {
 
   @Entity()
   class User extends AbstractUser {
@@ -57,16 +57,16 @@ describe('Authenticate', () => {
   afterEach(() => getConnection().close());
 
   it('should throw an Error if there is no session.', () => {
-    const preHook = getHookFunction(Authenticate(User));
+    const preHook = getHookFunction(AuthenticateWithSessionAndCookie(User));
     const ctx = new Context({});
 
     return (preHook(ctx, new ServiceManager()) as Promise<any>)
       .then(() => fail('The promise should be rejected'))
-      .catch(err => strictEqual(err.message, 'Authenticate hook requires session management.'));
+      .catch(err => strictEqual(err.message, 'AuthenticateWithSessionAndCookie hook requires session management.'));
   });
 
   it('should not throw an Error if the session does not have an `authentication.userId` property.', async () => {
-    const preHook = getHookFunction(Authenticate(User));
+    const preHook = getHookFunction(AuthenticateWithSessionAndCookie(User));
     const ctx = new Context({});
 
     ctx.request.session = {};
@@ -77,7 +77,7 @@ describe('Authenticate', () => {
   });
 
   it('should set ctx.user to undefined if no user is found in the database matching the given id.', async () => {
-    const hook = getHookFunction(Authenticate(User));
+    const hook = getHookFunction(AuthenticateWithSessionAndCookie(User));
     const ctx = new Context({});
 
     ctx.request.session = {
@@ -92,7 +92,7 @@ describe('Authenticate', () => {
 
   it('should add a user property (with all its groups and permissions) if a user matches'
       + ' the given id in the database.', async () => {
-    const hook = getHookFunction(Authenticate(User));
+    const hook = getHookFunction(AuthenticateWithSessionAndCookie(User));
     const ctx = new Context({});
 
     ctx.request.session = {

@@ -1,13 +1,13 @@
 # Usage in Web Requests
 
-FoalTS uses sessions and the `Authenticate` hook to authenticate users accross several requests.
+FoalTS uses sessions and the `AuthenticateWithSessionAndCookie` hook to authenticate users accross several requests.
 
-## The `Authenticate` Hook
+## The `AuthenticateWithSessionAndCookie` Hook
 
 It should decorate the `AppController`. If the user has already logged in in a previous request, then it will be available in the `context` with which the controller methods are called.
 
 ```ts
-@Authenticate(User)
+@AuthenticateWithSessionAndCookie(User)
 export class AppController {
   @Get('/foo')
   foo(ctx: Context) {
