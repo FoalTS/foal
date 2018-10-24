@@ -48,7 +48,7 @@ export class TestEnvironment {
       join(this.root, filePath),
       'utf8'
     );
-    strictEqual(actual, spec);
+    strictEqual(actual.replace(/\r\n/g, '\n'), spec.replace(/\r\n/g, '\n'));
     return this;
   }
 
