@@ -23,6 +23,12 @@ export interface CreateAppOptions {
   store?(session): any;
 }
 
+/**
+ * Main function to create a node.js (express) application from the root controller.
+ * @param rootControllerClass The root controller, usually called `AppController`
+ * @param options Optional options to specify the session store (default is MemoryStore)
+ * @param expressInstance Optional express instance to be used as base.
+ */
 export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}, expressInstance?) {
   const app = expressInstance || express();
 
