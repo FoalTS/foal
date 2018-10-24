@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.6.0-beta.6",
+  "version": "0.6.0",
   "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -88,11 +88,11 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/ejs": "^0.6.0-beta.5",
+    "@foal/ejs": "^0.6.0",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
-    "mocha": "^3.5.3",
+    "mocha": "^5.2.0",
     "mysql": "^2.15.0",
     "node-mocks-http": "^1.7.0",
     "nyc": "^12.0.2",

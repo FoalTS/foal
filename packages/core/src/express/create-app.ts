@@ -1,11 +1,14 @@
+// std
 import * as path from 'path';
 
+// 3p
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
+// FoalTS
 import {
   Class,
   Config,
@@ -20,8 +23,14 @@ export interface CreateAppOptions {
   store?(session): any;
 }
 
-export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}) {
-  const app = express();
+/**
+ * Main function to create a node.js (express) application from the root controller.
+ * @param rootControllerClass The root controller, usually called `AppController`
+ * @param options Optional options to specify the session store (default is MemoryStore)
+ * @param expressInstance Optional express instance to be used as base.
+ */
+export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}, expressInstance?) {
+  const app = expressInstance || express();
 
   app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
   app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
@@ -72,6 +81,12 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
         break;
       case 'PUT':
         app.put(route.path, createMiddleware(route, services));
+        break;
+      case 'HEAD':
+        app.head(route.path, createMiddleware(route, services));
+        break;
+      case 'OPTIONS':
+        app.options(route.path, createMiddleware(route, services));
         break;
     }
   }

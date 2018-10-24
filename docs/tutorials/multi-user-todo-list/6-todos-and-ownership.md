@@ -17,7 +17,7 @@ Go back to the `ApiController` and update the `getTodos` route.
 > - an empty object called `state` that you can use to forward information between hooks, 
 > - and the `user` object that is defined if a user logged in.
 >
-> *Note:* To make the `user` available you need to use the `Authenticate` hook somewhere. Generally it decorates the `AppController`.
+> *Note:* To make the `user` available you need to use the `AuthenticateWithSessionAndCookie` hook somewhere. Generally it decorates the `AppController`.
 
 Refresh the todo-list page. You should only see the todos of the user with whom you logged in.
 

@@ -5,7 +5,55 @@ import { strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
-import { Delete, Get, Patch, Post, Put } from './http-methods';
+import { Delete, Get, Head, Options, Patch, Post, Put } from './http-methods';
+
+describe('Head', () => {
+
+  it('should define the metadata httpMethod="HEAD" on the method class.', () => {
+    class Foobar {
+      @Head()
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    strictEqual(actual, 'HEAD');
+  });
+
+  it('should define the metadata path=${path} on the method class.', () => {
+    class Foobar {
+      @Head('/foo')
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
+    strictEqual(actual, '/foo');
+  });
+
+});
+
+describe('Options', () => {
+
+  it('should define the metadata httpMethod="OPTIONS" on the method class.', () => {
+    class Foobar {
+      @Options()
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    strictEqual(actual, 'OPTIONS');
+  });
+
+  it('should define the metadata path=${path} on the method class.', () => {
+    class Foobar {
+      @Options('/foo')
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
+    strictEqual(actual, '/foo');
+  });
+
+});
 
 describe('Get', () => {
 

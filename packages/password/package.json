@@ -1,6 +1,6 @@
 {
   "name": "@foal/password",
-  "version": "0.6.0-beta.5",
+  "version": "0.6.0",
   "description": "Password utilities for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -40,7 +40,7 @@
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
     "copy": "^0.3.2",
-    "mocha": "^3.5.3",
+    "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2"

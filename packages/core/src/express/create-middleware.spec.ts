@@ -9,6 +9,7 @@ import * as request from 'supertest';
 // FoalTS
 import {
   Context,
+  HttpResponse,
   HttpResponseBadRequest,
   HttpResponseCreated,
   HttpResponseInternalServerError,
@@ -83,6 +84,44 @@ describe('createMiddleware', () => {
 
       strictEqual(str, 'abc');
       strictEqual(actualServiceManager, expectedServiceManager);
+    });
+
+    it('should call the sync and async post hook functions (with the ctx, the given ServiceManager and the response)'
+        + ' after the controller method.', async () => {
+      let str = '';
+      const expectedServiceManager = new ServiceManager();
+      const expectedReponse = new HttpResponseOK();
+
+      let actualServiceManager: ServiceManager|undefined;
+      let actualResponse: HttpResponse|undefined;
+
+      const route: Route = {
+        controller: { bar: (ctx: Context) => {
+          ctx.state.str = 'c';
+          return expectedReponse;
+        }},
+        hooks: [
+          () => async ctx => { await 1; str = `${ctx.state.str}a`; },
+          () => ctx => ctx.state.str += 'b',
+          () => (ctx, services, response) => {
+            actualServiceManager = services;
+            actualResponse = response;
+          }
+        ],
+        httpMethod: 'GET',
+        path: '',
+        propertyKey: 'bar'
+      };
+      const request = createRequest();
+      const response = createResponse();
+
+      const middleware = createMiddleware(route, expectedServiceManager);
+
+      await middleware(request, response);
+
+      strictEqual(str, 'cba');
+      strictEqual(actualServiceManager, expectedServiceManager);
+      strictEqual(actualResponse, expectedReponse);
     });
 
     describe('when the controller method returns or resolves an instance of HttpResponseSuccess,'
@@ -379,9 +418,9 @@ describe('createMiddleware', () => {
           return new HttpResponseOK();
         }},
         hooks: [
-          () => str += 'a',
+          () => { str += 'a'; },
           () => new HttpResponseBadRequest(),
-          () => str += 'b',
+          () => { str += 'b'; },
         ],
         httpMethod: 'GET',
         path: '',
