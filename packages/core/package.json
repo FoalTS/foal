@@ -81,6 +81,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "helmet": "^3.12.1",
+    "mocha": "^5.2.0",
     "morgan": "^1.9.0",
     "reflect-metadata": "^0.1.10"
   },

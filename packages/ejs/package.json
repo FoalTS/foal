@@ -39,7 +39,8 @@
     "lib/"
   ],
   "dependencies": {
-    "ejs": "^2.5.7"
+    "ejs": "^2.5.7",
+    "mocha": "^5.2.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",

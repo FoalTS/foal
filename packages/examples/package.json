@@ -44,6 +44,7 @@
     "@foal/ejs": "^0.6.0-beta.5",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
+    "mocha": "^5.2.0",
     "source-map-support": "^0.5.6",
     "sqlite3": "^4.0.0",
     "typeorm": "^0.2.6"
