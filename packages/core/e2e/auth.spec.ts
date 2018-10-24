@@ -8,7 +8,7 @@ import { Column, createConnection, Entity, getConnection, getRepository } from '
 // FoalTS
 import {
   AbstractUser,
-  Authenticate,
+  AuthenticateWithSessionAndCookie,
   createApp,
   EmailAuthenticator,
   emailSchema,
@@ -57,7 +57,7 @@ it('Authentication and authorization', async () => {
     ];
   }
 
-  @Authenticate(User)
+  @AuthenticateWithSessionAndCookie(User)
   class AppController {
     subControllers = [
       MyController,

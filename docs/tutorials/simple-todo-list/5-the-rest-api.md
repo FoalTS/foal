@@ -100,12 +100,12 @@ The last thing to know is how the `ApiController` is bound to the request handle
 Open the file `app.controller.ts` in `src/app`.
 
 ```typescript
-import { Authenticate, controller } from '@foal/core';
+import { AuthenticateWithSessionAndCookie, controller } from '@foal/core';
 
 import { ApiController, ViewController } from './controllers';
 import { User } from './entities';
 
-@Authenticate(User)
+@AuthenticateWithSessionAndCookie(User)
 export class AppController {
   subControllers = [
     controller('/', ViewController),
@@ -118,4 +118,4 @@ This controller is the main controller of the application. It is directly called
 
 In that case, the `--register` flag directly added a new line to declare the `ApiController` as a sub-controller of `AppController`. The `ViewController` is in charge of rendering the `index.html` template.
 
-> The `Authenticate` decorator is useless here as you will not use authentication in this tutorial. You can remove it if you want.
+> The `AuthenticateWithSessionAndCookie` decorator is useless here as you will not use authentication in this tutorial. You can remove it if you want.
