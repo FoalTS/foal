@@ -5,7 +5,7 @@ export interface LogOptions {
   params?: boolean;
   headers?: string[]|boolean;
   query?: boolean;
-  logFn?: typeof console.log;
+  logFn?: (message?: any, ...optionalParams: any[]) => void;
 }
 
 /**

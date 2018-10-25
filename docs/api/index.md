@@ -1197,19 +1197,19 @@ interface LogOptions {
     params?: boolean | undefined;
     headers?: string[] | boolean;
     query?: boolean | undefined;
-    logFn?: typeof ???;
+    logFn?: ((message?: any, ...optionalParams: any[]) => void) | undefined;
 }
 ```
 
 **Properties**
 
-| Name    | Type                     | Optional |
-| ------- | ------------------------ | -------- |
-| body    | boolean &#124; undefined | true     |
-| params  | boolean &#124; undefined | true     |
-| headers | string[] &#124; boolean  | true     |
-| query   | boolean &#124; undefined | true     |
-| logFn   | typeof ???               | true     |
+| Name    | Type                                                                 | Optional |
+| ------- | -------------------------------------------------------------------- | -------- |
+| body    | boolean &#124; undefined                                             | true     |
+| params  | boolean &#124; undefined                                             | true     |
+| headers | string[] &#124; boolean                                              | true     |
+| query   | boolean &#124; undefined                                             | true     |
+| logFn   | ((message?: any, ...optionalParams: any[]) => void) &#124; undefined | true     |
 
 ----------
 
