@@ -36,6 +36,7 @@
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
   * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
 * [Cookbook](./cookbook/validation.md)
+  * [Build a Public API](./cookbook/build-a-public-api.md)
   * [Validation](./cookbook/validation.md)
   * [REST API](./cookbook/rest-api.md)
   * [Templates](./cookbook/template-engine.md)
@@ -58,7 +59,7 @@
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
-* [Deployment & environments](./deployment-and-environments/configuration.md)
+* [Deployment & Environments](./deployment-and-environments/configuration.md)
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
 
