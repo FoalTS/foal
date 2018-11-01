@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/%40foal%2Fexamples.svg)](https://badge.fury.io/js/%40foal%2Fexamples)
 [![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)](https://travis-ci.org/FoalTS/foal)
 
-Web framework to create enterprise-grade Node.JS applications .
+Web framework to create enterprise-grade Node.JS applications.
 
 This package does not aim to have any distributed code. It exists only for testing.
 
