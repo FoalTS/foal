@@ -2,7 +2,7 @@
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { createController, getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
+import { Context, createController, getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
 
 // App
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
@@ -21,7 +21,8 @@ describe('/* upperFirstCamelName */Controller', () => {
     });
 
     it('should return an HttpResponseOK.', () => {
-      ok(isHttpResponseOK(controller.foo()));
+      const ctx = new Context({});
+      ok(isHttpResponseOK(controller.foo(ctx)));
     });
 
   });
