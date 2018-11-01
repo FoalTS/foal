@@ -40,7 +40,7 @@ Documentation: [https://foalts.gitbook.io/docs/](https://foalts.gitbook.io/docs/
 
 ## Description
 
-FoalTS is a next-generation framework that helps you create server-side [Node.js](https://nodejs.org) applications. Its development tools, modular components and TypeScript support make it the ideal choice for efficienly building modern applications.
+FoalTS is a next-generation framework that helps you create server-side [Node.js](https://nodejs.org) applications. Its development tools, modular components and TypeScript support make it the ideal choice for building modern applications.
 
 ## Get started
 
