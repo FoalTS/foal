@@ -1,8 +1,9 @@
 // std
+import { execSync, spawn, SpawnOptions } from 'child_process';
 import * as crypto from 'crypto';
 
 // 3p
-import { blue, underline } from 'colors/safe';
+import { blue, red, underline } from 'colors/safe';
 
 // FoalTS
 import {
@@ -11,8 +12,17 @@ import {
   mkdirIfDoesNotExist,
 } from '../../utils';
 
-export function createApp({ name, sessionSecret }:
-  { name: string, sessionSecret?: string }) {
+function isYarnInstalled() {
+  try {
+    execSync('yarn --version', { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function createApp({ name, sessionSecret, autoInstall }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean }) {
   const names = getNames(name);
   if (process.env.NODE_ENV !== 'test') {
     console.log(blue(
@@ -99,14 +109,31 @@ export function createApp({ name, sessionSecret }:
         .copyFileFromTemplates('src/scripts/create-perm.ts')
         .copyFileFromTemplates('src/scripts/create-user.ts');
 
+  if (autoInstall) {
+    const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
+    const args = [ 'install' ];
+    const options: SpawnOptions = {
+      cwd: names.kebabName,
+      shell: true,
+      stdio: 'inherit'
+    };
+
+    await new Promise(resolve => {
+      spawn(packageManager, args, options)
+        .on('close', (code: number) => {
+          if (code !== 0) {
+            console.log(red('A problem occurred when installing the dependencies. See above.'));
+          }
+          resolve();
+        });
+    });
+  }
+
   if (process.env.NODE_ENV !== 'test') {
     console.log(
       `
-${underline('Install dependencies:')}
-$ cd ${names.kebabName}
-$ npm install
-
 ${underline('Run the app:')}
+$ cd ${names.kebabName}
 $ npm run develop
 `
     );
