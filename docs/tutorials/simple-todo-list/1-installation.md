@@ -20,11 +20,12 @@ Then create a new application.
 foal createapp my-app
 ```
 
-This command generates a new directory with the basic structure of the new application. Let's look at what `createapp` created:
+This command generates a new directory with the basic structure of the new application. It also installs all the dependencies. Let's look at what `createapp` created:
 
 ```shell
 my-app/
   config/
+  node_modules/
   public/
   src/
     app/
@@ -38,6 +39,7 @@ my-app/
 
 The outer `my-app` root directory is just a container for your project.
 - The `config/` directory contains configuration files for your different environments (production, test, development, e2e, etc).
+- The `node_modules/` directory contains all the prod and dev dependencies of your project.
 - The static files are located in the `public/` directory. They are usually images, CSS and client JavaScript files and are served directly when the server is running.
 - The `src/` directory contains all the source code of the application (TypeScript files and HTML templates).
   - The inner `app/` directory includes the components of your server (controllers, templates, services, hooks, sub-apps).
@@ -52,20 +54,12 @@ The outer `my-app` root directory is just a container for your project.
 >
 > The language used to develop a FoalTS application is [TypeScript](https://www.typescriptlang.org/). It is a typed superset of JavaScript that compiles to plain JavaScript. The benefits of using TypeScript are many, but in summary, the language provides great tools and the future features of JavaScript.
 
-Change into the `my-app` directory and install the dependencies.
-
-```sh
-cd my-app
-npm install
-```
-
-A new folder `node_modules/` should appear in your root directory. It contains all the prod and dev dependencies of your project.
-
 # Start The Server
 
 Let's verify that the FoalTS project works. Run the following command:
 
 ```
+cd my-app
 npm run develop
 ```
 
