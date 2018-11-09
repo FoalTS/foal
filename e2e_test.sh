@@ -4,7 +4,6 @@ cd e2e-test-temp
 # Test app creation
 foal createapp my-app
 cd my-app
-npm install
 
 # Test the generators that do not require user interaction
 foal g entity flight
