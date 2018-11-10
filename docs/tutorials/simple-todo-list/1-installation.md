@@ -56,7 +56,7 @@ The outer `my-app` root directory is just a container for your project.
 
 # Start The Server
 
-Let's verify that the FoalTS project works. Run the following command:
+Let's verify that the FoalTS project works. Run the following commands:
 
 ```
 cd my-app
