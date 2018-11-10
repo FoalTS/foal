@@ -60,7 +60,7 @@ export function createApp({ name, sessionSecret }:
       .renderTemplate('config/settings.production.json', locals)
       // Public
       .mkdirIfDoesNotExist('public')
-      .copyFileFromTemplates('public/logo.svg')
+      .copyFileFromTemplates('public/logo.png')
       // Src
       .mkdirIfDoesNotExist('src')
       .copyFileFromTemplates('src/e2e.ts')
