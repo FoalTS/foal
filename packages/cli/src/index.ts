@@ -34,7 +34,7 @@ program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
   .action((name: string) => {
-    createApp({ name });
+    createApp({ name, autoInstall: true });
   });
 
 program
