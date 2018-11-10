@@ -31,7 +31,7 @@ describe('createApp', () => {
     testEnv.rmdirIfExists('config');
 
     // Public
-    testEnv.rmfileIfExists('public/logo.png');
+    testEnv.rmfileIfExists('public/logo.svg');
     testEnv.rmdirIfExists('public');
 
     // Src
@@ -89,7 +89,7 @@ describe('createApp', () => {
 
   it('should copy the logo image.', () => {
     testEnv
-      .validateFileSpec('public/logo.png');
+      .validateFileSpec('public/logo.svg');
   });
 
   it('shoud copy the src/e2e templates.', () => {
