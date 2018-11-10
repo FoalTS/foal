@@ -1,4 +1,4 @@
-![Logo](./logo_title.png)
+![Logo](./logo_title.svg)
 
 A Web framework to create enterprise-grade Node.JS applications
 

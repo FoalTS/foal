@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_title.png" height="160px" alt="Logo" />
+    <img src="./docs/logo_title.svg" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
