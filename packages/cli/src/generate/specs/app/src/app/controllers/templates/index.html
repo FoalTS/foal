@@ -12,7 +12,6 @@
     }
     body {
       margin: 0;
-      background: linear-gradient(to bottom right, #116dd6, #bcd8f9);
       text-align: center;
       font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     }
@@ -21,6 +20,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
     }
     h1 {
       color: white;
@@ -28,9 +28,10 @@
       margin-bottom: 40px
     }
     a {
-      color: white;
-      background-color: #126cda;
-      border-color: #126cda;
+      box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+      color: rgb(22, 110, 219);
+      background-color: white;
+      border-color: white;
       border-radius: 30px;
       padding: 0.75rem 2.25rem;
       text-decoration: none;
@@ -38,23 +39,31 @@
       margin: 0px 10px;
     }
     img{
-      background-color: white;
-      padding: 10px 40px;
-      border-radius: 80px;
-      background-color: #f1f6fc;
+      width: 260px;
+    }
+    .background {
+      background: linear-gradient(to bottom right, #0169e0, #92c5ff);
+      position: absolute;
+      top: -200px;
+      width: 100%;
+      height: 800px;
+      transform: skewY(-10deg);
     }
   </style>
 </head>
 <body>
+  <div class="background">
+
+  </div>
   <div class="wrapper">
     <div class="img-container">
       <img src="logo.png" alt="FoalTS logo">
     </div>
-    <h1>You have successfully installed FoalTS!</h1>
+    <h1>Welcome to the future ✨</h1>
     <div>
-      <a href="https://foalts.gitbook.io/docs/">Documentation</a>
-      <a href="https://twitter.com/FoalTs">Twitter</a>
-      <a href="https://foalts.org/">FoalTS Website</a>
+      <a href="https://twitter.com/FoalTs">TWITTER</a>
+      <a href="https://foalts.gitbook.io/docs/">DOCUMENTATION</a>
+      <a href="https://foalts.org/">WEBSITE</a>
     </div>
   </div>
 </body>

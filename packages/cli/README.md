@@ -51,7 +51,7 @@ First install [Node.Js and npm](https://nodejs.org/en/download/).
 ```
 $ npm install -g @foal/cli
 $ foal createapp my-app
-$ cd my-app && npm install
+$ cd my-app
 $ npm run develop
 ```
 
