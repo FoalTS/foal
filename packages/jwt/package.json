@@ -38,7 +38,9 @@
   "files": [
     "lib/"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "jsonwebtoken": "^8.3.0"
+  },
   "devDependencies": {
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
