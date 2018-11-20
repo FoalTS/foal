@@ -1,1 +1,1 @@
-export const something = 1;
+export { JWTRequired } from './jwt-required.hook';

@@ -10,14 +10,14 @@ import { sign } from 'jsonwebtoken';
 import { Connection, createConnection, Entity, getRepository } from 'typeorm';
 
 // FoalTS
-import { AuthenticateWithJwtHeader } from './authenticate-with-jwt-header.hook';
+import { JWTRequired } from './jwt-required.hook';
 
-describe('authenticateWithJwtHeader', () => {
+describe('JWTRequired', () => {
 
   @Entity()
   class User extends AbstractUser { }
 
-  const hook = getHookFunction(AuthenticateWithJwtHeader(User));
+  const hook = getHookFunction(JWTRequired(User));
 
   let connection: Connection;
   let id: number;
@@ -189,7 +189,7 @@ describe('authenticateWithJwtHeader', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
-      const hook = getHookFunction(AuthenticateWithJwtHeader(User, { audience: 'bar' }));
+      const hook = getHookFunction(JWTRequired(User, { audience: 'bar' }));
 
       const token = sign({}, secret, { audience: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -206,7 +206,7 @@ describe('authenticateWithJwtHeader', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
-      const hook = getHookFunction(AuthenticateWithJwtHeader(User, { issuer: 'bar' }));
+      const hook = getHookFunction(JWTRequired(User, { issuer: 'bar' }));
 
       const token = sign({}, secret, { issuer: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -225,7 +225,7 @@ describe('authenticateWithJwtHeader', () => {
     // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"
 
     it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
-      const hook = getHookFunction(AuthenticateWithJwtHeader());
+      const hook = getHookFunction(JWTRequired());
 
       const jwt = sign({ foo: 'bar' }, secret, {});
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });

@@ -6,8 +6,7 @@ import {
 import { verify, VerifyOptions } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 
-export function AuthenticateWithJwtHeader(entityClass?: Class<AbstractUser>,
-                                          options: VerifyOptions = {}): HookDecorator {
+export function JWTRequired(entityClass?: Class<AbstractUser>, options: VerifyOptions = {}): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
     if (!secret) {
