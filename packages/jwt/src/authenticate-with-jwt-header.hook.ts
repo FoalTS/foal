@@ -1,6 +1,3 @@
-// std
-import { promisify } from 'util';
-
 // 3p
 import {
   AbstractUser, Class, Config, Hook, HookDecorator,
@@ -9,7 +6,7 @@ import {
 import { verify, VerifyOptions } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 
-export function AuthenticateWithJwtHeader(entityClass: Class<AbstractUser>,
+export function AuthenticateWithJwtHeader(entityClass?: Class<AbstractUser>,
                                           options: VerifyOptions = {}): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
@@ -44,20 +41,27 @@ export function AuthenticateWithJwtHeader(entityClass: Class<AbstractUser>,
         description: error.message
       });
     }
-    // if (!payload || typeof payload.sub !== 'string') {
-    //   return;
-    // }
 
-    // const id = parseInt(payload.sub, 10);
-    // if (isNaN(id)) {
-    //   return;
-    // }
+    if (!entityClass) {
+      ctx.user = payload;
+      return;
+    }
 
-    // const user = await getRepository(entityClass).findOne({ id });
-    // if (!user) {
-    //   return;
-    // }
+    if (typeof payload.sub !== 'string') {
+      return new HttpResponseUnauthorized({
+        code: 'invalid_token',
+        description: 'The token must include a subject which is the id of the user.'
+      });
+    }
 
-    // ctx.user = user;
+    const user = await getRepository(entityClass).findOne({ id: payload.sub });
+    if (!user) {
+      return new HttpResponseUnauthorized({
+        code: 'invalid_token',
+        description: 'The token subject does not match any user.'
+      });
+    }
+
+    ctx.user = user;
   });
 }

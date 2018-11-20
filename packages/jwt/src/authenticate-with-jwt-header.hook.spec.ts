@@ -4,7 +4,7 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 // 3p
 import {
   AbstractUser, Context, getHookFunction, Group,
-  HookFunction, isHttpResponseBadRequest, isHttpResponseUnauthorized, Permission, ServiceManager
+  isHttpResponseBadRequest, isHttpResponseUnauthorized, Permission, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 import { Connection, createConnection, Entity, getRepository } from 'typeorm';
@@ -224,11 +224,36 @@ describe('authenticateWithJwtHeader', () => {
 
     // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"
 
-    xit('should return an HttpResponseUnauthorized object if the decoded payload has no id (correct type, etc)');
+    it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
+      const hook = getHookFunction(AuthenticateWithJwtHeader());
 
-    xit('should set ctx.user with the decoded payload if no User entity was given.');
+      const jwt = sign({ foo: 'bar' }, secret, {});
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
+      const services = new ServiceManager();
 
-    xit('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
+      await hook(ctx, services);
+
+      notStrictEqual(ctx.user, undefined);
+      strictEqual((ctx.user as any).foo, 'bar');
+    });
+
+    it('should return an HttpResponseUnauthorized object if there is no subject and a User entity'
+        + ' was given.', async () => {
+      const token = sign({}, secret, {});
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'The token must include a subject which is the id of the user.'
+      });
+    });
+
+    it('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
       const jwt = sign({}, secret, { subject: id.toString() });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
       const services = new ServiceManager();
@@ -237,6 +262,24 @@ describe('authenticateWithJwtHeader', () => {
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as AbstractUser).id, id);
+    });
+
+    it('should return an HttpResponseUnauthorized object if a User entity was given and no'
+        + ' user was found in the database with id=payload.sub.', async () => {
+      const jwt = sign({}, secret, { subject: id.toString() + '1' });
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
+      const services = new ServiceManager();
+
+      await hook(ctx, services);
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'The token subject does not match any user.'
+      });
     });
 
   });
