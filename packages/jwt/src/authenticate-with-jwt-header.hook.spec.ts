@@ -173,12 +173,53 @@ describe('authenticateWithJwtHeader', () => {
       });
     });
 
-    xit('should return an HttpResponseUnauthorized object if the token is expired', async () => {
-      // invalid_token, 401
+    it('should return an HttpResponseUnauthorized object if the token is expired', async () => {
+      const token = sign({}, secret, { expiresIn: '1' });
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'jwt expired'
+      });
     });
 
-    xit('should return a ? object if the audience is not expected.', () => {
-      // invalid_token or insufficient_scope? 401 or 403?
+    it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
+      const hook = getHookFunction(AuthenticateWithJwtHeader(User, { audience: 'bar' }));
+
+      const token = sign({}, secret, { audience: 'foo' });
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'jwt audience invalid. expected: bar'
+      });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
+      const hook = getHookFunction(AuthenticateWithJwtHeader(User, { issuer: 'bar' }));
+
+      const token = sign({}, secret, { issuer: 'foo' });
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'jwt issuer invalid. expected: bar'
+      });
     });
 
     // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"

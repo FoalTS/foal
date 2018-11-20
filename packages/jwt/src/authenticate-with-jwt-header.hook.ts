@@ -6,10 +6,11 @@ import {
   AbstractUser, Class, Config, Hook, HookDecorator,
   HttpResponseBadRequest, HttpResponseUnauthorized
 } from '@foal/core';
-import { verify } from 'jsonwebtoken';
+import { verify, VerifyOptions } from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 
-export function AuthenticateWithJwtHeader(entityClass: Class<AbstractUser>): HookDecorator {
+export function AuthenticateWithJwtHeader(entityClass: Class<AbstractUser>,
+                                          options: VerifyOptions = {}): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
     if (!secret) {
@@ -32,7 +33,11 @@ export function AuthenticateWithJwtHeader(entityClass: Class<AbstractUser>): Hoo
 
     let payload;
     try {
-      payload = await promisify(verify)(token, Config.get('jwt', 'secret'));
+      payload = await new Promise((resolve, reject) => {
+        verify(token, secret, options, (err, value) => {
+          if (err) { reject(err); } else { resolve(value); }
+        });
+      });
     } catch (error) {
       return new HttpResponseUnauthorized({
         code: 'invalid_token',
