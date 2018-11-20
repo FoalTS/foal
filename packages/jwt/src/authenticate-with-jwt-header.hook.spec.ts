@@ -4,21 +4,21 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 // 3p
 import {
   AbstractUser, Context, getHookFunction, Group,
-  isHttpResponseBadRequest, Permission, ServiceManager
+  HookFunction, isHttpResponseBadRequest, isHttpResponseUnauthorized, Permission, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
+import { Connection, createConnection, Entity, getRepository } from 'typeorm';
 
 // FoalTS
-import { Connection, createConnection, Entity, getRepository } from 'typeorm';
 import { AuthenticateWithJwtHeader } from './authenticate-with-jwt-header.hook';
 
 describe('authenticateWithJwtHeader', () => {
 
   @Entity()
-  class User extends AbstractUser {}
+  class User extends AbstractUser { }
 
   const hook = getHookFunction(AuthenticateWithJwtHeader(User));
-  const secret = 'my_secret';
+
   let connection: Connection;
   let id: number;
 
@@ -26,56 +26,178 @@ describe('authenticateWithJwtHeader', () => {
     connection = await createConnection({
       database: 'test_db.sqlite',
       dropSchema: true,
-      entities: [ User, Permission, Group ],
+      entities: [User, Permission, Group],
       synchronize: true,
       type: 'sqlite',
     });
     const user = new User();
     await getRepository(User).save(user);
     id = user.id;
-    process.env.JWT_SECRET = 'my_secret';
   });
 
-  after(async () => {
-    await connection.close();
-    process.env.JWT_SECRET = '';
-  });
+  after(() => connection.close());
 
-  it('should not throw any error if the Authorization header does not exist.', async () => {
-    const ctx = new Context({ get(str: string) { return undefined; }});
-    const services = new ServiceManager();
-    // should throw if audience is not expected
-    // should throw if token is expired (spécifié dans les options)
-    // should throw if token issuer is wrong (spécifié dans les options)
-    // should throw error when signature is wrong
+  it('should throw if no secret is set in the Config.', async () => {
+    let err: Error|undefined;
+    try {
+      const ctx = new Context({ get(str: string) { return undefined; } });
+      const services = new ServiceManager();
 
-    await hook(ctx, services);
-  });
-
-  it('should return an HttpResponseBadRequest object if the Authorization header does '
-      + 'not use the Bearer schema.', async () => {
-    const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; }});
-    const services = new ServiceManager();
-
-    const response = await hook(ctx, services);
-
-    if (!isHttpResponseBadRequest(response)) {
-      throw new Error('response should be instance of HttpResponseBadRequest');
+      await hook(ctx, services);
+    } catch (error) {
+      err = error;
     }
-    deepStrictEqual(response.body, {
-      message: 'Format is Authorization: Bearer <token>'
-    });
+    if (!err) {
+      throw new Error('An error should be thrown since there is not secret.');
+    }
+    strictEqual(err.message, 'You must provide a secret in jwt.json or in the JWT_SECRET environment variable.');
   });
 
-  it('should decode the JWT token and return the corresponding user from the database.', async () => {
-    const jwt = sign({}, secret, { subject: id.toString() });
-    const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }});
-    const services = new ServiceManager();
+  describe('when a secret is set', () => {
 
-    await hook(ctx, services);
+    const secret = 'my_secret';
 
-    notStrictEqual(ctx.user, undefined);
-    strictEqual((ctx.user as AbstractUser).id, id);
+    before(() => process.env.JWT_SECRET = 'my_secret');
+
+    after(() => process.env.JWT_SECRET = '');
+
+    it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
+      const ctx = new Context({ get(str: string) { return undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseBadRequest(response)) {
+        throw new Error('Response should be an instance of HttpResponseBadRequest.');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_request',
+        description: 'Authorization header not found.'
+      });
+    });
+
+    it('should return an HttpResponseBadRequest object if the Authorization header does '
+      + 'not use the Bearer scheme.', async () => {
+        const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
+        const services = new ServiceManager();
+
+        const response = await hook(ctx, services);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('Response should be an instance of HttpResponseBadRequest.');
+        }
+        deepStrictEqual(response.body, {
+          code: 'invalid_request',
+          description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
+        });
+      });
+
+    it('should return an HttpResponseUnauthorized object if the token is not a JWT.', async () => {
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Bearer foo' : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'jwt malformed'
+      });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the header is invalid.', async () => {
+      const token = 'eyJhhGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid algorithm'
+      });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the payload is invalid.', async () => {
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+        + '.eyJz32IiOiIxMjM0NTY3ODkwIiwibmFtZSI6UkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'Unexpected token R in JSON at position 27'
+      });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moeGA08mogA';
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid signature'
+      });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.-I5sDyvGWSA8Qwk6OwM7VLV9Nz3pkINNHakp3S8kOn0';
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid signature'
+      });
+    });
+
+    xit('should return an HttpResponseUnauthorized object if the token is expired', async () => {
+      // invalid_token, 401
+    });
+
+    xit('should return a ? object if the audience is not expected.', () => {
+      // invalid_token or insufficient_scope? 401 or 403?
+    });
+
+    // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"
+
+    xit('should return an HttpResponseUnauthorized object if the decoded payload has no id (correct type, etc)');
+
+    xit('should set ctx.user with the decoded payload if no User entity was given.');
+
+    xit('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
+      const jwt = sign({}, secret, { subject: id.toString() });
+      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
+      const services = new ServiceManager();
+
+      await hook(ctx, services);
+
+      notStrictEqual(ctx.user, undefined);
+      strictEqual((ctx.user as AbstractUser).id, id);
+    });
+
   });
 
 });
