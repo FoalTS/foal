@@ -9,15 +9,15 @@ import {
 import { sign } from 'jsonwebtoken';
 
 // FoalTS
-import { JWTRequired } from './jwt-required.hook';
+import { JWT } from './jwt.hook';
 
-describe('JWTRequired', () => {
+describe('JWT', () => {
 
   const user = { id: 1 };
 
   const fetchUser = async id => id === '1' ? user : null;
 
-  const hook = getHookFunction(JWTRequired({ user: fetchUser }));
+  const hook = getHookFunction(JWT({ user: fetchUser }));
 
   it('should throw if no secret is set in the Config.', async () => {
     let err: Error|undefined;
@@ -171,7 +171,7 @@ describe('JWTRequired', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
-      const hook = getHookFunction(JWTRequired({ user: fetchUser }, { audience: 'bar' }));
+      const hook = getHookFunction(JWT({ user: fetchUser }, { audience: 'bar' }));
 
       const token = sign({}, secret, { audience: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -188,7 +188,7 @@ describe('JWTRequired', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
-      const hook = getHookFunction(JWTRequired({ user: fetchUser }, { issuer: 'bar' }));
+      const hook = getHookFunction(JWT({ user: fetchUser }, { issuer: 'bar' }));
 
       const token = sign({}, secret, { issuer: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -207,7 +207,7 @@ describe('JWTRequired', () => {
     // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"
 
     it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
-      const hook = getHookFunction(JWTRequired());
+      const hook = getHookFunction(JWT());
 
       const jwt = sign({ foo: 'bar' }, secret, {});
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });

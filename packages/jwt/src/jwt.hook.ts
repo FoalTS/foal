@@ -9,8 +9,7 @@ export interface JWTOptions {
   user?: (id: string|number) => Promise<any>;
 }
 
-export function JWTRequired(options: JWTOptions = {},
-                            verifyOptions: VerifyOptions = {}): HookDecorator {
+export function JWT(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
     if (!secret) {
