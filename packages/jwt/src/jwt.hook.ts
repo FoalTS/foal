@@ -7,6 +7,7 @@ import { verify, VerifyOptions } from 'jsonwebtoken';
 
 export interface JWTOptions {
   user?: (id: string|number) => Promise<any>;
+  blackList?: (token: string) => boolean|Promise<boolean>;
 }
 
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
@@ -30,6 +31,13 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new HttpResponseBadRequest({
         code: 'invalid_request',
         description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
+      });
+    }
+
+    if (options.blackList && await options.blackList(token)) {
+      return new HttpResponseUnauthorized({
+        code: 'invalid_token',
+        description: 'jwt revoked'
       });
     }
 

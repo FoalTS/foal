@@ -86,7 +86,28 @@ export function test(JWT: typeof JWTOptional|typeof JWTRequired, required: boole
           code: 'invalid_request',
           description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
         });
+    });
+
+    it('should return an HttpResponseUnauthorized object if the token is black listed.', async () => {
+      const hook = getHookFunction(JWT({
+        blackList: token => token === 'revokedToken' ? true : false,
+        user: fetchUser,
+      }));
+
+      const ctx = new Context({
+        get(str: string) {return str === 'Authorization' ? 'Bearer revokedToken' : undefined; }
       });
+      const services = new ServiceManager();
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'jwt revoked'
+      });
+    });
 
     it('should return an HttpResponseUnauthorized object if the token is not a JWT.', async () => {
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Bearer foo' : undefined; } });
