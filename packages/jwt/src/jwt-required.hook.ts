@@ -1,12 +1,16 @@
 // 3p
 import {
-  AbstractUser, Class, Config, Hook, HookDecorator,
+  Config, Hook, HookDecorator,
   HttpResponseBadRequest, HttpResponseUnauthorized
 } from '@foal/core';
 import { verify, VerifyOptions } from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
 
-export function JWTRequired(entityClass?: Class<AbstractUser>, options: VerifyOptions = {}): HookDecorator {
+export interface JWTOptions {
+  user?: (id: string|number) => Promise<any>;
+}
+
+export function JWTRequired(options: JWTOptions = {},
+                            verifyOptions: VerifyOptions = {}): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
     if (!secret) {
@@ -30,7 +34,7 @@ export function JWTRequired(entityClass?: Class<AbstractUser>, options: VerifyOp
     let payload;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secret, options, (err, value) => {
+        verify(token, secret, verifyOptions, (err, value) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
@@ -41,7 +45,7 @@ export function JWTRequired(entityClass?: Class<AbstractUser>, options: VerifyOp
       });
     }
 
-    if (!entityClass) {
+    if (!options.user) {
       ctx.user = payload;
       return;
     }
@@ -53,7 +57,7 @@ export function JWTRequired(entityClass?: Class<AbstractUser>, options: VerifyOp
       });
     }
 
-    const user = await getRepository(entityClass).findOne({ id: payload.sub });
+    const user = await options.user(payload.sub);
     if (!user) {
       return new HttpResponseUnauthorized({
         code: 'invalid_token',

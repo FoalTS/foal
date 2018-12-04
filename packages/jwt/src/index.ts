@@ -1,1 +1,1 @@
-export { JWTRequired } from './jwt-required.hook';
+export { JWTOptions, JWTRequired } from './jwt-required.hook';

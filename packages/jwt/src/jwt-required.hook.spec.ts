@@ -3,39 +3,21 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  AbstractUser, Context, getHookFunction, Group,
-  isHttpResponseBadRequest, isHttpResponseUnauthorized, Permission, ServiceManager
+  Context, getHookFunction, isHttpResponseBadRequest,
+  isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
-import { Connection, createConnection, Entity, getRepository } from 'typeorm';
 
 // FoalTS
 import { JWTRequired } from './jwt-required.hook';
 
 describe('JWTRequired', () => {
 
-  @Entity()
-  class User extends AbstractUser { }
+  const user = { id: 1 };
 
-  const hook = getHookFunction(JWTRequired(User));
+  const fetchUser = async id => id === '1' ? user : null;
 
-  let connection: Connection;
-  let id: number;
-
-  before(async () => {
-    connection = await createConnection({
-      database: 'test_db.sqlite',
-      dropSchema: true,
-      entities: [User, Permission, Group],
-      synchronize: true,
-      type: 'sqlite',
-    });
-    const user = new User();
-    await getRepository(User).save(user);
-    id = user.id;
-  });
-
-  after(() => connection.close());
+  const hook = getHookFunction(JWTRequired({ user: fetchUser }));
 
   it('should throw if no secret is set in the Config.', async () => {
     let err: Error|undefined;
@@ -189,7 +171,7 @@ describe('JWTRequired', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
-      const hook = getHookFunction(JWTRequired(User, { audience: 'bar' }));
+      const hook = getHookFunction(JWTRequired({ user: fetchUser }, { audience: 'bar' }));
 
       const token = sign({}, secret, { audience: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -206,7 +188,7 @@ describe('JWTRequired', () => {
     });
 
     it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
-      const hook = getHookFunction(JWTRequired(User, { issuer: 'bar' }));
+      const hook = getHookFunction(JWTRequired({ user: fetchUser }, { issuer: 'bar' }));
 
       const token = sign({}, secret, { issuer: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -254,19 +236,18 @@ describe('JWTRequired', () => {
     });
 
     it('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
-      const jwt = sign({}, secret, { subject: id.toString() });
+      const jwt = sign({}, secret, { subject: user.id.toString() });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
       const services = new ServiceManager();
 
       await hook(ctx, services);
 
-      notStrictEqual(ctx.user, undefined);
-      strictEqual((ctx.user as AbstractUser).id, id);
+      strictEqual(ctx.user, user);
     });
 
     it('should return an HttpResponseUnauthorized object if a User entity was given and no'
         + ' user was found in the database with id=payload.sub.', async () => {
-      const jwt = sign({}, secret, { subject: id.toString() + '1' });
+      const jwt = sign({}, secret, { subject: user.id.toString() + '1' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
       const services = new ServiceManager();
 
