@@ -9,7 +9,7 @@ export interface JWTOptions {
   user?: (id: string|number) => Promise<any>;
 }
 
-export function JWT(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
+export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   return Hook(async (ctx, services) => {
     const secret = Config.get('jwt', 'secret') as string|undefined;
     if (!secret) {
@@ -17,6 +17,9 @@ export function JWT(options: JWTOptions = {}, verifyOptions: VerifyOptions = {})
     }
     const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
     if (!authorizationHeader) {
+      if (!required) {
+        return;
+      }
       return new HttpResponseBadRequest({
         code: 'invalid_request',
         description: 'Authorization header not found.'

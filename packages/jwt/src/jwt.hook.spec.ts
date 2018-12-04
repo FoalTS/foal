@@ -3,16 +3,16 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Context, getHookFunction, isHttpResponseBadRequest,
-  isHttpResponseUnauthorized, ServiceManager
+  Context, getHookFunction,
+  isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT } from './jwt.hook';
+import { JWTOptional } from './jwt-optional.hook';
+import { JWTRequired } from './jwt-required.hook';
 
-describe('JWT', () => {
-
+export function test(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
 
   const fetchUser = async id => id === '1' ? user : null;
@@ -43,19 +43,34 @@ describe('JWT', () => {
 
     after(() => process.env.JWT_SECRET = '');
 
-    it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
-      const ctx = new Context({ get(str: string) { return undefined; } });
-      const services = new ServiceManager();
+    if (required) {
 
-      const response = await hook(ctx, services);
-      if (!isHttpResponseBadRequest(response)) {
-        throw new Error('Response should be an instance of HttpResponseBadRequest.');
-      }
-      deepStrictEqual(response.body, {
-        code: 'invalid_request',
-        description: 'Authorization header not found.'
+      it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
+        const ctx = new Context({ get(str: string) { return undefined; } });
+        const services = new ServiceManager();
+
+        const response = await hook(ctx, services);
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('Response should be an instance of HttpResponseBadRequest.');
+        }
+        deepStrictEqual(response.body, {
+          code: 'invalid_request',
+          description: 'Authorization header not found.'
+        });
       });
-    });
+
+    } else {
+
+      it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
+        const ctx = new Context({ get(str: string) { return undefined; } });
+        const services = new ServiceManager();
+
+        const response = await hook(ctx, services);
+        strictEqual(response, undefined);
+        strictEqual(ctx.user, undefined);
+      });
+
+    }
 
     it('should return an HttpResponseBadRequest object if the Authorization header does '
       + 'not use the Bearer scheme.', async () => {
@@ -265,4 +280,4 @@ describe('JWT', () => {
 
   });
 
-});
+}
