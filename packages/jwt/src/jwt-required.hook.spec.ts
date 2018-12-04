@@ -1,5 +1,5 @@
 // FoalTS
 import { JWTRequired } from './jwt-required.hook';
-import { test } from './jwt.hook.spec';
+import { testSuite } from './jwt.hook.spec';
 
-describe('JWTRequired', () => test(JWTRequired, true));
+describe('JWTRequired', () => testSuite(JWTRequired, true));

@@ -12,7 +12,7 @@ import { sign } from 'jsonwebtoken';
 import { JWTOptional } from './jwt-optional.hook';
 import { JWTRequired } from './jwt-required.hook';
 
-export function test(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
+export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
 
   const fetchUser = async id => id === '1' ? user : null;

@@ -6,7 +6,7 @@ import {
 import { verify, VerifyOptions } from 'jsonwebtoken';
 
 export interface JWTOptions {
-  user?: (id: string|number) => Promise<any>;
+  user?: (id: string|number) => Promise<any|undefined>;
   blackList?: (token: string) => boolean|Promise<boolean>;
 }
 

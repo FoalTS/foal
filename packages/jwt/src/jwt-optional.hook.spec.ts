@@ -1,5 +1,5 @@
 // FoalTS
 import { JWTOptional } from './jwt-optional.hook';
-import { test } from './jwt.hook.spec';
+import { testSuite } from './jwt.hook.spec';
 
-describe('JWTOptional', () => test(JWTOptional, false));
+describe('JWTOptional', () => testSuite(JWTOptional, false));
