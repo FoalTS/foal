@@ -58,6 +58,8 @@ generate # Handles the commands `foal createapp` and `foal generate`
   '- utils # Contains some helpers shared by all the generators
 ```
 
+Usually components that do not rely on a third-party library are located in the `@foal/core` package.
+
 ## Conventions
 
 ### Import declarations
