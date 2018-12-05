@@ -32,16 +32,19 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     if (!err) {
       throw new Error('An error should be thrown since there is not secret.');
     }
-    strictEqual(err.message, 'You must provide a secret in jwt.json or in the JWT_SECRET environment variable.');
+    strictEqual(
+      err.message,
+      'You must provide a secret or a public key in jwt.json or in the JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+    );
   });
 
   describe('when a secret is set', () => {
 
     const secret = 'my_secret';
 
-    before(() => process.env.JWT_SECRET = 'my_secret');
+    before(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = 'my_secret');
 
-    after(() => process.env.JWT_SECRET = '');
+    after(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = '');
 
     if (required) {
 
