@@ -4,6 +4,6 @@
 
 # Checklist
 
-- [ ] Add/update/check docs.
+- [ ] Add/update/check docs (code comments and docs/ folder).
 - [ ] Add/update/check tests.
 - [ ] Update/check the cli generators.
