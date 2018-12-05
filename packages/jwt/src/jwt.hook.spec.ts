@@ -107,6 +107,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'jwt revoked'
       });
+      strictEqual(response.getHeader('WWW-Authenticate'), 'error="invalid_token", error_description="jwt revoked"');
     });
 
     it('should return an HttpResponseUnauthorized object if the token is not a JWT.', async () => {
@@ -121,6 +122,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'jwt malformed'
       });
+      strictEqual(response.getHeader('WWW-Authenticate'), 'error="invalid_token", error_description="jwt malformed"');
     });
 
     it('should return an HttpResponseUnauthorized object if the header is invalid.', async () => {
@@ -138,6 +140,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'invalid algorithm'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid algorithm"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the payload is invalid.', async () => {
@@ -155,6 +161,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'Unexpected token R in JSON at position 27'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="Unexpected token R in JSON at position 27"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
@@ -172,6 +182,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'invalid signature'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid signature"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
@@ -189,6 +203,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'invalid signature'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid signature"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the token is expired', async () => {
@@ -204,6 +222,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'jwt expired'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="jwt expired"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
@@ -221,6 +243,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'jwt audience invalid. expected: bar'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="jwt audience invalid. expected: bar"'
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
@@ -238,9 +264,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'jwt issuer invalid. expected: bar'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="jwt issuer invalid. expected: bar"'
+      );
     });
-
-    // TODO: test and add the headers WWW-Authenticate: error="invalid_token", error_description="jwt malformed"
 
     it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
       const hook = getHookFunction(JWT());
@@ -269,6 +297,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'The token must include a subject which is the id of the user.'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="The token must include a subject which is the id of the user."'
+      );
     });
 
     it('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
@@ -297,6 +329,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         code: 'invalid_token',
         description: 'The token subject does not match any user.'
       });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="The token subject does not match any user."'
+      );
     });
 
   });

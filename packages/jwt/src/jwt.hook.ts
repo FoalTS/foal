@@ -35,10 +35,12 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     if (options.blackList && await options.blackList(token)) {
-      return new HttpResponseUnauthorized({
+      const response = new HttpResponseUnauthorized({
         code: 'invalid_token',
         description: 'jwt revoked'
       });
+      response.setHeader('WWW-Authenticate', 'error="invalid_token", error_description="jwt revoked"');
+      return response;
     }
 
     let payload;
@@ -49,10 +51,12 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         });
       });
     } catch (error) {
-      return new HttpResponseUnauthorized({
+      const response = new HttpResponseUnauthorized({
         code: 'invalid_token',
         description: error.message
       });
+      response.setHeader('WWW-Authenticate', `error="invalid_token", error_description="${error.message}"`);
+      return response;
     }
 
     if (!options.user) {
@@ -61,18 +65,28 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     if (typeof payload.sub !== 'string') {
-      return new HttpResponseUnauthorized({
+      const response = new HttpResponseUnauthorized({
         code: 'invalid_token',
         description: 'The token must include a subject which is the id of the user.'
       });
+      response.setHeader(
+        'WWW-Authenticate',
+        'error="invalid_token", error_description="The token must include a subject which is the id of the user."'
+      );
+      return response;
     }
 
     const user = await options.user(payload.sub);
     if (!user) {
-      return new HttpResponseUnauthorized({
+      const response = new HttpResponseUnauthorized({
         code: 'invalid_token',
         description: 'The token subject does not match any user.'
       });
+      response.setHeader(
+        'WWW-Authenticate',
+        'error="invalid_token", error_description="The token subject does not match any user."'
+      );
+      return response;
     }
 
     ctx.user = user;
