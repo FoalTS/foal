@@ -44,6 +44,7 @@ You're good!
 Create new todos with the shell scripts and then run the application.
 
 ```
+npm run build:scripts
 foal run-script create-todo text="Read the docs"
 foal run-script create-todo text="Create my first application"
 foal run-script create-todo text="Write tests"
