@@ -12,9 +12,11 @@ export interface JWTOptions {
 
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   return Hook(async (ctx, services) => {
-    const secret = Config.get('jwt', 'secret') as string|undefined;
-    if (!secret) {
-      throw new Error('You must provide a secret in jwt.json or in the JWT_SECRET environment variable.');
+    const secretOrPublicKey = Config.get('jwt', 'secretOrPublicKey') as string|undefined;
+    if (!secretOrPublicKey) {
+      throw new Error(
+        'You must provide a secretOrPublicKey in jwt.json or in the JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+        );
     }
     const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
     if (!authorizationHeader) {
@@ -46,7 +48,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     let payload;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secret, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
