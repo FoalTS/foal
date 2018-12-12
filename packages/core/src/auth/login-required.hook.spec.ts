@@ -10,8 +10,8 @@ import {
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager,
-} from '../../core';
-import { AbstractUser } from '../entities';
+} from '../core';
+import { AbstractUser } from './entities';
 import { LoginRequired } from './login-required.hook';
 
 describe('LoginRequired', () => {

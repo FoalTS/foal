@@ -3,7 +3,7 @@ import {
   HookDecorator,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../core';
+} from '../core';
 
 export function LoginRequired(options: { redirect?: string } = {}): HookDecorator {
   return Hook(ctx => {

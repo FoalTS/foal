@@ -9,9 +9,9 @@ import {
   Context,
   getHookFunction,
   ServiceManager,
-} from '../../core';
-import { AbstractUser, Group, Permission } from '../entities';
+} from '../core';
 import { AuthenticateWithSessionAndCookie } from './authenticate.hook';
+import { AbstractUser, Group, Permission } from './entities';
 
 describe('AuthenticateWithSessionAndCookie', () => {
 

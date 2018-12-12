@@ -1,7 +1,7 @@
 import { getManager } from 'typeorm';
 
-import { Class, Hook, HookDecorator } from '../../core';
-import { AbstractUser } from '../entities';
+import { Class, Hook, HookDecorator } from '../core';
+import { AbstractUser } from './entities';
 
 export function AuthenticateWithSessionAndCookie(UserEntity: Class<AbstractUser>): HookDecorator {
   return Hook(async ctx => {
