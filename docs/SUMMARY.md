@@ -65,4 +65,6 @@
 
 ## API Reference
 
-* [@foal/core](./api/index.md)
+* [@foal/core](./api/core/api/index.md)
+* [@foal/ejs](./api/ejs/api/index.md)
+* [@foal/password](./api/password/api/index.md)

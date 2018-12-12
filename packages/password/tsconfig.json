@@ -13,7 +13,8 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "types": ["node"]
   },
   "include": [
     "./src/**/*.ts"

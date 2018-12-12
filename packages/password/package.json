@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
+    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/password",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.txt.gz\" lib && tsc -p tsconfig-build.json",
@@ -43,6 +44,7 @@
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "ts-docs-gen": "0.2.0"
   }
 }
