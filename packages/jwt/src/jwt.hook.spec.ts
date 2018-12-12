@@ -273,7 +273,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
-    it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
+    it('should set ctx.user with the decoded payload if no fetchUser was given.', async () => {
       const hook = getHookFunction(JWT());
 
       const jwt = sign({ foo: 'bar' }, secret, {});
@@ -286,7 +286,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       strictEqual((ctx.user as any).foo, 'bar');
     });
 
-    it('should return an HttpResponseUnauthorized object if there is no subject and a User entity'
+    it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
         + ' was given.', async () => {
       const token = sign({}, secret, {});
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
@@ -306,7 +306,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
-    it('should fetch the user from the database and set ctx.user if a User entity was given.', async () => {
+    it('should fetch the user from the database and set ctx.user if a fetchUser was given.', async () => {
       const jwt = sign({}, secret, { subject: user.id.toString() });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
       const services = new ServiceManager();
