@@ -75,65 +75,94 @@ export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, requ
       .catch(err => strictEqual(err.message, 'LoginRequired and LoginOptional hooks require session management.'));
   });
 
-  it('should return an HttpResponseUnauthorized object if the session does not have an '
-      + '`authentication.userId` property.', async () => {
-    let ctx = new Context({ session: {} });
-    let response = await hook(ctx, new ServiceManager());
+  if (required) {
 
-    ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
+    it('should return an HttpResponseUnauthorized object if the session does not have an '
+        + '`authentication.userId` property.', async () => {
+      let ctx = new Context({ session: {} });
+      let response = await hook(ctx, new ServiceManager());
 
-    ctx = new Context({ session: { authentication: {} } });
-    response = await hook(ctx, new ServiceManager());
+      ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
 
-    ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
-  });
+      ctx = new Context({ session: { authentication: {} } });
+      response = await hook(ctx, new ServiceManager());
 
-  it('should return an HttpResponseRedirect object if the session does not have an '
-      + '`authentication.userId` property and if options.redirect is defined.', async () => {
-    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
-
-    let ctx = new Context({ session: {} });
-    let response = await hook(ctx, new ServiceManager());
-
-    ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
-    strictEqual((response as HttpResponseRedirect).path, '/foo');
-
-    ctx = new Context({ session: { authentication: {} } });
-    response = await hook(ctx, new ServiceManager());
-
-    ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
-    strictEqual((response as HttpResponseRedirect).path, '/foo');
-  });
-
-  it('should return an HttpResponseUnauthorized object if no user matches the given userId.', async () => {
-    const ctx = new Context({
-      session: {
-        authentication: {
-          userId: 2
-        }
-      }
+      ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
     });
-    const response = await hook(ctx, new ServiceManager());
 
-    ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
-  });
+    it('should return an HttpResponseRedirect object if the session does not have an '
+        + '`authentication.userId` property and if options.redirect is defined.', async () => {
+      hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
 
-  it('should return an HttpResponseRedirect object if no user matches the given userId'
-      + ' and if options.redirect is defined.', async () => {
-    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+      let ctx = new Context({ session: {} });
+      let response = await hook(ctx, new ServiceManager());
 
-    const ctx = new Context({
-      session: {
-        authentication: {
-          userId: 2
-        }
-      }
+      ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
+      strictEqual((response as HttpResponseRedirect).path, '/foo');
+
+      ctx = new Context({ session: { authentication: {} } });
+      response = await hook(ctx, new ServiceManager());
+
+      ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
+      strictEqual((response as HttpResponseRedirect).path, '/foo');
     });
-    const response = await hook(ctx, new ServiceManager());
 
-    ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
-    strictEqual((response as HttpResponseRedirect).path, '/foo');
-  });
+    it('should return an HttpResponseUnauthorized object if no user matches the given userId.', async () => {
+      const ctx = new Context({
+        session: {
+          authentication: {
+            userId: 2
+          }
+        }
+      });
+      const response = await hook(ctx, new ServiceManager());
+
+      ok(isHttpResponseUnauthorized(response), 'The response should be an instance of HttpResponseUnauthorized');
+    });
+
+    it('should return an HttpResponseRedirect object if no user matches the given userId'
+        + ' and if options.redirect is defined.', async () => {
+      hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+
+      const ctx = new Context({
+        session: {
+          authentication: {
+            userId: 2
+          }
+        }
+      });
+      const response = await hook(ctx, new ServiceManager());
+
+      ok(isHttpResponseRedirect(response), 'The response should be an instance of HttpResponseRedirect');
+      strictEqual((response as HttpResponseRedirect).path, '/foo');
+    });
+
+  } else {
+
+    it('should return undefined and assign undefined to ctx.user if the session does not have an '
+        + '`authentication.userId` property.', async () => {
+      const ctx = new Context({ session: {} });
+      const response = await hook(ctx, new ServiceManager());
+
+      strictEqual(response, undefined);
+      strictEqual(ctx.user, undefined);
+    });
+
+    it('should return undefined and assign undefined to ctx.user if no user matches the given userId.', async () => {
+      const ctx = new Context({
+        session: {
+          authentication: {
+            userId: 2
+          }
+        }
+      });
+      const response = await hook(ctx, new ServiceManager());
+
+      strictEqual(response, undefined);
+      strictEqual(ctx.user, undefined);
+    });
+
+  }
 
   it('should return undefined and set ctx.user if a user matches the given id.', async () => {
     const ctx = new Context({

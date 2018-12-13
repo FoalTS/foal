@@ -18,6 +18,9 @@ export function Login(required: boolean,
       throw new Error('LoginRequired and LoginOptional hooks require session management.');
     }
     if (!ctx.request.session.authentication || !ctx.request.session.authentication.hasOwnProperty('userId')) {
+      if (!required) {
+        return;
+      }
       return options.redirect ? new HttpResponseRedirect(options.redirect) : new HttpResponseUnauthorized();
     }
     const user = await getManager().findOne(
@@ -26,6 +29,9 @@ export function Login(required: boolean,
       { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }
     );
     if (!user) {
+      if (!required) {
+        return;
+      }
       return options.redirect ? new HttpResponseRedirect(options.redirect) : new HttpResponseUnauthorized();
     }
     ctx.user = user;
