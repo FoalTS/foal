@@ -8,7 +8,6 @@ import { Column, createConnection, Entity, getConnection, getRepository } from '
 // FoalTS
 import {
   AbstractUser,
-  AuthenticateWithSessionAndCookie,
   createApp,
   EmailAuthenticator,
   emailSchema,
@@ -24,9 +23,18 @@ import {
 } from '../src';
 
 it('Authentication and authorization', async () => {
+  @Entity()
+  class User extends AbstractUser {
+    @Column({ unique: true })
+    email: string;
+
+    @Column()
+    password: string;
+  }
+
+  @LoginRequired({ userEntity: User })
   class MyController {
     @Get('/foo')
-    @LoginRequired()
     foo() {
       return new HttpResponseOK();
     }
@@ -36,15 +44,6 @@ it('Authentication and authorization', async () => {
     bar() {
       return new HttpResponseOK();
     }
-  }
-
-  @Entity()
-  class User extends AbstractUser {
-    @Column({ unique: true })
-    email: string;
-
-    @Column()
-    password: string;
   }
 
   class Authenticator extends EmailAuthenticator<User> {
@@ -57,7 +56,6 @@ it('Authentication and authorization', async () => {
     ];
   }
 
-  @AuthenticateWithSessionAndCookie(User)
   class AppController {
     subControllers = [
       MyController,

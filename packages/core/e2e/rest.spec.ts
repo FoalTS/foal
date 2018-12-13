@@ -17,7 +17,6 @@ import {
 // FoalTS
 import {
   AbstractUser,
-  AuthenticateWithSessionAndCookie,
   controller,
   createApp,
   dependency,
@@ -119,13 +118,13 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     }
   }
 
-  @LoginRequired()
+  @LoginRequired({ userEntity: User })
   class UserController extends RestController {
     @dependency
     collection: UserCollection;
   }
 
-  @LoginRequired()
+  @LoginRequired({ userEntity: User })
   class OrgController extends RestController {
     @dependency
     collection: OrgCollection;
@@ -137,7 +136,6 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     ];
   }
 
-  @AuthenticateWithSessionAndCookie(User)
   class AppController {
     subControllers = [
       controller('/users', UserController),
