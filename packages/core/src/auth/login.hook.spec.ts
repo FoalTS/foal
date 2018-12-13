@@ -63,7 +63,7 @@ describe('Login', () => {
   afterEach(() => getConnection().close());
 
   beforeEach(() => {
-    hook = getHookFunction(Login({ userEntity: User }));
+    hook = getHookFunction(Login(true, { userEntity: User }));
   });
 
   it('should throw an Error if there is no session.', () => {
@@ -89,7 +89,7 @@ describe('Login', () => {
 
   it('should return an HttpResponseRedirect object if the session does not have an '
       + '`authentication.userId` property and if options.redirect is defined.', async () => {
-    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+    hook = getHookFunction(Login(true, { redirect: '/foo', userEntity: User }));
 
     let ctx = new Context({ session: {} });
     let response = await hook(ctx, new ServiceManager());
@@ -119,7 +119,7 @@ describe('Login', () => {
 
   it('should return an HttpResponseRedirect object if no user matches the given userId'
       + ' and if options.redirect is defined.', async () => {
-    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+    hook = getHookFunction(Login(true, { redirect: '/foo', userEntity: User }));
 
     const ctx = new Context({
       session: {

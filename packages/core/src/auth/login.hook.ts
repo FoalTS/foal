@@ -11,7 +11,8 @@ import {
 } from '../core';
 import { AbstractUser } from './entities';
 
-export function Login(options: { redirect?: string, userEntity: Class<AbstractUser> }): HookDecorator {
+export function Login(required: boolean,
+                      options: { redirect?: string, userEntity: Class<AbstractUser> }): HookDecorator {
   return Hook(async ctx => {
     if (!ctx.request.session) {
       throw new Error('LoginRequired hook requires session management.');
