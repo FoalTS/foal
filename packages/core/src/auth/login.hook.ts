@@ -15,7 +15,7 @@ export function Login(required: boolean,
                       options: { redirect?: string, userEntity: Class<AbstractUser> }): HookDecorator {
   return Hook(async ctx => {
     if (!ctx.request.session) {
-      throw new Error('LoginRequired hook requires session management.');
+      throw new Error('LoginRequired and LoginOptional hooks require session management.');
     }
     if (!ctx.request.session.authentication || !ctx.request.session.authentication.hasOwnProperty('userId')) {
       return options.redirect ? new HttpResponseRedirect(options.redirect) : new HttpResponseUnauthorized();
