@@ -15,9 +15,9 @@ import {
   ServiceManager,
 } from '../core';
 import { AbstractUser, Group, Permission } from './entities';
-import { LoginRequired } from './login-required.hook';
+import { Login } from './login.hook';
 
-describe('LoginRequired', () => {
+describe('Login', () => {
     // Optional : should return undefined and assign undefined to ctx.user;
   let hook: HookFunction;
 
@@ -63,7 +63,7 @@ describe('LoginRequired', () => {
   afterEach(() => getConnection().close());
 
   beforeEach(() => {
-    hook = getHookFunction(LoginRequired({ userEntity: User }));
+    hook = getHookFunction(Login({ userEntity: User }));
   });
 
   it('should throw an Error if there is no session.', () => {
@@ -71,7 +71,7 @@ describe('LoginRequired', () => {
 
     return (hook(ctx, new ServiceManager()) as Promise<any>)
       .then(() => fail('The promise should be rejected'))
-      .catch(err => strictEqual(err.message, 'LoginRequired hook requires session management.'));
+      .catch(err => strictEqual(err.message, 'Login hook requires session management.'));
   });
 
   it('should return an HttpResponseUnauthorized object if the session does not have an '
@@ -89,7 +89,7 @@ describe('LoginRequired', () => {
 
   it('should return an HttpResponseRedirect object if the session does not have an '
       + '`authentication.userId` property and if options.redirect is defined.', async () => {
-    hook = getHookFunction(LoginRequired({ redirect: '/foo', userEntity: User }));
+    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
 
     let ctx = new Context({ session: {} });
     let response = await hook(ctx, new ServiceManager());
@@ -119,7 +119,7 @@ describe('LoginRequired', () => {
 
   it('should return an HttpResponseRedirect object if no user matches the given userId'
       + ' and if options.redirect is defined.', async () => {
-    hook = getHookFunction(LoginRequired({ redirect: '/foo', userEntity: User }));
+    hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
 
     const ctx = new Context({
       session: {
