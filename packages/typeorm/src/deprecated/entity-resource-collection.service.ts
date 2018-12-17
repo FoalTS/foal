@@ -5,7 +5,6 @@ import {
   IResourceCollection,
   ObjectDoesNotExist,
   PermissionDenied,
-  UserWithPermissions
 } from '@foal/core';
 import { getManager } from 'typeorm';
 

@@ -3,8 +3,11 @@ import { pbkdf2 } from 'crypto';
 import { promisify } from 'util';
 
 // 3p
-import { Class, IAuthenticator, UserWithPermissions } from '@foal/core';
+import { Class, IAuthenticator } from '@foal/core';
 import { getManager } from 'typeorm';
+
+// FoalTS
+import { UserWithPermissions } from '../entities';
 
 export interface EmailUser extends UserWithPermissions {
   email: string;
