@@ -1,6 +1,10 @@
-// 3p
+// std
 import { notStrictEqual, strictEqual } from 'assert';
+
+// 3p
 import { Column, createConnection, Entity, getConnection, getManager, PrimaryGeneratedColumn } from 'typeorm';
+
+// FoalTS
 import { fetchUser } from './fetch-user.util';
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {

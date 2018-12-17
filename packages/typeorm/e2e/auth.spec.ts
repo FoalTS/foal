@@ -2,16 +2,10 @@
 import { ok } from 'assert';
 
 // 3p
-import * as request from 'supertest';
-import { Column, createConnection, Entity, getConnection, getRepository } from 'typeorm';
-
-// FoalTS
 import {
-  UserWithPermissions,
   createApp,
   EmailAuthenticator,
   emailSchema,
-  fetchUserWithPermissions,
   Get,
   Group,
   HttpResponseOK,
@@ -20,7 +14,15 @@ import {
   parsePassword,
   Permission,
   PermissionRequired,
-  strategy
+  strategy,
+  UserWithPermissions,
+} from '@foal/core';
+import * as request from 'supertest';
+import { Column, createConnection, Entity, getConnection, getRepository } from 'typeorm';
+
+// FoalTS
+import {
+  fetchUserWithPermissions,
 } from '../src';
 
 it('Authentication and authorization', async () => {

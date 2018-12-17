@@ -16,7 +16,6 @@ import {
 
 // FoalTS
 import {
-  UserWithPermissions,
   controller,
   createApp,
   dependency,
@@ -30,6 +29,7 @@ import {
   Permission,
   RestController,
   strategy,
+  UserWithPermissions,
 } from '../src';
 
 xit('REST API with RestController and EntityResourceCollection', async () => {

@@ -1,7 +1,11 @@
-// 3p
+// std
 import { notStrictEqual, ok, strictEqual } from 'assert';
+
+// 3p
+import { Group, Permission, UserWithPermissions } from '@foal/core';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
-import { Group, Permission, UserWithPermissions } from '../../auth';
+
+// FoalTS
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 
 function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {

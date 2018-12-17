@@ -1,6 +1,6 @@
-// FoalTS
+// 3p
+import { Class } from '@foal/core';
 import { getRepository } from 'typeorm';
-import { Class } from '../../core';
 
 export function fetchUserWithPermissions(
       userEntityClass: Class<{ id: number|string }>
