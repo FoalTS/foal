@@ -1,7 +1,7 @@
 // 3p
 import { notStrictEqual, ok, strictEqual } from 'assert';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
-import { UserWithPermissions, Group, Permission } from '../../auth';
+import { Group, Permission, UserWithPermissions } from '../../auth';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 
 function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {

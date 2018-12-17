@@ -12,7 +12,7 @@ import {
   HttpResponseUnauthorized,
   ServiceManager,
 } from '../../core';
-import { UserWithPermissions, Permission } from '../entities';
+import { Permission, UserWithPermissions } from '../entities';
 import { PermissionRequired } from './permission-required.hook';
 
 describe('PermissionRequired', () => {

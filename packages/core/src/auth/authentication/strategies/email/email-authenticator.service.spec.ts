@@ -5,7 +5,7 @@ import { fail, strictEqual } from 'assert';
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
-import { UserWithPermissions, Group, Permission } from '../../../entities';
+import { Group, Permission, UserWithPermissions } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
 describe('EmailAuthenticator', () => {

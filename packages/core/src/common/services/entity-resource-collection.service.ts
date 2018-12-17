@@ -5,7 +5,8 @@ import { Class } from '../../core';
 import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 
-export type Middleware = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => any;
+export type Middleware =
+  (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => any;
 export type RelationLoader = (user: UserWithPermissions|undefined, params: CollectionParams) => string[];
 
 export function middleware(operations: string, middleware: Middleware):
@@ -153,7 +154,8 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return resources.map(resource => this.getRepresentation(resource, params.fields as string[]));
   }
 
-  async modifyById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] }): Promise<object> {
+  async modifyById(user: UserWithPermissions|undefined,
+                   id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('modifyById')) {
       throw new PermissionDenied();
     }
@@ -181,7 +183,8 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(result, params.fields);
   }
 
-  async updateById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] }): Promise<object> {
+  async updateById(user: UserWithPermissions|undefined,
+                   id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
     }
