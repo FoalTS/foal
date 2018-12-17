@@ -1,8 +1,6 @@
-import { UserWithPermissions } from '../../auth';
-
-export class Context<User extends UserWithPermissions = UserWithPermissions> {
+export class Context<User = any> {
   state: { [key: string]: any } = {};
-  user: User|undefined = undefined;
+  user: User;
 
   constructor(public request) {}
 }
