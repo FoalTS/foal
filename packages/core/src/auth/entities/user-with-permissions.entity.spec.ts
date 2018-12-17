@@ -5,9 +5,9 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
-import { UserWithPermissions } from './abstract-user.entity';
 import { Group } from './group.entity';
 import { Permission } from './permission.entity';
+import { UserWithPermissions } from './user-with-permissions.entity';
 
 describe('UserWithPermissions', () => {
 
