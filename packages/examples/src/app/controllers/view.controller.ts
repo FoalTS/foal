@@ -1,8 +1,8 @@
-import { Context, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
+import { Context, fetchUserWithPermissions, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
 
 import { User } from '../entities';
 
-@LoginRequired({ userEntity: User, redirect: '/login' })
+@LoginRequired({ user: fetchUserWithPermissions(User), redirect: '/login' })
 export class ViewController {
 
   @Get('/')
