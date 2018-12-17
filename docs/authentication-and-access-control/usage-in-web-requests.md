@@ -1,13 +1,13 @@
 # Usage in Web Requests
 
-FoalTS uses sessions and the `AuthenticateWithSessionAndCookie` hook to authenticate users accross several requests.
+FoalTS uses sessions and the `LoginRequired` and `LoginOptional` hooks to authenticate users accross several requests.
 
-## The `AuthenticateWithSessionAndCookie` Hook
+## The `LoginOptional` Hook
 
-It should decorate the `AppController`. If the user has already logged in in a previous request, then it will be available in the `context` with which the controller methods are called.
+If the user has already logged in in a previous request, then it will be available in the `context` with which the controller methods are called.
 
 ```ts
-@AuthenticateWithSessionAndCookie(User)
+@LoginOptional({ user: fetchUser(User) })
 export class AppController {
   @Get('/foo')
   foo(ctx: Context) {
@@ -15,6 +15,8 @@ export class AppController {
   }
 }
 ```
+
+> `fetchUser` takes an id as argument, fetches the user from the database and returns an instance of `User` (or `undefined` if not user matches the given id). You can provide your own `fetchUser`. The built-in `fetchUserWithPermissions` lets you use the `Abstract.hasPerm` method and the `PermissionRequired` hook.
 
 ## How to Log a User In or Out
 
@@ -35,7 +37,7 @@ logOut(ctx);
 
 ### The LoginRequired Hook
 
-When no user is authenticated, the `LoginRequired(options?: { redirect?: string })` hook:
+When no user is authenticated, the `LoginRequired(options?: { redirect?: string, user: (id: number|string) => Promise<any> })` hook:
 - returns a `401 Unauthorized` if `options.redirect` is undefined,
 - redirects the page to the given path if `options.redirect` is defined.
 
