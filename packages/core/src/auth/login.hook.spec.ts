@@ -11,10 +11,9 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager,
 } from '../core';
-import { LoginOptional } from './login-optional.hook';
 import { LoginRequired } from './login-required.hook';
 
-export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, required: boolean) {
+export function testSuite(Login: typeof LoginRequired, required: boolean) {
 
   let hook: HookFunction;
 
