@@ -1,8 +1,8 @@
-import { AbstractUser/*, parsePassword*/ } from '@foal/core';
+import { UserWithPermissions/*, parsePassword*/ } from '@foal/core';
 import { /*Column, */Entity } from 'typeorm';
 
 @Entity()
-export class User extends AbstractUser {
+export class User extends UserWithPermissions {
 
   // @Column({ unique: true })
   // email: string;

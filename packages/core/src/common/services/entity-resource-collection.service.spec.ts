@@ -14,7 +14,7 @@ import {
 } from 'typeorm';
 
 // FoalTS
-import { AbstractUser } from '../../auth';
+import { UserWithPermissions } from '../../auth';
 import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { EntityResourceCollection, middleware, Middleware } from './entity-resource-collection.service';
 
@@ -197,7 +197,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.create({} as AbstractUser, {
+        await service.create({} as UserWithPermissions, {
           firstName: 'Victor',
           lastName: 'Hugo',
         }, {});
@@ -227,7 +227,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const data = {
           firstName: 'Victor',
           lastName: 'Hugo',
@@ -430,7 +430,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.findById({} as AbstractUser, user1.id, {});
+        await service.findById({} as UserWithPermissions, user1.id, {});
 
         strictEqual(str, 'ab');
       });
@@ -464,7 +464,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const params = {};
 
         await service.findById(user, user1.id, params);
@@ -522,7 +522,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service2 = new UserService2();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const params = {};
 
         const result2 = await service2.findById(user, user2.id, params);
@@ -609,7 +609,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.find({} as AbstractUser, {});
+        await service.find({} as UserWithPermissions, {});
 
         strictEqual(str, 'ab');
       });
@@ -643,7 +643,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const params = {};
 
         await service.find(user, params);
@@ -721,7 +721,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service2 = new UserService2();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const params = { query: { firstName: 'Victor' } };
 
         result = await service2.find(user, params);
@@ -832,7 +832,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.modifyById({} as AbstractUser, user1.id, {
+        await service.modifyById({} as UserWithPermissions, user1.id, {
           isAdmin: false
         }, {});
 
@@ -868,7 +868,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const data = {
           isAdmin: false
         };
@@ -998,7 +998,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.updateById({} as AbstractUser, user1.id, {
+        await service.updateById({} as UserWithPermissions, user1.id, {
           isAdmin: false
         }, {});
 
@@ -1034,7 +1034,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const data = {
           isAdmin: false
         };
@@ -1164,7 +1164,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        await service.deleteById({} as AbstractUser, user1.id, {});
+        await service.deleteById({} as UserWithPermissions, user1.id, {});
 
         strictEqual(str, 'ab');
       });
@@ -1198,7 +1198,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite', connectionName: 
         }
         const service = new UserService();
 
-        const user = {} as AbstractUser;
+        const user = {} as UserWithPermissions;
         const params = {};
 
         await service.deleteById(user, user1.id, params);

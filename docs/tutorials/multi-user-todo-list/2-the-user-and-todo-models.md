@@ -4,16 +4,16 @@ First delete the `db.sqlite3` database from the root directory. You will define 
 
 ## The User Model
 
-Then open the `user.entity.ts` file from the `src/app/entities` directory. The `User` entity is the main class used by the framework's authentication system. It extends the `AbstractUser` class which contains methods and properties useful for handling complex access controls.
+Then open the `user.entity.ts` file from the `src/app/entities` directory. The `User` entity is the main class used by the framework's authentication system. It extends the `UserWithPermissions` class which contains methods and properties useful for handling complex access controls.
 
 Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
-import { AbstractUser, parsePassword } from '@foal/core';
+import { UserWithPermissions, parsePassword } from '@foal/core';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class User extends AbstractUser {
+export class User extends UserWithPermissions {
 
   @Column({ unique: true })
   email: string;

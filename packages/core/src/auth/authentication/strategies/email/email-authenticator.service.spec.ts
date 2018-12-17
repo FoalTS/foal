@@ -5,13 +5,13 @@ import { fail, strictEqual } from 'assert';
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
-import { AbstractUser, Group, Permission } from '../../../entities';
+import { UserWithPermissions, Group, Permission } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
 describe('EmailAuthenticator', () => {
 
   @Entity()
-  class User extends AbstractUser {
+  class User extends UserWithPermissions {
     @Column({ unique: true })
     email: string;
 

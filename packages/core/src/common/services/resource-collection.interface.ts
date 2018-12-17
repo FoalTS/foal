@@ -1,4 +1,4 @@
-import { AbstractUser } from '../../auth';
+import { UserWithPermissions } from '../../auth';
 
 /**
  * Service interface. Create, read, update or delete resources and return representations of them.
@@ -7,15 +7,15 @@ import { AbstractUser } from '../../auth';
  * @interface IResourceCollection
  */
 export interface IResourceCollection {
-  create(user: AbstractUser|undefined, data: object, params: { fields?: string[] });
+  create(user: UserWithPermissions|undefined, data: object, params: { fields?: string[] });
 
-  find(user: AbstractUser|undefined, params: { query?: object, fields?: string[] });
-  findById(user: AbstractUser|undefined, id, params: { fields?: string[] });
+  find(user: UserWithPermissions|undefined, params: { query?: object, fields?: string[] });
+  findById(user: UserWithPermissions|undefined, id, params: { fields?: string[] });
 
-  modifyById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
-  updateById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
+  modifyById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
+  updateById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
 
-  deleteById(user: AbstractUser|undefined, id, params: {});
+  deleteById(user: UserWithPermissions|undefined, id, params: {});
 }
 
 export interface CollectionParams {

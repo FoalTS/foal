@@ -7,7 +7,7 @@ import { Column, createConnection, Entity, getConnection, getRepository } from '
 
 // FoalTS
 import {
-  AbstractUser,
+  UserWithPermissions,
   createApp,
   EmailAuthenticator,
   emailSchema,
@@ -25,7 +25,7 @@ import {
 
 it('Authentication and authorization', async () => {
   @Entity()
-  class User extends AbstractUser {
+  class User extends UserWithPermissions {
     @Column({ unique: true })
     email: string;
 

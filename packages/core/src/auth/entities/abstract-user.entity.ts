@@ -5,7 +5,7 @@ import { JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Group } from './group.entity';
 import { Permission } from './permission.entity';
 
-export abstract class AbstractUser {
+export abstract class UserWithPermissions {
 
   @PrimaryGeneratedColumn()
   id: number;

@@ -16,7 +16,7 @@ import {
 
 // FoalTS
 import {
-  AbstractUser,
+  UserWithPermissions,
   controller,
   createApp,
   dependency,
@@ -81,7 +81,7 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
   }
 
   @Entity()
-  class User extends AbstractUser {
+  class User extends UserWithPermissions {
     @Column()
     name: string;
 

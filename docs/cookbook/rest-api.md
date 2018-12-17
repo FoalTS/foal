@@ -15,15 +15,15 @@ foal g controller flight
 
 ```typescript
 interface IResourceCollection {
-  create(user: AbstractUser|undefined, data: object, params: { fields?: string[] });
+  create(user: UserWithPermissions|undefined, data: object, params: { fields?: string[] });
 
-  find(user: AbstractUser|undefined, params: { query?: object, fields?: string[] });
-  findById(user: AbstractUser|undefined, id, params: { fields?: string[] });
+  find(user: UserWithPermissions|undefined, params: { query?: object, fields?: string[] });
+  findById(user: UserWithPermissions|undefined, id, params: { fields?: string[] });
 
-  modifyById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
-  updateById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
+  modifyById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
+  updateById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
 
-  deleteById(user: AbstractUser|undefined, id, params: {});
+  deleteById(user: UserWithPermissions|undefined, id, params: {});
 }
 ```
 
@@ -68,14 +68,14 @@ The service also provides `middlewares` to handle authorization, input validatio
 ```typescript
 ...
 
-const restrictToAdminUsers = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const restrictToAdminUsers = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
   const user = context.user;
   if (!user || !user.hasPerm('admin-perm')) {
     throw new PermissionDenied()
   }
 }
 
-const validateData = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const validateData = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
   if (typeof context.data.myNum !== 'number') {
     throw new ValidationError({
       message: 'myNum should be a number'
@@ -83,7 +83,7 @@ const validateData = (context: { user: AbstractUser|undefined, resource, data, p
   }
 }
 
-const onlyReturnName = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const onlyReturnName = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
   params.fields = [ 'name' ];
 }
 

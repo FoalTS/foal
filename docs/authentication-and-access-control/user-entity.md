@@ -4,9 +4,9 @@
 
 The `User` entity is the core of the authentication and authorization system. It is a class that represents the `user` table in the database and each of its instances represents a row in this table.
 
-The class definition is usually located in the file `src/app/entities/user.entity.ts`. Its attributes represent the columns of the table. It extends the `AbstractUser` which has some useful utilities to handle authentication and authorization.
+The class definition is usually located in the file `src/app/entities/user.entity.ts`. Its attributes represent the columns of the table. It extends the `UserWithPermissions` which has some useful utilities to handle authentication and authorization.
 
-The primary attributes of the `AbstractUser` are:
+The primary attributes of the `UserWithPermissions` are:
 
 | Property name | Type | Database Link |
 | --- | --- | --- |
@@ -87,11 +87,11 @@ This section describes how to handle authentication with an email and a password
 Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a password.
 
 ```typescript
-import { AbstractUser, parsePassword } from '@foal/core';
+import { UserWithPermissions, parsePassword } from '@foal/core';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 ​
 @Entity()
-export class User extends AbstractUser {
+export class User extends UserWithPermissions {
 ​
   @PrimaryGeneratedColumn()
   id: number;

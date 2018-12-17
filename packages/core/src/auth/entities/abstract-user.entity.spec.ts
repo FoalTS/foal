@@ -5,14 +5,14 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
-import { AbstractUser } from './abstract-user.entity';
+import { UserWithPermissions } from './abstract-user.entity';
 import { Group } from './group.entity';
 import { Permission } from './permission.entity';
 
-describe('AbstractUser', () => {
+describe('UserWithPermissions', () => {
 
   @Entity()
-  class User extends AbstractUser {}
+  class User extends UserWithPermissions {}
 
   beforeEach(() => createConnection({
     database: 'test',

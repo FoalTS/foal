@@ -1,7 +1,7 @@
 // 3p
 import { notStrictEqual, ok, strictEqual } from 'assert';
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
-import { AbstractUser, Group, Permission } from '../../auth';
+import { UserWithPermissions, Group, Permission } from '../../auth';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 
 function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
@@ -9,7 +9,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
   describe(`with ${type}`, () => {
 
     @Entity()
-    class User extends AbstractUser { }
+    class User extends UserWithPermissions { }
 
     let user: User;
 

@@ -12,14 +12,14 @@ import {
   HttpResponseUnauthorized,
   ServiceManager,
 } from '../../core';
-import { AbstractUser, Permission } from '../entities';
+import { UserWithPermissions, Permission } from '../entities';
 import { PermissionRequired } from './permission-required.hook';
 
 describe('PermissionRequired', () => {
 
   let preHook: HookFunction;
 
-  class User extends AbstractUser {}
+  class User extends UserWithPermissions {}
 
   before(() => {
     preHook = getHookFunction(PermissionRequired('bar'));

@@ -3,10 +3,10 @@ import { getManager } from 'typeorm';
 import { promisify } from 'util';
 
 import { Class } from '../../../../core';
-import { AbstractUser } from '../../../entities';
+import { UserWithPermissions } from '../../../entities';
 import { IAuthenticator } from '../../authenticator.interface';
 
-export interface EmailUser extends AbstractUser {
+export interface EmailUser extends UserWithPermissions {
   email: string;
   password: string;
 }
