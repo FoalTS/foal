@@ -41,6 +41,7 @@
   * [REST API](./cookbook/rest-api.md)
   * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
+  * [404 Page](./cookbook/404-page.md)
 * [Architecture](./architecture/introduction.md)
   * [Request Lifecycle](./architecture/request-lifecycle.md)
   * [Controllers](./architecture/controllers.md)
