@@ -1,10 +1,10 @@
+// std
 import { pbkdf2 } from 'crypto';
-import { getManager } from 'typeorm';
 import { promisify } from 'util';
 
-import { Class } from '../../../../core';
-import { UserWithPermissions } from '../../../entities';
-import { IAuthenticator } from '../../authenticator.interface';
+// 3p
+import { Class, IAuthenticator, UserWithPermissions } from '@foal/core';
+import { getManager } from 'typeorm';
 
 export interface EmailUser extends UserWithPermissions {
   email: string;

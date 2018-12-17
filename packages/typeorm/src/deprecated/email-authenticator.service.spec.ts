@@ -2,10 +2,10 @@
 import { fail, strictEqual } from 'assert';
 
 // 3p
+import { Group, Permission, UserWithPermissions } from '@foal/core';
 import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
-import { Group, Permission, UserWithPermissions } from '../../../entities';
 import { EmailAuthenticator } from './email-authenticator.service';
 
 describe('EmailAuthenticator', () => {
