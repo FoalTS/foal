@@ -1,5 +1,3 @@
-import { UserWithPermissions } from '../../auth';
-
 /**
  * Service interface. Create, read, update or delete resources and return representations of them.
  *

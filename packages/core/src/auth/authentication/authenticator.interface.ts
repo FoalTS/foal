@@ -1,5 +1,3 @@
-import { UserWithPermissions } from '../entities';
-
-export interface IAuthenticator<User extends UserWithPermissions = UserWithPermissions> {
+export interface IAuthenticator<User = any> {
   authenticate(credentials: any): User | null | Promise<User|null>;
 }

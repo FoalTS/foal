@@ -13,7 +13,6 @@ import {
   HttpResponseRedirect,
   HttpResponseUnauthorized,
 } from '../../core';
-import { UserWithPermissions } from '../entities';
 import { IAuthenticator } from './authenticator.interface';
 import { LoginController, strategy } from './login.controller';
 
@@ -113,7 +112,7 @@ describe('LoginController', () => {
         if (credentials.hasOwnProperty('additionalField')) {
           throw new Error('authenticate was called with an unexpected additional field.');
         }
-        return credentials.email === 'john@foalts.org' ? { id: 1 } as UserWithPermissions : null;
+        return credentials.email === 'john@foalts.org' ? { id: 1 } : null;
       }
 
     }
