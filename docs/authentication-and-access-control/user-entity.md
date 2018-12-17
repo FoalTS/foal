@@ -87,7 +87,8 @@ This section describes how to handle authentication with an email and a password
 Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a password.
 
 ```typescript
-import { UserWithPermissions, parsePassword } from '@foal/core';
+import { parsePassword } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 ​
 @Entity()
@@ -108,7 +109,7 @@ export class User extends UserWithPermissions {
   }​
 }
 
-export { Group, Permission } from '@foal/core';
+export { Group, Permission } from '@foal/typeorm';
 
 ```
 
@@ -139,7 +140,7 @@ foal g service authenticator
 ```
 
 ```typescript
-import { EmailAuthenticator } from '@foal/core';
+import { EmailAuthenticator } from '@foal/typeorm';
 
 import { User } from '../entities';
 
@@ -154,7 +155,8 @@ You can now call the method `authenticate({ email, password }): Promise<User|nul
 *Example*
 
 ```typescript
-import { Context, dependency, emailSchema, HttpResponseOK, Post } from '@foal/core';
+import { Context, dependency, HttpResponseOK, Post } from '@foal/core';
+import { emailSchema } from '@foal/typeorm';
 
 import { Authenticator } from '../services';
 

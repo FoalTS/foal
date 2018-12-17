@@ -9,7 +9,8 @@ Then open the `user.entity.ts` file from the `src/app/entities` directory. The `
 Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
-import { UserWithPermissions, parsePassword } from '@foal/core';
+import { parsePassword } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
@@ -27,7 +28,7 @@ export class User extends UserWithPermissions {
 
 }
 
-export { Group, Permission } from '@foal/core';
+export { Group, Permission } from '@foal/typeorm';
 ```
 
 The `setPassword` method uses `parsePassword` to encrypt passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.

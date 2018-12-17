@@ -107,7 +107,8 @@ foal g controller auth --register
 
 Replace the content with:
 ```typescript
-import { emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { Get, LoginController, render, strategy } from '@foal/core';
+import { emailSchema } from '@foal/typeorm';
 ​​
 import { Authenticator } from '../services/authenticator.service';
 

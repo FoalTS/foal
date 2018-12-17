@@ -12,7 +12,8 @@ Open `index.ts` in `src/e2e` and replace its content.
 import { ok } from 'assert';
 
 // 3p
-import { createApp, Group, Permission } from '@foal/core';
+import { createApp } from '@foal/core';
+import { Group, Permission } from '@foal/typeorm';
 import * as request from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
 

@@ -13,7 +13,7 @@ If there are only two categories of users, administrators and non-administrators
 *Example*
 ```typescript
 // src/app/entities/user.entity.ts
-import { UserWithPermissions } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
@@ -50,7 +50,7 @@ If it exists more than two categories and/or a user can belong to several catego
 *Example*
 ```typescript
 // src/app/entities/user.entity.ts
-import { UserWithPermissions } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity } from 'typeorm';
 
 @Entity()

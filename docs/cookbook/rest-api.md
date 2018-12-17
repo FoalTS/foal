@@ -45,7 +45,7 @@ foal g service flight
 ```
 
 ```typescript
-import { EntityResourceCollection } from '@foal/core';
+import { EntityResourceCollection } from '@foal/typeorm';
 
 import { Flight } from '../entities/flight.entity';
 
@@ -172,7 +172,7 @@ export class Todo {
 
 ```typescript
 // flight-collection.service.ts
-import { EntityResourceCollection, middleware, validate } from '@foal/core';
+import { EntityResourceCollection, middleware, validate } from '@foal/typeorm';
 
 import { Flight } from '../entities';
 
@@ -199,7 +199,8 @@ export class FlightCollection extends EntityResourceCollection {
 
 ```typescript
 // flight.controller.ts
-import { dependency, RestController } from '@foal/core';
+import { dependency } from '@foal/core';
+import { RestController } from '@foal/typeorm';
 
 import { FlightCollection } from '../services';
 

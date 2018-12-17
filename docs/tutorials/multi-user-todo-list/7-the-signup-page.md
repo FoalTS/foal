@@ -13,8 +13,9 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, emailSchema, HttpResponseRedirect, Post, ValidateBody } from '@foal/core';
+import { Context, HttpResponseRedirect, Post, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
+import { emailSchema } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
 
 // App

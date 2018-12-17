@@ -45,7 +45,7 @@ By default, the value of `ctx.user` is the decoded payload of the JWT. However, 
 
 The `user` option is a function which takes the JWT `subject` as argument (the id of the user) and returns the data to assign to `ctx.user`.
 
-> The `@foal/core` package provides a handy function `fetchUser(userEntity)` to fetch a user from the database.
+> The `@foal/typeorm` package provides a handy function `fetchUser(userEntity)` to fetch a user from the database.
 
 ## The `blacklist` option
 
