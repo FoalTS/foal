@@ -1,10 +1,11 @@
+// 3p
 import {
   Hook,
   HookDecorator,
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../core';
+} from '@foal/core';
 
 export function PermissionRequired(perm: string, options: { redirect?: string } = {}): HookDecorator {
   return Hook(ctx => {

@@ -1,7 +1,7 @@
 // std
 import { ok, strictEqual } from 'assert';
 
-// FoalTS
+// 3p
 import {
   Context,
   getHookFunction,
@@ -10,9 +10,12 @@ import {
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
+  Permission,
   ServiceManager,
-} from '../../core';
-import { Permission, UserWithPermissions } from '../entities';
+  UserWithPermissions,
+} from '@foal/core';
+
+// FoalTS
 import { PermissionRequired } from './permission-required.hook';
 
 describe('PermissionRequired', () => {
