@@ -2,6 +2,17 @@
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
+import {
+  controller,
+  createApp,
+  dependency,
+  IAuthenticator,
+  IResourceCollection,
+  LoginController,
+  LoginRequired,
+  RestController,
+  strategy,
+} from '@foal/core';
 import * as request from 'supertest';
 import {
   Column,
@@ -15,22 +26,7 @@ import {
 } from 'typeorm';
 
 // FoalTS
-import {
-  controller,
-  createApp,
-  dependency,
-  EntityResourceCollection,
-  fetchUser,
-  Group,
-  IAuthenticator,
-  IResourceCollection,
-  LoginController,
-  LoginRequired,
-  Permission,
-  RestController,
-  strategy,
-  UserWithPermissions,
-} from '@foal/core';
+import { EntityResourceCollection, fetchUser, Group, Permission, UserWithPermissions } from '../src';
 
 xit('REST API with RestController and EntityResourceCollection', async () => {
   /**

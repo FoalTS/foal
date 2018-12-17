@@ -10,12 +10,11 @@ import {
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  Permission,
   ServiceManager,
-  UserWithPermissions,
 } from '@foal/core';
 
 // FoalTS
+import { Permission, UserWithPermissions } from '../entities';
 import { PermissionRequired } from './permission-required.hook';
 
 describe('PermissionRequired', () => {

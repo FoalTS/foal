@@ -8,8 +8,7 @@ import {
 } from '@foal/core';
 import { getManager } from 'typeorm';
 
-export type Middleware =
-  (context: { user: any, resource, data, params: CollectionParams }) => any;
+export type Middleware = (context: { user: any, resource, data, params: CollectionParams }) => any;
 export type RelationLoader = (user: any, params: CollectionParams) => string[];
 
 export function middleware(operations: string, middleware: Middleware):
