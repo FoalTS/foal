@@ -30,7 +30,7 @@ import {
   RestController,
   strategy,
   UserWithPermissions,
-} from '../src';
+} from '@foal/core';
 
 xit('REST API with RestController and EntityResourceCollection', async () => {
   /**

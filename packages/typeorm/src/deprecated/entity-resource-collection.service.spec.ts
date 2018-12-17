@@ -2,6 +2,7 @@
 import { deepStrictEqual, fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
+import { ObjectDoesNotExist, PermissionDenied, UserWithPermissions } from '@foal/core';
 import {
   Column,
   createConnection,
@@ -14,8 +15,6 @@ import {
 } from 'typeorm';
 
 // FoalTS
-import { UserWithPermissions } from '../../auth';
-import { ObjectDoesNotExist, PermissionDenied } from '../errors';
 import { EntityResourceCollection, middleware, Middleware } from './entity-resource-collection.service';
 
 @Entity()
