@@ -15,15 +15,15 @@ foal g controller flight
 
 ```typescript
 interface IResourceCollection {
-  create(user: UserWithPermissions|undefined, data: object, params: { fields?: string[] });
+  create(user: any, data: object, params: { fields?: string[] });
 
-  find(user: UserWithPermissions|undefined, params: { query?: object, fields?: string[] });
-  findById(user: UserWithPermissions|undefined, id, params: { fields?: string[] });
+  find(user: any, params: { query?: object, fields?: string[] });
+  findById(user: any, id, params: { fields?: string[] });
 
-  modifyById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
-  updateById(user: UserWithPermissions|undefined, id, data: object, params: { fields?: string[] });
+  modifyById(user: any, id, data: object, params: { fields?: string[] });
+  updateById(user: any, id, data: object, params: { fields?: string[] });
 
-  deleteById(user: UserWithPermissions|undefined, id, params: {});
+  deleteById(user: any, id, params: {});
 }
 ```
 
@@ -68,14 +68,14 @@ The service also provides `middlewares` to handle authorization, input validatio
 ```typescript
 ...
 
-const restrictToAdminUsers = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
+const restrictToAdminUsers = (context: { user: any, resource, data, params: CollectionParams }) => {
   const user = context.user;
   if (!user || !user.hasPerm('admin-perm')) {
     throw new PermissionDenied()
   }
 }
 
-const validateData = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
+const validateData = (context: { user: any, resource, data, params: CollectionParams }) => {
   if (typeof context.data.myNum !== 'number') {
     throw new ValidationError({
       message: 'myNum should be a number'
@@ -83,7 +83,7 @@ const validateData = (context: { user: UserWithPermissions|undefined, resource, 
   }
 }
 
-const onlyReturnName = (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => {
+const onlyReturnName = (context: { user: any, resource, data, params: CollectionParams }) => {
   params.fields = [ 'name' ];
 }
 

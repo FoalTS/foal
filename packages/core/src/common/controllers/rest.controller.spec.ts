@@ -2,7 +2,6 @@
 import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { UserWithPermissions } from '../../auth';
 import {
   Context,
   createController,
@@ -99,7 +98,7 @@ describe('RestController', () => {
             id: 1
           }
         });
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.deleteById(ctx);
         ok(actual instanceof HttpResponseOK);
@@ -224,7 +223,7 @@ describe('RestController', () => {
         const controller = createController(ConcreteController);
 
         const ctx = new Context({});
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.get(ctx);
         ok(actual instanceof HttpResponseOK);
@@ -347,7 +346,7 @@ describe('RestController', () => {
             id: 1
           }
         });
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.getById(ctx);
         ok(actual instanceof HttpResponseOK);
@@ -490,7 +489,7 @@ describe('RestController', () => {
             id: 1
           },
         });
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.patchById(ctx);
         ok(actual instanceof HttpResponseOK);
@@ -615,7 +614,7 @@ describe('RestController', () => {
             foobar: 'foo'
           },
         });
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.post(ctx);
         ok(actual instanceof HttpResponseCreated);
@@ -771,7 +770,7 @@ describe('RestController', () => {
             id: 1
           },
         });
-        ctx.user = {} as UserWithPermissions;
+        ctx.user = {};
 
         const actual = await controller.putById(ctx);
         ok(actual instanceof HttpResponseOK);

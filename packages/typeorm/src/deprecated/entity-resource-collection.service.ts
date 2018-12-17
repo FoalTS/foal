@@ -10,8 +10,8 @@ import {
 import { getManager } from 'typeorm';
 
 export type Middleware =
-  (context: { user: UserWithPermissions|undefined, resource, data, params: CollectionParams }) => any;
-export type RelationLoader = (user: UserWithPermissions|undefined, params: CollectionParams) => string[];
+  (context: { user: any, resource, data, params: CollectionParams }) => any;
+export type RelationLoader = (user: any, params: CollectionParams) => string[];
 
 export function middleware(operations: string, middleware: Middleware):
       Partial<Record<keyof IResourceCollection, Middleware>> {
@@ -67,7 +67,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
   readonly loadedRelations: Partial<Record<'find'|'findById', RelationLoader>> = {};
   readonly connectionName: string = 'default';
 
-  async create(user: UserWithPermissions|undefined, data: object, params: { fields?: string[] }): Promise<object> {
+  async create(user: any, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('create')) {
       throw new PermissionDenied();
     }
@@ -100,7 +100,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(resourceOrResources, params.fields);
   }
 
-  async findById(user: UserWithPermissions|undefined, id, params: { fields?: string[] }): Promise<object> {
+  async findById(user: any, id, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('findById')) {
       throw new PermissionDenied();
     }
@@ -129,7 +129,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(resource, params.fields);
   }
 
-  async find(user: UserWithPermissions|undefined, params: { query?: object, fields?: string[] }): Promise<object[]> {
+  async find(user: any, params: { query?: object, fields?: string[] }): Promise<object[]> {
     if (!this.allowedOperations.includes('find')) {
       throw new PermissionDenied();
     }
@@ -158,7 +158,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return resources.map(resource => this.getRepresentation(resource, params.fields as string[]));
   }
 
-  async modifyById(user: UserWithPermissions|undefined,
+  async modifyById(user: any,
                    id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('modifyById')) {
       throw new PermissionDenied();
@@ -187,7 +187,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(result, params.fields);
   }
 
-  async updateById(user: UserWithPermissions|undefined,
+  async updateById(user: any,
                    id, data: object, params: { fields?: string[] }): Promise<object> {
     if (!this.allowedOperations.includes('updateById')) {
       throw new PermissionDenied();
@@ -216,7 +216,7 @@ export abstract class EntityResourceCollection implements IResourceCollection {
     return this.getRepresentation(result, params.fields);
   }
 
-  async deleteById(user: UserWithPermissions|undefined, id, params: {}): Promise<void> {
+  async deleteById(user: any, id, params: {}): Promise<void> {
     if (!this.allowedOperations.includes('deleteById')) {
       throw new PermissionDenied();
     }
