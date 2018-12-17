@@ -1,4 +1,5 @@
-import { Context, fetchUserWithPermissions, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
+import { Context, Get, LoginRequired, render } from '@foal/core';
+import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
 
 import { User } from '../entities';
 

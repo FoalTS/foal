@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { parsePassword, UserWithPermissions } from '@foal/core';
+import { parsePassword } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 
 @Entity()
 export class User extends UserWithPermissions {
@@ -20,4 +21,4 @@ export class User extends UserWithPermissions {
 
 }
 
-export { Group, Permission } from '@foal/core';
+export { Group, Permission } from '@foal/typeorm';
