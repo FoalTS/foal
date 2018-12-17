@@ -23,6 +23,12 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
 
   const controller = createController(controllerClass, services);
 
+  for (const controllerClass of controller.subControllers || []) {
+    routes.push(
+      ...makeControllerRoutes(leftPath, leftHooks, controllerClass, services)
+    );
+  }
+
   getMethods(controllerClass.prototype).forEach(propertyKey => {
     if (propertyKey === 'constructor') { return; }
     const httpMethod = getMetadata('httpMethod', controllerClass, propertyKey);
@@ -34,12 +40,6 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
       routes.push({ controller, hooks, httpMethod, path, propertyKey });
     }
   });
-
-  for (const controllerClass of controller.subControllers || []) {
-    routes.push(
-      ...makeControllerRoutes(leftPath, leftHooks, controllerClass, services)
-    );
-  }
 
   return routes;
 }
