@@ -12,7 +12,7 @@ import {
   HttpResponseNotFound,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../core';
+} from '../core';
 import { IAuthenticator } from './authenticator.interface';
 import { LoginController, strategy } from './login.controller';
 

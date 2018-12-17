@@ -1,5 +1,6 @@
 // FoalTS
-import { getAjvInstance } from '../../common';
+import { logIn, logOut } from '../auth/utils';
+import { getAjvInstance } from '../common';
 import {
   Class,
   Context,
@@ -12,8 +13,7 @@ import {
   HttpResponseUnauthorized,
   Post,
   ServiceManager
-} from '../../core';
-import { logIn, logOut } from '../utils';
+} from '../core';
 import { IAuthenticator } from './authenticator.interface';
 
 export interface Strategy {

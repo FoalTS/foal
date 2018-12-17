@@ -2,6 +2,7 @@
 import { deepStrictEqual, fail, ok, strictEqual } from 'assert';
 
 // FoalTS
+import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../common/errors';
 import {
   Context,
   createController,
@@ -15,9 +16,8 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
-} from '../../core';
-import { ObjectDoesNotExist, PermissionDenied, ValidationError } from '../errors';
-import { CollectionParams, IResourceCollection } from '../services';
+} from '../core';
+import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 import { RestController } from './rest.controller';
 
 describe('RestController', () => {

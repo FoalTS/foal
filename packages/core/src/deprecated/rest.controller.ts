@@ -1,3 +1,4 @@
+import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../common/errors';
 import {
   Context,
   Delete,
@@ -12,9 +13,8 @@ import {
   Patch,
   Post,
   Put,
-} from '../../core';
-import { isObjectDoesNotExist, isPermissionDenied, isValidationError } from '../errors';
-import { CollectionParams, IResourceCollection } from '../services';
+} from '../core';
+import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 
 export abstract class RestController {
   abstract collection: Partial<IResourceCollection>;
