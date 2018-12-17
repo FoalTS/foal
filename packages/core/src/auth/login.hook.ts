@@ -1,18 +1,13 @@
-// 3p
-import { getManager } from 'typeorm';
-
 // FoalTS
 import {
-  Class,
   Hook,
   HookDecorator,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
 } from '../core';
-import { AbstractUser } from './entities';
 
 export function Login(required: boolean,
-                      options: { redirect?: string, userEntity: Class<AbstractUser> }): HookDecorator {
+                      options: { redirect?: string, user: (id: number|string) => Promise<any> }): HookDecorator {
   return Hook(async ctx => {
     if (!ctx.request.session) {
       throw new Error('LoginRequired and LoginOptional hooks require session management.');
@@ -23,11 +18,7 @@ export function Login(required: boolean,
       }
       return options.redirect ? new HttpResponseRedirect(options.redirect) : new HttpResponseUnauthorized();
     }
-    const user = await getManager().findOne(
-      options.userEntity,
-      ctx.request.session.authentication.userId,
-      { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }
-    );
+    const user = await options.user(ctx.request.session.authentication.userId);
     if (!user) {
       if (!required) {
         return;

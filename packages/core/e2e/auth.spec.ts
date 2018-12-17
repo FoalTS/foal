@@ -11,6 +11,7 @@ import {
   createApp,
   EmailAuthenticator,
   emailSchema,
+  fetchUserWithPermissions,
   Get,
   Group,
   HttpResponseOK,
@@ -32,7 +33,7 @@ it('Authentication and authorization', async () => {
     password: string;
   }
 
-  @LoginRequired({ userEntity: User })
+  @LoginRequired({ user: fetchUserWithPermissions(User) })
   class MyController {
     @Get('/foo')
     foo() {

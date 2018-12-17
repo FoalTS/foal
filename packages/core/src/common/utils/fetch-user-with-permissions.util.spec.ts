@@ -1,6 +1,6 @@
 // 3p
 import { notStrictEqual, ok, strictEqual } from 'assert';
-import { Column, createConnection, Entity, getConnection, getManager, PrimaryGeneratedColumn } from 'typeorm';
+import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 import { AbstractUser, Group, Permission } from '../../auth';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 

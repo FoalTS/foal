@@ -1,9 +1,6 @@
 // std
 import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
-// 3p
-import { Column, createConnection, Entity, getConnection, getManager } from 'typeorm';
-
 // FoalTS
 import {
   Context,
@@ -14,7 +11,6 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager,
 } from '../core';
-import { AbstractUser, Group, Permission } from './entities';
 import { LoginOptional } from './login-optional.hook';
 import { LoginRequired } from './login-required.hook';
 
@@ -22,50 +18,11 @@ export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, requ
 
   let hook: HookFunction;
 
-  @Entity()
-  class User extends AbstractUser {
-    @Column()
-    email: string;
+  async function fetchUser(id: number|string) {
+    return id === 1 ? { email: 'john@foalts.org', id: 1 } : undefined;
   }
 
-  beforeEach(() => createConnection({
-    database: 'test',
-    dropSchema: true,
-    entities: [ User, Group, Permission ],
-    password: 'test',
-    synchronize: true,
-    type: 'mysql',
-    username: 'test',
-  }));
-
-  beforeEach(async () => {
-    const permission1 = new Permission();
-    permission1.codeName = 'permission1';
-    permission1.name = '';
-
-    const permission2 = new Permission();
-    permission2.codeName = 'permission2';
-    permission2.name = '';
-
-    const group = new Group();
-    group.name = 'group1';
-    group.codeName = 'group1';
-    group.permissions = [ permission1 ];
-
-    const user = new User();
-    user.email = 'john@foalts.org';
-    user.id = 1;
-    user.groups = [ group ];
-    user.userPermissions = [ permission2 ];
-
-    return getManager().save([ permission1, permission2, group, user ]);
-  });
-
-  afterEach(() => getConnection().close());
-
-  beforeEach(() => {
-    hook = getHookFunction(Login({ userEntity: User }));
-  });
+  beforeEach(() =>  hook = getHookFunction(Login({ user: fetchUser })));
 
   it('should throw an Error if there is no session.', () => {
     const ctx = new Context({});
@@ -92,7 +49,7 @@ export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, requ
 
     it('should return an HttpResponseRedirect object if the session does not have an '
         + '`authentication.userId` property and if options.redirect is defined.', async () => {
-      hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+      hook = getHookFunction(Login({ redirect: '/foo', user: fetchUser }));
 
       let ctx = new Context({ session: {} });
       let response = await hook(ctx, new ServiceManager());
@@ -122,7 +79,7 @@ export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, requ
 
     it('should return an HttpResponseRedirect object if no user matches the given userId'
         + ' and if options.redirect is defined.', async () => {
-      hook = getHookFunction(Login({ redirect: '/foo', userEntity: User }));
+      hook = getHookFunction(Login({ redirect: '/foo', user: fetchUser }));
 
       const ctx = new Context({
         session: {
@@ -176,38 +133,8 @@ export function testSuite(Login: typeof LoginOptional|typeof LoginRequired, requ
 
     strictEqual(response, undefined);
     notStrictEqual(ctx.user, undefined);
-    strictEqual((ctx.user as User).id, 1);
-  });
-
-  it('should add a user property (with all its groups and permissions) if a user matches'
-      + ' the given id in the database.', async () => {
-    // TODO: Move this test somewhere else.
-    const ctx = new Context({});
-
-    ctx.request.session = {
-      authentication: {
-        userId: 1
-      }
-    };
-    await hook(ctx, new ServiceManager());
-
-    if (!ctx.user) {
-      throw new Error('ctx.user should be defined');
-    }
-    strictEqual(ctx.user.id, 1);
-    strictEqual((ctx.user as User).email, 'john@foalts.org');
-
-    ok(Array.isArray(ctx.user.userPermissions));
-    strictEqual(ctx.user.userPermissions.length, 1);
-    strictEqual(ctx.user.userPermissions[0].codeName, 'permission2');
-
-    ok(Array.isArray(ctx.user.groups));
-    strictEqual(ctx.user.groups.length, 1);
-    strictEqual(ctx.user.groups[0].name, 'group1');
-
-    ok(Array.isArray(ctx.user.groups[0].permissions));
-    strictEqual(ctx.user.groups[0].permissions.length, 1);
-    strictEqual(ctx.user.groups[0].permissions[0].codeName, 'permission1');
+    // TODO: remove "as { id: 1 }"
+    strictEqual((ctx.user as { id: number }).id, 1);
   });
 
 }

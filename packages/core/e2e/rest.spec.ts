@@ -21,6 +21,7 @@ import {
   createApp,
   dependency,
   EntityResourceCollection,
+  fetchUser,
   Group,
   IAuthenticator,
   IResourceCollection,
@@ -118,13 +119,13 @@ xit('REST API with RestController and EntityResourceCollection', async () => {
     }
   }
 
-  @LoginRequired({ userEntity: User })
+  @LoginRequired({ user: fetchUser(User) })
   class UserController extends RestController {
     @dependency
     collection: UserCollection;
   }
 
-  @LoginRequired({ userEntity: User })
+  @LoginRequired({ user: fetchUser(User) })
   class OrgController extends RestController {
     @dependency
     collection: OrgCollection;
