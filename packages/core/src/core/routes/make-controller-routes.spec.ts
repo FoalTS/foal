@@ -201,4 +201,28 @@ describe('makeControllerRoutes', () => {
     strictEqual(routes[1].propertyKey, 'index');
   });
 
+  it('should return the sub-controllers and controller routes in the right order.', () => {
+    class SubController {
+      @Get('/bar')
+      bar() {}
+    }
+
+    class AppController {
+      subControllers = [ SubController ];
+
+      @Get('/foo')
+      foo() {}
+    }
+
+    const routes = makeControllerRoutes('', [] , AppController, new ServiceManager());
+
+    strictEqual(routes.length, 2);
+
+    // bar
+    ok(routes[0].controller instanceof SubController);
+
+    // foo
+    ok(routes[1].controller instanceof AppController);
+  });
+
 });
