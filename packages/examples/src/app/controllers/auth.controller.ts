@@ -1,4 +1,5 @@
-import { Context, emailSchema, Get, LoginController, render, strategy } from '@foal/core';
+import { Context, Get, LoginController, render, strategy } from '@foal/core';
+import { emailSchema } from '@foal/typeorm';
 
 import { Authenticator } from '../services/authenticator.service';
 

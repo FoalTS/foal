@@ -1,8 +1,6 @@
-import { AbstractUser } from '../../auth';
-
-export class Context<User extends AbstractUser = AbstractUser> {
+export class Context<User = any> {
   state: { [key: string]: any } = {};
-  user: User|undefined = undefined;
+  user: User;
 
   constructor(public request) {}
 }

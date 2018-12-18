@@ -1,4 +1,5 @@
-import { EntityResourceCollection, middleware, validate } from '@foal/core';
+import { validate } from '@foal/core';
+import { EntityResourceCollection, middleware } from '@foal/typeorm';
 
 import { TestFooBar } from '../entities';
 

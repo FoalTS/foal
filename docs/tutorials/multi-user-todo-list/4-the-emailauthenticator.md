@@ -20,7 +20,7 @@ foal generate service authenticator
 ```
 
 ```typescript
-import { EmailAuthenticator } from '@foal/core';
+import { EmailAuthenticator } from '@foal/typeorm';
 
 import { User } from '../entities';
 
