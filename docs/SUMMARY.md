@@ -27,7 +27,12 @@
 
 ## Topic Guides
 
-* [Databases](./databases/introduction.md)
+* Architecture
+  * [Architecture Overview](./architecture/architecture-overview.md)
+  * [Controllers](./architecture/controllers.md)
+  * [Services](./architecture/services.md)
+  * [Hooks](./architecture/hooks.md)
+* Databases
   * [Introduction](./databases/introduction.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
@@ -42,11 +47,6 @@
   * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
   * [404 Page](./cookbook/404-page.md)
-* [Architecture](./architecture/introduction.md)
-  * [Request Lifecycle](./architecture/request-lifecycle.md)
-  * [Controllers](./architecture/controllers.md)
-  * [Services](./architecture/services.md)
-  * [Hooks](./architecture/hooks.md)
 * [Development Environment](./development-environment/build-and-start-the-app.md)
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
