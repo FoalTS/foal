@@ -16,18 +16,27 @@ import {
 } from '../core';
 import { IAuthenticator } from './authenticator.interface';
 
+/**
+ * @deprecated
+ */
 export interface Strategy {
   name: string;
   authenticatorClass: Class<IAuthenticator>;
   schema: object;
 }
 
+/**
+ * @deprecated
+ */
 export function strategy(name: Strategy['name'],
                          authenticatorClass: Strategy['authenticatorClass'],
                          schema: Strategy['schema']): Strategy {
   return { name, authenticatorClass, schema };
 }
 
+/**
+ * @deprecated
+ */
 export abstract class LoginController {
   redirect: { logout?: string, success?: string, failure?: string } | undefined;
   abstract strategies: Strategy[];

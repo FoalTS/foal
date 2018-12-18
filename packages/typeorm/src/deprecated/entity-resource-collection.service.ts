@@ -8,9 +8,19 @@ import {
 } from '@foal/core';
 import { getManager } from 'typeorm';
 
+/**
+ * @deprecated
+ */
 export type Middleware = (context: { user: any, resource, data, params: CollectionParams }) => any;
+
+/**
+ * @deprecated
+ */
 export type RelationLoader = (user: any, params: CollectionParams) => string[];
 
+/**
+ * @deprecated
+ */
 export function middleware(operations: string, middleware: Middleware):
       Partial<Record<keyof IResourceCollection, Middleware>> {
   const result: Partial<Record<keyof IResourceCollection, Middleware>> = {};
@@ -56,6 +66,7 @@ export function middleware(operations: string, middleware: Middleware):
  * @class EntityResourceCollection
  * @implements {IResourceCollection}
  * @template Entity
+ * @deprecated
  */
 export abstract class EntityResourceCollection implements IResourceCollection {
 

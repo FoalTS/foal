@@ -16,6 +16,9 @@ import {
 } from '../core';
 import { CollectionParams, IResourceCollection } from './resource-collection.interface';
 
+/**
+ * @deprecated
+ */
 export abstract class RestController {
   abstract collection: Partial<IResourceCollection>;
 

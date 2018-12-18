@@ -3,6 +3,7 @@
  *
  * @export
  * @interface IResourceCollection
+ * @deprecated
  */
 export interface IResourceCollection {
   create(user: any, data: object, params: { fields?: string[] });
@@ -16,6 +17,9 @@ export interface IResourceCollection {
   deleteById(user: any, id, params: {});
 }
 
+/**
+ * @deprecated
+ */
 export interface CollectionParams {
   query?: object;
   fields?: string[];

@@ -9,6 +9,9 @@ import { getManager } from 'typeorm';
 // FoalTS
 import { UserWithPermissions } from '../entities';
 
+/**
+ * @deprecated
+ */
 export interface EmailUser extends UserWithPermissions {
   email: string;
   password: string;
@@ -22,6 +25,7 @@ export interface EmailUser extends UserWithPermissions {
  * @class EmailAuthenticator
  * @implements {IAuthenticator<User>}
  * @template User An user interface that includes an `email` and a `password` fields.
+ * @deprecated
  */
 export abstract class EmailAuthenticator<User extends EmailUser>
     implements IAuthenticator<User> {

@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 export const emailSchema = {
   additionalProperties: false,
   properties: {
