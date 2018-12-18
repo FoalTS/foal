@@ -70,7 +70,7 @@ class AppController {
 
 Controllers may have sub-controllers. Hooks can be attached to the controllers or their methods. 
 
-Here's an example of what a FoalTS application can look like.
+Here's an example of what a FoalTS application may look like.
 
 ```typescript
 @LoginRequired(/* ... */)
