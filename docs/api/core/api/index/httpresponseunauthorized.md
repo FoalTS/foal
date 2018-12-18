@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseUnauthorized][ClassDeclaration-15]
+* [HttpResponseUnauthorized][ClassDeclaration-14]
     * Constructor
-        * [constructor(body)][Constructor-9]
+        * [constructor(body)][Constructor-12]
     * Properties
-        * [isHttpResponseUnauthorized][PropertyDeclaration-35]
-        * [statusCode][PropertyDeclaration-36]
-        * [statusMessage][PropertyDeclaration-37]
+        * [isHttpResponseUnauthorized][PropertyDeclaration-27]
+        * [statusCode][PropertyDeclaration-28]
+        * [statusMessage][PropertyDeclaration-29]
 
 # HttpResponseUnauthorized
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-15]: httpresponseunauthorized.md#httpresponseunauthorized
-[Constructor-9]: httpresponseunauthorized.md#constructorbody
-[PropertyDeclaration-35]: httpresponseunauthorized.md#ishttpresponseunauthorized
-[PropertyDeclaration-36]: httpresponseunauthorized.md#statuscode
-[PropertyDeclaration-37]: httpresponseunauthorized.md#statusmessage
+[ClassDeclaration-14]: httpresponseunauthorized.md#httpresponseunauthorized
+[Constructor-12]: httpresponseunauthorized.md#constructorbody
+[PropertyDeclaration-27]: httpresponseunauthorized.md#ishttpresponseunauthorized
+[PropertyDeclaration-28]: httpresponseunauthorized.md#statuscode
+[PropertyDeclaration-29]: httpresponseunauthorized.md#statusmessage

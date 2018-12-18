@@ -1,13 +1,17 @@
 # Table of contents
 
-* [EmailAuthenticator][ClassDeclaration-0]
+* [EmailAuthenticator][ClassDeclaration-3]
     * Methods
         * [checkPassword(user, password)][MethodDeclaration-1]
         * [authenticate(__0)][MethodDeclaration-2]
     * Properties
-        * [entityClass][PropertyDeclaration-0]
+        * [entityClass][PropertyDeclaration-10]
 
 # EmailAuthenticator
+
+**Warning Beta!**
+
+Deprecated!</span>
 
 Authenticator with email and password.
 
@@ -67,11 +71,10 @@ public abstract entityClass: Class<User>;
 
 **Type**
 
-[Class][InterfaceDeclaration-1]<User>
+Class<User>
 
-[ClassDeclaration-0]: emailauthenticator.md#emailauthenticator
+[ClassDeclaration-3]: emailauthenticator.md#emailauthenticator
 [InterfaceDeclaration-0]: ../index.md#emailuser
 [MethodDeclaration-1]: emailauthenticator.md#checkpassworduser-password
 [MethodDeclaration-2]: emailauthenticator.md#authenticate__0
-[PropertyDeclaration-0]: emailauthenticator.md#entityclass
-[InterfaceDeclaration-1]: ../index.md#class
+[PropertyDeclaration-10]: emailauthenticator.md#entityclass

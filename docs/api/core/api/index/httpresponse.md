@@ -1,19 +1,19 @@
 # Table of contents
 
-* [HttpResponse][ClassDeclaration-9]
+* [HttpResponse][ClassDeclaration-8]
     * Constructor
-        * [constructor(body)][Constructor-3]
+        * [constructor(body)][Constructor-6]
     * Methods
-        * [setHeader(name, value)][MethodDeclaration-6]
-        * [getHeader(name)][MethodDeclaration-7]
-        * [getHeaders()][MethodDeclaration-8]
-        * [setCookie(name, value, options)][MethodDeclaration-9]
-        * [getCookie(name)][MethodDeclaration-10]
-        * [getCookies()][MethodDeclaration-11]
+        * [setHeader(name, value)][MethodDeclaration-3]
+        * [getHeader(name)][MethodDeclaration-4]
+        * [getHeaders()][MethodDeclaration-5]
+        * [setCookie(name, value, options)][MethodDeclaration-6]
+        * [getCookie(name)][MethodDeclaration-7]
+        * [getCookies()][MethodDeclaration-8]
     * Properties
-        * [isHttpResponse][PropertyDeclaration-21]
-        * [statusCode][PropertyDeclaration-22]
-        * [statusMessage][PropertyDeclaration-23]
+        * [isHttpResponse][PropertyDeclaration-13]
+        * [statusCode][PropertyDeclaration-14]
+        * [statusMessage][PropertyDeclaration-15]
 
 # HttpResponse
 
@@ -97,7 +97,7 @@ public setCookie(name: string, value: string, options: CookieOptions = {}): void
 | ------- | --------------------------------------- | ------------- |
 | name    | string                                  |               |
 | value   | string                                  |               |
-| options | [CookieOptions][InterfaceDeclaration-4] | {}            |
+| options | [CookieOptions][InterfaceDeclaration-3] | {}            |
 
 **Return type**
 
@@ -119,7 +119,7 @@ public getCookie(name: string): { value: string | undefined; options: CookieOpti
 
 **Return type**
 
-{ value: string | undefined; options: [CookieOptions][InterfaceDeclaration-4]; }
+{ value: string | undefined; options: [CookieOptions][InterfaceDeclaration-3]; }
 
 ----------
 
@@ -131,7 +131,7 @@ public getCookies(): { [key: string]: { value: string | undefined; options: Cook
 
 **Return type**
 
-{ [key: string]: { value: string | undefined; options: [CookieOptions][InterfaceDeclaration-4]; }; }
+{ [key: string]: { value: string | undefined; options: [CookieOptions][InterfaceDeclaration-3]; }; }
 
 ## Properties
 
@@ -169,17 +169,17 @@ public abstract statusMessage: string;
 
 string
 
-[ClassDeclaration-9]: httpresponse.md#httpresponse
-[Constructor-3]: httpresponse.md#constructorbody
-[MethodDeclaration-6]: httpresponse.md#setheadername-value
-[MethodDeclaration-7]: httpresponse.md#getheadername
-[MethodDeclaration-8]: httpresponse.md#getheaders
-[MethodDeclaration-9]: httpresponse.md#setcookiename-value-options
-[InterfaceDeclaration-4]: ../index.md#cookieoptions
-[MethodDeclaration-10]: httpresponse.md#getcookiename
-[InterfaceDeclaration-4]: ../index.md#cookieoptions
-[MethodDeclaration-11]: httpresponse.md#getcookies
-[InterfaceDeclaration-4]: ../index.md#cookieoptions
-[PropertyDeclaration-21]: httpresponse.md#ishttpresponse
-[PropertyDeclaration-22]: httpresponse.md#statuscode
-[PropertyDeclaration-23]: httpresponse.md#statusmessage
+[ClassDeclaration-8]: httpresponse.md#httpresponse
+[Constructor-6]: httpresponse.md#constructorbody
+[MethodDeclaration-3]: httpresponse.md#setheadername-value
+[MethodDeclaration-4]: httpresponse.md#getheadername
+[MethodDeclaration-5]: httpresponse.md#getheaders
+[MethodDeclaration-6]: httpresponse.md#setcookiename-value-options
+[InterfaceDeclaration-3]: ../index.md#cookieoptions
+[MethodDeclaration-7]: httpresponse.md#getcookiename
+[InterfaceDeclaration-3]: ../index.md#cookieoptions
+[MethodDeclaration-8]: httpresponse.md#getcookies
+[InterfaceDeclaration-3]: ../index.md#cookieoptions
+[PropertyDeclaration-13]: httpresponse.md#ishttpresponse
+[PropertyDeclaration-14]: httpresponse.md#statuscode
+[PropertyDeclaration-15]: httpresponse.md#statusmessage

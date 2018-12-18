@@ -68,4 +68,6 @@
 
 * [@foal/core](./api/core/api/index.md)
 * [@foal/ejs](./api/ejs/api/index.md)
+* [@foal/jwt](./api/jwt/api/index.md)
 * [@foal/password](./api/password/api/index.md)
+* [@foal/typeorm](./api/typeorm/api/index.md)

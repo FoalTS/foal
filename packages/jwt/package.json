@@ -5,6 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
+    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/jwt",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
     "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
@@ -53,6 +54,7 @@
     "sqlite3": "^4.0.4",
     "supertest": "^3.3.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "ts-docs-gen": "0.2.0"
   }
 }

@@ -2,14 +2,18 @@
 
 * [LoginController][ClassDeclaration-4]
     * Methods
-        * [logout(ctx)][MethodDeclaration-5]
-        * [login(ctx)][MethodDeclaration-12]
+        * [logout(ctx)][MethodDeclaration-2]
+        * [login(ctx)][MethodDeclaration-9]
     * Properties
-        * [redirect][PropertyDeclaration-11]
-        * [strategies][PropertyDeclaration-12]
-        * [services][PropertyDeclaration-13]
+        * [redirect][PropertyDeclaration-5]
+        * [strategies][PropertyDeclaration-6]
+        * [services][PropertyDeclaration-7]
 
 # LoginController
+
+**Warning Beta!**
+
+Deprecated!</span>
 
 ```typescript
 abstract class LoginController
@@ -19,36 +23,36 @@ abstract class LoginController
 ### logout(ctx)
 
 ```typescript
-public logout(ctx: Context<AbstractUser>): HttpResponseRedirect | HttpResponseNoContent;
+public logout(ctx: Context<any>): HttpResponseRedirect | HttpResponseNoContent;
 ```
 
 **Parameters**
 
-| Name | Type                                                              |
-| ---- | ----------------------------------------------------------------- |
-| ctx  | [Context][ClassDeclaration-6]<[AbstractUser][ClassDeclaration-1]> |
+| Name | Type                               |
+| ---- | ---------------------------------- |
+| ctx  | [Context][ClassDeclaration-0]<any> |
 
 **Return type**
 
-[HttpResponseRedirect][ClassDeclaration-7] | [HttpResponseNoContent][ClassDeclaration-10]
+[HttpResponseRedirect][ClassDeclaration-6] | [HttpResponseNoContent][ClassDeclaration-9]
 
 ----------
 
 ### login(ctx)
 
 ```typescript
-public async login(ctx: Context<AbstractUser>): Promise<HttpResponseRedirect | HttpResponseNoContent | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseUnauthorized>;
+public async login(ctx: Context<any>): Promise<HttpResponseRedirect | HttpResponseNoContent | HttpResponseNotFound | HttpResponseBadRequest | HttpResponseUnauthorized>;
 ```
 
 **Parameters**
 
-| Name | Type                                                              |
-| ---- | ----------------------------------------------------------------- |
-| ctx  | [Context][ClassDeclaration-6]<[AbstractUser][ClassDeclaration-1]> |
+| Name | Type                               |
+| ---- | ---------------------------------- |
+| ctx  | [Context][ClassDeclaration-0]<any> |
 
 **Return type**
 
-Promise<[HttpResponseRedirect][ClassDeclaration-7] | [HttpResponseNoContent][ClassDeclaration-10] | [HttpResponseNotFound][ClassDeclaration-12] | [HttpResponseBadRequest][ClassDeclaration-14] | [HttpResponseUnauthorized][ClassDeclaration-15]>
+Promise<[HttpResponseRedirect][ClassDeclaration-6] | [HttpResponseNoContent][ClassDeclaration-9] | [HttpResponseNotFound][ClassDeclaration-11] | [HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseUnauthorized][ClassDeclaration-14]>
 
 ## Properties
 
@@ -72,7 +76,7 @@ public abstract strategies: Strategy[];
 
 **Type**
 
-[Strategy][InterfaceDeclaration-3][]
+[Strategy][InterfaceDeclaration-2][]
 
 ----------
 
@@ -87,21 +91,19 @@ public services: ServiceManager;
 [ServiceManager][ClassDeclaration-5]
 
 [ClassDeclaration-4]: logincontroller.md#logincontroller
-[MethodDeclaration-5]: logincontroller.md#logoutctx
-[ClassDeclaration-1]: abstractuser.md#abstractuser
-[ClassDeclaration-6]: context.md#context
-[ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
-[ClassDeclaration-10]: httpresponsenocontent.md#httpresponsenocontent
-[MethodDeclaration-12]: logincontroller.md#loginctx
-[ClassDeclaration-1]: abstractuser.md#abstractuser
-[ClassDeclaration-6]: context.md#context
-[ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
-[ClassDeclaration-10]: httpresponsenocontent.md#httpresponsenocontent
-[ClassDeclaration-12]: httpresponsenotfound.md#httpresponsenotfound
-[ClassDeclaration-14]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-15]: httpresponseunauthorized.md#httpresponseunauthorized
-[PropertyDeclaration-11]: logincontroller.md#redirect
-[PropertyDeclaration-12]: logincontroller.md#strategies
-[InterfaceDeclaration-3]: ../index.md#strategy
-[PropertyDeclaration-13]: logincontroller.md#services
+[MethodDeclaration-2]: logincontroller.md#logoutctx
+[ClassDeclaration-0]: context.md#context
+[ClassDeclaration-6]: httpresponseredirect.md#httpresponseredirect
+[ClassDeclaration-9]: httpresponsenocontent.md#httpresponsenocontent
+[MethodDeclaration-9]: logincontroller.md#loginctx
+[ClassDeclaration-0]: context.md#context
+[ClassDeclaration-6]: httpresponseredirect.md#httpresponseredirect
+[ClassDeclaration-9]: httpresponsenocontent.md#httpresponsenocontent
+[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseunauthorized.md#httpresponseunauthorized
+[PropertyDeclaration-5]: logincontroller.md#redirect
+[PropertyDeclaration-6]: logincontroller.md#strategies
+[InterfaceDeclaration-2]: ../index.md#strategy
+[PropertyDeclaration-7]: logincontroller.md#services
 [ClassDeclaration-5]: servicemanager.md#servicemanager

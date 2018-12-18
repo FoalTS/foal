@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseCreated][ClassDeclaration-22]
+* [HttpResponseCreated][ClassDeclaration-21]
     * Constructor
-        * [constructor(body)][Constructor-15]
+        * [constructor(body)][Constructor-18]
     * Properties
-        * [isHttpResponseCreated][PropertyDeclaration-52]
-        * [statusCode][PropertyDeclaration-53]
-        * [statusMessage][PropertyDeclaration-54]
+        * [isHttpResponseCreated][PropertyDeclaration-44]
+        * [statusCode][PropertyDeclaration-45]
+        * [statusMessage][PropertyDeclaration-46]
 
 # HttpResponseCreated
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-22]: httpresponsecreated.md#httpresponsecreated
-[Constructor-15]: httpresponsecreated.md#constructorbody
-[PropertyDeclaration-52]: httpresponsecreated.md#ishttpresponsecreated
-[PropertyDeclaration-53]: httpresponsecreated.md#statuscode
-[PropertyDeclaration-54]: httpresponsecreated.md#statusmessage
+[ClassDeclaration-21]: httpresponsecreated.md#httpresponsecreated
+[Constructor-18]: httpresponsecreated.md#constructorbody
+[PropertyDeclaration-44]: httpresponsecreated.md#ishttpresponsecreated
+[PropertyDeclaration-45]: httpresponsecreated.md#statuscode
+[PropertyDeclaration-46]: httpresponsecreated.md#statusmessage
