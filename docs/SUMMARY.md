@@ -30,7 +30,7 @@
 * Architecture
   * [Architecture Overview](./architecture/architecture-overview.md)
   * [Controllers](./architecture/controllers.md)
-  * [Services](./architecture/services.md)
+  * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
   * [Hooks](./architecture/hooks.md)
 * Databases
   * [Introduction](./databases/introduction.md)
