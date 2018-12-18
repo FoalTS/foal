@@ -36,8 +36,6 @@ It may also return an `HookPostFunction` that will be executed after the method 
 >
 -->
 
-<!-- > By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.-->
-
 ## Some common hooks
 
 - `ValidateBody` validates the format of the request body.

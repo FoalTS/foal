@@ -21,7 +21,6 @@ The content of the header should look like the following:
 Authorization: Bearer <token>
 ```
 
-
 > FoalTS makes no assumptions about how the JWT is generated and sent / stored to the client. The choice is yours. However, whenever the user wants to access a protected route, the client must send the JWT in the Authorization header using the Bearer schema.
 
 # Set Up
