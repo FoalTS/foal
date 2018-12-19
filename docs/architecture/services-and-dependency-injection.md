@@ -2,7 +2,6 @@
 
 ```sh
 foal generate service my-service
-> Empty
 ```
 
 ```typescript
@@ -11,62 +10,46 @@ export class MyService {
 }
 ```
 
-Services are one of core concepts of FoalTS. They are used to perform many different tasks such as logging, compute data, fetching and writing data from and to a database, etc.
+## Description
 
-Basically a service can be any class that serves a restricted and well-defined purpose.
+Services are useful to organize your code in domains. They can be used in a wide variety of situations: logging, interaction with a database, calculations, communication with an external API, etc.
 
-## Accessing services ...
+## Architecture
 
-### ... from controllers
+Basically, a service can be any class with a narrow and well defined purpose. They are instantiated as singletons.
 
+## Use & Dependency Injection
+
+You can access a service from a controller using the `@dependency` decorator.
+
+*Example:*
 ```typescript
-import { dependency, Get } from '@foal/core';
+import { dependency, Get, HttpResponseOK } from '@foal/core';
 
-class MyService {
-  run() {
-    console.log('hello world');
+class AppController {
+  @dependency
+  logger: Logger
+
+  @Get('/')
+  index() {
+    this.logger.log('index has been called!');
+    return new HttpResponseOK('Hello world!');
   }
+
 }
 
-class MyController {
-  @dependency
-  myService: MyService;
-
-  @Get('/foo')
-  foo(ctx) {
-    this.myService.run();
-  }
-}
-// OR
-class MyController2 {
-  @dependency
-  services: ServiceManager;
-
-  @Get('/foo')
-  foo(ctx) {
-    this.services.get(MyService).run();
+class Logger {
+  log(message: string) {
+    console.log(`${new Date()} - ${message}`);
   }
 }
 ```
 
-### ... from hooks
+> When instantiating the controller, FoalTS will provide the service instance. This mechanism is called *dependency injection* and is particularly interesting in unit testing (see section below).
 
-```typescript
-class MyService {
-  run() {
-    console.log('hello world');
-  }
-}
+In the same way, you can access a service from another service.
 
-function MyHook() {
-  return Hook((ctx, services) => {
-    services.get(MyService).run();
-  });
-}
-```
-
-### ... from other services
-
+*Example:*
 ```typescript
 import { dependency } from '@foal/core';
 
@@ -84,50 +67,150 @@ class MyServiceA {
     this.myService.run();
   }
 }
-// OR
-class MyServiceB {
-  @dependency
-  services: ServiceManager;
-
-  foo() {
-    this.services.get(MyService).run();
-  }
-}
 ```
 
 ## Testing services
 
-As foal uses the inversion of control principle, a service is very easy to test.
+Services are classes and so can be tested as is.
+
+*Example:*
+```typescript
+// calculator.service.ts
+export class CalculatorService {
+  sum(a: number, b: number): number {
+    return a + b;
+  }
+}
+```
 
 ```typescript
-// std
+// calculator.service.spec.ts
 import { strictEqual } from 'assert';
+import { CalculatorService } from './calculator.service';
 
-// 3p
-import { createService, dependency, ServiceManager } from '@foal/core';
+it('CalculatorService', () => {
+  const service = new CalculatorService();
+  strictEqual(service.sum(1, 2), 3);
+});
+```
 
-class ServiceA {
-  name = 'Service A';
+### Services (or Controllers) with Dependencies
+
+If your service has dependencies, you can use the `createService` function to instantiate the service with them.
+
+*Example:*
+```typescript
+// weather.service.ts
+import { dependency } from '@foal/core';
+
+class ConversionService {
+  celsiusToFahrenheit(temperature: number): number {
+    return temperature * 9/5 + 32;
+  }
 }
 
-class ServiceB {
-  name = 'Service B';
+class WeatherService {
+  temp = 14;
 
   @dependency
-  serviceA: ServiceA;
+  conversion: ConversionService
+
+  getWeather(): string {
+    const temp = this.conversion.celsiusToFahrenheit(this.temp);
+    return `The outside temperature is ${temp} °F.`;
+  }
+}
+```
+
+```typescript
+// weather.service.spec.ts
+import { strictEqual } from 'assert';
+import { createService } from '@foal/core';
+import { WeatherService } from './weather.service';
+
+it('WeatherService', () => {
+  const service = createService(WeatherService);
+
+  const expected = 'The outside temperature is 57.2 °F.';
+  const actual = service.getWeather();
+
+  strictEqual(actual, expected);
+});
+```
+
+> A similar function exists to instantiate controllers with their dependencies: `createController`.
+
+In many situations, it is necessary to mock the dependencies to truly write *unit* tests. This can be done by passing a second argument to `createService` (or `createController`).
+
+*Example:*
+```typescript
+// detector.service.ts
+import { dependency } from '@foal/core';
+
+class TwitterService {
+  fetchLastTweets() {
+    // Make a call to the Twitter API to get the last tweets.
+  }
 }
 
-const serviceA = new ServiceA();
-strictEqual(serviceA.name, 'Service A');
+class DetectorService {
+  @dependency
+  twitter: Twitter;
 
-const serviceB = createService(ServiceB);
-strictEqual(serviceB.serviceA.name, 'Service A');
+  isFoalTSMentionedInTheLastTweets() {
+    const tweets = this.twitter.fetchLastTweets();
+    if (tweets.find(tweet => tweet.msg.includes('FoalTS'))) {
+      return true;
+    }
+    return false;
+  }
+}
+```
 
-const mock = {} as ServiceA;
-const serviceB2 = createService(ServiceB, { serviceA: mock });
-strictEqual(serviceB2.name, 'Service B');
+```typescript
+// detector.service.spec.ts
+import { strictEqual } from 'assert';
+import { createService } from '@foal/core';
+import { DetectorService } from './weather.service';
 
-const services = new ServiceManager();
-const serviceB3 = services.get(ServiceB);
-strictEqual(serviceB3.name, 'Service B');
-``` 
+it('DetectorService', () => {
+  const twitterMock = {
+    fetchLastTweets() {
+      return [
+        { message: 'Hello world!' },
+        { message: 'I LOVE FoalTS' },
+      ]
+    }
+  }
+  const service = createService(DetectorService, {
+    twitter: twitterMock
+  });
+
+  const actual = service.isFoalTSMentionedInTheLastTweets();
+
+  strictEqual(actual, true);
+});
+```
+
+## Accessing the `ServiceManager`
+
+In rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
+
+```typescript
+import { dependency, ServiceManager } from '@foal/core';
+
+class MyService {
+  foo() {
+    return 'foo';
+  }
+}
+
+class MyController {
+  @dependency
+  services: ServiceManager;
+
+  bar() {
+    return this.services.get(MyService).foo();
+  }
+}
+```
