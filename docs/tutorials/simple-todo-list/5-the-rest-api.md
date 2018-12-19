@@ -8,7 +8,6 @@ Create a new controller.
 
 ```sh
 foal generate controller api --register
-> Empty
 ```
 
 Open the new generated file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
