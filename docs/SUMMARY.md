@@ -41,6 +41,9 @@
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
   * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
 * [Validation](./validation.md)
+* API
+  * [REST Blueprints](./api-section/rest-blueprints.md)
+  * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
 * Cookbook
   * [Build a Public API](./cookbook/build-a-public-api.md)
   * [REST API](./cookbook/rest-api.md)

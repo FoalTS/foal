@@ -1,6 +1,6 @@
-# REST API
+# REST Controllers (deprecated)
 
-> *This feature is experimental*.
+> **Warning: This feature is deprecated and will disappear in the future. Please go to the [REST Blueprints](./rest-blueprints.md) page.**
 
 REST API can be created using a `RestController` and a `ResourceCollection` service. They are not mandatory and you can create your REST API by hand by implementing your own controller. But they can be useful to split the logic and the presentation and to avoid writing boilerplate.
 
