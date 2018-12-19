@@ -2,7 +2,6 @@
 
 ```sh
 foal generate service my-service
-> Empty
 ```
 
 ```typescript
