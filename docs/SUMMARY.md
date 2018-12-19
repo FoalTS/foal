@@ -51,13 +51,13 @@
   * [Code Generation](./development-environment/code-generation.md)
   * [Linting & Code Style](./development-environment/linting-and-code-style.md)
   * [VS Code](./development-environment/vscode.md)
-* [Security](./security/csrf-protection.md)
-  * [CSRF protection](./security/csrf-protection.md)
-  * [XSS Protection](./security/xss-protection.md)
 * [Testing](./testing/introduction.md)
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
+* Security
+  * [CSRF protection](./security/csrf-protection.md)
+  * [XSS Protection](./security/xss-protection.md)
 * Utilities
   * [Templating](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
