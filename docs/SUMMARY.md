@@ -51,7 +51,7 @@
   * [Code Generation](./development-environment/code-generation.md)
   * [Linting & Code Style](./development-environment/linting-and-code-style.md)
   * [VS Code](./development-environment/vscode.md)
-* [Testing](./testing/introduction.md)
+* Testing
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
