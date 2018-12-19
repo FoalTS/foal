@@ -25,7 +25,7 @@ The code of a controller should be concise. If necessary, controllers can delega
 
 ## Controller Architecture
 
-A controller is simply a class of which some methods are responsible for a route. These methods must be decorated by one of theses decorators `Get`, `Post`, `Patch`, `Put`, `Delete`, `Head` or `Options`.
+A controller is simply a class of which some methods are responsible for a route. These methods must be decorated by one of theses decorators `Get`, `Post`, `Patch`, `Put`, `Delete`, `Head` or `Options`. They may be asynchronous.
 
 *Example:*
 ```typescript
