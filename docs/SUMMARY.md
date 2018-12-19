@@ -40,9 +40,9 @@
   * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
   * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
-* [Cookbook](./cookbook/validation.md)
+* [Validation](./validation.md)
+* Cookbook
   * [Build a Public API](./cookbook/build-a-public-api.md)
-  * [Validation](./cookbook/validation.md)
   * [REST API](./cookbook/rest-api.md)
   * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
