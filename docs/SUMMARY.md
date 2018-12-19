@@ -45,7 +45,7 @@
   * [REST Blueprints](./api-section/rest-blueprints.md)
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
-* [Development Environment](./development-environment/build-and-start-the-app.md)
+* CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
   * [Code Generation](./development-environment/code-generation.md)
