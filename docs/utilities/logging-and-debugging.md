@@ -1,12 +1,21 @@
 # Logging & Debugging
 
-FoalTS provides a convenient hook to log basic messages: `Log(message: string, options: LogOptions = {})`
+FoalTS provides a convenient hook for logging debug messages: `Log(message: string, options: LogOptions = {})`.
 
-Example:
+```typescript
+interface LogOptions {
+  body?: boolean;
+  params?: boolean;
+  headers?: string[]|boolean;
+  query?: boolean;
+}
+```
+
+*Example:*
 ```typescript
 import { Get, HttpResponseOK, Log } from '@foal/core';
 
-@Log('Message', {
+@Log('AppController', {
   body: true,
   headers: [ 'X-CSRF-Token' ],
   params: true,
