@@ -46,7 +46,6 @@
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
 * Cookbook
-  * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
   * [404 Page](./cookbook/404-page.md)
 * [Development Environment](./development-environment/build-and-start-the-app.md)
@@ -62,6 +61,9 @@
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
+* Utilities
+  * [Templating](./utilities/templating.md)
+  * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * [Deployment & Environments](./deployment-and-environments/configuration.md)
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->

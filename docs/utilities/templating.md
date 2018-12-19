@@ -1,10 +1,10 @@
-# Template engine
+# Templating
 
 FoalTS comes up with several tools to render templates.
 
 ## `render(templatePath: string, locals: object, dirname: string): HttpResponseOK`
 
-Renders the template with the given locals and then returns an `HttpResponeOK` whose body is the rendered template.
+Renders the template with the given locals and then returns an `HttpResponseOK` whose body is the rendered template.
 
 Example:
 ```typescript

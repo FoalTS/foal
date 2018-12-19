@@ -1,4 +1,4 @@
-# Basic logging
+# Logging & Debugging
 
 FoalTS provides a convenient hook to log basic messages: `Log(message: string, options: LogOptions = {})`
 
