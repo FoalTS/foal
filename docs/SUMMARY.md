@@ -44,9 +44,8 @@
 * API
   * [REST Blueprints](./api-section/rest-blueprints.md)
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
+  * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
 * Cookbook
-  * [Build a Public API](./cookbook/build-a-public-api.md)
-  * [REST API](./cookbook/rest-api.md)
   * [Templates](./cookbook/template-engine.md)
   * [Basic logging](./cookbook/basic-logging.md)
   * [404 Page](./cookbook/404-page.md)

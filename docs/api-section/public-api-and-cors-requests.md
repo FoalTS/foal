@@ -1,4 +1,4 @@
-# Build a Public API
+# Public API & CORS Requests
 
 Building an Open API requires to enable / disable some features.
 
