@@ -7,11 +7,9 @@
 
 // 3p
 import * as program from 'commander';
-import { prompt, Separator } from 'inquirer';
 
 // FoalTS
 import {
-  ControllerType,
   createApp,
   createController,
   createEntity,
@@ -20,7 +18,6 @@ import {
   createService,
   createSubApp,
   createVSCodeConfig,
-  ServiceType
 } from './generate';
 import { runScript } from './run-script';
 
@@ -53,11 +50,7 @@ program
     name = name || 'no-name';
     switch (type) {
       case 'controller':
-        const controllerChoices: ControllerType[] = [ 'Empty', 'REST'/*, 'GraphQL'*/, 'Login' ];
-        const controllerAnswers = await prompt([
-          { choices: controllerChoices, name: 'type', type: 'list', message: 'Type' }
-        ]);
-        createController({ name, type: controllerAnswers.type, register: options.register || false  });
+        createController({ name, type: 'Empty', register: options.register || false  });
         break;
       case 'entity':
         createEntity({ name });
@@ -72,22 +65,7 @@ program
         createScript({ name });
         break;
       case 'service':
-        const serviceChoices: ServiceType[] = [
-          'Empty',
-          new Separator(),
-          'ResourceCollection',
-          'EntityResourceCollection',
-          // new Separator(),
-          // 'GraphQLResolver',
-          new Separator(),
-          'Authenticator',
-          'EmailAuthenticator',
-          new Separator(),
-        ];
-        const serviceAnswers = await prompt([
-          { choices: serviceChoices, name: 'type', type: 'list', message: 'Type', pageSize: 10 }
-        ]);
-        createService({ name, type: serviceAnswers.type});
+        createService({ name, type: 'Empty' });
         break;
       case 'vscode-config':
         createVSCodeConfig();

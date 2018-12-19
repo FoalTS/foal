@@ -60,7 +60,6 @@ The next step is to create a controller that logs the users in or out and redire
 
 ```
 foal generate controller auth --register
-> Empty
 ```
 
 Open the new file `auth.controller.ts` and replace its content.
