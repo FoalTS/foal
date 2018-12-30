@@ -87,7 +87,7 @@ This section describes how to handle authentication with an email and a password
 Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a password.
 
 ```typescript
-import { parsePassword } from '@foal/core';
+import { encryptPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 ​
@@ -105,7 +105,7 @@ export class User extends UserWithPermissions {
 ​
   async setPassword(password: string) {
     // Encrypt the password before storing it in the database
-    this.password = await parsePassword(password);
+    this.password = await encryptPassword(password, { legacy: true });
   }​
 }
 
