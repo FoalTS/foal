@@ -34,8 +34,8 @@ describe('encryptPassword', () => {
 
     strictEqual(algorithm, 'pbkdf2_sha256');
     strictEqual(parseInt(iterations, 10), 100000);
-    strictEqual(salt.length, 32);
-    strictEqual(derivedKey.length, 128);
+    strictEqual(salt.length, 32); // 16 * 2
+    strictEqual(derivedKey.length, 128); // 64 * 2
 
     const expectedBuffer = await promisify(pbkdf2)(
       plainPassword, salt, parseInt(iterations, 10), 64, 'sha256'
