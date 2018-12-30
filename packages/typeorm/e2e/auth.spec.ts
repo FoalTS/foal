@@ -4,11 +4,11 @@ import { ok } from 'assert';
 // 3p
 import {
   createApp,
+  encryptPassword,
   Get,
   HttpResponseOK,
   LoginController,
   LoginRequired,
-  parsePassword,
   strategy,
 } from '@foal/core';
 import * as request from 'supertest';
@@ -89,7 +89,7 @@ it('Authentication and authorization', async () => {
 
   const user = new User();
   user.email = 'john@foalts.org';
-  user.password = await parsePassword('password');
+  user.password = await encryptPassword('password', { legacy: true });
   await getRepository(User, 'create-connection').save(user);
 
   await getConnection('create-connection').close();
