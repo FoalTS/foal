@@ -3,3 +3,5 @@ node_modules/
 npm-debug.log
 lib/
 db.sqlite3
+.vscode/
+.idea/
