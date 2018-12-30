@@ -1,6 +1,10 @@
 import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
+/**
+ * @deprecated
+ * @param password
+ */
 export async function parsePassword(password: string): Promise<string> {
   const salt = (await promisify(randomBytes)(16)).toString('hex');
   const iterations = 100000;
