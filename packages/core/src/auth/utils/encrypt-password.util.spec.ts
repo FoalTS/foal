@@ -1,8 +1,9 @@
 // std
 import { strictEqual } from 'assert';
-import { pbkdf2Sync } from 'crypto';
+import { pbkdf2, pbkdf2Sync } from 'crypto';
 
 // FoalTS
+import { promisify } from 'util';
 import { encryptPassword } from './encrypt-password.util';
 
 describe('encryptPassword', () => {
@@ -24,17 +25,22 @@ describe('encryptPassword', () => {
     strictEqual(derivedKey, expectedBuffer.toString('base64'));
   });
 
-  it('should encode the derived key in hexadecimal if options.encoding = "hex".', async () => {
+  it('should be able to encrypt the plain password using the legacy way (old parsePassword util).', async () => {
     const plainPassword = 'hello world';
-    const actual = await encryptPassword(plainPassword, { encoding: 'hex' });
+    const actual = await encryptPassword(plainPassword, { legacy: true });
 
-    const [ algorithm, iterations, salt, derivedKey ] = actual.split('$');
+    strictEqual(typeof actual, 'string');
+    const [ algorithm, iterations, salt, derivedKey] = actual.split('$');
 
-    const expectedBuffer = await pbkdf2Sync(
-      plainPassword, Buffer.from(salt, 'hex'), parseInt(iterations, 10), 32, 'sha256'
+    strictEqual(algorithm, 'pbkdf2_sha256');
+    strictEqual(parseInt(iterations, 10), 100000);
+    strictEqual(salt.length, 32);
+    strictEqual(derivedKey.length, 128);
+
+    const expectedBuffer = await promisify(pbkdf2)(
+      plainPassword, salt, parseInt(iterations, 10), 64, 'sha256'
     );
-
-    strictEqual(derivedKey, expectedBuffer.toString('hex'));
+    strictEqual(expectedBuffer.toString('hex'), derivedKey);
   });
 
 });
