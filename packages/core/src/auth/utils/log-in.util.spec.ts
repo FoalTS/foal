@@ -3,14 +3,13 @@ import { deepStrictEqual } from 'assert';
 
 // FoalTS
 import { Context } from '../../core';
-import { AbstractUser } from '../entities';
 import { logIn } from './log-in.util';
 
 describe('logIn', () => {
 
-  it('should create or update ctx.session.authentication to include the userId.', async () => {
+  it('should create or update ctx.session.authentication to include the userId.', () => {
     const ctx = new Context({ session: {} });
-    const user = { id: 1 } as AbstractUser;
+    const user = { id: 1 };
 
     logIn(ctx, user);
 
@@ -26,6 +25,18 @@ describe('logIn', () => {
       foo: 'bar',
       userId: 1
     });
+  });
+
+  it('should support a custom idKey.', async () => {
+    const ctx = new Context({ session: {} });
+    const user = { _id: 1 };
+
+    logIn(ctx, user, '_id');
+
+    deepStrictEqual(ctx.request.session.authentication, {
+      userId: 1
+    });
+
   });
 
 });

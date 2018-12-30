@@ -1,10 +1,10 @@
 # Table of contents
 
-* [ObjectDoesNotExist][ClassDeclaration-23]
+* [ObjectDoesNotExist][ClassDeclaration-1]
     * Constructor
-        * [constructor(content)][Constructor-16]
+        * [constructor(content)][Constructor-1]
     * Properties
-        * [isObjectDoesNotExist][PropertyDeclaration-55]
+        * [isObjectDoesNotExist][PropertyDeclaration-2]
 
 # ObjectDoesNotExist
 
@@ -37,6 +37,6 @@ public readonly isObjectDoesNotExist: true;
 
 true
 
-[ClassDeclaration-23]: objectdoesnotexist.md#objectdoesnotexist
-[Constructor-16]: objectdoesnotexist.md#constructorcontent
-[PropertyDeclaration-55]: objectdoesnotexist.md#isobjectdoesnotexist
+[ClassDeclaration-1]: objectdoesnotexist.md#objectdoesnotexist
+[Constructor-1]: objectdoesnotexist.md#constructorcontent
+[PropertyDeclaration-2]: objectdoesnotexist.md#isobjectdoesnotexist

@@ -41,6 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "@foal/core": "^0.6.2",
+    "@foal/typeorm": "^0.6.2",
     "@foal/ejs": "^0.6.2",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",

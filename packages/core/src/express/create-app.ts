@@ -54,6 +54,11 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
 
   if (Config.get('settings', 'csrf', false) as boolean) {
     app.use(csurf());
+  } else {
+    app.use((req, res, next) => {
+      req.csrfToken = () => 'CSRF protection disabled.';
+      next();
+    });
   }
   app.use((err, req, res, next) => {
     if (err.code === 'EBADCSRFTOKEN') {

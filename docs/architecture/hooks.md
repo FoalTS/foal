@@ -41,7 +41,8 @@ It may also return an `HookPostFunction` that will be executed after the method 
 ## Some common hooks
 
 - `ValidateBody` validates the format of the request body.
-- `PermissionRequired` or `LoginRequired` restrict the route access to certain users.
+- `LoginRequired` and `LoginOptional` authenticate the user by filling the `ctx.user` property.
+- `PermissionRequired` restricts the route access to certain users.
 
 ## How to create one
 

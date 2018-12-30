@@ -1,23 +1,23 @@
 # Table of contents
 
-* [Context][ClassDeclaration-6]
+* [Context][ClassDeclaration-0]
     * Constructor
         * [constructor(request)][Constructor-0]
     * Properties
-        * [state][PropertyDeclaration-15]
-        * [user][PropertyDeclaration-16]
+        * [state][PropertyDeclaration-0]
+        * [user][PropertyDeclaration-1]
 
 # Context
 
 ```typescript
-class Context<User extends AbstractUser = AbstractUser>
+class Context<User = any>
 ```
 
 **Type parameters**
 
-| Name | Constraint                         | Default                            |
-| ---- | ---------------------------------- | ---------------------------------- |
-| User | [AbstractUser][ClassDeclaration-1] | [AbstractUser][ClassDeclaration-1] |
+| Name | Default |
+| ---- | ------- |
+| User | any     |
 ## Constructor
 
 ### constructor(request)
@@ -49,16 +49,14 @@ public state: { [key: string]: any; };
 ### user
 
 ```typescript
-public user: User | undefined;
+public user: User;
 ```
 
 **Type**
 
-User | undefined
+User
 
-[ClassDeclaration-6]: context.md#context
-[ClassDeclaration-1]: abstractuser.md#abstractuser
-[ClassDeclaration-1]: abstractuser.md#abstractuser
+[ClassDeclaration-0]: context.md#context
 [Constructor-0]: context.md#constructorrequest
-[PropertyDeclaration-15]: context.md#state
-[PropertyDeclaration-16]: context.md#user
+[PropertyDeclaration-0]: context.md#state
+[PropertyDeclaration-1]: context.md#user
