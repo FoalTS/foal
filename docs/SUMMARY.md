@@ -33,7 +33,7 @@
   * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
   * [Hooks](./architecture/hooks.md)
 * Databases
-  * [Introduction](./databases/introduction.md)
+  * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
 * [Authentication & Access Control](./authentication-and-access-control/SUMMARY.md)
