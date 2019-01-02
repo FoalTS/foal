@@ -1,18 +1,33 @@
 // std
-import { ok, strictEqual } from 'assert';
+import { fail, ok, strictEqual } from 'assert';
 import { pbkdf2Sync } from 'crypto';
 
 // FoalTS
 import { encryptPassword } from './encrypt-password.util';
 import { verifyPassword } from './verify-password.util';
 
-// should reject an error if the encrypted password format is invalid
-// algorithm, parseInt
-
 describe('verifyPassword', () => {
 
-  it('should reject an Error if the encrypted password format is invalid.', () => {
+  it('should reject an Error if the encrypted password format is invalid.', async () => {
+    return Promise.all([
+      verifyPassword('hello world', 'pbkdf256')
+        .then(() => fail('This promise should be rejected.'))
+        .catch(error => strictEqual(error.message, 'Invalid algorithm.')),
 
+      verifyPassword('hello world', 'pbkdf2_sha256')
+        .then(() => fail('This promise should be rejected.'))
+        .catch(error => strictEqual(error.message, 'Invalid password format.')),
+      verifyPassword('hello world', 'pbkdf2_sha256$3')
+        .then(() => fail('This promise should be rejected.'))
+        .catch(error => strictEqual(error.message, 'Invalid password format.')),
+      verifyPassword('hello world', 'pbkdf2_sha256$3$aaaa')
+        .then(() => fail('This promise should be rejected.'))
+        .catch(error => strictEqual(error.message, 'Invalid password format.')),
+
+      verifyPassword('hello world', 'pbkdf2_sha256$aaa$aaaa$xxx')
+        .then(() => fail('This promise should be rejected.'))
+        .catch(error => strictEqual(error.message, 'Invalid password format.')),
+    ]);
   });
 
   it('should verify passwords based on the specified algorithm, iterations and salt.', async () => {
