@@ -1,5 +1,5 @@
 node_modules/
 .DS_Store
 npm-debug.log
-lib/
+build/
 db.sqlite3

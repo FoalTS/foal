@@ -14,7 +14,7 @@ Then update the `ormconfig.json` configuration file to connect the application t
 
 ```json
 {
-  "entities": ["lib/app/**/*.entity.js"],
+  "entities": ["build/app/**/*.entity.js"],
   "type": "mongodb",
   "host": "localhost",
   "port": 27017,

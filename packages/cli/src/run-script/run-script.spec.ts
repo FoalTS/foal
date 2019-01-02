@@ -12,12 +12,12 @@ describe('runScript', () => {
   afterEach(() => {
     rmfileIfExists('src/scripts/my-script.ts');
     rmdirIfExists('src/scripts');
-    rmfileIfExists('lib/scripts/my-script.js');
-    rmdirIfExists('lib/scripts');
+    rmfileIfExists('build/scripts/my-script.js');
+    rmdirIfExists('build/scripts');
     rmfileIfExists('my-script-temp');
   });
 
-  it('should log a suitable message if lib/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
+  it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
     let msg;
     const log = message => msg = message;
     runScript({ name: 'my-script' }, [], log);
@@ -27,7 +27,7 @@ describe('runScript', () => {
     );
   });
 
-  it('should log a suitable message if lib/scripts/my-script.js does not exist but '
+  it('should log a suitable message if build/scripts/my-script.js does not exist but '
       + 'src/scripts/my-script.ts exists.', () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
@@ -38,41 +38,41 @@ describe('runScript', () => {
 
     strictEqual(
       msg,
-      'The script "my-script" does not exist in lib/scripts/. But it exists in src/scripts/.'
+      'The script "my-script" does not exist in build/scripts/. But it exists in src/scripts/.'
         + ' Please build your script by running the command "npm run build:scripts".'
     );
   });
 
-  it('should log a suitable message if no function called "main" was found in lib/scripts/my-script.js.', () => {
-    mkdirIfDoesNotExist('lib/scripts');
-    writeFileSync('lib/scripts/my-script.js', '', 'utf8');
+  it('should log a suitable message if no function called "main" was found in build/scripts/my-script.js.', () => {
+    mkdirIfDoesNotExist('build/scripts');
+    writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
     let msg;
     const log = message => msg = message;
 
-    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
     runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg,
-      'Error: No "main" function was found in lib/scripts/my-script.js.'
+      'Error: No "main" function was found in build/scripts/my-script.js.'
     );
   });
 
   it('should validate the process arguments with the schema if it is given.', () => {
-    mkdirIfDoesNotExist('lib/scripts');
+    mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.schema = { type: 'object', additionalProperties: false };
     module.exports.main = function main(args) {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
-    writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
     let msg;
     const log = message => msg = message;
 
-    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
     runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
@@ -88,15 +88,15 @@ describe('runScript', () => {
     );
   });
 
-  it('should call the "main" function of lib/scripts/my-script.js with the script arguments (no schema).', () => {
-    mkdirIfDoesNotExist('lib/scripts');
+  it('should call the "main" function of build/scripts/my-script.js with the script arguments (no schema).', () => {
+    mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.main = function main(args) {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
-    writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
-    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
     runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
@@ -116,8 +116,8 @@ describe('runScript', () => {
     });
   });
 
-  it('should call the "main" function of lib/scripts/my-script.js with the script arguments (a schema).', () => {
-    mkdirIfDoesNotExist('lib/scripts');
+  it('should call the "main" function of build/scripts/my-script.js with the script arguments (a schema).', () => {
+    mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.schema = {
       type: 'object',
@@ -129,9 +129,9 @@ describe('runScript', () => {
     module.exports.main = function main(args) {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
-    writeFileSync('lib/scripts/my-script.js', scriptContent, 'utf8');
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
-    delete require.cache[join(process.cwd(), `./lib/scripts/my-script.js`)];
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
     runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',

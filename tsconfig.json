@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
+    "outDir": "./build/",
     "noImplicitAny": false,
     "module": "commonjs",
     "target": "es2017",

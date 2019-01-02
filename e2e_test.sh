@@ -31,7 +31,7 @@ npm run build:e2e
 npm run start:e2e
 
 # Test the application when it is started
-pm2 start lib/index.js
+pm2 start build/index.js
 sleep 1
 response=$(
     curl http://localhost:3000 \

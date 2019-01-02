@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "build",
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
