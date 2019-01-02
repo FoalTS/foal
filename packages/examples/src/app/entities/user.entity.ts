@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { parsePassword } from '@foal/core';
+import { encryptPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
 
 @Entity()
@@ -16,7 +16,7 @@ export class User extends UserWithPermissions {
   password: string;
 
   async setPassword(password: string): Promise<void> {
-    this.password = await parsePassword(password);
+    this.password = await encryptPassword(password, { legacy: true });
   }
 
 }
