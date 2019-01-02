@@ -40,6 +40,7 @@
   * [Introduction](./authentication-and-access-control/introduction.md)
   * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
   * [JWT (authentication)](./authentication-and-access-control/jwt.md)
+  * [Password Management](./authentication-and-access-control/password-management.md)
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
   * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
 * [Validation](./validation.md)
