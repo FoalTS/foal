@@ -3,21 +3,25 @@ import { ok } from 'assert';
 
 // 3p
 import {
+  Context,
   createApp,
   encryptPassword,
   Get,
+  HttpResponseNoContent,
   HttpResponseOK,
-  LoginController,
+  HttpResponseUnauthorized,
+  logIn,
   LoginRequired,
-  strategy,
+  logOut,
+  Post,
+  ValidateBody,
+  verifyPassword,
 } from '@foal/core';
 import * as request from 'supertest';
 import { Column, createConnection, Entity, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import {
-  EmailAuthenticator,
-  emailSchema,
   fetchUserWithPermissions,
   Group,
   Permission,
@@ -49,14 +53,38 @@ it('Authentication and authorization', async () => {
     }
   }
 
-  class Authenticator extends EmailAuthenticator<User> {
-    entityClass = User;
-  }
+  class AuthController {
+    @Get('/logout')
+    logout(ctx: Context) {
+      logOut(ctx);
+      return new HttpResponseNoContent();
+    }
 
-  class AuthController extends LoginController {
-    strategies = [
-      strategy('login', Authenticator, emailSchema)
-    ];
+    @Post('/login')
+    @ValidateBody({
+      additionalProperties: false,
+      properties: {
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string' }
+      },
+      required: [ 'email', 'password' ],
+      type: 'object',
+    })
+    async login(ctx: Context) {
+      const user = await getRepository(User).findOne({ email: ctx.request.body.email });
+
+      if (!user) {
+        return new HttpResponseUnauthorized();
+      }
+
+      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+        return new HttpResponseUnauthorized();
+      }
+
+      logIn(ctx, user);
+
+      return new HttpResponseNoContent();
+    }
   }
 
   class AppController {
@@ -89,7 +117,7 @@ it('Authentication and authorization', async () => {
 
   const user = new User();
   user.email = 'john@foalts.org';
-  user.password = await encryptPassword('password', { legacy: true });
+  user.password = await encryptPassword('password');
   await getRepository(User, 'create-connection').save(user);
 
   await getConnection('create-connection').close();
@@ -164,7 +192,7 @@ it('Authentication and authorization', async () => {
 
   await getConnection('perm-connection').close();
 
-  /* Access the route that require a specific permission */
+  /* Access the route that requires a specific permission */
 
   await request(app).get('/bar').set('Cookie', cookie).expect(200);
 
