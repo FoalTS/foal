@@ -36,8 +36,10 @@
   * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-* [Authentication & Access Control](./authentication-and-access-control/SUMMARY.md)
+* Authentication & Access Control
+  * [Introduction](./authentication-and-access-control/introduction.md)
   * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
+  * [JWT (authentication)](./authentication-and-access-control/jwt.md)
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
   * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
 * [Validation](./validation.md)
