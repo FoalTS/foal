@@ -43,7 +43,7 @@
   * [JWT (authentication)](./authentication-and-access-control/jwt.md)
   * [Password Management](./authentication-and-access-control/password-management.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
-  * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
+  * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation](./validation.md)
 * API
   * [REST Blueprints](./api-section/rest-blueprints.md)

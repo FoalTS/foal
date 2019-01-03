@@ -1,88 +1,9 @@
-# Permissions and Authorization
+# Groups and Permissions
 
-Authorization, also known as Access Control, is mediating access to resources on the basis of identity. It answers the question *What the user is allowed to do?*. In this way it differs from authentication which, upstream, answers the question *Who is the user?*.
 
-## Simple Scenarios
-
-In simple applications, access control can be managed with static roles or even with an `isAdmin` column in the simplest cases.
-
-### Admin and Non-Admins
-
-If there are only two categories of users, administrators and non-administrators, a simple solution can be to add an `isAdmin` column to the `user` table. Then authorization is handled by looking at the `isAdmin` property of the User objects.
-
-*Example*
-```typescript
-// src/app/entities/user.entity.ts
-import { UserWithPermissions } from '@foal/typeorm';
-import { Column, Entity } from 'typeorm';
-
-@Entity()
-export class User extends UserWithPermissions {
-
-  @Column()
-  isAdmin: boolean;
-
-}
-```
-
-```typescript
-// src/app/services/my-service.service.ts
-import { PermissionDenied } from '@foal/core';
-
-import { User } from '../entities';
-
-export class MyService {
-  private adminSecret = 'my secret';
-
-  getSecret(authenticatedUser: User) {
-    if (authenticatedUser.isAdmin) {
-      return this.adminSecret;
-    }
-    throw new PermissionDenied();
-  }
-}
-```
-
-### Static Roles
-
-If it exists more than two categories and/or a user can belong to several categories then defining a `roles` property can also be a solution.
-
-*Example*
-```typescript
-// src/app/entities/user.entity.ts
-import { UserWithPermissions } from '@foal/typeorm';
-import { Column, Entity } from 'typeorm';
-
-@Entity()
-export class User extends UserWithPermissions {
-
-  @Column('simple-array')
-  roles: string[];
-
-}
-```
-
-```typescript
-// src/app/services/my-service.service.ts
-import { PermissionDenied } from '@foal/core';
-
-import { User } from '../entities';
-
-export class MyService {
-  private adminSecret = 'my secret';
-
-  getSecret(authenticatedUser: User) {
-    if (authenticatedUser.roles.includes('admin')) {
-      return this.adminSecret;
-    }
-    throw new PermissionDenied();
-  }
-}
-```
+In advanced applications, access control can be managed through permissions and groups.
 
 ## Permissions
-
-In more complex applications, access control is managed through permissions and groups.
 
 ### The Permission Entity
 
@@ -203,19 +124,29 @@ foal run-script create-group name="Administrators" codeName="admin" permissions=
 
 ## Users
 
-## Relations between Users, Groups and Permissions
+### Relations between Users, Groups and Permissions
 
 ![Permissions, groups and users](./permissions-groups-and-users.png)
 
-## The `hasPerm` Method
+### The `hasPerm` Method
 
 The `hasPerm(permissionCodeName: string)` method of the `User` class returns true if one of these conditions is true:
 - The user has the required permission.
 - The user belongs to a group that has the required permission.
 
-## Creating Users with Groups and Permissions with a Shell Script (CLI)
+### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 ```sh
 npm run build:scripts
 foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 ```
+
+## Login and PermissionRequired Hook
+
+
+The built-in `fetchUserWithPermissions` lets you use the `UserWithPermissions.hasPerm` method and the `PermissionRequired` hook.
+
+The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook:
+- returns a `401 Unauthorized` if no user is authenticated and `options.redirect` is undefined,
+- redirects the page to the given path if no user is authenticated and  `options.redirect` is defined,
+- returns a `403 Forbidden` if the user does not have the given permission. The `perm` argument is the `codeName` of the permission.
