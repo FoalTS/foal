@@ -38,7 +38,7 @@
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
 * Authentication & Access Control
   * [Introduction](./authentication-and-access-control/introduction.md)
-  * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
+  * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
   * [Session & Cookie (authentication)](./authentication-and-access-control/session-and-cookie.md)
   * [JWT (authentication)](./authentication-and-access-control/jwt.md)
   * [Password Management](./authentication-and-access-control/password-management.md)
