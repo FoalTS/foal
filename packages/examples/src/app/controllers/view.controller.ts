@@ -1,9 +1,12 @@
-import { Context, Get, LoginRequired, PermissionRequired, render } from '@foal/core';
+import { Context, Get, LoginRequired, render } from '@foal/core';
+import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
 
+import { User } from '../entities';
+
+@LoginRequired({ user: fetchUserWithPermissions(User), redirect: '/login' })
 export class ViewController {
 
   @Get('/')
-  @LoginRequired({ redirect: '/login' })
   home(ctx: Context) {
     return render('./templates/home.html', {
       csrfToken: ctx.request.csrfToken()

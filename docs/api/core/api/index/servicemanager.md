@@ -2,10 +2,10 @@
 
 * [ServiceManager][ClassDeclaration-5]
     * Methods
-        * [set(serviceClass, service)][MethodDeclaration-3]
-        * [get(serviceClass)][MethodDeclaration-4]
+        * [set(serviceClass, service)][MethodDeclaration-0]
+        * [get(serviceClass)][MethodDeclaration-1]
     * Properties
-        * [map][PropertyDeclaration-14]
+        * [map][PropertyDeclaration-8]
 
 # ServiceManager
 
@@ -32,7 +32,7 @@ public set<Service>(serviceClass: Class<Service>, service: any): void;
 
 | Name         | Type                                     |
 | ------------ | ---------------------------------------- |
-| serviceClass | [Class][InterfaceDeclaration-1]<Service> |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
 | service      | any                                      |
 
 **Return type**
@@ -59,7 +59,7 @@ public get<Service>(serviceClass: Class<Service>): Service;
 
 | Name         | Type                                     |
 | ------------ | ---------------------------------------- |
-| serviceClass | [Class][InterfaceDeclaration-1]<Service> |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
 
 **Return type**
 
@@ -75,12 +75,12 @@ public readonly map: Map<Class<any>, any>;
 
 **Type**
 
-Map<[Class][InterfaceDeclaration-1]<any>, any>
+Map<[Class][TypeAliasDeclaration-1]<any>, any>
 
 [ClassDeclaration-5]: servicemanager.md#servicemanager
-[MethodDeclaration-3]: servicemanager.md#setserviceclass-service
-[InterfaceDeclaration-1]: ../index.md#class
-[MethodDeclaration-4]: servicemanager.md#getserviceclass
-[InterfaceDeclaration-1]: ../index.md#class
-[PropertyDeclaration-14]: servicemanager.md#map
-[InterfaceDeclaration-1]: ../index.md#class
+[MethodDeclaration-0]: servicemanager.md#setserviceclass-service
+[TypeAliasDeclaration-1]: ../index.md#class
+[MethodDeclaration-1]: servicemanager.md#getserviceclass
+[TypeAliasDeclaration-1]: ../index.md#class
+[PropertyDeclaration-8]: servicemanager.md#map
+[TypeAliasDeclaration-1]: ../index.md#class

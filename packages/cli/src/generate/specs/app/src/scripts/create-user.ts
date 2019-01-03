@@ -1,5 +1,5 @@
 // 3p
-import { Group, Permission } from '@foal/core';
+import { Group, Permission } from '@foal/typeorm';
 // import { isCommon } from '@foal/password';
 import { createConnection, getManager, getRepository } from 'typeorm';
 

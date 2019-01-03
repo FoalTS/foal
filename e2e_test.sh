@@ -5,9 +5,11 @@ cd e2e-test-temp
 foal createapp my-app
 cd my-app
 
-# Test the generators that do not require user interaction
+# Test the generators
 foal g entity flight
 foal g hook foo-bar
+foal g service foo
+foal g controller bar --register
 foal g sub-app bar-foo
 foal g script bar-script
 

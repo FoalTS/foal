@@ -1,10 +1,10 @@
 # Table of contents
 
-* [Config][ClassDeclaration-29]
+* [Config][ClassDeclaration-24]
     * Methods
-        * [get(configName, propName, defaultValue)][MethodDeclaration-30]
+        * [get(configName, propName, defaultValue)][MethodDeclaration-21]
     * Properties
-        * [root][PropertyDeclaration-69]
+        * [root][PropertyDeclaration-53]
 
 # Config
 
@@ -43,6 +43,6 @@ public static root: string;
 
 string
 
-[ClassDeclaration-29]: config.md#config
-[MethodDeclaration-30]: config.md#getconfigname-propname-defaultvalue
-[PropertyDeclaration-69]: config.md#root
+[ClassDeclaration-24]: config.md#config
+[MethodDeclaration-21]: config.md#getconfigname-propname-defaultvalue
+[PropertyDeclaration-53]: config.md#root

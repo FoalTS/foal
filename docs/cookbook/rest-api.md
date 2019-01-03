@@ -15,15 +15,15 @@ foal g controller flight
 
 ```typescript
 interface IResourceCollection {
-  create(user: AbstractUser|undefined, data: object, params: { fields?: string[] });
+  create(user: any, data: object, params: { fields?: string[] });
 
-  find(user: AbstractUser|undefined, params: { query?: object, fields?: string[] });
-  findById(user: AbstractUser|undefined, id, params: { fields?: string[] });
+  find(user: any, params: { query?: object, fields?: string[] });
+  findById(user: any, id, params: { fields?: string[] });
 
-  modifyById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
-  updateById(user: AbstractUser|undefined, id, data: object, params: { fields?: string[] });
+  modifyById(user: any, id, data: object, params: { fields?: string[] });
+  updateById(user: any, id, data: object, params: { fields?: string[] });
 
-  deleteById(user: AbstractUser|undefined, id, params: {});
+  deleteById(user: any, id, params: {});
 }
 ```
 
@@ -45,7 +45,7 @@ foal g service flight
 ```
 
 ```typescript
-import { EntityResourceCollection } from '@foal/core';
+import { EntityResourceCollection } from '@foal/typeorm';
 
 import { Flight } from '../entities/flight.entity';
 
@@ -68,14 +68,14 @@ The service also provides `middlewares` to handle authorization, input validatio
 ```typescript
 ...
 
-const restrictToAdminUsers = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const restrictToAdminUsers = (context: { user: any, resource, data, params: CollectionParams }) => {
   const user = context.user;
   if (!user || !user.hasPerm('admin-perm')) {
     throw new PermissionDenied()
   }
 }
 
-const validateData = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const validateData = (context: { user: any, resource, data, params: CollectionParams }) => {
   if (typeof context.data.myNum !== 'number') {
     throw new ValidationError({
       message: 'myNum should be a number'
@@ -83,7 +83,7 @@ const validateData = (context: { user: AbstractUser|undefined, resource, data, p
   }
 }
 
-const onlyReturnName = (context: { user: AbstractUser|undefined, resource, data, params: CollectionParams }) => {
+const onlyReturnName = (context: { user: any, resource, data, params: CollectionParams }) => {
   params.fields = [ 'name' ];
 }
 
@@ -172,7 +172,7 @@ export class Todo {
 
 ```typescript
 // flight-collection.service.ts
-import { EntityResourceCollection, middleware, validate } from '@foal/core';
+import { EntityResourceCollection, middleware, validate } from '@foal/typeorm';
 
 import { Flight } from '../entities';
 
@@ -199,7 +199,8 @@ export class FlightCollection extends EntityResourceCollection {
 
 ```typescript
 // flight.controller.ts
-import { dependency, RestController } from '@foal/core';
+import { dependency } from '@foal/core';
+import { RestController } from '@foal/typeorm';
 
 import { FlightCollection } from '../services';
 

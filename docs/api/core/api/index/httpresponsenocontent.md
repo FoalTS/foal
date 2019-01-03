@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseNoContent][ClassDeclaration-10]
+* [HttpResponseNoContent][ClassDeclaration-9]
     * Constructor
-        * [constructor()][Constructor-4]
+        * [constructor()][Constructor-7]
     * Properties
-        * [isHttpResponseNoContent][PropertyDeclaration-24]
-        * [statusCode][PropertyDeclaration-25]
-        * [statusMessage][PropertyDeclaration-26]
+        * [isHttpResponseNoContent][PropertyDeclaration-16]
+        * [statusCode][PropertyDeclaration-17]
+        * [statusMessage][PropertyDeclaration-18]
 
 # HttpResponseNoContent
 
@@ -57,8 +57,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-10]: httpresponsenocontent.md#httpresponsenocontent
-[Constructor-4]: httpresponsenocontent.md#constructor
-[PropertyDeclaration-24]: httpresponsenocontent.md#ishttpresponsenocontent
-[PropertyDeclaration-25]: httpresponsenocontent.md#statuscode
-[PropertyDeclaration-26]: httpresponsenocontent.md#statusmessage
+[ClassDeclaration-9]: httpresponsenocontent.md#httpresponsenocontent
+[Constructor-7]: httpresponsenocontent.md#constructor
+[PropertyDeclaration-16]: httpresponsenocontent.md#ishttpresponsenocontent
+[PropertyDeclaration-17]: httpresponsenocontent.md#statuscode
+[PropertyDeclaration-18]: httpresponsenocontent.md#statusmessage

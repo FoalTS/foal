@@ -1,9 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { AbstractUser, parsePassword } from '@foal/core';
+import { encryptPassword } from '@foal/core';
+import { UserWithPermissions } from '@foal/typeorm';
 
 @Entity()
-export class User extends AbstractUser {
+export class User extends UserWithPermissions {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,9 +16,9 @@ export class User extends AbstractUser {
   password: string;
 
   async setPassword(password: string): Promise<void> {
-    this.password = await parsePassword(password);
+    this.password = await encryptPassword(password, { legacy: true });
   }
 
 }
 
-export { Group, Permission } from '@foal/core';
+export { Group, Permission } from '@foal/typeorm';

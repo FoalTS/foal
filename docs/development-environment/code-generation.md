@@ -12,9 +12,6 @@ Create a new directory with all the required files to get started.
 
 ```shell
 foal g controller foobar
-> Empty
-> REST
-> Login
 ```
 
 Create a new controller in `./src/app/controllers`, in `./controllers` or in the current directory depending on which folders are found.
@@ -53,13 +50,6 @@ Create a new sub-app with all its files in `./src/app/sub-apps`, in `./sub-apps`
 
 ```shell
 foal g service foobar
-> Empty
-  ──────────────
-> ResourceCollection
-> EntityResourceCollection
-  ──────────────
-> Authenticator
-> EmailAuthenticator
 ```
 
 Create a new service in `./src/app/services`, in `./services` or in the current directory depending on which folders are found.

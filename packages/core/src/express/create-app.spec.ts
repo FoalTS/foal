@@ -27,6 +27,22 @@ describe('createApp', () => {
     return promise;
   });
 
+  it('should define the function req.csrfToken even if csrf is set to false in Config.', () => {
+    process.env.SETTINGS_CSRF = 'false';
+    class AppController {
+      @Post('/')
+      index(ctx: Context) {
+        return new HttpResponseOK(ctx.request.csrfToken());
+      }
+    }
+    const app = createApp(AppController);
+    const promise = Promise.all([
+      request(app).post('/').expect(200).expect('CSRF protection disabled.'),
+    ]);
+    process.env.SETTINGS_CSRF = 'false'; // Not great: assumption about the default param here.
+    return promise;
+  });
+
   it('should return 404 "Not Found" on requests that have no handlers.', () => {
     const app = createApp(class {});
     return Promise.all([

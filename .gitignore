@@ -9,3 +9,7 @@ e2e-test-temp
 
 lib/
 .vscode/
+.idea/
+
+test_db.sqlite
+e2e_db.sqlite
