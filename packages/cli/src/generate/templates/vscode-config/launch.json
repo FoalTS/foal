@@ -5,10 +5,10 @@
       "type": "node",
       "request": "launch",
       "name": "Start the server",
-      "program": "${workspaceFolder}/lib/index.js",
+      "program": "${workspaceFolder}/build/index.js",
       "preLaunchTask": "build",
       "outFiles": [
-        "${workspaceFolder}/lib/**/*.js"
+        "${workspaceFolder}/build/**/*.js"
       ]
     }
   ]
