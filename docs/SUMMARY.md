@@ -42,6 +42,7 @@
   * [Session & Cookie (authentication)](./authentication-and-access-control/session-and-cookie.md)
   * [JWT (authentication)](./authentication-and-access-control/jwt.md)
   * [Password Management](./authentication-and-access-control/password-management.md)
+  * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
 * [Validation](./validation.md)
 * API
