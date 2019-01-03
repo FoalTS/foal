@@ -27,40 +27,47 @@
 
 ## Topic Guides
 
-* [Databases](./databases/introduction.md)
-  * [Introduction](./databases/introduction.md)
+* Architecture
+  * [Architecture Overview](./architecture/architecture-overview.md)
+  * [Controllers](./architecture/controllers.md)
+  * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
+  * [Hooks](./architecture/hooks.md)
+* Databases
+  * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-* [Authentication & Access Control](./authentication-and-access-control/SUMMARY.md)
-  * [User Entity & create-user Script](./authentication-and-access-control/user-entity.md)
-  * [Permissions & Authorization](./authentication-and-access-control/permissions-and-authorization.md)
-  * [Usage in Web Requests](./authentication-and-access-control/usage-in-web-requests.md)
-* [Cookbook](./cookbook/validation.md)
-  * [Build a Public API](./cookbook/build-a-public-api.md)
-  * [Validation](./cookbook/validation.md)
-  * [REST API](./cookbook/rest-api.md)
-  * [Templates](./cookbook/template-engine.md)
-  * [Basic logging](./cookbook/basic-logging.md)
-  * [404 Page](./cookbook/404-page.md)
-* [Architecture](./architecture/introduction.md)
-  * [Request Lifecycle](./architecture/request-lifecycle.md)
-  * [Controllers](./architecture/controllers.md)
-  * [Services](./architecture/services.md)
-  * [Hooks](./architecture/hooks.md)
-* [Development Environment](./development-environment/build-and-start-the-app.md)
+* Authentication & Access Control
+  * [Introduction](./authentication-and-access-control/introduction.md)
+  * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
+  * [Session & Cookie (authentication)](./authentication-and-access-control/session-and-cookie.md)
+  * [JWT (authentication)](./authentication-and-access-control/jwt.md)
+  * [Password Management](./authentication-and-access-control/password-management.md)
+  * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
+  * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
+* [Validation](./validation.md)
+* API
+  * [REST Blueprints](./api-section/rest-blueprints.md)
+  * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
+  * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
+* CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
   * [Code Generation](./development-environment/code-generation.md)
   * [Linting & Code Style](./development-environment/linting-and-code-style.md)
   * [VS Code](./development-environment/vscode.md)
-* [Security](./security/csrf-protection.md)
-  * [CSRF protection](./security/csrf-protection.md)
-  * [XSS Protection](./security/xss-protection.md)
-* [Testing](./testing/introduction.md)
+* Testing
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
-* [Deployment & Environments](./deployment-and-environments/configuration.md)
+* Security
+  * [CSRF protection](./security/csrf-protection.md)
+  * [XSS Protection](./security/xss-protection.md)
+* Utilities
+  * [Templating](./utilities/templating.md)
+  * [Logging & Debugging](./utilities/logging-and-debugging.md)
+* Cookbook
+  * [404 Page](./cookbook/404-page.md)
+* Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
 

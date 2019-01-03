@@ -11,7 +11,7 @@ class MyController {}
 class MyController {}
 ```
 
-FoalTS provides two hooks `JWTOptional` and `JWTRequired` to authenticate users with a JWT token.
+FoalTS provides two hooks `JWTOptional` and `JWTRequired` to authenticate users with a [JWT](https://jwt.io/introduction/) token.
 
 They expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
 
@@ -20,7 +20,6 @@ The content of the header should look like the following:
 ```
 Authorization: Bearer <token>
 ```
-
 
 > FoalTS makes no assumptions about how the JWT is generated and sent / stored to the client. The choice is yours. However, whenever the user wants to access a protected route, the client must send the JWT in the Authorization header using the Bearer schema.
 
@@ -45,7 +44,7 @@ By default, the value of `ctx.user` is the decoded payload of the JWT. However, 
 
 The `user` option is a function which takes the JWT `subject` as argument (the id of the user) and returns the data to assign to `ctx.user`.
 
-> The `@foal/typeorm` package provides a handy function `fetchUser(userEntity)` to fetch a user from the database.
+> The `@foal/typeorm` package provides two handy functions `fetchUser(userEntity)` and `fetchUserWithPermissions(userEntity)` to fetch a user from the database.
 
 ## The `blacklist` option
 

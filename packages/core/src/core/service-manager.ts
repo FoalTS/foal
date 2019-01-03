@@ -21,7 +21,7 @@ export function dependency(target: any, propertyKey: string) {
  * Create a new service with its dependencies.
  *
  * @param serviceClass The service class.
- * @param dependencies Either a ServiceManager or an object which key/values are the service classes/instances.
+ * @param dependencies Either a ServiceManager or an object which key/values are the service properties/instances.
  */
 export function createService<Service>(serviceClass: Class<Service>, dependencies?: object|ServiceManager): Service {
   const serviceDependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];

@@ -4,7 +4,9 @@
 foal generate hook my-hook
 ```
 
-Hooks are decorators that execute extra logic before and/or after the method execution.
+## Description
+
+Hooks are decorators that execute extra logic before and/or after the execution of a controller method.
 
 They are particulary useful in these scenarios:
 - authentication & access control
@@ -13,150 +15,268 @@ They are particulary useful in these scenarios:
 
 They improve code readability and make unit testing easier.
 
-## Structure
+## Built-in Hooks
 
-A hook is made of small function, synchronous or asynchronous, that is executed before the controller method.
+Foal provides a number of hooks to handle the most common scenarios.
 
-This function takes two parameters:
-- The `Context` object which provides some information on the http request as well as the authenticated user if it exists.
-- The service manager that lets access other services within the hook.
-
-It may return an `HttpResponse` object. If so, the remaining hooks and the controller method are not executed, and the server responds with this response.
-
-It may also return an `HookPostFunction` that will be executed after the method execution. This takes three parameters: the context, the service manager and the response returned by the controller method.
-
-<!--
-// TODO: Write this.
-> Difference between a hook and an express middleware?
-> - sync or async
-> - do not use res, but return, resolves a HttpResponse
-> - pas de next. Si pas de valeur retounée ou d'erreur levée/rejetée, on va à l'étape suivante
-> - ctx est un peu différent de req avec le state notamment
-> - purpose: not to be at the end of the chain. It's really in the middle.
->
--->
-
-<!-- > By convention post-hook names should start with `onSuccess`, `onError`, `onClientError` or `onServorError` if they are dealing only with some subclasses of `HttpResponse`.-->
-
-## Some common hooks
-
-- `ValidateBody` validates the format of the request body.
-- `LoginRequired` and `LoginOptional` authenticate the user by filling the `ctx.user` property.
+- `ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation.md)).
+- `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
+- `JWTRequired`, `JWTOptional`, `LoginRequired`, `LoginOptional` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
 
-## How to create one
+## Use
 
+A hook can decorate a controller method or the controller itself. If it decorates the controller then it applies to all its methods and sub-controllers.
+
+In the below example, `LoginRequired` applies to `listProducts` and `addProduct`.
+
+*Example:*
 ```typescript
 import {
-  Context,
-  ServiceManager,
-  Hook
+  Get, HttpResponseCreated, HttpResponseOK,
+  LoginRequired, Post, ValidateBody
 } from '@foal/core';
 
-export function HelloWorld(smiley: string){
-  return Hook((ctx: Context, services: ServiceManager) => {
-    console.log('Hello world ' + smiley);
-  });
+@LoginRequired(/* ... */)
+class AppController {
+  private products = [
+    { name: 'Hoover' }
+  ];
+
+  @Get('/products')
+  listProducts() {
+    return new HttpResponseOK(this.products)
+  }
+
+  @Post('/products')
+  @ValidateBody({
+    type: 'object',
+    properties: {
+      name: { type: 'string' }
+    },
+    additionalProperties: false,
+    required: [ 'name' ]
+  })
+  addProduct(ctx) {
+    this.products.push(ctx.request.body);
+    return new HttpResponseCreated();
+  }
+
+}
+```
+
+If the user makes a POST request to `/products` whereas she/he is not authenticated, then the server will respond with a 401 error and the `ValidateBody` hook and `addProduct` method won't be executed.
+
+## Architecture
+
+In addition to the hooks provided by FoalTS, you can also create your own.
+
+A hook is made of a small function, synchronous or asynchronous, that is executed before the controller method.
+
+To create one, you need to call the `Hook` function.
+
+*Example:*
+```typescript
+import { Get, Hook, HttpResponseOK } from '@foal/core';
+
+class MyController {
+
+  @Get('/')
+  @Hook(() => {
+    console.log('Receiving GET / request...');
+  })
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
+
+}
+```
+
+The hook function can take two parameters: the `Context` object and the service manager. The [Context object](./controllers.md) is specific to the request and gives you information on it. The service manager lets you access any service through its `get` method.
+
+*Example:*
+```typescript
+import { Get, Hook, HttpResponseOK } from '@foal/core';
+
+class Logger {
+  log(message: string) {
+    console.log(`${new Date()} - ${message}`);
+  }
 }
 
-export function LogExecutionTime() {
-  return Hook(() => {
-    const NS_PER_SEC = 1e9;
+class MyController {
+
+  @Get('/')
+  @Hook((ctx, services) => {
+    const logger = services.get(Logger);
+    logger.log('IP: ' + ctx.request.ip);
+  })
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
+
+}
+```
+
+A hook function can return an `HttpResponse` object. If so, the remaining hooks and the controller method are not executed and the object is used to render the HTTP response.
+
+*Example:*
+```typescript
+import { Get, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+
+class MyController {
+
+  @Get('/')
+  @Hook((ctx) => {
+    if (typeof ctx.request.body.name !== 'string') {
+      return new HttpResponseBadRequest();
+    }
+  })
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
+
+}
+```
+
+A hook function may also return a *hook post function* to be executed after the controller method. It is interesting in case you want to change the HTTP response or perform logging.
+
+*Example:*
+```typescript
+import { Get, Hook, HttpResponseOK } from '@foal/core';
+
+class MyController {
+
+  @Get('/')
+  @Hook(() => {
     const time = process.hrtime(); 
+
     return () => {
-      const diff = process.hrtime(time);
-      console.log(`Benchmark took ${diff[0] * NS_PER_SEC + diff[1]} nanoseconds`);
+      const seconds = process.hrtime(time)[0];
+      console.log(`Executed in ${seconds} seconds`);
     };
   })
-}
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
 
+}
 ```
 
-## How to bind the hook to a route
+A *hook post function* accepts three parameters: the context, the service manager and the response returned by the controller method.
 
-Hooks can either be bound to one, several or all the routes of a controller.
+## Testing Hooks
+
+Hooks can be tested thanks to the `getHookFunction`.
 
 ```typescript
-import { Get, HttpResponseOK } from '@foal/core';
+// validate-body.hook.ts
+import { Hook, HttpResponseBadRequest } from '@foal/core';
 
-import { HelloWorld } from './hello-world.hook';
-
-@HelloWorld(':)')
-class MyController {
-  @Get('/foo')
-  @HelloWorld(':/')
-  foo() {
-    return new HttpResponseOK();
+export const validateBody = Hook(ctx => {
+  if (typeof ctx.request.body.name !== 'string') {
+    return new HttpResponseBadRequest();
   }
-
-  @Get('/bar')
-  bar() {
-    return new HttpResponseOK();
-  }
-}
-
-class MyController2 {
-  @Get('/foobar')
-  foobar() {
-    return new HttpResponseOK();
-  }
-}
-
-@HelloWorld(':D')
-export class AppController {
-  subControllers = [
-    controller('/a', MyController),
-    controller('/b', MyController2)
-  ]
-}
-
-/*
-GET /a/foo
-"Hello world :D"
-"Hello world :)"
-"Hello world :/"
-
-GET /a/bar
-"Hello world :D"
-"Hello world :)"
-
-GET /b/foobar
-"Hello world :D"
-*/
-
+})
 ```
 
-## Testing a hook
-
 ```typescript
-// std
-import { strictEqual } from 'assert';
-
-// 3p
+// validate-body.hook.spec.ts
 import {
-  Context,
-  getHookFunction,
-  Hook,
-  ServiceManager
+  Context, getHookFunction,
+  isHttpResponseBadRequest, ServiceManager
 } from '@foal/core';
+import { validateBody } from './validate-body.hook';
 
-function MyHook() {
-  return Hook(ctx => {
-    ctx.state.foo = 'bar';
+it('validateBody', () => {
+  const ctx = Context({
+    // fake request object
+    body: { name: 3 }
   });
+  const hook = getHookFunction(validateBody);
+  
+  const response = hook(ctx, new ServiceManager());
+
+  if (!isHttpResponseBadRequest(response)) {
+    throw new Error();
+  }
+});
+```
+
+### Mocking services
+
+You can mock services by using the `set` method of the service manager.
+
+*Example:*
+```typescript
+// authenticate.hook.ts
+import { Get, Hook, HttpResponseOK } from '@foal/core';
+
+export class UserService {
+  private users = {
+    eh4sb: { id: 1, name: 'John' },
+    kadu5: { id: 2, name: 'Mary' }
+  };
+
+  getUser(key: string) {
+    return this.users[key];
+  }
 }
 
-describe('preHook', () => {
-  
-  it('should add a foo property to the context state.', () => {
-    const ctx = Context();
-    const hook = getHookFunction(MyHook())
-    
-    hook(ctx, new ServiceManager());
-
-    strictEqual(ctx.state.foo, 'bar');
-  })
-
+export const authenticate = Hook((ctx, services) => {
+  const users = services.get(UserService);
+  ctx.user = users.getUser(ctx.params.query.key);
 });
+```
 
+```typescript
+// authenticate.hook.spec.ts
+import { strictEqual } from 'assert';
+import { Context, getHookFunction } from '@foal/core';
+import { authenticate, UserService } from './authenticate.hook';
+
+it('authenticate', () => {
+  const hook = getHookFunction(authenticate);
+
+  const user = { id: 3, name: 'Bob' };
+
+  const ctx = Context();
+  const services = new ServiceManager();
+  services.set(UserService, {
+    getUser() {
+      return user;
+    }
+  })
+  
+  hook(ctx, services);
+
+  strictEqual(ctx.user, user);
+});
+```
+
+## Hook factories
+
+Usually, we don't create hooks directly by hook factories. Thus it is easier to customize the hook behavior on each route.
+
+*Example:*
+```typescript
+import { Get, Hook } from '@foal/core';
+
+function Log(msg: string) {
+  return Hook(() => { console.log(msg); });
+}
+
+class MyController {
+  @Get('/route1')
+  @Log('Receiving a GET /route1 request...')
+  route1() {
+    // ...
+  }
+
+  @Get('/route2')
+  @Log('Receiving a GET /route2 request...')
+  route2() {
+    // ...
+  }
+}
 ```

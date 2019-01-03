@@ -40,7 +40,7 @@ validate(schema, data);
 
 ## The `ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` hooks
 
-`ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate the `context.request.{body|headers|params|query}` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `body`.
+`ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate `context.request.{body|headers|params|query}` with the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `body`.
 
 *Example*:
 ```typescript
