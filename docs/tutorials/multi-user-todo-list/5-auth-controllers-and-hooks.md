@@ -67,10 +67,12 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, dependency, Get, HttpResponseRedirect,
-  logIn, logOut, Post, ValidateBody
+  Context, Get, HttpResponseRedirect,
+  logIn, logOut, Post, ValidateBody, verifyPassword
 } from '@foal/core';
 import { getRepository } from 'typeorm';
+
+import { User } from '../entities';
 
 export class AuthController {
 
