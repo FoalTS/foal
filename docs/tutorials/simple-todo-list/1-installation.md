@@ -72,6 +72,6 @@ You've started the development server.
 >
 > You can define in `config/settings.js` which port the application is using. Simply add the key `"port"` with the desired value.
 
-Go to `http://localhost:3000` in your browser. You should see the text *You have successfully installed FoalTS!*.
+Go to `http://localhost:3000` in your browser. You should see the text *Welcome to the future* <3.
 
 Congratulations, you now have a server running!
