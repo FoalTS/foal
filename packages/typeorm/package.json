@@ -1,6 +1,6 @@
 {
   "name": "@foal/typeorm",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "FoalTS integration of TypeORM",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -47,7 +47,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "~0.6.2"
+    "@foal/core": "^0.7.0"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
@@ -61,9 +61,9 @@
     "rimraf": "^2.6.2",
     "sqlite3": "^4.0.4",
     "supertest": "^3.3.0",
+    "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
     "typeorm": "^0.2.6",
-    "typescript": "^2.5.2",
-    "ts-docs-gen": "0.2.0"
+    "typescript": "^2.5.2"
   }
 }
