@@ -132,10 +132,14 @@ The usual way to handle authorization is to use a *hook*. In this case, you are 
 Update the api and view controllers.
 
 ```typescript
+import { Get, LoginRequired, render } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+import { User } from '../entities';
+
 export class ViewController {
 
   @Get('/')
-  @LoginRequired({ redirect: '/signin' })
+  @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
   index(ctx) {
     ...
   }
@@ -146,7 +150,7 @@ export class ViewController {
 ```
 
 ```typescript
-@LoginRequired()
+@LoginRequired({ user: fetchUser(User) })
 export class ApiController {
 
   ...
