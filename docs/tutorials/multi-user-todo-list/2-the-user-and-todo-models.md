@@ -10,10 +10,13 @@ Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
 import { encryptPassword } from '@foal/core';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class {
+export class User {
+
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ unique: true })
   email: string;
@@ -27,7 +30,6 @@ export class {
 
 }
 
-export { Group, Permission } from '@foal/typeorm';
 ```
 
 The `setPassword` method uses `encryptPassword` to encrypt passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
