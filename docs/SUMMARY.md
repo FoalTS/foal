@@ -16,7 +16,6 @@
   * [Introduction](./tutorials/multi-user-todo-list/1-Introduction.md)
   * [The User & Todo Models](./tutorials/multi-user-todo-list/2-the-user-and-todo-models.md)
   * [The Shell Scripts](./tutorials/multi-user-todo-list/3-the-shell-scripts.md)
-  * [The EmailAuthenticator](./tutorials/multi-user-todo-list/4-the-emailauthenticator.md)
   * [Auth Controllers & Hooks](./tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md)
   * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
   * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)

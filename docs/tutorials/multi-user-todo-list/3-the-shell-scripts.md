@@ -4,7 +4,7 @@ Like in the previous tutorial, you are going to use shell scripts to populate th
 
 ## The `create-user` script
 
-A script called `create-user` already exists in the `scripts/` directory. It lets you create users with *permissions* and *groups* when starting a new project. However you don't need to use these things in this tutorial and the definition of the `User` model has changed.
+A script called `create-user` already exists in the `scripts/` directory. It has a lot of commented lines that let you create users with *permissions* and *groups*.
 
 Open the file and replace its content with the following:
 
