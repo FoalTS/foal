@@ -1,10 +1,10 @@
 # Table of contents
 
-* [HttpResponseRedirection][ClassDeclaration-8]
+* [HttpResponseRedirection][ClassDeclaration-9]
     * Constructor
-        * [constructor(body)][Constructor-2]
+        * [constructor(body)][Constructor-9]
     * Properties
-        * [isHttpResponseRedirection][PropertyDeclaration-20]
+        * [isHttpResponseRedirection][PropertyDeclaration-18]
 
 # HttpResponseRedirection
 
@@ -37,6 +37,6 @@ public readonly isHttpResponseRedirection: true;
 
 true
 
-[ClassDeclaration-8]: httpresponseredirection.md#httpresponseredirection
-[Constructor-2]: httpresponseredirection.md#constructorbody
-[PropertyDeclaration-20]: httpresponseredirection.md#ishttpresponseredirection
+[ClassDeclaration-9]: httpresponseredirection.md#httpresponseredirection
+[Constructor-9]: httpresponseredirection.md#constructorbody
+[PropertyDeclaration-18]: httpresponseredirection.md#ishttpresponseredirection

@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseInternalServerError][ClassDeclaration-28]
+* [HttpResponseInternalServerError][ClassDeclaration-19]
     * Constructor
-        * [constructor(body)][Constructor-20]
+        * [constructor(body)][Constructor-19]
     * Properties
-        * [isHttpResponseInternalServerError][PropertyDeclaration-66]
-        * [statusCode][PropertyDeclaration-67]
-        * [statusMessage][PropertyDeclaration-68]
+        * [isHttpResponseInternalServerError][PropertyDeclaration-42]
+        * [statusCode][PropertyDeclaration-43]
+        * [statusMessage][PropertyDeclaration-44]
 
 # HttpResponseInternalServerError
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-28]: httpresponseinternalservererror.md#httpresponseinternalservererror
-[Constructor-20]: httpresponseinternalservererror.md#constructorbody
-[PropertyDeclaration-66]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
-[PropertyDeclaration-67]: httpresponseinternalservererror.md#statuscode
-[PropertyDeclaration-68]: httpresponseinternalservererror.md#statusmessage
+[ClassDeclaration-19]: httpresponseinternalservererror.md#httpresponseinternalservererror
+[Constructor-19]: httpresponseinternalservererror.md#constructorbody
+[PropertyDeclaration-42]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
+[PropertyDeclaration-43]: httpresponseinternalservererror.md#statuscode
+[PropertyDeclaration-44]: httpresponseinternalservererror.md#statusmessage

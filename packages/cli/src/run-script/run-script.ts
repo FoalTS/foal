@@ -9,10 +9,10 @@ import * as Ajv from 'ajv';
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
 export function runScript({ name }: { name: string }, argv: string[], log = console.log) {
-  if (!existsSync(`lib/scripts/${name}.js`)) {
+  if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
-        `The script "${name}" does not exist in lib/scripts/. But it exists in src/scripts/.`
+        `The script "${name}" does not exist in build/scripts/. But it exists in src/scripts/.`
           + ' Please build your script by running the command "npm run build:scripts".'
       );
     } else {
@@ -21,10 +21,10 @@ export function runScript({ name }: { name: string }, argv: string[], log = cons
     return;
   }
 
-  const { main, schema } = require(join(process.cwd(), `./lib/scripts/${name}`));
+  const { main, schema } = require(join(process.cwd(), `./build/scripts/${name}`));
 
   if (!main) {
-    log(`Error: No "main" function was found in lib/scripts/${name}.js.`);
+    log(`Error: No "main" function was found in build/scripts/${name}.js.`);
     return;
   }
 

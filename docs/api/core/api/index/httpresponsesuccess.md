@@ -1,10 +1,10 @@
 # Table of contents
 
-* [HttpResponseSuccess][ClassDeclaration-11]
+* [HttpResponseSuccess][ClassDeclaration-5]
     * Constructor
         * [constructor(body)][Constructor-5]
     * Properties
-        * [isHttpResponseSuccess][PropertyDeclaration-27]
+        * [isHttpResponseSuccess][PropertyDeclaration-8]
 
 # HttpResponseSuccess
 
@@ -37,6 +37,6 @@ public readonly isHttpResponseSuccess: true;
 
 true
 
-[ClassDeclaration-11]: httpresponsesuccess.md#httpresponsesuccess
+[ClassDeclaration-5]: httpresponsesuccess.md#httpresponsesuccess
 [Constructor-5]: httpresponsesuccess.md#constructorbody
-[PropertyDeclaration-27]: httpresponsesuccess.md#ishttpresponsesuccess
+[PropertyDeclaration-8]: httpresponsesuccess.md#ishttpresponsesuccess

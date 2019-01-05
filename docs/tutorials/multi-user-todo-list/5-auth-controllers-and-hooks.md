@@ -1,6 +1,6 @@
 # Auth Controllers and Hooks
 
-Now that you have the authenticator, it is time to create a controller to log users in or out. Here is what we want:
+So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out. Here is what we want:
 
 1. Users load the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, users are redirected to `/signin?bad_credentials=true`. The `bad_credentials` parameter tells the page to show the error message `Invalid email or password`.
 1. Users can view, create and delete their todos in the page `/`.
@@ -60,7 +60,6 @@ The next step is to create a controller that logs the users in or out and redire
 
 ```
 foal generate controller auth --register
-> Empty
 ```
 
 Open the new file `auth.controller.ts` and replace its content.
@@ -68,17 +67,12 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, dependency, emailSchema, Get, HttpResponseRedirect,
+  Context, dependency, Get, HttpResponseRedirect,
   logIn, logOut, Post, ValidateBody
 } from '@foal/core';
-
-// App
-import { Authenticator } from '../services';
+import { getRepository } from 'typeorm';
 
 export class AuthController {
-  // Make the Authenticator service accessible from the controller.
-  @dependency
-  authenticator: Authenticator;
 
   @Post('/login')
   // Validate the request body.
@@ -92,11 +86,15 @@ export class AuthController {
     type: 'object',
   })
   async login(ctx: Context) {
-    // Try to authenticate the user from the given credentials (email and password).
-    const user = await this.authenticator.authenticate(ctx.request.body);
+    const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
-    // Redirect the user to /signin if the authentication fails.
     if (!user) {
+      // Redirect the user to /signin if the authentication fails.
+      return new HttpResponseRedirect('/signin?bad_credentials=true');
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      // Redirect the user to /signin if the authentication fails.
       return new HttpResponseRedirect('/signin?bad_credentials=true');
     }
 
@@ -119,25 +117,7 @@ export class AuthController {
 
 ```
 
-> The `@dependency` decorator lets you access a service from a controller or another service.
->
-> At first glance, writing the code below would seem more intuitive.
-> ```typescript
-> export class AuthController {
->   authenticator: Authenticator;
->   constructor() {
->     this.authenticator = new Authenticator();
->   }
-> }
-> ```
->
-> However, using the `@dependency` decorator has several advantages.
->
-> 1. You write less code.
->
-> 2. The service is instantiated only once.
->
-> 3. Unit testing is greatly facilitated. With the `createController` and `createService` functions, you can inject mocks in your controllers and services when writing unit tests. This technique, called [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection), will be presented in another tutorial.
+> Writting `getRepository(User).findOne({ email: email, password: password })` cannot work since the password needs to be encrypted.
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 

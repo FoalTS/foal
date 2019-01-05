@@ -8,7 +8,6 @@ Create a new controller.
 
 ```sh
 foal generate controller api --register
-> Empty
 ```
 
 Open the new generated file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
@@ -100,12 +99,11 @@ The last thing to know is how the `ApiController` is bound to the request handle
 Open the file `app.controller.ts` in `src/app`.
 
 ```typescript
-import { AuthenticateWithSessionAndCookie, controller } from '@foal/core';
+import { controller } from '@foal/core';
 
 import { ApiController, ViewController } from './controllers';
 import { User } from './entities';
 
-@AuthenticateWithSessionAndCookie(User)
 export class AppController {
   subControllers = [
     controller('/', ViewController),
@@ -117,5 +115,3 @@ export class AppController {
 This controller is the main controller of the application. It is directly called when a request comes in. It may have sub-controllers that go in the `controllers/` directory.
 
 In that case, the `--register` flag directly added a new line to declare the `ApiController` as a sub-controller of `AppController`. The `ViewController` is in charge of rendering the `index.html` template.
-
-> The `AuthenticateWithSessionAndCookie` decorator is useless here as you will not use authentication in this tutorial. You can remove it if you want.

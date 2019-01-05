@@ -1,11 +1,11 @@
 # Table of contents
 
-* [ServiceManager][ClassDeclaration-5]
+* [ServiceManager][ClassDeclaration-21]
     * Methods
-        * [set(serviceClass, service)][MethodDeclaration-3]
-        * [get(serviceClass)][MethodDeclaration-4]
+        * [set(serviceClass, service)][MethodDeclaration-6]
+        * [get(serviceClass)][MethodDeclaration-7]
     * Properties
-        * [map][PropertyDeclaration-14]
+        * [map][PropertyDeclaration-48]
 
 # ServiceManager
 
@@ -32,7 +32,7 @@ public set<Service>(serviceClass: Class<Service>, service: any): void;
 
 | Name         | Type                                     |
 | ------------ | ---------------------------------------- |
-| serviceClass | [Class][InterfaceDeclaration-1]<Service> |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
 | service      | any                                      |
 
 **Return type**
@@ -59,7 +59,7 @@ public get<Service>(serviceClass: Class<Service>): Service;
 
 | Name         | Type                                     |
 | ------------ | ---------------------------------------- |
-| serviceClass | [Class][InterfaceDeclaration-1]<Service> |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
 
 **Return type**
 
@@ -75,12 +75,12 @@ public readonly map: Map<Class<any>, any>;
 
 **Type**
 
-Map<[Class][InterfaceDeclaration-1]<any>, any>
+Map<[Class][TypeAliasDeclaration-1]<any>, any>
 
-[ClassDeclaration-5]: servicemanager.md#servicemanager
-[MethodDeclaration-3]: servicemanager.md#setserviceclass-service
-[InterfaceDeclaration-1]: ../index.md#class
-[MethodDeclaration-4]: servicemanager.md#getserviceclass
-[InterfaceDeclaration-1]: ../index.md#class
-[PropertyDeclaration-14]: servicemanager.md#map
-[InterfaceDeclaration-1]: ../index.md#class
+[ClassDeclaration-21]: servicemanager.md#servicemanager
+[MethodDeclaration-6]: servicemanager.md#setserviceclass-service
+[TypeAliasDeclaration-1]: ../index.md#class
+[MethodDeclaration-7]: servicemanager.md#getserviceclass
+[TypeAliasDeclaration-1]: ../index.md#class
+[PropertyDeclaration-48]: servicemanager.md#map
+[TypeAliasDeclaration-1]: ../index.md#class

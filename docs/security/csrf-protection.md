@@ -4,7 +4,7 @@ FoalTS includes a CSRF protection. It is enabled by default and makes your app r
 
 ## Retreive the csrf token
 
-You can get the csrf token by calling the `csrfToken` method of the context `request`. It is then easy to send it to the client upon page rendering.
+You can get the csrf token by calling the `csrfToken` method of the context `request`. It is then easy to send the token to the client upon page rendering.
 
 ```typescript
 import { Get, render } from '@foal/core';
@@ -43,4 +43,6 @@ If the token is incorrect or is not provided then the server responds with a 403
 
 ## Enable or disable the csrf protection
 
-You can disable the protection by setting the property `csrf` to false in `settings.json` (or `settings.prod.json`, `settings.dev.json`, etc). You can also use the variable environment `SETTINGS_CSRF`.
+You can disable the protection by setting the property `csrf` to false in `settings.json` (or `settings.prod.json`, `settings.dev.json`, etc). You can also use the environment variable `SETTINGS_CSRF`.
+
+When the CSRF protection is disabled, `ctx.request.csrfToken` returns the string `"CSRF protection disabled."`.

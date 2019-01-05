@@ -1,9 +1,8 @@
 import { Context } from '../../core';
-import { AbstractUser } from '../entities';
 
-export function logIn(ctx: Context, user: AbstractUser) {
+export function logIn(ctx: Context, user: object, idKey = 'id') {
   ctx.request.session.authentication = {
     ...ctx.request.session.authentication,
-    userId: user.id
+    userId: user[idKey]
   };
 }

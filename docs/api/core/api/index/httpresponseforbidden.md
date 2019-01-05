@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseForbidden][ClassDeclaration-21]
+* [HttpResponseForbidden][ClassDeclaration-14]
     * Constructor
         * [constructor(body)][Constructor-14]
     * Properties
-        * [isHttpResponseForbidden][PropertyDeclaration-49]
-        * [statusCode][PropertyDeclaration-50]
-        * [statusMessage][PropertyDeclaration-51]
+        * [isHttpResponseForbidden][PropertyDeclaration-29]
+        * [statusCode][PropertyDeclaration-30]
+        * [statusMessage][PropertyDeclaration-31]
 
 # HttpResponseForbidden
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-21]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
 [Constructor-14]: httpresponseforbidden.md#constructorbody
-[PropertyDeclaration-49]: httpresponseforbidden.md#ishttpresponseforbidden
-[PropertyDeclaration-50]: httpresponseforbidden.md#statuscode
-[PropertyDeclaration-51]: httpresponseforbidden.md#statusmessage
+[PropertyDeclaration-29]: httpresponseforbidden.md#ishttpresponseforbidden
+[PropertyDeclaration-30]: httpresponseforbidden.md#statuscode
+[PropertyDeclaration-31]: httpresponseforbidden.md#statusmessage

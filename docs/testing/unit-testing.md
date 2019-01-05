@@ -20,32 +20,20 @@ Every unit test file should be placed next to the file it tests with the same na
 - `npm run start:test:w` - Execute the unit tests from the built files and do it again whenever one of these files changes (watch mode).
 
 
-## Testing Controllers and Services
+## Testing Controllers
 
-```typescript
-// std
-import { ok } from 'assert';
+See [Controllers](../architecture/controllers.md).
 
-// 3p
-import { createController, dependency } from '@foal/core';
+## Testing Services
 
-class MyService {
-
-}
-
-class MyController {
-  @dependency
-  myService: MyService;
-}
-
-const controller = createController(MyController);
-ok(controller.myService instanceof MyService);
-```
-
-## Dependency Injection and Unit Testing
-
-FoalTS uses dependency injection to keep the code loosely coupled and so enhance testatibility.
+See [Services & Dependency Injection](../architecture/services-and-dependency-injection.md).
 
 ## Testing Hooks
 
-`getHookFunction` util.
+See [Hooks](../architecture/hooks.md).
+
+## Dependency Injection & Unit Testing
+
+FoalTS uses dependency injection to keep the code loosely coupled and so enhance testatibility.
+
+See [Services & Dependency Injection](../architecture/services-and-dependency-injection.md).

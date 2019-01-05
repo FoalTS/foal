@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseOK][ClassDeclaration-20]
+* [HttpResponseOK][ClassDeclaration-4]
     * Constructor
-        * [constructor(body)][Constructor-13]
+        * [constructor(body)][Constructor-4]
     * Properties
-        * [isHttpResponseOK][PropertyDeclaration-46]
-        * [statusCode][PropertyDeclaration-47]
-        * [statusMessage][PropertyDeclaration-48]
+        * [isHttpResponseOK][PropertyDeclaration-5]
+        * [statusCode][PropertyDeclaration-6]
+        * [statusMessage][PropertyDeclaration-7]
 
 # HttpResponseOK
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-20]: httpresponseok.md#httpresponseok
-[Constructor-13]: httpresponseok.md#constructorbody
-[PropertyDeclaration-46]: httpresponseok.md#ishttpresponseok
-[PropertyDeclaration-47]: httpresponseok.md#statuscode
-[PropertyDeclaration-48]: httpresponseok.md#statusmessage
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[Constructor-4]: httpresponseok.md#constructorbody
+[PropertyDeclaration-5]: httpresponseok.md#ishttpresponseok
+[PropertyDeclaration-6]: httpresponseok.md#statuscode
+[PropertyDeclaration-7]: httpresponseok.md#statusmessage

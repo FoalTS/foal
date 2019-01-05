@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseRedirect][ClassDeclaration-7]
+* [HttpResponseRedirect][ClassDeclaration-10]
     * Constructor
-        * [constructor(path, body)][Constructor-1]
+        * [constructor(path, body)][Constructor-10]
     * Properties
-        * [isHttpResponseRedirect][PropertyDeclaration-17]
-        * [statusCode][PropertyDeclaration-18]
-        * [statusMessage][PropertyDeclaration-19]
+        * [isHttpResponseRedirect][PropertyDeclaration-19]
+        * [statusCode][PropertyDeclaration-20]
+        * [statusMessage][PropertyDeclaration-21]
 
 # HttpResponseRedirect
 
@@ -64,8 +64,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-7]: httpresponseredirect.md#httpresponseredirect
-[Constructor-1]: httpresponseredirect.md#constructorpath-body
-[PropertyDeclaration-17]: httpresponseredirect.md#ishttpresponseredirect
-[PropertyDeclaration-18]: httpresponseredirect.md#statuscode
-[PropertyDeclaration-19]: httpresponseredirect.md#statusmessage
+[ClassDeclaration-10]: httpresponseredirect.md#httpresponseredirect
+[Constructor-10]: httpresponseredirect.md#constructorpath-body
+[PropertyDeclaration-19]: httpresponseredirect.md#ishttpresponseredirect
+[PropertyDeclaration-20]: httpresponseredirect.md#statuscode
+[PropertyDeclaration-21]: httpresponseredirect.md#statusmessage

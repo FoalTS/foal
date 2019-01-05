@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -84,11 +84,8 @@
     "morgan": "^1.9.0",
     "reflect-metadata": "^0.1.10"
   },
-  "peerDependencies": {
-    "typeorm": "^0.2.6"
-  },
   "devDependencies": {
-    "@foal/ejs": "^0.6.2",
+    "@foal/ejs": "^0.7.0",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
@@ -103,7 +100,6 @@
     "supertest": "^3.1.0",
     "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
-    "typeorm": "^0.2.6",
     "typescript": "^2.5.2"
   }
 }

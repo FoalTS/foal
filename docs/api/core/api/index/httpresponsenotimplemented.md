@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseNotImplemented][ClassDeclaration-18]
+* [HttpResponseNotImplemented][ClassDeclaration-20]
     * Constructor
-        * [constructor(body)][Constructor-11]
+        * [constructor(body)][Constructor-20]
     * Properties
-        * [isHttpResponseNotImplemented][PropertyDeclaration-42]
-        * [statusCode][PropertyDeclaration-43]
-        * [statusMessage][PropertyDeclaration-44]
+        * [isHttpResponseNotImplemented][PropertyDeclaration-45]
+        * [statusCode][PropertyDeclaration-46]
+        * [statusMessage][PropertyDeclaration-47]
 
 # HttpResponseNotImplemented
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-18]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[Constructor-11]: httpresponsenotimplemented.md#constructorbody
-[PropertyDeclaration-42]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
-[PropertyDeclaration-43]: httpresponsenotimplemented.md#statuscode
-[PropertyDeclaration-44]: httpresponsenotimplemented.md#statusmessage
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[Constructor-20]: httpresponsenotimplemented.md#constructorbody
+[PropertyDeclaration-45]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
+[PropertyDeclaration-46]: httpresponsenotimplemented.md#statuscode
+[PropertyDeclaration-47]: httpresponsenotimplemented.md#statusmessage

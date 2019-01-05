@@ -1,0 +1,69 @@
+{
+  "name": "@foal/typeorm",
+  "version": "0.7.0",
+  "description": "FoalTS integration of TypeORM",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/typeorm",
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
+    "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "FoalTS",
+    "foal",
+    "postgres",
+    "mariadb",
+    "mongodb",
+    "mysql",
+    "sqlite",
+    "database",
+    "TypeORM",
+    "ORM"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "lib/"
+  ],
+  "dependencies": {
+    "@foal/core": "^0.7.0"
+  },
+  "peerDependencies": {
+    "typeorm": "^0.2.6"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^10.5.6",
+    "mocha": "^5.2.0",
+    "mysql": "^2.16.0",
+    "pg": "^7.7.1",
+    "rimraf": "^2.6.2",
+    "sqlite3": "^4.0.4",
+    "supertest": "^3.3.0",
+    "ts-docs-gen": "0.2.0",
+    "ts-node": "^3.3.0",
+    "typeorm": "^0.2.6",
+    "typescript": "^2.5.2"
+  }
+}

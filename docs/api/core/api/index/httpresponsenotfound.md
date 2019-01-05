@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseNotFound][ClassDeclaration-12]
+* [HttpResponseNotFound][ClassDeclaration-15]
     * Constructor
-        * [constructor(body)][Constructor-6]
+        * [constructor(body)][Constructor-15]
     * Properties
-        * [isHttpResponseNotFound][PropertyDeclaration-28]
-        * [statusCode][PropertyDeclaration-29]
-        * [statusMessage][PropertyDeclaration-30]
+        * [isHttpResponseNotFound][PropertyDeclaration-32]
+        * [statusCode][PropertyDeclaration-33]
+        * [statusMessage][PropertyDeclaration-34]
 
 # HttpResponseNotFound
 
@@ -63,8 +63,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-12]: httpresponsenotfound.md#httpresponsenotfound
-[Constructor-6]: httpresponsenotfound.md#constructorbody
-[PropertyDeclaration-28]: httpresponsenotfound.md#ishttpresponsenotfound
-[PropertyDeclaration-29]: httpresponsenotfound.md#statuscode
-[PropertyDeclaration-30]: httpresponsenotfound.md#statusmessage
+[ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
+[Constructor-15]: httpresponsenotfound.md#constructorbody
+[PropertyDeclaration-32]: httpresponsenotfound.md#ishttpresponsenotfound
+[PropertyDeclaration-33]: httpresponsenotfound.md#statuscode
+[PropertyDeclaration-34]: httpresponsenotfound.md#statusmessage

@@ -1,10 +1,10 @@
 # Table of contents
 
-* [PermissionDenied][ClassDeclaration-24]
+* [PermissionDenied][ClassDeclaration-2]
     * Constructor
-        * [constructor(content)][Constructor-17]
+        * [constructor(content)][Constructor-2]
     * Properties
-        * [isPermissionDenied][PropertyDeclaration-56]
+        * [isPermissionDenied][PropertyDeclaration-3]
 
 # PermissionDenied
 
@@ -37,6 +37,6 @@ public readonly isPermissionDenied: true;
 
 true
 
-[ClassDeclaration-24]: permissiondenied.md#permissiondenied
-[Constructor-17]: permissiondenied.md#constructorcontent
-[PropertyDeclaration-56]: permissiondenied.md#ispermissiondenied
+[ClassDeclaration-2]: permissiondenied.md#permissiondenied
+[Constructor-2]: permissiondenied.md#constructorcontent
+[PropertyDeclaration-3]: permissiondenied.md#ispermissiondenied

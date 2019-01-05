@@ -5,9 +5,11 @@ cd e2e-test-temp
 foal createapp my-app
 cd my-app
 
-# Test the generators that do not require user interaction
+# Test the generators
 foal g entity flight
 foal g hook foo-bar
+foal g service foo
+foal g controller bar --register
 foal g sub-app bar-foo
 foal g script bar-script
 
@@ -31,7 +33,7 @@ npm run build:e2e
 npm run start:e2e
 
 # Test the application when it is started
-pm2 start lib/index.js
+pm2 start build/index.js
 sleep 1
 response=$(
     curl http://localhost:3000 \
@@ -45,11 +47,11 @@ pm2 delete index
 # Test the default shell scripts to create permissions, groups and users.
 npm run build:scripts
 
-foal run-script create-perm name="My first permission" codeName="my-first-perm"
-foal run-script create-perm name="My second permission" codeName="my-second-perm"
+# foal run-script create-perm name="My first permission" codeName="my-first-perm"
+# foal run-script create-perm name="My second permission" codeName="my-second-perm"
 
-foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
-foal run-script create-group name="My group2" codeName="my-group2"
+# foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
+# foal run-script create-group name="My group2" codeName="my-group2"
 
-foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+# foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 foal run-script create-user
