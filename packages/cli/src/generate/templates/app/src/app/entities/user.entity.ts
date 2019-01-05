@@ -1,9 +1,8 @@
 // import { encryptPassword } from '@foal/core';
-import { UserWithPermissions } from '@foal/typeorm';
 import { /*Column, */Entity } from 'typeorm';
 
 @Entity()
-export class User extends UserWithPermissions {
+export class User {
 
   // @Column({ unique: true })
   // email: string;
@@ -16,5 +15,3 @@ export class User extends UserWithPermissions {
   // }
 
 }
-
-export { Group, Permission } from '@foal/typeorm';
