@@ -1,20 +1,20 @@
 # Table of contents
 
-* [RestController][ClassDeclaration-15]
+* [RestController][ClassDeclaration-24]
     * Methods
-        * [extendParams(ctx, params)][MethodDeclaration-10]
-        * [delete()][MethodDeclaration-11]
-        * [deleteById(ctx)][MethodDeclaration-12]
-        * [get(ctx)][MethodDeclaration-13]
-        * [getById(ctx)][MethodDeclaration-14]
-        * [patch()][MethodDeclaration-15]
-        * [patchById(ctx)][MethodDeclaration-16]
-        * [post(ctx)][MethodDeclaration-17]
-        * [postById()][MethodDeclaration-18]
-        * [put()][MethodDeclaration-19]
-        * [putById(ctx)][MethodDeclaration-20]
+        * [extendParams(ctx, params)][MethodDeclaration-11]
+        * [delete()][MethodDeclaration-12]
+        * [deleteById(ctx)][MethodDeclaration-13]
+        * [get(ctx)][MethodDeclaration-14]
+        * [getById(ctx)][MethodDeclaration-15]
+        * [patch()][MethodDeclaration-16]
+        * [patchById(ctx)][MethodDeclaration-17]
+        * [post(ctx)][MethodDeclaration-18]
+        * [postById()][MethodDeclaration-19]
+        * [put()][MethodDeclaration-20]
+        * [putById(ctx)][MethodDeclaration-21]
     * Properties
-        * [collection][PropertyDeclaration-30]
+        * [collection][PropertyDeclaration-53]
 
 # RestController
 
@@ -38,11 +38,11 @@ public extendParams(ctx: Context<any>, params: CollectionParams): CollectionPara
 | Name   | Type                                       |
 | ------ | ------------------------------------------ |
 | ctx    | [Context][ClassDeclaration-0]<any>         |
-| params | [CollectionParams][InterfaceDeclaration-5] |
+| params | [CollectionParams][InterfaceDeclaration-6] |
 
 **Return type**
 
-[CollectionParams][InterfaceDeclaration-5]
+[CollectionParams][InterfaceDeclaration-6]
 
 ----------
 
@@ -61,7 +61,7 @@ public delete(): HttpResponseMethodNotAllowed;
 ### deleteById(ctx)
 
 ```typescript
-public async deleteById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseOK | HttpResponseForbidden>;
+public async deleteById(ctx: Context<any>): Promise<HttpResponseOK | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotFound | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -72,14 +72,14 @@ public async deleteById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpR
 
 **Return type**
 
-Promise<[HttpResponseNotFound][ClassDeclaration-11] | [HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseOK][ClassDeclaration-19] | [HttpResponseForbidden][ClassDeclaration-20]>
+Promise<[HttpResponseOK][ClassDeclaration-4] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotFound][ClassDeclaration-15] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ----------
 
 ### get(ctx)
 
 ```typescript
-public async get(ctx: Context<any>): Promise<HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseOK | HttpResponseForbidden>;
+public async get(ctx: Context<any>): Promise<HttpResponseOK | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -90,14 +90,14 @@ public async get(ctx: Context<any>): Promise<HttpResponseBadRequest | HttpRespon
 
 **Return type**
 
-Promise<[HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseOK][ClassDeclaration-19] | [HttpResponseForbidden][ClassDeclaration-20]>
+Promise<[HttpResponseOK][ClassDeclaration-4] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ----------
 
 ### getById(ctx)
 
 ```typescript
-public async getById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseOK | HttpResponseForbidden>;
+public async getById(ctx: Context<any>): Promise<HttpResponseOK | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotFound | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -108,7 +108,7 @@ public async getById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResp
 
 **Return type**
 
-Promise<[HttpResponseNotFound][ClassDeclaration-11] | [HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseOK][ClassDeclaration-19] | [HttpResponseForbidden][ClassDeclaration-20]>
+Promise<[HttpResponseOK][ClassDeclaration-4] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotFound][ClassDeclaration-15] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ----------
 
@@ -127,7 +127,7 @@ public patch(): HttpResponseMethodNotAllowed;
 ### patchById(ctx)
 
 ```typescript
-public async patchById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseOK | HttpResponseForbidden>;
+public async patchById(ctx: Context<any>): Promise<HttpResponseOK | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotFound | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -138,14 +138,14 @@ public async patchById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpRe
 
 **Return type**
 
-Promise<[HttpResponseNotFound][ClassDeclaration-11] | [HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseOK][ClassDeclaration-19] | [HttpResponseForbidden][ClassDeclaration-20]>
+Promise<[HttpResponseOK][ClassDeclaration-4] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotFound][ClassDeclaration-15] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ----------
 
 ### post(ctx)
 
 ```typescript
-public async post(ctx: Context<any>): Promise<HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseForbidden | HttpResponseCreated>;
+public async post(ctx: Context<any>): Promise<HttpResponseCreated | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -156,7 +156,7 @@ public async post(ctx: Context<any>): Promise<HttpResponseBadRequest | HttpRespo
 
 **Return type**
 
-Promise<[HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseForbidden][ClassDeclaration-20] | [HttpResponseCreated][ClassDeclaration-21]>
+Promise<[HttpResponseCreated][ClassDeclaration-7] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ----------
 
@@ -187,7 +187,7 @@ public put(): HttpResponseMethodNotAllowed;
 ### putById(ctx)
 
 ```typescript
-public async putById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResponseBadRequest | HttpResponseNotImplemented | HttpResponseOK | HttpResponseForbidden>;
+public async putById(ctx: Context<any>): Promise<HttpResponseOK | HttpResponseBadRequest | HttpResponseForbidden | HttpResponseNotFound | HttpResponseNotImplemented>;
 ```
 
 **Parameters**
@@ -198,7 +198,7 @@ public async putById(ctx: Context<any>): Promise<HttpResponseNotFound | HttpResp
 
 **Return type**
 
-Promise<[HttpResponseNotFound][ClassDeclaration-11] | [HttpResponseBadRequest][ClassDeclaration-13] | [HttpResponseNotImplemented][ClassDeclaration-17] | [HttpResponseOK][ClassDeclaration-19] | [HttpResponseForbidden][ClassDeclaration-20]>
+Promise<[HttpResponseOK][ClassDeclaration-4] | [HttpResponseBadRequest][ClassDeclaration-12] | [HttpResponseForbidden][ClassDeclaration-14] | [HttpResponseNotFound][ClassDeclaration-15] | [HttpResponseNotImplemented][ClassDeclaration-20]>
 
 ## Properties
 
@@ -210,60 +210,60 @@ public abstract collection: Partial<IResourceCollection>;
 
 **Type**
 
-Partial<[IResourceCollection][InterfaceDeclaration-4]>
+Partial<[IResourceCollection][InterfaceDeclaration-5]>
 
-[ClassDeclaration-15]: restcontroller.md#restcontroller
-[MethodDeclaration-10]: restcontroller.md#extendparamsctx-params
+[ClassDeclaration-24]: restcontroller.md#restcontroller
+[MethodDeclaration-11]: restcontroller.md#extendparamsctx-params
 [ClassDeclaration-0]: context.md#context
-[InterfaceDeclaration-5]: ../index.md#collectionparams
-[InterfaceDeclaration-5]: ../index.md#collectionparams
-[MethodDeclaration-11]: restcontroller.md#delete
+[InterfaceDeclaration-6]: ../index.md#collectionparams
+[InterfaceDeclaration-6]: ../index.md#collectionparams
+[MethodDeclaration-12]: restcontroller.md#delete
 [ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[MethodDeclaration-12]: restcontroller.md#deletebyidctx
+[MethodDeclaration-13]: restcontroller.md#deletebyidctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-19]: httpresponseok.md#httpresponseok
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[MethodDeclaration-13]: restcontroller.md#getctx
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[MethodDeclaration-14]: restcontroller.md#getctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-19]: httpresponseok.md#httpresponseok
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[MethodDeclaration-14]: restcontroller.md#getbyidctx
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[MethodDeclaration-15]: restcontroller.md#getbyidctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-19]: httpresponseok.md#httpresponseok
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[MethodDeclaration-15]: restcontroller.md#patch
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[MethodDeclaration-16]: restcontroller.md#patch
 [ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[MethodDeclaration-16]: restcontroller.md#patchbyidctx
+[MethodDeclaration-17]: restcontroller.md#patchbyidctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-19]: httpresponseok.md#httpresponseok
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[MethodDeclaration-17]: restcontroller.md#postctx
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[MethodDeclaration-18]: restcontroller.md#postctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[ClassDeclaration-21]: httpresponsecreated.md#httpresponsecreated
-[MethodDeclaration-18]: restcontroller.md#postbyid
+[ClassDeclaration-7]: httpresponsecreated.md#httpresponsecreated
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[MethodDeclaration-19]: restcontroller.md#postbyid
 [ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[MethodDeclaration-19]: restcontroller.md#put
+[MethodDeclaration-20]: restcontroller.md#put
 [ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[MethodDeclaration-20]: restcontroller.md#putbyidctx
+[MethodDeclaration-21]: restcontroller.md#putbyidctx
 [ClassDeclaration-0]: context.md#context
-[ClassDeclaration-11]: httpresponsenotfound.md#httpresponsenotfound
-[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-17]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-19]: httpresponseok.md#httpresponseok
-[ClassDeclaration-20]: httpresponseforbidden.md#httpresponseforbidden
-[PropertyDeclaration-30]: restcontroller.md#collection
-[InterfaceDeclaration-4]: ../index.md#iresourcecollection
+[ClassDeclaration-4]: httpresponseok.md#httpresponseok
+[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
+[PropertyDeclaration-53]: restcontroller.md#collection
+[InterfaceDeclaration-5]: ../index.md#iresourcecollection

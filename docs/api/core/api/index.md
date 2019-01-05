@@ -2,20 +2,20 @@
 
 * [index.ts][SourceFile-0]
     * Functions
-        * [logIn][FunctionDeclaration-0]
-        * [logOut][FunctionDeclaration-1]
-        * [parsePassword][FunctionDeclaration-2]
-        * [LoginOptional][FunctionDeclaration-3]
-        * [LoginRequired][FunctionDeclaration-4]
-        * [isObjectDoesNotExist][FunctionDeclaration-5]
-        * [isPermissionDenied][FunctionDeclaration-6]
-        * [isValidationError][FunctionDeclaration-7]
-        * [Log][FunctionDeclaration-8]
-        * [ValidateBody][FunctionDeclaration-9]
-        * [ValidateHeaders][FunctionDeclaration-10]
-        * [ValidateParams][FunctionDeclaration-11]
-        * [ValidateQuery][FunctionDeclaration-12]
-        * [strategy][FunctionDeclaration-13]
+        * [encryptPassword][FunctionDeclaration-0]
+        * [logIn][FunctionDeclaration-1]
+        * [logOut][FunctionDeclaration-2]
+        * [verifyPassword][FunctionDeclaration-3]
+        * [LoginOptional][FunctionDeclaration-4]
+        * [LoginRequired][FunctionDeclaration-5]
+        * [isObjectDoesNotExist][FunctionDeclaration-6]
+        * [isPermissionDenied][FunctionDeclaration-7]
+        * [isValidationError][FunctionDeclaration-8]
+        * [Log][FunctionDeclaration-9]
+        * [ValidateBody][FunctionDeclaration-10]
+        * [ValidateHeaders][FunctionDeclaration-11]
+        * [ValidateParams][FunctionDeclaration-12]
+        * [ValidateQuery][FunctionDeclaration-13]
         * [controller][FunctionDeclaration-14]
         * [escapeProp][FunctionDeclaration-15]
         * [escape][FunctionDeclaration-16]
@@ -55,15 +55,16 @@
         * [createController][FunctionDeclaration-50]
         * [createService][FunctionDeclaration-51]
         * [dependency][FunctionDeclaration-52]
-        * [createApp][FunctionDeclaration-53]
+        * [strategy][FunctionDeclaration-53]
+        * [createApp][FunctionDeclaration-54]
     * Interfaces
         * [LogOptions][InterfaceDeclaration-0]
-        * [IAuthenticator][InterfaceDeclaration-1]
-        * [Strategy][InterfaceDeclaration-2]
-        * [IResourceCollection][InterfaceDeclaration-4]
-        * [CollectionParams][InterfaceDeclaration-5]
-        * [CookieOptions][InterfaceDeclaration-3]
-        * [Route][InterfaceDeclaration-6]
+        * [CookieOptions][InterfaceDeclaration-1]
+        * [Route][InterfaceDeclaration-2]
+        * [IAuthenticator][InterfaceDeclaration-3]
+        * [Strategy][InterfaceDeclaration-4]
+        * [IResourceCollection][InterfaceDeclaration-5]
+        * [CollectionParams][InterfaceDeclaration-6]
         * [CreateAppOptions][InterfaceDeclaration-7]
     * Types
         * [Class][TypeAliasDeclaration-1]
@@ -75,6 +76,30 @@
 # index.ts
 
 ## Functions
+
+### encryptPassword
+
+Hash a password using the PBKDF2 algorithm.
+
+Configured to use PBKDF2 + HMAC + SHA256.
+The result is a 64 byte binary string (or hex if the legacy option is true).
+
+```typescript
+function encryptPassword(plainTextPassword: string, options: { legacy?: boolean | undefined; } = {}): Promise<string>;
+```
+
+**Parameters**
+
+| Name              | Type                                   | Default value | Description              |
+| ----------------- | -------------------------------------- | ------------- | ------------------------ |
+| plainTextPassword | string                                 |               | The password to encrypt. |
+| options           | { legacy?: boolean &#124; undefined; } | {}            |                          |
+
+**Return type**
+
+Promise<string>
+
+----------
 
 ### logIn
 
@@ -114,21 +139,23 @@ void
 
 ----------
 
-### parsePassword
+### verifyPassword
 
 ```typescript
-function parsePassword(password: string): Promise<string>;
+function verifyPassword(plainTextPassword: string, encryptedPassword: string, options: { legacy?: boolean | undefined; } = {}): Promise<boolean>;
 ```
 
 **Parameters**
 
-| Name     | Type   |
-| -------- | ------ |
-| password | string |
+| Name              | Type                                   | Default value |
+| ----------------- | -------------------------------------- | ------------- |
+| plainTextPassword | string                                 |               |
+| encryptedPassword | string                                 |               |
+| options           | { legacy?: boolean &#124; undefined; } | {}            |
 
 **Return type**
 
-Promise<string>
+Promise<boolean>
 
 ----------
 
@@ -323,30 +350,6 @@ function ValidateQuery(schema: object): HookDecorator;
 
 ----------
 
-### strategy
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-```typescript
-function strategy(name: Strategy["name"], authenticatorClass: Strategy["authenticatorClass"], schema: Strategy["schema"]): Strategy;
-```
-
-**Parameters**
-
-| Name               | Type                                                     |
-| ------------------ | -------------------------------------------------------- |
-| name               | [Strategy][InterfaceDeclaration-2]["name"]               |
-| authenticatorClass | [Strategy][InterfaceDeclaration-2]["authenticatorClass"] |
-| schema             | [Strategy][InterfaceDeclaration-2]["schema"]             |
-
-**Return type**
-
-[Strategy][InterfaceDeclaration-2]
-
-----------
-
 ### controller
 
 ```typescript
@@ -449,7 +452,7 @@ function render(templatePath: string, locals: object, dirname: string): HttpResp
 
 **Return type**
 
-[HttpResponseOK][ClassDeclaration-19]
+[HttpResponseOK][ClassDeclaration-4]
 
 ----------
 
@@ -612,7 +615,7 @@ function isHttpResponse(obj: any): obj is HttpResponse;
 
 **Return type**
 
-obj is [HttpResponse][ClassDeclaration-8]
+obj is [HttpResponse][ClassDeclaration-6]
 
 ----------
 
@@ -630,7 +633,7 @@ function isHttpResponseSuccess(obj: any): obj is HttpResponseSuccess;
 
 **Return type**
 
-obj is [HttpResponseSuccess][ClassDeclaration-10]
+obj is [HttpResponseSuccess][ClassDeclaration-5]
 
 ----------
 
@@ -648,7 +651,7 @@ function isHttpResponseOK(obj: any): obj is HttpResponseOK;
 
 **Return type**
 
-obj is [HttpResponseOK][ClassDeclaration-19]
+obj is [HttpResponseOK][ClassDeclaration-4]
 
 ----------
 
@@ -666,7 +669,7 @@ function isHttpResponseCreated(obj: any): obj is HttpResponseCreated;
 
 **Return type**
 
-obj is [HttpResponseCreated][ClassDeclaration-21]
+obj is [HttpResponseCreated][ClassDeclaration-7]
 
 ----------
 
@@ -684,7 +687,7 @@ function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent;
 
 **Return type**
 
-obj is [HttpResponseNoContent][ClassDeclaration-9]
+obj is [HttpResponseNoContent][ClassDeclaration-8]
 
 ----------
 
@@ -702,7 +705,7 @@ function isHttpResponseRedirection(obj: any): obj is HttpResponseRedirection;
 
 **Return type**
 
-obj is [HttpResponseRedirection][ClassDeclaration-7]
+obj is [HttpResponseRedirection][ClassDeclaration-9]
 
 ----------
 
@@ -720,7 +723,7 @@ function isHttpResponseRedirect(obj: any): obj is HttpResponseRedirect;
 
 **Return type**
 
-obj is [HttpResponseRedirect][ClassDeclaration-6]
+obj is [HttpResponseRedirect][ClassDeclaration-10]
 
 ----------
 
@@ -738,7 +741,7 @@ function isHttpResponseClientError(obj: any): obj is HttpResponseClientError;
 
 **Return type**
 
-obj is [HttpResponseClientError][ClassDeclaration-12]
+obj is [HttpResponseClientError][ClassDeclaration-11]
 
 ----------
 
@@ -756,7 +759,7 @@ function isHttpResponseBadRequest(obj: any): obj is HttpResponseBadRequest;
 
 **Return type**
 
-obj is [HttpResponseBadRequest][ClassDeclaration-13]
+obj is [HttpResponseBadRequest][ClassDeclaration-12]
 
 ----------
 
@@ -774,7 +777,7 @@ function isHttpResponseUnauthorized(obj: any): obj is HttpResponseUnauthorized;
 
 **Return type**
 
-obj is [HttpResponseUnauthorized][ClassDeclaration-14]
+obj is [HttpResponseUnauthorized][ClassDeclaration-13]
 
 ----------
 
@@ -792,7 +795,7 @@ function isHttpResponseForbidden(obj: any): obj is HttpResponseForbidden;
 
 **Return type**
 
-obj is [HttpResponseForbidden][ClassDeclaration-20]
+obj is [HttpResponseForbidden][ClassDeclaration-14]
 
 ----------
 
@@ -810,7 +813,7 @@ function isHttpResponseNotFound(obj: any): obj is HttpResponseNotFound;
 
 **Return type**
 
-obj is [HttpResponseNotFound][ClassDeclaration-11]
+obj is [HttpResponseNotFound][ClassDeclaration-15]
 
 ----------
 
@@ -846,7 +849,7 @@ function isHttpResponseConflict(obj: any): obj is HttpResponseConflict;
 
 **Return type**
 
-obj is [HttpResponseConflict][ClassDeclaration-22]
+obj is [HttpResponseConflict][ClassDeclaration-17]
 
 ----------
 
@@ -882,7 +885,7 @@ function isHttpResponseInternalServerError(obj: any): obj is HttpResponseInterna
 
 **Return type**
 
-obj is [HttpResponseInternalServerError][ClassDeclaration-23]
+obj is [HttpResponseInternalServerError][ClassDeclaration-19]
 
 ----------
 
@@ -900,7 +903,7 @@ function isHttpResponseNotImplemented(obj: any): obj is HttpResponseNotImplement
 
 **Return type**
 
-obj is [HttpResponseNotImplemented][ClassDeclaration-17]
+obj is [HttpResponseNotImplemented][ClassDeclaration-20]
 
 ----------
 
@@ -953,11 +956,11 @@ function makeControllerRoutes(parentPath: string, parentHooks: HookFunction[], c
 | parentPath      | string                                   |
 | parentHooks     | [HookFunction][TypeAliasDeclaration-3][] |
 | controllerClass | [Class][TypeAliasDeclaration-1]          |
-| services        | [ServiceManager][ClassDeclaration-5]     |
+| services        | [ServiceManager][ClassDeclaration-21]    |
 
 **Return type**
 
-[Route][InterfaceDeclaration-6][]
+[Route][InterfaceDeclaration-2][]
 
 ----------
 
@@ -1013,10 +1016,10 @@ function createController<T>(controllerClass: Class<T>, dependencies?: object | 
 
 **Parameters**
 
-| Name            | Type                                               |
-| --------------- | -------------------------------------------------- |
-| controllerClass | [Class][TypeAliasDeclaration-1]<T>                 |
-| dependencies    | object &#124; [ServiceManager][ClassDeclaration-5] |
+| Name            | Type                                                |
+| --------------- | --------------------------------------------------- |
+| controllerClass | [Class][TypeAliasDeclaration-1]<T>                  |
+| dependencies    | object &#124; [ServiceManager][ClassDeclaration-21] |
 
 **Return type**
 
@@ -1040,10 +1043,10 @@ function createService<Service>(serviceClass: Class<Service>, dependencies?: obj
 
 **Parameters**
 
-| Name         | Type                                               | Description                                                                              |
-| ------------ | -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| serviceClass | [Class][TypeAliasDeclaration-1]<Service>           | The service class.                                                                       |
-| dependencies | object &#124; [ServiceManager][ClassDeclaration-5] | Either a ServiceManager or an object which key/values are the service classes/instances. |
+| Name         | Type                                                | Description                                                                                 |
+| ------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service>            | The service class.                                                                          |
+| dependencies | object &#124; [ServiceManager][ClassDeclaration-21] | Either a ServiceManager or an object which key/values are the service properties/instances. |
 
 **Return type**
 
@@ -1072,7 +1075,27 @@ void
 
 ----------
 
-### [strategy][FunctionDeclaration-13]
+### strategy
+
+**Warning Beta!**
+
+Deprecated!</span>
+
+```typescript
+function strategy(name: Strategy["name"], authenticatorClass: Strategy["authenticatorClass"], schema: Strategy["schema"]): Strategy;
+```
+
+**Parameters**
+
+| Name               | Type                                                     |
+| ------------------ | -------------------------------------------------------- |
+| name               | [Strategy][InterfaceDeclaration-4]["name"]               |
+| authenticatorClass | [Strategy][InterfaceDeclaration-4]["authenticatorClass"] |
+| schema             | [Strategy][InterfaceDeclaration-4]["schema"]             |
+
+**Return type**
+
+[Strategy][InterfaceDeclaration-4]
 
 ----------
 
@@ -1119,6 +1142,58 @@ interface LogOptions {
 | headers | string[] &#124; boolean                                              | true     |
 | query   | boolean &#124; undefined                                             | true     |
 | logFn   | ((message?: any, ...optionalParams: any[]) => void) &#124; undefined | true     |
+
+----------
+
+### CookieOptions
+
+```typescript
+interface CookieOptions {
+    domain?: string | undefined;
+    expires?: Date | undefined;
+    httpOnly?: boolean | undefined;
+    maxAge?: number | undefined;
+    path?: string | undefined;
+    secure?: boolean | undefined;
+    sameSite?: "strict" | "lax";
+}
+```
+
+**Properties**
+
+| Name     | Type                     | Optional |
+| -------- | ------------------------ | -------- |
+| domain   | string &#124; undefined  | true     |
+| expires  | Date &#124; undefined    | true     |
+| httpOnly | boolean &#124; undefined | true     |
+| maxAge   | number &#124; undefined  | true     |
+| path     | string &#124; undefined  | true     |
+| secure   | boolean &#124; undefined | true     |
+| sameSite | "strict" &#124; "lax"    | true     |
+
+----------
+
+### Route
+
+```typescript
+interface Route {
+    httpMethod: HttpMethod;
+    path: string;
+    hooks: HookFunction[];
+    controller: any;
+    propertyKey: string;
+}
+```
+
+**Properties**
+
+| Name        | Type                                     | Optional |
+| ----------- | ---------------------------------------- | -------- |
+| httpMethod  | [HttpMethod][TypeAliasDeclaration-2]     | false    |
+| path        | string                                   | false    |
+| hooks       | [HookFunction][TypeAliasDeclaration-3][] | false    |
+| controller  | any                                      | false    |
+| propertyKey | string                                   | false    |
 
 ----------
 
@@ -1177,7 +1252,7 @@ interface Strategy {
 | Name               | Type                                                                           | Optional |
 | ------------------ | ------------------------------------------------------------------------------ | -------- |
 | name               | string                                                                         | false    |
-| authenticatorClass | [Class][TypeAliasDeclaration-1]<[IAuthenticator][InterfaceDeclaration-1]<any>> | false    |
+| authenticatorClass | [Class][TypeAliasDeclaration-1]<[IAuthenticator][InterfaceDeclaration-3]<any>> | false    |
 | schema             | object                                                                         | false    |
 
 ----------
@@ -1324,74 +1399,6 @@ interface CollectionParams {
 
 ----------
 
-### CookieOptions
-
-```typescript
-interface CookieOptions {
-    domain?: string | undefined;
-    expires?: Date | undefined;
-    httpOnly?: boolean | undefined;
-    maxAge?: number | undefined;
-    path?: string | undefined;
-    secure?: boolean | undefined;
-    sameSite?: "strict" | "lax";
-}
-```
-
-**Properties**
-
-| Name     | Type                     | Optional |
-| -------- | ------------------------ | -------- |
-| domain   | string &#124; undefined  | true     |
-| expires  | Date &#124; undefined    | true     |
-| httpOnly | boolean &#124; undefined | true     |
-| maxAge   | number &#124; undefined  | true     |
-| path     | string &#124; undefined  | true     |
-| secure   | boolean &#124; undefined | true     |
-| sameSite | "strict" &#124; "lax"    | true     |
-
-----------
-
-### Route
-
-```typescript
-interface Route {
-    httpMethod: HttpMethod;
-    path: string;
-    hooks: HookFunction[];
-    controller: any;
-    propertyKey: string;
-}
-```
-
-**Properties**
-
-| Name        | Type                                     | Optional |
-| ----------- | ---------------------------------------- | -------- |
-| httpMethod  | [HttpMethod][TypeAliasDeclaration-2]     | false    |
-| path        | string                                   | false    |
-| hooks       | [HookFunction][TypeAliasDeclaration-3][] | false    |
-| controller  | any                                      | false    |
-| propertyKey | string                                   | false    |
-
-----------
-
-### [IAuthenticator][InterfaceDeclaration-1]
-
-----------
-
-### [Strategy][InterfaceDeclaration-2]
-
-----------
-
-### [IResourceCollection][InterfaceDeclaration-4]
-
-----------
-
-### [CollectionParams][InterfaceDeclaration-5]
-
-----------
-
 ### CreateAppOptions
 
 ```typescript
@@ -1468,7 +1475,7 @@ type HookFunction = (ctx: Context<any>, services: ServiceManager) => void | Http
 
 **Type**
 
-(ctx: Context<any>, services: ServiceManager) => void | [HttpResponse][ClassDeclaration-8] | [HookPostFunction][TypeAliasDeclaration-4] | Promise<void | [HttpResponse][ClassDeclaration-8] | [HookPostFunction][TypeAliasDeclaration-4]>
+(ctx: Context<any>, services: ServiceManager) => void | [HttpResponse][ClassDeclaration-6] | [HookPostFunction][TypeAliasDeclaration-4] | Promise<void | [HttpResponse][ClassDeclaration-6] | [HookPostFunction][TypeAliasDeclaration-4]>
 
 ----------
 
@@ -1499,85 +1506,67 @@ type HookDecorator = (target: any, propertyKey?: string | undefined) => any;
 
 ----------
 
-### [LoginController][ClassDeclaration-4]
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-
-----------
-
-### [RestController][ClassDeclaration-15]
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-
-----------
-
 ### [Context][ClassDeclaration-0]
 
 
 ----------
 
-### [HttpResponse][ClassDeclaration-8]
+### [HttpResponse][ClassDeclaration-6]
 
 
 ----------
 
-### [HttpResponseSuccess][ClassDeclaration-10]
+### [HttpResponseSuccess][ClassDeclaration-5]
 
 
 ----------
 
-### [HttpResponseOK][ClassDeclaration-19]
+### [HttpResponseOK][ClassDeclaration-4]
 
 
 ----------
 
-### [HttpResponseCreated][ClassDeclaration-21]
+### [HttpResponseCreated][ClassDeclaration-7]
 
 
 ----------
 
-### [HttpResponseNoContent][ClassDeclaration-9]
+### [HttpResponseNoContent][ClassDeclaration-8]
 
 
 ----------
 
-### [HttpResponseRedirection][ClassDeclaration-7]
+### [HttpResponseRedirection][ClassDeclaration-9]
 
 
 ----------
 
-### [HttpResponseRedirect][ClassDeclaration-6]
+### [HttpResponseRedirect][ClassDeclaration-10]
 
 
 ----------
 
-### [HttpResponseClientError][ClassDeclaration-12]
+### [HttpResponseClientError][ClassDeclaration-11]
 
 
 ----------
 
-### [HttpResponseBadRequest][ClassDeclaration-13]
+### [HttpResponseBadRequest][ClassDeclaration-12]
 
 
 ----------
 
-### [HttpResponseUnauthorized][ClassDeclaration-14]
+### [HttpResponseUnauthorized][ClassDeclaration-13]
 
 
 ----------
 
-### [HttpResponseForbidden][ClassDeclaration-20]
+### [HttpResponseForbidden][ClassDeclaration-14]
 
 
 ----------
 
-### [HttpResponseNotFound][ClassDeclaration-11]
+### [HttpResponseNotFound][ClassDeclaration-15]
 
 
 ----------
@@ -1587,7 +1576,7 @@ Deprecated!</span>
 
 ----------
 
-### [HttpResponseConflict][ClassDeclaration-22]
+### [HttpResponseConflict][ClassDeclaration-17]
 
 
 ----------
@@ -1597,66 +1586,72 @@ Deprecated!</span>
 
 ----------
 
-### [HttpResponseInternalServerError][ClassDeclaration-23]
+### [HttpResponseInternalServerError][ClassDeclaration-19]
 
 
 ----------
 
-### [HttpResponseNotImplemented][ClassDeclaration-17]
+### [HttpResponseNotImplemented][ClassDeclaration-20]
 
 
 ----------
 
-### [Config][ClassDeclaration-24]
+### [Config][ClassDeclaration-22]
 
 
 ----------
 
-### [ServiceManager][ClassDeclaration-5]
+### [ServiceManager][ClassDeclaration-21]
 
 Identity Mapper that instantiates and returns service singletons.
 
 
 ----------
 
-### [LoginController][ClassDeclaration-4]
+### [LoginController][ClassDeclaration-23]
+
+**Warning Beta!**
+
+Deprecated!</span>
+
 
 ----------
 
-### [RestController][ClassDeclaration-15]
+### [RestController][ClassDeclaration-24]
+
+**Warning Beta!**
+
+Deprecated!</span>
+
 
 [SourceFile-0]: index.md#indexts
-[FunctionDeclaration-0]: index.md#login
+[FunctionDeclaration-0]: index.md#encryptpassword
+[FunctionDeclaration-1]: index.md#login
 [ClassDeclaration-0]: index/context.md#context
-[FunctionDeclaration-1]: index.md#logout
+[FunctionDeclaration-2]: index.md#logout
 [ClassDeclaration-0]: index/context.md#context
-[FunctionDeclaration-2]: index.md#parsepassword
-[FunctionDeclaration-3]: index.md#loginoptional
+[FunctionDeclaration-3]: index.md#verifypassword
+[FunctionDeclaration-4]: index.md#loginoptional
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-4]: index.md#loginrequired
+[FunctionDeclaration-5]: index.md#loginrequired
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-5]: index.md#isobjectdoesnotexist
+[FunctionDeclaration-6]: index.md#isobjectdoesnotexist
 [ClassDeclaration-1]: index/objectdoesnotexist.md#objectdoesnotexist
-[FunctionDeclaration-6]: index.md#ispermissiondenied
+[FunctionDeclaration-7]: index.md#ispermissiondenied
 [ClassDeclaration-2]: index/permissiondenied.md#permissiondenied
-[FunctionDeclaration-7]: index.md#isvalidationerror
+[FunctionDeclaration-8]: index.md#isvalidationerror
 [ClassDeclaration-3]: index/validationerror.md#validationerror
-[FunctionDeclaration-8]: index.md#log
+[FunctionDeclaration-9]: index.md#log
 [InterfaceDeclaration-0]: index.md#logoptions
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-9]: index.md#validatebody
+[FunctionDeclaration-10]: index.md#validatebody
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-10]: index.md#validateheaders
+[FunctionDeclaration-11]: index.md#validateheaders
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-11]: index.md#validateparams
+[FunctionDeclaration-12]: index.md#validateparams
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-12]: index.md#validatequery
+[FunctionDeclaration-13]: index.md#validatequery
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-13]: index.md#strategy
-[InterfaceDeclaration-2]: index.md#strategy
-[InterfaceDeclaration-2]: index.md#strategy
-[InterfaceDeclaration-2]: index.md#strategy
-[InterfaceDeclaration-2]: index.md#strategy
 [FunctionDeclaration-14]: index.md#controller
 [TypeAliasDeclaration-1]: index.md#class
 [TypeAliasDeclaration-1]: index.md#class
@@ -1665,7 +1660,7 @@ Identity Mapper that instantiates and returns service singletons.
 [FunctionDeclaration-17]: index.md#getajvinstance
 [FunctionDeclaration-18]: index.md#isinfile
 [FunctionDeclaration-19]: index.md#render
-[ClassDeclaration-19]: index/httpresponseok.md#httpresponseok
+[ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
 [FunctionDeclaration-20]: index.md#validate
 [FunctionDeclaration-21]: index.md#head
 [FunctionDeclaration-22]: index.md#options
@@ -1675,39 +1670,39 @@ Identity Mapper that instantiates and returns service singletons.
 [FunctionDeclaration-26]: index.md#patch
 [FunctionDeclaration-27]: index.md#delete
 [FunctionDeclaration-28]: index.md#ishttpresponse
-[ClassDeclaration-8]: index/httpresponse.md#httpresponse
+[ClassDeclaration-6]: index/httpresponse.md#httpresponse
 [FunctionDeclaration-29]: index.md#ishttpresponsesuccess
-[ClassDeclaration-10]: index/httpresponsesuccess.md#httpresponsesuccess
+[ClassDeclaration-5]: index/httpresponsesuccess.md#httpresponsesuccess
 [FunctionDeclaration-30]: index.md#ishttpresponseok
-[ClassDeclaration-19]: index/httpresponseok.md#httpresponseok
+[ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
 [FunctionDeclaration-31]: index.md#ishttpresponsecreated
-[ClassDeclaration-21]: index/httpresponsecreated.md#httpresponsecreated
+[ClassDeclaration-7]: index/httpresponsecreated.md#httpresponsecreated
 [FunctionDeclaration-32]: index.md#ishttpresponsenocontent
-[ClassDeclaration-9]: index/httpresponsenocontent.md#httpresponsenocontent
+[ClassDeclaration-8]: index/httpresponsenocontent.md#httpresponsenocontent
 [FunctionDeclaration-33]: index.md#ishttpresponseredirection
-[ClassDeclaration-7]: index/httpresponseredirection.md#httpresponseredirection
+[ClassDeclaration-9]: index/httpresponseredirection.md#httpresponseredirection
 [FunctionDeclaration-34]: index.md#ishttpresponseredirect
-[ClassDeclaration-6]: index/httpresponseredirect.md#httpresponseredirect
+[ClassDeclaration-10]: index/httpresponseredirect.md#httpresponseredirect
 [FunctionDeclaration-35]: index.md#ishttpresponseclienterror
-[ClassDeclaration-12]: index/httpresponseclienterror.md#httpresponseclienterror
+[ClassDeclaration-11]: index/httpresponseclienterror.md#httpresponseclienterror
 [FunctionDeclaration-36]: index.md#ishttpresponsebadrequest
-[ClassDeclaration-13]: index/httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-12]: index/httpresponsebadrequest.md#httpresponsebadrequest
 [FunctionDeclaration-37]: index.md#ishttpresponseunauthorized
-[ClassDeclaration-14]: index/httpresponseunauthorized.md#httpresponseunauthorized
+[ClassDeclaration-13]: index/httpresponseunauthorized.md#httpresponseunauthorized
 [FunctionDeclaration-38]: index.md#ishttpresponseforbidden
-[ClassDeclaration-20]: index/httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-14]: index/httpresponseforbidden.md#httpresponseforbidden
 [FunctionDeclaration-39]: index.md#ishttpresponsenotfound
-[ClassDeclaration-11]: index/httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-15]: index/httpresponsenotfound.md#httpresponsenotfound
 [FunctionDeclaration-40]: index.md#ishttpresponsemethodnotallowed
 [ClassDeclaration-16]: index/httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
 [FunctionDeclaration-41]: index.md#ishttpresponseconflict
-[ClassDeclaration-22]: index/httpresponseconflict.md#httpresponseconflict
+[ClassDeclaration-17]: index/httpresponseconflict.md#httpresponseconflict
 [FunctionDeclaration-42]: index.md#ishttpresponseservererror
 [ClassDeclaration-18]: index/httpresponseservererror.md#httpresponseservererror
 [FunctionDeclaration-43]: index.md#ishttpresponseinternalservererror
-[ClassDeclaration-23]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
+[ClassDeclaration-19]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
 [FunctionDeclaration-44]: index.md#ishttpresponsenotimplemented
-[ClassDeclaration-17]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
+[ClassDeclaration-20]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
 [FunctionDeclaration-45]: index.md#hook
 [TypeAliasDeclaration-3]: index.md#hookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
@@ -1717,65 +1712,70 @@ Identity Mapper that instantiates and returns service singletons.
 [FunctionDeclaration-47]: index.md#makecontrollerroutes
 [TypeAliasDeclaration-3]: index.md#hookfunction
 [TypeAliasDeclaration-1]: index.md#class
-[ClassDeclaration-5]: index/servicemanager.md#servicemanager
-[InterfaceDeclaration-6]: index.md#route
+[ClassDeclaration-21]: index/servicemanager.md#servicemanager
+[InterfaceDeclaration-2]: index.md#route
 [FunctionDeclaration-48]: index.md#getpath
 [TypeAliasDeclaration-1]: index.md#class
 [FunctionDeclaration-49]: index.md#gethttpmethod
 [TypeAliasDeclaration-1]: index.md#class
 [FunctionDeclaration-50]: index.md#createcontroller
 [TypeAliasDeclaration-1]: index.md#class
-[ClassDeclaration-5]: index/servicemanager.md#servicemanager
+[ClassDeclaration-21]: index/servicemanager.md#servicemanager
 [FunctionDeclaration-51]: index.md#createservice
 [TypeAliasDeclaration-1]: index.md#class
-[ClassDeclaration-5]: index/servicemanager.md#servicemanager
+[ClassDeclaration-21]: index/servicemanager.md#servicemanager
 [FunctionDeclaration-52]: index.md#dependency
-[FunctionDeclaration-53]: index.md#createapp
+[FunctionDeclaration-53]: index.md#strategy
+[InterfaceDeclaration-4]: index.md#strategy
+[InterfaceDeclaration-4]: index.md#strategy
+[InterfaceDeclaration-4]: index.md#strategy
+[InterfaceDeclaration-4]: index.md#strategy
+[FunctionDeclaration-54]: index.md#createapp
 [TypeAliasDeclaration-1]: index.md#class
 [InterfaceDeclaration-7]: index.md#createappoptions
 [InterfaceDeclaration-0]: index.md#logoptions
-[InterfaceDeclaration-1]: index.md#iauthenticator
-[InterfaceDeclaration-2]: index.md#strategy
-[InterfaceDeclaration-1]: index.md#iauthenticator
-[TypeAliasDeclaration-1]: index.md#class
-[InterfaceDeclaration-4]: index.md#iresourcecollection
-[InterfaceDeclaration-5]: index.md#collectionparams
-[InterfaceDeclaration-3]: index.md#cookieoptions
-[InterfaceDeclaration-6]: index.md#route
+[InterfaceDeclaration-1]: index.md#cookieoptions
+[InterfaceDeclaration-2]: index.md#route
 [TypeAliasDeclaration-2]: index.md#httpmethod
 [TypeAliasDeclaration-3]: index.md#hookfunction
+[InterfaceDeclaration-3]: index.md#iauthenticator
+[InterfaceDeclaration-4]: index.md#strategy
+[InterfaceDeclaration-3]: index.md#iauthenticator
+[TypeAliasDeclaration-1]: index.md#class
+[InterfaceDeclaration-5]: index.md#iresourcecollection
+[InterfaceDeclaration-6]: index.md#collectionparams
 [InterfaceDeclaration-7]: index.md#createappoptions
 [TypeAliasDeclaration-1]: index.md#class
 [TypeAliasDeclaration-2]: index.md#httpmethod
 [TypeAliasDeclaration-4]: index.md#hookpostfunction
 [TypeAliasDeclaration-3]: index.md#hookfunction
-[ClassDeclaration-8]: index/httpresponse.md#httpresponse
+[ClassDeclaration-6]: index/httpresponse.md#httpresponse
 [TypeAliasDeclaration-4]: index.md#hookpostfunction
-[ClassDeclaration-8]: index/httpresponse.md#httpresponse
+[ClassDeclaration-6]: index/httpresponse.md#httpresponse
 [TypeAliasDeclaration-4]: index.md#hookpostfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [ClassDeclaration-1]: index/objectdoesnotexist.md#objectdoesnotexist
 [ClassDeclaration-2]: index/permissiondenied.md#permissiondenied
 [ClassDeclaration-3]: index/validationerror.md#validationerror
-[ClassDeclaration-4]: index/logincontroller.md#logincontroller
-[ClassDeclaration-15]: index/restcontroller.md#restcontroller
 [ClassDeclaration-0]: index/context.md#context
-[ClassDeclaration-8]: index/httpresponse.md#httpresponse
-[ClassDeclaration-10]: index/httpresponsesuccess.md#httpresponsesuccess
-[ClassDeclaration-19]: index/httpresponseok.md#httpresponseok
-[ClassDeclaration-21]: index/httpresponsecreated.md#httpresponsecreated
-[ClassDeclaration-9]: index/httpresponsenocontent.md#httpresponsenocontent
-[ClassDeclaration-7]: index/httpresponseredirection.md#httpresponseredirection
-[ClassDeclaration-6]: index/httpresponseredirect.md#httpresponseredirect
-[ClassDeclaration-12]: index/httpresponseclienterror.md#httpresponseclienterror
-[ClassDeclaration-13]: index/httpresponsebadrequest.md#httpresponsebadrequest
-[ClassDeclaration-14]: index/httpresponseunauthorized.md#httpresponseunauthorized
-[ClassDeclaration-20]: index/httpresponseforbidden.md#httpresponseforbidden
-[ClassDeclaration-11]: index/httpresponsenotfound.md#httpresponsenotfound
+[ClassDeclaration-6]: index/httpresponse.md#httpresponse
+[ClassDeclaration-5]: index/httpresponsesuccess.md#httpresponsesuccess
+[ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
+[ClassDeclaration-7]: index/httpresponsecreated.md#httpresponsecreated
+[ClassDeclaration-8]: index/httpresponsenocontent.md#httpresponsenocontent
+[ClassDeclaration-9]: index/httpresponseredirection.md#httpresponseredirection
+[ClassDeclaration-10]: index/httpresponseredirect.md#httpresponseredirect
+[ClassDeclaration-11]: index/httpresponseclienterror.md#httpresponseclienterror
+[ClassDeclaration-12]: index/httpresponsebadrequest.md#httpresponsebadrequest
+[ClassDeclaration-13]: index/httpresponseunauthorized.md#httpresponseunauthorized
+[ClassDeclaration-14]: index/httpresponseforbidden.md#httpresponseforbidden
+[ClassDeclaration-15]: index/httpresponsenotfound.md#httpresponsenotfound
 [ClassDeclaration-16]: index/httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[ClassDeclaration-22]: index/httpresponseconflict.md#httpresponseconflict
+[ClassDeclaration-17]: index/httpresponseconflict.md#httpresponseconflict
 [ClassDeclaration-18]: index/httpresponseservererror.md#httpresponseservererror
-[ClassDeclaration-23]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
-[ClassDeclaration-17]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-24]: index/config.md#config
-[ClassDeclaration-5]: index/servicemanager.md#servicemanager
+[ClassDeclaration-19]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
+[ClassDeclaration-20]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
+[ClassDeclaration-22]: index/config.md#config
+[ClassDeclaration-21]: index/servicemanager.md#servicemanager
+[ClassDeclaration-23]: index/logincontroller.md#logincontroller
+[ClassDeclaration-24]: index/restcontroller.md#restcontroller

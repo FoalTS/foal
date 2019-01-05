@@ -2,9 +2,9 @@
 
 * [HttpResponseServerError][ClassDeclaration-18]
     * Constructor
-        * [constructor(body)][Constructor-15]
+        * [constructor(body)][Constructor-18]
     * Properties
-        * [isHttpResponseServerError][PropertyDeclaration-37]
+        * [isHttpResponseServerError][PropertyDeclaration-41]
 
 # HttpResponseServerError
 
@@ -38,5 +38,5 @@ public readonly isHttpResponseServerError: true;
 true
 
 [ClassDeclaration-18]: httpresponseservererror.md#httpresponseservererror
-[Constructor-15]: httpresponseservererror.md#constructorbody
-[PropertyDeclaration-37]: httpresponseservererror.md#ishttpresponseservererror
+[Constructor-18]: httpresponseservererror.md#constructorbody
+[PropertyDeclaration-41]: httpresponseservererror.md#ishttpresponseservererror

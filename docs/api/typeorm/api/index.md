@@ -2,9 +2,10 @@
 
 * [index.ts][SourceFile-0]
     * Functions
-        * [PermissionRequired][FunctionDeclaration-0]
-        * [fetchUserWithPermissions][FunctionDeclaration-1]
-        * [fetchUser][FunctionDeclaration-2]
+        * [middleware][FunctionDeclaration-0]
+        * [PermissionRequired][FunctionDeclaration-1]
+        * [fetchUserWithPermissions][FunctionDeclaration-2]
+        * [fetchUser][FunctionDeclaration-3]
     * Interfaces
         * [EmailUser][InterfaceDeclaration-0]
     * Types
@@ -16,6 +17,29 @@
 # index.ts
 
 ## Functions
+
+### middleware
+
+**Warning Beta!**
+
+Deprecated!</span>
+
+```typescript
+function middleware(operations: string, middleware: Middleware): Partial<Record<keyof IResourceCollection, Middleware>>;
+```
+
+**Parameters**
+
+| Name       | Type                                 |
+| ---------- | ------------------------------------ |
+| operations | string                               |
+| middleware | [Middleware][TypeAliasDeclaration-0] |
+
+**Return type**
+
+Partial<Record<keyof IResourceCollection, [Middleware][TypeAliasDeclaration-0]>>
+
+----------
 
 ### PermissionRequired
 
@@ -183,9 +207,12 @@ const emailSchema: { additionalProperties: boolean; properties: { email: { type:
 { additionalProperties: boolean; properties: { email: { type: string; format: string; }; password: { type: string; }; }; required: string[]; type: string; }
 
 [SourceFile-0]: index.md#indexts
-[FunctionDeclaration-0]: index.md#permissionrequired
-[FunctionDeclaration-1]: index.md#fetchuserwithpermissions
-[FunctionDeclaration-2]: index.md#fetchuser
+[FunctionDeclaration-0]: index.md#middleware
+[TypeAliasDeclaration-0]: index.md#middleware
+[TypeAliasDeclaration-0]: index.md#middleware
+[FunctionDeclaration-1]: index.md#permissionrequired
+[FunctionDeclaration-2]: index.md#fetchuserwithpermissions
+[FunctionDeclaration-3]: index.md#fetchuser
 [InterfaceDeclaration-0]: index.md#emailuser
 [ClassDeclaration-0]: index/userwithpermissions.md#userwithpermissions
 [TypeAliasDeclaration-0]: index.md#middleware
