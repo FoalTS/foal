@@ -18,10 +18,10 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(/*args*/) {
   const user = new User();
-  user.userPermissions = [];
-  user.groups = [];
+  // user.userPermissions = [];
+  // user.groups = [];
   // user.email = args.email;
   // if (await isCommon(args.password)) {
   //   console.log('This password is too common. Please choose another one.');
