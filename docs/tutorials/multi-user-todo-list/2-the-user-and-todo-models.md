@@ -25,7 +25,7 @@ export class User {
   password: string;
 
   async setPassword(password: string) {
-    this.password = await encryptPassword(password, { legacy: true });
+    this.password = await encryptPassword(password);
   }
 
 }
