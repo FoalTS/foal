@@ -10,6 +10,7 @@ foal g entity flight
 foal g hook foo-bar
 foal g service foo
 foal g controller bar --register
+foal g rest-api product --register
 foal g sub-app bar-foo
 foal g script bar-script
 
@@ -42,6 +43,97 @@ response=$(
         --output /dev/null \
 )
 test "$response" -ge 200 && test "$response" -le 299
+
+# Test the REST API
+# TODO: use a function for the tests below.
+
+# GET /products -> 200
+response=$(
+    curl http://localhost:3000/products \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 200
+
+# POST /products -> 201
+response=$(
+    curl http://localhost:3000/products \
+        -X POST \
+        -d '{ "text": "value1" }' \
+        -H "Content-Type: application/json"  \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 201
+
+# POST /products -> 400
+response=$(
+    curl http://localhost:3000/products \
+        -X POST \
+        -d '{}' \
+        -H "Content-Type: application/json"  \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 400
+
+# GET /products/1 -> 200
+response=$(
+    curl http://localhost:3000/products/1 \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 200
+
+# GET /products/2 -> 404
+response=$(
+    curl http://localhost:3000/products/2 \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 404
+
+# PUT /products/1 -> 200
+response=$(
+    curl http://localhost:3000/products/1 \
+        -X PUT \
+        -d '{ "text": "value2" }' \
+        -H "Content-Type: application/json"  \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 200
+
+# DELETE /products/1 -> 200
+response=$(
+    curl http://localhost:3000/products/1 \
+        -X DELETE \
+        -d '{ "text": "value1" }' \
+        -H "Content-Type: application/json"  \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 200
+
+# DELETE /products/1 -> 404
+response=$(
+    curl http://localhost:3000/products/1 \
+        -X DELETE \
+        -d '{ "text": "value1" }' \
+        -H "Content-Type: application/json"  \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" = 404
+
 pm2 delete index
 
 # Test the default shell scripts to create permissions, groups and users.
