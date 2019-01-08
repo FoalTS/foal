@@ -45,94 +45,63 @@ response=$(
 test "$response" -ge 200 && test "$response" -le 299
 
 # Test the REST API
-# TODO: use a function for the tests below.
 
-# GET /products -> 200
-response=$(
-    curl http://localhost:3000/products \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 200
+function test_rest_api () {
+    echo "Requesting $1 $2"
+    STATUS=$(
+        curl "$2" \
+            -X $1 \
+            --write-out %{http_code} \
+            --silent \
+            --output /dev/null \
+    )
+    if [ $STATUS -eq $3 ]; then
+        echo "SUCCESS: Got $STATUS! Expected $3."
+    else
+        echo "ERROR: Got $STATUS. Expected $3..."
+        exit 1
+    fi
+}
 
-# POST /products -> 201
-response=$(
-    curl http://localhost:3000/products \
-        -X POST \
-        -d '{ "text": "value1" }' \
-        -H "Content-Type: application/json"  \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 201
+function test_rest_api_with_body () {
+    echo "Requesting $1 $2"
+    STATUS=$(
+        curl "$2" \
+            -X $1 \
+            -d "$4" \
+            -H "Content-Type: application/json"  \
+            --write-out %{http_code} \
+            --silent \
+            --output /dev/null \
+    )
+    if [ $STATUS -eq $3 ]; then
+        echo "SUCCESS: Got $STATUS! Expected $3."
+    else
+        echo "ERROR: Got $STATUS. Expected $3..."
+        exit 1
+    fi
+}
 
-# POST /products -> 400
-response=$(
-    curl http://localhost:3000/products \
-        -X POST \
-        -d '{}' \
-        -H "Content-Type: application/json"  \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 400
+test_rest_api GET "http://localhost:3000/products" 200
+test_rest_api GET "http://localhost:3000/products/1" 200
+test_rest_api GET "http://localhost:3000/products/20000" 404
 
-# GET /products/1 -> 200
-response=$(
-    curl http://localhost:3000/products/1 \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 200
+test_rest_api_with_body POST "http://localhost:3000/products" 201 '{ "text": "value1" }'
+test_rest_api_with_body POST "http://localhost:3000/products" 400 '{}'
+test_rest_api_with_body POST "http://localhost:3000/products/1" 405
 
-# GET /products/2 -> 404
-response=$(
-    curl http://localhost:3000/products/2 \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 404
+test_rest_api_with_body PUT "http://localhost:3000/products" 405
+test_rest_api_with_body PUT "http://localhost:3000/products/1" 200 '{ "text": "value2" }'
+test_rest_api_with_body PUT "http://localhost:3000/products/1" 400 '{}'
+test_rest_api_with_body PUT "http://localhost:3000/products/20000" 404 '{ "text": "value2" }'
 
-# PUT /products/1 -> 200
-response=$(
-    curl http://localhost:3000/products/1 \
-        -X PUT \
-        -d '{ "text": "value2" }' \
-        -H "Content-Type: application/json"  \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 200
+test_rest_api_with_body PATCH "http://localhost:3000/products" 405
+test_rest_api_with_body PATCH "http://localhost:3000/products/1" 200 '{ "text": "value2" }'
+test_rest_api_with_body PATCH "http://localhost:3000/products/20000" 404 '{ "text": "value2" }'
 
-# DELETE /products/1 -> 200
-response=$(
-    curl http://localhost:3000/products/1 \
-        -X DELETE \
-        -d '{ "text": "value1" }' \
-        -H "Content-Type: application/json"  \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 200
-
-# DELETE /products/1 -> 404
-response=$(
-    curl http://localhost:3000/products/1 \
-        -X DELETE \
-        -d '{ "text": "value1" }' \
-        -H "Content-Type: application/json"  \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" = 404
+test_rest_api DELETE "http://localhost:3000/products" 405
+test_rest_api DELETE "http://localhost:3000/products/1" 204
+test_rest_api DELETE "http://localhost:3000/products/1" 404
 
 pm2 delete index
 
