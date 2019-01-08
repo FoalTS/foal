@@ -26,8 +26,16 @@ export function createRestApi({ name }: { name: string }) {
     });
 
   new Generator('rest-api', controllerRoot)
-    .renderTemplate('controller.ts', names, `${names.kebabName}.controller.ts`)
-    .renderTemplate('controller.spec.ts', names, `${names.kebabName}.controller.spec.ts`)
+    .renderTemplate(
+      controllerRoot ? 'controller.ts' : 'controller.current-dir.ts',
+      names,
+      `${names.kebabName}.controller.ts`
+    )
+    .renderTemplate(
+      controllerRoot ? 'controller.spec.ts' : 'controller.spec.current-dir.ts',
+      names,
+      `${names.kebabName}.controller.spec.ts`
+    )
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;

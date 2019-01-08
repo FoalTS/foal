@@ -31,11 +31,16 @@ describe('createRestApi', () => {
     rmfileIfExists('controllers/test-foo-bar.controller.spec.ts');
     rmfileIfExists('controllers/index.ts');
     rmdirIfExists('controllers');
+
+
+    rmfileIfExists('test-foo-bar.entity.ts');
+    rmfileIfExists('test-foo-bar.controller.ts');
+    rmfileIfExists('test-foo-bar.controller.spec.ts');
   });
 
   function test(root: string) {
 
-    describe(`when the directories ${root}entities/ and ${root}controllers exist`, () => {
+    describe(`when the directories ${root}entities/ and ${root}controllers/ exist`, () => {
 
       const testEntityEnv = new TestEnvironment('rest-api', root + 'entities');
       const testControllerEnv = new TestEnvironment('rest-api', root + 'controllers');
@@ -64,7 +69,28 @@ describe('createRestApi', () => {
 
   }
 
-  // test('src/app/');
+  test('src/app/');
   test('');
+
+  describe('when the directory entities/ or the directory controllers/ does not exist.', () => {
+
+    const testEnv = new TestEnvironment('rest-api', '');
+
+    beforeEach(() => {
+      testEnv.mkRootDirIfDoesNotExist();
+      testEnv.copyFileFromMocks('index.current-dir.ts', 'index.ts');
+    });
+
+    it('should render the templates in the current directory.', () => {
+      createRestApi({ name: 'test-fooBar' });
+
+      testEnv
+        .validateSpec('test-foo-bar.entity.ts')
+        .validateSpec('test-foo-bar.controller.current-dir.ts', 'test-foo-bar.controller.ts')
+        .validateSpec('test-foo-bar.controller.spec.current-dir.ts', 'test-foo-bar.controller.spec.ts')
+        .validateSpec('index.current-dir.ts', 'index.ts');
+    });
+
+  });
 
 });
