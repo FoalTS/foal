@@ -1,6 +1,9 @@
 // std
 import { existsSync } from 'fs';
 
+// 3p
+import { underline } from 'colors/safe';
+
 // FoalTS
 import { Generator, getNames } from '../../utils';
 
@@ -40,4 +43,11 @@ export function createRestApi({ name }: { name: string }) {
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
     });
+
+  if (process.env.NODE_ENV !== 'test') {
+      console.log(
+        `\n${underline('Next steps:')} Complete ${names.upperFirstCamelName} (${names.kebabName}.entity)`
+        + ` and ${names.camelName}Schema (${names.kebabName}.controller).`
+      );
+    }
 }
