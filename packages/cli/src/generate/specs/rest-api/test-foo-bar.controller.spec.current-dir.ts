@@ -25,6 +25,7 @@ describe('TestFooBarController', () => {
       database: './test_db.sqlite3',
       dropSchema: true,
       synchronize: true,
+      type: 'sqlite',
     });
     await createConnection(connectionOptions);
   });
