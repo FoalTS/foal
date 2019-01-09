@@ -10,8 +10,8 @@ import {
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
 
 // App
-import { /* upperFirstCamelName */ } from './/* kebabName */.entity';
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
+import { /* upperFirstCamelName */ } from './/* kebabName */.entity';
 
 describe('/* upperFirstCamelName */Controller', () => {
 
@@ -147,7 +147,8 @@ describe('/* upperFirstCamelName */Controller', () => {
       strictEqual(getPath(/* upperFirstCamelName */Controller, 'post'), '/');
     });
 
-    it('should create the /* camelName */ in the database and return it through an HttpResponseCreated object.', async () => {
+    it('should create the /* camelName */ in the database and return it through '
+        + 'an HttpResponseCreated object.', async () => {
       const ctx = new Context({
         body: {
           text: '/* upperFirstCamelName */ 3',

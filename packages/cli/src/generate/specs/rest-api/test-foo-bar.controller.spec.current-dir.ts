@@ -10,8 +10,8 @@ import {
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
 
 // App
-import { TestFooBar } from './test-foo-bar.entity';
 import { TestFooBarController } from './test-foo-bar.controller';
+import { TestFooBar } from './test-foo-bar.entity';
 
 describe('TestFooBarController', () => {
 
@@ -147,7 +147,8 @@ describe('TestFooBarController', () => {
       strictEqual(getPath(TestFooBarController, 'post'), '/');
     });
 
-    it('should create the testFooBar in the database and return it through an HttpResponseCreated object.', async () => {
+    it('should create the testFooBar in the database and return it through '
+        + 'an HttpResponseCreated object.', async () => {
       const ctx = new Context({
         body: {
           text: 'TestFooBar 3',

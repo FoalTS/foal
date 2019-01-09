@@ -147,7 +147,8 @@ describe('/* upperFirstCamelName */Controller', () => {
       strictEqual(getPath(/* upperFirstCamelName */Controller, 'post'), '/');
     });
 
-    it('should create the /* camelName */ in the database and return it through an HttpResponseCreated object.', async () => {
+    it('should create the /* camelName */ in the database and return it through '
+        + 'an HttpResponseCreated object.', async () => {
       const ctx = new Context({
         body: {
           text: '/* upperFirstCamelName */ 3',

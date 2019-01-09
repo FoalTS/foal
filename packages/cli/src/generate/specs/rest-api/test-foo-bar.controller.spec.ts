@@ -147,7 +147,8 @@ describe('TestFooBarController', () => {
       strictEqual(getPath(TestFooBarController, 'post'), '/');
     });
 
-    it('should create the testFooBar in the database and return it through an HttpResponseCreated object.', async () => {
+    it('should create the testFooBar in the database and return it through '
+        + 'an HttpResponseCreated object.', async () => {
       const ctx = new Context({
         body: {
           text: 'TestFooBar 3',
