@@ -32,7 +32,12 @@ export interface CreateAppOptions {
 export function createApp(rootControllerClass: Class, options: CreateAppOptions = {}, expressInstance?) {
   const app = expressInstance || express();
 
-  app.use(logger('[:date] ":method :url HTTP/:http-version" :status - :response-time ms'));
+  const loggerFormat = Config.get(
+    'settings', 'loggerFormat',
+    '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
+  );
+
+  app.use(logger(loggerFormat));
   app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
   app.use(helmet());
   app.use(express.json());
