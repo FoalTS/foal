@@ -83,12 +83,13 @@ function test_rest_api_with_body () {
 }
 
 test_rest_api GET "http://localhost:3000/products" 200
-test_rest_api GET "http://localhost:3000/products/1" 200
 test_rest_api GET "http://localhost:3000/products/20000" 404
 
 test_rest_api_with_body POST "http://localhost:3000/products" 201 '{ "text": "value1" }'
 test_rest_api_with_body POST "http://localhost:3000/products" 400 '{}'
 test_rest_api_with_body POST "http://localhost:3000/products/1" 405
+
+test_rest_api GET "http://localhost:3000/products/1" 200
 
 test_rest_api_with_body PUT "http://localhost:3000/products" 405
 test_rest_api_with_body PUT "http://localhost:3000/products/1" 200 '{ "text": "value2" }'
