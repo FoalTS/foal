@@ -57,7 +57,7 @@ program
         createEntity({ name });
         break;
       case 'rest-api':
-        createRestApi({ name });
+        createRestApi({ name, register: options.register || false });
         break;
       case 'hook':
         createHook({ name });

@@ -6,8 +6,9 @@ import { underline } from 'colors/safe';
 
 // FoalTS
 import { Generator, getNames } from '../../utils';
+import { registerController } from '../controller/register-controller';
 
-export function createRestApi({ name }: { name: string }) {
+export function createRestApi({ name, register }: { name: string, register: boolean }) {
   const names = getNames(name);
 
   let entityRoot = '';
@@ -28,7 +29,9 @@ export function createRestApi({ name }: { name: string }) {
       return content;
     });
 
-  new Generator('rest-api', controllerRoot)
+  const controllerGenerator = new Generator('rest-api', controllerRoot);
+
+  controllerGenerator
     .renderTemplate(
       controllerRoot ? 'controller.ts' : 'controller.current-dir.ts',
       names,
@@ -44,10 +47,17 @@ export function createRestApi({ name }: { name: string }) {
       return content;
     });
 
+  if (register) {
+    controllerGenerator
+      .updateFile('../app.controller.ts', content => {
+        return registerController(content, `${names.upperFirstCamelName}Controller`, `/${names.kebabName}s`);
+      }, { allowFailure: true });
+  }
+
   if (process.env.NODE_ENV !== 'test') {
-      console.log(
-        `\n${underline('Next steps:')} Complete ${names.upperFirstCamelName} (${names.kebabName}.entity)`
-        + ` and ${names.camelName}Schema (${names.kebabName}.controller).`
-      );
-    }
+    console.log(
+      `\n${underline('Next steps:')} Complete ${names.upperFirstCamelName} (${names.kebabName}.entity)`
+      + ` and ${names.camelName}Schema (${names.kebabName}.controller).`
+    );
+  }
 }

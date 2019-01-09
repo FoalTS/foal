@@ -18,6 +18,7 @@ describe('createRestApi', () => {
     rmfileIfExists('src/app/controllers/index.ts');
     rmdirIfExists('src/app/controllers');
 
+    rmfileIfExists('src/app/app.controller.ts');
     rmdirIfExists('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
@@ -32,6 +33,7 @@ describe('createRestApi', () => {
     rmfileIfExists('controllers/index.ts');
     rmdirIfExists('controllers');
 
+    rmfileIfExists('app.controller.ts');
 
     rmfileIfExists('test-foo-bar.entity.ts');
     rmfileIfExists('test-foo-bar.controller.ts');
@@ -53,7 +55,7 @@ describe('createRestApi', () => {
       });
 
       it('should render the templates in the proper directory.', () => {
-        createRestApi({ name: 'test-fooBar' });
+        createRestApi({ name: 'test-fooBar', register: false });
 
         testEntityEnv
           .validateSpec('test-foo-bar.entity.ts')
@@ -63,6 +65,75 @@ describe('createRestApi', () => {
           .validateSpec('test-foo-bar.controller.ts')
           .validateSpec('test-foo-bar.controller.spec.ts')
           .validateSpec('index.controllers.ts', 'index.ts');
+      });
+
+    });
+
+    describe(`when the directories ${root}entities/ and ${root}controllers/ exist and "register" is true.`, () => {
+
+      const testEntityEnv = new TestEnvironment('rest-api', root + 'entities');
+      const testControllerEnv = new TestEnvironment('rest-api', root + 'controllers');
+
+      beforeEach(() => {
+        testEntityEnv.mkRootDirIfDoesNotExist();
+        testEntityEnv.copyFileFromMocks('index.entities.ts', 'index.ts');
+        testControllerEnv.mkRootDirIfDoesNotExist();
+        testControllerEnv.copyFileFromMocks('index.controllers.ts', 'index.ts');
+      });
+
+      it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.controller-import.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.controller-import.ts', '../app.controller.ts');
+      });
+
+      it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.no-controller-import.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.no-controller-import.ts', '../app.controller.ts');
+      });
+
+      it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.core-import.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.core-import.ts', '../app.controller.ts');
+      });
+
+      it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.empty-property.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.empty-property.ts', '../app.controller.ts');
+      });
+
+      it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.empty-spaced-property.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.empty-spaced-property.ts', '../app.controller.ts');
+      });
+
+      it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
+          + ' src/app/app.controller.ts if it exists.', () => {
+        testControllerEnv.copyFileFromMocks('app.controller.no-empty-property.ts', '../app.controller.ts');
+
+        createRestApi({ name: 'test-fooBar', register: true });
+
+        testControllerEnv
+          .validateSpec('app.controller.no-empty-property.ts', '../app.controller.ts');
       });
 
     });
@@ -82,7 +153,7 @@ describe('createRestApi', () => {
     });
 
     it('should render the templates in the current directory.', () => {
-      createRestApi({ name: 'test-fooBar' });
+      createRestApi({ name: 'test-fooBar', register: false });
 
       testEnv
         .validateSpec('test-foo-bar.entity.ts')
