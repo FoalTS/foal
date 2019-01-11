@@ -2,6 +2,7 @@
   "csrf": true,
   "debug": false,
   "port": 3000,
+  "loggerFormat": "tiny",
   "staticUrl": "public/",
   "sessionResave": false,
   "sessionSaveUninitialized": false,

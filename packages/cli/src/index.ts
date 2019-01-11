@@ -14,6 +14,7 @@ import {
   createController,
   createEntity,
   createHook,
+  createRestApi,
   createScript,
   createService,
   createSubApp,
@@ -54,6 +55,9 @@ program
         break;
       case 'entity':
         createEntity({ name });
+        break;
+      case 'rest-api':
+        createRestApi({ name, register: options.register || false });
         break;
       case 'hook':
         createHook({ name });

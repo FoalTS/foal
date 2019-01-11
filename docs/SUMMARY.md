@@ -45,7 +45,7 @@
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation](./validation.md)
 * API
-  * [REST Blueprints](./api-section/rest-blueprints.md)
+  * [REST API](./api-section/rest-blueprints.md)
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
 * CLI & Development Environment
