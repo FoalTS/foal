@@ -1,6 +1,7 @@
 {
   "csrf": true,
   "debug": true,
+  "loggerFormat": "dev",
   "port": 3000,
   "sessionSecret": "my secret",
   "sessionResave": true,
