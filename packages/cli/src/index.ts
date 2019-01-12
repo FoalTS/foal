@@ -6,6 +6,7 @@
  */
 
 // 3p
+import chalk from 'chalk';
 import * as program from 'commander';
 
 // FoalTS
@@ -24,6 +25,7 @@ import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
+const args = process.argv.slice(3);
 
 program
   .version(pkg.version, '-v, --version');
@@ -32,6 +34,10 @@ program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
   .action((name: string) => {
+    if (args.length > 1) {
+      console.log(chalk.red.bold('\n Kindly provide only one argument as the project name'));
+      process.exit(1);
+    }
     createApp({ name, autoInstall: true });
   });
 
