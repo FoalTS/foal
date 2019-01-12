@@ -6,7 +6,7 @@
  */
 
 // 3p
-import chalk from 'chalk';
+import { red, yellow } from 'colors/safe';
 import * as program from 'commander';
 
 // FoalTS
@@ -85,7 +85,7 @@ program
   .arguments('<command>')
   .action(cmd => {
     program.outputHelp();
-    console.log(`  ` + chalk.red(`\n  Unknown command ${chalk.yellow(cmd)}.`));
+    console.log(`  ` + red(`\n  Unknown command ${yellow(cmd)}.`));
     console.log();
   });
 
