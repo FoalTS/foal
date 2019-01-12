@@ -6,7 +6,7 @@
  */
 
 // 3p
-import { red } from 'colors/safe';
+import { red, yellow } from 'colors/safe';
 import * as program from 'commander';
 
 // FoalTS
@@ -85,4 +85,18 @@ program
     }
   });
 
+// Validation for random commands
+program
+  .arguments('<command>')
+  .action(cmd => {
+    program.outputHelp();
+    console.log(`  ` + red(`\n  Unknown command ${yellow(cmd)}.`));
+    console.log();
+  });
+
 program.parse(process.argv);
+
+// Shows help if no arguments are provided
+if (!program.args.length) {
+  program.outputHelp();
+}
