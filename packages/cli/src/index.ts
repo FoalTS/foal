@@ -6,6 +6,7 @@
  */
 
 // 3p
+import chalk from 'chalk';
 import * as program from 'commander';
 
 // FoalTS
@@ -79,4 +80,18 @@ program
     }
   });
 
+// Validation for random commands
+program
+  .arguments('<command>')
+  .action(cmd => {
+    program.outputHelp();
+    console.log(`  ` + chalk.red(`\n  Unknown command ${chalk.yellow(cmd)}.`));
+    console.log();
+  });
+
 program.parse(process.argv);
+
+// Shows help if no arguments are provided
+if (!program.args.length) {
+  program.outputHelp();
+}
