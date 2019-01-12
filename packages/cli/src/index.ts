@@ -6,7 +6,7 @@
  */
 
 // 3p
-import chalk from 'chalk';
+import { red } from 'colors/safe';
 import * as program from 'commander';
 
 // FoalTS
@@ -35,8 +35,8 @@ program
   .description('Creates a new directory with a new FoalTS app.')
   .action((name: string) => {
     if (args.length > 1) {
-      console.log(chalk.red.bold('\n Kindly provide only one argument as the project name'));
-      process.exit(1);
+      console.log(red('\n Kindly provide only one argument as the project name'));
+      return;
     }
     createApp({ name, autoInstall: true });
   });
