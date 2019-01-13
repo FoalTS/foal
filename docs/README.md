@@ -13,7 +13,7 @@ A Web framework to create enterprise-grade Node.JS applications
 
 ## Description
 
-FoalTS is a next-generation framework that helps you create server-side [Node.js](https://nodejs.org) applications. Its development tools, core components and TypeScript support make it the ideal choice for building modern applications.
+FoalTS is a framework [Node.js] (https://nodejs.org) for creating server-side Web applications. Its development tools, core components and TypeScript support allow you to create almost any application, from prototypes to large-scale applications.
 
 
 ## Motivation
