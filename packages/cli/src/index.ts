@@ -6,6 +6,7 @@
  */
 
 // 3p
+import { red, yellow } from 'colors/safe';
 import * as program from 'commander';
 
 // FoalTS
@@ -24,6 +25,7 @@ import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
+const args = process.argv.slice(3);
 
 program
   .version(pkg.version, '-v, --version');
@@ -32,6 +34,10 @@ program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
   .action((name: string) => {
+    if (args.length > 1) {
+      console.log(red('\n Kindly provide only one argument as the project name'));
+      return;
+    }
     createApp({ name, autoInstall: true });
   });
 
@@ -79,4 +85,18 @@ program
     }
   });
 
+// Validation for random commands
+program
+  .arguments('<command>')
+  .action(cmd => {
+    program.outputHelp();
+    console.log(`  ` + red(`\n  Unknown command ${yellow(cmd)}.`));
+    console.log();
+  });
+
 program.parse(process.argv);
+
+// Shows help if no arguments are provided
+if (!program.args.length) {
+  program.outputHelp();
+}
