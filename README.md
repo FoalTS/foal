@@ -43,7 +43,7 @@
 
 ## :raised_hands: Description
 
-FoalTS is a next-generation framework that helps you create server-side [Node.js](https://nodejs.org) applications. Its development tools, modular components and TypeScript support make it the ideal choice for building modern applications.
+FoalTS is a next-generation framework that helps you create server-side [Node.js](https://nodejs.org) applications. Its development tools, core components and TypeScript support make it the ideal choice for building modern applications.
 
 ## :city_sunrise: Get started
 
@@ -70,6 +70,32 @@ But when it comes to setting up a complete and scalable project, things get hard
 
 This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
+## :tulip: Features
+
+### TypeScript
+
+TypeScript brings you optional static type-checking along with the latest ECMAScript features. Writing FoalTS with TypeScript has been and will always be fundamental. Code is more elegant and concise. Most of the silly mistakes are caught at compilation. And autocompletion is well-handled and the API is better documented.
+
+<p align="center">
+  <img src="./docs/typescript2.png" width="450px">
+</p>
+
+### Essential components
+
+Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
+
+<p align="center">
+  <img src="./docs/components2.png" width="450px">
+</p>
+
+### Dev tools
+
+Every project needs dev tools. But setting up and maintaining such an environment in Node.Js is often hard or time consuming. FoalTS focuses on helping the developer to code. Generators, watchers, the compiler, linter, bundler and test framework are all provided in FoalTS. No more set up, get started right away.
+
+<p align="center">
+  <img src="./docs/dev-tools2.png" width="450px">
+</p>
+
 ## Ask a question
 
 Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/foal/issues/new/).
@@ -77,32 +103,6 @@ Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/f
 ## Screenshot
 
 ![Screenshot](./docs/screenshot.png)
-
-## :tulip: Features
-
-### Production-ready
-
-FoalTS provides an advanced configuration system to smoothly switch between your environments. How you specify the configuration may change between deploys (env variables, json files, etc). But your codebase stays the same.
-
-### TypeScript
-
-TypeScript brings you optional static type-checking along with the latest ECMAScript features. Writing FoalTS with TypeScript has been and will always be fundamental. Code is more elegant and concise. Most of the silly mistakes are caught at compilation. And autocompletion is well-handled and the API is better documented.
-
-### Dev tools
-
-Every project needs dev tools. But setting up and maintaining such an environment in Node.Js is often hard or time consuming. FoalTS focuses on helping the developer to code. Generators, watchers, the compiler, linter, bundler and test framework are all provided in FoalTS. No more set up, get started right away.
-
-### Basic components
-
-Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
-
-### Architecture
-
-FoalTS provides a robust architecture for creating large web apps. Divided into controllers, services and hooks, your code is well organized. FoalTS enforces the separation of concerns, improves testability and makes your code more readable.
-
-### Security
-
-Security is everyone's business. To help you ship secure apps FoalTS provides some common tools (csrf, xss protections) to take care of it. Moreover all default configurations are set to prevent security failures (cookies, headers, etc).
 
 ## Contributing
 
