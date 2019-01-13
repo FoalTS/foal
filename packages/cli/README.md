@@ -38,10 +38,6 @@ Website: [https://foalts.org/](https://foalts.org/)
 
 Documentation: [https://foalts.gitbook.io/docs/](https://foalts.gitbook.io/docs/)
 
-## Description
-
-FoalTS is a [Node.js](https://nodejs.org) framework for creating server-side Web applications. Its development tools, core components and TypeScript support allow you to create almost any application, from prototypes to large-scale applications.
-
 ## Get started
 
 First install [Node.Js and npm](https://nodejs.org/en/download/).

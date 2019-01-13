@@ -41,10 +41,6 @@
   <a href="https://twitter.com/foalts">Twitter</a>
 </p>
 
-## :raised_hands: Description
-
-FoalTS is a [Node.js](https://nodejs.org) framework for creating server-side Web applications. Its development tools, core components and TypeScript support allow you to create almost any application, from prototypes to large-scale applications.
-
 ## :city_sunrise: Get started
 
 First install [Node.Js and npm](https://nodejs.org/en/download/).

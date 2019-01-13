@@ -11,11 +11,6 @@ A Web framework to create enterprise-grade Node.JS applications
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 
-## Description
-
-FoalTS is a [Node.js](https://nodejs.org) framework for creating server-side Web applications. Its development tools, core components and TypeScript support allow you to create almost any application, from prototypes to large-scale applications.
-
-
 ## Motivation
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
