@@ -69,7 +69,7 @@
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
-  * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
+  * [Ship to Production](./deployment-and-environments/ship-to-production.md)
 
 ## API Reference
 
