@@ -66,6 +66,7 @@
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
   * [404 Page](./cookbook/404-page.md)
+  * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)<!-- * [Serverless Framework](./fundamentals/serverless.md) -->
