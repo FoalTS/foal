@@ -18,7 +18,7 @@ describe('ApiController', () => {
 
     it('should return a HttpResponseOK.', () => {
       const controller = createController(ApiController);
-      const ctx = new Context();
+      const ctx = new Context({});
 
       const response = controller.index(ctx);
 
