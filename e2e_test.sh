@@ -116,4 +116,4 @@ npm run build:scripts
 # foal run-script create-group name="My group2" codeName="my-group2"
 
 # foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
-foal run-script create-user
+foal run create-user
