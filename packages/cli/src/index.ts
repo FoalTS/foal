@@ -42,7 +42,8 @@ program
   });
 
 program
-  .command('run-script <name>')
+  .command('run <name>')
+  .alias('run-script')
   .description('Runs the given script.')
   .action((name: string) => {
     runScript({ name }, process.argv);

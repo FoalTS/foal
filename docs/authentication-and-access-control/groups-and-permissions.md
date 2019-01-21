@@ -49,7 +49,7 @@ async function main() {
 
 ```sh
 npm run build:scripts
-foal run-script create-perm name="Permission to access the secret" codeName="access-secret"
+foal run create-perm name="Permission to access the secret" codeName="access-secret"
 ```
 
 ## Groups
@@ -104,8 +104,8 @@ async function main() {
 
 ```sh
 npm run build:scripts
-foal run-script create-perm name="Permission to delete users" codeName="delete-users"
-foal run-script create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
+foal run create-perm name="Permission to delete users" codeName="delete-users"
+foal run create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
 ```
 
 ## Users
@@ -142,7 +142,7 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 
 ```sh
 npm run build:scripts
-foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 ```
 
 ## Fetching a User with their Permissions
