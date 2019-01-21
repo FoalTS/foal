@@ -21,10 +21,6 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('tslint.json');
 
     // Config
-    testEnv.rmfileIfExists('config/app.development.json');
-    testEnv.rmfileIfExists('config/app.e2e.json');
-    testEnv.rmfileIfExists('config/app.production.json');
-    testEnv.rmfileIfExists('config/app.test.json');
     testEnv.rmfileIfExists('config/settings.development.json');
     testEnv.rmfileIfExists('config/settings.json');
     testEnv.rmfileIfExists('config/settings.production.json');
@@ -32,15 +28,13 @@ describe('createApp', () => {
 
     // Public
     testEnv.rmfileIfExists('public/logo.png');
+    testEnv.rmfileIfExists('public/index.html');
     testEnv.rmdirIfExists('public');
 
     // Src
-    testEnv.rmfileIfExists('src/app/controllers/templates/index.html');
-    testEnv.rmdirIfExists('src/app/controllers/templates');
-
     testEnv.rmfileIfExists('src/app/controllers/index.ts');
-    testEnv.rmfileIfExists('src/app/controllers/view.controller.spec.ts');
-    testEnv.rmfileIfExists('src/app/controllers/view.controller.ts');
+    testEnv.rmfileIfExists('src/app/controllers/api.controller.spec.ts');
+    testEnv.rmfileIfExists('src/app/controllers/api.controller.ts');
     testEnv.rmdirIfExists('src/app/controllers');
 
     testEnv.rmfileIfExists('src/app/hooks/index.ts');
@@ -78,17 +72,14 @@ describe('createApp', () => {
 
   it('should render the config templates.', () => {
     testEnv
-      .validateSpec('config/app.development.json')
-      .validateSpec('config/app.e2e.json')
-      .validateSpec('config/app.production.json')
-      .validateSpec('config/app.test.json')
       .validateSpec('config/settings.development.json')
       .validateSpec('config/settings.json')
       .validateSpec('config/settings.production.json');
   });
 
-  it('should copy the logo image.', () => {
+  it('should copy the public directory.', () => {
     testEnv
+      .validateSpec('public/index.html')
       .validateFileSpec('public/logo.png');
   });
 
@@ -107,8 +98,8 @@ describe('createApp', () => {
   it('should render the src/app/controllers templates.', () => {
     testEnv
       .validateSpec('src/app/controllers/index.ts')
-      .validateSpec('src/app/controllers/view.controller.spec.ts')
-      .validateSpec('src/app/controllers/view.controller.ts');
+      .validateSpec('src/app/controllers/api.controller.spec.ts')
+      .validateSpec('src/app/controllers/api.controller.ts');
   });
 
   it('should render the src/app/hooks templates.', () => {
@@ -131,11 +122,6 @@ describe('createApp', () => {
     testEnv
       .validateSpec('src/app/services/index.ts');
  });
-
-  it('should render the src/app/controllers/templates templates.', () => {
-    testEnv
-      .validateSpec('src/app/controllers/templates/index.html');
-  });
 
   it('should render the src/app templates.', () => {
     testEnv
