@@ -72,8 +72,8 @@ npm run build:scripts
 Create two new users.
 
 ```
-foal run-script create-user email="john@foalts.org" password="john_password"
-foal run-script create-user email="mary@foalts.org" password="mary_password"
+foal run create-user email="john@foalts.org" password="john_password"
+foal run create-user email="mary@foalts.org" password="mary_password"
 ```
 
 > If you try to re-run one of these commands, you'll get the error below as the email key is unique.
@@ -137,8 +137,8 @@ npm run build:scripts
 Create new todos for each user.
 
 ```
-foal run-script create-todo owner="john@foalts.org" text="John task 1"
-foal run-script create-todo owner="john@foalts.org" text="John task 2"
-foal run-script create-todo owner="mary@foalts.org" text="Mary task 1"
-foal run-script create-todo owner="mary@foalts.org" text="Mary task 2"
+foal run create-todo owner="john@foalts.org" text="John task 1"
+foal run create-todo owner="john@foalts.org" text="John task 2"
+foal run create-todo owner="mary@foalts.org" text="Mary task 1"
+foal run create-todo owner="mary@foalts.org" text="Mary task 2"
 ```

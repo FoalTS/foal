@@ -60,9 +60,9 @@ npm run build:scripts
 Then run the script to create tasks in the database.
 
 ```sh
-foal run-script create-todo text="Read the docs"
-foal run-script create-todo text="Create my first application"
-foal run-script create-todo text="Write tests"
+foal run create-todo text="Read the docs"
+foal run create-todo text="Create my first application"
+foal run create-todo text="Write tests"
 ```
 
 > Note that if you try to create a new to-do without specifying the text argument, you'll get the error below.

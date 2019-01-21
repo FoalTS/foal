@@ -44,7 +44,7 @@ npm run build:scripts
 Then you can execute it with this command:
 
 ```sh
-foal run-script my-script
+foal run my-script # or foal run-script my-script
 ```
 
-> You can also provide additionnal arguments to your script (for example: `foal run-script my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
+> You can also provide additionnal arguments to your script (for example: `foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
