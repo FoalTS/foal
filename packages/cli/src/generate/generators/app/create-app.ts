@@ -1,14 +1,16 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
 import * as crypto from 'crypto';
+import { join } from 'path';
 
 // 3p
-import { blue, red, underline } from 'colors/safe';
+import { blue, cyan, red } from 'colors/safe';
 
 // FoalTS
 import {
   Generator,
   getNames,
+  initGitRepo,
   mkdirIfDoesNotExist,
 } from '../../utils';
 
@@ -21,8 +23,14 @@ function isYarnInstalled() {
   }
 }
 
-export async function createApp({ name, sessionSecret, autoInstall }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean }) {
+function log(msg: string) {
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(msg);
+  }
+}
+
+export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
   const names = getNames(name);
   if (process.env.NODE_ENV !== 'test') {
     console.log(blue(
@@ -103,6 +111,8 @@ export async function createApp({ name, sessionSecret, autoInstall }:
         .copyFileFromTemplates('src/scripts/create-perm.ts')
         .copyFileFromTemplates('src/scripts/create-user.ts');
 
+  log('');
+  log('  📦 Installing the dependencies...');
   if (autoInstall) {
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
     const args = [ 'install' ];
@@ -116,20 +126,23 @@ export async function createApp({ name, sessionSecret, autoInstall }:
       spawn(packageManager, args, options)
         .on('close', (code: number) => {
           if (code !== 0) {
-            console.log(red('A problem occurred when installing the dependencies. See above.'));
+            log(red('A problem occurred when installing the dependencies. See above.'));
           }
           resolve();
         });
     });
   }
 
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(
-      `
-${underline('Run the app:')}
-$ cd ${names.kebabName}
-$ npm run develop
-`
-    );
+  log('  📔 Initializing the git repository...');
+  if (initRepo) {
+    await initGitRepo(join(process.cwd(), names.kebabName));
   }
+
+  log(`
+  👉 Run the following commands to get started:
+
+    $ ${cyan(`cd ${names.kebabName}`)}
+    $ ${cyan('npm run develop')}
+`
+  );
 }
