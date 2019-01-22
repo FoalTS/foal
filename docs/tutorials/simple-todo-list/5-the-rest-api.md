@@ -2,15 +2,9 @@
 
 Good, so far you have a frontend working properly and some todos in your database. Now it is time to code a REST API to link them both.
 
-To do so, you are going to create a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help them do this. We will not study the services in this tutorial.
+To do so, you are going to use a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help them do this. We will not study the services in this tutorial.
 
-Create a new controller.
-
-```sh
-foal generate controller api --register
-```
-
-Open the new generated file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
+Open the file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
 
 ```typescript
 import { Get, HttpResponseOK } from '@foal/core';
@@ -94,24 +88,20 @@ The `Context` objet, which is passed to each route handler, contains the express
 
 Now type a new todo in the input text and press Enter. The task appears in the todo list. Refresh the page, it should still be there. If you click on the checkbox, the todo is successfully deleted.
 
-The last thing to know is how the `ApiController` is bound to the request handler. You defined so far routes in this controller but never registered the controller anywhere. This has been done automatically when you specified the `--register` option in the generator command.
+The last thing to know is how the `ApiController` is bound to the request handler. You defined so far routes in this controller but never registered the controller anywhere. This is done in the `app.controller.ts` file, the entry point of your application.
 
 Open the file `app.controller.ts` in `src/app`.
 
 ```typescript
 import { controller } from '@foal/core';
 
-import { ApiController, ViewController } from './controllers';
-import { User } from './entities';
+import { ApiController } from './controllers';
 
 export class AppController {
   subControllers = [
-    controller('/', ViewController),
     controller('/api', ApiController)
   ];
 }
 ```
 
 This controller is the main controller of the application. It is directly called when a request comes in. It may have sub-controllers that go in the `controllers/` directory.
-
-In that case, the `--register` flag directly added a new line to declare the `ApiController` as a sub-controller of `AppController`. The `ViewController` is in charge of rendering the `index.html` template.

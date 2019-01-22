@@ -16,41 +16,37 @@ When the user presses the `Log out` button in the todo-list page, the page reque
 
 Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list.zip).
 
-Replace the static files `script.js` and `style.js` in `public/` and move the `index.html`, `signin.html` and `signup.html` templates in `src/app/controllers/templates/`.
+Empty the `public/` directory.
 
-Open the `view.controller.ts` file and replace its content to serve the new login and signup pages.
+Then move `script.js` and `style.js` to `public/` and the `index.html`, `signin.html` and `signup.html` templates to `src/app/controllers/templates/`.
+
+Open the `app.controller.ts` file and add three new routes to serve the pages.
 
 ```typescript
-import { Get, render } from '@foal/core';
+import { controller, Get, render } from '@foal/core';
 
-export class ViewController {
+export class AppController {
+  subControllers = [
+    controller('/api', ApiController)
+  ];
 
   @Get('/')
   index(ctx) {
-    return render('./templates/index.html', {
-      csrfToken: ctx.request.csrfToken(),
-    }, __dirname);
+    return render('./templates/index.html', {}, __dirname);
   }
 
   @Get('/signin')
-  signin(ctx) {
-    return render('./templates/signin.html', {
-      csrfToken: ctx.request.csrfToken(),
-    }, __dirname);
+  async signin(ctx) {
+    return render('./templates/signin.html', {}, __dirname);
   }
 
   @Get('/signup')
-  signup(ctx) {
-    return render('./templates/signup.html', {
-      csrfToken: ctx.request.csrfToken(),
-    }, __dirname);
+  async signup(ctx) {
+    return render('./templates/signup.html', {}, __dirname);
   }
-
 }
 
 ```
-
-> The only reason why the views are not static files is that we need to include the csrf token in the pages.
 
 Open your browser and go to `http://localhost:3000/signin`. The login page should show up.
 
@@ -61,6 +57,8 @@ The next step is to create a controller that logs the users in or out and redire
 ```
 foal generate controller auth --register
 ```
+
+> The `--register` flag directly adds a new line in `app.controller.ts` to declare the `AuthController` as a sub-controller of `AppController`.
 
 Open the new file `auth.controller.ts` and replace its content.
 
@@ -129,18 +127,18 @@ Great, so far you can authenticate users. But as you have not yet added access c
 
 The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 401 error or redirects the user if no user was logged in. 
 
-Update the api and view controllers.
+Update controllers.
 
 ```typescript
 import { Get, LoginRequired, render } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
 import { User } from '../entities';
 
-export class ViewController {
+export class AppController {
 
   @Get('/')
   @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
-  index(ctx) {
+  index() {
     ...
   }
 
