@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 import { join } from 'path';
 
 // 3p
-import { blue, cyan, red } from 'colors/safe';
+import { cyan, red } from 'colors/safe';
 
 // FoalTS
 import {
