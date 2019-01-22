@@ -25,23 +25,25 @@ Open the `app.controller.ts` file and add three new routes to serve the pages.
 ```typescript
 import { controller, Get, render } from '@foal/core';
 
+import { ApiController } from './controllers';
+
 export class AppController {
   subControllers = [
     controller('/api', ApiController)
   ];
 
   @Get('/')
-  index(ctx) {
+  index() {
     return render('./templates/index.html', {}, __dirname);
   }
 
   @Get('/signin')
-  async signin(ctx) {
+  signin() {
     return render('./templates/signin.html', {}, __dirname);
   }
 
   @Get('/signup')
-  async signup(ctx) {
+  signup() {
     return render('./templates/signup.html', {}, __dirname);
   }
 }
