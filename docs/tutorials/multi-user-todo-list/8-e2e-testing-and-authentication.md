@@ -91,14 +91,6 @@ describe('The server', () => {
 
 ```
 
-You also need to create a configuration file `settings.e2e.json` in the `config/` directory to disable the csrf token protection.
-
-```json
-{
-  "csrf": false
-}
-```
-
 Now run the tests.
 
 ```

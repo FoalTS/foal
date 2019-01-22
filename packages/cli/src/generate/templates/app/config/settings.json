@@ -1,5 +1,5 @@
 {
-  "csrf": true,
+  "csrf": false,
   "debug": false,
   "port": 3000,
   "loggerFormat": "tiny",

@@ -48,6 +48,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
       httpOnly: Config.get('settings', 'sessionCookieHttpOnly'),
       maxAge: Config.get('settings', 'sessionCookieMaxAge'),
       path: Config.get('settings', 'sessionCookiePath'),
+      sameSite: Config.get('settings', 'sessionCookieSameSite'),
       secure: Config.get('settings', 'sessionCookieSecure'),
     },
     name: Config.get('settings', 'sessionName'),

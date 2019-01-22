@@ -9,7 +9,13 @@ import { cyan, green } from 'colors/safe';
 import { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 
 export class Generator {
-  constructor(private name: string, private root: string) {}
+  constructor(
+    private name: string,
+    private root: string,
+    private options: {
+      noLogs?: boolean
+    } = {}
+  ) {}
 
   /* Create architecture */
 
@@ -68,7 +74,7 @@ export class Generator {
     if (this.root) {
       path = join(this.root, path);
     }
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV !== 'test' && !this.options.noLogs) {
       console.log(`${green('CREATE')} ${path}`);
     }
   }
@@ -77,7 +83,7 @@ export class Generator {
     if (this.root) {
       path = join(this.root, path);
     }
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV !== 'test' && !this.options.noLogs) {
       console.log(`${cyan('UPDATE')} ${path}`);
     }
   }
