@@ -4,6 +4,7 @@ import { join } from 'path';
 
 // FoalTS
 export { Generator } from './generator';
+export { initGitRepo } from './init-git-repo';
 export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 export { TestEnvironment } from './test-environment';
 export { getNames } from './get-names';

@@ -38,7 +38,7 @@ program
       console.log(red('\n Kindly provide only one argument as the project name'));
       return;
     }
-    createApp({ name, autoInstall: true });
+    createApp({ name, autoInstall: true, initRepo: true });
   });
 
 program
