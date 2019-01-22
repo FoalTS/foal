@@ -34,17 +34,17 @@ export class AppController {
 
   @Get('/')
   index() {
-    return render('./templates/index.html', {}, __dirname);
+    return render('./controllers/templates/index.html', {}, __dirname);
   }
 
   @Get('/signin')
   signin() {
-    return render('./templates/signin.html', {}, __dirname);
+    return render('./controllers/templates/signin.html', {}, __dirname);
   }
 
   @Get('/signup')
   signup() {
-    return render('./templates/signup.html', {}, __dirname);
+    return render('./controllers/templates/signup.html', {}, __dirname);
   }
 }
 
