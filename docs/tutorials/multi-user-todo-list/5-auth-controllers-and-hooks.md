@@ -129,7 +129,7 @@ Great, so far you can authenticate users. But as you have not yet added access c
 
 The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 401 error or redirects the user if no user was logged in. 
 
-Update controllers.
+Update the controllers.
 
 ```typescript
 import { Get, LoginRequired, render } from '@foal/core';
