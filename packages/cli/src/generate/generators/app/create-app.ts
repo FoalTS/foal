@@ -33,7 +33,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
   const names = getNames(name);
   if (process.env.NODE_ENV !== 'test') {
-    console.log(blue(
+    console.log(cyan(
 `====================================================================
 
      _______   ________   ____        ___     _________   _______
@@ -56,7 +56,8 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
 
   mkdirIfDoesNotExist(names.kebabName);
 
-  new Generator('app', names.kebabName)
+  log('  📂 Creating files...');
+  new Generator('app', names.kebabName, { noLogs: true })
     .copyFileFromTemplates('gitignore', '.gitignore')
     .copyFileFromTemplates('ormconfig.json')
     .renderTemplate('package.json', locals)
@@ -133,7 +134,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
     });
   }
 
-  log('  📔 Initializing the git repository...');
+  log('  📔 Initializing git repository...');
   if (initRepo) {
     await initGitRepo(join(process.cwd(), names.kebabName));
   }
