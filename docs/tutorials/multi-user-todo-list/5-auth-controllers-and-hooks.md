@@ -132,9 +132,11 @@ The usual way to handle authorization is to use a *hook*. In this case, you are 
 Update the controllers.
 
 ```typescript
-import { Get, LoginRequired, render } from '@foal/core';
+import { controller, Get, LoginRequired, render } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
-import { User } from '../entities';
+
+import { ApiController, AuthController } from './controllers';
+import { User } from './entities';
 
 export class AppController {
 
