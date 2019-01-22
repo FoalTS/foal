@@ -1,6 +1,6 @@
 # The Sign Up Page
 
-The sign up page, that is served in the view controller, makes a request `POST /signup` when the button `Create an account` is pressed.
+The sign up page, that is served in the app controller, makes a request `POST /signup` when the button `Create an account` is pressed.
 
 Create a new controller to handle this route.
 

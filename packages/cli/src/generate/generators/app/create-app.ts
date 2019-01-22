@@ -61,15 +61,12 @@ export async function createApp({ name, sessionSecret, autoInstall }:
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')
-      .renderTemplate('config/app.development.json', locals)
-      .renderTemplate('config/app.e2e.json', locals)
-      .renderTemplate('config/app.production.json', locals)
-      .renderTemplate('config/app.test.json', locals)
       .renderTemplate('config/settings.json', locals)
       .renderTemplate('config/settings.development.json', locals)
       .renderTemplate('config/settings.production.json', locals)
       // Public
       .mkdirIfDoesNotExist('public')
+      .copyFileFromTemplates('public/index.html')
       .copyFileFromTemplates('public/logo.png')
       // Src
       .mkdirIfDoesNotExist('src')
@@ -82,11 +79,8 @@ export async function createApp({ name, sessionSecret, autoInstall }:
           // Controllers
           .mkdirIfDoesNotExist('src/app/controllers')
           .copyFileFromTemplates('src/app/controllers/index.ts')
-          .copyFileFromTemplates('src/app/controllers/view.controller.ts')
-          .copyFileFromTemplates('src/app/controllers/view.controller.spec.ts')
-            // Templates
-            .mkdirIfDoesNotExist('src/app/controllers/templates')
-            .copyFileFromTemplates('src/app/controllers/templates/index.html')
+          .copyFileFromTemplates('src/app/controllers/api.controller.ts')
+          .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
           // Entities
           .mkdirIfDoesNotExist('src/app/entities')
           .copyFileFromTemplates('src/app/entities/index.ts')
