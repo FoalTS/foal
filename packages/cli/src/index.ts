@@ -13,6 +13,7 @@ import * as program from 'commander';
 import {
   connectAngular,
   connectReact,
+  connectVue,
   createApp,
   createController,
   createEntity,
@@ -59,6 +60,7 @@ program
     console.log('Available frameworks:');
     console.log('  angular');
     console.log('  react');
+    console.log('  vue');
   })
   .action(async (framework: string, path: string) => {
     switch (framework) {
@@ -67,6 +69,9 @@ program
         break;
       case 'react':
         connectReact(path);
+        break;
+      case 'vue':
+        connectVue(path);
         break;
       default:
         console.error('Please provide a valid framework: angular.');

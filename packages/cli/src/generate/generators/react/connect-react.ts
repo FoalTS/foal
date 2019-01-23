@@ -1,4 +1,4 @@
-import { join, relative } from 'path';
+import { join } from 'path';
 
 import { red } from 'colors/safe';
 import { existsSync } from 'fs';
