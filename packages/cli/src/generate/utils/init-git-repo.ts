@@ -7,13 +7,14 @@ export async function initGitRepo(root: string) {
 
   function execute(args: string[]) {
     return new Promise<void>((resolve, reject) => {
-      spawn('git', args, { cwd: root })
+      spawn('git', args, { cwd: root, shell: true })
         .on('close', (code: number) => code === 0 ? resolve() : reject(code));
     });
   }
 
   const hasCommand = await execute(['--version']).then(() => true, () => false);
   if (!hasCommand) {
+    console.log('Git not installed. Skipping initialization of git.');
     return;
   }
 
