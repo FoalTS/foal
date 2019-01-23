@@ -7,7 +7,7 @@ import { join } from 'path';
 import { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 
 export class TestEnvironment {
-  constructor(private generatorName: string, private root: string) {}
+  constructor(private generatorName: string, private root: string = '') {}
 
   /* Create environment */
   mkRootDirIfDoesNotExist() {
