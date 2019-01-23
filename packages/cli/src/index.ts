@@ -11,6 +11,8 @@ import * as program from 'commander';
 
 // FoalTS
 import {
+  connectAngular,
+  connectReact,
   createApp,
   createController,
   createEntity,
@@ -21,7 +23,6 @@ import {
   createSubApp,
   createVSCodeConfig,
 } from './generate';
-import { connectAngular } from './generate/generators/angular';
 import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
@@ -57,11 +58,15 @@ program
     console.log('');
     console.log('Available frameworks:');
     console.log('  angular');
+    console.log('  react');
   })
   .action(async (framework: string, path: string) => {
     switch (framework) {
       case 'angular':
         connectAngular(path);
+        break;
+      case 'react':
+        connectReact(path);
         break;
       default:
         console.error('Please provide a valid framework: angular.');
