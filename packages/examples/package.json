@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.7.3",
+  "version": "0.7.5",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" lib",
@@ -50,7 +50,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/cli": "^0.7.3",
+    "@foal/cli": "^0.7.5",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
     "concurrently": "^3.5.1",
