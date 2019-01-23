@@ -52,7 +52,7 @@ program
 
 program
   .command('connect <framework> <path>')
-  .description('Configure your frontend to interact with your Foal app.')
+  .description('Configure your frontend to interact with your application.')
   .on('--help', () => {
     console.log('');
     console.log('Available frameworks:');
