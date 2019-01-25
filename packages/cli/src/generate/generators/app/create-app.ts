@@ -29,6 +29,36 @@ function log(msg: string) {
   }
 }
 
+function validateProjectName(name: string) {
+  // As per npm naming conventions (https://www.npmjs.com/package/validate-npm-package-name)
+  const specialChars = ['!',
+    '@',
+    '#',
+    '$',
+    '%',
+    '^',
+    '&',
+    '*',
+    '(',
+    ')',
+    '/',
+    '\\',
+    '+',
+    '{',
+    '}',
+    '[',
+    ']',
+    ':',
+    ';',
+    '<',
+    '>',
+    ',',
+    '.',
+    '?'
+ ];
+  return !specialChars.find(char => name.includes(char));
+}
+
 export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
   const names = getNames(name);
@@ -54,6 +84,13 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
     sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
   };
 
+     // Validating whether if the project-name follows npm naming conventions
+  if (!validateProjectName(name)) {
+    console.log(
+      red(`\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`)
+    );
+    return;
+  }
   mkdirIfDoesNotExist(names.kebabName);
 
   log('  📂 Creating files...');
