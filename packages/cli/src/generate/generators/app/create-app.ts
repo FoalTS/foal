@@ -1,14 +1,16 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
 import * as crypto from 'crypto';
+import { join } from 'path';
 
 // 3p
-import { blue, red, underline } from 'colors/safe';
+import { cyan, red } from 'colors/safe';
 
 // FoalTS
 import {
   Generator,
   getNames,
+  initGitRepo,
   mkdirIfDoesNotExist,
 } from '../../utils';
 
@@ -21,51 +23,17 @@ function isYarnInstalled() {
   }
 }
 
-function validateProjectName(name: string) {
-  let flag = 0;
-  const specialChars = ['!',
-    '@',
-    '#',
-    '$',
-    '%',
-    '^',
-    '&',
-    '*',
-    '(',
-    ')',
-    '/',
-    '\\',
-    '+',
-    '{',
-    '}',
-    '[',
-    ']',
-    ':',
-    ';',
-    '<',
-    '>',
-    ',',
-    '.',
-    '?'
-  ];
-
-  specialChars.map(char => {
-    if (name.includes(char)) {
-      flag = 1;
-      return false;
-    }
-  });
-
-  if (flag === 0) {
-    return true;
+function log(msg: string) {
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(msg);
   }
 }
 
-export async function createApp({ name, sessionSecret, autoInstall }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean }) {
+export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
   const names = getNames(name);
   if (process.env.NODE_ENV !== 'test') {
-    console.log(blue(
+    console.log(cyan(
 `====================================================================
 
      _______   ________   ____        ___     _________   _______
@@ -86,17 +54,10 @@ export async function createApp({ name, sessionSecret, autoInstall }:
     sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
   };
 
-  // Validating whether if the project-name follows npm naming conventions
-  if (!validateProjectName(name)) {
-    console.log(
-      red(`\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`)
-    );
-    process.exit(1);
-  }
-
   mkdirIfDoesNotExist(names.kebabName);
 
-  new Generator('app', names.kebabName)
+  log('  📂 Creating files...');
+  new Generator('app', names.kebabName, { noLogs: true })
     .copyFileFromTemplates('gitignore', '.gitignore')
     .copyFileFromTemplates('ormconfig.json')
     .renderTemplate('package.json', locals)
@@ -109,15 +70,12 @@ export async function createApp({ name, sessionSecret, autoInstall }:
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')
-      .renderTemplate('config/app.development.json', locals)
-      .renderTemplate('config/app.e2e.json', locals)
-      .renderTemplate('config/app.production.json', locals)
-      .renderTemplate('config/app.test.json', locals)
       .renderTemplate('config/settings.json', locals)
       .renderTemplate('config/settings.development.json', locals)
       .renderTemplate('config/settings.production.json', locals)
       // Public
       .mkdirIfDoesNotExist('public')
+      .copyFileFromTemplates('public/index.html')
       .copyFileFromTemplates('public/logo.png')
       // Src
       .mkdirIfDoesNotExist('src')
@@ -130,11 +88,8 @@ export async function createApp({ name, sessionSecret, autoInstall }:
           // Controllers
           .mkdirIfDoesNotExist('src/app/controllers')
           .copyFileFromTemplates('src/app/controllers/index.ts')
-          .copyFileFromTemplates('src/app/controllers/view.controller.ts')
-          .copyFileFromTemplates('src/app/controllers/view.controller.spec.ts')
-            // Templates
-            .mkdirIfDoesNotExist('src/app/controllers/templates')
-            .copyFileFromTemplates('src/app/controllers/templates/index.html')
+          .copyFileFromTemplates('src/app/controllers/api.controller.ts')
+          .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
           // Entities
           .mkdirIfDoesNotExist('src/app/entities')
           .copyFileFromTemplates('src/app/entities/index.ts')
@@ -157,6 +112,8 @@ export async function createApp({ name, sessionSecret, autoInstall }:
         .copyFileFromTemplates('src/scripts/create-perm.ts')
         .copyFileFromTemplates('src/scripts/create-user.ts');
 
+  log('');
+  log('  📦 Installing the dependencies...');
   if (autoInstall) {
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
     const args = [ 'install' ];
@@ -170,20 +127,23 @@ export async function createApp({ name, sessionSecret, autoInstall }:
       spawn(packageManager, args, options)
         .on('close', (code: number) => {
           if (code !== 0) {
-            console.log(red('A problem occurred when installing the dependencies. See above.'));
+            log(red('A problem occurred when installing the dependencies. See above.'));
           }
           resolve();
         });
     });
   }
 
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(
-      `
-${underline('Run the app:')}
-$ cd ${names.kebabName}
-$ npm run develop
-`
-    );
+  log('  📔 Initializing git repository...');
+  if (initRepo) {
+    await initGitRepo(join(process.cwd(), names.kebabName));
   }
+
+  log(`
+  👉 Run the following commands to get started:
+
+    $ ${cyan(`cd ${names.kebabName}`)}
+    $ ${cyan('npm run develop')}
+`
+  );
 }
