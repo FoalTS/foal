@@ -29,6 +29,46 @@ function log(msg: string) {
   }
 }
 
+function validateProjectName(name: string) {
+  let flag = 0;
+  const specialChars = ['!',
+    '@',
+    '#',
+    '$',
+    '%',
+    '^',
+    '&',
+    '*',
+    '(',
+    ')',
+    '/',
+    '\\',
+    '+',
+    '{',
+    '}',
+    '[',
+    ']',
+    ':',
+    ';',
+    '<',
+    '>',
+    ',',
+    '.',
+    '?'
+  ];
+
+  specialChars.map(char => {
+    if (name.includes(char)) {
+      flag = 1;
+      return false;
+    }
+  });
+
+  if (flag === 0) {
+    return true;
+  }
+}
+
 export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
   const names = getNames(name);
@@ -53,6 +93,14 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
     ...names,
     sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
   };
+  
+   // Validating whether if the project-name follows npm naming conventions
+  if (!validateProjectName(name)) {
+    console.log(
+      red(`\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`)
+    );
+    process.exit(1);
+  }
 
   mkdirIfDoesNotExist(names.kebabName);
 
