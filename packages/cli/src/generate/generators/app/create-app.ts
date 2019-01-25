@@ -56,7 +56,7 @@ function validateProjectName(name: string) {
     '.',
     '?'
  ];
- return !specialChars.find(char => name.includes(char));  
+  return !specialChars.find(char => name.includes(char));
 }
 
 export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
