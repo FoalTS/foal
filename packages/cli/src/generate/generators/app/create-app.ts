@@ -30,7 +30,7 @@ function log(msg: string) {
 }
 
 function validateProjectName(name: string) {
-  let flag = 0;
+  // As per npm naming conventions (https://www.npmjs.com/package/validate-npm-package-name)
   const specialChars = ['!',
     '@',
     '#',
@@ -55,18 +55,8 @@ function validateProjectName(name: string) {
     ',',
     '.',
     '?'
-  ];
-
-  specialChars.map(char => {
-    if (name.includes(char)) {
-      flag = 1;
-      return false;
-    }
-  });
-
-  if (flag === 0) {
-    return true;
-  }
+ ];
+ return !specialChars.find(char => name.includes(char));  
 }
 
 export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
@@ -101,7 +91,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
     );
     return;
   }
-
   mkdirIfDoesNotExist(names.kebabName);
 
   log('  📂 Creating files...');
