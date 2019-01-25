@@ -4,11 +4,11 @@ The application that you will create is a simple to-do list. It consists of a fr
 
 First download the html, css and js files by clicking [here](https://foalts.org/simple-todo-list.zip).
 
-Put the static files `script.js` and `style.js` in `public/` and move the `index.html` template in `src/app/controllers/templates/`.
+Put the downloaded files in the static directory `public/`.
 
-The code executed in the browser will make API calls to the server to view, create and delete the tasks. The only reason why `index.html` is a template is to send the [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery) to the frontend.
+The code executed in the browser will make API calls to the server to view, create and delete the tasks.
 
-Stop and restart the `npm run develop` command and go to `http://localhost:3000`. You should now see this:
+Refresh the page. You should now see this:
 
 ![Browser view](./app.png)
 

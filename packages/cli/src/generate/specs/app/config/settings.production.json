@@ -1,6 +1,7 @@
 {
   "sessionCookieHttpOnly": true,
   "sessionCookieMaxAge": 3600000,
+  "sessionCookieSameSite": "lax",
   "sessionCookieSecure": true,
   "sessionName": "id"
 }
