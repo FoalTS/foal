@@ -5,6 +5,12 @@ cd e2e-test-temp
 foal createapp my-app
 cd my-app
 
+# Check some compilation errors
+if grep -Ril "../../Users/loicp" .; then
+    echo "Compilation error: \"../../Users/loicp\" has been found in one of the builds."
+    exit 1
+fi
+
 # Test the generators
 foal g entity flight
 foal g hook foo-bar
