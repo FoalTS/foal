@@ -70,6 +70,7 @@
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)
+* [Comparison with Other Frameworks](./comparison-with-other-frameworks.md)
 
 ## API Reference
 
