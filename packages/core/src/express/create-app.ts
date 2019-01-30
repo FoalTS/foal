@@ -2,6 +2,7 @@
 import * as path from 'path';
 
 // 3p
+import * as cookieParser from 'cookie-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
@@ -42,6 +43,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(cookieParser());
   app.use(session({
     cookie: {
       domain: Config.get('settings', 'sessionCookieDomain'),
