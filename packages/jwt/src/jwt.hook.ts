@@ -22,7 +22,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get('jwt', 'cookieName') as string|undefined || 'auth';
+      const cookieName = Config.get('jwt', 'cookieName', 'auth') as string;
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {

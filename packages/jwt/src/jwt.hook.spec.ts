@@ -340,7 +340,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
-      process.env.JWT_COOKIE_NAME = '';
+      delete process.env.JWT_COOKIE_NAME;
     });
 
     it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
