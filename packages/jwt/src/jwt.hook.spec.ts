@@ -301,7 +301,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
-    it('should set ctx.user with the decoded payload if no fetchUser was given (cookie=false).', async () => {
+    it('should set ctx.user with the decoded payload if no fetchUser was given.', async () => {
       const hook = getHookFunction(JWT());
 
       const jwt = sign({ foo: 'bar' }, secret, {});
@@ -314,7 +314,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       strictEqual((ctx.user as any).foo, 'bar');
     });
 
-    it('should set ctx.user with the decoded payload if no fetchUser was given (cookie=true).', async () => {
+    it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true).', async () => {
       const hook = getHookFunction(JWT({ cookie: true }));
 
       const jwt = sign({ foo: 'bar' }, secret, {});
@@ -325,6 +325,22 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
+    });
+
+    it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true '
+        + 'and JWT_COOKIE_NAME=xxx).', async () => {
+      process.env.JWT_COOKIE_NAME = 'xxx';
+      const hook = getHookFunction(JWT({ cookie: true }));
+
+      const jwt = sign({ foo: 'bar' }, secret, {});
+      const ctx = new Context({ get: () => undefined, cookies: { xxx: jwt } });
+      const services = new ServiceManager();
+
+      await hook(ctx, services);
+
+      notStrictEqual(ctx.user, undefined);
+      strictEqual((ctx.user as any).foo, 'bar');
+      process.env.JWT_COOKIE_NAME = '';
     });
 
     it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
