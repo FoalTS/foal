@@ -48,6 +48,9 @@
   * [REST API](./api-section/rest-blueprints.md)
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
+* Frontend Frameworks
+  * [Single Page Application](./frontend-frameworks/single-page-application.md)
+  * [Angular](./frontend-frameworks/angular.md)
 * CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
