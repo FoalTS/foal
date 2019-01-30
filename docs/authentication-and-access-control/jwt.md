@@ -4,7 +4,7 @@
 @JWTRequired()
 class MyController {}
 
-@JWTRequired({ user: fetchUser(User), blackList: isInFile('./blacklist.txt') })
+@JWTRequired({ user: fetchUser(User), blackList: isInFile('./blacklist.txt'), cookie: true })
 class MyController {}
 
 @JWTRequired({}, { audience: 'foo' })
@@ -13,7 +13,7 @@ class MyController {}
 
 FoalTS provides two hooks `JWTOptional` and `JWTRequired` to authenticate users with a [JWT](https://jwt.io/introduction/) token.
 
-They expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
+If `options.cookie` is not defined, they expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
 
 The content of the header should look like the following:
 
@@ -35,6 +35,7 @@ You must provide a secret or a public key to the hooks. You have two ways to do 
 export interface JWTOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   blackList?: (token: string) => boolean|Promise<boolean>;
+  cookie?: boolean;
 }
 ```
 
@@ -52,6 +53,12 @@ The `blacklist` option lets you easily revoke tokens. It is a function that take
 
 > In particular the `isInFile` function provided in the `@foal/core` package may be useful in this case. It lets you create a file with all the revoked tokens.
 
+## The `cookie` option
+
+By default the hooks parse the `Authorization` header. With the option `cookie: true`, the jwt is retreived from the cookie named `auth`.
+
+> You can change the name of the cookie with the env variable `JWT_COOKIE_NAME` or in `config/jwt.json` with the `cookieName` key.
+
 # Verify Options
 
 The second argument of `JWTOptional` and `JWTRequired` are passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
@@ -62,6 +69,7 @@ The second argument of `JWTOptional` and `JWTRequired` are passed as options to 
 | --- | --- | --- | --- |
 | No secret or public key is provided in `jwt.json` or as environment variable. | 500 | | |
 | The `Authorization` header does not exist (only for `JWTRequired`). | 400 | `{ code: 'invalid_request', description: 'Authorization header not found.' }` |
+| The auth cookie does not exist (only for `JWTRequired`). | 400 | `{ code: 'invalid_request', description: 'Auth cookie not found.' }` |
 | The `Authorization` header does use the Bearer scheme. | 400 | `{ code: 'invalid_request', description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.' }` |
 | The token is black listed. | 401 | `{ code: 'invalid_token', description: 'jwt revoked' }` | error="invalid_token", error_description="jwt revoked"
 | The token is not a JWT. | 401 | `{ code: 'invalid_token', description: 'jwt malformed' }` | error="invalid_token", error_description="jwt malformed"
