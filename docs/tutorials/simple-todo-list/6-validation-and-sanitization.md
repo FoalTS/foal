@@ -13,19 +13,28 @@ The `ValidateBody` and `ValidateParams` check respectively the `body` and `param
 Let's add validation and sanitization to your application. In fact, you have already defined the todo schema in the `create-todo` script earlier.
 
 ```typescript
+import {
+  ...
+  ValidateBody, ValidateParams
+} from '@foal/core';
+
+export class ApiController {
+
+  ...
+
   @Post('/todos')
   @ValidateBody({
     // The body request should be an object once parsed by the framework.
-    type: 'object',
+    // Every additional properties that are not defined in the "properties"
+    // object should be removed.
+    additionalProperties: false,
     properties: {
       // The "text" property of ctx.request.body should be a string if it exists.
       text: { type: 'string' }
     },
     // The property "text" is required.
     required: [ 'text' ],
-    // Every additional properties that are not defined in the "properties"
-    // object should be removed.
-    additionalProperties: false,
+    type: 'object',
   })
   async postTodo(ctx: Context) {
     const todo = new Todo();
@@ -54,4 +63,7 @@ Let's add validation and sanitization to your application. In fact, you have alr
     await getRepository(Todo).remove(todo);
     return new HttpResponseNoContent();
   }
+
+}
+
 ```

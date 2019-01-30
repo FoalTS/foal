@@ -32,7 +32,10 @@ Refresh your browser, you should see the two todos printed.
 Now, we would like to return the todos stored in the database. Update the code as follows:
 
 ```typescript
-import { Get, HttpResponseOK } from '@foal/core';
+import {
+  Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
+  HttpResponseNotFound, HttpResponseOK, Post
+} from '@foal/core';
 import { getRepository } from 'typeorm';
 
 import { Todo } from '../entities';
