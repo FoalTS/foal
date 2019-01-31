@@ -18,7 +18,7 @@ describe('ValidateHeaders', () => {
     const hook = getHookFunction(ValidateHeaders(schema));
     const ctx = new Context({});
     ctx.request.headers = {
-      foo: 3
+      foo: '3'
     };
 
     const actual = hook(ctx, new ServiceManager());
