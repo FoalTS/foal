@@ -66,6 +66,7 @@
   * [Templating](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
+  * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
 * Deployment & Environments
