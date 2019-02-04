@@ -13,8 +13,8 @@
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
   <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
-  <a href="https://badge.fury.io/js/%40foal%2Fpassword">
-    <img src="https://badge.fury.io/js/%40foal%2Fpassword.svg" alt="npm version">
+  <a href="https://badge.fury.io/js/%40foal%2Fmongoose">
+    <img src="https://badge.fury.io/js/%40foal%2Fmongoose.svg" alt="npm version">
   </a>
   <a href="https://travis-ci.org/FoalTS/foal">
     <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
@@ -22,8 +22,8 @@
   <a href="https://codecov.io/github/FoalTS/foal">
     <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
   </a>
-  <a href="https://snyk.io/test/npm/@foal/password">
-    <img src="https://snyk.io/test/npm/@foal/password/badge.svg" alt="Known Vulnerabilities">
+  <a href="https://snyk.io/test/npm/@foal/mongoose">
+    <img src="https://snyk.io/test/npm/@foal/mongoose/badge.svg" alt="Known Vulnerabilities">
   </a>
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
