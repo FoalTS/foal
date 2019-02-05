@@ -44,7 +44,9 @@
     "lib/"
   ],
   "dependencies": {
-    "@types/mongoose": "^5.3.12",
+    "@types/mongoose": "^5.3.12"
+  },
+  "peerDependencies": {
     "mongoose": "^5.4.9"
   },
   "devDependencies": {
@@ -53,6 +55,7 @@
     "@types/node": "^10.5.6",
     "copy": "^0.3.2",
     "mocha": "^5.2.0",
+    "mongoose": "^5.4.9",
     "rimraf": "^2.6.2",
     "supertest": "^3.4.2",
     "ts-docs-gen": "0.2.0",
