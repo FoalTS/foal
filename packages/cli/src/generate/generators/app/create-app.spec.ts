@@ -112,6 +112,18 @@ describe('createApp', () => {
       .validateSpec('src/scripts/create-user.ts');
   });
 
+  it('shoud copy the src/scripts templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .shouldNotExist('src/scripts/create-group.ts')
+      .shouldNotExist('src/scripts/create-perm.ts')
+      .validateSpec(
+        'src/scripts/create-user.mongodb.ts',
+        'src/scripts/create-user.ts'
+      );
+  });
+
   it('should render the src/app/controllers templates.', async () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
@@ -176,6 +188,15 @@ describe('createApp', () => {
       .validateSpec('src/test.ts');
   });
 
+  it('should render the src templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .validateSpec('src/e2e.ts')
+      .validateSpec('src/index.mongodb.ts', 'src/index.ts')
+      .validateSpec('src/test.ts');
+  });
+
   it('should render the root templates.', async () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
@@ -188,6 +209,23 @@ describe('createApp', () => {
       .validateSpec('tsconfig.e2e.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.migrations.json')
+      .validateSpec('tsconfig.scripts.json')
+      .validateSpec('tsconfig.test.json')
+      .validateSpec('tslint.json');
+  });
+
+  it('should render the root templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .validateSpec('gitignore', '.gitignore')
+      .shouldNotExist('ormconfig.json')
+      .validateSpec('package.mongodb.json', 'package.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.app.json')
+      .validateSpec('tsconfig.e2e.json')
+      .validateSpec('tsconfig.json')
+      .shouldNotExist('tsconfig.migrations.json')
       .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
       .validateSpec('tslint.json');
