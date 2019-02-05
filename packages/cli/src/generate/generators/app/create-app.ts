@@ -141,7 +141,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
           .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
-        .copyFileFromTemplates('src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
         .copyFileFromTemplates('src/scripts/create-group.ts')
@@ -153,13 +152,17 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
     generator
       .mkdirIfDoesNotExist('src/app/models')
       .copyFileFromTemplates('src/app/models/index.ts')
-      .copyFileFromTemplates('src/app/models/user.model.ts');
+      .copyFileFromTemplates('src/app/models/user.model.ts')
+    // Src / E2E
+      .copyFileFromTemplates('src/e2e/index.mongodb.ts', 'src/e2e/index.ts');
   } else {
     // Src / App / Entities
     generator
       .mkdirIfDoesNotExist('src/app/entities')
       .copyFileFromTemplates('src/app/entities/index.ts')
-      .copyFileFromTemplates('src/app/entities/user.entity.ts');
+      .copyFileFromTemplates('src/app/entities/user.entity.ts')
+    // Src / E2E
+      .copyFileFromTemplates('src/e2e/index.ts');
   }
 
   log('');

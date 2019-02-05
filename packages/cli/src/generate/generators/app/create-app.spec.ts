@@ -96,6 +96,13 @@ describe('createApp', () => {
       .validateSpec('src/e2e/index.ts');
   });
 
+  it('shoud copy the src/e2e templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .validateSpec('src/e2e/index.mongodb.ts', 'src/e2e/index.ts');
+  });
+
   it('shoud copy the src/scripts templates.', async () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
