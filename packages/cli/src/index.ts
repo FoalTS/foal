@@ -33,12 +33,13 @@ program
 program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
-  .action((name: string) => {
+  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
+  .action((name: string, options) => {
     if (args.length > 1) {
       console.log(red('\n Kindly provide only one argument as the project name'));
       return;
     }
-    createApp({ name, autoInstall: true, initRepo: true });
+    createApp({ name, autoInstall: true, initRepo: true, mongodb: options.mongodb || false });
   });
 
 program

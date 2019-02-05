@@ -6,8 +6,6 @@ describe('createApp', () => {
 
   const testEnv = new TestEnvironment('app', 'test-foo-bar');
 
-  beforeEach(() => createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' }));
-
   afterEach(() => {
     testEnv.rmfileIfExists('.gitignore');
     testEnv.rmfileIfExists('ormconfig.json');
@@ -44,6 +42,10 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('src/app/entities/user.entity.ts');
     testEnv.rmdirIfExists('src/app/entities');
 
+    testEnv.rmfileIfExists('src/app/models/index.ts');
+    testEnv.rmfileIfExists('src/app/models/user.model.ts');
+    testEnv.rmdirIfExists('src/app/models');
+
     testEnv.rmfileIfExists('src/app/sub-apps/index.ts');
     testEnv.rmdirIfExists('src/app/sub-apps');
 
@@ -70,72 +72,106 @@ describe('createApp', () => {
     testEnv.rmdirIfExists('../test-foo-bar');
   });
 
-  it('should render the config templates.', () => {
+  it('should render the config templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('config/settings.development.json')
       .validateSpec('config/settings.json')
       .validateSpec('config/settings.production.json');
   });
 
-  it('should copy the public directory.', () => {
+  it('should copy the public directory.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('public/index.html')
       .validateFileSpec('public/logo.png');
   });
 
-  it('shoud copy the src/e2e templates.', () => {
+  it('shoud copy the src/e2e templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/e2e/index.ts');
   });
 
-  it('shoud copy the src/scripts templates.', () => {
+  it('shoud copy the src/scripts templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/scripts/create-group.ts')
       .validateSpec('src/scripts/create-perm.ts')
       .validateSpec('src/scripts/create-user.ts');
   });
 
-  it('should render the src/app/controllers templates.', () => {
+  it('should render the src/app/controllers templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/controllers/index.ts')
       .validateSpec('src/app/controllers/api.controller.spec.ts')
       .validateSpec('src/app/controllers/api.controller.ts');
   });
 
-  it('should render the src/app/hooks templates.', () => {
+  it('should render the src/app/hooks templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/hooks/index.ts');
   });
 
-  it('should render the src/app/entities templates.', () => {
+  it('should render the src/app/entities templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/entities/index.ts')
-      .validateSpec('src/app/entities/user.entity.ts');
+      .validateSpec('src/app/entities/user.entity.ts')
+      .shouldNotExist('src/app/models');
   });
 
-  it('should render the src/app/sub-apps templates.', () => {
+  it('should render the src/app/models templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .validateSpec('src/app/models/index.ts')
+      .validateSpec('src/app/models/user.model.ts')
+      .shouldNotExist('src/app/entities');
+  });
+
+  it('should render the src/app/sub-apps templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/sub-apps/index.ts');
   });
 
-  it('should render the src/app/services templates.', () => {
+  it('should render the src/app/services templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/services/index.ts');
  });
 
-  it('should render the src/app templates.', () => {
+  it('should render the src/app templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/app/app.controller.ts');
   });
 
-  it('should render the src templates.', () => {
+  it('should render the src templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('src/e2e.ts')
       .validateSpec('src/index.ts')
       .validateSpec('src/test.ts');
   });
 
-  it('should render the root templates.', () => {
+  it('should render the root templates.', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+
     testEnv
       .validateSpec('gitignore', '.gitignore')
       .validateSpec('ormconfig.json')

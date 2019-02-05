@@ -59,9 +59,10 @@ function validateProjectName(name: string) {
   return !specialChars.find(char => name.includes(char));
 }
 
-export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
+export async function createApp({ name, sessionSecret, autoInstall, initRepo, mongodb = false }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean }) {
   const names = getNames(name);
+
   if (process.env.NODE_ENV !== 'test') {
     console.log(cyan(
 `====================================================================
@@ -94,7 +95,9 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   mkdirIfDoesNotExist(names.kebabName);
 
   log('  📂 Creating files...');
-  new Generator('app', names.kebabName, { noLogs: true })
+  const generator = new Generator('app', names.kebabName, { noLogs: true });
+
+  generator
     .copyFileFromTemplates('gitignore', '.gitignore')
     .copyFileFromTemplates('ormconfig.json')
     .renderTemplate('package.json', locals)
@@ -127,10 +130,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
           .copyFileFromTemplates('src/app/controllers/index.ts')
           .copyFileFromTemplates('src/app/controllers/api.controller.ts')
           .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
-          // Entities
-          .mkdirIfDoesNotExist('src/app/entities')
-          .copyFileFromTemplates('src/app/entities/index.ts')
-          .copyFileFromTemplates('src/app/entities/user.entity.ts')
           // Hooks
           .mkdirIfDoesNotExist('src/app/hooks')
           .copyFileFromTemplates('src/app/hooks/index.ts')
@@ -148,6 +147,20 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
         .copyFileFromTemplates('src/scripts/create-group.ts')
         .copyFileFromTemplates('src/scripts/create-perm.ts')
         .copyFileFromTemplates('src/scripts/create-user.ts');
+
+  if (mongodb) {
+    // Src / App / Models
+    generator
+      .mkdirIfDoesNotExist('src/app/models')
+      .copyFileFromTemplates('src/app/models/index.ts')
+      .copyFileFromTemplates('src/app/models/user.model.ts');
+  } else {
+    // Src / App / Entities
+    generator
+      .mkdirIfDoesNotExist('src/app/entities')
+      .copyFileFromTemplates('src/app/entities/index.ts')
+      .copyFileFromTemplates('src/app/entities/user.entity.ts');
+  }
 
   log('');
   log('  📦 Installing the dependencies...');
