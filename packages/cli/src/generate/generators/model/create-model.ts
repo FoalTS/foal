@@ -18,7 +18,8 @@ export function createModel({ name }: { name: string }) {
   new Generator('model', root)
     .renderTemplate('model.ts', names, `${names.kebabName}.model.ts`)
     .updateFile('index.ts', content => {
-      content += `export { I${names.upperFirstCamelName}, ${names.upperFirstCamelName} } from './${names.kebabName}.model';\n`;
+      const exportNames = [ `I${names.upperFirstCamelName}`, names.upperFirstCamelName ].sort();
+      content += `export { ${exportNames.join(', ')} } from './${names.kebabName}.model';\n`;
       return content;
     });
 }

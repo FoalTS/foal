@@ -9,6 +9,7 @@ import { createModel } from './create-model';
 describe('createModel', () => {
 
   afterEach(() => {
+    rmfileIfExists('src/app/models/a-test-foo-bar.model.ts');
     rmfileIfExists('src/app/models/test-foo-bar.model.ts');
     rmfileIfExists('src/app/models/index.ts');
     rmdirIfExists('src/app/models');
@@ -17,10 +18,12 @@ describe('createModel', () => {
     // approach.
     // rmdirIfExists('src');
 
+    rmfileIfExists('models/a-test-foo-bar.model.ts');
     rmfileIfExists('models/test-foo-bar.model.ts');
     rmfileIfExists('models/index.ts');
     rmdirIfExists('models');
 
+    rmfileIfExists('a-test-foo-bar.model.ts');
     rmfileIfExists('test-foo-bar.model.ts');
     rmfileIfExists('index.ts');
   });
@@ -42,6 +45,13 @@ describe('createModel', () => {
         testEnv
           .validateSpec('test-foo-bar.model.ts')
           .validateSpec('index.ts', 'index.ts');
+      });
+
+      it('should should order the export in index.ts.', () => {
+        createModel({ name: 'a-test-fooBar' });
+
+        testEnv
+          .validateSpec('index.sorted.ts', 'index.ts');
       });
 
     });
