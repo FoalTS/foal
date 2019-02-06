@@ -21,8 +21,22 @@ export function connectAngular(path: string) {
     return;
   }
 
+  if (!existsSync(join(root, 'package.json'))) {
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(red(`  The directory ${path} is not an Angular project (missing package.json).`));
+    }
+    return;
+  }
+
   new Generator('angular', root)
     .copyFileFromTemplates('proxy.conf.json', 'src/proxy.conf.json')
+    .updateFile('package.json', content => {
+      const pkg = JSON.parse(content);
+
+      pkg.scripts.build = 'ng build --prod';
+
+      return JSON.stringify(pkg, null, 2);
+    })
     .updateFile('angular.json', content => {
       const config = JSON.parse(content);
 

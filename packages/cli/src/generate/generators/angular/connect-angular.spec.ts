@@ -1,12 +1,14 @@
 import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists, TestEnvironment } from '../../utils';
 import { connectAngular } from './connect-angular';
 
+// TODO: To improve: make the tests (more) independent from each other.
 describe('connectAngular', () => {
 
   afterEach(() => {
     rmfileIfExists('connector-test/angular/src/proxy.conf.json');
     rmdirIfExists('connector-test/angular/src');
     rmfileIfExists('connector-test/angular/angular.json');
+    rmfileIfExists('connector-test/angular/package.json');
     rmdirIfExists('connector-test/angular');
     rmdirIfExists('connector-test');
   });
@@ -17,7 +19,8 @@ describe('connectAngular', () => {
     mkdirIfDoesNotExist('connector-test/angular/src');
 
     testEnv
-      .copyFileFromMocks('angular.json', 'connector-test/angular/angular.json');
+      .copyFileFromMocks('angular.json', 'connector-test/angular/angular.json')
+      .copyFileFromMocks('package.json', 'connector-test/angular/package.json');
 
     connectAngular('./connector-test/angular');
 
@@ -33,7 +36,8 @@ describe('connectAngular', () => {
     mkdirIfDoesNotExist('connector-test/angular/src');
 
     testEnv
-      .copyFileFromMocks('angular.json', 'connector-test/angular/angular.json');
+      .copyFileFromMocks('angular.json', 'connector-test/angular/angular.json')
+      .copyFileFromMocks('package.json', 'connector-test/angular/package.json');
 
     connectAngular('./connector-test/angular');
 
@@ -42,6 +46,25 @@ describe('connectAngular', () => {
   });
 
   it('should not throw if angular.json does not exist.', () => {
+    mkdirIfDoesNotExist('connector-test/angular/src');
+
+    connectAngular('./connector-test/angular');
+  });
+
+  it('should update package.json with the "--prod" flag.', () => {
+    mkdirIfDoesNotExist('connector-test/angular/src');
+
+    testEnv
+      .copyFileFromMocks('angular.json', 'connector-test/angular/angular.json')
+      .copyFileFromMocks('package.json', 'connector-test/angular/package.json');
+
+    connectAngular('./connector-test/angular');
+
+    testEnv
+      .validateSpec('package.json', 'connector-test/angular/package.json');
+  });
+
+  it('should not throw if package.json does not exist.', () => {
     mkdirIfDoesNotExist('connector-test/angular/src');
 
     connectAngular('./connector-test/angular');

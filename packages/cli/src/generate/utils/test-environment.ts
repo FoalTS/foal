@@ -21,6 +21,7 @@ export class TestEnvironment {
       join(__dirname, '../mocks', this.generatorName, srcPath),
       join(this.root, destPath)
     );
+    return this;
   }
 
   /* Remove environment */
