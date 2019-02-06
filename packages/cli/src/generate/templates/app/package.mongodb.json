@@ -33,13 +33,13 @@
     "@foal/core": "~0.7.0",
     "@foal/ejs": "~0.7.0",
     "@foal/mongoose": "~0.7.0",
-    "@types/mongoose": "^5.3.12",
     "connect-mongo": "^2.0.3",
     "mongoose": "^5.4.9",
     "source-map-support": "^0.5.1"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
+    "@types/mongoose": "^5.3.12",
     "@types/node": "^8.0.47",
     "concurrently": "^3.5.1",
     "copy": "^0.3.2",
