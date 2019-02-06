@@ -20,7 +20,7 @@ const userSchema: Schema = new Schema({
 export interface IUser extends Document {
   email: string;
   password: string;
-  setPassword: (password: string) => Promise<void>;
+  // setPassword: (password: string) => Promise<void>;
 }
 
 export const User: Model<IUser> = models.User || model<IUser>('User', userSchema);
