@@ -101,11 +101,6 @@ You need to install a *database driver* for each database you are connecting to.
 
   ```npm install mongodb --save```
 
-## Using another ORM
-
-If you want to use another ORM/ODM (Sequelize, Mongoose, etc) or just do not want to use one at all, you can uninstall the `typeorm` and `@foal/typeorm` packages. The framework core is not TypeORM-dependent.
-
-
 ## Quick tips to create a database (in development)
 
 ### MySQL
