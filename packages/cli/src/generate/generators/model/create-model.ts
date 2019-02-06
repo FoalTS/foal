@@ -1,10 +1,27 @@
 // std
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
+
+// 3p
+import { red } from 'colors/safe';
 
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { findProjectPath, Generator, getNames } from '../../utils';
 
-export function createModel({ name }: { name: string }) {
+export function createModel({ name, checkMongoose }: { name: string, checkMongoose?: boolean }) {
+  const projectPath = findProjectPath();
+
+  if (checkMongoose && projectPath !== null) {
+    const pkg = JSON.parse(readFileSync(join(projectPath, 'package.json'), 'utf8'));
+    if (!pkg.dependencies || !pkg.dependencies.mongoose) {
+      console.log(red(
+        '\n  "foal generate|g model <name>" can only be used in a MongoDB project. '
+        + '\n    Please use "foal generate|g entity <name>" instead.'
+      ));
+      return;
+    }
+  }
+
   const names = getNames(name);
 
   let root = '';

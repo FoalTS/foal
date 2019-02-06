@@ -1,14 +1,27 @@
 // std
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 // 3p
-import { underline } from 'colors/safe';
+import { red, underline } from 'colors/safe';
 
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { findProjectPath, Generator, getNames } from '../../utils';
 import { registerController } from '../controller/register-controller';
 
 export function createRestApi({ name, register }: { name: string, register: boolean }) {
+  const projectPath = findProjectPath();
+
+  if (projectPath !== null) {
+    const pkg = JSON.parse(readFileSync(join(projectPath, 'package.json'), 'utf8'));
+    if (pkg.dependencies && pkg.dependencies.mongoose) {
+      console.log(red(
+        '\n  "foal generate|g rest-api <name>" cannot be used in a MongoDB project.'
+      ));
+      return;
+    }
+  }
+
   const names = getNames(name);
 
   let entityRoot = '';

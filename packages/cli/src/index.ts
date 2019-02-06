@@ -68,7 +68,7 @@ program
         createHook({ name });
         break;
       case 'model':
-        createModel({ name });
+        createModel({ name, checkMongoose: true });
         break;
       case 'sub-app':
         createSubApp({ name });
