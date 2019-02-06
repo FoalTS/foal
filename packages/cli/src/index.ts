@@ -15,18 +15,17 @@ import {
   createController,
   createEntity,
   createHook,
+  createModel,
   createRestApi,
   createScript,
   createService,
   createSubApp,
   createVSCodeConfig,
-  createModel,
 } from './generate';
 import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
-const args = process.argv.slice(3);
 
 program
   .version(pkg.version, '-v, --version');
@@ -83,7 +82,16 @@ program
         createVSCodeConfig();
         break;
       default:
-        console.error('Please provide a valid type: controller|entity|hook|sub-app|service|vscode-config.');
+        console.error();
+        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:\n`));
+        console.error(red('  controller'));
+        console.error(red('  entity'));
+        console.error(red('  hook'));
+        console.error(red('  model'));
+        console.error(red('  sub-app'));
+        console.error(red('  service'));
+        console.error(red('  vscode-config'));
+        console.error();
     }
   });
 
@@ -92,7 +100,7 @@ program
   .arguments('<command>')
   .action(cmd => {
     program.outputHelp();
-    console.log(`  ` + red(`\n  Unknown command ${yellow(cmd)}.`));
+    console.log(red(`\n  Unknown command ${yellow(cmd)}.`));
     console.log();
   });
 

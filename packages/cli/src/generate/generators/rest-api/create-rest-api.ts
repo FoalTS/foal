@@ -16,7 +16,7 @@ export function createRestApi({ name, register }: { name: string, register: bool
     const pkg = JSON.parse(readFileSync(join(projectPath, 'package.json'), 'utf8'));
     if (pkg.dependencies && pkg.dependencies.mongoose) {
       console.log(red(
-        '\n  "foal generate|g rest-api <name>" cannot be used in a MongoDB project.'
+        '\n  "foal generate|g rest-api <name>" cannot be used in a Mongoose project.\n'
       ));
       return;
     }
