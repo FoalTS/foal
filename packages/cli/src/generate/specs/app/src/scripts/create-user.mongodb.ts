@@ -1,4 +1,5 @@
 // 3p
+import { Config } from '@foal/core';
 // import { isCommon } from '@foal/password';
 import { connect } from 'mongoose';
 
@@ -24,7 +25,9 @@ export async function main(/*args*/) {
   // }
   // await user.setPassword(args.password);
 
-  await connect('mongodb://localhost:27017/test-foo-bar-db', { useNewUrlParser: true });
+  const uri = Config.get('mongodb', 'uri');
+
+  await connect(uri, { useNewUrlParser: true });
 
   try {
     console.log(

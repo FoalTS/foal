@@ -19,6 +19,8 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('tslint.json');
 
     // Config
+    testEnv.rmfileIfExists('config/mongodb.e2e.json');
+    testEnv.rmfileIfExists('config/mongodb.development.json');
     testEnv.rmfileIfExists('config/settings.development.json');
     testEnv.rmfileIfExists('config/settings.json');
     testEnv.rmfileIfExists('config/settings.production.json');
@@ -76,6 +78,19 @@ describe('createApp', () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
     testEnv
+      .shouldNotExist('config/mongodb.development.json')
+      .shouldNotExist('config/mongodb.e2e.json')
+      .validateSpec('config/settings.development.json')
+      .validateSpec('config/settings.json')
+      .validateSpec('config/settings.production.json');
+  });
+
+  it('should render the config templates (MongoDB option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+
+    testEnv
+      .validateSpec('config/mongodb.development.json')
+      .validateSpec('config/mongodb.e2e.json')
       .validateSpec('config/settings.development.json')
       .validateSpec('config/settings.json')
       .validateSpec('config/settings.production.json');

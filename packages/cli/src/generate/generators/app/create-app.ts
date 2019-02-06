@@ -143,6 +143,9 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
   if (mongodb) {
     generator
       .renderTemplate('package.mongodb.json', locals, 'package.json')
+    // Config
+      .renderTemplate('config/mongodb.e2e.json', locals)
+      .renderTemplate('config/mongodb.development.json', locals)
     // Src
       .copyFileFromTemplates('src/index.mongodb.ts', 'src/index.ts')
     // Src / App / Models

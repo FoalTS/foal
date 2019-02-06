@@ -12,7 +12,8 @@ import { createConnection } from 'mongoose';
 import { AppController } from './app/app.controller';
 
 async function main() {
-  const mongooseConnection = createConnection('mongodb://localhost:27017/test-foo-bar-db');
+  const uri = Config.get('mongodb', 'uri');
+  const mongooseConnection = createConnection(uri, { useNewUrlParser: true });
 
   const app = createApp(AppController, {
     store: session => new (mongodbStoreFactory(session))({ mongooseConnection })

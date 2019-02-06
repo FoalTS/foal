@@ -1,5 +1,5 @@
 // 3p
-import { createApp } from '@foal/core';
+import { Config, createApp } from '@foal/core';
 import { connect, disconnect } from 'mongoose';
 import * as request from 'supertest';
 
@@ -11,7 +11,8 @@ describe('The server', () => {
   let app;
 
   before(async () => {
-    await connect('mongodb://localhost:27017/e2e_db', { useNewUrlParser: true });
+    const uri = Config.get('mongodb', 'uri');
+    await connect(uri, { useNewUrlParser: true });
     app = createApp(AppController);
   });
 
