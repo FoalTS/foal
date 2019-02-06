@@ -1,5 +1,7 @@
 # Configuration
 
+> You might br interested in reading the chapter [III. Config](https://12factor.net/config) of the Twelve-Factor App guide.
+
 ```
 |- config
 | |- settings.json
@@ -8,7 +10,7 @@
 '- src
 ```
 
-Configuration should be strictly separated from the codebase. Thus storing credentials or other values varying between deploys is not allowed in FoalTS. Instead a static class `Config` is provided to read config values from separate config files or environment variables.
+Configuration should be strictly separated from the codebase. Thus storing in the code credentials or other values varying between deploys is not allowed in FoalTS. Instead a static class `Config` is provided to read config values from separate config files or environment variables.
 
 Let's take an example:
 

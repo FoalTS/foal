@@ -35,6 +35,7 @@
   * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
+  * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Introduction](./authentication-and-access-control/introduction.md)
   * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
@@ -43,7 +44,7 @@
   * [Password Management](./authentication-and-access-control/password-management.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
-* [Validation](./validation.md)
+* [Validation & Sanitization](./validation-and-sanitization.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
   * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
@@ -65,11 +66,13 @@
   * [Templating](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
+  * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)
+* [Comparison with Other Frameworks](./comparison-with-other-frameworks.md)
 
 ## API Reference
 
