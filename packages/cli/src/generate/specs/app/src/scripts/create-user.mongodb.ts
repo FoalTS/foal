@@ -1,7 +1,7 @@
 // 3p
 import { Config } from '@foal/core';
 // import { isCommon } from '@foal/password';
-import { connect } from 'mongoose';
+import { connect, disconnect } from 'mongoose';
 
 // App
 import { User } from '../app/models';
@@ -9,7 +9,7 @@ import { User } from '../app/models';
 export const schema = {
   additionalProperties: false,
   properties: {
-    // email: { type: 'string' },
+    // email: { type: 'string', format: 'email' },
     // password: { type: 'string' },
   },
   required: [ /* 'email', 'password' */ ],
@@ -25,9 +25,8 @@ export async function main(/*args*/) {
   // }
   // await user.setPassword(args.password);
 
-  const uri = Config.get('mongodb', 'uri');
-
-  await connect(uri, { useNewUrlParser: true });
+  const uri = Config.get('mongodb', 'uri') as string;
+  connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 
   try {
     console.log(
@@ -35,5 +34,7 @@ export async function main(/*args*/) {
     );
   } catch (error) {
     console.log(error.message);
+  } finally {
+    disconnect();
   }
 }

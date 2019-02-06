@@ -20,6 +20,7 @@ import {
   createService,
   createSubApp,
   createVSCodeConfig,
+  createModel,
 } from './generate';
 import { runScript } from './run-script';
 
@@ -35,10 +36,6 @@ program
   .description('Creates a new directory with a new FoalTS app.')
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
   .action((name: string, options) => {
-    if (args.length > 1) {
-      console.log(red('\n Kindly provide only one argument as the project name'));
-      return;
-    }
     createApp({ name, autoInstall: true, initRepo: true, mongodb: options.mongodb || false });
   });
 
@@ -52,7 +49,7 @@ program
 
 program
   .command('generate <type> [name]')
-  .description('Generates files (type: controller|entity|hook|sub-app|service|vscode-config).')
+  .description('Generates files (type: controller|entity|hook|model|sub-app|service|vscode-config).')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
   .action(async (type: string, name: string, options) => {
@@ -69,6 +66,9 @@ program
         break;
       case 'hook':
         createHook({ name });
+        break;
+      case 'model':
+        createModel({ name });
         break;
       case 'sub-app':
         createSubApp({ name });

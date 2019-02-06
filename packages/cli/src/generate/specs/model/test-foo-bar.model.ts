@@ -1,4 +1,4 @@
-import { Document, model, Model, Schema } from 'mongoose';
+import { Document, model, Model, models, Schema } from 'mongoose';
 
 const testFooBarSchema: Schema = new Schema({
 
@@ -8,4 +8,4 @@ export interface ITestFooBar extends Document {
 
 }
 
-export const TestFooBar: Model<ITestFooBar> = model<ITestFooBar>('TestFooBar', testFooBarSchema);
+export const TestFooBar: Model<ITestFooBar> = models.TestFooBar || model<ITestFooBar>('TestFooBar', testFooBarSchema);

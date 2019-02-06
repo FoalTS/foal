@@ -6,17 +6,17 @@ import * as http from 'http';
 // 3p
 import { Config, createApp } from '@foal/core';
 import * as mongodbStoreFactory from 'connect-mongo';
-import { createConnection } from 'mongoose';
+import { connect, connection } from 'mongoose';
 
 // App
 import { AppController } from './app/app.controller';
 
 async function main() {
-  const uri = Config.get('mongodb', 'uri');
-  const mongooseConnection = createConnection(uri, { useNewUrlParser: true });
+  const uri = Config.get('mongodb', 'uri') as string;
+  connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 
   const app = createApp(AppController, {
-    store: session => new (mongodbStoreFactory(session))({ mongooseConnection })
+    store: session => new (mongodbStoreFactory(session))({ mongooseConnection: connection })
   });
 
   const httpServer = http.createServer(app);

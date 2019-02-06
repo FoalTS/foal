@@ -10,9 +10,9 @@ describe('The server', () => {
 
   let app;
 
-  before(async () => {
-    const uri = Config.get('mongodb', 'uri');
-    await connect(uri, { useNewUrlParser: true });
+  before(() => {
+    const uri = Config.get('mongodb', 'uri') as string;
+    connect(uri, { useNewUrlParser: true, useCreateIndex: true });
     app = createApp(AppController);
   });
 

@@ -9,7 +9,7 @@ import { User } from '../app/entities';
 export const schema = {
   additionalProperties: false,
   properties: {
-    // email: { type: 'string' },
+    // email: { type: 'string', format: 'email' },
     // groups: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
     // password: { type: 'string' },
     // userPermissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] },
