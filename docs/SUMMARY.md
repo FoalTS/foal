@@ -35,6 +35,7 @@
   * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
+  * [Use Mongoose (MongoDB)](./databases/using-mongoose.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Introduction](./authentication-and-access-control/introduction.md)
