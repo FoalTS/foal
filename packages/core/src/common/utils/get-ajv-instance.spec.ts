@@ -80,6 +80,7 @@ describe('getAjvInstance', () => {
     });
 
     after(() => {
+      delete _instanceWrapper.instance;
       delete process.env.AJV_COERCE_TYPES;
       delete process.env.AJV_REMOVE_ADDITIONAL;
       delete process.env.AJV_USE_DEFAULTS;
