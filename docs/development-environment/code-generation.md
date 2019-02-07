@@ -8,6 +8,8 @@ foal createapp my-app
 
 Create a new directory with all the required files to get started.
 
+If you specify the flag `--mongodb`, the new project will use `mongoose` and `@foal/mongoose` in place of `typeorm` and `@foal/typeorm`. You can find more information [here](../databases/using-mongoose.md).
+
 ## Create a controller
 
 ```shell
@@ -29,6 +31,14 @@ foal g entity <name>
 ```
 
 Create a new entity in `./src/app/entities`, in `./entities` or in the current directory depending on which folders are found.
+
+## Create a model (only for Mongoose)
+
+```shell
+foal g model <name>
+```
+
+Create a new model in `./src/app/models`, in `./models` or in the current directory depending on which folders are found.
 
 ## Create REST API
 
@@ -52,7 +62,16 @@ See the page [REST Blueprints](../api-section/rest-blueprints.md) for more detai
 foal g hook <name>
 ```
 
-Create a new controller in `./src/app/hooks`, in `./hooks` or in the current directory depending on which folders are found.
+Create a new hook in `./src/app/hooks`, in `./hooks` or in the current directory depending on which folders are found.
+
+## Create a script
+
+```shell
+foal g script <name>
+```
+
+Create a new shell script in `src/scripts` regardless of where you run the command.
+
 
 ## Create a sub-app
 
