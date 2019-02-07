@@ -8,6 +8,7 @@ import { verify, VerifyOptions } from 'jsonwebtoken';
 export interface JWTOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   blackList?: (token: string) => boolean|Promise<boolean>;
+  cookie?: boolean;
 }
 
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
@@ -18,22 +19,45 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         'You must provide a secretOrPublicKey in jwt.json or in the JWT_SECRET_OR_PUBLIC_KEY environment variable.'
         );
     }
-    const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
-    if (!authorizationHeader) {
-      if (!required) {
-        return;
+
+    let token: string;
+    if (options.cookie) {
+      const cookieName = Config.get('jwt', 'cookieName', 'auth') as string;
+      const content = ctx.request.cookies[cookieName] as string|undefined;
+
+      if (!content) {
+        if (!required) {
+          return;
+        }
+        return new HttpResponseBadRequest({
+          code: 'invalid_request',
+          description: 'Auth cookie not found.'
+        });
       }
-      return new HttpResponseBadRequest({
-        code: 'invalid_request',
-        description: 'Authorization header not found.'
-      });
-    }
-    const token = authorizationHeader.split('Bearer ')[1] as string|undefined;
-    if (!token) {
-      return new HttpResponseBadRequest({
-        code: 'invalid_request',
-        description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
-      });
+
+      token = content;
+    } else {
+      const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
+
+      if (!authorizationHeader) {
+        if (!required) {
+          return;
+        }
+        return new HttpResponseBadRequest({
+          code: 'invalid_request',
+          description: 'Authorization header not found.'
+        });
+      }
+
+      const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
+      if (!content) {
+        return new HttpResponseBadRequest({
+          code: 'invalid_request',
+          description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
+        });
+      }
+
+      token = content;
     }
 
     if (options.blackList && await options.blackList(token)) {

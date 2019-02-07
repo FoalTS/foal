@@ -76,7 +76,9 @@
     "all": true
   },
   "dependencies": {
+    "@types/express": "^4.16.1",
     "ajv": "^6.5.0",
+    "cookie-parser": "^1.4.3",
     "csurf": "^1.9.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",

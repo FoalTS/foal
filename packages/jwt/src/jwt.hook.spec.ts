@@ -62,10 +62,38 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         });
       });
 
+      it('should return an HttpResponseBadRequest object if options.cookie=true and '
+          + 'the cookie does not exist.', async () => {
+        const hook = getHookFunction(JWT({ cookie: true }));
+
+        const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
+        const services = new ServiceManager();
+
+        const response = await hook(ctx, services);
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('Response should be an instance of HttpResponseBadRequest.');
+        }
+        deepStrictEqual(response.body, {
+          code: 'invalid_request',
+          description: 'Auth cookie not found.'
+        });
+      });
+
     } else {
 
       it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
         const ctx = new Context({ get(str: string) { return undefined; } });
+        const services = new ServiceManager();
+
+        const response = await hook(ctx, services);
+        strictEqual(response, undefined);
+        strictEqual(ctx.user, undefined);
+      });
+
+      it('should let ctx.user equal undefined if options.cookie=true and the cookie does not exist.', async () => {
+        const hook = getHookFunction(JWT({ cookie: true }));
+
+        const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
         const services = new ServiceManager();
 
         const response = await hook(ctx, services);
@@ -284,6 +312,35 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
+    });
+
+    it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true).', async () => {
+      const hook = getHookFunction(JWT({ cookie: true }));
+
+      const jwt = sign({ foo: 'bar' }, secret, {});
+      const ctx = new Context({ get: () => undefined, cookies: { auth: jwt } });
+      const services = new ServiceManager();
+
+      await hook(ctx, services);
+
+      notStrictEqual(ctx.user, undefined);
+      strictEqual((ctx.user as any).foo, 'bar');
+    });
+
+    it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true '
+        + 'and JWT_COOKIE_NAME=xxx).', async () => {
+      process.env.JWT_COOKIE_NAME = 'xxx';
+      const hook = getHookFunction(JWT({ cookie: true }));
+
+      const jwt = sign({ foo: 'bar' }, secret, {});
+      const ctx = new Context({ get: () => undefined, cookies: { xxx: jwt } });
+      const services = new ServiceManager();
+
+      await hook(ctx, services);
+
+      notStrictEqual(ctx.user, undefined);
+      strictEqual((ctx.user as any).foo, 'bar');
+      delete process.env.JWT_COOKIE_NAME;
     });
 
     it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
