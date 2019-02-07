@@ -19,6 +19,8 @@ Foal uses this [baseline ajv configuration](https://github.com/epoberezkin/ajv#o
 }
 ```
 
+You can override these settings with the config file `config/ajv.json` or using the environment variables `AJV_COERCE_TYPE`, `AJV_REMOVE_ADDITIONAL` and `AJV_USE_DEFAULTS`.
+
 ## The `validate` util
 
 The `validate` util throws a `ValidationError` if the given data does not fit the shema.
@@ -118,6 +120,9 @@ export class AppController {
 }
 
 ```
+
+
+Assuming that you did not change Foal's default configuration of Ajv (see above), you will get these results:
 
 | Request | Response |
 | --- | --- |
