@@ -1,7 +1,7 @@
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseMethodNotAllowed,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
-  Put, ValidateBody, ValidateQuery
+  Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
@@ -35,6 +35,7 @@ export class TestFooBarController {
   }
 
   @Get('/:id')
+  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
   async getById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
 
@@ -63,6 +64,7 @@ export class TestFooBarController {
   }
 
   @Patch('/:id')
+  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async patchById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
@@ -84,6 +86,7 @@ export class TestFooBarController {
   }
 
   @Put('/:id')
+  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
   @ValidateBody(testFooBarSchema)
   async putById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
@@ -105,6 +108,7 @@ export class TestFooBarController {
   }
 
   @Delete('/:id')
+  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
   async deleteById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
 
