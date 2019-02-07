@@ -15,6 +15,7 @@ import {
   createController,
   createEntity,
   createHook,
+  createModel,
   createRestApi,
   createScript,
   createService,
@@ -25,7 +26,6 @@ import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
-const args = process.argv.slice(3);
 
 program
   .version(pkg.version, '-v, --version');
@@ -33,12 +33,9 @@ program
 program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
-  .action((name: string) => {
-    if (args.length > 1) {
-      console.log(red('\n Kindly provide only one argument as the project name'));
-      return;
-    }
-    createApp({ name, autoInstall: true, initRepo: true });
+  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
+  .action((name: string, options) => {
+    createApp({ name, autoInstall: true, initRepo: true, mongodb: options.mongodb || false });
   });
 
 program
@@ -51,7 +48,7 @@ program
 
 program
   .command('generate <type> [name]')
-  .description('Generates files (type: controller|entity|hook|sub-app|service|vscode-config).')
+  .description('Generates files (type: controller|entity|hook|model|sub-app|service|vscode-config).')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
   .action(async (type: string, name: string, options) => {
@@ -69,6 +66,9 @@ program
       case 'hook':
         createHook({ name });
         break;
+      case 'model':
+        createModel({ name, checkMongoose: true });
+        break;
       case 'sub-app':
         createSubApp({ name });
         break;
@@ -82,7 +82,16 @@ program
         createVSCodeConfig();
         break;
       default:
-        console.error('Please provide a valid type: controller|entity|hook|sub-app|service|vscode-config.');
+        console.error();
+        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:\n`));
+        console.error(red('  controller'));
+        console.error(red('  entity'));
+        console.error(red('  hook'));
+        console.error(red('  model'));
+        console.error(red('  sub-app'));
+        console.error(red('  service'));
+        console.error(red('  vscode-config'));
+        console.error();
     }
   });
 
@@ -91,7 +100,7 @@ program
   .arguments('<command>')
   .action(cmd => {
     program.outputHelp();
-    console.log(`  ` + red(`\n  Unknown command ${yellow(cmd)}.`));
+    console.log(red(`\n  Unknown command ${yellow(cmd)}.`));
     console.log();
   });
 

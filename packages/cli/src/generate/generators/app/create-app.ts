@@ -59,9 +59,10 @@ function validateProjectName(name: string) {
   return !specialChars.find(char => name.includes(char));
 }
 
-export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
+export async function createApp({ name, sessionSecret, autoInstall, initRepo, mongodb = false }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean }) {
   const names = getNames(name);
+
   if (process.env.NODE_ENV !== 'test') {
     console.log(cyan(
 `====================================================================
@@ -94,14 +95,13 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   mkdirIfDoesNotExist(names.kebabName);
 
   log('  📂 Creating files...');
-  new Generator('app', names.kebabName, { noLogs: true })
+  const generator = new Generator('app', names.kebabName, { noLogs: true });
+
+  generator
     .copyFileFromTemplates('gitignore', '.gitignore')
-    .copyFileFromTemplates('ormconfig.json')
-    .renderTemplate('package.json', locals)
     .copyFileFromTemplates('tsconfig.app.json')
     .copyFileFromTemplates('tsconfig.e2e.json')
     .copyFileFromTemplates('tsconfig.json')
-    .copyFileFromTemplates('tsconfig.migrations.json')
     .copyFileFromTemplates('tsconfig.scripts.json')
     .copyFileFromTemplates('tsconfig.test.json')
     .copyFileFromTemplates('tslint.json')
@@ -117,7 +117,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
       // Src
       .mkdirIfDoesNotExist('src')
       .copyFileFromTemplates('src/e2e.ts')
-      .copyFileFromTemplates('src/index.ts')
       .copyFileFromTemplates('src/test.ts')
         // App
         .mkdirIfDoesNotExist('src/app')
@@ -127,10 +126,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
           .copyFileFromTemplates('src/app/controllers/index.ts')
           .copyFileFromTemplates('src/app/controllers/api.controller.ts')
           .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
-          // Entities
-          .mkdirIfDoesNotExist('src/app/entities')
-          .copyFileFromTemplates('src/app/entities/index.ts')
-          .copyFileFromTemplates('src/app/entities/user.entity.ts')
           // Hooks
           .mkdirIfDoesNotExist('src/app/hooks')
           .copyFileFromTemplates('src/app/hooks/index.ts')
@@ -142,12 +137,43 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
           .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
-        .copyFileFromTemplates('src/e2e/index.ts')
         // Scripts
-        .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplates('src/scripts/create-group.ts')
-        .copyFileFromTemplates('src/scripts/create-perm.ts')
-        .copyFileFromTemplates('src/scripts/create-user.ts');
+        .mkdirIfDoesNotExist('src/scripts');
+
+  if (mongodb) {
+    generator
+      .renderTemplate('package.mongodb.json', locals, 'package.json')
+    // Config
+      .renderTemplate('config/mongodb.e2e.json', locals)
+      .renderTemplate('config/mongodb.development.json', locals)
+    // Src
+      .copyFileFromTemplates('src/index.mongodb.ts', 'src/index.ts')
+    // Src / App / Models
+      .mkdirIfDoesNotExist('src/app/models')
+      .copyFileFromTemplates('src/app/models/index.ts')
+      .copyFileFromTemplates('src/app/models/user.model.ts')
+    // Src / E2E
+      .copyFileFromTemplates('src/e2e/index.mongodb.ts', 'src/e2e/index.ts')
+    // Src / Scripts
+      .copyFileFromTemplates('src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
+  } else {
+    generator
+      .copyFileFromTemplates('ormconfig.json')
+      .renderTemplate('package.json', locals)
+      .copyFileFromTemplates('tsconfig.migrations.json')
+    // Src
+      .copyFileFromTemplates('src/index.ts')
+    // Src / App / Entities
+      .mkdirIfDoesNotExist('src/app/entities')
+      .copyFileFromTemplates('src/app/entities/index.ts')
+      .copyFileFromTemplates('src/app/entities/user.entity.ts')
+    // Src / E2E
+      .copyFileFromTemplates('src/e2e/index.ts')
+    // Src / Scripts
+      .copyFileFromTemplates('src/scripts/create-group.ts')
+      .copyFileFromTemplates('src/scripts/create-perm.ts')
+      .copyFileFromTemplates('src/scripts/create-user.ts');
+  }
 
   log('');
   log('  📦 Installing the dependencies...');

@@ -25,6 +25,7 @@
         "exclude": [
             "**/src/migrations/*.ts",
             "**/src/generate/mocks/**/*.ts",
+            "**/src/generate/templates/model/*.ts",
             "**/src/generate/templates/rest-api/*.ts",
             "**/src/generate/specs/**/app.controller.*.ts"
         ]
