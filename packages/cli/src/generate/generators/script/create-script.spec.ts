@@ -6,6 +6,8 @@ import {
 } from '../../utils';
 import { createScript } from './create-script';
 
+// TODO: Improve the tests. They currently cover partially `createScript`.
+
 describe('createScript', () => {
 
   afterEach(() => {
@@ -14,32 +16,31 @@ describe('createScript', () => {
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
     // rmdirIfExists('src');
-
-    rmfileIfExists('test-foo-bar.ts');
   });
 
-  function test(root: string) {
+  describe(`when the directory src/scripts/ exists`, () => {
 
-    describe(`when the directory ${root}/ exists`, () => {
+    const testEnv = new TestEnvironment('script', 'src/scripts');
 
-      const testEnv = new TestEnvironment('script', root);
-
-      beforeEach(() => {
-        testEnv.mkRootDirIfDoesNotExist();
-      });
-
-      it('should copy the empty script file in the proper directory.', () => {
-        createScript({ name: 'test-fooBar' });
-
-        testEnv
-          .validateSpec('test-foo-bar.ts');
-      });
-
+    beforeEach(() => {
+      testEnv.mkRootDirIfDoesNotExist();
     });
 
-  }
+    it('should copy the empty script file in the proper directory.', () => {
+      createScript({ name: 'test-fooBar' });
 
-  test('src/scripts');
-  test('');
+      testEnv
+        .validateSpec('test-foo-bar.ts');
+    });
+
+  });
+
+  describe(`when the directory src/scripts/ does not exist`, () => {
+
+    it('should not throw an error.', () => {
+      createScript({ name: 'test-fooBar' });
+    });
+
+  });
 
 });
