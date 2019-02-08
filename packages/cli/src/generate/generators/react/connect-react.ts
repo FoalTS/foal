@@ -5,23 +5,21 @@ import { existsSync } from 'fs';
 import { Generator } from '../../utils';
 
 export function connectReact(path: string) {
-  const root = join(process.cwd(), path);
-
-  if (!existsSync(root)) {
+  if (!existsSync(path)) {
     if (process.env.NODE_ENV !== 'test') {
       console.log(red(`  The directory ${path} does not exist.`));
     }
     return;
   }
 
-  if (!existsSync(join(root, 'package.json'))) {
+  if (!existsSync(join(path, 'package.json'))) {
     if (process.env.NODE_ENV !== 'test') {
       console.log(red(`  The directory ${path} is not a React project (missing package.json).`));
     }
     return;
   }
 
-  new Generator('react', root)
+  new Generator('react', path)
     .updateFile('package.json', content => {
       const pkg = JSON.parse(content);
       pkg.proxy = 'http://localhost:3001';
