@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.7.3",
+  "version": "0.7.7",
   "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
