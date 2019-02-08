@@ -54,7 +54,7 @@ $ cd my-app
 $ npm run develop
 ```
 
-The development server is started! Go to `http://localhost:3000` and find our welcoming page!
+The development server is started! Go to `http://localhost:3001` and find our welcoming page!
 
 [=> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
 

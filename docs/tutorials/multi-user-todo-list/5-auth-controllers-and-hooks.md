@@ -50,7 +50,7 @@ export class AppController {
 
 ```
 
-Open your browser and go to `http://localhost:3000/signin`. The login page should show up.
+Open your browser and go to `http://localhost:3001/signin`. The login page should show up.
 
 ## Login Controllers
 
@@ -162,4 +162,4 @@ export class ApiController {
 
 > When a hook decorates a controller class, it applies to all the routes of the controller and its sub-controllers.
 
-Go to `http://localhost:3000`. If you are not logged in you should be redirected to the login page.
+Go to `http://localhost:3001`. If you are not logged in you should be redirected to the login page.

@@ -24,7 +24,7 @@ export function connectReact(path: string) {
   new Generator('react', root)
     .updateFile('package.json', content => {
       const pkg = JSON.parse(content);
-      pkg.proxy = 'http://localhost:3000';
+      pkg.proxy = 'http://localhost:3001';
       return JSON.stringify(pkg, null, 2);
     });
 }

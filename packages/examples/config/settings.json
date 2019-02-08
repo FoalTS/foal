@@ -2,7 +2,7 @@
   "csrf": true,
   "debug": true,
   "loggerFormat": "dev",
-  "port": 3000,
+  "port": 3001,
   "sessionSecret": "my secret",
   "sessionResave": true,
   "sessionSaveUninitialized": true,

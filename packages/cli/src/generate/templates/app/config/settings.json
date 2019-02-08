@@ -1,7 +1,7 @@
 {
   "csrf": false,
   "debug": false,
-  "port": 3000,
+  "port": 3001,
   "loggerFormat": "tiny",
   "staticUrl": "public/",
   "sessionResave": false,

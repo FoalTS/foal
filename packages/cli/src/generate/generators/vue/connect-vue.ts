@@ -29,7 +29,7 @@ export function connectVue(path: string) {
       // Proxy configuration
       pkg.vue.devServer = pkg.vue.devServer || {};
       pkg.vue.devServer.proxy = pkg.vue.devServer.proxy || {};
-      pkg.vue.devServer.proxy['^/api'] = { target: 'http://localhost:3000' };
+      pkg.vue.devServer.proxy['^/api'] = { target: 'http://localhost:3001' };
 
       // Output build directory
       const outputPath = join(relative(root, process.cwd()), 'public');
