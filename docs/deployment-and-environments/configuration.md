@@ -1,6 +1,6 @@
 # Configuration
 
-> You might br interested in reading the chapter [III. Config](https://12factor.net/config) of the Twelve-Factor App guide.
+> You might be interested in reading the chapter [III. Config](https://12factor.net/config) of the Twelve-Factor App guide.
 
 ```
 |- config
