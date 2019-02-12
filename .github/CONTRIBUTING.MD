@@ -10,9 +10,9 @@ Thanks for your interest in FoalTS! There are several ways to contribute. **Writ
 
 If you find a security vulnerability, please do NOT open an issue. Email loic.poullain@centraliens.net instead.
 
-- [Report a bug](https://github.com/FoalTS/foal/issues/new?template=bug_report.md)
-- [Suggest a new feature](https://github.com/FoalTS/foal/issues/new?template=feature_request.md)
-- [Other (ask a question, etc)](https://github.com/FoalTS/foal/issues/new?template=other.md)
+- [Report a bug](https://github.com/FoalTS/foal/issues/new)
+- [Suggest a new feature](https://github.com/FoalTS/foal/issues/new)
+- [Other (ask a question, etc)](https://github.com/FoalTS/foal/issues/new)
 
 ## Submit a PR
 
