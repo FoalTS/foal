@@ -102,6 +102,7 @@
     "supertest": "^3.1.0",
     "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "yamljs": "^0.3.0"
   }
 }
