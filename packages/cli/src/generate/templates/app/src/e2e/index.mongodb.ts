@@ -11,7 +11,7 @@ describe('The server', () => {
   let app;
 
   before(() => {
-    const uri = Config.get('mongodb', 'uri') as string;
+    const uri = Config.get('mongodb.uri') as string;
     connect(uri, { useNewUrlParser: true, useCreateIndex: true });
     app = createApp(AppController);
   });

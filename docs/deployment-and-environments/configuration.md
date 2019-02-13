@@ -15,7 +15,7 @@ Configuration should be strictly separated from the codebase. Thus storing in th
 Let's take an example:
 
 ```typescript
-const password = Config.get('database', 'strongPassword', 'xxx');
+const password = Config.get('database.strongPassword', 'xxx');
 ```
 
 FoalTS fetches the password in this order:
