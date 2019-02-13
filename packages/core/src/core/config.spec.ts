@@ -1,5 +1,5 @@
 // std
-import { strict, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
@@ -220,7 +220,6 @@ api:
       writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
 
       function testResponseTime(key: string) {
-        const NS_PER_SEC = 1e9;
         delete require.cache[require.resolve('yamljs')];
         const time = process.hrtime();
         Config.get(key);
