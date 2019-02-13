@@ -21,8 +21,18 @@ foal g model <name>
 ## Mongoose configuration
 
 The URI of the MongoDB database can be passed through:
-- the config file `config/mongodb.json` with the `uri` key,
+- the config file `config/default.json` with the `mongodb.uri` key,
 - or with the environment variable `MONGODB_URI`.
+
+*Example (`config/default.json`)*:
+```json
+{
+  ...
+  "mongodb": {
+    "uri": "mongodb://localhost:27017/db"
+  }
+}
+```
 
 ## Running migrations
 
