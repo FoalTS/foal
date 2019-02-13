@@ -23,6 +23,8 @@ describe('Config', () => {
 
   before(() => initialEnv = process.env.NODE_ENV);
 
+  beforeEach(() => Config.clearCache());
+
   afterEach(() => {
     if (initialEnv === undefined) {
       // Assigning undefined to process.env.NODE_ENV makes process.env.NODE_ENV equal to "undefined"!
@@ -182,34 +184,36 @@ describe('Config', () => {
       strictEqual(Config.get('barFoo', 'foo7'), 'foo1');
     });
 
-    it('should not take too long.', () => {
-      process.env.NODE_ENV = 'test';
-      process.env.DB_USERNAME = 'test';
-      mkdirSync('config');
+    describe('should not take too long', () => {
 
-      const dotEnvFileContent = 'DB_PASSWORD=foo';
-      writeFileSync('.env', dotEnvFileContent, 'utf8');
-      const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
-      writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
-      const defaultYAMLFileContent = 'barFoo: foo4';
-      writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
-      const envJSONFileContent = JSON.stringify({
-        jwt: {
-          secretOrPublicKey: 'kljdsqjheblajubdqsmk'
-        },
-        settings: {
-          csrf: false,
-          debug: false,
-          loggerFormat: 'tiny',
-          port: 3000,
-          sessionResave: false,
-          sessionSaveUninitialized: false,
-          sessionSecret: '79120183c32f87b25fbe0da73426dcca',
-          staticUrl: 'public/',
-        }
-      });
-      writeFileSync('config/test.json', envJSONFileContent, 'utf8');
-      const envYAMLFileContent = `app:
+      beforeEach(() => {
+        process.env.NODE_ENV = 'test';
+        process.env.DB_USERNAME = 'test';
+        mkdirSync('config');
+
+        const dotEnvFileContent = 'DB_PASSWORD=foo';
+        writeFileSync('.env', dotEnvFileContent, 'utf8');
+        const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
+        writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
+        const defaultYAMLFileContent = 'barFoo: foo4';
+        writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
+        const envJSONFileContent = JSON.stringify({
+          jwt: {
+            secretOrPublicKey: 'kljdsqjheblajubdqsmk'
+          },
+          settings: {
+            csrf: false,
+            debug: false,
+            loggerFormat: 'tiny',
+            port: 3000,
+            sessionResave: false,
+            sessionSaveUninitialized: false,
+            sessionSecret: '79120183c32f87b25fbe0da73426dcca',
+            staticUrl: 'public/',
+          }
+        });
+        writeFileSync('config/test.json', envJSONFileContent, 'utf8');
+        const envYAMLFileContent = `app:
     port: 8080
     baseUrl: 'http://localhost'
 auth:
@@ -217,20 +221,45 @@ auth:
 api:
     authService: http://auth-service:8080
     someUrl: '/blah'`;
-      writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
+        writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
+      });
 
-      function testResponseTime(key: string) {
-        delete require.cache[require.resolve('yamljs')];
-        const time = process.hrtime();
-        Config.get(key);
-        const diff = process.hrtime(time);
-        strictEqual(diff[0], 0);
-        strictEqual(diff[1] < 3e6, true, `Expected Config.get to be executed in less than 1ms. Took ${diff[1]} ns.`);
-      }
+      it('on first load / caching (< 3ms).', () => {
+        function testResponseTime(key: string) {
+          delete require.cache[require.resolve('yamljs')];
+          const time = process.hrtime();
+          Config.get(key);
+          const diff = process.hrtime(time);
+          strictEqual(diff[0], 0);
+          strictEqual(diff[1] < 3e6, true, `Expected Config.get to be executed in less than 3ms. Took ${diff[1]} ns.`);
+        }
 
-      testResponseTime('barFoo');
-      testResponseTime('settings.sessionSaveUninitialized');
-      testResponseTime('auth.alg');
+        testResponseTime('barFoo');
+        testResponseTime('settings.sessionSaveUninitialized');
+        testResponseTime('auth.alg');
+      });
+
+      it('on first second load  (< 0.1ms).', () => {
+        function testResponseTime(key: string) {
+          delete require.cache[require.resolve('yamljs')];
+          const time = process.hrtime();
+          Config.get(key);
+          const diff = process.hrtime(time);
+          strictEqual(diff[0], 0);
+          strictEqual(
+            diff[1] < 0.1e6, true,
+            `Expected Config.get to be executed in less than 0.1ms. Took ${diff[1]} ns.`
+          );
+        }
+
+        Config.get('barFoo');
+        Config.get('settings.sessionSaveUninitialized');
+        Config.get('auth.alg');
+
+        testResponseTime('barFoo');
+        testResponseTime('settings.sessionSaveUninitialized');
+        testResponseTime('auth.alg');
+      });
     });
 
   });

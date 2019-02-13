@@ -41,49 +41,70 @@ export class Config {
     return defaultValue as T;
   }
 
+  static clearCache() {
+    this.cache = {
+      dotEnv: undefined,
+      json: {},
+      yaml: {},
+    };
+  }
+
   private static yaml;
+  private static cache: { dotEnv: any, json: object, yaml: object } = {
+    dotEnv: undefined,
+    json: {},
+    yaml: {},
+  };
 
   private static readDotEnvValue(name: string): string | boolean | number | undefined {
-    if (!existsSync('.env')) {
-      return;
+    if (!this.cache.dotEnv) {
+      if (!existsSync('.env')) {
+        return;
+      }
+
+      const envFileContent = readFileSync('.env', 'utf8');
+      this.cache.dotEnv = {};
+      envFileContent.replace(/\r\n/g, '\n').split('\n').forEach(line => {
+        const [ key, value ] = line.split('=');
+        this.cache.dotEnv[key] = value;
+      });
     }
 
-    const envFileContent = readFileSync('.env', 'utf8');
-    const config = {};
-    envFileContent.replace(/\r\n/g, '\n').split('\n').forEach(line => {
-      const [ key, value ] = line.split('=');
-      config[key] = value;
-    });
-
-    if (config[name] !== undefined) {
-      return this.convertType(config[name]);
+    if (this.cache.dotEnv[name] !== undefined) {
+      return this.convertType(this.cache.dotEnv[name]);
     }
   }
 
   private static readJSONValue(path: string, key: string): any {
-    if (!existsSync(path)) {
-      return;
+    if (!this.cache.json[path]) {
+      if (!existsSync(path)) {
+        return;
+      }
+
+      const fileContent = readFileSync(path, 'utf8');
+      this.cache.json[path] = JSON.parse(fileContent);
     }
 
-    const fileContent = readFileSync(path, 'utf8');
-    const config = JSON.parse(fileContent);
-    return this.getValue(config, key);
+    return this.getValue(this.cache.json[path], key);
   }
 
   private static readYAMLValue(path: string, key: string): any {
-    if (!existsSync(path)) {
-      return;
+    if (!this.cache.yaml[path]) {
+      if (!existsSync(path)) {
+        return;
+      }
+
+      const yaml = this.getYAMLInstance();
+      if (!yaml) {
+        console.log(`Impossible to read ${path}. The package "yamljs" is not installed.`);
+        return;
+      }
+
+      const fileContent = readFileSync(path, 'utf8');
+      this.cache.yaml[path] = yaml.parse(fileContent);
     }
 
-    const yaml = this.getYAMLInstance();
-    if (!yaml) {
-      console.log(`Impossible to read ${path}. The package "yamljs" is not installed.`);
-      return;
-    }
-
-    const fileContent = readFileSync(path, 'utf8');
-    const config = yaml.parse(fileContent);
-    return this.getValue(config, key);
+    return this.getValue(this.cache.yaml[path], key);
   }
 
   private static getYAMLInstance(): false | any {
