@@ -34,8 +34,15 @@ program
   .command('createapp <name>')
   .description('Creates a new directory with a new FoalTS app.')
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
+  .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
-    createApp({ name, autoInstall: true, initRepo: true, mongodb: options.mongodb || false });
+    createApp({
+      autoInstall: true,
+      initRepo: true,
+      mongodb: options.mongodb || false,
+      name,
+      yaml: options.yaml || false
+    });
   });
 
 program
