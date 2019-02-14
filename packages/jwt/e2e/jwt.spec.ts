@@ -9,8 +9,8 @@ import { JWTRequired } from '../src';
 
 const secret = 'my_strong_secret';
 
-before(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = secret);
-after(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = '');
+before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = secret);
+after(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = '');
 
 interface User {
   id: number;
