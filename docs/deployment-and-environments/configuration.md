@@ -1,6 +1,6 @@
 # Configuration
 
-> You might br interested in reading the chapter [III. Config](https://12factor.net/config) of the Twelve-Factor App guide.
+> You might be interested in reading the chapter [III. Config](https://12factor.net/config) of the Twelve-Factor App guide.
 
 ```
 |- config
@@ -25,3 +25,23 @@ FoalTS fetches the password in this order:
 - Else `'xxx'` is returned.
 
 > If the value of an env variable can be converted to a number or a boolean then it is converted.
+ormconfig.json
+## Using YAML
+
+Install `yamljs`
+
+ormconfig.yml
+
+The createapp --yaml flag
+
+`settings`: configuration from foal official packages. Each sub-section is the name of the package. Exception the PORT
+
+*Example of configuration file:*
+```yaml
+port: 3000
+settings:
+  core:
+    ff: r
+  jwt:
+    foo: r
+```
