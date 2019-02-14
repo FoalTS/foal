@@ -43,7 +43,7 @@ The createapp --yaml flag
 
 *Example of configuration file:*
 ```yaml
-port: 3000
+port: 3001
 
 settings:
   session:

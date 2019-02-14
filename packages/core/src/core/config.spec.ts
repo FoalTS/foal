@@ -205,7 +205,7 @@ describe('Config', () => {
             csrf: false,
             debug: false,
             loggerFormat: 'tiny',
-            port: 3000,
+            port: 3001,
             sessionResave: false,
             sessionSaveUninitialized: false,
             sessionSecret: '79120183c32f87b25fbe0da73426dcca',
