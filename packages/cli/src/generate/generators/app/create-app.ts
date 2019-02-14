@@ -1,7 +1,6 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
 import * as crypto from 'crypto';
-import { join } from 'path';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -193,7 +192,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
 
   log('  📔 Initializing git repository...');
   if (initRepo) {
-    await initGitRepo(join(process.cwd(), names.kebabName));
+    await initGitRepo(names.kebabName);
   }
 
   log(`

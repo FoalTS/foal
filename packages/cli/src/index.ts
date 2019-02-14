@@ -11,6 +11,9 @@ import * as program from 'commander';
 
 // FoalTS
 import {
+  connectAngular,
+  connectReact,
+  connectVue,
   createApp,
   createController,
   createEntity,
@@ -32,7 +35,7 @@ program
 
 program
   .command('createapp <name>')
-  .description('Creates a new directory with a new FoalTS app.')
+  .description('Create a new project.')
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
@@ -48,16 +51,48 @@ program
 program
   .command('run <name>')
   .alias('run-script')
-  .description('Runs the given script.')
+  .description('Run a shell script.')
   .action((name: string) => {
     runScript({ name }, process.argv);
   });
 
 program
+  .command('connect <framework> <path>')
+  .description('Configure your frontend to interact with your application.')
+  .on('--help', () => {
+    console.log('');
+    console.log('Available frameworks:');
+    console.log('  angular');
+    console.log('  react');
+    console.log('  vue');
+  })
+  .action(async (framework: string, path: string) => {
+    switch (framework) {
+      case 'angular':
+        connectAngular(path);
+        break;
+      case 'react':
+        connectReact(path);
+        break;
+      case 'vue':
+        connectVue(path);
+        break;
+      default:
+        console.error('Please provide a valid framework: angular.');
+    }
+  });
+
+program
   .command('generate <type> [name]')
-  .description('Generates files (type: controller|entity|hook|model|sub-app|service|vscode-config).')
+  .description('Generate and/or modify files.')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
+  .on('--help', () => {
+    console.log('');
+    console.log('Available types:');
+    [ 'controller', 'entity', 'hook', 'model', 'sub-app', 'service', 'vscode-config' ]
+      .forEach(t => console.log(`  ${t}`));
+  })
   .action(async (type: string, name: string, options) => {
     name = name || 'no-name';
     switch (type) {

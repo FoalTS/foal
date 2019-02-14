@@ -41,6 +41,8 @@ Website: [https://foalts.org/](https://foalts.org/)
 
 Documentation: [https://foalts.gitbook.io/docs/](https://foalts.gitbook.io/docs/)
 
+FoalTS is a Node.js framework for building HTTP APIs and Web applications with a rich interface (Angular / React / Vue). It is written in TypeScript and offers many built-in dev tools and components to handle extremely common scenarios. Simple, testable and progressive, Foal accelerates development while leaving you in control of your code.
+
 ## Get started
 
 First install [Node.Js and npm](https://nodejs.org/en/download/).
@@ -54,7 +56,7 @@ $ cd my-app
 $ npm run develop
 ```
 
-The development server is started! Go to `http://localhost:3000` and find our welcoming page!
+The development server is started! Go to `http://localhost:3001` and find our welcoming page!
 
 [=> Continue with the tutorial](https://foalts.gitbook.io/docs/content/)
 

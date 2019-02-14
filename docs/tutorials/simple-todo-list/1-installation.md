@@ -68,10 +68,10 @@ You've started the development server.
 > The **development server** watches at your files and automatically compiles and reloads your code. You don’t need to restart the server each time you make code changes. Note that it is only intended to be used in development, do not use it on production.
 
 
-> **Port 3000 already in use?**
+> **Port 3001 already in use?**
 >
 > You can define in `config/settings.js` which port the application is using. Simply add the key `"port"` with the desired value.
 
-Go to `http://localhost:3000` in your browser. You should see the text *Welcome to the future* <3.
+Go to `http://localhost:3001` in your browser. You should see the text *Welcome to the future* <3.
 
 Congratulations, you now have a server running!
