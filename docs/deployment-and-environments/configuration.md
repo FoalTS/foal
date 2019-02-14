@@ -15,7 +15,7 @@ Configuration should be strictly separated from the codebase. Thus storing in th
 Let's take an example:
 
 ```typescript
-const password = Config.get('database.strongPassword', 'xxx');
+const password = Config.get<string>('database.strongPassword', 'xxx');
 ```
 
 FoalTS fetches the password in this order:
@@ -26,6 +26,11 @@ FoalTS fetches the password in this order:
 
 > If the value of an env variable can be converted to a number or a boolean then it is converted.
 ormconfig.json
+
+configuration can be multi level
+
+## TypeORM configuration
+
 ## Using YAML
 
 Install `yamljs`
@@ -39,9 +44,19 @@ The createapp --yaml flag
 *Example of configuration file:*
 ```yaml
 port: 3000
+
 settings:
-  core:
-    ff: r
+  session:
+    cookie:
+      httpOnly: true
+      maxAge: 3600000
+      sameSite: lax
+      secure: true
+    name: id
   jwt:
-    foo: r
+    secretOrPublicKey: 'xxx'
+    cookieName: 'xxx'
+
+mongodb:
+  uri: 'mongodb://localhost:27017/test'
 ```
