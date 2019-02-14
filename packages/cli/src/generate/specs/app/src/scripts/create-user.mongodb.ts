@@ -25,7 +25,7 @@ export async function main(/*args*/) {
   // }
   // await user.setPassword(args.password);
 
-  const uri = Config.get('mongodb.uri') as string;
+  const uri = Config.get<string>('mongodb.uri');
   connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 
   try {

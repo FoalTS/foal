@@ -46,17 +46,17 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   app.use(cookieParser());
   app.use(session({
     cookie: {
-      domain: Config.get('settings.sessionCookieDomain'),
-      httpOnly: Config.get('settings.sessionCookieHttpOnly'),
-      maxAge: Config.get('settings.sessionCookieMaxAge'),
-      path: Config.get('settings.sessionCookiePath'),
-      sameSite: Config.get('settings.sessionCookieSameSite'),
-      secure: Config.get('settings.sessionCookieSecure'),
+      domain: Config.get('settings.session.cookie.domain'),
+      httpOnly: Config.get('settings.session.cookie.httpOnly'),
+      maxAge: Config.get('settings.session.cookie.maxAge'),
+      path: Config.get('settings.session.cookie.path'),
+      sameSite: Config.get('settings.session.cookie.sameSite'),
+      secure: Config.get('settings.session.cookie.secure'),
     },
-    name: Config.get('settings.sessionName'),
-    resave: Config.get('settings.sessionResave', false),
-    saveUninitialized: Config.get('settings.sessionSaveUninitialized', true),
-    secret: Config.get('settings.sessionSecret', 'default_secret'),
+    name: Config.get('settings.session.name'),
+    resave: Config.get('settings.session.resave', false),
+    saveUninitialized: Config.get('settings.session.saveUninitialized', true),
+    secret: Config.get('settings.session.secret', 'default_secret'),
     store: options.store ? options.store(session) : undefined,
   }));
 
