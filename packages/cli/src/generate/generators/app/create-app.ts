@@ -107,9 +107,8 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')
-      .renderTemplate('config/settings.json', locals)
-      .renderTemplate('config/settings.development.json', locals)
-      .renderTemplate('config/settings.production.json', locals)
+      .renderTemplate('config/default.json', locals)
+      .renderTemplate('config/production.json', locals)
       // Public
       .mkdirIfDoesNotExist('public')
       .copyFileFromTemplates('public/index.html')
@@ -144,8 +143,8 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
     generator
       .renderTemplate('package.mongodb.json', locals, 'package.json')
     // Config
-      .renderTemplate('config/mongodb.e2e.json', locals)
-      .renderTemplate('config/mongodb.development.json', locals)
+      .renderTemplate('config/e2e.mongodb.json', locals, 'config/e2e.json')
+      .renderTemplate('config/development.mongodb.json', locals, 'config/development.json')
     // Src
       .copyFileFromTemplates('src/index.mongodb.ts', 'src/index.ts')
     // Src / App / Models
@@ -161,6 +160,8 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
       .copyFileFromTemplates('ormconfig.json')
       .renderTemplate('package.json', locals)
       .copyFileFromTemplates('tsconfig.migrations.json')
+    // Config
+      .renderTemplate('config/development.json', locals)
     // Src
       .copyFileFromTemplates('src/index.ts')
     // Src / App / Entities

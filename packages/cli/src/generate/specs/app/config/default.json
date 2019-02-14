@@ -1,0 +1,14 @@
+{
+  "port": 3000,
+  "settings": {
+    "csrf": false,
+    "debug": false,
+    "loggerFormat": "tiny",
+    "staticUrl": "public/",
+    "session": {
+      "resave": false,
+      "saveUninitialized": false,
+      "secret": "my-secret"
+    }
+  }
+}
