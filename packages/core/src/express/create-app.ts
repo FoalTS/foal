@@ -1,6 +1,3 @@
-// std
-import * as path from 'path';
-
 // 3p
 import * as cookieParser from 'cookie-parser';
 import * as csurf from 'csurf';
@@ -39,7 +36,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   );
 
   app.use(logger(loggerFormat));
-  app.use(express.static(path.join(process.cwd(), Config.get('settings', 'staticUrl', '/public') as string)));
+  app.use(express.static(Config.get('settings', 'staticUrl', 'public') as string));
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
