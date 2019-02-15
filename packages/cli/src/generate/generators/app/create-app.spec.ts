@@ -275,7 +275,7 @@ describe('createApp', () => {
       .validateSpec('gitignore', '.gitignore')
       .shouldNotExist('ormconfig.json')
       .validateSpec('ormconfig.yml')
-      .validateSpec('package.json')
+      .validateSpec('package.yaml.json', 'package.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
@@ -294,6 +294,24 @@ describe('createApp', () => {
       .shouldNotExist('ormconfig.json')
       .shouldNotExist('ormconfig.yml')
       .validateSpec('package.mongodb.json', 'package.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.app.json')
+      .validateSpec('tsconfig.e2e.json')
+      .validateSpec('tsconfig.json')
+      .shouldNotExist('tsconfig.migrations.json')
+      .validateSpec('tsconfig.scripts.json')
+      .validateSpec('tsconfig.test.json')
+      .validateSpec('tslint.json');
+  });
+
+  it('should render the root templates (MongoDB & YAML options).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true, yaml: true });
+
+    testEnv
+      .validateSpec('gitignore', '.gitignore')
+      .shouldNotExist('ormconfig.json')
+      .shouldNotExist('ormconfig.yml')
+      .validateSpec('package.mongodb.yaml.json', 'package.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
