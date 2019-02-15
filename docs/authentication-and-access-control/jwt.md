@@ -26,8 +26,18 @@ Authorization: Bearer <token>
 # Set Up
 
 You must provide a secret or a public key to the hooks. You have two ways to do that:
-- in the `config/jwt.json` file through the `secretOrPublicKey` key,
-- or with the environment variable `JWT_SECRET_OR_PUBLIC_KEY`.
+- in the `config/default.json` file through the `settings.jwt.secretOrPublicKey` key,
+- or with the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`.
+
+*Example (`config/default.json`):*
+```json
+{
+  ...
+  "jwt": {
+    "secretOrPublicKey": "strong_secret"
+  }
+}
+```
 
 # Options
 
@@ -57,7 +67,7 @@ The `blacklist` option lets you easily revoke tokens. It is a function that take
 
 By default the hooks parse the `Authorization` header. With the option `cookie: true`, the jwt is retreived from the cookie named `auth`.
 
-> You can change the name of the cookie with the env variable `JWT_COOKIE_NAME` or in `config/jwt.json` with the `cookieName` key.
+> You can change the name of the cookie with the env variable `SETTINGS_JWT_COOKIE_NAME` or in `config/default.json` with the `settings.jwt.cookieName` key.
 
 # Verify Options
 
@@ -67,7 +77,7 @@ The second argument of `JWTOptional` and `JWTRequired` are passed as options to 
 
 | Error | Response Status | Response Body |  `WWW-Authenticate` Response Header
 | --- | --- | --- | --- |
-| No secret or public key is provided in `jwt.json` or as environment variable. | 500 | | |
+| No secret or public key is provided in `default.json` or as environment variable. | 500 | | |
 | The `Authorization` header does not exist (only for `JWTRequired`). | 400 | `{ code: 'invalid_request', description: 'Authorization header not found.' }` |
 | The auth cookie does not exist (only for `JWTRequired`). | 400 | `{ code: 'invalid_request', description: 'Auth cookie not found.' }` |
 | The `Authorization` header does use the Bearer scheme. | 400 | `{ code: 'invalid_request', description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.' }` |

@@ -34,7 +34,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     }
     strictEqual(
       err.message,
-      'You must provide a secretOrPublicKey in jwt.json or in the JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+      'You must provide a settings.jwt.secretOrPublicKey in default.json or in the '
+        + 'SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
     );
   });
 
@@ -42,9 +43,9 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     const secret = 'my_secret';
 
-    before(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = 'my_secret');
+    before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = 'my_secret');
 
-    after(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = '');
+    after(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = '');
 
     if (required) {
 
@@ -328,8 +329,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true '
-        + 'and JWT_COOKIE_NAME=xxx).', async () => {
-      process.env.JWT_COOKIE_NAME = 'xxx';
+        + 'and SETTINGS_JWT_COOKIE_NAME=xxx).', async () => {
+      process.env.SETTINGS_JWT_COOKIE_NAME = 'xxx';
       const hook = getHookFunction(JWT({ cookie: true }));
 
       const jwt = sign({ foo: 'bar' }, secret, {});
@@ -340,7 +341,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
-      delete process.env.JWT_COOKIE_NAME;
+      delete process.env.SETTINGS_JWT_COOKIE_NAME;
     });
 
     it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
@@ -436,9 +437,9 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----`;
 
-    before(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = publicKey);
+    before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = publicKey);
 
-    after(() => process.env.JWT_SECRET_OR_PUBLIC_KEY = '');
+    after(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = '');
 
     it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
       const hook = getHookFunction(JWT());

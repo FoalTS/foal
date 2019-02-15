@@ -9,6 +9,7 @@ describe('createApp', () => {
   afterEach(() => {
     testEnv.rmfileIfExists('.gitignore');
     testEnv.rmfileIfExists('ormconfig.json');
+    testEnv.rmfileIfExists('ormconfig.yml');
     testEnv.rmfileIfExists('package.json');
     testEnv.rmfileIfExists('tsconfig.app.json');
     testEnv.rmfileIfExists('tsconfig.e2e.json');
@@ -19,11 +20,15 @@ describe('createApp', () => {
     testEnv.rmfileIfExists('tslint.json');
 
     // Config
-    testEnv.rmfileIfExists('config/mongodb.e2e.json');
-    testEnv.rmfileIfExists('config/mongodb.development.json');
-    testEnv.rmfileIfExists('config/settings.development.json');
-    testEnv.rmfileIfExists('config/settings.json');
-    testEnv.rmfileIfExists('config/settings.production.json');
+    testEnv.rmfileIfExists('config/e2e.json');
+    testEnv.rmfileIfExists('config/development.json');
+    testEnv.rmfileIfExists('config/default.json');
+    testEnv.rmfileIfExists('config/production.json');
+
+    testEnv.rmfileIfExists('config/e2e.yml');
+    testEnv.rmfileIfExists('config/development.yml');
+    testEnv.rmfileIfExists('config/default.yml');
+    testEnv.rmfileIfExists('config/production.yml');
     testEnv.rmdirIfExists('config');
 
     // Public
@@ -78,22 +83,56 @@ describe('createApp', () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
     testEnv
-      .shouldNotExist('config/mongodb.development.json')
-      .shouldNotExist('config/mongodb.e2e.json')
-      .validateSpec('config/settings.development.json')
-      .validateSpec('config/settings.json')
-      .validateSpec('config/settings.production.json');
+      .shouldNotExist('config/e2e.json')
+      .shouldNotExist('config/e2e.yml')
+      .shouldNotExist('config/development.yml')
+      .shouldNotExist('config/default.yml')
+      .shouldNotExist('config/production.yml')
+      .validateSpec('config/development.json')
+      .validateSpec('config/default.json')
+      .validateSpec('config/production.json');
+  });
+
+  it('should render the config templates (YAML option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', yaml: true });
+
+    testEnv
+      .shouldNotExist('config/e2e.yml')
+      .shouldNotExist('config/e2e.json')
+      .shouldNotExist('config/development.json')
+      .shouldNotExist('config/default.json')
+      .shouldNotExist('config/production.json')
+      .validateSpec('config/development.yml')
+      .validateSpec('config/default.yml')
+      .validateSpec('config/production.yml');
   });
 
   it('should render the config templates (MongoDB option).', async () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
 
     testEnv
-      .validateSpec('config/mongodb.development.json')
-      .validateSpec('config/mongodb.e2e.json')
-      .validateSpec('config/settings.development.json')
-      .validateSpec('config/settings.json')
-      .validateSpec('config/settings.production.json');
+      .shouldNotExist('config/e2e.yml')
+      .shouldNotExist('config/development.yml')
+      .shouldNotExist('config/default.yml')
+      .shouldNotExist('config/production.yml')
+      .validateSpec('config/e2e.mongodb.json', 'config/e2e.json')
+      .validateSpec('config/development.mongodb.json', 'config/development.json')
+      .validateSpec('config/default.json')
+      .validateSpec('config/production.json');
+  });
+
+  it('should render the config templates (MongoDB & YAML options).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true, yaml: true });
+
+    testEnv
+      .shouldNotExist('config/e2e.json')
+      .shouldNotExist('config/development.json')
+      .shouldNotExist('config/default.json')
+      .shouldNotExist('config/production.json')
+      .validateSpec('config/e2e.mongodb.yml', 'config/e2e.yml')
+      .validateSpec('config/development.mongodb.yml', 'config/development.yml')
+      .validateSpec('config/default.yml')
+      .validateSpec('config/production.yml');
   });
 
   it('should copy the public directory.', async () => {
@@ -217,8 +256,26 @@ describe('createApp', () => {
 
     testEnv
       .validateSpec('gitignore', '.gitignore')
+      .shouldNotExist('ormconfig.yml')
       .validateSpec('ormconfig.json')
       .validateSpec('package.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.app.json')
+      .validateSpec('tsconfig.e2e.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.migrations.json')
+      .validateSpec('tsconfig.scripts.json')
+      .validateSpec('tsconfig.test.json')
+      .validateSpec('tslint.json');
+  });
+  it('should render the root templates (YAML option).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', yaml: true });
+
+    testEnv
+      .validateSpec('gitignore', '.gitignore')
+      .shouldNotExist('ormconfig.json')
+      .validateSpec('ormconfig.yml')
+      .validateSpec('package.yaml.json', 'package.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
@@ -235,7 +292,26 @@ describe('createApp', () => {
     testEnv
       .validateSpec('gitignore', '.gitignore')
       .shouldNotExist('ormconfig.json')
+      .shouldNotExist('ormconfig.yml')
       .validateSpec('package.mongodb.json', 'package.json')
+      .validateSpec('tsconfig.json')
+      .validateSpec('tsconfig.app.json')
+      .validateSpec('tsconfig.e2e.json')
+      .validateSpec('tsconfig.json')
+      .shouldNotExist('tsconfig.migrations.json')
+      .validateSpec('tsconfig.scripts.json')
+      .validateSpec('tsconfig.test.json')
+      .validateSpec('tslint.json');
+  });
+
+  it('should render the root templates (MongoDB & YAML options).', async () => {
+    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true, yaml: true });
+
+    testEnv
+      .validateSpec('gitignore', '.gitignore')
+      .shouldNotExist('ormconfig.json')
+      .shouldNotExist('ormconfig.yml')
+      .validateSpec('package.mongodb.yaml.json', 'package.json')
       .validateSpec('tsconfig.json')
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')

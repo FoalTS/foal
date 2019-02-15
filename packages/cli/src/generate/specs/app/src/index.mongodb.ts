@@ -12,7 +12,7 @@ import { connect, connection } from 'mongoose';
 import { AppController } from './app/app.controller';
 
 async function main() {
-  const uri = Config.get('mongodb', 'uri') as string;
+  const uri = Config.get<string>('mongodb.uri');
   connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 
   const app = createApp(AppController, {
@@ -20,7 +20,7 @@ async function main() {
   });
 
   const httpServer = http.createServer(app);
-  const port = Config.get('settings', 'port', 3001);
+  const port = Config.get('port', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });

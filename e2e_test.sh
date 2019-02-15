@@ -124,14 +124,14 @@ npm run build:scripts
 # foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 foal run create-user
 
-########################################################
-# Repeat (almost) the same tests with a Mongoose project
-########################################################
+#################################################################
+# Repeat (almost) the same tests with a Mongoose and YAML project
+#################################################################
 
 cd ..
 
 # Test app creation
-foal createapp my-mongodb-app --mongodb
+foal createapp my-mongodb-app --mongodb --yaml
 cd my-mongodb-app
 
 # Check some compilation errors

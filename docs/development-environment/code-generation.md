@@ -10,6 +10,8 @@ Create a new directory with all the required files to get started.
 
 If you specify the flag `--mongodb`, the new project will use `mongoose` and `@foal/mongoose` in place of `typeorm` and `@foal/typeorm`. You can find more information [here](../databases/using-mongoose.md).
 
+If you specify the flag `--yaml`, the new project will use YAML format for its configuration files. You can find more information [here](../deployment-and-environments/configuration.md).
+
 ## Create a controller
 
 ```shell

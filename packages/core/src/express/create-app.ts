@@ -31,33 +31,33 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   const app = expressInstance || express();
 
   const loggerFormat = Config.get(
-    'settings', 'loggerFormat',
+    'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
 
   app.use(logger(loggerFormat));
-  app.use(express.static(Config.get('settings', 'staticUrl', 'public') as string));
+  app.use(express.static(Config.get('settings.staticUrl', 'public')));
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
   app.use(session({
     cookie: {
-      domain: Config.get('settings', 'sessionCookieDomain'),
-      httpOnly: Config.get('settings', 'sessionCookieHttpOnly'),
-      maxAge: Config.get('settings', 'sessionCookieMaxAge'),
-      path: Config.get('settings', 'sessionCookiePath'),
-      sameSite: Config.get('settings', 'sessionCookieSameSite'),
-      secure: Config.get('settings', 'sessionCookieSecure'),
+      domain: Config.get('settings.session.cookie.domain'),
+      httpOnly: Config.get('settings.session.cookie.httpOnly'),
+      maxAge: Config.get('settings.session.cookie.maxAge'),
+      path: Config.get('settings.session.cookie.path'),
+      sameSite: Config.get('settings.session.cookie.sameSite'),
+      secure: Config.get('settings.session.cookie.secure'),
     },
-    name: Config.get('settings', 'sessionName'),
-    resave: Config.get('settings', 'sessionResave', false),
-    saveUninitialized: Config.get('settings', 'sessionSaveUninitialized', true),
-    secret: Config.get('settings', 'sessionSecret', 'default_secret'),
+    name: Config.get('settings.session.name'),
+    resave: Config.get('settings.session.resave', false),
+    saveUninitialized: Config.get('settings.session.saveUninitialized', true),
+    secret: Config.get('settings.session.secret', 'default_secret'),
     store: options.store ? options.store(session) : undefined,
   }));
 
-  if (Config.get('settings', 'csrf', false) as boolean) {
+  if (Config.get('settings.csrf', false) as boolean) {
     app.use(csurf());
   } else {
     app.use((req, res, next) => {
@@ -101,7 +101,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
     }
   }
   app.use(notFound());
-  app.use(handleErrors(Config.get('settings', 'debug', false) as boolean, console.error));
+  app.use(handleErrors(Config.get('settings.debug', false), console.error));
 
   return app;
 }

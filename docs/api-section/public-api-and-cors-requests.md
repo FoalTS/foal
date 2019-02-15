@@ -1,10 +1,6 @@
 # Public API & CORS Requests
 
-Building an Open API requires to enable / disable some features.
-
-## Disable the CSRF protection
-
-Open `config/settings.json` and set the `csrf` property to `false`.
+Building an Open API requires to allow Cross-Origin Request Sharing.
 
 ## Enable Cross-Origin Resource Sharing (CORS)
 
