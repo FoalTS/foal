@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-20]
     * Properties
-        * [isHttpResponseNotImplemented][PropertyDeclaration-45]
-        * [statusCode][PropertyDeclaration-46]
-        * [statusMessage][PropertyDeclaration-47]
+        * [isHttpResponseNotImplemented][PropertyDeclaration-46]
+        * [statusCode][PropertyDeclaration-47]
+        * [statusMessage][PropertyDeclaration-48]
 
 # HttpResponseNotImplemented
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
 [Constructor-20]: httpresponsenotimplemented.md#constructorbody
-[PropertyDeclaration-45]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
-[PropertyDeclaration-46]: httpresponsenotimplemented.md#statuscode
-[PropertyDeclaration-47]: httpresponsenotimplemented.md#statusmessage
+[PropertyDeclaration-46]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
+[PropertyDeclaration-47]: httpresponsenotimplemented.md#statuscode
+[PropertyDeclaration-48]: httpresponsenotimplemented.md#statusmessage

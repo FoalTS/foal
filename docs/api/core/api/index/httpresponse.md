@@ -11,9 +11,9 @@
         * [getCookie(name)][MethodDeclaration-4]
         * [getCookies()][MethodDeclaration-5]
     * Properties
-        * [isHttpResponse][PropertyDeclaration-9]
-        * [statusCode][PropertyDeclaration-10]
-        * [statusMessage][PropertyDeclaration-11]
+        * [isHttpResponse][PropertyDeclaration-10]
+        * [statusCode][PropertyDeclaration-11]
+        * [statusMessage][PropertyDeclaration-12]
 
 # HttpResponse
 
@@ -97,7 +97,7 @@ public setCookie(name: string, value: string, options: CookieOptions = {}): void
 | ------- | --------------------------------------- | ------------- |
 | name    | string                                  |               |
 | value   | string                                  |               |
-| options | [CookieOptions][InterfaceDeclaration-1] | {}            |
+| options | [CookieOptions][InterfaceDeclaration-2] | {}            |
 
 **Return type**
 
@@ -119,7 +119,7 @@ public getCookie(name: string): { value: string | undefined; options: CookieOpti
 
 **Return type**
 
-{ value: string | undefined; options: [CookieOptions][InterfaceDeclaration-1]; }
+{ value: string | undefined; options: [CookieOptions][InterfaceDeclaration-2]; }
 
 ----------
 
@@ -131,7 +131,7 @@ public getCookies(): { [key: string]: { value: string | undefined; options: Cook
 
 **Return type**
 
-{ [key: string]: { value: string | undefined; options: [CookieOptions][InterfaceDeclaration-1]; }; }
+{ [key: string]: { value: string | undefined; options: [CookieOptions][InterfaceDeclaration-2]; }; }
 
 ## Properties
 
@@ -175,11 +175,11 @@ string
 [MethodDeclaration-1]: httpresponse.md#getheadername
 [MethodDeclaration-2]: httpresponse.md#getheaders
 [MethodDeclaration-3]: httpresponse.md#setcookiename-value-options
-[InterfaceDeclaration-1]: ../index.md#cookieoptions
+[InterfaceDeclaration-2]: ../index.md#cookieoptions
 [MethodDeclaration-4]: httpresponse.md#getcookiename
-[InterfaceDeclaration-1]: ../index.md#cookieoptions
+[InterfaceDeclaration-2]: ../index.md#cookieoptions
 [MethodDeclaration-5]: httpresponse.md#getcookies
-[InterfaceDeclaration-1]: ../index.md#cookieoptions
-[PropertyDeclaration-9]: httpresponse.md#ishttpresponse
-[PropertyDeclaration-10]: httpresponse.md#statuscode
-[PropertyDeclaration-11]: httpresponse.md#statusmessage
+[InterfaceDeclaration-2]: ../index.md#cookieoptions
+[PropertyDeclaration-10]: httpresponse.md#ishttpresponse
+[PropertyDeclaration-11]: httpresponse.md#statuscode
+[PropertyDeclaration-12]: httpresponse.md#statusmessage

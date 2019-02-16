@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(content)][Constructor-3]
     * Properties
-        * [isValidationError][PropertyDeclaration-4]
+        * [isValidationError][PropertyDeclaration-5]
 
 # ValidationError
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-3]: validationerror.md#validationerror
 [Constructor-3]: validationerror.md#constructorcontent
-[PropertyDeclaration-4]: validationerror.md#isvalidationerror
+[PropertyDeclaration-5]: validationerror.md#isvalidationerror

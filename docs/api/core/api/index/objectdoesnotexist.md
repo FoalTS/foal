@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(content)][Constructor-1]
     * Properties
-        * [isObjectDoesNotExist][PropertyDeclaration-2]
+        * [isObjectDoesNotExist][PropertyDeclaration-3]
 
 # ObjectDoesNotExist
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-1]: objectdoesnotexist.md#objectdoesnotexist
 [Constructor-1]: objectdoesnotexist.md#constructorcontent
-[PropertyDeclaration-2]: objectdoesnotexist.md#isobjectdoesnotexist
+[PropertyDeclaration-3]: objectdoesnotexist.md#isobjectdoesnotexist

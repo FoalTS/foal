@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-12]
     * Properties
-        * [isHttpResponseBadRequest][PropertyDeclaration-23]
-        * [statusCode][PropertyDeclaration-24]
-        * [statusMessage][PropertyDeclaration-25]
+        * [isHttpResponseBadRequest][PropertyDeclaration-24]
+        * [statusCode][PropertyDeclaration-25]
+        * [statusMessage][PropertyDeclaration-26]
 
 # HttpResponseBadRequest
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
 [Constructor-12]: httpresponsebadrequest.md#constructorbody
-[PropertyDeclaration-23]: httpresponsebadrequest.md#ishttpresponsebadrequest
-[PropertyDeclaration-24]: httpresponsebadrequest.md#statuscode
-[PropertyDeclaration-25]: httpresponsebadrequest.md#statusmessage
+[PropertyDeclaration-24]: httpresponsebadrequest.md#ishttpresponsebadrequest
+[PropertyDeclaration-25]: httpresponsebadrequest.md#statuscode
+[PropertyDeclaration-26]: httpresponsebadrequest.md#statusmessage

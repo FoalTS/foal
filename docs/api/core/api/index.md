@@ -55,17 +55,12 @@
         * [createController][FunctionDeclaration-50]
         * [createService][FunctionDeclaration-51]
         * [dependency][FunctionDeclaration-52]
-        * [strategy][FunctionDeclaration-53]
-        * [createApp][FunctionDeclaration-54]
+        * [createApp][FunctionDeclaration-53]
     * Interfaces
-        * [LogOptions][InterfaceDeclaration-0]
-        * [CookieOptions][InterfaceDeclaration-1]
-        * [Route][InterfaceDeclaration-2]
-        * [IAuthenticator][InterfaceDeclaration-3]
-        * [Strategy][InterfaceDeclaration-4]
-        * [IResourceCollection][InterfaceDeclaration-5]
-        * [CollectionParams][InterfaceDeclaration-6]
-        * [CreateAppOptions][InterfaceDeclaration-7]
+        * [LogOptions][InterfaceDeclaration-1]
+        * [CookieOptions][InterfaceDeclaration-2]
+        * [Route][InterfaceDeclaration-3]
+        * [CreateAppOptions][InterfaceDeclaration-4]
     * Types
         * [Class][TypeAliasDeclaration-1]
         * [HttpMethod][TypeAliasDeclaration-2]
@@ -262,7 +257,7 @@ function Log(message: string, options: LogOptions = {}): HookDecorator;
 | Name    | Type                                 | Default value | Description                                                                 |
 | ------- | ------------------------------------ | ------------- | --------------------------------------------------------------------------- |
 | message | string                               |               | The message to print.                                                       |
-| options | [LogOptions][InterfaceDeclaration-0] | {}            | Options to specify which information on the HTTP request should be printed. |
+| options | [LogOptions][InterfaceDeclaration-1] | {}            | Options to specify which information on the HTTP request should be printed. |
 
 **Return type**
 
@@ -415,8 +410,8 @@ It has this default configuration:
   - removeAdditional: true (Remove additional properties when `additionalProperties` keyword is false.)
   - useDefaults: true (Replace missing properties and items with the values from corresponding `default` keyword)
 
-This configuration can be overrided using the file `config/ajv.json` or through environment
-variables: AJV_COERCE_TYPES, AJV_REMOVE_ADDITIONAL, USE_DEFAULTS.
+This configuration can be overrided using the file `config/default.json` or through environment
+variables: SETTINGS_AJV_COERCE_TYPES, SETTINGS_AJV_REMOVE_ADDITIONAL, SETTINGS_AJV_USE_DEFAULTS.
 
 ```typescript
 function getAjvInstance(): Ajv;
@@ -970,7 +965,7 @@ function makeControllerRoutes(parentPath: string, parentHooks: HookFunction[], c
 
 **Return type**
 
-[Route][InterfaceDeclaration-2][]
+[Route][InterfaceDeclaration-3][]
 
 ----------
 
@@ -1085,30 +1080,6 @@ void
 
 ----------
 
-### strategy
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-```typescript
-function strategy(name: Strategy["name"], authenticatorClass: Strategy["authenticatorClass"], schema: Strategy["schema"]): Strategy;
-```
-
-**Parameters**
-
-| Name               | Type                                                     |
-| ------------------ | -------------------------------------------------------- |
-| name               | [Strategy][InterfaceDeclaration-4]["name"]               |
-| authenticatorClass | [Strategy][InterfaceDeclaration-4]["authenticatorClass"] |
-| schema             | [Strategy][InterfaceDeclaration-4]["schema"]             |
-
-**Return type**
-
-[Strategy][InterfaceDeclaration-4]
-
-----------
-
 ### createApp
 
 Main function to create a node.js (express) application from the root controller.
@@ -1122,7 +1093,7 @@ function createApp(rootControllerClass: Class, options: CreateAppOptions = {}, e
 | Name                | Type                                       | Default value | Description                                                            |
 | ------------------- | ------------------------------------------ | ------------- | ---------------------------------------------------------------------- |
 | rootControllerClass | [Class][TypeAliasDeclaration-1]            |               | The root controller, usually called `AppController`                    |
-| options             | [CreateAppOptions][InterfaceDeclaration-7] | {}            | Optional options to specify the session store (default is MemoryStore) |
+| options             | [CreateAppOptions][InterfaceDeclaration-4] | {}            | Optional options to specify the session store (default is MemoryStore) |
 | expressInstance     | any                                        |               | Optional express instance to be used as base.                          |
 
 **Return type**
@@ -1204,208 +1175,6 @@ interface Route {
 | hooks       | [HookFunction][TypeAliasDeclaration-3][] | false    |
 | controller  | any                                      | false    |
 | propertyKey | string                                   | false    |
-
-----------
-
-### IAuthenticator
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-```typescript
-interface IAuthenticator<User = any> {
-    authenticate(credentials: any): User | null | Promise<User | null>;
-}
-```
-
-**Type parameters**
-
-| Name | Default |
-| ---- | ------- |
-| User | any     |
-#### Method
-
-```typescript
-authenticate(credentials: any): User | null | Promise<User | null>;
-```
-
-**Parameters**
-
-| Name        | Type |
-| ----------- | ---- |
-| credentials | any  |
-
-**Return type**
-
-User | null | Promise<User | null>
-
-
-----------
-
-### Strategy
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-```typescript
-interface Strategy {
-    name: string;
-    authenticatorClass: Class<IAuthenticator<any>>;
-    schema: object;
-}
-```
-
-**Properties**
-
-| Name               | Type                                                                           | Optional |
-| ------------------ | ------------------------------------------------------------------------------ | -------- |
-| name               | string                                                                         | false    |
-| authenticatorClass | [Class][TypeAliasDeclaration-1]<[IAuthenticator][InterfaceDeclaration-3]<any>> | false    |
-| schema             | object                                                                         | false    |
-
-----------
-
-### IResourceCollection
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-Service interface. Create, read, update or delete resources and return representations of them.
-
-```typescript
-interface IResourceCollection {
-    create(user: any, data: object, params: { fields?: string[]; }): any;
-    find(user: any, params: { query?: object | undefined; fields?: string[]; }): any;
-    findById(user: any, id: any, params: { fields?: string[]; }): any;
-    modifyById(user: any, id: any, data: object, params: { fields?: string[]; }): any;
-    updateById(user: any, id: any, data: object, params: { fields?: string[]; }): any;
-    deleteById(user: any, id: any, params: {}): any;
-}
-```
-#### Method
-
-```typescript
-create(user: any, data: object, params: { fields?: string[]; }): any;
-```
-
-**Parameters**
-
-| Name   | Type                   |
-| ------ | ---------------------- |
-| user   | any                    |
-| data   | object                 |
-| params | { fields?: string[]; } |
-
-**Return type**
-
-any
-
-```typescript
-find(user: any, params: { query?: object | undefined; fields?: string[]; }): any;
-```
-
-**Parameters**
-
-| Name   | Type                                                    |
-| ------ | ------------------------------------------------------- |
-| user   | any                                                     |
-| params | { query?: object &#124; undefined; fields?: string[]; } |
-
-**Return type**
-
-any
-
-```typescript
-findById(user: any, id: any, params: { fields?: string[]; }): any;
-```
-
-**Parameters**
-
-| Name   | Type                   |
-| ------ | ---------------------- |
-| user   | any                    |
-| id     | any                    |
-| params | { fields?: string[]; } |
-
-**Return type**
-
-any
-
-```typescript
-modifyById(user: any, id: any, data: object, params: { fields?: string[]; }): any;
-```
-
-**Parameters**
-
-| Name   | Type                   |
-| ------ | ---------------------- |
-| user   | any                    |
-| id     | any                    |
-| data   | object                 |
-| params | { fields?: string[]; } |
-
-**Return type**
-
-any
-
-```typescript
-updateById(user: any, id: any, data: object, params: { fields?: string[]; }): any;
-```
-
-**Parameters**
-
-| Name   | Type                   |
-| ------ | ---------------------- |
-| user   | any                    |
-| id     | any                    |
-| data   | object                 |
-| params | { fields?: string[]; } |
-
-**Return type**
-
-any
-
-```typescript
-deleteById(user: any, id: any, params: {}): any;
-```
-
-**Parameters**
-
-| Name   | Type |
-| ------ | ---- |
-| user   | any  |
-| id     | any  |
-| params | {}   |
-
-**Return type**
-
-any
-
-
-----------
-
-### CollectionParams
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-```typescript
-interface CollectionParams {
-    query?: object | undefined;
-    fields?: string[];
-}
-```
-
-**Properties**
-
-| Name   | Type                    | Optional |
-| ------ | ----------------------- | -------- |
-| query  | object &#124; undefined | true     |
-| fields | string[]                | true     |
 
 ----------
 
@@ -1616,24 +1385,6 @@ type HookDecorator = (target: any, propertyKey?: string | undefined) => any;
 Identity Mapper that instantiates and returns service singletons.
 
 
-----------
-
-### [LoginController][ClassDeclaration-23]
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-
-----------
-
-### [RestController][ClassDeclaration-24]
-
-**Warning Beta!**
-
-Deprecated!</span>
-
-
 [SourceFile-0]: index.md#indexts
 [FunctionDeclaration-0]: index.md#encryptpassword
 [FunctionDeclaration-1]: index.md#login
@@ -1652,7 +1403,7 @@ Deprecated!</span>
 [FunctionDeclaration-8]: index.md#isvalidationerror
 [ClassDeclaration-3]: index/validationerror.md#validationerror
 [FunctionDeclaration-9]: index.md#log
-[InterfaceDeclaration-0]: index.md#logoptions
+[InterfaceDeclaration-1]: index.md#logoptions
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [FunctionDeclaration-10]: index.md#validatebody
 [TypeAliasDeclaration-0]: index.md#hookdecorator
@@ -1723,7 +1474,7 @@ Deprecated!</span>
 [TypeAliasDeclaration-3]: index.md#hookfunction
 [TypeAliasDeclaration-1]: index.md#class
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager
-[InterfaceDeclaration-2]: index.md#route
+[InterfaceDeclaration-3]: index.md#route
 [FunctionDeclaration-48]: index.md#getpath
 [TypeAliasDeclaration-1]: index.md#class
 [FunctionDeclaration-49]: index.md#gethttpmethod
@@ -1735,26 +1486,15 @@ Deprecated!</span>
 [TypeAliasDeclaration-1]: index.md#class
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager
 [FunctionDeclaration-52]: index.md#dependency
-[FunctionDeclaration-53]: index.md#strategy
-[InterfaceDeclaration-4]: index.md#strategy
-[InterfaceDeclaration-4]: index.md#strategy
-[InterfaceDeclaration-4]: index.md#strategy
-[InterfaceDeclaration-4]: index.md#strategy
-[FunctionDeclaration-54]: index.md#createapp
+[FunctionDeclaration-53]: index.md#createapp
 [TypeAliasDeclaration-1]: index.md#class
-[InterfaceDeclaration-7]: index.md#createappoptions
-[InterfaceDeclaration-0]: index.md#logoptions
-[InterfaceDeclaration-1]: index.md#cookieoptions
-[InterfaceDeclaration-2]: index.md#route
+[InterfaceDeclaration-4]: index.md#createappoptions
+[InterfaceDeclaration-1]: index.md#logoptions
+[InterfaceDeclaration-2]: index.md#cookieoptions
+[InterfaceDeclaration-3]: index.md#route
 [TypeAliasDeclaration-2]: index.md#httpmethod
 [TypeAliasDeclaration-3]: index.md#hookfunction
-[InterfaceDeclaration-3]: index.md#iauthenticator
-[InterfaceDeclaration-4]: index.md#strategy
-[InterfaceDeclaration-3]: index.md#iauthenticator
-[TypeAliasDeclaration-1]: index.md#class
-[InterfaceDeclaration-5]: index.md#iresourcecollection
-[InterfaceDeclaration-6]: index.md#collectionparams
-[InterfaceDeclaration-7]: index.md#createappoptions
+[InterfaceDeclaration-4]: index.md#createappoptions
 [TypeAliasDeclaration-1]: index.md#class
 [TypeAliasDeclaration-2]: index.md#httpmethod
 [TypeAliasDeclaration-4]: index.md#hookpostfunction
@@ -1787,5 +1527,3 @@ Deprecated!</span>
 [ClassDeclaration-20]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
 [ClassDeclaration-22]: index/config.md#config
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager
-[ClassDeclaration-23]: index/logincontroller.md#logincontroller
-[ClassDeclaration-24]: index/restcontroller.md#restcontroller

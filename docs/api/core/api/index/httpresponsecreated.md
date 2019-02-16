@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-7]
     * Properties
-        * [isHttpResponseCreated][PropertyDeclaration-12]
-        * [statusCode][PropertyDeclaration-13]
-        * [statusMessage][PropertyDeclaration-14]
+        * [isHttpResponseCreated][PropertyDeclaration-13]
+        * [statusCode][PropertyDeclaration-14]
+        * [statusMessage][PropertyDeclaration-15]
 
 # HttpResponseCreated
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-7]: httpresponsecreated.md#httpresponsecreated
 [Constructor-7]: httpresponsecreated.md#constructorbody
-[PropertyDeclaration-12]: httpresponsecreated.md#ishttpresponsecreated
-[PropertyDeclaration-13]: httpresponsecreated.md#statuscode
-[PropertyDeclaration-14]: httpresponsecreated.md#statusmessage
+[PropertyDeclaration-13]: httpresponsecreated.md#ishttpresponsecreated
+[PropertyDeclaration-14]: httpresponsecreated.md#statuscode
+[PropertyDeclaration-15]: httpresponsecreated.md#statusmessage

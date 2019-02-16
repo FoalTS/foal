@@ -55,6 +55,7 @@ HookDecorator
 interface JWTOptions {
     user?: ((id: string | number) => Promise<any>) | undefined;
     blackList?: ((token: string) => boolean | Promise<boolean>) | undefined;
+    cookie?: boolean | undefined;
 }
 ```
 
@@ -64,6 +65,7 @@ interface JWTOptions {
 | --------- | --------------------------------------------------------------------- | -------- |
 | user      | ((id: string &#124; number) => Promise<any>) &#124; undefined         | true     |
 | blackList | ((token: string) => boolean &#124; Promise<boolean>) &#124; undefined | true     |
+| cookie    | boolean &#124; undefined                                              | true     |
 
 [SourceFile-0]: index.md#indexts
 [FunctionDeclaration-0]: index.md#jwtoptional

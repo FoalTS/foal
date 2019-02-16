@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-13]
     * Properties
-        * [isHttpResponseUnauthorized][PropertyDeclaration-26]
-        * [statusCode][PropertyDeclaration-27]
-        * [statusMessage][PropertyDeclaration-28]
+        * [isHttpResponseUnauthorized][PropertyDeclaration-27]
+        * [statusCode][PropertyDeclaration-28]
+        * [statusMessage][PropertyDeclaration-29]
 
 # HttpResponseUnauthorized
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-13]: httpresponseunauthorized.md#httpresponseunauthorized
 [Constructor-13]: httpresponseunauthorized.md#constructorbody
-[PropertyDeclaration-26]: httpresponseunauthorized.md#ishttpresponseunauthorized
-[PropertyDeclaration-27]: httpresponseunauthorized.md#statuscode
-[PropertyDeclaration-28]: httpresponseunauthorized.md#statusmessage
+[PropertyDeclaration-27]: httpresponseunauthorized.md#ishttpresponseunauthorized
+[PropertyDeclaration-28]: httpresponseunauthorized.md#statuscode
+[PropertyDeclaration-29]: httpresponseunauthorized.md#statusmessage

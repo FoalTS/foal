@@ -6,6 +6,7 @@
     * Properties
         * [state][PropertyDeclaration-0]
         * [user][PropertyDeclaration-1]
+        * [request][PropertyDeclaration-2]
 
 # Context
 
@@ -56,7 +57,20 @@ public user: User;
 
 User
 
+----------
+
+### request
+
+```typescript
+public request: HTTPRequest;
+```
+
+**Type**
+
+HTTPRequest
+
 [ClassDeclaration-0]: context.md#context
 [Constructor-0]: context.md#constructorrequest
 [PropertyDeclaration-0]: context.md#state
 [PropertyDeclaration-1]: context.md#user
+[PropertyDeclaration-2]: context.md#request
