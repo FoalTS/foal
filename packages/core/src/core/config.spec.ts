@@ -158,23 +158,23 @@ describe('Config', () => {
       mkdirSync('config');
 
       const dotEnvFileContent = 'BAR_FOO=foo2';
-      const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
-      const defaultYAMLFileContent = 'barFoo: foo4';
-      const envJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
-      const envYAMLFileContent = 'barFoo: foo6';
+      const envJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
+      const envYAMLFileContent = 'barFoo: foo4';
+      const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
+      const defaultYAMLFileContent = 'barFoo: foo6';
 
       strictEqual(Config.get('barFoo', 'foo7'), 'foo7');
 
-      writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
+      writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
       strictEqual(Config.get('barFoo', 'foo7'), 'foo6');
 
-      writeFileSync('config/test.json', envJSONFileContent, 'utf8');
+      writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
       strictEqual(Config.get('barFoo', 'foo7'), 'foo5');
 
-      writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
+      writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
       strictEqual(Config.get('barFoo', 'foo7'), 'foo4');
 
-      writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
+      writeFileSync('config/test.json', envJSONFileContent, 'utf8');
       strictEqual(Config.get('barFoo', 'foo7'), 'foo3');
 
       writeFileSync('.env', dotEnvFileContent, 'utf8');

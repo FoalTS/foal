@@ -16,16 +16,6 @@ export class Config {
       return dotEnvValue as any;
     }
 
-    const defaultJSONValue = this.readJSONValue('config/default.json', key);
-    if (defaultJSONValue !== undefined) {
-      return defaultJSONValue;
-    }
-
-    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
-    if (defaultYAMLValue !== undefined) {
-      return defaultYAMLValue;
-    }
-
     const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
     const envJSONValue = this.readJSONValue(envJSONFilePath, key);
     if (envJSONValue !== undefined) {
@@ -36,6 +26,16 @@ export class Config {
     const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
     if (envYAMLValue !== undefined) {
       return envYAMLValue;
+    }
+
+    const defaultJSONValue = this.readJSONValue('config/default.json', key);
+    if (defaultJSONValue !== undefined) {
+      return defaultJSONValue;
+    }
+
+    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
+    if (defaultYAMLValue !== undefined) {
+      return defaultYAMLValue;
     }
 
     return defaultValue as T;
