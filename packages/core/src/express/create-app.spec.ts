@@ -43,6 +43,24 @@ describe('createApp', () => {
     return promise;
   });
 
+  it('should parse the cookies.', () => {
+    class AppController {
+      @Get('/')
+      index(ctx: Context) {
+        return new HttpResponseOK(ctx.request.cookies);
+      }
+    }
+    const app = createApp(AppController);
+    return request(app).get('/')
+      // The type of the second parameter of `set` is incorrect.
+      .set('Cookie', ['nameOne=valueOne;nameTwo=valueTwo'] as any)
+      .expect(200)
+      .expect({
+        nameOne: 'valueOne',
+        nameTwo: 'valueTwo',
+      });
+  });
+
   it('should return 404 "Not Found" on requests that have no handlers.', () => {
     const app = createApp(class {});
     return Promise.all([

@@ -1,7 +1,6 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
 import * as crypto from 'crypto';
-import { join } from 'path';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -59,9 +58,11 @@ function validateProjectName(name: string) {
   return !specialChars.find(char => name.includes(char));
 }
 
-export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean }) {
+export async function createApp({ name, sessionSecret, autoInstall, initRepo, mongodb = false, yaml = false }:
+  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
+    yaml?: boolean }) {
   const names = getNames(name);
+
   if (process.env.NODE_ENV !== 'test') {
     console.log(cyan(
 `====================================================================
@@ -94,22 +95,35 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
   mkdirIfDoesNotExist(names.kebabName);
 
   log('  📂 Creating files...');
-  new Generator('app', names.kebabName, { noLogs: true })
+  const generator = new Generator('app', names.kebabName, { noLogs: true });
+
+  generator
     .copyFileFromTemplates('gitignore', '.gitignore')
-    .copyFileFromTemplates('ormconfig.json')
-    .renderTemplate('package.json', locals)
+    .copyFileFromTemplatesOnlyIf(!mongodb && !yaml, 'ormconfig.json')
+    .copyFileFromTemplatesOnlyIf(!mongodb && yaml, 'ormconfig.yml')
+    .renderTemplateOnlyIf(!mongodb && !yaml, 'package.json', locals)
+    .renderTemplateOnlyIf(!mongodb && yaml, 'package.yaml.json', locals, 'package.json')
+    .renderTemplateOnlyIf(mongodb && !yaml, 'package.mongodb.json', locals, 'package.json')
+    .renderTemplateOnlyIf(mongodb && yaml, 'package.mongodb.yaml.json', locals, 'package.json')
     .copyFileFromTemplates('tsconfig.app.json')
     .copyFileFromTemplates('tsconfig.e2e.json')
     .copyFileFromTemplates('tsconfig.json')
-    .copyFileFromTemplates('tsconfig.migrations.json')
+    .copyFileFromTemplatesOnlyIf(!mongodb, 'tsconfig.migrations.json')
     .copyFileFromTemplates('tsconfig.scripts.json')
     .copyFileFromTemplates('tsconfig.test.json')
     .copyFileFromTemplates('tslint.json')
       // Config
       .mkdirIfDoesNotExist('config')
-      .renderTemplate('config/settings.json', locals)
-      .renderTemplate('config/settings.development.json', locals)
-      .renderTemplate('config/settings.production.json', locals)
+      .renderTemplateOnlyIf(!yaml, 'config/default.json', locals)
+      .renderTemplateOnlyIf(yaml, 'config/default.yml', locals)
+      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/development.json', locals)
+      .renderTemplateOnlyIf(!mongodb && yaml, 'config/development.yml', locals)
+      .renderTemplateOnlyIf(mongodb && !yaml, 'config/development.mongodb.json', locals, 'config/development.json')
+      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
+      .renderTemplateOnlyIf(mongodb && yaml, 'config/development.mongodb.yml', locals, 'config/development.yml')
+      .renderTemplateOnlyIf(mongodb && yaml, 'config/e2e.mongodb.yml', locals, 'config/e2e.yml')
+      .renderTemplateOnlyIf(!yaml, 'config/production.json', locals)
+      .renderTemplateOnlyIf(yaml, 'config/production.yml', locals)
       // Public
       .mkdirIfDoesNotExist('public')
       .copyFileFromTemplates('public/index.html')
@@ -117,7 +131,8 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
       // Src
       .mkdirIfDoesNotExist('src')
       .copyFileFromTemplates('src/e2e.ts')
-      .copyFileFromTemplates('src/index.ts')
+      .copyFileFromTemplatesOnlyIf(mongodb, 'src/index.mongodb.ts', 'src/index.ts')
+      .copyFileFromTemplatesOnlyIf(!mongodb, 'src/index.ts')
       .copyFileFromTemplates('src/test.ts')
         // App
         .mkdirIfDoesNotExist('src/app')
@@ -128,12 +143,16 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
           .copyFileFromTemplates('src/app/controllers/api.controller.ts')
           .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
           // Entities
-          .mkdirIfDoesNotExist('src/app/entities')
-          .copyFileFromTemplates('src/app/entities/index.ts')
-          .copyFileFromTemplates('src/app/entities/user.entity.ts')
+          .mkdirIfDoesNotExistOnlyIf(!mongodb, 'src/app/entities')
+          .copyFileFromTemplatesOnlyIf(!mongodb, 'src/app/entities/index.ts')
+          .copyFileFromTemplatesOnlyIf(!mongodb, 'src/app/entities/user.entity.ts')
           // Hooks
           .mkdirIfDoesNotExist('src/app/hooks')
           .copyFileFromTemplates('src/app/hooks/index.ts')
+          // Models
+          .mkdirIfDoesNotExistOnlyIf(mongodb, 'src/app/models')
+          .copyFileFromTemplatesOnlyIf(mongodb, 'src/app/models/index.ts')
+          .copyFileFromTemplatesOnlyIf(mongodb, 'src/app/models/user.model.ts')
           // Services
           .mkdirIfDoesNotExist('src/app/services')
           .copyFileFromTemplates('src/app/services/index.ts')
@@ -142,12 +161,14 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
           .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
-        .copyFileFromTemplates('src/e2e/index.ts')
+        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/e2e/index.ts')
+        .copyFileFromTemplatesOnlyIf(mongodb, 'src/e2e/index.mongodb.ts', 'src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplates('src/scripts/create-group.ts')
-        .copyFileFromTemplates('src/scripts/create-perm.ts')
-        .copyFileFromTemplates('src/scripts/create-user.ts');
+        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-group.ts')
+        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-perm.ts')
+        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
+        .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
 
   log('');
   log('  📦 Installing the dependencies...');
@@ -173,7 +194,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo }:
 
   log('  📔 Initializing git repository...');
   if (initRepo) {
-    await initGitRepo(join(process.cwd(), names.kebabName));
+    await initGitRepo(names.kebabName);
   }
 
   log(`

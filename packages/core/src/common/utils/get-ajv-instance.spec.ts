@@ -44,9 +44,9 @@ describe('getAjvInstance', () => {
 
     before(() => {
       delete _instanceWrapper.instance;
-      process.env.AJV_COERCE_TYPES = 'false';
-      process.env.AJV_REMOVE_ADDITIONAL = 'false';
-      process.env.AJV_USE_DEFAULTS = 'false';
+      process.env.SETTINGS_AJV_COERCE_TYPES = 'false';
+      process.env.SETTINGS_AJV_REMOVE_ADDITIONAL = 'false';
+      process.env.SETTINGS_AJV_USE_DEFAULTS = 'false';
     });
 
     it('should accept custom configuration from the Config.', () => {
@@ -81,9 +81,9 @@ describe('getAjvInstance', () => {
 
     after(() => {
       delete _instanceWrapper.instance;
-      delete process.env.AJV_COERCE_TYPES;
-      delete process.env.AJV_REMOVE_ADDITIONAL;
-      delete process.env.AJV_USE_DEFAULTS;
+      delete process.env.SETTINGS_AJV_COERCE_TYPES;
+      delete process.env.SETTINGS_AJV_REMOVE_ADDITIONAL;
+      delete process.env.SETTINGS_AJV_USE_DEFAULTS;
     });
 
   });

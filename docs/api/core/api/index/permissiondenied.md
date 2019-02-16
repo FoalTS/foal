@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(content)][Constructor-2]
     * Properties
-        * [isPermissionDenied][PropertyDeclaration-3]
+        * [isPermissionDenied][PropertyDeclaration-4]
 
 # PermissionDenied
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-2]: permissiondenied.md#permissiondenied
 [Constructor-2]: permissiondenied.md#constructorcontent
-[PropertyDeclaration-3]: permissiondenied.md#ispermissiondenied
+[PropertyDeclaration-4]: permissiondenied.md#ispermissiondenied

@@ -2,9 +2,9 @@
 
 * [Config][ClassDeclaration-22]
     * Methods
-        * [get(configName, propName, defaultValue)][MethodDeclaration-8]
-    * Properties
-        * [root][PropertyDeclaration-49]
+        * [get(key, defaultValue)][MethodDeclaration-8]
+        * [get(key, defaultValue)][MethodDeclaration-10]
+        * [clearCache()][MethodDeclaration-9]
 
 # Config
 
@@ -13,36 +13,67 @@ class Config
 ```
 ## Methods
 
-### get(configName, propName, defaultValue)
+### get(key, defaultValue)
 
 ```typescript
-public static get(configName: string, propName: string, defaultValue?: number | string | boolean): number | string | boolean | undefined;
+public static get<T = any>(key: string, defaultValue?: T | undefined): T;
 ```
+
+**Type parameters**
+
+| Name | Default |
+| ---- | ------- |
+| T    | any     |
 
 **Parameters**
 
-| Name         | Type                                |
-| ------------ | ----------------------------------- |
-| configName   | string                              |
-| propName     | string                              |
-| defaultValue | number &#124; string &#124; boolean |
+| Name         | Type               |
+| ------------ | ------------------ |
+| key          | string             |
+| defaultValue | T &#124; undefined |
 
 **Return type**
 
-number | string | boolean | undefined
+T
 
-## Properties
+----------
 
-### root
+### get(key, defaultValue)
 
 ```typescript
-public static root: string;
+public get<T = any>(key: string, defaultValue?: T | undefined): T;
 ```
 
-**Type**
+**Type parameters**
 
-string
+| Name | Default |
+| ---- | ------- |
+| T    | any     |
+
+**Parameters**
+
+| Name         | Type               |
+| ------------ | ------------------ |
+| key          | string             |
+| defaultValue | T &#124; undefined |
+
+**Return type**
+
+T
+
+----------
+
+### clearCache()
+
+```typescript
+public static clearCache(): void;
+```
+
+**Return type**
+
+void
 
 [ClassDeclaration-22]: config.md#config
-[MethodDeclaration-8]: config.md#getconfigname-propname-defaultvalue
-[PropertyDeclaration-49]: config.md#root
+[MethodDeclaration-8]: config.md#getkey-defaultvalue
+[MethodDeclaration-10]: config.md#getkey-defaultvalue
+[MethodDeclaration-9]: config.md#clearcache

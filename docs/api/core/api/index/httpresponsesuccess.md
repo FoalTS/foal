@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(body)][Constructor-5]
     * Properties
-        * [isHttpResponseSuccess][PropertyDeclaration-8]
+        * [isHttpResponseSuccess][PropertyDeclaration-9]
 
 # HttpResponseSuccess
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-5]: httpresponsesuccess.md#httpresponsesuccess
 [Constructor-5]: httpresponsesuccess.md#constructorbody
-[PropertyDeclaration-8]: httpresponsesuccess.md#ishttpresponsesuccess
+[PropertyDeclaration-9]: httpresponsesuccess.md#ishttpresponsesuccess

@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 // FoalTS
+export { findProjectPath } from './find-project-path';
 export { Generator } from './generator';
 export { initGitRepo } from './init-git-repo';
 export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';

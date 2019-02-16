@@ -43,6 +43,6 @@ If the token is incorrect or is not provided then the server responds with a 403
 
 ## Enable or disable the csrf protection
 
-You can disable the protection by setting the property `csrf` to false in `settings.json` (or `settings.prod.json`, `settings.dev.json`, etc). You can also use the environment variable `SETTINGS_CSRF`.
+You can enable / disable the protection by setting the property `settings.csrf` to true / false in `config/default.json`. You can also use the environment variable `SETTINGS_CSRF`.
 
 When the CSRF protection is disabled, `ctx.request.csrfToken` returns the string `"CSRF protection disabled."`.

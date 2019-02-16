@@ -1,5 +1,5 @@
 // std
-import { copyFileSync, readFileSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 // 3p
@@ -19,30 +19,52 @@ export class Generator {
 
   /* Create architecture */
 
-  mkdirIfDoesNotExist(path: string) {
+  mkdirIfDoesNotExist(path: string): this {
     mkdirIfDoesNotExist(join(this.root, path));
+    return this;
+  }
+
+  mkdirIfDoesNotExistOnlyIf(condition: boolean, path: string): this {
+    if (condition) {
+      return this.mkdirIfDoesNotExist(path);
+    }
     return this;
   }
 
   /* Create files */
 
-  copyFileFromTemplates(srcPath: string, destPath?: string) {
+  copyFileFromTemplates(srcPath: string, destPath?: string): this {
     destPath = destPath || srcPath;
+
+    const absoluteSrcPath = join(__dirname, '../templates', this.name, srcPath);
+
+    if (!existsSync(absoluteSrcPath)) {
+      throw new Error(`Template not found: ${srcPath}`);
+    }
+
     this.logCreate(destPath);
-    copyFileSync(
-      join(__dirname, '../templates', this.name, srcPath),
-      join(this.root, destPath)
-    );
+    copyFileSync(absoluteSrcPath, join(this.root, destPath));
     return this;
   }
 
-  renderTemplate(templatePath: string, locals: object, destPath?: string) {
+  copyFileFromTemplatesOnlyIf(condition: boolean, srcPath: string, destPath?: string): this {
+    if (condition) {
+      return this.copyFileFromTemplates(srcPath, destPath);
+    }
+    return this;
+  }
+
+  renderTemplate(templatePath: string, locals: object, destPath?: string): this {
     destPath = destPath || templatePath;
+
+    const absoluteTemplatePath = join(__dirname, '../templates', this.name, templatePath);
+
+    if (!existsSync(absoluteTemplatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+
     this.logCreate(destPath);
-    const template = readFileSync(
-      join(__dirname, '../templates', this.name, templatePath),
-      'utf8'
-    );
+    const template = readFileSync(absoluteTemplatePath, 'utf8');
     let content = template;
     for (const key in locals) {
       if (locals.hasOwnProperty(key)) {
@@ -50,6 +72,13 @@ export class Generator {
       }
     }
     writeFileSync(join(this.root, destPath), content, 'utf8');
+    return this;
+  }
+
+  renderTemplateOnlyIf(condition: boolean, templatePath: string, locals: object, destPath?: string): this {
+    if (condition) {
+      return this.renderTemplate(templatePath, locals, destPath);
+    }
     return this;
   }
 

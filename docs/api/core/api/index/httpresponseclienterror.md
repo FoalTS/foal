@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(body)][Constructor-11]
     * Properties
-        * [isHttpResponseClientError][PropertyDeclaration-22]
+        * [isHttpResponseClientError][PropertyDeclaration-23]
 
 # HttpResponseClientError
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-11]: httpresponseclienterror.md#httpresponseclienterror
 [Constructor-11]: httpresponseclienterror.md#constructorbody
-[PropertyDeclaration-22]: httpresponseclienterror.md#ishttpresponseclienterror
+[PropertyDeclaration-23]: httpresponseclienterror.md#ishttpresponseclienterror

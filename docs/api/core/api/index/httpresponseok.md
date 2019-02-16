@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-4]
     * Properties
-        * [isHttpResponseOK][PropertyDeclaration-5]
-        * [statusCode][PropertyDeclaration-6]
-        * [statusMessage][PropertyDeclaration-7]
+        * [isHttpResponseOK][PropertyDeclaration-6]
+        * [statusCode][PropertyDeclaration-7]
+        * [statusMessage][PropertyDeclaration-8]
 
 # HttpResponseOK
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-4]: httpresponseok.md#httpresponseok
 [Constructor-4]: httpresponseok.md#constructorbody
-[PropertyDeclaration-5]: httpresponseok.md#ishttpresponseok
-[PropertyDeclaration-6]: httpresponseok.md#statuscode
-[PropertyDeclaration-7]: httpresponseok.md#statusmessage
+[PropertyDeclaration-6]: httpresponseok.md#ishttpresponseok
+[PropertyDeclaration-7]: httpresponseok.md#statuscode
+[PropertyDeclaration-8]: httpresponseok.md#statusmessage

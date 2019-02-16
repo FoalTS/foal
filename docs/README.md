@@ -11,6 +11,8 @@ A Web framework to create enterprise-grade Node.JS applications
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 
+FoalTS is a Node.js framework for building HTTP APIs and Web applications with a rich interface (Angular / React / Vue). It is written in TypeScript and offers many built-in dev tools and components to handle extremely common scenarios. Simple, testable and progressive, Foal accelerates development while leaving you in control of your code.
+
 ## Motivation
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 

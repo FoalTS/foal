@@ -38,11 +38,12 @@ services:
   #     SA_PASSWORD: "Admin12345"
   #     ACCEPT_EULA: "Y"
 
-  # mongodb:
-  #   image: "mongo:3.4.1"
-  #   container_name: "mongodb"
-  #   ports:
-  #     - "27017:27017"
+  mongodb:
+    image: "mongo:3.4.1"
+    container_name: "mongodb"
+    ports:
+      - "27017:27017"
+
   adminer:
     image: adminer
     ports:

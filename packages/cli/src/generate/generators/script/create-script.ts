@@ -1,18 +1,32 @@
 // std
 import { existsSync } from 'fs';
+import { join, relative } from 'path';
+
+// 3p
+import { red } from 'colors/safe';
 
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { findProjectPath, Generator, getNames } from '../../utils';
 
 export function createScript({ name }: { name: string }) {
   const names = getNames(name);
 
-  let root = '';
+  const root = findProjectPath();
 
-  if (existsSync('src/scripts')) {
-    root = 'src/scripts';
+  if (!root) {
+    console.log(red('\n  This directory is not a Foal project (missing package.json).\n'));
+    return;
   }
 
-  new Generator('script', root)
+  const scriptPath = join(root, './src/scripts/');
+  if (!existsSync(scriptPath)) {
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(red(`\n  This directory is not a Foal project (${scriptPath} does not exist).\n`));
+    }
+    return;
+  }
+
+  // Use `relative` to have pretty CREATE logs.
+  new Generator('script', relative(process.cwd(), scriptPath))
     .copyFileFromTemplates('script.ts', `${names.kebabName}.ts`);
 }

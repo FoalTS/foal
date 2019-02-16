@@ -4,7 +4,7 @@
     * Constructor
         * [constructor(body)][Constructor-9]
     * Properties
-        * [isHttpResponseRedirection][PropertyDeclaration-18]
+        * [isHttpResponseRedirection][PropertyDeclaration-19]
 
 # HttpResponseRedirection
 
@@ -39,4 +39,4 @@ true
 
 [ClassDeclaration-9]: httpresponseredirection.md#httpresponseredirection
 [Constructor-9]: httpresponseredirection.md#constructorbody
-[PropertyDeclaration-18]: httpresponseredirection.md#ishttpresponseredirection
+[PropertyDeclaration-19]: httpresponseredirection.md#ishttpresponseredirection

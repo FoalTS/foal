@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-19]
     * Properties
-        * [isHttpResponseInternalServerError][PropertyDeclaration-42]
-        * [statusCode][PropertyDeclaration-43]
-        * [statusMessage][PropertyDeclaration-44]
+        * [isHttpResponseInternalServerError][PropertyDeclaration-43]
+        * [statusCode][PropertyDeclaration-44]
+        * [statusMessage][PropertyDeclaration-45]
 
 # HttpResponseInternalServerError
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-19]: httpresponseinternalservererror.md#httpresponseinternalservererror
 [Constructor-19]: httpresponseinternalservererror.md#constructorbody
-[PropertyDeclaration-42]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
-[PropertyDeclaration-43]: httpresponseinternalservererror.md#statuscode
-[PropertyDeclaration-44]: httpresponseinternalservererror.md#statusmessage
+[PropertyDeclaration-43]: httpresponseinternalservererror.md#ishttpresponseinternalservererror
+[PropertyDeclaration-44]: httpresponseinternalservererror.md#statuscode
+[PropertyDeclaration-45]: httpresponseinternalservererror.md#statusmessage

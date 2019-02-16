@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-17]
     * Properties
-        * [isHttpResponseConflict][PropertyDeclaration-38]
-        * [statusCode][PropertyDeclaration-39]
-        * [statusMessage][PropertyDeclaration-40]
+        * [isHttpResponseConflict][PropertyDeclaration-39]
+        * [statusCode][PropertyDeclaration-40]
+        * [statusMessage][PropertyDeclaration-41]
 
 # HttpResponseConflict
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-17]: httpresponseconflict.md#httpresponseconflict
 [Constructor-17]: httpresponseconflict.md#constructorbody
-[PropertyDeclaration-38]: httpresponseconflict.md#ishttpresponseconflict
-[PropertyDeclaration-39]: httpresponseconflict.md#statuscode
-[PropertyDeclaration-40]: httpresponseconflict.md#statusmessage
+[PropertyDeclaration-39]: httpresponseconflict.md#ishttpresponseconflict
+[PropertyDeclaration-40]: httpresponseconflict.md#statuscode
+[PropertyDeclaration-41]: httpresponseconflict.md#statusmessage

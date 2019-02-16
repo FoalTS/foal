@@ -4,9 +4,9 @@
     * Constructor
         * [constructor(body)][Constructor-14]
     * Properties
-        * [isHttpResponseForbidden][PropertyDeclaration-29]
-        * [statusCode][PropertyDeclaration-30]
-        * [statusMessage][PropertyDeclaration-31]
+        * [isHttpResponseForbidden][PropertyDeclaration-30]
+        * [statusCode][PropertyDeclaration-31]
+        * [statusMessage][PropertyDeclaration-32]
 
 # HttpResponseForbidden
 
@@ -65,6 +65,6 @@ string
 
 [ClassDeclaration-14]: httpresponseforbidden.md#httpresponseforbidden
 [Constructor-14]: httpresponseforbidden.md#constructorbody
-[PropertyDeclaration-29]: httpresponseforbidden.md#ishttpresponseforbidden
-[PropertyDeclaration-30]: httpresponseforbidden.md#statuscode
-[PropertyDeclaration-31]: httpresponseforbidden.md#statusmessage
+[PropertyDeclaration-30]: httpresponseforbidden.md#ishttpresponseforbidden
+[PropertyDeclaration-31]: httpresponseforbidden.md#statuscode
+[PropertyDeclaration-32]: httpresponseforbidden.md#statusmessage

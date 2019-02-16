@@ -35,6 +35,7 @@
   * [TypeORM (SQL & noSQL)](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
+  * [Use Mongoose (MongoDB)](./databases/using-mongoose.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Introduction](./authentication-and-access-control/introduction.md)
@@ -47,8 +48,10 @@
 * [Validation & Sanitization](./validation-and-sanitization.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
-  * [REST Controllers (deprecated)](./api-section/rest-controllers.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
+* Frontend Integration
+  * [Single Page Applications](./frontend-integration/single-page-applications.md)
+  * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
 * CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
@@ -80,5 +83,6 @@
 * [@foal/core](./api/core/api/index.md)
 * [@foal/ejs](./api/ejs/api/index.md)
 * [@foal/jwt](./api/jwt/api/index.md)
+* [@foal/mongoose](./api/mongoose/api/index.md)
 * [@foal/password](./api/password/api/index.md)
 * [@foal/typeorm](./api/typeorm/api/index.md)
