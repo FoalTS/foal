@@ -4,7 +4,17 @@ The last step of this tutorial is to add some unit tests to the `ApiController`.
 
 A unit test file ends with the `spec.ts` extension and is usually placed next to the file it is testing.
 
-Open the file `api.controller.spec.ts` and replace its content.
+Create a new file `config/test.json` to set the database uri.
+
+```json
+{
+  "mongodb": {
+    "uri": "mongodb://localhost:27017/test-my-app"
+  }
+}
+```
+
+Then open the file `api.controller.spec.ts` and replace its content.
 
 ```typescript
 // std
@@ -13,36 +23,25 @@ import { ok, strictEqual } from 'assert';
 
 // 3p
 import { createController, getHttpMethod, getPath, HttpResponseOK, isHttpResponseOK } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { connect, disconnect } from 'mongoose';
 
 // App
-import { Todo } from '../entities';
+import { Todo } from '../models';
 import { ApiController } from './api.controller';
 
 // Define a group of tests.
 describe('ApiController', () => {
 
   let controller: ApiController;
-  let connection: Connection;
 
   // Create a connection to the database before running all the tests.
   before(async () => {
-    connection = await createConnection({
-      // Choose a test database. You don't want to run your tests on your production data.
-      database: './test_db.sqlite3',
-      // Drop the schema when the connection is established.
-      dropSchema: true,
-      // Register the models that are used.
-      entities: [ Todo ],
-      // Auto create the database schema.
-      synchronize: true,
-      // Specify the type of database.
-      type: 'sqlite',
-    });
+    const uri = Config.get<string>('mongodb.uri');
+    connect(uri, { useNewUrlParser: true, useCreateIndex: true });
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
-  after(() => connection.close());
+  after(() => disconnect());
 
   // Create or re-create the controller before each test.
   beforeEach(() => controller = createController(ApiController));
@@ -68,7 +67,10 @@ describe('ApiController', () => {
       todo2.text = 'Todo 2';
 
       // Save the todos.
-      await connection.manager.save([ todo1, todo2 ]);
+      await Promise.all([
+        todo1.save(),
+        todo2.save()
+      ]);
 
       const response = await controller.getTodos();
       ok(isHttpResponseOK(response), 'response should be an instance of HttpResponseOK.');
@@ -97,7 +99,7 @@ Run the tests.
 npm run test
 ```
 
-> This command watches at your tests and tested files in the `app/` and `scripts/` directories. When a file is modified, it automatically recompiles and re-runs your tests.
+> This command watches at your tests and tested files in the `app/` directory. When a file is modified, it automatically recompiles and re-runs your tests.
 
 You should now end up with this output:
 
@@ -107,4 +109,4 @@ Congratulations! You have reached the end of this tutorial!
 
 If you have any questions, feel free to open an issue on Github!
 
-> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code.zip).
+> The entire source code is available [here](https://foalts.org/mongodb-todo-list-source-code.zip).

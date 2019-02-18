@@ -6,7 +6,7 @@ Let's create your first model. The CLI provides a useful command to generate a n
 foal generate entity todo
 ```
 
-> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapping*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
+> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapper*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
 
 
 > Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.
@@ -29,7 +29,7 @@ export class Todo {
 
 ```
 
-When running the app, this class will a generate a new table in the `db.sqlite3` database.
+When running the app, this class will generate a new table in the `db.sqlite3` database.
 
 ```
 +------------+-----------+-------------------------------------+
