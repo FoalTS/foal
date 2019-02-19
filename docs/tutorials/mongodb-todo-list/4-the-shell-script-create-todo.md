@@ -19,7 +19,8 @@ Open the new generated file in the `src/scripts` directory and update its conten
 
 ```typescript
 // 3p
-import { connect, disconnet } from 'typeorm';
+import { Config } from '@foal/core';
+import { connect, disconnect } from 'mongoose';
 
 // App
 import { Todo } from '../app/models';
@@ -44,7 +45,7 @@ export async function main(args) {
   try {
   // Save the task in the database and then display it in the console.
     console.log(
-      await user.save()
+      await todo.save()
     );
   } catch (error) {
     console.log(error.message);

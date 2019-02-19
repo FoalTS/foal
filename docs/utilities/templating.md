@@ -15,12 +15,14 @@ render('./templates/my-template.html', { title: 'foobar' }, __dirname);
 
 By default FoalTS uses [ejs](http://ejs.co/) as template engine but you can use a different one.
 
-To do so, you need to create a package that exports a function `renderToString(template: string, locals: object): string` and then to add your package name in `config/settings.js` as follows:
+To do so, you need to create a package that exports a function `renderToString(template: string, locals: object): string` and then to add your package name in `config/default.js` as follows:
 
 ```json
 {
   ...
-  "templateEngine": "my-package-name"
+  "settings": {
+    "templateEngine": "my-package-name"
+  }
   ...
 }
 ```

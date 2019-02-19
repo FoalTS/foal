@@ -40,7 +40,7 @@ export class ApiController {
     const todo = new Todo();
     todo.text = ctx.request.body.text;
 
-    await todo.save(todo);
+    await todo.save();
 
     return new HttpResponseCreated(todo);
   }

@@ -6,7 +6,7 @@ Let's create your first model. The CLI provides a useful command to generate a n
 foal generate model todo
 ```
 
-> FoalTS uses [Mongoose](http://typeorm.io), a complete *Object-Document Mapper*, to communicate with the MongoDB database.
+> FoalTS uses [Mongoose](http://mongoosejs.com), a complete *Object-Document Mapper*, to communicate with the MongoDB database.
 
 Open the file `todo.model.ts` in the `src/app/models` directory and add a `text` field.
 
@@ -15,8 +15,8 @@ import { Document, model, Model, models, Schema } from 'mongoose';
 
 const todoSchema: Schema = new Schema({
   text: {
-    type: String, // String with a capital letter
-    required: true
+    required: true,
+    type: String // String with a capital letter
   }
 });
 

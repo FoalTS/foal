@@ -1,6 +1,6 @@
 # Installation
 
-In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which the user can view, create and delete his or her tasks.
+In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which users can view, create and delete their tasks.
 
 > **Requirements:**
 >
@@ -70,7 +70,7 @@ You've started the development server.
 
 > **Port 3001 already in use?**
 >
-> You can define in `config/settings.js` which port the application is using. Simply add the key `"port"` with the desired value.
+> You can define in `config/default.js` which port the application is using.
 
 Go to `http://localhost:3001` in your browser. You should see the text *Welcome to the future* <3.
 

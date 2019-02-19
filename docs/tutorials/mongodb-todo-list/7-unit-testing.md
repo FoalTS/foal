@@ -22,7 +22,7 @@ Then open the file `api.controller.spec.ts` and replace its content.
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { createController, getHttpMethod, getPath, HttpResponseOK, isHttpResponseOK } from '@foal/core';
+import { Config, createController, getHttpMethod, getPath, HttpResponseOK, isHttpResponseOK } from '@foal/core';
 import { connect, disconnect } from 'mongoose';
 
 // App
@@ -38,6 +38,8 @@ describe('ApiController', () => {
   before(async () => {
     const uri = Config.get<string>('mongodb.uri');
     connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+
+    await Todo.remove({});
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
@@ -108,5 +110,3 @@ You should now end up with this output:
 Congratulations! You have reached the end of this tutorial!
 
 If you have any questions, feel free to open an issue on Github!
-
-> The entire source code is available [here](https://foalts.org/mongodb-todo-list-source-code.zip).
