@@ -33,7 +33,6 @@ my-app/
     app/
     e2e/
     scripts/
-  ormconfig.json
   package.json
   tsconfig.*.json
   tslint.json
