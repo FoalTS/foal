@@ -1,10 +1,12 @@
 # Installation
 
-In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which users can view, create and delete their tasks.
+In this tutorial you will learn how to create a basic web application with FoalTS and MongoDB. The demo application is a simple to-do list with which users can view, create and delete their tasks.
 
 > **Requirements:**
 >
 > [Node.js](https://nodejs.org/en/) 8 or greater
+>
+> [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)
 
 # Create a New Project
 
@@ -14,10 +16,10 @@ First you need to install globaly the *Command Line Interface (CLI)* of FoalTS. 
 npm install -g @foal/cli
 ```
 
-Then create a new application.
+Then create a new application. **Don't forget the --mongodb option.**
 
 ```sh
-foal createapp my-app
+foal createapp my-app --mongodb
 ```
 
 This command generates a new directory with the basic structure of the new application. It also installs all the dependencies. Let's look at what `createapp` created:
@@ -45,7 +47,6 @@ The outer `my-app` root directory is just a container for your project.
   - The inner `app/` directory includes the components of your server (controllers, templates, services, hooks, sub-apps).
   - End-to-end tests are located in the `e2e/` directory.
   - The inner `scripts/` folder contains scripts intended to be called from the command line (ex: create-user).
-- The `ormconfig.json` file defines the configuration and credentials of the database(s) connection(s). They can also be passed through environment variables.
 - The `package.json` lists the dependencies and commands of the project.
 - The `tsconfig.*.json` files list the TypeScript compiler configuration for each `npm` command.
 - Finally the linting configuration can be found in the `tslint.json` file.
