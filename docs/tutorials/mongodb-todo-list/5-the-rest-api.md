@@ -79,7 +79,7 @@ Add the create and delete features.
     }
 
     // Remove the todo from the database.
-    await Todo.findOneAndDelete(ctx.request.params.id);
+    await Todo.findByIdAndRemove(ctx.request.params.id);
 
     // Returns an successful empty response. The status is 204.
     return new HttpResponseNoContent();
