@@ -6,6 +6,9 @@
     "loggerFormat": "tiny",
     "staticUrl": "public/",
     "session": {
+      "cookie": {
+        "path": "/"
+      },
       "resave": false,
       "saveUninitialized": false,
       "secret": "my-secret"
