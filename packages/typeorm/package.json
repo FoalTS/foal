@@ -1,6 +1,6 @@
 {
   "name": "@foal/typeorm",
-  "version": "0.8.2",
+  "version": "0.8.1",
   "description": "FoalTS integration of TypeORM",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -47,7 +47,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.2"
+    "@foal/core": "^0.8.1"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
