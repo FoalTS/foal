@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" lib",
@@ -40,9 +40,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.8.2",
+    "@foal/core": "^0.8.3",
     "@foal/ejs": "^0.8.0",
-    "@foal/typeorm": "^0.8.2",
+    "@foal/typeorm": "^0.8.3",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
     "source-map-support": "^0.5.6",
