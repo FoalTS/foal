@@ -1,6 +1,6 @@
 {
   "name": "@foal/mongoose",
-  "version": "0.8.3",
+  "version": "0.8.5",
   "description": "FoalTS integration of Mongoose",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -50,7 +50,7 @@
     "mongoose": "^5.4.9"
   },
   "devDependencies": {
-    "@foal/core": "^0.8.3",
+    "@foal/core": "^0.8.5",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
     "copy": "^0.3.2",
