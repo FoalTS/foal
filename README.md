@@ -60,6 +60,8 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 :point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/content/) :seedling:
 
+![Screenshot](./docs/screenshot.png)
+
 ## :dart: Why?
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
@@ -94,13 +96,19 @@ Every project needs dev tools. But setting up and maintaining such an environmen
   <img src="./docs/dev-tools2.png" width="450px">
 </p>
 
-## Ask a question
+## Philosophy
 
-Feel free to ask a question by [submitting an issue](https://github.com/FoalTS/foal/issues/new/).
+### Simple
 
-## Screenshot
+Keeping things simple is a challenge when creating an application. Simple code is easier to handle and understand, and therefore easier to maintain, debug and extend. Many frameworks, in trying to provide a large number of features and tools, tend to become complex, cumbersome and sometimes incomprehensible. In Foal, the architecture and components are designed to keep the code as simple as possible. Complexity is only used when there is no other option. 
 
-![Screenshot](./docs/screenshot.png)
+### Testable
+
+Too often, tests are set aside in web projects. Considered secondary, many frameworks do not encourage developers to write them and often make this task difficult. This is a pity, because writing tests really improves the long-term reliability of the product. They help to detect bugs in advance, prevent regressions and even improve application design as they are developed. FoalTS is different and aims to help developers write unit and acceptance tests. The entire framework provides both the architecture and the tools necessary for this purpose.
+
+### Progressive
+
+Building a proof of concept or a global application is not the same thing. The first one tests an idea and must be built quickly. The other is a large production system that must be reliable and serve thousands of customers. They both have different objectives and technical concerns. However, it is highly likely that the PoC built today will one day become the global application of tomorrow, with evolving technical goals and needs. FoalTS is designed to support you along the way. At first, the framework provides a default configuration, lightweight components and practical templates to quickly start a new project. Then, as the application evolves, Foal's components, tools and architecture adapt to allow you to customize and scale your product.
 
 ## Contributing
 
