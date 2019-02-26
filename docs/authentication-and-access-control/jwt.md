@@ -21,7 +21,7 @@ The content of the header should look like the following:
 Authorization: Bearer <token>
 ```
 
-> FoalTS makes no assumptions about how the JWT is generated and sent / stored to the client. The choice is yours. However, whenever the user wants to access a protected route, the client must send the JWT in the Authorization header using the Bearer schema.
+> FoalTS makes no assumptions about how the JWT is generated and sent / stored to the client. The choice is yours. However, whenever the user wants to access a protected route, the client must send the JWT in the Authorization header using the Bearer schema (or in an cookie if the option is set to true).
 
 # Set Up
 
@@ -37,6 +37,24 @@ You must provide a secret or a public key to the hooks. You have two ways to do 
     "secretOrPublicKey": "strong_secret"
   }
 }
+```
+
+# How to Generate a Token
+
+Here is an example on how to generate a one-hour token:
+
+```typescript
+import { sign } from 'jsonwebtoken';
+
+const token = sign(
+  {
+    sub: 'my_id',
+    email: 'mary@foalts.org'
+  },
+  // This example assumes that you use a secret. If not, please provide the private key.
+  Config.get<string>('settings.jwt.secretOrPublicKey'),
+  { expiresIn: '1h' }
+);
 ```
 
 # Options
