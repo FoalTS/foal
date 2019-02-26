@@ -36,7 +36,7 @@ Update the api controller.
     const todo = new Todo();
     todo.text = ctx.request.body.text;
     // Make the current user the owner of the todo.
-    todo.owner = ctx.user as User;
+    todo.owner = ctx.user;
 
     await getRepository(Todo).save(todo);
 
