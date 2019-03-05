@@ -83,6 +83,10 @@
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)
 * [Comparison with Other Frameworks](./comparison-with-other-frameworks.md)
 
+## Upgrading
+
+* [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
+
 ## API Reference
 
 * [@foal/core](./api/core/api/index.md)
