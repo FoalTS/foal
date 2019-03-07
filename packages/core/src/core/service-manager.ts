@@ -8,7 +8,9 @@ export interface Dependency {
 }
 
 /**
- * Decorator used to inject a service inside a controller or another service.
+ * Decorator injecting a service inside a controller or another service.
+ *
+ * @export
  */
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
@@ -20,8 +22,12 @@ export function dependency(target: any, propertyKey: string) {
 /**
  * Create a new service with its dependencies.
  *
- * @param serviceClass The service class.
- * @param dependencies Either a ServiceManager or an object which key/values are the service properties/instances.
+ * @export
+ * @template Service
+ * @param {Class<Service>} serviceClass - The service class.
+ * @param {(object|ServiceManager)} [dependencies] - Either a ServiceManager or an
+ * object which key/values are the service properties/instances.
+ * @returns {Service} - The created service.
  */
 export function createService<Service>(serviceClass: Class<Service>, dependencies?: object|ServiceManager): Service {
   const serviceDependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
@@ -47,19 +53,34 @@ export function createService<Service>(serviceClass: Class<Service>, dependencie
 
 /**
  * Identity Mapper that instantiates and returns service singletons.
+ *
+ * @export
+ * @class ServiceManager
  */
 export class ServiceManager {
 
   readonly map: Map<Class<any>, any>  = new Map();
 
+  /**
+   * Add manually a service to the identity mapper. This function is
+   * useful during tests to inject mocks.
+   *
+   * @template Service
+   * @param {Class<Service>} serviceClass - The service class representing the key.
+   * @param {*} service - The service object (or mock) representing the value.
+   * @memberof ServiceManager
+   */
   set<Service>(serviceClass: Class<Service>, service: any): void {
     this.map.set(serviceClass, service);
   }
 
   /**
-   * Get or create the service singleton.
+   * Get (and create if necessary) the service singleton.
    *
-   * @param serviceClass
+   * @template Service
+   * @param {Class<Service>} serviceClass - The service class.
+   * @returns {Service} - The service instance.
+   * @memberof ServiceManager
    */
   get<Service>(serviceClass: Class<Service>): Service {
     // The ts-ignores fix TypeScript bugs.

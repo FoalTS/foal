@@ -6,11 +6,28 @@ import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
 import { getMetadata, join } from './utils';
 
+/**
+ * Recursively get the property names of an object and its prototypes.
+ *
+ * @param {(object|null)} obj - The object.
+ * @returns {string[]} The property names.
+ */
 function getMethods(obj: object|null): string[] {
   if (obj === Object.prototype) { return []; }
   return Object.getOwnPropertyNames(obj).concat(getMethods(Object.getPrototypeOf(obj)));
 }
 
+/**
+ * Recursively create the routes of a controller and its subcontrollers from the
+ * controller class definition.
+ *
+ * @export
+ * @param {string} parentPath - Prefix of all the route paths.
+ * @param {HookFunction[]} parentHooks - First hooks of all the route hooks.
+ * @param {Class} controllerClass - The controller class.
+ * @param {ServiceManager} services - The application services.
+ * @returns {Route[]} The created routes.
+ */
 export function makeControllerRoutes(parentPath: string, parentHooks: HookFunction[],
                                      controllerClass: Class, services: ServiceManager): Route[] {
   const routes: Route[] = [];
