@@ -1,6 +1,8 @@
 # Authentication with JWT
 
 ```typescript
+import { JWTRequired } from '@foal/jwt';
+
 @JWTRequired()
 class MyController {}
 
