@@ -1,5 +1,11 @@
 import { Context, Hook, HookDecorator } from '../../core';
 
+/**
+ * Options of the `Log` hook.
+ *
+ * @export
+ * @interface LogOptions
+ */
 export interface LogOptions {
   body?: boolean;
   params?: boolean;
@@ -9,10 +15,19 @@ export interface LogOptions {
 }
 
 /**
- * Logs a message with optional information on the HTTP request.
+ * Hook logging a message with optional information on the HTTP request.
  *
  * @param message The message to print.
  * @param options Options to specify which information on the HTTP request should be printed.
+ */
+
+/**
+ * Hook factory logging a message with optional information on the HTTP request.
+ *
+ * @export
+ * @param {string} message - The message to print on each request.
+ * @param {LogOptions} [options={}] - Options to specify which information on the HTTP request should be printed.
+ * @returns {HookDecorator} The hook.
  */
 export function Log(message: string, options: LogOptions = {}): HookDecorator {
   const logFn = options.logFn || console.log;

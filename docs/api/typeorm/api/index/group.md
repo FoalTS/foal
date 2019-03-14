@@ -9,6 +9,8 @@
 
 # Group
 
+Entity representing a group. A group can have permissions.
+
 ```typescript
 class Group
 ```

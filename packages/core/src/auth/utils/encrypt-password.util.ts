@@ -20,8 +20,12 @@ async function parsePassword(password: string): Promise<string> {
  * Configured to use PBKDF2 + HMAC + SHA256.
  * The result is a 64 byte binary string (or hex if the legacy option is true).
  *
+ * The random salt is 16 bytes long.
+ * The number of iterations is 150000.
+ * The length key is 32 bytes long.
+ *
  * @export
- * @param {string} plainTextPassword The password to encrypt.
+ * @param {string} plainTextPassword - The password to encrypt.
  * @param {{ legacy?: boolean }} [options={}]
  * @returns {Promise<string>} The derived key with the algorithm name, the number of iterations and the salt.
  */

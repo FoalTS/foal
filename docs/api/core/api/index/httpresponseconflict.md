@@ -10,6 +10,8 @@
 
 # HttpResponseConflict
 
+Represent an HTTP response with the status 409 - CONFLICT.
+
 ```typescript
 class HttpResponseConflict
 ```
@@ -17,19 +19,23 @@ class HttpResponseConflict
 
 ### constructor(body)
 
+Create an instance of HttpResponseConflict.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseConflict
+
+Property used internally by isHttpResponseConflict.
 
 ```typescript
 public readonly isHttpResponseConflict: true;
@@ -43,6 +49,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -54,6 +62,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

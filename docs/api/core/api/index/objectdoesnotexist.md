@@ -8,6 +8,8 @@
 
 # ObjectDoesNotExist
 
+Represent an object that was expected to be found but that does not exist.
+
 ```typescript
 class ObjectDoesNotExist
 ```

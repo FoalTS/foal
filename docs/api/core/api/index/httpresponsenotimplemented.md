@@ -10,6 +10,8 @@
 
 # HttpResponseNotImplemented
 
+Represent an HTTP response with the status 501 - NOT IMPLEMENTED.
+
 ```typescript
 class HttpResponseNotImplemented
 ```
@@ -17,19 +19,23 @@ class HttpResponseNotImplemented
 
 ### constructor(body)
 
+Create an instance of HttpResponseNotImplemented.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseNotImplemented
+
+Property used internally by isHttpResponseNotImplemented.
 
 ```typescript
 public readonly isHttpResponseNotImplemented: true;
@@ -43,6 +49,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -54,6 +62,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

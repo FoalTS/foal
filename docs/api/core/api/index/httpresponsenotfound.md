@@ -10,6 +10,8 @@
 
 # HttpResponseNotFound
 
+Represent an HTTP response with the status 404 - NOT FOUND.
+
 ```typescript
 class HttpResponseNotFound
 ```
@@ -17,19 +19,23 @@ class HttpResponseNotFound
 
 ### constructor(body)
 
+Create an instance of HttpResponseNotFound.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseNotFound
+
+Property used internally by isHttpResponseNotFound.
 
 ```typescript
 public readonly isHttpResponseNotFound: true;
@@ -43,6 +49,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -54,6 +62,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

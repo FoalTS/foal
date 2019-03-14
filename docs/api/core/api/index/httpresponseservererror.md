@@ -8,6 +8,8 @@
 
 # HttpResponseServerError
 
+Represent an HTTP response with a server error status 5xx.
+
 ```typescript
 abstract class HttpResponseServerError
 ```
@@ -28,6 +30,8 @@ public constructor(body?: any);
 ## Properties
 
 ### isHttpResponseServerError
+
+Property used internally by isHttpResponseServerError.
 
 ```typescript
 public readonly isHttpResponseServerError: true;

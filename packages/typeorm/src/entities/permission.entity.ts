@@ -1,5 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * Entity representing a permission.
+ *
+ * @export
+ * @class Permission
+ */
 @Entity()
 export class Permission {
 

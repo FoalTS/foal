@@ -8,6 +8,8 @@
 
 # ValidationError
 
+Represent an incorrect data format.
+
 ```typescript
 class ValidationError
 ```

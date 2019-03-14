@@ -10,16 +10,18 @@
 
 ### renderToString
 
+Util function to render a template using EJS. It is used by the `render` function in `@foal/core`.
+
 ```typescript
 function renderToString(template: string, locals: object): string;
 ```
 
 **Parameters**
 
-| Name     | Type   |
-| -------- | ------ |
-| template | string |
-| locals   | object |
+| Name     | Type   | Description                               |
+| -------- | ------ | ----------------------------------------- |
+| template | string | - The template.                           |
+| locals   | object | - The variables required by the template. |
 
 **Return type**
 

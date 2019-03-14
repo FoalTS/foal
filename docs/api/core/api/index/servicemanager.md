@@ -18,6 +18,9 @@ class ServiceManager
 
 ### set(serviceClass, service)
 
+Add manually a service to the identity mapper. This function is
+useful during tests to inject mocks.
+
 ```typescript
 public set<Service>(serviceClass: Class<Service>, service: any): void;
 ```
@@ -30,10 +33,10 @@ public set<Service>(serviceClass: Class<Service>, service: any): void;
 
 **Parameters**
 
-| Name         | Type                                     |
-| ------------ | ---------------------------------------- |
-| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
-| service      | any                                      |
+| Name         | Type                                     | Description                                            |
+| ------------ | ---------------------------------------- | ------------------------------------------------------ |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> | - The service class representing the key.              |
+| service      | any                                      | - The service object (or mock) representing the value. |
 
 **Return type**
 
@@ -43,7 +46,7 @@ void
 
 ### get(serviceClass)
 
-Get or create the service singleton.
+Get (and create if necessary) the service singleton.
 
 ```typescript
 public get<Service>(serviceClass: Class<Service>): Service;
@@ -57,9 +60,9 @@ public get<Service>(serviceClass: Class<Service>): Service;
 
 **Parameters**
 
-| Name         | Type                                     |
-| ------------ | ---------------------------------------- |
-| serviceClass | [Class][TypeAliasDeclaration-1]<Service> |
+| Name         | Type                                     | Description          |
+| ------------ | ---------------------------------------- | -------------------- |
+| serviceClass | [Class][TypeAliasDeclaration-1]<Service> | - The service class. |
 
 **Return type**
 

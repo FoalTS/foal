@@ -6,6 +6,14 @@ import {
   HttpResponseUnauthorized,
 } from '../core';
 
+/**
+ * Sub-function used by LoginRequired and LoginOptional to avoid code duplication.
+ *
+ * @export
+ * @param {boolean} required
+ * @param {({ redirect?: string, user: (id: number|string) => Promise<any> })} options
+ * @returns {HookDecorator}
+ */
 export function Login(required: boolean,
                       options: { redirect?: string, user: (id: number|string) => Promise<any> }): HookDecorator {
   return Hook(async ctx => {

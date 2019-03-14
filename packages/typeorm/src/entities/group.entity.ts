@@ -4,6 +4,12 @@ import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 't
 // FoalTS
 import { Permission } from './permission.entity';
 
+/**
+ * Entity representing a group. A group can have permissions.
+ *
+ * @export
+ * @class Group
+ */
 @Entity()
 export class Group {
 
