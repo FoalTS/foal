@@ -13,16 +13,26 @@
 
 ### JWTOptional
 
+Hook factory to authenticate users using JSON Web Tokens.
+
+The hook does not return any error when no user could be authenticated.
+
+If `options.cookie` is not defined, the hook expects the JWT to be included in the
+`Authorization` header using the `Bearer` schema. Once the token is verified and decoded,
+`ctx.user` is set with the payload (by default) or a custom object (see `options.user`).
+
+The content of the header should look like the following: Authorization: Bearer <token>
+
 ```typescript
 function JWTOptional(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator;
 ```
 
 **Parameters**
 
-| Name          | Type                                 | Default value |
-| ------------- | ------------------------------------ | ------------- |
-| options       | [JWTOptions][InterfaceDeclaration-0] | {}            |
-| verifyOptions | VerifyOptions                        | {}            |
+| Name          | Type                                 | Default value | Description                              |
+| ------------- | ------------------------------------ | ------------- | ---------------------------------------- |
+| options       | [JWTOptions][InterfaceDeclaration-0] | {}            | - Hook options.                          |
+| verifyOptions | VerifyOptions                        | {}            | - Options of the `jsonwebtoken` package. |
 
 **Return type**
 
@@ -32,16 +42,26 @@ HookDecorator
 
 ### JWTRequired
 
+Hook factory to authenticate users using JSON Web Tokens.
+
+The hook returns a 401 error if no user could be authenticated.
+
+If `options.cookie` is not defined, the hook expects the JWT to be included in the
+`Authorization` header using the `Bearer` schema. Once the token is verified and decoded,
+`ctx.user` is set with the payload (by default) or a custom object (see `options.user`).
+
+The content of the header should look like the following: Authorization: Bearer <token>
+
 ```typescript
 function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator;
 ```
 
 **Parameters**
 
-| Name          | Type                                 | Default value |
-| ------------- | ------------------------------------ | ------------- |
-| options       | [JWTOptions][InterfaceDeclaration-0] | {}            |
-| verifyOptions | VerifyOptions                        | {}            |
+| Name          | Type                                 | Default value | Description                              |
+| ------------- | ------------------------------------ | ------------- | ---------------------------------------- |
+| options       | [JWTOptions][InterfaceDeclaration-0] | {}            | - Hook options.                          |
+| verifyOptions | VerifyOptions                        | {}            | - Options of the `jsonwebtoken` package. |
 
 **Return type**
 
@@ -50,6 +70,8 @@ HookDecorator
 ## Interfaces
 
 ### JWTOptions
+
+Options of the hooks created by JWTRequired and JWTOptional.
 
 ```typescript
 interface JWTOptions {

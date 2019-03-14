@@ -8,6 +8,8 @@
 
 # Permission
 
+Entity representing a permission.
+
 ```typescript
 class Permission
 ```

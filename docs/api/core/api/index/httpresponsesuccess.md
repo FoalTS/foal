@@ -8,6 +8,8 @@
 
 # HttpResponseSuccess
 
+Represent an HTTP response with a success status 2xx.
+
 ```typescript
 abstract class HttpResponseSuccess
 ```
@@ -15,19 +17,23 @@ abstract class HttpResponseSuccess
 
 ### constructor(body)
 
+Create an instance of HttpResponseSuccess.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseSuccess
+
+Property used internally by isHttpResponseSuccess.
 
 ```typescript
 public readonly isHttpResponseSuccess: true;

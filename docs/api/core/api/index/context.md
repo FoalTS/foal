@@ -10,6 +10,11 @@
 
 # Context
 
+Class instantiated on each request. It includes:
+- the express request object,
+- the user object if available,
+- and a `state` object that can be used to pass data across several hooks.
+
 ```typescript
 class Context<User = any>
 ```
@@ -23,15 +28,17 @@ class Context<User = any>
 
 ### constructor(request)
 
+Creates an instance of Context.
+
 ```typescript
 public constructor(request: any);
 ```
 
 **Parameters**
 
-| Name    | Type |
-| ------- | ---- |
-| request | any  |
+| Name    | Type | Description                                                  |
+| ------- | ---- | ------------------------------------------------------------ |
+| request | any  | - Either the express request object or a mock (for testing). |
 
 ## Properties
 
@@ -67,10 +74,11 @@ public request: HTTPRequest;
 
 **Type**
 
-HTTPRequest
+[HTTPRequest][InterfaceDeclaration-0]
 
 [ClassDeclaration-0]: context.md#context
 [Constructor-0]: context.md#constructorrequest
 [PropertyDeclaration-0]: context.md#state
 [PropertyDeclaration-1]: context.md#user
 [PropertyDeclaration-2]: context.md#request
+[InterfaceDeclaration-0]: ../index.md#httprequest

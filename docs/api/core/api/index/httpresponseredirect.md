@@ -10,6 +10,8 @@
 
 # HttpResponseRedirect
 
+Represent an HTTP response with the status 302 - FOUND.
+
 ```typescript
 class HttpResponseRedirect
 ```
@@ -17,20 +19,24 @@ class HttpResponseRedirect
 
 ### constructor(path, body)
 
+Create an instance of HttpResponseRedirect.
+
 ```typescript
 public constructor(path: string, body?: any);
 ```
 
 **Parameters**
 
-| Name | Type   |
-| ---- | ------ |
-| path | string |
-| body | any    |
+| Name | Type   | Description                      |
+| ---- | ------ | -------------------------------- |
+| path | string | - The redirection path.          |
+| body | any    | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseRedirect
+
+Property used internally by isHttpResponseRedirect.
 
 ```typescript
 public readonly isHttpResponseRedirect: true;
@@ -44,6 +50,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -55,6 +63,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

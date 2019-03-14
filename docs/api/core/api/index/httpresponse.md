@@ -17,6 +17,10 @@
 
 # HttpResponse
 
+Reprensent an HTTP response. This class must be extended.
+Instances of HttpResponse are returned in hooks and controller
+methods.
+
 ```typescript
 abstract class HttpResponse
 ```
@@ -24,19 +28,23 @@ abstract class HttpResponse
 
 ### constructor(body)
 
+Create an instance of HttpResponse.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Methods
 
 ### setHeader(name, value)
+
+Add or replace a header in the response.
 
 ```typescript
 public setHeader(name: string, value: string): void;
@@ -44,10 +52,10 @@ public setHeader(name: string, value: string): void;
 
 **Parameters**
 
-| Name  | Type   |
-| ----- | ------ |
-| name  | string |
-| value | string |
+| Name  | Type   | Description        |
+| ----- | ------ | ------------------ |
+| name  | string | - The header name. |
+| value | string | - The value name.  |
 
 **Return type**
 
@@ -57,15 +65,17 @@ void
 
 ### getHeader(name)
 
+Read the value of a header added with setHeader.
+
 ```typescript
 public getHeader(name: string): string | undefined;
 ```
 
 **Parameters**
 
-| Name | Type   |
-| ---- | ------ |
-| name | string |
+| Name | Type   | Description        |
+| ---- | ------ | ------------------ |
+| name | string | - The header name. |
 
 **Return type**
 
@@ -74,6 +84,8 @@ string | undefined
 ----------
 
 ### getHeaders()
+
+Read all the headers added with setHeader.
 
 ```typescript
 public getHeaders(): { [key: string]: string; };
@@ -87,17 +99,19 @@ public getHeaders(): { [key: string]: string; };
 
 ### setCookie(name, value, options)
 
+Add or replace a cookie in the response.
+
 ```typescript
 public setCookie(name: string, value: string, options: CookieOptions = {}): void;
 ```
 
 **Parameters**
 
-| Name    | Type                                    | Default value |
-| ------- | --------------------------------------- | ------------- |
-| name    | string                                  |               |
-| value   | string                                  |               |
-| options | [CookieOptions][InterfaceDeclaration-2] | {}            |
+| Name    | Type                                    | Default value | Description                     |
+| ------- | --------------------------------------- | ------------- | ------------------------------- |
+| name    | string                                  |               | - The cookie name.              |
+| value   | string                                  |               | - The cookie value.             |
+| options | [CookieOptions][InterfaceDeclaration-2] | {}            | - The cookie directives if any. |
 
 **Return type**
 
@@ -107,15 +121,17 @@ void
 
 ### getCookie(name)
 
+Read the value and directives of a cookie added with setCookie.
+
 ```typescript
 public getCookie(name: string): { value: string | undefined; options: CookieOptions; };
 ```
 
 **Parameters**
 
-| Name | Type   |
-| ---- | ------ |
-| name | string |
+| Name | Type   | Description        |
+| ---- | ------ | ------------------ |
+| name | string | - The cookie name. |
 
 **Return type**
 
@@ -124,6 +140,8 @@ public getCookie(name: string): { value: string | undefined; options: CookieOpti
 ----------
 
 ### getCookies()
+
+Read all the cookies added with setCookie.
 
 ```typescript
 public getCookies(): { [key: string]: { value: string | undefined; options: CookieOptions; }; };
@@ -137,6 +155,8 @@ public getCookies(): { [key: string]: { value: string | undefined; options: Cook
 
 ### isHttpResponse
 
+Property used internally by isHttpResponse.
+
 ```typescript
 public readonly isHttpResponse: true;
 ```
@@ -149,6 +169,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public abstract statusCode: number;
 ```
@@ -160,6 +182,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public abstract statusMessage: string;

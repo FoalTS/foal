@@ -10,6 +10,11 @@
 
 # UserWithPermissions
 
+Abstract class to define a user entity with a system of groups and permissions.
+
+A group can have permissions.
+A user can have permissions and belong to groups that have also permissions.
+
 ```typescript
 abstract class UserWithPermissions
 ```
@@ -17,15 +22,18 @@ abstract class UserWithPermissions
 
 ### hasPerm(codeName)
 
+Check if a user has a given permission. The user must have been retreived from the db
+with their groups and permissions. Otherwise, the method will always return false.
+
 ```typescript
 public hasPerm(codeName: string): boolean;
 ```
 
 **Parameters**
 
-| Name     | Type   |
-| -------- | ------ |
-| codeName | string |
+| Name     | Type   | Description               |
+| -------- | ------ | ------------------------- |
+| codeName | string | - Name of the permission. |
 
 **Return type**
 

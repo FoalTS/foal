@@ -10,6 +10,8 @@
 
 # HttpResponseForbidden
 
+Represent an HTTP response with the status 403 - FORBIDDEN.
+
 ```typescript
 class HttpResponseForbidden
 ```
@@ -17,19 +19,23 @@ class HttpResponseForbidden
 
 ### constructor(body)
 
+Create an instance of HttpResponseForbidden.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseForbidden
+
+Property used internally by isHttpResponseForbidden.
 
 ```typescript
 public readonly isHttpResponseForbidden: true;
@@ -43,6 +49,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -54,6 +62,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

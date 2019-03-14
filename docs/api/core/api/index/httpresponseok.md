@@ -10,6 +10,8 @@
 
 # HttpResponseOK
 
+Represent an HTTP response with the status 200 - OK.
+
 ```typescript
 class HttpResponseOK
 ```
@@ -17,19 +19,23 @@ class HttpResponseOK
 
 ### constructor(body)
 
+Create an instance of HttpResponseOK.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseOK
+
+Property used internally by isHttpResponOK.
 
 ```typescript
 public readonly isHttpResponseOK: true;
@@ -43,6 +49,8 @@ true
 
 ### statusCode
 
+Status code of the response.
+
 ```typescript
 public statusCode: number;
 ```
@@ -54,6 +62,9 @@ number
 ----------
 
 ### statusMessage
+
+Status message of the response. It must follow the HTTP conventions
+and be consistent with the statusCode property.
 
 ```typescript
 public statusMessage: string;

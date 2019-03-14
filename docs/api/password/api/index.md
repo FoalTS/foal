@@ -10,7 +10,7 @@
 
 ### isCommon
 
-Test if the given password is part of the 10k most common passwords.
+Test if a password belongs to a list of 10k common passwords.
 
 ```typescript
 function isCommon(password: string): Promise<boolean>;
@@ -18,9 +18,9 @@ function isCommon(password: string): Promise<boolean>;
 
 **Parameters**
 
-| Name     | Type   |
-| -------- | ------ |
-| password | string |
+| Name     | Type   | Description             |
+| -------- | ------ | ----------------------- |
+| password | string | - The password to test. |
 
 **Return type**
 

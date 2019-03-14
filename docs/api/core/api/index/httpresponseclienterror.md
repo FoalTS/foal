@@ -8,6 +8,8 @@
 
 # HttpResponseClientError
 
+Represent an HTTP response with a client error status 4xx.
+
 ```typescript
 abstract class HttpResponseClientError
 ```
@@ -15,19 +17,23 @@ abstract class HttpResponseClientError
 
 ### constructor(body)
 
+Create an instance of HttpResponseClientError.
+
 ```typescript
 public constructor(body?: any);
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name | Type | Description                      |
+| ---- | ---- | -------------------------------- |
+| body | any  | - Optional body of the response. |
 
 ## Properties
 
 ### isHttpResponseClientError
+
+Property used internally by isHttpResponseClientError.
 
 ```typescript
 public readonly isHttpResponseClientError: true;
