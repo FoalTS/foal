@@ -7,9 +7,11 @@ import { gunzip } from 'zlib';
 let list: string[];
 
 /**
- * Test if the given password is part of the 10k most common passwords.
+ * Test if a password belongs to a list of 10k common passwords.
  *
- * @param password
+ * @export
+ * @param {string} password - The password to test.
+ * @returns {Promise<boolean>} - True if the password is found in the list. False otherwise.
  */
 export async function isCommon(password: string): Promise<boolean> {
   if (!list) {

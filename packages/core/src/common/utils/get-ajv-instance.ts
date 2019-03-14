@@ -9,7 +9,7 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
 };
 
 /**
- * Returns the Ajv instance used internally by FoalTS.
+ * Return the Ajv instance used internally by FoalTS.
  *
  * It has this default configuration:
  *  - coerceTypes: true (Change data type of data to match `type` keyword.)
@@ -18,6 +18,9 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
  *
  * This configuration can be overrided using the file `config/default.json` or through environment
  * variables: SETTINGS_AJV_COERCE_TYPES, SETTINGS_AJV_REMOVE_ADDITIONAL, SETTINGS_AJV_USE_DEFAULTS.
+ *
+ * @export
+ * @returns {Ajv.Ajv} The AJV instance
  */
 export function getAjvInstance(): Ajv.Ajv {
   if (!_instanceWrapper.instance) {

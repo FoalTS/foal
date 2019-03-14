@@ -11,7 +11,7 @@ class MyController {}
 class MyController {}
 ```
 
-FoalTS provides two hooks `JWTOptional` and `JWTRequired` to authenticate users with a [JWT](https://jwt.io/introduction/) token.
+FoalTS provides two hooks `JWTOptional` and `JWTRequired` to authenticate users with a [JWT](https://jwt.io/introduction/) token. They can be imported from the `@foal/jwt` package.
 
 If `options.cookie` is not defined, they expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
 

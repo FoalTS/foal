@@ -14,6 +14,14 @@ function renderDebug500(stack): string {
     + '</html>';
 }
 
+/**
+ * Create an express middleware to return a 500 HTML page if an error is thrown and is not caught.
+ *
+ * @export
+ * @param {boolean} debug - Specify if the error stack should be included in the page.
+ * @param {*} [logFn=console.error]
+ * @returns The express middleware.
+ */
 export function handleErrors(debug: boolean, logFn = console.error) {
   return (err, req, res, next) => {
     logFn(err.stack);

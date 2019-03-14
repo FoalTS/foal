@@ -4,9 +4,11 @@ import { Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { getAjvInstance } from '../utils';
 
 /**
- * Hook to validate the query of the request.
+ * Hook factory validating the query of the request against a AJV schema.
  *
- * @param schema Schema used to validate the query request.
+ * @export
+ * @param {object} schema - Schema used to validate the query request.
+ * @returns {HookDecorator} - The hook.
  */
 export function ValidateQuery(schema: object): HookDecorator {
   const ajv = getAjvInstance();

@@ -5,12 +5,27 @@ import {
 } from '@foal/core';
 import { verify, VerifyOptions } from 'jsonwebtoken';
 
+/**
+ * Options of the hooks created by JWTRequired and JWTOptional.
+ *
+ * @export
+ * @interface JWTOptions
+ */
 export interface JWTOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
 }
 
+/**
+ * Sub-function used by JWTRequired and JWTOptional to avoid code duplication.
+ *
+ * @export
+ * @param {boolean} required
+ * @param {JWTOptions} options
+ * @param {VerifyOptions} verifyOptions
+ * @returns {HookDecorator}
+ */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   return Hook(async (ctx, services) => {
     const secretOrPublicKey = Config.get<string|undefined>('settings.jwt.secretOrPublicKey');
