@@ -10,6 +10,7 @@ import { red, yellow } from 'colors/safe';
 import * as program from 'commander';
 
 // FoalTS
+import { createSecret } from './create-secret';
 import {
   connectAngular,
   connectReact,
@@ -47,6 +48,11 @@ program
       yaml: options.yaml || false
     });
   });
+
+program
+  .command('createsecret')
+  .description('Create a 256-bit random secret encoded in base64.')
+  .action(() => createSecret().then(secret => console.log(secret)));
 
 program
   .command('run <name>')
