@@ -37,7 +37,7 @@ describe('createApp', () => {
     const app = createApp(class {});
     await request(app)
       .get('/hello-world.html')
-      .expect(200)
+      .expect(200, '<h1>Hello world!</h1>')
       .expect('Content-type', 'text/html; charset=UTF-8');
   });
 
@@ -47,7 +47,7 @@ describe('createApp', () => {
     const app = createApp(class {});
     await request(app)
       .get('/prefix/hello-world.html')
-      .expect(200)
+      .expect(200, '<h1>Hello world!</h1>')
       .expect('Content-type', 'text/html; charset=UTF-8');
   });
 
