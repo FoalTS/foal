@@ -23,7 +23,7 @@ export class ConfigMock implements Config {
   }
 
   /**
-   * Return the config value previously given by ConfigMock.set.
+   * Return the config value previously given with ConfigMock.set.
    *
    * @template T - TypeScript type of the returned value. Default is `any`.
    * @param {string} key - Name of the config key using dots and camel case.
@@ -33,6 +33,15 @@ export class ConfigMock implements Config {
    */
   get<T = any>(key: string, defaultValue?: T | undefined): T {
     return this.map.get(key) || defaultValue;
+  }
+
+  /**
+   * Clear every config value previously given with Config.set.
+   *
+   * @memberof ConfigMock
+   */
+  reset(): void {
+    this.map.clear();
   }
 
 }

@@ -26,4 +26,22 @@ describe('ConfigMock', () => {
 
   });
 
+  describe('when "reset" is called', () => {
+
+    it('should clear every config value previously given with the "set" method.', () => {
+      const config = new ConfigMock();
+      config.set('a', 'A');
+      config.set('b', 'B');
+
+      strictEqual(config.get('a'), 'A');
+      strictEqual(config.get('b'), 'B');
+
+      config.reset();
+
+      strictEqual(config.get('a'), undefined);
+      strictEqual(config.get('b'), undefined);
+    });
+
+  });
+
 });
