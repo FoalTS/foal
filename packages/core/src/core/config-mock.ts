@@ -18,7 +18,7 @@ export class ConfigMock implements Config {
    * @param {*} value - The config value (ex: 36000).
    * @memberof ConfigMock
    */
-  set(key: string, value: any) {
+  set(key: string, value: any): void {
     this.map.set(key, value);
   }
 
