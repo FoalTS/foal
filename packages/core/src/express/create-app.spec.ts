@@ -8,10 +8,48 @@ import { MemoryStore } from 'express-session';
 import * as request from 'supertest';
 
 // FoalTS
+import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
+
+  before(() => {
+    if (!existsSync('test-public')) {
+      mkdirSync('test-public');
+    }
+    writeFileSync('test-public/hello-world.html', '<h1>Hello world!</h1>', 'utf8');
+    process.env.SETTINGS_STATIC_URL = 'test-public';
+  });
+
+  after(() => {
+    delete process.env.SETTINGS_STATIC_URL;
+    delete process.env.SETTINGS_STATIC_PATH_PREFIX;
+    if (existsSync('test-public/hello-world.html')) {
+      unlinkSync('test-public/hello-world.html');
+    }
+    if (existsSync('test-public')) {
+      rmdirSync('test-public');
+    }
+  });
+
+  it('should serve static files.', async () => {
+    const app = createApp(class {});
+    await request(app)
+      .get('/hello-world.html')
+      .expect(200)
+      .expect('Content-type', 'text/html; charset=UTF-8');
+  });
+
+  it('should support custom path prefix when serving static files.', async () => {
+    process.env.SETTINGS_STATIC_PATH_PREFIX = '/prefix';
+
+    const app = createApp(class {});
+    await request(app)
+      .get('/prefix/hello-world.html')
+      .expect(200)
+      .expect('Content-type', 'text/html; charset=UTF-8');
+  });
 
   it('should return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with bad'
       + ' csrf token.', () => {
