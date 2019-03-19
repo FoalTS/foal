@@ -161,7 +161,14 @@ describe('createApp', () => {
 
   it('should accept a custom session store.', async () => {
     const store = new MemoryStore();
-    const app = createApp(class {}, {
+    class AppController {
+      @Get('/foo')
+      foo(ctx: Context) {
+        ctx.request.session.bar = 'foobar';
+      }
+    }
+
+    const app = createApp(AppController, {
       store: session => {
         strictEqual(typeof session, 'function');
         return store;

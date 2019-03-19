@@ -61,7 +61,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
     },
     name: Config.get('settings.session.name'),
     resave: Config.get('settings.session.resave', false),
-    saveUninitialized: Config.get('settings.session.saveUninitialized', true),
+    saveUninitialized: Config.get('settings.session.saveUninitialized', false),
     secret: Config.get('settings.session.secret', 'default_secret'),
     store: options.store ? options.store(session) : undefined,
   }));
