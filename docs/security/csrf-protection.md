@@ -1,10 +1,60 @@
 # CSRF protection
 
-FoalTS includes a CSRF protection. It is enabled by default and makes your app require a csrf token on POST, PUT, PATCH and DELETE requests.
+> Cross-Site Request Forgery (CSRF) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user’s web browser to perform an unwanted action on a trusted site when the user is authenticated.
+>
+> *Source: [OWASP](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md)*
 
-## Retreive the csrf token
+FoalTS provides CSRF protection based on tokens.
+When activated, the defense requires that POST, PUT, PATCH and DELETE requests include a CSRF token to be valid. If they do not, the server returns a 403 error with the message `Bad csrf token`.
 
-You can get the csrf token by calling the `csrfToken` method of the context `request`. It is then easy to send the token to the client upon page rendering.
+## Enable the CSRF protection
+
+The CSRF defense can be activated using the key `settings.csrf` in the configuration.
+
+*Example with `config/default.json`*
+```json
+{
+  "settings": {
+    "csrf": true
+  }
+}
+```
+
+*Example with `config/default.yml`*
+```yaml
+settings:
+  csrf: true
+```
+
+*Example with `.env` (or environment variable)*
+```
+SETTINGS_CSRF=true
+```
+
+## Generate CSRF tokens
+
+You can generate CSRF tokens using the `csrfToken` method of the `request` object. When the protection is disabled, the method returns the string `'CSRF protection disabled.'`.
+
+*Example*
+```typescript
+import { Context, Get } from '@foal/core';
+
+export class AppController {
+
+  @Get('')
+  index(ctx: Context) {
+    const csrfToken = ctx.request.csrfToken();
+    // ...
+  }
+
+}
+```
+
+## Stateful CSRF Defense (using sessions)
+
+By default, FoalTS provides CSRF protection using sessions.
+
+### How to send CSRF tokens to the client
 
 ```typescript
 import { Get, render } from '@foal/core';
@@ -32,17 +82,57 @@ export class ViewController {
 </html>
 ```
 
-## Send the csrf token
+### How to include a CSRF token in every subsequent request
 
-You have several ways to specify the csrf token when making a request:
-- in the body with the name `_csrf`,
-- in the query with the name `_csrf`,
+You must include a CSRF token in your subsequent POST, PUT, PATCH and DELETE requests. Otherwise the server will return a 403 error.
+
+There are several locations where the token can be included:
+- in the request body with the name `_csrf`,
+- in the request query with the name `_csrf`,
 - or in one of these headers: `CSRF-Token`, `XSRF-Token`, `X-CSRF-Token` or `X-XSRF-Token`.
 
-If the token is incorrect or is not provided then the server responds with a 403 status and the message `Bad csrf token`.
+## Stateless CSRF Defense (using Double Submit Cookie technique)
 
-## Enable or disable the csrf protection
+FoalTS also supports the *Double Submit Cookie* technique as CSRF protection. In this case, the protection does not rely on sessions.
 
-You can enable / disable the protection by setting the property `settings.csrf` to true / false in `config/default.json`. You can also use the environment variable `SETTINGS_CSRF`.
+You can enable it with the key `settings.csrfOptions.cookie` in the configuration. 
 
-When the CSRF protection is disabled, `ctx.request.csrfToken` returns the string `"CSRF protection disabled."`.
+*Example with `config/default.yml`*
+```yaml
+settings:
+  csrf: true
+  csrfOptions:
+    cookie: true
+```
+
+*Example with `.env` (or environment variable)*
+```
+SETTINGS_CSRF=true
+SETTINGS_CSRF_OPTIONS_COOKIE=true
+```
+
+### How to send CSRF tokens to the client
+
+```typescript
+import { Get, render } from '@foal/core';
+
+export class ViewController {
+  @Get('/')
+  index(ctx) {
+    const response = new HttpResponseOK();
+    response.setCookie('csrf-token', ctx.request.csrfToken());
+    return response;
+  }
+}
+```
+
+The server generates two cookies on the client named `_csrf` and `csrf-token`. The first one must be included in every subsequent request. The other contains the token that must be included as a header or param/body attribute in your request.
+
+### How to include a CSRF token in every subsequent request
+
+You must include the token value of the previous `csrf-token` cookie in your subsequent POST, PUT, PATCH and DELETE requests. Otherwise the server will return a 403 error.
+
+There are several locations where the token can be included:
+- in the request body with the name `_csrf`,
+- in the request query with the name `_csrf`,
+- or in one of these headers: `CSRF-Token`, `XSRF-Token`, `X-CSRF-Token` or `X-XSRF-Token`.
