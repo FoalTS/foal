@@ -15,6 +15,7 @@ describe('createApp', () => {
 
   afterEach(() => {
     delete process.env.SETTINGS_CSRF;
+    delete process.env.SETTINGS_CSRF_OPTIONS_COOKIE;
   });
 
   it('should return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with bad'
@@ -27,6 +28,36 @@ describe('createApp', () => {
       request(app).put('/').expect(403).expect('Bad csrf token.'),
       request(app).delete('/').expect(403).expect('Bad csrf token.'),
     ]);
+  });
+
+  it('should not return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with correct'
+      + ' csrf token.', async () => {
+    process.env.SETTINGS_CSRF = 'true';
+    class AppController {
+      @Get('/')
+      index(ctx: Context) {
+        return new HttpResponseOK(ctx.request.csrfToken());
+      }
+    }
+    const app = createApp(AppController);
+
+    let csrfToken = '';
+    let sessionCookie = '';
+    await request(app).get('/').then(response => {
+      csrfToken = response.text;
+      for (const line of response.header['set-cookie']) {
+        if (line.includes('connect.sid')) {
+          sessionCookie = line;
+          break;
+        }
+      }
+    });
+
+    return request(app)
+      .post('/')
+      .set('Cookie', sessionCookie)
+      .set('csrf-token', csrfToken)
+      .expect(404);
   });
 
   it('should return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with bad'
@@ -58,7 +89,6 @@ describe('createApp', () => {
       .expect(200)
       .then(data => {
         ok(Array.isArray(data.header['set-cookie']));
-        console.log(data.header['set-cookie']);
         for (const line of data.header['set-cookie']) {
           const [ name, key ] = line.split('=');
           switch (name) {

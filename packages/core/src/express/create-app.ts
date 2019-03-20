@@ -67,8 +67,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   }));
 
   if (Config.get('settings.csrf', false) as boolean) {
-    // TODO: write a test that fails with cookie: true
-    app.use(csurf({ cookie: true }));
+    app.use(csurf({ cookie: Config.get('settings.csrfOptions.cookie', false) }));
   } else {
     app.use((req, res, next) => {
       req.csrfToken = () => 'CSRF protection disabled.';
