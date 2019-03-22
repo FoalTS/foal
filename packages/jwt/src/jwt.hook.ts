@@ -28,7 +28,8 @@ export interface JWTOptions {
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   return Hook(async (ctx, services) => {
-    const secretOrPublicKey = Config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+    const config = services.get(Config);
+    const secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
     if (!secretOrPublicKey) {
       throw new Error(
         'You must provide a settings.jwt.secretOrPublicKey in default.json or '
@@ -38,7 +39,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get<string>('settings.jwt.cookieName', 'auth');
+      const cookieName = config.get<string>('settings.jwt.cookieName', 'auth');
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
