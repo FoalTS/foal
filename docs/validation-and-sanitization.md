@@ -57,7 +57,7 @@ validate(schema, data);
 
 ## Validation & Sanitization of HTTP Requests
 
-`ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate `context.request.{body|headers|params|query}` against the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `body`.
+`ValidateBody`, `ValidateCookies`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate `context.request.{body|cookies|headers|params|query}` against the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `body`.
 
 *Example*:
 ```typescript
