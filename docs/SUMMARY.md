@@ -72,6 +72,7 @@
   * [CSRF Protection](./security/csrf-protection.md)
   * [XSS Protection](./security/xss-protection.md)
 * Utilities
+  * [Static Files](./utilities/static-files.md)
   * [Templating](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
