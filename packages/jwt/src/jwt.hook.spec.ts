@@ -3,8 +3,8 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Context, getHookFunction,
-  isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
+  Config, ConfigMock, Context,
+  getHookFunction, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
@@ -42,16 +42,24 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   describe('when a secret is given', () => {
 
     const secret = 'my_secret';
+    let services: ServiceManager;
+    let config: ConfigMock;
 
-    before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = 'my_secret');
+    before(() => {
+      services = new ServiceManager();
+      config = new ConfigMock();
+      services.set(Config, config);
+    });
 
-    after(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = '');
+    beforeEach(() => {
+      config.reset();
+      config.set('settings.jwt.secretOrPublicKey', secret);
+    });
 
     if (required) {
 
       it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
         const ctx = new Context({ get(str: string) { return undefined; } });
-        const services = new ServiceManager();
 
         const response = await hook(ctx, services);
         if (!isHttpResponseBadRequest(response)) {
@@ -68,7 +76,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
-        const services = new ServiceManager();
 
         const response = await hook(ctx, services);
         if (!isHttpResponseBadRequest(response)) {
@@ -84,7 +91,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
         const ctx = new Context({ get(str: string) { return undefined; } });
-        const services = new ServiceManager();
 
         const response = await hook(ctx, services);
         strictEqual(response, undefined);
@@ -95,7 +101,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
-        const services = new ServiceManager();
 
         const response = await hook(ctx, services);
         strictEqual(response, undefined);
@@ -107,7 +112,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should return an HttpResponseBadRequest object if the Authorization header does '
       + 'not use the Bearer scheme.', async () => {
         const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
-        const services = new ServiceManager();
 
         const response = await hook(ctx, services);
 
@@ -129,7 +133,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const ctx = new Context({
         get(str: string) {return str === 'Authorization' ? 'Bearer revokedToken' : undefined; }
       });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -144,7 +147,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the token is not a JWT.', async () => {
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Bearer foo' : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -162,7 +164,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -183,7 +184,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         + '.eyJz32IiOiIxMjM0NTY3ODkwIiwibmFtZSI6UkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -204,7 +204,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moeGA08mogA';
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -225,7 +224,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.-I5sDyvGWSA8Qwk6OwM7VLV9Nz3pkINNHakp3S8kOn0';
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -244,7 +242,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should return an HttpResponseUnauthorized object if the token is expired', async () => {
       const token = sign({}, secret, { expiresIn: '1' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -265,7 +262,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       const token = sign({}, secret, { audience: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -286,7 +282,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       const token = sign({}, secret, { issuer: 'foo' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -307,7 +302,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       const jwt = sign({ foo: 'bar' }, secret, {});
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 
@@ -320,7 +314,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       const jwt = sign({ foo: 'bar' }, secret, {});
       const ctx = new Context({ get: () => undefined, cookies: { auth: jwt } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 
@@ -330,25 +323,22 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true '
         + 'and SETTINGS_JWT_COOKIE_NAME=xxx).', async () => {
-      process.env.SETTINGS_JWT_COOKIE_NAME = 'xxx';
+      config.set('settings.jwt.cookieName', 'xxx');
       const hook = getHookFunction(JWT({ cookie: true }));
 
       const jwt = sign({ foo: 'bar' }, secret, {});
       const ctx = new Context({ get: () => undefined, cookies: { xxx: jwt } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
-      delete process.env.SETTINGS_JWT_COOKIE_NAME;
     });
 
     it('should return an HttpResponseUnauthorized object if there is no subject and a fetchUser'
         + ' was given.', async () => {
       const token = sign({}, secret, {});
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; } });
-      const services = new ServiceManager();
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -367,7 +357,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should fetch the user from the database and set ctx.user if a fetchUser was given.', async () => {
       const jwt = sign({}, secret, { subject: user.id.toString() });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 
@@ -378,7 +367,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         + ' user was found in the database with id=payload.sub.', async () => {
       const jwt = sign({}, secret, { subject: user.id.toString() + '1' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 
@@ -437,16 +425,25 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----`;
 
-    before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = publicKey);
+    let services: ServiceManager;
+    let config: ConfigMock;
 
-    after(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = '');
+    before(() => {
+      services = new ServiceManager();
+      config = new ConfigMock();
+      services.set(Config, config);
+    });
+
+    beforeEach(() => {
+      config.reset();
+      config.set('settings.jwt.secretOrPublicKey', publicKey);
+    });
 
     it('should set ctx.user with the decoded payload if no User entity was given.', async () => {
       const hook = getHookFunction(JWT());
 
       const jwt = sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' });
       const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
-      const services = new ServiceManager();
 
       await hook(ctx, services);
 

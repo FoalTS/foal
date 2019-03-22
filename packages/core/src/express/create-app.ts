@@ -45,7 +45,10 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   );
 
   app.use(logger(loggerFormat));
-  app.use(express.static(Config.get('settings.staticUrl', 'public')));
+  app.use(
+    Config.get('settings.staticPathPrefix', ''),
+    express.static(Config.get('settings.staticUrl', 'public'))
+  );
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
