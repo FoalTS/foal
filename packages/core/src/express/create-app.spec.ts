@@ -24,13 +24,16 @@ describe('createApp', () => {
 
   after(() => {
     delete process.env.SETTINGS_STATIC_URL;
-    delete process.env.SETTINGS_STATIC_PATH_PREFIX;
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
     if (existsSync('test-public')) {
       rmdirSync('test-public');
     }
+  });
+
+  afterEach(() => {
+    delete process.env.SETTINGS_STATIC_PATH_PREFIX;
   });
 
   it('should serve static files.', async () => {
