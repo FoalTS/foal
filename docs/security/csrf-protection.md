@@ -4,8 +4,7 @@
 >
 > *Source: [OWASP](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md)*
 
-FoalTS provides CSRF protection based on tokens.
-When activated, the defense requires that POST, PUT, PATCH and DELETE requests include a CSRF token to be valid. If they do not, the server returns a 403 error with the message `Bad csrf token`.
+FoalTS provides CSRF protection based on tokens. When activated, the defense requires that POST, PUT, PATCH and DELETE requests include a CSRF token to be valid. If they do not, the server returns a 403 error with the message `Bad csrf token`.
 
 ## Enable the CSRF protection
 
