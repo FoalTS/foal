@@ -8,6 +8,7 @@ import {
   HttpResponseClientError,
   HttpResponseConflict,
   HttpResponseCreated,
+  HttpResponseFile,
   HttpResponseForbidden,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
@@ -25,6 +26,7 @@ import {
   isHttpResponseClientError,
   isHttpResponseConflict,
   isHttpResponseCreated,
+  isHttpResponseFile,
   isHttpResponseForbidden,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
@@ -191,6 +193,127 @@ describe('isHttpResponseOK', () => {
     strictEqual(isHttpResponseOK(response), false);
     strictEqual(isHttpResponseOK(undefined), false);
     strictEqual(isHttpResponseOK(null), false);
+  });
+
+});
+
+describe('HttpResponseFile', () => {
+
+  const defaultOptions = {
+    directory: '',
+    file: '',
+  };
+
+  it('should inherit from HttpResponseOK, HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseFile(defaultOptions);
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+    ok(httpResponse instanceof HttpResponseOK);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseFile(defaultOptions);
+    strictEqual(httpResponse.statusCode, 200);
+    strictEqual(httpResponse.statusMessage, 'OK');
+  });
+
+  it('should have an undefined body.', () => {
+    const httpResponse = new HttpResponseFile(defaultOptions);
+    strictEqual(httpResponse.body, undefined);
+  });
+
+  it('should have a "directory" and a "file" properties set in the constructor.', () => {
+    const httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: 'my_pdf.pdf'
+    });
+    strictEqual(httpResponse.directory, 'uploaded/');
+    strictEqual(httpResponse.file, 'my_pdf.pdf');
+  });
+
+  it('should have a "forceDownload" property set optionally in the constructor.', () => {
+    let httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: 'my_pdf.pdf'
+    });
+    strictEqual(httpResponse.forceDownload, false);
+
+    httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: 'my_pdf.pdf',
+      forceDownload: true,
+    });
+    strictEqual(httpResponse.forceDownload, true);
+  });
+
+  it('should have a "filename" property set optionally in the constructor.', () => {
+    let httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: 'my_pdf.pdf',
+      filename: 'my_great_pdf.pdf',
+    });
+    strictEqual(httpResponse.filename, 'my_great_pdf.pdf');
+
+    httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: 'my_pdf.pdf',
+    });
+    strictEqual(httpResponse.filename, 'my_pdf.pdf');
+  });
+
+  it('should sanitize the "file" property passed in the constructor to only keep the base name.', () => {
+    // Test HttpResponseFile.file
+    let httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: './my_pdf.pdf',
+    });
+    strictEqual(httpResponse.file, 'my_pdf.pdf');
+
+    httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: '../my_pdf.pdf',
+    });
+    strictEqual(httpResponse.file, 'my_pdf.pdf');
+
+    httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: '/Users/my_pdf.pdf',
+    });
+    strictEqual(httpResponse.file, 'my_pdf.pdf');
+
+    // Test HttpResponseFile.filename
+    httpResponse = new HttpResponseFile({
+      directory: 'uploaded/',
+      file: '/Users/my_pdf.pdf',
+    });
+    strictEqual(httpResponse.filename, 'my_pdf.pdf');
+  });
+
+});
+
+describe('isHttpResponseFile', () => {
+
+  const defaultOptions = {
+    directory: '',
+    file: '',
+  };
+
+  it('should return true if the given object is an instance of HttpResponseFile.', () => {
+    const response = new HttpResponseFile(defaultOptions);
+    strictEqual(isHttpResponseFile(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseFile property equal to true.', () => {
+    const response = { isHttpResponseFile: true };
+    strictEqual(isHttpResponseFile(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseFile and if it '
+      + 'has no property isHttpResponseFile.', () => {
+    const response = {};
+    strictEqual(isHttpResponseFile(response), false);
+    strictEqual(isHttpResponseFile(undefined), false);
+    strictEqual(isHttpResponseFile(null), false);
   });
 
 });
