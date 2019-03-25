@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { ok, strictEqual } from 'assert';
 import { promisify } from 'util';
 
 // 3p
@@ -33,6 +33,8 @@ describe('createApp', () => {
   });
 
   afterEach(() => {
+    delete process.env.SETTINGS_CSRF;
+    delete process.env.SETTINGS_CSRF_OPTIONS_COOKIE;
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
   });
 
@@ -58,14 +60,102 @@ describe('createApp', () => {
       + ' csrf token.', () => {
     process.env.SETTINGS_CSRF = 'true';
     const app = createApp(class {});
-    const promise = Promise.all([
+    return Promise.all([
       request(app).post('/').expect(403).expect('Bad csrf token.'),
       request(app).patch('/').expect(403).expect('Bad csrf token.'),
       request(app).put('/').expect(403).expect('Bad csrf token.'),
       request(app).delete('/').expect(403).expect('Bad csrf token.'),
     ]);
-    process.env.SETTINGS_CSRF = 'false'; // Not great: assumption about the default param here.
-    return promise;
+  });
+
+  it('should not return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with correct'
+      + ' csrf token.', async () => {
+    process.env.SETTINGS_CSRF = 'true';
+    class AppController {
+      @Get('/')
+      index(ctx: Context) {
+        return new HttpResponseOK(ctx.request.csrfToken());
+      }
+    }
+    const app = createApp(AppController);
+
+    let csrfToken = '';
+    let sessionCookie = '';
+    await request(app).get('/').then(response => {
+      csrfToken = response.text;
+      for (const line of response.header['set-cookie']) {
+        if (line.includes('connect.sid')) {
+          sessionCookie = line;
+          break;
+        }
+      }
+    });
+
+    return request(app)
+      .post('/')
+      .set('Cookie', sessionCookie)
+      .set('csrf-token', csrfToken)
+      .expect(404);
+  });
+
+  it('should return a 403 "Bad csrf token" on POST/PATCH/PUT/DELETE requests with bad'
+      + ' csrf token (cookie=true).', async () => {
+    process.env.SETTINGS_CSRF = 'true';
+    process.env.SETTINGS_CSRF_OPTIONS_COOKIE = 'true';
+
+    class AppController {
+      @Get('/foo')
+      foo(ctx: Context) {
+        const response = new HttpResponseOK();
+        response.setCookie('csrf-token', ctx.request.csrfToken());
+        return response;
+      }
+    }
+
+    const app = createApp(AppController);
+    await Promise.all([
+      request(app).post('/').expect(403).expect('Bad csrf token.'),
+      request(app).patch('/').expect(403).expect('Bad csrf token.'),
+      request(app).put('/').expect(403).expect('Bad csrf token.'),
+      request(app).delete('/').expect(403).expect('Bad csrf token.'),
+    ]);
+
+    let csrfSecret = '';
+    let csrfHash = '';
+    await request(app)
+      .get('/foo')
+      .expect(200)
+      .then(data => {
+        ok(Array.isArray(data.header['set-cookie']));
+        for (const line of data.header['set-cookie']) {
+          const [ name, key ] = line.split('=');
+          switch (name) {
+            case 'csrf-token':
+              csrfHash = key.split(';')[0];
+              break;
+            case '_csrf':
+              csrfSecret = key.split(';')[0];
+              break;
+            case 'connect.sid':
+              throw new Error('Session cookie should not exist when using double submit cookie technique.');
+            default:
+              break;
+          }
+        }
+      });
+
+    await Promise.all([
+      request(app).post('/')
+        .set('Cookie', [`_csrf=${csrfSecret}`])
+        .expect(403),
+      request(app).post('/')
+        .set('csrf-token', csrfHash)
+        .expect(403),
+      request(app).post('/')
+        .set('Cookie', [`_csrf=${csrfSecret}`])
+        .set('csrf-token', csrfHash)
+        .expect(404)
+    ]);
   });
 
   it('should define the function req.csrfToken even if csrf is set to false in Config.', () => {
@@ -77,11 +167,9 @@ describe('createApp', () => {
       }
     }
     const app = createApp(AppController);
-    const promise = Promise.all([
+    return Promise.all([
       request(app).post('/').expect(200).expect('CSRF protection disabled.'),
     ]);
-    process.env.SETTINGS_CSRF = 'false'; // Not great: assumption about the default param here.
-    return promise;
   });
 
   it('should parse the cookies.', () => {
@@ -202,7 +290,15 @@ describe('createApp', () => {
 
   it('should accept a custom session store.', async () => {
     const store = new MemoryStore();
-    const app = createApp(class {}, {
+    class AppController {
+      @Get('/foo')
+      foo(ctx: Context) {
+        ctx.request.session.bar = 'foobar';
+        return new HttpResponseOK();
+      }
+    }
+
+    const app = createApp(AppController, {
       store: session => {
         strictEqual(typeof session, 'function');
         return store;
