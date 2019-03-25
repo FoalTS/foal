@@ -142,6 +142,7 @@ Here are the available options:
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)
+- `class HttpResponseFile` (200)
 - `class HttpResponseCreated` (201)
 
 `abstract class HttpResponseRedirection` (3xx):
@@ -162,6 +163,10 @@ Here are the available options:
 The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` constructors can take an optional argument `body` which is used as the body of the reponse.
 
 Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
+
+If the `body` is a stream, you need to pass a second argument as follows:
+
+`new HttpResponseOK(myFileStream, { stream: true })`
 
 The `HttpResponse` class has also 7 methods to set/get cookies and headers:
 ```typescript
