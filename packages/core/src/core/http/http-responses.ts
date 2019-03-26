@@ -1,5 +1,10 @@
 // std
-import { basename } from 'path';
+import { createReadStream, exists, stat } from 'fs';
+import { basename, join } from 'path';
+import { promisify } from 'util';
+
+// 3p
+import { getType } from 'mime';
 
 /**
  * Cookie options of the HttpResponse.setCookie method.
@@ -260,120 +265,48 @@ export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
 }
 
 /**
- * Options passed to the constructor of the `HttpResponseFile` class.
+ * Create an HttpResponseOK whose content is the specified file. If returned in a controller,
+ * the server sends the file in streaming.
  *
- * @export
- * @interface HttpResponseFileOptions
+ * @param {Object} options - The options used to create the HttpResponseOK.
+ * @param {string} options.directory - Directory where the file is located.
+ * @param {string} options.file - Name of the file with its extension. If a path is given,
+ * only the basename is kept.
+ * @param {boolean} [options.forceDownload=false] - Indicate if the browser should download
+ * the file directly without trying to display it in the window.
+ * @param {filename} [options.string=options.file] - Default name used by the browser when
+ * saving the file to the disk.
+ * @returns {Promise<HttpResponseOK>}
  */
-export interface HttpResponseFileOptions {
-  /**
-   * Directory where the file is located.
-   *
-   * @type {string}
-   * @memberof HttpResponseFileOptions
-   */
-  directory: string;
-  /**
-   * Name of the file with its extension. If a path is given,
-   * only the basename is kept.
-   *
-   * @type {string}
-   * @memberof HttpResponseFileOptions
-   */
-  file: string;
-  /**
-   * Indicate if the browser should download the file directly without
-   * trying to display it in the window.
-   *
-   * @type {boolean}
-   * @memberof HttpResponseFileOptions
-   */
-  forceDownload?: boolean;
-  /**
-   * Default name used by the browser when saving the file to the disk.
-   *
-   * @type {string}
-   * @memberof HttpResponseFileOptions
-   */
-  filename?: string;
-}
-
-/**
- * Represent an HTTP response with the status 200 - OK whose body
- * is the content of a file.
- *
- * @export
- * @class HttpResponseFile
- * @extends {HttpResponseOK}
- */
-export class HttpResponseFile extends HttpResponseOK {
-  /**
-   * Property used internally by isHttpResponFile.
-   *
-   * @memberof HttpResponseFile
-   */
-  readonly isHttpResponseFile = true;
-
-  /**
-   * Directory where the file is located.
-   *
-   * @type {string}
-   * @memberof HttpResponseFile
-   */
-  readonly directory: string;
-  /**
-   * Name of the file with its extension.
-   *
-   * @type {string}
-   * @memberof HttpResponseFile
-   */
-  readonly file: string;
-  /**
-   * Indicate if the browser should download the file directly without
-   * trying to display it in the window.
-   *
-   * @type {boolean}
-   * @memberof HttpResponseFile
-   */
-  readonly forceDownload: boolean;
-  /**
-   * Default name used by the browser when saving the file to the disk.
-   *
-   * @type {string}
-   * @memberof HttpResponseFile
-   */
-  readonly filename: string;
-
-  /**
-   * Create an instance of HttpResponseFile.
-   * @param {HttpResponseFileOptions} options - Options giving information on the file to send.
-   * @memberof HttpResponseFile
-   */
-  constructor(options: HttpResponseFileOptions) {
-    super();
-    this.directory = options.directory;
-    this.file = basename(options.file);
-    this.forceDownload = options.forceDownload || false;
-    this.filename = options.filename || this.file;
+export async function createHttpResponseFile(options:
+  { directory: string, file: string, forceDownload?: boolean, filename?: string }
+): Promise<HttpResponseOK> {
+  const file = basename(options.file);
+  const filePath = join(options.directory, file);
+  if (!await new Promise(resolve => exists(filePath, resolve))) {
+    throw new Error(`The file "${filePath}" does not exist.`);
   }
-}
 
-/**
- * Check if an object is an instance of HttpResponseFile.
- *
- * This function is a help when you have several packages using @foal/core.
- * Npm can install the package several times, which leads to duplicate class
- * definitions. If this is the case, the keyword `instanceof` may return false
- * while the object is an instance of the class. This function fixes this
- * problem.
- *
- * @export
- * @param {*} obj - The object to check.
- * @returns {obj is HttpResponseFile} - True if the error is an instance of HttpResponseFile. False otherwise.
- */
-export function isHttpResponseFile(obj: any): obj is HttpResponseFile {
-  return obj instanceof HttpResponseFile ||
-  (typeof obj === 'object' && obj !== null && obj.isHttpResponseFile === true);
+  const stats = await promisify(stat)(filePath);
+  if (stats.isDirectory()) {
+    throw new Error(`The directory "${filePath}" is not a file.`);
+  }
+
+  const stream = createReadStream(filePath);
+  const response = new HttpResponseOK(stream, { stream: true });
+
+  const mimeType = getType(options.file);
+  if (mimeType) {
+    response.setHeader('Content-Type', mimeType);
+  }
+  response.setHeader('Content-Length', stats.size.toString());
+  response.setHeader(
+    'Content-Disposition',
+    (options.forceDownload ? 'attachement' : 'inline')
+    + `; filename="${options.filename || file}"`
+  );
+
+  return response;
 }
 
 /**

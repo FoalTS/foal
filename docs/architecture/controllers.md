@@ -142,7 +142,6 @@ Here are the available options:
 
 `abstract class HttpResponseSuccess` (2xx):
 - `class HttpResponseOK` (200)
-- `class HttpResponseFile` (200)
 - `class HttpResponseCreated` (201)
 
 `abstract class HttpResponseRedirection` (3xx):

@@ -1,14 +1,16 @@
 // std
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { ReadStream } from 'fs';
+import { join } from 'path';
 
 // FoalTS
 import {
+  createHttpResponseFile,
   HttpResponse,
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
   HttpResponseCreated,
-  HttpResponseFile,
   HttpResponseForbidden,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
@@ -26,7 +28,6 @@ import {
   isHttpResponseClientError,
   isHttpResponseConflict,
   isHttpResponseCreated,
-  isHttpResponseFile,
   isHttpResponseForbidden,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
@@ -205,123 +206,125 @@ describe('isHttpResponseOK', () => {
 
 });
 
-describe('HttpResponseFile', () => {
+describe('createHttpResponseFile', () => {
 
-  const defaultOptions = {
-    directory: '',
-    file: '',
+  const pngFileOptions = {
+    directory: process.cwd(),
+    file: 'test-file.png',
   };
 
-  it('should inherit from HttpResponseOK, HttpResponseSuccess and HttpResponse', () => {
-    const httpResponse = new HttpResponseFile(defaultOptions);
-    ok(httpResponse instanceof HttpResponse);
-    ok(httpResponse instanceof HttpResponseSuccess);
-    ok(httpResponse instanceof HttpResponseOK);
+  it('should throw an Error if no file exists at the given path.', done => {
+    createHttpResponseFile({ directory: 'foo', file: 'bar.html' })
+      .then(() => done('The promise should be rejected.'))
+      .catch(err => {
+        console.log(err.message);
+        if (err.message !== 'The file "foo/bar.html" does not exist.') {
+          done(`Incorrect error message: ${err.message}.`);
+          return;
+        }
+        done();
+      });
   });
 
-  it('should have the correct status.', () => {
-    const httpResponse = new HttpResponseFile(defaultOptions);
-    strictEqual(httpResponse.statusCode, 200);
-    strictEqual(httpResponse.statusMessage, 'OK');
+  it('should throw an Error if a directory exists at the given path.', done => {
+    createHttpResponseFile({ directory: '', file: 'src' })
+      .then(() => done('The promise should be rejected.'))
+      .catch(err => {
+        console.log(err.message);
+        if (err.message !== 'The directory "src" is not a file.') {
+          done(`Incorrect error message: ${err.message}.`);
+          return;
+        }
+        done();
+      });
   });
 
-  it('should have an undefined body.', () => {
-    const httpResponse = new HttpResponseFile(defaultOptions);
-    strictEqual(httpResponse.body, undefined);
-  });
+  describe('should return an http response that', () => {
 
-  it('should have a "directory" and a "file" properties set in the constructor.', () => {
-    const httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my_pdf.pdf'
+    it('should be an HttpResponseOK.', async () => {
+      const response = await createHttpResponseFile(pngFileOptions);
+      ok(response instanceof HttpResponseOK);
     });
-    strictEqual(httpResponse.directory, 'uploaded/');
-    strictEqual(httpResponse.file, 'my_pdf.pdf');
-  });
 
-  it('should have a "forceDownload" property set optionally in the constructor.', () => {
-    let httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my_pdf.pdf'
+    it('should have a property stream set to true.', async () => {
+      const httpResponse = await createHttpResponseFile(pngFileOptions);
+      strictEqual(httpResponse.stream, true);
     });
-    strictEqual(httpResponse.forceDownload, false);
 
-    httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my_pdf.pdf',
-      forceDownload: true,
+    it('should have a body property which value is a readable stream at the given path.', async () => {
+      const httpResponse = await createHttpResponseFile(pngFileOptions);
+      if (!(httpResponse.body instanceof ReadStream)) {
+        throw new Error('The response body is not a ReadStream.');
+      }
+      strictEqual(httpResponse.body.path, join(process.cwd(), 'test-file.png'));
     });
-    strictEqual(httpResponse.forceDownload, true);
-  });
 
-  it('should have a "filename" property set optionally in the constructor.', () => {
-    let httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my_pdf.pdf',
-      filename: 'my_great_pdf.pdf',
+    it('should have a correct Content-Type header based on the file extension.', async () => {
+      let httpResponse = await createHttpResponseFile(pngFileOptions);
+      strictEqual(httpResponse.getHeader('Content-Type'), 'image/png');
+
+      httpResponse = await createHttpResponseFile({
+        directory: process.cwd(),
+        file: 'test-file'
+      });
+      strictEqual(httpResponse.getHeader('Content-Type'), undefined);
     });
-    strictEqual(httpResponse.filename, 'my_great_pdf.pdf');
 
-    httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my_pdf.pdf',
+    it('should have a correct Content-Length header based on the file size.', async () => {
+      const fileSize = '12412';
+      const httpResponse = await createHttpResponseFile(pngFileOptions);
+
+      strictEqual(httpResponse.getHeader('Content-Length'), fileSize);
     });
-    strictEqual(httpResponse.filename, 'my_pdf.pdf');
-  });
 
-  it('should sanitize the "file" property passed in the constructor to only keep the base name.', () => {
-    // Test HttpResponseFile.file
-    let httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: './my_pdf.pdf',
+    it('should have a correct Content-Disposition header based on the filename '
+        + 'and forceDownload options.', async () => {
+      let httpResponse = await createHttpResponseFile(pngFileOptions);
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'inline; filename="test-file.png"');
+
+      httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        filename: 'download.png'
+      });
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'inline; filename="download.png"');
+
+      httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        forceDownload: true
+      });
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachement; filename="test-file.png"');
+
+      httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        filename: 'download.png',
+        forceDownload: true,
+      });
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachement; filename="download.png"');
     });
-    strictEqual(httpResponse.file, 'my_pdf.pdf');
 
-    httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: '../my_pdf.pdf',
+    it('should sanitize the "file" option to only keep the base name.', async () => {
+      // Test file location.
+      // No error should be thrown.
+      let httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        file: 'uploaded/' + pngFileOptions.file,
+      });
+      httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        file: '../' + pngFileOptions.file,
+      });
+      httpResponse = await createHttpResponseFile({
+        ...pngFileOptions,
+        file: '/Users/' + pngFileOptions.file,
+      });
+
+      // Test filename in Content-Disposition.
+      strictEqual(
+        httpResponse.getHeader('Content-Disposition'),
+        'inline; filename="test-file.png"'
+      );
     });
-    strictEqual(httpResponse.file, 'my_pdf.pdf');
 
-    httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: '/Users/my_pdf.pdf',
-    });
-    strictEqual(httpResponse.file, 'my_pdf.pdf');
-
-    // Test HttpResponseFile.filename
-    httpResponse = new HttpResponseFile({
-      directory: 'uploaded/',
-      file: '/Users/my_pdf.pdf',
-    });
-    strictEqual(httpResponse.filename, 'my_pdf.pdf');
-  });
-
-});
-
-describe('isHttpResponseFile', () => {
-
-  const defaultOptions = {
-    directory: '',
-    file: '',
-  };
-
-  it('should return true if the given object is an instance of HttpResponseFile.', () => {
-    const response = new HttpResponseFile(defaultOptions);
-    strictEqual(isHttpResponseFile(response), true);
-  });
-
-  it('should return true if the given object has an isHttpResponseFile property equal to true.', () => {
-    const response = { isHttpResponseFile: true };
-    strictEqual(isHttpResponseFile(response), true);
-  });
-
-  it('should return false if the given object is not an instance of HttpResponseFile and if it '
-      + 'has no property isHttpResponseFile.', () => {
-    const response = {};
-    strictEqual(isHttpResponseFile(response), false);
-    strictEqual(isHttpResponseFile(undefined), false);
-    strictEqual(isHttpResponseFile(null), false);
   });
 
 });
