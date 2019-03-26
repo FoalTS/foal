@@ -122,17 +122,15 @@ Static files can be served using a static directory. You will find more informat
 
 ### from the Local File System
 
-The `HttpResponseFile` class allows you to send files to the client. Here is its signature:
+The `createHttpResponseFile` function allows you to send files to the client. Here is its signature:
 
 ```typescript
-class HttpResponseFile {
-  constructor(options: {
-    directory: string;
-    file: string;
-    forceDownload?: boolean;
-    filename?: string;
-  }) {}
-}
+function createHttpResponseFile(options: {
+  directory: string;
+  file: string;
+  forceDownload?: boolean;
+  filename?: string;
+}): Promise<HttpResponseOK> {}
 ```
 
 - The `directory` option is the folder path where the file is located (ex: `uploaded/`).
@@ -143,13 +141,13 @@ class HttpResponseFile {
 #### Example with no database
 
 ```typescript
-import { Get, HttpResponseFile } from '@foal/core';
+import { createHttpResponseFile, Get } from '@foal/core';
 
 class AppController {
 
   @Get('/download')
   download() {
-    return new HttpResponseFile({
+    return createHttpResponseFile({
       directory: 'uploaded/',
       file: 'my-pdf.pdf'
     });
@@ -188,7 +186,7 @@ export class UploadedFile extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { Context, Get, HttpResponseFile } from '@foal/core';
+import { Context, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
 
 import { UploadedFile } from './entities';
 
@@ -204,7 +202,7 @@ class AppController {
       return new HttpResponseNotFound();
     }
 
-    return new HttpResponseFile({
+    return createHttpResponseFile({
       directory: 'uploaded/',
       file: file.path
     });
@@ -220,7 +218,7 @@ class AppController {
 It will be possible to return a file stored on an AWS S3 bucket using this technique:
 
 ```typescript
-import { HttpResponseS3File } from '@foal/aws';
+import { createHttpResponseS3File } from '@foal/aws';
 import { Context, Get } from '@foal/core';
 
 class MyController {
@@ -228,7 +226,7 @@ class MyController {
   @Get('/my-pdf')
   getMyPdf(ctx: Context) {
 
-    new HttpResponseS3File({
+    return createHttpResponseFile({
       bucket: 'name_of_the_bucket',
       key: 'name_of_the_file',
       // Tell the browser to download the pdf and not to display it.
