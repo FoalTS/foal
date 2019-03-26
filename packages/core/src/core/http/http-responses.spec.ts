@@ -173,6 +173,14 @@ describe('HttpResponseOK', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseOK();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseOK({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseOK', () => {
@@ -341,6 +349,14 @@ describe('HttpResponseCreated', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseCreated();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseCreated({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseCreated', () => {
@@ -449,6 +465,14 @@ describe('HttpResponseRedirect', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRedirect('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRedirect('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseRedirect', () => {
@@ -518,6 +542,14 @@ describe('HttpResponseBadRequest', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseBadRequest();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseBadRequest({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseBadRequest', () => {
@@ -563,6 +595,14 @@ describe('HttpResponseUnauthorized', () => {
     const body = { foo: 'bar' };
     httpResponse = new HttpResponseUnauthorized(body);
     strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnauthorized();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnauthorized({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
   });
 
 });
@@ -612,6 +652,14 @@ describe('HttpResponseForbidden', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseForbidden();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseForbidden({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseForbidden', () => {
@@ -657,6 +705,14 @@ describe('HttpResponseNotFound', () => {
     const body = { foo: 'bar' };
     httpResponse = new HttpResponseNotFound(body);
     strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNotFound();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNotFound({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
   });
 
 });
@@ -706,6 +762,14 @@ describe('HttpResponseMethodNotAllowed', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMethodNotAllowed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMethodNotAllowed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseMethodNotAllowed', () => {
@@ -751,6 +815,14 @@ describe('HttpResponseConflict', () => {
     const body = { foo: 'bar' };
     httpResponse = new HttpResponseConflict(body);
     strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseConflict();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseConflict({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
   });
 
 });
@@ -822,6 +894,14 @@ describe('HttpResponseInternalServerError', () => {
     strictEqual(httpResponse.body, body);
   });
 
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseInternalServerError();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseInternalServerError({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
 });
 
 describe('isHttpResponseInternalServerError', () => {
@@ -867,6 +947,14 @@ describe('HttpResponseNotImplemented', () => {
     const body = { foo: 'bar' };
     httpResponse = new HttpResponseNotImplemented(body);
     strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNotImplemented();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNotImplemented({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
   });
 
 });

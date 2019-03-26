@@ -51,6 +51,13 @@ export abstract class HttpResponse {
    * @memberof HttpResponse
    */
   abstract statusMessage: string;
+  /**
+   * Specify if the body property is a stream.
+   *
+   * @type {boolean}
+   * @memberof HttpResponse
+   */
+  readonly stream: boolean = false;
 
   private cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
   private headers: { [key: string]: string } = {};
@@ -60,7 +67,9 @@ export abstract class HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponse
    */
-  constructor(public body?: any) {}
+  constructor(public body?: any, options: { stream?: boolean } = {}) {
+    this.stream = options.stream || false;
+  }
 
   /**
    * Add or replace a header in the response.
@@ -182,8 +191,8 @@ export abstract class HttpResponseSuccess extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseSuccess
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -227,8 +236,8 @@ export class HttpResponseOK extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseOK
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -389,8 +398,8 @@ export class HttpResponseCreated extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseCreated
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -479,8 +488,8 @@ export abstract class HttpResponseRedirection extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirection
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -526,8 +535,8 @@ export class HttpResponseRedirect extends HttpResponseRedirection {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirect
    */
-  constructor(public path: string, body?: any) {
-    super(body);
+  constructor(public path: string, body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -572,8 +581,8 @@ export abstract class HttpResponseClientError extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseClientError
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -618,8 +627,8 @@ export class HttpResponseBadRequest extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseBadRequest
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -664,8 +673,8 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseUnauthorized
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
     this.setHeader('WWW-Authenticate', '');
   }
 }
@@ -711,8 +720,8 @@ export class HttpResponseForbidden extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseForbidden
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -756,8 +765,8 @@ export class HttpResponseNotFound extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotFound
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -801,8 +810,8 @@ export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseMethodNotAllowed
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -847,8 +856,8 @@ export class HttpResponseConflict extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseConflict
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -887,8 +896,8 @@ export abstract class HttpResponseServerError extends HttpResponse {
    * @memberof HttpResponseServerError
    */
   readonly isHttpResponseServerError = true;
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -933,8 +942,8 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseInternalServerError
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -979,8 +988,8 @@ export class HttpResponseNotImplemented extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotImplemented
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
