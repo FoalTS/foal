@@ -53,6 +53,7 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
+    "@foal/formidable": "^0.8.6",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
     "mocha": "^5.2.0",
