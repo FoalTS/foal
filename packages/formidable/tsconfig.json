@@ -17,6 +17,7 @@
     "types": [ "node", "mocha" ]
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./e2e/**/*.spec.ts"
   ]
 }
