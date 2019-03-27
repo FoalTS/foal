@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync
 import { join } from 'path';
 
 // 3p
-import { Context, createApp, Get, HttpResponseOK, Post } from '@foal/core';
+import { Context, createApp, createHttpResponseFile, Get, HttpResponseNotFound, HttpResponseOK, Post } from '@foal/core';
 import { parseForm } from '@foal/formidable';
 import { strictEqual } from 'assert';
 import { IncomingForm } from 'formidable';
@@ -79,8 +79,19 @@ describe('Upload & Download Files', () => {
       }
 
       @Get('/download')
-      download() {
-        return new HttpResponseOK();
+      async download() {
+        const file = await UploadedFile.findOne({ user });
+
+        if (!file) {
+          return new HttpResponseNotFound();
+        }
+
+        return createHttpResponseFile({
+          directory: 'uploaded/',
+          file: file.path,
+          filename: 'download.png',
+          forceDownload: true,
+        });
       }
 
     }
@@ -120,6 +131,7 @@ describe('Upload & Download Files', () => {
       .expect(200)
       .expect('Content-Type', 'image/png')
       .expect('Content-Length', image.length.toString())
+      .expect('Content-Disposition', 'attachement; filename="download.png"')
       .expect(image);
 
   });

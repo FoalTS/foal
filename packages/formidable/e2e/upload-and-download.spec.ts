@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync
 import { join } from 'path';
 
 // 3p
-import { Context, createApp, Get, HttpResponseNoContent, HttpResponseOK, Post } from '@foal/core';
+import { Context, createApp, createHttpResponseFile, HttpResponseOK, Post } from '@foal/core';
 import { IncomingForm } from 'formidable';
 import * as request from 'supertest';
 
@@ -44,9 +44,14 @@ describe('Upload & Download Files', () => {
         return new HttpResponseOK(files.file1.path);
       }
 
-      @Get('/download')
-      download() {
-        return new HttpResponseOK();
+      @Post('/download')
+      download(ctx: Context) {
+        return createHttpResponseFile({
+          directory: 'uploaded',
+          file: ctx.request.body.filePath,
+          filename: 'download.png',
+          forceDownload: true,
+        });
       }
 
     }
@@ -67,10 +72,12 @@ describe('Upload & Download Files', () => {
     const image = readFileSync('e2e/test-image.png');
 
     await request(app)
-      .get('/download')
+      .post('/download')
+      .send({ filePath })
       .expect(200)
       .expect('Content-Type', 'image/png')
       .expect('Content-Length', image.length.toString())
+      .expect('Content-Disposition', 'attachement; filename="download.png"')
       .expect(image);
 
   });
