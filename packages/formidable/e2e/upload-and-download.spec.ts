@@ -39,7 +39,7 @@ describe('Upload & Download Files', () => {
         const form = new IncomingForm();
         form.uploadDir = 'uploaded';
         form.keepExtensions = true;
-        const { fields, files } = await parseForm(form, ctx);
+        const { files } = await parseForm(form, ctx);
 
         return new HttpResponseOK(files.file1.path);
       }

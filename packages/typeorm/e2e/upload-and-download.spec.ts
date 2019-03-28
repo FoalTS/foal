@@ -3,7 +3,10 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync
 import { join } from 'path';
 
 // 3p
-import { Context, createApp, createHttpResponseFile, Get, HttpResponseNotFound, HttpResponseOK, Post } from '@foal/core';
+import {
+  Context, createApp, createHttpResponseFile, Get,
+  HttpResponseNotFound, HttpResponseOK, Post
+} from '@foal/core';
 import { parseForm } from '@foal/formidable';
 import { strictEqual } from 'assert';
 import { IncomingForm } from 'formidable';
@@ -68,7 +71,7 @@ describe('Upload & Download Files', () => {
         const form = new IncomingForm();
         form.uploadDir = 'uploaded';
         form.keepExtensions = true;
-        const { fields, files } = await parseForm(form, ctx);
+        const { files } = await parseForm(form, ctx);
 
         const file = new UploadedFile();
         file.user = user;
