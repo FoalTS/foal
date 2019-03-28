@@ -1,3 +1,11 @@
+// std
+import { createReadStream, exists, stat } from 'fs';
+import { basename, join } from 'path';
+import { promisify } from 'util';
+
+// 3p
+import { getType } from 'mime';
+
 /**
  * Cookie options of the HttpResponse.setCookie method.
  *
@@ -48,6 +56,13 @@ export abstract class HttpResponse {
    * @memberof HttpResponse
    */
   abstract statusMessage: string;
+  /**
+   * Specify if the body property is a stream.
+   *
+   * @type {boolean}
+   * @memberof HttpResponse
+   */
+  readonly stream: boolean = false;
 
   private cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
   private headers: { [key: string]: string } = {};
@@ -57,7 +72,9 @@ export abstract class HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponse
    */
-  constructor(public body?: any) {}
+  constructor(public body?: any, options: { stream?: boolean } = {}) {
+    this.stream = options.stream || false;
+  }
 
   /**
    * Add or replace a header in the response.
@@ -179,8 +196,8 @@ export abstract class HttpResponseSuccess extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseSuccess
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -224,8 +241,8 @@ export class HttpResponseOK extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseOK
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -245,6 +262,51 @@ export class HttpResponseOK extends HttpResponseSuccess {
 export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
   return obj instanceof HttpResponseOK ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseOK === true);
+}
+
+/**
+ * Create an HttpResponseOK whose content is the specified file. If returned in a controller,
+ * the server sends the file in streaming.
+ *
+ * @param {Object} options - The options used to create the HttpResponseOK.
+ * @param {string} options.directory - Directory where the file is located.
+ * @param {string} options.file - Name of the file with its extension. If a path is given,
+ * only the basename is kept.
+ * @param {boolean} [options.forceDownload=false] - Indicate if the browser should download
+ * the file directly without trying to display it in the window.
+ * @param {filename} [options.string=options.file] - Default name used by the browser when
+ * saving the file to the disk.
+ * @returns {Promise<HttpResponseOK>}
+ */
+export async function createHttpResponseFile(options:
+  { directory: string, file: string, forceDownload?: boolean, filename?: string }
+): Promise<HttpResponseOK> {
+  const file = basename(options.file);
+  const filePath = join(options.directory, file);
+  if (!await new Promise(resolve => exists(filePath, resolve))) {
+    throw new Error(`The file "${filePath}" does not exist.`);
+  }
+
+  const stats = await promisify(stat)(filePath);
+  if (stats.isDirectory()) {
+    throw new Error(`The directory "${filePath}" is not a file.`);
+  }
+
+  const stream = createReadStream(filePath);
+  const response = new HttpResponseOK(stream, { stream: true });
+
+  const mimeType = getType(options.file);
+  if (mimeType) {
+    response.setHeader('Content-Type', mimeType);
+  }
+  response.setHeader('Content-Length', stats.size.toString());
+  response.setHeader(
+    'Content-Disposition',
+    (options.forceDownload ? 'attachement' : 'inline')
+    + `; filename="${options.filename || file}"`
+  );
+
+  return response;
 }
 
 /**
@@ -269,8 +331,8 @@ export class HttpResponseCreated extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseCreated
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -359,8 +421,8 @@ export abstract class HttpResponseRedirection extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirection
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -406,8 +468,8 @@ export class HttpResponseRedirect extends HttpResponseRedirection {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirect
    */
-  constructor(public path: string, body?: any) {
-    super(body);
+  constructor(public path: string, body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -452,8 +514,8 @@ export abstract class HttpResponseClientError extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseClientError
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -498,8 +560,8 @@ export class HttpResponseBadRequest extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseBadRequest
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -544,8 +606,8 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseUnauthorized
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
     this.setHeader('WWW-Authenticate', '');
   }
 }
@@ -591,8 +653,8 @@ export class HttpResponseForbidden extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseForbidden
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -636,8 +698,8 @@ export class HttpResponseNotFound extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotFound
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -681,8 +743,8 @@ export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseMethodNotAllowed
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -727,8 +789,8 @@ export class HttpResponseConflict extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseConflict
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -767,8 +829,8 @@ export abstract class HttpResponseServerError extends HttpResponse {
    * @memberof HttpResponseServerError
    */
   readonly isHttpResponseServerError = true;
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -813,8 +875,8 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseInternalServerError
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 
@@ -859,8 +921,8 @@ export class HttpResponseNotImplemented extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotImplemented
    */
-  constructor(body?: any) {
-    super(body);
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
   }
 }
 

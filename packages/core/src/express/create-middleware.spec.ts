@@ -4,6 +4,7 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import * as express from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
+import { Readable } from 'stream';
 import * as request from 'supertest';
 
 // FoalTS
@@ -176,6 +177,19 @@ describe('createMiddleware', () => {
             new ServiceManager()
           ));
 
+          const stream = new Readable({
+            read() {
+              this.push('Stream ');
+              this.push('content');
+              this.push(null);
+            }
+          });
+
+          app.get('/e', createMiddleware(
+            route(() => new HttpResponseOK(stream, { stream: true })),
+            new ServiceManager()
+          ));
+
           return Promise.all([
             request(app)
               .get('/a')
@@ -190,7 +204,10 @@ describe('createMiddleware', () => {
               .get('/d')
               .then(response => {
                 deepStrictEqual(response.body, {});
-              })
+              }),
+            request(app)
+              .get('/e')
+              .expect('Stream content')
           ]);
         });
 
