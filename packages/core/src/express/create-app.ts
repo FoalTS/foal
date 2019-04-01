@@ -45,7 +45,10 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   );
 
   app.use(logger(loggerFormat));
-  app.use(express.static(Config.get('settings.staticUrl', 'public')));
+  app.use(
+    Config.get('settings.staticPathPrefix', ''),
+    express.static(Config.get('settings.staticUrl', 'public'))
+  );
   app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
@@ -61,13 +64,13 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
     },
     name: Config.get('settings.session.name'),
     resave: Config.get('settings.session.resave', false),
-    saveUninitialized: Config.get('settings.session.saveUninitialized', true),
+    saveUninitialized: Config.get('settings.session.saveUninitialized', false),
     secret: Config.get('settings.session.secret', 'default_secret'),
     store: options.store ? options.store(session) : undefined,
   }));
 
   if (Config.get('settings.csrf', false) as boolean) {
-    app.use(csurf());
+    app.use(csurf({ cookie: Config.get('settings.csrfOptions.cookie', false) }));
   } else {
     app.use((req, res, next) => {
       req.csrfToken = () => 'CSRF protection disabled.';

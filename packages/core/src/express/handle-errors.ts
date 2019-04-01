@@ -9,7 +9,7 @@ function renderDebug500(stack): string {
     + '<body>'
     +  '<h1>500 - INTERNAL SERVER ERROR</h1>'
     + `<pre>${stack}</pre>`
-    + 'You are seeing this error because you have debug set to true in your config/settings.js file.'
+    + 'You are seeing this error because you have debug set to true in your configuration file.'
     + '</body>'
     + '</html>';
 }

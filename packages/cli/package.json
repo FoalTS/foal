@@ -1,15 +1,17 @@
 {
   "name": "@foal/cli",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run-script",
+    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
     "test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
     "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
+    "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
+    "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/create-secret/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },

@@ -41,6 +41,8 @@ You must provide a secret or a public key to the hooks. You have two ways to do 
 }
 ```
 
+> Note: The command `foal createsecret` generates a 256-bit secret encoded in base64 that can be used for your hook.
+
 # How to Generate a Token
 
 Here is an example on how to generate a one-hour token:

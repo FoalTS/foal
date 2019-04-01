@@ -163,6 +163,10 @@ The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerErro
 
 Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
 
+If the `body` is a stream, you need to pass a second argument as follows:
+
+`new HttpResponseOK(myFileStream, { stream: true })`
+
 The `HttpResponse` class has also 7 methods to set/get cookies and headers:
 ```typescript
 ({

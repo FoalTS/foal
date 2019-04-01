@@ -2,9 +2,9 @@
 
 * [HttpResponseRedirection][ClassDeclaration-9]
     * Constructor
-        * [constructor(body)][Constructor-9]
+        * [constructor(body, options)][Constructor-9]
     * Properties
-        * [isHttpResponseRedirection][PropertyDeclaration-19]
+        * [isHttpResponseRedirection][PropertyDeclaration-20]
 
 # HttpResponseRedirection
 
@@ -15,19 +15,20 @@ abstract class HttpResponseRedirection
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseRedirection.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -44,5 +45,5 @@ public readonly isHttpResponseRedirection: true;
 true
 
 [ClassDeclaration-9]: httpresponseredirection.md#httpresponseredirection
-[Constructor-9]: httpresponseredirection.md#constructorbody
-[PropertyDeclaration-19]: httpresponseredirection.md#ishttpresponseredirection
+[Constructor-9]: httpresponseredirection.md#constructorbody-options
+[PropertyDeclaration-20]: httpresponseredirection.md#ishttpresponseredirection

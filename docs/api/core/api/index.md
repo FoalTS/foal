@@ -13,49 +13,51 @@
         * [isValidationError][FunctionDeclaration-8]
         * [Log][FunctionDeclaration-9]
         * [ValidateBody][FunctionDeclaration-10]
-        * [ValidateHeaders][FunctionDeclaration-11]
-        * [ValidateParams][FunctionDeclaration-12]
-        * [ValidateQuery][FunctionDeclaration-13]
-        * [controller][FunctionDeclaration-14]
-        * [escapeProp][FunctionDeclaration-15]
-        * [escape][FunctionDeclaration-16]
-        * [getAjvInstance][FunctionDeclaration-17]
-        * [isInFile][FunctionDeclaration-18]
-        * [render][FunctionDeclaration-19]
-        * [validate][FunctionDeclaration-20]
-        * [Head][FunctionDeclaration-21]
-        * [Options][FunctionDeclaration-22]
-        * [Get][FunctionDeclaration-23]
-        * [Post][FunctionDeclaration-24]
-        * [Put][FunctionDeclaration-25]
-        * [Patch][FunctionDeclaration-26]
-        * [Delete][FunctionDeclaration-27]
-        * [isHttpResponse][FunctionDeclaration-28]
-        * [isHttpResponseSuccess][FunctionDeclaration-29]
-        * [isHttpResponseOK][FunctionDeclaration-30]
-        * [isHttpResponseCreated][FunctionDeclaration-31]
-        * [isHttpResponseNoContent][FunctionDeclaration-32]
-        * [isHttpResponseRedirection][FunctionDeclaration-33]
-        * [isHttpResponseRedirect][FunctionDeclaration-34]
-        * [isHttpResponseClientError][FunctionDeclaration-35]
-        * [isHttpResponseBadRequest][FunctionDeclaration-36]
-        * [isHttpResponseUnauthorized][FunctionDeclaration-37]
-        * [isHttpResponseForbidden][FunctionDeclaration-38]
-        * [isHttpResponseNotFound][FunctionDeclaration-39]
-        * [isHttpResponseMethodNotAllowed][FunctionDeclaration-40]
-        * [isHttpResponseConflict][FunctionDeclaration-41]
-        * [isHttpResponseServerError][FunctionDeclaration-42]
-        * [isHttpResponseInternalServerError][FunctionDeclaration-43]
-        * [isHttpResponseNotImplemented][FunctionDeclaration-44]
-        * [Hook][FunctionDeclaration-45]
-        * [getHookFunction][FunctionDeclaration-46]
-        * [makeControllerRoutes][FunctionDeclaration-47]
-        * [getPath][FunctionDeclaration-48]
-        * [getHttpMethod][FunctionDeclaration-49]
-        * [createController][FunctionDeclaration-50]
-        * [createService][FunctionDeclaration-51]
-        * [dependency][FunctionDeclaration-52]
-        * [createApp][FunctionDeclaration-53]
+        * [ValidateCookies][FunctionDeclaration-11]
+        * [ValidateHeaders][FunctionDeclaration-12]
+        * [ValidateParams][FunctionDeclaration-13]
+        * [ValidateQuery][FunctionDeclaration-14]
+        * [controller][FunctionDeclaration-15]
+        * [escapeProp][FunctionDeclaration-16]
+        * [escape][FunctionDeclaration-17]
+        * [getAjvInstance][FunctionDeclaration-18]
+        * [isInFile][FunctionDeclaration-19]
+        * [render][FunctionDeclaration-20]
+        * [validate][FunctionDeclaration-21]
+        * [Head][FunctionDeclaration-22]
+        * [Options][FunctionDeclaration-23]
+        * [Get][FunctionDeclaration-24]
+        * [Post][FunctionDeclaration-25]
+        * [Put][FunctionDeclaration-26]
+        * [Patch][FunctionDeclaration-27]
+        * [Delete][FunctionDeclaration-28]
+        * [isHttpResponse][FunctionDeclaration-29]
+        * [isHttpResponseSuccess][FunctionDeclaration-30]
+        * [isHttpResponseOK][FunctionDeclaration-31]
+        * [createHttpResponseFile][FunctionDeclaration-32]
+        * [isHttpResponseCreated][FunctionDeclaration-33]
+        * [isHttpResponseNoContent][FunctionDeclaration-34]
+        * [isHttpResponseRedirection][FunctionDeclaration-35]
+        * [isHttpResponseRedirect][FunctionDeclaration-36]
+        * [isHttpResponseClientError][FunctionDeclaration-37]
+        * [isHttpResponseBadRequest][FunctionDeclaration-38]
+        * [isHttpResponseUnauthorized][FunctionDeclaration-39]
+        * [isHttpResponseForbidden][FunctionDeclaration-40]
+        * [isHttpResponseNotFound][FunctionDeclaration-41]
+        * [isHttpResponseMethodNotAllowed][FunctionDeclaration-42]
+        * [isHttpResponseConflict][FunctionDeclaration-43]
+        * [isHttpResponseServerError][FunctionDeclaration-44]
+        * [isHttpResponseInternalServerError][FunctionDeclaration-45]
+        * [isHttpResponseNotImplemented][FunctionDeclaration-46]
+        * [Hook][FunctionDeclaration-47]
+        * [getHookFunction][FunctionDeclaration-48]
+        * [makeControllerRoutes][FunctionDeclaration-49]
+        * [getPath][FunctionDeclaration-50]
+        * [getHttpMethod][FunctionDeclaration-51]
+        * [createController][FunctionDeclaration-52]
+        * [createService][FunctionDeclaration-53]
+        * [dependency][FunctionDeclaration-54]
+        * [createApp][FunctionDeclaration-55]
     * Interfaces
         * [LogOptions][InterfaceDeclaration-1]
         * [HTTPRequest][InterfaceDeclaration-0]
@@ -324,6 +326,26 @@ function ValidateBody(schema: object): HookDecorator;
 | Name   | Type   | Description                                 |
 | ------ | ------ | ------------------------------------------- |
 | schema | object | - Schema used to validate the body request. |
+
+**Return type**
+
+[HookDecorator][TypeAliasDeclaration-0]
+
+----------
+
+### ValidateCookies
+
+Hook factory validating the cookies of the request against a AJV schema.
+
+```typescript
+function ValidateCookies(schema: object): HookDecorator;
+```
+
+**Parameters**
+
+| Name   | Type   | Description                                    |
+| ------ | ------ | ---------------------------------------------- |
+| schema | object | - Schema used to validate the cookies request. |
 
 **Return type**
 
@@ -763,6 +785,27 @@ function isHttpResponseOK(obj: any): obj is HttpResponseOK;
 **Return type**
 
 obj is [HttpResponseOK][ClassDeclaration-4]
+
+----------
+
+### createHttpResponseFile
+
+Create an HttpResponseOK whose content is the specified file. If returned in a controller,
+the server sends the file in streaming.
+
+```typescript
+function createHttpResponseFile(options: { directory: string; file: string; forceDownload?: boolean | undefined; filename?: string | undefined; }): Promise<HttpResponseOK>;
+```
+
+**Parameters**
+
+| Name    | Type                                                                                                               | Description                                      |
+| ------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| options | { directory: string; file: string; forceDownload?: boolean &#124; undefined; filename?: string &#124; undefined; } | - The options used to create the HttpResponseOK. |
+
+**Return type**
+
+Promise<[HttpResponseOK][ClassDeclaration-4]>
 
 ----------
 
@@ -1699,7 +1742,14 @@ Represent an HTTP response with the status 501 - NOT IMPLEMENTED.
 
 ----------
 
-### [Config][ClassDeclaration-22]
+### [ConfigMock][ClassDeclaration-22]
+
+Mock the Config class when it is used as a service.
+
+
+----------
+
+### [Config][ClassDeclaration-23]
 
 Static class to access environment variables and configuration files.
 
@@ -1735,86 +1785,90 @@ Identity Mapper that instantiates and returns service singletons.
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [FunctionDeclaration-10]: index.md#validatebody
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-11]: index.md#validateheaders
+[FunctionDeclaration-11]: index.md#validatecookies
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-12]: index.md#validateparams
+[FunctionDeclaration-12]: index.md#validateheaders
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-13]: index.md#validatequery
+[FunctionDeclaration-13]: index.md#validateparams
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-14]: index.md#controller
+[FunctionDeclaration-14]: index.md#validatequery
+[TypeAliasDeclaration-0]: index.md#hookdecorator
+[FunctionDeclaration-15]: index.md#controller
 [TypeAliasDeclaration-1]: index.md#class
 [TypeAliasDeclaration-1]: index.md#class
-[FunctionDeclaration-15]: index.md#escapeprop
-[FunctionDeclaration-16]: index.md#escape
-[FunctionDeclaration-17]: index.md#getajvinstance
-[FunctionDeclaration-18]: index.md#isinfile
-[FunctionDeclaration-19]: index.md#render
+[FunctionDeclaration-16]: index.md#escapeprop
+[FunctionDeclaration-17]: index.md#escape
+[FunctionDeclaration-18]: index.md#getajvinstance
+[FunctionDeclaration-19]: index.md#isinfile
+[FunctionDeclaration-20]: index.md#render
 [ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
-[FunctionDeclaration-20]: index.md#validate
-[FunctionDeclaration-21]: index.md#head
-[FunctionDeclaration-22]: index.md#options
-[FunctionDeclaration-23]: index.md#get
-[FunctionDeclaration-24]: index.md#post
-[FunctionDeclaration-25]: index.md#put
-[FunctionDeclaration-26]: index.md#patch
-[FunctionDeclaration-27]: index.md#delete
-[FunctionDeclaration-28]: index.md#ishttpresponse
+[FunctionDeclaration-21]: index.md#validate
+[FunctionDeclaration-22]: index.md#head
+[FunctionDeclaration-23]: index.md#options
+[FunctionDeclaration-24]: index.md#get
+[FunctionDeclaration-25]: index.md#post
+[FunctionDeclaration-26]: index.md#put
+[FunctionDeclaration-27]: index.md#patch
+[FunctionDeclaration-28]: index.md#delete
+[FunctionDeclaration-29]: index.md#ishttpresponse
 [ClassDeclaration-6]: index/httpresponse.md#httpresponse
-[FunctionDeclaration-29]: index.md#ishttpresponsesuccess
+[FunctionDeclaration-30]: index.md#ishttpresponsesuccess
 [ClassDeclaration-5]: index/httpresponsesuccess.md#httpresponsesuccess
-[FunctionDeclaration-30]: index.md#ishttpresponseok
+[FunctionDeclaration-31]: index.md#ishttpresponseok
 [ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
-[FunctionDeclaration-31]: index.md#ishttpresponsecreated
+[FunctionDeclaration-32]: index.md#createhttpresponsefile
+[ClassDeclaration-4]: index/httpresponseok.md#httpresponseok
+[FunctionDeclaration-33]: index.md#ishttpresponsecreated
 [ClassDeclaration-7]: index/httpresponsecreated.md#httpresponsecreated
-[FunctionDeclaration-32]: index.md#ishttpresponsenocontent
+[FunctionDeclaration-34]: index.md#ishttpresponsenocontent
 [ClassDeclaration-8]: index/httpresponsenocontent.md#httpresponsenocontent
-[FunctionDeclaration-33]: index.md#ishttpresponseredirection
+[FunctionDeclaration-35]: index.md#ishttpresponseredirection
 [ClassDeclaration-9]: index/httpresponseredirection.md#httpresponseredirection
-[FunctionDeclaration-34]: index.md#ishttpresponseredirect
+[FunctionDeclaration-36]: index.md#ishttpresponseredirect
 [ClassDeclaration-10]: index/httpresponseredirect.md#httpresponseredirect
-[FunctionDeclaration-35]: index.md#ishttpresponseclienterror
+[FunctionDeclaration-37]: index.md#ishttpresponseclienterror
 [ClassDeclaration-11]: index/httpresponseclienterror.md#httpresponseclienterror
-[FunctionDeclaration-36]: index.md#ishttpresponsebadrequest
+[FunctionDeclaration-38]: index.md#ishttpresponsebadrequest
 [ClassDeclaration-12]: index/httpresponsebadrequest.md#httpresponsebadrequest
-[FunctionDeclaration-37]: index.md#ishttpresponseunauthorized
+[FunctionDeclaration-39]: index.md#ishttpresponseunauthorized
 [ClassDeclaration-13]: index/httpresponseunauthorized.md#httpresponseunauthorized
-[FunctionDeclaration-38]: index.md#ishttpresponseforbidden
+[FunctionDeclaration-40]: index.md#ishttpresponseforbidden
 [ClassDeclaration-14]: index/httpresponseforbidden.md#httpresponseforbidden
-[FunctionDeclaration-39]: index.md#ishttpresponsenotfound
+[FunctionDeclaration-41]: index.md#ishttpresponsenotfound
 [ClassDeclaration-15]: index/httpresponsenotfound.md#httpresponsenotfound
-[FunctionDeclaration-40]: index.md#ishttpresponsemethodnotallowed
+[FunctionDeclaration-42]: index.md#ishttpresponsemethodnotallowed
 [ClassDeclaration-16]: index/httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[FunctionDeclaration-41]: index.md#ishttpresponseconflict
+[FunctionDeclaration-43]: index.md#ishttpresponseconflict
 [ClassDeclaration-17]: index/httpresponseconflict.md#httpresponseconflict
-[FunctionDeclaration-42]: index.md#ishttpresponseservererror
+[FunctionDeclaration-44]: index.md#ishttpresponseservererror
 [ClassDeclaration-18]: index/httpresponseservererror.md#httpresponseservererror
-[FunctionDeclaration-43]: index.md#ishttpresponseinternalservererror
+[FunctionDeclaration-45]: index.md#ishttpresponseinternalservererror
 [ClassDeclaration-19]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
-[FunctionDeclaration-44]: index.md#ishttpresponsenotimplemented
+[FunctionDeclaration-46]: index.md#ishttpresponsenotimplemented
 [ClassDeclaration-20]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
-[FunctionDeclaration-45]: index.md#hook
+[FunctionDeclaration-47]: index.md#hook
 [TypeAliasDeclaration-3]: index.md#hookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
-[FunctionDeclaration-46]: index.md#gethookfunction
+[FunctionDeclaration-48]: index.md#gethookfunction
 [TypeAliasDeclaration-0]: index.md#hookdecorator
 [TypeAliasDeclaration-3]: index.md#hookfunction
-[FunctionDeclaration-47]: index.md#makecontrollerroutes
+[FunctionDeclaration-49]: index.md#makecontrollerroutes
 [TypeAliasDeclaration-3]: index.md#hookfunction
 [TypeAliasDeclaration-1]: index.md#class
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager
 [InterfaceDeclaration-3]: index.md#route
-[FunctionDeclaration-48]: index.md#getpath
+[FunctionDeclaration-50]: index.md#getpath
 [TypeAliasDeclaration-1]: index.md#class
-[FunctionDeclaration-49]: index.md#gethttpmethod
+[FunctionDeclaration-51]: index.md#gethttpmethod
 [TypeAliasDeclaration-1]: index.md#class
-[FunctionDeclaration-50]: index.md#createcontroller
-[TypeAliasDeclaration-1]: index.md#class
-[ClassDeclaration-21]: index/servicemanager.md#servicemanager
-[FunctionDeclaration-51]: index.md#createservice
+[FunctionDeclaration-52]: index.md#createcontroller
 [TypeAliasDeclaration-1]: index.md#class
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager
-[FunctionDeclaration-52]: index.md#dependency
-[FunctionDeclaration-53]: index.md#createapp
+[FunctionDeclaration-53]: index.md#createservice
+[TypeAliasDeclaration-1]: index.md#class
+[ClassDeclaration-21]: index/servicemanager.md#servicemanager
+[FunctionDeclaration-54]: index.md#dependency
+[FunctionDeclaration-55]: index.md#createapp
 [TypeAliasDeclaration-1]: index.md#class
 [InterfaceDeclaration-4]: index.md#createappoptions
 [InterfaceDeclaration-1]: index.md#logoptions
@@ -1854,5 +1908,6 @@ Identity Mapper that instantiates and returns service singletons.
 [ClassDeclaration-18]: index/httpresponseservererror.md#httpresponseservererror
 [ClassDeclaration-19]: index/httpresponseinternalservererror.md#httpresponseinternalservererror
 [ClassDeclaration-20]: index/httpresponsenotimplemented.md#httpresponsenotimplemented
-[ClassDeclaration-22]: index/config.md#config
+[ClassDeclaration-22]: index/configmock.md#configmock
+[ClassDeclaration-23]: index/config.md#config
 [ClassDeclaration-21]: index/servicemanager.md#servicemanager

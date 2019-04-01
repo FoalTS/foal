@@ -1,5 +1,5 @@
 // 3p
-import { Context, createApp, Get, HttpResponseOK, HttpResponseUnauthorized, logIn, Post } from '@foal/core';
+import { Context, createApp, Get, HttpResponseOK, HttpResponseUnauthorized, Post } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 

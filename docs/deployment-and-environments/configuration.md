@@ -133,17 +133,26 @@ export class AppController {
 
 *app.controller.spec.ts*
 ```typescript
-import { createController } from '@foal/core';
+import { createController, ConfigMock } from '@foal/core';
 
 import { AppController } from './app.controller';
 
 ...
-const config = {
-  get: (str: string) => str === 'secret' ? 'fake_secret' : ''
-};
+const config = new ConfigMock();
+config.set('secret', 'fake_secret');
 const controller = createController(AppController, { config });
 ...
 
+```
+
+The `ConfigMock` is a class to mock the configuration during testing. Here is its signature:
+
+```typescript
+interface {
+  set(key: string, value: any): void;
+  reset(): void;
+  get<T = any>(key: string, defaultValue?: T): T;
+}
 ```
 
 ## Additional Resources

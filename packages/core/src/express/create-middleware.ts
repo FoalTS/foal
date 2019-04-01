@@ -62,6 +62,12 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
       if (typeof response.body === 'number') {
         response.body = response.body.toString();
       }
+
+      if (response.stream === true) {
+        response.body.pipe(res);
+        return;
+      }
+
       res.send(response.body);
     } catch (err) {
       next(err);

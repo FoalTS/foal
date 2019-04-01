@@ -72,9 +72,11 @@
   * [CSRF Protection](./security/csrf-protection.md)
   * [XSS Protection](./security/xss-protection.md)
 * Utilities
+  * [Static Files](./utilities/static-files.md)
   * [Templating](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
+  * [Upload & Download Files](./cookbook/upload-and-download-files.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
@@ -91,6 +93,7 @@
 
 * [@foal/core](./api/core/api/index.md)
 * [@foal/ejs](./api/ejs/api/index.md)
+* [@foal/formidable](./api/formidable/api/index.md)
 * [@foal/jwt](./api/jwt/api/index.md)
 * [@foal/mongoose](./api/mongoose/api/index.md)
 * [@foal/password](./api/password/api/index.md)
