@@ -10,7 +10,7 @@
     "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
     "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "engines": {
@@ -49,6 +49,7 @@
   "devDependencies": {
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
+    "copy": "^0.3.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "ts-docs-gen": "0.2.0",
