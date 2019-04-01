@@ -2,11 +2,11 @@
 
 * [HttpResponseBadRequest][ClassDeclaration-12]
     * Constructor
-        * [constructor(body)][Constructor-12]
+        * [constructor(body, options)][Constructor-12]
     * Properties
-        * [isHttpResponseBadRequest][PropertyDeclaration-24]
-        * [statusCode][PropertyDeclaration-25]
-        * [statusMessage][PropertyDeclaration-26]
+        * [isHttpResponseBadRequest][PropertyDeclaration-25]
+        * [statusCode][PropertyDeclaration-26]
+        * [statusMessage][PropertyDeclaration-27]
 
 # HttpResponseBadRequest
 
@@ -17,19 +17,20 @@ class HttpResponseBadRequest
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseBadRequest.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
-[Constructor-12]: httpresponsebadrequest.md#constructorbody
-[PropertyDeclaration-24]: httpresponsebadrequest.md#ishttpresponsebadrequest
-[PropertyDeclaration-25]: httpresponsebadrequest.md#statuscode
-[PropertyDeclaration-26]: httpresponsebadrequest.md#statusmessage
+[Constructor-12]: httpresponsebadrequest.md#constructorbody-options
+[PropertyDeclaration-25]: httpresponsebadrequest.md#ishttpresponsebadrequest
+[PropertyDeclaration-26]: httpresponsebadrequest.md#statuscode
+[PropertyDeclaration-27]: httpresponsebadrequest.md#statusmessage

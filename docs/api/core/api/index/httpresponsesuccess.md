@@ -2,7 +2,7 @@
 
 * [HttpResponseSuccess][ClassDeclaration-5]
     * Constructor
-        * [constructor(body)][Constructor-5]
+        * [constructor(body, options)][Constructor-5]
     * Properties
         * [isHttpResponseSuccess][PropertyDeclaration-9]
 
@@ -15,19 +15,20 @@ abstract class HttpResponseSuccess
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseSuccess.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -44,5 +45,5 @@ public readonly isHttpResponseSuccess: true;
 true
 
 [ClassDeclaration-5]: httpresponsesuccess.md#httpresponsesuccess
-[Constructor-5]: httpresponsesuccess.md#constructorbody
+[Constructor-5]: httpresponsesuccess.md#constructorbody-options
 [PropertyDeclaration-9]: httpresponsesuccess.md#ishttpresponsesuccess

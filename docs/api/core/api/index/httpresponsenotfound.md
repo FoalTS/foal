@@ -2,11 +2,11 @@
 
 * [HttpResponseNotFound][ClassDeclaration-15]
     * Constructor
-        * [constructor(body)][Constructor-15]
+        * [constructor(body, options)][Constructor-15]
     * Properties
-        * [isHttpResponseNotFound][PropertyDeclaration-33]
-        * [statusCode][PropertyDeclaration-34]
-        * [statusMessage][PropertyDeclaration-35]
+        * [isHttpResponseNotFound][PropertyDeclaration-34]
+        * [statusCode][PropertyDeclaration-35]
+        * [statusMessage][PropertyDeclaration-36]
 
 # HttpResponseNotFound
 
@@ -17,19 +17,20 @@ class HttpResponseNotFound
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseNotFound.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-15]: httpresponsenotfound.md#httpresponsenotfound
-[Constructor-15]: httpresponsenotfound.md#constructorbody
-[PropertyDeclaration-33]: httpresponsenotfound.md#ishttpresponsenotfound
-[PropertyDeclaration-34]: httpresponsenotfound.md#statuscode
-[PropertyDeclaration-35]: httpresponsenotfound.md#statusmessage
+[Constructor-15]: httpresponsenotfound.md#constructorbody-options
+[PropertyDeclaration-34]: httpresponsenotfound.md#ishttpresponsenotfound
+[PropertyDeclaration-35]: httpresponsenotfound.md#statuscode
+[PropertyDeclaration-36]: httpresponsenotfound.md#statusmessage

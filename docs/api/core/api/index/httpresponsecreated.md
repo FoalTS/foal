@@ -2,11 +2,11 @@
 
 * [HttpResponseCreated][ClassDeclaration-7]
     * Constructor
-        * [constructor(body)][Constructor-7]
+        * [constructor(body, options)][Constructor-7]
     * Properties
-        * [isHttpResponseCreated][PropertyDeclaration-13]
-        * [statusCode][PropertyDeclaration-14]
-        * [statusMessage][PropertyDeclaration-15]
+        * [isHttpResponseCreated][PropertyDeclaration-14]
+        * [statusCode][PropertyDeclaration-15]
+        * [statusMessage][PropertyDeclaration-16]
 
 # HttpResponseCreated
 
@@ -17,19 +17,20 @@ class HttpResponseCreated
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseCreated.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-7]: httpresponsecreated.md#httpresponsecreated
-[Constructor-7]: httpresponsecreated.md#constructorbody
-[PropertyDeclaration-13]: httpresponsecreated.md#ishttpresponsecreated
-[PropertyDeclaration-14]: httpresponsecreated.md#statuscode
-[PropertyDeclaration-15]: httpresponsecreated.md#statusmessage
+[Constructor-7]: httpresponsecreated.md#constructorbody-options
+[PropertyDeclaration-14]: httpresponsecreated.md#ishttpresponsecreated
+[PropertyDeclaration-15]: httpresponsecreated.md#statuscode
+[PropertyDeclaration-16]: httpresponsecreated.md#statusmessage

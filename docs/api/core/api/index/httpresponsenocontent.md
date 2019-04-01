@@ -4,9 +4,9 @@
     * Constructor
         * [constructor()][Constructor-8]
     * Properties
-        * [isHttpResponseNoContent][PropertyDeclaration-16]
-        * [statusCode][PropertyDeclaration-17]
-        * [statusMessage][PropertyDeclaration-18]
+        * [isHttpResponseNoContent][PropertyDeclaration-17]
+        * [statusCode][PropertyDeclaration-18]
+        * [statusMessage][PropertyDeclaration-19]
 
 # HttpResponseNoContent
 
@@ -70,6 +70,6 @@ string
 
 [ClassDeclaration-8]: httpresponsenocontent.md#httpresponsenocontent
 [Constructor-8]: httpresponsenocontent.md#constructor
-[PropertyDeclaration-16]: httpresponsenocontent.md#ishttpresponsenocontent
-[PropertyDeclaration-17]: httpresponsenocontent.md#statuscode
-[PropertyDeclaration-18]: httpresponsenocontent.md#statusmessage
+[PropertyDeclaration-17]: httpresponsenocontent.md#ishttpresponsenocontent
+[PropertyDeclaration-18]: httpresponsenocontent.md#statuscode
+[PropertyDeclaration-19]: httpresponsenocontent.md#statusmessage

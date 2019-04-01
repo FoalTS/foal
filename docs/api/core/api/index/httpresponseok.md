@@ -2,7 +2,7 @@
 
 * [HttpResponseOK][ClassDeclaration-4]
     * Constructor
-        * [constructor(body)][Constructor-4]
+        * [constructor(body, options)][Constructor-4]
     * Properties
         * [isHttpResponseOK][PropertyDeclaration-6]
         * [statusCode][PropertyDeclaration-7]
@@ -17,19 +17,20 @@ class HttpResponseOK
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseOK.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-4]: httpresponseok.md#httpresponseok
-[Constructor-4]: httpresponseok.md#constructorbody
+[Constructor-4]: httpresponseok.md#constructorbody-options
 [PropertyDeclaration-6]: httpresponseok.md#ishttpresponseok
 [PropertyDeclaration-7]: httpresponseok.md#statuscode
 [PropertyDeclaration-8]: httpresponseok.md#statusmessage

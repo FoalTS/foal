@@ -2,11 +2,11 @@
 
 * [HttpResponseRedirect][ClassDeclaration-10]
     * Constructor
-        * [constructor(path, body)][Constructor-10]
+        * [constructor(path, body, options)][Constructor-10]
     * Properties
-        * [isHttpResponseRedirect][PropertyDeclaration-20]
-        * [statusCode][PropertyDeclaration-21]
-        * [statusMessage][PropertyDeclaration-22]
+        * [isHttpResponseRedirect][PropertyDeclaration-21]
+        * [statusCode][PropertyDeclaration-22]
+        * [statusMessage][PropertyDeclaration-23]
 
 # HttpResponseRedirect
 
@@ -17,20 +17,21 @@ class HttpResponseRedirect
 ```
 ## Constructor
 
-### constructor(path, body)
+### constructor(path, body, options)
 
 Create an instance of HttpResponseRedirect.
 
 ```typescript
-public constructor(path: string, body?: any);
+public constructor(path: string, body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type   | Description                      |
-| ---- | ------ | -------------------------------- |
-| path | string | - The redirection path.          |
-| body | any    | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| path    | string                                 |               | - The redirection path.          |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -76,7 +77,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-10]: httpresponseredirect.md#httpresponseredirect
-[Constructor-10]: httpresponseredirect.md#constructorpath-body
-[PropertyDeclaration-20]: httpresponseredirect.md#ishttpresponseredirect
-[PropertyDeclaration-21]: httpresponseredirect.md#statuscode
-[PropertyDeclaration-22]: httpresponseredirect.md#statusmessage
+[Constructor-10]: httpresponseredirect.md#constructorpath-body-options
+[PropertyDeclaration-21]: httpresponseredirect.md#ishttpresponseredirect
+[PropertyDeclaration-22]: httpresponseredirect.md#statuscode
+[PropertyDeclaration-23]: httpresponseredirect.md#statusmessage

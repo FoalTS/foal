@@ -2,11 +2,11 @@
 
 * [HttpResponseMethodNotAllowed][ClassDeclaration-16]
     * Constructor
-        * [constructor(body)][Constructor-16]
+        * [constructor(body, options)][Constructor-16]
     * Properties
-        * [isHttpResponseMethodNotAllowed][PropertyDeclaration-36]
-        * [statusCode][PropertyDeclaration-37]
-        * [statusMessage][PropertyDeclaration-38]
+        * [isHttpResponseMethodNotAllowed][PropertyDeclaration-37]
+        * [statusCode][PropertyDeclaration-38]
+        * [statusMessage][PropertyDeclaration-39]
 
 # HttpResponseMethodNotAllowed
 
@@ -17,19 +17,20 @@ class HttpResponseMethodNotAllowed
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseMethodNotAllowed.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[Constructor-16]: httpresponsemethodnotallowed.md#constructorbody
-[PropertyDeclaration-36]: httpresponsemethodnotallowed.md#ishttpresponsemethodnotallowed
-[PropertyDeclaration-37]: httpresponsemethodnotallowed.md#statuscode
-[PropertyDeclaration-38]: httpresponsemethodnotallowed.md#statusmessage
+[Constructor-16]: httpresponsemethodnotallowed.md#constructorbody-options
+[PropertyDeclaration-37]: httpresponsemethodnotallowed.md#ishttpresponsemethodnotallowed
+[PropertyDeclaration-38]: httpresponsemethodnotallowed.md#statuscode
+[PropertyDeclaration-39]: httpresponsemethodnotallowed.md#statusmessage
