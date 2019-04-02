@@ -5,7 +5,7 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
+import { Context, getHttpMethod, getPath, isHttpResponseOK, isHttpResponseRedirect } from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
@@ -31,19 +31,33 @@ describe('SwaggerController', () => {
 
   describe('has a "index" method that', () => {
 
+    const ctx = new Context({ path: 'swagger/' });
+
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(ConcreteClass, 'index'), 'GET');
       strictEqual(getPath(ConcreteClass, 'index'), '/');
     });
 
-    // TODO: Test the redirect
+    it('should redirect the user to xxx/ if there is no trailing slash in the URL.', async () => {
+      // This way, the browser requests the assets at the correct path (the relative path).
+      const controller = new ConcreteClass();
+
+      const ctx = new Context({ path: 'xxx' });
+      const response = await controller.index(ctx);
+
+      if (!isHttpResponseRedirect(response)) {
+        throw new Error('SwaggerController.index should return an HttpResponseRedirect instance.');
+      }
+
+      strictEqual(response.path, ctx.request.path + '/');
+    });
 
     it('should properly render the template given options are { url: "xxx" }.', async () => {
       class ConcreteClass extends SwaggerController {
         options = { url: 'xxx' };
       }
       const controller = new ConcreteClass();
-      const response = await controller.index();
+      const response = await controller.index(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
@@ -60,7 +74,7 @@ describe('SwaggerController', () => {
         options = { controllerClass: class {} };
       }
       const controller = new ConcreteClass();
-      const response = await controller.index();
+      const response = await controller.index(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
@@ -81,7 +95,7 @@ describe('SwaggerController', () => {
           ];
         }
         const controller = new ConcreteClass();
-        const response = await controller.index();
+        const response = await controller.index(ctx);
 
         if (!isHttpResponseOK(response)) {
           throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
@@ -102,7 +116,7 @@ describe('SwaggerController', () => {
           ];
         }
         const controller = new ConcreteClass();
-        const response = await controller.index();
+        const response = await controller.index(ctx);
 
         if (!isHttpResponseOK(response)) {
           throw new Error('SwaggerController.index should return an HttpResponseOK instance.');

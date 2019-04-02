@@ -4,7 +4,7 @@ import { join } from 'path';
 import { promisify } from 'util';
 
 // 3p
-import { Class, Context, createHttpResponseFile, Get, HttpResponseOK, Options } from '@foal/core';
+import { Class, Context, createHttpResponseFile, Get, HttpResponseOK, HttpResponseRedirect } from '@foal/core';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 
 function isUrlOption(option): option is { url: string } {
@@ -36,7 +36,11 @@ export abstract class SwaggerController {
   /* UI */
 
   @Get('/')
-  async index() {
+  async index(ctx: Context) {
+    if (!ctx.request.path.endsWith('/')) {
+      return new HttpResponseRedirect(ctx.request.path + '/');
+    }
+
     const template = await promisify(readFile)(join(__dirname, 'index.tpl.html'), 'utf8');
     let body = '';
 
