@@ -1,2 +1,4 @@
 public/assets/bootstrap/
 test_db.sqlite
+build/
+openapi.yml
