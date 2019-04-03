@@ -28,9 +28,9 @@ export abstract class SwaggerController {
 
   /* Spec file(s) */
 
-  @Get('swagger.json')
+  @Get('openapi.json')
   getOpenApiDefinition(ctx: Context) {
-    // Use a query /swagger.json?name=v1
+    // Use a query /openapi.json?name=v1
   }
 
   /* UI */
@@ -45,7 +45,7 @@ export abstract class SwaggerController {
     let body = '';
 
     if (!Array.isArray(this.options)) {
-      const url = isUrlOption(this.options) ? this.options.url : 'swagger.json';
+      const url = isUrlOption(this.options) ? this.options.url : 'openapi.json';
       body = template
         .replace('{{ urls }}', `url: "${url}"`)
         .replace('{{ urlArray }}', '');
@@ -58,7 +58,7 @@ export abstract class SwaggerController {
           }
           return {
             name: option.name,
-            url: isUrlOption(option) ? option.url : `swagger.json?name=${option.name}`
+            url: isUrlOption(option) ? option.url : `openapi.json?name=${option.name}`
           };
         });
       let urlArray = `\n      const urls = ${JSON.stringify(options)};`;
