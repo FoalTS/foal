@@ -33,6 +33,8 @@ export interface IOpenAPI {
    * server. If the servers property is not provided, or is an empty array, the default
    * value would be a Server Object with a url value of /.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiServer[]}
    * @memberof IOpenAPI
    */
@@ -40,12 +42,16 @@ export interface IOpenAPI {
   /**
    * The available paths and operations for the API.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiPath[]}
    * @memberof IOpenAPI
    */
   paths: IApiPath[];
   /**
    * An element to hold various schemas for the specification.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiComponent[]}
    * @memberof IOpenAPI
@@ -56,6 +62,8 @@ export interface IOpenAPI {
    * of values includes alternative security requirement objects that can be used.
    * Only one of the security requirement objects need to be satisfied to authorize
    * a request. Individual operations can override this definition.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiSecurityRequirement[]}
    * @memberof IOpenAPI
@@ -68,12 +76,16 @@ export interface IOpenAPI {
    * declared MAY be organized randomly or based on the tools' logic. Each tag name in
    * the list MUST be unique.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiTag[]}
    * @memberof IOpenAPI
    */
   tags?: IApiTag[];
   /**
    * Additional external documentation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiExternalDocumentation}
    * @memberof IOpenAPI
@@ -86,12 +98,16 @@ export interface IOpenAPI {
  * if needed, and MAY be presented in editing or documentation generation tools for
  * convenience.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiInfo
  */
 export interface IApiInfo {
   /**
    * The title of the application.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiInfo
@@ -101,12 +117,16 @@ export interface IApiInfo {
    * A short description of the application. CommonMark syntax MAY be used for rich
    * text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiInfo
    */
   description?: string;
   /**
    * A URL to the Terms of Service for the API. MUST be in the format of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiInfo
@@ -115,12 +135,16 @@ export interface IApiInfo {
   /**
    * The contact information for the exposed API.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiContact}
    * @memberof IApiInfo
    */
   contact?: IApiContact;
   /**
    * The license information for the exposed API.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiLicense}
    * @memberof IApiInfo
@@ -129,6 +153,8 @@ export interface IApiInfo {
   /**
    * The version of the OpenAPI document (which is distinct from the OpenAPI
    * Specification version or the API implementation version).
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiInfo
@@ -139,12 +165,16 @@ export interface IApiInfo {
 /**
  * Contact information for the exposed API.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiContact
  */
 export interface IApiContact {
   /**
    * The identifying name of the contact person/organization.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiContact
@@ -153,6 +183,8 @@ export interface IApiContact {
   /**
    * The URL pointing to the contact information. MUST be in the format of a URL.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiContact
    */
@@ -160,6 +192,8 @@ export interface IApiContact {
   /**
    * The email address of the contact person/organization. MUST be in the format
    * of an email address.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiContact
@@ -170,6 +204,8 @@ export interface IApiContact {
 /**
  * License information for the exposed API.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiLicense
  */
@@ -177,12 +213,16 @@ export interface IApiLicense {
   /**
    * The license name used for the API.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiLicense
    */
   name: string;
   /**
    * A URL to the license used for the API. MUST be in the format of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiLicense
@@ -192,6 +232,8 @@ export interface IApiLicense {
 
 /**
  * An object representing a Server.
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
  *
  * @export
  * @interface IApiServer
@@ -203,6 +245,8 @@ export interface IApiServer {
    * where the OpenAPI document is being served. Variable substitutions will
    * be made when a variable is named in {brackets}.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiServer
    */
@@ -211,6 +255,8 @@ export interface IApiServer {
    * An optional string describing the host designated by the URL. CommonMark
    * syntax MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiServer
    */
@@ -218,6 +264,8 @@ export interface IApiServer {
   /**
    * A map between a variable name and its value. The value is used for substitution
    * in the server's URL template.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {{
    *     [key: string]: IApiServerVariable;
@@ -232,6 +280,8 @@ export interface IApiServer {
 /**
  * An object representing a Server Variable for server URL template substitution.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiServerVariable
  */
@@ -239,6 +289,8 @@ export interface IApiServerVariable {
   /**
    * An enumeration of string values to be used if the substitution options are
    * from a limited set.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string[]}
    * @memberof IApiServerVariable
@@ -249,6 +301,8 @@ export interface IApiServerVariable {
    * value is not supplied. Note this behavior is different than the Schema Object's
    * treatment of default values, because in those cases parameter values are optional.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiServerVariable
    */
@@ -256,6 +310,8 @@ export interface IApiServerVariable {
   /**
    * An optional description for the server variable. CommonMark syntax MAY be used for
    * rich text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiServerVariable
@@ -268,12 +324,16 @@ export interface IApiServerVariable {
  * within the components object will have no effect on the API unless they are explicitly
  * referenced from properties outside the components object.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiComponents
  */
 export interface IApiComponents {
   /**
    * An object to hold reusable Schema Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiSchema | IApiReference;
@@ -286,6 +346,8 @@ export interface IApiComponents {
   /**
    * An object to hold reusable Response Objects.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {({
    *     [key: string]: IApiResponse | IApiReference;
    *   })}
@@ -296,6 +358,8 @@ export interface IApiComponents {
   };
   /**
    * An object to hold reusable Parameter Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiParameter | IApiReference;
@@ -308,6 +372,8 @@ export interface IApiComponents {
   /**
    * An object to hold reusable Example Objects.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {({
    *     [key: string]: IApiExample | IApiReference;
    *   })}
@@ -318,6 +384,8 @@ export interface IApiComponents {
   };
   /**
    * An object to hold reusable Request Body Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiRequestBody | IApiReference;
@@ -330,6 +398,8 @@ export interface IApiComponents {
   /**
    * An object to hold reusable Header Objects.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {({
    *     [key: string]: IApiHeader | IApiReference;
    *   })}
@@ -340,6 +410,8 @@ export interface IApiComponents {
   };
   /**
    * An object to hold reusable Security Scheme Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiSecurityScheme | IApiReference;
@@ -352,6 +424,8 @@ export interface IApiComponents {
   /**
    * An object to hold reusable Link Objects.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {({
    *     [key: string]: IApiLink | IApiReference;
    *   })}
@@ -362,6 +436,8 @@ export interface IApiComponents {
   };
   /**
    * An object to hold reusable Callback Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiCallback | IApiReference;
@@ -378,6 +454,8 @@ export interface IApiComponents {
  * The path is appended to the URL from the Server Object in order to construct
  * the full URL. The Paths MAY be empty, due to ACL constraints.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiPath
  */
@@ -391,6 +469,8 @@ export interface IApiPath {
    * different templated names MUST NOT exist as they are identical. In case of
    * ambiguous matching, it's up to the tooling to decide which one to use.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiPathItem}
    * @memberof IApiPath
    */
@@ -402,6 +482,8 @@ export interface IApiPath {
  * due to ACL constraints. The path itself is still exposed to the documentation viewer
  * but they will not know which operations and parameters are available.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiPathItem
  */
@@ -411,12 +493,16 @@ export interface IApiPathItem {
    * be in the format of a Path Item Object. If there are conflicts between the referenced
    * definition and this Path Item's definition, the behavior is *undefined*.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiPathItem
    */
   $ref?: string;
   /**
    * An optional, string summary, intended to apply to all operations in this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiPathItem
@@ -426,12 +512,16 @@ export interface IApiPathItem {
    * An optional, string description, intended to apply to all operations in this path.
    * CommonMark syntax MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiPathItem
    */
   description?: string;
   /**
    * A definition of a GET operation on this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOperation}
    * @memberof IApiPathItem
@@ -440,12 +530,16 @@ export interface IApiPathItem {
   /**
    * A definition of a PUT operation on this path.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOperation}
    * @memberof IApiPathItem
    */
   put?: IApiOperation;
   /**
    * A definition of a POST operation on this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOperation}
    * @memberof IApiPathItem
@@ -454,12 +548,16 @@ export interface IApiPathItem {
   /**
    * A definition of a DELETE operation on this path.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOperation}
    * @memberof IApiPathItem
    */
   delete?: IApiOperation;
   /**
    * A definition of a OPTIONS operation on this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOperation}
    * @memberof IApiPathItem
@@ -468,12 +566,16 @@ export interface IApiPathItem {
   /**
    * A definition of a HEAD operation on this path.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOperation}
    * @memberof IApiPathItem
    */
   head?: IApiOperation;
   /**
    * A definition of a PATCH operation on this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOperation}
    * @memberof IApiPathItem
@@ -482,12 +584,16 @@ export interface IApiPathItem {
   /**
    * A definition of a TRACE operation on this path.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOperation}
    * @memberof IApiPathItem
    */
   trace?: IApiOperation;
   /**
    * An alternative server array to service all operations in this path.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiServer[]}
    * @memberof IApiPathItem
@@ -501,6 +607,8 @@ export interface IApiPathItem {
    * can use the Reference Object to link to parameters that are defined at the OpenAPI
    * Object's components/parameters.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {((IApiParameter | IApiReference)[])}
    * @memberof IApiPathItem
    */
@@ -510,6 +618,8 @@ export interface IApiPathItem {
 /**
  * Describes a single API operation on a path.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiOperation
  */
@@ -518,12 +628,16 @@ export interface IApiOperation {
    * A list of tags for API documentation control. Tags can be used for
    * logical grouping of operations by resources or any other qualifier.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string[]}
    * @memberof IApiOperation
    */
   tags?: string[];
   /**
    * A short summary of what the operation does.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiOperation
@@ -533,12 +647,16 @@ export interface IApiOperation {
    * A verbose explanation of the operation behavior. CommonMark syntax
    * MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiOperation
    */
   description?: string;
   /**
    * Additional external documentation for this operation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiExternalDocumentation}
    * @memberof IApiOperation
@@ -549,6 +667,8 @@ export interface IApiOperation {
    * operations described in the API. The operationId value is case-sensitive. Tools
    * and libraries MAY use the operationId to uniquely identify an operation, therefore,
    * it is RECOMMENDED to follow common programming naming conventions.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiOperation
@@ -561,6 +681,8 @@ export interface IApiOperation {
    * combination of a name and location. The list can use the Reference Object to link to
    * parameters that are defined at the OpenAPI Object's components/parameters.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {((IApiParameter | IApiReference)[])}
    * @memberof IApiOperation
    */
@@ -571,12 +693,16 @@ export interface IApiOperation {
    * for request bodies. In other cases where the HTTP spec is vague, requestBody SHALL be
    * ignored by consumers.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {(IApiRequestBody | IApiReference)}
    * @memberof IApiOperation
    */
   requestBody?: IApiRequestBody | IApiReference;
   /**
    * The list of possible responses as they are returned from executing this operation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiResponse[]}
    * @memberof IApiOperation
@@ -588,6 +714,8 @@ export interface IApiOperation {
    * that describes a request that may be initiated by the API provider and the expected
    * responses. The key value used to identify the callback object is an expression, evaluated
    * at runtime, that identifies a URL to use for the callback operation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiCallback | IApiReference;
@@ -601,6 +729,8 @@ export interface IApiOperation {
    * Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the
    * declared operation. Default value is false.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {boolean}
    * @memberof IApiOperation
    */
@@ -612,6 +742,8 @@ export interface IApiOperation {
    * definition overrides any declared top-level security. To remove a top-level security
    * declaration, an empty array can be used.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiSecurityRequirement[]}
    * @memberof IApiOperation
    */
@@ -619,6 +751,8 @@ export interface IApiOperation {
   /**
    * An alternative server array to service this operation. If an alternative server object
    * is specified at the Path Item Object or Root level, it will be overridden by this value.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiServer[]}
    * @memberof IApiOperation
@@ -629,6 +763,8 @@ export interface IApiOperation {
 /**
  * Allows referencing an external resource for extended documentation.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiExternalDocumentation
  */
@@ -637,12 +773,16 @@ export interface IApiExternalDocumentation {
    * A short description of the target documentation. CommonMark syntax MAY be used for
    * rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiExternalDocumentation
    */
   description?: string;
   /**
    * The URL for the target documentation. Value MUST be in the format of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiExternalDocumentation
@@ -667,6 +807,8 @@ export interface IApiExternalDocumentation {
  * header names are case insensitive.
  * * cookie - Used to pass a specific cookie value to the API.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiParameter
  */
@@ -679,12 +821,16 @@ export interface IApiParameter {
    * the parameter definition SHALL be ignored.
    * * For all other cases, the name corresponds to the parameter name used by the in property.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiParameter
    */
   name: string;
   /**
    * The location of the parameter. Possible values are "query", "header", "path" or "cookie".
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {('query'|'header'|'path'|'cookie')}
    * @memberof IApiParameter
@@ -693,6 +839,8 @@ export interface IApiParameter {
   /**
    * A brief description of the parameter. This could contain examples of use. CommonMark
    * syntax MAY be used for rich text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiParameter
@@ -703,6 +851,8 @@ export interface IApiParameter {
    * this property is REQUIRED and its value MUST be true. Otherwise, the property MAY be
    * included and its default value is false.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {boolean}
    * @memberof IApiParameter
    */
@@ -710,6 +860,8 @@ export interface IApiParameter {
   /**
    * Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
    * Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {boolean}
    * @memberof IApiParameter
@@ -722,14 +874,31 @@ export interface IApiParameter {
    * be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a
    * later revision.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {boolean}
    * @memberof IApiParameter
    */
   allowEmptyValue?: boolean;
+
+  // TODO: Complete this:
+
+  /**
+   * The schema defining the type used for the parameter.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {(IApiSchema | IApiReference)}
+   * @memberof IApiOperation
+   */
+  schema?: IApiSchema | IApiReference;
+  style?: string;
 }
 
 /**
  * Describes a single request body.
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
  *
  * @export
  * @interface IApiRequestBody
@@ -739,6 +908,8 @@ export interface IApiRequestBody {
    * A brief description of the request body. This could contain examples
    * of use. CommonMark syntax MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiRequestBody
    */
@@ -747,6 +918,8 @@ export interface IApiRequestBody {
    * The content of the request body. The key is a media type or media type
    * range and the value describes it. For requests that match multiple keys,
    * only the most specific key is applicable. e.g. text/plain overrides text/*
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {{
    *     [key: string]: IApiMediaType;
@@ -759,6 +932,8 @@ export interface IApiRequestBody {
   /**
    * Determines if the request body is required in the request. Defaults to false.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {boolean}
    * @memberof IApiRequestBody
    */
@@ -769,12 +944,16 @@ export interface IApiRequestBody {
  * Each Media Type Object provides schema and examples for the media type
  * identified by its key.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiMediaType
  */
 export interface IApiMediaType {
   /**
    * The schema defining the content of the request, response, or parameter.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {(IApiSchema | IApiReference)}
    * @memberof IApiMediaType
@@ -787,6 +966,8 @@ export interface IApiMediaType {
    * which contains an example, the example value SHALL override the example
    * provided by the schema.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {*}
    * @memberof IApiMediaType
    */
@@ -796,6 +977,8 @@ export interface IApiMediaType {
    * and specified schema if present. The examples field is mutually exclusive of
    * the example field. Furthermore, if referencing a schema which contains an
    * example, the examples value SHALL override the example provided by the schema.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiExample | IApiReference;
@@ -811,6 +994,8 @@ export interface IApiMediaType {
    * only apply to requestBody objects when the media type is multipart or
    * application/x-www-form-urlencoded.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {{
    *     [key: string]: IApiEncoding;
    *   }}
@@ -824,6 +1009,8 @@ export interface IApiMediaType {
 /**
  * A single encoding definition applied to a single schema property.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiEncoding
  */
@@ -836,6 +1023,8 @@ export interface IApiEncoding {
    * media type (e.g. application/json), a wildcard media type (e.g. image/*), or a
    * comma-separated list of the two types.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiEncoding
    */
@@ -845,6 +1034,8 @@ export interface IApiEncoding {
    * Content-Disposition. Content-Type is described separately and SHALL be ignored in
    * this section. This property SHALL be ignored if the request body media type is not
    * a multipart.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiHeader | IApiReference;
@@ -860,6 +1051,8 @@ export interface IApiEncoding {
    * same values as query parameters, including default values. This property SHALL be
    * ignored if the request body media type is not application/x-www-form-urlencoded.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiEncoding
    */
@@ -871,6 +1064,8 @@ export interface IApiEncoding {
    * styles, the default value is false. This property SHALL be ignored if the request body
    * media type is not application/x-www-form-urlencoded.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {boolean}
    * @memberof IApiEncoding
    */
@@ -880,6 +1075,8 @@ export interface IApiEncoding {
    * RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding. The default value is
    * false. This property SHALL be ignored if the request body media type is not
    * application/x-www-form-urlencoded.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {boolean}
    * @memberof IApiEncoding
@@ -901,6 +1098,8 @@ export interface IApiEncoding {
  * The Responses Object MUST contain at least one response code, and it SHOULD be the response
  * for a successful operation call.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiResponses
  */
@@ -909,6 +1108,8 @@ export interface IApiResponses {
    * The documentation of responses other than the ones declared for specific HTTP response
    * codes. Use this field to cover undeclared responses. A Reference Object can link to a
    * response that the OpenAPI Object's components/responses section defines.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
@@ -925,6 +1126,8 @@ export interface IApiResponses {
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
    */
@@ -939,6 +1142,8 @@ export interface IApiResponses {
    * Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
@@ -955,6 +1160,8 @@ export interface IApiResponses {
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
    */
@@ -969,6 +1176,8 @@ export interface IApiResponses {
    * Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
@@ -985,6 +1194,8 @@ export interface IApiResponses {
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
    */
@@ -1000,6 +1211,8 @@ export interface IApiResponses {
    * response is defined using an explicit code, the explicit code definition takes precedence
    * over the range definition for that code.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {(IApiResponse | IApiReference)}
    * @memberof IApiResponses
    */
@@ -1010,6 +1223,8 @@ export interface IApiResponses {
  * Describes a single response from an API Operation, including design-time, static
  * links to operations based on the response.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiResponse
  */
@@ -1017,6 +1232,8 @@ export interface IApiResponse {
   /**
    * A short description of the response. CommonMark syntax MAY be used for rich
    * text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiResponse
@@ -1026,6 +1243,8 @@ export interface IApiResponse {
    * Maps a header name to its definition. RFC7230 states header names are case
    * insensitive. If a response header is defined with the name "Content-Type",
    * it SHALL be ignored.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiHeader | IApiReference;
@@ -1041,6 +1260,8 @@ export interface IApiResponse {
    * match multiple keys, only the most specific key is applicable. e.g. text/plain
    * overrides text/*
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {{
    *     [key: string]: IApiMediaType;
    *   }}
@@ -1053,6 +1274,8 @@ export interface IApiResponse {
    * A map of operations links that can be followed from the response. The key of the
    * map is a short name for the link, following the naming constraints of the names
    * for Component Objects.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {({
    *     [key: string]: IApiLink | IApiReference;
@@ -1071,6 +1294,8 @@ export interface IApiResponse {
  * callback object is an expression, evaluated at runtime, that identifies a URL to use
  * for the callback operation.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiCallback
  */
@@ -1078,6 +1303,8 @@ export interface IApiCallback {
   /**
    * A Path Item Object used to define a callback request and expected responses. A
    * complete example is available.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiPathItem}
    * @memberof IApiCallback
@@ -1089,6 +1316,8 @@ export interface IApiExample {
   /**
    * Short description for the example.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiExample
    */
@@ -1096,6 +1325,8 @@ export interface IApiExample {
   /**
    * Long description for the example. CommonMark syntax MAY be used for rich
    * text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiExample
@@ -1106,6 +1337,8 @@ export interface IApiExample {
    * exclusive. To represent examples of media types that cannot naturally represented
    * in JSON or YAML, use a string value to contain the example, escaping where necessary.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {*}
    * @memberof IApiExample
    */
@@ -1114,6 +1347,8 @@ export interface IApiExample {
    * A URL that points to the literal example. This provides the capability to reference
    * examples that cannot easily be included in JSON or YAML documents. The value field
    * and externalValue field are mutually exclusive.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiExample
@@ -1133,6 +1368,8 @@ export interface IApiExample {
  * for accessing values in an operation and using them as parameters while invoking the linked
  * operation.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiLink
  */
@@ -1142,6 +1379,8 @@ export interface IApiLink {
    * the operationId field, and MUST point to an Operation Object. Relative operationRef values
    * MAY be used to locate an existing Operation Object in the OpenAPI definition.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiLink
    */
@@ -1149,6 +1388,8 @@ export interface IApiLink {
   /**
    * The name of an existing, resolvable OAS operation, as defined with a unique operationId.
    * This field is mutually exclusive of the operationRef field.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiLink
@@ -1161,6 +1402,8 @@ export interface IApiLink {
    * operation. The parameter name can be qualified using the parameter location [{in}.]{name}
    * for operations that use the same parameter name in different locations (e.g. path.id).
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {{
    *     [key: string]: any;
    *   }}
@@ -1172,6 +1415,8 @@ export interface IApiLink {
   /**
    * A literal value or {expression} to use as a request body when calling the target operation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {*}
    * @memberof IApiLink
    */
@@ -1179,12 +1424,16 @@ export interface IApiLink {
   /**
    * A description of the link. CommonMark syntax MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiLink
    */
   description?: string;
   /**
    * A server object to be used by the target operation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiServer}
    * @memberof IApiLink
@@ -1197,6 +1446,8 @@ export interface IApiHeader {
    * A brief description of the header. This could contain examples of use.
    * CommonMark syntax MAY be used for rich text representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiHeader
    */
@@ -1205,6 +1456,8 @@ export interface IApiHeader {
   /**
    * Specifies that a header is deprecated and SHOULD be transitioned out of usage.
    * Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {boolean}
    * @memberof IApiHeader
@@ -1217,12 +1470,16 @@ export interface IApiHeader {
  * Adds metadata to a single tag that is used by the Operation Object. It is not
  * mandatory to have a Tag Object per tag defined in the Operation Object instances.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiTag
  */
 export interface IApiTag {
   /**
    * The name of the tag.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiTag
@@ -1232,12 +1489,16 @@ export interface IApiTag {
    * A short description for the tag. CommonMark syntax MAY be used for rich text
    * representation.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiTag
    */
   description?: string;
   /**
    * Additional external documentation for this tag.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiExternalDocumentation}
    * @memberof IApiTag
@@ -1255,12 +1516,16 @@ export interface IApiTag {
  * For this specification, reference resolution is accomplished as defined by the JSON
  * Reference specification and not by the JSON Schema specification.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiReference
  */
 export interface IApiReference {
   /**
    * The reference string.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiReference
@@ -1275,6 +1540,8 @@ export interface IApiReference {
  *
  * For more information about the properties, see JSON Schema Core and JSON Schema
  * Validation. Unless stated otherwise, the property definitions follow the JSON Schema.
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
  */
 export type IApiSchema = any;
 
@@ -1283,6 +1550,8 @@ export interface IApiAbstractSecurityScheme {
    * The type of the security scheme. Valid values are "apiKey", "http", "oauth2",
    * "openIdConnect".
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {('apiKey'|'http'|'oauth2'|'openIdConnect')}
    * @memberof IApiAbstractSecurityScheme
    */
@@ -1290,6 +1559,8 @@ export interface IApiAbstractSecurityScheme {
   /**
    * A short description for security scheme. CommonMark syntax MAY be used for
    * rich text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiAbstractSecurityScheme
@@ -1302,12 +1573,16 @@ export interface IApiApiKeySecurityScheme extends IApiAbstractSecurityScheme {
   /**
    * The name of the header, query or cookie parameter to be used.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiApiKeySecurityScheme
    */
   name: string;
   /**
    * The location of the API key. Valid values are "query", "header" or "cookie".
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {('query'|'header'|'cookie')}
    * @memberof IApiApiKeySecurityScheme
@@ -1321,6 +1596,8 @@ export interface IApiHttpSecurityScheme extends IApiAbstractSecurityScheme {
    * The name of the HTTP Authorization scheme to be used in the Authorization
    * header as defined in RFC7235.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiHttpSecurityScheme
    */
@@ -1329,6 +1606,8 @@ export interface IApiHttpSecurityScheme extends IApiAbstractSecurityScheme {
    * A hint to the client to identify how the bearer token is formatted. Bearer
    * tokens are usually generated by an authorization server, so this information
    * is primarily for documentation purposes.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiHttpSecurityScheme
@@ -1340,6 +1619,8 @@ export interface IApiOAuth2SecurityScheme extends IApiAbstractSecurityScheme {
   type: 'oauth2';
   /**
    * An object containing configuration information for the flow types supported.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOAuthFlows}
    * @memberof IApiOAuth2SecurityScheme
@@ -1353,6 +1634,8 @@ export interface IApiOpenIdConnectSecurityScheme extends IApiAbstractSecuritySch
    * OpenId Connect URL to discover OAuth2 configuration values. This MUST be
    * in the form of a URL.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiOpenIdConnectSecurityScheme
    */
@@ -1365,6 +1648,8 @@ export interface IApiOpenIdConnectSecurityScheme extends IApiAbstractSecuritySch
  * a query parameter), OAuth2's common flows (implicit, password, application and access
  * code) as defined in RFC6749, and OpenID Connect Discovery.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  */
 export type IApiSecurityScheme = IApiApiKeySecurityScheme | IApiHttpSecurityScheme |
@@ -1373,6 +1658,8 @@ export type IApiSecurityScheme = IApiApiKeySecurityScheme | IApiHttpSecuritySche
 /**
  * Allows configuration of the supported OAuth Flows.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiOAuthFlows
  */
@@ -1380,12 +1667,16 @@ export interface IApiOAuthFlows {
   /**
    * Configuration for the OAuth Implicit flow
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
   implicit?: IApiOAuthFlow;
   /**
    * Configuration for the OAuth Resource Owner Password flow
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
@@ -1395,6 +1686,8 @@ export interface IApiOAuthFlows {
    * Configuration for the OAuth Client Credentials flow. Previously called
    * application in OpenAPI 2.0.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
@@ -1402,6 +1695,8 @@ export interface IApiOAuthFlows {
   /**
    * Configuration for the OAuth Authorization Code flow. Previously called
    * accessCode in OpenAPI 2.0.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
@@ -1412,12 +1707,16 @@ export interface IApiOAuthFlows {
 /**
  * Configuration details for a supported OAuth Flow
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiOAuthFlow
  */
 export interface IApiOAuthFlow {
   /**
    * The authorization URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiOAuthFlow
@@ -1426,12 +1725,16 @@ export interface IApiOAuthFlow {
   /**
    * The token URL to be used for this flow. This MUST be in the form of a URL.
    *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
    * @type {string}
    * @memberof IApiOAuthFlow
    */
   tokenUrl?: string;
   /**
    * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string}
    * @memberof IApiOAuthFlow
@@ -1440,6 +1743,8 @@ export interface IApiOAuthFlow {
   /**
    * The available scopes for the OAuth2 security scheme. A map between the scope
    * name and a short description for it.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {{
    *     [key: string]: string;
@@ -1464,6 +1769,8 @@ export interface IApiOAuthFlow {
  * Operation Object, only one of the Security Requirement Objects in the list needs to
  * be satisfied to authorize the request.
  *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
  * @export
  * @interface IApiSecurityRequirement
  */
@@ -1473,6 +1780,8 @@ export interface IApiSecurityRequirement {
    * Schemes under the Components Object. If the security scheme is of type "oauth2" or
    * "openIdConnect", then the value is a list of scope names required for the execution.
    * For other security scheme types, the array MUST be empty.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {string[]}
    * @memberof IApiSecurityRequirement
