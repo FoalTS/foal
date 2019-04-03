@@ -1464,6 +1464,18 @@ export interface IApiHeader {
    */
   deprecated?: boolean;
   allowEmptyValue?: boolean;
+
+  // TODO: Complete this:
+
+  /**
+   * The schema defining the type used for the parameter.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {(IApiSchema | IApiReference)}
+   * @memberof IApiOperation
+   */
+  schema?: IApiSchema | IApiReference;
 }
 
 /**
