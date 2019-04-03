@@ -4,7 +4,11 @@ import { join } from 'path';
 import { promisify } from 'util';
 
 // 3p
-import { Class, Context, createHttpResponseFile, Get, HttpResponseMovedPermanently, HttpResponseOK } from '@foal/core';
+import {
+  Class, Context, createHttpResponseFile, createOpenApiDocument,
+  Get, HttpResponseBadRequest, HttpResponseMovedPermanently,
+  HttpResponseNotFound, HttpResponseOK
+} from '@foal/core';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 
 function isUrlOption(option): option is { url: string } {
@@ -12,13 +16,28 @@ function isUrlOption(option): option is { url: string } {
 }
 
 /**
- *
+ * Serve Swagger UI to visualize and interact with API resources.
  *
  * @export
  * @abstract
  * @class SwaggerController
  */
 export abstract class SwaggerController {
+  /**
+   * Specify the OpenAPI Specification(s) and their location(s).
+   *
+   * If a controller class is provided, then an OpenAPI Specification is generated
+   * from its definition.
+   *
+   * @abstract
+   * @type {({ url: string } |
+   *            { controllerClass: Class } |
+   *            (
+   *              { name: string, url: string, primary?: boolean } |
+   *              { name: string, controllerClass: Class, primary?: boolean }
+   *            )[])}
+   * @memberof SwaggerController
+   */
   abstract options: { url: string } |
            { controllerClass: Class } |
            (
@@ -30,7 +49,26 @@ export abstract class SwaggerController {
 
   @Get('openapi.json')
   getOpenApiDefinition(ctx: Context) {
-    // Use a query /openapi.json?name=v1
+    if (isUrlOption(this.options)) {
+      return new HttpResponseNotFound();
+    }
+
+    if (!Array.isArray(this.options)) {
+      const document = createOpenApiDocument(this.options.controllerClass);
+      return new HttpResponseOK(document);
+    }
+
+    const name = ctx.request.query.name;
+    if (typeof name !== 'string') {
+      return new HttpResponseBadRequest('Missing URL parameter "name".');
+    }
+
+    const option = this.options.find(option => option.name === name);
+    if (!option || isUrlOption(option)) {
+      return new HttpResponseNotFound();
+    }
+
+    return new HttpResponseOK(createOpenApiDocument(option.controllerClass));
   }
 
   /* UI */

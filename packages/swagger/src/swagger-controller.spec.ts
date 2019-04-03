@@ -1,11 +1,11 @@
 // std
-import { ok, strictEqual } from 'assert';
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { Context, getHttpMethod, getPath, isHttpResponseMovedPermanently, isHttpResponseOK } from '@foal/core';
+import { ApiInfo, Context, getHttpMethod, getPath, isHttpResponseBadRequest, isHttpResponseMovedPermanently, isHttpResponseNotFound, isHttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
@@ -26,6 +26,130 @@ describe('SwaggerController', () => {
   }
 
   /* Spec file(s) */
+
+  describe('has a "getOpenApiDefinition" method that', () => {
+
+    it('should handle requests at GET /.', () => {
+      strictEqual(getHttpMethod(ConcreteClass, 'getOpenApiDefinition'), 'GET');
+      strictEqual(getPath(ConcreteClass, 'getOpenApiDefinition'), 'openapi.json');
+    });
+
+    describe('given options is an object', () => {
+
+      const ctx = new Context({});
+
+      it('should return an HttpResponseNotFound if the object interface is { url: string }', () => {
+        class ConcreteClass extends SwaggerController {
+          options = { url: 'foobar' };
+        }
+        const controller = new ConcreteClass();
+        const response = controller.getOpenApiDefinition(ctx);
+
+        if (!isHttpResponseNotFound(response)) {
+          throw new Error('The response should be an instance of HttpResponseNotFound.');
+        }
+      });
+
+      it('should return an HttpResponseOK with the controller document.', () => {
+        const info = {
+          title: 'Api',
+          version: '1.0.0',
+        };
+
+        @ApiInfo(info)
+        class ApiController {}
+
+        class ConcreteClass extends SwaggerController {
+          options = { controllerClass: ApiController };
+        }
+        const controller = new ConcreteClass();
+        const response = controller.getOpenApiDefinition(ctx);
+
+        if (!isHttpResponseOK(response)) {
+          throw new Error('The response should be an instance of HttpResponseOK.');
+        }
+
+        deepStrictEqual(response.body, {
+          info,
+          openapi: '3.0.2',
+          paths: []
+        });
+      });
+
+    });
+
+    describe('given options is an array', () => {
+
+      it('should return an HttpResponseBadRequest if no param "name" is provided.', () => {
+        class ConcreteClass extends SwaggerController {
+          options = [];
+        }
+        const controller = new ConcreteClass();
+
+        const ctx = new Context({ query: {} });
+        const response = controller.getOpenApiDefinition(ctx);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('The response should be an instance of HttpResponseBadRequest.');
+        }
+
+        strictEqual(response.body, 'Missing URL parameter "name".');
+      });
+
+      it('should return an HttpResponseNotFound if no controller is found with that name.', () => {
+        class ConcreteClass extends SwaggerController {
+          options = [
+            { name: 'v1', url: 'http://example.com' },
+          ];
+        }
+        const controller = new ConcreteClass();
+
+        let ctx = new Context({ query: { name: 'v2' } });
+        let response = controller.getOpenApiDefinition(ctx);
+        if (!isHttpResponseNotFound(response)) {
+          throw new Error('The response should be an instance of HttpResponseNotFound.');
+        }
+
+        ctx = new Context({ query: { name: 'v1' } });
+        response = controller.getOpenApiDefinition(ctx);
+        if (!isHttpResponseNotFound(response)) {
+          throw new Error('The response should be an instance of HttpResponseNotFound.');
+        }
+      });
+
+      it('should return an HttpResponseOK with the controller document.', () => {
+        const info = {
+          title: 'Api',
+          version: '1.0.0',
+        };
+
+        @ApiInfo(info)
+        class ApiController {}
+
+        class ConcreteClass extends SwaggerController {
+          options = [
+            { name: 'v1', url: 'http://example.com' },
+            { name: 'v2', controllerClass: ApiController },
+          ];
+        }
+        const controller = new ConcreteClass();
+
+        const ctx = new Context({ query: { name: 'v2' } });
+        const response = controller.getOpenApiDefinition(ctx);
+        if (!isHttpResponseOK(response)) {
+          throw new Error('The response should be an instance of HttpResponseOK.');
+        }
+
+        deepStrictEqual(response.body, {
+          info,
+          openapi: '3.0.2',
+          paths: []
+        });
+      });
+
+    });
+
+  });
 
   /* UI */
 
