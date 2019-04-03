@@ -83,37 +83,37 @@ export function ApiDeprecated(deprecated: boolean = true) {
 /* Components */
 
 export function ApiDefineSchema(key: string, schema: IApiSchema | IApiReference) {
-  return AddMetadataProperty('api:schemas', key, schema);
+  return AddMetadataProperty('api:components:schemas', key, schema);
 }
 
 export function ApiDefineResponse(key: string, response: IApiResponse | IApiReference) {
-  return AddMetadataProperty('api:responses', key, response);
+  return AddMetadataProperty('api:components:responses', key, response);
 }
 
 export function ApiDefineParameter(key: string, parameter: IApiParameter | IApiReference) {
-  return AddMetadataProperty('api:parameters', key, parameter);
+  return AddMetadataProperty('api:components:parameters', key, parameter);
 }
 
 export function ApiDefineExample(key: string, example: IApiExample | IApiReference) {
-  return AddMetadataProperty('api:examples', key, example);
+  return AddMetadataProperty('api:components:examples', key, example);
 }
 
 export function ApiDefineRequestBody(key: string, requestBody: IApiRequestBody | IApiReference) {
-  return AddMetadataProperty('api:requestBodies', key, requestBody);
+  return AddMetadataProperty('api:components:requestBodies', key, requestBody);
 }
 
 export function ApiDefineHeader(key: string, header: IApiHeader | IApiReference) {
-  return AddMetadataProperty('api:headers', key, header);
+  return AddMetadataProperty('api:components:headers', key, header);
 }
 
 export function ApiDefineSecurityScheme(key: string, securityScheme: IApiSecurityScheme | IApiReference) {
-  return AddMetadataProperty('api:securitySchemes', key, securityScheme);
+  return AddMetadataProperty('api:components:securitySchemes', key, securityScheme);
 }
 
 export function ApiDefineLink(key: string, link: IApiLink | IApiReference) {
-  return AddMetadataProperty('api:links', key, link);
+  return AddMetadataProperty('api:components:links', key, link);
 }
 
 export function ApiDefineCallback(key: string, callback: IApiCallback | IApiReference) {
-  return AddMetadataProperty('api:callbacks', key, callback);
+  return AddMetadataProperty('api:components:callbacks', key, callback);
 }

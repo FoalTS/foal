@@ -504,7 +504,7 @@ describe('ApiDefineSchema', () => {
     @ApiDefineSchema('schema2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:schemas', Controller), {
+    deepStrictEqual(getMetadata('api:components:schemas', Controller), {
       schema1: metadata,
       schema2: metadata2
     });
@@ -517,7 +517,7 @@ describe('ApiDefineSchema', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:schemas', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:schemas', Controller, 'foo'), {
       schema1: metadata,
       schema2: metadata2
     });
@@ -556,7 +556,7 @@ describe('ApiDefineResponse', () => {
     @ApiDefineResponse('response2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:responses', Controller), {
+    deepStrictEqual(getMetadata('api:components:responses', Controller), {
       response1: metadata,
       response2: metadata2
     });
@@ -569,7 +569,7 @@ describe('ApiDefineResponse', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:responses', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:responses', Controller, 'foo'), {
       response1: metadata,
       response2: metadata2
     });
@@ -608,7 +608,7 @@ describe('ApiDefineParameter', () => {
     @ApiDefineParameter('parameter2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:parameters', Controller), {
+    deepStrictEqual(getMetadata('api:components:parameters', Controller), {
       parameter1: metadata,
       parameter2: metadata2
     });
@@ -621,7 +621,7 @@ describe('ApiDefineParameter', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:parameters', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:parameters', Controller, 'foo'), {
       parameter1: metadata,
       parameter2: metadata2
     });
@@ -639,7 +639,7 @@ describe('ApiDefineExample', () => {
     @ApiDefineExample('example2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:examples', Controller), {
+    deepStrictEqual(getMetadata('api:components:examples', Controller), {
       example1: metadata,
       example2: metadata2
     });
@@ -652,7 +652,7 @@ describe('ApiDefineExample', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:examples', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:examples', Controller, 'foo'), {
       example1: metadata,
       example2: metadata2
     });
@@ -724,7 +724,7 @@ describe('ApiDefineRequestBody', () => {
     @ApiDefineRequestBody('requestBody2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:requestBodies', Controller), {
+    deepStrictEqual(getMetadata('api:components:requestBodies', Controller), {
       requestBody1: metadata,
       requestBody2: metadata2
     });
@@ -737,7 +737,7 @@ describe('ApiDefineRequestBody', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:requestBodies', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:requestBodies', Controller, 'foo'), {
       requestBody1: metadata,
       requestBody2: metadata2
     });
@@ -760,7 +760,7 @@ describe('ApiDefineHeader', () => {
     @ApiDefineHeader('header2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:headers', Controller), {
+    deepStrictEqual(getMetadata('api:components:headers', Controller), {
       header1: metadata,
       header2: metadata2
     });
@@ -773,7 +773,7 @@ describe('ApiDefineHeader', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:headers', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:headers', Controller, 'foo'), {
       header1: metadata,
       header2: metadata2
     });
@@ -798,7 +798,7 @@ describe('ApiDefineSecurityScheme', () => {
     @ApiDefineSecurityScheme('scheme2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:securitySchemes', Controller), {
+    deepStrictEqual(getMetadata('api:components:securitySchemes', Controller), {
       scheme1: metadata,
       scheme2: metadata2
     });
@@ -811,7 +811,7 @@ describe('ApiDefineSecurityScheme', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:securitySchemes', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:securitySchemes', Controller, 'foo'), {
       scheme1: metadata,
       scheme2: metadata2
     });
@@ -829,7 +829,7 @@ describe('ApiDefineLink', () => {
     @ApiDefineLink('link2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:links', Controller), {
+    deepStrictEqual(getMetadata('api:components:links', Controller), {
       link1: metadata,
       link2: metadata2
     });
@@ -842,7 +842,7 @@ describe('ApiDefineLink', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:links', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:links', Controller, 'foo'), {
       link1: metadata,
       link2: metadata2
     });
@@ -860,7 +860,7 @@ describe('ApiDefineCallback', () => {
     @ApiDefineCallback('cb2', metadata2)
     class Controller {}
 
-    deepStrictEqual(getMetadata('api:callbacks', Controller), {
+    deepStrictEqual(getMetadata('api:components:callbacks', Controller), {
       cb1: metadata,
       cb2: metadata2
     });
@@ -873,7 +873,7 @@ describe('ApiDefineCallback', () => {
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:callbacks', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:components:callbacks', Controller, 'foo'), {
       cb1: metadata,
       cb2: metadata2
     });
