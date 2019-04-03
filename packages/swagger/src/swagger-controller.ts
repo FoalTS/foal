@@ -86,26 +86,22 @@ export abstract class SwaggerController {
       const url = isUrlOption(this.options) ? this.options.url : 'openapi.json';
       body = template
         .replace('{{ urls }}', `url: "${url}"`)
-        .replace('{{ urlArray }}', '');
+        .replace('{{ primaryName }}', '');
     } else {
       let primaryName: string = '';
       const options = this.options
         .map(option => {
           if (option.primary) {
-            primaryName = option.name;
+            primaryName = `\n        \'urls.primaryName\': "${option.name}",`;
           }
           return {
             name: option.name,
             url: isUrlOption(option) ? option.url : `openapi.json?name=${option.name}`
           };
         });
-      let urlArray = `\n      const urls = ${JSON.stringify(options)};`;
-      if (primaryName) {
-        urlArray = urlArray.concat(`\n      urls.primaryName = "${primaryName}";`);
-      }
       body = template
-        .replace('{{ urls }}', 'urls: urls')
-        .replace('{{ urlArray }}', urlArray);
+        .replace('{{ urls }}', `urls: ${JSON.stringify(options)}`)
+        .replace('{{ primaryName }}', primaryName);
     }
 
     const response = new HttpResponseOK(body);

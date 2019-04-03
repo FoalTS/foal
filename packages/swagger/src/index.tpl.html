@@ -37,9 +37,9 @@
     <script src="./swagger-ui-standalone-preset.js"> </script>
     <script>
     window.onload = function() {
-      // Begin Swagger UI call region{{ urlArray }}
+      // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        {{ urls }},
+        {{ urls }},{{ primaryName }}
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
