@@ -5,7 +5,7 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { Context, getHttpMethod, getPath, isHttpResponseOK, isHttpResponseRedirect } from '@foal/core';
+import { Context, getHttpMethod, getPath, isHttpResponseMovedPermanently, isHttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
@@ -45,8 +45,8 @@ describe('SwaggerController', () => {
       const ctx = new Context({ path: 'xxx' });
       const response = await controller.index(ctx);
 
-      if (!isHttpResponseRedirect(response)) {
-        throw new Error('SwaggerController.index should return an HttpResponseRedirect instance.');
+      if (!isHttpResponseMovedPermanently(response)) {
+        throw new Error('SwaggerController.index should return an HttpResponseMovedPermanently instance.');
       }
 
       strictEqual(response.path, ctx.request.path + '/');
