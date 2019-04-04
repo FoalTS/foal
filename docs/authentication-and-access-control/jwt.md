@@ -183,7 +183,31 @@ export class ApiController {
 
 ## Blacklist Tokens
 
+In the event that a jwt has been stolen by an attacker, the application must be able to revoke the compromised token. This can be done by establishing a *black list*. Revoked tokens are no longer considered valid and the hooks return a 401 error - UNAUTHORIZED when they receive one.
+
+```typescript
+import { isInFile } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired({ blackList: isInFile('./blacklist.txt') })
+export class ApiController {
+  // ...
+}
+```
+
+The `isInFile` function takes a token and returns a boolean specifying if the token is revoked or not.
+
+You can provide your own function (in the case you want to use a cache database for example). This function must have this signature:
+
+```typescript
+(token: string) => boolean|Promise<boolean>;
+```
+
 ## Make a Database Call to Get More Properties of the User
+
+// TODO
+
+The decoded payload may not be sufficient
 
 The `subject` property (or `sub`) is a string that **must** contain the user id. Otherwise the hooks won't be able to authenticate the user. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
 
@@ -191,47 +215,7 @@ The `subject` property (or `sub`) is a string that **must** contain the user id.
 // TypeORM
 // Custom
 
-## Store JWTs in a cookie
-
-## Use RSA or ECDSA public/private keys
-
-## Audience, Algorithm and Other Options
-
-The second argument of `JWTOptional` and `JWTRequired` are passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
-
-## Techniques
-
-### Extend the "session lifetime"
-
-
-```typescript
-import { JWTRequired } from '@foal/jwt';
-
-@JWTRequired()
-class MyController {}
-
-@JWTRequired({ user: fetchUser(User), blackList: isInFile('./blacklist.txt'), cookie: true })
-class MyController {}
-
-@JWTRequired({}, { audience: 'foo' })
-class MyController {}
-```
-
-If `options.cookie` is not defined, they expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
-
-> FoalTS makes no assumptions about how the JWT is generated and sent / stored to the client. The choice is yours. However, whenever the user wants to access a protected route, the client must send the JWT in the Authorization header using the Bearer schema (or in an cookie if the option is set to true).
-
-# Options
-
-```typescript
-export interface JWTOptions {
-  user?: (id: string|number) => Promise<any|undefined>;
-  blackList?: (token: string) => boolean|Promise<boolean>;
-  cookie?: boolean;
-}
-```
-
-## The `user` option
+---
 
 By default, the value of `ctx.user` is the decoded payload of the JWT. However, you may want to set `ctx.user` with some data fetched from the database.
 
@@ -239,18 +223,41 @@ The `user` option is a function which takes the JWT `subject` as argument (the i
 
 > The `@foal/typeorm` package provides two handy functions `fetchUser(userEntity)` and `fetchUserWithPermissions(userEntity)` to fetch a user from the database.
 
-## The `blacklist` option
+---
 
-The `blacklist` option lets you easily revoke tokens. It is a function that takes a token as parameter and returns `true` if the token is revoked.
+## Store JWTs in a cookie
 
-> In particular the `isInFile` function provided in the `@foal/core` package may be useful in this case. It lets you create a file with all the revoked tokens.
+// TODO
 
-## The `cookie` option
+---
+
+If `options.cookie` is not defined, they expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
 
 By default the hooks parse the `Authorization` header. With the option `cookie: true`, the jwt is retreived from the cookie named `auth`.
 
 > You can change the name of the cookie with the env variable `SETTINGS_JWT_COOKIE_NAME` or in `config/default.json` with the `settings.jwt.cookieName` key.
 
+---
+
+## Use RSA or ECDSA public/private keys
+
+// TODO
+
+## Audience, Algorithm and Other Options
+
+// TODO
+
+---
+
+The second argument of `JWTOptional` and `JWTRequired` are passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
+
+---
+
+## Techniques
+
+### Extend the "session lifetime"
+
+// TODO
 
 # Hook Errors
 
