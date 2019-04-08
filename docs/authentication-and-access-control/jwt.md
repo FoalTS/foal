@@ -20,7 +20,7 @@ $ foal createsecret
 Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 ```
 
-> Alternatively you can use a public/private key pair to sign your tokens. In this case, please refer to the [advanced section](#Advanced) below.
+> Alternatively you can use a public/private key pair to sign your tokens. In this case, please refer to the [advanced section](#Use-RSA-or-ECDSA-public/private-keys) below.
 
 Once the secret is in hand, there are several ways to provide it to the future hooks:
 
@@ -70,8 +70,8 @@ const token = sign(
 );
 ```
 
-- The `subject` property (or `sub`) is required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-Properties-of-the-User).
-- Each token **should** have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
+- The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-User-Properties).
+- Each token should have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
 
 ## Example of a `LoginController`
 
@@ -203,61 +203,199 @@ You can provide your own function (in the case you want to use a cache database 
 (token: string) => boolean|Promise<boolean>;
 ```
 
-## Make a Database Call to Get More Properties of the User
+## Make a Database Call to Get More User Properties
 
-// TODO
+In several cases, the decoded payload is not sufficient. We may need to fetch extra properties from the database, such as the user permissions for example, or simply want the `Context.user` to a be a model instance instead of a plain object.
 
-The decoded payload may not be sufficient
+In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` option to transform the decoded payload into something else. To do this,
 
-The `subject` property (or `sub`) is a string that **must** contain the user id. Otherwise the hooks won't be able to authenticate the user. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
+- Each JSON Web Token must have a `subject` property (or `sub`) which is a string containing the user id. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
+  ```typescript
+  import { sign } from 'jsonwebtoken';
 
-// Mongoose
-// TypeORM
-// Custom
+  const token = sign(
+    {
+      sub: '90485234', // Required
+      id: 90485234,
+      email: 'mary@foalts.org'
+    },
+    Config.get<string>('settings.jwt.secretOrPublicKey'),
+    { expiresIn: '1h' }
+  );
+  ```
 
----
+- The hook must be provided a function that takes a string id (the `subject`) as parameter and returns the value of the `Context.user`. If the function returns `undefined`, the hooks returns an error *401 - UNAUTHORIZED*.
 
-By default, the value of `ctx.user` is the decoded payload of the JWT. However, you may want to set `ctx.user` with some data fetched from the database.
+  *Example with TypeORM*
+  ```typescript
+  import { Context, Get } from '@foal/core';
+  import { JWTRequired } from '@foal/jwt';
+  import { fetchUser } from '@foal/typeorm';
 
-The `user` option is a function which takes the JWT `subject` as argument (the id of the user) and returns the data to assign to `ctx.user`.
+  import { User } from '../entities';
 
-> The `@foal/typeorm` package provides two handy functions `fetchUser(userEntity)` and `fetchUserWithPermissions(userEntity)` to fetch a user from the database.
+  // fetchUser fetches the user from the database using the entity User. It returns an instance of User.
+  @JWTRequired({ user: fetchUser(User) })
+  export class ApiController {
+    @Get('/do-something')
+    get(ctx: Context) {
+      // ctx.user is the instance returned by fetchUser.
+      // ...
+    }
+  }
+  ```
 
----
+  *Example with Mongoose*
+  ```typescript
+  import { Context, Get } from '@foal/core';
+  import { JWTRequired } from '@foal/jwt';
+  import { fetchUser } from '@foal/mongoose';
+
+  import { User } from '../models';
+
+  // fetchUser fetches the user from the database using the model User. It returns an instance of User.
+  @JWTRequired({ user: fetchUser(User) })
+  export class ApiController {
+    @Get('/do-something')
+    get(ctx: Context) {
+      // ctx.user is the instance returned by fetchUser.
+      // ...
+    }
+  }
+  ```
+
+  *Example with a custom function*
+
+  ```typescript
+  import { Context, Get } from '@foal/core';
+  import { JWTRequired } from '@foal/jwt';
+
+  const users = [
+    { id: 1, email: 'mary@foalts.org', isAdmin: true },
+    { id: 2, email: 'john@foalts.org', isAdmin: false },
+  ];
+
+  function getUserById(id: string) {
+    return users.find(user => user.id.toString() === id);
+  }
+
+  @JWTRequired({ user: getUserById })
+  export class ApiController {
+    @Get('/do-something')
+    get(ctx: Context) {
+      // ctx.user is an item of the `users` array.
+      // ...
+    }
+  }
+  ```
 
 ## Store JWTs in a cookie
 
-// TODO
+> Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
----
+By default, the hooks expect the token to be sent in the **Authorization** header using the **Bearer** schema. But it is also possible to send the token in a cookie with the `cookie` option.
 
-If `options.cookie` is not defined, they expect the JWT to be included in the `Authorization` header using the `Bearer` schema. Once the token is verified and decoded, `ctx.user` is populated with the payload (by default) or a custom object (see `options.user`).
+```typescript
+import { JWTRequired } from '@foal/jwt';
 
-By default the hooks parse the `Authorization` header. With the option `cookie: true`, the jwt is retreived from the cookie named `auth`.
+@JWTRequired({ cookie: true })
+export class ApiController {
+  // ...
+}
+```
 
-> You can change the name of the cookie with the env variable `SETTINGS_JWT_COOKIE_NAME` or in `config/default.json` with the `settings.jwt.cookieName` key.
+In this case, the token must be sent in a cookie named `auth` by default. This name can be changed with the configuration key `settings.jwt.cookieName`:
+- using the environment variable `SETTINGS_JWT_COOKIE_NAME`,
+- in a file named `.env` in the root directory,
+  ```
+  SETTINGS_JWT_COOKIE_NAME=custom_name
+  ```
+- or in a YAML or JSON file in the `config/` directory.
 
----
+  *development.yml*
+  ```yaml
+  settings:
+    jwt:
+      cookieName: "custom_name"
+  ```
+  *development.json*
+  ```json
+  {
+    "settings": {
+      "jwt": {
+        "cookieName": "custom_name"
+      }
+    }
+  }
+
 
 ## Use RSA or ECDSA public/private keys
 
-// TODO
+JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
-## Audience, Algorithm and Other Options
+### Provide the Public/Private Key
 
-// TODO
+The name of the private key is arbitrary.
 
----
+*Example with a `.env` file*
+```
+SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my_public_key
+JWT_PRIVATE_KEY=my_private_key
+```
 
-The second argument of `JWTOptional` and `JWTRequired` are passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
+### Generate Temporary Tokens
 
----
+*Example*
+```typescript
+import { sign } from 'jsonwebtoken';
 
-## Techniques
+const token = sign(
+  {
+    email: 'john@foalts.org'
+  },
+  Config.get<string>('jwt.privateKey'),
+  { expiresIn: '1h' }
+);
+```
 
-### Extend the "session lifetime"
+### Receive & Verify Tokens
 
-// TODO
+*Example with RSA*
+```typescript
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired({}, { algorithm: 'RSA' })
+export class ApiController {
+  // ...
+}
+
+```
+
+## Audience, Issuer and Other Options
+
+The second parameter of `JWTOptional` and `JWTRequired` allows to specify the required audience or issuer as well as other properties. It is passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
+
+*Example checking the audience*
+```typescript
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired({}, { audience: [ /urn:f[o]{2}/, 'urn:bar' ] })
+export class ApiController {
+  // ...
+}
+
+```
+
+*Example checking the issuer*
+```typescript
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired({}, { issuer: 'foo' })
+export class ApiController {
+  // ...
+}
+
+```
 
 # Hook Errors
 
