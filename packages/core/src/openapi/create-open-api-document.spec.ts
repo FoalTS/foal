@@ -11,7 +11,7 @@ describe('createOpenApiDocument', () => {
     class Controller {}
 
     try {
-      const document = createOpenApiDocument(Controller);
+      createOpenApiDocument(Controller);
       done(new Error('The function should have thrown an Error.'));
     } catch (error) {
       strictEqual(error.message, 'Your root controller should be decorated with @ApiInfo.');

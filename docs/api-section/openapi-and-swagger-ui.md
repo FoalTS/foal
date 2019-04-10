@@ -2,8 +2,8 @@
 
 ## Swagger UI - A Graphical Interface to Visualize And interact with the API’s Resources
 
-![Swagger 1](./swagger1.png)
-![Swagger 2](./swagger2.png)
+![Example 1 of Swagger UI](./swagger1.png)
+![Example 2 of Swagger UI](./swagger2.png)
 
 ### Simple case
 
@@ -31,7 +31,7 @@ export class OpenApiController extends SwaggerController {
 
 ### Several APIs or versions
 
-![Swagger 3](./swagger3.png)
+![Example of several versions](./swagger3.png)
 
 *app.controller.ts*
 ```typescript
@@ -87,28 +87,25 @@ export async function main() {
 
 ## Decorators
 
-| Decorator | Root Controller | SubController | Method |
-|--|--|--|--|
-| `@ApiInfo` | yes | no | no |
-| `@ApiServer` | yes | yes | yes |
-| `@ApiSecurityRequirement` | yes | yes | yes |
-| `@ApiDefineTag` | yes | yes | yes |
-| `@ApiExternalDoc` | yes | no | yes |
-| `@ApiOperation` | no | no | yes |
-| `@ApiUseTag` | yes | yes | yes |
-| `@ApiParameter` | yes | yes | yes |
-| `@ApiRequestBody` | no | no | yes |
-| `@ApiResponse` | yes | yes | yes |
-| `@ApiCallback` | yes | yes | yes |
-| `@ApiDeprecated` | yes | yes | yes |
-| `@ApiDefineSchema` | yes | yes | yes |
-| `@ApiDefineResponse` | yes | yes | yes |
-| `@ApiDefineParameter` | yes | yes | yes |
-| `@ApiDefineExample` | yes | yes | yes |
-| `@ApiDefineRequestBody` | yes | yes | yes |
-| `@ApiDefineHeader` | yes | yes | yes |
-| `@ApiDefineSecurityScheme` | yes | yes | yes |
-| `@ApiDefineLink` | yes | yes | yes |
-| `@ApiDefineCallback` | yes | yes | yes |
+| Root Controller | Controllers / Methods | Methods |
+| --- |  --- |  --- | 
+| `@ApiInfo` | `@ApiServer` | `@ApiOperation` |
+| | `@ApiSecurityRequirement` | `@ApiRequestBody` |
+| | `@ApiDefineTag` | |
+| | `@ApiExternalDoc` | |
+| | `@ApiUseTag` | |
+| | `@ApiParameter` | |
+| | `@ApiResponse` | |
+| | `@ApiCallback` | |
+| | `@ApiDeprecated` | |
+| | `@ApiDefineSchema` | |
+| | `@ApiDefineResponse` | |
+| | `@ApiDefineParameter` | |
+| | `@ApiDefineExample` | |
+| | `@ApiDefineRequestBody` | |
+| | `@ApiDefineHeader` | |
+| | `@ApiDefineSecurityScheme` | |
+| | `@ApiDefineLink` | |
+| | `@ApiDefineCallback` | |
 
 ## Examples

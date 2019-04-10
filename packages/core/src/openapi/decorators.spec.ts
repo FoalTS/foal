@@ -39,7 +39,7 @@ describe('ApiInfo', () => {
     @ApiInfo(metadata)
     class Controller { }
 
-    strictEqual(getMetadata('api:info', Controller), metadata);
+    strictEqual(getMetadata('api:document:info', Controller), metadata);
   });
 
 });
@@ -55,15 +55,15 @@ describe('ApiServer', () => {
     url: 'https://staging.gigantic-server.com/v1',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiServer(metadata)
     class Controller { }
-    deepStrictEqual(getMetadata('api:servers', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller), [metadata]);
 
     @ApiServer(metadata)
     @ApiServer(metadata2)
     class Controller2 { }
-    deepStrictEqual(getMetadata('api:servers', Controller2), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller2), [metadata, metadata2]);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -71,14 +71,14 @@ describe('ApiServer', () => {
       @ApiServer(metadata)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:servers', Controller, 'foo'), [metadata]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller, 'foo'), [metadata]);
 
     class Controller2 {
       @ApiServer(metadata)
       @ApiServer(metadata2)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:servers', Controller2, 'foo'), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller2, 'foo'), [metadata, metadata2]);
   });
 
 });
@@ -94,15 +94,15 @@ describe('ApiSecurityRequirement', () => {
     ]
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiSecurityRequirement(metadata)
     class Controller { }
-    deepStrictEqual(getMetadata('api:security', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:security', Controller), [metadata]);
 
     @ApiSecurityRequirement(metadata)
     @ApiSecurityRequirement(metadata2)
     class Controller2 { }
-    deepStrictEqual(getMetadata('api:security', Controller2), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:security', Controller2), [metadata, metadata2]);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -110,14 +110,14 @@ describe('ApiSecurityRequirement', () => {
       @ApiSecurityRequirement(metadata)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:security', Controller, 'foo'), [metadata]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:security', Controller, 'foo'), [metadata]);
 
     class Controller2 {
       @ApiSecurityRequirement(metadata)
       @ApiSecurityRequirement(metadata2)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:security', Controller2, 'foo'), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:security', Controller2, 'foo'), [metadata, metadata2]);
   });
 
 });
@@ -133,15 +133,15 @@ describe('ApiDefineTag', () => {
     name: 'pet2',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineTag(metadata)
     class Controller { }
-    deepStrictEqual(getMetadata('api:documentTags', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:document:tags', Controller), [metadata]);
 
     @ApiDefineTag(metadata)
     @ApiDefineTag(metadata2)
     class Controller2 { }
-    deepStrictEqual(getMetadata('api:documentTags', Controller2), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:document:tags', Controller2), [metadata, metadata2]);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -149,14 +149,14 @@ describe('ApiDefineTag', () => {
       @ApiDefineTag(metadata)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:documentTags', Controller, 'foo'), [metadata]);
+    deepStrictEqual(getMetadata('api:document:tags', Controller, 'foo'), [metadata]);
 
     class Controller2 {
       @ApiDefineTag(metadata)
       @ApiDefineTag(metadata2)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:documentTags', Controller2, 'foo'), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:document:tags', Controller2, 'foo'), [metadata, metadata2]);
   });
 
 });
@@ -168,11 +168,11 @@ describe('ApiExternalDoc', () => {
     url: 'https://example.com',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiExternalDoc(metadata)
     class Controller { }
 
-    strictEqual(getMetadata('api:externalDocs', Controller), metadata);
+    strictEqual(getMetadata('api:documentOrOperation:externalDocs', Controller), metadata);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -181,7 +181,7 @@ describe('ApiExternalDoc', () => {
       foo() { }
     }
 
-    strictEqual(getMetadata('api:externalDocs', Controller, 'foo'), metadata);
+    strictEqual(getMetadata('api:documentOrOperation:externalDocs', Controller, 'foo'), metadata);
   });
 
 });
@@ -267,15 +267,15 @@ describe('ApiUseTag', () => {
   const metadata: string = 'tag1';
   const metadata2: string = 'tag2';
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiUseTag(metadata)
     class Controller { }
-    deepStrictEqual(getMetadata('api:operationTags', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:operation:tags', Controller), [metadata]);
 
     @ApiUseTag(metadata)
     @ApiUseTag(metadata2)
     class Controller2 { }
-    deepStrictEqual(getMetadata('api:operationTags', Controller2), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:operation:tags', Controller2), [metadata, metadata2]);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -283,14 +283,14 @@ describe('ApiUseTag', () => {
       @ApiUseTag(metadata)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:operationTags', Controller, 'foo'), [metadata]);
+    deepStrictEqual(getMetadata('api:operation:tags', Controller, 'foo'), [metadata]);
 
     class Controller2 {
       @ApiUseTag(metadata)
       @ApiUseTag(metadata2)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:operationTags', Controller2, 'foo'), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:operation:tags', Controller2, 'foo'), [metadata, metadata2]);
   });
 
 });
@@ -321,15 +321,15 @@ describe('ApiParameter', () => {
     style: 'simple'
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiParameter(metadata)
     class Controller { }
-    deepStrictEqual(getMetadata('api:parameters', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:operation:parameters', Controller), [metadata]);
 
     @ApiParameter(metadata)
     @ApiParameter(metadata2)
     class Controller2 { }
-    deepStrictEqual(getMetadata('api:parameters', Controller2), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:operation:parameters', Controller2), [metadata, metadata2]);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -337,14 +337,14 @@ describe('ApiParameter', () => {
       @ApiParameter(metadata)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:parameters', Controller, 'foo'), [metadata]);
+    deepStrictEqual(getMetadata('api:operation:parameters', Controller, 'foo'), [metadata]);
 
     class Controller2 {
       @ApiParameter(metadata)
       @ApiParameter(metadata2)
       foo() { }
     }
-    deepStrictEqual(getMetadata('api:parameters', Controller2, 'foo'), [metadata, metadata2]);
+    deepStrictEqual(getMetadata('api:operation:parameters', Controller2, 'foo'), [metadata, metadata2]);
   });
 
 });
@@ -401,35 +401,46 @@ describe('ApiRequestBody', () => {
       foo() { }
     }
 
-    strictEqual(getMetadata('api:requestBody', Controller, 'foo'), metadata);
+    strictEqual(getMetadata('api:operation:requestBody', Controller, 'foo'), metadata);
   });
 
 });
 
 describe('ApiResponse', () => {
+  const metadata: IApiResponse = {
+    content: {
+      'application/json': {
+        schema: {
+          $ref: '#/components/schemas/GeneralError'
+        }
+      }
+    },
+    description: 'General Error',
+  };
+  const metadata2: IApiResponse = {
+    description: 'Entity not found.'
+  };
+
+  it('should define the correct metadata (class).', () => {
+    @ApiResponse('default', metadata)
+    @ApiResponse(404, metadata2)
+    class Controller {}
+
+    deepStrictEqual(getMetadata('api:operation:responses', Controller), {
+      default: metadata,
+      404: metadata2
+    });
+
+  });
 
   it('should define the correct metadata (method).', () => {
-    const metadata: IApiResponse = {
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/components/schemas/GeneralError'
-          }
-        }
-      },
-      description: 'General Error',
-    };
-    const metadata2: IApiResponse = {
-      description: 'Entity not found.'
-    };
-
     class Controller {
       @ApiResponse('default', metadata)
       @ApiResponse(404, metadata2)
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:responses', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:operation:responses', Controller, 'foo'), {
       default: metadata,
       404: metadata2
     });
@@ -439,17 +450,28 @@ describe('ApiResponse', () => {
 
 describe('ApiCallback', () => {
 
-  it('should define the correct metadata (method).', () => {
-    const metadata: IApiCallback = {};
-    const metadata2: IApiCallback = {};
+  const metadata: IApiCallback = {};
+  const metadata2: IApiCallback = {};
 
+  it('should define the correct metadata (class).', () => {
+    @ApiCallback('callback1', metadata)
+    @ApiCallback('callback2', metadata2)
+    class Controller {}
+
+    deepStrictEqual(getMetadata('api:operation:callbacks', Controller), {
+      callback1: metadata,
+      callback2: metadata2
+    });
+  });
+
+  it('should define the correct metadata (method).', () => {
     class Controller {
       @ApiCallback('callback1', metadata)
       @ApiCallback('callback2', metadata2)
       foo() { }
     }
 
-    deepStrictEqual(getMetadata('api:callbacks', Controller, 'foo'), {
+    deepStrictEqual(getMetadata('api:operation:callbacks', Controller, 'foo'), {
       callback1: metadata,
       callback2: metadata2
     });
@@ -461,11 +483,11 @@ describe('ApiDeprecated', () => {
 
   const metadata: boolean = true;
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDeprecated(metadata)
     class Controller {}
 
-    strictEqual(getMetadata('api:deprecated', Controller), metadata);
+    strictEqual(getMetadata('api:operation:deprecated', Controller), metadata);
   });
 
   it('should define the correct metadata (method).', () => {
@@ -474,7 +496,7 @@ describe('ApiDeprecated', () => {
       foo() { }
     }
 
-    strictEqual(getMetadata('api:deprecated', Controller, 'foo'), metadata);
+    strictEqual(getMetadata('api:operation:deprecated', Controller, 'foo'), metadata);
   });
 
 });
@@ -499,7 +521,7 @@ describe('ApiDefineSchema', () => {
   };
   const metadata2: IApiSchema = {};
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineSchema('schema1', metadata)
     @ApiDefineSchema('schema2', metadata2)
     class Controller {}
@@ -551,7 +573,7 @@ describe('ApiDefineResponse', () => {
     description: 'A simple string response',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineResponse('response1', metadata)
     @ApiDefineResponse('response2', metadata2)
     class Controller {}
@@ -603,7 +625,7 @@ describe('ApiDefineParameter', () => {
     }
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineParameter('parameter1', metadata)
     @ApiDefineParameter('parameter2', metadata2)
     class Controller {}
@@ -634,7 +656,7 @@ describe('ApiDefineExample', () => {
   const metadata: IApiExample = {};
   const metadata2: IApiExample = {};
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineExample('example1', metadata)
     @ApiDefineExample('example2', metadata2)
     class Controller {}
@@ -719,7 +741,7 @@ describe('ApiDefineRequestBody', () => {
     description: 'user to add to the system',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineRequestBody('requestBody1', metadata)
     @ApiDefineRequestBody('requestBody2', metadata2)
     class Controller {}
@@ -755,7 +777,7 @@ describe('ApiDefineHeader', () => {
   };
   const metadata2: IApiHeader = {};
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineHeader('header1', metadata)
     @ApiDefineHeader('header2', metadata2)
     class Controller {}
@@ -793,7 +815,7 @@ describe('ApiDefineSecurityScheme', () => {
     type: 'apiKey',
   };
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineSecurityScheme('scheme1', metadata)
     @ApiDefineSecurityScheme('scheme2', metadata2)
     class Controller {}
@@ -824,7 +846,7 @@ describe('ApiDefineLink', () => {
   const metadata: IApiLink = {};
   const metadata2: IApiLink = {};
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineLink('link1', metadata)
     @ApiDefineLink('link2', metadata2)
     class Controller {}
@@ -855,7 +877,7 @@ describe('ApiDefineCallback', () => {
   const metadata: IApiCallback = {};
   const metadata2: IApiCallback = {};
 
-  it('should define the correct metadata (controller).', () => {
+  it('should define the correct metadata (class).', () => {
     @ApiDefineCallback('cb1', metadata)
     @ApiDefineCallback('cb2', metadata2)
     class Controller {}

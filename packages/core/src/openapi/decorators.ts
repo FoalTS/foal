@@ -28,59 +28,55 @@ function AddMetadataProperty(metadataKey: string, key: string, property: any) {
 }
 
 export function ApiInfo(info: IApiInfo) {
-  return Reflect.metadata('api:info', info);
+  return Reflect.metadata('api:document:info', info);
 }
 
 export function ApiServer(server: IApiServer) {
-  return AddMetadataItem('api:servers', server);
+  return AddMetadataItem('api:documentOrOperation:servers', server);
 }
 
 export function ApiSecurityRequirement(securityRequirement: IApiSecurityRequirement) {
-  return AddMetadataItem('api:security', securityRequirement);
+  return AddMetadataItem('api:documentOrOperation:security', securityRequirement);
 }
 
 export function ApiDefineTag(tag: IApiTag) {
-  return AddMetadataItem('api:documentTags', tag);
+  return AddMetadataItem('api:document:tags', tag);
 }
 
 export function ApiExternalDoc(externalDoc: IApiExternalDocumentation) {
-  return Reflect.metadata('api:externalDocs', externalDoc);
+  return Reflect.metadata('api:documentOrOperation:externalDocs', externalDoc);
 }
-
-/* Operation specific */
 
 export function ApiOperation(operation: IApiOperation) {
   return Reflect.metadata('api:operation', operation);
 }
 
 export function ApiUseTag(tag: string) {
-  return AddMetadataItem('api:operationTags', tag);
+  return AddMetadataItem('api:operation:tags', tag);
 }
 
 export function ApiParameter(parameter: IApiParameter | IApiReference) {
-  return AddMetadataItem('api:parameters', parameter);
+  return AddMetadataItem('api:operation:parameters', parameter);
 }
 
 export function ApiRequestBody(requestBody: IApiRequestBody | IApiReference) {
-  return Reflect.metadata('api:requestBody', requestBody);
+  return Reflect.metadata('api:operation:requestBody', requestBody);
 }
 
 export function ApiResponse(
   key: 'default'|'1XX'|'2XX'|'3XX'|'4XX'|'5XX'|number,
   response: IApiResponse | IApiReference
 ) {
-  return AddMetadataProperty('api:responses', key.toString(), response);
+  return AddMetadataProperty('api:operation:responses', key.toString(), response);
 }
 
 export function ApiCallback(key: string, callback: IApiCallback | IApiReference) {
-  return AddMetadataProperty('api:callbacks', key, callback);
+  return AddMetadataProperty('api:operation:callbacks', key, callback);
 }
 
 export function ApiDeprecated(deprecated: boolean = true) {
-  return Reflect.metadata('api:deprecated', deprecated);
+  return Reflect.metadata('api:operation:deprecated', deprecated);
 }
-
-/* Components */
 
 export function ApiDefineSchema(key: string, schema: IApiSchema | IApiReference) {
   return AddMetadataProperty('api:components:schemas', key, schema);
