@@ -44,10 +44,10 @@ export interface IOpenAPI {
    *
    * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
-   * @type {IApiPath[]}
+   * @type {IApiPaths}
    * @memberof IOpenAPI
    */
-  paths: IApiPath[];
+  paths: IApiPaths;
   /**
    * An element to hold various schemas for the specification.
    *
@@ -341,7 +341,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   schemas?: {
-    [key: string]: IApiSchema | IApiReference;
+    [key: string]: IApiSchema | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Response Objects.
@@ -354,7 +354,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   responses?: {
-    [key: string]: IApiResponse | IApiReference;
+    [key: string]: IApiResponse | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Parameter Objects.
@@ -367,7 +367,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   parameters?: {
-    [key: string]: IApiParameter | IApiReference;
+    [key: string]: IApiParameter | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Example Objects.
@@ -380,7 +380,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   examples?: {
-    [key: string]: IApiExample | IApiReference;
+    [key: string]: IApiExample | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Request Body Objects.
@@ -393,7 +393,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   requestBodies?: {
-    [key: string]: IApiRequestBody | IApiReference;
+    [key: string]: IApiRequestBody | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Header Objects.
@@ -406,7 +406,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   headers?: {
-    [key: string]: IApiHeader | IApiReference;
+    [key: string]: IApiHeader | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Security Scheme Objects.
@@ -419,7 +419,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   securitySchemes?: {
-    [key: string]: IApiSecurityScheme | IApiReference;
+    [key: string]: IApiSecurityScheme | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Link Objects.
@@ -432,7 +432,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   links?: {
-    [key: string]: IApiLink | IApiReference;
+    [key: string]: IApiLink | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
   /**
    * An object to hold reusable Callback Objects.
@@ -445,7 +445,7 @@ export interface IApiComponents {
    * @memberof IApiComponents
    */
   callbacks?: {
-    [key: string]: IApiCallback | IApiReference;
+    [key: string]: IApiCallback | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
 }
 
@@ -457,9 +457,9 @@ export interface IApiComponents {
  * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
  *
  * @export
- * @interface IApiPath
+ * @interface IApiPaths
  */
-export interface IApiPath {
+export interface IApiPaths {
   /**
    * A relative path to an individual endpoint. The field name MUST begin with a slash.
    * The path is appended (no relative URL resolution) to the expanded URL from the
@@ -472,7 +472,7 @@ export interface IApiPath {
    * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
    *
    * @type {IApiPathItem}
-   * @memberof IApiPath
+   * @memberof IApiPaths
    */
   [path: string]: IApiPathItem;
 }
@@ -790,6 +790,181 @@ export interface IApiExternalDocumentation {
   url: string;
 }
 
+export interface IApiAbstractParameter {
+  /**
+   * The name of the parameter. Parameter names are case sensitive.
+   * * If in is "path", the name field MUST correspond to the associated path segment
+   * from the path field in the Paths Object. See Path Templating for further information.
+   * * If in is "header" and the name field is "Accept", "Content-Type" or "Authorization",
+   * the parameter definition SHALL be ignored.
+   * * For all other cases, the name corresponds to the parameter name used by the in property.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiAbstractParameter
+   */
+  name: string;
+  /**
+   * The location of the parameter. Possible values are "query", "header", "path" or "cookie".
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {('query'|'header'|'path'|'cookie')}
+   * @memberof IApiAbstractParameter
+   */
+  in: 'query'|'header'|'path'|'cookie';
+  /**
+   * A brief description of the parameter. This could contain examples of use. CommonMark
+   * syntax MAY be used for rich text representation.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiAbstractParameter
+   */
+  description?: string;
+  /**
+   * Determines whether this parameter is mandatory. If the parameter location is "path",
+   * this property is REQUIRED and its value MUST be true. Otherwise, the property MAY be
+   * included and its default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiAbstractParameter
+   */
+  required?: boolean;
+  /**
+   * Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
+   * Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiAbstractParameter
+   */
+  deprecated?: boolean;
+
+  /**
+   * Describes how the parameter value will be serialized depending on the type of the
+   * parameter value. Default values (based on value of in): for query - form;
+   * for path - simple; for header - simple; for cookie - form.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiAbstractParameter
+   */
+  style?: 'matrix'|'label'|'form'|'simple'|'spaceDelimited'|'pipeDelimited'|'deepObject';
+  /**
+   * When this is true, parameter values of type array or object generate separate
+   * parameters for each value of the array or key-value pair of the map. For other
+   * types of parameters this property has no effect. When style is form, the default
+   * value is true. For all other styles, the default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiAbstractParameter
+   */
+  explode?: boolean;
+  /**
+   * The schema defining the type used for the parameter.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {(IApiSchema | IApiReference)}
+   * @memberof IApiAbstractParameter
+   */
+  schema?: IApiSchema | IApiReference;
+  /**
+   * Example of the media type. The example SHOULD match the specified schema and encoding
+   * properties if present. The example field is mutually exclusive of the examples field.
+   * Furthermore, if referencing a schema which contains an example, the example value SHALL
+   * override the example provided by the schema. To represent examples of media types that
+   * cannot naturally be represented in JSON or YAML, a string value can contain the example
+   * with escaping where necessary.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {*}
+   * @memberof IApiAbstractParameter
+   */
+  example?: any;
+  /**
+   * Examples of the media type. Each example SHOULD contain a value in the correct format as
+   * specified in the parameter encoding. The examples field is mutually exclusive of the
+   * example field. Furthermore, if referencing a schema which contains an example, the examples
+   * value SHALL override the example provided by the schema.
+   *
+   * @type {({
+   *     [key: string]: IApiExample | IApiReference;
+   *   })}
+   * @memberof IApiAbstractParameter
+   */
+  examples?: {
+    [key: string]: IApiExample | IApiReference;
+  };
+  /**
+   * A map containing the representations for the parameter. The key is the media type and the
+   * value describes it. The map MUST only contain one entry.
+   *
+   * @type {{
+   *     [key: string]: IApiMediaType;
+   *   }}
+   * @memberof IApiAbstractParameter
+   */
+  content?: {
+    [key: string]: IApiMediaType;
+  };
+}
+
+export interface IApiPathParameter extends IApiAbstractParameter {
+  in: 'path';
+  required: true;
+  style?: 'matrix'|'label'|'simple';
+}
+
+export interface IApiQueryParameter extends IApiAbstractParameter {
+  in: 'query';
+  /**
+   * Sets the ability to pass empty-valued parameters. This is valid only for query parameters
+   * and allows sending a parameter with an empty value. Default value is false. If style is
+   * used, and if behavior is n/a (cannot be serialized), the value of allowEmptyValue SHALL
+   * be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a
+   * later revision.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiAbstractParameter
+   */
+  allowEmptyValue?: boolean;
+  /**
+   * Determines whether the parameter value SHOULD allow reserved characters, as defined by
+   * RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding. This property only
+   * applies to parameters with an in value of query. The default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiQueryParameter
+   */
+  allowReserved?: boolean;
+  style?: 'form'|'spaceDelimited'|'pipeDelimited'|'deepObject';
+}
+
+export interface IApiHeaderParameter extends IApiAbstractParameter {
+  in: 'header';
+  style?: 'simple';
+}
+
+export interface IApiCookieParameter extends IApiAbstractParameter {
+  in: 'cookie';
+  style?: 'form';
+}
+
 /**
  * Describes a single operation parameter.
  *
@@ -810,90 +985,8 @@ export interface IApiExternalDocumentation {
  * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
  *
  * @export
- * @interface IApiParameter
  */
-export interface IApiParameter {
-  /**
-   * The name of the parameter. Parameter names are case sensitive.
-   * * If in is "path", the name field MUST correspond to the associated path segment
-   * from the path field in the Paths Object. See Path Templating for further information.
-   * * If in is "header" and the name field is "Accept", "Content-Type" or "Authorization",
-   * the parameter definition SHALL be ignored.
-   * * For all other cases, the name corresponds to the parameter name used by the in property.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {string}
-   * @memberof IApiParameter
-   */
-  name: string;
-  /**
-   * The location of the parameter. Possible values are "query", "header", "path" or "cookie".
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {('query'|'header'|'path'|'cookie')}
-   * @memberof IApiParameter
-   */
-  in: 'query'|'header'|'path'|'cookie';
-  /**
-   * A brief description of the parameter. This could contain examples of use. CommonMark
-   * syntax MAY be used for rich text representation.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {string}
-   * @memberof IApiParameter
-   */
-  description?: string;
-  /**
-   * Determines whether this parameter is mandatory. If the parameter location is "path",
-   * this property is REQUIRED and its value MUST be true. Otherwise, the property MAY be
-   * included and its default value is false.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {boolean}
-   * @memberof IApiParameter
-   */
-  required?: boolean;
-  /**
-   * Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
-   * Default value is false.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {boolean}
-   * @memberof IApiParameter
-   */
-  deprecated?: boolean;
-  /**
-   * Sets the ability to pass empty-valued parameters. This is valid only for query parameters
-   * and allows sending a parameter with an empty value. Default value is false. If style is
-   * used, and if behavior is n/a (cannot be serialized), the value of allowEmptyValue SHALL
-   * be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a
-   * later revision.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {boolean}
-   * @memberof IApiParameter
-   */
-  allowEmptyValue?: boolean;
-
-  // TODO: Complete this:
-
-  /**
-   * The schema defining the type used for the parameter.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {(IApiSchema | IApiReference)}
-   * @memberof IApiOperation
-   */
-  schema?: IApiSchema | IApiReference;
-  style?: string;
-}
+export type IApiParameter = IApiPathParameter | IApiQueryParameter | IApiHeaderParameter | IApiCookieParameter;
 
 /**
  * Describes a single request body.
@@ -1056,7 +1149,7 @@ export interface IApiEncoding {
    * @type {string}
    * @memberof IApiEncoding
    */
-  style?: string;
+  style?: 'matrix'|'label'|'form'|'simple'|'spaceDelimited'|'pipeDelimited'|'deepObject';
   /**
    * When this is true, property values of type array or object generate separate parameters
    * for each value of the array, or key-value-pair of the map. For other types of properties
@@ -1283,7 +1376,7 @@ export interface IApiResponse {
    * @memberof IApiResponse
    */
   links?: {
-    [key: string]: IApiLink | IApiReference;
+    [key: string]: IApiLink | IApiReference; // Allowed characters: "A..Z a..z 0..9 . _ -"
   };
 }
 
@@ -1410,7 +1503,7 @@ export interface IApiLink {
    * @memberof IApiLink
    */
   parameters?: {
-    [key: string]: any;
+    [key: string]: any|string;
   };
   /**
    * A literal value or {expression} to use as a request body when calling the target operation.
@@ -1420,7 +1513,7 @@ export interface IApiLink {
    * @type {*}
    * @memberof IApiLink
    */
-  requestBody?: any;
+  requestBody?: any|string;
   /**
    * A description of the link. CommonMark syntax MAY be used for rich text representation.
    *
@@ -1441,42 +1534,20 @@ export interface IApiLink {
   server?: IApiServer;
 }
 
-export interface IApiHeader {
-  /**
-   * A brief description of the header. This could contain examples of use.
-   * CommonMark syntax MAY be used for rich text representation.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {string}
-   * @memberof IApiHeader
-   */
-  description?: string;
-  required?: boolean;
-  /**
-   * Specifies that a header is deprecated and SHOULD be transitioned out of usage.
-   * Default value is false.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {boolean}
-   * @memberof IApiHeader
-   */
-  deprecated?: boolean;
-  allowEmptyValue?: boolean;
-
-  // TODO: Complete this:
-
-  /**
-   * The schema defining the type used for the parameter.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {(IApiSchema | IApiReference)}
-   * @memberof IApiOperation
-   */
-  schema?: IApiSchema | IApiReference;
-}
+/**
+ * The Header Object follows the structure of the Parameter Object with the following changes:
+ *
+ * 1. name MUST NOT be specified, it is given in the corresponding headers map.
+ * 2. in MUST NOT be specified, it is implicitly in header.
+ * 3. All traits that are affected by the location MUST be applicable to a location of
+ * header (for example, style).
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
+ * @export
+ */
+export type IApiHeader = Pick<IApiHeaderParameter, Exclude<keyof IApiHeaderParameter, 'in'|'name'>>;
+// Omit the keys 'in' and 'name'.
 
 /**
  * Adds metadata to a single tag that is used by the Operation Object. It is not
@@ -1554,8 +1625,233 @@ export interface IApiReference {
  * Validation. Unless stated otherwise, the property definitions follow the JSON Schema.
  *
  * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
+ * @export
+ * @interface IApiSchema
  */
-export type IApiSchema = any;
+export interface IApiSchema {
+  title?: string;
+  multipleOf?: number;
+  maximum?: number;
+  exclusiveMaximum?: number;
+  minimum?: number;
+  exclusiveMinimum?: number;
+  maxLength?: number;
+  minLength?: number;
+  pattern?: string;
+  maxItems?: number;
+  minItems?: number;
+  uniqueItems?: boolean;
+  maxProperties?: number;
+  minProperties?: number;
+  required?: string[];
+  enum?: any[];
+  type?: 'null'|'boolean'|'object'|'array'|'number'|'string'|'integer';
+  allOf?: (IApiSchema | IApiReference)[];
+  oneOf?: (IApiSchema | IApiReference)[];
+  anyOf?: (IApiSchema | IApiReference)[];
+  not?: IApiSchema | IApiReference;
+  items?: IApiSchema | IApiReference;
+  properties?: {
+    [key: string]: IApiSchema | IApiReference;
+  };
+  additionalProperties?: boolean | (IApiSchema | IApiReference);
+  description?: string;
+  format?: string;
+  default?: any;
+  /**
+   * Allows sending a null value for the defined schema. Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiSchema
+   */
+  nullable?: boolean;
+  /**
+   * Adds support for polymorphism. The discriminator is an object name that is used
+   * to differentiate between other schemas which may satisfy the payload description.
+   * See Composition and Inheritance for more details.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiSchema
+   */
+  discriminator?: IApiDiscriminator;
+  /**
+   * Relevant only for Schema "properties" definitions. Declares the property as "read only".
+   * This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of
+   * the request. If the property is marked as readOnly being true and is in the required list,
+   * the required will take effect on the response only. A property MUST NOT be marked as both
+   * readOnly and writeOnly being true. Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiSchema
+   */
+  readOnly?: boolean;
+  /**
+   * Relevant only for Schema "properties" definitions. Declares the property as "write only".
+   * Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.
+   * If the property is marked as writeOnly being true and is in the required list, the required
+   * will take effect on the request only. A property MUST NOT be marked as both readOnly and
+   * writeOnly being true. Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiSchema
+   */
+  writeOnly?: boolean;
+  /**
+   * This MAY be used only on properties schemas. It has no effect on root schemas. Adds
+   * additional metadata to describe the XML representation of this property.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {IApiXML}
+   * @memberof IApiSchema
+   */
+  xml?: IApiXML;
+  /**
+   * Additional external documentation for this schema.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {IApiExternalDocumentation}
+   * @memberof IApiSchema
+   */
+  externalDocs?: IApiExternalDocumentation;
+  /**
+   * A free-form property to include an example of an instance for this schema. To represent
+   * examples that cannot be naturally represented in JSON or YAML, a string value can be used
+   * to contain the example with escaping where necessary.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {*}
+   * @memberof IApiSchema
+   */
+  example?: any;
+  /**
+   * Specifies that a schema is deprecated and SHOULD be transitioned out of usage. Default
+   * value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiSchema
+   */
+  deprecated?: boolean;
+}
+
+/**
+ * When request bodies or response payloads may be one of a number of different schemas,
+ * a discriminator object can be used to aid in serialization, deserialization, and
+ * validation. The discriminator is a specific object in a schema which is used to inform
+ * the consumer of the specification of an alternative schema based on the value
+ * associated with it.
+ *
+ * When using the discriminator, inline schemas will not be considered.
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
+ * @export
+ * @interface IApiDiscriminator
+ */
+export interface IApiDiscriminator {
+  /**
+   * The name of the property in the payload that will hold the discriminator value.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiDiscriminator
+   */
+  propertyName: string;
+  /**
+   * An object to hold mappings between payload values and schema names or references.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {{
+   *     [key: string]: string;
+   *   }}
+   * @memberof IApiDiscriminator
+   */
+  mapping?: {
+    [key: string]: string;
+  };
+}
+
+/**
+ * A metadata object that allows for more fine-tuned XML model definitions.
+ *
+ * When using arrays, XML element names are not inferred (for singular/plural forms) and
+ * the name property SHOULD be used to add that information. See examples for expected behavior.
+ *
+ * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+ *
+ * @export
+ * @interface IApiXML
+ */
+export interface IApiXML {
+  /**
+   * Replaces the name of the element/attribute used for the described schema property.
+   * When defined within items, it will affect the name of the individual XML elements
+   * within the list. When defined alongside type being array (outside the items), it
+   * will affect the wrapping element and only if wrapped is true. If wrapped is false,
+   * it will be ignored.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiXML
+   */
+  name?: string;
+  /**
+   * The URI of the namespace definition. Value MUST be in the form of an absolute URI.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiXML
+   */
+  namespace?: string;
+  /**
+   * The prefix to be used for the name.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiXML
+   */
+  prefix?: string;
+  /**
+   * Declares whether the property definition translates to an attribute instead of an
+   * element. Default value is false.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiXML
+   */
+  attribute?: boolean;
+  /**
+   * MAY be used only for an array definition. Signifies whether the array is wrapped
+   * (for example, <books><book/><book/></books>) or unwrapped (<book/><book/>). Default
+   * value is false. The definition takes effect only when defined alongside type being
+   * array (outside the items).
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {boolean}
+   * @memberof IApiXML
+   */
+  wrapped?: boolean;
+}
 
 export interface IApiAbstractSecurityScheme {
   /**
@@ -1684,7 +1980,7 @@ export interface IApiOAuthFlows {
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
-  implicit?: IApiOAuthFlow;
+  implicit?: IApiImplicitOAuthFlow;
   /**
    * Configuration for the OAuth Resource Owner Password flow
    *
@@ -1693,7 +1989,7 @@ export interface IApiOAuthFlows {
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
-  password?: IApiOAuthFlow;
+  password?: IApiPasswordOAuthFlow;
   /**
    * Configuration for the OAuth Client Credentials flow. Previously called
    * application in OpenAPI 2.0.
@@ -1703,7 +1999,7 @@ export interface IApiOAuthFlows {
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
-  clientCredentials?: IApiOAuthFlow;
+  clientCredentials?: IApiClientCredentialsOAuthFlow;
   /**
    * Configuration for the OAuth Authorization Code flow. Previously called
    * accessCode in OpenAPI 2.0.
@@ -1713,7 +2009,7 @@ export interface IApiOAuthFlows {
    * @type {IApiOAuthFlow}
    * @memberof IApiOAuthFlows
    */
-  authorizationCode?: IApiOAuthFlow;
+  authorizationCode?: IApiAuthorizationCodeOAuthFlow;
 }
 
 /**
@@ -1725,24 +2021,6 @@ export interface IApiOAuthFlows {
  * @interface IApiOAuthFlow
  */
 export interface IApiOAuthFlow {
-  /**
-   * The authorization URL to be used for this flow. This MUST be in the form of a URL.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {string}
-   * @memberof IApiOAuthFlow
-   */
-  authorizationUrl?: string;
-  /**
-   * The token URL to be used for this flow. This MUST be in the form of a URL.
-   *
-   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
-   *
-   * @type {string}
-   * @memberof IApiOAuthFlow
-   */
-  tokenUrl?: string;
   /**
    * The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL.
    *
@@ -1766,6 +2044,63 @@ export interface IApiOAuthFlow {
   scopes: {
     [key: string]: string;
   };
+}
+
+export interface IApiImplicitOAuthFlow extends IApiOAuthFlow {
+  /**
+   * The authorization URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiImplicitOAuthFlow
+   */
+  authorizationUrl?: string;
+}
+
+export interface IApiPasswordOAuthFlow extends IApiOAuthFlow {
+  /**
+   * The token URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiPasswordOAuthFlow
+   */
+  tokenUrl?: string;
+}
+
+export interface IApiClientCredentialsOAuthFlow extends IApiOAuthFlow {
+  /**
+   * The token URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiClientCredentialsOAuthFlow
+   */
+  tokenUrl?: string;
+}
+
+export interface IApiAuthorizationCodeOAuthFlow extends IApiOAuthFlow {
+  /**
+   * The authorization URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiAuthorizationCodeOAuthFlow
+   */
+  authorizationUrl?: string;
+  /**
+   * The token URL to be used for this flow. This MUST be in the form of a URL.
+   *
+   * Source: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
+   *
+   * @type {string}
+   * @memberof IApiOAuthFlow
+   */
+  tokenUrl?: string;
 }
 
 /**
