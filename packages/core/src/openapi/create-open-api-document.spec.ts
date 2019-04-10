@@ -5,10 +5,11 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { createOpenApiDocument } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineExample, ApiDefineHeader, ApiDefineLink,
-  ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema, ApiDefineSecurityScheme, ApiInfo
+  ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiInfo
 } from './decorators';
 import {
-  IApiCallback, IApiExample, IApiHeader, IApiLink, IApiParameter, IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityScheme
+  IApiCallback, IApiExample, IApiHeader, IApiLink, IApiParameter,
+  IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityScheme, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {
@@ -1333,6 +1334,126 @@ describe('createOpenApiDocument', () => {
       }
 
       deepStrictEqual(document.components.callbacks, { callback1, callback2, callback3, callback4 });
+    });
+
+  });
+
+  describe('should define a tag when @ApiDefineTag decorates', () => {
+
+    const tag1: IApiTag = {
+      name: 'tag1',
+    };
+    const tag2: IApiTag = {
+      name: 'tag2',
+    };
+    const tag3: IApiTag = {
+      name: 'tag3',
+    };
+    const tag4: IApiTag = {
+      name: 'tag4',
+    };
+
+    it('the root controller.', () => {
+      @ApiInfo(infoMetadata)
+      @ApiDefineTag(tag1)
+      @ApiDefineTag(tag2)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+
+      if (!document.tags) {
+        throw new Error('The document should have a "tags" section.');
+      }
+
+      deepStrictEqual(document.tags, [ tag1, tag2 ]);
+    });
+
+    it('a sub-controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          SubController
+        ];
+      }
+
+      @ApiDefineTag(tag1)
+      @ApiDefineTag(tag2)
+      class SubController {}
+
+      const document = createOpenApiDocument(Controller);
+
+      if (!document.tags) {
+        throw new Error('The document should have a "tags" section.');
+      }
+
+      deepStrictEqual(document.tags, [ tag1, tag2 ]);
+    });
+
+    it('a method.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @ApiDefineTag(tag1)
+        @ApiDefineTag(tag2)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      if (!document.tags) {
+        throw new Error('The document should have a "tags" section.');
+      }
+
+      deepStrictEqual(document.tags, [ tag1, tag2 ]);
+    });
+
+    it('a method of a sub-controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          SubController
+        ];
+      }
+
+      class SubController {
+        @ApiDefineTag(tag1)
+        @ApiDefineTag(tag2)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      if (!document.tags) {
+        throw new Error('The document should have a "tags" section.');
+      }
+
+      deepStrictEqual(document.tags, [ tag1, tag2 ]);
+    });
+
+    it('all of them.', () => {
+      @ApiInfo(infoMetadata)
+      @ApiDefineTag(tag1)
+      class Controller {
+        subControllers = [
+          SubController
+        ];
+
+        @ApiDefineTag(tag2)
+        foo() {}
+      }
+
+      @ApiDefineTag(tag3)
+      class SubController {
+        @ApiDefineTag(tag4)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      if (!document.tags) {
+        throw new Error('The document should have a "tags" section.');
+      }
+
+      deepStrictEqual(document.tags, [ tag1, tag3, tag4, tag2 ]);
     });
 
   });
