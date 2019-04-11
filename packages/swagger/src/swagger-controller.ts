@@ -47,7 +47,7 @@ export abstract class SwaggerController {
 
   /* Spec file(s) */
 
-  @Get('openapi.json')
+  @Get('/openapi.json')
   getOpenApiDefinition(ctx: Context) {
     if (isUrlOption(this.options)) {
       return new HttpResponseNotFound();

@@ -5,7 +5,10 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { ApiInfo, Context, getHttpMethod, getPath, isHttpResponseBadRequest, isHttpResponseMovedPermanently, isHttpResponseNotFound, isHttpResponseOK } from '@foal/core';
+import {
+  ApiInfo, Context, getHttpMethod, getPath, isHttpResponseBadRequest,
+  isHttpResponseMovedPermanently, isHttpResponseNotFound, isHttpResponseOK
+} from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
@@ -31,7 +34,7 @@ describe('SwaggerController', () => {
 
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(ConcreteClass, 'getOpenApiDefinition'), 'GET');
-      strictEqual(getPath(ConcreteClass, 'getOpenApiDefinition'), 'openapi.json');
+      strictEqual(getPath(ConcreteClass, 'getOpenApiDefinition'), '/openapi.json');
     });
 
     describe('given options is an object', () => {
