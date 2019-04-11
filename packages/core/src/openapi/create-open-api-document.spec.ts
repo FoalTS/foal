@@ -5,7 +5,8 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { createOpenApiDocument } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineExample, ApiDefineHeader, ApiDefineLink,
-  ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiInfo
+  ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema,
+  ApiDefineSecurityScheme, ApiDefineTag, ApiInfo
 } from './decorators';
 import {
   IApiCallback, IApiExample, IApiHeader, IApiLink, IApiParameter,

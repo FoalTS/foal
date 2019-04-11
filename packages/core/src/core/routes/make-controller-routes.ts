@@ -1,6 +1,5 @@
 // FoalTS
 import { Class } from '../class.interface';
-import { createController } from '../controllers';
 import { HookFunction } from '../hooks';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
@@ -38,7 +37,7 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
   const leftPath = join(parentPath, controllerPath);
   const leftHooks = parentHooks.concat(controllerHooks);
 
-  const controller = createController(controllerClass, services);
+  const controller = new controllerClass();
 
   for (const controllerClass of controller.subControllers || []) {
     routes.push(
