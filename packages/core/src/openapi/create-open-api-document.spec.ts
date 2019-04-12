@@ -2,6 +2,8 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
+import { controller } from '../common';
+import { Get, Post } from '../core';
 import { createOpenApiDocument } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineExample, ApiDefineHeader, ApiDefineLink,
@@ -1455,6 +1457,142 @@ describe('createOpenApiDocument', () => {
       }
 
       deepStrictEqual(document.tags, [ tag1, tag3, tag4, tag2 ]);
+    });
+
+  });
+
+  describe('should return the paths and methods', () => {
+
+    it('of the root controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/products')
+        readProducts() {}
+
+        @Get('/products/1')
+        readProduct() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths['/products'], { get: {} });
+      deepStrictEqual(document.paths['/products/1'], { get: {} });
+    });
+
+    it('of the sub controllers.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      class ApiController {
+        subControllers = [
+          controller('/products', ProductController)
+        ];
+      }
+
+      class ProductController {
+        @Get()
+        readProducts() {}
+
+        @Get('/1')
+        readProduct() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/api/products': { get: {} },
+        '/api/products/1': { get: {} },
+      });
+    });
+
+    it('with the proper path templating.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/api/users/:userId/products/:productId')
+        something() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/api/users/{userId}/products/{productId}': { get: {} }
+      });
+    });
+
+    it('which paths always start with a slash.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          controller('/products', ProductController)
+        ];
+
+        @Get()
+        index() {}
+
+        @Get('api')
+        api() {}
+      }
+
+      class ProductController {
+        @Get()
+        readProduct() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/': { get: {} },
+        '/api': { get: {} },
+        '/products': { get: {} }
+      });
+    });
+
+    it('without duplicate paths for different methods.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/products')
+        readProducts() {}
+
+        @Post('/products')
+        createProduct() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/products': {
+          get: {},
+          post: {}
+        }
+      });
+    });
+
+    it('or throw an error if paths are in conflict.', done => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/api/users/:userId/products/:productId')
+        something() {}
+
+        @Get('/api/users/:userId2/products/:productId2')
+        something2() {}
+      }
+
+      try {
+        createOpenApiDocument(Controller);
+        done(new Error('The function should have thrown an Error.'));
+      } catch (error) {
+        strictEqual(
+          error.message,
+          'Templated paths with the same hierarchy but different templated names MUST NOT exist as they are identical.'
+          + '\n  Path 1: /api/users/{userId}/products/{productId}'
+          + '\n  Path 2: /api/users/{userId2}/products/{productId2}'
+        );
+        done();
+      }
     });
 
   });

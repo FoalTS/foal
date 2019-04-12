@@ -1,4 +1,5 @@
-import { ApiDefineResponse, ApiDefineTag, ApiInfo, Context, Get, HttpResponseOK } from '@foal/core';
+import { ApiDefineResponse, ApiDefineTag, ApiInfo, Context, controller, Get, HttpResponseOK } from '@foal/core';
+import { ProductController } from './product.controller';
 
 @ApiInfo({
   license: {
@@ -14,7 +15,11 @@ import { ApiDefineResponse, ApiDefineTag, ApiInfo, Context, Get, HttpResponseOK 
 })
 export class ApiV2Controller {
 
-  @Get('/')
+  subControllers = [
+    controller('/products', ProductController)
+  ];
+
+  @Get('/foo')
   @ApiDefineResponse('Good success', {
     content: {
       'application/json': {
