@@ -1,8 +1,11 @@
 // FoalTS
-import { Class, createController } from '../core';
+import { Class, createController, HttpMethod } from '../core';
 import { getMethods } from '../core/routes/make-controller-routes';
 import { getHttpMethod, getMetadata, getPath, join } from '../core/routes/utils';
-import { IApiComponents, IApiInfo, IApiPaths, IApiTag, IOpenAPI } from './interfaces';
+import {
+  IApiComponents, IApiExternalDocumentation, IApiInfo, IApiOperation, IApiPathItem,
+  IApiPaths, IApiSecurityRequirement, IApiServer, IApiTag, IOpenAPI
+} from './interfaces';
 
 function getApiInfo(controllerClass: Class): IApiInfo {
   const info = getMetadata('api:document:info', controllerClass);
@@ -30,24 +33,20 @@ function getTags(controllerClass: Class, propertyKey?: string): IApiTag[] {
   return getMetadata('api:document:tags', controllerClass, propertyKey) || [];
 }
 
-function mergeComponents(target: IApiComponents, source: IApiComponents): void {
-  Object.assign(target.callbacks, source.callbacks);
-  Object.assign(target.examples, source.examples);
-  Object.assign(target.headers, source.headers);
-  Object.assign(target.links, source.links);
-  Object.assign(target.parameters, source.parameters);
-  Object.assign(target.requestBodies, source.requestBodies);
-  Object.assign(target.responses, source.responses);
-  Object.assign(target.schemas, source.schemas);
-  Object.assign(target.securitySchemes, source.securitySchemes);
+function getExternalDocs(controllerClass: Class, propertyKey?: string): IApiExternalDocumentation | undefined {
+  return getMetadata('api:documentOrOperation:externalDocs', controllerClass, propertyKey);
 }
 
-function mergeTags(target: IApiTag[], source: IApiTag[]): void {
-  target.push(...source);
+function getServers(controllerClass: Class, propertyKey?: string): IApiServer[] | undefined {
+  return getMetadata('api:documentOrOperation:servers', controllerClass, propertyKey);
 }
 
-function mergePaths(target: IApiPaths, source: IApiPaths): void {
-  Object.assign(target, source);
+function getSecurity(controllerClass: Class, propertyKey?: string): IApiSecurityRequirement[] | undefined {
+  return getMetadata('api:documentOrOperation:security', controllerClass, propertyKey);
+}
+
+function pathsFrom(...paths: IApiPaths[]): IApiPaths {
+  return Object.assign({}, ...paths);
 }
 
 function convertPathTemplating(path: string): string {
@@ -76,54 +75,180 @@ function checkDuplicatePaths(paths: IApiPaths): void {
   }
 }
 
-function getApiComponentsTagsAndPaths(controllerClass: Class, pathPrefix: string = ''): {
+function getOperation(controllerClass: Class, propertyKey?: string): IApiOperation {
+  const operation: IApiOperation = {
+    responses: {}
+  };
+
+  const externalDocs = getExternalDocs(controllerClass, propertyKey);
+  if (externalDocs) {
+    operation.externalDocs = externalDocs;
+  }
+
+  const security = getSecurity(controllerClass, propertyKey);
+  if (security) {
+    operation.security = security;
+  }
+
+  const servers = getServers(controllerClass, propertyKey);
+  if (servers) {
+    operation.servers = servers;
+  }
+
+  return operation;
+}
+
+function componentsFrom(...componentss: IApiComponents[]): IApiComponents {
+  const components: IApiComponents = {};
+
+  for (const sourceComponents of componentss) {
+    if (sourceComponents.callbacks) {
+      components.callbacks = Object.assign({}, components.callbacks, sourceComponents.callbacks);
+    }
+    if (sourceComponents.examples) {
+      components.examples = Object.assign({}, components.examples, sourceComponents.examples);
+    }
+    if (sourceComponents.headers) {
+      components.headers = Object.assign({}, components.headers, sourceComponents.headers);
+    }
+    if (sourceComponents.links) {
+      components.links = Object.assign({}, components.links, sourceComponents.links);
+    }
+    if (sourceComponents.parameters) {
+      components.parameters = Object.assign({}, components.parameters, sourceComponents.parameters);
+    }
+    if (sourceComponents.requestBodies) {
+      components.requestBodies = Object.assign({}, components.requestBodies, sourceComponents.requestBodies);
+    }
+    if (sourceComponents.responses) {
+      components.responses = Object.assign({}, components.responses, sourceComponents.responses);
+    }
+    if (sourceComponents.schemas) {
+      components.schemas = Object.assign({}, components.schemas, sourceComponents.schemas);
+    }
+    if (sourceComponents.parameters) {
+      components.securitySchemes = Object.assign({}, components.securitySchemes, sourceComponents.securitySchemes);
+    }
+  }
+
+  return components;
+}
+
+function operationFrom(...operations: (IApiOperation|undefined)[]): IApiOperation {
+  const operation: IApiOperation = {
+    responses: {}
+  };
+
+  for (const sourceOperation of operations) {
+    if (!sourceOperation) {
+      continue;
+    }
+
+    if (sourceOperation.externalDocs) {
+      operation.externalDocs = sourceOperation.externalDocs;
+    }
+    if (sourceOperation.security) {
+      operation.security = sourceOperation.security;
+    }
+    if (sourceOperation.servers) {
+      operation.servers = sourceOperation.servers;
+    }
+  }
+
+  return operation;
+}
+
+function tagsFrom(tags1: IApiTag[], tags2: IApiTag[], tags3: IApiTag[] = []): IApiTag[] {
+  return tags1.concat(tags2).concat(tags3);
+}
+
+function getApiComponentsTagsAndPaths(
+  controllerClass: Class, root: boolean, pathPrefix: string = '', controllerOperation: IApiOperation = { responses: {}}
+): {
   components: IApiComponents, tags: IApiTag[], paths: IApiPaths
 } {
   // Controller class
-  const components = getComponents(controllerClass);
-  const tags = getTags(controllerClass);
-  const paths: IApiPaths = {};
+  const result: { components: IApiComponents, tags: IApiTag[], paths: IApiPaths } = {
+    components: getComponents(controllerClass),
+    paths: {},
+    tags: getTags(controllerClass),
+  };
   const controllerPathPrefix = join(pathPrefix, getPath(controllerClass));
+  if (!root) {
+    controllerOperation = operationFrom(controllerOperation, getOperation(controllerClass));
+  }
 
   // Sub-controllers
   const controller = createController(controllerClass);
   if (controller.subControllers) {
     for (const subControllerClass of controller.subControllers) {
-      const componentsTagsAndPaths = getApiComponentsTagsAndPaths(subControllerClass, controllerPathPrefix);
-      mergeTags(tags, componentsTagsAndPaths.tags);
-      mergeComponents(components, componentsTagsAndPaths.components);
-      mergePaths(paths, componentsTagsAndPaths.paths);
+      const { components, tags, paths } = getApiComponentsTagsAndPaths(
+        subControllerClass,
+        false,
+        controllerPathPrefix,
+        controllerOperation
+      );
+      result.tags = tagsFrom(result.tags, tags);
+      result.components = componentsFrom(result.components, components);
+      result.paths = pathsFrom(result.paths, paths);
     }
   }
 
   // Controller methods
-  for (const method of getMethods(controllerClass.prototype)) {
-    mergeTags(tags, getTags(controllerClass, method));
-    mergeComponents(components, getComponents(controllerClass, method));
-    const path = getPath(controllerClass, method) || '';
-    const httpMethod = getHttpMethod(controllerClass, method);
-    if (httpMethod) {
-      const keyPath = convertPathTemplating(join(controllerPathPrefix, path));
-      paths[keyPath] = {
-        ...paths[keyPath],
-        [httpMethod.toLowerCase()]: {}
-      };
+  for (const propertyKey of getMethods(controllerClass.prototype)) {
+    const httpMethod = getHttpMethod(controllerClass, propertyKey);
+
+    if (!httpMethod) {
+      continue;
     }
+
+    let operation = getOperation(controllerClass, propertyKey);
+    const tags = getTags(controllerClass, propertyKey);
+    const components = getComponents(controllerClass, propertyKey);
+
+    result.tags = tagsFrom(result.tags, tags);
+    result.components = componentsFrom(result.components, components);
+
+    operation = operationFrom(controllerOperation, operation);
+
+    const path = getPath(controllerClass, propertyKey) || '';
+    const keyPath = convertPathTemplating(join(controllerPathPrefix, path));
+    const pathItem: IApiPathItem = {
+      ...result.paths[keyPath],
+      [httpMethod.toLowerCase()]: operation
+    };
+
+    result.paths[keyPath] = pathItem;
   }
 
-  return { components, tags, paths };
+  return result;
 }
 
 export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
-  const { components, tags, paths } = getApiComponentsTagsAndPaths(controllerClass);
+  const { components, tags, paths } = getApiComponentsTagsAndPaths(controllerClass, true);
   checkDuplicatePaths(paths);
-  const document = {
+  const document: IOpenAPI = {
     components,
     info: getApiInfo(controllerClass),
     openapi: '3.0.0',
     paths,
     tags,
   };
+
+  const externalDocs = getExternalDocs(controllerClass);
+  if (externalDocs) {
+    document.externalDocs = externalDocs;
+  }
+
+  const servers = getServers(controllerClass);
+  if (servers) {
+    document.servers = servers;
+  }
+
+  const security = getSecurity(controllerClass);
+  if (security) {
+    document.security = security;
+  }
 
   return document;
 }

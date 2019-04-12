@@ -8,11 +8,11 @@ import { createOpenApiDocument } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineExample, ApiDefineHeader, ApiDefineLink,
   ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema,
-  ApiDefineSecurityScheme, ApiDefineTag, ApiInfo
+  ApiDefineSecurityScheme, ApiDefineTag, ApiExternalDoc, ApiInfo, ApiSecurityRequirement, ApiServer
 } from './decorators';
 import {
-  IApiCallback, IApiExample, IApiHeader, IApiLink, IApiParameter,
-  IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityScheme, IApiTag
+  IApiCallback, IApiExample, IApiExternalDocumentation, IApiHeader, IApiLink,
+  IApiParameter, IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityRequirement, IApiSecurityScheme, IApiServer, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {
@@ -22,7 +22,7 @@ describe('createOpenApiDocument', () => {
     version: '0.0.0'
   };
 
-  it('should return document using the version 3.0 of OpenAPI.', () => {
+  it('should return a document using the version 3.0 of OpenAPI.', () => {
     @ApiInfo(infoMetadata)
     class Controller {}
 
@@ -116,6 +116,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineSchema('schema1', schema1)
         @ApiDefineSchema('schema2', schema2)
         foo() {}
@@ -143,6 +144,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineSchema('schema1', schema1)
         @ApiDefineSchema('schema2', schema2)
         foo() {}
@@ -169,12 +171,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineSchema('schema2', schema2)
         foo() {}
       }
 
       @ApiDefineSchema('schema3', schema3)
       class SubController {
+        @Get()
         @ApiDefineSchema('schema4', schema4)
         foo() {}
       }
@@ -256,6 +260,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineResponse('response1', response1)
         @ApiDefineResponse('response2', response2)
         foo() {}
@@ -283,6 +288,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineResponse('response1', response1)
         @ApiDefineResponse('response2', response2)
         foo() {}
@@ -309,12 +315,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineResponse('response2', response2)
         foo() {}
       }
 
       @ApiDefineResponse('response3', response3)
       class SubController {
+        @Get()
         @ApiDefineResponse('response4', response4)
         foo() {}
       }
@@ -400,6 +408,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineParameter('parameter1', parameter1)
         @ApiDefineParameter('parameter2', parameter2)
         foo() {}
@@ -427,6 +436,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineParameter('parameter1', parameter1)
         @ApiDefineParameter('parameter2', parameter2)
         foo() {}
@@ -453,12 +463,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineParameter('parameter2', parameter2)
         foo() {}
       }
 
       @ApiDefineParameter('parameter3', parameter3)
       class SubController {
+        @Get()
         @ApiDefineParameter('parameter4', parameter4)
         foo() {}
       }
@@ -540,6 +552,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineExample('example1', example1)
         @ApiDefineExample('example2', example2)
         foo() {}
@@ -567,6 +580,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineExample('example1', example1)
         @ApiDefineExample('example2', example2)
         foo() {}
@@ -593,12 +607,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineExample('example2', example2)
         foo() {}
       }
 
       @ApiDefineExample('example3', example3)
       class SubController {
+        @Get()
         @ApiDefineExample('example4', example4)
         foo() {}
       }
@@ -684,6 +700,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineRequestBody('requestBody1', requestBody1)
         @ApiDefineRequestBody('requestBody2', requestBody2)
         foo() {}
@@ -711,6 +728,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineRequestBody('requestBody1', requestBody1)
         @ApiDefineRequestBody('requestBody2', requestBody2)
         foo() {}
@@ -737,12 +755,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineRequestBody('requestBody2', requestBody2)
         foo() {}
       }
 
       @ApiDefineRequestBody('requestBody3', requestBody3)
       class SubController {
+        @Get()
         @ApiDefineRequestBody('requestBody4', requestBody4)
         foo() {}
       }
@@ -828,6 +848,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineHeader('header1', header1)
         @ApiDefineHeader('header2', header2)
         foo() {}
@@ -855,6 +876,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineHeader('header1', header1)
         @ApiDefineHeader('header2', header2)
         foo() {}
@@ -881,12 +903,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineHeader('header2', header2)
         foo() {}
       }
 
       @ApiDefineHeader('header3', header3)
       class SubController {
+        @Get()
         @ApiDefineHeader('header4', header4)
         foo() {}
       }
@@ -972,6 +996,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineSecurityScheme('securityScheme1', securityScheme1)
         @ApiDefineSecurityScheme('securityScheme2', securityScheme2)
         foo() {}
@@ -999,6 +1024,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineSecurityScheme('securityScheme1', securityScheme1)
         @ApiDefineSecurityScheme('securityScheme2', securityScheme2)
         foo() {}
@@ -1025,12 +1051,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineSecurityScheme('securityScheme2', securityScheme2)
         foo() {}
       }
 
       @ApiDefineSecurityScheme('securityScheme3', securityScheme3)
       class SubController {
+        @Get()
         @ApiDefineSecurityScheme('securityScheme4', securityScheme4)
         foo() {}
       }
@@ -1115,6 +1143,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineLink('link1', link1)
         @ApiDefineLink('link2', link2)
         foo() {}
@@ -1142,6 +1171,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineLink('link1', link1)
         @ApiDefineLink('link2', link2)
         foo() {}
@@ -1168,12 +1198,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineLink('link2', link2)
         foo() {}
       }
 
       @ApiDefineLink('link3', link3)
       class SubController {
+        @Get()
         @ApiDefineLink('link4', link4)
         foo() {}
       }
@@ -1263,6 +1295,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineCallback('callback1', callback1)
         @ApiDefineCallback('callback2', callback2)
         foo() {}
@@ -1290,6 +1323,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineCallback('callback1', callback1)
         @ApiDefineCallback('callback2', callback2)
         foo() {}
@@ -1316,12 +1350,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineCallback('callback2', callback2)
         foo() {}
       }
 
       @ApiDefineCallback('callback3', callback3)
       class SubController {
+        @Get()
         @ApiDefineCallback('callback4', callback4)
         foo() {}
       }
@@ -1395,6 +1431,7 @@ describe('createOpenApiDocument', () => {
     it('a method.', () => {
       @ApiInfo(infoMetadata)
       class Controller {
+        @Get()
         @ApiDefineTag(tag1)
         @ApiDefineTag(tag2)
         foo() {}
@@ -1418,6 +1455,7 @@ describe('createOpenApiDocument', () => {
       }
 
       class SubController {
+        @Get()
         @ApiDefineTag(tag1)
         @ApiDefineTag(tag2)
         foo() {}
@@ -1440,12 +1478,14 @@ describe('createOpenApiDocument', () => {
           SubController
         ];
 
+        @Get()
         @ApiDefineTag(tag2)
         foo() {}
       }
 
       @ApiDefineTag(tag3)
       class SubController {
+        @Get()
         @ApiDefineTag(tag4)
         foo() {}
       }
@@ -1475,8 +1515,8 @@ describe('createOpenApiDocument', () => {
 
       const document = createOpenApiDocument(Controller);
 
-      deepStrictEqual(document.paths['/products'], { get: {} });
-      deepStrictEqual(document.paths['/products/1'], { get: {} });
+      deepStrictEqual(document.paths['/products'], { get: { responses: {} } });
+      deepStrictEqual(document.paths['/products/1'], { get: { responses: {} } });
     });
 
     it('of the sub controllers.', () => {
@@ -1504,8 +1544,8 @@ describe('createOpenApiDocument', () => {
       const document = createOpenApiDocument(Controller);
 
       deepStrictEqual(document.paths, {
-        '/api/products': { get: {} },
-        '/api/products/1': { get: {} },
+        '/api/products': { get: { responses: {} } },
+        '/api/products/1': { get: { responses: {} } },
       });
     });
 
@@ -1519,7 +1559,7 @@ describe('createOpenApiDocument', () => {
       const document = createOpenApiDocument(Controller);
 
       deepStrictEqual(document.paths, {
-        '/api/users/{userId}/products/{productId}': { get: {} }
+        '/api/users/{userId}/products/{productId}': { get: { responses: {} } }
       });
     });
 
@@ -1545,9 +1585,9 @@ describe('createOpenApiDocument', () => {
       const document = createOpenApiDocument(Controller);
 
       deepStrictEqual(document.paths, {
-        '/': { get: {} },
-        '/api': { get: {} },
-        '/products': { get: {} }
+        '/': { get: { responses: {} } },
+        '/api': { get: { responses: {} } },
+        '/products': { get: { responses: {} } }
       });
     });
 
@@ -1565,8 +1605,8 @@ describe('createOpenApiDocument', () => {
 
       deepStrictEqual(document.paths, {
         '/products': {
-          get: {},
-          post: {}
+          get: { responses: {} },
+          post: { responses: {} }
         }
       });
     });
@@ -1593,6 +1633,286 @@ describe('createOpenApiDocument', () => {
         );
         done();
       }
+    });
+
+  });
+
+  describe('should specify an external doc when @ApiExternalDoc decorates', () => {
+
+    const externalDocumentation: IApiExternalDocumentation = {
+      url: 'http://examples.com/docs'
+    };
+    const externalDocumentation2: IApiExternalDocumentation = {
+      url: 'http://examples2.com/docs'
+    };
+
+    it('the root controller.', () => {
+      @ApiInfo(infoMetadata)
+      @ApiExternalDoc(externalDocumentation)
+      class Controller {
+        @Get()
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      strictEqual(document.externalDocs, externalDocumentation);
+      deepStrictEqual(document.paths, {
+        '/': {
+          // No externa docs here.
+          get: { responses: {} }
+        }
+      });
+    });
+
+    it('a method.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/foo')
+        @ApiExternalDoc(externalDocumentation)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/foo': {
+          get: {
+            externalDocs: externalDocumentation,
+            responses: {}
+          }
+        }
+      });
+    });
+
+    it('a sub-controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          ApiController
+        ];
+      }
+
+      @ApiExternalDoc(externalDocumentation)
+      class ApiController {
+        subControllers = [
+          ProductController
+        ];
+      }
+
+      class ProductController {
+        @Get('/foo')
+        foo() {}
+
+        @Get('/bar')
+        @ApiExternalDoc(externalDocumentation2)
+        bar() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/bar': {
+          get: {
+            externalDocs: externalDocumentation2,
+            responses: {}
+          }
+        },
+        '/foo': {
+          get: {
+            externalDocs: externalDocumentation,
+            responses: {}
+          }
+        },
+      });
+    });
+
+  });
+
+  describe('should specify a server when @ApiServer decorates', () => {
+
+    const server: IApiServer = {
+      url: 'http://examples.com'
+    };
+    const server2: IApiServer = {
+      url: 'http://examples2.com'
+    };
+
+    it('the root controller.', () => {
+      @ApiInfo(infoMetadata)
+      @ApiServer(server)
+      @ApiServer(server2)
+      class Controller {
+        @Get()
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.servers, [ server, server2 ]);
+      deepStrictEqual(document.paths, {
+        '/': {
+          // No servers here.
+          get: { responses: {} }
+        }
+      });
+    });
+
+    it('a method.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/foo')
+        @ApiServer(server)
+        @ApiServer(server2)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/foo': {
+          get: {
+            responses: {},
+            servers: [ server, server2 ],
+          }
+        }
+      });
+    });
+
+    it('a sub-controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          ApiController
+        ];
+      }
+
+      @ApiServer(server)
+      class ApiController {
+        subControllers = [
+          ProductController
+        ];
+      }
+
+      class ProductController {
+        @Get('/foo')
+        foo() {}
+
+        @Get('/bar')
+        @ApiServer(server2)
+        bar() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/bar': {
+          get: {
+            responses: {},
+            servers: [ server2 ],
+          }
+        },
+        '/foo': {
+          get: {
+            responses: {},
+            servers: [ server ],
+          }
+        },
+      });
+    });
+
+  });
+
+  describe('should specify a security requirement when @ApiSecurityRequirements decorates', () => {
+
+    const security: IApiSecurityRequirement = {
+      a: [ 'b' ]
+    };
+    const security2: IApiSecurityRequirement = {
+      c: [ 'd' ]
+    };
+
+    it('the root controller.', () => {
+      @ApiInfo(infoMetadata)
+      @ApiSecurityRequirement(security)
+      @ApiSecurityRequirement(security2)
+      class Controller {
+        @Get()
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.security, [ security, security2 ]);
+      deepStrictEqual(document.paths, {
+        '/': {
+          // No servers here.
+          get: { responses: {} }
+        }
+      });
+    });
+
+    it('a method.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        @Get('/foo')
+        @ApiSecurityRequirement(security)
+        @ApiSecurityRequirement(security2)
+        foo() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/foo': {
+          get: {
+            responses: {},
+            security: [ security, security2 ],
+          }
+        }
+      });
+    });
+
+    it('a sub-controller.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {
+        subControllers = [
+          ApiController
+        ];
+      }
+
+      @ApiSecurityRequirement(security)
+      class ApiController {
+        subControllers = [
+          ProductController
+        ];
+      }
+
+      class ProductController {
+        @Get('/foo')
+        foo() {}
+
+        @Get('/bar')
+        @ApiSecurityRequirement(security2)
+        bar() {}
+      }
+
+      const document = createOpenApiDocument(Controller);
+
+      deepStrictEqual(document.paths, {
+        '/bar': {
+          get: {
+            responses: {},
+            security: [ security2 ],
+          }
+        },
+        '/foo': {
+          get: {
+            responses: {},
+            security: [ security ],
+          }
+        },
+      });
     });
 
   });
