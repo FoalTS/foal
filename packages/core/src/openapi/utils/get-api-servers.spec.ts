@@ -4,9 +4,9 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { ApiServer } from '../decorators';
 import { IApiServer } from '../interfaces';
-import { getServers } from './get-servers';
+import { getApiServers } from './get-api-servers';
 
-describe('getServers', () => {
+describe('getApiServers', () => {
   const server: IApiServer = {
     url: 'http://example.com'
   };
@@ -17,7 +17,7 @@ describe('getServers', () => {
       @ApiServer(server)
       class Controller {}
 
-      const actual = getServers(Controller);
+      const actual = getApiServers(Controller);
 
       deepStrictEqual(actual, [ server ]);
     });
@@ -28,7 +28,7 @@ describe('getServers', () => {
         foo() {}
       }
 
-      const actual = getServers(Controller, 'foo');
+      const actual = getApiServers(Controller, 'foo');
 
       deepStrictEqual(actual, [ server ]);
     });
@@ -40,7 +40,7 @@ describe('getServers', () => {
     it('from a class.', () => {
       class Controller {}
 
-      const actual = getServers(Controller);
+      const actual = getApiServers(Controller);
 
       strictEqual(actual, undefined);
     });
@@ -50,7 +50,7 @@ describe('getServers', () => {
         foo() {}
       }
 
-      const actual = getServers(Controller, 'foo');
+      const actual = getApiServers(Controller, 'foo');
 
       strictEqual(actual, undefined);
     });

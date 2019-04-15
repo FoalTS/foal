@@ -4,7 +4,7 @@ import { IApiComponents } from '../interfaces';
 
 import { getMetadata } from '../../core/routes/utils';
 
-export function getComponents(controllerClass: Class, propertyKey?: string): IApiComponents {
+export function getApiComponents(controllerClass: Class, propertyKey?: string): IApiComponents {
   const components: IApiComponents = {};
 
   const callbacks = getMetadata('api:components:callbacks', controllerClass, propertyKey);

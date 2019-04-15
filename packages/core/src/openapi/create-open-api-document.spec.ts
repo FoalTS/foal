@@ -12,7 +12,8 @@ import {
 } from './decorators';
 import {
   IApiCallback, IApiExample, IApiExternalDocumentation, IApiHeader, IApiLink,
-  IApiParameter, IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityRequirement, IApiSecurityScheme, IApiServer, IApiTag
+  IApiParameter, IApiRequestBody, IApiResponse, IApiSchema, IApiSecurityRequirement,
+  IApiSecurityScheme, IApiServer, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {
@@ -22,7 +23,7 @@ describe('createOpenApiDocument', () => {
     version: '0.0.0'
   };
 
-  it('should return a document using the version 3.0 of OpenAPI.', () => {
+  it('should return the proper OpenAPI version.', () => {
     @ApiInfo(infoMetadata)
     class Controller {}
 
@@ -30,29 +31,135 @@ describe('createOpenApiDocument', () => {
     strictEqual(document.openapi, '3.0.0');
   });
 
-  it('should throw an Error if no api:info is found on the root controller.', done => {
-    class Controller {}
+  describe('should return from the root controller', () => {
 
-    try {
-      createOpenApiDocument(Controller);
-      done(new Error('The function should have thrown an Error.'));
-    } catch (error) {
-      strictEqual(error.message, 'The API root controller should be decorated with @ApiInfo.');
-      done();
-    }
+    it('the API information.', () => {
+      const metadata = {
+        title: 'foo',
+        version: '0.0.0'
+      };
+      @ApiInfo(metadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.info, metadata);
+    });
+
+    it('or throw an Error if no API information is found.', done => {
+      class Controller {}
+
+      try {
+        createOpenApiDocument(Controller);
+        done(new Error('The function should have thrown an Error.'));
+      } catch (error) {
+        strictEqual(error.message, 'The API root controller should be decorated with @ApiInfo.');
+        done();
+      }
+    });
+
+    it('the servers if they exist.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.hasOwnProperty('servers'), false);
+
+      const server: IApiServer = {
+        url: 'http://example.com'
+      };
+
+      @ApiInfo(infoMetadata)
+      @ApiServer(server)
+      class Controller2 {}
+
+      const document2 = createOpenApiDocument(Controller2);
+      deepStrictEqual(document2.servers, [ server ]);
+    });
+
+    it('the components if they exist.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.hasOwnProperty('components'), false);
+
+      const callback: IApiCallback = {};
+
+      @ApiInfo(infoMetadata)
+      @ApiDefineCallback('callback', callback)
+      class Controller2 {}
+
+      const document2 = createOpenApiDocument(Controller2);
+      deepStrictEqual(document2.components, {
+        callbacks: { callback }
+      });
+    });
+
+    it('the security requirements if they exist.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.hasOwnProperty('security'), false);
+
+      const securityRequirement: IApiSecurityRequirement = {};
+
+      @ApiInfo(infoMetadata)
+      @ApiSecurityRequirement(securityRequirement)
+      class Controller2 {}
+
+      const document2 = createOpenApiDocument(Controller2);
+      deepStrictEqual(document2.security, [ securityRequirement ]);
+    });
+
+    it('the tags if they exist.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.hasOwnProperty('tags'), false);
+
+      const tag: IApiTag = {
+        name: 'tag1'
+      };
+
+      @ApiInfo(infoMetadata)
+      @ApiDefineTag(tag)
+      class Controller2 {}
+
+      const document2 = createOpenApiDocument(Controller2);
+      deepStrictEqual(document2.tags, [ tag ]);
+    });
+
+    it('the external documentation if it exists.', () => {
+      @ApiInfo(infoMetadata)
+      class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.hasOwnProperty('externalDocs'), false);
+
+      const externalDocs: IApiExternalDocumentation = {
+        url: 'http://example.com/docs'
+      };
+
+      @ApiInfo(infoMetadata)
+      @ApiExternalDoc(externalDocs)
+      class Controller2 {}
+
+      const document2 = createOpenApiDocument(Controller2);
+      deepStrictEqual(document2.externalDocs, externalDocs);
+    });
+
   });
 
-  it('should return the document info.', () => {
-    const metadata = {
-      title: 'foo',
-      version: '0.0.0'
-    };
-    @ApiInfo(metadata)
-    class Controller {}
+});
 
-    const document = createOpenApiDocument(Controller);
-    strictEqual(document.info, metadata);
-  });
+xdescribe('createOpenApiDocument', () => {
+
+  const infoMetadata = {
+    title: 'foo',
+    version: '0.0.0'
+  };
 
   describe('should define a schema when @ApiDefineSchema decorates', () => {
 

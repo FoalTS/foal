@@ -4,9 +4,9 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { ApiDefineTag } from '../decorators';
 import { IApiTag } from '../interfaces';
-import { getTags } from './get-tags';
+import { getApiTags } from './get-api-tags';
 
-describe('getTags', () => {
+describe('getApiTags', () => {
   const tag: IApiTag = {
     name: 'tag 1'
   };
@@ -17,7 +17,7 @@ describe('getTags', () => {
       @ApiDefineTag(tag)
       class Controller {}
 
-      const actual = getTags(Controller);
+      const actual = getApiTags(Controller);
 
       deepStrictEqual(actual, [ tag ]);
     });
@@ -28,7 +28,7 @@ describe('getTags', () => {
         foo() {}
       }
 
-      const actual = getTags(Controller, 'foo');
+      const actual = getApiTags(Controller, 'foo');
 
       deepStrictEqual(actual, [ tag ]);
     });
@@ -40,7 +40,7 @@ describe('getTags', () => {
     it('from a class.', () => {
       class Controller {}
 
-      const actual = getTags(Controller);
+      const actual = getApiTags(Controller);
 
       strictEqual(actual, undefined);
     });
@@ -50,7 +50,7 @@ describe('getTags', () => {
         foo() {}
       }
 
-      const actual = getTags(Controller, 'foo');
+      const actual = getApiTags(Controller, 'foo');
 
       strictEqual(actual, undefined);
     });

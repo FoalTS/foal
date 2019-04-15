@@ -1,49 +1,15 @@
 // FoalTS
-import { Class, createController, HttpMethod } from '../core';
+import { Class, createController } from '../core';
 import { getMethods } from '../core/routes/make-controller-routes';
-import { getHttpMethod, getMetadata, getPath, join } from '../core/routes/utils';
+import { getHttpMethod, getPath, join } from '../core/routes/utils';
 import {
-  IApiComponents, IApiExternalDocumentation, IApiInfo, IApiOperation, IApiPathItem,
-  IApiPaths, IApiSecurityRequirement, IApiServer, IApiTag, IOpenAPI
+  IApiComponents, IApiOperation,
+  IApiPaths, IApiTag, IOpenAPI
 } from './interfaces';
-
-function getApiInfo(controllerClass: Class): IApiInfo {
-  const info = getMetadata('api:document:info', controllerClass);
-  if (!info) {
-    throw new Error('The API root controller should be decorated with @ApiInfo.');
-  }
-  return info;
-}
-
-function getComponents(controllerClass: Class, propertyKey?: string): IApiComponents {
-  return {
-    callbacks: getMetadata('api:components:callbacks', controllerClass, propertyKey) || {},
-    examples: getMetadata('api:components:examples', controllerClass, propertyKey) || {},
-    headers: getMetadata('api:components:headers', controllerClass, propertyKey) || {},
-    links: getMetadata('api:components:links', controllerClass, propertyKey) || {},
-    parameters: getMetadata('api:components:parameters', controllerClass, propertyKey) || {},
-    requestBodies: getMetadata('api:components:requestBodies', controllerClass, propertyKey) || {},
-    responses: getMetadata('api:components:responses', controllerClass, propertyKey) || {},
-    schemas: getMetadata('api:components:schemas', controllerClass, propertyKey) || {},
-    securitySchemes: getMetadata('api:components:securitySchemes', controllerClass, propertyKey) || {},
-  };
-}
-
-function getTags(controllerClass: Class, propertyKey?: string): IApiTag[] {
-  return getMetadata('api:document:tags', controllerClass, propertyKey) || [];
-}
-
-function getExternalDocs(controllerClass: Class, propertyKey?: string): IApiExternalDocumentation | undefined {
-  return getMetadata('api:documentOrOperation:externalDocs', controllerClass, propertyKey);
-}
-
-function getServers(controllerClass: Class, propertyKey?: string): IApiServer[] | undefined {
-  return getMetadata('api:documentOrOperation:servers', controllerClass, propertyKey);
-}
-
-function getSecurity(controllerClass: Class, propertyKey?: string): IApiSecurityRequirement[] | undefined {
-  return getMetadata('api:documentOrOperation:security', controllerClass, propertyKey);
-}
+import {
+  getApiCompleteOperation, getApiComponents, getApiExternalDocs, getApiInfo, getApiSecurity,
+  getApiServers, getApiTags
+} from './utils';
 
 function pathsFrom(...paths: IApiPaths[]): IApiPaths {
   return Object.assign({}, ...paths);
@@ -80,17 +46,17 @@ function getOperation(controllerClass: Class, propertyKey?: string): IApiOperati
     responses: {}
   };
 
-  const externalDocs = getExternalDocs(controllerClass, propertyKey);
+  const externalDocs = getApiExternalDocs(controllerClass, propertyKey);
   if (externalDocs) {
     operation.externalDocs = externalDocs;
   }
 
-  const security = getSecurity(controllerClass, propertyKey);
+  const security = getApiSecurity(controllerClass, propertyKey);
   if (security) {
     operation.security = security;
   }
 
-  const servers = getServers(controllerClass, propertyKey);
+  const servers = getApiServers(controllerClass, propertyKey);
   if (servers) {
     operation.servers = servers;
   }
@@ -162,35 +128,41 @@ function tagsFrom(tags1: IApiTag[], tags2: IApiTag[], tags3: IApiTag[] = []): IA
   return tags1.concat(tags2).concat(tags3);
 }
 
-function getApiComponentsTagsAndPaths(
-  controllerClass: Class, root: boolean, pathPrefix: string = '', controllerOperation: IApiOperation = { responses: {}}
-): {
-  components: IApiComponents, tags: IApiTag[], paths: IApiPaths
-} {
-  // Controller class
-  const result: { components: IApiComponents, tags: IApiTag[], paths: IApiPaths } = {
-    components: getComponents(controllerClass),
-    paths: {},
-    tags: getTags(controllerClass),
-  };
-  const controllerPathPrefix = join(pathPrefix, getPath(controllerClass));
-  if (!root) {
-    controllerOperation = operationFrom(controllerOperation, getOperation(controllerClass));
+interface PartialDocument {
+  paths: IApiPaths;
+  tags: IApiTag[];
+  components: IApiComponents;
+}
+
+function addPrefixToPaths(prefix: string, paths: IApiPaths): IApiPaths {
+  const result: IApiPaths = {};
+
+  // tslint:disable-next-line:forin
+  for (const path in paths) {
+    result[join(prefix, path)] = paths[path];
   }
+
+  return result;
+}
+
+function getPartialDocument(controllerClass: Class, root: boolean): PartialDocument {
+  // Controller class
+  let components = getApiComponents(controllerClass);
+  let tags = getApiTags(controllerClass) || [];
+  const controllerPath = getPath(controllerClass) || '';
+  const controllerOperation = getOperation(controllerClass); // Pb if is root
+
+  // Sub-controllers & Controller methods
+  let paths: IApiPaths = {};
 
   // Sub-controllers
   const controller = createController(controllerClass);
   if (controller.subControllers) {
     for (const subControllerClass of controller.subControllers) {
-      const { components, tags, paths } = getApiComponentsTagsAndPaths(
-        subControllerClass,
-        false,
-        controllerPathPrefix,
-        controllerOperation
-      );
-      result.tags = tagsFrom(result.tags, tags);
-      result.components = componentsFrom(result.components, components);
-      result.paths = pathsFrom(result.paths, paths);
+      const subDocument = getPartialDocument(subControllerClass, false);
+      tags = tagsFrom(tags, subDocument.tags);
+      components = componentsFrom(components, subDocument.components);
+      paths = pathsFrom(paths, addPrefixToPaths(controllerPath, subDocument.paths));
     }
   }
 
@@ -202,53 +174,77 @@ function getApiComponentsTagsAndPaths(
       continue;
     }
 
-    let operation = getOperation(controllerClass, propertyKey);
-    const tags = getTags(controllerClass, propertyKey);
-    const components = getComponents(controllerClass, propertyKey);
+    const methodTags = getApiTags(controllerClass, propertyKey) || [];
+    const methodComponents = getApiComponents(controllerClass, propertyKey);
+    tags = tagsFrom(tags, methodTags);
+    components = componentsFrom(components, methodComponents);
 
-    result.tags = tagsFrom(result.tags, tags);
-    result.components = componentsFrom(result.components, components);
-
-    operation = operationFrom(controllerOperation, operation);
+    let methodOperation = getApiCompleteOperation(controllerClass, propertyKey);
+    methodOperation = operationFrom(controllerOperation, methodOperation);
 
     const path = getPath(controllerClass, propertyKey) || '';
-    const keyPath = convertPathTemplating(join(controllerPathPrefix, path));
-    const pathItem: IApiPathItem = {
-      ...result.paths[keyPath],
-      [httpMethod.toLowerCase()]: operation
+    // Là c'est plus bon pour le début du slash.
+    const keyPath = convertPathTemplating(join(controllerPath, path));
+    paths[keyPath] = {
+      ...paths[keyPath],
+      [httpMethod.toLowerCase()]: methodOperation
     };
-
-    result.paths[keyPath] = pathItem;
   }
 
-  return result;
+  return { components, paths, tags };
 }
 
 export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
-  const { components, tags, paths } = getApiComponentsTagsAndPaths(controllerClass, true);
-  checkDuplicatePaths(paths);
-  const document: IOpenAPI = {
-    components,
-    info: getApiInfo(controllerClass),
-    openapi: '3.0.0',
-    paths,
-    tags,
-  };
-
-  const externalDocs = getExternalDocs(controllerClass);
-  if (externalDocs) {
-    document.externalDocs = externalDocs;
+  const info = getApiInfo(controllerClass);
+  if (!info) {
+    throw new Error('The API root controller should be decorated with @ApiInfo.');
   }
 
-  const servers = getServers(controllerClass);
+  const document: IOpenAPI = {
+    info,
+    openapi: '3.0.0',
+    paths: {}
+  };
+
+  const servers = getApiServers(controllerClass);
   if (servers) {
     document.servers = servers;
   }
 
-  const security = getSecurity(controllerClass);
+  const components = getApiComponents(controllerClass);
+  if (Object.keys(components).length > 0) {
+    document.components = components;
+  }
+
+  const security = getApiSecurity(controllerClass);
   if (security) {
     document.security = security;
   }
+
+  const tags = getApiTags(controllerClass);
+  if (tags) {
+    document.tags = tags;
+  }
+
+  const externalDocs = getApiExternalDocs(controllerClass);
+  if (externalDocs) {
+    document.externalDocs = externalDocs;
+  }
+
+  return document;
+}
+
+export function xcreateOpenApiDocument(controllerClass: Class): any {
+  const { components, tags, paths } = getPartialDocument(controllerClass, true);
+  checkDuplicatePaths(paths);
+
+  const document: IOpenAPI = {
+    components,
+    info: {} as any,
+    openapi: '3.0.0',
+    paths,
+    tags,
+  };
 
   return document;
 }

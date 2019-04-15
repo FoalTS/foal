@@ -4,9 +4,9 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { ApiSecurityRequirement } from '../decorators';
 import { IApiSecurityRequirement } from '../interfaces';
-import { getSecurity } from './get-security';
+import { getApiSecurity } from './get-api-security';
 
-describe('getSecurity', () => {
+describe('getApiSecurity', () => {
   const securityRequirement: IApiSecurityRequirement = {};
 
   describe('when security requirements are defined, should return them', () => {
@@ -15,7 +15,7 @@ describe('getSecurity', () => {
       @ApiSecurityRequirement(securityRequirement)
       class Controller {}
 
-      const actual = getSecurity(Controller);
+      const actual = getApiSecurity(Controller);
 
       deepStrictEqual(actual, [ securityRequirement ]);
     });
@@ -26,7 +26,7 @@ describe('getSecurity', () => {
         foo() {}
       }
 
-      const actual = getSecurity(Controller, 'foo');
+      const actual = getApiSecurity(Controller, 'foo');
 
       deepStrictEqual(actual, [ securityRequirement ]);
     });
@@ -38,7 +38,7 @@ describe('getSecurity', () => {
     it('from a class.', () => {
       class Controller {}
 
-      const actual = getSecurity(Controller);
+      const actual = getApiSecurity(Controller);
 
       strictEqual(actual, undefined);
     });
@@ -48,7 +48,7 @@ describe('getSecurity', () => {
         foo() {}
       }
 
-      const actual = getSecurity(Controller, 'foo');
+      const actual = getApiSecurity(Controller, 'foo');
 
       strictEqual(actual, undefined);
     });
