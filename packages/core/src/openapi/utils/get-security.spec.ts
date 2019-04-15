@@ -9,7 +9,7 @@ import { getSecurity } from './get-security';
 describe('getSecurity', () => {
   const securityRequirement: IApiSecurityRequirement = {};
 
-  describe('when security requirements are defined, should return them from', () => {
+  describe('when security requirements are defined, should return them', () => {
 
     it('from a class.', () => {
       @ApiSecurityRequirement(securityRequirement)
@@ -33,7 +33,7 @@ describe('getSecurity', () => {
 
   });
 
-  describe('when no tag is defined, should return undefined from', () => {
+  describe('when no security requirement is defined, should return undefined', () => {
 
     it('from a class.', () => {
       class Controller {}

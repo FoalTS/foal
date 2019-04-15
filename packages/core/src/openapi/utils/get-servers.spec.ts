@@ -11,7 +11,7 @@ describe('getServers', () => {
     url: 'http://example.com'
   };
 
-  describe('when servers are defined, should return them from', () => {
+  describe('when servers are defined, should return them', () => {
 
     it('from a class.', () => {
       @ApiServer(server)
@@ -35,7 +35,7 @@ describe('getServers', () => {
 
   });
 
-  describe('when no tag is defined, should return undefined from', () => {
+  describe('when no server is defined, should return undefined', () => {
 
     it('from a class.', () => {
       class Controller {}

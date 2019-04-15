@@ -11,7 +11,7 @@ describe('getExternalDocs', () => {
     url: 'http://www.example.com'
   };
 
-  describe('when an externalDoc is defined, should return it from', () => {
+  describe('when an external documentation is defined, should return it', () => {
 
     it('from a class.', () => {
       @ApiExternalDoc(externalDocs)
@@ -35,7 +35,7 @@ describe('getExternalDocs', () => {
 
   });
 
-  describe('when no tag is defined, should return undefined from', () => {
+  describe('when no external documentation is defined, should return undefined', () => {
 
     it('from a class.', () => {
       class Controller {}
