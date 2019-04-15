@@ -1,4 +1,7 @@
-import { ApiDefineResponse, ApiDefineTag, ApiInfo, Context, controller, Get, HttpResponseOK } from '@foal/core';
+import {
+  ApiDefineResponse, ApiDefineTag, ApiInfo, ApiResponse,
+  Context, controller, Get, HttpResponseOK
+} from '@foal/core';
 import { ProductController } from './product.controller';
 
 @ApiInfo({
@@ -13,6 +16,16 @@ import { ProductController } from './product.controller';
   description: 'my tag',
   name: 'tag1',
 })
+@ApiDefineResponse('SuccessResponse', {
+  content: {
+    'application/json': {
+      example: {
+        foo: 1
+      }
+    }
+  },
+  description: 'An incredible response',
+})
 export class ApiV2Controller {
 
   subControllers = [
@@ -20,15 +33,8 @@ export class ApiV2Controller {
   ];
 
   @Get('/foo')
-  @ApiDefineResponse('Good success', {
-    content: {
-      'application/json': {
-        example: {
-          foo: 1
-        }
-      }
-    },
-    description: 'An incredible response',
+  @ApiResponse(200, {
+    $ref: '#/components/responses/SuccessResponse'
   })
   foo(ctx: Context) {
     return new HttpResponseOK();

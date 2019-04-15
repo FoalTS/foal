@@ -7,8 +7,8 @@ import {
   IApiPaths, IApiTag, IOpenAPI
 } from './interfaces';
 import {
-  getApiCompleteOperation, getApiComponents, getApiExternalDocs, getApiInfo, getApiSecurity,
-  getApiServers, getApiTags
+  getApiCompleteOperation, getApiComponents, getApiExternalDocs, getApiInfo, getApiOperation,
+  getApiSecurity, getApiServers, getApiTags
 } from './utils';
 
 function pathsFrom(...paths: IApiPaths[]): IApiPaths {
@@ -22,7 +22,7 @@ function convertPathTemplating(path: string): string {
   return path.replace(/\:\w*/g, $1 => `{${$1.slice(1)}}`);
 }
 
-function checkDuplicatePaths(paths: IApiPaths): void {
+function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   const originalPaths: string[] = [];
   const convertedPaths: string[] = [];
   // tslint:disable-next-line:forin
@@ -194,16 +194,66 @@ function getPartialDocument(controllerClass: Class, root: boolean): PartialDocum
   return { components, paths, tags };
 }
 
+function getPaths(controllerClass: Class): IApiPaths {
+  const paths: IApiPaths = {};
+
+  // Sub-controller methods.
+  const controller = new controllerClass(); // Outch. TODO: do not instantiate the controller.
+  if (controller.subControllers) {
+    for (const subControllerClass of controller.subControllers) {
+      const subPaths = getPaths(subControllerClass);
+      const subControllerPath = getPath(subControllerClass) || '';
+      // tslint:disable-next-line:forin
+      for (const subPath in subPaths) {
+        paths[subControllerPath + subPath] = {
+          ...paths[subControllerPath + subPath], // Potentially undefined
+          ...subPaths[subPath]
+        };
+      }
+    }
+  }
+
+  // Controller methods.
+  for (const propertyKey of getMethods(controllerClass.prototype)) {
+    const httpMethod = getHttpMethod(controllerClass, propertyKey);
+
+    if (!httpMethod) {
+      continue;
+    }
+
+    const path = (getPath(controllerClass, propertyKey) || '')
+      .replace(/\:\w*/g, $1 => `{${$1.slice(1)}}`);
+
+    paths[path] = {
+      ...paths[path],
+      [httpMethod.toLowerCase()]: getApiCompleteOperation(controllerClass, propertyKey)
+    };
+  }
+
+  return paths;
+}
+
 export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
   const info = getApiInfo(controllerClass);
   if (!info) {
     throw new Error('The API root controller should be decorated with @ApiInfo.');
   }
 
+  const paths = getPaths(controllerClass);
+  // Use "... of Object.keys" instead of "... in ..." because properties are changed.
+  for (const path of Object.keys(paths)) {
+    if (!path.startsWith('/')) {
+      paths['/' + path] = paths[path];
+      delete paths[path];
+    }
+  }
+
+  throwErrorIfDuplicatePaths(paths);
+
   const document: IOpenAPI = {
     info,
     openapi: '3.0.0',
-    paths: {}
+    paths
   };
 
   const servers = getApiServers(controllerClass);
@@ -230,21 +280,6 @@ export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
   if (externalDocs) {
     document.externalDocs = externalDocs;
   }
-
-  return document;
-}
-
-export function xcreateOpenApiDocument(controllerClass: Class): any {
-  const { components, tags, paths } = getPartialDocument(controllerClass, true);
-  checkDuplicatePaths(paths);
-
-  const document: IOpenAPI = {
-    components,
-    info: {} as any,
-    openapi: '3.0.0',
-    paths,
-    tags,
-  };
 
   return document;
 }
