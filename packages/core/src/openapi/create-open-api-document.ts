@@ -9,7 +9,7 @@ import {
 import {
   getApiCompleteOperation, getApiComponents, getApiExternalDocs, getApiInfo, getApiOperation,
   getApiSecurity, getApiServers, getApiTags
-} from './utils';
+} from './metadata-getters';
 
 function pathsFrom(...paths: IApiPaths[]): IApiPaths {
   return Object.assign({}, ...paths);
