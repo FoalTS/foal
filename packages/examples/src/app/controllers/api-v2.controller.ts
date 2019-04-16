@@ -1,17 +1,18 @@
 import {
   ApiDefineResponse, ApiDefineTag, ApiInfo, ApiResponse,
-  Context, controller, Get, HttpResponseOK
+  ApiServer, Context, controller, Get, HttpResponseOK
 } from '@foal/core';
 import { ProductController } from './product.controller';
 
 @ApiInfo({
   license: {
-    name: 'toto',
+    name: 'foobar',
     url: 'http://foobar.com'
   },
   title: 'Api',
   version: 'v2',
 })
+@ApiServer({ url: '/api' })
 @ApiDefineTag({
   description: 'my tag',
   name: 'tag1',
