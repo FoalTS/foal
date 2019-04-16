@@ -13,6 +13,19 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the tags of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('tags'), false);
+
+      @ApiUseTag('tag1')
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.tags, [ 'tag1' ]);
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -102,6 +115,22 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the external documentation of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('externalDocs'), false);
+
+      const doc: IApiExternalDocumentation = {
+        url: 'http://example.com/docs'
+      };
+      @ApiExternalDoc(doc)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.externalDocs, doc);
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -160,6 +189,23 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the parameters of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('parameters'), false);
+
+      const param: IApiParameter = {
+        in: 'cookie',
+        name: 'parameter1'
+      };
+      @ApiParameter(param)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.parameters, [ param ]);
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -209,6 +255,22 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the responses of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      deepStrictEqual(operation.responses, {});
+
+      const response: IApiResponse = {
+        description: 'response1'
+      };
+      @ApiResponse(200, response)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.responses, { 200: response });
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -232,6 +294,22 @@ describe('getApiCompleteOperation', () => {
   });
 
   describe('should return the callbacks of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('callbacks'), false);
+
+      const callback: IApiCallback = {};
+      @ApiCallback('callback1', callback)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.callbacks, {
+        callback1: callback
+      });
+    });
 
     it('a class method.', () => {
       class Controller {
@@ -257,6 +335,19 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the deprecated flag of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('deprecated'), false);
+
+      @ApiDeprecated(false)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.deprecated, false);
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -277,6 +368,20 @@ describe('getApiCompleteOperation', () => {
   });
 
   describe('should return the security requirements of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('security'), false);
+
+      const securityRequirement: IApiSecurityRequirement = {};
+      @ApiSecurityRequirement(securityRequirement)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.security, [ securityRequirement ]);
+    });
 
     it('a class method.', () => {
       class Controller {
@@ -299,6 +404,22 @@ describe('getApiCompleteOperation', () => {
   });
 
   describe('should return the servers of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('servers'), false);
+
+      const server: IApiServer = {
+        url: 'http://example.com'
+      };
+      @ApiServer(server)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      deepStrictEqual(operation2.servers, [ server ]);
+    });
 
     it('a class method.', () => {
       class Controller {

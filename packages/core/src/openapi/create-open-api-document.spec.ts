@@ -6,14 +6,13 @@ import { controller } from '../common';
 import { Get, Post } from '../core';
 import { createOpenApiDocument } from './create-open-api-document';
 import {
-  ApiDefineCallback, ApiDefineExample, ApiDefineHeader, ApiDefineLink,
-  ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse, ApiDefineSchema,
-  ApiDefineSecurityScheme, ApiDefineTag, ApiExternalDoc, ApiInfo, ApiOperation, ApiSecurityRequirement, ApiServer
+  ApiDefineCallback, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
+  ApiOperation, ApiParameter, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from './decorators';
 import {
   IApiCallback, IApiExample, IApiExternalDocumentation, IApiHeader, IApiLink,
-  IApiOperation, IApiParameter, IApiRequestBody, IApiResponse, IApiSchema,
-  IApiSecurityRequirement, IApiSecurityScheme, IApiServer, IApiTag
+  IApiOperation, IApiParameter, IApiPaths, IApiRequestBody, IApiResponse,
+  IApiSchema, IApiSecurityRequirement, IApiSecurityScheme, IApiServer, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {
@@ -367,12 +366,162 @@ describe('createOpenApiDocument', () => {
     }
   });
 
-  // should return the components defined in sub-controllers (and sub-methods?)
-  // '-> Test one component type is sufficient because of the unit tests on "extendComponents"
-  // -> use three levels of sub-controllers with components overring and others with no conflicts
-  // should return the tags defined in sub-controllers and sub-methods
-  // should complete the operations with the operation pieces defined in sub controllers
-  // -> same notes as for the components
-  // -> Think about the specificity of the root controller
+  it('should return the components of the sub-controllers and sub-controllers methods if they exist.', () => {
+    const callback1: IApiCallback = { a: { $ref: '1' } };
+    const callback2: IApiCallback = { a: { $ref: '2' } };
+    const callback3: IApiCallback = { a: { $ref: '3' } };
+    const callback4: IApiCallback = { a: { $ref: '4' } };
+
+    @ApiInfo(infoMetadata)
+    @ApiDefineCallback('callback1', callback1)
+    class Controller {
+      subControllers = [
+        SubController
+      ];
+    }
+
+    @ApiDefineCallback('callback2', callback2)
+    @ApiDefineCallback('callback3', callback3)
+    class SubController {
+      subControllers = [
+        SubSubController
+      ];
+    }
+
+    class SubSubController {
+      @Get('/foo')
+      @ApiDefineCallback('callback1', callback4)
+      @ApiDefineCallback('callback2', callback4)
+      foo() {}
+    }
+
+    const document = createOpenApiDocument(Controller);
+    deepStrictEqual(document.components, {
+      callbacks: {
+        callback1: callback4,
+        callback2: callback4,
+        callback3
+      }
+    });
+  });
+
+  it('should return the tags of the sub-controllers and sub-controllers methods if they exist.', () => {
+    const tag1: IApiTag = { name: '1' };
+    const tag2: IApiTag = { name: '2' };
+    const tag3: IApiTag = { name: '3' };
+    const tag4: IApiTag = { name: '4' };
+
+    @ApiInfo(infoMetadata)
+    @ApiDefineTag(tag1)
+    class Controller {
+      subControllers = [
+        SubController
+      ];
+    }
+
+    @ApiDefineTag(tag2)
+    @ApiDefineTag(tag3)
+    class SubController {
+      subControllers = [
+        SubSubController
+      ];
+    }
+
+    class SubSubController {
+      @Get('/foo')
+      @ApiDefineTag(tag4)
+      foo() {}
+    }
+
+    const document = createOpenApiDocument(Controller);
+    deepStrictEqual(document.tags, [ tag1, tag2, tag3, tag4 ]);
+  });
+
+  it('should the operations completed with the operation pieces defined in the sub-controllers.', () => {
+    const response: IApiResponse = { description: 'Unauthorized' };
+    const parameter: IApiParameter = { in: 'cookie', name: 'foo' };
+
+    @ApiInfo(infoMetadata)
+    @ApiResponse(401, response)
+    class Controller {
+      subControllers = [
+        SubController
+      ];
+    }
+
+    @ApiParameter(parameter)
+    @ApiDeprecated()
+    @ApiUseTag('tag1')
+    class SubController {
+      subControllers = [
+        SubSubController
+      ];
+    }
+
+    class SubSubController {
+      @Get('/foo')
+      @ApiUseTag('tag2')
+      foo() {}
+
+      @Post('/bar')
+      @ApiDeprecated(false)
+      bar() {}
+    }
+
+    const document = createOpenApiDocument(Controller);
+    deepStrictEqual(document.paths, {
+      '/bar': {
+        post: {
+          deprecated: false,
+          parameters: [
+            parameter
+          ],
+          responses: {
+            401: response
+          },
+          tags: [ 'tag1' ]
+        }
+      },
+      '/foo': {
+        get: {
+          deprecated: true,
+          parameters: [
+            parameter
+          ],
+          responses: {
+            401: response
+          },
+          tags: [ 'tag1', 'tag2' ]
+        },
+      }
+    } as IApiPaths);
+  });
+
+  it('should not include the root servers, security requirements and externalDocs in the paths.', () => {
+    const server: IApiServer = { url: 'http://example.com' };
+    const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
+    const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
+
+    @ApiInfo(infoMetadata)
+    @ApiServer(server)
+    @ApiExternalDoc(externalDocs)
+    @ApiSecurityRequirement(securityRequirement)
+    class Controller {
+      @Get('/foo')
+      foo() {}
+    }
+
+    const document = createOpenApiDocument(Controller);
+    deepStrictEqual(document.servers, [ server ]);
+    deepStrictEqual(document.externalDocs, externalDocs);
+    deepStrictEqual(document.security, [ securityRequirement ]);
+    deepStrictEqual(document.paths, {
+      '/foo': {
+        get: {
+          responses: {}
+        }
+      }
+    });
+  });
 
 });
