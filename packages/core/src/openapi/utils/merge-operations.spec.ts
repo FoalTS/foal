@@ -398,6 +398,98 @@ describe('mergeOperations', () => {
 
   });
 
+  describe('should merge the requestBody', () => {
+
+    it('when operation1.requestBody is undefined and operation2.requestBody is not.', () => {
+      const operation1: IApiOperation = {
+        responses: {}
+      };
+      const operation2: IApiOperation = {
+        requestBody: {
+          content: {},
+          description: '1'
+        },
+        responses: {},
+      };
+
+      const operation = mergeOperations(operation1, operation2);
+
+      deepStrictEqual(operation, {
+        requestBody: {
+          content: {},
+          description: '1'
+        },
+        responses: {},
+      });
+    });
+
+    it('when operation2.requestBody is undefined and operation1.requestBody is not.', () => {
+      const operation1: IApiOperation = {
+        requestBody: {
+          content: {},
+          description: '1'
+        },
+        responses: {},
+      };
+      const operation2: IApiOperation = {
+        responses: {}
+      };
+
+      const operation = mergeOperations(operation1, operation2);
+
+      deepStrictEqual(operation, {
+        requestBody: {
+          content: {},
+          description: '1'
+        },
+        responses: {},
+      });
+    });
+
+    it('when both operation1.requestBody and operation2.requestBody are undefined.', () => {
+      const operation1: IApiOperation = {
+        responses: {}
+      };
+      const operation2: IApiOperation = {
+        responses: {}
+      };
+
+      const operation = mergeOperations(operation1, operation2);
+
+      deepStrictEqual(operation, {
+        responses: {}
+      });
+    });
+
+    it('when both operation1.requestBody and operation2.requestBody are defined.', () => {
+      const operation1: IApiOperation = {
+        requestBody: {
+          content: {},
+          description: '1'
+        },
+        responses: {},
+      };
+      const operation2: IApiOperation = {
+        requestBody: {
+          content: {},
+          description: '2'
+        },
+        responses: {},
+      };
+
+      const operation = mergeOperations(operation1, operation2);
+
+      deepStrictEqual(operation, {
+        requestBody: {
+          content: {},
+          description: '2'
+        },
+        responses: {},
+      });
+    });
+
+  });
+
   it('should merge the responses.', () => {
     const operation1: IApiOperation = {
       responses: {

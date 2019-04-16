@@ -173,7 +173,8 @@ it('OpenAPI', async () => {
           schema: { $ref: '#/components/schemas/Pet' }
         },
       },
-      description: 'Pet object that needs to be added to the store'
+      description: 'Pet object that needs to be added to the store',
+      required: true
     })
     @ApiResponse(400, { description: 'Invalid ID supplied', content: {} })
     @ApiResponse(404, { description: 'Pet not found', content: {} })
