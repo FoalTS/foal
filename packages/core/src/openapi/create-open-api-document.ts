@@ -110,7 +110,9 @@ export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
   delete operation.externalDocs;
   delete operation.security;
 
-  let { components, paths, tags } = getPaths(controllerClass, operation);
+  const o = getPaths(controllerClass, operation);
+
+  const paths = o.paths;
   // Use "... of Object.keys" instead of "... in ..." because properties are changed.
   for (const path of Object.keys(paths)) {
     if (!path.startsWith('/')) {
@@ -123,12 +125,12 @@ export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
 
   document.paths = paths;
 
-  components = mergeComponents(getApiComponents(controllerClass), components);
+  const components = mergeComponents(getApiComponents(controllerClass), o.components);
   if (Object.keys(components).length > 0) {
     document.components = components;
   }
 
-  tags = mergeTags(getApiTags(controllerClass), tags);
+  const tags = mergeTags(getApiTags(controllerClass), o.tags);
   if (tags) {
     document.tags = tags;
   }

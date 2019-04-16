@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { ApiRequestBody } from '../decorators';

@@ -10,9 +10,8 @@ import {
   ApiOperation, ApiParameter, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from './decorators';
 import {
-  IApiCallback, IApiExample, IApiExternalDocumentation, IApiHeader, IApiLink,
-  IApiOperation, IApiParameter, IApiPaths, IApiRequestBody, IApiResponse,
-  IApiSchema, IApiSecurityRequirement, IApiSecurityScheme, IApiServer, IApiTag
+  IApiCallback, IApiExternalDocumentation, IApiOperation, IApiParameter, IApiPaths,
+  IApiResponse, IApiSecurityRequirement, IApiServer, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {

@@ -1,5 +1,4 @@
 import { Class } from '../../core';
-import { getMetadata } from '../../core/routes/utils';
 import { IApiOperation } from '../interfaces';
 import { getApiCallbacks } from './get-api-callbacks';
 import { getApiDeprecated } from './get-api-deprecated';
