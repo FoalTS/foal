@@ -1,6 +1,6 @@
 # Documentation
 
-* [Introduction](./README.md)
+* [Why FoalTS?](./README.md)
 
 ## Tutorials
 
