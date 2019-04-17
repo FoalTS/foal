@@ -1,9 +1,70 @@
 # OpenAPI & Swagger UI
 
-## Swagger UI - A Graphical Interface to Visualize And interact with the API’s Resources
+## Introduction
 
-![Example 1 of Swagger UI](./swagger1.png)
-![Example 2 of Swagger UI](./swagger2.png)
+**OpenAPI Specification** (formerly known as Swagger Specification) is an API description format for REST APIs. An OpenAPI *document* allows developers to describe entirely an API.
+
+**Swagger UI** is a graphical interface to visualize and interact with the API’s resources. It is automatically generated from one or several OpenAPI documents.
+
+*[Example of OpenAPI document and Swagger Visualisation](https://editor.swagger.io/)*
+
+## OpenAPI
+
+### The Basics
+
+API Metadata
+
+Describe the api with @ApiOperation
+
+The other decorators
+
+### Don't Repeat Yourself and Take Advantage of the SubControllers
+
+@ApiOperation forbidden
+
+Example with:
+- deprecated
+- parameter (comment on s'en sort finalement ?)
+
+### Generate the document(s)
+
+`createOpenApiDocument` is the core function used to generate an OpenAPI document.
+
+// Shell Script
+// Or Swagger UI
+
+#### Generate and Save a Specification File from the Command Line
+
+```typescript
+// std
+import { writeFileSync } from 'fs';
+
+// 3p
+import { createOpenApiDocument } from '@foal/core';
+import { stringify } from 'yamljs';
+
+// App
+import { ApiV1Controller } from '../app/controllers';
+
+export async function main() {
+  const document = createOpenApiDocument(ApiV1Controller);
+  const yamlDocument = stringify(document);
+
+  writeFileSync('openapi.yml', yamlDocument, 'utf8');
+}
+
+```
+
+#### Errors
+
+1. Not the API info
+2. Conflicted paths
+
+## Swagger UI
+
+```
+npm install @foal/swagger
+```
 
 ### Simple case
 
@@ -29,7 +90,7 @@ export class OpenApiController extends SwaggerController {
 
 ```
 
-### Several APIs or versions
+### Several APIs or Versions
 
 ![Example of several versions](./swagger3.png)
 
@@ -63,28 +124,6 @@ export class OpenApiController extends SwaggerController {
 }
 ```
 
-## Generate and Save a Specification File from the Command Line
-
-```typescript
-// std
-import { writeFileSync } from 'fs';
-
-// 3p
-import { createOpenApiDocument } from '@foal/core';
-import { stringify } from 'yamljs';
-
-// App
-import { ApiV1Controller } from '../app/controllers';
-
-export async function main() {
-  const document = createOpenApiDocument(ApiV1Controller);
-  const yamlDocument = stringify(document);
-
-  writeFileSync('openapi.yml', yamlDocument, 'utf8');
-}
-
-```
-
 ## Decorators
 
 | Root Controller | Controllers / Methods | Methods |
@@ -108,4 +147,17 @@ export async function main() {
 | | `@ApiDefineLink` | |
 | | `@ApiDefineCallback` | |
 
-## Examples
+## Advanced
+
+### In-Depth Overview
+
+- Explain that the operation are gathered under the same path
+- The Root Controller and The Decorators `@ApiServer`, `@ApiSecurity` & `@ApiExternalDocs`
+
+### Best Practices with Sub-Controlling
+
+If on sub-controller, use @ApiDefine & @Api($ref)
+
+### Testing the Documentation
+
+## A Complete Example

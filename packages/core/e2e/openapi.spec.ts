@@ -161,7 +161,7 @@ it('OpenAPI', async () => {
     @Put()
     @ApiOperation({
       operationId: 'updatePet',
-      responses: {}, // TODO: Remove this
+      responses: {},
       summary: 'Update an existing pet',
     })
     @ApiRequestBody({
@@ -187,7 +187,7 @@ it('OpenAPI', async () => {
     @Post()
     @ApiOperation({
       operationId: 'addPet',
-      responses: {}, // TODO: Remove this
+      responses: {},
       summary: 'Add a new pet to the store'
     })
     @ApiRequestBody({
@@ -212,7 +212,7 @@ it('OpenAPI', async () => {
     @ApiOperation({
       description: 'Multiple status values can be provided with comma separated strings',
       operationId: 'findPetsByStatus',
-      responses: {}, // TODO: Remove this
+      responses: {},
       summary: 'Finds Pets by status',
     })
     @ApiParameter({
@@ -259,7 +259,7 @@ it('OpenAPI', async () => {
       description: 'Muliple tags can be provided with comma separated strings. Use         tag1,'
         + '\ntag2, tag3 for testing.',
       operationId: 'findPetsByTags',
-      responses: {}, // TODO: Remove this
+      responses: {},
       summary: 'Finds Pets by tags'
     })
     @ApiParameter({
