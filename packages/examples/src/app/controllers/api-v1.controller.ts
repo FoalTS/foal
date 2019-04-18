@@ -1,4 +1,4 @@
-import { ApiInfo, Context, Get, HttpResponseOK, Put } from '@foal/core';
+import { ApiInfo, Get, HttpResponseOK, Put } from '@foal/core';
 
 @ApiInfo({
   title: 'API',
