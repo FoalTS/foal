@@ -74,8 +74,8 @@ describe('SwaggerController', () => {
 
         deepStrictEqual(response.body, {
           info,
-          openapi: '3.0.2',
-          paths: []
+          openapi: '3.0.0',
+          paths: {}
         });
       });
 
@@ -145,8 +145,8 @@ describe('SwaggerController', () => {
 
         deepStrictEqual(response.body, {
           info,
-          openapi: '3.0.2',
-          paths: []
+          openapi: '3.0.0',
+          paths: {}
         });
       });
 
