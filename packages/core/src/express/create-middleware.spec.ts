@@ -14,6 +14,7 @@ import {
   HttpResponseBadRequest,
   HttpResponseCreated,
   HttpResponseInternalServerError,
+  HttpResponseMovedPermanently,
   HttpResponseOK,
   HttpResponseRedirect,
   Route,
@@ -288,7 +289,18 @@ describe('createMiddleware', () => {
 
     describe('when the controller method returns or resolves an instance of HttpResponseRedirection', () => {
 
-      it('should redirect the page with the correct status.', () => {
+      it('should redirect the page with the correct status (301).', () => {
+        const app = express();
+        app.get('/a', createMiddleware(route(() => new HttpResponseMovedPermanently('/b')), new ServiceManager()));
+        app.get('/b', (req, res) => res.send('foo'));
+
+        return request(app)
+          .get('/a')
+          .expect('location', '/b')
+          .expect(301);
+      });
+
+      it('should redirect the page with the correct status (302).', () => {
         const app = express();
         app.get('/a', createMiddleware(route(() => new HttpResponseRedirect('/b')), new ServiceManager()));
         app.get('/b', (req, res) => res.send('foo'));

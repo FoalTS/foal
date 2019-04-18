@@ -12,7 +12,7 @@ import { getMetadata, join } from './utils';
  * @param {(object|null)} obj - The object.
  * @returns {string[]} The property names.
  */
-function getMethods(obj: object|null): string[] {
+export function getMethods(obj: object|null): string[] {
   if (obj === Object.prototype) { return []; }
   return Object.getOwnPropertyNames(obj).concat(getMethods(Object.getPrototypeOf(obj)));
 }

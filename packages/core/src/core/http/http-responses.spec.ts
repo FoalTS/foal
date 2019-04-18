@@ -14,6 +14,7 @@ import {
   HttpResponseForbidden,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
+  HttpResponseMovedPermanently,
   HttpResponseNoContent,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
@@ -31,6 +32,7 @@ import {
   isHttpResponseForbidden,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
+  isHttpResponseMovedPermanently,
   isHttpResponseNoContent,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
@@ -440,6 +442,50 @@ describe('isHttpResponseRedirection', () => {
     strictEqual(isHttpResponseRedirection(response), false);
     strictEqual(isHttpResponseRedirection(undefined), false);
     strictEqual(isHttpResponseRedirection(null), false);
+  });
+
+});
+
+describe('HttpResponseMovedPermanently', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseMovedPermanently('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMovedPermanently('/foo');
+    strictEqual(httpResponse.statusCode, 301);
+    strictEqual(httpResponse.statusMessage, 'MOVED PERMANENTLY');
+  });
+
+  it('should accept a mandatory path.', () => {
+    const httpResponse = new HttpResponseMovedPermanently('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+  });
+
+});
+
+describe('isHttpResponseMovedPermanently', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMovedPermanently.', () => {
+    const response = new HttpResponseMovedPermanently('/foo');
+    strictEqual(isHttpResponseMovedPermanently(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMovedPermanently property equal to true.', () => {
+    const response = { isHttpResponseMovedPermanently: true };
+    strictEqual(isHttpResponseMovedPermanently(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMovedPermanently and if it '
+      + 'has no property isHttpResponseMovedPermanently.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMovedPermanently(response), false);
+    strictEqual(isHttpResponseMovedPermanently(undefined), false);
+    strictEqual(isHttpResponseMovedPermanently(null), false);
   });
 
 });
