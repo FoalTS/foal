@@ -14,6 +14,15 @@ describe('getApiRequestBody', () => {
   describe('when a request body is specified, should return it', () => {
 
     it('from a class method.', () => {
+      @ApiRequestBody(requestBody)
+      class Controller {}
+
+      const actual = getApiRequestBody(Controller);
+
+      strictEqual(actual, requestBody);
+    });
+
+    it('from a class method.', () => {
       class Controller {
         @ApiRequestBody(requestBody)
         foo() {}
@@ -27,6 +36,14 @@ describe('getApiRequestBody', () => {
   });
 
   describe('when no request body is specified, should return undefined', () => {
+
+    it('from a class.', () => {
+      class Controller {}
+
+      const actual = getApiRequestBody(Controller);
+
+      strictEqual(actual, undefined);
+    });
 
     it('from a class method.', () => {
       class Controller {

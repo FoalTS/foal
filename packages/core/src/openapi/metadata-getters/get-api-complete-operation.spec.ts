@@ -231,6 +231,22 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the request body of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('requestBody'), false);
+
+      const requestBody: IApiRequestBody = {
+        content: {}
+      };
+      @ApiRequestBody(requestBody)
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.requestBody, requestBody);
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -443,6 +459,53 @@ describe('getApiCompleteOperation', () => {
 
   });
 
-  it('should override the @ApiOperation metadata with the other other decorators metadata (@ApiServer, etc).');
-  // Caution: value false of the deprecated flag.
+  it('should return the values of @ApiOperation.', () => {
+    class Controller {
+      @ApiOperation({
+        callbacks: {
+          a: { $ref: 'cb 1' }
+        },
+        deprecated: true,
+        description: 'description 1',
+        externalDocs: { url: 'http://example.com/docs' },
+        operationId: 'foo 1',
+        parameters: [
+          { $ref: 'param 1' }
+        ],
+        requestBody: { $ref: 'body 1' },
+        responses: {
+          200: { $ref: '2' }
+        },
+        security: [ { a: ['security 1'] } ],
+        servers: [ { url: 'http://example.com' }],
+        summary: 'summary 1',
+        tags: [ 'tag1' ],
+      })
+
+      foo() {}
+    }
+
+    const operation = getApiCompleteOperation(Controller, 'foo');
+    deepStrictEqual(operation, {
+      callbacks: {
+        a: { $ref: 'cb 1' }
+      },
+      deprecated: true,
+      description: 'description 1',
+      externalDocs: { url: 'http://example.com/docs' },
+      operationId: 'foo 1',
+      parameters: [
+        { $ref: 'param 1' }
+      ],
+      requestBody: { $ref: 'body 1' },
+      responses: {
+        200: { $ref: '2' }
+      },
+      security: [ { a: ['security 1'] } ],
+      servers: [ { url: 'http://example.com' }],
+      summary: 'summary 1',
+      tags: [ 'tag1' ],
+    });
+  });
+
 });

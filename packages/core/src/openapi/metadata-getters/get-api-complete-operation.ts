@@ -12,28 +12,14 @@ import { getApiServers } from './get-api-servers';
 import { getApiUsedTags } from './get-api-used-tags';
 
 export function getApiCompleteOperation(controllerClass: Class, propertyKey?: string): IApiOperation {
-  const completeOperation: IApiOperation = {
-    responses: getApiResponses(controllerClass, propertyKey) || {},
+  const operation = getApiOperation(controllerClass, propertyKey);
+  const completeOperation: IApiOperation = operation || {
+    responses: {},
   };
 
   const tags = getApiUsedTags(controllerClass, propertyKey);
   if (tags) {
     completeOperation.tags = tags;
-  }
-
-  if (propertyKey) {
-    const operation = getApiOperation(controllerClass, propertyKey);
-    if (operation) {
-      if (operation.summary !== undefined) {
-        completeOperation.summary = operation.summary;
-      }
-      if (operation.description !== undefined) {
-        completeOperation.description = operation.description;
-      }
-      if (operation.operationId !== undefined) {
-        completeOperation.operationId = operation.operationId;
-      }
-    }
   }
 
   const externalDocs = getApiExternalDocs(controllerClass, propertyKey);
@@ -46,11 +32,14 @@ export function getApiCompleteOperation(controllerClass: Class, propertyKey?: st
     completeOperation.parameters = parameters;
   }
 
-  if (propertyKey) {
-    const requestBody = getApiRequestBody(controllerClass, propertyKey);
-    if (requestBody) {
-      completeOperation.requestBody = requestBody;
-    }
+  const requestBody = getApiRequestBody(controllerClass, propertyKey);
+  if (requestBody) {
+    completeOperation.requestBody = requestBody;
+  }
+
+  const responses = getApiResponses(controllerClass, propertyKey);
+  if (responses) {
+    completeOperation.responses = responses;
   }
 
   const callbacks = getApiCallbacks(controllerClass, propertyKey);
