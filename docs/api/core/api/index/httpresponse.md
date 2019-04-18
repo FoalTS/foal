@@ -2,7 +2,7 @@
 
 * [HttpResponse][ClassDeclaration-6]
     * Constructor
-        * [constructor(body)][Constructor-6]
+        * [constructor(body, options)][Constructor-6]
     * Methods
         * [setHeader(name, value)][MethodDeclaration-0]
         * [getHeader(name)][MethodDeclaration-1]
@@ -14,6 +14,7 @@
         * [isHttpResponse][PropertyDeclaration-10]
         * [statusCode][PropertyDeclaration-11]
         * [statusMessage][PropertyDeclaration-12]
+        * [stream][PropertyDeclaration-13]
 
 # HttpResponse
 
@@ -26,19 +27,20 @@ abstract class HttpResponse
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponse.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Methods
 
@@ -194,8 +196,22 @@ public abstract statusMessage: string;
 
 string
 
+----------
+
+### stream
+
+Specify if the body property is a stream.
+
+```typescript
+public readonly stream: boolean;
+```
+
+**Type**
+
+boolean
+
 [ClassDeclaration-6]: httpresponse.md#httpresponse
-[Constructor-6]: httpresponse.md#constructorbody
+[Constructor-6]: httpresponse.md#constructorbody-options
 [MethodDeclaration-0]: httpresponse.md#setheadername-value
 [MethodDeclaration-1]: httpresponse.md#getheadername
 [MethodDeclaration-2]: httpresponse.md#getheaders
@@ -208,3 +224,4 @@ string
 [PropertyDeclaration-10]: httpresponse.md#ishttpresponse
 [PropertyDeclaration-11]: httpresponse.md#statuscode
 [PropertyDeclaration-12]: httpresponse.md#statusmessage
+[PropertyDeclaration-13]: httpresponse.md#stream

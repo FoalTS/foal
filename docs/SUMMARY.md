@@ -1,6 +1,6 @@
 # Documentation
 
-* [Introduction](./README.md)
+* [Why FoalTS?](./README.md)
 
 ## Tutorials
 
@@ -68,6 +68,8 @@
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
+* Cloud
+  * [Firebase](./cloud/firebase.md)
 * Security
   * [HTTP Headers Protection](./security/http-headers-protection.md)
   * [CSRF Protection](./security/csrf-protection.md)
@@ -94,6 +96,7 @@
 
 * [@foal/core](./api/core/api/index.md)
 * [@foal/ejs](./api/ejs/api/index.md)
+* [@foal/formidable](./api/formidable/api/index.md)
 * [@foal/jwt](./api/jwt/api/index.md)
 * [@foal/mongoose](./api/mongoose/api/index.md)
 * [@foal/password](./api/password/api/index.md)

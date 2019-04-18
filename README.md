@@ -62,7 +62,7 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 ![Screenshot](./docs/screenshot.png)
 
-## :dart: Why?
+## :dart: Motivation
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
 
@@ -70,33 +70,7 @@ But when it comes to setting up a complete and scalable project, things get hard
 
 This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
 
-## :tulip: Features
-
-### TypeScript
-
-TypeScript brings you optional static type-checking along with the latest ECMAScript features. Writing FoalTS with TypeScript has been and will always be fundamental. Code is more elegant and concise. Most of the silly mistakes are caught at compilation. And autocompletion is well-handled and the API is better documented.
-
-<p align="center">
-  <img src="./docs/typescript2.png" width="450px">
-</p>
-
-### Essential components
-
-Some patterns always come back while developing a web app. Set up a REST API, talk to the database or manage authentication shouldn't be a hard task. FoalTS lets you focus on the business logic, not on re-inventing the wheel.
-
-<p align="center">
-  <img src="./docs/components2.png" width="450px">
-</p>
-
-### Dev tools
-
-Every project needs dev tools. But setting up and maintaining such an environment in Node.Js is often hard or time consuming. FoalTS focuses on helping the developer to code. Generators, watchers, the compiler, linter, bundler and test framework are all provided in FoalTS. No more set up, get started right away.
-
-<p align="center">
-  <img src="./docs/dev-tools2.png" width="450px">
-</p>
-
-## Philosophy
+## :black_nib: Philosophy
 
 ### Simple
 

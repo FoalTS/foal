@@ -2,9 +2,9 @@
 
 * [HttpResponseClientError][ClassDeclaration-11]
     * Constructor
-        * [constructor(body)][Constructor-11]
+        * [constructor(body, options)][Constructor-11]
     * Properties
-        * [isHttpResponseClientError][PropertyDeclaration-23]
+        * [isHttpResponseClientError][PropertyDeclaration-24]
 
 # HttpResponseClientError
 
@@ -15,19 +15,20 @@ abstract class HttpResponseClientError
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseClientError.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -44,5 +45,5 @@ public readonly isHttpResponseClientError: true;
 true
 
 [ClassDeclaration-11]: httpresponseclienterror.md#httpresponseclienterror
-[Constructor-11]: httpresponseclienterror.md#constructorbody
-[PropertyDeclaration-23]: httpresponseclienterror.md#ishttpresponseclienterror
+[Constructor-11]: httpresponseclienterror.md#constructorbody-options
+[PropertyDeclaration-24]: httpresponseclienterror.md#ishttpresponseclienterror

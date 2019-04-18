@@ -5,7 +5,7 @@
         * [set(serviceClass, service)][MethodDeclaration-6]
         * [get(serviceClass)][MethodDeclaration-7]
     * Properties
-        * [map][PropertyDeclaration-49]
+        * [map][PropertyDeclaration-50]
 
 # ServiceManager
 
@@ -85,5 +85,5 @@ Map<[Class][TypeAliasDeclaration-1]<any>, any>
 [TypeAliasDeclaration-1]: ../index.md#class
 [MethodDeclaration-7]: servicemanager.md#getserviceclass
 [TypeAliasDeclaration-1]: ../index.md#class
-[PropertyDeclaration-49]: servicemanager.md#map
+[PropertyDeclaration-50]: servicemanager.md#map
 [TypeAliasDeclaration-1]: ../index.md#class

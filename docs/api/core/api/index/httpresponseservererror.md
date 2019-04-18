@@ -2,9 +2,9 @@
 
 * [HttpResponseServerError][ClassDeclaration-18]
     * Constructor
-        * [constructor(body)][Constructor-18]
+        * [constructor(body, options)][Constructor-18]
     * Properties
-        * [isHttpResponseServerError][PropertyDeclaration-42]
+        * [isHttpResponseServerError][PropertyDeclaration-43]
 
 # HttpResponseServerError
 
@@ -15,17 +15,18 @@ abstract class HttpResponseServerError
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type |
-| ---- | ---- |
-| body | any  |
+| Name    | Type                                   | Default value |
+| ------- | -------------------------------------- | ------------- |
+| body    | any                                    |               |
+| options | { stream?: boolean &#124; undefined; } | {}            |
 
 ## Properties
 
@@ -42,5 +43,5 @@ public readonly isHttpResponseServerError: true;
 true
 
 [ClassDeclaration-18]: httpresponseservererror.md#httpresponseservererror
-[Constructor-18]: httpresponseservererror.md#constructorbody
-[PropertyDeclaration-42]: httpresponseservererror.md#ishttpresponseservererror
+[Constructor-18]: httpresponseservererror.md#constructorbody-options
+[PropertyDeclaration-43]: httpresponseservererror.md#ishttpresponseservererror

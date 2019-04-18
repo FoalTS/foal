@@ -2,11 +2,11 @@
 
 * [HttpResponseNotImplemented][ClassDeclaration-20]
     * Constructor
-        * [constructor(body)][Constructor-20]
+        * [constructor(body, options)][Constructor-20]
     * Properties
-        * [isHttpResponseNotImplemented][PropertyDeclaration-46]
-        * [statusCode][PropertyDeclaration-47]
-        * [statusMessage][PropertyDeclaration-48]
+        * [isHttpResponseNotImplemented][PropertyDeclaration-47]
+        * [statusCode][PropertyDeclaration-48]
+        * [statusMessage][PropertyDeclaration-49]
 
 # HttpResponseNotImplemented
 
@@ -17,19 +17,20 @@ class HttpResponseNotImplemented
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseNotImplemented.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-20]: httpresponsenotimplemented.md#httpresponsenotimplemented
-[Constructor-20]: httpresponsenotimplemented.md#constructorbody
-[PropertyDeclaration-46]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
-[PropertyDeclaration-47]: httpresponsenotimplemented.md#statuscode
-[PropertyDeclaration-48]: httpresponsenotimplemented.md#statusmessage
+[Constructor-20]: httpresponsenotimplemented.md#constructorbody-options
+[PropertyDeclaration-47]: httpresponsenotimplemented.md#ishttpresponsenotimplemented
+[PropertyDeclaration-48]: httpresponsenotimplemented.md#statuscode
+[PropertyDeclaration-49]: httpresponsenotimplemented.md#statusmessage

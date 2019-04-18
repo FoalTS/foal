@@ -88,7 +88,7 @@ FoalTS offers the possibility to use YAML files instead of JSON ones. To use thi
 foal createapp --yaml
 ```
 
-If you already have an existing project that you want to migrate, you can install the `yaml` package and change your existing JSON files to YAML.
+If you already have an existing project that you want to migrate, you can install the `yamljs` package and change your existing JSON files to YAML.
 
 *Example of yaml configuration file:*
 ```yaml

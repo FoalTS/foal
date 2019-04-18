@@ -2,11 +2,11 @@
 
 * [HttpResponseUnauthorized][ClassDeclaration-13]
     * Constructor
-        * [constructor(body)][Constructor-13]
+        * [constructor(body, options)][Constructor-13]
     * Properties
-        * [isHttpResponseUnauthorized][PropertyDeclaration-27]
-        * [statusCode][PropertyDeclaration-28]
-        * [statusMessage][PropertyDeclaration-29]
+        * [isHttpResponseUnauthorized][PropertyDeclaration-28]
+        * [statusCode][PropertyDeclaration-29]
+        * [statusMessage][PropertyDeclaration-30]
 
 # HttpResponseUnauthorized
 
@@ -17,19 +17,20 @@ class HttpResponseUnauthorized
 ```
 ## Constructor
 
-### constructor(body)
+### constructor(body, options)
 
 Create an instance of HttpResponseUnauthorized.
 
 ```typescript
-public constructor(body?: any);
+public constructor(body?: any, options: { stream?: boolean | undefined; } = {});
 ```
 
 **Parameters**
 
-| Name | Type | Description                      |
-| ---- | ---- | -------------------------------- |
-| body | any  | - Optional body of the response. |
+| Name    | Type                                   | Default value | Description                      |
+| ------- | -------------------------------------- | ------------- | -------------------------------- |
+| body    | any                                    |               | - Optional body of the response. |
+| options | { stream?: boolean &#124; undefined; } | {}            |                                  |
 
 ## Properties
 
@@ -75,7 +76,7 @@ public statusMessage: string;
 string
 
 [ClassDeclaration-13]: httpresponseunauthorized.md#httpresponseunauthorized
-[Constructor-13]: httpresponseunauthorized.md#constructorbody
-[PropertyDeclaration-27]: httpresponseunauthorized.md#ishttpresponseunauthorized
-[PropertyDeclaration-28]: httpresponseunauthorized.md#statuscode
-[PropertyDeclaration-29]: httpresponseunauthorized.md#statusmessage
+[Constructor-13]: httpresponseunauthorized.md#constructorbody-options
+[PropertyDeclaration-28]: httpresponseunauthorized.md#ishttpresponseunauthorized
+[PropertyDeclaration-29]: httpresponseunauthorized.md#statuscode
+[PropertyDeclaration-30]: httpresponseunauthorized.md#statusmessage
