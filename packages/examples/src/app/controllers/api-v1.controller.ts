@@ -1,4 +1,4 @@
-import { ApiInfo, Context, Get, HttpResponseOK } from '@foal/core';
+import { ApiInfo, Context, Get, HttpResponseOK, Put } from '@foal/core';
 
 @ApiInfo({
   title: 'API',
@@ -6,8 +6,13 @@ import { ApiInfo, Context, Get, HttpResponseOK } from '@foal/core';
 })
 export class ApiV1Controller {
 
-  @Get('/')
-  foo(ctx: Context) {
+  @Get('/products/:id')
+  getProduct() {
+    return new HttpResponseOK();
+  }
+
+  @Put('/products/:productId')
+  updateProduct() {
     return new HttpResponseOK();
   }
 
