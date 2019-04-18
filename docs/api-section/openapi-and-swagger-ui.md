@@ -205,8 +205,7 @@ paths:
 
 ## Swagger UI
 
-![Swagger example 1](./swagger1.png)
-![Swagger example 2](./swagger2.png)
+![Example of Swagger UI](./swagger.png)
 
 ```
 npm install @foal/swagger
