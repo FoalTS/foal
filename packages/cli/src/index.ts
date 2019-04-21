@@ -65,7 +65,7 @@ program
 
 program
   .command('develop [name]')
-  .description('Build and serve files (by default the application) in watch mode.')
+  .description('[Beta] Build and serve files (by default the application) in watch mode.')
   .action((name: string | undefined) => {
     develop(name || 'app');
   });

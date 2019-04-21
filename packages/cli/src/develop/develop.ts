@@ -44,7 +44,9 @@ export function develop(name: string) {
     },
     diagnostics => {
       if (diagnostics.find(({ category }) => category === 1)) {
-        console.log('Impossible to start the server: the TypeScript compilation failed.');
+        console.log(
+          `Impossible to ${nodeProcess ? 're' : ''}start the server: the TypeScript compilation failed (see above).`
+        );
       } else {
         console.log(`${nodeProcess ? 'Res' : 'S'}tarting the server...\n`);
         nodeProcess = startProcess(projectPath);
