@@ -5,13 +5,15 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret",
+    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:develop",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
     "test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
     "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
     "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
     "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/create-secret/**/*.spec.ts\"",
+    "test:develop": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/develop/**/*.spec.ts\"",
+    "dev:test:develop": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/develop/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
@@ -52,11 +54,13 @@
   "dependencies": {
     "ajv": "^6.5.0",
     "colors": "^1.3.2",
-    "commander": "^2.15.1"
+    "commander": "^2.15.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
     "@types/node": "^10.1.2",
+    "@types/yamljs": "^0.2.30",
     "copyfiles": "^2.0.0",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",

@@ -11,6 +11,7 @@ import * as program from 'commander';
 
 // FoalTS
 import { createSecret } from './create-secret';
+import { develop } from './develop';
 import {
   connectAngular,
   connectReact,
@@ -60,6 +61,13 @@ program
   .description('Run a shell script.')
   .action((name: string) => {
     runScript({ name }, process.argv);
+  });
+
+program
+  .command('develop [name]')
+  .description('Build and serve files (by default the application) in watch mode.')
+  .action((name: string | undefined) => {
+    develop(name || 'app');
   });
 
 program
