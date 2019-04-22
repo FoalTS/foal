@@ -1,6 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists,
   TestEnvironment
 } from '../../utils';
@@ -9,21 +9,10 @@ import { createController } from './create-controller';
 describe('createController', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/app/controllers/test-foo-bar.controller.ts');
-    rmfileIfExists('src/app/controllers/test-foo-bar.controller.spec.ts');
-    rmfileIfExists('src/app/controllers/index.ts');
-    rmdirIfExists('src/app/controllers');
-    rmfileIfExists('src/app/app.controller.ts');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    rmfileIfExists('controllers/test-foo-bar.controller.ts');
-    rmfileIfExists('controllers/test-foo-bar.controller.spec.ts');
-    rmfileIfExists('controllers/index.ts');
-    rmdirIfExists('controllers');
-
+    rmDirAndFilesIfExist('controllers');
     rmfileIfExists('test-foo-bar.controller.ts');
     rmfileIfExists('test-foo-bar.controller.spec.ts');
     rmfileIfExists('index.ts');

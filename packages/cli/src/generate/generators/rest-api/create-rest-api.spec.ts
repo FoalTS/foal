@@ -1,6 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists,
   TestEnvironment,
 } from '../../utils';
@@ -9,32 +9,12 @@ import { createRestApi } from './create-rest-api';
 describe('createRestApi', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/app/entities/test-foo-bar.entity.ts');
-    rmfileIfExists('src/app/entities/index.ts');
-    rmdirIfExists('src/app/entities');
-
-    rmfileIfExists('src/app/controllers/test-foo-bar.controller.ts');
-    rmfileIfExists('src/app/controllers/test-foo-bar.controller.spec.ts');
-    rmfileIfExists('src/app/controllers/index.ts');
-    rmdirIfExists('src/app/controllers');
-
-    rmfileIfExists('src/app/app.controller.ts');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    rmfileIfExists('entities/test-foo-bar.entity.ts');
-    rmfileIfExists('entities/index.ts');
-    rmdirIfExists('entities');
-
-    rmfileIfExists('controllers/test-foo-bar.controller.ts');
-    rmfileIfExists('controllers/test-foo-bar.controller.spec.ts');
-    rmfileIfExists('controllers/index.ts');
-    rmdirIfExists('controllers');
-
+    rmDirAndFilesIfExist('entities');
+    rmDirAndFilesIfExist('controllers');
     rmfileIfExists('app.controller.ts');
-
     rmfileIfExists('test-foo-bar.entity.ts');
     rmfileIfExists('test-foo-bar.controller.ts');
     rmfileIfExists('test-foo-bar.controller.spec.ts');

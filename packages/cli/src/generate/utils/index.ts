@@ -6,6 +6,7 @@ import { join } from 'path';
 export { findProjectPath } from './find-project-path';
 export { Generator } from './generator';
 export { initGitRepo } from './init-git-repo';
+export { rmDirAndFilesIfExist } from './rm-dir-and-files-if-exist';
 export { mkdirIfDoesNotExist } from './mkdir-if-does-not-exist';
 export { TestEnvironment } from './test-environment';
 export { getNames } from './get-names';
@@ -24,12 +25,6 @@ export function mkdirIfNotExists(path: string) {
 export function rmfileIfExists(path: string) {
   if (fs.existsSync(path)) {
     fs.unlinkSync(path);
-  }
-}
-
-export function rmdirIfExists(path: string) {
-  if (fs.existsSync(path)) {
-    fs.rmdirSync(path);
   }
 }
 

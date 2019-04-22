@@ -1,18 +1,13 @@
 // FoalTS
 import {
-  rmdirIfExists,
-  rmfileIfExists,
+  rmDirAndFilesIfExist,
   TestEnvironment,
 } from '../../utils';
 import { createVSCodeConfig } from './create-vscode-config';
 
 describe('createVSCodeConfig', () => {
 
-  afterEach(() => {
-    rmfileIfExists('.vscode/launch.json');
-    rmfileIfExists('.vscode/tasks.json');
-    rmdirIfExists('.vscode');
-  });
+  afterEach(() => rmDirAndFilesIfExist('.vscode'));
 
   const testEnv = new TestEnvironment('vscode-config', '.vscode');
 

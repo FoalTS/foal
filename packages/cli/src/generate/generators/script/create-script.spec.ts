@@ -1,7 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
-  rmfileIfExists,
+  rmDirAndFilesIfExist,
   TestEnvironment,
 } from '../../utils';
 import { createScript } from './create-script';
@@ -11,11 +10,9 @@ import { createScript } from './create-script';
 describe('createScript', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/scripts/test-foo-bar.ts');
-    rmdirIfExists('src/scripts');
+    rmDirAndFilesIfExist('src/scripts');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
   });
 
   describe(`when the directory src/scripts/ exists`, () => {

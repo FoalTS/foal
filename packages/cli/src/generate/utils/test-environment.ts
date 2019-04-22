@@ -1,6 +1,6 @@
 // std
 import { ok, strictEqual } from 'assert';
-import { copyFileSync, existsSync, readFileSync, rmdirSync, unlinkSync } from 'fs';
+import { copyFileSync, existsSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
 // FoalTS
@@ -25,17 +25,29 @@ export class TestEnvironment {
   }
 
   /* Remove environment */
-  rmdirIfExists(path: string) {
-    path = join(this.root, path);
-    if (existsSync(path)) {
-      rmdirSync(path);
-    }
-  }
   rmfileIfExists(path: string) {
     path = join(this.root, path);
     if (existsSync(path)) {
       unlinkSync(path);
     }
+  }
+  rmDirAndFilesIfExist(path: string) {
+    const absolutePath = join(this.root, path);
+    if (!existsSync(absolutePath)) {
+      return;
+    }
+
+    const files = readdirSync(absolutePath);
+    for (const file of files) {
+      const stat = statSync(join(absolutePath, file));
+      if (stat.isDirectory()) {
+        this.rmDirAndFilesIfExist(join(path, file));
+      } else {
+        unlinkSync(join(absolutePath, file));
+      }
+    }
+
+    rmdirSync(absolutePath);
   }
 
   /* Test */

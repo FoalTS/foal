@@ -1,13 +1,9 @@
-import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists, TestEnvironment } from '../../utils';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, TestEnvironment } from '../../utils';
 import { connectReact } from './connect-react';
 
 describe('connectReact', () => {
 
-  afterEach(() => {
-    rmfileIfExists('connector-test/react/package.json');
-    rmdirIfExists('connector-test/react');
-    rmdirIfExists('connector-test');
-  });
+  afterEach(() => rmDirAndFilesIfExist('connector-test'));
 
   const testEnv = new TestEnvironment('react');
 
