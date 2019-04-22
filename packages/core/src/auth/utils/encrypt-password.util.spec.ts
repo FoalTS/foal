@@ -8,7 +8,7 @@ import { encryptPassword } from './encrypt-password.util';
 
 describe('encryptPassword', () => {
 
-  it('should encrypt the plain password into a 32-byte derived key with PBKDF2/SHA256,'
+  it('should hash the plain password into a 32-byte derived key with PBKDF2/SHA256,'
       + ' 150 000 iterations and a 16-byte random salt.', async () => {
     const plainPassword = 'hello world';
     const actual = await encryptPassword(plainPassword);
@@ -25,7 +25,7 @@ describe('encryptPassword', () => {
     strictEqual(derivedKey, expectedBuffer.toString('base64'));
   });
 
-  it('should be able to encrypt the plain password using the legacy way (old parsePassword util).', async () => {
+  it('should be able to salt and hash the plain password using the legacy way (old parsePassword util).', async () => {
     const plainPassword = 'hello world';
     const actual = await encryptPassword(plainPassword, { legacy: true });
 

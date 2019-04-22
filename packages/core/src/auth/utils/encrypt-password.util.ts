@@ -2,7 +2,7 @@ import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
 /**
- * Legacy function to encrypt passwords. Only kept for backward compatibility.
+ * Legacy function to hash passwords. Only kept for backward compatibility.
  * @param password
  */
 async function parsePassword(password: string): Promise<string> {
@@ -24,8 +24,10 @@ async function parsePassword(password: string): Promise<string> {
  * The number of iterations is 150000.
  * The length key is 32 bytes long.
  *
+ * Note: This function is badly named. It does not encrypt passwords but salt and hash them.
+ *
  * @export
- * @param {string} plainTextPassword - The password to encrypt.
+ * @param {string} plainTextPassword - The password to hash.
  * @param {{ legacy?: boolean }} [options={}]
  * @returns {Promise<string>} The derived key with the algorithm name, the number of iterations and the salt.
  */

@@ -83,7 +83,7 @@ export class User extends UserWithPermissions {
   password: string;
 ​
   async setPassword(password: string) {
-    // Encrypt the password before storing it in the database
+    // Hash the password before storing it in the database
     this.password = await encryptPassword(password, { legacy: true });
   }​
 }
