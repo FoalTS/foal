@@ -25,7 +25,7 @@ import * as request from 'supertest';
 // FoalTS
 import { fetchUser } from '@foal/mongoose';
 
-it('Authentication and authorization (Mongoose)', async () => {
+it('Foal should support authorization and authentication based on sessions & cookies (Mongoose)', async () => {
 
   const UserSchema: Schema = new Schema({
     email: {
