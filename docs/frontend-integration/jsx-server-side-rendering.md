@@ -1,10 +1,10 @@
 # JSX Server-Side Rendering
 
-> If you are interested in SSR without JSX, then you might take a look at [the "templating" page](../utilities/templating).
+> If you are interested in SSR without JSX, then you might take a look at [the "templating" page](../utilities/templating.md).
 
 ## Compile JSX Files
 
-The TypeScript compiler supports JSX files.
+The TypeScript compiler supports JSX.
 
 To enable this feature, update the `tsconfig.json` as follows:
 ```json
@@ -49,7 +49,7 @@ npm install react react-dom @types/react-dom
 This example shows how to use JSX SSR with React. It assumes that both `view.controller.tsx` and `template.html` files are in the same directory.
 
 *view.controller.tsx*
-```tsx
+```typescript
 // std
 import { readFile } from 'fs';
 import { join } from 'path';
