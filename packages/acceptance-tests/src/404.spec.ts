@@ -2,7 +2,7 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { createApp, Get, HttpResponseNotFound, HttpResponseOK } from '../src';
+import { createApp, Get, HttpResponseNotFound, HttpResponseOK } from '@foal/core';
 
 it('404', async () => {
 

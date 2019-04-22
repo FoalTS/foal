@@ -9,7 +9,7 @@ import {
   Get,
   HttpResponseNoContent,
   HttpResponseOK,
-  HttpResponseRedirect,
+  HttpResponseUnauthorized,
   logIn,
   LoginRequired,
   logOut,
@@ -17,22 +17,21 @@ import {
   ValidateBody,
   verifyPassword,
 } from '@foal/core';
+import { Column, createConnection, Entity, getConnection, getRepository } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
-import { Column, createConnection, Entity, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import {
-  fetchUser,
   fetchUserWithPermissions,
   Group,
   Permission,
   PermissionRequired,
   UserWithPermissions
-} from '../src';
+} from '@foal/typeorm';
 
 describe('', () => {
 
-  it('Authentication and authorization (redirection)', async () => {
+  it('Authentication and authorization', async () => {
     @Entity()
     class User extends UserWithPermissions {
       @Column({ unique: true })
@@ -77,27 +76,16 @@ describe('', () => {
         const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
         if (!user) {
-          return new HttpResponseRedirect('/signin');
+          return new HttpResponseUnauthorized();
         }
 
         if (!await verifyPassword(ctx.request.body.password, user.password)) {
-          return new HttpResponseRedirect('/signin');
+          return new HttpResponseUnauthorized();
         }
 
         logIn(ctx, user);
 
-        return new HttpResponseRedirect('/home');
-      }
-
-      @Get('/home')
-      @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
-      home() {
-        return new HttpResponseOK('Home!');
-      }
-
-      @Get('/signin')
-      signin() {
-        return new HttpResponseOK('Sign in!');
+        return new HttpResponseNoContent();
       }
     }
 
@@ -148,16 +136,14 @@ describe('', () => {
     await request(app)
       .post('/login')
       .send({ email: 'mary@foalts.org', password: 'password' })
-      .expect(302)
-      .expect('location', '/signin');
+      .expect(401);
 
     /* Try to login with a wrong password */
 
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'wrong-password' })
-      .expect(302)
-      .expect('location', '/signin');
+      .expect(401);
 
     /* Log in */
 
@@ -165,8 +151,7 @@ describe('', () => {
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'password' })
-      .expect(302)
-      .expect('location', '/home')
+      .expect(204)
       .then(data => {
         ok(Array.isArray(data.header['set-cookie']));
         cookie = data.header['set-cookie'][0];

@@ -11,7 +11,7 @@ import {
   ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
   ApiOperation, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer,
   ApiUseTag, controller, createOpenApiDocument, Delete, Get, Post, Put
-} from '../src';
+} from '@foal/core';
 
 it('OpenAPI', async () => {
 

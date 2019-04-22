@@ -23,9 +23,9 @@ import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
 import * as request from 'supertest';
 
 // FoalTS
-import { fetchUser } from '../src';
+import { fetchUser } from '@foal/mongoose';
 
-it('Authentication and authorization', async () => {
+it('Authentication and authorization (Mongoose)', async () => {
 
   const UserSchema: Schema = new Schema({
     email: {

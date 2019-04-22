@@ -18,7 +18,7 @@ import {
 
 // FoalTS
 
-describe('Upload & Download Files', () => {
+describe('Upload & Download Files (TypoORM)', () => {
 
   before(() => {
     if (!existsSync('uploaded')) {
@@ -114,7 +114,7 @@ describe('Upload & Download Files', () => {
 
     await request(app)
       .post('/upload')
-      .attach('file1', 'e2e/test-image.png')
+      .attach('file1', 'src/test-image.png')
       .expect(200);
 
     const files = await UploadedFile.find({ user });
@@ -127,7 +127,7 @@ describe('Upload & Download Files', () => {
       throw new Error(`${file.path} not found`);
     }
 
-    const image = readFileSync('e2e/test-image.png');
+    const image = readFileSync('src/test-image.png');
 
     await request(app)
       .get('/download')
