@@ -19,9 +19,6 @@
   <a href="https://travis-ci.org/FoalTS/foal">
     <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
   </a>
-  <a href="https://codecov.io/github/FoalTS/foal">
-    <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
-  </a>
   <a href="https://snyk.io/test/npm/@foal/mongoose">
     <img src="https://snyk.io/test/npm/@foal/mongoose/badge.svg" alt="Known Vulnerabilities">
   </a>
@@ -30,6 +27,9 @@
   </a>
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
+  </a>
+  <a href="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg">
+    <img src="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg" alt="2FA">
   </a>
 </p>
 

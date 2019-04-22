@@ -31,6 +31,9 @@
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
   </a>
+  <a href="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg">
+    <img src="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg" alt="2FA">
+  </a>
 </p>
 
 Github: [https://github.com/FoalTS/foal](https://github.com/FoalTS/foal)
