@@ -2,9 +2,10 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { createApp, Get, HttpResponseNotFound, HttpResponseOK } from '../src';
+import { createApp, Get, HttpResponseNotFound, HttpResponseOK } from '@foal/core';
 
-it('404', async () => {
+it('404 page: users should be able to define a controller method that catches requests'
+  + ' that have no handler.', async () => {
 
   class ViewController {
     @Get('/home')

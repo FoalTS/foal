@@ -7,8 +7,6 @@
   "scripts": {
     "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/core",
     "test": "nyc --reporter=json --reporter=text mocha --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
-    "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
-    "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "dev:test:auth": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/auth/**/*.spec.ts\"",
     "dev:test:common": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/common/**/*.spec.ts\"",
@@ -100,7 +98,6 @@
     "pg": "^7.4.3",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
-    "sqlite3": "^4.0.2",
     "supertest": "^3.1.0",
     "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",

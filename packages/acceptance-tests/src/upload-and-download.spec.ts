@@ -8,7 +8,7 @@ import { IncomingForm } from 'formidable';
 import * as request from 'supertest';
 
 // FoalTS
-import { parseForm } from '../src';
+import { parseForm } from '@foal/formidable';
 
 describe('Upload & Download Files', () => {
 
@@ -61,7 +61,7 @@ describe('Upload & Download Files', () => {
     let filePath = '';
     await request(app)
       .post('/upload')
-      .attach('file1', 'e2e/test-image.png')
+      .attach('file1', 'src/assets/test-image.png')
       .expect(200)
       .then(data => filePath = data.text);
 
@@ -69,7 +69,7 @@ describe('Upload & Download Files', () => {
       throw new Error(`${filePath} not found`);
     }
 
-    const image = readFileSync('e2e/test-image.png');
+    const image = readFileSync('src/assets/test-image.png');
 
     await request(app)
       .post('/download')

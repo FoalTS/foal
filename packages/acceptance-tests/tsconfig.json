@@ -1,22 +1,24 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
-    "noImplicitAny": false,
+    "outDir": "lib/",
     "module": "commonjs",
     "target": "es2017",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "baseUrl": ".",
+    "strict": true,
+    "noImplicitAny": false,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
     "declaration": true,
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "types": [ "node", "mocha" ],
+    "jsx": "react"
   },
   "include": [
-    "./packages/**/index.ts",
-    "./packages/**/src/**/*.ts",
-    "./packages/**/src/**/*.tsx"
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
   ]
 }

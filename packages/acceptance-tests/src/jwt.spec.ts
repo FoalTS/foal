@@ -1,11 +1,11 @@
+// std
+import { ok } from 'assert';
+
 // 3p
 import { Context, createApp, Get, HttpResponseOK, HttpResponseUnauthorized, Post } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
-
-// FoalTS
-import { ok } from 'assert';
-import { JWTRequired } from '../src';
 
 const secret = 'my_strong_secret';
 
