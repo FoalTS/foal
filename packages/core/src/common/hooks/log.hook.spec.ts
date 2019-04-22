@@ -66,8 +66,9 @@ describe('Log', () => {
     const hook = getHookFunction(Log('foo', { headers: [ 'my-header1', 'my-header2' ], logFn }));
 
     const headers = {
+      // According to RFC 7230, each header field consists of a case-INsensitive field name.
+      'My-header2': 'header 2',
       'my-header1': 'header 1',
-      'my-header2': 'header 2',
       'my-header3': 'header 3'
     };
     const ctx = new Context({ headers });
@@ -77,6 +78,7 @@ describe('Log', () => {
     strictEqual(logFn.msgs[1][0], 'my-header1: ');
     strictEqual(logFn.msgs[1][1], 'header 1');
     strictEqual(logFn.msgs[2][0], 'my-header2: ');
+    // Test the case
     strictEqual(logFn.msgs[2][1], 'header 2');
   });
 
