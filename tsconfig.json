@@ -17,6 +17,5 @@
   "include": [
     "./packages/**/index.ts",
     "./packages/**/src/**/*.ts",
-    "./packages/**/e2e/**/*.ts",
   ]
 }
