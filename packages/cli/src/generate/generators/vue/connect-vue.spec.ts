@@ -1,13 +1,9 @@
-import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists, TestEnvironment } from '../../utils';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, TestEnvironment } from '../../utils';
 import { connectVue } from './connect-vue';
 
 describe('connectVue', () => {
 
-  afterEach(() => {
-    rmfileIfExists('connector-test/vue/package.json');
-    rmdirIfExists('connector-test/vue');
-    rmdirIfExists('connector-test');
-  });
+  afterEach(() => rmDirAndFilesIfExist('connector-test'));
 
   const testEnv = new TestEnvironment('vue');
 

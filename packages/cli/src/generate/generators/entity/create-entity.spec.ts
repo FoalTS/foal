@@ -1,6 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists,
   TestEnvironment,
 } from '../../utils';
@@ -9,18 +9,10 @@ import { createEntity } from './create-entity';
 describe('createEntity', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/app/entities/test-foo-bar.entity.ts');
-    rmfileIfExists('src/app/entities/index.ts');
-    rmdirIfExists('src/app/entities');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    rmfileIfExists('entities/test-foo-bar.entity.ts');
-    rmfileIfExists('entities/index.ts');
-    rmdirIfExists('entities');
-
+    rmDirAndFilesIfExist('entities');
     rmfileIfExists('test-foo-bar.entity.ts');
     rmfileIfExists('index.ts');
   });

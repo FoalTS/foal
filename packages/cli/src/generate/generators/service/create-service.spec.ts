@@ -1,6 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists,
   TestEnvironment
 } from '../../utils';
@@ -9,27 +9,14 @@ import { createService } from './create-service';
 describe('createService', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/app/services/test-foo-bar.service.ts');
-    rmfileIfExists('src/app/services/test-foo-bar-collection.service.ts');
-    rmfileIfExists('src/app/services/test-foo-bar-resolver.service.ts');
-    rmfileIfExists('src/app/services/index.ts');
-    rmdirIfExists('src/app/services');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    rmfileIfExists('services/test-foo-bar.service.ts');
-    rmfileIfExists('services/test-foo-bar-collection.service.ts');
-    rmfileIfExists('services/test-foo-bar-resolver.service.ts');
-    rmfileIfExists('services/index.ts');
-    rmdirIfExists('services');
-
+    rmDirAndFilesIfExist('services');
     rmfileIfExists('test-foo-bar.service.ts');
     rmfileIfExists('test-foo-bar-collection.service.ts');
     rmfileIfExists('test-foo-bar-resolver.service.ts');
     rmfileIfExists('index.ts');
-
   });
 
   function test(root: string) {

@@ -7,51 +7,22 @@ import {
   mkdirIfNotExists,
   readFileFromRoot,
   readFileFromTemplatesSpec,
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists
 } from '../../utils';
 import { createSubApp } from './create-sub-app';
 
 // TODO: Use TestEnvironment.
 
-function removeFiles(prefix: string = '') {
-  rmdirIfExists(`${prefix}test-foo-bar/controllers/templates`);
-  rmfileIfExists(`${prefix}test-foo-bar/controllers/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/controllers`);
-
-  rmfileIfExists(`${prefix}test-foo-bar/hooks/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/hooks`);
-
-  rmfileIfExists(`${prefix}test-foo-bar/entities/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/entities`);
-
-  rmfileIfExists(`${prefix}test-foo-bar/sub-apps/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/sub-apps`);
-
-  rmfileIfExists(`${prefix}test-foo-bar/services/index.ts`);
-  rmdirIfExists(`${prefix}test-foo-bar/services`);
-
-  rmfileIfExists(`${prefix}test-foo-bar/test-foo-bar.controller.ts`);
-  rmfileIfExists(`${prefix}test-foo-bar/index.ts`);
-
-  rmdirIfExists(`${prefix}test-foo-bar`);
-  rmfileIfExists(`${prefix}index.ts`);
-}
-
 describe('createSubApp', () => {
 
   afterEach(() => {
-    removeFiles('src/app/sub-apps/');
-    rmdirIfExists('src/app/sub-apps');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    removeFiles('sub-apps/');
-    rmdirIfExists('sub-apps');
-
-    removeFiles();
+    rmDirAndFilesIfExist('sub-apps');
+    rmDirAndFilesIfExist('test-foo-bar');
+    rmfileIfExists('index.ts');
   });
 
   const indexInitialContent = 'export { BarFooController } from \'./bar-foo\';\n';

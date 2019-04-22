@@ -1,17 +1,10 @@
-import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists, TestEnvironment } from '../../utils';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, TestEnvironment } from '../../utils';
 import { connectAngular } from './connect-angular';
 
 // TODO: To improve: make the tests (more) independent from each other.
 describe('connectAngular', () => {
 
-  afterEach(() => {
-    rmfileIfExists('connector-test/angular/src/proxy.conf.json');
-    rmdirIfExists('connector-test/angular/src');
-    rmfileIfExists('connector-test/angular/angular.json');
-    rmfileIfExists('connector-test/angular/package.json');
-    rmdirIfExists('connector-test/angular');
-    rmdirIfExists('connector-test');
-  });
+  afterEach(() => rmDirAndFilesIfExist('connector-test'));
 
   const testEnv = new TestEnvironment('angular');
 

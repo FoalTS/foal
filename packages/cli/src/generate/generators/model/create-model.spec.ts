@@ -1,6 +1,6 @@
 // FoalTS
 import {
-  rmdirIfExists,
+  rmDirAndFilesIfExist,
   rmfileIfExists,
   TestEnvironment,
 } from '../../utils';
@@ -9,20 +9,10 @@ import { createModel } from './create-model';
 describe('createModel', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/app/models/a-test-foo-bar.model.ts');
-    rmfileIfExists('src/app/models/test-foo-bar.model.ts');
-    rmfileIfExists('src/app/models/index.ts');
-    rmdirIfExists('src/app/models');
-    rmdirIfExists('src/app');
+    rmDirAndFilesIfExist('src/app');
     // We cannot remove src/ since the generator code lives within. This is bad testing
     // approach.
-    // rmdirIfExists('src');
-
-    rmfileIfExists('models/a-test-foo-bar.model.ts');
-    rmfileIfExists('models/test-foo-bar.model.ts');
-    rmfileIfExists('models/index.ts');
-    rmdirIfExists('models');
-
+    rmDirAndFilesIfExist('models');
     rmfileIfExists('a-test-foo-bar.model.ts');
     rmfileIfExists('test-foo-bar.model.ts');
     rmfileIfExists('index.ts');
