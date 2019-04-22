@@ -61,7 +61,7 @@ describe('Upload & Download Files', () => {
     let filePath = '';
     await request(app)
       .post('/upload')
-      .attach('file1', 'src/test-image.png')
+      .attach('file1', 'src/assets/test-image.png')
       .expect(200)
       .then(data => filePath = data.text);
 
@@ -69,7 +69,7 @@ describe('Upload & Download Files', () => {
       throw new Error(`${filePath} not found`);
     }
 
-    const image = readFileSync('src/test-image.png');
+    const image = readFileSync('src/assets/test-image.png');
 
     await request(app)
       .post('/download')

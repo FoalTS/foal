@@ -809,7 +809,7 @@ it('OpenAPI', async () => {
 
   }
 
-  const yamlDocument = readFileSync(join(__dirname, './openapi.yml'), 'utf8');
+  const yamlDocument = readFileSync(join(__dirname, './assets/openapi.yml'), 'utf8');
   const expectedDocument = parse(yamlDocument);
 
   const actualDocument = createOpenApiDocument(ApiController);

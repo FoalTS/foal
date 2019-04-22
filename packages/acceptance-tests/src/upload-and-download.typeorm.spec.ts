@@ -114,7 +114,7 @@ describe('Upload & Download Files (TypoORM)', () => {
 
     await request(app)
       .post('/upload')
-      .attach('file1', 'src/test-image.png')
+      .attach('file1', 'src/assets/test-image.png')
       .expect(200);
 
     const files = await UploadedFile.find({ user });
@@ -127,7 +127,7 @@ describe('Upload & Download Files (TypoORM)', () => {
       throw new Error(`${file.path} not found`);
     }
 
-    const image = readFileSync('src/test-image.png');
+    const image = readFileSync('src/assets/test-image.png');
 
     await request(app)
       .get('/download')
