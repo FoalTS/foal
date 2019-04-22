@@ -7,8 +7,6 @@
   "scripts": {
     "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/typeorm",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
-    "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"

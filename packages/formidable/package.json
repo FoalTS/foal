@@ -6,8 +6,6 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/formidable",
-    "e2e": "mocha --require ts-node/register \"./e2e/**/*.spec.ts\"",
-    "dev:e2e": "mocha --require ts-node/register --watch --watch-extensions ts \"./e2e/**/*.spec.ts\"",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
