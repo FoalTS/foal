@@ -98,7 +98,6 @@
     "pg": "^7.4.3",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.6",
-    "sqlite3": "^4.0.2",
     "supertest": "^3.1.0",
     "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",

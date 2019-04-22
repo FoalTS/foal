@@ -51,7 +51,6 @@
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@foal/formidable": "^0.8.7",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
     "mocha": "^5.2.0",
@@ -59,7 +58,6 @@
     "pg": "^7.7.1",
     "rimraf": "^2.6.2",
     "sqlite3": "^4.0.4",
-    "supertest": "^3.3.0",
     "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
     "typeorm": "0.2.14",
