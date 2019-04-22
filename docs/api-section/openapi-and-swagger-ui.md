@@ -377,10 +377,10 @@ import { ApiResponse, ApiServer, Get } from '@foal/core';
   title: 'A Great API',
   version: '1.0.0'
 })
-@ApiServer({ url: 'http://example.com' })
 export class ApiController {
 
   @Get('/')
+  @ApiServer({ url: 'http://example.com' })
   @ApiResponse(200, { description: 'successful operation' })
   index() {
     // ...
