@@ -1,0 +1,91 @@
+========================================================================
+Framework: ExpressJS
+========================================================================
+This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient).....done
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            3000
+
+Document Path:          /api/users
+Document Length:        20 bytes
+
+Concurrency Level:      10
+Time taken for tests:   0.142 seconds
+Complete requests:      100
+Failed requests:        0
+Total transferred:      42000 bytes
+HTML transferred:       2000 bytes
+Requests per second:    703.58 [#/sec] (mean)
+Time per request:       14.213 [ms] (mean)
+Time per request:       1.421 [ms] (mean, across all concurrent requests)
+Transfer rate:          288.58 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.3      0       3
+Processing:     9   12   3.0     12      21
+Waiting:        7   10   3.3      9      19
+Total:          9   12   3.0     12      21
+
+Percentage of the requests served within a certain time (ms)
+  50%     12
+  66%     13
+  75%     14
+  80%     14
+  90%     19
+  95%     20
+  98%     21
+  99%     21
+ 100%     21 (longest request)
+========================================================================
+Framework: FoalTS
+========================================================================
+This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient).....done
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            3000
+
+Document Path:          /api/users
+Document Length:        97 bytes
+
+Concurrency Level:      10
+Time taken for tests:   0.143 seconds
+Complete requests:      100
+Failed requests:        0
+Non-2xx responses:      100
+Total transferred:      49700 bytes
+HTML transferred:       9700 bytes
+Requests per second:    700.27 [#/sec] (mean)
+Time per request:       14.280 [ms] (mean)
+Time per request:       1.428 [ms] (mean, across all concurrent requests)
+Transfer rate:          339.88 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:     7   12   5.3     11      28
+Waiting:        6   12   5.3     11      27
+Total:          7   13   5.3     11      28
+
+Percentage of the requests served within a certain time (ms)
+  50%     11
+  66%     12
+  75%     13
+  80%     13
+  90%     27
+  95%     27
+  98%     28
+  99%     28
+ 100%     28 (longest request)
