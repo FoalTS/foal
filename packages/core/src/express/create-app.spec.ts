@@ -38,7 +38,7 @@ describe('createApp', () => {
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
   });
 
-  it('should include security headers in the HTTP responses.', async () => {
+  it('should include security headers in HTTP responses.', async () => {
     class AppController {
       @Get('/')
       index() {
@@ -60,7 +60,7 @@ describe('createApp', () => {
       .expect('X-Custom-Header', 'foobar');
   });
 
-  it('should not include the X-Powered-By: Express header in the HTTP responses.', async () => {
+  it('should not include the X-Powered-By: Express header in HTTP responses.', async () => {
     class AppController {
       @Get('/')
       index() {
@@ -72,7 +72,6 @@ describe('createApp', () => {
     await request(app)
       .get('/')
       .then(response => {
-        console.log(response.header);
         if (response.header['x-powered-by']) {
           throw new Error('The header "X-Powered-By" should not exist.');
         }
