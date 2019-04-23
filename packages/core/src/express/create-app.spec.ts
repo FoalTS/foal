@@ -38,12 +38,53 @@ describe('createApp', () => {
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
   });
 
-  it('should serve static files.', async () => {
+  it('should include security headers in HTTP responses.', async () => {
+    class AppController {
+      @Get('/')
+      index() {
+        const response = new HttpResponseOK();
+        response.setHeader('X-Custom-Header', 'foobar');
+        return response;
+      }
+    }
+    const app = createApp(AppController);
+
+    await request(app)
+      .get('/')
+      .expect('X-Content-Type-Options', 'nosniff')
+      .expect('X-DNS-Prefetch-Control', 'off')
+      .expect('X-Download-Options', 'noopen')
+      .expect('X-Frame-Options', 'SAMEORIGIN')
+      .expect('X-XSS-Protection', '1; mode=block')
+      .expect('Strict-Transport-Security', 'max-age=15552000; includeSubDomains')
+      .expect('X-Custom-Header', 'foobar');
+  });
+
+  it('should not include the X-Powered-By: Express header in HTTP responses.', async () => {
+    class AppController {
+      @Get('/')
+      index() {
+        return new HttpResponseOK();
+      }
+    }
+    const app = createApp(AppController);
+
+    await request(app)
+      .get('/')
+      .then(response => {
+        if (response.header['x-powered-by']) {
+          throw new Error('The header "X-Powered-By" should not exist.');
+        }
+      });
+  });
+
+  it('should serve static files (with the proper headers).', async () => {
     const app = createApp(class {});
     await request(app)
       .get('/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
-      .expect('Content-type', 'text/html; charset=UTF-8');
+      .expect('Content-type', 'text/html; charset=UTF-8')
+      .expect('X-Content-Type-Options', 'nosniff');
   });
 
   it('should support custom path prefix when serving static files.', async () => {
