@@ -3,7 +3,6 @@ import * as cookieParser from 'cookie-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
 import * as session from 'express-session';
-import * as helmet from 'helmet';
 import * as logger from 'morgan';
 
 // FoalTS
@@ -45,11 +44,20 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   );
 
   app.use(logger(loggerFormat));
+  app.use((_, res, next) => {
+    res.removeHeader('X-Powered-By');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-DNS-Prefetch-Control', 'off');
+    res.setHeader('X-Download-Options', 'noopen');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+    next();
+  });
   app.use(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticUrl', 'public'))
   );
-  app.use(helmet());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
