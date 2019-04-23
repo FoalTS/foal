@@ -6,6 +6,7 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
+![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
 ## Motivation
 
