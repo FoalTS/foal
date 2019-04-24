@@ -33,3 +33,16 @@ export class ApiController {
 
 }
 ```
+
+## CORS Requests and Authentication
+
+If your API requires a token to be sent in the `Authorization` header, then the name of this header should be specified in the `options` handler.
+
+```typescript
+  @Options('*')
+  options(ctx: Context) {
+    const response = new HttpResponseNoContent();
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    return response;
+  }
+```
