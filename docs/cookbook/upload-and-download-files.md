@@ -213,12 +213,12 @@ class AppController {
 
 ### from a Cloud Storage (AWS S3)
 
-**This feature is currently not available but will be implemented in the future.** Feel free to add a comment on the [Github issue]() if you need it.
+**This feature is currently not available but will be implemented in the future.** Feel free to add a comment on the [Github issue](https://github.com/FoalTS/foal/issues/421) if you need it.
 
 It will be possible to return a file stored on an AWS S3 bucket using this technique:
 
 ```typescript
-import { createHttpResponseS3File } from '@foal/aws';
+import { createHttpResponseFileFromS3 } from '@foal/aws';
 import { Context, Get } from '@foal/core';
 
 class MyController {
@@ -226,7 +226,7 @@ class MyController {
   @Get('/my-pdf')
   getMyPdf(ctx: Context) {
 
-    return createHttpResponseFile({
+    return createHttpResponseFileFromS3({
       bucket: 'name_of_the_bucket',
       key: 'name_of_the_file',
       // Tell the browser to download the pdf and not to display it.
