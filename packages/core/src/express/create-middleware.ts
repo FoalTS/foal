@@ -3,6 +3,7 @@ import {
   HookPostFunction,
   HttpResponse,
   isHttpResponse,
+  isHttpResponseMovedPermanently,
   isHttpResponseRedirect,
   Route,
   ServiceManager
@@ -54,8 +55,8 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         res.cookie(cookieName, cookies[cookieName].value, cookies[cookieName].options);
       }
 
-      if (isHttpResponseRedirect(response)) {
-        res.redirect(response.path);
+      if (isHttpResponseRedirect(response) || isHttpResponseMovedPermanently(response)) {
+        res.redirect(response.statusCode, response.path);
         return;
       }
 

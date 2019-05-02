@@ -119,7 +119,7 @@ export class AuthController {
 
 ```
 
-> Writting `getRepository(User).findOne({ email: email, password: password })` cannot work since the password needs to be encrypted.
+> Writting `getRepository(User).findOne({ email: email, password: password })` cannot work since the password needs to be hashed.
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 

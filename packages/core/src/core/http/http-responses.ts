@@ -446,6 +446,52 @@ export function isHttpResponseRedirection(obj: any): obj is HttpResponseRedirect
 }
 
 /**
+ * Represent an HTTP response with the status 301 - MOVED PERMANENTLY.
+ *
+ * @export
+ * @class HttpResponseMovedPermanently
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseMovedPermanently extends HttpResponseRedirection {
+  /**
+   * Property used internally by isHttpResponseMovedPermanently.
+   *
+   * @memberof isHttpResponseMovedPermanently
+   */
+  readonly isHttpResponseMovedPermanently = true;
+  readonly statusCode = 301;
+  readonly statusMessage = 'MOVED PERMANENTLY';
+
+  /**
+   * Create an instance of HttpResponseMovedPermanently.
+   * @param {string} path - The redirection path.
+   * @memberof HttpResponseMovedPermanently
+   */
+  constructor(public path: string) {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMovedPermanently.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMovedPermanently} - True if the error is an
+ * instance of HttpResponseMovedPermanently. False otherwise.
+ */
+export function isHttpResponseMovedPermanently(obj: any): obj is HttpResponseMovedPermanently {
+  return obj instanceof HttpResponseMovedPermanently ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMovedPermanently === true);
+}
+
+/**
  * Represent an HTTP response with the status 302 - FOUND.
  *
  * @export

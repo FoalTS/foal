@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseConflict][ClassDeclaration-17]
+* [HttpResponseConflict][ClassDeclaration-18]
     * Constructor
-        * [constructor(body, options)][Constructor-17]
+        * [constructor(body, options)][Constructor-18]
     * Properties
-        * [isHttpResponseConflict][PropertyDeclaration-40]
-        * [statusCode][PropertyDeclaration-41]
-        * [statusMessage][PropertyDeclaration-42]
+        * [isHttpResponseConflict][PropertyDeclaration-43]
+        * [statusCode][PropertyDeclaration-44]
+        * [statusMessage][PropertyDeclaration-45]
 
 # HttpResponseConflict
 
@@ -75,8 +75,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-17]: httpresponseconflict.md#httpresponseconflict
-[Constructor-17]: httpresponseconflict.md#constructorbody-options
-[PropertyDeclaration-40]: httpresponseconflict.md#ishttpresponseconflict
-[PropertyDeclaration-41]: httpresponseconflict.md#statuscode
-[PropertyDeclaration-42]: httpresponseconflict.md#statusmessage
+[ClassDeclaration-18]: httpresponseconflict.md#httpresponseconflict
+[Constructor-18]: httpresponseconflict.md#constructorbody-options
+[PropertyDeclaration-43]: httpresponseconflict.md#ishttpresponseconflict
+[PropertyDeclaration-44]: httpresponseconflict.md#statuscode
+[PropertyDeclaration-45]: httpresponseconflict.md#statusmessage

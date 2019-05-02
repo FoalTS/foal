@@ -1,11 +1,11 @@
 # Table of contents
 
-* [ServiceManager][ClassDeclaration-21]
+* [ServiceManager][ClassDeclaration-22]
     * Methods
         * [set(serviceClass, service)][MethodDeclaration-6]
         * [get(serviceClass)][MethodDeclaration-7]
     * Properties
-        * [map][PropertyDeclaration-50]
+        * [map][PropertyDeclaration-53]
 
 # ServiceManager
 
@@ -80,10 +80,10 @@ public readonly map: Map<Class<any>, any>;
 
 Map<[Class][TypeAliasDeclaration-1]<any>, any>
 
-[ClassDeclaration-21]: servicemanager.md#servicemanager
+[ClassDeclaration-22]: servicemanager.md#servicemanager
 [MethodDeclaration-6]: servicemanager.md#setserviceclass-service
 [TypeAliasDeclaration-1]: ../index.md#class
 [MethodDeclaration-7]: servicemanager.md#getserviceclass
 [TypeAliasDeclaration-1]: ../index.md#class
-[PropertyDeclaration-50]: servicemanager.md#map
+[PropertyDeclaration-53]: servicemanager.md#map
 [TypeAliasDeclaration-1]: ../index.md#class

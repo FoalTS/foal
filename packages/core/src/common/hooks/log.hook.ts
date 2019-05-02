@@ -45,7 +45,12 @@ export function Log(message: string, options: LogOptions = {}): HookDecorator {
     if (options.headers === true) {
       logFn('Headers: ', ctx.request.headers);
     } else if (Array.isArray(options.headers)) {
-      options.headers.forEach(header => logFn(`${header}: `, ctx.request.headers[header]));
+      for (const header of options.headers) {
+        const headerName = Object.keys(ctx.request.headers).find(
+          head => header.toLowerCase() === head.toLowerCase() // Header names are case insensitive.
+        );
+        logFn(`${header}: `, headerName === undefined ? undefined : ctx.request.headers[headerName]);
+      }
     }
   });
 }

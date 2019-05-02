@@ -53,6 +53,7 @@
 * [Validation & Sanitization](./validation-and-sanitization.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
+  * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
 * Frontend Integration
   * [Single Page Applications](./frontend-integration/single-page-applications.md)
@@ -100,4 +101,5 @@
 * [@foal/jwt](./api/jwt/api/index.md)
 * [@foal/mongoose](./api/mongoose/api/index.md)
 * [@foal/password](./api/password/api/index.md)
+* [@foal/swagger](./api/swagger/api/index.md)
 * [@foal/typeorm](./api/typeorm/api/index.md)

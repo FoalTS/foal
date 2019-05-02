@@ -1,6 +1,7 @@
 sudo: required
 language: node_js
 node_js:
+  - 10
   - 8
 
 services:
@@ -24,7 +25,6 @@ install:
 script:
   - npm run lint
   - lerna run test
-  - lerna run e2e
   - ./e2e_test.sh
 
 after_success:

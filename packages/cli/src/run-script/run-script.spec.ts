@@ -4,16 +4,14 @@ import { join } from 'path';
 
 // FoalTS
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { mkdirIfDoesNotExist, rmdirIfExists, rmfileIfExists } from '../generate/utils';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, rmfileIfExists } from '../generate/utils';
 import { runScript } from './run-script';
 
 describe('runScript', () => {
 
   afterEach(() => {
-    rmfileIfExists('src/scripts/my-script.ts');
-    rmdirIfExists('src/scripts');
-    rmfileIfExists('build/scripts/my-script.js');
-    rmdirIfExists('build/scripts');
+    rmDirAndFilesIfExist('src/scripts');
+    rmDirAndFilesIfExist('build/scripts');
     rmfileIfExists('my-script-temp');
   });
 

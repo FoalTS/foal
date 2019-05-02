@@ -1,17 +1,17 @@
 {
   "name": "@foal/examples",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "FoalTs examples",
   "scripts": {
-    "build": "tsc && copy-cli \"src/**/*.html\" lib",
+    "build": "tsc && copy-cli \"src/**/*.html\" build",
     "build:w": "tsc -w",
-    "start": "node ./lib/index.js",
-    "start:w": "supervisor -w ./lib --no-restart-on error ./lib/index.js",
+    "start": "node ./build/index.js",
+    "start:w": "supervisor -w ./build --no-restart-on error ./build/index.js",
     "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
-    "build:test": "tsc && copy-cli \"src/**/*.html\" lib",
+    "build:test": "tsc && copy-cli \"src/**/*.html\" build",
     "build:test:w": "tsc -w",
-    "start:test": "mocha \"./lib/**/*.spec.js\"",
-    "start:test:w": "mocha -w \"./lib/**/*.spec.js\"",
+    "start:test": "mocha \"./build/**/*.spec.js\"",
+    "start:test:w": "mocha -w \"./build/**/*.spec.js\"",
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
@@ -26,7 +26,7 @@
     "access": "public"
   },
   "files": [
-    "lib/"
+    "build/"
   ],
   "contributors": [
     "Loïc Poullain <loic.poullain@centraliens.net>"
@@ -40,17 +40,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^0.8.7",
-    "@foal/ejs": "^0.8.7",
-    "@foal/typeorm": "^0.8.7",
+    "@foal/core": "^0.8.8",
+    "@foal/ejs": "^0.8.8",
+    "@foal/swagger": "^0.8.8",
+    "@foal/typeorm": "^0.8.8",
     "bootstrap": "^4.0.0",
     "connect-sqlite3": "^0.9.11",
     "source-map-support": "^0.5.6",
     "sqlite3": "^4.0.0",
-    "typeorm": "0.2.14"
+    "typeorm": "0.2.14",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^0.8.7",
+    "@foal/cli": "^0.8.8",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.1",
     "concurrently": "^3.5.1",

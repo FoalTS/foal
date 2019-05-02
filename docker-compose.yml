@@ -40,7 +40,6 @@ services:
 
   mongodb:
     image: "mongo:3.4.1"
-    container_name: "mongodb"
     ports:
       - "27017:27017"
 

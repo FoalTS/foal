@@ -8,7 +8,7 @@ import { verifyPassword } from './verify-password.util';
 
 describe('verifyPassword', () => {
 
-  it('should reject an Error if the encrypted password format is invalid.', async () => {
+  it('should reject an Error if the password hash format is invalid.', async () => {
     return Promise.all([
       verifyPassword('hello world', 'pbkdf256')
         .then(() => fail('This promise should be rejected.'))
@@ -37,26 +37,27 @@ describe('verifyPassword', () => {
     const iterations = 3;
     const keylen = 4;
     const derivedKey = pbkdf2Sync(plainPassword, saltBuffer, iterations, keylen, 'sha256');
-    const encryptedPassword = `pbkdf2_sha256$3$aaa$${derivedKey.toString('base64')}`;
+    const passwordHash = `pbkdf2_sha256$3$aaa$${derivedKey.toString('base64')}`;
 
-    ok(await verifyPassword(plainPassword, encryptedPassword));
-    strictEqual(await verifyPassword('wrong password', encryptedPassword), false);
+    ok(await verifyPassword(plainPassword, passwordHash));
+    strictEqual(await verifyPassword('wrong password', passwordHash), false);
   });
 
-  it('should verify passwords encrypted with encryptPassword.', async () => {
+  it('should verify password hashes created from encryptPassword.', async () => {
     const plainPassword = 'hello world';
-    const encryptedPassword = await encryptPassword(plainPassword);
+    const passwordHash = await encryptPassword(plainPassword);
 
-    ok(await verifyPassword(plainPassword, encryptedPassword));
-    strictEqual(await verifyPassword('wrong password', encryptedPassword), false);
+    ok(await verifyPassword(plainPassword, passwordHash));
+    strictEqual(await verifyPassword('wrong password', passwordHash), false);
   });
 
-  it('should verify passwords encrypted with encryptPassword and the legacy option (old parsePassword).', async () => {
+  it('should verify password hashes created from encryptPassword with the legacy'
+      + ' option (old parsePassword).', async () => {
     const plainPassword = 'hello world';
-    const encryptedPassword = await encryptPassword(plainPassword, { legacy: true });
+    const passwordHash = await encryptPassword(plainPassword, { legacy: true });
 
-    ok(await verifyPassword(plainPassword, encryptedPassword, { legacy: true }));
-    strictEqual(await verifyPassword('wrong password', encryptedPassword, { legacy: true }), false);
+    ok(await verifyPassword(plainPassword, passwordHash, { legacy: true }));
+    strictEqual(await verifyPassword('wrong password', passwordHash, { legacy: true }), false);
   });
 
 });

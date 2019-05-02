@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Config][ClassDeclaration-23]
+* [Config][ClassDeclaration-24]
     * Methods
         * [get(key, defaultValue)][MethodDeclaration-11]
         * [get(key, defaultValue)][MethodDeclaration-13]
@@ -113,7 +113,7 @@ public static clearCache(): void;
 
 void
 
-[ClassDeclaration-23]: config.md#config
+[ClassDeclaration-24]: config.md#config
 [MethodDeclaration-11]: config.md#getkey-defaultvalue
 [MethodDeclaration-13]: config.md#getkey-defaultvalue
 [MethodDeclaration-12]: config.md#clearcache

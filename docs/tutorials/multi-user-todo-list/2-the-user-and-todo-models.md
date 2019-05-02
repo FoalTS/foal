@@ -32,7 +32,7 @@ export class User {
 
 ```
 
-The `setPassword` method uses `encryptPassword` to encrypt passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+The `setPassword` method uses `encryptPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
 
 ## The Todo Model
 
