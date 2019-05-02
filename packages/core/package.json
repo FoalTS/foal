@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "docs": "typedoc --out ../../api/core src/index.ts --readme none --theme markdown",
+    "docs": "typedoc --out ../../docs/api/core src/index.ts --readme none --theme markdown",
     "test": "nyc --reporter=json --reporter=text mocha --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "dev:test:auth": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/auth/**/*.spec.ts\"",
