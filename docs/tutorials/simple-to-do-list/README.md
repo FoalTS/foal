@@ -1,2 +1,0 @@
-# Simple To-Do List
-

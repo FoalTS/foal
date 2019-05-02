@@ -1,2 +1,0 @@
-# MongoDB To-Do List
-
