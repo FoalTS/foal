@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseMethodNotAllowed][ClassDeclaration-16]
+* [HttpResponseMethodNotAllowed][ClassDeclaration-17]
     * Constructor
-        * [constructor(body, options)][Constructor-16]
+        * [constructor(body, options)][Constructor-17]
     * Properties
-        * [isHttpResponseMethodNotAllowed][PropertyDeclaration-37]
-        * [statusCode][PropertyDeclaration-38]
-        * [statusMessage][PropertyDeclaration-39]
+        * [isHttpResponseMethodNotAllowed][PropertyDeclaration-40]
+        * [statusCode][PropertyDeclaration-41]
+        * [statusMessage][PropertyDeclaration-42]
 
 # HttpResponseMethodNotAllowed
 
@@ -75,8 +75,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-16]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
-[Constructor-16]: httpresponsemethodnotallowed.md#constructorbody-options
-[PropertyDeclaration-37]: httpresponsemethodnotallowed.md#ishttpresponsemethodnotallowed
-[PropertyDeclaration-38]: httpresponsemethodnotallowed.md#statuscode
-[PropertyDeclaration-39]: httpresponsemethodnotallowed.md#statusmessage
+[ClassDeclaration-17]: httpresponsemethodnotallowed.md#httpresponsemethodnotallowed
+[Constructor-17]: httpresponsemethodnotallowed.md#constructorbody-options
+[PropertyDeclaration-40]: httpresponsemethodnotallowed.md#ishttpresponsemethodnotallowed
+[PropertyDeclaration-41]: httpresponsemethodnotallowed.md#statuscode
+[PropertyDeclaration-42]: httpresponsemethodnotallowed.md#statusmessage

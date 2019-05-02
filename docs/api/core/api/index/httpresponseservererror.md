@@ -1,10 +1,10 @@
 # Table of contents
 
-* [HttpResponseServerError][ClassDeclaration-18]
+* [HttpResponseServerError][ClassDeclaration-19]
     * Constructor
-        * [constructor(body, options)][Constructor-18]
+        * [constructor(body, options)][Constructor-19]
     * Properties
-        * [isHttpResponseServerError][PropertyDeclaration-43]
+        * [isHttpResponseServerError][PropertyDeclaration-46]
 
 # HttpResponseServerError
 
@@ -42,6 +42,6 @@ public readonly isHttpResponseServerError: true;
 
 true
 
-[ClassDeclaration-18]: httpresponseservererror.md#httpresponseservererror
-[Constructor-18]: httpresponseservererror.md#constructorbody-options
-[PropertyDeclaration-43]: httpresponseservererror.md#ishttpresponseservererror
+[ClassDeclaration-19]: httpresponseservererror.md#httpresponseservererror
+[Constructor-19]: httpresponseservererror.md#constructorbody-options
+[PropertyDeclaration-46]: httpresponseservererror.md#ishttpresponseservererror

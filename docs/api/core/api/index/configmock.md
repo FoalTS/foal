@@ -1,6 +1,6 @@
 # Table of contents
 
-* [ConfigMock][ClassDeclaration-22]
+* [ConfigMock][ClassDeclaration-23]
     * Methods
         * [set(key, value)][MethodDeclaration-8]
         * [get(key, defaultValue)][MethodDeclaration-9]
@@ -75,7 +75,7 @@ public reset(): void;
 
 void
 
-[ClassDeclaration-22]: configmock.md#configmock
+[ClassDeclaration-23]: configmock.md#configmock
 [MethodDeclaration-8]: configmock.md#setkey-value
 [MethodDeclaration-9]: configmock.md#getkey-defaultvalue
 [MethodDeclaration-10]: configmock.md#reset

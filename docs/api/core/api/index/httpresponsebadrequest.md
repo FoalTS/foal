@@ -1,12 +1,12 @@
 # Table of contents
 
-* [HttpResponseBadRequest][ClassDeclaration-12]
+* [HttpResponseBadRequest][ClassDeclaration-13]
     * Constructor
-        * [constructor(body, options)][Constructor-12]
+        * [constructor(body, options)][Constructor-13]
     * Properties
-        * [isHttpResponseBadRequest][PropertyDeclaration-25]
-        * [statusCode][PropertyDeclaration-26]
-        * [statusMessage][PropertyDeclaration-27]
+        * [isHttpResponseBadRequest][PropertyDeclaration-28]
+        * [statusCode][PropertyDeclaration-29]
+        * [statusMessage][PropertyDeclaration-30]
 
 # HttpResponseBadRequest
 
@@ -75,8 +75,8 @@ public statusMessage: string;
 
 string
 
-[ClassDeclaration-12]: httpresponsebadrequest.md#httpresponsebadrequest
-[Constructor-12]: httpresponsebadrequest.md#constructorbody-options
-[PropertyDeclaration-25]: httpresponsebadrequest.md#ishttpresponsebadrequest
-[PropertyDeclaration-26]: httpresponsebadrequest.md#statuscode
-[PropertyDeclaration-27]: httpresponsebadrequest.md#statusmessage
+[ClassDeclaration-13]: httpresponsebadrequest.md#httpresponsebadrequest
+[Constructor-13]: httpresponsebadrequest.md#constructorbody-options
+[PropertyDeclaration-28]: httpresponsebadrequest.md#ishttpresponsebadrequest
+[PropertyDeclaration-29]: httpresponsebadrequest.md#statuscode
+[PropertyDeclaration-30]: httpresponsebadrequest.md#statusmessage
