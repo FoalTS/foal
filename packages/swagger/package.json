@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/swagger",
+    "docs": "typedoc --out ../../api/swagger src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
@@ -50,8 +50,9 @@
     "copy": "^0.3.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
-    "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0"
   }
 }
