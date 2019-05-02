@@ -25,6 +25,9 @@ it('404 page: users should be able to define a controller method that catches re
 
   const app = createApp(AppController);
 
-  await request(app).get('/home').expect(200);
+  await Promise.all([
+    request(app).get('/home').expect(200),
+    request(app).get('/nowhere').expect(404)
+  ]);
 
 });
