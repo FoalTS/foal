@@ -1,6 +1,6 @@
 {
   "name": "@foal/formidable",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "Small package to use formidable with promises",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -50,7 +50,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
-    "@foal/core": "^0.8.7",
+    "@foal/core": "^0.8.8",
     "@types/formidable": "^1.0.31"
   }
 }
