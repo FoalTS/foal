@@ -34,10 +34,10 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseOK(/* camelName */s);
   }
 
-  @Get('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Get('/:/* camelName */Id')
+  @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   async getById(ctx: Context) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params.id);
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -53,7 +53,7 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseCreated(/* camelName */);
   }
 
-  @Post('/:id')
+  @Post('/:/* camelName */Id')
   postById() {
     return new HttpResponseMethodNotAllowed();
   }
@@ -63,11 +63,11 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Patch('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Patch('/:/* camelName */Id')
+  @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   @ValidateBody({ .../* camelName */Schema, required: [] })
   async patchById(ctx: Context) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params.id);
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -85,11 +85,11 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Put('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Put('/:/* camelName */Id')
+  @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   @ValidateBody(/* camelName */Schema)
   async putById(ctx: Context) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params.id);
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -107,16 +107,16 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Delete('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Delete('/:/* camelName */Id')
+  @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   async deleteById(ctx: Context) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params.id);
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
     }
 
-    await getRepository(/* upperFirstCamelName */).delete(ctx.request.params.id);
+    await getRepository(/* upperFirstCamelName */).delete(ctx.request.params./* camelName */Id);
 
     return new HttpResponseNoContent();
   }
