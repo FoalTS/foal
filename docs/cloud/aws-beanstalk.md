@@ -42,6 +42,8 @@ module.exports = {
 
 And complete your configuration file `config/default.json` (or `config/default.yml`) with your local database credentials:
 
+> The below credentials are an example. If you want to use them, you need to install PostgreSQL on your local host, create a database named `my-db` and install the postgres driver in your project (`npm install pg`). But you are free to use another database with other credentials if you want to.
+
 ```json
 {
   "settings": {
@@ -197,7 +199,7 @@ Migrations are SQL queries that modify the database schemas (definition of the t
 
 But using this in production is considered unsafe (data could be lost for example if a model is changed by mistake). That's why we will generate and run migrations manually. To do this, we will need access to the database.
 
-> This section assumes that you have previously set the environment variable `DATABASE_SYNCHRONIZE` to `false`. This overrides the `synchronize` setting.
+> **Warning** This section assumes that you have previously set the environment variable `DATABASE_SYNCHRONIZE` to `false`. This overrides the `synchronize` setting on AWS.
 
 Go to [AWS database page](https://console.aws.amazon.com/rds/home#databases:) and click on your database.
 
@@ -252,9 +254,11 @@ npm run build:migrations
 Then run the migration.
 
 ```sh
-migration:run
+npm run migration:run
 ```
 
 The database schema is updated. Your remote application should now run properly.
 
 **Close your terminal / console**. Do not start your local application in the same terminal, otherwise it will run on your production database.
+
+> **Caution:** Running migrations is always sensitive part of deployments. You should always back up your data before doing such a thing.
