@@ -40,6 +40,12 @@ program
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
+    const args = process.argv.slice(3);
+    const appName = args.filter(item => !item.includes('-'));
+    if (appName.length > 1) {
+      console.log(red('\n Kindly provide only one argument as the project name'));
+      return;
+    }
     createApp({
       autoInstall: true,
       initRepo: true,
