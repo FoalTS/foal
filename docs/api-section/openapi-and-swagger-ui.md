@@ -338,7 +338,7 @@ paths:
           description: successful operation
 ```
 
-- The decorators `@ApiServer`, `@ApiSecurity` and `@ApiExternalDocs` have a different behavior depending on if they decorate the root controller or a subcontroller / a method.
+- The decorators `@ApiServer`, `@ApiSecurityRequirement` and `@ApiExternalDocs` have a different behavior depending on if they decorate the root controller or a subcontroller / a method.
 
 *Example with the root controller*
 
