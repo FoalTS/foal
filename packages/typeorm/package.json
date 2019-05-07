@@ -1,11 +1,11 @@
 {
   "name": "@foal/typeorm",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "FoalTS integration of TypeORM",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/typeorm",
+    "docs": "typedoc --out ../../docs/api/typeorm src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
@@ -45,7 +45,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.7"
+    "@foal/core": "^0.8.8"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
@@ -58,9 +58,10 @@
     "pg": "^7.7.1",
     "rimraf": "^2.6.2",
     "sqlite3": "^4.0.4",
-    "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
     "typeorm": "0.2.14",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0"
   }
 }

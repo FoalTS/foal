@@ -1,11 +1,11 @@
 {
   "name": "@foal/formidable",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "Small package to use formidable with promises",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "generate:api:docs": "ts-docs-gen --entryFile ./src/index.ts --output ../../docs/api/formidable",
+    "docs": "typedoc --out ../../docs/api/formidable src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
@@ -45,12 +45,13 @@
     "formidable": "^1.2.1",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
-    "ts-docs-gen": "0.2.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.5.2",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0"
   },
   "dependencies": {
-    "@foal/core": "^0.8.7",
+    "@foal/core": "^0.8.8",
     "@types/formidable": "^1.0.31"
   }
 }

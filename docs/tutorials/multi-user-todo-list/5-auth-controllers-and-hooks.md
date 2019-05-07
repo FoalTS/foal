@@ -18,7 +18,7 @@ Download the html, css and js files by clicking [here](https://foalts.org/multi-
 
 Empty the `public/` directory.
 
-Then move `script.js` and `style.js` to `public/` and the `index.html`, `signin.html` and `signup.html` templates to `src/app/controllers/templates/`.
+Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` templates to `src/app/controllers/templates/`.
 
 Open the `app.controller.ts` file and add three new routes to serve the pages.
 

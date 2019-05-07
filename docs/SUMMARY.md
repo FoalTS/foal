@@ -71,6 +71,7 @@
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
 * Cloud
+  * [AWS Beanstalk](./cloud/aws-beanstalk.md)
   * [Firebase](./cloud/firebase.md)
 * Security
   * [HTTP Headers Protection](./security/http-headers-protection.md)
@@ -96,10 +97,11 @@
 
 ## API Reference
 
-* [@foal/core](./api/core/api/index.md)
-* [@foal/ejs](./api/ejs/api/index.md)
-* [@foal/formidable](./api/formidable/api/index.md)
-* [@foal/jwt](./api/jwt/api/index.md)
-* [@foal/mongoose](./api/mongoose/api/index.md)
-* [@foal/password](./api/password/api/index.md)
-* [@foal/typeorm](./api/typeorm/api/index.md)
+* [@foal/core](./api/core/README.md)
+* [@foal/ejs](./api/ejs/README.md)
+* [@foal/formidable](./api/formidable/README.md)
+* [@foal/jwt](./api/jwt/README.md)
+* [@foal/mongoose](./api/mongoose/README.md)
+* [@foal/password](./api/password/README.md)
+* [@foal/swagger](./api/swagger/README.md)
+* [@foal/typeorm](./api/typeorm/README.md)
