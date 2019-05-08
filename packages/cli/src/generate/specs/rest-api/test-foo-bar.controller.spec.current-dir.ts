@@ -105,15 +105,15 @@ describe('TestFooBarController', () => {
 
   describe('has a "getById" method that', () => {
 
-    it('should handle requests at GET /:id.', () => {
+    it('should handle requests at GET /:testFooBarId.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'getById'), 'GET');
-      strictEqual(getPath(TestFooBarController, 'getById'), '/:id');
+      strictEqual(getPath(TestFooBarController, 'getById'), '/:testFooBarId');
     });
 
     it('should return an HttpResponseOK object if the testFooBar was found.', async () => {
       const ctx = new Context({
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       const response = await controller.getById(ctx);
@@ -129,7 +129,7 @@ describe('TestFooBarController', () => {
     it('should return an HttpResponseNotFound object if the testFooBar was not found.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          testFooBarId: -1
         }
       });
       const response = await controller.getById(ctx);
@@ -177,9 +177,9 @@ describe('TestFooBarController', () => {
 
   describe('has a "postById" method that', () => {
 
-    it('should handle requests at POST /:id.', () => {
+    it('should handle requests at POST /:testFooBarId.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'postById'), 'POST');
-      strictEqual(getPath(TestFooBarController, 'postById'), '/:id');
+      strictEqual(getPath(TestFooBarController, 'postById'), '/:testFooBarId');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
@@ -203,9 +203,9 @@ describe('TestFooBarController', () => {
 
   describe('has a "patchById" method that', () => {
 
-    it('should handle requests at PATCH /:id.', () => {
+    it('should handle requests at PATCH /:testFooBarId.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'patchById'), 'PATCH');
-      strictEqual(getPath(TestFooBarController, 'patchById'), '/:id');
+      strictEqual(getPath(TestFooBarController, 'patchById'), '/:testFooBarId');
     });
 
     it('should update the testFooBar in the database and return it through an HttpResponseOK object.', async () => {
@@ -214,7 +214,7 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 2 (version 2)',
         },
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       const response = await controller.patchById(ctx);
@@ -241,7 +241,7 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 2 (version 2)',
         },
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       await controller.patchById(ctx);
@@ -261,7 +261,7 @@ describe('TestFooBarController', () => {
           text: '',
         },
         params: {
-          id: -1
+          testFooBarId: -1
         }
       });
       const response = await controller.patchById(ctx);
@@ -288,9 +288,9 @@ describe('TestFooBarController', () => {
 
   describe('has a "putById" method that', () => {
 
-    it('should handle requests at PUT /:id.', () => {
+    it('should handle requests at PUT /:testFooBarId.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'putById'), 'PUT');
-      strictEqual(getPath(TestFooBarController, 'putById'), '/:id');
+      strictEqual(getPath(TestFooBarController, 'putById'), '/:testFooBarId');
     });
 
     it('should update the testFooBar in the database and return it through an HttpResponseOK object.', async () => {
@@ -299,7 +299,7 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 2 (version 2)',
         },
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       const response = await controller.putById(ctx);
@@ -326,7 +326,7 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 2 (version 2)',
         },
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       await controller.putById(ctx);
@@ -346,7 +346,7 @@ describe('TestFooBarController', () => {
           text: '',
         },
         params: {
-          id: -1
+          testFooBarId: -1
         }
       });
       const response = await controller.putById(ctx);
@@ -373,15 +373,15 @@ describe('TestFooBarController', () => {
 
   describe('has a "deleteById" method that', () => {
 
-    it('should handle requests at DELETE /:id.', () => {
+    it('should handle requests at DELETE /:testFooBarId.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'deleteById'), 'DELETE');
-      strictEqual(getPath(TestFooBarController, 'deleteById'), '/:id');
+      strictEqual(getPath(TestFooBarController, 'deleteById'), '/:testFooBarId');
     });
 
     it('should delete the testFooBar and return an HttpResponseNoContent object.', async () => {
       const ctx = new Context({
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -398,7 +398,7 @@ describe('TestFooBarController', () => {
     it('should not delete the other testFooBars.', async () => {
       const ctx = new Context({
         params: {
-          id: testFooBar2.id
+          testFooBarId: testFooBar2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -415,7 +415,7 @@ describe('TestFooBarController', () => {
     it('should return an HttpResponseNotFound if the testFooBar was not fond.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          testFooBarId: -1
         }
       });
       const response = await controller.deleteById(ctx);

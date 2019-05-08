@@ -105,15 +105,15 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   describe('has a "getById" method that', () => {
 
-    it('should handle requests at GET /:id.', () => {
+    it('should handle requests at GET /:/* camelName */Id.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'getById'), 'GET');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'getById'), '/:id');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'getById'), '/:/* camelName */Id');
     });
 
     it('should return an HttpResponseOK object if the /* camelName */ was found.', async () => {
       const ctx = new Context({
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       const response = await controller.getById(ctx);
@@ -129,7 +129,7 @@ describe('/* upperFirstCamelName */Controller', () => {
     it('should return an HttpResponseNotFound object if the /* camelName */ was not found.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          /* camelName */Id: -1
         }
       });
       const response = await controller.getById(ctx);
@@ -177,9 +177,9 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   describe('has a "postById" method that', () => {
 
-    it('should handle requests at POST /:id.', () => {
+    it('should handle requests at POST /:/* camelName */Id.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'postById'), 'POST');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'postById'), '/:id');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'postById'), '/:/* camelName */Id');
     });
 
     it('should return a HttpResponseMethodNotAllowed.', () => {
@@ -203,9 +203,9 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   describe('has a "patchById" method that', () => {
 
-    it('should handle requests at PATCH /:id.', () => {
+    it('should handle requests at PATCH /:/* camelName */Id.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'patchById'), 'PATCH');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'patchById'), '/:id');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'patchById'), '/:/* camelName */Id');
     });
 
     it('should update the /* camelName */ in the database and return it through an HttpResponseOK object.', async () => {
@@ -214,7 +214,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 2 (version 2)',
         },
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       const response = await controller.patchById(ctx);
@@ -241,7 +241,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 2 (version 2)',
         },
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       await controller.patchById(ctx);
@@ -261,7 +261,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '',
         },
         params: {
-          id: -1
+          /* camelName */Id: -1
         }
       });
       const response = await controller.patchById(ctx);
@@ -288,9 +288,9 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   describe('has a "putById" method that', () => {
 
-    it('should handle requests at PUT /:id.', () => {
+    it('should handle requests at PUT /:/* camelName */Id.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'putById'), 'PUT');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'putById'), '/:id');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'putById'), '/:/* camelName */Id');
     });
 
     it('should update the /* camelName */ in the database and return it through an HttpResponseOK object.', async () => {
@@ -299,7 +299,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 2 (version 2)',
         },
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       const response = await controller.putById(ctx);
@@ -326,7 +326,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 2 (version 2)',
         },
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       await controller.putById(ctx);
@@ -346,7 +346,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '',
         },
         params: {
-          id: -1
+          /* camelName */Id: -1
         }
       });
       const response = await controller.putById(ctx);
@@ -373,15 +373,15 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   describe('has a "deleteById" method that', () => {
 
-    it('should handle requests at DELETE /:id.', () => {
+    it('should handle requests at DELETE /:/* camelName */Id.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'deleteById'), 'DELETE');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'deleteById'), '/:id');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'deleteById'), '/:/* camelName */Id');
     });
 
     it('should delete the /* camelName */ and return an HttpResponseNoContent object.', async () => {
       const ctx = new Context({
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -398,7 +398,7 @@ describe('/* upperFirstCamelName */Controller', () => {
     it('should not delete the other /* camelName */s.', async () => {
       const ctx = new Context({
         params: {
-          id: /* camelName */2.id
+          /* camelName */Id: /* camelName */2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -415,7 +415,7 @@ describe('/* upperFirstCamelName */Controller', () => {
     it('should return an HttpResponseNotFound if the /* camelName */ was not fond.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          /* camelName */Id: -1
         }
       });
       const response = await controller.deleteById(ctx);
