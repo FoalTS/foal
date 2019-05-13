@@ -43,11 +43,15 @@
   "devDependencies": {
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
+    "graphql": "^14.3.0",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.2",
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0"
+  },
+  "peerDependencies": {
+    "graphql": "^14.3.0"
   }
 }
