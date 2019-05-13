@@ -19,26 +19,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   const hook = getHookFunction(JWT({ user: fetchUser }));
 
-  it('should throw if no secretOrPublicKey is set in the Config.', async () => {
-    let err: Error|undefined;
-    try {
-      const ctx = new Context({ get(str: string) { return undefined; } });
-      const services = new ServiceManager();
-
-      await hook(ctx, services);
-    } catch (error) {
-      err = error;
-    }
-    if (!err) {
-      throw new Error('An error should be thrown since there is not secret.');
-    }
-    strictEqual(
-      err.message,
-      'You must provide a settings.jwt.secretOrPublicKey in default.json or in the '
-        + 'SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
-    );
-  });
-
   describe('when a secret is given', () => {
 
     const secret = 'my_secret';
@@ -219,6 +199,29 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
+    it('should throw if no secretOrPublicKey is set in the Config and options.secretOrPublicKey is'
+        + ' not defined.', async () => {
+      // Remove the secret.
+      config.reset();
+
+      let err: Error|undefined;
+      try {
+        const token = sign({}, secret);
+        const ctx = new Context({ get(str: string) { return `Bearer ${token}`; } });
+        await hook(ctx, services);
+      } catch (error) {
+        err = error;
+      }
+      if (!err) {
+        throw new Error('An error should be thrown since there is not secret.');
+      }
+      strictEqual(
+        err.message,
+        'You must provide a settings.jwt.secretOrPublicKey in default.json or in the '
+          + 'SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+      );
+    });
+
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
@@ -308,6 +311,35 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       notStrictEqual(ctx.user, undefined);
       strictEqual((ctx.user as any).foo, 'bar');
     });
+
+    // it('should set ctx.user with the decoded payload if no fetchUser was given'
+    //     + ' (options.secretOrPublicKey is defined).', async () => {
+    //   config.reset();
+
+    //   let header, payload;
+
+    //   const hook = getHookFunction(JWT({
+    //     secretOrPublicKey: async (h, p) => {
+    //       header = h;
+    //       payload = p;
+    //       return secret;
+    //     }
+    //   }));
+
+    //   const jwt = sign({ foo: 'bar' }, secret, {});
+    //   const ctx = new Context({ get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; } });
+
+    //   await hook(ctx, services);
+
+    //   notStrictEqual(ctx.user, undefined);
+    //   strictEqual((ctx.user as any).foo, 'bar');
+
+    //   deepStrictEqual(header, {
+    //     alg: 'HS256',
+    //     typ: 'JWT'
+    //   });
+    //   deepStrictEqual(payload, { foo: 'bar' });
+    // });
 
     it('should set ctx.user with the decoded payload if no fetchUser was given (options.cookie=true).', async () => {
       const hook = getHookFunction(JWT({ cookie: true }));

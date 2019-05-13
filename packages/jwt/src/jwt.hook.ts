@@ -13,6 +13,7 @@ import { verify, VerifyOptions } from 'jsonwebtoken';
  */
 export interface JWTOptions {
   user?: (id: string|number) => Promise<any|undefined>;
+  secretOrPublicKey?: (header: object, payload: object) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
 }
@@ -29,13 +30,6 @@ export interface JWTOptions {
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   return Hook(async (ctx, services) => {
     const config = services.get(Config);
-    const secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
-    if (!secretOrPublicKey) {
-      throw new Error(
-        'You must provide a settings.jwt.secretOrPublicKey in default.json or '
-          + 'in the SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
-        );
-    }
 
     let token: string;
     if (options.cookie) {
@@ -84,6 +78,14 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       });
       response.setHeader('WWW-Authenticate', 'error="invalid_token", error_description="jwt revoked"');
       return response;
+    }
+
+    const secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+    if (!secretOrPublicKey) {
+      throw new Error(
+        'You must provide a settings.jwt.secretOrPublicKey in default.json or '
+          + 'in the SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+        );
     }
 
     let payload;
