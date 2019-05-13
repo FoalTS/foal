@@ -5,6 +5,26 @@ import {
 } from '@foal/core';
 import { verify, VerifyOptions } from 'jsonwebtoken';
 
+class InvalidTokenResponse extends HttpResponseUnauthorized {
+
+  constructor(description: string) {
+    super({ code: 'invalid_token', description });
+    this.setHeader(
+      'WWW-Authenticate',
+      `error="invalid_token", error_description="${description}"`
+    );
+  }
+
+}
+
+class InvalidRequestResponse extends HttpResponseBadRequest {
+
+  constructor(description: string) {
+    super({ code: 'invalid_request', description });
+  }
+
+}
+
 /**
  * Options of the hooks created by JWTRequired and JWTOptional.
  *
@@ -40,10 +60,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         if (!required) {
           return;
         }
-        return new HttpResponseBadRequest({
-          code: 'invalid_request',
-          description: 'Auth cookie not found.'
-        });
+        return new InvalidRequestResponse('Auth cookie not found.');
       }
 
       token = content;
@@ -54,30 +71,19 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         if (!required) {
           return;
         }
-        return new HttpResponseBadRequest({
-          code: 'invalid_request',
-          description: 'Authorization header not found.'
-        });
+        return new InvalidRequestResponse('Authorization header not found.');
       }
 
       const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
       if (!content) {
-        return new HttpResponseBadRequest({
-          code: 'invalid_request',
-          description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
-        });
+        return new InvalidRequestResponse('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
       }
 
       token = content;
     }
 
     if (options.blackList && await options.blackList(token)) {
-      const response = new HttpResponseUnauthorized({
-        code: 'invalid_token',
-        description: 'jwt revoked'
-      });
-      response.setHeader('WWW-Authenticate', 'error="invalid_token", error_description="jwt revoked"');
-      return response;
+      return new InvalidTokenResponse('jwt revoked');
     }
 
     const secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
@@ -96,12 +102,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         });
       });
     } catch (error) {
-      const response = new HttpResponseUnauthorized({
-        code: 'invalid_token',
-        description: error.message
-      });
-      response.setHeader('WWW-Authenticate', `error="invalid_token", error_description="${error.message}"`);
-      return response;
+      return new InvalidTokenResponse(error.message);
     }
 
     if (!options.user) {
@@ -110,28 +111,12 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     if (typeof payload.sub !== 'string') {
-      const response = new HttpResponseUnauthorized({
-        code: 'invalid_token',
-        description: 'The token must include a subject which is the id of the user.'
-      });
-      response.setHeader(
-        'WWW-Authenticate',
-        'error="invalid_token", error_description="The token must include a subject which is the id of the user."'
-      );
-      return response;
+      return new InvalidTokenResponse('The token must include a subject which is the id of the user.');
     }
 
     const user = await options.user(payload.sub);
     if (!user) {
-      const response = new HttpResponseUnauthorized({
-        code: 'invalid_token',
-        description: 'The token subject does not match any user.'
-      });
-      response.setHeader(
-        'WWW-Authenticate',
-        'error="invalid_token", error_description="The token subject does not match any user."'
-      );
-      return response;
+      return new InvalidTokenResponse('The token subject does not match any user.');
     }
 
     ctx.user = user;
