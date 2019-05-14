@@ -198,7 +198,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should return an HttpResponseUnauthorized object if the header is invalid.', async () => {
-      const token = 'eyJhhGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+      const token = 'OiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       const ctx = new Context({
@@ -211,11 +211,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       }
       deepStrictEqual(response.body, {
         code: 'invalid_token',
-        description: 'invalid algorithm'
+        description: 'invalid token'
       });
       strictEqual(
         response.getHeader('WWW-Authenticate'),
-        'error="invalid_token", error_description="invalid algorithm"'
+        'error="invalid_token", error_description="invalid token"'
       );
     });
 
@@ -241,6 +241,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
+  });
+
+  describe('should verify the token and', () => {
+
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
@@ -262,10 +266,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         'error="invalid_token", error_description="invalid signature"'
       );
     });
-
-  });
-
-  describe('should verify the token and', () => {
 
     it('should throw an error if no secretOrPublicKey is set in the Config and options.secretOrPublicKey is'
         + ' not defined.', async () => {
@@ -386,6 +386,29 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT());
 
         const jwt = sign({ foo: 'bar' }, secret, {});
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
+        });
+
+        await hook(ctx, services);
+
+        notStrictEqual(ctx.user, undefined);
+        strictEqual((ctx.user as any).foo, 'bar');
+      });
+
+      it('with the decoded payload (header & secret from options.secretOrPublicKey).', async () => {
+        config.reset();
+        const secretOrPublicKey = async (header, payload) => {
+          deepStrictEqual(header, {
+            alg: 'HS256',
+            typ: 'JWT'
+          });
+          deepStrictEqual(payload, { foo: 'bar' });
+          return secret;
+        };
+        const hook = getHookFunction(JWT({ secretOrPublicKey }));
+
+        const jwt = sign({ foo: 'bar' }, secret, { noTimestamp: true });
         const ctx = new Context({
           get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
         });

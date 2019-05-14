@@ -3,7 +3,7 @@ import {
   Config, Hook, HookDecorator,
   HttpResponseBadRequest, HttpResponseUnauthorized
 } from '@foal/core';
-import { verify, VerifyOptions } from 'jsonwebtoken';
+import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
 
@@ -86,8 +86,26 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('jwt revoked');
     }
 
-    const secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
-    if (!secretOrPublicKey) {
+    const parts = token.split('.');
+
+    if (parts.length !== 3) {
+      return new InvalidTokenResponse('jwt malformed');
+    }
+
+    let decoded: null | { header: any, payload: any };
+    try {
+      decoded = decode(token, { complete: true }) as null | { header: any, payload: any };
+    } catch (error) {
+      return new InvalidTokenResponse(error.message);
+    }
+    if (!decoded) {
+      return new InvalidTokenResponse('invalid token');
+    }
+
+    const secretOrPublicKey = options.secretOrPublicKey ?
+      await options.secretOrPublicKey(decoded.header, decoded.payload)
+      : config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+    if (secretOrPublicKey === undefined) {
       throw new Error(
         'You must provide a settings.jwt.secretOrPublicKey in default.json or '
           + 'in the SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
