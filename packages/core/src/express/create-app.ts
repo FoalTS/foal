@@ -1,4 +1,5 @@
 // 3p
+import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as csurf from 'csurf';
 import * as express from 'express';
@@ -60,6 +61,7 @@ export function createApp(rootControllerClass: Class, options: CreateAppOptions 
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(bodyParser.text({ type: [ 'text/*', 'application/graphql' ] }));
   app.use(cookieParser());
   app.use(session({
     cookie: {
