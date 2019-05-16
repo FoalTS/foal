@@ -856,100 +856,97 @@ describe('GraphQLController', () => {
       });
 
       describe('should return an HttpResponseOK instance', () => {
-        describe('should return an HttpResponseOK instance', () => {
-          class ConcreteController extends GraphQLController {
-            schema = buildSchema(`type Query {
+        class ConcreteController extends GraphQLController {
+          schema = buildSchema(`type Query {
               hello: String
             }
             `);
+        }
+
+        beforeEach(() => controller = createController(ConcreteController));
+
+        it('with an "errors" property if the GraphQL schema does not validate the body.', async () => {
+          const query = `{ b }`;
+          const ctx = new Context({
+            body: query,
+            get(headerName: string) {
+              return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
+            },
+            query: {}
+          });
+          const response = await controller.post(ctx);
+
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
           }
 
-          beforeEach(() => controller = createController(ConcreteController));
-
-          it('with an "errors" property if the GraphQL schema does not validate the body.', async () => {
-            const query = `{ b }`;
-            const ctx = new Context({
-              body: query,
-              get(headerName: string) {
-                return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
-              },
-              query: {}
-            });
-            const response = await controller.post(ctx);
-
-            if (!isHttpResponseOK(response)) {
-              throw new Error('The controller should have returned an HttpResponseOK instance.');
-            }
-
-            deepStrictEqual(parse(response.body), {
-              errors: [
-                {
-                  locations: [
-                    { column: 3, line: 1 }
-                  ],
-                  message: 'Cannot query field "b" on type "Query".'
-                }
-              ]
-            });
-          });
-
-          it('with a "data" property if the GraphQL schema validates the body.', async () => {
-            const query = `{ hello }`;
-            const ctx = new Context({
-              body: query,
-              get(headerName: string) {
-                return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
-              },
-              query: {}
-            });
-            const response = await controller.post(ctx);
-
-            if (!isHttpResponseOK(response)) {
-              throw new Error('The controller should have returned an HttpResponseOK instance.');
-            }
-
-            deepStrictEqual(parse(response.body), {
-              data: {
-                hello: null
+          deepStrictEqual(parse(response.body), {
+            errors: [
+              {
+                locations: [
+                  { column: 3, line: 1 }
+                ],
+                message: 'Cannot query field "b" on type "Query".'
               }
-            });
+            ]
           });
+        });
 
-          it('with a "data" property if the GraphQL schema validates the body (with resolvers).', async () => {
-            class ConcreteController extends GraphQLController {
-              schema = buildSchema(`type Query {
+        it('with a "data" property if the GraphQL schema validates the body.', async () => {
+          const query = `{ hello }`;
+          const ctx = new Context({
+            body: query,
+            get(headerName: string) {
+              return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
+            },
+            query: {}
+          });
+          const response = await controller.post(ctx);
+
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
+          }
+
+          deepStrictEqual(parse(response.body), {
+            data: {
+              hello: null
+            }
+          });
+        });
+
+        it('with a "data" property if the GraphQL schema validates the body (with resolvers).', async () => {
+          class ConcreteController extends GraphQLController {
+            schema = buildSchema(`type Query {
                 hello: String
               }
               `);
-              resolvers = {
-                hello: () => {
-                  return 'Hello world!';
-                },
-              };
-            }
-            controller = createController(ConcreteController);
-
-            const query = `{ hello }`;
-            const ctx = new Context({
-              body: query,
-              get(headerName: string) {
-                return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
+            resolvers = {
+              hello: () => {
+                return 'Hello world!';
               },
-              query: {}
-            });
-            const response = await controller.post(ctx);
+            };
+          }
+          controller = createController(ConcreteController);
 
-            if (!isHttpResponseOK(response)) {
-              throw new Error('The controller should have returned an HttpResponseOK instance.');
-            }
-
-            deepStrictEqual(parse(response.body), {
-              data: {
-                hello: 'Hello world!'
-              }
-            });
+          const query = `{ hello }`;
+          const ctx = new Context({
+            body: query,
+            get(headerName: string) {
+              return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
+            },
+            query: {}
           });
+          const response = await controller.post(ctx);
 
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
+          }
+
+          deepStrictEqual(parse(response.body), {
+            data: {
+              hello: 'Hello world!'
+            }
+          });
         });
 
       });
