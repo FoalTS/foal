@@ -21,6 +21,10 @@ const postBodySchema = {
   type: 'object',
 };
 
+function sanitize(o: object): object {
+  return JSON.parse(JSON.stringify(o));
+}
+
 export abstract class GraphQLController {
   abstract schema: object;
   resolvers: object;
@@ -55,7 +59,7 @@ export abstract class GraphQLController {
       source: ctx.request.query.query,
       variableValues: variables,
     });
-    return new HttpResponseOK(result);
+    return new HttpResponseOK(sanitize(result));
   }
 
   @Post('/')
@@ -82,7 +86,7 @@ export abstract class GraphQLController {
       variableValues: ctx.request.body.variables,
     });
 
-    return new HttpResponseOK(result);
+    return new HttpResponseOK(sanitize(result));
   }
 
   private async postApplicationGraphQL(ctx: Context): Promise<HttpResponse> {
@@ -98,7 +102,7 @@ export abstract class GraphQLController {
       source: ctx.request.body
     });
 
-    return new HttpResponseOK(result);
+    return new HttpResponseOK(sanitize(result));
   }
 
 }
