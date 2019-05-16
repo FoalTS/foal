@@ -302,7 +302,8 @@ describe('GraphQLController', () => {
       strictEqual(getPath(ConcreteController, 'post'), '/');
     });
 
-    describe('should validate the request query by returning an HttpResponseBadRequest instance', () => {
+    describe('should validate the request query by returning an HttpResponseBadRequest instance'
+        + ' (given query.query is defined)', () => {
 
       it('if the "query" param is not a string.', async () => {
         const ctx = new Context({
@@ -392,6 +393,107 @@ describe('GraphQLController', () => {
           response.body,
           'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
         );
+      });
+
+    });
+
+    describe('should validate the request body by returning an HttpResponseBadRequest instance'
+        + ' (given query.query is undefined)', () => {
+
+      it('if the "query" property is missing.', async () => {
+        const ctx = new Context({
+          body: {},
+          query: {}
+        });
+        const response = await controller.post(ctx);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('The function should have returned an HttpResponseBadRequest instance.');
+        }
+
+        deepStrictEqual(response.body, [{
+          dataPath: '',
+          keyword: 'required',
+          message: 'should have required property \'query\'',
+          params: {
+            missingProperty: 'query'
+          },
+          schemaPath: '#/required'
+        }]);
+      });
+
+      it('if the "query" property is not a string.', async () => {
+        const ctx = new Context({
+          body: {
+            query: {}
+          },
+          query: {}
+        });
+        const response = await controller.post(ctx);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('The function should have returned an HttpResponseBadRequest instance.');
+        }
+
+        deepStrictEqual(response.body, [{
+          dataPath: '.query',
+          keyword: 'type',
+          message: 'should be string',
+          params: {
+            type: 'string'
+          },
+          schemaPath: '#/properties/query/type'
+        }]);
+      });
+
+      it('if the "operationName" property is not a string.', async () => {
+        const ctx = new Context({
+          body: {
+            operationName: {},
+            query: ''
+          },
+          query: {}
+        });
+        const response = await controller.post(ctx);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('The function should have returned an HttpResponseBadRequest instance.');
+        }
+
+        deepStrictEqual(response.body, [{
+          dataPath: '.operationName',
+          keyword: 'type',
+          message: 'should be string',
+          params: {
+            type: 'string'
+          },
+          schemaPath: '#/properties/operationName/type'
+        }]);
+      });
+
+      it('if the "variables" property is not an object.', async () => {
+        const ctx = new Context({
+          body: {
+            query: '',
+            variables: '',
+          },
+          query: {}
+        });
+        const response = await controller.post(ctx);
+
+        if (!isHttpResponseBadRequest(response)) {
+          throw new Error('The function should have returned an HttpResponseBadRequest instance.');
+        }
+
+        deepStrictEqual(response.body, [{
+          dataPath: '.variables',
+          keyword: 'type',
+          message: 'should be object',
+          params: {
+            type: 'object'
+          },
+          schemaPath: '#/properties/variables/type'
+        }]);
       });
 
     });

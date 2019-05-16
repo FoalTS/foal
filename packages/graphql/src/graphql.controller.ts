@@ -20,6 +20,16 @@ const postQuerySchema = {
   type: 'object',
 };
 
+const postBodySchema = {
+  properties: {
+    operationName: { type: 'string' },
+    query: { type: 'string' },
+    variables: { type: 'object' },
+  },
+  required: [ 'query' ],
+  type: 'object',
+};
+
 export abstract class GraphQLController {
   abstract schema: object;
   resolvers: object;
@@ -74,6 +84,10 @@ export abstract class GraphQLController {
           `The "variables" URL parameter is not a valid JSON-encoded string: ${error.message}`
         );
       }
+    }
+
+    if (!ajv.validate(postBodySchema, ctx.request.body)) {
+      return new HttpResponseBadRequest(ajv.errors);
     }
 
     return new HttpResponseOK();
