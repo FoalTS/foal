@@ -6,7 +6,7 @@ import {
   Context, createController, getHttpMethod, getPath, isHttpResponseBadRequest,
   isHttpResponseOK
 } from '@foal/core';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
 
 // App
 import { GraphQLController } from './graphql.controller';
@@ -175,7 +175,7 @@ describe('GraphQLController', () => {
         });
       });
 
-      it('with a "data" property if the GraphQL schema validates the query (without resolvers).', async () => {
+      it('with a "data" property if the GraphQL schema validates the query.', async () => {
         const query = `{ hello }`;
         const ctx = new Context({
           query: { query }
@@ -189,6 +189,73 @@ describe('GraphQLController', () => {
         deepStrictEqual(JSON.parse(response.body), {
           data: {
             hello: null
+          }
+        });
+      });
+
+      it('with a "data" property if the GraphQL schema validates the query (with operationName).', async () => {
+        class ConcreteController extends GraphQLController {
+          schema = buildSchema(`type Query {
+            hello: String
+            hello2: String
+          }
+          `);
+        }
+        controller = createController(ConcreteController);
+
+        const query = `query a { hello } \n query b { hello2 }`;
+        const ctx = new Context({
+          query: { query, operationName: 'b' }
+        });
+        const response = await controller.get(ctx);
+
+        if (!isHttpResponseOK(response)) {
+          throw new Error('The controller should have returned an HttpResponseOK instance.');
+        }
+
+        deepStrictEqual(JSON.parse(response.body), {
+          data: {
+            hello2: null
+          }
+        });
+      });
+
+      it('with a "data" property if the GraphQL schema validates the query (with variables).', async () => {
+        class ConcreteController extends GraphQLController {
+          schema = new GraphQLSchema({
+            query: new GraphQLObjectType({
+              fields: {
+                hello: {
+                  args: {
+                    input: {
+                      type: GraphQLString,
+                    },
+                  },
+                  type: GraphQLString,
+                  resolve(obj, args, context, info) {
+                    return JSON.stringify(args);
+                  }
+                }
+              },
+              name: 'RootQueryType',
+            })
+          });
+        }
+        controller = createController(ConcreteController);
+
+        const query = `query a($input: String) { hello(input: $input) }`;
+        const ctx = new Context({
+          query: { query, variables: '{"input":"foobar"}' }
+        });
+        const response = await controller.get(ctx);
+
+        if (!isHttpResponseOK(response)) {
+          throw new Error('The controller should have returned an HttpResponseOK instance.');
+        }
+
+        deepStrictEqual(JSON.parse(response.body), {
+          data: {
+            hello: '{"input":"foobar"}'
           }
         });
       });
