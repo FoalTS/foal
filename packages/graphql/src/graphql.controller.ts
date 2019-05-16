@@ -68,7 +68,7 @@ export abstract class GraphQLController {
   }
 
   @Post('/')
-  post(ctx: Context) {
+  async post(ctx: Context) {
     const ajv = getAjvInstance();
 
     if (!ajv.validate(postQuerySchema, ctx.request.query)) {
@@ -86,10 +86,19 @@ export abstract class GraphQLController {
       }
     }
 
-    if (!ajv.validate(postBodySchema, ctx.request.body)) {
-      return new HttpResponseBadRequest(ajv.errors);
+    if (!ctx.request.query.query) {
+      if (!ajv.validate(postBodySchema, ctx.request.body)) {
+        return new HttpResponseBadRequest(ajv.errors);
+      }
     }
 
-    return new HttpResponseOK();
+    const result = await graphql({
+      operationName: ctx.request.query.operationName,
+      rootValue: this.resolvers,
+      schema: this.schema,
+      source: ctx.request.query.query,
+      variableValues: variables,
+    });
+    return new HttpResponseOK(JSON.stringify(result));
   }
 }
