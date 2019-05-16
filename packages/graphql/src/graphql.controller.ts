@@ -1,13 +1,22 @@
 import { Context, Get, getAjvInstance, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
 import { graphql } from 'graphql';
 
-const getSchema = {
+const getQuerySchema = {
   properties: {
     operationName: { type: 'string' },
     query: { type: 'string' },
     variables: { type: 'string' },
   },
   required: [ 'query' ],
+  type: 'object',
+};
+
+const postQuerySchema = {
+  properties: {
+    operationName: { type: 'string' },
+    query: { type: 'string' },
+    variables: { type: 'string' },
+  },
   type: 'object',
 };
 
@@ -23,7 +32,7 @@ export abstract class GraphQLController {
   async get(ctx: Context) {
     const ajv = getAjvInstance();
 
-    if (!ajv.validate(getSchema, ctx.request.query)) {
+    if (!ajv.validate(getQuerySchema, ctx.request.query)) {
       return new HttpResponseBadRequest(ajv.errors);
     }
 
@@ -50,6 +59,23 @@ export abstract class GraphQLController {
 
   @Post('/')
   post(ctx: Context) {
+    const ajv = getAjvInstance();
+
+    if (!ajv.validate(postQuerySchema, ctx.request.query)) {
+      return new HttpResponseBadRequest(ajv.errors);
+    }
+
+    let variables: object|undefined;
+    if (ctx.request.query.variables) {
+      try {
+        variables = JSON.parse(ctx.request.query.variables);
+      } catch (error) {
+        return new HttpResponseBadRequest(
+          `The "variables" URL parameter is not a valid JSON-encoded string: ${error.message}`
+        );
+      }
+    }
+
     return new HttpResponseOK();
   }
 }
