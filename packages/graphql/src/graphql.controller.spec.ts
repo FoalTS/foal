@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
