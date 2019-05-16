@@ -1,4 +1,4 @@
-import { Context, Get, getAjvInstance, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
+import { Context, Get, getAjvInstance, HttpResponse, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
 import { graphql } from 'graphql';
 
 const getQuerySchema = {
@@ -67,17 +67,7 @@ export abstract class GraphQLController {
     }
 
     if (ctx.request.get('Content-Type') === 'application/graphql') {
-      if (!ajv.validate({ type: 'string' }, ctx.request.body)) {
-        return new HttpResponseBadRequest(ajv.errors);
-      }
-
-      const result = await graphql({
-        rootValue: this.resolvers,
-        schema: this.schema,
-        source: ctx.request.body
-      });
-
-      return new HttpResponseOK(result);
+      return this.postApplicationGraphQL(ctx);
     }
 
     if (!ajv.validate(postBodySchema, ctx.request.body)) {
@@ -94,4 +84,21 @@ export abstract class GraphQLController {
 
     return new HttpResponseOK(result);
   }
+
+  private async postApplicationGraphQL(ctx: Context): Promise<HttpResponse> {
+    const ajv = getAjvInstance();
+
+    if (!ajv.validate({ type: 'string' }, ctx.request.body)) {
+      return new HttpResponseBadRequest(ajv.errors);
+    }
+
+    const result = await graphql({
+      rootValue: this.resolvers,
+      schema: this.schema,
+      source: ctx.request.body
+    });
+
+    return new HttpResponseOK(result);
+  }
+
 }
