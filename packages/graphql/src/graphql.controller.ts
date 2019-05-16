@@ -7,7 +7,7 @@ const getQuerySchema = {
     query: { type: 'string' },
     variables: { type: 'string' },
   },
-  required: [ 'query' ],
+  required: ['query'],
   type: 'object',
 };
 
@@ -17,7 +17,7 @@ const postBodySchema = {
     query: { type: 'string' },
     variables: { type: 'object' },
   },
-  required: [ 'query' ],
+  required: ['query'],
   type: 'object',
 };
 
@@ -37,7 +37,7 @@ export abstract class GraphQLController {
       return new HttpResponseBadRequest(ajv.errors);
     }
 
-    let variables: object|undefined;
+    let variables: object | undefined;
     if (ctx.request.query.variables) {
       try {
         variables = JSON.parse(ctx.request.query.variables);
@@ -64,6 +64,20 @@ export abstract class GraphQLController {
 
     if (ctx.request.query.query !== undefined) {
       return this.get(ctx);
+    }
+
+    if (ctx.request.get('Content-Type') === 'application/graphql') {
+      if (!ajv.validate({ type: 'string' }, ctx.request.body)) {
+        return new HttpResponseBadRequest(ajv.errors);
+      }
+
+      const result = await graphql({
+        rootValue: this.resolvers,
+        schema: this.schema,
+        source: ctx.request.body
+      });
+
+      return new HttpResponseOK(result);
     }
 
     if (!ajv.validate(postBodySchema, ctx.request.body)) {
