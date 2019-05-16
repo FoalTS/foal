@@ -37,7 +37,7 @@ export abstract class GraphQLController {
       }
     }
 
-    const result = await graphql(this.schema, ctx.request.query.query);
+    const result = await graphql(this.schema, ctx.request.query.query, this.resolvers);
     return new HttpResponseOK(JSON.stringify(result));
   }
 
