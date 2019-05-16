@@ -11,6 +11,10 @@ import { buildSchema, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'gr
 // App
 import { GraphQLController } from './graphql.controller';
 
+function parse(o: object) {
+  return JSON.parse(JSON.stringify(o));
+}
+
 describe('GraphQLController', () => {
 
   let controller: GraphQLController;
@@ -163,7 +167,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           errors: [
             {
               locations: [
@@ -186,7 +190,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: null
           }
@@ -213,7 +217,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello2: null
           }
@@ -253,7 +257,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: '{"input":"foobar"}'
           }
@@ -284,7 +288,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: 'Hello world!'
           }
@@ -519,7 +523,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           errors: [
             {
               locations: [
@@ -542,7 +546,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: null
           }
@@ -569,7 +573,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello2: null
           }
@@ -609,7 +613,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: '{"input":"foobar"}'
           }
@@ -640,7 +644,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: 'Hello world!'
           }
@@ -671,7 +675,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           errors: [
             {
               locations: [
@@ -695,7 +699,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: null
           }
@@ -723,7 +727,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello2: null
           }
@@ -764,7 +768,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: '{"input":"foobar"}'
           }
@@ -796,7 +800,7 @@ describe('GraphQLController', () => {
           throw new Error('The controller should have returned an HttpResponseOK instance.');
         }
 
-        deepStrictEqual(JSON.parse(response.body), {
+        deepStrictEqual(parse(response.body), {
           data: {
             hello: 'Hello world!'
           }

@@ -11,15 +11,6 @@ const getQuerySchema = {
   type: 'object',
 };
 
-const postQuerySchema = {
-  properties: {
-    operationName: { type: 'string' },
-    query: { type: 'string' },
-    variables: { type: 'string' },
-  },
-  type: 'object',
-};
-
 const postBodySchema = {
   properties: {
     operationName: { type: 'string' },
@@ -64,7 +55,7 @@ export abstract class GraphQLController {
       source: ctx.request.query.query,
       variableValues: variables,
     });
-    return new HttpResponseOK(JSON.stringify(result));
+    return new HttpResponseOK(result);
   }
 
   @Post('/')
@@ -87,6 +78,6 @@ export abstract class GraphQLController {
       variableValues: ctx.request.body.variables,
     });
 
-    return new HttpResponseOK(JSON.stringify(result));
+    return new HttpResponseOK(result);
   }
 }
