@@ -71,34 +71,22 @@ export abstract class GraphQLController {
   async post(ctx: Context) {
     const ajv = getAjvInstance();
 
-    if (!ajv.validate(postQuerySchema, ctx.request.query)) {
+    if (ctx.request.query.query !== undefined) {
+      return this.get(ctx);
+    }
+
+    if (!ajv.validate(postBodySchema, ctx.request.body)) {
       return new HttpResponseBadRequest(ajv.errors);
     }
 
-    let variables: object|undefined;
-    if (ctx.request.query.variables) {
-      try {
-        variables = JSON.parse(ctx.request.query.variables);
-      } catch (error) {
-        return new HttpResponseBadRequest(
-          `The "variables" URL parameter is not a valid JSON-encoded string: ${error.message}`
-        );
-      }
-    }
-
-    if (!ctx.request.query.query) {
-      if (!ajv.validate(postBodySchema, ctx.request.body)) {
-        return new HttpResponseBadRequest(ajv.errors);
-      }
-    }
-
     const result = await graphql({
-      operationName: ctx.request.query.operationName,
+      operationName: ctx.request.body.operationName,
       rootValue: this.resolvers,
       schema: this.schema,
-      source: ctx.request.query.query,
-      variableValues: variables,
+      source: ctx.request.body.query,
+      variableValues: ctx.request.body.variables,
     });
+
     return new HttpResponseOK(JSON.stringify(result));
   }
 }
