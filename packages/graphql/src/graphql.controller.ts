@@ -1,4 +1,6 @@
-import { Context, Get, getAjvInstance, HttpResponse, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
+// 3p
+import { Context, Get, HttpResponse, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
+import * as Ajv from 'ajv';
 import { graphql } from 'graphql';
 
 const getQuerySchema = {
@@ -25,6 +27,8 @@ function sanitize(o: object): object {
   return JSON.parse(JSON.stringify(o));
 }
 
+const ajv = new Ajv();
+
 export abstract class GraphQLController {
   abstract schema: object|Promise<object>;
   resolvers: object;
@@ -35,8 +39,6 @@ export abstract class GraphQLController {
 
   @Get('/')
   async get(ctx: Context) {
-    const ajv = getAjvInstance();
-
     if (!ajv.validate(getQuerySchema, ctx.request.query)) {
       return new HttpResponseBadRequest(ajv.errors);
     }
@@ -64,8 +66,6 @@ export abstract class GraphQLController {
 
   @Post('/')
   async post(ctx: Context) {
-    const ajv = getAjvInstance();
-
     if (ctx.request.query.query !== undefined) {
       return this.get(ctx);
     }
@@ -90,8 +90,6 @@ export abstract class GraphQLController {
   }
 
   private async postApplicationGraphQL(ctx: Context): Promise<HttpResponse> {
-    const ajv = getAjvInstance();
-
     if (!ajv.validate({ type: 'string' }, ctx.request.body)) {
       return new HttpResponseBadRequest(ajv.errors);
     }

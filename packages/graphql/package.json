@@ -38,6 +38,7 @@
     "lib/"
   ],
   "dependencies": {
+    "ajv": "^6.10.0",
     "@foal/core": "^0.8.8",
     "glob": "^7.1.4"
   },
