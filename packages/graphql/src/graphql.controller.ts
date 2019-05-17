@@ -55,6 +55,7 @@ export abstract class GraphQLController {
     }
 
     const result = await graphql({
+      contextValue: this.getResolverContext(ctx),
       operationName: ctx.request.query.operationName,
       rootValue: this.resolvers,
       schema: await this.schema,
@@ -79,6 +80,7 @@ export abstract class GraphQLController {
     }
 
     const result = await graphql({
+      contextValue: this.getResolverContext(ctx),
       operationName: ctx.request.body.operationName,
       rootValue: this.resolvers,
       schema: await this.schema,
@@ -95,6 +97,7 @@ export abstract class GraphQLController {
     }
 
     const result = await graphql({
+      contextValue: this.getResolverContext(ctx),
       rootValue: this.resolvers,
       schema: await this.schema,
       source: ctx.request.body
