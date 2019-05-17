@@ -26,7 +26,7 @@ function sanitize(o: object): object {
 }
 
 export abstract class GraphQLController {
-  abstract schema: object;
+  abstract schema: object|Promise<object>;
   resolvers: object;
 
   getResolverContext(ctx: Context): object {
@@ -55,7 +55,7 @@ export abstract class GraphQLController {
     const result = await graphql({
       operationName: ctx.request.query.operationName,
       rootValue: this.resolvers,
-      schema: this.schema,
+      schema: await this.schema,
       source: ctx.request.query.query,
       variableValues: variables,
     });
@@ -81,7 +81,7 @@ export abstract class GraphQLController {
     const result = await graphql({
       operationName: ctx.request.body.operationName,
       rootValue: this.resolvers,
-      schema: this.schema,
+      schema: await this.schema,
       source: ctx.request.body.query,
       variableValues: ctx.request.body.variables,
     });
@@ -98,7 +98,7 @@ export abstract class GraphQLController {
 
     const result = await graphql({
       rootValue: this.resolvers,
-      schema: this.schema,
+      schema: await this.schema,
       source: ctx.request.body
     });
 

@@ -193,6 +193,33 @@ describe('GraphQLController', () => {
         });
       });
 
+      it('with a "data" property if the GraphQL schema validates the query'
+          + ' (schema given within a promise).', async () => {
+        class ConcreteController extends GraphQLController {
+          schema = Promise.resolve(buildSchema(`type Query {
+            hello: String
+          }
+          `));
+        }
+        controller = createController(ConcreteController);
+
+        const query = `{ hello }`;
+        const ctx = new Context({
+          query: { query }
+        });
+        const response = await controller.get(ctx);
+
+        if (!isHttpResponseOK(response)) {
+          throw new Error('The controller should have returned an HttpResponseOK instance.');
+        }
+
+        deepStrictEqual(response.body, {
+          data: {
+            hello: null
+          }
+        });
+      });
+
       it('with a "data" property if the GraphQL schema validates the query (with operationName).', async () => {
         class ConcreteController extends GraphQLController {
           schema = buildSchema(`type Query {
@@ -431,7 +458,16 @@ describe('GraphQLController', () => {
           });
         });
 
-        it('with a "data" property if the GraphQL schema validates the query.', async () => {
+        it('with a "data" property if the GraphQL schema validates the query'
+            + ' (schema given within a promise).', async () => {
+          class ConcreteController extends GraphQLController {
+            schema = Promise.resolve(buildSchema(`type Query {
+              hello: String
+            }
+            `));
+          }
+          controller = createController(ConcreteController);
+
           const query = `{ hello }`;
           const ctx = new Context({
             query: { query }
@@ -712,6 +748,35 @@ describe('GraphQLController', () => {
           });
         });
 
+        it('with a "data" property if the GraphQL schema validates the body'
+            + ' (schema given within a promise).', async () => {
+          class ConcreteController extends GraphQLController {
+            schema = Promise.resolve(buildSchema(`type Query {
+              hello: String
+            }
+            `));
+          }
+          controller = createController(ConcreteController);
+
+          const query = `{ hello }`;
+          const ctx = new Context({
+            body: { query },
+            get: () => 'application/json',
+            query: {}
+          });
+          const response = await controller.post(ctx);
+
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
+          }
+
+          deepStrictEqual(response.body, {
+            data: {
+              hello: null
+            }
+          });
+        });
+
         it('with a "data" property if the GraphQL schema validates the body (with operationName).', async () => {
           class ConcreteController extends GraphQLController {
             schema = buildSchema(`type Query {
@@ -889,6 +954,37 @@ describe('GraphQLController', () => {
         });
 
         it('with a "data" property if the GraphQL schema validates the body.', async () => {
+          const query = `{ hello }`;
+          const ctx = new Context({
+            body: query,
+            get(headerName: string) {
+              return headerName === 'Content-Type' ? 'application/graphql' : 'foo';
+            },
+            query: {}
+          });
+          const response = await controller.post(ctx);
+
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
+          }
+
+          deepStrictEqual(response.body, {
+            data: {
+              hello: null
+            }
+          });
+        });
+
+        it('with a "data" property if the GraphQL schema validates the body'
+            + ' (schema given within a promise).', async () => {
+          class ConcreteController extends GraphQLController {
+            schema = Promise.resolve(buildSchema(`type Query {
+                hello: String
+              }
+              `));
+          }
+          controller = createController(ConcreteController);
+
           const query = `{ hello }`;
           const ctx = new Context({
             body: query,

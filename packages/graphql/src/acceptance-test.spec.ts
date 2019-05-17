@@ -40,7 +40,6 @@ describe('GraphQLController (acceptance test)', () => {
 
   class AppResolver {
     user(obj, args, context, info) {
-      console.log(obj);
       return {
         id: obj.id,
         name: 'someone!'
