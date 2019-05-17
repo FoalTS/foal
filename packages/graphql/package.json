@@ -38,7 +38,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.8"
+    "@foal/core": "^0.8.8",
+    "glob": "^7.1.4"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",
