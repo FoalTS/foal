@@ -3,7 +3,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Context, createController, getHttpMethod, getPath, Hook,
+  Context, createController, getHttpMethod, getPath,
   isHttpResponseBadRequest,
   isHttpResponseOK
 } from '@foal/core';

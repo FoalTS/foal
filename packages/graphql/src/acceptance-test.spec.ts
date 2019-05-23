@@ -19,7 +19,7 @@ import { deepStrictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 
 // 3p
-import { Config, controller, createApp, dependency } from '@foal/core';
+import { controller, createApp, dependency } from '@foal/core';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
