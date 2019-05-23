@@ -8,6 +8,7 @@
 // 3p
 import { red, yellow } from 'colors/safe';
 import * as program from 'commander';
+const didYouMean = require('didyoumean'); // tslint:disable-line 
 
 // FoalTS
 import { createSecret } from './create-secret';
@@ -27,6 +28,17 @@ import {
   createVSCodeConfig,
 } from './generate';
 import { runScript } from './run-script';
+
+const suggestCommands = (cmd: any) => {
+  const availableCommands = program.commands.map(cmd => {
+    return cmd._name;
+  });
+
+  const suggestion = didYouMean(cmd, availableCommands);
+  if (suggestion) {
+    console.log(`  ` + red(`Did you mean ${yellow(suggestion)}?`));
+  }
+};
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
@@ -150,6 +162,7 @@ program
     program.outputHelp();
     console.log(red(`\n  Unknown command ${yellow(cmd)}.`));
     console.log();
+    suggestCommands(cmd);
   });
 
 program.parse(process.argv);
