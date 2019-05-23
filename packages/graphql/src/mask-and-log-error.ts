@@ -1,6 +1,6 @@
 import { Config } from '@foal/core';
 
-export function maskAndLogErrors(err: any): any {
+export function maskAndLogError(err: any): any {
   console.log(err);
 
   if (Config.get('settings.debug')) {

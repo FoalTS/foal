@@ -2,9 +2,9 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { maskAndLogErrors } from './mask-and-log-errors';
+import { maskAndLogError } from './mask-and-log-error';
 
-describe('maskAndLogErrors', () => {
+describe('maskAndLogError', () => {
 
   afterEach(() => delete process.env.SETTINGS_DEBUG);
 
@@ -12,14 +12,14 @@ describe('maskAndLogErrors', () => {
     process.env.SETTINGS_DEBUG = 'true';
     const err = new Error('This is an error (that should be shown in the logs)');
 
-    const result = maskAndLogErrors(err);
+    const result = maskAndLogError(err);
     strictEqual(result, err);
   });
 
   it('should return an "Internal Server Error" otherwise.', () => {
     const err = new Error('This is an error (that should be shown in the logs)');
 
-    const result = maskAndLogErrors(err);
+    const result = maskAndLogError(err);
     strictEqual(result.message, 'Internal Server Error');
   });
 

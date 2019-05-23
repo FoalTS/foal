@@ -1,8 +1,8 @@
 // FoalTS
-import { maskAndLogErrors } from './mask-and-log-errors';
+import { maskAndLogError } from './mask-and-log-error';
 
 export function formatError<R>(
-  resolver: (...args) => R, formatFunction: (err: any) => any = maskAndLogErrors
+  resolver: (...args) => R, formatFunction: (err: any) => any = maskAndLogError
 ): (...args) => Promise<R> {
   return async (...args) => {
     try {
