@@ -21,7 +21,7 @@ describe('formatError', () => {
       strictEqual(await result, 'hello!!!');
     });
 
-    it('format and reject errors thrown in the resolver.', done => {
+    it('format and reject errors rejected in the resolver.', done => {
       function resolver() {
         return Promise.reject(new Error('hello'));
       }
@@ -41,7 +41,7 @@ describe('formatError', () => {
         });
     });
 
-    it('format and reject errors rejected in the resolver.', done => {
+    it('format and reject errors thrown in the resolver.', done => {
       function resolver() {
         throw new Error('hello');
       }
