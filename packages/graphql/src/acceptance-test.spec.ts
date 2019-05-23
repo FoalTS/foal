@@ -19,7 +19,7 @@ import { deepStrictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 
 // 3p
-import { controller, createApp, dependency } from '@foal/core';
+import { Config, controller, createApp, dependency } from '@foal/core';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
@@ -29,6 +29,7 @@ import gql from 'graphql-tag';
 
 // FoalTS
 import { get } from 'http';
+import { FormatError } from './format-error.decorator';
 import { GraphQLController } from './graphql.controller';
 import { schemaFromTypeGlob } from './schema-from-type-glob';
 
@@ -159,6 +160,66 @@ describe('[Acceptance test] GraphQLController', () => {
       data: {
         user: { name: 'someone!' }
       }
+    });
+  });
+
+  it('should include in the documentation an example on how to handle errors in resolvers.', async () => {
+    process.env.SETTINGS_DEBUG = 'false';
+
+    class Resolvers {
+      @FormatError()
+      user() {
+        throw new Error('This is an error');
+      }
+    }
+
+    class ApiController extends GraphQLController {
+      schema = buildSchema(typeDefs);
+
+      @dependency
+      resolvers: Resolvers;
+    }
+
+    class AppController {
+      subControllers = [
+        controller('/graphql', ApiController)
+      ];
+    }
+
+    server = createApp(AppController).listen(3000);
+
+    const response = await new Promise((resolve, reject) => {
+      get('http://localhost:3000/graphql?query={user{name}}', resp => {
+        let data = '';
+        resp.on('data', chunk => {
+          data += chunk;
+        });
+        resp.on('end', () => {
+          resolve(JSON.parse(data));
+        });
+      }).on('error', err => {
+        reject(err);
+      });
+    });
+
+    deepStrictEqual(response, {
+      data: {
+        user: null
+      },
+      errors: [
+        {
+          locations: [
+            {
+              column: 2,
+              line: 1
+            }
+          ],
+          message: 'Internal Server Error',
+          path: [
+            'user'
+          ]
+        }
+      ]
     });
   });
 
