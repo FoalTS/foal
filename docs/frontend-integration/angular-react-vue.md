@@ -22,7 +22,7 @@ foal createapp backend
 ng new frontend
 
 cd backend
-foal connect ../frontend
+foal connect angular ../frontend
 ```
 
 ### React
@@ -35,7 +35,7 @@ foal createapp backend
 npx create-react-app frontend --typescript
 
 cd backend
-foal connect ../frontend
+foal connect react ../frontend
 ```
 
 ### Vue
@@ -48,7 +48,7 @@ foal createapp backend
 vue create frontend
 
 cd backend
-foal connect ../frontend
+foal connect vue ../frontend
 ```
 
 ## Problems Solved by the `connect` Command
