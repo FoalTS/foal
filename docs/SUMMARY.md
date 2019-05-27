@@ -55,6 +55,7 @@
   * [REST API](./api-section/rest-blueprints.md)
   * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
+  * [GraphQL](./api-section/graphql.md)
 * Frontend Integration
   * [Single Page Applications](./frontend-integration/single-page-applications.md)
   * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
