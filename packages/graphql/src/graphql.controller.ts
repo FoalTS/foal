@@ -29,6 +29,16 @@ function sanitize(o: object): object {
 
 const ajv = new Ajv();
 
+/**
+ * GraphQL controller compatible compatible with the common GraphQL clients
+ * ([graphql-request](https://www.npmjs.com/package/graphql-request),
+ * [Apollo Client](https://www.apollographql.com/docs/react/), etc) or any client that
+ * follows the HTTP specification defined [here](https://graphql.org/learn/serving-over-http/).
+ *
+ * @export
+ * @abstract
+ * @class GraphQLController
+ */
 export abstract class GraphQLController {
   abstract schema: object|Promise<object>;
   resolvers: object;
