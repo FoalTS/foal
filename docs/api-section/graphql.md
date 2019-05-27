@@ -2,6 +2,26 @@
 
 [GraphQL](https://graphql.org/) is a query language for APIs. Unlike traditional REST APIs, GraphQL APIs have only one endpoint to which requests are sent. The content of the request describes all the operations to be performed and the data to be returned in the response. Many resources can be retrieved in a single request and the client gets exactly the properties it asks for.
 
+*Example of request*
+```graphql
+{
+  project(name: "GraphQL") {
+    tagline
+  }
+}
+```
+
+*Example of response*
+```json
+{
+  "data": {
+    "project": {
+      "tagline": "A query language for APIs"
+    }
+  }
+}
+```
+
 > The below document assumes that you have a basic knowledge of GraphQL.
 
 To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc), load type definitions from separate files or handle errors thrown in resolvers.
@@ -46,6 +66,14 @@ export class ApiController extends GraphQLController {
   schema = schema;
   resolvers = root;
 }
+```
+
+And here is an example of what your client code might look like:
+```typescript
+import { request } from 'graphql-request';
+
+const data = await request('/graphql', '{ hello }');
+// data equals "{ hello: 'Hello world!' }"
 ```
 
 Alternatively, if you have several strings that define your GraphQL types, you can use the `schemaFromTypeDefs` function to build the schema.
@@ -113,7 +141,7 @@ export class ApiController extends GraphQLController {
 }
 ```
 
-Note that for this to work, you must copy the graphql files during building. To do this, you can update some lines of your `package.json` as follows:
+Note that for this to work, you must copy the graphql files during the build. To do this, you can update some lines of your `package.json` as follows:
 
 ```json
 {
@@ -130,7 +158,7 @@ Note that for this to work, you must copy the graphql files during building. To 
 }
 ```
 
-> Alternatively, if you want to specify only specific files instead of using a glob pattern, you can use `schemaFromTypePaths`.
+> Alternatively, if you want to specify only specific files instead of using a glob pattern, you can call `schemaFromTypePaths`.
 > ```typescript
 > import { GraphQLController, schemaFromTypePaths } from '@foal/graphql';
 >
@@ -145,7 +173,7 @@ Note that for this to work, you must copy the graphql files during building. To 
 
 ## Using a Service for the Root Resolvers
 
-It is also possible to group the root resolvers into a service and thus benefit from all the advantages that services offer (dependency injection, etc). All you have to do is add the `@dependency` decorator as you would with any service.
+Root resolvers can also be grouped into a service in order to benefit from all the advantages offered by services (dependency injection, etc.). All you have to do is add the `@dependency` decorator as you would with any service.
 
 *api.controller.ts*
 ```typescript
@@ -180,13 +208,27 @@ Next releases of FoalTS will include support for [GraphiQL](https://github.com/g
 
 ## Error Handling - Masking & Logging Errors
 
-By default, GraphQL returns all errors thrown (or rejected) in the resolvers. However, this behavior may not be desired in production as it could cause sensitive information to leak from the server.
+By default, GraphQL returns all errors thrown (or rejected) in the resolvers. However, this behavior is often not desired in production as it could cause sensitive information to leak from the server.
 
-For comparison, when the [configuration key](../deployment-and-environments/configuration.md) `settings.debug` is not true (production case), REST APIs returns a `500 - Internal Server Error` without details of the error.
+In comparison with REST APIs, when the [configuration key](../deployment-and-environments/configuration.md)  `settings.debug` does not equal `true` (production case), details of the errors thrown in controllers are not returned to the client. Only a `500 - Internal Server Error` error is sent back.
 
-In a similar way, FoalTS provides a function `formatError` and a decorator `@FormatError` for your GraphQL APIs to log errors and mask them when `settings.debug` is not true.
+In a similar way, FoalTS provides two utilities `formatError` and `@FormatError` for your GraphQL APIs to log and mask errors.  When `settings.debug` is `true`, the errors are converted into a new one whose unique message is `Internal Server Error`.
 
-Here are examples on how to use them.
+*Example of GraphQL response in production*
+```json
+{
+  "data": { "user": null },
+  "errors": [
+    {
+      "locations": [ { "column": 2, "line": 1 } ],
+      "message": "Internal Server Error",
+      "path": [ "user" ]
+    }
+  ]
+}
+```
+
+Here are examples on how to use `formatError` and `@FormatError`.
 
 ```typescript
 function user() {
@@ -207,19 +249,86 @@ class ResolverService {
 }
 ```
 
-> `formatError` and `@FormatError`. Promises. Testability
+> Note that `formatError` and `@FormatError` make your functions become asynchronous. This means that any value returned by the function is now a resolved promise of this value, and any errors thrown in the function is converted into a rejected promise. This only has an impact on unit testing as you may need to preceed your function calls by the keyword `await`.
 
-Override `maskAndLogError`
+`formatError` and `@FormatError` also accept an optional parameter to override its default behavior. It is a function that takes the error thrown or rejected in the resolver and return the error that must be sent to the client. It may be asynchronous or synchronous.
+
+By default, this function is:
+```typescript
+function maskAndLogError(err: any): any {
+  console.log(err);
+
+  if (Config.get('settings.debug')) {
+    return err;
+  }
+
+  return new Error('Internal Server Error');
+}
+```
+
+But we can also imagine other implementations such as:
+```typescript
+import { reportErrorTo3rdPartyService } from 'somewhere';
+
+async function maskAndLogError(err: any): Promise<any> {
+  console.log(err);
+
+  try {
+    await reportErrorTo3rdPartyService(err);
+  } catch (error) {}
+
+  if (err instanceof MyCustomError) {
+    return err;
+  }
+
+  if (Config.get('settings.debug')) {
+    return err;
+  }
+
+  return new Error('Internal Server Error');
+}
+```
 
 ## Authentication & Authorization
 
-The below example shows how to authenticate a user with 
+> The below code is an example of managing authentication and authorization with a GraphQL controller.
+
+*api.controller.ts*
+```typescript
+import { GraphQLController } from '@foal/graphql';
+import { JWTRequired } from '@foal/jwt';
+import { fetchUser } from '@foal/typeorm';
+import { buildSchema } from 'graphql';
+
+import { User } from '../entities';
+
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+const root = {
+  hello: (obj, args, context, info) => {
+    if (!context.user.isAdmin) {
+      return null;
+    }
+    return 'Hello world!';
+  },
+};
+
+@JWTRequired({ user: fetchUser(User) })
+export class ApiController extends GraphQLController {
+  schema = schema;
+  resolvers = root;
+}
+```
 
 ## Advanced
 
 ### Override the Resolver Context
 
-The *GraphQL context* that is passed to the resolvers is by default the *request context*. The behavior can be changed by overriding the `getResolverContext` method.
+The *GraphQL context* that is passed to the resolvers is by default the *request context*. This behavior can be changed by overriding the `getResolverContext` method.
 
 ```typescript
 import { Context } from '@foal/core';
