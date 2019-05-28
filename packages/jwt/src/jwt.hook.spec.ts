@@ -49,6 +49,26 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----`;
 
+function toBase64(headerOrPayload: string): string {
+  return Buffer.from(headerOrPayload, 'binary').toString('base64').replace(/=/g, '');
+}
+
+function fromBase64(str: string): string {
+  return Buffer.from(str, 'base64').toString('binary');
+}
+
+const payload1 = {
+  sub: '1234567890',
+  // tslint:disable-next-line:object-literal-sort-keys
+  name: 'John Doe',
+  iat: 1516239022
+};
+
+const header1 = {
+  alg: 'HS256',
+  typ: 'JWT'
+};
+
 export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
 
@@ -197,9 +217,33 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       strictEqual(response.getHeader('WWW-Authenticate'), 'error="invalid_token", error_description="jwt malformed"');
     });
 
-    it('should return an HttpResponseUnauthorized object if the header is invalid.', async () => {
-      const token = 'OiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+    it('should return an HttpResponseUnauthorized object if the header is invalid'
+        + ' (not a base64-encoded string).', async () => {
+      const token = '$$$'
+        + '.' + toBase64(JSON.stringify(payload1))
+        + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid token'
+      });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid token"'
+      );
+    });
+
+    it('should return an HttpResponseUnauthorized object if the header is invalid'
+        + ' (not a representation of a valid JSON object).', async () => {
+      const token = toBase64('{')
+        + '.' + toBase64(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       const ctx = new Context({
         get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
@@ -220,7 +264,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should return an HttpResponseUnauthorized object if the payload is invalid.', async () => {
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+      const token = toBase64(JSON.stringify(header1))
         + '.eyJz32IiOiIxMjM0NTY3ODkwIiwibmFtZSI6UkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       const ctx = new Context({
@@ -247,7 +291,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.' + toBase64(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moeGA08mogA';
       const ctx = new Context({
         get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
@@ -292,7 +336,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-        + '.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
+        + '.' + toBase64(JSON.stringify(payload1))
         + '.-I5sDyvGWSA8Qwk6OwM7VLV9Nz3pkINNHakp3S8kOn0';
       const ctx = new Context({
         get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
