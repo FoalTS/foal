@@ -5,6 +5,9 @@ import {
 } from '@foal/core';
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
+// FoalTS
+import { isInvalidTokenError } from './invalid-token.error';
+
 class InvalidTokenResponse extends HttpResponseUnauthorized {
 
   constructor(description: string) {
@@ -102,9 +105,19 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('invalid token');
     }
 
-    const secretOrPublicKey = options.secretOrPublicKey ?
-      await options.secretOrPublicKey(decoded.header, decoded.payload)
-      : config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+    let secretOrPublicKey: string|undefined;
+    if (options.secretOrPublicKey) {
+      try {
+        secretOrPublicKey = await options.secretOrPublicKey(decoded.header, decoded.payload);
+      } catch (error) {
+        if (isInvalidTokenError(error)) {
+          return new InvalidTokenResponse(error.message);
+        }
+        throw error;
+      }
+    } else {
+      secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+    }
     if (secretOrPublicKey === undefined) {
       throw new Error(
         'You must provide a settings.jwt.secretOrPublicKey in default.json or '
@@ -115,7 +128,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     let payload;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey as string, verifyOptions, (err, value) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });

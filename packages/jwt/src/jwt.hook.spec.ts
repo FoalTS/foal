@@ -9,6 +9,7 @@ import {
 import { sign } from 'jsonwebtoken';
 
 // FoalTS
+import { InvalidTokenError } from './invalid-token.error';
 import { JWTOptional } from './jwt-optional.hook';
 import { JWTRequired } from './jwt-required.hook';
 
@@ -283,6 +284,43 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         response.getHeader('WWW-Authenticate'),
         'error="invalid_token", error_description="Unexpected token R in JSON at position 27"'
       );
+    });
+
+    it('should return an HttpResponseUnauthorized object if options.secretOrPublicKey throws an'
+        + ' InvalidTokenError.', async () => {
+      const hook = getHookFunction(JWT({
+        secretOrPublicKey: async () => { throw new InvalidTokenError('invalid kid'); }
+      }));
+      const token = sign({}, secret);
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid kid'
+      });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid kid"'
+      );
+    });
+
+    it('should throw an error if options.secretOrPublicKey throws an error which is not an InvalidTokenError.', () => {
+      const hook = getHookFunction(JWT({
+        secretOrPublicKey: async () => { throw new Error('Connection error'); }
+      }));
+      const token = sign({}, secret);
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+      return (hook(ctx, services) as Promise<any>)
+        .then(() => { throw new Error('An error should have been thrown.'); })
+        .catch(err => strictEqual(err.message, 'Connection error'));
     });
 
   });
