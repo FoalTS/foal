@@ -10,6 +10,7 @@
   "dependencies": {
     "@foal/core": "^0.8.8",
     "@foal/formidable": "^0.8.8",
+    "@foal/jwks-rsa": "^0.8.8",
     "@foal/jwt": "^0.8.8",
     "@foal/mongoose": "^0.8.8",
     "@foal/typeorm": "^0.8.8",
@@ -24,6 +25,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "sqlite3": "^4.0.4",
+    "superagent": "^5.0.5",
     "supertest": "^3.3.0",
     "ts-node": "^3.3.0",
     "typeorm": "^0.2.14",
