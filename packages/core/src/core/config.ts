@@ -175,7 +175,10 @@ export class Config {
     if (value === 'false') {
       return false;
     }
-    const n = parseInt(value, 10);
+    if (value.replace(/ /g, '') === '') {
+      return value;
+    }
+    const n = Number(value);
     if (!isNaN(n)) {
       return n;
     }
