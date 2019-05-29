@@ -128,15 +128,32 @@ describe('Config', () => {
 
       process.env.TEST_FOO_FOO_BAR3 = '36';
       strictEqual(Config.get('test.foo.fooBar3'), 36);
+
+      process.env.TEST_FOO_FOO_BAR4 = '4xxj6lkq8';
+      strictEqual(Config.get('test.foo.fooBar4'), '4xxj6lkq8');
+
+      process.env.TEST_FOO_FOO_BAR5 = '2e2';
+      strictEqual(Config.get('test.foo.fooBar5'), 200);
+
+      process.env.TEST_FOO_FOO_BAR6 = '';
+      strictEqual(Config.get('test.foo.fooBar6'), '');
+
+      process.env.TEST_FOO_FOO_BAR7 = '   ';
+      strictEqual(Config.get('test.foo.fooBar7'), '   ');
     });
 
     it('should parse .env values.', () => {
-      const fileContent = 'FOO_BAR1=true\nFOO_BAR2=false\r\nFOO_BAR3=42\n';
+      const fileContent = 'FOO_BAR1=true\nFOO_BAR2=false\r\nFOO_BAR3=42\n'
+        + 'FOO_BAR4=4xxj6lkq8\nFOO_BAR5=2e2\nFOO_BAR6=\nFOO_BAR7=   \n';
       writeFileSync('.env', fileContent, 'utf8');
 
       strictEqual(Config.get('foo.bar1'), true);
       strictEqual(Config.get('foo.bar2'), false);
       strictEqual(Config.get('foo.bar3'), 42);
+      strictEqual(Config.get('foo.bar4'), '4xxj6lkq8');
+      strictEqual(Config.get('foo.bar5'), 200);
+      strictEqual(Config.get('foo.bar6'), '');
+      strictEqual(Config.get('foo.bar7'), '   ');
     });
 
     it('should use "development" as default environment if none is specified.', () => {
