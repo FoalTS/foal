@@ -121,8 +121,59 @@ describe('FoalTS should support authentification with a JWKS retreived', () => {
       });
   });
 
-  xit('from AWS Cognito.', () => {
+  it('from AWS Cognito.', async () => {
+    const clientId = Config.get('cognito.clientId');
+    const domain = Config.get('cognito.domain');
+    const refreshToken = Config.get('cognito.refreshToken');
+    let token: string;
+    const region = Config.get('cognito.region');
+    const userPoolId = Config.get('cognito.userPoolId');
 
+    try {
+      const { body } = await superagent
+        .post(`https://${domain}.auth.${region}.amazoncognito.com/oauth2/token`)
+        .send('grant_type=refresh_token')
+        .send(`client_id=${clientId}`)
+        .send(`refresh_token=${refreshToken}`);
+      token = body.id_token;
+    } catch (error) {
+      throw new Error('Requesting a new access token failed.');
+    }
+
+    class AppController {
+
+      @Get('/api/users/me')
+      @JWTRequired({
+        secretOrPublicKey: getRSAPublicKeyFromJWKS({
+          cache: true,
+          jwksRequestsPerMinute: 5,
+          jwksUri: `https://cognito-idp.${region}.amazonaws.com/${userPoolId}/.well-known/jwks.json`,
+          rateLimit: true,
+        })
+      }, {
+        algorithms: [ 'RS256' ],
+        audience: clientId,
+        issuer: `https://cognito-idp.${region}.amazonaws.com/${userPoolId}`,
+      })
+      getUser() {
+        return new HttpResponseOK({
+          name: 'Alix'
+        });
+      }
+
+    }
+
+    const app = createApp(AppController);
+
+    return request(app)
+      .get('/api/users/me')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, {
+          name: 'Alix'
+        });
+      });
   });
 
 });
