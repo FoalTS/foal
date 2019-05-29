@@ -54,6 +54,7 @@ function toBase64(headerOrPayload: string): string {
   return Buffer.from(headerOrPayload, 'binary').toString('base64').replace(/=/g, '');
 }
 
+/* tslint:disable-next-line:no-unused-variable */
 function fromBase64(str: string): string {
   return Buffer.from(str, 'base64').toString('binary');
 }

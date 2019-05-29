@@ -31,10 +31,10 @@ describe('FoalTS should support authentification with a JWKS retreived', () => {
     const jwks = {
       keys: [
         {
+          alg: 'RS256',
           e: 'AQAB',
           kid: 'aaa',
           kty: 'RSA',
-          alg: 'RS256',
           n: 'vzoCEC2rpSpJQaWZbUmlsDNwp83Jr4fi6KmBWIwnj1MZ6CUQ7rBasuLI8AcfX5_10scSfQNCsTLV2t'
             + 'MKQaHuvyrVfwY0dINk-nkqB74QcT2oCCH9XduJjDuwWA4xLqAKuF96FsIes52opEM50W7_W7DZCKX'
             + 'kC8fFPFj6QF5ZzApDw2Qsu3yMRmr7_W9uWeaTwfPx24YdY7Ah-fdLy3KN40vXv9c4xiSafVvnx9Bw'
