@@ -60,9 +60,9 @@ describe('[Acceptance test] GraphQLController', () => {
 
   describe('should support common GraphQL clients such as', () => {
     class AppResolver {
-      user(obj, args, context, info) {
+      user(args, context, info) {
         return {
-          id: obj.id,
+          id: args.id,
           name: 'someone!'
         };
       }
@@ -116,9 +116,9 @@ describe('[Acceptance test] GraphQLController', () => {
 
   it('should work with type definitions located in separate files.', async () => {
     class AppResolver {
-      user(obj, args, context, info) {
+      user(args, context, info) {
         return {
-          id: obj.id,
+          id: args.id,
           name: 'someone!'
         };
       }
