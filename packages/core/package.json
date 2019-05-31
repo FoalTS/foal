@@ -14,6 +14,7 @@
     "dev:test:core": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/core/**/*.spec.ts\"",
     "dev:test:express": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/express/**/*.spec.ts\"",
     "dev:test:openapi": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/openapi/**/*.spec.ts\"",
+    "dev:test:sessions": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/sessions/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
