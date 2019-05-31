@@ -8,6 +8,18 @@
       "script": "build:app",
       "label": "build",
       "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "build:test",
+      "label": "build:test",
+      "problemMatcher": [],
+    },
+    {
+      "type": "npm",
+      "script": "build:e2e",
+      "label": "build:e2e",
+      "problemMatcher": [],
     }
   ]
 }
