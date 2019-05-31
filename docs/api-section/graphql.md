@@ -311,7 +311,7 @@ const schema = buildSchema(`
 `);
 
 const root = {
-  hello: (obj, args, context, info) => {
+  hello: (_, context) => {
     if (!context.user.isAdmin) {
       return null;
     }
