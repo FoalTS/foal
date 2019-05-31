@@ -18,7 +18,7 @@
 
 ▸ **renderToString**(template: *`string`*, locals: *`object`*): `string`
 
-*Defined in [index.ts:17](https://github.com/FoalTS/foal/blob/7934e4d7/packages/ejs/src/index.ts#L17)*
+*Defined in [index.ts:17](https://github.com/FoalTS/foal/blob/cf326d07/packages/ejs/src/index.ts#L17)*
 
 Util function to render a template using EJS. It is used by the `render` function in `@foal/core`.
 

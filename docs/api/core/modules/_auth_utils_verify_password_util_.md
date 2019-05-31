@@ -18,7 +18,7 @@
 
 ▸ **verifyPassword**(plainTextPassword: *`string`*, passwordHash: *`string`*, options?: *`object`*): `Promise`<`boolean`>
 
-*Defined in [auth/utils/verify-password.util.ts:14](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/utils/verify-password.util.ts#L14)*
+*Defined in [auth/utils/verify-password.util.ts:14](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/verify-password.util.ts#L14)*
 
 Compare a plain text password and a hash to see if they match.
 

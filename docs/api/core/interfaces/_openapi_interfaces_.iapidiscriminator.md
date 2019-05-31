@@ -33,7 +33,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● mapping**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1784](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1784)*
+*Defined in [openapi/interfaces.ts:1784](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1784)*
 
 An object to hold mappings between payload values and schema names or references.
 
@@ -50,7 +50,7 @@ ___
 
 **● propertyName**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1773](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1773)*
+*Defined in [openapi/interfaces.ts:1773](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1773)*
 
 The name of the property in the payload that will hold the discriminator value.
 

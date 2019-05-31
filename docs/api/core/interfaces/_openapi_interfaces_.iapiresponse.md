@@ -33,7 +33,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● content**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1363](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1363)*
+*Defined in [openapi/interfaces.ts:1363](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1363)*
 
 A map containing descriptions of potential response payloads. The key is a media type or media type range and the value describes it. For responses that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/\*
 
@@ -50,7 +50,7 @@ ___
 
 **● description**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1334](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1334)*
+*Defined in [openapi/interfaces.ts:1334](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1334)*
 
 A short description of the response. CommonMark syntax MAY be used for rich text representation.
 
@@ -67,7 +67,7 @@ ___
 
 **● headers**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1347](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1347)*
+*Defined in [openapi/interfaces.ts:1347](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1347)*
 
 Maps a header name to its definition. RFC7230 states header names are case insensitive. If a response header is defined with the name "Content-Type", it SHALL be ignored.
 
@@ -84,7 +84,7 @@ ___
 
 **● links**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1378](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1378)*
+*Defined in [openapi/interfaces.ts:1378](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1378)*
 
 A map of operations links that can be followed from the response. The key of the map is a short name for the link, following the naming constraints of the names for Component Objects.
 

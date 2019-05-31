@@ -19,7 +19,7 @@
 
 ▸ **encryptPassword**(plainTextPassword: *`string`*, options?: *`object`*): `Promise`<`string`>
 
-*Defined in [auth/utils/encrypt-password.util.ts:34](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/utils/encrypt-password.util.ts#L34)*
+*Defined in [auth/utils/encrypt-password.util.ts:34](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/encrypt-password.util.ts#L34)*
 
 Hash a password using the PBKDF2 algorithm.
 
@@ -53,7 +53,7 @@ ___
 
 ▸ **parsePassword**(password: *`string`*): `Promise`<`string`>
 
-*Defined in [auth/utils/encrypt-password.util.ts:8](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/utils/encrypt-password.util.ts#L8)*
+*Defined in [auth/utils/encrypt-password.util.ts:8](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/encrypt-password.util.ts#L8)*
 
 Legacy function to hash passwords. Only kept for backward compatibility.
 

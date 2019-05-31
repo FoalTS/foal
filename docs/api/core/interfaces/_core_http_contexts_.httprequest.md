@@ -217,7 +217,7 @@ ___
 
 **● csrfToken**: *`function`*
 
-*Defined in [core/http/contexts.ts:13](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L13)*
+*Defined in [core/http/contexts.ts:13](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L13)*
 
 #### Type declaration
 ▸(): `string`
@@ -519,7 +519,7 @@ ___
 
 **● session**: *`any`*
 
-*Defined in [core/http/contexts.ts:12](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L12)*
+*Defined in [core/http/contexts.ts:12](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L12)*
 
 ___
 <a id="signedcookies"></a>

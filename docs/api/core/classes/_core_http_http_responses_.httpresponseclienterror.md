@@ -66,7 +66,7 @@ Represent an HTTP response with a client error status 4xx.
 
 *Overrides [HttpResponse](_core_http_http_responses_.httpresponse.md).[constructor](_core_http_http_responses_.httpresponse.md#constructor)*
 
-*Defined in [core/http/http-responses.ts:556](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L556)*
+*Defined in [core/http/http-responses.ts:556](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L556)*
 
 Create an instance of HttpResponseClientError.
 
@@ -96,7 +96,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[body](_core_http_http_responses_.httpresponse.md#body)*
 
-*Defined in [core/http/http-responses.ts:75](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L75)*
+*Defined in [core/http/http-responses.ts:75](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L75)*
 
 ___
 <a id="ishttpresponse"></a>
@@ -107,7 +107,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[isHttpResponse](_core_http_http_responses_.httpresponse.md#ishttpresponse)*
 
-*Defined in [core/http/http-responses.ts:40](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L40)*
+*Defined in [core/http/http-responses.ts:40](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L40)*
 
 Property used internally by isHttpResponse.
 
@@ -120,7 +120,7 @@ ___
 
 **● isHttpResponseClientError**: *`true`* = true
 
-*Defined in [core/http/http-responses.ts:556](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L556)*
+*Defined in [core/http/http-responses.ts:556](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L556)*
 
 Property used internally by isHttpResponseClientError.
 
@@ -135,7 +135,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[statusCode](_core_http_http_responses_.httpresponse.md#statuscode)*
 
-*Defined in [core/http/http-responses.ts:49](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L49)*
+*Defined in [core/http/http-responses.ts:49](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L49)*
 
 Status code of the response.
 
@@ -154,7 +154,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[statusMessage](_core_http_http_responses_.httpresponse.md#statusmessage)*
 
-*Defined in [core/http/http-responses.ts:58](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L58)*
+*Defined in [core/http/http-responses.ts:58](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L58)*
 
 Status message of the response. It must follow the HTTP conventions and be consistent with the statusCode property.
 
@@ -173,7 +173,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[stream](_core_http_http_responses_.httpresponse.md#stream)*
 
-*Defined in [core/http/http-responses.ts:65](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L65)*
+*Defined in [core/http/http-responses.ts:65](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L65)*
 
 Specify if the body property is a stream.
 
@@ -193,7 +193,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[getCookie](_core_http_http_responses_.httpresponse.md#getcookie)*
 
-*Defined in [core/http/http-responses.ts:132](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L132)*
+*Defined in [core/http/http-responses.ts:132](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L132)*
 
 Read the value and directives of a cookie added with setCookie.
 
@@ -218,7 +218,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[getCookies](_core_http_http_responses_.httpresponse.md#getcookies)*
 
-*Defined in [core/http/http-responses.ts:147](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L147)*
+*Defined in [core/http/http-responses.ts:147](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L147)*
 
 Read all the cookies added with setCookie.
 
@@ -237,7 +237,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[getHeader](_core_http_http_responses_.httpresponse.md#getheader)*
 
-*Defined in [core/http/http-responses.ts:98](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L98)*
+*Defined in [core/http/http-responses.ts:98](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L98)*
 
 Read the value of a header added with setHeader.
 
@@ -262,7 +262,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[getHeaders](_core_http_http_responses_.httpresponse.md#getheaders)*
 
-*Defined in [core/http/http-responses.ts:108](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L108)*
+*Defined in [core/http/http-responses.ts:108](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L108)*
 
 Read all the headers added with setHeader.
 
@@ -280,7 +280,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[setCookie](_core_http_http_responses_.httpresponse.md#setcookie)*
 
-*Defined in [core/http/http-responses.ts:120](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L120)*
+*Defined in [core/http/http-responses.ts:120](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L120)*
 
 Add or replace a cookie in the response.
 
@@ -305,7 +305,7 @@ ___
 
 *Inherited from [HttpResponse](_core_http_http_responses_.httpresponse.md).[setHeader](_core_http_http_responses_.httpresponse.md#setheader)*
 
-*Defined in [core/http/http-responses.ts:86](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L86)*
+*Defined in [core/http/http-responses.ts:86](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L86)*
 
 Add or replace a header in the response.
 

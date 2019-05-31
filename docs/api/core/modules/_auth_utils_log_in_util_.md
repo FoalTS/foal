@@ -18,7 +18,7 @@
 
 ▸ **logIn**(ctx: *[Context](../classes/_core_http_contexts_.context.md)*, user: *`object`*, idKey?: *`string`*): `void`
 
-*Defined in [auth/utils/log-in.util.ts:11](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/utils/log-in.util.ts#L11)*
+*Defined in [auth/utils/log-in.util.ts:11](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/log-in.util.ts#L11)*
 
 Save the user id in the current session.
 

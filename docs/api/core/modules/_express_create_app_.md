@@ -22,7 +22,7 @@
 
 ▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, options?: *[CreateAppOptions](../interfaces/_express_create_app_.createappoptions.md)*, expressInstance?: *`any`*): `any`
 
-*Defined in [express/create-app.ts:38](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/express/create-app.ts#L38)*
+*Defined in [express/create-app.ts:39](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/express/create-app.ts#L39)*
 
 Create an express application from the root controller of the Foal project.
 

@@ -31,7 +31,7 @@
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1876)*
+*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1876)*
 
 A short description for security scheme. CommonMark syntax MAY be used for rich text representation.
 
@@ -48,7 +48,7 @@ ___
 
 **● type**: *"apiKey" \| "http" \| "oauth2" \| "openIdConnect"*
 
-*Defined in [openapi/interfaces.ts:1866](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1866)*
+*Defined in [openapi/interfaces.ts:1866](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1866)*
 
 The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".
 

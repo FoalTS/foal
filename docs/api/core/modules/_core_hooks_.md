@@ -25,7 +25,7 @@
 
 **Ƭ HookDecorator**: *`function`*
 
-*Defined in [core/hooks.ts:29](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/hooks.ts#L29)*
+*Defined in [core/hooks.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/hooks.ts#L29)*
 
 Interface of a hook. It is actually the interface of a decorator.
 
@@ -50,7 +50,7 @@ ___
 
 **Ƭ HookFunction**: *`function`*
 
-*Defined in [core/hooks.ts:21](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/hooks.ts#L21)*
+*Defined in [core/hooks.ts:21](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/hooks.ts#L21)*
 
 Interface of a function from which a hook can be created.
 
@@ -75,7 +75,7 @@ ___
 
 **Ƭ HookPostFunction**: *`function`*
 
-*Defined in [core/hooks.ts:14](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/hooks.ts#L14)*
+*Defined in [core/hooks.ts:14](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/hooks.ts#L14)*
 
 Interface of a function that can be returned in a hook function. This function is then executed after the controller method execution.
 
@@ -104,7 +104,7 @@ ___
 
 ▸ **Hook**(hookFunction: *[HookFunction](_core_hooks_.md#hookfunction)*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [core/hooks.ts:38](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/hooks.ts#L38)*
+*Defined in [core/hooks.ts:38](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/hooks.ts#L38)*
 
 Create a hook from a function.
 
@@ -126,7 +126,7 @@ ___
 
 ▸ **getHookFunction**(hook: *[HookDecorator](_core_hooks_.md#hookdecorator)*): [HookFunction](_core_hooks_.md#hookfunction)
 
-*Defined in [core/hooks.ts:54](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/hooks.ts#L54)*
+*Defined in [core/hooks.ts:54](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/hooks.ts#L54)*
 
 Get the function from which the hook was made.
 

@@ -18,7 +18,7 @@
 
 ▸ **LoginOptional**(options: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [auth/login-optional.hook.ts:15](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/login-optional.hook.ts#L15)*
+*Defined in [auth/login-optional.hook.ts:15](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/login-optional.hook.ts#L15)*
 
 Hook factory to authenticate users using cookies and sessions.
 

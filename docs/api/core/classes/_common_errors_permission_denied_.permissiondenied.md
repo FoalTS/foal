@@ -41,7 +41,7 @@ Represent the prohibition to perform an action that was expected to be accessibl
 
 ⊕ **new PermissionDenied**(content?: *`any`*): [PermissionDenied](_common_errors_permission_denied_.permissiondenied.md)
 
-*Defined in [common/errors/permission-denied.ts:9](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/permission-denied.ts#L9)*
+*Defined in [common/errors/permission-denied.ts:9](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/permission-denied.ts#L9)*
 
 **Parameters:**
 
@@ -61,7 +61,7 @@ ___
 
 **● content**: *`any`*
 
-*Defined in [common/errors/permission-denied.ts:11](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/permission-denied.ts#L11)*
+*Defined in [common/errors/permission-denied.ts:11](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/permission-denied.ts#L11)*
 
 ___
 <a id="ispermissiondenied"></a>
@@ -70,7 +70,7 @@ ___
 
 **● isPermissionDenied**: *`true`* = true
 
-*Defined in [common/errors/permission-denied.ts:9](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/permission-denied.ts#L9)*
+*Defined in [common/errors/permission-denied.ts:9](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/permission-denied.ts#L9)*
 
 ___
 <a id="message"></a>

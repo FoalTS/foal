@@ -18,7 +18,7 @@
 
 ▸ **Login**(required: *`boolean`*, options: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [auth/login.hook.ts:17](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/login.hook.ts#L17)*
+*Defined in [auth/login.hook.ts:17](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/login.hook.ts#L17)*
 
 Sub-function used by LoginRequired and LoginOptional to avoid code duplication.
 

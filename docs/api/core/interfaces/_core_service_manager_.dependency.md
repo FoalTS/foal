@@ -23,7 +23,7 @@
 
 **● propertyKey**: *`string`*
 
-*Defined in [core/service-manager.ts:6](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/service-manager.ts#L6)*
+*Defined in [core/service-manager.ts:6](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L6)*
 
 ___
 <a id="serviceclass"></a>
@@ -32,7 +32,7 @@ ___
 
 **● serviceClass**: *[Class](../modules/_core_class_interface_.md#class)*
 
-*Defined in [core/service-manager.ts:7](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/service-manager.ts#L7)*
+*Defined in [core/service-manager.ts:7](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L7)*
 
 ___
 

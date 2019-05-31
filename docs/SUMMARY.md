@@ -100,6 +100,8 @@
 * [@foal/core](./api/core/README.md)
 * [@foal/ejs](./api/ejs/README.md)
 * [@foal/formidable](./api/formidable/README.md)
+* [@foal/graphql](./api/graphql/README.md)
+* [@foal/jwks-rsa](./api/jwks-rsa/README.md)
 * [@foal/jwt](./api/jwt/README.md)
 * [@foal/mongoose](./api/mongoose/README.md)
 * [@foal/password](./api/password/README.md)

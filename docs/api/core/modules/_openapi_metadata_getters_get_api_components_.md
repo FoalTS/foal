@@ -18,7 +18,7 @@
 
 ▸ **getApiComponents**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)
 
-*Defined in [openapi/metadata-getters/get-api-components.ts:7](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/metadata-getters/get-api-components.ts#L7)*
+*Defined in [openapi/metadata-getters/get-api-components.ts:7](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-components.ts#L7)*
 
 **Parameters:**
 

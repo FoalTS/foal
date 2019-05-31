@@ -18,7 +18,7 @@
 
 ▸ **getApiTags**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiTag](../interfaces/_openapi_interfaces_.iapitag.md)[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-tags.ts:5](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/metadata-getters/get-api-tags.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-tags.ts:5](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-tags.ts#L5)*
 
 **Parameters:**
 
