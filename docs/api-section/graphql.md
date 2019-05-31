@@ -134,9 +134,10 @@ type User {
 *api.controller.ts*
 ```typescript
 import { GraphQLController, schemaFromTypeGlob } from '@foal/graphql';
+import { join } from 'path';
 
 export class ApiController extends GraphQLController {
-  schema = schemaFromTypeGlob('./src/app/**/*.graphql');
+  schema = schemaFromTypeGlob(join(__dirname, '**/*.graphql'));
   // ...
 }
 ```
@@ -161,11 +162,12 @@ Note that for this to work, you must copy the graphql files during the build. To
 > Alternatively, if you want to specify only specific files instead of using a glob pattern, you can call `schemaFromTypePaths`.
 > ```typescript
 > import { GraphQLController, schemaFromTypePaths } from '@foal/graphql';
+> import { join } from 'path';
 >
 > export class ApiController extends GraphQLController {
 >   schema = schemaFromTypePaths(
->     './src/app/controllers/query.graphql',
->     './src/app/controllers/user.graphql'
+>     join(__dirname, './query.graphql'),
+>     join(__dirname, './user.graphql')
 >   );
 >   // ...
 > }
