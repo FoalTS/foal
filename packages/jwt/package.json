@@ -1,6 +1,6 @@
 {
   "name": "@foal/jwt",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "Authentication with JWT for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -40,7 +40,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.8",
+    "@foal/core": "^0.8.9",
     "@types/jsonwebtoken": "^8.3.0",
     "jsonwebtoken": "^8.3.0"
   },
@@ -51,8 +51,8 @@
     "rimraf": "^2.6.2",
     "sqlite3": "^4.0.4",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2",
     "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0"
+    "typedoc-plugin-markdown": "^1.2.0",
+    "typescript": "^2.5.2"
   }
 }
