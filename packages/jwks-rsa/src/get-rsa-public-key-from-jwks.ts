@@ -21,6 +21,14 @@ export interface Options {
   handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
 }
 
+/**
+ * Create a function to retreive the RSA public key from a JWKS endpoint based on the kid of
+ * the given JWT header.
+ *
+ * @export
+ * @param {Options} options - Options of the jwks-rsa package.
+ * @returns {(header: any, payload: any) => Promise<string>} The returned function.
+ */
 export function getRSAPublicKeyFromJWKS(options: Options): (header: any, payload: any) => Promise<string> {
   return async ({ alg, kid }) => {
     if (alg !== 'RS256') {
