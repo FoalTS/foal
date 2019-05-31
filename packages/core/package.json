@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -77,6 +77,7 @@
   "dependencies": {
     "@types/express": "^4.16.1",
     "ajv": "^6.5.0",
+    "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.3",
     "csurf": "^1.9.0",
     "express": "^4.16.3",
@@ -86,7 +87,7 @@
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "@foal/ejs": "^0.8.8",
+    "@foal/ejs": "^0.8.9",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
@@ -99,9 +100,9 @@
     "source-map-support": "^0.5.6",
     "supertest": "^3.1.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2",
-    "yamljs": "^0.3.0",
     "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0"
+    "typedoc-plugin-markdown": "^1.2.0",
+    "typescript": "^2.5.2",
+    "yamljs": "^0.3.0"
   }
 }

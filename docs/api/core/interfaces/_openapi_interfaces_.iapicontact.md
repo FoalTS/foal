@@ -32,7 +32,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● email**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:201](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L201)*
+*Defined in [openapi/interfaces.ts:201](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L201)*
 
 The email address of the contact person/organization. MUST be in the format of an email address.
 
@@ -49,7 +49,7 @@ ___
 
 **● name**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:182](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L182)*
+*Defined in [openapi/interfaces.ts:182](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L182)*
 
 The identifying name of the contact person/organization.
 
@@ -66,7 +66,7 @@ ___
 
 **● url**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:191](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L191)*
+*Defined in [openapi/interfaces.ts:191](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L191)*
 
 The URL pointing to the contact information. MUST be in the format of a URL.
 

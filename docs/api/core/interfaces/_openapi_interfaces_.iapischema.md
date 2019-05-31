@@ -66,7 +66,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● additionalProperties**: *`boolean` \| [IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1658](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1658)*
+*Defined in [openapi/interfaces.ts:1658](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1658)*
 
 ___
 <a id="allof"></a>
@@ -75,7 +75,7 @@ ___
 
 **● allOf**: *([IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md))[]*
 
-*Defined in [openapi/interfaces.ts:1650](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1650)*
+*Defined in [openapi/interfaces.ts:1650](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1650)*
 
 ___
 <a id="anyof"></a>
@@ -84,7 +84,7 @@ ___
 
 **● anyOf**: *([IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md))[]*
 
-*Defined in [openapi/interfaces.ts:1652](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1652)*
+*Defined in [openapi/interfaces.ts:1652](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1652)*
 
 ___
 <a id="default"></a>
@@ -93,7 +93,7 @@ ___
 
 **● default**: *`any`*
 
-*Defined in [openapi/interfaces.ts:1661](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1661)*
+*Defined in [openapi/interfaces.ts:1661](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1661)*
 
 ___
 <a id="deprecated"></a>
@@ -102,7 +102,7 @@ ___
 
 **● deprecated**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1747](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1747)*
+*Defined in [openapi/interfaces.ts:1747](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1747)*
 
 Specifies that a schema is deprecated and SHOULD be transitioned out of usage. Default value is false.
 
@@ -119,7 +119,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1659](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1659)*
+*Defined in [openapi/interfaces.ts:1659](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1659)*
 
 ___
 <a id="discriminator"></a>
@@ -128,7 +128,7 @@ ___
 
 **● discriminator**: *[IApiDiscriminator](_openapi_interfaces_.iapidiscriminator.md)*
 
-*Defined in [openapi/interfaces.ts:1681](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1681)*
+*Defined in [openapi/interfaces.ts:1681](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1681)*
 
 Adds support for polymorphism. The discriminator is an object name that is used to differentiate between other schemas which may satisfy the payload description. See Composition and Inheritance for more details.
 
@@ -145,7 +145,7 @@ ___
 
 **● enum**: *`any`[]*
 
-*Defined in [openapi/interfaces.ts:1648](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1648)*
+*Defined in [openapi/interfaces.ts:1648](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1648)*
 
 ___
 <a id="example"></a>
@@ -154,7 +154,7 @@ ___
 
 **● example**: *`any`*
 
-*Defined in [openapi/interfaces.ts:1737](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1737)*
+*Defined in [openapi/interfaces.ts:1737](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1737)*
 
 A free-form property to include an example of an instance for this schema. To represent examples that cannot be naturally represented in JSON or YAML, a string value can be used to contain the example with escaping where necessary.
 
@@ -171,7 +171,7 @@ ___
 
 **● exclusiveMaximum**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1636](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1636)*
+*Defined in [openapi/interfaces.ts:1636](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1636)*
 
 ___
 <a id="exclusiveminimum"></a>
@@ -180,7 +180,7 @@ ___
 
 **● exclusiveMinimum**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1638](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1638)*
+*Defined in [openapi/interfaces.ts:1638](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1638)*
 
 ___
 <a id="externaldocs"></a>
@@ -189,7 +189,7 @@ ___
 
 **● externalDocs**: *[IApiExternalDocumentation](_openapi_interfaces_.iapiexternaldocumentation.md)*
 
-*Defined in [openapi/interfaces.ts:1726](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1726)*
+*Defined in [openapi/interfaces.ts:1726](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1726)*
 
 Additional external documentation for this schema.
 
@@ -206,7 +206,7 @@ ___
 
 **● format**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1660](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1660)*
+*Defined in [openapi/interfaces.ts:1660](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1660)*
 
 ___
 <a id="items"></a>
@@ -215,7 +215,7 @@ ___
 
 **● items**: *[IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1654](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1654)*
+*Defined in [openapi/interfaces.ts:1654](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1654)*
 
 ___
 <a id="maxitems"></a>
@@ -224,7 +224,7 @@ ___
 
 **● maxItems**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1642](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1642)*
+*Defined in [openapi/interfaces.ts:1642](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1642)*
 
 ___
 <a id="maxlength"></a>
@@ -233,7 +233,7 @@ ___
 
 **● maxLength**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1639](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1639)*
+*Defined in [openapi/interfaces.ts:1639](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1639)*
 
 ___
 <a id="maxproperties"></a>
@@ -242,7 +242,7 @@ ___
 
 **● maxProperties**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1645](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1645)*
+*Defined in [openapi/interfaces.ts:1645](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1645)*
 
 ___
 <a id="maximum"></a>
@@ -251,7 +251,7 @@ ___
 
 **● maximum**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1635](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1635)*
+*Defined in [openapi/interfaces.ts:1635](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1635)*
 
 ___
 <a id="minitems"></a>
@@ -260,7 +260,7 @@ ___
 
 **● minItems**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1643](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1643)*
+*Defined in [openapi/interfaces.ts:1643](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1643)*
 
 ___
 <a id="minlength"></a>
@@ -269,7 +269,7 @@ ___
 
 **● minLength**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1640](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1640)*
+*Defined in [openapi/interfaces.ts:1640](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1640)*
 
 ___
 <a id="minproperties"></a>
@@ -278,7 +278,7 @@ ___
 
 **● minProperties**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1646](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1646)*
+*Defined in [openapi/interfaces.ts:1646](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1646)*
 
 ___
 <a id="minimum"></a>
@@ -287,7 +287,7 @@ ___
 
 **● minimum**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1637](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1637)*
+*Defined in [openapi/interfaces.ts:1637](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1637)*
 
 ___
 <a id="multipleof"></a>
@@ -296,7 +296,7 @@ ___
 
 **● multipleOf**: *`undefined` \| `number`*
 
-*Defined in [openapi/interfaces.ts:1634](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1634)*
+*Defined in [openapi/interfaces.ts:1634](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1634)*
 
 ___
 <a id="not"></a>
@@ -305,7 +305,7 @@ ___
 
 **● not**: *[IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1653](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1653)*
+*Defined in [openapi/interfaces.ts:1653](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1653)*
 
 ___
 <a id="nullable"></a>
@@ -314,7 +314,7 @@ ___
 
 **● nullable**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1670](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1670)*
+*Defined in [openapi/interfaces.ts:1670](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1670)*
 
 Allows sending a null value for the defined schema. Default value is false.
 
@@ -331,7 +331,7 @@ ___
 
 **● oneOf**: *([IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md))[]*
 
-*Defined in [openapi/interfaces.ts:1651](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1651)*
+*Defined in [openapi/interfaces.ts:1651](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1651)*
 
 ___
 <a id="pattern"></a>
@@ -340,7 +340,7 @@ ___
 
 **● pattern**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1641](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1641)*
+*Defined in [openapi/interfaces.ts:1641](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1641)*
 
 ___
 <a id="properties"></a>
@@ -349,7 +349,7 @@ ___
 
 **● properties**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1655](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1655)*
+*Defined in [openapi/interfaces.ts:1655](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1655)*
 
 ___
 <a id="readonly"></a>
@@ -358,7 +358,7 @@ ___
 
 **● readOnly**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1694](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1694)*
+*Defined in [openapi/interfaces.ts:1694](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1694)*
 
 Relevant only for Schema "properties" definitions. Declares the property as "read only". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request. If the property is marked as readOnly being true and is in the required list, the required will take effect on the response only. A property MUST NOT be marked as both readOnly and writeOnly being true. Default value is false.
 
@@ -375,7 +375,7 @@ ___
 
 **● required**: *`string`[]*
 
-*Defined in [openapi/interfaces.ts:1647](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1647)*
+*Defined in [openapi/interfaces.ts:1647](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1647)*
 
 ___
 <a id="title"></a>
@@ -384,7 +384,7 @@ ___
 
 **● title**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1633](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1633)*
+*Defined in [openapi/interfaces.ts:1633](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1633)*
 
 ___
 <a id="type"></a>
@@ -393,7 +393,7 @@ ___
 
 **● type**: *"null" \| "boolean" \| "object" \| "array" \| "number" \| "string" \| "integer"*
 
-*Defined in [openapi/interfaces.ts:1649](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1649)*
+*Defined in [openapi/interfaces.ts:1649](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1649)*
 
 ___
 <a id="uniqueitems"></a>
@@ -402,7 +402,7 @@ ___
 
 **● uniqueItems**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1644](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1644)*
+*Defined in [openapi/interfaces.ts:1644](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1644)*
 
 ___
 <a id="writeonly"></a>
@@ -411,7 +411,7 @@ ___
 
 **● writeOnly**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1707](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1707)*
+*Defined in [openapi/interfaces.ts:1707](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1707)*
 
 Relevant only for Schema "properties" definitions. Declares the property as "write only". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response. If the property is marked as writeOnly being true and is in the required list, the required will take effect on the request only. A property MUST NOT be marked as both readOnly and writeOnly being true. Default value is false.
 
@@ -428,7 +428,7 @@ ___
 
 **● xml**: *[IApiXML](_openapi_interfaces_.iapixml.md)*
 
-*Defined in [openapi/interfaces.ts:1717](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L1717)*
+*Defined in [openapi/interfaces.ts:1717](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1717)*
 
 This MAY be used only on properties schemas. It has no effect on root schemas. Adds additional metadata to describe the XML representation of this property.
 

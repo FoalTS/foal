@@ -18,6 +18,7 @@ Options of the hooks created by JWTRequired and JWTOptional.
 
 * [blackList](_jwt_hook_.jwtoptions.md#blacklist)
 * [cookie](_jwt_hook_.jwtoptions.md#cookie)
+* [secretOrPublicKey](_jwt_hook_.jwtoptions.md#secretorpublickey)
 * [user](_jwt_hook_.jwtoptions.md#user)
 
 ---
@@ -30,7 +31,7 @@ Options of the hooks created by JWTRequired and JWTOptional.
 
 **● blackList**: *`undefined` \| `function`*
 
-*Defined in [jwt.hook.ts:16](https://github.com/FoalTS/foal/blob/7934e4d7/packages/jwt/src/jwt.hook.ts#L16)*
+*Defined in [jwt.hook.ts:40](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L40)*
 
 ___
 <a id="cookie"></a>
@@ -39,7 +40,16 @@ ___
 
 **● cookie**: *`undefined` \| `false` \| `true`*
 
-*Defined in [jwt.hook.ts:17](https://github.com/FoalTS/foal/blob/7934e4d7/packages/jwt/src/jwt.hook.ts#L17)*
+*Defined in [jwt.hook.ts:41](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L41)*
+
+___
+<a id="secretorpublickey"></a>
+
+### `<Optional>` secretOrPublicKey
+
+**● secretOrPublicKey**: *`undefined` \| `function`*
+
+*Defined in [jwt.hook.ts:39](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L39)*
 
 ___
 <a id="user"></a>
@@ -48,7 +58,7 @@ ___
 
 **● user**: *`undefined` \| `function`*
 
-*Defined in [jwt.hook.ts:15](https://github.com/FoalTS/foal/blob/7934e4d7/packages/jwt/src/jwt.hook.ts#L15)*
+*Defined in [jwt.hook.ts:38](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L38)*
 
 ___
 

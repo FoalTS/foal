@@ -18,7 +18,7 @@
 
 ▸ **LoginRequired**(options: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [auth/login-required.hook.ts:16](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/auth/login-required.hook.ts#L16)*
+*Defined in [auth/login-required.hook.ts:16](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/login-required.hook.ts#L16)*
 
 Hook factory to authenticate users using cookies and sessions.
 

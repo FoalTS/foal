@@ -31,7 +31,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:781](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L781)*
+*Defined in [openapi/interfaces.ts:781](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L781)*
 
 A short description of the target documentation. CommonMark syntax MAY be used for rich text representation.
 
@@ -48,7 +48,7 @@ ___
 
 **● url**: *`string`*
 
-*Defined in [openapi/interfaces.ts:790](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L790)*
+*Defined in [openapi/interfaces.ts:790](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L790)*
 
 The URL for the target documentation. Value MUST be in the format of a URL.
 

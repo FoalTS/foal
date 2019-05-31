@@ -18,7 +18,7 @@
 
 ▸ **fetchUser**(userModel: *`Model`<`any`>*): `function`
 
-*Defined in [utils/fetch-user.util.ts:19](https://github.com/FoalTS/foal/blob/7934e4d7/packages/mongoose/src/utils/fetch-user.util.ts#L19)*
+*Defined in [utils/fetch-user.util.ts:19](https://github.com/FoalTS/foal/blob/cf326d07/packages/mongoose/src/utils/fetch-user.util.ts#L19)*
 
 Create a function that finds the first document that matches some id.
 

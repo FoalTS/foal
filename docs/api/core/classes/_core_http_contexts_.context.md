@@ -42,7 +42,7 @@ Class instantiated on each request. It includes:
 
 ⊕ **new Context**(request: *`any`*): [Context](_core_http_contexts_.context.md)
 
-*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L29)*
+*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L29)*
 
 Creates an instance of Context.
 
@@ -66,7 +66,7 @@ ___
 
 **● request**: *[HTTPRequest](../interfaces/_core_http_contexts_.httprequest.md)*
 
-*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L29)*
+*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L29)*
 
 ___
 <a id="state"></a>
@@ -75,7 +75,7 @@ ___
 
 **● state**: *`object`*
 
-*Defined in [core/http/contexts.ts:27](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L27)*
+*Defined in [core/http/contexts.ts:27](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L27)*
 
 #### Type declaration
 
@@ -88,7 +88,7 @@ ___
 
 **● user**: *`User`*
 
-*Defined in [core/http/contexts.ts:28](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/contexts.ts#L28)*
+*Defined in [core/http/contexts.ts:28](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L28)*
 
 ___
 

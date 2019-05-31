@@ -28,7 +28,7 @@ Options of the `createApp` function.
 
 ▸ **store**(session: *`any`*): `any`
 
-*Defined in [express/create-app.ts:26](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/express/create-app.ts#L26)*
+*Defined in [express/create-app.ts:27](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/express/create-app.ts#L27)*
 
 **Parameters:**
 

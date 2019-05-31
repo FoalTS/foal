@@ -20,7 +20,7 @@
 
 ▸ **createOpenApiDocument**(controllerClass: *[Class](_core_class_interface_.md#class)*): [IOpenAPI](../interfaces/_openapi_interfaces_.iopenapi.md)
 
-*Defined in [openapi/create-open-api-document.ts:83](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/create-open-api-document.ts#L83)*
+*Defined in [openapi/create-open-api-document.ts:83](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/create-open-api-document.ts#L83)*
 
 **Parameters:**
 
@@ -37,7 +37,7 @@ ___
 
 ▸ **getPaths**(controllerClass: *[Class](_core_class_interface_.md#class)*, operation: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)*): `object`
 
-*Defined in [openapi/create-open-api-document.ts:28](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/create-open-api-document.ts#L28)*
+*Defined in [openapi/create-open-api-document.ts:28](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/create-open-api-document.ts#L28)*
 
 **Parameters:**
 
@@ -55,7 +55,7 @@ ___
 
 ▸ **throwErrorIfDuplicatePaths**(paths: *[IApiPaths](../interfaces/_openapi_interfaces_.iapipaths.md)*): `void`
 
-*Defined in [openapi/create-open-api-document.ts:9](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/create-open-api-document.ts#L9)*
+*Defined in [openapi/create-open-api-document.ts:9](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/create-open-api-document.ts#L9)*
 
 **Parameters:**
 

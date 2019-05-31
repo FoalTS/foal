@@ -18,7 +18,7 @@
 
 ▸ **fetchUserWithPermissions**(userEntityClass: *`Class`<`object`>*): `function`
 
-*Defined in [utils/fetch-user-with-permissions.util.ts:21](https://github.com/FoalTS/foal/blob/7934e4d7/packages/typeorm/src/utils/fetch-user-with-permissions.util.ts#L21)*
+*Defined in [utils/fetch-user-with-permissions.util.ts:21](https://github.com/FoalTS/foal/blob/cf326d07/packages/typeorm/src/utils/fetch-user-with-permissions.util.ts#L21)*
 
 Create a function that finds the first entity that matches some id. Groups and permissions are also retreived so that `UserWithPermissions.hasPerm` and `PermissionRequired` can be used.
 

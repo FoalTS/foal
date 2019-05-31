@@ -18,7 +18,7 @@
 
 ▸ **render**(templatePath: *`string`*, locals: *`object`*, dirname: *`string`*): [HttpResponseOK](../classes/_core_http_http_responses_.httpresponseok.md)
 
-*Defined in [common/utils/render.util.ts:19](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/utils/render.util.ts#L19)*
+*Defined in [common/utils/render.util.ts:19](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/utils/render.util.ts#L19)*
 
 Render a template in a new HttpResponseOK object.
 

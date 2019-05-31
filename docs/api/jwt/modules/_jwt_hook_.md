@@ -4,6 +4,11 @@
 
 ## Index
 
+### Classes
+
+* [InvalidRequestResponse](../classes/_jwt_hook_.invalidrequestresponse.md)
+* [InvalidTokenResponse](../classes/_jwt_hook_.invalidtokenresponse.md)
+
 ### Interfaces
 
 * [JWTOptions](../interfaces/_jwt_hook_.jwtoptions.md)
@@ -22,7 +27,7 @@
 
 ▸ **JWT**(required: *`boolean`*, options: *[JWTOptions](../interfaces/_jwt_hook_.jwtoptions.md)*, verifyOptions: *`VerifyOptions`*): `HookDecorator`
 
-*Defined in [jwt.hook.ts:29](https://github.com/FoalTS/foal/blob/7934e4d7/packages/jwt/src/jwt.hook.ts#L29)*
+*Defined in [jwt.hook.ts:53](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L53)*
 
 Sub-function used by JWTRequired and JWTOptional to avoid code duplication.
 

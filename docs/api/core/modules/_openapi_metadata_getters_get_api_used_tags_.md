@@ -18,7 +18,7 @@
 
 ▸ **getApiUsedTags**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `string`[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-used-tags.ts:4](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/metadata-getters/get-api-used-tags.ts#L4)*
+*Defined in [openapi/metadata-getters/get-api-used-tags.ts:4](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-used-tags.ts#L4)*
 
 **Parameters:**
 

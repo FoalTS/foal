@@ -55,6 +55,7 @@
   * [REST API](./api-section/rest-blueprints.md)
   * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)
   * [Public API & CORS Requests](./api-section/public-api-and-cors-requests.md)
+  * [GraphQL](./api-section/graphql.md)
 * Frontend Integration
   * [Single Page Applications](./frontend-integration/single-page-applications.md)
   * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
@@ -99,6 +100,8 @@
 * [@foal/core](./api/core/README.md)
 * [@foal/ejs](./api/ejs/README.md)
 * [@foal/formidable](./api/formidable/README.md)
+* [@foal/graphql](./api/graphql/README.md)
+* [@foal/jwks-rsa](./api/jwks-rsa/README.md)
 * [@foal/jwt](./api/jwt/README.md)
 * [@foal/mongoose](./api/mongoose/README.md)
 * [@foal/password](./api/password/README.md)

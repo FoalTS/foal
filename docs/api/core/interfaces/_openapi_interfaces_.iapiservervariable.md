@@ -32,7 +32,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● default**: *`string`*
 
-*Defined in [openapi/interfaces.ts:309](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L309)*
+*Defined in [openapi/interfaces.ts:309](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L309)*
 
 The default value to use for substitution, which SHALL be sent if an alternate value is not supplied. Note this behavior is different than the Schema Object's treatment of default values, because in those cases parameter values are optional.
 
@@ -49,7 +49,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:319](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L319)*
+*Defined in [openapi/interfaces.ts:319](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L319)*
 
 An optional description for the server variable. CommonMark syntax MAY be used for rich text representation.
 
@@ -66,7 +66,7 @@ ___
 
 **● enum**: *`string`[]*
 
-*Defined in [openapi/interfaces.ts:298](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/openapi/interfaces.ts#L298)*
+*Defined in [openapi/interfaces.ts:298](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L298)*
 
 An enumeration of string values to be used if the substitution options are from a limited set.
 

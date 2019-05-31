@@ -316,6 +316,36 @@ describe('createApp', () => {
       .expect({ body: { foo: 'bar' } });
   });
 
+  it('should parse incoming request bodies (text/*)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(MyController);
+    return request(app)
+      .post('/foo')
+      .type('text/plain')
+      .send('Hello world!')
+      .expect({ body: 'Hello world!' });
+  });
+
+  it('should parse incoming request bodies (application/graphql)', () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = createApp(MyController);
+    return request(app)
+      .post('/foo')
+      .type('application/graphql')
+      .send('{ me { name } }')
+      .expect({ body: '{ me { name } }' });
+  });
+
   it('should have sessions.', () => {
     class MyController {
       @Get('/foo')

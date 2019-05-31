@@ -18,7 +18,7 @@
 
 **Ƭ Class**: *`object`*
 
-*Defined in [core/class.interface.ts:6](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/class.interface.ts#L6)*
+*Defined in [core/class.interface.ts:6](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/class.interface.ts#L6)*
 
 Interface of a class from its class definition.
 

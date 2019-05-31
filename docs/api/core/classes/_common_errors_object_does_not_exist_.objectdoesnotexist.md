@@ -41,7 +41,7 @@ Represent an object that was expected to be found but that does not exist.
 
 ⊕ **new ObjectDoesNotExist**(content?: *`any`*): [ObjectDoesNotExist](_common_errors_object_does_not_exist_.objectdoesnotexist.md)
 
-*Defined in [common/errors/object-does-not-exist.ts:9](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/object-does-not-exist.ts#L9)*
+*Defined in [common/errors/object-does-not-exist.ts:9](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/object-does-not-exist.ts#L9)*
 
 **Parameters:**
 
@@ -61,7 +61,7 @@ ___
 
 **● content**: *`any`*
 
-*Defined in [common/errors/object-does-not-exist.ts:11](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/object-does-not-exist.ts#L11)*
+*Defined in [common/errors/object-does-not-exist.ts:11](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/object-does-not-exist.ts#L11)*
 
 ___
 <a id="isobjectdoesnotexist"></a>
@@ -70,7 +70,7 @@ ___
 
 **● isObjectDoesNotExist**: *`true`* = true
 
-*Defined in [common/errors/object-does-not-exist.ts:9](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/common/errors/object-does-not-exist.ts#L9)*
+*Defined in [common/errors/object-does-not-exist.ts:9](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/object-does-not-exist.ts#L9)*
 
 ___
 <a id="message"></a>

@@ -57,7 +57,7 @@ Reprensent an HTTP response. This class must be extended. Instances of HttpRespo
 
 ⊕ **new HttpResponse**(body?: *`any`*, options?: *`object`*): [HttpResponse](_core_http_http_responses_.httpresponse.md)
 
-*Defined in [core/http/http-responses.ts:68](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L68)*
+*Defined in [core/http/http-responses.ts:68](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L68)*
 
 Create an instance of HttpResponse.
 
@@ -85,7 +85,7 @@ ___
 
 **● body**: *`any`*
 
-*Defined in [core/http/http-responses.ts:75](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L75)*
+*Defined in [core/http/http-responses.ts:75](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L75)*
 
 ___
 <a id="cookies"></a>
@@ -94,7 +94,7 @@ ___
 
 **● cookies**: *`object`*
 
-*Defined in [core/http/http-responses.ts:67](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L67)*
+*Defined in [core/http/http-responses.ts:67](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L67)*
 
 #### Type declaration
 
@@ -111,7 +111,7 @@ ___
 
 **● headers**: *`object`*
 
-*Defined in [core/http/http-responses.ts:68](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L68)*
+*Defined in [core/http/http-responses.ts:68](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L68)*
 
 #### Type declaration
 
@@ -124,7 +124,7 @@ ___
 
 **● isHttpResponse**: *`true`* = true
 
-*Defined in [core/http/http-responses.ts:40](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L40)*
+*Defined in [core/http/http-responses.ts:40](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L40)*
 
 Property used internally by isHttpResponse.
 
@@ -137,7 +137,7 @@ ___
 
 **● statusCode**: *`number`*
 
-*Defined in [core/http/http-responses.ts:49](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L49)*
+*Defined in [core/http/http-responses.ts:49](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L49)*
 
 Status code of the response.
 
@@ -154,7 +154,7 @@ ___
 
 **● statusMessage**: *`string`*
 
-*Defined in [core/http/http-responses.ts:58](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L58)*
+*Defined in [core/http/http-responses.ts:58](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L58)*
 
 Status message of the response. It must follow the HTTP conventions and be consistent with the statusCode property.
 
@@ -171,7 +171,7 @@ ___
 
 **● stream**: *`boolean`* = false
 
-*Defined in [core/http/http-responses.ts:65](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L65)*
+*Defined in [core/http/http-responses.ts:65](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L65)*
 
 Specify if the body property is a stream.
 
@@ -189,7 +189,7 @@ ___
 
 ▸ **getCookie**(name: *`string`*): `object`
 
-*Defined in [core/http/http-responses.ts:132](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L132)*
+*Defined in [core/http/http-responses.ts:132](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L132)*
 
 Read the value and directives of a cookie added with setCookie.
 
@@ -212,7 +212,7 @@ ___
 
 ▸ **getCookies**(): `object`
 
-*Defined in [core/http/http-responses.ts:147](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L147)*
+*Defined in [core/http/http-responses.ts:147](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L147)*
 
 Read all the cookies added with setCookie.
 
@@ -229,7 +229,7 @@ ___
 
 ▸ **getHeader**(name: *`string`*): `string` \| `undefined`
 
-*Defined in [core/http/http-responses.ts:98](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L98)*
+*Defined in [core/http/http-responses.ts:98](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L98)*
 
 Read the value of a header added with setHeader.
 
@@ -252,7 +252,7 @@ ___
 
 ▸ **getHeaders**(): `object`
 
-*Defined in [core/http/http-responses.ts:108](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L108)*
+*Defined in [core/http/http-responses.ts:108](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L108)*
 
 Read all the headers added with setHeader.
 
@@ -268,7 +268,7 @@ ___
 
 ▸ **setCookie**(name: *`string`*, value: *`string`*, options?: *[CookieOptions](../interfaces/_core_http_http_responses_.cookieoptions.md)*): `void`
 
-*Defined in [core/http/http-responses.ts:120](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L120)*
+*Defined in [core/http/http-responses.ts:120](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L120)*
 
 Add or replace a cookie in the response.
 
@@ -291,7 +291,7 @@ ___
 
 ▸ **setHeader**(name: *`string`*, value: *`string`*): `void`
 
-*Defined in [core/http/http-responses.ts:86](https://github.com/FoalTS/foal/blob/7934e4d7/packages/core/src/core/http/http-responses.ts#L86)*
+*Defined in [core/http/http-responses.ts:86](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/http-responses.ts#L86)*
 
 Add or replace a header in the response.
 

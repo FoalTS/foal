@@ -1,6 +1,6 @@
 {
   "name": "@foal/password",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "Password utilities for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -44,8 +44,8 @@
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2",
     "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0"
+    "typedoc-plugin-markdown": "^1.2.0",
+    "typescript": "^2.5.2"
   }
 }

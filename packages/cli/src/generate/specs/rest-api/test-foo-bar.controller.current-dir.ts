@@ -34,10 +34,10 @@ export class TestFooBarController {
     return new HttpResponseOK(testFooBars);
   }
 
-  @Get('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Get('/:testFooBarId')
+  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   async getById(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -53,7 +53,7 @@ export class TestFooBarController {
     return new HttpResponseCreated(testFooBar);
   }
 
-  @Post('/:id')
+  @Post('/:testFooBarId')
   postById() {
     return new HttpResponseMethodNotAllowed();
   }
@@ -63,11 +63,11 @@ export class TestFooBarController {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Patch('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Patch('/:testFooBarId')
+  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async patchById(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -85,11 +85,11 @@ export class TestFooBarController {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Put('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Put('/:testFooBarId')
+  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody(testFooBarSchema)
   async putById(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -107,16 +107,16 @@ export class TestFooBarController {
     return new HttpResponseMethodNotAllowed();
   }
 
-  @Delete('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Delete('/:testFooBarId')
+  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   async deleteById(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.id);
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
     }
 
-    await getRepository(TestFooBar).delete(ctx.request.params.id);
+    await getRepository(TestFooBar).delete(ctx.request.params.testFooBarId);
 
     return new HttpResponseNoContent();
   }
