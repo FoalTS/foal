@@ -26,26 +26,26 @@ export class Session {
     if (typeof token !== 'string') {
       return false;
     }
-    const [ sessionId, signature ] = token.split('.');
+    const [ sessionID, signature ] = token.split('.');
     // signature is potentially undefined
     if (signature === undefined) {
       return false;
     }
 
-    const expectedSignatureBuffer = sign(sessionId, secret);
+    const expectedSignatureBuffer = sign(sessionID, secret);
     const actualSignatureBuffer = Buffer.alloc(expectedSignatureBuffer.length);
     actualSignatureBuffer.write(signature, 0, actualSignatureBuffer.length, 'base64');
 
     if (timingSafeEqual(expectedSignatureBuffer, actualSignatureBuffer)) {
-      return sessionId;
+      return sessionID;
     }
     return false;
   }
 
   private modified = false;
 
-  constructor(readonly sessionId: string, private sessionContent: object, readonly maxAge: number) {
-    if (sessionId.includes('.')) {
+  constructor(readonly sessionID: string, private sessionContent: object, readonly maxAge: number) {
+    if (sessionID.includes('.')) {
       throw new Error('A session ID cannot include dots.');
     }
   }
@@ -73,8 +73,8 @@ export class Session {
     if (!secret) {
       throw new Error('You must provide a secret with the configuration key settings.session.secret.');
     }
-    const signature = sign(this.sessionId, secret).toString('base64');
-    return `${this.sessionId}.${convertBase64ToBase64url(signature)}`;
+    const signature = sign(this.sessionID, secret).toString('base64');
+    return `${this.sessionID}.${convertBase64ToBase64url(signature)}`;
   }
 
 }

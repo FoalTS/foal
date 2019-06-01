@@ -17,7 +17,7 @@ describe('Session', () => {
 
   describe('when it is instanciated', () => {
 
-    it('should throw an error if the sessionId includes a dot.', () => {
+    it('should throw an error if the sessionID includes a dot.', () => {
       try {
         // tslint:disable-next-line:no-unused-expression
         new Session('xxx.yyy', {}, 0);
@@ -27,9 +27,9 @@ describe('Session', () => {
       }
     });
 
-    it('should set two readonly properties "sessionId" and "maxAge" from the given arguments.', () => {
+    it('should set two readonly properties "sessionID" and "maxAge" from the given arguments.', () => {
       const session = new Session('xxx', {}, 0);
-      strictEqual(session.sessionId, 'xxx');
+      strictEqual(session.sessionID, 'xxx');
       strictEqual(session.maxAge, 0);
     });
 
@@ -101,7 +101,7 @@ describe('Session', () => {
         0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
         0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
       ]); // 32 bytes (256 bits)
-      const sessionIdBuffer = Buffer.from([
+      const sessionIDBuffer = Buffer.from([
         0xFB, 0xF0, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
         0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
       ]); // 16 bytes (128 bits)
@@ -111,12 +111,12 @@ describe('Session', () => {
       strictEqual(secret, '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY');
 
       // Base64 value: +/BmZmZmZmZmZmZmZmZmZg==
-      const sessionId = sessionIdBuffer.toString('base64').replace('+', '-').replace('/', '_').replace('==', '');
-      strictEqual(sessionId, '-_BmZmZmZmZmZmZmZmZmZg');
+      const sessionID = sessionIDBuffer.toString('base64').replace('+', '-').replace('/', '_').replace('==', '');
+      strictEqual(sessionID, '-_BmZmZmZmZmZmZmZmZmZg');
 
       // Base64 value: rD1LLZl5sr+IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk=
       const signature = createHmac('sha256', secretBuffer)
-        .update(sessionIdBuffer)
+        .update(sessionIDBuffer)
         .digest('base64')
         .replace('+', '-')
         .replace('=', '');
@@ -124,12 +124,12 @@ describe('Session', () => {
 
       process.env.SETTINGS_SESSION_SECRET = secret;
 
-      const session = new Session(sessionId, {}, 0);
+      const session = new Session(sessionID, {}, 0);
       const token = session.getToken();
 
       strictEqual(
         token,
-        `${sessionId}.${signature}`
+        `${sessionID}.${signature}`
       );
     });
 
