@@ -1,14 +1,56 @@
+import { createHmac, timingSafeEqual } from 'crypto';
+import { Config } from '../core';
+
+export function convertBase64ToBase64url(str: string): string {
+  return str
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+
+function sign(base64Value: string, base64Secret: string): Buffer {
+  return createHmac('sha256', Buffer.from(base64Secret, 'base64'))
+    .update(Buffer.from(base64Value, 'base64'))
+    .digest();
+}
+
 export class Session {
 
+  // TODO
   static verifyTokenAndGetId(token: string): string|false {
+    const secret = Config.get<string|undefined>('settings.session.secret');
+    if (!secret) {
+      throw new Error('You must provide a secret with the configuration key settings.session.secret.');
+    }
+
+    if (typeof token !== 'string') {
+      return false;
+    }
+    const [ sessionId, signature ] = token.split('.');
+    // signature is potentially undefined
+    if (signature === undefined) {
+      return false;
+    }
+
+    const expectedSignatureBuffer = sign(sessionId, secret);
+    const actualSignatureBuffer = Buffer.alloc(expectedSignatureBuffer.length);
+    actualSignatureBuffer.write(signature, 0, actualSignatureBuffer.length, 'base64');
+
+    if (timingSafeEqual(expectedSignatureBuffer, actualSignatureBuffer)) {
+      return sessionId;
+    }
     return false;
   }
 
   private modified = false;
 
-  constructor(readonly sessionId, private sessionContent: object, readonly maxAge: number) {}
+  constructor(readonly sessionId: string, private sessionContent: object, readonly maxAge: number) {
+    if (sessionId.includes('.')) {
+      throw new Error('A session ID cannot include dots.');
+    }
+  }
 
-  get isModified() {
+  get isModified(): boolean {
     return this.modified;
   }
 
@@ -17,7 +59,9 @@ export class Session {
     this.modified = true;
   }
 
-  get<T>(key: string, defaultValue?: T): T|undefined {
+  get<T>(key: string): T | undefined;
+  get<T>(key: string, defaultValue: any): T;
+  get(key: string, defaultValue?: any): any {
     if (!this.sessionContent.hasOwnProperty(key)) {
       return defaultValue;
     }
@@ -25,8 +69,12 @@ export class Session {
   }
 
   getToken(): string {
-    // Use signature.
-    return this.sessionId;
+    const secret = Config.get<string|undefined>('settings.session.secret');
+    if (!secret) {
+      throw new Error('You must provide a secret with the configuration key settings.session.secret.');
+    }
+    const signature = sign(this.sessionId, secret).toString('base64');
+    return `${this.sessionId}.${convertBase64ToBase64url(signature)}`;
   }
 
 }
