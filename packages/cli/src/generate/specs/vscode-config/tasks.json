@@ -13,13 +13,13 @@
       "type": "npm",
       "script": "build:test",
       "label": "build:test",
-      "problemMatcher": [],
+      "problemMatcher": []
     },
     {
       "type": "npm",
       "script": "build:e2e",
       "label": "build:e2e",
-      "problemMatcher": [],
+      "problemMatcher": []
     }
   ]
 }

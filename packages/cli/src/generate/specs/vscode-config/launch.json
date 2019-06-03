@@ -29,7 +29,7 @@
       "outFiles": [
         "${workspaceFolder}/build/**/*.js"
       ],
-      "internalConsoleOptions": "openOnSessionStart",
+      "internalConsoleOptions": "openOnSessionStart"
     },
     {
       "type": "node",
@@ -49,6 +49,6 @@
         "${workspaceFolder}/build/**/*.js"
       ],
       "internalConsoleOptions": "openOnSessionStart"
-    },
+    }
   ]
 }
