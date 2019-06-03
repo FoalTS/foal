@@ -9,7 +9,7 @@ Then open the `user.entity.ts` file from the `src/app/entities` directory. The `
 Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
-import { encryptPassword } from '@foal/core';
+import { hashPassword } from '@foal/core';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -25,14 +25,16 @@ export class User {
   password: string;
 
   async setPassword(password: string) {
-    this.password = await encryptPassword(password);
+    this.password = await hashPassword(password);
   }
 
 }
 
 ```
 
-The `setPassword` method uses `encryptPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+The `setPassword` method uses `hashPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+
+> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
 
 ## The Todo Model
 
