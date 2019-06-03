@@ -141,9 +141,9 @@ it('JWT test (with cookies)', async () => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
-      const response = new HttpResponseOK();
-      response.setCookie('auth', jwt as string);
-      return response;
+
+      return new HttpResponseOK()
+        .setCookie('auth', jwt as string);
     }
 
     @Get('/get-username')

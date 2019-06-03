@@ -54,6 +54,10 @@ describe('HttpResponse', () => {
 
   beforeEach(() => response = new ConcreteClass());
 
+  it('when setHeader is called should return the HttpResponse instance.', () => {
+    strictEqual(response.setHeader('my_header', 'header_value'), response);
+  });
+
   it('when setHeader and getHeader are called should set and get custom headers.', () => {
     response.setHeader('my_header', 'header_value');
     strictEqual(response.getHeader('my_header'), 'header_value');
@@ -70,6 +74,10 @@ describe('HttpResponse', () => {
       my_header2: 'header_value2'
     });
     notStrictEqual(actual1, actual2);
+  });
+
+  it('when setCookie is called should return the HttpResponse instance.', () => {
+    strictEqual(response.setCookie('my_header', 'header_value'), response);
   });
 
   it('when setCookie and getCookie are called should set and get custom cookies.', () => {

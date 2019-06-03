@@ -170,13 +170,13 @@ If the `body` is a stream, you need to pass a second argument as follows:
 The `HttpResponse` class has also 7 methods to set/get cookies and headers:
 ```typescript
 ({
-  setHeader(name: string, value: string);
+  setHeader(name: string, value: string): this;
 
   getHeader(name: string): string|undefined;
 
   getHeaders(): { [key: string]: string };
 
-  setCookie(name: string, value: string, options: CookieOptions = {}): void;
+  setCookie(name: string, value: string, options: CookieOptions = {}): this;
 
   getCookie(name: string): { value: string|undefined, options: CookieOptions };
 

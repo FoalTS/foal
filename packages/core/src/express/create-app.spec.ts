@@ -42,9 +42,8 @@ describe('createApp', () => {
     class AppController {
       @Get('/')
       index() {
-        const response = new HttpResponseOK();
-        response.setHeader('X-Custom-Header', 'foobar');
-        return response;
+        return new HttpResponseOK()
+          .setHeader('X-Custom-Header', 'foobar');
       }
     }
     const app = createApp(AppController);
@@ -147,9 +146,8 @@ describe('createApp', () => {
     class AppController {
       @Get('/foo')
       foo(ctx: Context) {
-        const response = new HttpResponseOK();
-        response.setCookie('csrf-token', ctx.request.csrfToken());
-        return response;
+        return new HttpResponseOK()
+          .setCookie('csrf-token', ctx.request.csrfToken());
       }
     }
 

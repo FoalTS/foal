@@ -249,15 +249,15 @@ describe('createMiddleware', () => {
 
         it('should send a response with the suitable cookies.', () => {
           const app = express();
-          const successResponse = new HttpResponseCreated();
-          successResponse.setCookie('cookie1', 'cookie1_value_a');
-          successResponse.setCookie('cookie2', 'cookie2_value_a', { httpOnly: true });
-          const clientErrorResponse = new HttpResponseBadRequest();
-          clientErrorResponse.setCookie('cookie1', 'cookie1_value_b');
-          clientErrorResponse.setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
-          const serverErrorResponse = new HttpResponseInternalServerError();
-          serverErrorResponse.setCookie('cookie1', 'cookie1_value_c');
-          serverErrorResponse.setCookie('cookie2', 'cookie2_value_c', { httpOnly: true });
+          const successResponse = new HttpResponseCreated()
+            .setCookie('cookie1', 'cookie1_value_a')
+            .setCookie('cookie2', 'cookie2_value_a', { httpOnly: true });
+          const clientErrorResponse = new HttpResponseBadRequest()
+            .setCookie('cookie1', 'cookie1_value_b')
+            .setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
+          const serverErrorResponse = new HttpResponseInternalServerError()
+            .setCookie('cookie1', 'cookie1_value_c')
+            .setCookie('cookie2', 'cookie2_value_c', { httpOnly: true });
 
           app.get('/success', createMiddleware(
             route(() => successResponse),
