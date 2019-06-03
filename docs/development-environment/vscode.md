@@ -27,3 +27,7 @@ foal generate vscode-config
 Now you can add a breakpoint in your code and start the app in debug mode.
 
 ![Debugging demo](./debugger.gif)
+
+The generated files also include configurations to run your unit and end-to-end tests.
+
+![Debug configurations](./debug-configurations.png)
