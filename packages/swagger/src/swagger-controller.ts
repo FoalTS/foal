@@ -104,9 +104,8 @@ export abstract class SwaggerController {
         .replace('{{ primaryName }}', primaryName);
     }
 
-    const response = new HttpResponseOK(body);
-    response.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return response;
+    return new HttpResponseOK(body)
+      .setHeader('Content-Type', 'text/html; charset=utf-8');
   }
 
   @Get('/swagger-ui.css')

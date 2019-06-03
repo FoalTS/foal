@@ -21,16 +21,18 @@ app.js
 
 # Change the directory
 
-You can change the directory where the static files are served using the badly named configuration key `staticUrl`.
+You can change the directory where the static files are served using the configuration key `staticPath`.
 
 *Example with `config/default.json`*
 ```json
 {
   "settings": {
-    "staticUrl": "another-directory/"
+    "staticPath": "another-directory/"
   }
 }
 ```
+
+> Note: In previous versions of FoalTS (<v1.0.0), this parameter was badly named `staticUrl`.
 
 # Add a virtual prefix path
 

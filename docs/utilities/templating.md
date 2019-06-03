@@ -2,9 +2,9 @@
 
 FoalTS comes up with several tools to render templates.
 
-## `render(templatePath: string, locals: object, dirname: string): HttpResponseOK`
+## `render(templatePath: string, locals: object, dirname: string): Promise<HttpResponseOK>`
 
-Renders the template with the given locals and then returns an `HttpResponseOK` whose body is the rendered template.
+Renders the template with the given locals and then resolves an `HttpResponseOK` whose body is the rendered template.
 
 Example:
 ```typescript

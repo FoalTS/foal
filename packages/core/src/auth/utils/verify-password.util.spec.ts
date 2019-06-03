@@ -3,7 +3,7 @@ import { fail, ok, strictEqual } from 'assert';
 import { pbkdf2Sync } from 'crypto';
 
 // FoalTS
-import { encryptPassword } from './encrypt-password.util';
+import { hashPassword } from './hash-password.util';
 import { verifyPassword } from './verify-password.util';
 
 describe('verifyPassword', () => {
@@ -43,18 +43,18 @@ describe('verifyPassword', () => {
     strictEqual(await verifyPassword('wrong password', passwordHash), false);
   });
 
-  it('should verify password hashes created from encryptPassword.', async () => {
+  it('should verify password hashes created from hashPassword.', async () => {
     const plainPassword = 'hello world';
-    const passwordHash = await encryptPassword(plainPassword);
+    const passwordHash = await hashPassword(plainPassword);
 
     ok(await verifyPassword(plainPassword, passwordHash));
     strictEqual(await verifyPassword('wrong password', passwordHash), false);
   });
 
-  it('should verify password hashes created from encryptPassword with the legacy'
+  it('should verify password hashes created from hashPassword with the legacy'
       + ' option (old parsePassword).', async () => {
     const plainPassword = 'hello world';
-    const passwordHash = await encryptPassword(plainPassword, { legacy: true });
+    const passwordHash = await hashPassword(plainPassword, { legacy: true });
 
     ok(await verifyPassword(plainPassword, passwordHash, { legacy: true }));
     strictEqual(await verifyPassword('wrong password', passwordHash, { legacy: true }), false);

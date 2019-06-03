@@ -226,7 +226,7 @@ describe('Config', () => {
             sessionResave: false,
             sessionSaveUninitialized: false,
             sessionSecret: '79120183c32f87b25fbe0da73426dcca',
-            staticUrl: 'public/',
+            staticPath: 'public/',
           }
         });
         writeFileSync('config/test.json', envJSONFileContent, 'utf8');

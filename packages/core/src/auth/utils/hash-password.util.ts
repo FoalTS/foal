@@ -24,15 +24,13 @@ async function parsePassword(password: string): Promise<string> {
  * The number of iterations is 150000.
  * The length key is 32 bytes long.
  *
- * Note: This function is badly named. It does not encrypt passwords but salt and hash them.
- *
  * @export
  * @param {string} plainTextPassword - The password to hash.
  * @param {{ legacy?: boolean }} [options={}]
  * @returns {Promise<string>} The derived key with the algorithm name, the number of iterations and the salt.
  */
-export async function encryptPassword(plainTextPassword: string,
-                                      options: { legacy?: boolean } = {}): Promise<string> {
+export async function hashPassword(plainTextPassword: string,
+                                   options: { legacy?: boolean } = {}): Promise<string> {
   if (options.legacy) {
     return parsePassword(plainTextPassword);
   }

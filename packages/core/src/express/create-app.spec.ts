@@ -19,11 +19,11 @@ describe('createApp', () => {
       mkdirSync('test-public');
     }
     writeFileSync('test-public/hello-world.html', '<h1>Hello world!</h1>', 'utf8');
-    process.env.SETTINGS_STATIC_URL = 'test-public';
+    process.env.SETTINGS_STATIC_PATH = 'test-public';
   });
 
   after(() => {
-    delete process.env.SETTINGS_STATIC_URL;
+    delete process.env.SETTINGS_STATIC_PATH;
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
@@ -42,9 +42,8 @@ describe('createApp', () => {
     class AppController {
       @Get('/')
       index() {
-        const response = new HttpResponseOK();
-        response.setHeader('X-Custom-Header', 'foobar');
-        return response;
+        return new HttpResponseOK()
+          .setHeader('X-Custom-Header', 'foobar');
       }
     }
     const app = createApp(AppController);
@@ -147,9 +146,8 @@ describe('createApp', () => {
     class AppController {
       @Get('/foo')
       foo(ctx: Context) {
-        const response = new HttpResponseOK();
-        response.setCookie('csrf-token', ctx.request.csrfToken());
-        return response;
+        return new HttpResponseOK()
+          .setCookie('csrf-token', ctx.request.csrfToken());
       }
     }
 
