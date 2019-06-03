@@ -6,6 +6,6 @@
   "sessionSecret": "my secret",
   "sessionResave": true,
   "sessionSaveUninitialized": true,
-  "staticUrl": "public/",
+  "staticPath": "public/",
   "templateEngine": "@foal/ejs"
 }

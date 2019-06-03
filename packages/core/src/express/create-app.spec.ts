@@ -19,11 +19,11 @@ describe('createApp', () => {
       mkdirSync('test-public');
     }
     writeFileSync('test-public/hello-world.html', '<h1>Hello world!</h1>', 'utf8');
-    process.env.SETTINGS_STATIC_URL = 'test-public';
+    process.env.SETTINGS_STATIC_PATH = 'test-public';
   });
 
   after(() => {
-    delete process.env.SETTINGS_STATIC_URL;
+    delete process.env.SETTINGS_STATIC_PATH;
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
