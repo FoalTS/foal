@@ -124,7 +124,7 @@ program
         createScript({ name });
         break;
       case 'service':
-        createService({ name, type: 'Empty' });
+        createService({ name });
         break;
       case 'vscode-config':
         createVSCodeConfig();
