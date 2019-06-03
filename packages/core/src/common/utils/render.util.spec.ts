@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual, throws } from 'assert';
+import { notStrictEqual, ok, strictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -29,16 +29,21 @@ describe('render', () => {
     }
   });
 
-  it('should render the ejs template (HttpResponseOK) with the given locals if it is correct.', () => {
+  it('should render the ejs template (HttpResponseOK) with the given locals if it is correct.', async () => {
     const name = 'Foobar';
     const expected = `Hello ${name}! How are you?`;
-    const actual = render('./templates/template.html', { name }, __dirname);
+    const actual = await render('./templates/template.html', { name }, __dirname);
     ok(actual instanceof HttpResponseOK);
     strictEqual(actual.body, expected);
   });
 
-  it('should throw an Error if the template and/or locals are incorrect.', () => {
-    throws(() => render(templatePath, {}, __dirname));
+  it('should throw an Error if the template and/or locals are incorrect.', async () => {
+    try {
+      await render(templatePath, {}, __dirname);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      notStrictEqual(error.message, 'An error should have been thrown');
+    }
   });
 
 });
