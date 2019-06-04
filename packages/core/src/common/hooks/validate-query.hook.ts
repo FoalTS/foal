@@ -1,7 +1,9 @@
 import * as Ajv from 'ajv';
 
-import { Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
+import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
+import { ApiParameter, IApiQueryParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { extractProperties } from './extract-properties.util';
 
 /**
  * Hook factory validating the query of the request against a AJV schema.
@@ -10,12 +12,41 @@ import { getAjvInstance } from '../utils';
  * @param {object} schema - Schema used to validate the query request.
  * @returns {HookDecorator} - The hook.
  */
-export function ValidateQuery(schema: object): HookDecorator {
+export function ValidateQuery(schema: object, options: { openapi?: boolean } = {}): HookDecorator {
+  if ((schema as any).type !== 'object') {
+    throw new Error('ValidateQuery only accepts a schema of type "object".');
+  }
+
   const ajv = getAjvInstance();
   const isValid = ajv.compile(schema);
-  return Hook(ctx => {
+
+  function validate(ctx: Context) {
     if (!isValid(ctx.request.query)) {
       return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
     }
-  });
+  }
+
+  return (target: any, propertyKey?: string) =>  {
+    Hook(validate)(target, propertyKey);
+
+    if (!options.openapi) {
+      return;
+    }
+
+    for (const property of extractProperties(schema)) {
+      const apiQueryParameter: IApiQueryParameter = {
+        in: 'query',
+        name: property.name,
+        schema: property.schema
+      };
+      if (property.required) {
+        apiQueryParameter.required = true;
+      }
+      if (propertyKey) {
+        ApiParameter(apiQueryParameter)(target, propertyKey);
+      } else {
+        ApiParameter(apiQueryParameter)(target);
+      }
+    }
+  };
 }
