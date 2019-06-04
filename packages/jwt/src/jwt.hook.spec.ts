@@ -3,9 +3,9 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Config, ConfigMock, Context, getApiComponents, getApiSecurity,
-  getHookFunction, IApiComponents, IApiSecurityRequirement, isHttpResponseBadRequest,
-  isHttpResponseUnauthorized, ServiceManager
+  Config, ConfigMock, Context, getApiComponents, getApiResponses,
+  getApiSecurity, getHookFunction, IApiComponents, IApiResponses,
+  IApiSecurityRequirement, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
@@ -614,6 +614,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
       deepStrictEqual(getApiComponents(Foobar), {});
     });
 
@@ -622,6 +623,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
       deepStrictEqual(getApiComponents(Foobar), {});
     });
 
@@ -647,8 +649,19 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           { bearerAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+
+        const actualResponses = getApiResponses(Foobar);
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is missing or invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
       } else {
         strictEqual(actualSecurityRequirements, undefined);
+        const actualResponses = getApiResponses(Foobar);
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
       }
     });
 
@@ -676,8 +689,19 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           { bearerAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+
+        const actualResponses = getApiResponses(Foobar, 'foo');
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is missing or invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
       } else {
         strictEqual(actualSecurityRequirements, undefined);
+        const actualResponses = getApiResponses(Foobar, 'foo');
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
       }
     });
 

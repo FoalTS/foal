@@ -1,5 +1,8 @@
 // 3p
-import { ApiDefineSecurityScheme, ApiSecurityRequirement, HookDecorator, IApiSecurityScheme } from '@foal/core';
+import {
+  ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
+  HookDecorator, IApiSecurityScheme
+} from '@foal/core';
 import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
@@ -41,12 +44,8 @@ export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptio
       type: 'http',
     };
 
-    if (propertyKey) {
-      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
-      ApiSecurityRequirement({ bearerAuth: [] })(target, propertyKey);
-    } else {
-      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target);
-      ApiSecurityRequirement({ bearerAuth: [] })(target);
-    }
+    ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
+    ApiSecurityRequirement({ bearerAuth: [] })(target, propertyKey);
+    ApiResponse(401, { description: 'JWT is missing or invalid.' })(target, propertyKey);
   };
 }
