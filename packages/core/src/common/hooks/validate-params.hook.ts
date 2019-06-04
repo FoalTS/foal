@@ -1,6 +1,6 @@
 import * as Ajv from 'ajv';
 
-import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
+import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiPathParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { extractProperties } from './extract-properties.util';
@@ -29,7 +29,7 @@ export function ValidateParams(schema: object, options: { openapi?: boolean } = 
   return (target: any, propertyKey?: string) =>  {
     Hook(validate)(target, propertyKey);
 
-    if (!options.openapi) {
+    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
       return;
     }
 

@@ -2,7 +2,7 @@
 import * as Ajv from 'ajv';
 
 // FoalTS
-import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
+import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiRequestBody, ApiResponse, IApiRequestBody } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
@@ -26,7 +26,7 @@ export function ValidateBody(schema: object, options: { openapi?: boolean } = {}
   return (target: any, propertyKey?: string) =>  {
     Hook(validate)(target, propertyKey);
 
-    if (!options.openapi) {
+    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
       return;
     }
 

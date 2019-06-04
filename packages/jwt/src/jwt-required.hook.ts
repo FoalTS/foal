@@ -1,7 +1,7 @@
 // 3p
 import {
   ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
-  HookDecorator, IApiSecurityScheme
+  Config, HookDecorator, IApiSecurityScheme
 } from '@foal/core';
 import { VerifyOptions } from 'jsonwebtoken';
 
@@ -34,7 +34,7 @@ export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptio
   return (target: any, propertyKey?: string) =>  {
     JWT(true, options, verifyOptions)(target, propertyKey);
 
-    if (!options.openapi) {
+    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
       return;
     }
 

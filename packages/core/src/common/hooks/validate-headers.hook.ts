@@ -3,7 +3,7 @@ import * as Ajv from 'ajv';
 
 // FoalTS
 import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../..';
-import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
+import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { getAjvInstance } from '../utils';
 import { extractProperties } from './extract-properties.util';
 
@@ -31,7 +31,7 @@ export function ValidateHeaders(schema: object, options: { openapi?: boolean } =
   return (target: any, propertyKey?: string) =>  {
     Hook(validate)(target, propertyKey);
 
-    if (!options.openapi) {
+    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
       return;
     }
 

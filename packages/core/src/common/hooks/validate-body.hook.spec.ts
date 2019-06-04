@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { getApiRequestBody, getApiResponses, IApiRequestBody, IApiResponses } from '../../openapi';
 import { ValidateBody } from './validate-body.hook';
 
@@ -61,7 +61,18 @@ describe('ValidateBody', () => {
 
   describe('should define an API specification', () => {
 
-    it('unless options.openapi is undefined.', () => {
+    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
+      @ValidateBody(schema)
+      class Foobar {}
+
+      strictEqual(getApiRequestBody(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
+    });
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
       @ValidateBody(schema)
       class Foobar {}
 
@@ -77,10 +88,7 @@ describe('ValidateBody', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateBody(schema, { openapi: true })
-      class Foobar {}
-
+    function testClass(Foobar: Class) {
       const actualRequestBody = getApiRequestBody(Foobar);
       const expectedRequestBody: IApiRequestBody = {
         content: {
@@ -95,14 +103,24 @@ describe('ValidateBody', () => {
         400: { description: 'Bad request.' }
       };
       deepStrictEqual(actualResponses, expectedResponses);
+    }
+
+    it('if options.openapi is true (class decorator).', () => {
+      @ValidateBody(schema, { openapi: true })
+      class Foobar {}
+
+      testClass(Foobar);
     });
 
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateBody(schema, { openapi: true })
-        foo() {}
-      }
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      @ValidateBody(schema)
+      class Foobar {}
 
+      testClass(Foobar);
+    });
+
+    function testMethod(Foobar: Class) {
       const actualRequestBody = getApiRequestBody(Foobar, 'foo');
       const expectedRequestBody: IApiRequestBody = {
         content: {
@@ -117,6 +135,25 @@ describe('ValidateBody', () => {
         400: { description: 'Bad request.' }
       };
       deepStrictEqual(actualResponses, expectedResponses);
+    }
+
+    it('if options.openapi is true (method decorator).', () => {
+      class Foobar {
+        @ValidateBody(schema, { openapi: true })
+        foo() {}
+      }
+
+      testMethod(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @ValidateBody(schema)
+        foo() {}
+      }
+
+      testMethod(Foobar);
     });
 
   });

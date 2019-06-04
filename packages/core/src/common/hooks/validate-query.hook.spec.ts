@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { getApiParameters, getApiResponses, IApiQueryParameter, IApiResponses } from '../../openapi';
 import { ValidateQuery } from './validate-query.hook';
 
@@ -70,6 +70,8 @@ describe('ValidateQuery', () => {
 
   describe('should define an API specification', () => {
 
+    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
+
     const schema = {
       properties: {
         barfoo: { type: 'string' },
@@ -79,7 +81,16 @@ describe('ValidateQuery', () => {
       type: 'object',
     };
 
-    it('unless options.openapi is undefined.', () => {
+    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
+      @ValidateQuery(schema)
+      class Foobar {}
+
+      strictEqual(getApiParameters(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
+    });
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
       @ValidateQuery(schema)
       class Foobar {}
 
@@ -95,10 +106,7 @@ describe('ValidateQuery', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateQuery(schema, { openapi: true })
-      class Foobar {}
-
+    function testClass(Foobar: Class) {
       const actual = getApiParameters(Foobar);
       const expected: IApiQueryParameter[] = [
         {
@@ -120,14 +128,24 @@ describe('ValidateQuery', () => {
         400: { description: 'Bad request.' }
       };
       deepStrictEqual(actualResponses, expectedResponses);
+    }
+
+    it('if options.openapi is true (class decorator).', () => {
+      @ValidateQuery(schema, { openapi: true })
+      class Foobar {}
+
+      testClass(Foobar);
     });
 
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateQuery(schema, { openapi: true })
-        foo() {}
-      }
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      @ValidateQuery(schema)
+      class Foobar {}
 
+      testClass(Foobar);
+    });
+
+    function testMethod(Foobar: Class) {
       const actual = getApiParameters(Foobar, 'foo');
       const expected: IApiQueryParameter[] = [
         {
@@ -149,6 +167,25 @@ describe('ValidateQuery', () => {
         400: { description: 'Bad request.' }
       };
       deepStrictEqual(actualResponses, expectedResponses);
+    }
+
+    it('if options.openapi is true (method decorator).', () => {
+      class Foobar {
+        @ValidateQuery(schema, { openapi: true })
+        foo() {}
+      }
+
+      testMethod(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @ValidateQuery(schema)
+        foo() {}
+      }
+
+      testMethod(Foobar);
     });
 
   });
