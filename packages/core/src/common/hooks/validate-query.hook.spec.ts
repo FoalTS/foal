@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Context, getHookFunction, getHookFunctions, Hook, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { getApiParameters, getApiResponses, IApiQueryParameter, IApiResponses } from '../../openapi';
 import { ValidateQuery } from './validate-query.hook';
 
@@ -84,6 +84,7 @@ describe('ValidateQuery', () => {
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('unless options.openapi is false.', () => {
@@ -91,6 +92,7 @@ describe('ValidateQuery', () => {
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('if options.openapi is true (class decorator).', () => {

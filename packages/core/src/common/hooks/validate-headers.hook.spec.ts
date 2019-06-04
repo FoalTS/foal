@@ -96,6 +96,7 @@ describe('ValidateHeaders', () => {
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('unless options.openapi is false.', () => {
@@ -103,6 +104,7 @@ describe('ValidateHeaders', () => {
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('if options.openapi is true (class decorator).', () => {
