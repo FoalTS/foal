@@ -113,13 +113,13 @@ describe('ValidateHeaders', () => {
       const expected: IApiHeaderParameter[] = [
         {
           in: 'header',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'header',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];
@@ -136,13 +136,13 @@ describe('ValidateHeaders', () => {
       const expected: IApiHeaderParameter[] = [
         {
           in: 'header',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'header',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];

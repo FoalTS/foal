@@ -101,13 +101,13 @@ describe('ValidateQuery', () => {
       const expected: IApiQueryParameter[] = [
         {
           in: 'query',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'query',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];
@@ -124,13 +124,13 @@ describe('ValidateQuery', () => {
       const expected: IApiQueryParameter[] = [
         {
           in: 'query',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'query',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];

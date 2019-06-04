@@ -101,13 +101,13 @@ describe('ValidateCookies', () => {
       const expected: IApiCookieParameter[] = [
         {
           in: 'cookie',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'cookie',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];
@@ -124,13 +124,13 @@ describe('ValidateCookies', () => {
       const expected: IApiCookieParameter[] = [
         {
           in: 'cookie',
-          name: 'barfoo',
-          required: true,
+          name: 'foobar',
           schema: { type: 'string' }
         },
         {
           in: 'cookie',
-          name: 'foobar',
+          name: 'barfoo',
+          required: true,
           schema: { type: 'string' }
         },
       ];

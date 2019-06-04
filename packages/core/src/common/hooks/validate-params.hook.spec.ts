@@ -101,13 +101,13 @@ describe('ValidateParams', () => {
       const expected: IApiPathParameter[] = [
         {
           in: 'path',
-          name: 'barfoo',
+          name: 'foobar',
           required: true,
           schema: { type: 'string' }
         },
         {
           in: 'path',
-          name: 'foobar',
+          name: 'barfoo',
           required: true,
           schema: { type: 'string' }
         },
@@ -125,13 +125,13 @@ describe('ValidateParams', () => {
       const expected: IApiPathParameter[] = [
         {
           in: 'path',
-          name: 'barfoo',
+          name: 'foobar',
           required: true,
           schema: { type: 'string' }
         },
         {
           in: 'path',
-          name: 'foobar',
+          name: 'barfoo',
           required: true,
           schema: { type: 'string' }
         },
