@@ -3,7 +3,7 @@ import * as Ajv from 'ajv';
 
 // FoalTS
 import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiRequestBody, IApiRequestBody } from '../../openapi';
+import { ApiRequestBody, ApiResponse, IApiRequestBody } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
@@ -42,5 +42,7 @@ export function ValidateBody(schema: object, options: { openapi?: boolean } = {}
     } else {
       ApiRequestBody(requestBody)(target);
     }
+
+    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
   };
 }

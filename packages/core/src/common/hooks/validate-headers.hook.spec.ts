@@ -3,7 +3,7 @@ import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, IApiHeaderParameter } from '../../openapi';
+import { getApiParameters, getApiResponses, IApiHeaderParameter, IApiResponses } from '../../openapi';
 import { ValidateHeaders } from './validate-headers.hook';
 
 describe('ValidateHeaders', () => {
@@ -124,6 +124,12 @@ describe('ValidateHeaders', () => {
         },
       ];
       deepStrictEqual(actual, expected);
+
+      const actualResponses = getApiResponses(Foobar);
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
     it('if options.openapi is true (method decorator).', () => {
@@ -147,6 +153,12 @@ describe('ValidateHeaders', () => {
         },
       ];
       deepStrictEqual(actual, expected);
+
+      const actualResponses = getApiResponses(Foobar, 'foo');
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
   });

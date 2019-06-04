@@ -1,7 +1,7 @@
 import * as Ajv from 'ajv';
 
 import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, IApiQueryParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiQueryParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { extractProperties } from './extract-properties.util';
 
@@ -42,11 +42,10 @@ export function ValidateQuery(schema: object, options: { openapi?: boolean } = {
       if (property.required) {
         apiQueryParameter.required = true;
       }
-      if (propertyKey) {
-        ApiParameter(apiQueryParameter)(target, propertyKey);
-      } else {
-        ApiParameter(apiQueryParameter)(target);
-      }
+
+      ApiParameter(apiQueryParameter)(target, propertyKey);
     }
+
+    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
   };
 }

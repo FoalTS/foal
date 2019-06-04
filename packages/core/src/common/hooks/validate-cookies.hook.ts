@@ -3,7 +3,7 @@ import * as Ajv from 'ajv';
 
 // FoalTS
 import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, IApiCookieParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiCookieParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { extractProperties } from './extract-properties.util';
 
@@ -44,11 +44,10 @@ export function ValidateCookies(schema: object, options: { openapi?: boolean } =
       if (property.required) {
         apiCookieParameter.required = true;
       }
-      if (propertyKey) {
-        ApiParameter(apiCookieParameter)(target, propertyKey);
-      } else {
-        ApiParameter(apiCookieParameter)(target);
-      }
+
+      ApiParameter(apiCookieParameter)(target, propertyKey);
     }
+
+    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
   };
 }

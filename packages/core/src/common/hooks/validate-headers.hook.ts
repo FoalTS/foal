@@ -2,7 +2,7 @@
 import * as Ajv from 'ajv';
 
 // FoalTS
-import { ApiParameter, IApiHeaderParameter } from '../..';
+import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../..';
 import { Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { getAjvInstance } from '../utils';
 import { extractProperties } from './extract-properties.util';
@@ -44,11 +44,10 @@ export function ValidateHeaders(schema: object, options: { openapi?: boolean } =
       if (property.required) {
         apiHeaderParameter.required = true;
       }
-      if (propertyKey) {
-        ApiParameter(apiHeaderParameter)(target, propertyKey);
-      } else {
-        ApiParameter(apiHeaderParameter)(target);
-      }
+
+      ApiParameter(apiHeaderParameter)(target, propertyKey);
     }
+
+    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
   };
 }

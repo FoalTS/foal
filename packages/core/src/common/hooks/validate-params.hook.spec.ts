@@ -3,7 +3,7 @@ import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, IApiPathParameter } from '../../openapi';
+import { getApiParameters, getApiResponses, IApiPathParameter, IApiResponses } from '../../openapi';
 import { ValidateParams } from './validate-params.hook';
 
 describe('ValidateParams', () => {
@@ -113,6 +113,12 @@ describe('ValidateParams', () => {
         },
       ];
       deepStrictEqual(actual, expected);
+
+      const actualResponses = getApiResponses(Foobar);
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
     it('if options.openapi is true (method decorator).', () => {
@@ -137,6 +143,12 @@ describe('ValidateParams', () => {
         },
       ];
       deepStrictEqual(actual, expected);
+
+      const actualResponses = getApiResponses(Foobar, 'foo');
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
   });

@@ -3,7 +3,7 @@ import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiRequestBody, IApiRequestBody } from '../../openapi';
+import { getApiRequestBody, getApiResponses, IApiRequestBody, IApiResponses } from '../../openapi';
 import { ValidateBody } from './validate-body.hook';
 
 describe('ValidateBody', () => {
@@ -66,6 +66,7 @@ describe('ValidateBody', () => {
       class Foobar {}
 
       strictEqual(getApiRequestBody(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('unless options.openapi is false.', () => {
@@ -73,19 +74,27 @@ describe('ValidateBody', () => {
       class Foobar {}
 
       strictEqual(getApiRequestBody(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
     });
 
     it('if options.openapi is true (class decorator).', () => {
       @ValidateBody(schema, { openapi: true })
       class Foobar {}
 
-      const apiRequestBody = getApiRequestBody(Foobar);
-      deepStrictEqual(apiRequestBody, {
+      const actualRequestBody = getApiRequestBody(Foobar);
+      const expectedRequestBody: IApiRequestBody = {
         content: {
-          'application/json': { schema }
+          'application/json': { schema: schema as object }
         },
         required: true
-      } as IApiRequestBody);
+      };
+      deepStrictEqual(actualRequestBody, expectedRequestBody);
+
+      const actualResponses = getApiResponses(Foobar);
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
     it('if options.openapi is true (method decorator).', () => {
@@ -94,13 +103,20 @@ describe('ValidateBody', () => {
         foo() {}
       }
 
-      const apiRequestBody = getApiRequestBody(Foobar, 'foo');
-      deepStrictEqual(apiRequestBody, {
+      const actualRequestBody = getApiRequestBody(Foobar, 'foo');
+      const expectedRequestBody: IApiRequestBody = {
         content: {
-          'application/json': { schema }
+          'application/json': { schema: schema as object }
         },
         required: true
-      } as IApiRequestBody);
+      };
+      deepStrictEqual(actualRequestBody, expectedRequestBody);
+
+      const actualResponses = getApiResponses(Foobar, 'foo');
+      const expectedResponses: IApiResponses = {
+        400: { description: 'Bad request.' }
+      };
+      deepStrictEqual(actualResponses, expectedResponses);
     });
 
   });
