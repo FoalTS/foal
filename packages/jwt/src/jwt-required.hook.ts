@@ -1,5 +1,5 @@
 // 3p
-import { HookDecorator } from '@foal/core';
+import { ApiDefineSecurityScheme, ApiSecurityRequirement, HookDecorator, IApiSecurityScheme } from '@foal/core';
 import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
@@ -28,5 +28,25 @@ import { JWT, JWTOptions } from './jwt.hook';
  * @returns {HookDecorator} The hook.
  */
 export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
-  return JWT(true, options, verifyOptions);
+  return (target: any, propertyKey?: string) =>  {
+    JWT(true, options, verifyOptions)(target, propertyKey);
+
+    if (!options.openapi) {
+      return;
+    }
+
+    const securityScheme: IApiSecurityScheme = {
+      bearerFormat: 'JWT',
+      scheme: 'bearer',
+      type: 'http',
+    };
+
+    if (propertyKey) {
+      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
+      ApiSecurityRequirement({ bearerAuth: [] })(target, propertyKey);
+    } else {
+      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target);
+      ApiSecurityRequirement({ bearerAuth: [] })(target);
+    }
+  };
 }

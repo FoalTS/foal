@@ -39,6 +39,7 @@ export interface JWTOptions {
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
+  openapi?: boolean;
 }
 
 /**

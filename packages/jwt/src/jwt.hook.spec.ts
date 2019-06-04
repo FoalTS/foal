@@ -3,8 +3,9 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Config, ConfigMock, Context,
-  getHookFunction, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
+  Config, ConfigMock, Context, getApiComponents, getApiSecurity,
+  getHookFunction, IApiComponents, IApiSecurityRequirement, isHttpResponseBadRequest,
+  isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
@@ -602,6 +603,82 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         );
       });
 
+    });
+
+  });
+
+  describe('should define an API specification', () => {
+
+    it('unless options.openapi is undefined.', () => {
+      @JWT()
+      class Foobar {}
+
+      strictEqual(getApiSecurity(Foobar), undefined);
+      deepStrictEqual(getApiComponents(Foobar), {});
+    });
+
+    it('unless options.openapi is false.', () => {
+      @JWT()
+      class Foobar {}
+
+      strictEqual(getApiSecurity(Foobar), undefined);
+      deepStrictEqual(getApiComponents(Foobar), {});
+    });
+
+    it('if options.openapi is true (class decorator).', () => {
+      @JWT({ openapi: true })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            bearerFormat: 'JWT',
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
+    });
+
+    it('if options.openapi is true (method decorator).', () => {
+      class Foobar {
+        @JWT({ openapi: true })
+        foo() {}
+      }
+
+      const actualComponents = getApiComponents(Foobar, 'foo');
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            bearerFormat: 'JWT',
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar, 'foo');
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
     });
 
   });
