@@ -1,6 +1,6 @@
 # Comparison with Other Frameworks
 
-More comparisons to come!
+Feel free to suggest changes to keep the page up to date or correct inaccuracies, if necessary. Feel free also to [open an issue](https://github.com/FoalTS/foal/issues/new) if you have other examples of differentiation to share.
 
 ## NestJS
 
