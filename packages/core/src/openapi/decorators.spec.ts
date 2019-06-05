@@ -7,8 +7,8 @@ import {
   ApiCallback, ApiDefineCallback, ApiDefineExample, ApiDefineHeader,
   ApiDefineLink, ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse,
   ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiDeprecated,
-  ApiExternalDoc, ApiInfo, ApiOperation, ApiParameter, ApiRequestBody,
-  ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
+  ApiExternalDoc, ApiInfo, ApiOperation, ApiOperationDescription, ApiOperationSummary,
+  ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from './decorators';
 import {
   IApiCallback, IApiExample, IApiExternalDocumentation,
@@ -40,6 +40,34 @@ describe('ApiInfo', () => {
     class Controller { }
 
     strictEqual(getMetadata('api:document:info', Controller), metadata);
+  });
+
+});
+
+describe('ApiOperationDescription', () => {
+
+  const metadata: string = 'Returns pets based on ID';
+
+  it('should define the correct metadata (method).', () => {
+    class Controller {
+      @ApiOperationDescription(metadata)
+      foo() { }
+    }
+    deepStrictEqual(getMetadata('api:operation:description', Controller, 'foo'), 'Returns pets based on ID');
+  });
+
+});
+
+describe('ApiOperationSummary', () => {
+
+  const metadata: string = 'Find pets by ID';
+
+  it('should define the correct metadata (method).', () => {
+    class Controller {
+      @ApiOperationSummary(metadata)
+      foo() { }
+    }
+    deepStrictEqual(getMetadata('api:operation:summary', Controller, 'foo'), 'Find pets by ID');
   });
 
 });

@@ -62,7 +62,7 @@ describe('Foal', () => {
         },
         type: 'object',
       })
-      createProduct(ctx) {}
+      createProduct() {}
     }
 
     const yamlDocument2 = readFileSync(join(__dirname, './assets/openapi.hooks2.yml'), 'utf8');
