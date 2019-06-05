@@ -1,6 +1,6 @@
 import {
   ApiOperationDescription, ApiOperationSummary, ApiResponse,
-  Context, Delete, Get, HttpResponseCreated, HttpResponseMethodNotAllowed,
+  Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
@@ -19,7 +19,7 @@ const testFooBarSchema = {
 
 export class TestFooBarController {
 
-  @Get('/')
+  @Get()
   @ApiOperationSummary('Find testFooBars.')
   @ApiOperationDescription(
     'The query parameters "skip" and "take" can be used for pagination. The first ' +
@@ -57,7 +57,7 @@ export class TestFooBarController {
     return new HttpResponseOK(testFooBar);
   }
 
-  @Post('/')
+  @Post()
   @ApiOperationSummary('Create a new testFooBar.')
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(201, { description: 'TestFooBar successfully created. Returns the testFooBar.' })
@@ -65,16 +65,6 @@ export class TestFooBarController {
   async post(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).save(ctx.request.body);
     return new HttpResponseCreated(testFooBar);
-  }
-
-  @Post('/:testFooBarId')
-  postById() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Patch('/')
-  patch() {
-    return new HttpResponseMethodNotAllowed();
   }
 
   @Patch('/:testFooBarId')
@@ -98,11 +88,6 @@ export class TestFooBarController {
     return new HttpResponseOK(testFooBar);
   }
 
-  @Put('/')
-  put() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
   @Put('/:testFooBarId')
   @ApiOperationSummary('Update/replace an existing testFooBar.')
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
@@ -122,11 +107,6 @@ export class TestFooBarController {
     await getRepository(TestFooBar).save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
-  }
-
-  @Delete('/')
-  delete() {
-    return new HttpResponseMethodNotAllowed();
   }
 
   @Delete('/:testFooBarId')

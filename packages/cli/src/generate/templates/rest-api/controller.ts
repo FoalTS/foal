@@ -1,6 +1,6 @@
 import {
   ApiOperationDescription, ApiOperationSummary, ApiResponse,
-  Context, Delete, Get, HttpResponseCreated, HttpResponseMethodNotAllowed,
+  Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
@@ -19,7 +19,7 @@ const /* camelName */Schema = {
 
 export class /* upperFirstCamelName */Controller {
 
-  @Get('/')
+  @Get()
   @ApiOperationSummary('Find /* camelName */s.')
   @ApiOperationDescription(
     'The query parameters "skip" and "take" can be used for pagination. The first ' +
@@ -57,7 +57,7 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseOK(/* camelName */);
   }
 
-  @Post('/')
+  @Post()
   @ApiOperationSummary('Create a new /* camelName */.')
   @ApiResponse(400, { description: 'Invalid /* camelName */.' })
   @ApiResponse(201, { description: '/* upperFirstCamelName */ successfully created. Returns the /* camelName */.' })
@@ -65,16 +65,6 @@ export class /* upperFirstCamelName */Controller {
   async post(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).save(ctx.request.body);
     return new HttpResponseCreated(/* camelName */);
-  }
-
-  @Post('/:/* camelName */Id')
-  postById() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Patch('/')
-  patch() {
-    return new HttpResponseMethodNotAllowed();
   }
 
   @Patch('/:/* camelName */Id')
@@ -98,11 +88,6 @@ export class /* upperFirstCamelName */Controller {
     return new HttpResponseOK(/* camelName */);
   }
 
-  @Put('/')
-  put() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
   @Put('/:/* camelName */Id')
   @ApiOperationSummary('Update/replace an existing /* camelName */.')
   @ApiResponse(400, { description: 'Invalid /* camelName */.' })
@@ -122,11 +107,6 @@ export class /* upperFirstCamelName */Controller {
     await getRepository(/* upperFirstCamelName */).save(/* camelName */);
 
     return new HttpResponseOK(/* camelName */);
-  }
-
-  @Delete('/')
-  delete() {
-    return new HttpResponseMethodNotAllowed();
   }
 
   @Delete('/:/* camelName */Id')

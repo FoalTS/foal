@@ -4,7 +4,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import {
   Context, createController, getHttpMethod, getPath,
-  isHttpResponseCreated, isHttpResponseMethodNotAllowed, isHttpResponseNoContent,
+  isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
@@ -51,7 +51,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'get'), 'GET');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'get'), '/');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'get'), undefined);
     });
 
     it('should return an HttpResponseOK object with the /* camelName */ list.', async () => {
@@ -145,7 +145,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     it('should handle requests at POST /.', () => {
       strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'post'), 'POST');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'post'), '/');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'post'), undefined);
     });
 
     it('should create the /* camelName */ in the database and return it through '
@@ -171,32 +171,6 @@ describe('/* upperFirstCamelName */Controller', () => {
 
       strictEqual(response.body.id, /* camelName */.id);
       strictEqual(response.body.text, /* camelName */.text);
-    });
-
-  });
-
-  describe('has a "postById" method that', () => {
-
-    it('should handle requests at POST /:/* camelName */Id.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'postById'), 'POST');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'postById'), '/:/* camelName */Id');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.postById()));
-    });
-
-  });
-
-  describe('has a "patch" method that', () => {
-
-    it('should handle requests at PATCH /.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'patch'), 'PATCH');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'patch'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.patch()));
     });
 
   });
@@ -273,19 +247,6 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "put" method that', () => {
-
-    it('should handle requests at PUT /.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'put'), 'PUT');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'put'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.put()));
-    });
-
-  });
-
   describe('has a "putById" method that', () => {
 
     it('should handle requests at PUT /:/* camelName */Id.', () => {
@@ -354,19 +315,6 @@ describe('/* upperFirstCamelName */Controller', () => {
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
       }
-    });
-
-  });
-
-  describe('has a "delete" method that', () => {
-
-    it('should handle requests at DELETE /.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'delete'), 'DELETE');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'delete'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.delete()));
     });
 
   });

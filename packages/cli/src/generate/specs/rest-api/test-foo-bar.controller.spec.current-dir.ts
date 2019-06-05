@@ -4,7 +4,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import {
   Context, createController, getHttpMethod, getPath,
-  isHttpResponseCreated, isHttpResponseMethodNotAllowed, isHttpResponseNoContent,
+  isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
@@ -51,7 +51,7 @@ describe('TestFooBarController', () => {
 
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'get'), 'GET');
-      strictEqual(getPath(TestFooBarController, 'get'), '/');
+      strictEqual(getPath(TestFooBarController, 'get'), undefined);
     });
 
     it('should return an HttpResponseOK object with the testFooBar list.', async () => {
@@ -145,7 +145,7 @@ describe('TestFooBarController', () => {
 
     it('should handle requests at POST /.', () => {
       strictEqual(getHttpMethod(TestFooBarController, 'post'), 'POST');
-      strictEqual(getPath(TestFooBarController, 'post'), '/');
+      strictEqual(getPath(TestFooBarController, 'post'), undefined);
     });
 
     it('should create the testFooBar in the database and return it through '
@@ -171,32 +171,6 @@ describe('TestFooBarController', () => {
 
       strictEqual(response.body.id, testFooBar.id);
       strictEqual(response.body.text, testFooBar.text);
-    });
-
-  });
-
-  describe('has a "postById" method that', () => {
-
-    it('should handle requests at POST /:testFooBarId.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'postById'), 'POST');
-      strictEqual(getPath(TestFooBarController, 'postById'), '/:testFooBarId');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.postById()));
-    });
-
-  });
-
-  describe('has a "patch" method that', () => {
-
-    it('should handle requests at PATCH /.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'patch'), 'PATCH');
-      strictEqual(getPath(TestFooBarController, 'patch'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.patch()));
     });
 
   });
@@ -273,19 +247,6 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "put" method that', () => {
-
-    it('should handle requests at PUT /.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'put'), 'PUT');
-      strictEqual(getPath(TestFooBarController, 'put'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.put()));
-    });
-
-  });
-
   describe('has a "putById" method that', () => {
 
     it('should handle requests at PUT /:testFooBarId.', () => {
@@ -354,19 +315,6 @@ describe('TestFooBarController', () => {
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
       }
-    });
-
-  });
-
-  describe('has a "delete" method that', () => {
-
-    it('should handle requests at DELETE /.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'delete'), 'DELETE');
-      strictEqual(getPath(TestFooBarController, 'delete'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.delete()));
     });
 
   });
