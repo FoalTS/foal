@@ -95,6 +95,8 @@ Using the `@ApiOperation` decorator can sometimes be cumbersome. That is why Foa
 
 | Operation Decorators |
 | --- |
+| `@ApiOperationSummary` |
+| `@ApiOperationDescription` |
 | `@ApiServer` |
 | `@ApiRequestBody` |
 | `@ApiSecurityRequirement` |
