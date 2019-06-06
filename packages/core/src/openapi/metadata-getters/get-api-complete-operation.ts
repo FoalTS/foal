@@ -5,6 +5,7 @@ import { getApiDeprecated } from './get-api-deprecated';
 import { getApiExternalDocs } from './get-api-external-docs';
 import { getApiOperation } from './get-api-operation';
 import { getApiOperationDescription } from './get-api-operation-description';
+import { getApiOperationId } from './get-api-operation-id';
 import { getApiOperationSummary } from './get-api-operation-summary';
 import { getApiParameters } from './get-api-parameters';
 import { getApiRequestBody } from './get-api-request-body';
@@ -22,6 +23,11 @@ export function getApiCompleteOperation(controllerClass: Class, propertyKey?: st
   const description = getApiOperationDescription(controllerClass, propertyKey);
   if (description !== undefined) {
     completeOperation.description = description;
+  }
+
+  const operationId = getApiOperationId(controllerClass, propertyKey);
+  if (operationId !== undefined) {
+    completeOperation.operationId = operationId;
   }
 
   const summary = getApiOperationSummary(controllerClass, propertyKey);

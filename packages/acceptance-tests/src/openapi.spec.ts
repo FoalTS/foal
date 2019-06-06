@@ -9,8 +9,8 @@ import { parse } from 'yamljs';
 // FoalTS
 import {
   ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
-  ApiOperation, ApiOperationDescription, ApiOperationSummary, ApiParameter, ApiRequestBody, ApiResponse,
-  ApiSecurityRequirement, ApiServer, ApiUseTag, controller, createOpenApiDocument, Delete, Get, Post, Put
+  ApiOperation, ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiParameter, ApiRequestBody,
+  ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag, controller, createOpenApiDocument, Delete, Get, Post, Put
 } from '@foal/core';
 
 it('OpenAPI', async () => {
@@ -159,10 +159,7 @@ it('OpenAPI', async () => {
   })
   class PetController {
     @Put()
-    @ApiOperation({
-      operationId: 'updatePet',
-      responses: {},
-    })
+    @ApiOperationId('updatePet')
     @ApiOperationSummary('Update an existing pet')
     @ApiRequestBody({
       content: {
@@ -185,10 +182,7 @@ it('OpenAPI', async () => {
     updatePet() { }
 
     @Post()
-    @ApiOperation({
-      operationId: 'addPet',
-      responses: {},
-    })
+    @ApiOperationId('addPet')
     @ApiOperationSummary('Add a new pet to the store')
     @ApiRequestBody({
       content: {
@@ -209,10 +203,7 @@ it('OpenAPI', async () => {
     addPet() { }
 
     @Get('/findByStatus')
-    @ApiOperation({
-      operationId: 'findPetsByStatus',
-      responses: {},
-    })
+    @ApiOperationId('findPetsByStatus')
     @ApiOperationSummary('Finds Pets by status')
     @ApiOperationDescription('Multiple status values can be provided with comma separated strings')
     @ApiParameter({
@@ -255,10 +246,7 @@ it('OpenAPI', async () => {
     findPetsByStatus() { }
 
     @Get('/findByTags')
-    @ApiOperation({
-      operationId: 'findPetsByTags',
-      responses: {},
-    })
+    @ApiOperationId('findPetsByTags')
     @ApiOperationDescription('Muliple tags can be provided with comma separated strings. Use         tag1,'
     + '\ntag2, tag3 for testing.')
     @ApiOperationSummary('Finds Pets by tags')
@@ -299,10 +287,7 @@ it('OpenAPI', async () => {
     findPetsByTags() { }
 
     @Get('/:petId')
-    @ApiOperation({
-      operationId: 'getPetById',
-      responses: {},
-    })
+    @ApiOperationId('getPetById')
     @ApiOperationSummary('Find pet by ID')
     @ApiOperationDescription('Returns a single pet')
     @ApiParameter({

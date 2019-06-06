@@ -5,6 +5,7 @@ export { getApiDeprecated } from './get-api-deprecated';
 export { getApiExternalDocs } from './get-api-external-docs';
 export { getApiInfo } from './get-api-info';
 export { getApiOperationDescription } from './get-api-operation-description';
+export { getApiOperationId } from './get-api-operation-id';
 export { getApiOperationSummary } from './get-api-operation-summary';
 export { getApiOperation } from './get-api-operation';
 export { getApiParameters } from './get-api-parameters';

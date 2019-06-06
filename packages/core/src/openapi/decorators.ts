@@ -35,6 +35,10 @@ export function ApiOperationDescription(description: string) {
   return Reflect.metadata('api:operation:description', description);
 }
 
+export function ApiOperationId(operationId: string) {
+  return Reflect.metadata('api:operation:operationId', operationId);
+}
+
 export function ApiOperationSummary(summary: string) {
   return Reflect.metadata('api:operation:summary', summary);
 }

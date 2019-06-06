@@ -7,8 +7,8 @@ import {
   ApiCallback, ApiDefineCallback, ApiDefineExample, ApiDefineHeader,
   ApiDefineLink, ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse,
   ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiDeprecated,
-  ApiExternalDoc, ApiInfo, ApiOperation, ApiOperationDescription, ApiOperationSummary,
-  ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
+  ApiExternalDoc, ApiInfo, ApiOperation, ApiOperationDescription, ApiOperationId,
+  ApiOperationSummary, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from './decorators';
 import {
   IApiCallback, IApiExample, IApiExternalDocumentation,
@@ -54,6 +54,20 @@ describe('ApiOperationDescription', () => {
       foo() { }
     }
     deepStrictEqual(getMetadata('api:operation:description', Controller, 'foo'), 'Returns pets based on ID');
+  });
+
+});
+
+describe('ApiOperationId', () => {
+
+  const metadata: string = 'updatePet';
+
+  it('should define the correct metadata (method).', () => {
+    class Controller {
+      @ApiOperationId(metadata)
+      foo() { }
+    }
+    deepStrictEqual(getMetadata('api:operation:operationId', Controller, 'foo'), 'updatePet');
   });
 
 });

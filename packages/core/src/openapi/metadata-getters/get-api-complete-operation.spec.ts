@@ -1,7 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
-  ApiCallback, ApiDeprecated, ApiExternalDoc, ApiOperation, ApiOperationDescription, ApiOperationSummary,
-  ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
+  ApiCallback, ApiDeprecated, ApiExternalDoc, ApiOperation, ApiOperationDescription, ApiOperationId,
+  ApiOperationSummary, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from '../decorators';
 import {
   IApiCallback, IApiExternalDocumentation, IApiParameter, IApiRequestBody, IApiResponse,
@@ -75,6 +75,40 @@ describe('getApiCompleteOperation', () => {
 
       const operation2 = getApiCompleteOperation(Controller2, 'foo');
       strictEqual(operation2.summary, '');
+    });
+
+  });
+
+  describe('should return the operationId of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('operationId'), false);
+
+      @ApiOperationId('')
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.operationId, '');
+    });
+
+    it('a class method.', () => {
+      class Controller {
+        foo() {}
+      }
+
+      const operation = getApiCompleteOperation(Controller, 'foo');
+      strictEqual(operation.hasOwnProperty('operationId'), false);
+
+      class Controller2 {
+        @ApiOperationId('')
+        foo() {}
+      }
+
+      const operation2 = getApiCompleteOperation(Controller2, 'foo');
+      strictEqual(operation2.operationId, '');
     });
 
   });
