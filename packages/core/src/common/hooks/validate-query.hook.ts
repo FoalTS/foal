@@ -10,6 +10,7 @@ import { extractProperties } from './extract-properties.util';
  *
  * @export
  * @param {object} schema - Schema used to validate the query request.
+ * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
 export function ValidateQuery(schema: object, options: { openapi?: boolean } = {}): HookDecorator {

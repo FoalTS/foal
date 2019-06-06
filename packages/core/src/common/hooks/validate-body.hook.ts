@@ -11,6 +11,7 @@ import { getAjvInstance } from '../utils';
  *
  * @export
  * @param {object} schema - Schema used to validate the body request.
+ * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
 export function ValidateBody(schema: object, options: { openapi?: boolean } = {}): HookDecorator {

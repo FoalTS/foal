@@ -12,6 +12,7 @@ import { extractProperties } from './extract-properties.util';
  *
  * @export
  * @param {object} schema - Schema used to validate the headers request.
+ * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
 export function ValidateHeaders(schema: object, options: { openapi?: boolean } = {}): HookDecorator {
