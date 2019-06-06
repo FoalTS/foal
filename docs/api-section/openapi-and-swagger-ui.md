@@ -96,6 +96,7 @@ Using the `@ApiOperation` decorator can sometimes be cumbersome. That is why Foa
 | Operation Decorators |
 | --- |
 | `@ApiOperationSummary` |
+| `@ApiOperationId` |
 | `@ApiOperationDescription` |
 | `@ApiServer` |
 | `@ApiRequestBody` |
@@ -203,6 +204,76 @@ paths:
           description: successful operation
         404:
           description: not found
+```
+
+### Use Existing Hooks
+
+The addition of these decorators can sometimes be quite redundant with existing hooks. For example, if we want to write OpenAPI documentation for authentication and validation of the request body, we may end up with something like this.
+
+```typescript
+@JWTRequired()
+@ApiSecurityRequirement({ bearerAuth: [] })
+@ApiDefineSecurityScheme('bearerAuth', {
+  type: 'http',
+  scheme: 'bearer',
+  bearerFormat: 'JWT'
+})
+export class ApiController {
+  
+  @Post('/products')
+  @ValidateBody(schema)
+  @ApiRequestBody({
+     required: true,
+     content: {
+       'application/json': { schema }
+     }
+  })
+  createProducts() {
+    
+  }
+
+}
+```
+
+To avoid this, it is possible to generate the OpenAPI documentation from the validation and authentication hooks using the `openapi` option.
+
+```typescript
+@JWTRequired({ openapi: true })
+export class ApiController {
+  
+  @Post('/products')
+  @ValidateBody(schema, { openapi: true })
+  createProducts() {
+    // ...
+  }
+
+}
+```
+
+More simply, you can globally set the [configuration key](../deployment-and-environments/configuration.md) `setting.openapi.useHooks` to `true` so that each authentication and validation hooks generates documentation.
+
+```yaml
+settings:
+  openapi:
+    useHooks: true
+```
+
+Note that this global configuration can always be override by setting the `openapi` option on each hook.
+
+```typescript
+export class ApiController {
+  
+  @Post('/products')
+  // Generate automatically the OpenAPI spec for the request body
+  @ValidateBody(schema)
+  // Choose to write a customize spec for the path parameters
+  @ValidateParams(schema2, { openapi: false })
+  @ApiParameter( ... )
+  createProducts() {
+    // ...
+  }
+
+}
 ```
 
 ## Swagger UI

@@ -115,3 +115,11 @@ export const productSchhema = {
   type: 'object',
 };
 ```
+
+## Generate OpenAPI documentation
+
+The generated controllers also have OpenAPI decorators on their methods to document the API.
+
+In this way, when the [configuration key](../deployment-and-environments/configuration.md) `settings.openapi.useHooks` is set to `true`, we can get a full documentation of the API using [Swagger UI](./openapi-and-swagger-ui.md)
+
+![Example of documentation](./rest-openapi.png).
