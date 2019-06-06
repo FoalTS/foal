@@ -4,7 +4,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import {
   Context, createController, getHttpMethod, getPath,
-  isHttpResponseCreated, isHttpResponseMethodNotAllowed, isHttpResponseNoContent,
+  isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
@@ -51,7 +51,7 @@ describe('ProductController', () => {
 
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(ProductController, 'get'), 'GET');
-      strictEqual(getPath(ProductController, 'get'), '/');
+      strictEqual(getPath(ProductController, 'get'), undefined);
     });
 
     it('should return an HttpResponseOK object with the product list.', async () => {
@@ -105,15 +105,15 @@ describe('ProductController', () => {
 
   describe('has a "getById" method that', () => {
 
-    it('should handle requests at GET /:id.', () => {
+    it('should handle requests at GET /:productId.', () => {
       strictEqual(getHttpMethod(ProductController, 'getById'), 'GET');
-      strictEqual(getPath(ProductController, 'getById'), '/:id');
+      strictEqual(getPath(ProductController, 'getById'), '/:productId');
     });
 
     it('should return an HttpResponseOK object if the product was found.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       const response = await controller.getById(ctx);
@@ -129,7 +129,7 @@ describe('ProductController', () => {
     it('should return an HttpResponseNotFound object if the product was not found.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          productId: -1
         }
       });
       const response = await controller.getById(ctx);
@@ -145,7 +145,7 @@ describe('ProductController', () => {
 
     it('should handle requests at POST /.', () => {
       strictEqual(getHttpMethod(ProductController, 'post'), 'POST');
-      strictEqual(getPath(ProductController, 'post'), '/');
+      strictEqual(getPath(ProductController, 'post'), undefined);
     });
 
     it('should create the product in the database and return it through '
@@ -175,37 +175,11 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "postById" method that', () => {
-
-    it('should handle requests at POST /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'postById'), 'POST');
-      strictEqual(getPath(ProductController, 'postById'), '/:id');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.postById()));
-    });
-
-  });
-
-  describe('has a "patch" method that', () => {
-
-    it('should handle requests at PATCH /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'patch'), 'PATCH');
-      strictEqual(getPath(ProductController, 'patch'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.patch()));
-    });
-
-  });
-
   describe('has a "patchById" method that', () => {
 
-    it('should handle requests at PATCH /:id.', () => {
+    it('should handle requests at PATCH /:productId.', () => {
       strictEqual(getHttpMethod(ProductController, 'patchById'), 'PATCH');
-      strictEqual(getPath(ProductController, 'patchById'), '/:id');
+      strictEqual(getPath(ProductController, 'patchById'), '/:productId');
     });
 
     it('should update the product in the database and return it through an HttpResponseOK object.', async () => {
@@ -214,7 +188,7 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       const response = await controller.patchById(ctx);
@@ -241,7 +215,7 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       await controller.patchById(ctx);
@@ -261,7 +235,7 @@ describe('ProductController', () => {
           text: '',
         },
         params: {
-          id: -1
+          productId: -1
         }
       });
       const response = await controller.patchById(ctx);
@@ -273,24 +247,11 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "put" method that', () => {
-
-    it('should handle requests at PUT /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'put'), 'PUT');
-      strictEqual(getPath(ProductController, 'put'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.put()));
-    });
-
-  });
-
   describe('has a "putById" method that', () => {
 
-    it('should handle requests at PUT /:id.', () => {
+    it('should handle requests at PUT /:productId.', () => {
       strictEqual(getHttpMethod(ProductController, 'putById'), 'PUT');
-      strictEqual(getPath(ProductController, 'putById'), '/:id');
+      strictEqual(getPath(ProductController, 'putById'), '/:productId');
     });
 
     it('should update the product in the database and return it through an HttpResponseOK object.', async () => {
@@ -299,7 +260,7 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       const response = await controller.putById(ctx);
@@ -326,7 +287,7 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       await controller.putById(ctx);
@@ -346,7 +307,7 @@ describe('ProductController', () => {
           text: '',
         },
         params: {
-          id: -1
+          productId: -1
         }
       });
       const response = await controller.putById(ctx);
@@ -358,30 +319,17 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "delete" method that', () => {
-
-    it('should handle requests at DELETE /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'delete'), 'DELETE');
-      strictEqual(getPath(ProductController, 'delete'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.delete()));
-    });
-
-  });
-
   describe('has a "deleteById" method that', () => {
 
-    it('should handle requests at DELETE /:id.', () => {
+    it('should handle requests at DELETE /:productId.', () => {
       strictEqual(getHttpMethod(ProductController, 'deleteById'), 'DELETE');
-      strictEqual(getPath(ProductController, 'deleteById'), '/:id');
+      strictEqual(getPath(ProductController, 'deleteById'), '/:productId');
     });
 
     it('should delete the product and return an HttpResponseNoContent object.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -398,7 +346,7 @@ describe('ProductController', () => {
     it('should not delete the other products.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
       const response = await controller.deleteById(ctx);
@@ -415,7 +363,7 @@ describe('ProductController', () => {
     it('should return an HttpResponseNotFound if the product was not fond.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          productId: -1
         }
       });
       const response = await controller.deleteById(ctx);
