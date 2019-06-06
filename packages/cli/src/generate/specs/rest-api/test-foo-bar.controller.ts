@@ -1,6 +1,6 @@
 import {
   ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
-  Context, Delete, Get, HttpResponseCreated,
+  ApiUseTag, Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
@@ -17,6 +17,7 @@ const testFooBarSchema = {
   type: 'object',
 };
 
+@ApiUseTag('testFooBar')
 export class TestFooBarController {
 
   @Get()
