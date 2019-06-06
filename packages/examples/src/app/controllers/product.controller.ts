@@ -1,13 +1,14 @@
 import {
-  ApiRequestBody, ApiUseTag, Context, Delete, Get,
-  HttpResponseCreated, HttpResponseMethodNotAllowed, HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK,
-  IApiSchema, Patch, Post, Put, ValidateBody, ValidateParams, ValidateQuery
+  ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
+  ApiUseTag, Context, Delete, Get, HttpResponseCreated,
+  HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
+  Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
 import { Product } from '../entities';
 
-const productSchema: IApiSchema = {
+const productSchema = {
   additionalProperties: false,
   properties: {
     text: { type: 'string', maxLength: 255 },
@@ -19,7 +20,15 @@ const productSchema: IApiSchema = {
 @ApiUseTag('product')
 export class ProductController {
 
-  @Get('/')
+  @Get()
+  @ApiOperationId('findProducts')
+  @ApiOperationSummary('Find products.')
+  @ApiOperationDescription(
+    'The query parameters "skip" and "take" can be used for pagination. The first ' +
+    'is the offset and the second is the number of elements to be returned.'
+  )
+  @ApiResponse(400, { description: 'Invalid query parameters.' })
+  @ApiResponse(200, { description: 'Returns a list of products.' })
   @ValidateQuery({
     properties: {
       skip: { type: 'number' },
@@ -27,7 +36,7 @@ export class ProductController {
     },
     type: 'object',
   })
-  async get(ctx: Context) {
+  async findProducts(ctx: Context) {
     const products = await getRepository(Product).find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take
@@ -35,10 +44,14 @@ export class ProductController {
     return new HttpResponseOK(products);
   }
 
-  @Get('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
-  async getById(ctx: Context) {
-    const product = await getRepository(Product).findOne(ctx.request.params.id);
+  @Get('/:productId')
+  @ApiOperationId('findProductById')
+  @ApiOperationSummary('Find a product by ID.')
+  @ApiResponse(404, { description: 'Product not found.' })
+  @ApiResponse(200, { description: 'Returns the product.' })
+  @ValidateParams({ properties: { productId: { type: 'number' } }, type: 'object' })
+  async findProductById(ctx: Context) {
+    const product = await getRepository(Product).findOne(ctx.request.params.productId);
 
     if (!product) {
       return new HttpResponseNotFound();
@@ -47,44 +60,27 @@ export class ProductController {
     return new HttpResponseOK(product);
   }
 
-  @Post('/')
+  @Post()
+  @ApiOperationId('createProduct')
+  @ApiOperationSummary('Create a new product.')
+  @ApiResponse(400, { description: 'Invalid product.' })
+  @ApiResponse(201, { description: 'Product successfully created. Returns the product.' })
   @ValidateBody(productSchema)
-  @ApiRequestBody({
-    content: {
-      'application/json': {
-        schema: productSchema
-      }
-    },
-    required: true
-  })
-  async post(ctx: Context) {
+  async createProduct(ctx: Context) {
     const product = await getRepository(Product).save(ctx.request.body);
     return new HttpResponseCreated(product);
   }
 
-  @Post('/:id')
-  postById() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Patch('/')
-  patch() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Patch('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Patch('/:productId')
+  @ApiOperationId('modifyProduct')
+  @ApiOperationSummary('Update/modify an existing product.')
+  @ApiResponse(400, { description: 'Invalid product.' })
+  @ApiResponse(404, { description: 'Product not found.' })
+  @ApiResponse(200, { description: 'Product successfully updated. Returns the product.' })
+  @ValidateParams({ properties: { productId: { type: 'number' } }, type: 'object' })
   @ValidateBody({ ...productSchema, required: [] })
-  @ApiRequestBody({
-    content: {
-      'application/json': {
-        schema: { ...productSchema, required: [] }
-      }
-    },
-    required: true
-  })
-  async patchById(ctx: Context) {
-    const product = await getRepository(Product).findOne(ctx.request.params.id);
+  async modifyProduct(ctx: Context) {
+    const product = await getRepository(Product).findOne(ctx.request.params.productId);
 
     if (!product) {
       return new HttpResponseNotFound();
@@ -97,24 +93,16 @@ export class ProductController {
     return new HttpResponseOK(product);
   }
 
-  @Put('/')
-  put() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Put('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
+  @Put('/:productId')
+  @ApiOperationId('replaceProduct')
+  @ApiOperationSummary('Update/replace an existing product.')
+  @ApiResponse(400, { description: 'Invalid product.' })
+  @ApiResponse(404, { description: 'Product not found.' })
+  @ApiResponse(200, { description: 'Product successfully updated. Returns the product.' })
+  @ValidateParams({ properties: { productId: { type: 'number' } }, type: 'object' })
   @ValidateBody(productSchema)
-  @ApiRequestBody({
-    content: {
-      'application/json': {
-        schema: productSchema
-      }
-    },
-    required: true
-  })
-  async putById(ctx: Context) {
-    const product = await getRepository(Product).findOne(ctx.request.params.id);
+  async replaceProduct(ctx: Context) {
+    const product = await getRepository(Product).findOne(ctx.request.params.productId);
 
     if (!product) {
       return new HttpResponseNotFound();
@@ -127,21 +115,20 @@ export class ProductController {
     return new HttpResponseOK(product);
   }
 
-  @Delete('/')
-  delete() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Delete('/:id')
-  @ValidateParams({ properties: { id: { type: 'number' } }, type: 'object' })
-  async deleteById(ctx: Context) {
-    const product = await getRepository(Product).findOne(ctx.request.params.id);
+  @Delete('/:productId')
+  @ApiOperationId('deleteProduct')
+  @ApiOperationSummary('Delete a product.')
+  @ApiResponse(404, { description: 'Product not found.' })
+  @ApiResponse(204, { description: 'Product successfully deleted.' })
+  @ValidateParams({ properties: { productId: { type: 'number' } }, type: 'object' })
+  async deleteProduct(ctx: Context) {
+    const product = await getRepository(Product).findOne(ctx.request.params.productId);
 
     if (!product) {
       return new HttpResponseNotFound();
     }
 
-    await getRepository(Product).delete(ctx.request.params.id);
+    await getRepository(Product).delete(ctx.request.params.productId);
 
     return new HttpResponseNoContent();
   }

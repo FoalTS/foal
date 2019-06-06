@@ -1,7 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
-  ApiCallback, ApiDeprecated, ApiExternalDoc, ApiOperation, ApiParameter, ApiRequestBody,
-  ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
+  ApiCallback, ApiDeprecated, ApiExternalDoc, ApiOperation, ApiOperationDescription, ApiOperationId,
+  ApiOperationSummary, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from '../decorators';
 import {
   IApiCallback, IApiExternalDocumentation, IApiParameter, IApiRequestBody, IApiResponse,
@@ -47,6 +47,19 @@ describe('getApiCompleteOperation', () => {
 
   describe('should return the summary of', () => {
 
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('summary'), false);
+
+      @ApiOperationSummary('')
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.summary, '');
+    });
+
     it('a class method.', () => {
       class Controller {
         foo() {}
@@ -55,21 +68,8 @@ describe('getApiCompleteOperation', () => {
       const operation = getApiCompleteOperation(Controller, 'foo');
       strictEqual(operation.hasOwnProperty('summary'), false);
 
-      class Controller3 {
-        @ApiOperation({
-          responses: {},
-        })
-        foo() {}
-      }
-
-      const operation3 = getApiCompleteOperation(Controller3, 'foo');
-      strictEqual(operation3.hasOwnProperty('summary'), false);
-
       class Controller2 {
-        @ApiOperation({
-          responses: {},
-          summary: ''
-        })
+        @ApiOperationSummary('')
         foo() {}
       }
 
@@ -79,7 +79,54 @@ describe('getApiCompleteOperation', () => {
 
   });
 
+  describe('should return the operationId of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('operationId'), false);
+
+      @ApiOperationId('')
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.operationId, '');
+    });
+
+    it('a class method.', () => {
+      class Controller {
+        foo() {}
+      }
+
+      const operation = getApiCompleteOperation(Controller, 'foo');
+      strictEqual(operation.hasOwnProperty('operationId'), false);
+
+      class Controller2 {
+        @ApiOperationId('')
+        foo() {}
+      }
+
+      const operation2 = getApiCompleteOperation(Controller2, 'foo');
+      strictEqual(operation2.operationId, '');
+    });
+
+  });
+
   describe('should return the description of', () => {
+
+    it('a class.', () => {
+      class Controller {}
+
+      const operation = getApiCompleteOperation(Controller);
+      strictEqual(operation.hasOwnProperty('description'), false);
+
+      @ApiOperationDescription('')
+      class Controller2 {}
+
+      const operation2 = getApiCompleteOperation(Controller2);
+      strictEqual(operation2.description, '');
+    });
 
     it('a class method.', () => {
       class Controller {
@@ -89,21 +136,8 @@ describe('getApiCompleteOperation', () => {
       const operation = getApiCompleteOperation(Controller, 'foo');
       strictEqual(operation.hasOwnProperty('description'), false);
 
-      class Controller3 {
-        @ApiOperation({
-          responses: {},
-        })
-        foo() {}
-      }
-
-      const operation3 = getApiCompleteOperation(Controller3, 'foo');
-      strictEqual(operation3.hasOwnProperty('description'), false);
-
       class Controller2 {
-        @ApiOperation({
-          description: '',
-          responses: {},
-        })
+        @ApiOperationDescription('')
         foo() {}
       }
 

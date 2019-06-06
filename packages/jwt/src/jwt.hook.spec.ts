@@ -3,8 +3,9 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Config, ConfigMock, Context,
-  getHookFunction, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
+  Class, Config, ConfigMock, Context, getApiComponents,
+  getApiResponses, getApiSecurity, getHookFunction, IApiComponents,
+  IApiResponses, IApiSecurityRequirement, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
@@ -602,6 +603,144 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         );
       });
 
+    });
+
+  });
+
+  describe('should define an API specification', () => {
+
+    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
+      @JWT()
+      class Foobar {}
+
+      strictEqual(getApiSecurity(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
+      deepStrictEqual(getApiComponents(Foobar), {});
+    });
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      @JWT()
+      class Foobar {}
+
+      strictEqual(getApiSecurity(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
+      deepStrictEqual(getApiComponents(Foobar), {});
+    });
+
+    it('unless options.openapi is false.', () => {
+      @JWT()
+      class Foobar {}
+
+      strictEqual(getApiSecurity(Foobar), undefined);
+      strictEqual(getApiResponses(Foobar), undefined);
+      deepStrictEqual(getApiComponents(Foobar), {});
+    });
+
+    function testClass(Foobar: Class) {
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            bearerFormat: 'JWT',
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+
+        const actualResponses = getApiResponses(Foobar);
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is missing or invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+        const actualResponses = getApiResponses(Foobar);
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
+      }
+    }
+
+    it('if options.openapi is true (class decorator).', () => {
+      @JWT({ openapi: true })
+      class Foobar {}
+
+      testClass(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      @JWT()
+      class Foobar {}
+
+      testClass(Foobar);
+    });
+
+    function testMethod(Foobar: Class) {
+      const actualComponents = getApiComponents(Foobar, 'foo');
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            bearerFormat: 'JWT',
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar, 'foo');
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+
+        const actualResponses = getApiResponses(Foobar, 'foo');
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is missing or invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+        const actualResponses = getApiResponses(Foobar, 'foo');
+        const expectedResponses: IApiResponses = {
+          401: { description: 'JWT is invalid.' }
+        };
+        deepStrictEqual(actualResponses, expectedResponses);
+      }
+    }
+
+    it('if options.openapi is true (method decorator).', () => {
+      class Foobar {
+        @JWT({ openapi: true })
+        foo() {}
+      }
+
+      testMethod(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @JWT()
+        foo() {}
+      }
+
+      testMethod(Foobar);
     });
 
   });

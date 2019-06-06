@@ -31,6 +31,18 @@ export function ApiInfo(info: IApiInfo) {
   return Reflect.metadata('api:document:info', info);
 }
 
+export function ApiOperationDescription(description: string) {
+  return Reflect.metadata('api:operation:description', description);
+}
+
+export function ApiOperationId(operationId: string) {
+  return Reflect.metadata('api:operation:operationId', operationId);
+}
+
+export function ApiOperationSummary(summary: string) {
+  return Reflect.metadata('api:operation:summary', summary);
+}
+
 export function ApiServer(server: IApiServer) {
   return AddMetadataItem('api:documentOrOperation:servers', server);
 }
