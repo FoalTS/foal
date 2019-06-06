@@ -1,5 +1,5 @@
 import {
-  ApiOperationDescription, ApiOperationSummary, ApiResponse,
+  ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
   Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
@@ -20,6 +20,7 @@ const testFooBarSchema = {
 export class TestFooBarController {
 
   @Get()
+  @ApiOperationId('findTestFooBars')
   @ApiOperationSummary('Find testFooBars.')
   @ApiOperationDescription(
     'The query parameters "skip" and "take" can be used for pagination. The first ' +
@@ -34,7 +35,7 @@ export class TestFooBarController {
     },
     type: 'object',
   })
-  async get(ctx: Context) {
+  async findTestFooBars(ctx: Context) {
     const testFooBars = await getRepository(TestFooBar).find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take
@@ -43,11 +44,12 @@ export class TestFooBarController {
   }
 
   @Get('/:testFooBarId')
+  @ApiOperationId('findTestFooBarById')
   @ApiOperationSummary('Find a testFooBar by ID.')
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
-  async getById(ctx: Context) {
+  async findTestFooBarById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -58,23 +60,25 @@ export class TestFooBarController {
   }
 
   @Post()
+  @ApiOperationId('createTestFooBar')
   @ApiOperationSummary('Create a new testFooBar.')
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(201, { description: 'TestFooBar successfully created. Returns the testFooBar.' })
   @ValidateBody(testFooBarSchema)
-  async post(ctx: Context) {
+  async createTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).save(ctx.request.body);
     return new HttpResponseCreated(testFooBar);
   }
 
   @Patch('/:testFooBarId')
+  @ApiOperationId('modifyTestFooBar')
   @ApiOperationSummary('Update/modify an existing testFooBar.')
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
-  async patchById(ctx: Context) {
+  async modifyTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -89,13 +93,14 @@ export class TestFooBarController {
   }
 
   @Put('/:testFooBarId')
+  @ApiOperationId('replaceTestFooBar')
   @ApiOperationSummary('Update/replace an existing testFooBar.')
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody(testFooBarSchema)
-  async putById(ctx: Context) {
+  async replaceTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -110,11 +115,12 @@ export class TestFooBarController {
   }
 
   @Delete('/:testFooBarId')
+  @ApiOperationId('deleteTestFooBar')
   @ApiOperationSummary('Delete a testFooBar.')
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
-  async deleteById(ctx: Context) {
+  async deleteTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {

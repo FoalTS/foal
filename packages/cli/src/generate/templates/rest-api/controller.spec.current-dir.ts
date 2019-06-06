@@ -47,16 +47,16 @@ describe('/* upperFirstCamelName */Controller', () => {
     ]);
   });
 
-  describe('has a "get" method that', () => {
+  describe('has a "find/* upperFirstCamelName */s" method that', () => {
 
     it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'get'), 'GET');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'get'), undefined);
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'find/* upperFirstCamelName */s'), 'GET');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'find/* upperFirstCamelName */s'), undefined);
     });
 
     it('should return an HttpResponseOK object with the /* camelName */ list.', async () => {
       const ctx = new Context({ query: {} });
-      const response = await controller.get(ctx);
+      const response = await controller.find/* upperFirstCamelName */s(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -81,7 +81,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           take: 2
         }
       });
-      let response = await controller.get(ctx);
+      let response = await controller.find/* upperFirstCamelName */s(ctx);
 
       strictEqual(response.body.length, 2);
       ok(response.body.find(/* camelName */ => /* camelName */.id === /* camelName */1.id));
@@ -93,7 +93,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           skip: 1
         }
       });
-      response = await controller.get(ctx);
+      response = await controller.find/* upperFirstCamelName */s(ctx);
 
       strictEqual(response.body.length, 2);
       ok(!response.body.find(/* camelName */ => /* camelName */.id === /* camelName */1.id));
@@ -103,11 +103,11 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "getById" method that', () => {
+  describe('has a "find/* upperFirstCamelName */ById" method that', () => {
 
     it('should handle requests at GET /:/* camelName */Id.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'getById'), 'GET');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'getById'), '/:/* camelName */Id');
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'find/* upperFirstCamelName */ById'), 'GET');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'find/* upperFirstCamelName */ById'), '/:/* camelName */Id');
     });
 
     it('should return an HttpResponseOK object if the /* camelName */ was found.', async () => {
@@ -116,7 +116,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.find/* upperFirstCamelName */ById(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -132,7 +132,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.find/* upperFirstCamelName */ById(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -141,11 +141,11 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "post" method that', () => {
+  describe('has a "create/* upperFirstCamelName */" method that', () => {
 
     it('should handle requests at POST /.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'post'), 'POST');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'post'), undefined);
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'create/* upperFirstCamelName */'), 'POST');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'create/* upperFirstCamelName */'), undefined);
     });
 
     it('should create the /* camelName */ in the database and return it through '
@@ -155,7 +155,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 3',
         }
       });
-      const response = await controller.post(ctx);
+      const response = await controller.create/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseCreated(response)) {
         throw new Error('The returned value should be an HttpResponseCreated object.');
@@ -175,11 +175,11 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "patchById" method that', () => {
+  describe('has a "modify/* upperFirstCamelName */" method that', () => {
 
     it('should handle requests at PATCH /:/* camelName */Id.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'patchById'), 'PATCH');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'patchById'), '/:/* camelName */Id');
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'modify/* upperFirstCamelName */'), 'PATCH');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'modify/* upperFirstCamelName */'), '/:/* camelName */Id');
     });
 
     it('should update the /* camelName */ in the database and return it through an HttpResponseOK object.', async () => {
@@ -191,7 +191,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modify/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -218,7 +218,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      await controller.patchById(ctx);
+      await controller.modify/* upperFirstCamelName */(ctx);
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(/* camelName */1.id);
 
@@ -238,7 +238,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modify/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -247,11 +247,11 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "putById" method that', () => {
+  describe('has a "replace/* upperFirstCamelName */" method that', () => {
 
     it('should handle requests at PUT /:/* camelName */Id.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'putById'), 'PUT');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'putById'), '/:/* camelName */Id');
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'replace/* upperFirstCamelName */'), 'PUT');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'replace/* upperFirstCamelName */'), '/:/* camelName */Id');
     });
 
     it('should update the /* camelName */ in the database and return it through an HttpResponseOK object.', async () => {
@@ -263,7 +263,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replace/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -290,7 +290,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      await controller.putById(ctx);
+      await controller.replace/* upperFirstCamelName */(ctx);
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(/* camelName */1.id);
 
@@ -310,7 +310,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replace/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -319,11 +319,11 @@ describe('/* upperFirstCamelName */Controller', () => {
 
   });
 
-  describe('has a "deleteById" method that', () => {
+  describe('has a "delete/* upperFirstCamelName */" method that', () => {
 
     it('should handle requests at DELETE /:/* camelName */Id.', () => {
-      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'deleteById'), 'DELETE');
-      strictEqual(getPath(/* upperFirstCamelName */Controller, 'deleteById'), '/:/* camelName */Id');
+      strictEqual(getHttpMethod(/* upperFirstCamelName */Controller, 'delete/* upperFirstCamelName */'), 'DELETE');
+      strictEqual(getPath(/* upperFirstCamelName */Controller, 'delete/* upperFirstCamelName */'), '/:/* camelName */Id');
     });
 
     it('should delete the /* camelName */ and return an HttpResponseNoContent object.', async () => {
@@ -332,7 +332,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -349,7 +349,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -366,7 +366,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');

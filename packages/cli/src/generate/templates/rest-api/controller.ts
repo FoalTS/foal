@@ -1,5 +1,5 @@
 import {
-  ApiOperationDescription, ApiOperationSummary, ApiResponse,
+  ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
   Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
@@ -20,6 +20,7 @@ const /* camelName */Schema = {
 export class /* upperFirstCamelName */Controller {
 
   @Get()
+  @ApiOperationId('find/* upperFirstCamelName */s')
   @ApiOperationSummary('Find /* camelName */s.')
   @ApiOperationDescription(
     'The query parameters "skip" and "take" can be used for pagination. The first ' +
@@ -34,7 +35,7 @@ export class /* upperFirstCamelName */Controller {
     },
     type: 'object',
   })
-  async get(ctx: Context) {
+  async find/* upperFirstCamelName */s(ctx: Context) {
     const /* camelName */s = await getRepository(/* upperFirstCamelName */).find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take
@@ -43,11 +44,12 @@ export class /* upperFirstCamelName */Controller {
   }
 
   @Get('/:/* camelName */Id')
+  @ApiOperationId('find/* upperFirstCamelName */ById')
   @ApiOperationSummary('Find a /* camelName */ by ID.')
   @ApiResponse(404, { description: '/* upperFirstCamelName */ not found.' })
   @ApiResponse(200, { description: 'Returns the /* camelName */.' })
   @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
-  async getById(ctx: Context) {
+  async find/* upperFirstCamelName */ById(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
@@ -58,23 +60,25 @@ export class /* upperFirstCamelName */Controller {
   }
 
   @Post()
+  @ApiOperationId('create/* upperFirstCamelName */')
   @ApiOperationSummary('Create a new /* camelName */.')
   @ApiResponse(400, { description: 'Invalid /* camelName */.' })
   @ApiResponse(201, { description: '/* upperFirstCamelName */ successfully created. Returns the /* camelName */.' })
   @ValidateBody(/* camelName */Schema)
-  async post(ctx: Context) {
+  async create/* upperFirstCamelName */(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).save(ctx.request.body);
     return new HttpResponseCreated(/* camelName */);
   }
 
   @Patch('/:/* camelName */Id')
+  @ApiOperationId('modify/* upperFirstCamelName */')
   @ApiOperationSummary('Update/modify an existing /* camelName */.')
   @ApiResponse(400, { description: 'Invalid /* camelName */.' })
   @ApiResponse(404, { description: '/* upperFirstCamelName */ not found.' })
   @ApiResponse(200, { description: '/* upperFirstCamelName */ successfully updated. Returns the /* camelName */.' })
   @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   @ValidateBody({ .../* camelName */Schema, required: [] })
-  async patchById(ctx: Context) {
+  async modify/* upperFirstCamelName */(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
@@ -89,13 +93,14 @@ export class /* upperFirstCamelName */Controller {
   }
 
   @Put('/:/* camelName */Id')
+  @ApiOperationId('replace/* upperFirstCamelName */')
   @ApiOperationSummary('Update/replace an existing /* camelName */.')
   @ApiResponse(400, { description: 'Invalid /* camelName */.' })
   @ApiResponse(404, { description: '/* upperFirstCamelName */ not found.' })
   @ApiResponse(200, { description: '/* upperFirstCamelName */ successfully updated. Returns the /* camelName */.' })
   @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
   @ValidateBody(/* camelName */Schema)
-  async putById(ctx: Context) {
+  async replace/* upperFirstCamelName */(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {
@@ -110,11 +115,12 @@ export class /* upperFirstCamelName */Controller {
   }
 
   @Delete('/:/* camelName */Id')
+  @ApiOperationId('delete/* upperFirstCamelName */')
   @ApiOperationSummary('Delete a /* camelName */.')
   @ApiResponse(404, { description: '/* upperFirstCamelName */ not found.' })
   @ApiResponse(204, { description: '/* upperFirstCamelName */ successfully deleted.' })
   @ValidateParams({ properties: { /* camelName */Id: { type: 'number' } }, type: 'object' })
-  async deleteById(ctx: Context) {
+  async delete/* upperFirstCamelName */(ctx: Context) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(ctx.request.params./* camelName */Id);
 
     if (!/* camelName */) {

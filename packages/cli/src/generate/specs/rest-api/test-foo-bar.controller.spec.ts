@@ -47,16 +47,16 @@ describe('TestFooBarController', () => {
     ]);
   });
 
-  describe('has a "get" method that', () => {
+  describe('has a "findTestFooBars" method that', () => {
 
     it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'get'), 'GET');
-      strictEqual(getPath(TestFooBarController, 'get'), undefined);
+      strictEqual(getHttpMethod(TestFooBarController, 'findTestFooBars'), 'GET');
+      strictEqual(getPath(TestFooBarController, 'findTestFooBars'), undefined);
     });
 
     it('should return an HttpResponseOK object with the testFooBar list.', async () => {
       const ctx = new Context({ query: {} });
-      const response = await controller.get(ctx);
+      const response = await controller.findTestFooBars(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -81,7 +81,7 @@ describe('TestFooBarController', () => {
           take: 2
         }
       });
-      let response = await controller.get(ctx);
+      let response = await controller.findTestFooBars(ctx);
 
       strictEqual(response.body.length, 2);
       ok(response.body.find(testFooBar => testFooBar.id === testFooBar1.id));
@@ -93,7 +93,7 @@ describe('TestFooBarController', () => {
           skip: 1
         }
       });
-      response = await controller.get(ctx);
+      response = await controller.findTestFooBars(ctx);
 
       strictEqual(response.body.length, 2);
       ok(!response.body.find(testFooBar => testFooBar.id === testFooBar1.id));
@@ -103,11 +103,11 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "getById" method that', () => {
+  describe('has a "findTestFooBarById" method that', () => {
 
     it('should handle requests at GET /:testFooBarId.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'getById'), 'GET');
-      strictEqual(getPath(TestFooBarController, 'getById'), '/:testFooBarId');
+      strictEqual(getHttpMethod(TestFooBarController, 'findTestFooBarById'), 'GET');
+      strictEqual(getPath(TestFooBarController, 'findTestFooBarById'), '/:testFooBarId');
     });
 
     it('should return an HttpResponseOK object if the testFooBar was found.', async () => {
@@ -116,7 +116,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.findTestFooBarById(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -132,7 +132,7 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.findTestFooBarById(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -141,11 +141,11 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "post" method that', () => {
+  describe('has a "createTestFooBar" method that', () => {
 
     it('should handle requests at POST /.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'post'), 'POST');
-      strictEqual(getPath(TestFooBarController, 'post'), undefined);
+      strictEqual(getHttpMethod(TestFooBarController, 'createTestFooBar'), 'POST');
+      strictEqual(getPath(TestFooBarController, 'createTestFooBar'), undefined);
     });
 
     it('should create the testFooBar in the database and return it through '
@@ -155,7 +155,7 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 3',
         }
       });
-      const response = await controller.post(ctx);
+      const response = await controller.createTestFooBar(ctx);
 
       if (!isHttpResponseCreated(response)) {
         throw new Error('The returned value should be an HttpResponseCreated object.');
@@ -175,11 +175,11 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "patchById" method that', () => {
+  describe('has a "modifyTestFooBar" method that', () => {
 
     it('should handle requests at PATCH /:testFooBarId.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'patchById'), 'PATCH');
-      strictEqual(getPath(TestFooBarController, 'patchById'), '/:testFooBarId');
+      strictEqual(getHttpMethod(TestFooBarController, 'modifyTestFooBar'), 'PATCH');
+      strictEqual(getPath(TestFooBarController, 'modifyTestFooBar'), '/:testFooBarId');
     });
 
     it('should update the testFooBar in the database and return it through an HttpResponseOK object.', async () => {
@@ -191,7 +191,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modifyTestFooBar(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -218,7 +218,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      await controller.patchById(ctx);
+      await controller.modifyTestFooBar(ctx);
 
       const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
 
@@ -238,7 +238,7 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modifyTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -247,11 +247,11 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "putById" method that', () => {
+  describe('has a "replaceTestFooBar" method that', () => {
 
     it('should handle requests at PUT /:testFooBarId.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'putById'), 'PUT');
-      strictEqual(getPath(TestFooBarController, 'putById'), '/:testFooBarId');
+      strictEqual(getHttpMethod(TestFooBarController, 'replaceTestFooBar'), 'PUT');
+      strictEqual(getPath(TestFooBarController, 'replaceTestFooBar'), '/:testFooBarId');
     });
 
     it('should update the testFooBar in the database and return it through an HttpResponseOK object.', async () => {
@@ -263,7 +263,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replaceTestFooBar(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -290,7 +290,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      await controller.putById(ctx);
+      await controller.replaceTestFooBar(ctx);
 
       const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
 
@@ -310,7 +310,7 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replaceTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -319,11 +319,11 @@ describe('TestFooBarController', () => {
 
   });
 
-  describe('has a "deleteById" method that', () => {
+  describe('has a "deleteTestFooBar" method that', () => {
 
     it('should handle requests at DELETE /:testFooBarId.', () => {
-      strictEqual(getHttpMethod(TestFooBarController, 'deleteById'), 'DELETE');
-      strictEqual(getPath(TestFooBarController, 'deleteById'), '/:testFooBarId');
+      strictEqual(getHttpMethod(TestFooBarController, 'deleteTestFooBar'), 'DELETE');
+      strictEqual(getPath(TestFooBarController, 'deleteTestFooBar'), '/:testFooBarId');
     });
 
     it('should delete the testFooBar and return an HttpResponseNoContent object.', async () => {
@@ -332,7 +332,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -349,7 +349,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -366,7 +366,7 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
