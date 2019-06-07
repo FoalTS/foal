@@ -16,7 +16,6 @@ function sign(base64Value: string, base64Secret: string): Buffer {
 
 export class Session {
 
-  // TODO
   static verifyTokenAndGetId(token: string): string|false {
     const secret = Config.get<string|undefined>('settings.session.secret');
     if (!secret) {

@@ -463,7 +463,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   describe('should set Context.user', () => {
 
-    describe('given options.fetchUser is not defined', () => {
+    describe('given options.user is not defined', () => {
 
       it('with the decoded payload (header & secret).', async () => {
         const hook = getHookFunction(JWT());
@@ -546,7 +546,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     });
 
-    describe('given options.fetchUser if defined', () => {
+    describe('given options.user if defined', () => {
 
       it('OR return an HttpResponseUnauthorized object if payload.sub is not a string.', async () => {
         const token = sign({}, secret, {});

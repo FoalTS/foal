@@ -1,4 +1,8 @@
-import { Class, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseUnauthorized, ServiceManager } from '../core';
+import {
+  Class, Config, Context, Hook, HookDecorator, HttpResponseBadRequest,
+  HttpResponseUnauthorized,
+  ServiceManager
+} from '../core';
 import { Session } from './session';
 import { SessionStore } from './session-store';
 
@@ -29,16 +33,23 @@ export interface TokenOptions {
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
-  return Hook((ctx: Context, services: ServiceManager) => {
+  return Hook(async (ctx: Context, services: ServiceManager) => {
+    const cookieName = Config.get<string>('settings.session.id', 'auth');
+
+    /* Validate the request */
 
     let token: string;
     if (options.cookie) {
-      // Missing cookieName & content
+      const content = ctx.request.cookies[cookieName] as string|undefined;
 
-      if (!required) {
-        return;
+      if (!content) {
+        if (!required) {
+          return;
+        }
+        return new InvalidRequestResponse('Auth cookie not found.');
       }
-      return new InvalidRequestResponse('Auth cookie not found.');
+
+      token = content;
     } else {
       const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
 
@@ -57,10 +68,30 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       token = content;
     }
 
+    /* Verify the token */
+
     const sessionID = Session.verifyTokenAndGetId(token);
     if (!sessionID) {
       const response = new InvalidTokenResponse('invalid token');
+      if (options.cookie) {
+        response.setCookie(cookieName, '', { maxAge: 0 });
+      }
       return response;
     }
+
+    const store = services.get(options.store);
+    const session = await store.read(sessionID);
+    const userId: any = session.get('userId');
+
+    if (!options.user) {
+      ctx.user = userId;
+      return;
+    }
+
+    const user = await options.user(userId);
+    if (!user) {
+      return new InvalidTokenResponse('The token does not match any user.');
+    }
+    ctx.user = user;
   });
 }
