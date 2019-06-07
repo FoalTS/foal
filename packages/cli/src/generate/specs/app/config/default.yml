@@ -5,9 +5,3 @@ settings:
   debug: false
   loggerFormat: tiny
   staticUrl: public/
-  session:
-    cookie:
-      path: /
-    resave: false
-    saveUnitialized: false
-    secret: my-secret
