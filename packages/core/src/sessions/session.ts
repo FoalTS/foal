@@ -43,7 +43,7 @@ export class Session {
 
   private modified = false;
 
-  constructor(readonly sessionID: string, private sessionContent: object, readonly maxAge: number) {
+  constructor(readonly sessionID: string, private sessionContent: object) {
     if (sessionID.includes('.')) {
       throw new Error('A session ID cannot include dots.');
     }

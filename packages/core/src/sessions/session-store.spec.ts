@@ -84,10 +84,10 @@ describe('SessionStore', () => {
           return this.generateSessionID();
         }
 
-        async createAndSaveSession() { return new Session('a', {}, 0); }
+        async createAndSaveSession() { return new Session('a', {}); }
         async destroy() {}
         async extendLifeTime() {}
-        async read() { return new Session('a', {}, 0); }
+        async read() { return new Session('a', {}); }
         async update() {}
       }
 

@@ -20,7 +20,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     async createAndSaveSession(sessionContent: object): Promise<Session> {
       const sessionID = await this.generateSessionID();
-      const session = new Session(sessionID, sessionContent, 0);
+      const session = new Session(sessionID, sessionContent);
       this.sessions.push(session);
       return session;
     }

@@ -1,7 +1,8 @@
 import { strictEqual } from 'assert';
 import { HttpResponse, HttpResponseOK } from '../core';
 import {
-  SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH
+  SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT
 } from './constants';
 import { Session } from './session';
 import { setSessionCookie } from './set-session-cookie';
@@ -10,7 +11,6 @@ describe('setSessionCookie', () => {
 
   let session: Session;
   let response: HttpResponse;
-  const maxAge = 3600;
 
   before(() => process.env.SETTINGS_SESSION_SECRET = 'secret');
 
@@ -18,7 +18,7 @@ describe('setSessionCookie', () => {
 
   beforeEach(() => {
     response = new HttpResponseOK();
-    session = new Session('xxx', {}, maxAge);
+    session = new Session('xxx', {});
   });
 
   describe('should set a session cookie in the response', () => {
@@ -59,7 +59,7 @@ describe('setSessionCookie', () => {
 
       it('with the proper "maxAge" directive.', () => {
         const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(options.maxAge, maxAge);
+        strictEqual(options.maxAge, SESSION_DEFAULT_INACTIVITY_TIMEOUT);
       });
 
     });
@@ -117,7 +117,7 @@ describe('setSessionCookie', () => {
 
       it('with the proper "maxAge" directive.', () => {
         const { options } = response.getCookie('auth2');
-        strictEqual(options.maxAge, maxAge);
+        strictEqual(options.maxAge, SESSION_DEFAULT_INACTIVITY_TIMEOUT);
       });
 
     });
