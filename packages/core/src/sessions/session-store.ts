@@ -3,6 +3,8 @@ import { randomBytes } from 'crypto';
 import { promisify } from 'util';
 
 // FoalTS
+import { Config } from '../core';
+import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { convertBase64ToBase64url, Session } from './session';
 
 /**
@@ -20,11 +22,24 @@ import { convertBase64ToBase64url, Session } from './session';
 export abstract class SessionStore {
 
   static getExpirationTimeouts(): { inactivity: number , absolute: number } {
-    // Throw if not positive numbers OR absolute < inactivity.
-    return {
-      absolute: 0,
-      inactivity: 0,
+    const result = {
+      absolute: Config.get('settings.session.expirationTimeouts.absolute', SESSION_DEFAULT_ABSOLUTE_TIMEOUT),
+      inactivity: Config.get('settings.session.expirationTimeouts.inactivity', SESSION_DEFAULT_INACTIVITY_TIMEOUT),
     };
+    if (result.absolute < 0) {
+      throw new Error('[CONFIG] The value of settings.session.expirationTimeouts.absolute must be a positive number.');
+    }
+    if (result.inactivity < 0) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.'
+      );
+    }
+    if (result.absolute < result.inactivity) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.absolute must be greater than *.inactivity.'
+      );
+    }
+    return result;
   }
 
   /**
