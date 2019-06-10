@@ -3,6 +3,7 @@ import {
   HttpResponseUnauthorized,
   ServiceManager
 } from '../core';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
 import { Session } from './session';
 import { SessionStore } from './session-store';
@@ -35,7 +36,7 @@ export interface TokenOptions {
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
-    const cookieName = Config.get<string>('settings.session.cookie.name', 'auth');
+    const cookieName = Config.get<string>('settings.session.cookie.name', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
 

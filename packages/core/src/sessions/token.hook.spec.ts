@@ -4,6 +4,7 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { Session } from './session';
 import { SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
@@ -195,7 +196,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const ctx = new Context({
           get(str: string) { return undefined; },
           cookies: {
-            auth: token,
+            [SESSION_DEFAULT_COOKIE_NAME]: token,
           }
         });
 
@@ -204,7 +205,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           throw new Error('response should be instance of HttpResponseUnauthorized');
         }
 
-        const { value, options } = response.getCookie('auth');
+        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(value, '');
         strictEqual(options.maxAge, 0);
       });
@@ -239,7 +240,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
         const ctx = new Context({
           cookies: {
-            auth: token
+            [SESSION_DEFAULT_COOKIE_NAME]: token
           },
           get(str: string) { return undefined; }
         });

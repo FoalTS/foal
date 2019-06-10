@@ -1,5 +1,8 @@
 import { strictEqual } from 'assert';
 import { HttpResponse, HttpResponseOK } from '../core';
+import {
+  SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH
+} from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
 
 describe('removeSessionCookie', () => {
@@ -19,37 +22,37 @@ describe('removeSessionCookie', () => {
       beforeEach(() => removeSessionCookie(response));
 
       it('with the proper default name and value.', () => {
-        const { value } = response.getCookie('auth');
+        const { value } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(value, '');
       });
 
       it('with the proper default "domain" directive.', () => {
-        const { options } = response.getCookie('auth');
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(options.domain, undefined);
       });
 
       it('with the proper default "httpOnly" directive.', () => {
-        const { options } = response.getCookie('auth');
-        strictEqual(options.httpOnly, true);
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+        strictEqual(options.httpOnly, SESSION_DEFAULT_COOKIE_HTTP_ONLY);
       });
 
       it('with the proper default "path" directive.', () => {
-        const { options } = response.getCookie('auth');
-        strictEqual(options.path, '/');
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+        strictEqual(options.path, SESSION_DEFAULT_COOKIE_PATH);
       });
 
       it('with the proper default "sameSite" directive.', () => {
-        const { options } = response.getCookie('auth');
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(options.sameSite, undefined);
       });
 
       it('with the proper default "secure" directive.', () => {
-        const { options } = response.getCookie('auth');
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(options.secure, undefined);
       });
 
       it('with the proper "maxAge" directive.', () => {
-        const { options } = response.getCookie('auth');
+        const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(options.maxAge, 0);
       });
 
