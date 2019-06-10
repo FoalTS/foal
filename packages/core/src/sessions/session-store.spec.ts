@@ -80,15 +80,31 @@ describe('SessionStore', () => {
 
     it('should generate a random base64url-encoded string which size is 128 bits.', async () => {
       class Store extends SessionStore {
+        createAndSaveSession(sessionContent: object): Promise<Session> {
+          throw new Error('Method not implemented.');
+        }
+        update(session: Session): Promise<boolean> {
+          throw new Error('Method not implemented.');
+        }
+        destroy(sessionID: string): Promise<boolean> {
+          throw new Error('Method not implemented.');
+        }
+        read(sessionID: string): Promise<Session | undefined> {
+          throw new Error('Method not implemented.');
+        }
+        extendLifeTime(sessionID: string): Promise<boolean> {
+          throw new Error('Method not implemented.');
+        }
+        clear(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        cleanUpExpiredSessions(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+
         getID(): Promise<string> {
           return this.generateSessionID();
         }
-
-        async createAndSaveSession() { return new Session('a', {}); }
-        async destroy() {}
-        async extendLifeTime() {}
-        async read() { return new Session('a', {}); }
-        async update() {}
       }
 
       const id = await new Store().getID();
