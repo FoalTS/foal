@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { Session } from '../../sessions';
 
 /**
  * Interface of the express request object. It also includes
@@ -17,15 +18,17 @@ export interface HTTPRequest extends Request {
  * Class instantiated on each request. It includes:
  * - the express request object,
  * - the user object if available,
+ * - the session object if available,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
  * @class Context
  * @template User
  */
-export class Context<User = any> {
+export class Context<User = any, ContextSession = Session|undefined> {
   state: { [key: string]: any } = {};
   user: User;
+  session: ContextSession;
   request: HTTPRequest;
 
   /**
