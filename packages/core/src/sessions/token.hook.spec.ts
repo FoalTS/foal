@@ -1,6 +1,6 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
-  Config, Context, getHookFunction, isHttpResponseBadRequest,
+  Context, getHookFunction, isHttpResponseBadRequest,
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
@@ -54,7 +54,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   afterEach(() => {
     delete process.env.SETTINGS_SESSION_SECRET;
-    delete process.env.SETTINGS_SESSION_ID;
+    delete process.env.SETTINGS_SESSION_COOKIE_NAME;
   });
 
   beforeEach(() => {
@@ -188,7 +188,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     describe('given options.cookie is true', () => {
 
-      xit('should remove the cookie in the response if the token is invalid.', async () => {
+      it('should remove the cookie in the response if the token is invalid.', async () => {
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
         const token = 'xxx';
@@ -206,11 +206,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
         const { value, options } = response.getCookie('auth');
         strictEqual(value, '');
-        deepStrictEqual(options, {
-          domain: 'example.com',
-          maxAge: 0,
-          path: '/',
-        });
+        strictEqual(options.maxAge, 0);
       });
 
     });
@@ -255,7 +251,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the used id (cookie with a custom name).', async () => {
-        process.env.SETTINGS_SESSION_ID = 'auth2';
+        process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
         const session = await services.get(Store).createAndSaveSession({ userId: 34 });
@@ -324,11 +320,19 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should return a post-hook function that', () => {
 
+    it('should update the session if it has been modified.');
+
+    it('should extend the session lifetime.');
+
     describe('given options.cookie is false or not defined', () => {
+
+      it('should not set a cookie in the response.');
 
     });
 
     describe('given options.cookie is true', () => {
+
+      it('should set a cookie in the response with the token to extend its lifetime on the client.');
 
     });
 

@@ -3,6 +3,7 @@ import {
   HttpResponseUnauthorized,
   ServiceManager
 } from '../core';
+import { removeSessionCookie } from './remove-session-cookie';
 import { Session } from './session';
 import { SessionStore } from './session-store';
 
@@ -34,7 +35,7 @@ export interface TokenOptions {
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
-    const cookieName = Config.get<string>('settings.session.id', 'auth');
+    const cookieName = Config.get<string>('settings.session.cookie.name', 'auth');
 
     /* Validate the request */
 
@@ -74,7 +75,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     if (!sessionID) {
       const response = new InvalidTokenResponse('invalid token');
       if (options.cookie) {
-        response.setCookie(cookieName, '', { maxAge: 0 });
+        removeSessionCookie(response);
       }
       return response;
     }
