@@ -1,1 +1,1 @@
-export const something = 1;
+export { CsrfTokenRequired } from './csrf-token-required.hook';

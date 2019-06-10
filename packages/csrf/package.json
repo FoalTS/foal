@@ -48,5 +48,8 @@
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
     "typescript": "^2.5.2"
+  },
+  "dependencies": {
+    "@foal/core": "^0.8.9"
   }
 }
