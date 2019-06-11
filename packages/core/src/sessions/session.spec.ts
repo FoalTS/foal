@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { createHmac } from 'crypto';
 
 // FoalTS
@@ -20,20 +20,21 @@ describe('Session', () => {
     it('should throw an error if the sessionID includes a dot.', () => {
       try {
         // tslint:disable-next-line:no-unused-expression
-        new Session('xxx.yyy', {});
+        new Session('xxx.yyy', {}, 0);
         throw new Error('An error should have been thrown during instanciation.');
       } catch (error) {
         strictEqual(error.message, 'A session ID cannot include dots.');
       }
     });
 
-    it('should set a readonly property "sessionID" from the given arguments.', () => {
-      const session = new Session('xxx', {});
+    it('should set two readonly properties "sessionID" and "createdAt" from the given arguments.', () => {
+      const session = new Session('xxx', {}, 3);
       strictEqual(session.sessionID, 'xxx');
+      strictEqual(session.createdAt, 3);
     });
 
     it('should not be "modified".', () => {
-      const session = new Session('xxx', {});
+      const session = new Session('xxx', {}, 0);
       strictEqual(session.isModified, false);
     });
 
@@ -42,17 +43,17 @@ describe('Session', () => {
   describe('has a "get" method that', () => {
 
     it('should return the value of the key given in the param "sessionContent" during instantiation.', () => {
-      const session = new Session('', { foo: 'bar' });
+      const session = new Session('', { foo: 'bar' }, 0);
       strictEqual(session.get('foo'), 'bar');
     });
 
     it('should return the default value if the key does not exist.', () => {
-      const session = new Session('', { foo: 'bar' });
+      const session = new Session('', { foo: 'bar' }, 0);
       strictEqual(session.get<string>('foobar', 'barfoo'), 'barfoo');
     });
 
     it('should return undefined if there is no default value and if the key does not exist.', () => {
-      const session = new Session('', { foo: 'bar' });
+      const session = new Session('', { foo: 'bar' }, 0);
       strictEqual(session.get('foobar'), undefined);
     });
 
@@ -61,13 +62,13 @@ describe('Session', () => {
   describe('has a "set" method that', () => {
 
     it('should modify the session content...', () => {
-      const session = new Session('', {});
+      const session = new Session('', {}, 0);
       session.set('foo', 'bar');
       strictEqual(session.get('foo'), 'bar');
     });
 
     it('...and mark it as modified.', () => {
-      const session = new Session('', {});
+      const session = new Session('', {}, 0);
       strictEqual(session.isModified, false);
 
       session.set('foo', 'bar');
@@ -81,7 +82,7 @@ describe('Session', () => {
     afterEach(() => delete process.env.SETTINGS_SESSION_SECRET);
 
     it('should throw an Error is the configuration key `settings.session.secret` is not defined.', () => {
-      const session = new Session('aaa', {});
+      const session = new Session('aaa', {}, 0);
       try {
         session.getToken();
         throw new Error('Session.getToken should have thrown an Error.');
@@ -123,7 +124,7 @@ describe('Session', () => {
 
       process.env.SETTINGS_SESSION_SECRET = secret;
 
-      const session = new Session(sessionID, {});
+      const session = new Session(sessionID, {}, 0);
       const token = session.getToken();
 
       strictEqual(
@@ -175,6 +176,18 @@ describe('Session', () => {
       const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk';
 
       strictEqual(Session.verifyTokenAndGetId(token), '-_BmZmZmZmZmZmZmZmZmZg');
+    });
+
+  });
+
+  describe('has a "getContent" method that', () => {
+
+    it('should return a copy of the session content', () => {
+      const content = { foo: 'bar' };
+      const session = new Session('a', content, 0);
+
+      deepStrictEqual(session.getContent(), content);
+      notStrictEqual(session.getContent(), content);
     });
 
   });

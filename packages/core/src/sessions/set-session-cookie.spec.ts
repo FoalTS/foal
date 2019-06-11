@@ -18,7 +18,7 @@ describe('setSessionCookie', () => {
 
   beforeEach(() => {
     response = new HttpResponseOK();
-    session = new Session('xxx', {});
+    session = new Session('xxx', {}, 0);
   });
 
   describe('should set a session cookie in the response', () => {

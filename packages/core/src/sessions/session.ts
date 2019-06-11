@@ -43,7 +43,7 @@ export class Session {
 
   private modified = false;
 
-  constructor(readonly sessionID: string, private sessionContent: object) {
+  constructor(readonly sessionID: string, private sessionContent: object, readonly createdAt: number) {
     if (sessionID.includes('.')) {
       throw new Error('A session ID cannot include dots.');
     }
@@ -74,6 +74,10 @@ export class Session {
     }
     const signature = sign(this.sessionID, secret).toString('base64');
     return `${this.sessionID}.${convertBase64ToBase64url(signature)}`;
+  }
+
+  getContent(): object {
+    return { ...this.sessionContent };
   }
 
 }

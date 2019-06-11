@@ -24,6 +24,8 @@ export abstract class SessionStore {
   /**
    * Read session expiration timeouts from the configuration.
    *
+   * The values are in seconds.
+   *
    * Default values are:
    * - 15 min for inactivity timeout
    * - 1 week for absolute timeout
@@ -72,27 +74,23 @@ export abstract class SessionStore {
   /**
    * Update and extend the lifetime of a session.
    *
-   * The method returns `true` on success and `false` on failure. Failure can happen
-   * if the session has expired or does not exist.
+   * The internal behavior is similar to "update or insert".
    *
    * @abstract
    * @param {Session} session - The session containaing the updated content.
-   * @returns {Promise<boolean>} The success of the operation.
+   * @returns {Promise<void>}
    * @memberof SessionStore
    */
-  abstract update(session: Session): Promise<boolean>;
+  abstract update(session: Session): Promise<void>;
   /**
-   * Delete a session.
-   *
-   * The method returns `true` on success and `false` on failure. Failure can happen
-   * if the session has previously expired or does not exist.
+   * Delete a session, whether it exists or not.
    *
    * @abstract
    * @param {string} sessionID - The ID of the session.
-   * @returns {Promise<boolean>} The success of the operation.
+   * @returns {Promise<void>}
    * @memberof SessionStore
    */
-  abstract destroy(sessionID: string): Promise<boolean>;
+  abstract destroy(sessionID: string): Promise<void>;
   /**
    * Read a session from its ID.
    *
@@ -108,15 +106,14 @@ export abstract class SessionStore {
    * Extend the lifetime of a session from its ID. The duration is
    * the inactivity timeout.
    *
-   * The method returns `true` on success and `false` on failure. Failure can happen
-   * if the session has previously expired or does not exist.
+   * If the session does not exist, the method does not throw an error.
    *
    * @abstract
    * @param {string} sessionID - The ID of the session.
-   * @returns {Promise<boolean>} The success of the operation.
+   * @returns {Promise<void>}
    * @memberof SessionStore
    */
-  abstract extendLifeTime(sessionID: string): Promise<boolean>;
+  abstract extendLifeTime(sessionID: string): Promise<void>;
   /**
    * Clear all sessions.
    *
