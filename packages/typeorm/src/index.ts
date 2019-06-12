@@ -7,4 +7,4 @@
 export * from './entities';
 export * from './hooks';
 export * from './utils';
-export { TypeORMStore } from './typeorm-store';
+export { TypeORMStore } from './typeorm-store.service';

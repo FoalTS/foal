@@ -4,7 +4,7 @@ import { createConnection, getConnection, getRepository } from 'typeorm';
 // FoalTS
 import { createService, Session, SessionStore } from '@foal/core';
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { FoalSession, TypeORMStore } from './typeorm-store';
+import { FoalSession, TypeORMStore } from './typeorm-store.service';
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
