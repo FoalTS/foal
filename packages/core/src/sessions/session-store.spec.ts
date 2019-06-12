@@ -83,16 +83,16 @@ describe('SessionStore', () => {
         createAndSaveSession(sessionContent: object): Promise<Session> {
           throw new Error('Method not implemented.');
         }
-        update(session: Session): Promise<boolean> {
+        update(session: Session): Promise<void> {
           throw new Error('Method not implemented.');
         }
-        destroy(sessionID: string): Promise<boolean> {
+        destroy(sessionID: string): Promise<void> {
           throw new Error('Method not implemented.');
         }
         read(sessionID: string): Promise<Session | undefined> {
           throw new Error('Method not implemented.');
         }
-        extendLifeTime(sessionID: string): Promise<boolean> {
+        extendLifeTime(sessionID: string): Promise<void> {
           throw new Error('Method not implemented.');
         }
         clear(): Promise<void> {

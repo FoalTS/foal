@@ -1,9 +1,9 @@
-import { Context, Get, LoginRequired, render } from '@foal/core';
-import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { Context, Get, render, TokenRequired } from '@foal/core';
+import { fetchUserWithPermissions, PermissionRequired, TypeORMStore } from '@foal/typeorm';
 
 import { User } from '../entities';
 
-@LoginRequired({ user: fetchUserWithPermissions(User), redirect: '/login' })
+@TokenRequired({ store: TypeORMStore, user: fetchUserWithPermissions(User), redirectTo: '/login', cookie: true })
 export class ViewController {
 
   @Get('/')

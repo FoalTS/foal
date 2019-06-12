@@ -1,18 +1,33 @@
 // 3p
 import {
-  Context, Get, HttpResponseRedirect, logIn,
-  logOut, Post, render, ValidateBody, verifyPassword
+  Context,
+  dependency,
+  Get,
+  HttpResponseRedirect,
+  Post,
+  removeSessionCookie,
+  render,
+  Session,
+  setSessionCookie,
+  ValidateBody,
+  verifyPassword
 } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
 
 // App
 import { User } from '../entities';
 
 export class AuthController {
+  @dependency
+  store: TypeORMStore;
+
   @Get('/logout')
-  logout(ctx: Context) {
-    logOut(ctx);
-    return new HttpResponseRedirect('/login');
+  logout(ctx: Context<any, Session>) {
+    const response = new HttpResponseRedirect('/login');
+    this.store.destroy(ctx.session.sessionID);
+    removeSessionCookie(response);
+    return response;
   }
 
   @Post('/login')
@@ -37,9 +52,11 @@ export class AuthController {
       return new HttpResponseRedirect('/login?invalid_credentials=true');
     }
 
-    logIn(ctx, user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
 
-    return new HttpResponseRedirect('/');
+    const response = new HttpResponseRedirect('/');
+    setSessionCookie(response, session);
+    return response;
   }
 
   @Get('/login')

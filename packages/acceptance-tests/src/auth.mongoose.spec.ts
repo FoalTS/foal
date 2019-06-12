@@ -5,6 +5,7 @@ import { ok } from 'assert';
 import {
   Context,
   createApp,
+  dependency,
   encryptPassword,
   Get,
   Hook,
@@ -12,13 +13,15 @@ import {
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseUnauthorized,
-  logIn,
-  LoginRequired,
-  logOut,
   Post,
+  removeSessionCookie,
+  Session,
+  setSessionCookie,
+  TokenRequired,
   ValidateBody,
   verifyPassword,
 } from '@foal/core';
+import { RedisStore } from '@foal/redis';
 import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
 import * as request from 'supertest';
 
@@ -59,7 +62,7 @@ it('Foal should support authorization and authentication based on sessions & coo
     });
   }
 
-  @LoginRequired({ user: fetchUser(UserModel) })
+  @TokenRequired({ user: fetchUser(UserModel), store: RedisStore, cookie: true })
   class MyController {
     @Get('/foo')
     foo() {
@@ -74,9 +77,14 @@ it('Foal should support authorization and authentication based on sessions & coo
   }
 
   class AuthController {
+    @dependency
+    store: RedisStore;
+
     @Get('/logout')
-    logout(ctx: Context) {
-      logOut(ctx);
+    async logout(ctx: Context<any, Session>) {
+      const response = new HttpResponseNoContent();
+      await this.store.destroy(ctx.session.sessionID);
+      removeSessionCookie(response);
       return new HttpResponseNoContent();
     }
 
@@ -101,9 +109,10 @@ it('Foal should support authorization and authentication based on sessions & coo
         return new HttpResponseUnauthorized();
       }
 
-      logIn(ctx, user);
-
-      return new HttpResponseNoContent();
+      const session = await this.store.createAndSaveSession({ userId: user.id });
+      const response = new HttpResponseNoContent();
+      setSessionCookie(response, session);
+      return response;
     }
   }
 

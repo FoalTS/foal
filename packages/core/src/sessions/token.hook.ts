@@ -34,6 +34,7 @@ export interface TokenOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   store: Class<SessionStore>;
   cookie?: boolean;
+  redirectTo?: string;
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {

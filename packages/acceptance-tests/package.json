@@ -13,6 +13,7 @@
     "@foal/jwks-rsa": "^0.8.9",
     "@foal/jwt": "^0.8.9",
     "@foal/mongoose": "^0.8.9",
+    "@foal/redis": "^0.8.9",
     "@foal/typeorm": "^0.8.9",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",

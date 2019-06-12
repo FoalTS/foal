@@ -5,16 +5,18 @@ import { ok } from 'assert';
 import {
   Context,
   createApp,
+  dependency,
   encryptPassword,
   Get,
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  logIn,
-  LoginRequired,
-  logOut,
   Post,
+  removeSessionCookie,
+  Session,
+  setSessionCookie,
+  TokenRequired,
   ValidateBody,
   verifyPassword,
 } from '@foal/core';
@@ -28,6 +30,7 @@ import {
   Group,
   Permission,
   PermissionRequired,
+  TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
 
@@ -45,7 +48,7 @@ describe('Foal should support authorization and authentication based on sessions
       password: string;
     }
 
-    @LoginRequired({ user: fetchUserWithPermissions(User) })
+    @TokenRequired({ user: fetchUserWithPermissions(User), store: TypeORMStore, cookie: true })
     class MyController {
       @Get('/foo')
       foo() {
@@ -60,9 +63,14 @@ describe('Foal should support authorization and authentication based on sessions
     }
 
     class AuthController {
+      @dependency
+      store: TypeORMStore;
+
       @Get('/logout')
-      logout(ctx: Context) {
-        logOut(ctx);
+      async logout(ctx: Context<any, Session>) {
+        const response = new HttpResponseNoContent();
+        await this.store.destroy(ctx.session.sessionID);
+        removeSessionCookie(response);
         return new HttpResponseNoContent();
       }
 
@@ -87,13 +95,14 @@ describe('Foal should support authorization and authentication based on sessions
           return new HttpResponseRedirect('/signin');
         }
 
-        logIn(ctx, user);
-
-        return new HttpResponseRedirect('/home');
+        const session = await this.store.createAndSaveSession({ userId: user.id });
+        const response = new HttpResponseRedirect('/home');
+        setSessionCookie(response, session);
+        return response;
       }
 
       @Get('/home')
-      @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
+      @TokenRequired({ redirectTo: '/signin', user: fetchUser(User), store: TypeORMStore, cookie: true })
       home() {
         return new HttpResponseOK('Home!');
       }
@@ -239,7 +248,7 @@ describe('Foal should support authorization and authentication based on sessions
       password: string;
     }
 
-    @LoginRequired({ user: fetchUserWithPermissions(User) })
+    @TokenRequired({ store: TypeORMStore, user: fetchUserWithPermissions(User), cookie: true })
     class MyController {
       @Get('/foo')
       foo() {
@@ -254,9 +263,14 @@ describe('Foal should support authorization and authentication based on sessions
     }
 
     class AuthController {
+      @dependency
+      store: TypeORMStore;
+
       @Get('/logout')
-      logout(ctx: Context) {
-        logOut(ctx);
+      async logout(ctx: Context<any, Session>) {
+        const response = new HttpResponseNoContent();
+        await this.store.destroy(ctx.session.sessionID);
+        removeSessionCookie(response);
         return new HttpResponseNoContent();
       }
 
@@ -281,9 +295,10 @@ describe('Foal should support authorization and authentication based on sessions
           return new HttpResponseUnauthorized();
         }
 
-        logIn(ctx, user);
-
-        return new HttpResponseNoContent();
+        const session = await this.store.createAndSaveSession({ userId: user.id });
+        const response = new HttpResponseNoContent();
+        setSessionCookie(response, session);
+        return response;
       }
     }
 
