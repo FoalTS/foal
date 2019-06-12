@@ -1,7 +1,10 @@
-import { Session, SessionStore } from '@foal/core';
+import { Config, dependency, Session, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 export class RedisStore extends SessionStore {
+
+  @dependency
+  config: Config;
 
   private redisClient;
 
@@ -100,7 +103,8 @@ export class RedisStore extends SessionStore {
 
   private getRedisInstance() {
     if (!this.redisClient) {
-      this.redisClient = createClient('redis://localhost:6379');
+      const redisURI = this.config.get('redis.uri');
+      this.redisClient = createClient(redisURI);
     }
     return this.redisClient ;
   }
