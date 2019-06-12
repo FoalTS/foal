@@ -1,1 +1,1 @@
-export const something = 1;
+export { RedisStore } from './redis-store.service';
