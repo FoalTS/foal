@@ -18,8 +18,8 @@ import * as request from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
 
 // App
-import { AppController } from '../app/app.controller';
-import { Todo, User } from '../app/entities';
+import { AppController } from './app/app.controller';
+import { Todo, User } from './app/entities';
 
 // Define a group of tests.
 describe('The server', () => {
