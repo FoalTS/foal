@@ -1,6 +1,8 @@
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import {
-  Context, getHookFunction, isHttpResponseBadRequest,
+  Context, getHookFunction, HttpResponseOK,
+  isHttpResponse,
+  isHttpResponseBadRequest,
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
@@ -16,33 +18,34 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   const fetchUser = async id => id === 1 ? user : null;
 
   class Store extends SessionStore {
+    updateCalledWith: Session|undefined = undefined;
+    extendLifeTimeCalledWith: string|undefined = undefined;
+
     private sessions: Session[] = [];
 
-    async createAndSaveSession(sessionContent: object): Promise<Session> {
-      const sessionID = await this.generateSessionID();
-      const session = new Session(sessionID, sessionContent);
-      this.sessions.push(session);
-      return session;
+    async clear(): Promise<void> {
+      this.sessions = [];
     }
-    update(session: Session): Promise<void> {
-      throw new Error('Method not implemented.');
+    async update(session: Session): Promise<void> {
+      this.updateCalledWith = session;
     }
     destroy(sessionID: string): Promise<void> {
       throw new Error('Method not implemented.');
     }
-    async read(sessionID: string): Promise<Session> {
-      const session = this.sessions.find(session => session.sessionID === sessionID);
-      if (!session) {
-        throw new Error('Not found'); // TODO: check this
-      }
-      return session;
+    async extendLifeTime(sessionID: string): Promise<void> {
+      this.extendLifeTimeCalledWith = sessionID;
     }
-    extendLifeTime(sessionID: string): Promise<void> {
+    cleanUpExpiredSessions(): Promise<void> {
       throw new Error('Method not implemented.');
     }
-
-    clear() {
-      this.sessions = [];
+    async createAndSaveSession(sessionContent: object): Promise<Session> {
+      const sessionID = await this.generateSessionID();
+      const session = new Session(sessionID, sessionContent, Date.now());
+      this.sessions.push(session);
+      return session;
+    }
+    async read(sessionID: string): Promise<Session|undefined> {
+      return this.sessions.find(session => session.sessionID === sessionID);
     }
   }
 
@@ -214,11 +217,89 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   });
 
+  describe('should verify the session ID and', () => {
+
+    it('should return an HttpResponseUnauthorized object if no session matching the ID is found.', async () => {
+      const session = await services.get(Store).createAndSaveSession({ userId: 22 });
+      const token = session.getToken();
+
+      await services.get(Store).clear();
+
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'token invalid or expired'
+      });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="token invalid or expired"'
+      );
+    });
+
+    describe('given options.cookie is false or not defined', () => {
+
+      it('should not set a cookie in the response if no session matching the ID is found.', async () => {
+        const session = await services.get(Store).createAndSaveSession({ userId: 23 });
+        const token = session.getToken();
+
+        await services.get(Store).clear();
+
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const response = await hook(ctx, services);
+        if (!isHttpResponseUnauthorized(response)) {
+          throw new Error('response should be instance of HttpResponseUnauthorized');
+        }
+        deepStrictEqual(response.getCookies(), {});
+      });
+
+    });
+
+    describe('given options.cookie is true', () => {
+
+      it('should remove the cookie in the response if no session matching the ID is found.', async () => {
+        const hook = getHookFunction(Token({ store: Store, cookie: true }));
+
+        const session = await services.get(Store).createAndSaveSession({ userId: 24 });
+        const token = session.getToken();
+
+        await services.get(Store).clear();
+
+        const ctx = new Context({
+          get(str: string) { return undefined; },
+          cookies: {
+            [SESSION_DEFAULT_COOKIE_NAME]: token,
+          }
+        });
+
+        const response = await hook(ctx, services);
+        if (!isHttpResponseUnauthorized(response)) {
+          throw new Error('response should be instance of HttpResponseUnauthorized');
+        }
+
+        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+        strictEqual(value, '');
+        strictEqual(options.maxAge, 0);
+      });
+
+    });
+
+  });
+
   describe('should set Context.user', () => {
 
     describe('given options.user is not defined', () => {
 
-      it('with the used id (header).', async () => {
+      it('with the user id (header).', async () => {
         const session = await services.get(Store).createAndSaveSession({ userId: 36 });
         const token = session.getToken();
 
@@ -227,12 +308,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        strictEqual(response, undefined);
+        strictEqual(isHttpResponse(response), false);
 
         strictEqual(ctx.user, 36);
       });
 
-      it('with the used id (cookie).', async () => {
+      it('with the user id (cookie).', async () => {
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
         const session = await services.get(Store).createAndSaveSession({ userId: 35 });
@@ -246,12 +327,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        strictEqual(response, undefined);
+        strictEqual(isHttpResponse(response), false);
 
         strictEqual(ctx.user, 35);
       });
 
-      it('with the used id (cookie with a custom name).', async () => {
+      it('with the user id (cookie with a custom name).', async () => {
         process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
@@ -266,7 +347,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        strictEqual(response, undefined);
+        strictEqual(isHttpResponse(response), false);
 
         strictEqual(ctx.user, 34);
       });
@@ -286,7 +367,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        strictEqual(response, undefined);
+        strictEqual(isHttpResponse(response), false);
         strictEqual(ctx.user, user);
       });
 
@@ -321,19 +402,109 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should return a post-hook function that', () => {
 
-    it('should update the session if it has been modified.');
+    beforeEach(() => {
+      services.get(Store).updateCalledWith = undefined;
+      services.get(Store).extendLifeTimeCalledWith = undefined;
+    });
 
-    it('should extend the session lifetime.');
+    it('should update the session and extend its lifetime if it has been modified.', async () => {
+      const session = await services.get(Store).createAndSaveSession({ userId: 47 });
+      const token = session.getToken();
+
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const postHookFunction = await hook(ctx, services);
+      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+        throw new Error('The hook should return a post hook function');
+      }
+      if (!ctx.session) {
+        throw new Error('ctx.session should be defined');
+      }
+      ctx.session.set('something', 1); // set "isModified" to "true"
+      await postHookFunction(ctx, services, new HttpResponseOK());
+
+      strictEqual(services.get(Store).updateCalledWith, ctx.session);
+      strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
+    });
+
+    it('should extend the session lifetime if it has not been modified.', async () => {
+      const session = await services.get(Store).createAndSaveSession({ userId: 48 });
+      const token = session.getToken();
+
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const postHookFunction = await hook(ctx, services);
+      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+        throw new Error('The hook should return a post hook function');
+      }
+      if (!ctx.session) {
+        throw new Error('ctx.session should be defined');
+      }
+      // Do not set "isModified" to "true"
+      await postHookFunction(ctx, services, new HttpResponseOK());
+
+      strictEqual(services.get(Store).updateCalledWith, undefined);
+      strictEqual(services.get(Store).extendLifeTimeCalledWith, session.sessionID);
+    });
 
     describe('given options.cookie is false or not defined', () => {
 
-      it('should not set a cookie in the response.');
+      it('should not set a cookie in the response.', async () => {
+        const session = await services.get(Store).createAndSaveSession({ userId: 48 });
+        const token = session.getToken();
+
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const postHookFunction = await hook(ctx, services);
+        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+          throw new Error('The hook should return a post hook function');
+        }
+        if (!ctx.session) {
+          throw new Error('ctx.session should be defined');
+        }
+        const response = new HttpResponseOK();
+        await postHookFunction(ctx, services, response);
+
+        deepStrictEqual(response.getCookies(), {});
+      });
 
     });
 
     describe('given options.cookie is true', () => {
 
-      it('should set a cookie in the response with the token to extend its lifetime on the client.');
+      it('should set a cookie in the response with the token to extend its lifetime on the client.', async () => {
+        const session = await services.get(Store).createAndSaveSession({ userId: 48 });
+        const token = session.getToken();
+
+        const hook = getHookFunction(Token({ store: Store, cookie: true }));
+
+        const ctx = new Context({
+          get(str: string) { return undefined; },
+          cookies: {
+            [SESSION_DEFAULT_COOKIE_NAME]: session.getToken()
+          }
+        });
+
+        const postHookFunction = await hook(ctx, services);
+        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+          throw new Error('The hook should return a post hook function');
+        }
+        if (!ctx.session) {
+          throw new Error('ctx.session should be defined');
+        }
+        const response = new HttpResponseOK();
+        await postHookFunction(ctx, services, response);
+
+        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+        strictEqual(value, session.getToken());
+        deepStrictEqual(options.maxAge, SessionStore.getExpirationTimeouts().inactivity);
+      });
 
     });
 

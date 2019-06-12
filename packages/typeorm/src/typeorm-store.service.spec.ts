@@ -210,6 +210,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
       });
 
+      it('should not throw if no session matches the given session ID.', async () => {
+        await store.destroy('c');
+      });
+
     });
 
     describe('has a "read" method that', () => {

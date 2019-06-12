@@ -1,5 +1,6 @@
 import {
-  Class, Config, Context, Hook, HookDecorator, HttpResponseBadRequest,
+  Class, Config, Context, Hook, HookDecorator, HttpResponse,
+  HttpResponseBadRequest,
   HttpResponseUnauthorized,
   ServiceManager
 } from '../core';
@@ -7,6 +8,7 @@ import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
 import { Session } from './session';
 import { SessionStore } from './session-store';
+import { setSessionCookie } from './set-session-cookie';
 
 class InvalidRequestResponse extends HttpResponseBadRequest {
 
@@ -81,19 +83,44 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       return response;
     }
 
+    /* Verify the session ID */
+
     const store = services.get(options.store);
     const session = await store.read(sessionID);
+
+    if (!session) {
+      const response = new InvalidTokenResponse('token invalid or expired');
+      if (options.cookie) {
+        removeSessionCookie(response);
+      }
+      return response;
+    }
+
+    ctx.session = session;
+
+    /* Verify the session content */
+
     const userId: any = session.get('userId');
 
     if (!options.user) {
       ctx.user = userId;
-      return;
+    } else {
+      const user = await options.user(userId);
+      if (!user) {
+        return new InvalidTokenResponse('The token does not match any user.');
+      }
+      ctx.user = user;
     }
 
-    const user = await options.user(userId);
-    if (!user) {
-      return new InvalidTokenResponse('The token does not match any user.');
-    }
-    ctx.user = user;
+    return async (ctx, services, response: HttpResponse) => {
+      if (session.isModified) {
+        await store.update(session);
+      } else {
+        await store.extendLifeTime(session.sessionID);
+      }
+      if (options.cookie) {
+        setSessionCookie(response, session);
+      }
+    };
   });
 }
