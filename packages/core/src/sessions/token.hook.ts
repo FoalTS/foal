@@ -36,6 +36,7 @@ export interface TokenOptions {
   store: Class<SessionStore>;
   cookie?: boolean;
   redirectTo?: string;
+  openapi?: boolean;
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
