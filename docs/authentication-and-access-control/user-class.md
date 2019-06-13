@@ -66,7 +66,7 @@ This section describes how to create users with an email and a password.
 Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a password.
 
 ```typescript
-import { encryptPassword } from '@foal/core';
+import { hashPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 ​
@@ -84,7 +84,7 @@ export class User extends UserWithPermissions {
 ​
   async setPassword(password: string) {
     // Hash the password before storing it in the database
-    this.password = await encryptPassword(password, { legacy: true });
+    this.password = await hashPassword(password, { legacy: true });
   }​
 }
 

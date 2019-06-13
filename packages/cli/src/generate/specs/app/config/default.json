@@ -4,6 +4,6 @@
     "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
-    "staticUrl": "public/"
+    "staticPath": "public/"
   }
 }

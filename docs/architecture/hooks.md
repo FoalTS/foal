@@ -19,7 +19,7 @@ They improve code readability and make unit testing easier.
 
 Foal provides a number of hooks to handle the most common scenarios.
 
-- `ValidateBody`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation.md)).
+- `ValidateBody`, `ValidateHeaders`, `ValidateParams`, `ValidateCookies` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation.md)).
 - `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
 - `JWTRequired`, `JWTOptional`, `LoginRequired`, `LoginOptional` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
@@ -165,9 +165,45 @@ class MyController {
 
 A *hook post function* accepts three parameters: the context, the service manager and the response returned by the controller method.
 
+## Grouping Several Hooks into One
+
+In case you need to group several hooks together, the `MergeHooks` function can be used to do this.
+
+```typescript
+// Before
+
+class MyController {
+  @Post('/products')
+  @ValidateBody({...})
+  @ValidateHeaders({...})
+  @ValidateCookie({...})
+  addProduct() {
+    // ...
+  }
+}
+
+// After
+
+function ValidateAll() {
+  return MergeHooks(
+    ValidateBody({...}),
+    ValidateHeaders({...}),
+    ValidateCookie({...})
+  )
+}
+
+class MyController {
+  @Post('/products')
+  @ValidateAll()
+  addProduct() {
+    // ...
+  }
+}
+```
+
 ## Testing Hooks
 
-Hooks can be tested thanks to the `getHookFunction`.
+Hooks can be tested thanks to the utility `getHookFunction` (or `getHookFunctions` if the hook was made from several functions).
 
 ```typescript
 // validate-body.hook.ts

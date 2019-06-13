@@ -6,8 +6,8 @@ import {
   Context,
   createApp,
   dependency,
-  encryptPassword,
   Get,
+  hashPassword,
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseRedirect,
@@ -143,7 +143,7 @@ describe('Foal should support authorization and authentication based on sessions
 
     const user = new User();
     user.email = 'john@foalts.org';
-    user.password = await encryptPassword('password');
+    user.password = await hashPassword('password');
     await getRepository(User, 'create-connection').save(user);
 
     await getConnection('create-connection').close();
@@ -332,7 +332,7 @@ describe('Foal should support authorization and authentication based on sessions
 
     const user = new User();
     user.email = 'john@foalts.org';
-    user.password = await encryptPassword('password');
+    user.password = await hashPassword('password');
     await getRepository(User, 'create-connection').save(user);
 
     await getConnection('create-connection').close();

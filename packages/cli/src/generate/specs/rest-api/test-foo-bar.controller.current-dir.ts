@@ -1,5 +1,6 @@
 import {
-  Context, Delete, Get, HttpResponseCreated, HttpResponseMethodNotAllowed,
+  ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
+  ApiUseTag, Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidateParams, ValidateQuery
 } from '@foal/core';
@@ -16,9 +17,18 @@ const testFooBarSchema = {
   type: 'object',
 };
 
+@ApiUseTag('testFooBar')
 export class TestFooBarController {
 
-  @Get('/')
+  @Get()
+  @ApiOperationId('findTestFooBars')
+  @ApiOperationSummary('Find testFooBars.')
+  @ApiOperationDescription(
+    'The query parameters "skip" and "take" can be used for pagination. The first ' +
+    'is the offset and the second is the number of elements to be returned.'
+  )
+  @ApiResponse(400, { description: 'Invalid query parameters.' })
+  @ApiResponse(200, { description: 'Returns a list of testFooBars.' })
   @ValidateQuery({
     properties: {
       skip: { type: 'number' },
@@ -26,7 +36,7 @@ export class TestFooBarController {
     },
     type: 'object',
   })
-  async get(ctx: Context) {
+  async findTestFooBars(ctx: Context) {
     const testFooBars = await getRepository(TestFooBar).find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take
@@ -35,8 +45,12 @@ export class TestFooBarController {
   }
 
   @Get('/:testFooBarId')
+  @ApiOperationId('findTestFooBarById')
+  @ApiOperationSummary('Find a testFooBar by ID.')
+  @ApiResponse(404, { description: 'TestFooBar not found.' })
+  @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
-  async getById(ctx: Context) {
+  async findTestFooBarById(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -46,27 +60,26 @@ export class TestFooBarController {
     return new HttpResponseOK(testFooBar);
   }
 
-  @Post('/')
+  @Post()
+  @ApiOperationId('createTestFooBar')
+  @ApiOperationSummary('Create a new testFooBar.')
+  @ApiResponse(400, { description: 'Invalid testFooBar.' })
+  @ApiResponse(201, { description: 'TestFooBar successfully created. Returns the testFooBar.' })
   @ValidateBody(testFooBarSchema)
-  async post(ctx: Context) {
+  async createTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).save(ctx.request.body);
     return new HttpResponseCreated(testFooBar);
   }
 
-  @Post('/:testFooBarId')
-  postById() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
-  @Patch('/')
-  patch() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
   @Patch('/:testFooBarId')
+  @ApiOperationId('modifyTestFooBar')
+  @ApiOperationSummary('Update/modify an existing testFooBar.')
+  @ApiResponse(400, { description: 'Invalid testFooBar.' })
+  @ApiResponse(404, { description: 'TestFooBar not found.' })
+  @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
-  async patchById(ctx: Context) {
+  async modifyTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -78,17 +91,17 @@ export class TestFooBarController {
     await getRepository(TestFooBar).save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
-  }
-
-  @Put('/')
-  put() {
-    return new HttpResponseMethodNotAllowed();
   }
 
   @Put('/:testFooBarId')
+  @ApiOperationId('replaceTestFooBar')
+  @ApiOperationSummary('Update/replace an existing testFooBar.')
+  @ApiResponse(400, { description: 'Invalid testFooBar.' })
+  @ApiResponse(404, { description: 'TestFooBar not found.' })
+  @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
   @ValidateBody(testFooBarSchema)
-  async putById(ctx: Context) {
+  async replaceTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
@@ -102,14 +115,13 @@ export class TestFooBarController {
     return new HttpResponseOK(testFooBar);
   }
 
-  @Delete('/')
-  delete() {
-    return new HttpResponseMethodNotAllowed();
-  }
-
   @Delete('/:testFooBarId')
+  @ApiOperationId('deleteTestFooBar')
+  @ApiOperationSummary('Delete a testFooBar.')
+  @ApiResponse(404, { description: 'TestFooBar not found.' })
+  @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
-  async deleteById(ctx: Context) {
+  async deleteTestFooBar(ctx: Context) {
     const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {

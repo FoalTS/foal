@@ -44,7 +44,7 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
   });
   app.use(
     Config.get('settings.staticPathPrefix', ''),
-    express.static(Config.get('settings.staticUrl', 'public'))
+    express.static(Config.get('settings.staticPath', 'public'))
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));

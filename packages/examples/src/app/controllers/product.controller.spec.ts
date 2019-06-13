@@ -4,7 +4,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import {
   Context, createController, getHttpMethod, getPath,
-  isHttpResponseCreated, isHttpResponseMethodNotAllowed, isHttpResponseNoContent,
+  isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
 import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
@@ -47,16 +47,16 @@ describe('ProductController', () => {
     ]);
   });
 
-  describe('has a "get" method that', () => {
+  describe('has a "findProducts" method that', () => {
 
     it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'get'), 'GET');
-      strictEqual(getPath(ProductController, 'get'), '/');
+      strictEqual(getHttpMethod(ProductController, 'findProducts'), 'GET');
+      strictEqual(getPath(ProductController, 'findProducts'), undefined);
     });
 
     it('should return an HttpResponseOK object with the product list.', async () => {
       const ctx = new Context({ query: {} });
-      const response = await controller.get(ctx);
+      const response = await controller.findProducts(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -81,7 +81,7 @@ describe('ProductController', () => {
           take: 2
         }
       });
-      let response = await controller.get(ctx);
+      let response = await controller.findProducts(ctx);
 
       strictEqual(response.body.length, 2);
       ok(response.body.find(product => product.id === product1.id));
@@ -93,7 +93,7 @@ describe('ProductController', () => {
           skip: 1
         }
       });
-      response = await controller.get(ctx);
+      response = await controller.findProducts(ctx);
 
       strictEqual(response.body.length, 2);
       ok(!response.body.find(product => product.id === product1.id));
@@ -103,20 +103,20 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "getById" method that', () => {
+  describe('has a "findProductById" method that', () => {
 
-    it('should handle requests at GET /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'getById'), 'GET');
-      strictEqual(getPath(ProductController, 'getById'), '/:id');
+    it('should handle requests at GET /:productId.', () => {
+      strictEqual(getHttpMethod(ProductController, 'findProductById'), 'GET');
+      strictEqual(getPath(ProductController, 'findProductById'), '/:productId');
     });
 
     it('should return an HttpResponseOK object if the product was found.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.findProductById(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -129,10 +129,10 @@ describe('ProductController', () => {
     it('should return an HttpResponseNotFound object if the product was not found.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          productId: -1
         }
       });
-      const response = await controller.getById(ctx);
+      const response = await controller.findProductById(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -141,11 +141,11 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "post" method that', () => {
+  describe('has a "createProduct" method that', () => {
 
     it('should handle requests at POST /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'post'), 'POST');
-      strictEqual(getPath(ProductController, 'post'), '/');
+      strictEqual(getHttpMethod(ProductController, 'createProduct'), 'POST');
+      strictEqual(getPath(ProductController, 'createProduct'), undefined);
     });
 
     it('should create the product in the database and return it through '
@@ -155,7 +155,7 @@ describe('ProductController', () => {
           text: 'Product 3',
         }
       });
-      const response = await controller.post(ctx);
+      const response = await controller.createProduct(ctx);
 
       if (!isHttpResponseCreated(response)) {
         throw new Error('The returned value should be an HttpResponseCreated object.');
@@ -175,37 +175,11 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "postById" method that', () => {
+  describe('has a "modifyProduct" method that', () => {
 
-    it('should handle requests at POST /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'postById'), 'POST');
-      strictEqual(getPath(ProductController, 'postById'), '/:id');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.postById()));
-    });
-
-  });
-
-  describe('has a "patch" method that', () => {
-
-    it('should handle requests at PATCH /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'patch'), 'PATCH');
-      strictEqual(getPath(ProductController, 'patch'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.patch()));
-    });
-
-  });
-
-  describe('has a "patchById" method that', () => {
-
-    it('should handle requests at PATCH /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'patchById'), 'PATCH');
-      strictEqual(getPath(ProductController, 'patchById'), '/:id');
+    it('should handle requests at PATCH /:productId.', () => {
+      strictEqual(getHttpMethod(ProductController, 'modifyProduct'), 'PATCH');
+      strictEqual(getPath(ProductController, 'modifyProduct'), '/:productId');
     });
 
     it('should update the product in the database and return it through an HttpResponseOK object.', async () => {
@@ -214,10 +188,10 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modifyProduct(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -241,10 +215,10 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      await controller.patchById(ctx);
+      await controller.modifyProduct(ctx);
 
       const product = await getRepository(Product).findOne(product1.id);
 
@@ -261,10 +235,10 @@ describe('ProductController', () => {
           text: '',
         },
         params: {
-          id: -1
+          productId: -1
         }
       });
-      const response = await controller.patchById(ctx);
+      const response = await controller.modifyProduct(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -273,24 +247,11 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "put" method that', () => {
+  describe('has a "replaceProduct" method that', () => {
 
-    it('should handle requests at PUT /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'put'), 'PUT');
-      strictEqual(getPath(ProductController, 'put'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.put()));
-    });
-
-  });
-
-  describe('has a "putById" method that', () => {
-
-    it('should handle requests at PUT /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'putById'), 'PUT');
-      strictEqual(getPath(ProductController, 'putById'), '/:id');
+    it('should handle requests at PUT /:productId.', () => {
+      strictEqual(getHttpMethod(ProductController, 'replaceProduct'), 'PUT');
+      strictEqual(getPath(ProductController, 'replaceProduct'), '/:productId');
     });
 
     it('should update the product in the database and return it through an HttpResponseOK object.', async () => {
@@ -299,10 +260,10 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replaceProduct(ctx);
 
       if (!isHttpResponseOK(response)) {
         throw new Error('The returned value should be an HttpResponseOK object.');
@@ -326,10 +287,10 @@ describe('ProductController', () => {
           text: 'Product 2 (version 2)',
         },
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      await controller.putById(ctx);
+      await controller.replaceProduct(ctx);
 
       const product = await getRepository(Product).findOne(product1.id);
 
@@ -346,10 +307,10 @@ describe('ProductController', () => {
           text: '',
         },
         params: {
-          id: -1
+          productId: -1
         }
       });
-      const response = await controller.putById(ctx);
+      const response = await controller.replaceProduct(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');
@@ -358,33 +319,20 @@ describe('ProductController', () => {
 
   });
 
-  describe('has a "delete" method that', () => {
+  describe('has a "deleteProduct" method that', () => {
 
-    it('should handle requests at DELETE /.', () => {
-      strictEqual(getHttpMethod(ProductController, 'delete'), 'DELETE');
-      strictEqual(getPath(ProductController, 'delete'), '/');
-    });
-
-    it('should return a HttpResponseMethodNotAllowed.', () => {
-      ok(isHttpResponseMethodNotAllowed(controller.delete()));
-    });
-
-  });
-
-  describe('has a "deleteById" method that', () => {
-
-    it('should handle requests at DELETE /:id.', () => {
-      strictEqual(getHttpMethod(ProductController, 'deleteById'), 'DELETE');
-      strictEqual(getPath(ProductController, 'deleteById'), '/:id');
+    it('should handle requests at DELETE /:productId.', () => {
+      strictEqual(getHttpMethod(ProductController, 'deleteProduct'), 'DELETE');
+      strictEqual(getPath(ProductController, 'deleteProduct'), '/:productId');
     });
 
     it('should delete the product and return an HttpResponseNoContent object.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteProduct(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -398,10 +346,10 @@ describe('ProductController', () => {
     it('should not delete the other products.', async () => {
       const ctx = new Context({
         params: {
-          id: product2.id
+          productId: product2.id
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteProduct(ctx);
 
       if (!isHttpResponseNoContent(response)) {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
@@ -415,10 +363,10 @@ describe('ProductController', () => {
     it('should return an HttpResponseNotFound if the product was not fond.', async () => {
       const ctx = new Context({
         params: {
-          id: -1
+          productId: -1
         }
       });
-      const response = await controller.deleteById(ctx);
+      const response = await controller.deleteProduct(ctx);
 
       if (!isHttpResponseNotFound(response)) {
         throw new Error('The returned value should be an HttpResponseNotFound object.');

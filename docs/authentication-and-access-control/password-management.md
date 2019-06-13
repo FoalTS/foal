@@ -2,11 +2,11 @@
 
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
 
-## The `encryptPassword` function
+## The `hashPassword` function
 
-The `encryptPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) algorithm with a SHA256 hash. It takes as parameters the password in plain text and an optional `options` object. It returns a promise which value is a password hash.
+The `hashPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) algorithm with a SHA256 hash. It takes as parameters the password in plain text and an optional `options` object. It returns a promise which value is a password hash.
 
-> Note: This function is badly named. It does not encrypt passwords but salt and hash them.
+> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
 
 **Parameters**
 
@@ -42,4 +42,4 @@ The `verifyPassword` takes three arguments:
 Promise<boolean>
 ```
 
-> If you used the `parsePassword` function in previous versions of Foal (<0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `encryptPassword`.
+> If you used the `parsePassword` function in previous versions of Foal (<0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `hashPassword`.

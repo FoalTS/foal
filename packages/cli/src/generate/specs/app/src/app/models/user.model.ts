@@ -1,4 +1,4 @@
-// import { encryptPassword } from '@foal/core';
+// import { hashPassword } from '@foal/core';
 import { Document, model, Model, models, Schema } from 'mongoose';
 
 const userSchema: Schema = new Schema({
@@ -14,7 +14,7 @@ const userSchema: Schema = new Schema({
 });
 
 // userSchema.methods.setPassword = async function(password: string) {
-//   this.password = await encryptPassword(password);
+//   this.password = await hashPassword(password);
 // };
 
 export interface IUser extends Document {

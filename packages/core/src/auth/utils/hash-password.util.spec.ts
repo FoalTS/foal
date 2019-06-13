@@ -4,14 +4,14 @@ import { pbkdf2, pbkdf2Sync } from 'crypto';
 
 // FoalTS
 import { promisify } from 'util';
-import { encryptPassword } from './encrypt-password.util';
+import { hashPassword } from './hash-password.util';
 
-describe('encryptPassword', () => {
+describe('hashPassword', () => {
 
   it('should hash the plain password into a 32-byte derived key with PBKDF2/SHA256,'
       + ' 150 000 iterations and a 16-byte random salt.', async () => {
     const plainPassword = 'hello world';
-    const actual = await encryptPassword(plainPassword);
+    const actual = await hashPassword(plainPassword);
 
     const [ algorithm, iterations, salt, derivedKey ] = actual.split('$');
 
@@ -27,7 +27,7 @@ describe('encryptPassword', () => {
 
   it('should be able to salt and hash the plain password using the legacy way (old parsePassword util).', async () => {
     const plainPassword = 'hello world';
-    const actual = await encryptPassword(plainPassword, { legacy: true });
+    const actual = await hashPassword(plainPassword, { legacy: true });
 
     strictEqual(typeof actual, 'string');
     const [ algorithm, iterations, salt, derivedKey] = actual.split('$');

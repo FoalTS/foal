@@ -6,8 +6,8 @@ import {
   Context,
   createApp,
   dependency,
-  encryptPassword,
   Get,
+  hashPassword,
   Hook,
   HttpResponseForbidden,
   HttpResponseNoContent,
@@ -135,7 +135,7 @@ it('Foal should support authorization and authentication based on sessions & coo
 
   const user = new UserModel();
   user.email = 'john@foalts.org';
-  user.password = await encryptPassword('password');
+  user.password = await hashPassword('password');
   user.isAdmin = false;
   await user.save();
 

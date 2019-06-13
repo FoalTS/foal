@@ -125,7 +125,7 @@ export class LoginController {
 
 *user.entity.ts*
 ```typescript
-import { encryptPassword } from '@foal/core';
+import { hashPassword } from '@foal/core';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -141,7 +141,7 @@ export class User extends BaseEntity {
   password: string;
 
   async setPassword(password: string) {
-    this.password = await encryptPassword(password);
+    this.password = await hashPassword(password);
   }
 
 }

@@ -83,8 +83,9 @@ export abstract class HttpResponse {
    * @param {string} value - The value name.
    * @memberof HttpResponse
    */
-  setHeader(name: string, value: string): void {
+  setHeader(name: string, value: string): this {
     this.headers[name] = value;
+    return this;
   }
 
   /**
@@ -117,8 +118,9 @@ export abstract class HttpResponse {
    * @param {CookieOptions} [options={}] - The cookie directives if any.
    * @memberof HttpResponse
    */
-  setCookie(name: string, value: string, options: CookieOptions = {}): void {
+  setCookie(name: string, value: string, options: CookieOptions = {}): this {
     this.cookies[name] = { value, options };
+    return this;
   }
 
   /**
@@ -299,12 +301,13 @@ export async function createHttpResponseFile(options:
   if (mimeType) {
     response.setHeader('Content-Type', mimeType);
   }
-  response.setHeader('Content-Length', stats.size.toString());
-  response.setHeader(
-    'Content-Disposition',
-    (options.forceDownload ? 'attachement' : 'inline')
-    + `; filename="${options.filename || file}"`
-  );
+  response
+    .setHeader('Content-Length', stats.size.toString())
+    .setHeader(
+      'Content-Disposition',
+      (options.forceDownload ? 'attachement' : 'inline')
+      + `; filename="${options.filename || file}"`
+    );
 
   return response;
 }

@@ -1,0 +1,17 @@
+{
+  "port": 3001,
+  "settings": {
+    "openapi": {
+      "useHooks": true
+    },
+    "debug": true,
+    "loggerFormat": "dev",
+    "session": {
+      "secret": "my secret",
+      "resave": true,
+      "saveUninitialized": true,
+      "staticPath": "public/",
+      "templateEngine": "@foal/ejs"
+    }
+  }
+}

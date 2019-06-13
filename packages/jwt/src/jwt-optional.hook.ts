@@ -1,5 +1,5 @@
 // 3p
-import { HookDecorator } from '@foal/core';
+import { ApiDefineSecurityScheme, ApiResponse, Config, HookDecorator, IApiSecurityScheme } from '@foal/core';
 import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
@@ -28,5 +28,20 @@ import { JWT, JWTOptions } from './jwt.hook';
  * @returns {HookDecorator} The hook.
  */
 export function JWTOptional(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
-  return JWT(false, options, verifyOptions);
+  return (target: any, propertyKey?: string) =>  {
+    JWT(false, options, verifyOptions)(target, propertyKey);
+
+    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
+      return;
+    }
+
+    const securityScheme: IApiSecurityScheme = {
+      bearerFormat: 'JWT',
+      scheme: 'bearer',
+      type: 'http',
+    };
+
+    ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
+    ApiResponse(401, { description: 'JWT is invalid.' })(target, propertyKey);
+  };
 }
