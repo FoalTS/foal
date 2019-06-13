@@ -3,6 +3,7 @@ import {
   Context, getHookFunction, HttpResponseOK,
   isHttpResponse,
   isHttpResponseBadRequest,
+  isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
@@ -173,6 +174,22 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       );
     });
 
+    it('should return an HttpResponseRedirect object if the token is invalid '
+        + '(options.redirectTo is defined).', async () => {
+      const token = 'xxx';
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseRedirect(response)) {
+        throw new Error('response should be instance of HttpResponseRedirect');
+      }
+      strictEqual(response.path, '/foo');
+    });
+
     describe('given options.cookie is false or not defined', () => {
 
       it('should not set a cookie in the response if the token is invalid.', async () => {
@@ -182,8 +199,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('response should be instance of HttpResponseUnauthorized');
+        if (!isHttpResponse(response)) {
+          throw new Error('response should be instance of HttpResponse');
         }
         deepStrictEqual(response.getCookies(), {});
       });
@@ -204,8 +221,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('response should be instance of HttpResponseUnauthorized');
+        if (!isHttpResponse(response)) {
+          throw new Error('response should be instance of HttpResponse');
         }
 
         const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
@@ -243,6 +260,26 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       );
     });
 
+    it('should return an HttpResponseRedirect object if no session matching the ID is found'
+        + ' (options.redirectTo is defined).', async () => {
+      const session = await services.get(Store).createAndSaveSession({ userId: 22 });
+      const token = session.getToken();
+
+      await services.get(Store).clear();
+
+      const ctx = new Context({
+        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      });
+
+      const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseRedirect(response)) {
+        throw new Error('response should be instance of HttpResponseRedirect');
+      }
+      strictEqual(response.path, '/foo');
+    });
+
     describe('given options.cookie is false or not defined', () => {
 
       it('should not set a cookie in the response if no session matching the ID is found.', async () => {
@@ -256,8 +293,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('response should be instance of HttpResponseUnauthorized');
+        if (!isHttpResponse(response)) {
+          throw new Error('response should be instance of HttpResponse');
         }
         deepStrictEqual(response.getCookies(), {});
       });
@@ -282,8 +319,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
         const response = await hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('response should be instance of HttpResponseUnauthorized');
+        if (!isHttpResponse(response)) {
+          throw new Error('response should be instance of HttpResponse');
         }
 
         const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
@@ -394,6 +431,24 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           response.getHeader('WWW-Authenticate'),
           'error="invalid_token", error_description="The token does not match any user."'
         );
+      });
+
+      it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '
+          + 'with the given user Id (options.redirectTo is defined).', async () => {
+        const hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+
+        const session = await services.get(Store).createAndSaveSession({ userId: 2 });
+        const token = session.getToken();
+
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const response = await hook(ctx, services);
+        if (!isHttpResponseRedirect(response)) {
+          throw new Error('response should be instance of HttpResponseRedirect');
+        }
+        strictEqual(response.path, '/foo');
       });
 
     });

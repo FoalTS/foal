@@ -1,6 +1,7 @@
 import {
   Class, Config, Context, Hook, HookDecorator, HttpResponse,
   HttpResponseBadRequest,
+  HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager
 } from '../core';
@@ -77,7 +78,10 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     const sessionID = Session.verifyTokenAndGetId(token);
     if (!sessionID) {
-      const response = new InvalidTokenResponse('invalid token');
+      let response: HttpResponse = new InvalidTokenResponse('invalid token');
+      if (options.redirectTo) {
+        response = new HttpResponseRedirect(options.redirectTo);
+      }
       if (options.cookie) {
         removeSessionCookie(response);
       }
@@ -90,7 +94,10 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     const session = await store.read(sessionID);
 
     if (!session) {
-      const response = new InvalidTokenResponse('token invalid or expired');
+      let response: HttpResponse = new InvalidTokenResponse('token invalid or expired');
+      if (options.redirectTo) {
+        response = new HttpResponseRedirect(options.redirectTo);
+      }
       if (options.cookie) {
         removeSessionCookie(response);
       }
@@ -108,6 +115,9 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     } else {
       const user = await options.user(userId);
       if (!user) {
+        if (options.redirectTo) {
+          return new HttpResponseRedirect(options.redirectTo);
+        }
         return new InvalidTokenResponse('The token does not match any user.');
       }
       ctx.user = user;
