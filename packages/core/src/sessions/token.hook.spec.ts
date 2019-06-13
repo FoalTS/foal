@@ -703,6 +703,61 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       testMethod(Foobar);
     });
 
+    it('which is different if options.cookie is true.', () => {
+      @Token({ store: Store, openapi: true, cookie: true })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          cookieAuth: {
+            in: 'cookie',
+            name: SESSION_DEFAULT_COOKIE_NAME,
+            type: 'apiKey',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { cookieAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
+    });
+
+    it('which is different if options.cookie is true (cookie name is not the default one).', () => {
+      process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
+      @Token({ store: Store, openapi: true, cookie: true })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          cookieAuth: {
+            in: 'cookie',
+            name: 'auth2',
+            type: 'apiKey',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { cookieAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
+    });
+
   });
 
 }

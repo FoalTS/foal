@@ -10,6 +10,7 @@ import {
 import { sign } from 'jsonwebtoken';
 
 // FoalTS
+import { JWT_DEFAULT_COOKIE_NAME } from './constants';
 import { InvalidTokenError } from './invalid-token.error';
 import { JWTOptional } from './jwt-optional.hook';
 import { JWTRequired } from './jwt-required.hook';
@@ -92,6 +93,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   beforeEach(() => {
     config.reset();
     config.set('settings.jwt.secretOrPublicKey', secret);
+    delete process.env.SETTINGS_JWT_COOKIE_NAME;
   });
 
   describe('should validate the request and', () => {
@@ -524,7 +526,12 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const jwt = sign({ foo: 'bar' }, secret, {});
-        const ctx = new Context({ get: () => undefined, cookies: { auth: jwt } });
+        const ctx = new Context({
+          cookies: {
+            [JWT_DEFAULT_COOKIE_NAME]: jwt
+          },
+          get: () => undefined,
+        });
 
         await hook(ctx, services);
 
@@ -741,6 +748,61 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       }
 
       testMethod(Foobar);
+    });
+
+    it('which is different if options.cookie is true.', () => {
+      @JWT({ openapi: true, cookie: true })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          cookieAuth: {
+            in: 'cookie',
+            name: JWT_DEFAULT_COOKIE_NAME,
+            type: 'apiKey',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { cookieAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
+    });
+
+    it('which is different if options.cookie is true (cookie name is not the default one).', () => {
+      process.env.SETTINGS_JWT_COOKIE_NAME = 'auth2';
+      @JWT({ openapi: true, cookie: true })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar);
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          cookieAuth: {
+            in: 'cookie',
+            name: 'auth2',
+            type: 'apiKey',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+
+      const actualSecurityRequirements = getApiSecurity(Foobar);
+      if (required) {
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { cookieAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      } else {
+        strictEqual(actualSecurityRequirements, undefined);
+      }
     });
 
   });
