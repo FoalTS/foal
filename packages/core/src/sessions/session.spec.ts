@@ -89,7 +89,7 @@ describe('Session', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          'You must provide a secret with the configuration key settings.session.secret.'
+          '[CONFIG] You must provide a secret with the configuration key settings.session.secret.'
         );
       }
     });
@@ -146,7 +146,7 @@ describe('Session', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          'You must provide a secret with the configuration key settings.session.secret.'
+          '[CONFIG] You must provide a secret with the configuration key settings.session.secret.'
         );
       }
     });

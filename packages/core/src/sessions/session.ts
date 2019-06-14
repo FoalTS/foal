@@ -19,7 +19,7 @@ export class Session {
   static verifyTokenAndGetId(token: string): string|false {
     const secret = Config.get<string|undefined>('settings.session.secret');
     if (!secret) {
-      throw new Error('You must provide a secret with the configuration key settings.session.secret.');
+      throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
     }
 
     if (typeof token !== 'string') {
@@ -70,7 +70,7 @@ export class Session {
   getToken(): string {
     const secret = Config.get<string|undefined>('settings.session.secret');
     if (!secret) {
-      throw new Error('You must provide a secret with the configuration key settings.session.secret.');
+      throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
     }
     const signature = sign(this.sessionID, secret).toString('base64');
     return `${this.sessionID}.${convertBase64ToBase64url(signature)}`;

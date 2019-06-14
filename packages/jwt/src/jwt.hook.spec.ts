@@ -371,8 +371,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       }
       strictEqual(
         err.message,
-        'You must provide a settings.jwt.secretOrPublicKey in default.json or in the '
-          + 'SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
+        '[CONFIG] You must provide a secret or public key with the configuration key settings.jwt.secretOrPublicKey.'
       );
     });
 
