@@ -60,6 +60,10 @@ export abstract class SessionStore {
     return result;
   }
 
+  createAndSaveSessionFromUser(user: { id: string|number }): Promise<Session> {
+    return this.createAndSaveSession({ userId: user.id });
+  }
+
   /**
    * Create and save a new session.
    *

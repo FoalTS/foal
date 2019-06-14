@@ -109,7 +109,7 @@ it('Foal should support authorization and authentication based on sessions & coo
         return new HttpResponseUnauthorized();
       }
 
-      const session = await this.store.createAndSaveSession({ userId: user.id });
+      const session = await this.store.createAndSaveSessionFromUser(user);
       const response = new HttpResponseNoContent();
       setSessionCookie(response, session);
       return response;

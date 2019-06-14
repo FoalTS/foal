@@ -52,7 +52,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login?invalid_credentials=true');
     }
 
-    const session = await this.store.createAndSaveSession({ userId: user.id });
+    const session = await this.store.createAndSaveSessionFromUser(user);
 
     const response = new HttpResponseRedirect('/');
     setSessionCookie(response, session);

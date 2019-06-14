@@ -95,7 +95,7 @@ describe('Foal should support authorization and authentication based on sessions
           return new HttpResponseRedirect('/signin');
         }
 
-        const session = await this.store.createAndSaveSession({ userId: user.id });
+        const session = await this.store.createAndSaveSessionFromUser(user);
         const response = new HttpResponseRedirect('/home');
         setSessionCookie(response, session);
         return response;
@@ -295,7 +295,7 @@ describe('Foal should support authorization and authentication based on sessions
           return new HttpResponseUnauthorized();
         }
 
-        const session = await this.store.createAndSaveSession({ userId: user.id });
+        const session = await this.store.createAndSaveSessionFromUser(user);
         const response = new HttpResponseNoContent();
         setSessionCookie(response, session);
         return response;

@@ -119,4 +119,43 @@ describe('SessionStore', () => {
 
   });
 
+  describe('has a "createAndSaveSessionFromUser" method that', () => {
+
+    it('should call "createAndSaveSession" with the user ID and return the created session.', async () => {
+      class Store extends SessionStore {
+        async createAndSaveSession(sessionContent: object): Promise<Session> {
+          return new Session('xxx', sessionContent, 36);
+        }
+        update(session: Session): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        destroy(sessionID: string): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        read(sessionID: string): Promise<Session | undefined> {
+          throw new Error('Method not implemented.');
+        }
+        extendLifeTime(sessionID: string): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        clear(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        cleanUpExpiredSessions(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+
+      }
+
+      const user = { id: 1 };
+
+      const session = await new Store().createAndSaveSessionFromUser(user);
+
+      strictEqual(session.sessionID, 'xxx');
+      deepStrictEqual(session.getContent(), { userId: 1 });
+      strictEqual(session.createdAt, 36);
+    });
+
+  });
+
 });
