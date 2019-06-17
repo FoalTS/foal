@@ -230,6 +230,8 @@ export function RefreshJWT(): HookDecorator {
 
     return (ctx, services, response: HttpResponse) => {
       const newToken = sign(
+        // The below object assumes that ctx.user is
+        // the decoded payload (default behavior).
         {
           email: ctx.user.email,
           id: ctx.user.id,
