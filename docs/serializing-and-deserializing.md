@@ -4,6 +4,10 @@ This document shows how to serialize class instances into plain objects and, con
 
 Serialization is particularly interesting if you need to transform HTTP request bodies into model instances or, inversely, convert model instances into plain objects to be returned in HTTP responses.
 
+```
+npm install class-transformer
+```
+
 ## The `class-tranformer` library
 
 The `class-transformer` has two main functions to transform objects: `plainToClass` and `classToPlain`. Some examples of their use are given below.
@@ -72,7 +76,7 @@ The below code shows how to create a hook to unserialize the request body.
 *unserialize-body.hook.ts*
 ```typescript
 import { Class, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
-import { plainToClass } from 'class-transformer';
+import { ClassTransformOptions, plainToClass } from 'class-transformer';
 
 export function UnserializeBody(cls: Class, options?: ClassTransformOptions): HookDecorator {
   return Hook(ctx => {
@@ -82,15 +86,20 @@ export function UnserializeBody(cls: Class, options?: ClassTransformOptions): Ho
     ctx.request.body = plainToClass(cls, ctx.request.body, options);
   });
 }
+
 ```
 
 *product.controller.ts*
 ```typescript
-import { BaseEntity, Entity } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 // BaseEntity adds the method "save" to the class.
 export class Product extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
   name: string;
 }
 ```
@@ -98,19 +107,19 @@ export class Product extends BaseEntity {
 *api.controller.ts*
 ```typescript
 import { HttpResponseCreated, Post, ValidateBody } from '@foal/core';
-import { UnserializeBody } from '../hooks';
 import { Product } from '../entities';
+import { UnserializeBody } from '../hooks';
 
 export class ApiController {
 
   @Post('/products')
   @ValidateBody({
-    type: 'object',
     additionalProperties: false,
     properties: {
       name: { type: 'string' }
-    }
-    required: [ 'name' ]
+    },
+    required: [ 'name' ],
+    type: 'object',
   })
   @UnserializeBody(Product)
   async createProduct(ctx) {
