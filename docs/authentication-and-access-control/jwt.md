@@ -203,6 +203,57 @@ You can provide your own function (in the case you want to use a cache database 
 (token: string) => boolean|Promise<boolean>;
 ```
 
+## Refresh the tokens
+
+Having a too-long expiration date for JSON Web Tokens is not recommend as it increases exposure to attacks based on token hijacking. If an attacker succeeds in stealing a token with an insufficient expiration date, he/she will have plenty of time to make other attacks and harm your application.
+
+In order to minimize the exposure, it is recommend to set a short expiration date (15 minutes for common applications) to quickly invalidate tokens. In this way, even if a token is stolen, it will quickly become unusable since it will have expired.
+
+One of the disadvantages of having short expiration dates, however, is that users get logged out too often which is not very user-friendly.
+
+One way to get around this problem is to generate and send a new token on each request. The client then saves this new token and uses it on further requests. In this way, if users are inactive more than 15 minutes, they are disconnected. Otherwise, the user will still be connected but the application will use a different token.
+
+The below code shows how to implement this technique with a hook. On each request, the client will receive a new token in the `Authorization` header of the response. Other implementations are still possible (especially if you use cookies).
+
+> _Note that when a new token is generated, the previous one is still valid until its expiration date._
+
+*refresh-jwt.hook.ts (example)*
+```typescript
+import { Config, Hook, HookDecorator, HttpResponse } from '@foal/core';
+import { sign } from 'jsonwebtoken';
+
+export function RefreshJWT(): HookDecorator {
+  return Hook(ctx => {
+    if (!ctx.user) {
+      return;
+    }
+
+    return (ctx, services, response: HttpResponse) => {
+      const newToken = sign(
+        {
+          email: ctx.user.email,
+          id: ctx.user.id,
+          sub: ctx.user.subject,
+        },
+        Config.get<string>('settings.jwt.secretOrPublicKey'),
+        { expiresIn: '15m' }
+      );
+      response.setHeader('Authorization', newToken);
+    };
+
+  });
+}
+```
+
+*api.controller.ts (example)*
+```typescript
+@JWTRequired()
+@RefreshJWT()
+export class ApiController {
+  // ...
+}
+```
+
 ## Make a Database Call to Get More User Properties
 
 In several cases, the decoded payload is not sufficient. We may need to fetch extra properties from the database, such as the user permissions for example, or simply want the `Context.user` to a be a model instance instead of a plain object.
