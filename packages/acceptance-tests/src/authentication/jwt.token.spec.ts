@@ -1,3 +1,15 @@
+// std
+import { deepStrictEqual, strictEqual } from 'assert';
+
+// 3p
+import {
+  Column, createConnection, Entity, getConnection, getRepository,
+  PrimaryGeneratedColumn
+} from '@foal/typeorm/node_modules/typeorm';
+import { sign } from 'jsonwebtoken';
+import * as request from 'supertest';
+
+// FoalTS
 import {
   Config, Context, controller, createApp, Get,
   hashPassword, HttpResponseOK,
@@ -5,13 +17,6 @@ import {
 } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 import { fetchUser } from '@foal/typeorm';
-import {
-  Column, createConnection, Entity, getConnection, getRepository,
-  PrimaryGeneratedColumn
-} from '@foal/typeorm/node_modules/typeorm';
-import { deepStrictEqual, strictEqual } from 'assert';
-import { sign } from 'jsonwebtoken';
-import * as request from 'supertest';
 
 describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 

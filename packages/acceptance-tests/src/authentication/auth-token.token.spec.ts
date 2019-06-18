@@ -1,15 +1,20 @@
+// std
+import { deepStrictEqual, strictEqual } from 'assert';
+
+// 3p
+import {
+  Column, createConnection, Entity, getConnection, getRepository,
+  PrimaryGeneratedColumn
+} from '@foal/typeorm/node_modules/typeorm';
+import * as request from 'supertest';
+
+// FoalTS
 import {
   Context, controller, createApp, dependency, Get, hashPassword,
   HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized,
   Post, Session, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
-import {
-  Column, createConnection, Entity, getConnection, getRepository,
-  PrimaryGeneratedColumn
-} from '@foal/typeorm/node_modules/typeorm';
-import { deepStrictEqual, strictEqual } from 'assert';
-import * as request from 'supertest';
 
 describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
 
