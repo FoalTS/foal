@@ -128,7 +128,7 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
       .send({ email: 'john@foalts.org', password: 'wrong_password' })
       .expect(401);
 
-    // Try to login with a wrong email
+    // Login with a correct email
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'password' })

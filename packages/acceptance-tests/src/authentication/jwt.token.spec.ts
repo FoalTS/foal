@@ -1,121 +1,186 @@
-// 3p
-import { Context, createApp, Get, HttpResponseOK, HttpResponseUnauthorized, Post } from '@foal/core';
+import {
+  Config, Context, controller, createApp, Get,
+  hashPassword, HttpResponseOK,
+  HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
+} from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
+import { fetchUser } from '@foal/typeorm';
+import {
+  Column, createConnection, Entity, getConnection, getRepository,
+  PrimaryGeneratedColumn
+} from '@foal/typeorm/node_modules/typeorm';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
-const secret = 'my_strong_secret';
+describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
-before(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = secret);
-after(() => delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY);
+  let app: any;
+  let token: string;
 
-interface User {
-  id: number;
-  username: string;
-  isAdmin: boolean;
-}
-
-const users: User[] = [
-  { id: 1, username: 'John', isAdmin: true },
-  { id: 2, username: 'Mary', isAdmin: false },
-];
-
-it('JWT test (no cookie)', async () => {
-
-  const blackList: string[] = [];
-
-  async function fetchUser(id): Promise<User|undefined> {
-    return users.find(user => user.id.toString() === id);
-  }
+  let blackList: string[];
 
   function isBlackListed(token: string): boolean {
     return blackList.includes(token);
   }
 
-  class AppController {
-    @Post('/login')
-    async logIn(ctx: Context) {
-      const user = users.find(user => user.username === ctx.request.body.username);
-      if (!user) {
-        return new HttpResponseUnauthorized();
-      }
-      const payload = {
-        id: user.id,
-        username: user.username
-      };
+  @Entity()
+  class User {
+    @PrimaryGeneratedColumn()
+    id: number;
 
-      const jwt = await new Promise((resolve, reject) => {
-        sign(payload, secret, { subject: user.id.toString() }, (err, value) => {
-          if (err) { reject(err); } else { resolve(value); }
-        });
+    @Column({ unique: true })
+    email: string;
+
+    @Column()
+    password: string;
+
+    @Column()
+    nickname: string;
+  }
+
+  @JWTRequired({ user: fetchUser(User), blackList: isBlackListed })
+  class ApiController {
+    @Get('/products')
+    readProducts(ctx: Context<User>) {
+      return new HttpResponseOK({
+        nickname: ctx.user.nickname
       });
-      return new HttpResponseOK(jwt);
-    }
-
-    @Get('/is-admin')
-    @JWTRequired({ user: fetchUser, blackList: isBlackListed })
-    async isAdmin(ctx) {
-      return new HttpResponseOK(ctx.user.isAdmin);
     }
   }
 
-  const app = createApp(AppController);
+  class LoginController {
 
-  /* Try to login with a wrong username */
+    @Post('/login')
+    @ValidateBody({
+      additionalProperties: false,
+      properties: {
+        email: { type: 'string', format: 'email' },
+        password: { type: 'string' }
+      },
+      required: [ 'email', 'password' ],
+      type: 'object',
+    })
+    async login(ctx: Context) {
+      const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
-  await request(app)
-    .post('/login')
-    .send({ username: 'Someone' })
-    .expect(401);
+      if (!user) {
+        return new HttpResponseUnauthorized();
+      }
 
-  /* Login with a correct username */
+      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+        return new HttpResponseUnauthorized();
+      }
 
-  let jwt = '';
-  await request(app)
-    .post('/login')
-    .send({ username: 'John' })
-    .expect(200)
-    .then(data => jwt = data.text);
+      const payload = {
+        email: user.email,
+        id: user.id,
+      };
+      const secret = Config.get<string>('settings.jwt.secretOrPublicKey');
 
-  /* Request /is-admin without the jwt */
+      token = await new Promise<string>((resolve, reject) => {
+        sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(value);
+        });
+      });
+      return new HttpResponseOK({
+        token
+      });
+    }
+  }
 
-  await request(app)
-    .get('/is-admin')
-    .expect(400)
-    .expect({
-      code: 'invalid_request',
-      description: 'Authorization header not found.'
+  class AppController {
+    subControllers = [
+      controller('', LoginController),
+      controller('/api', ApiController),
+    ];
+  }
+
+  before(async () => {
+    process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = 'session-secret';
+    await createConnection({
+      database: 'e2e_db.sqlite',
+      dropSchema: true,
+      entities: [ User ],
+      synchronize: true,
+      type: 'sqlite',
     });
 
-  /* Request /is-admin with a bad jwt */
+    const user = new User();
+    user.email = 'john@foalts.org';
+    user.password = await hashPassword('password');
+    user.nickname = 'Johny';
+    await getRepository(User).save(user);
 
-  await request(app)
-    .get('/is-admin')
-    .set('Authorization', 'Bearer hello')
-    .expect(401)
-    .expect({
-      code: 'invalid_token',
-      description: 'jwt malformed'
-    });
+    blackList = [];
 
-  /* Request /is-admin with the correct jwt */
+    app = createApp(AppController);
+  });
 
-  await request(app)
-    .get('/is-admin')
-    .set('Authorization', `Bearer ${jwt}`)
-    .expect(200)
-    .expect('true');
+  after(async () => {
+    await getConnection().close();
+    delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+  });
 
-  /* Add the token to the black list and request /is-admin again */
+  it('cannot access protected routes if they are not logged in.', () => {
+    return request(app)
+      .get('/api/products')
+      .expect(400)
+      .expect({
+        code: 'invalid_request',
+        description: 'Authorization header not found.'
+      });
+  });
 
-  blackList.push(jwt);
+  it('can log in.', async () => {
+    // Try to login with a wrong email
+    await request(app)
+      .post('/login')
+      .send({ email: 'mary@foalts.org', password: 'password' })
+      .expect(401);
 
-  await request(app)
-    .get('/is-admin')
-    .set('Authorization', `Bearer ${jwt}`)
-    .expect(401)
-    .expect({
-      code: 'invalid_token',
-      description: 'jwt revoked'
-    });
+    // Try to login with a wrong email
+    await request(app)
+      .post('/login')
+      .send({ email: 'john@foalts.org', password: 'wrong_password' })
+      .expect(401);
+
+    // Login with a correct email
+    await request(app)
+      .post('/login')
+      .send({ email: 'john@foalts.org', password: 'password' })
+      .expect(200)
+      .then(response => {
+        strictEqual(typeof response.body.token, 'string');
+        token = response.body.token;
+      });
+  });
+
+  it('can access routes once they are logged in.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, {
+          nickname: 'Johny'
+        });
+      });
+  });
+
+  it('cannot access routes if the token is blacklisted.', () => {
+    blackList.push(token);
+    return request(app)
+      .get('/api/products')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401)
+      .expect({
+        code: 'invalid_token',
+        description: 'jwt revoked'
+      });
+  });
+
 });

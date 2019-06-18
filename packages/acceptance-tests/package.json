@@ -4,8 +4,8 @@
   "version": "0.8.9",
   "description": "Acceptance tests of the framework",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.{ts,tsx}\"",
-    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
+    "test": "mocha --require ts-node/register --file \"./src/init.ts\" \"./src/**/*.spec.{ts,tsx}\"",
+    "dev:test": "mocha --require ts-node/register --file \"./src/init.ts\" --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
   },
   "dependencies": {
     "@foal/core": "^0.8.9",

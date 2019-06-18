@@ -1,8 +1,7 @@
 import {
   Context, controller, createApp, dependency, Get, hashPassword,
-  HttpResponseNoContent, HttpResponseOK, HttpResponseRedirect,
-  HttpResponseUnauthorized, Post, removeSessionCookie, Session, setSessionCookie,
-  TokenRequired, ValidateBody, verifyPassword
+  HttpResponseOK, HttpResponseRedirect, Post, removeSessionCookie,
+  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
 import {
@@ -78,6 +77,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
     }
 
     @Get('/home')
+    @TokenRequired({ store: TypeORMStore, cookie: true, redirectTo: '/login' })
     home() {
       return new HttpResponseOK('Home page');
     }
@@ -113,14 +113,19 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
     delete process.env.SETTINGS_SESSION_SECRET;
   });
 
-  it('cannot access protected routes if they are not logged in.', () => {
-    return request(app)
+  it('cannot access protected routes if they are not logged in.', async () => {
+    await request(app)
       .get('/api/products')
       .expect(400)
       .expect({
         code: 'invalid_request',
         description: 'Auth cookie not found.'
       });
+
+    await request(app)
+      .get('/home')
+      .expect(302)
+      .expect('Location', '/login');
   });
 
   it('can log in.', async () => {
@@ -138,7 +143,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       .expect(302)
       .expect('location', '/login');
 
-    // Try to login with a wrong email
+    // Login with a correct email
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'password' })
@@ -146,14 +151,14 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       .expect('location', '/home')
       .then(response => {
         strictEqual(Array.isArray(response.header['set-cookie']), true);
-        token = response.header['set-cookie'][0];
+        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
       });
   });
 
   it('can access routes once they are logged in.', () => {
     return request(app)
       .get('/api/products')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, []);
@@ -163,7 +168,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
   it('can log out.', () => {
     return request(app)
       .get('/logout')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(302)
       .expect('location', '/login')
       .then(response => {
@@ -172,15 +177,21 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       });
   });
 
-  it('cannot access routes once they are logged out.', () => {
-    return request(app)
+  it('cannot access routes once they are logged out.', async () => {
+    await request(app)
       .get('/api/products')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(401)
       .expect({
         code: 'invalid_token',
         description: 'token invalid or expired'
       });
+
+    await request(app)
+      .get('/home')
+      .set('Cookie', `auth=${token}`)
+      .expect(302)
+      .expect('Location', '/login');
   });
 
 });

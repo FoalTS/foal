@@ -131,21 +131,21 @@ describe('[Authentication|auth token|cookie|no redirection] Users', () => {
       .send({ email: 'john@foalts.org', password: 'wrong_password' })
       .expect(401);
 
-    // Try to login with a wrong email
+    // Login with a correct email
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'password' })
       .expect(204)
       .then(response => {
         strictEqual(Array.isArray(response.header['set-cookie']), true);
-        token = response.header['set-cookie'][0];
+        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
       });
   });
 
   it('can access routes once they are logged in.', () => {
     return request(app)
       .get('/api/products')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, []);
@@ -155,7 +155,7 @@ describe('[Authentication|auth token|cookie|no redirection] Users', () => {
   it('can log out.', () => {
     return request(app)
       .get('/logout')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(204)
       .then(response => {
         strictEqual(Array.isArray(response.header['set-cookie']), true);
@@ -166,7 +166,7 @@ describe('[Authentication|auth token|cookie|no redirection] Users', () => {
   it('cannot access routes once they are logged out.', () => {
     return request(app)
       .get('/api/products')
-      .set('Cookie', token)
+      .set('Cookie', `auth=${token}`)
       .expect(401)
       .expect({
         code: 'invalid_token',
