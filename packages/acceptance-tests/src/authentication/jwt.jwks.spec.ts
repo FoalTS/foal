@@ -13,7 +13,7 @@ import { Config, createApp, Get, HttpResponseOK } from '@foal/core';
 import { getRSAPublicKeyFromJWKS } from '@foal/jwks-rsa';
 import { JWTRequired } from '@foal/jwt';
 
-describe('FoalTS should support authentification with a JWKS retreived', () => {
+describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retreived', () => {
 
   let server;
 
