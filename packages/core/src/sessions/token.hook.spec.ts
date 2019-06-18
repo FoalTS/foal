@@ -90,6 +90,19 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           });
         });
 
+        it('should return an HttpResponseRedirect object if the Authorization header does not exist'
+          + ' (options.redirectTo is defined).', async () => {
+          const ctx = new Context({ get(str: string) { return undefined; } });
+
+          const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
+
+          const response = await hook(ctx, services);
+          if (!isHttpResponseRedirect(response)) {
+            throw new Error('Response should be an instance of HttpResponseRedirect.');
+          }
+          strictEqual(response.path, '/foo');
+        });
+
       } else  {
 
         it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
@@ -117,6 +130,20 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
       });
 
+      it('should return an HttpResponseBadRedirect object if the Authorization header does '
+          + 'not use the Bearer scheme (options.redirectTo is defined).', async () => {
+        const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
+
+        const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
+
+        const response = await hook(ctx, services);
+
+        if (!isHttpResponseRedirect(response)) {
+          throw new Error('Response should be an instance of HttpResponseRedirect.');
+        }
+        strictEqual(response.path, '/foo');
+      });
+
     });
 
     describe('given options.cookie is true', () => {
@@ -136,6 +163,19 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
             code: 'invalid_request',
             description: 'Auth cookie not found.'
           });
+        });
+
+        it('should return an HttpResponseRedirect object if the cookie does not exist'
+            + ' (options.redirectTo is defined).' , async () => {
+          const hook = getHookFunction(Token({ store: Store, cookie: true, redirectTo: '/foo' }));
+
+          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
+
+          const response = await hook(ctx, services);
+          if (!isHttpResponseRedirect(response)) {
+            throw new Error('Response should be an instance of HttpResponseRedirect.');
+          }
+          strictEqual(response.path, '/foo');
         });
 
       } else {
@@ -546,7 +586,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const ctx = new Context({
           get(str: string) { return undefined; },
           cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: session.getToken()
+            [SESSION_DEFAULT_COOKIE_NAME]: token
           }
         });
 

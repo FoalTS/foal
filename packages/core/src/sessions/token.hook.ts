@@ -53,6 +53,9 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         if (!required) {
           return;
         }
+        if (options.redirectTo) {
+          return new HttpResponseRedirect(options.redirectTo);
+        }
         return new InvalidRequestResponse('Auth cookie not found.');
       }
 
@@ -64,11 +67,17 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         if (!required) {
           return;
         }
+        if (options.redirectTo) {
+          return new HttpResponseRedirect(options.redirectTo);
+        }
         return new InvalidRequestResponse('Authorization header not found.');
       }
 
       const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
       if (!content) {
+        if (options.redirectTo) {
+          return new HttpResponseRedirect(options.redirectTo);
+        }
         return new InvalidRequestResponse('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
       }
 
