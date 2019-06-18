@@ -25,6 +25,7 @@
     "mongoose": "^5.4.9",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "redis": "^2.8.0",
     "sqlite3": "^4.0.4",
     "superagent": "^5.0.5",
     "supertest": "^3.3.0",
