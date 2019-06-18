@@ -89,7 +89,7 @@ export function UnserializeBody(cls: Class, options?: ClassTransformOptions): Ho
 
 ```
 
-*product.controller.ts*
+*product.entity.ts*
 ```typescript
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
