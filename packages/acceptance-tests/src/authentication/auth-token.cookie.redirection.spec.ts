@@ -1,7 +1,8 @@
 import {
   Context, controller, createApp, dependency, Get, hashPassword,
-  HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized,
-  Post, Session, TokenRequired, ValidateBody, verifyPassword
+  HttpResponseNoContent, HttpResponseOK, HttpResponseRedirect,
+  HttpResponseUnauthorized, Post, removeSessionCookie, Session, setSessionCookie,
+  TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
 import {
@@ -11,7 +12,7 @@ import {
 import { deepStrictEqual, strictEqual } from 'assert';
 import * as request from 'supertest';
 
-describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
+describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
   let app: any;
   let token: string;
@@ -28,7 +29,7 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
     password: string;
   }
 
-  @TokenRequired({ store: TypeORMStore })
+  @TokenRequired({ store: TypeORMStore, cookie: true })
   class ApiController {
     @Get('/products')
     readProducts() {
@@ -41,10 +42,12 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
     store: TypeORMStore;
 
     @Get('/logout')
-    @TokenRequired({ store: TypeORMStore })
+    @TokenRequired({ store: TypeORMStore, cookie: true })
     async logout(ctx: Context<any, Session>) {
       await this.store.destroy(ctx.session.sessionID);
-      return new HttpResponseNoContent();
+      const response = new HttpResponseRedirect('/login');
+      removeSessionCookie(response);
+      return response;
     }
 
     @Post('/login')
@@ -61,17 +64,22 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
       const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
       if (!user) {
-        return new HttpResponseUnauthorized();
+        return new HttpResponseRedirect('/login');
       }
 
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
-        return new HttpResponseUnauthorized();
+        return new HttpResponseRedirect('/login');
       }
 
       const session = await this.store.createAndSaveSessionFromUser(user);
-      return new HttpResponseOK({
-        token: session.getToken()
-      });
+      const response = new HttpResponseRedirect('/home');
+      setSessionCookie(response, session);
+      return response;
+    }
+
+    @Get('/home')
+    home() {
+      return new HttpResponseOK('Home page');
     }
   }
 
@@ -111,7 +119,7 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
       .expect(400)
       .expect({
         code: 'invalid_request',
-        description: 'Authorization header not found.'
+        description: 'Auth cookie not found.'
       });
   });
 
@@ -120,29 +128,32 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
     await request(app)
       .post('/login')
       .send({ email: 'mary@foalts.org', password: 'password' })
-      .expect(401);
+      .expect(302)
+      .expect('location', '/login');
 
     // Try to login with a wrong email
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'wrong_password' })
-      .expect(401);
+      .expect(302)
+      .expect('location', '/login');
 
     // Try to login with a wrong email
     await request(app)
       .post('/login')
       .send({ email: 'john@foalts.org', password: 'password' })
-      .expect(200)
+      .expect(302)
+      .expect('location', '/home')
       .then(response => {
-        strictEqual(typeof response.body.token, 'string');
-        token = response.body.token;
+        strictEqual(Array.isArray(response.header['set-cookie']), true);
+        token = response.header['set-cookie'][0];
       });
   });
 
   it('can access routes once they are logged in.', () => {
     return request(app)
       .get('/api/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Cookie', token)
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, []);
@@ -152,14 +163,19 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
   it('can log out.', () => {
     return request(app)
       .get('/logout')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(204);
+      .set('Cookie', token)
+      .expect(302)
+      .expect('location', '/login')
+      .then(response => {
+        strictEqual(Array.isArray(response.header['set-cookie']), true);
+        strictEqual(response.header['set-cookie'][0].split('Max-Age=')[1].split(';')[0], '0');
+      });
   });
 
   it('cannot access routes once they are logged out.', () => {
     return request(app)
       .get('/api/products')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Cookie', token)
       .expect(401)
       .expect({
         code: 'invalid_token',
