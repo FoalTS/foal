@@ -5,4 +5,3 @@ settings:
   debug: false
   loggerFormat: tiny
   staticPath: public/
-
