@@ -1,6 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
   Class, Context, getHookFunction,
+  HookPostFunction,
+  HttpResponse,
   HttpResponseOK,
   isHttpResponse,
   isHttpResponseBadRequest,
@@ -450,6 +452,41 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const response = await hook(ctx, services);
         strictEqual(isHttpResponse(response), false);
         strictEqual(ctx.user, user);
+      });
+
+      it('or throw an Error if the session userId is not of type "string" or "number".', async () => {
+        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+
+        const session = await services.get(Store).createAndSaveSession({ userId: true });
+        const sessionID = session.sessionID;
+        let token = session.getToken();
+
+        let ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        try {
+          await hook(ctx, services);
+          throw new Error('The hook should have thrown an error.');
+        } catch (error) {
+          strictEqual(
+            error.message,
+            `The "userId" value of the session ${sessionID} must be a string or a number. Got "boolean".`
+          );
+        }
+
+        // Should not throw with a number or a string
+        token = (await services.get(Store).createAndSaveSession({ userId: 'my string' })).getToken();
+        ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+        await hook(ctx, services);
+
+        token = (await services.get(Store).createAndSaveSession({ userId: 33 })).getToken();
+        ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+        await hook(ctx, services);
       });
 
       it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '

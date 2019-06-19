@@ -123,6 +123,11 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     if (!options.user) {
       ctx.user = userId;
     } else {
+      if (typeof userId !== 'number' && typeof userId !== 'string') {
+        throw new Error(
+          `The "userId" value of the session ${sessionID} must be a string or a number. Got "${typeof userId}".`
+        );
+      }
       const user = await options.user(userId);
       if (!user) {
         if (options.redirectTo) {
