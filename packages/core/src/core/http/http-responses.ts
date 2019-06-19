@@ -9,6 +9,8 @@ import { getType } from 'mime';
 /**
  * Cookie options of the HttpResponse.setCookie method.
  *
+ * The value of maxAge is in seconds.
+ *
  * @export
  * @interface CookieOptions
  */
