@@ -86,7 +86,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
 
     @Get('/logout')
     async logout(ctx: Context<any, Session>) {
-      await logOut(ctx, this.store, { cookie: true });
+      await logOut(ctx, this.store);
       return new HttpResponseNoContent();
     }
 
