@@ -1,8 +1,6 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
   Class, Context, getHookFunction,
-  HookPostFunction,
-  HttpResponse,
   HttpResponseOK,
   isHttpResponse,
   isHttpResponseBadRequest,
