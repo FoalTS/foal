@@ -13,11 +13,12 @@ import {
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseUnauthorized,
+  logOut,
   Post,
   Session,
   TokenRequired,
   ValidateBody,
-  verifyPassword,
+  verifyPassword
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
@@ -84,9 +85,8 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     store: RedisStore;
 
     @Get('/logout')
-    @TokenRequired({ user: fetchUser(UserModel), store: RedisStore })
     async logout(ctx: Context<any, Session>) {
-      await this.store.destroy(ctx.session.sessionID);
+      await logOut(ctx, this.store, { cookie: true });
       return new HttpResponseNoContent();
     }
 
