@@ -4,16 +4,16 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
+  logOut,
   Post,
   removeSessionCookie,
   render,
-  Session,
   setSessionCookie,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { getRepository } from 'typeorm';
+import { getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { User } from '../entities';
@@ -23,9 +23,10 @@ export class AuthController {
   store: TypeORMStore;
 
   @Get('/logout')
-  logout(ctx: Context<any, Session>) {
+  async logout(ctx: Context) {
+    await logOut(ctx, this.store, { cookie: true });
+
     const response = new HttpResponseRedirect('/login');
-    this.store.destroy(ctx.session.sessionID);
     removeSessionCookie(response);
     return response;
   }
@@ -61,6 +62,6 @@ export class AuthController {
 
   @Get('/login')
   renderLogin(ctx: Context) {
-    return render('./templates/login.html', { csrfToken: ctx.request.csrfToken() }, __dirname);
+    return render('./templates/login.html', { csrfToken: 'csrf token' }, __dirname);
   }
 }

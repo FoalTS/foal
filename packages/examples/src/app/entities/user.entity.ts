@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 import { hashPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
@@ -16,9 +16,9 @@ export class User extends UserWithPermissions {
   password: string;
 
   async setPassword(password: string): Promise<void> {
-    this.password = await hashPassword(password, { legacy: true });
+    this.password = await hashPassword(password);
   }
 
 }
 
-export { Group, Permission } from '@foal/typeorm';
+export { Group, Permission, FoalSession } from '@foal/typeorm';

@@ -11,13 +11,13 @@ import * as http from 'http';
 
 // 3p
 import { Config, createApp } from '@foal/core';
-import { createConnection } from 'typeorm';
+import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { AppController } from './app/app.controller';
 
 async function main() {
-  await createConnection();
+  await createConnection(require('../ormconfig.json'));
 
   const app = createApp(AppController);
 

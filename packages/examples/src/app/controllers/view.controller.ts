@@ -9,7 +9,7 @@ export class ViewController {
   @Get('/')
   home(ctx: Context) {
     return render('./templates/home.html', {
-      csrfToken: ctx.request.csrfToken()
+      csrfToken: 'csrf token'
     }, __dirname);
   }
 
@@ -17,7 +17,7 @@ export class ViewController {
   @PermissionRequired('admin', { redirect: '/login' })
   admin(ctx: Context) {
     return render('./templates/admin.html', {
-      csrfToken: ctx.request.csrfToken()
+      csrfToken: 'csrf token'
     }, __dirname);
   }
 
