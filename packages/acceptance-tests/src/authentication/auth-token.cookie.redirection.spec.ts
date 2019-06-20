@@ -57,7 +57,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    async singup(ctx: Context) {
+    async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
