@@ -12,7 +12,7 @@ import * as request from 'supertest';
 import {
   Context, controller, createApp, dependency, Get, hashPassword,
   HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized,
-  logOut, Post, Session, TokenRequired, ValidateBody, verifyPassword
+  logOut, Post, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
 
@@ -41,26 +41,36 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
     }
   }
 
-  class LoginController {
+  const credentialsSchema = {
+    additionalProperties: false,
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string' }
+    },
+    required: [ 'email', 'password' ],
+    type: 'object',
+  };
+
+  class AuthController {
     @dependency
     store: TypeORMStore;
 
-    @Get('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await logOut(ctx, this.store);
-      return new HttpResponseNoContent();
+    @Post('/signup')
+    @ValidateBody(credentialsSchema)
+    async singup(ctx: Context) {
+      const user = new User();
+      user.email = ctx.request.body.email;
+      user.password = await hashPassword(ctx.request.body.password);
+      await getRepository(User).save(user);
+
+      const session = await this.store.createAndSaveSessionFromUser(user);
+      return new HttpResponseOK({
+        token: session.getToken()
+      });
     }
 
     @Post('/login')
-    @ValidateBody({
-      additionalProperties: false,
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: [ 'email', 'password' ],
-      type: 'object',
-    })
+    @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
       const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
@@ -77,11 +87,17 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
         token: session.getToken()
       });
     }
+
+    @Get('/logout')
+    async logout(ctx: Context) {
+      await logOut(ctx, this.store);
+      return new HttpResponseNoContent();
+    }
   }
 
   class AppController {
     subControllers = [
-      controller('', LoginController),
+      AuthController,
       controller('/api', ApiController),
     ];
   }
@@ -95,11 +111,6 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
       synchronize: true,
       type: 'sqlite',
     });
-
-    const user = new User();
-    user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
-    await getRepository(User).save(user);
 
     app = createApp(AppController);
   });
@@ -116,6 +127,45 @@ describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
       .expect({
         code: 'invalid_request',
         description: 'Authorization header not found.'
+      });
+  });
+
+  it('can sign up.', async () => {
+    await request(app)
+      .post('/signup')
+      .send({ email: 'john@foalts.org', password: 'password' })
+      .expect(200)
+      .then(response => {
+        strictEqual(typeof response.body.token, 'string');
+        token = response.body.token;
+      });
+  });
+
+  it('can access routes once they signed up.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, []);
+      });
+  });
+
+  it('can log out.', () => {
+    return request(app)
+      .get('/logout')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204);
+  });
+
+  it('cannot access routes once they are logged out.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(401)
+      .expect({
+        code: 'invalid_token',
+        description: 'token invalid or expired'
       });
   });
 

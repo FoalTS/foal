@@ -39,33 +39,43 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
     @Column()
     password: string;
-
-    @Column()
-    nickname: string;
   }
+
+  const credentialsSchema = {
+    additionalProperties: false,
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string' }
+    },
+    required: [ 'email', 'password' ],
+    type: 'object',
+  };
 
   @JWTRequired({ user: fetchUser(User), blackList: isBlackListed })
   class ApiController {
     @Get('/products')
     readProducts(ctx: Context<User>) {
       return new HttpResponseOK({
-        nickname: ctx.user.nickname
+        email: ctx.user.email
       });
     }
   }
 
-  class LoginController {
+  class AuthController {
+
+    @Post('/signup')
+    @ValidateBody(credentialsSchema)
+    async singup(ctx: Context) {
+      const user = new User();
+      user.email = ctx.request.body.email;
+      user.password = await hashPassword(ctx.request.body.password);
+      await getRepository(User).save(user);
+
+      return this.generateLoginResponse(user);
+    }
 
     @Post('/login')
-    @ValidateBody({
-      additionalProperties: false,
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: [ 'email', 'password' ],
-      type: 'object',
-    })
+    @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
       const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
@@ -77,6 +87,10 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
         return new HttpResponseUnauthorized();
       }
 
+      return this.generateLoginResponse(user);
+    }
+
+    private async generateLoginResponse(user: User): Promise<HttpResponseOK> {
       const payload = {
         email: user.email,
         id: user.id,
@@ -100,7 +114,7 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
   class AppController {
     subControllers = [
-      controller('', LoginController),
+      AuthController,
       controller('/api', ApiController),
     ];
   }
@@ -114,12 +128,6 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
       synchronize: true,
       type: 'sqlite',
     });
-
-    const user = new User();
-    user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
-    user.nickname = 'Johny';
-    await getRepository(User).save(user);
 
     blackList = [];
 
@@ -138,6 +146,29 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
       .expect({
         code: 'invalid_request',
         description: 'Authorization header not found.'
+      });
+  });
+
+  it('can sign up.', async () => {
+    await request(app)
+      .post('/signup')
+      .send({ email: 'john@foalts.org', password: 'password' })
+      .expect(200)
+      .then(response => {
+        strictEqual(typeof response.body.token, 'string');
+        token = response.body.token;
+      });
+  });
+
+  it('can access routes once they signed up.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, {
+          email: 'john@foalts.org'
+        });
       });
   });
 
@@ -172,7 +203,7 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, {
-          nickname: 'Johny'
+          email: 'john@foalts.org'
         });
       });
   });

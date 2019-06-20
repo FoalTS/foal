@@ -12,7 +12,7 @@ import * as request from 'supertest';
 import {
   Context, controller, createApp, dependency, Get, hashPassword, HttpResponseOK,
   HttpResponseRedirect, logOut, Post, removeSessionCookie,
-  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
+  setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
 
@@ -41,28 +41,36 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
     }
   }
 
-  class LoginController {
+  const credentialsSchema = {
+    additionalProperties: false,
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string' }
+    },
+    required: [ 'email', 'password' ],
+    type: 'object',
+  };
+
+  class AuthController {
     @dependency
     store: TypeORMStore;
 
-    @Get('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await logOut(ctx, this.store, { cookie: true });
-      const response = new HttpResponseRedirect('/login');
-      removeSessionCookie(response);
+    @Post('/signup')
+    @ValidateBody(credentialsSchema)
+    async singup(ctx: Context) {
+      const user = new User();
+      user.email = ctx.request.body.email;
+      user.password = await hashPassword(ctx.request.body.password);
+      await getRepository(User).save(user);
+
+      const session = await this.store.createAndSaveSessionFromUser(user);
+      const response = new HttpResponseRedirect('/home');
+      setSessionCookie(response, session);
       return response;
     }
 
     @Post('/login')
-    @ValidateBody({
-      additionalProperties: false,
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: [ 'email', 'password' ],
-      type: 'object',
-    })
+    @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
       const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
@@ -80,6 +88,14 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       return response;
     }
 
+    @Get('/logout')
+    async logout(ctx: Context) {
+      await logOut(ctx, this.store, { cookie: true });
+      const response = new HttpResponseRedirect('/login');
+      removeSessionCookie(response);
+      return response;
+    }
+
     @Get('/home')
     @TokenRequired({ store: TypeORMStore, cookie: true, redirectTo: '/login' })
     home() {
@@ -89,7 +105,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
   class AppController {
     subControllers = [
-      controller('', LoginController),
+      AuthController,
       controller('/api', ApiController),
     ];
   }
@@ -103,11 +119,6 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       synchronize: true,
       type: 'sqlite',
     });
-
-    const user = new User();
-    user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
-    await getRepository(User).save(user);
 
     app = createApp(AppController);
   });
@@ -128,6 +139,57 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
     await request(app)
       .get('/home')
+      .expect(302)
+      .expect('Location', '/login');
+  });
+
+  it('can sign up.', async () => {
+    await request(app)
+      .post('/signup')
+      .send({ email: 'john@foalts.org', password: 'password' })
+      .expect(302)
+      .expect('location', '/home')
+      .then(response => {
+        strictEqual(Array.isArray(response.header['set-cookie']), true);
+        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
+      });
+  });
+
+  it('can access routes once they signed up.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Cookie', `auth=${token}`)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, []);
+      });
+  });
+
+  it('can log out.', () => {
+    return request(app)
+      .get('/logout')
+      .set('Cookie', `auth=${token}`)
+      .expect(302)
+      .expect('location', '/login')
+      .then(response => {
+        strictEqual(Array.isArray(response.header['set-cookie']), true);
+        strictEqual(response.header['set-cookie'][0].split('Max-Age=')[1].split(';')[0], '0');
+      });
+  });
+
+  it('cannot access routes once they are logged out.', async () => {
+    await request(app)
+      .get('/api/products')
+      .set('Cookie', `auth=${token}`)
+      .expect(401)
+      .expect({
+        code: 'invalid_token',
+        description: 'token invalid or expired'
+      });
+
+    await request(app)
+      .get('/home')
+      .set('Cookie', `auth=${token}`)
       .expect(302)
       .expect('Location', '/login');
   });

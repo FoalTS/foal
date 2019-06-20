@@ -43,9 +43,6 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
 
     @Column()
     password: string;
-
-    @Column()
-    nickname: string;
   }
 
   @JWTRequired({ user: fetchUser(User), blackList: isBlackListed, cookie: true })
@@ -53,12 +50,49 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
     @Get('/products')
     readProducts(ctx: Context<User>) {
       return new HttpResponseOK({
-        nickname: ctx.user.nickname
+        email: ctx.user.email
       });
     }
   }
 
-  class LoginController {
+  const credentialsSchema = {
+    additionalProperties: false,
+    properties: {
+      email: { type: 'string', format: 'email' },
+      password: { type: 'string' }
+    },
+    required: [ 'email', 'password' ],
+    type: 'object',
+  };
+
+  class AuthController {
+
+    @Post('/signup')
+    @ValidateBody(credentialsSchema)
+    async singup(ctx: Context) {
+      const user = new User();
+      user.email = ctx.request.body.email;
+      user.password = await hashPassword(ctx.request.body.password);
+      await getRepository(User).save(user);
+
+      return this.generateLoginResponse(user);
+    }
+
+    @Post('/login')
+    @ValidateBody(credentialsSchema)
+    async login(ctx: Context) {
+      const user = await getRepository(User).findOne({ email: ctx.request.body.email });
+
+      if (!user) {
+        return new HttpResponseUnauthorized();
+      }
+
+      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+        return new HttpResponseUnauthorized();
+      }
+
+      return this.generateLoginResponse(user);
+    }
 
     @Get('/logout')
     @JWTRequired({ cookie: true })
@@ -71,31 +105,12 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
         );
     }
 
-    @Post('/login')
-    @ValidateBody({
-      additionalProperties: false,
-      properties: {
-        email: { type: 'string', format: 'email' },
-        password: { type: 'string' }
-      },
-      required: [ 'email', 'password' ],
-      type: 'object',
-    })
-    async login(ctx: Context) {
-      const user = await getRepository(User).findOne({ email: ctx.request.body.email });
-
-      if (!user) {
-        return new HttpResponseUnauthorized();
-      }
-
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
-        return new HttpResponseUnauthorized();
-      }
-
+    private async generateLoginResponse(user: User): Promise<HttpResponseNoContent> {
       const payload = {
         email: user.email,
         id: user.id,
       };
+
       const secret = Config.get<string>('settings.jwt.secretOrPublicKey');
 
       token = await new Promise<string>((resolve, reject) => {
@@ -117,7 +132,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
 
   class AppController {
     subControllers = [
-      controller('', LoginController),
+      AuthController,
       controller('/api', ApiController),
     ];
   }
@@ -131,12 +146,6 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       synchronize: true,
       type: 'sqlite',
     });
-
-    const user = new User();
-    user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
-    user.nickname = 'Johny';
-    await getRepository(User).save(user);
 
     blackList = [];
 
@@ -158,7 +167,31 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       });
   });
 
+  it('can sign up.', async () => {
+    await request(app)
+      .post('/signup')
+      .send({ email: 'john@foalts.org', password: 'password' })
+      .expect(204)
+      .then(response => {
+        strictEqual(Array.isArray(response.header['set-cookie']), true);
+        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
+      });
+  });
+
+  it('can access routes once they signed up.', () => {
+    return request(app)
+      .get('/api/products')
+      .set('Cookie', `auth=${token}`)
+      .expect(200)
+      .then(response => {
+        deepStrictEqual(response.body, {
+          email: 'john@foalts.org'
+        });
+      });
+  });
+
   it('can log in.', async () => {
+    token = '';
     // Try to login with a wrong email
     await request(app)
       .post('/login')
@@ -189,7 +222,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, {
-          nickname: 'Johny'
+          email: 'john@foalts.org'
         });
       });
   });
