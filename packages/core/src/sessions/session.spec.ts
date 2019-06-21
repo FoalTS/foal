@@ -3,15 +3,7 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { createHmac } from 'crypto';
 
 // FoalTS
-import { convertBase64ToBase64url, Session } from './session';
-
-describe('convertBase64ToBase64url', () => {
-  it('should convert base64-encode strings to base64url-encoded ones.', () => {
-    const expected = 'hello-hi-_how_arfA';
-    const actual = convertBase64ToBase64url('hello+hi+/how/arfA==');
-    strictEqual(actual, expected);
-  });
-});
+import { Session } from './session';
 
 describe('Session', () => {
 

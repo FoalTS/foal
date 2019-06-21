@@ -76,7 +76,7 @@ describe('SessionStore', () => {
 
   });
 
-  describe('has a "generateID" method that', () => {
+  describe('has a "generateSessionID" method that', () => {
 
     it('should generate a random base64url-encoded string which size is 128 bits.', async () => {
       class Store extends SessionStore {

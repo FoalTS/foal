@@ -1,11 +1,8 @@
-// std
-import { randomBytes } from 'crypto';
-import { promisify } from 'util';
-
 // FoalTS
+import { generateToken } from '../common';
 import { Config } from '../core';
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
-import { convertBase64ToBase64url, Session } from './session';
+import { Session } from './session';
 
 /**
  * Abstract class to be override when creating a session storage service.
@@ -145,7 +142,6 @@ export abstract class SessionStore {
    * @memberof SessionStore
    */
   protected async generateSessionID(): Promise<string> {
-    const buff = await promisify(randomBytes)(32);
-    return convertBase64ToBase64url(buff.toString('base64'));
+    return generateToken();
   }
 }

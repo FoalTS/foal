@@ -1,18 +1,6 @@
-import { createHmac, timingSafeEqual } from 'crypto';
+// FoalTS
+import { signToken, verifySignedToken } from '../common';
 import { Config } from '../core';
-
-export function convertBase64ToBase64url(str: string): string {
-  return str
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
-}
-
-function sign(base64Value: string, base64Secret: string): Buffer {
-  return createHmac('sha256', Buffer.from(base64Secret, 'base64'))
-    .update(Buffer.from(base64Value, 'base64'))
-    .digest();
-}
 
 export class Session {
 
@@ -22,23 +10,7 @@ export class Session {
       throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
     }
 
-    if (typeof token !== 'string') {
-      return false;
-    }
-    const [ sessionID, signature ] = token.split('.');
-    // signature is potentially undefined
-    if (signature === undefined) {
-      return false;
-    }
-
-    const expectedSignatureBuffer = sign(sessionID, secret);
-    const actualSignatureBuffer = Buffer.alloc(expectedSignatureBuffer.length);
-    actualSignatureBuffer.write(signature, 0, actualSignatureBuffer.length, 'base64');
-
-    if (timingSafeEqual(expectedSignatureBuffer, actualSignatureBuffer)) {
-      return sessionID;
-    }
-    return false;
+    return verifySignedToken(token, secret);
   }
 
   private modified = false;
@@ -72,8 +44,7 @@ export class Session {
     if (!secret) {
       throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
     }
-    const signature = sign(this.sessionID, secret).toString('base64');
-    return `${this.sessionID}.${convertBase64ToBase64url(signature)}`;
+    return signToken(this.sessionID, secret);
   }
 
   getContent(): object {
