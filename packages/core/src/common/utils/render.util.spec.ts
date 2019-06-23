@@ -98,7 +98,7 @@ describe('render', () => {
       }
     });
 
-    it('should render the template with the given template engine.', async () => {
+    it('should render the template with the given template engine (renderToString).', async () => {
       process.env.SETTINGS_TEMPLATE_ENGINE = '@foal/ejs';
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
@@ -107,12 +107,32 @@ describe('render', () => {
       strictEqual(actual.body, expected);
     });
 
-    it('should throw errors returned by the given template engine.', async () => {
+    it('should render the template with the given template engine (Express).', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = 'ejs';
+      const name = 'Foobar';
+      const expected = `Hello ${name}! How are you?`;
+      const actual = await render('./templates/template.ejs.html', { name }, __dirname);
+      ok(actual instanceof HttpResponseOK);
+      strictEqual(actual.body, expected);
+    });
+
+    it('should throw errors returned by the given template engine (renderToString).', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = '@foal/ejs';
       try {
-        await render(ejsTemplatePath, {}, __dirname);
+        await render('./templates/template.ejs.html', {}, __dirname);
         throw new Error('An error should have been thrown');
       } catch (error) {
-        notStrictEqual(error.message, 'An error should have been thrown');
+        strictEqual(error.message.includes('name is not defined'), true);
+      }
+    });
+
+    it('should throw errors returned by the given template engine (Express).', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = 'ejs';
+      try {
+        await render('./templates/template.ejs.html', {}, __dirname);
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        strictEqual(error.message.includes('name is not defined'), true);
       }
     });
 

@@ -36,15 +36,26 @@ export function renderToString(template: string, locals: object): string {
  * @returns {HttpResponseOK}
  */
 export async function render(templatePath: string, locals: object, dirname: string): Promise<HttpResponseOK> {
-  const template = await promisify(readFile)(join(dirname, templatePath), 'utf8');
+  const path = join(dirname, templatePath);
+  const template = await promisify(readFile)(path, 'utf8');
 
   const templateEngine = Config.get<string|undefined>('settings.templateEngine');
   if (templateEngine) {
-    const { renderToString } = require(templateEngine);
-    if (!renderToString) {
-      throw new Error(`${templateEngine} is not a template engine compatible with FoalTS.`);
+    const { renderToString, __express } = require(templateEngine);
+    if (renderToString) {
+      return new HttpResponseOK(renderToString(template, locals));
     }
-    return new HttpResponseOK(renderToString(template, locals));
+    if (__express) {
+      return new Promise<HttpResponseOK>((resolve, reject) => {
+        __express(path, locals, (err, html) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(new HttpResponseOK(html));
+        });
+      });
+    }
+    throw new Error(`${templateEngine} is not a template engine compatible with FoalTS.`);
   }
 
   return new HttpResponseOK(renderToString(template, locals));
