@@ -36,6 +36,7 @@ describe('render', () => {
   const templatesPath = join(__dirname, './templates');
   const ejsTemplatePath = join(__dirname, './templates/template.ejs.html');
   const defaultTemplatePath = join(__dirname, './templates/template.default.html');
+  const rootTemplatePath = './template.default.html';
 
   before(() => {
     if (!existsSync(templatesPath)) {
@@ -43,6 +44,7 @@ describe('render', () => {
     }
     writeFileSync(ejsTemplatePath, ejsTemplate, 'utf8');
     writeFileSync(defaultTemplatePath, defaultTemplate, 'utf8');
+    writeFileSync(rootTemplatePath, defaultTemplate, 'utf8');
   });
 
   after(() => {
@@ -51,6 +53,9 @@ describe('render', () => {
     }
     if (existsSync(defaultTemplatePath)) {
       unlinkSync(defaultTemplatePath);
+    }
+    if (existsSync(rootTemplatePath)) {
+      unlinkSync(rootTemplatePath);
     }
     if (existsSync(templatesPath)) {
       rmdirSync(templatesPath);
@@ -136,6 +141,14 @@ describe('render', () => {
       }
     });
 
+  });
+
+  it('should use the project directory as root directory if "dirname" is not defined', async () => {
+    const name = 'Foobar';
+    const expected = `Hello ${name}! How are you?`;
+    const actual = await render(rootTemplatePath, { name });
+    ok(actual instanceof HttpResponseOK);
+    strictEqual(actual.body, expected);
   });
 
 });
