@@ -41,6 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "@foal/core": "^0.8.9",
+    "@foal/csrf": "^0.8.9",
     "@foal/ejs": "^0.8.9",
     "@foal/swagger": "^0.8.9",
     "@foal/typeorm": "^0.8.9",
