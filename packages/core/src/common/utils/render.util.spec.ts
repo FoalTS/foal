@@ -8,6 +8,7 @@ import { HttpResponseOK } from '../../core';
 import { render, renderToString } from './render.util';
 
 const ejsTemplate = 'Hello <%= name %>! How are you?';
+const twigTemplate = '{% for user in users %} {{ user.name }} {% endfor %}';
 const defaultTemplate = 'Hello {{ name }}! How are you?';
 
 describe('renderToString', () => {
@@ -35,6 +36,7 @@ describe('renderToString', () => {
 describe('render', () => {
   const templatesPath = join(__dirname, './templates');
   const ejsTemplatePath = join(__dirname, './templates/template.ejs.html');
+  const twigTemplatePath = join(__dirname, './templates/template.twig.html');
   const defaultTemplatePath = join(__dirname, './templates/template.default.html');
   const rootTemplatePath = './template.default.html';
 
@@ -43,6 +45,7 @@ describe('render', () => {
       mkdirSync(templatesPath);
     }
     writeFileSync(ejsTemplatePath, ejsTemplate, 'utf8');
+    writeFileSync(twigTemplatePath, twigTemplate, 'utf8');
     writeFileSync(defaultTemplatePath, defaultTemplate, 'utf8');
     writeFileSync(rootTemplatePath, defaultTemplate, 'utf8');
   });
@@ -50,6 +53,9 @@ describe('render', () => {
   after(() => {
     if (existsSync(ejsTemplatePath)) {
       unlinkSync(ejsTemplatePath);
+    }
+    if (existsSync(twigTemplatePath)) {
+      unlinkSync(twigTemplatePath);
     }
     if (existsSync(defaultTemplatePath)) {
       unlinkSync(defaultTemplatePath);
@@ -117,6 +123,15 @@ describe('render', () => {
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
       const actual = await render('./templates/template.ejs.html', { name }, __dirname);
+      ok(actual instanceof HttpResponseOK);
+      strictEqual(actual.body, expected);
+    });
+
+    it('should render the template with the given template engine (Express: twig).', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = 'twig';
+      const users = [ { name: 'John' }, { name: 'Mary'} ];
+      const expected = ' John  Mary ';
+      const actual = await render('./templates/template.twig.html', { users }, __dirname);
       ok(actual instanceof HttpResponseOK);
       strictEqual(actual.body, expected);
     });
