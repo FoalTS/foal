@@ -5,45 +5,117 @@ import { join } from 'path';
 
 // FoalTS
 import { HttpResponseOK } from '../../core';
-import { render } from './render.util';
+import { render, renderToString } from './render.util';
 
-const template = 'Hello <%= name %>! How are you?';
+const ejsTemplate = 'Hello <%= name %>! How are you?';
+const defaultTemplate = 'Hello {{ name }}! How are you?';
+
+describe('renderToString', () => {
+
+  it('should render the template with the given locals.', () => {
+    const template = 'Hello {{ name }} {{ lastName }}!';
+    const locals = { name: 'Mary', lastName: 'Johnson' };
+
+    const expected = 'Hello Mary Johnson!';
+    const actual = renderToString(template, locals);
+    strictEqual(actual, expected);
+  });
+
+  it('should use the locals as many times as needed.', () => {
+    const template = 'Hello {{ name }} {{ name }}!';
+    const locals = { name: 'Mary' };
+
+    const expected = 'Hello Mary Mary!';
+    const actual = renderToString(template, locals);
+    strictEqual(actual, expected);
+  });
+
+});
 
 describe('render', () => {
   const templatesPath = join(__dirname, './templates');
-  const templatePath = join(__dirname, './templates/template.html');
+  const ejsTemplatePath = join(__dirname, './templates/template.ejs.html');
+  const defaultTemplatePath = join(__dirname, './templates/template.default.html');
 
   before(() => {
     if (!existsSync(templatesPath)) {
       mkdirSync(templatesPath);
     }
-    writeFileSync(templatePath, template, 'utf8');
+    writeFileSync(ejsTemplatePath, ejsTemplate, 'utf8');
+    writeFileSync(defaultTemplatePath, defaultTemplate, 'utf8');
   });
 
   after(() => {
-    if (existsSync(templatePath)) {
-      unlinkSync(templatePath);
+    if (existsSync(ejsTemplatePath)) {
+      unlinkSync(ejsTemplatePath);
+    }
+    if (existsSync(defaultTemplatePath)) {
+      unlinkSync(defaultTemplatePath);
     }
     if (existsSync(templatesPath)) {
       rmdirSync(templatesPath);
     }
   });
 
-  it('should render the ejs template (HttpResponseOK) with the given locals if it is correct.', async () => {
-    const name = 'Foobar';
-    const expected = `Hello ${name}! How are you?`;
-    const actual = await render('./templates/template.html', { name }, __dirname);
-    ok(actual instanceof HttpResponseOK);
-    strictEqual(actual.body, expected);
-  });
-
-  it('should throw an Error if the template and/or locals are incorrect.', async () => {
+  it('should throw an error if the template file does not exist.', async () => {
     try {
-      await render(templatePath, {}, __dirname);
+      await render('foobar.html', {}, __dirname);
       throw new Error('An error should have been thrown');
     } catch (error) {
-      notStrictEqual(error.message, 'An error should have been thrown');
+      strictEqual(
+        error.message.startsWith('ENOENT: no such file or directory, open'),
+        true
+      );
     }
+  });
+
+  describe('given the configuration key "settings.templateEngine" is undefined', () => {
+
+    it('should render the template with the default built-in template engine.', async () => {
+      const name = 'Foobar';
+      const expected = `Hello ${name}! How are you?`;
+      const actual = await render('./templates/template.default.html', { name }, __dirname);
+      ok(actual instanceof HttpResponseOK);
+      strictEqual(actual.body, expected);
+    });
+
+  });
+
+  describe('given the configuration key "settings.templateEngine" is defined', () => {
+
+    afterEach(() => delete process.env.SETTINGS_TEMPLATE_ENGINE);
+
+    it('should throw an Error if the given template engine is not compatible with Foal.', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = 'rimraf'; // A random package
+      try {
+        await render('./templates/template.default.html', {}, __dirname);
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          'rimraf is not a template engine compatible with FoalTS.'
+        );
+      }
+    });
+
+    it('should render the template with the given template engine.', async () => {
+      process.env.SETTINGS_TEMPLATE_ENGINE = '@foal/ejs';
+      const name = 'Foobar';
+      const expected = `Hello ${name}! How are you?`;
+      const actual = await render('./templates/template.ejs.html', { name }, __dirname);
+      ok(actual instanceof HttpResponseOK);
+      strictEqual(actual.body, expected);
+    });
+
+    it('should throw errors returned by the given template engine.', async () => {
+      try {
+        await render(ejsTemplatePath, {}, __dirname);
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        notStrictEqual(error.message, 'An error should have been thrown');
+      }
+    });
+
   });
 
 });

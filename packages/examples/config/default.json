@@ -9,9 +9,9 @@
     "session": {
       "secret": "my secret",
       "resave": true,
-      "saveUninitialized": true,
-      "staticPath": "public/",
-      "templateEngine": "@foal/ejs"
-    }
+      "saveUninitialized": true
+    },
+    "staticPath": "public/",
+    "templateEngine": "@foal/ejs"
   }
 }
