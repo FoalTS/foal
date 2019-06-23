@@ -234,8 +234,8 @@ export function RefreshJWT(): HookDecorator {
         // the decoded payload (default behavior).
         {
           email: ctx.user.email,
-          id: ctx.user.id,
-          sub: ctx.user.subject,
+          // id: ctx.user.id,
+          // sub: ctx.user.subject,
         },
         Config.get<string>('settings.jwt.secretOrPublicKey'),
         { expiresIn: '15m' }
@@ -268,6 +268,8 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
   const token = sign(
     {
+      // TypeScript v3.5.1 and v3.5.2 have a bug which makes the compilation fail
+      // with the property "sub". This can be fixed by adding "as any" after the object.
       sub: '90485234', // Required
       id: 90485234,
       email: 'mary@foalts.org'
