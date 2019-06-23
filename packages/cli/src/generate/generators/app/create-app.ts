@@ -165,8 +165,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/e2e/index.mongodb.ts', 'src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-group.ts')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-perm.ts')
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
 

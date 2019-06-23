@@ -90,8 +90,6 @@ describe('createApp', () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 
     testEnv
-      .validateSpec('src/scripts/create-group.ts')
-      .validateSpec('src/scripts/create-perm.ts')
       .validateSpec('src/scripts/create-user.ts');
   });
 
@@ -99,8 +97,6 @@ describe('createApp', () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
 
     testEnv
-      .shouldNotExist('src/scripts/create-group.ts')
-      .shouldNotExist('src/scripts/create-perm.ts')
       .validateSpec(
         'src/scripts/create-user.mongodb.ts',
         'src/scripts/create-user.ts'
