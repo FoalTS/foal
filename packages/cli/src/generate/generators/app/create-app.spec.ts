@@ -137,13 +137,6 @@ describe('createApp', () => {
       .shouldNotExist('src/app/entities');
   });
 
-  it('should render the src/app/sub-apps templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
-
-    testEnv
-      .validateSpec('src/app/sub-apps/index.ts');
-  });
-
   it('should render the src/app/services templates.', async () => {
     await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
 

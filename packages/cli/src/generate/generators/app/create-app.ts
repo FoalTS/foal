@@ -156,9 +156,6 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
           // Services
           .mkdirIfDoesNotExist('src/app/services')
           .copyFileFromTemplates('src/app/services/index.ts')
-          // Sub-apps
-          .mkdirIfDoesNotExist('src/app/sub-apps')
-          .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/e2e/index.ts')
