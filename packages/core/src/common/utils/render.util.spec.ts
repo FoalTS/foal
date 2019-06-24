@@ -1,5 +1,5 @@
 // std
-import { notStrictEqual, ok, strictEqual } from 'assert';
+import { ok, strictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
