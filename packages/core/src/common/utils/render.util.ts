@@ -42,9 +42,6 @@ export async function render(templatePath: string, locals: object, dirname?: str
   const templateEngine = Config.get<string|undefined>('settings.templateEngine');
   if (templateEngine) {
     const { renderToString, __express } = require(templateEngine);
-    if (renderToString) {
-      return new HttpResponseOK(renderToString(template, locals));
-    }
     if (__express) {
       return new Promise<HttpResponseOK>((resolve, reject) => {
         __express(path, locals, (err, html) => {
@@ -54,6 +51,9 @@ export async function render(templatePath: string, locals: object, dirname?: str
           resolve(new HttpResponseOK(html));
         });
       });
+    }
+    if (renderToString) {
+      return new HttpResponseOK(renderToString(template, locals));
     }
     throw new Error(`${templateEngine} is not a template engine compatible with FoalTS.`);
   }
