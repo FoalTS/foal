@@ -99,8 +99,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
 
   generator
     .copyFileFromTemplates('gitignore', '.gitignore')
-    .copyFileFromTemplatesOnlyIf(!mongodb && !yaml, 'ormconfig.json')
-    .copyFileFromTemplatesOnlyIf(!mongodb && yaml, 'ormconfig.yml')
+    .copyFileFromTemplatesOnlyIf(!mongodb, 'ormconfig.js')
     .renderTemplateOnlyIf(!mongodb && !yaml, 'package.json', locals)
     .renderTemplateOnlyIf(!mongodb && yaml, 'package.yaml.json', locals, 'package.json')
     .renderTemplateOnlyIf(mongodb && !yaml, 'package.mongodb.json', locals, 'package.json')
@@ -119,11 +118,15 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
       .renderTemplateOnlyIf(!mongodb && !yaml, 'config/development.json', locals)
       .renderTemplateOnlyIf(!mongodb && yaml, 'config/development.yml', locals)
       .renderTemplateOnlyIf(mongodb && !yaml, 'config/development.mongodb.json', locals, 'config/development.json')
-      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
       .renderTemplateOnlyIf(mongodb && yaml, 'config/development.mongodb.yml', locals, 'config/development.yml')
+      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/e2e.json', locals)
+      .renderTemplateOnlyIf(!mongodb && yaml, 'config/e2e.yml', locals)
+      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
       .renderTemplateOnlyIf(mongodb && yaml, 'config/e2e.mongodb.yml', locals, 'config/e2e.yml')
       .renderTemplateOnlyIf(!yaml, 'config/production.json', locals)
       .renderTemplateOnlyIf(yaml, 'config/production.yml', locals)
+      .renderTemplateOnlyIf(!yaml, 'config/test.json', locals)
+      .renderTemplateOnlyIf(yaml, 'config/test.yml', locals)
       // Public
       .mkdirIfDoesNotExist('public')
       .copyFileFromTemplates('public/index.html')

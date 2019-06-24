@@ -7,7 +7,7 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
+import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // App
 import { TestFooBarController } from './test-foo-bar.controller';
@@ -19,16 +19,7 @@ describe('TestFooBarController', () => {
   let testFooBar1: TestFooBar;
   let testFooBar2: TestFooBar;
 
-  before(async () => {
-    const connectionOptions = await getConnectionOptions();
-    Object.assign(connectionOptions, {
-      database: './test_db.sqlite3',
-      dropSchema: true,
-      synchronize: true,
-      type: 'sqlite',
-    });
-    await createConnection(connectionOptions);
-  });
+  before(() => createConnection());
 
   after(() => getConnection().close());
 
