@@ -30,10 +30,10 @@ export function renderToString(template: string, locals: object): string {
  * @export
  * @param {string} templatePath - The path of the template.
  * @param {object} locals - The variables used to render the template.
- * @param {string} dirname - The directory name where the templated is located.
+ * @param {string} [dirname] - The directory name where the templated is located.
  * The passed value is usually `__dirname`. The function then joins `dirname` and
  * `templatePath` together.
- * @returns {HttpResponseOK}
+ * @returns {Promise<HttpResponseOK>}
  */
 export async function render(templatePath: string, locals: object, dirname?: string): Promise<HttpResponseOK> {
   const path = dirname ? join(dirname, templatePath) : templatePath;
