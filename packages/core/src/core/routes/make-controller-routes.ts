@@ -1,6 +1,6 @@
 // FoalTS
 import { Class } from '../class.interface';
-import { createController } from '../controllers';
+import { ControllerManager, createController } from '../controllers';
 import { HookFunction } from '../hooks';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
@@ -35,10 +35,13 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
   const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
-  const leftPath = join(parentPath, controllerPath);
-  const leftHooks = parentHooks.concat(controllerHooks);
-
   const controller = createController(controllerClass, services);
+
+  const controllerManager = services.get(ControllerManager);
+  controllerManager.set(controllerClass, controller);
+
+  const leftPath = join(parentPath, controllerPath);
+  const leftHooks = parentHooks.concat(controllerHooks.map(hook => hook.bind(controller)));
 
   for (const controllerClass of controller.subControllers || []) {
     routes.push(
@@ -53,7 +56,7 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
       const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined;
       const methodHooks = getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [];
       const path = join(leftPath, methodPath);
-      const hooks = [ ...leftHooks, ...methodHooks ];
+      const hooks = [ ...leftHooks, ...methodHooks.map(hook => hook.bind(controller)) ];
       routes.push({ controller, hooks, httpMethod, path, propertyKey });
     }
   });

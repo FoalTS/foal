@@ -2,20 +2,24 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
+import { ControllerManager } from '../controllers';
 import { Hook, HookFunction } from '../hooks';
-import { Get, Post } from '../http';
+import { Context, Get, HttpResponseOK, Post } from '../http';
 import { dependency, ServiceManager } from '../service-manager';
 import { makeControllerRoutes } from './make-controller-routes';
 
 describe('makeControllerRoutes', () => {
 
-  const hook0: HookFunction = () => {};
-  const hook1: HookFunction = () => {};
-  const hook2: HookFunction = () => {};
-  const hook3: HookFunction = () => {};
-  const hook4: HookFunction = () => {};
-  const hook5: HookFunction = () => {};
-  const hook6: HookFunction = () => {};
+  const hook0: HookFunction = () => new HttpResponseOK('hook0');
+  const hook1: HookFunction = () => new HttpResponseOK('hook1');
+  const hook2: HookFunction = () => new HttpResponseOK('hook2');
+  const hook3: HookFunction = () => new HttpResponseOK('hook3');
+  const hook4: HookFunction = () => new HttpResponseOK('hook4');
+  const hook5: HookFunction = () => new HttpResponseOK('hook5');
+  const hook6: HookFunction = () => new HttpResponseOK('hook6');
+
+  const ctx = new Context({});
+  const services = new ServiceManager();
 
   it('should return the routes from a controller with no paths and hooks.', () => {
     class FoobarController {
@@ -63,7 +67,10 @@ describe('makeControllerRoutes', () => {
     strictEqual(routes.length, 1);
 
     // bar() {}
-    deepStrictEqual(routes[0].hooks, [ hook1, hook2, hook3, hook4, hook5, hook6 ]);
+    deepStrictEqual(
+      routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
+      [ 'hook1', 'hook2', 'hook3', 'hook4', 'hook5', 'hook6' ]
+    );
   });
 
   it('should return the routes from the controller methods that have a http-method decorator.', () => {
@@ -142,14 +149,20 @@ describe('makeControllerRoutes', () => {
 
     // barfoo
     ok(routes[0].controller instanceof FoobarController2);
-    deepStrictEqual(routes[0].hooks, [ hook2, hook3 ]);
+    deepStrictEqual(
+      routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
+      [ 'hook2', 'hook3' ]
+    );
     strictEqual(routes[0].httpMethod, 'POST');
     strictEqual(routes[0].path, '/foo/barfoo');
     strictEqual(routes[0].propertyKey, 'barfoo');
 
     // bar
     ok(routes[1].controller instanceof FoobarController2);
-    deepStrictEqual(routes[1].hooks, [ hook2, hook1 ]);
+    deepStrictEqual(
+      routes[1].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
+      [ 'hook2', 'hook1' ]
+    );
     strictEqual(routes[1].httpMethod, 'GET');
     strictEqual(routes[1].path, '/foo/bar');
     strictEqual(routes[1].propertyKey, 'bar');
@@ -188,14 +201,20 @@ describe('makeControllerRoutes', () => {
 
     // bar
     ok(routes[0].controller instanceof ApiController);
-    deepStrictEqual(routes[0].hooks, [ hook0, hook1, hook2, hook3 ]);
+    deepStrictEqual(
+      routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
+      [ 'hook0', 'hook1', 'hook2', 'hook3' ]
+    );
     strictEqual(routes[0].httpMethod, 'GET');
     strictEqual(routes[0].path, 'bar/foo/api/flights');
     strictEqual(routes[0].propertyKey, 'flights');
 
     // foobar
     ok(routes[1].controller instanceof AuthController);
-    deepStrictEqual(routes[1].hooks, [ hook0, hook1, hook4, hook5 ]);
+    deepStrictEqual(
+      routes[1].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
+      [ 'hook0', 'hook1', 'hook4', 'hook5' ]
+    );
     strictEqual(routes[1].httpMethod, 'GET');
     strictEqual(routes[1].path, 'bar/foo/auth/');
     strictEqual(routes[1].propertyKey, 'index');
@@ -223,6 +242,48 @@ describe('makeControllerRoutes', () => {
 
     // foo
     ok(routes[1].controller instanceof AppController);
+  });
+
+  it('should bind the controller instance to the controller and method hooks.', () => {
+    let firstThis: FoobarController|undefined;
+    // tslint:disable-next-line:prefer-const
+    let secondThis: FoobarController|undefined;
+
+    @Hook(function(this: FoobarController) {
+      firstThis = this;
+    })
+    class FoobarController {
+      @Get()
+      @Hook(function(this: FoobarController) {
+        secondThis = this;
+      })
+      bar() {}
+    }
+
+    const routes = makeControllerRoutes('', [], FoobarController, new ServiceManager());
+
+    strictEqual(routes.length, 1);
+
+    // bar() {}
+    strictEqual(firstThis, undefined);
+    routes[0].hooks[0](ctx, services);
+    strictEqual(firstThis instanceof FoobarController, true);
+
+    strictEqual(secondThis, undefined);
+    routes[0].hooks[1](ctx, services);
+    strictEqual(secondThis instanceof FoobarController, true);
+
+    strictEqual(firstThis, secondThis);
+  });
+
+  it('should register the controller instance in the ControllerManager.', () => {
+    class FoobarController {}
+
+    const services = new ServiceManager();
+
+    strictEqual(services.get(ControllerManager).get(FoobarController), undefined);
+    makeControllerRoutes('', [], FoobarController, services);
+    strictEqual(services.get(ControllerManager).get(FoobarController) instanceof FoobarController, true);
   });
 
 });
