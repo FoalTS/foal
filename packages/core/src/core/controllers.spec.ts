@@ -5,7 +5,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
-import { createController } from './controllers';
+import { ControllerManager, createController } from './controllers';
 import { dependency, ServiceManager } from './service-manager';
 
 describe('createController', () => {
@@ -136,6 +136,31 @@ describe('createController', () => {
     strictEqual((childController as any).foobar2, undefined);
     notStrictEqual(childController2.foobar, undefined);
     notStrictEqual(childController2.foobar2, undefined);
+  });
+
+});
+
+describe('ServiceManager', () => {
+
+  let controllerManager: ControllerManager;
+
+  class Foobar {}
+
+  beforeEach(() => controllerManager = new ControllerManager());
+
+  describe('when get is called', () => {
+
+    it('should return the controller instance registered with the "set" method.', () => {
+      const foobar = new Foobar();
+      controllerManager.set(Foobar, foobar);
+      strictEqual(controllerManager.get(Foobar), foobar);
+      ok(controllerManager.get(Foobar) instanceof Foobar);
+    });
+
+    it('should return undefined if no controller instance was registered with the "set" method.', () => {
+      strictEqual(controllerManager.get(Foobar), undefined);
+    });
+
   });
 
 });

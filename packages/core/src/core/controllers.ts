@@ -37,3 +37,39 @@ export function createController<Controller>(controllerClass: Class<Controller>,
 
   return service;
 }
+
+/**
+ * Identity Mapper that registers controller instances. It is a service.
+ *
+ * @export
+ * @class ControllerManager
+ */
+export class ControllerManager {
+
+  readonly map: Map<Class<any>, any>  = new Map();
+
+  /**
+   * Add a controller to the identity mapper.
+   *
+   * @template Controller
+   * @param {Class<Controller>} controllerClass - The controller class representing the key.
+   * @param {*} controller - The controller object representing the value.
+   * @memberof ControllerManager
+   */
+  set<Controller>(controllerClass: Class<Controller>, controller: any): void {
+    this.map.set(controllerClass, controller);
+  }
+
+  /**
+   * Get the controller instance.
+   *
+   * @template Controller
+   * @param {Class<Controller>} controllerClass - The controller class.
+   * @returns {Controller} - The controller instance.
+   * @memberof ServiceManager
+   */
+  get<Controller>(controllerClass: Class<Controller>): Controller|undefined {
+    return this.map.get(controllerClass);
+  }
+
+}
