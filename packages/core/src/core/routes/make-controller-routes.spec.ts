@@ -123,6 +123,21 @@ describe('makeControllerRoutes', () => {
     strictEqual(routes[0].controller.service2, services.get(Service2));
   });
 
+  it('should register the controller instance in the ServiceManager.', () => {
+    class FoobarController {
+      @Get()
+      bar() {}
+    }
+
+    const services = new ServiceManager();
+    const routes = makeControllerRoutes('', [], FoobarController, services);
+
+    strictEqual(routes.length, 1);
+
+    // bar
+    strictEqual(routes[0].controller, services.get(FoobarController));
+  });
+
   it('should return all the routes of the prototype chain of an inherited controller.', () => {
     class FoobarController {
 

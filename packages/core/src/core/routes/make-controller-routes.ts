@@ -1,6 +1,5 @@
 // FoalTS
 import { Class } from '../class.interface';
-import { createController } from '../controllers';
 import { HookFunction } from '../hooks';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
@@ -35,7 +34,8 @@ export function makeControllerRoutes(parentPath: string, parentHooks: HookFuncti
   const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
-  const controller = createController(controllerClass, services);
+  // FoalTS stores as well the controllers in the service manager.
+  const controller = services.get(controllerClass);
 
   const leftPath = join(parentPath, controllerPath);
   const leftHooks = parentHooks.concat(controllerHooks.map(hook => hook.bind(controller)));
