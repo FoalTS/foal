@@ -2,7 +2,6 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { ControllerManager } from '../controllers';
 import { Hook, HookFunction } from '../hooks';
 import { Context, Get, HttpResponseOK, Post } from '../http';
 import { dependency, ServiceManager } from '../service-manager';
@@ -274,16 +273,6 @@ describe('makeControllerRoutes', () => {
     strictEqual(secondThis instanceof FoobarController, true);
 
     strictEqual(firstThis, secondThis);
-  });
-
-  it('should register the controller instance in the ControllerManager.', () => {
-    class FoobarController {}
-
-    const services = new ServiceManager();
-
-    strictEqual(services.get(ControllerManager).get(FoobarController), undefined);
-    makeControllerRoutes('', [], FoobarController, services);
-    strictEqual(services.get(ControllerManager).get(FoobarController) instanceof FoobarController, true);
   });
 
 });
