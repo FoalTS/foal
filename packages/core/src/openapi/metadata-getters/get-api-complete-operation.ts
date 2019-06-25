@@ -14,7 +14,9 @@ import { getApiSecurity } from './get-api-security';
 import { getApiServers } from './get-api-servers';
 import { getApiUsedTags } from './get-api-used-tags';
 
-export function getApiCompleteOperation(controllerClass: Class, propertyKey?: string): IApiOperation {
+export function getApiCompleteOperation<T>(
+  controllerClass: Class<T>, controller: T, propertyKey?: string
+): IApiOperation {
   const operation = getApiOperation(controllerClass, propertyKey);
   const completeOperation: IApiOperation = operation || {
     responses: {},
@@ -52,7 +54,7 @@ export function getApiCompleteOperation(controllerClass: Class, propertyKey?: st
 
   const requestBody = getApiRequestBody(controllerClass, propertyKey);
   if (requestBody) {
-    completeOperation.requestBody = requestBody;
+    completeOperation.requestBody = typeof requestBody === 'function' ? requestBody(controller) : requestBody;
   }
 
   const responses = getApiResponses(controllerClass, propertyKey);

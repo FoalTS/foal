@@ -446,6 +446,16 @@ describe('ApiRequestBody', () => {
     strictEqual(getMetadata('api:operation:requestBody', Controller, 'foo'), metadata);
   });
 
+  it('should define the correct metadata (method & dynamic metadata).', () => {
+    const metadataFunc = (controller: any) => metadata;
+    class Controller {
+      @ApiRequestBody(metadataFunc)
+      foo() { }
+    }
+
+    strictEqual(getMetadata('api:operation:requestBody', Controller, 'foo'), metadataFunc);
+  });
+
 });
 
 describe('ApiResponse', () => {

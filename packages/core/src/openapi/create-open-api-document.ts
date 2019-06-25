@@ -1,5 +1,5 @@
 // FoalTS
-import { Class } from '../core';
+import { Class, ServiceManager } from '../core';
 import { getMethods } from '../core/routes/make-controller-routes';
 import { getHttpMethod, getPath } from '../core/routes/utils';
 import { IApiComponents, IApiOperation, IApiPaths, IApiTag, IOpenAPI } from './interfaces';
@@ -25,18 +25,19 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   }
 }
 
-function getPaths(controllerClass: Class, operation: IApiOperation):
-{ paths: IApiPaths, components: IApiComponents, tags: IApiTag[]|undefined } {
+function getPaths(
+  controllerClass: Class, operation: IApiOperation, controllers: ServiceManager
+): { paths: IApiPaths, components: IApiComponents, tags: IApiTag[]|undefined } {
   const paths: IApiPaths = {};
   let components: IApiComponents = {};
   let tags: IApiTag[] | undefined;
 
   // Sub-controller methods.
-  const controller = new controllerClass(); // Outch. TODO: do not instantiate the controller.
+  const controller = controllers.get(controllerClass);
   if (controller.subControllers) {
     for (const subControllerClass of controller.subControllers) {
-      const subControllerOperation = getApiCompleteOperation(subControllerClass);
-      const o = getPaths(subControllerClass, mergeOperations(operation, subControllerOperation));
+      const subControllerOperation = getApiCompleteOperation(subControllerClass, controllers.get(subControllerClass));
+      const o = getPaths(subControllerClass, mergeOperations(operation, subControllerOperation), controllers);
 
       const subControllerComponents = getApiComponents(subControllerClass);
       components = mergeComponents(components, mergeComponents(subControllerComponents, o.components));
@@ -73,14 +74,17 @@ function getPaths(controllerClass: Class, operation: IApiOperation):
 
     paths[path] = {
       ...paths[path],
-      [httpMethod.toLowerCase()]: mergeOperations(operation, getApiCompleteOperation(controllerClass, propertyKey))
+      [httpMethod.toLowerCase()]: mergeOperations(
+        operation,
+        getApiCompleteOperation(controllerClass, controllers.get(controllerClass), propertyKey)
+      )
     };
   }
 
   return { components, paths, tags };
 }
 
-export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
+export function createOpenApiDocument(controllerClass: Class, controllers = new ServiceManager()): IOpenAPI {
   const info = getApiInfo(controllerClass);
   if (!info) {
     throw new Error('The API root controller should be decorated with @ApiInfo.');
@@ -92,7 +96,7 @@ export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
     paths: {}
   };
 
-  const operation = getApiCompleteOperation(controllerClass);
+  const operation = getApiCompleteOperation(controllerClass, controllers.get(controllerClass));
 
   if (operation.servers) {
     document.servers = operation.servers;
@@ -110,7 +114,7 @@ export function createOpenApiDocument(controllerClass: Class): IOpenAPI {
   delete operation.externalDocs;
   delete operation.security;
 
-  const o = getPaths(controllerClass, operation);
+  const o = getPaths(controllerClass, operation, controllers);
 
   const paths = o.paths;
   // Use "... of Object.keys" instead of "... in ..." because properties are changed.

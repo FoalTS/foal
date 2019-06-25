@@ -71,7 +71,9 @@ export function ApiParameter(parameter: IApiParameter | IApiReference) {
   return AddMetadataItem('api:operation:parameters', parameter);
 }
 
-export function ApiRequestBody(requestBody: IApiRequestBody | IApiReference) {
+export function ApiRequestBody(
+  requestBody: IApiRequestBody | IApiReference | ((controller: any) => IApiRequestBody | IApiReference)
+) {
   return Reflect.metadata('api:operation:requestBody', requestBody);
 }
 
