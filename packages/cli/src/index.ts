@@ -96,7 +96,7 @@ program
   .on('--help', () => {
     console.log('');
     console.log('Available types:');
-    [ 'controller', 'entity', 'hook', 'model', 'sub-app', 'service', 'vscode-config' ]
+    [ 'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config' ]
       .forEach(t => console.log(`  ${t}`));
   })
   .action(async (type: string, name: string, options) => {

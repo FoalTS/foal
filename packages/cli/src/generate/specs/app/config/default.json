@@ -13,5 +13,8 @@
       "saveUninitialized": false,
       "secret": "my-secret"
     }
+  },
+  "database": {
+    "database": "./db.sqlite3"
   }
 }

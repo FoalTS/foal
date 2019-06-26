@@ -1,6 +1,6 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getManager } from 'typeorm';
+import { createConnection, getConnection, getManager } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -17,7 +17,11 @@ export async function main(args) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  await createConnection();
+  await createConnection({
+    database: './e2e_db.sqlite',
+    entities: [ Permission ],
+    type: 'sqlite',
+  });
 
   try {
     console.log(
@@ -25,5 +29,7 @@ export async function main(args) {
     );
   } catch (error) {
     console.log(error.message);
+  } finally {
+    await getConnection().close();
   }
 }

@@ -7,7 +7,7 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getConnectionOptions, getRepository } from 'typeorm';
+import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // App
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
@@ -19,16 +19,7 @@ describe('/* upperFirstCamelName */Controller', () => {
   let /* camelName */1: /* upperFirstCamelName */;
   let /* camelName */2: /* upperFirstCamelName */;
 
-  before(async () => {
-    const connectionOptions = await getConnectionOptions();
-    Object.assign(connectionOptions, {
-      database: './test_db.sqlite3',
-      dropSchema: true,
-      synchronize: true,
-      type: 'sqlite',
-    });
-    await createConnection(connectionOptions);
-  });
+  before(() => createConnection());
 
   after(() => getConnection().close());
 
