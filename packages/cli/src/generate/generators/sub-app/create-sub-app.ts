@@ -3,7 +3,7 @@
 import { existsSync, writeFileSync } from 'fs';
 
 // FoalTS
-import { Generator, getNames, mkdirIfDoesNotExist, mkdirIfNotExists } from '../../utils';
+import { Generator, getNames, mkdirIfDoesNotExist } from '../../utils';
 
 export function createSubApp({ name }: { name: string }) {
   const names = getNames(name);
