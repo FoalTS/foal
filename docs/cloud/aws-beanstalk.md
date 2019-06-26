@@ -16,7 +16,7 @@ npm uninstall sqlite3 connect-sqlite3
 
 ### Configure the Database Credentials
 
-Replace your `ormconfig.json` (or `ormconfig.yml`) file with this one:
+Replace your `ormconfig.js` (or `ormconfig.yml` or `ormconfig.json`) file with this one:
 
 *ormconfig.js*
 ```js
@@ -194,6 +194,8 @@ Upload the archive to AWS.
 The application restarts. This may take a few minutes.
 
 ## Generate & Run the Database Migrations
+
+**Warning, warning: this section is only compatible with projects created with FoalTS v0.8. If you need a tutorial for v1 and above, feel free to open a Github issue for that.**
 
 Migrations are SQL queries that modify the database schemas (definition of the tables, relations, etc). By default, every new Foal project is created with the option `synchronize: true` in its `ormconfig`. This setting updates the database schema on every launch of the application.
 
