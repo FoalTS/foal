@@ -27,6 +27,8 @@ export function renderToString(template: string, locals: object): string {
 /**
  * Render a template in a new HttpResponseOK object.
  *
+ * The template engine is specified using the configuration key `settings.templateEngine`.
+ *
  * @export
  * @param {string} templatePath - The path of the template.
  * @param {object} locals - The variables used to render the template.
