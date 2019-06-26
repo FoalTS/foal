@@ -1,5 +1,6 @@
 import { Class } from '../../core';
-import { IApiOperation } from '../interfaces';
+import { IApiOperation, IApiResponses } from '../interfaces';
+import { Dynamic } from '../utils';
 import { getApiCallbacks } from './get-api-callbacks';
 import { getApiDeprecated } from './get-api-deprecated';
 import { getApiExternalDocs } from './get-api-external-docs';
@@ -18,38 +19,38 @@ export function getApiCompleteOperation<T>(
   controllerClass: Class<T>, controller: T, propertyKey?: string
 ): IApiOperation {
   const operation = getApiOperation(controllerClass, propertyKey);
-  const completeOperation: IApiOperation = operation || {
+  const completeOperation: IApiOperation = (typeof operation === 'function' ? operation(controller) : operation) || {
     responses: {},
   };
 
   const description = getApiOperationDescription(controllerClass, propertyKey);
   if (description !== undefined) {
-    completeOperation.description = description;
+    completeOperation.description = typeof description === 'function' ? description(controller) : description;
   }
 
   const operationId = getApiOperationId(controllerClass, propertyKey);
   if (operationId !== undefined) {
-    completeOperation.operationId = operationId;
+    completeOperation.operationId = typeof operationId === 'function' ? operationId(controller) : operationId;
   }
 
   const summary = getApiOperationSummary(controllerClass, propertyKey);
   if (summary !== undefined) {
-    completeOperation.summary = summary;
+    completeOperation.summary = typeof summary === 'function' ? summary(controller) : summary;
   }
 
   const tags = getApiUsedTags(controllerClass, propertyKey);
   if (tags) {
-    completeOperation.tags = tags;
+    completeOperation.tags = tags.map(tag => typeof tag === 'function' ? tag(controller) : tag);
   }
 
   const externalDocs = getApiExternalDocs(controllerClass, propertyKey);
   if (externalDocs) {
-    completeOperation.externalDocs = externalDocs;
+    completeOperation.externalDocs = typeof externalDocs === 'function' ? externalDocs(controller) : externalDocs;
   }
 
   const parameters = getApiParameters(controllerClass, propertyKey);
   if (parameters) {
-    completeOperation.parameters = parameters;
+    completeOperation.parameters = parameters.map(param => typeof param === 'function' ? param(controller) : param);
   }
 
   const requestBody = getApiRequestBody(controllerClass, propertyKey);
@@ -59,27 +60,39 @@ export function getApiCompleteOperation<T>(
 
   const responses = getApiResponses(controllerClass, propertyKey);
   if (responses) {
-    completeOperation.responses = responses;
+    completeOperation.responses = {};
+    // tslint:disable-next-line:forin
+    for (const key in responses) {
+      const response = responses[key];
+      completeOperation.responses[key] = typeof response === 'function' ? response(controller) : response;
+    }
   }
 
   const callbacks = getApiCallbacks(controllerClass, propertyKey);
   if (callbacks) {
-    completeOperation.callbacks = callbacks;
+    completeOperation.callbacks = {};
+    // tslint:disable-next-line:forin
+    for (const key in callbacks) {
+      const callback = callbacks[key];
+      completeOperation.callbacks[key] = typeof callback === 'function' ? callback(controller) : callback;
+    }
   }
 
   const deprecated = getApiDeprecated(controllerClass, propertyKey);
   if (deprecated !== undefined) {
-    completeOperation.deprecated = deprecated;
+    completeOperation.deprecated = typeof deprecated === 'function' ? deprecated(controller) : deprecated;
   }
 
   const security = getApiSecurity(controllerClass, propertyKey);
   if (security) {
-    completeOperation.security = security;
+    completeOperation.security = security.map(requirement => {
+      return typeof requirement === 'function' ? requirement(controller) : requirement;
+    });
   }
 
   const servers = getApiServers(controllerClass, propertyKey);
   if (servers) {
-    completeOperation.servers = servers;
+    completeOperation.servers = servers.map(server => typeof server === 'function' ? server(controller) : server);
   }
 
   return completeOperation;

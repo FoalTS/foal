@@ -39,7 +39,7 @@ function getPaths(
       const subControllerOperation = getApiCompleteOperation(subControllerClass, controllers.get(subControllerClass));
       const o = getPaths(subControllerClass, mergeOperations(operation, subControllerOperation), controllers);
 
-      const subControllerComponents = getApiComponents(subControllerClass);
+      const subControllerComponents = getApiComponents(subControllerClass, controllers.get(subControllerClass));
       components = mergeComponents(components, mergeComponents(subControllerComponents, o.components));
 
       const subControllerTags = getApiTags(subControllerClass);
@@ -66,7 +66,10 @@ function getPaths(
       continue;
     }
 
-    components = mergeComponents(components, getApiComponents(controllerClass, propertyKey));
+    components = mergeComponents(
+      components,
+      getApiComponents(controllerClass, controllers.get(controllerClass), propertyKey)
+    );
     tags = mergeTags(tags, getApiTags(controllerClass, propertyKey));
 
     const path = (getPath(controllerClass, propertyKey) || '')
@@ -90,13 +93,14 @@ export function createOpenApiDocument(controllerClass: Class, controllers = new 
     throw new Error('The API root controller should be decorated with @ApiInfo.');
   }
 
+  const controller = controllers.get(controllerClass);
   const document: IOpenAPI = {
-    info,
+    info: typeof info === 'function' ? info(controller) : info,
     openapi: '3.0.0',
     paths: {}
   };
 
-  const operation = getApiCompleteOperation(controllerClass, controllers.get(controllerClass));
+  const operation = getApiCompleteOperation(controllerClass, controller);
 
   if (operation.servers) {
     document.servers = operation.servers;
@@ -129,7 +133,10 @@ export function createOpenApiDocument(controllerClass: Class, controllers = new 
 
   document.paths = paths;
 
-  const components = mergeComponents(getApiComponents(controllerClass), o.components);
+  const components = mergeComponents(
+    getApiComponents(controllerClass, controllers.get(controllerClass)),
+    o.components
+  );
   if (Object.keys(components).length > 0) {
     document.components = components;
   }

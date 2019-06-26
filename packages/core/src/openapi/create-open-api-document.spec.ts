@@ -43,6 +43,20 @@ describe('createOpenApiDocument', () => {
       strictEqual(document.info, metadata);
     });
 
+    it('the API information (dynamic API information).', () => {
+      const metadata = {
+        title: 'foo',
+        version: '0.0.0'
+      };
+      @ApiInfo((controller: Controller) => controller.metadata)
+      class Controller {
+        metadata = metadata;
+      }
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.info, metadata);
+    });
+
     it('or throw an Error if no API information is found.', done => {
       class Controller {}
 
@@ -525,11 +539,15 @@ describe('createOpenApiDocument', () => {
 
   it('should use the controller instances to retreive the dynamic metadata.', () => {
     @ApiRequestBody(controller => controller.requestBody)
+    @ApiDefineCallback('callback1', controller => controller.callback)
     class SubController {
       requestBody: IApiRequestBody = {
         content: {
           'application/xml': {}
         }
+      };
+      callback: IApiCallback = {
+        a: { $ref: 'foobar' }
       };
 
       @Post('/bar')
@@ -538,6 +556,7 @@ describe('createOpenApiDocument', () => {
 
     @ApiInfo(infoMetadata)
     @ApiRequestBody(controller => controller.requestBody2)
+    @ApiDefineCallback('callback2', controller => controller.callback2)
     class Controller {
       subControllers = [ SubController ];
 
@@ -546,7 +565,6 @@ describe('createOpenApiDocument', () => {
           'application/json': {}
         }
       };
-
       requestBody2: IApiRequestBody = {
         content: {
           'application/json': {
@@ -555,8 +573,16 @@ describe('createOpenApiDocument', () => {
         }
       };
 
+      callback2: IApiCallback = {
+        b: { $ref: 'foobar' }
+      };
+      callback3: IApiCallback = {
+        c: { $ref: 'foobar' }
+      };
+
       @Get('/foo')
       @ApiRequestBody(controller => controller.requestBody)
+      @ApiDefineCallback('callback3', controller => controller.callback3)
       foo() {}
 
       @Get('/barfoo')
@@ -595,6 +621,19 @@ describe('createOpenApiDocument', () => {
             }
           },
           responses: {}
+        }
+      }
+    });
+    deepStrictEqual(document.components, {
+      callbacks: {
+        callback1: {
+          a: { $ref: 'foobar' }
+        },
+        callback2: {
+          b: { $ref: 'foobar' }
+        },
+        callback3: {
+          c: { $ref: 'foobar' }
         }
       }
     });
