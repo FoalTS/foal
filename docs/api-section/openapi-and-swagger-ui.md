@@ -208,6 +208,8 @@ paths:
 
 ### Use Existing Hooks
 
+> This section describes a new feature introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
+
 The addition of these decorators can sometimes be quite redundant with existing hooks. For example, if we want to write OpenAPI documentation for authentication and validation of the request body, we may end up with something like this.
 
 ```typescript

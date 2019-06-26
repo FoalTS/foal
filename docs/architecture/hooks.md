@@ -167,6 +167,8 @@ A *hook post function* accepts three parameters: the context, the service manage
 
 ## Grouping Several Hooks into One
 
+> This section describes a new feature introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
+
 In case you need to group several hooks together, the `MergeHooks` function can be used to do this.
 
 ```typescript
