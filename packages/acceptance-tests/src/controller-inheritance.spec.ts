@@ -1,0 +1,276 @@
+// std
+import { deepStrictEqual } from 'assert';
+
+// 3p
+import * as request from 'supertest';
+import { getRepository } from 'typeorm';
+
+// FoalTs
+import {
+  ApiDefineSchema,
+  ApiInfo,
+  ApiParameter,
+  ApiRequestBody,
+  Class,
+  Context,
+  createApp,
+  createOpenApiDocument,
+  Delete,
+  dependency,
+  Get,
+  HttpResponse,
+  HttpResponseCreated,
+  HttpResponseNotFound,
+  IApiInfo,
+  IApiSchema,
+  IOpenAPI,
+  Patch,
+  Post,
+  ValidateBody
+} from '@foal/core';
+
+describe('FoalTS', () => {
+  it('should handle controller inheritance properly ("this" reference, OpenAPI, etc).', async () => {
+    // From issue: https://github.com/FoalTS/foal/issues/459 "Decorators Inheritance Problem"
+
+    /* Abstract */
+
+    interface CRUDService {
+      create(body: any);
+      findById(id: any);
+      update(id: any, body: any);
+      deleteById(id: any);
+    }
+
+    abstract class BaseController {
+      abstract service: CRUDService;
+      entity: Class;
+      schema: IApiSchema;
+
+      constructor(entity: Class, schema: IApiSchema) {
+        this.entity = entity;
+        this.schema = schema;
+      }
+
+      @Post('/')
+      @ValidateBody((c: BaseController) => c.schema)
+      @ApiRequestBody((c: BaseController) => ({
+        content: {
+          'application/json': {
+            schema: c.schema
+          }
+        },
+        required: true
+      }))
+      async create(ctx: Context): Promise<HttpResponse> {
+        const result = await this.service.create(ctx.request.body);
+        return new HttpResponseCreated(result);
+      }
+
+      @Get('/')
+      async findAll(): Promise<HttpResponse> {
+        const repository = await getRepository(this.entity);
+        const result = await repository.find();
+        return new HttpResponseCreated(result);
+      }
+
+      @Get('/:id')
+      @ApiParameter({
+        in: 'path',
+        name: 'id',
+        required: true,
+        schema: { type: 'integer' }
+      })
+      async findById(ctx: Context): Promise<HttpResponse> {
+        const result = await this.service.findById(ctx.request.params.id);
+        if (result) {
+          return new HttpResponseCreated(result);
+        }
+        return new HttpResponseNotFound();
+      }
+
+      @Patch('/:id')
+      @ApiParameter({
+        in: 'path',
+        name: 'id',
+        required: true,
+        schema: { type: 'integer' }
+      })
+      @ApiRequestBody((c: BaseController) => ({
+        content: {
+          'application/json': {
+            schema: c.schema
+          }
+        },
+        required: true
+      }))
+      async update(ctx: Context): Promise<HttpResponse> {
+        const result = await this.service.update(ctx.request.params.id, ctx.request.body);
+        if (result) {
+          return new HttpResponseCreated(result);
+        }
+        return new HttpResponseNotFound();
+      }
+
+      @Delete('/:id')
+      @ApiParameter({
+        in: 'path',
+        name: 'id',
+        required: true,
+        schema: { type: 'integer' }
+      })
+      async deleteById(ctx: Context): Promise<HttpResponse> {
+        const result = await this.service.deleteById(ctx.request.params.id);
+        if (result) {
+          return new HttpResponseCreated();
+        }
+        return new HttpResponseNotFound();
+      }
+    }
+
+    /* Concrete */
+
+    const someSchema: IApiSchema = {
+      properties: {
+        name: {
+          type: 'string'
+        },
+      },
+      required: [ 'name' ],
+      type: 'object',
+    };
+
+    class SomeEntity {
+
+    }
+
+    class SomeService implements CRUDService  {
+      create(body: any) {
+        return body;
+      }
+      findById(id: any) {
+        throw new Error('Method not implemented.');
+      }
+      update(id: any, body: any) {
+        throw new Error('Method not implemented.');
+      }
+      deleteById(id: any) {
+        throw new Error('Method not implemented.');
+      }
+    }
+
+    @ApiInfo({
+      title: 'Some API',
+      version: '1.0.0'
+    })
+    class SomeController extends BaseController {
+      @dependency
+      service: SomeService;
+
+      constructor() {
+        super(SomeEntity, someSchema);
+      }
+    }
+
+    // Test the OpenAPI decorators
+    const document = createOpenApiDocument(SomeController);
+    const expectedDocument: IOpenAPI = {
+      info: {
+        title: 'Some API',
+        version: '1.0.0'
+      },
+      openapi: '3.0.0',
+      paths: {
+        '/': {
+          get: {
+            responses: {}
+          },
+          post: {
+            requestBody: {
+              content: {
+                'application/json': {
+                  schema: someSchema
+                }
+              },
+              required: true
+            },
+            responses: {}
+          },
+        },
+        '/{id}': {
+          delete: {
+            parameters: [
+              {
+                in: 'path',
+                name: 'id',
+                required: true,
+                schema: { type: 'integer' }
+              }
+            ],
+            responses: {}
+          },
+          get: {
+            parameters: [
+              {
+                in: 'path',
+                name: 'id',
+                required: true,
+                schema: { type: 'integer' }
+              }
+            ],
+            responses: {}
+          },
+          patch: {
+            parameters: [
+              {
+                in: 'path',
+                name: 'id',
+                required: true,
+                schema: { type: 'integer' }
+              }
+            ],
+            requestBody: {
+              content: {
+                'application/json': {
+                  schema: someSchema
+                }
+              },
+              required: true
+            },
+            responses: {}
+          },
+        }
+      }
+    };
+    deepStrictEqual(document, expectedDocument);
+
+    const app = createApp(SomeController);
+
+    // Test the hook
+    await request(app)
+      .post('/')
+      .send({})
+      .expect(400)
+      .expect({
+        body: [
+          {
+            dataPath: '',
+            keyword: 'required',
+            message: 'should have required property \'name\'',
+            params: {
+              missingProperty: 'name'
+            },
+            schemaPath: '#/required',
+          }
+        ]
+      });
+
+    // Test the service
+    return request(app)
+      .post('/')
+      .send({ name: 'string' })
+      .expect(201)
+      .expect({ name: 'string' });
+  });
+
+});
