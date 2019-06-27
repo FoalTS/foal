@@ -12,8 +12,8 @@ import {
 function AddMetadataItem<T>(metadataKey: string, item: T) {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
-    const items: T[] = Reflect.getOwnMetadata(metadataKey, target, propertyKey as string) || [];
-    items.unshift(item);
+    let items: T[] = Reflect.getMetadata(metadataKey, target, propertyKey as string) || [];
+    items = [ item, ...items ];
     Reflect.defineMetadata(metadataKey, items, target, propertyKey as string);
   };
 }
@@ -21,7 +21,8 @@ function AddMetadataItem<T>(metadataKey: string, item: T) {
 function AddMetadataProperty(metadataKey: string, key: string, property: any) {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
-    const o = Reflect.getOwnMetadata(metadataKey, target, propertyKey as string) || {};
+    let o = Reflect.getMetadata(metadataKey, target, propertyKey as string) || {};
+    o = Object.assign({}, o);
     o[key] = property;
     Reflect.defineMetadata(metadataKey, o, target, propertyKey as string);
   };

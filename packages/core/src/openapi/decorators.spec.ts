@@ -166,6 +166,17 @@ describe('ApiServer', () => {
     deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller), [metadataFunc]);
   });
 
+  it('should define the correct metadata (class & inheritance).', () => {
+    @ApiServer(metadata)
+    class Controller { }
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller), [metadata]);
+
+    @ApiServer(metadata2)
+    class Controller2 extends Controller { }
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller), [metadata]);
+    deepStrictEqual(getMetadata('api:documentOrOperation:servers', Controller2), [metadata2, metadata]);
+  });
+
   it('should define the correct metadata (method).', () => {
     class Controller {
       @ApiServer(metadata)
@@ -587,7 +598,6 @@ describe('ApiResponse', () => {
       default: metadata,
       404: metadata2
     });
-
   });
 
   it('should define the correct metadata (class & dynamic).', () => {
@@ -599,6 +609,24 @@ describe('ApiResponse', () => {
       default: metadataFunc,
     });
 
+  });
+
+  it('should define the correct metadata (class & inheritance).', () => {
+    @ApiResponse('default', metadata)
+    class Controller {}
+    deepStrictEqual(getMetadata('api:operation:responses', Controller), {
+      default: metadata,
+    });
+
+    @ApiResponse(404, metadata2)
+    class Controller2 extends Controller {}
+    deepStrictEqual(getMetadata('api:operation:responses', Controller), {
+      default: metadata
+    });
+    deepStrictEqual(getMetadata('api:operation:responses', Controller2), {
+      default: metadata,
+      404: metadata2
+    });
   });
 
   it('should define the correct metadata (method).', () => {
