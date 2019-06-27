@@ -93,7 +93,7 @@ export class ServiceManager {
   get<Service>(serviceClass: Class<Service>): Service {
     // The ts-ignores fix TypeScript bugs.
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
-    if (serviceClass === ServiceManager) {
+    if (serviceClass === ServiceManager || serviceClass.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
