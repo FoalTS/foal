@@ -22,7 +22,7 @@ export function ValidateBody(
   function validate(this: any, ctx: Context) {
     const ajvSchema = typeof schema === 'function' ? schema(this) : schema;
     if (!ajv.validate(ajvSchema, ctx.request.body)) {
-      return new HttpResponseBadRequest(ajv.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ body: ajv.errors });
     }
   }
 

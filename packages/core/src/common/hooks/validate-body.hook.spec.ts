@@ -55,8 +55,20 @@ describe('ValidateBody', () => {
         const ctx = new Context({});
 
         const actual = hook(ctx, new ServiceManager());
-        ok(actual instanceof HttpResponseBadRequest);
-        notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          body: [
+            {
+              dataPath: '',
+              keyword: 'type',
+              message: 'should be object',
+              params: { type: 'object' },
+              schemaPath: '#/type',
+            }
+          ]
+        });
       });
 
     });
