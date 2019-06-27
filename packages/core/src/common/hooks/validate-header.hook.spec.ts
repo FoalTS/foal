@@ -3,19 +3,19 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, getApiResponses, IApiCookieParameter, IApiResponses } from '../../openapi';
-import { ValidateCookie } from './validate-cookie.hook';
+import { getApiParameters, getApiResponses, IApiHeaderParameter, IApiResponses } from '../../openapi';
+import { ValidateHeader } from './validate-header.hook';
 
-describe('ValidateCookie', () => {
+describe('ValidateHeader', () => {
 
   const services = new ServiceManager();
 
-  describe('should validate the cookie and', () => {
+  describe('should validate the header and', () => {
 
-    it('should return an HttpResponseBadRequest object if the cookie does not exist'
+    it('should return an HttpResponseBadRequest object if the header does not exist'
         + 'and options.required is undefined.', () => {
-      const hook = getHookFunction(ValidateCookie('foo', {}));
-      const ctx = new Context({ cookies: {} });
+      const hook = getHookFunction(ValidateHeader('foo', {}));
+      const ctx = new Context({ headers: {} });
 
       const response = hook(ctx, services);
       if (!(response instanceof HttpResponseBadRequest)) {
@@ -23,7 +23,7 @@ describe('ValidateCookie', () => {
       }
 
       deepStrictEqual(response.body, {
-        cookies: [
+        headers: [
           {
             dataPath: '',
             keyword: 'required',
@@ -37,10 +37,10 @@ describe('ValidateCookie', () => {
       });
     });
 
-    it('should return an HttpResponseBadRequest object if the cookie does not exist'
+    it('should return an HttpResponseBadRequest object if the header does not exist'
         + 'and options.required is true.', () => {
-      const hook = getHookFunction(ValidateCookie('foo', {}, { required: true }));
-      const ctx = new Context({ cookies: {} });
+      const hook = getHookFunction(ValidateHeader('foo', {}, { required: true }));
+      const ctx = new Context({ headers: {} });
 
       const response = hook(ctx, services);
       if (!(response instanceof HttpResponseBadRequest)) {
@@ -48,7 +48,7 @@ describe('ValidateCookie', () => {
       }
 
       deepStrictEqual(response.body, {
-        cookies: [
+        headers: [
           {
             dataPath: '',
             keyword: 'required',
@@ -62,18 +62,18 @@ describe('ValidateCookie', () => {
       });
     });
 
-    it('should NOT return an HttpResponseBadRequest object if the cookie does not exist'
+    it('should NOT return an HttpResponseBadRequest object if the header does not exist'
         + 'and options.required is false.', () => {
-      const hook = getHookFunction(ValidateCookie('foo', {}, { required: false }));
-      const ctx = new Context({ cookies: {} });
+      const hook = getHookFunction(ValidateHeader('foo', {}, { required: false }));
+      const ctx = new Context({ headers: {} });
 
       const response = hook(ctx, services);
       strictEqual(response, undefined);
     });
 
-    it('should return an HttpResponseBadRequest object if the schema does not validate the cookie.', () => {
-      const hook = getHookFunction(ValidateCookie('foo', { type: 'integer' }));
-      const ctx = new Context({ cookies: { foo: 'a' } });
+    it('should return an HttpResponseBadRequest object if the schema does not validate the header.', () => {
+      const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
+      const ctx = new Context({ headers: { foo: 'a' } });
 
       const response = hook(ctx, services);
       if (!(response instanceof HttpResponseBadRequest)) {
@@ -81,7 +81,7 @@ describe('ValidateCookie', () => {
       }
 
       deepStrictEqual(response.body, {
-        cookies: [
+        headers: [
           {
             dataPath: '.foo',
             keyword: 'type',
@@ -95,17 +95,17 @@ describe('ValidateCookie', () => {
       });
     });
 
-    it('should NOT return an HttpResponseBadRequest object if the schema validates the cookie.', () => {
-      const hook = getHookFunction(ValidateCookie('foo', { type: 'integer' }));
-      const ctx = new Context({ cookies: { foo: '3' } });
+    it('should NOT return an HttpResponseBadRequest object if the schema validates the header.', () => {
+      const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
+      const ctx = new Context({ headers: { foo: '3' } });
 
       const response = hook(ctx, services);
       strictEqual(response, undefined);
     });
 
-    it('should NOT return an HttpResponseBadRequest object if the schema validates the cookie (default value).', () => {
-      const hook = getHookFunction(ValidateCookie('foo'));
-      const ctx = new Context({ cookies: { foo: 'aaa' } });
+    it('should NOT return an HttpResponseBadRequest object if the schema validates the header (default value).', () => {
+      const hook = getHookFunction(ValidateHeader('foo'));
+      const ctx = new Context({ headers: { foo: 'aaa' } });
 
       const response = hook(ctx, services);
       strictEqual(response, undefined);
@@ -118,8 +118,8 @@ describe('ValidateCookie', () => {
     afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
 
     it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { required: false })
-      @ValidateCookie('barfoo', { type: 'string' })
+      @ValidateHeader('foobar', { type: 'string' }, { required: false })
+      @ValidateHeader('barfoo', { type: 'string' })
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
@@ -128,8 +128,8 @@ describe('ValidateCookie', () => {
 
     it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
       process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateCookie('foobar', { type: 'string' }, { required: false })
-      @ValidateCookie('barfoo', { type: 'string' })
+      @ValidateHeader('foobar', { type: 'string' }, { required: false })
+      @ValidateHeader('barfoo', { type: 'string' })
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
@@ -137,8 +137,8 @@ describe('ValidateCookie', () => {
     });
 
     it('unless options.openapi is false.', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { openapi: false, required: false })
-      @ValidateCookie('barfoo', { type: 'string' }, { openapi: false })
+      @ValidateHeader('foobar', { type: 'string' }, { openapi: false, required: false })
+      @ValidateHeader('barfoo', { type: 'string' }, { openapi: false })
       class Foobar {}
 
       strictEqual(getApiParameters(Foobar), undefined);
@@ -147,14 +147,14 @@ describe('ValidateCookie', () => {
 
     function testClass(Foobar: Class) {
       const actual = getApiParameters(Foobar);
-      const expected: IApiCookieParameter[] = [
+      const expected: IApiHeaderParameter[] = [
         {
-          in: 'cookie',
+          in: 'header',
           name: 'foobar',
           schema: { type: 'string' }
         },
         {
-          in: 'cookie',
+          in: 'header',
           name: 'barfoo',
           required: true,
           schema: { type: 'string' }
@@ -170,8 +170,8 @@ describe('ValidateCookie', () => {
     }
 
     it('if options.openapi is true (class decorator).', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { openapi: true, required: false })
-      @ValidateCookie('barfoo', { type: 'string' }, { openapi: true })
+      @ValidateHeader('foobar', { type: 'string' }, { openapi: true, required: false })
+      @ValidateHeader('barfoo', { type: 'string' }, { openapi: true })
       class Foobar {}
 
       testClass(Foobar);
@@ -179,8 +179,8 @@ describe('ValidateCookie', () => {
 
     it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
       process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      @ValidateCookie('foobar', { type: 'string' }, { required: false })
-      @ValidateCookie('barfoo', { type: 'string' })
+      @ValidateHeader('foobar', { type: 'string' }, { required: false })
+      @ValidateHeader('barfoo', { type: 'string' })
       class Foobar {}
 
       testClass(Foobar);
@@ -188,14 +188,14 @@ describe('ValidateCookie', () => {
 
     function testMethod(Foobar: Class) {
       const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiCookieParameter[] = [
+      const expected: IApiHeaderParameter[] = [
         {
-          in: 'cookie',
+          in: 'header',
           name: 'foobar',
           schema: { type: 'string' }
         },
         {
-          in: 'cookie',
+          in: 'header',
           name: 'barfoo',
           required: true,
           schema: { type: 'string' }
@@ -212,8 +212,8 @@ describe('ValidateCookie', () => {
 
     it('if options.openapi is true (method decorator).', () => {
       class Foobar {
-        @ValidateCookie('foobar', { type: 'string' }, { openapi: true, required: false })
-        @ValidateCookie('barfoo', { type: 'string' }, { openapi: true })
+        @ValidateHeader('foobar', { type: 'string' }, { openapi: true, required: false })
+        @ValidateHeader('barfoo', { type: 'string' }, { openapi: true })
         foo() {}
       }
 
@@ -223,8 +223,8 @@ describe('ValidateCookie', () => {
     it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
       process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
       class Foobar {
-        @ValidateCookie('foobar', { type: 'string' }, { required: false })
-        @ValidateCookie('barfoo', { type: 'string' })
+        @ValidateHeader('foobar', { type: 'string' }, { required: false })
+        @ValidateHeader('barfoo', { type: 'string' })
         foo() {}
       }
 

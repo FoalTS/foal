@@ -1,35 +1,35 @@
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiCookieParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
- * Hook - Validate a specific cookie against an AJV schema.
+ * Hook - Validate a specific header against an AJV schema.
  *
  * @export
- * @param {string} name - Cookie name.
- * @param {object} [schema={ type: 'string' }] - Schema used to validate the cookie.
+ * @param {string} name - Header name.
+ * @param {object} [schema={ type: 'string' }] - Schema used to validate the header.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
- * @param {boolean} [options.required] - Specify is the cookie is optional.
+ * @param {boolean} [options.required] - Specify is the header is optional.
  * @returns {HookDecorator} The hook.
  */
-export function ValidateCookie(
+export function ValidateHeader(
   name: string, schema: object = { type: 'string' } , options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   const ajv = getAjvInstance();
   const required = options.required !== false;
 
   function validate(ctx: Context) {
-    const cookiesSchema = {
+    const headersSchema = {
       properties: {
         [name]: schema
       },
       required: required ? [ name ] : [],
       type: 'object',
     };
-    if (!ajv.validate(cookiesSchema, ctx.request.cookies)) {
-      return new HttpResponseBadRequest({ cookies: ajv.errors });
+    if (!ajv.validate(headersSchema, ctx.request.headers)) {
+      return new HttpResponseBadRequest({ headers: ajv.errors });
     }
   }
 
@@ -40,12 +40,12 @@ export function ValidateCookie(
       return;
     }
 
-    const apiCookieParameter: IApiCookieParameter = { in: 'cookie', name, schema };
+    const apiHeaderParameter: IApiHeaderParameter = { in: 'header', name, schema };
     if (required) {
-      apiCookieParameter.required = required;
+      apiHeaderParameter.required = required;
     }
 
-    ApiParameter(apiCookieParameter)(target, propertyKey);
+    ApiParameter(apiHeaderParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
   };
 }
