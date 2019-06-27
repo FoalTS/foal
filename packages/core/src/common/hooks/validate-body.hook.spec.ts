@@ -17,44 +17,92 @@ describe('ValidateBody', () => {
 
   describe('should validate the request body and', () => {
 
-    it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
-        + ' by ajv for the given schema.', () => {
-      const hook = getHookFunction(ValidateBody(schema));
-      const ctx = new Context({});
-      ctx.request.body = {
-        foo: 3
-      };
+    describe('given schema is an object', () => {
 
-      const actual = hook(ctx, new ServiceManager());
-      strictEqual(actual instanceof HttpResponseBadRequest, false);
-    });
-
-    it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
-        + ' ajv for the given schema.', () => {
-      const hook = getHookFunction(ValidateBody(schema));
-
-      function context(body) {
+      it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
+          + ' by ajv for the given schema.', () => {
+        const hook = getHookFunction(ValidateBody(schema));
         const ctx = new Context({});
-        ctx.request.body = body;
-        return ctx;
-      }
+        ctx.request.body = {
+          foo: 3
+        };
 
-      ok(hook(context(null), new ServiceManager()) instanceof HttpResponseBadRequest);
-      ok(hook(context(undefined), new ServiceManager()) instanceof HttpResponseBadRequest);
-      ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
-      ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
-      ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
-      ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
+        const actual = hook(ctx, new ServiceManager());
+        strictEqual(actual instanceof HttpResponseBadRequest, false);
+      });
+
+      it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
+          + ' ajv for the given schema.', () => {
+        const hook = getHookFunction(ValidateBody(schema));
+
+        function context(body) {
+          const ctx = new Context({});
+          ctx.request.body = body;
+          return ctx;
+        }
+
+        ok(hook(context(null), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(undefined), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
+      });
+
+      it('should return an HttpResponseBadRequest with a defined `body` property if '
+          + 'ctx.request.body is not validated by ajv.', () => {
+        const hook = getHookFunction(ValidateBody(schema));
+        const ctx = new Context({});
+
+        const actual = hook(ctx, new ServiceManager());
+        ok(actual instanceof HttpResponseBadRequest);
+        notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      });
+
     });
 
-    it('should return an HttpResponseBadRequest with a defined `body` property if '
-        + 'ctx.request.body is not validated by ajv.', () => {
-      const hook = getHookFunction(ValidateBody(schema));
-      const ctx = new Context({});
+    describe('given schema is a function', () => {
 
-      const actual = hook(ctx, new ServiceManager());
-      ok(actual instanceof HttpResponseBadRequest);
-      notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      it('should not return an HttpResponseBadRequest if ctx.request.body is validated '
+          + ' by ajv for the given schema.', () => {
+        const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind({ schema });
+        const ctx = new Context({});
+        ctx.request.body = {
+          foo: 3
+        };
+
+        const actual = hook(ctx, new ServiceManager());
+        strictEqual(actual instanceof HttpResponseBadRequest, false);
+      });
+
+      it('should return an HttpResponseBadRequest if ctx.request.body is not validated by '
+          + ' ajv for the given schema.', () => {
+        const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind({ schema });
+
+        function context(body) {
+          const ctx = new Context({});
+          ctx.request.body = body;
+          return ctx;
+        }
+
+        ok(hook(context(null), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(undefined), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context('foo'), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(3), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context(true), new ServiceManager()) instanceof HttpResponseBadRequest);
+        ok(hook(context({ foo: 'a' }), new ServiceManager()) instanceof HttpResponseBadRequest);
+      });
+
+      it('should return an HttpResponseBadRequest with a defined `body` property if '
+          + 'ctx.request.body is not validated by ajv.', () => {
+        const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind({ schema });
+        const ctx = new Context({});
+
+        const actual = hook(ctx, new ServiceManager());
+        ok(actual instanceof HttpResponseBadRequest);
+        notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      });
+
     });
 
   });
@@ -154,6 +202,26 @@ describe('ValidateBody', () => {
       }
 
       testMethod(Foobar);
+    });
+
+    it('given schema is a function.', () => {
+      class Foobar {
+        schema = schema;
+        @ValidateBody((controller: Foobar) => controller.schema, { openapi: true })
+        foo() {}
+      }
+
+      const actualDynamicRequestBody = getApiRequestBody(Foobar, 'foo');
+      const expectedRequestBody: IApiRequestBody = {
+        content: {
+          'application/json': { schema: schema as object }
+        },
+        required: true
+      };
+      if (typeof actualDynamicRequestBody !== 'function') {
+        throw new Error('The ApiRequestBody metadata should be a function.');
+      }
+      deepStrictEqual(actualDynamicRequestBody(new Foobar()), expectedRequestBody);
     });
 
   });
