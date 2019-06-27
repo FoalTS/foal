@@ -36,36 +36,76 @@ describe('ValidatePathParam', () => {
       });
     });
 
-    it('should return an HttpResponseBadRequest object if the schema does not validate the path parameter.', () => {
-      const hook = getHookFunction(ValidatePathParam('foo', { type: 'integer' }));
-      const ctx = new Context({ params: { foo: 'a' } });
+    describe('given schema is an object', () => {
 
-      const response = hook(ctx, services);
-      if (!(response instanceof HttpResponseBadRequest)) {
-        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
-      }
+      it('should return an HttpResponseBadRequest object if the schema does not validate the path parameter.', () => {
+        const hook = getHookFunction(ValidatePathParam('foo', { type: 'integer' }));
+        const ctx = new Context({ params: { foo: 'a' } });
 
-      deepStrictEqual(response.body, {
-        pathParams: [
-          {
-            dataPath: '.foo',
-            keyword: 'type',
-            message: 'should be integer',
-            params: {
-              type: 'integer'
-            },
-            schemaPath: '#/properties/foo/type'
-          }
-        ]
+        const response = hook(ctx, services);
+        if (!(response instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+
+        deepStrictEqual(response.body, {
+          pathParams: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: {
+                type: 'integer'
+              },
+              schemaPath: '#/properties/foo/type'
+            }
+          ]
+        });
       });
+
+      it('should NOT return an HttpResponseBadRequest object if the schema validates the path parameter.', () => {
+        const hook = getHookFunction(ValidatePathParam('foo', { type: 'integer' }));
+        const ctx = new Context({ params: { foo: '3' } });
+
+        const response = hook(ctx, services);
+        strictEqual(response, undefined);
+      });
+
     });
 
-    it('should NOT return an HttpResponseBadRequest object if the schema validates the path parameter.', () => {
-      const hook = getHookFunction(ValidatePathParam('foo', { type: 'integer' }));
-      const ctx = new Context({ params: { foo: '3' } });
+    describe('given schema is a function', () => {
 
-      const response = hook(ctx, services);
-      strictEqual(response, undefined);
+      it('should return an HttpResponseBadRequest object if the schema does not validate the path parameter.', () => {
+        const hook = getHookFunction(ValidatePathParam('foo', c => c.schema)).bind({ schema: { type: 'integer' } });
+        const ctx = new Context({ params: { foo: 'a' } });
+
+        const response = hook(ctx, services);
+        if (!(response instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+
+        deepStrictEqual(response.body, {
+          pathParams: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: {
+                type: 'integer'
+              },
+              schemaPath: '#/properties/foo/type'
+            }
+          ]
+        });
+      });
+
+      it('should NOT return an HttpResponseBadRequest object if the schema validates the path parameter.', () => {
+        const hook = getHookFunction(ValidatePathParam('foo', c => c.schema)).bind({ schema: { type: 'integer' } });
+        const ctx = new Context({ params: { foo: '3' } });
+
+        const response = hook(ctx, services);
+        strictEqual(response, undefined);
+      });
+
     });
 
     it('should NOT return an HttpResponseBadRequest object if the schema validates the path parameter'
@@ -178,6 +218,30 @@ describe('ValidatePathParam', () => {
       }
 
       testMethod(Foobar);
+    });
+
+    it('given schema is a function.', () => {
+      class Foobar {
+        schema = { type: 'string' };
+        @ValidatePathParam('barfoo', c => c.schema, { openapi: true })
+        foo() {}
+      }
+
+      const actual = getApiParameters(Foobar, 'foo');
+      const expected: IApiPathParameter = {
+        in: 'path',
+        name: 'barfoo',
+        required: true,
+        schema: { type: 'string' }
+      };
+      if (actual === undefined) {
+        throw new Error('The Api parameters metadata should be defined.');
+      }
+      const schemaFn = actual[0];
+      if (typeof schemaFn !== 'function') {
+        throw new Error('The Api parameter metadata should be a function.');
+      }
+      deepStrictEqual(schemaFn(new Foobar()), expected);
     });
 
   });

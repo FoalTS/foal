@@ -71,36 +71,76 @@ describe('ValidateHeader', () => {
       strictEqual(response, undefined);
     });
 
-    it('should return an HttpResponseBadRequest object if the schema does not validate the header.', () => {
-      const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
-      const ctx = new Context({ headers: { foo: 'a' } });
+    describe('given schema is an object', () => {
 
-      const response = hook(ctx, services);
-      if (!(response instanceof HttpResponseBadRequest)) {
-        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
-      }
+      it('should return an HttpResponseBadRequest object if the schema does not validate the header.', () => {
+        const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
+        const ctx = new Context({ headers: { foo: 'a' } });
 
-      deepStrictEqual(response.body, {
-        headers: [
-          {
-            dataPath: '.foo',
-            keyword: 'type',
-            message: 'should be integer',
-            params: {
-              type: 'integer'
-            },
-            schemaPath: '#/properties/foo/type'
-          }
-        ]
+        const response = hook(ctx, services);
+        if (!(response instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+
+        deepStrictEqual(response.body, {
+          headers: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: {
+                type: 'integer'
+              },
+              schemaPath: '#/properties/foo/type'
+            }
+          ]
+        });
       });
+
+      it('should NOT return an HttpResponseBadRequest object if the schema validates the header.', () => {
+        const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
+        const ctx = new Context({ headers: { foo: '3' } });
+
+        const response = hook(ctx, services);
+        strictEqual(response, undefined);
+      });
+
     });
 
-    it('should NOT return an HttpResponseBadRequest object if the schema validates the header.', () => {
-      const hook = getHookFunction(ValidateHeader('foo', { type: 'integer' }));
-      const ctx = new Context({ headers: { foo: '3' } });
+    describe('given schema is a function', () => {
 
-      const response = hook(ctx, services);
-      strictEqual(response, undefined);
+      it('should return an HttpResponseBadRequest object if the schema does not validate the header.', () => {
+        const hook = getHookFunction(ValidateHeader('foo', c => c.schema)).bind({ schema: { type: 'integer' } });
+        const ctx = new Context({ headers: { foo: 'a' } });
+
+        const response = hook(ctx, services);
+        if (!(response instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+
+        deepStrictEqual(response.body, {
+          headers: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: {
+                type: 'integer'
+              },
+              schemaPath: '#/properties/foo/type'
+            }
+          ]
+        });
+      });
+
+      it('should NOT return an HttpResponseBadRequest object if the schema validates the header.', () => {
+        const hook = getHookFunction(ValidateHeader('foo', c => c.schema)).bind({ schema: { type: 'integer' } });
+        const ctx = new Context({ headers: { foo: '3' } });
+
+        const response = hook(ctx, services);
+        strictEqual(response, undefined);
+      });
+
     });
 
     it('should NOT return an HttpResponseBadRequest object if the schema validates the header (default value).', () => {
@@ -229,6 +269,30 @@ describe('ValidateHeader', () => {
       }
 
       testMethod(Foobar);
+    });
+
+    it('given schema is a function.', () => {
+      class Foobar {
+        schema = { type: 'string' };
+        @ValidateHeader('barfoo', c => c.schema, { openapi: true })
+        foo() {}
+      }
+
+      const actual = getApiParameters(Foobar, 'foo');
+      const expected: IApiHeaderParameter = {
+        in: 'header',
+        name: 'barfoo',
+        required: true,
+        schema: { type: 'string' }
+      };
+      if (actual === undefined) {
+        throw new Error('The Api parameters metadata should be defined.');
+      }
+      const schemaFn = actual[0];
+      if (typeof schemaFn !== 'function') {
+        throw new Error('The Api parameter metadata should be a function.');
+      }
+      deepStrictEqual(schemaFn(new Foobar()), expected);
     });
 
   });

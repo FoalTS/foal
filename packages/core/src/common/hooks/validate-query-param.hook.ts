@@ -1,6 +1,6 @@
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiQueryParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiQueryParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
@@ -8,22 +8,25 @@ import { getAjvInstance } from '../utils';
  *
  * @export
  * @param {string} name - Query parameter name.
- * @param {object} [schema={ type: 'string' }] - Schema used to validate the query parameter.
+ * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
+ * validate the query parameter.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
  * @param {boolean} [options.required] - Specify is the query is optional.
  * @returns {HookDecorator} The hook.
  */
 export function ValidateQueryParam(
-  name: string, schema: object = { type: 'string' } , options: { openapi?: boolean, required?: boolean } = {}
+  name: string,
+  schema: object | ((controller: any) => object) = { type: 'string' },
+  options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   const ajv = getAjvInstance();
   const required = options.required !== false;
 
-  function validate(ctx: Context) {
+  function validate(this: any, ctx: Context) {
     const querySchema = {
       properties: {
-        [name]: schema
+        [name]: typeof schema === 'function' ? schema(this) : schema
       },
       required: required ? [ name ] : [],
       type: 'object',
@@ -40,10 +43,15 @@ export function ValidateQueryParam(
       return;
     }
 
-    const apiQueryParameter: IApiQueryParameter = { in: 'query', name, schema };
-    if (required) {
-      apiQueryParameter.required = required;
+    function makeParameter(schema: IApiSchema): IApiQueryParameter {
+      const result: IApiQueryParameter = { in: 'query', name, schema };
+      if (required) {
+        result.required = required;
+      }
+      return result;
     }
+
+    const apiQueryParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiQueryParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

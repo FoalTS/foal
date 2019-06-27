@@ -1,6 +1,6 @@
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiPathParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiPathParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
@@ -8,20 +8,23 @@ import { getAjvInstance } from '../utils';
  *
  * @export
  * @param {string} name - Path parameter name.
- * @param {object} [schema={ type: 'string' }] - Schema used to validate the path parameter.
+ * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
+ * validate the path parameter.
  * @param {{ openapi?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
  * @returns {HookDecorator} The hook.
  */
 export function ValidatePathParam(
-  name: string, schema: object = { type: 'string' } , options: { openapi?: boolean } = {}
+  name: string,
+  schema: object | ((controller: any) => object) = { type: 'string' },
+  options: { openapi?: boolean } = {}
 ): HookDecorator {
   const ajv = getAjvInstance();
 
-  function validate(ctx: Context) {
+  function validate(this: any, ctx: Context) {
     const paramsSchema = {
       properties: {
-        [name]: schema
+        [name]: typeof schema === 'function' ? schema(this) : schema
       },
       required: [ name ],
       type: 'object',
@@ -38,12 +41,11 @@ export function ValidatePathParam(
       return;
     }
 
-    const apiPathParameter: IApiPathParameter = {
-      in: 'path',
-      name,
-      required: true,
-      schema,
-    };
+    function makeParameter(schema: IApiSchema): IApiPathParameter {
+      return { in: 'path', name, required: true, schema };
+    }
+
+    const apiPathParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiPathParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

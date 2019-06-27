@@ -1,6 +1,6 @@
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../../openapi';
+import { ApiParameter, ApiResponse, IApiHeaderParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
@@ -8,22 +8,25 @@ import { getAjvInstance } from '../utils';
  *
  * @export
  * @param {string} name - Header name.
- * @param {object} [schema={ type: 'string' }] - Schema used to validate the header.
+ * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
+ * validate the header.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
  * @param {boolean} [options.required] - Specify is the header is optional.
  * @returns {HookDecorator} The hook.
  */
 export function ValidateHeader(
-  name: string, schema: object = { type: 'string' } , options: { openapi?: boolean, required?: boolean } = {}
+  name: string,
+  schema: object | ((controller: any) => object) = { type: 'string' },
+  options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   const ajv = getAjvInstance();
   const required = options.required !== false;
 
-  function validate(ctx: Context) {
+  function validate(this: any, ctx: Context) {
     const headersSchema = {
       properties: {
-        [name]: schema
+        [name]: typeof schema === 'function' ? schema(this) : schema
       },
       required: required ? [ name ] : [],
       type: 'object',
@@ -40,10 +43,15 @@ export function ValidateHeader(
       return;
     }
 
-    const apiHeaderParameter: IApiHeaderParameter = { in: 'header', name, schema };
-    if (required) {
-      apiHeaderParameter.required = required;
+    function makeParameter(schema: IApiSchema): IApiHeaderParameter {
+      const result: IApiHeaderParameter = { in: 'header', name, schema };
+      if (required) {
+        result.required = required;
+      }
+      return result;
     }
+
+    const apiHeaderParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiHeaderParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
