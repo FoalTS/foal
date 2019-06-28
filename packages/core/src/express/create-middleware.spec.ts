@@ -88,13 +88,12 @@ describe('createMiddleware', () => {
       strictEqual(actualServiceManager, expectedServiceManager);
     });
 
-    it('should call the sync and async post hook functions (with the ctx, the given ServiceManager and the response)'
+    it('should call the sync and async post hook functions with the response'
         + ' after the controller method.', async () => {
       let str = '';
       const expectedServiceManager = new ServiceManager();
       const expectedReponse = new HttpResponseOK();
 
-      let actualServiceManager: ServiceManager|undefined;
       let actualResponse: HttpResponse|undefined;
 
       const route: Route = {
@@ -103,10 +102,9 @@ describe('createMiddleware', () => {
           return expectedReponse;
         }},
         hooks: [
-          () => async ctx => { await 1; str = `${ctx.state.str}a`; },
-          () => ctx => ctx.state.str += 'b',
-          () => (ctx, services, response) => {
-            actualServiceManager = services;
+          ctx => async () => { await 1; str = `${ctx.state.str}a`; },
+          ctx => () => { ctx.state.str += 'b'; },
+          () => response => {
             actualResponse = response;
           }
         ],
@@ -122,7 +120,6 @@ describe('createMiddleware', () => {
       await middleware(request, response);
 
       strictEqual(str, 'cba');
-      strictEqual(actualServiceManager, expectedServiceManager);
       strictEqual(actualResponse, expectedReponse);
     });
 
