@@ -79,7 +79,7 @@
   * [XSS Protection](./security/xss-protection.md)
 * Utilities
   * [Static Files](./utilities/static-files.md)
-  * [Templating](./utilities/templating.md)
+  * [Templates (SSR)](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
   * [Upload & Download Files](./cookbook/upload-and-download-files.md)
@@ -94,6 +94,7 @@
 ## Upgrading
 
 * [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
+* [To v1](https://github.com/FoalTS/foal/releases/tag/v1.0.0)
 
 ## API Reference
 
