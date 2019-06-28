@@ -119,13 +119,6 @@ pm2 delete index
 # Test the default shell scripts to create permissions, groups and users.
 npm run build:scripts
 
-# foal run-script create-perm name="My first permission" codeName="my-first-perm"
-# foal run-script create-perm name="My second permission" codeName="my-second-perm"
-
-# foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
-# foal run-script create-group name="My group2" codeName="my-group2"
-
-# foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 foal run create-user
 
 #################################################################

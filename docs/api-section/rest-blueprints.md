@@ -118,6 +118,8 @@ export const productSchhema = {
 
 ## Generate OpenAPI documentation
 
+> This section describes a new feature introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
+
 The generated controllers also have OpenAPI decorators on their methods to document the API.
 
 In this way, when the [configuration key](../deployment-and-environments/configuration.md) `settings.openapi.useHooks` is set to `true`, we can get a full documentation of the API using [Swagger UI](./openapi-and-swagger-ui.md)

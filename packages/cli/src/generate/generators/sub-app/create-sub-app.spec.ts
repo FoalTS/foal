@@ -29,8 +29,10 @@ describe('createSubApp', () => {
 
   describe('should render the root templates', () => {
 
-    function test(prefix = '') {
-      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+    function test(prefix = '', indexAlreadyExist = true) {
+      if (indexAlreadyExist) {
+        writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
+      }
 
       createSubApp({ name: 'test-fooBar' });
 
@@ -42,14 +44,25 @@ describe('createSubApp', () => {
       actual = readFileFromRoot(`${prefix}test-foo-bar/test-foo-bar.controller.ts`);
       strictEqual(actual, expected);
 
-      expected = readFileFromTemplatesSpec('sub-app/index.parent.ts');
-      actual = readFileFromRoot(`${prefix}index.ts`);
-      strictEqual(actual, expected);
+      if (indexAlreadyExist) {
+        expected = readFileFromTemplatesSpec('sub-app/index.parent.ts');
+        actual = readFileFromRoot(`${prefix}index.ts`);
+        strictEqual(actual, expected);
+      } else {
+        expected = readFileFromTemplatesSpec('sub-app/index.parent.empty.ts');
+        actual = readFileFromRoot(`${prefix}index.ts`);
+        strictEqual(actual, expected);
+      }
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
       mkdirIfNotExists('src/app/sub-apps');
       test('src/app/sub-apps/');
+    });
+
+    it('in src/app/sub-apps/ if src/app/ exists.', () => {
+      mkdirIfNotExists('src/app');
+      test('src/app/sub-apps/', false);
     });
 
     it('in sub-apps/ if the directory exists.', () => {

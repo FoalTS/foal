@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getManager, getRepository } from 'typeorm';
+import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -19,7 +19,11 @@ export async function main(args) {
   group.codeName = args.codeName;
   group.name = args.name;
 
-  await createConnection();
+  await createConnection({
+    database: './e2e_db.sqlite',
+    entities: [ Permission, Group ],
+    type: 'sqlite',
+  });
 
   for (const codeName of args.permissions as string[]) {
     const permission = await getRepository(Permission).findOne({ codeName });
@@ -36,5 +40,7 @@ export async function main(args) {
     );
   } catch (error) {
     console.log(error.message);
+  } finally {
+    await getConnection().close();
   }
 }
