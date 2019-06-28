@@ -51,6 +51,7 @@
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation & Sanitization](./validation-and-sanitization.md)
+* [Serializing & Deserializing](./serializing-and-deserializing.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
   * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)

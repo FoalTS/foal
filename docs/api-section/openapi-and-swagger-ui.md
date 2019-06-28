@@ -21,6 +21,9 @@ import { ApiInfo } from '@foal/core';
   title: 'A Great API',
   version: '1.0.0'
 })
+// @ApiServer({
+//   url: '/api'
+// })
 export class ApiController {
   // ...
 }
