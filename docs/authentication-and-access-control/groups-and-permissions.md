@@ -246,13 +246,15 @@ foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" 
 
 If you want the `hasPerm` method to work on the context `user` property, you must use the `fetchUserWithPermissions` function in the authentication hook.
 
-*Example with JWT*
+*Example with JSON Web Tokens*
 ```typescript
 import { Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 import { fetchUserWithPermissions } from '@foal/typeorm';
 
-@JWTRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({
+  user: fetchUserWithPermissions(User)
+})
 export class ProductController {
   @Get('/products')
   readProduct(ctx) {
@@ -264,12 +266,15 @@ export class ProductController {
 }
 ```
 
-*Example with sessions and sookies*
+*Example with Sessions Tokens*
 ```typescript
-import { Get, LoginRequired } from '@foal/core';
-import { fetchUserWithPermissions } from '@foal/typeorm';
+import { Get, TokenRequired } from '@foal/core';
+import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 
-@LoginRequired({ user: fetchUserWithPermissions(User) })
+@TokenRequired({
+  store: TypeORMStore,
+  user: fetchUserWithPermissions(User)
+})
 export class ProductController {
   @Get('/products')
   readProduct(ctx) {
@@ -283,17 +288,33 @@ export class ProductController {
 
 ## The PermissionRequired Hook
 
-The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook:
-- returns a `401 Unauthorized` if no user is authenticated and `options.redirect` is undefined,
-- redirects the page to the given path if no user is authenticated and  `options.redirect` is defined,
-- returns a `403 Forbidden` if the user does not have the given permission. The `perm` argument is the `codeName` of the permission.
+> This requires the use of `fetchUserWithPermissions`.
+
+```typescript
+@PermissionRequired('perm')
+```
+
+| Context | Response |
+| --- | --- |
+| `ctx.user` is undefined | 401 - UNAUTHORIZED |
+| `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
+
+```typescript
+@PermissionRequired('perm', { redirect: '/login' })
+```
+
+| Context | Response |
+| --- | --- |
+| `ctx.user` is undefined | Redirects to `/login` (302 - FOUND) |
+| `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 *Example*
 ```typescript
-import { Get, LoginRequired } from '@foal/core';
+import { Get } from '@foal/core';
 import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { JWTRequired } from '@foal/jwt';
 
-@LoginRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({ user: fetchUserWithPermissions(User) })
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')

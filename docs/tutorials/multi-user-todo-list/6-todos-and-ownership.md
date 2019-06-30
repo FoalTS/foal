@@ -16,8 +16,6 @@ Go back to the `ApiController` and update the `getTodos` route.
 > - the express [request object](https://expressjs.com/en/4x/api.html#req),
 > - an empty object called `state` that you can use to forward information between hooks, 
 > - and the `user` object that is defined if a user logged in.
->
-> *Note:* To make the `user` available you need to use the `LoginRequired` or `LoginOptional` hooks somewhere.
 
 Refresh the todo-list page. You should only see the todos of the user with whom you logged in.
 

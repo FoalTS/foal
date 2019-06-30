@@ -38,11 +38,11 @@ The URI of the MongoDB database can be passed through:
 
 The concept of migrations does not exist in MongoDB. That's why there is no migration commands in a Mongoose project.
 
-## Usage with `JWTRequired` or `LoginRequired`
+## Usage with `JWTRequired`
 
-The `@foal/mongoose` package provides a `fetchUser` function to be used with `JWTRequired` or `LoginRequired`. It takes an id as parameter and returns a Mongoose model or undefined if the id does not match any user.
+The `@foal/mongoose` package provides a `fetchUser` function to be used with `JWTRequired` or `TokenRequired`. It takes an id as parameter and returns a Mongoose model or undefined if the id does not match any user.
 
-*Example 1*:
+*Example with JSON Web Tokens*:
 ```typescript
 import { JWTRequired } from '@foal/jwt';
 import { fetchUser } from '@foal/mongoose';
@@ -50,17 +50,6 @@ import { fetchUser } from '@foal/mongoose';
 import { User } from '../models';
 
 @JWTRequired({ user: fetchUser(User) })
-class MyController {}
-```
-
-*Example 2*:
-```typescript
-import { LoginRequired } from '@foal/core';
-import { fetchUser } from '@foal/mongoose';
-
-import { User } from '../models';
-
-@LoginRequired({ user: fetchUser(User) })
 class MyController {}
 ```
 

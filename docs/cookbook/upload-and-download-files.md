@@ -87,7 +87,7 @@ import { IncomingForm } from 'formidable';
 
 import { UploadedFile } from './entities';
 
-// @JWTRequired OR @LoginRequired
+// @JWTRequired OR @TokenRequired
 // OR a custom hook that sets Context.user.
 export class AppController {
 
@@ -190,7 +190,7 @@ import { Context, createHttpResponseFile, Get, HttpResponseNotFound } from '@foa
 
 import { UploadedFile } from './entities';
 
-// @JWTRequired OR @LoginRequired
+// @JWTRequired OR @TokenRequired
 // OR a custom hook that sets Context.user.
 class AppController {
 

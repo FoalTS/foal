@@ -123,17 +123,19 @@ export class AuthController {
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 
-## The LoginRequired Hook
+## The TokenRequired Hook
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 401 error or redirects the user if no user was logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if no user was logged in. 
+
+> FoalTS versions prior to version 1 used the `LoginRequired` hook. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
 
 Update the controllers.
 
 ```typescript
-import { controller, Get, LoginRequired, render } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
+import { controller, Get, TokenRequired, render } from '@foal/core';
+import { fetchUser, TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
 import { User } from './entities';
@@ -141,7 +143,12 @@ import { User } from './entities';
 export class AppController {
 
   @Get('/')
-  @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
+  @TokenRequired({
+    cookie: true,
+    redirect: '/signin',
+    store: TypeORMStore,
+    user: fetchUser(User),
+  })
   index() {
     ...
   }
@@ -152,7 +159,11 @@ export class AppController {
 ```
 
 ```typescript
-@LoginRequired({ user: fetchUser(User) })
+@TokenRequired({
+  cookie: true,
+  store: TypeORMStore,
+  user: fetchUser(User)
+})
 export class ApiController {
 
   ...
