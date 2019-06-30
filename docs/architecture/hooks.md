@@ -270,11 +270,13 @@ Hooks can be tested thanks to the utility `getHookFunction` (or `getHookFunction
 // validate-body.hook.ts
 import { Hook, HttpResponseBadRequest } from '@foal/core';
 
-export const validateBody = Hook(ctx => {
-  if (typeof ctx.request.body.name !== 'string') {
-    return new HttpResponseBadRequest();
-  }
-})
+export function ValidateBody() {
+  return Hook(ctx => {
+    if (typeof ctx.request.body.name !== 'string') {
+      return new HttpResponseBadRequest();
+    }
+  });
+}
 ```
 
 ```typescript
@@ -283,21 +285,57 @@ import {
   Context, getHookFunction,
   isHttpResponseBadRequest, ServiceManager
 } from '@foal/core';
-import { validateBody } from './validate-body.hook';
+import { ValidateBody } from './validate-body.hook';
 
-it('validateBody', () => {
-  const ctx = Context({
+it('ValidateBody', () => {
+  const ctx = new Context({
     // fake request object
     body: { name: 3 }
   });
-  const hook = getHookFunction(validateBody);
+  const hook = getHookFunction(ValidateBody());
   
   const response = hook(ctx, new ServiceManager());
 
   if (!isHttpResponseBadRequest(response)) {
-    throw new Error();
+    throw new Error('The hook should return an HttpResponseBadRequest object.');
   }
 });
+```
+
+### Testing Hooks that Use `this`
+
+```typescript
+// validate-param-type.hook.ts
+import { Context, Hook, HttpResponseBadRequest } from '@foal/core';
+
+export function ValidateParamType() {
+  return Hook(function(this: any, ctx: Context) {
+    if (typeof ctx.request.params.id !== this.paramType) {
+      return new HttpResponseBadRequest();
+    }
+  });
+}
+```
+
+```typescript
+// validate-param-type.hook.spec.ts
+import { Context, getHookFunction , HttpResponseBadRequest } from '@foal/core';
+import { ValidateParamType } from './validate-param-type';
+
+const ctx = new Context({
+  // fake request object
+  params: { id: 'xxx' }
+});
+const controller = {
+  paramType: 'number'
+};
+const hook = getHookFunction(ValidateParamType()).bind(controller);
+
+const response = hook(ctx, new ServiceManager());
+
+if (!isHttpResponseBadRequest(response)) {
+  throw new Error('The hook should return an HttpResponseBadRequest object.');
+}
 ```
 
 ### Mocking services
