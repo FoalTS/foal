@@ -369,6 +369,36 @@ export class OpenApiController extends SwaggerController {
 
 ## Advanced
 
+### Using Controller Properties
+
+```typescript
+import { ApiRequestBody, IApiRequestBody, Post } from '@foal/core';
+
+class ApiController {
+
+  requestBody: IApiRequestBody = {
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object'
+        }
+      }
+    },
+    required: true
+  };
+
+  @Post('/products')
+  // This is invalid:
+  // @ApiRequestBody(this.requestBody)
+  // This is valid:
+  @ApiRequestBody(controller => controller.requestBody)
+  createProduct() {
+    // ...
+  }
+
+}
+```
+
 ### In-Depth Overview
 
 - FoalTS automatically resolves the path items and operations based on your controller paths.
