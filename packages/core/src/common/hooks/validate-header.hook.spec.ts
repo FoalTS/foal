@@ -105,6 +105,15 @@ describe('ValidateHeader', () => {
         strictEqual(response, undefined);
       });
 
+      it('should NOT return an HttpResponseBadRequest object if the schema validates'
+          + ' the header (case insensitive).', () => {
+        const hook = getHookFunction(ValidateHeader('Authorization', { type: 'string' }));
+        const ctx = new Context({ headers: { authorization: 'xxx' } });
+
+        const response = hook(ctx, services);
+        strictEqual(response, undefined);
+      });
+
     });
 
     describe('given schema is a function', () => {

@@ -22,6 +22,7 @@ export function ValidateHeader(
 ): HookDecorator {
   const ajv = getAjvInstance();
   const required = options.required !== false;
+  name = name.toLowerCase();
 
   function validate(this: any, ctx: Context) {
     const headersSchema = {
