@@ -59,6 +59,8 @@ validate(schema, data);
 
 ### Validation & Sanitization of HTTP Requests
 
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
+
 FoalTS provides many hooks to validate and sanitize HTTP requests. When validation fails, they return an `HttpResponseBadRequest` object whose body contains the validation errors.
 
 *Example*
