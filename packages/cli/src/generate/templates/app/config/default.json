@@ -5,5 +5,8 @@
     "debug": false,
     "loggerFormat": "tiny",
     "staticPath": "public/"
+  },
+  "database": {
+    "database": "./db.sqlite3"
   }
 }

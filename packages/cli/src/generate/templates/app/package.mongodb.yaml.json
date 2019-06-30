@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "@foal/core": "~0.8.0",
-    "@foal/ejs": "~0.8.0",
     "@foal/mongoose": "~0.8.0",
     "mongoose": "^5.4.9",
     "source-map-support": "^0.5.1",

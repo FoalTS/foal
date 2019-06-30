@@ -40,6 +40,12 @@ export interface JWTOptions {
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
+  /**
+   * Add openapi metadata to the class or class method.
+   *
+   * @type {boolean}
+   * @memberof JWTOptions
+   */
   openapi?: boolean;
 }
 

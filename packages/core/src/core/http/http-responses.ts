@@ -83,6 +83,7 @@ export abstract class HttpResponse {
    *
    * @param {string} name - The header name.
    * @param {string} value - The value name.
+   * @returns {this}
    * @memberof HttpResponse
    */
   setHeader(name: string, value: string): this {
@@ -118,6 +119,7 @@ export abstract class HttpResponse {
    * @param {string} name - The cookie name.
    * @param {string} value - The cookie value.
    * @param {CookieOptions} [options={}] - The cookie directives if any.
+   * @returns {this}
    * @memberof HttpResponse
    */
   setCookie(name: string, value: string, options: CookieOptions = {}): this {

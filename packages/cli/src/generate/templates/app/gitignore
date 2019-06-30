@@ -3,6 +3,6 @@ node_modules/
 npm-debug.log
 build/
 .env
-db.sqlite3
+*.sqlite3
 .vscode/
 .idea/
