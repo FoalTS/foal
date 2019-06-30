@@ -59,11 +59,26 @@ describe('ValidateCookies', () => {
     it('should return an HttpResponseBadRequest with a defined `body` property if '
         + 'ctx.request.cookies is not validated by ajv.', () => {
       const hook = getHookFunction(ValidateCookies(schema));
-      const ctx = new Context({});
+      const ctx = new Context({ cookies: { foo: 'xxx' } });
 
       const actual = hook(ctx, new ServiceManager());
-      ok(actual instanceof HttpResponseBadRequest);
-      notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      if (!(actual instanceof HttpResponseBadRequest)) {
+        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+      }
+
+      deepStrictEqual(actual.body, {
+        cookies: [
+          {
+            dataPath: '.foo',
+            keyword: 'type',
+            message: 'should be integer',
+            params: {
+              type: 'integer'
+            },
+            schemaPath: '#/properties/foo/type'
+          }
+        ]
+      });
     });
 
   });

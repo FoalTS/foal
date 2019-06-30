@@ -182,8 +182,8 @@ import { Post, ValidateHeader } from '@foal/core';
 
 export class AppController {
   @Get('/products')
-  @ValidateHeader('authorization')
-  @ValidateHeader('a-number', { type: 'integer' }, { required: false })
+  @ValidateHeader('Authorization')
+  @ValidateHeader('A-Number', { type: 'integer' }, { required: false })
   readProducts() {
     // ...
   }
@@ -196,10 +196,10 @@ import { Post, ValidateHeader } from '@foal/core';
 
 export class AppController {
   schema = { type: 'integer' };
-  
+
   @Get('/products')
-  @ValidateHeader('authorization')
-  @ValidateHeader('a-number', c => c.schema, { required: false })
+  @ValidateHeader('Authorization')
+  @ValidateHeader('A-Number', c => c.schema, { required: false })
   readProducts() {
     // ...
   }
@@ -214,6 +214,7 @@ export class AppController {
   @Get('/products')
   @ValidateHeaders({
     properties: {
+      // All properties should be in lower case.
       'a-number': { type: 'integer' },
       'authorization': { type: 'string' },
     },
@@ -260,8 +261,8 @@ import { Post, ValidateCookie } from '@foal/core';
 
 export class AppController {
   @Get('/products')
-  @ValidateCookie('authorization')
-  @ValidateCookie('a-number', { type: 'integer' }, { required: false })
+  @ValidateCookie('Authorization')
+  @ValidateCookie('A-Number', { type: 'integer' }, { required: false })
   readProducts() {
     // ...
   }
@@ -276,8 +277,8 @@ export class AppController {
   schema = { type: 'integer' };
 
   @Get('/products')
-  @ValidateCookie('authorization')
-  @ValidateCookie('a-number', c => c.schema, { required: false })
+  @ValidateCookie('Authorization')
+  @ValidateCookie('A-Number', c => c.schema, { required: false })
   readProducts() {
     // ...
   }
@@ -290,12 +291,13 @@ import { Post, ValidateCookies } from '@foal/core';
 
 export class AppController {
   @Get('/products')
+  @Hook(ctx => console.log(ctx.request.cookies))
   @ValidateCookies({
     properties: {
-      'a-number': { type: 'integer' },
-      'authorization': { type: 'string' },
+      'A-Number': { type: 'integer' },
+      'Authorization': { type: 'string' },
     },
-    required: [ 'authorization' ],
+    required: [ 'Authorization' ],
     type: 'object'
   })
   readProducts() {
@@ -443,8 +445,8 @@ export class AppController {
   @Get('/products')
   @ValidateQuery({
     properties: {
-      authorization: { type: 'string' },
       'a-number': { type: 'integer' },
+      'authorization': { type: 'string' },
     },
     required: [ 'authorization' ],
     type: 'object'

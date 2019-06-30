@@ -59,11 +59,26 @@ describe('ValidateParams', () => {
     it('should return an HttpResponseBadRequest with a defined `body` property if '
         + 'ctx.request.params is not validated by ajv.', () => {
       const hook = getHookFunction(ValidateParams(schema));
-      const ctx = new Context({});
+      const ctx = new Context({ params: { foo: 'xxx' } });
 
       const actual = hook(ctx, new ServiceManager());
-      ok(actual instanceof HttpResponseBadRequest);
-      notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      if (!(actual instanceof HttpResponseBadRequest)) {
+        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+      }
+
+      deepStrictEqual(actual.body, {
+        pathParams: [
+          {
+            dataPath: '.foo',
+            keyword: 'type',
+            message: 'should be integer',
+            params: {
+              type: 'integer'
+            },
+            schemaPath: '#/properties/foo/type'
+          }
+        ]
+      });
     });
 
   });

@@ -23,7 +23,7 @@ export function ValidateParams(schema: object, options: { openapi?: boolean } = 
 
   function validate(ctx: Context) {
     if (!isValid(ctx.request.params)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ pathParams: isValid.errors });
     }
   }
 

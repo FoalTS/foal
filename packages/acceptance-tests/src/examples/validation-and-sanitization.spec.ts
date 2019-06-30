@@ -150,8 +150,8 @@ describe('Input Validation & Sanitization', () => {
         it('(first example)', () => {
           class AppController {
             @Get('/products')
-            @ValidateHeader('authorization')
-            @ValidateHeader('a-number', { type: 'integer' }, { required: false })
+            @ValidateHeader('Authorization')
+            @ValidateHeader('A-Number', { type: 'integer' }, { required: false })
             readProducts() {
               // ...
             }
@@ -172,8 +172,8 @@ describe('Input Validation & Sanitization', () => {
             schema = { type: 'integer' };
 
             @Get('/products')
-            @ValidateHeader('authorization')
-            @ValidateHeader('a-number', c => c.schema, { required: false })
+            @ValidateHeader('Authorization')
+            @ValidateHeader('A-Number', c => c.schema, { required: false })
             readProducts() {
               // ...
             }
@@ -189,7 +189,7 @@ describe('Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        xit('(third example)', () => {
+        it('(third example)', () => {
           class AppController {
             @Get('/products')
             @ValidateHeaders({
@@ -273,15 +273,16 @@ describe('Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        xit('(third example)', () => {
+        it('(third example)', () => {
           class AppController {
             @Get('/products')
+            @Hook(ctx => console.log(ctx.request.cookies))
             @ValidateCookies({
               properties: {
-                'a-number': { type: 'integer' },
-                'authorization': { type: 'string' },
+                'A-Number': { type: 'integer' },
+                'Authorization': { type: 'string' },
               },
-              required: [ 'authorization' ],
+              required: [ 'Authorization' ],
               type: 'object'
             })
             readProducts() {
@@ -352,7 +353,7 @@ describe('Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        xit('(third example)', () => {
+        it('(third example)', () => {
           class AppController {
             @Get('/products/:productId')
             @ValidateParams({
@@ -428,10 +429,10 @@ describe('Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        xit('(third example)', () => {
+        it('(third example)', () => {
           class AppController {
             @Get('/products')
-            @ValidateCookies({
+            @ValidateQuery({
               properties: {
                 'a-number': { type: 'integer' },
                 'authorization': { type: 'string' },

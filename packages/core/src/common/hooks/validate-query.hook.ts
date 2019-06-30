@@ -23,7 +23,7 @@ export function ValidateQuery(schema: object, options: { openapi?: boolean } = {
 
   function validate(ctx: Context) {
     if (!isValid(ctx.request.query)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ query: isValid.errors });
     }
   }
 

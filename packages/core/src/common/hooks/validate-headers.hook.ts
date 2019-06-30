@@ -25,7 +25,7 @@ export function ValidateHeaders(schema: object, options: { openapi?: boolean } =
 
   function validate(ctx: Context) {
     if (!isValid(ctx.request.headers)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ headers: isValid.errors });
     }
   }
 
