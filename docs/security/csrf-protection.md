@@ -6,28 +6,47 @@
 
 FoalTS provides CSRF protection based on tokens. When activated, the defense requires that POST, PUT, PATCH and DELETE requests include a CSRF token to be valid. If they do not, the server returns a 403 error with the message `Bad csrf token`.
 
-## Enable the CSRF protection
+## SameSite Cookie Attribute
 
-The CSRF defense can be activated using the key `settings.csrf` in the configuration.
+## SPA + API
 
-*Example with `config/default.json`*
+Ex: cli
+
+### Stateful CSRF token (Session-based)
+
+### Stateless CSRF token (Double Submit Cookie Technique)
+
+## Regular Web Applications
+
+### Stateful CSRF token (Session-based)
+
+### Stateless CSRF token (Double Submit Cookie Technique)
+
+## Disable the CSRF protection
+
+The CSRF hook `@CsrfTokenRequired` can be disabled on a specific environment using the configuration key `settings.csrf.enabled`.
+
+*Example with `config/test.json`*
 ```json
 {
   "settings": {
-    "csrf": true
+    "csrf": {
+      "enabled": false
+    }
   }
 }
 ```
 
-*Example with `config/default.yml`*
+*Example with `config/test.yml`*
 ```yaml
 settings:
-  csrf: true
+  csrf:
+    enabled: false
 ```
 
-*Example with `.env` (or environment variable)*
+*Example with environment variable*
 ```
-SETTINGS_CSRF=true
+SETTINGS_CSRF_ENABLED=false
 ```
 
 ## Generate CSRF tokens
