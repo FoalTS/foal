@@ -223,8 +223,6 @@ describe('Config', () => {
             debug: false,
             loggerFormat: 'tiny',
             port: 3001,
-            sessionResave: false,
-            sessionSaveUninitialized: false,
             sessionSecret: '79120183c32f87b25fbe0da73426dcca',
             staticPath: 'public/',
           }
@@ -252,7 +250,7 @@ api:
         }
 
         testResponseTime('barFoo');
-        testResponseTime('settings.sessionSaveUninitialized');
+        testResponseTime('settings.sessionSecret');
         testResponseTime('auth.alg');
       });
 
@@ -270,11 +268,11 @@ api:
         }
 
         Config.get('barFoo');
-        Config.get('settings.sessionSaveUninitialized');
+        Config.get('settings.sessionSecret');
         Config.get('auth.alg');
 
         testResponseTime('barFoo');
-        testResponseTime('settings.sessionSaveUninitialized');
+        testResponseTime('settings.sessionSecret');
         testResponseTime('auth.alg');
       });
     });
