@@ -87,6 +87,15 @@ function getPaths(
   return { components, paths, tags };
 }
 
+/**
+ * Create an OpenAPI document from a controller class.
+ *
+ * @export
+ * @param {Class} controllerClass - The controller class.
+ * @param {*} [controllers=new ServiceManager()] - An optional service manager that contains
+ * the instances of the controller and its subcontrollers.
+ * @returns {IOpenAPI} The generate OpenAPI document.
+ */
 export function createOpenApiDocument(controllerClass: Class, controllers = new ServiceManager()): IOpenAPI {
   const info = getApiInfo(controllerClass);
   if (!info) {
