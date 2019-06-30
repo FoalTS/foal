@@ -27,7 +27,7 @@ import {
 } from '@foal/core';
 import { HttpResponseCreated } from '../../../typeorm/node_modules/@foal/core/lib/core';
 
-describe('Input Validation & Sanitization', () => {
+describe('[Docs] Input Validation & Sanitization', () => {
 
   describe('With a JSON Schema (AJV)', () => {
 
@@ -276,7 +276,6 @@ describe('Input Validation & Sanitization', () => {
         it('(third example)', () => {
           class AppController {
             @Get('/products')
-            @Hook(ctx => console.log(ctx.request.cookies))
             @ValidateCookies({
               properties: {
                 'A-Number': { type: 'integer' },
