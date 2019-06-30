@@ -12,30 +12,6 @@ describe('ValidatePathParam', () => {
 
   describe('should validate the path parameter and', () => {
 
-    it('should return an HttpResponseBadRequest object if the path parameter does not exist.', () => {
-      const hook = getHookFunction(ValidatePathParam('foo', {}));
-      const ctx = new Context({ params: {} });
-
-      const response = hook(ctx, services);
-      if (!(response instanceof HttpResponseBadRequest)) {
-        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
-      }
-
-      deepStrictEqual(response.body, {
-        pathParams: [
-          {
-            dataPath: '',
-            keyword: 'required',
-            message: 'should have required property \'.foo\'',
-            params: {
-              missingProperty: '.foo'
-            },
-            schemaPath: '#/required'
-          }
-        ]
-      });
-    });
-
     describe('given schema is an object', () => {
 
       it('should return an HttpResponseBadRequest object if the schema does not validate the path parameter.', () => {
@@ -106,15 +82,6 @@ describe('ValidatePathParam', () => {
         strictEqual(response, undefined);
       });
 
-    });
-
-    it('should NOT return an HttpResponseBadRequest object if the schema validates the path parameter'
-        + ' (default value).', () => {
-      const hook = getHookFunction(ValidatePathParam('foo'));
-      const ctx = new Context({ params: { foo: 'aaa' } });
-
-      const response = hook(ctx, services);
-      strictEqual(response, undefined);
     });
 
   });

@@ -8,7 +8,7 @@ import { getAjvInstance } from '../utils';
  *
  * @export
  * @param {string} name - Path parameter name.
- * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
+ * @param {(object | ((controller: any) => object))} schema - Schema used to
  * validate the path parameter.
  * @param {{ openapi?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
@@ -16,7 +16,7 @@ import { getAjvInstance } from '../utils';
  */
 export function ValidatePathParam(
   name: string,
-  schema: object | ((controller: any) => object) = { type: 'string' },
+  schema: object | ((controller: any) => object),
   options: { openapi?: boolean } = {}
 ): HookDecorator {
   const ajv = getAjvInstance();
