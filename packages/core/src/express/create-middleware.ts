@@ -44,7 +44,7 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
       }
 
       for (const postFn of hookPostFunctions) {
-        await postFn(ctx, services, response);
+        await postFn(response);
       }
 
       res.status(response.statusCode);

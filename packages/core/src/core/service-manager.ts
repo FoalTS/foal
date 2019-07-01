@@ -30,23 +30,31 @@ export function dependency(target: any, propertyKey: string) {
  * @returns {Service} - The created service.
  */
 export function createService<Service>(serviceClass: Class<Service>, dependencies?: object|ServiceManager): Service {
-  const serviceDependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+  return createControllerOrService(serviceClass, dependencies);
+}
+
+export function createControllerOrService<ControllerOrService>(
+  controllerOrServiceClass: Class<ControllerOrService>, dependencies?: object|ServiceManager
+): ControllerOrService {
+  const controllerOrServiceDependencies: Dependency[] = Reflect.getMetadata(
+    'dependencies', controllerOrServiceClass.prototype
+  ) || [];
 
   let serviceManager = new ServiceManager();
 
-  const service = new serviceClass();
+  const service = new controllerOrServiceClass();
 
   if (dependencies instanceof ServiceManager) {
     serviceManager = dependencies;
   } else if (typeof dependencies === 'object') {
-    serviceDependencies.forEach(dep => {
+    controllerOrServiceDependencies.forEach(dep => {
       const serviceMock = dependencies[dep.propertyKey];
       if (serviceMock) {
         serviceManager.set(dep.serviceClass, serviceMock);
       }
     });
   }
-  serviceDependencies.forEach(dep => service[dep.propertyKey] = serviceManager.get(dep.serviceClass));
+  controllerOrServiceDependencies.forEach(dep => service[dep.propertyKey] = serviceManager.get(dep.serviceClass));
 
   return service;
 }
@@ -85,7 +93,7 @@ export class ServiceManager {
   get<Service>(serviceClass: Class<Service>): Service {
     // The ts-ignores fix TypeScript bugs.
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
-    if (serviceClass === ServiceManager) {
+    if (serviceClass === ServiceManager || serviceClass.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
@@ -95,7 +103,7 @@ export class ServiceManager {
     }
 
     // If the service has not been instantiated yet then do it.
-    const service = createService(serviceClass, this);
+    const service = createControllerOrService(serviceClass, this);
 
     // Save and return the service.
     this.map.set(serviceClass, service);

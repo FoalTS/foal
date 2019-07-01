@@ -11,7 +11,7 @@ import { ServiceManager } from './service-manager';
  *
  * @export
  */
-export type HookPostFunction = (ctx: Context, services: ServiceManager, response: HttpResponse) => void | Promise<void>;
+export type HookPostFunction = (response: HttpResponse) => void | Promise<void>;
 
 /**
  * Interface of a function from which a hook can be created.

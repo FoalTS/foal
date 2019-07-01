@@ -366,8 +366,70 @@ export class OpenApiController extends SwaggerController {
 }
 ```
 
+### Using a Static File
+
+If you prefer to write manually your OpenAPI document, you can add an `openapi.yml` file in the `public/` directory and configure your `SwaggerController` as follows:
+
+```typescript
+import { SwaggerController } from '@foal/swagger';
+
+export class OpenApiController extends SwaggerController {
+  options = { url: '/openapi.yml' };
+}
+
+```
 
 ## Advanced
+
+### Using Controller Properties
+
+```typescript
+import { ApiRequestBody, IApiRequestBody, Post } from '@foal/core';
+
+class ApiController {
+
+  requestBody: IApiRequestBody = {
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object'
+        }
+      }
+    },
+    required: true
+  };
+
+  @Post('/products')
+  // This is invalid:
+  // @ApiRequestBody(this.requestBody)
+  // This is valid:
+  @ApiRequestBody(controller => controller.requestBody)
+  createProduct() {
+    // ...
+  }
+
+}
+```
+
+### The `OpenAPI` service
+
+```typescript
+import { dependency, Get, HttpResponseOK, OpenAPI } from '@foal/core';
+
+import { ApiController } from './api.controller';
+
+export class OpenApiController {
+  @dependency
+  openapi: OpenAPI;
+
+  @Get('/openapi.json')
+  readDocument() {
+    return new HttpResponseOK(
+      this.openapi.createDocument(ApiController)
+    );
+  }
+}
+```
 
 ### In-Depth Overview
 

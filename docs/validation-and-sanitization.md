@@ -59,9 +59,11 @@ validate(schema, data);
 
 ### Validation & Sanitization of HTTP Requests
 
-`ValidateBody`, `ValidateCookies`, `ValidateHeaders`, `ValidateParams` and `ValidateQuery` are hooks to control the body, headers, route params and the query of the requests received by the server. They validate `context.request.{body|cookies|headers|params|query}` against the given schema. If the validation fails then an `HttpResponseBadRequest` is returned with the validation errors as `body`.
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
 
-*Example*:
+FoalTS provides many hooks to validate and sanitize HTTP requests. When validation fails, they return an `HttpResponseBadRequest` object whose body contains the validation errors.
+
+*Example*
 ```typescript
 import { Context, HttpResponseOK, Post, ValidateBody } from '@foal/core';
 
@@ -80,28 +82,396 @@ export class MyController {
   postUser(ctx: Context) {
     // In this method we are sure that firstName and lastName
     // are defined thanks to the above hook.
-    console.log(ctx.request.body.firstName, ctx.request.body.lastName);
+    console.log(
+      ctx.request.body.firstName, ctx.request.body.lastName
+    );
     return new HttpResponseOK();
   }
 
 }
-
 ```
 
-In this example, if you try to `POST /user` with a JSON object that does not have a `firstName` property, you'll get returned a `400 BAD REQUEST` with this body:
+#### ValidateBody
 
+It validates the request body (`Context.request.body`).
+
+*HTTP request*
+
+```
+POST /products
+
+{
+  "price": "hello world"
+}
+```
+
+*Controller (first example)*
+```typescript
+import { Post, ValidateBody } from '@foal/core';
+
+export class AppController {
+  @Post('/products')
+  @ValidateBody({
+    additionalProperties: false,
+    properties: {
+      price: { type: 'integer' },
+    },
+    required: [ 'price' ],
+    type: 'object'
+  })
+  createProduct() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Post, ValidateBody } from '@foal/core';
+
+export class AppController {
+  schema = {
+    additionalProperties: false,
+    properties: {
+      price: { type: 'integer' },
+    },
+    required: [ 'price' ],
+    type: 'object'
+  };
+
+  @Post('/products')
+  @ValidateBody(controller => controller.schema)
+  createProduct() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
 ```json
-[
+{
+  "body": [
     {
-        "keyword": "required",
-        "dataPath": "",
-        "schemaPath": "#/required",
-        "params": {
-            "missingProperty": "firstName"
-        },
-        "message": "should have required property 'firstName'"
+      "dataPath": ".price",
+      "keyword": "type",
+      "message": "should be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/price/type"
     }
-]
+  ]
+}
+```
+
+#### ValidateHeader & ValidateHeaders
+
+It validates the request headers (`Context.request.headers`).
+
+*HTTP request*
+
+```
+GET /products
+Authorization: xxx
+A-Number: hello
+```
+
+*Controller (first example)*
+```typescript
+import { Post, ValidateHeader } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateHeader('Authorization')
+  @ValidateHeader('A-Number', { type: 'integer' }, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Post, ValidateHeader } from '@foal/core';
+
+export class AppController {
+  schema = { type: 'integer' };
+
+  @Get('/products')
+  @ValidateHeader('Authorization')
+  @ValidateHeader('A-Number', c => c.schema, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (third example)*
+```typescript
+import { Post, ValidateHeaders } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateHeaders({
+    properties: {
+      // All properties should be in lower case.
+      'a-number': { type: 'integer' },
+      'authorization': { type: 'string' },
+    },
+    required: [ 'authorization' ],
+    type: 'object'
+  })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
+```json
+{
+  "headers": [
+    {
+      "dataPath:" "['a-number']",
+      "keyword": "type",
+      "message": "should be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/a-number/type"
+    }
+  ]
+}
+```
+
+#### ValidateCookie & ValidateCookies
+
+It validates the request cookies (`Context.request.cookies`).
+
+*HTTP request*
+
+```
+GET /products
+Cookies: Authorization=xxx; A-Number=hello
+```
+
+*Controller (first example)*
+```typescript
+import { Post, ValidateCookie } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateCookie('Authorization')
+  @ValidateCookie('A-Number', { type: 'integer' }, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Post, ValidateCookie } from '@foal/core';
+
+export class AppController {
+  schema = { type: 'integer' };
+
+  @Get('/products')
+  @ValidateCookie('Authorization')
+  @ValidateCookie('A-Number', c => c.schema, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (third example)*
+```typescript
+import { Post, ValidateCookies } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @Hook(ctx => console.log(ctx.request.cookies))
+  @ValidateCookies({
+    properties: {
+      'A-Number': { type: 'integer' },
+      'Authorization': { type: 'string' },
+    },
+    required: [ 'Authorization' ],
+    type: 'object'
+  })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
+```json
+{
+  "cookies": [
+    {
+      "dataPath": "['a-number']",
+      "keyword": "type",
+      "message": "should be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/a-number/type"
+    }
+  ]
+}
+```
+
+#### ValidatePathParam & ValidateParams
+
+It validates the request path parameter (`Context.request.params`).
+
+*HTTP request*
+
+```
+GET /products/xxx
+```
+
+*Controller (first example)*
+```typescript
+import { Post, ValidatePathParam } from '@foal/core';
+
+export class AppController {
+  @Get('/products/:productId')
+  @ValidatePathParam('productId', { type: 'integer' })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Post, ValidatePathParam } from '@foal/core';
+
+export class AppController {
+  schema = { type: 'integer' };
+
+  @Get('/products/:productId')
+  @ValidatePathParam('productId', c => c.schema)
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (third example)*
+```typescript
+import { Post, ValidateParams } from '@foal/core';
+
+export class AppController {
+  @Get('/products/:productId')
+  @ValidateParams({
+    properties: {
+      productId: { type: 'integer' }
+    },
+    type: 'object'
+  })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
+```json
+{
+  "pathParams": [
+    {
+      "dataPath": ".productId",
+      "keyword": "type",
+      "message": "should be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/productId/type"
+    }
+  ]
+}
+```
+
+
+#### ValidateQueryParam & ValidateQuery
+
+It validates the request query (`Context.request.query`).
+
+*HTTP request*
+
+```
+GET /products?authorization=xxx&a-number=hello
+```
+
+*Controller (first example)*
+```typescript
+import { Post, ValidateQueryParam } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateQueryParam('authorization')
+  @ValidateQueryParam('a-number', { type: 'integer' }, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Post, ValidateQueryParam } from '@foal/core';
+
+export class AppController {
+  schema = { type: 'integer' };
+
+  @Get('/products')
+  @ValidateQueryParam('authorization')
+  @ValidateQueryParam('a-number', c => c.schema, { required: false })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (third example)*
+```typescript
+import { Post, ValidateQuery } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateQuery({
+    properties: {
+      'a-number': { type: 'integer' },
+      'authorization': { type: 'string' },
+    },
+    required: [ 'authorization' ],
+    type: 'object'
+  })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
+```json
+{
+  "query": [
+    {
+      "dataPath": "['a-number']",
+      "keyword": "type",
+      "message": "should be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/a-number/type"
+    }
+  ]
+}
 ```
 
 ### Sanitization Example
@@ -120,8 +490,8 @@ export class AppController {
   @ValidateQuery({
     additionalProperties: false,
     properties: {
-      name: { type: 'string' },
       apiKey: { type: 'number' },
+      name: { type: 'string' },
     },
     required: [ 'name', 'apiKey' ],
     type: 'object'
@@ -139,7 +509,7 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 
 | Request | Response |
 | --- | --- |
-| GET `/no-sanitization?name=Alex&apiKey=34&city=Paris`| `{ name: 'Alex', apiKey: '34', city: 'Paris }`
+| GET `/no-sanitization?name=Alex&apiKey=34&city=Paris`| `{ name: 'Alex', apiKey: '34', city: 'Paris' }`
 | GET `/sanitization?name=Alex&apiKey=34&city=Paris` | `{ name: 'Alex', apiKey: 34 }`
 
 ## With a Validation Class (class-validator)
@@ -246,6 +616,34 @@ export class SocialPostController {
   }
 
 }
+```
+
+*HTTP request (example)*
+```
+POST /
+
+{
+  "text": "foo"
+}
+```
+
+*HTTP response (example)*
+```json
+[
+  {
+    "children": [],
+    "constraints": { "length": "title must be longer than or equal to 10 characters" },
+    "property": "title",
+    "target": { "text": "foo" },
+  },
+  {
+    "children": [],
+    "constraints": { "contains": "text must contain a hello string" },
+    "property": "text",
+    "target": { "text": "foo" },
+    "value": "foo",
+  }
+]
 ```
 
 ### Usage with TypeORM entities

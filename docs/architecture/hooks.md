@@ -19,7 +19,7 @@ They improve code readability and make unit testing easier.
 
 Foal provides a number of hooks to handle the most common scenarios.
 
-- `ValidateBody`, `ValidateHeaders`, `ValidateParams`, `ValidateCookies` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation.md)).
+- `ValidateBody`, `ValidateHeader`, `ValidateHeaders`, `ValidatePathParam`, `ValidateParams`, `ValidateCookie`, `ValidateCookies`, `ValidateQueryParam` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation-and-sanitization.md)).
 - `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
 - `JWTRequired`, `JWTOptional`, `TokenRequired`, `TokenOptional` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
@@ -67,7 +67,17 @@ class AppController {
 
 If the user makes a POST request to `/products` whereas she/he is not authenticated, then the server will respond with a 401 error and the `ValidateBody` hook and `addProduct` method won't be executed.
 
-## Architecture
+> If you need to apply a hook globally, you just have to make it decorate the root controller: `AppController`.
+>
+> ```typescript
+> @Log('Request body:', { body: true })
+> export class AppController {
+>  // ...
+> }
+> ```
+
+
+## Build Custom Hooks
 
 In addition to the hooks provided by FoalTS, you can also create your own.
 
@@ -122,12 +132,12 @@ A hook function can return an `HttpResponse` object. If so, the remaining hooks 
 
 *Example:*
 ```typescript
-import { Get, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+import { Context, Get, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
 
 class MyController {
 
   @Get('/')
-  @Hook((ctx) => {
+  @Hook((ctx: Context) => {
     if (typeof ctx.request.body.name !== 'string') {
       return new HttpResponseBadRequest();
     }
@@ -139,9 +149,60 @@ class MyController {
 }
 ```
 
-A hook function may also return a *hook post function* to be executed after the controller method. It is interesting in case you want to change the HTTP response or perform logging.
+You can also have access to the controller instance through the `this` keyword.
 
-*Example:*
+> Note: versions prior to version 1 do not support this feature. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
+
+*Example*
+```typescript
+import { Get, getAjvInstance, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+
+
+class MyController {
+
+  schema = { /* ... */ };
+
+  @Get('/')
+  @Hook((this: MyController, ctx, services) => {
+    const ajv = getAjvInstance();
+    const requestBody = ctx.request.body;
+    if (!ajv.validate(this.schema, requestBody)) {
+      return new HttpResponseBadRequest(ajv.errors);
+    }
+  })
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
+
+}
+```
+
+### Executing Logic After the Controller Method
+
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
+
+A hook can also be used to execute extra logic after the controller method. To do so, you can return a *hook post function* inside the hook. This function will be executed after the controller method. It takes exactly one parameter: the `HttpResponse` object returned by the controller.
+
+The below example shows how to add a custom cookie to the response returned by the controller.
+
+```typescript
+import { Get, Hook, HttpResponseOK } from '@foal/core';
+
+class MyController {
+
+  @Get('/')
+  @Hook(() => response => {
+    response.setCookie('X-CSRF-TOKEN', 'xxx');
+  })
+  index() {
+    return new HttpResponseOK('Hello world!');
+  }
+
+}
+```
+
+This example shows how to execute logic both before and after the controller method.
+
 ```typescript
 import { Get, Hook, HttpResponseOK } from '@foal/core';
 
@@ -162,8 +223,6 @@ class MyController {
 
 }
 ```
-
-A *hook post function* accepts three parameters: the context, the service manager and the response returned by the controller method.
 
 ## Grouping Several Hooks into One
 
@@ -211,11 +270,13 @@ Hooks can be tested thanks to the utility `getHookFunction` (or `getHookFunction
 // validate-body.hook.ts
 import { Hook, HttpResponseBadRequest } from '@foal/core';
 
-export const validateBody = Hook(ctx => {
-  if (typeof ctx.request.body.name !== 'string') {
-    return new HttpResponseBadRequest();
-  }
-})
+export function ValidateBody() {
+  return Hook(ctx => {
+    if (typeof ctx.request.body.name !== 'string') {
+      return new HttpResponseBadRequest();
+    }
+  });
+}
 ```
 
 ```typescript
@@ -224,21 +285,57 @@ import {
   Context, getHookFunction,
   isHttpResponseBadRequest, ServiceManager
 } from '@foal/core';
-import { validateBody } from './validate-body.hook';
+import { ValidateBody } from './validate-body.hook';
 
-it('validateBody', () => {
-  const ctx = Context({
+it('ValidateBody', () => {
+  const ctx = new Context({
     // fake request object
     body: { name: 3 }
   });
-  const hook = getHookFunction(validateBody);
+  const hook = getHookFunction(ValidateBody());
   
   const response = hook(ctx, new ServiceManager());
 
   if (!isHttpResponseBadRequest(response)) {
-    throw new Error();
+    throw new Error('The hook should return an HttpResponseBadRequest object.');
   }
 });
+```
+
+### Testing Hooks that Use `this`
+
+```typescript
+// validate-param-type.hook.ts
+import { Context, Hook, HttpResponseBadRequest } from '@foal/core';
+
+export function ValidateParamType() {
+  return Hook(function(this: any, ctx: Context) {
+    if (typeof ctx.request.params.id !== this.paramType) {
+      return new HttpResponseBadRequest();
+    }
+  });
+}
+```
+
+```typescript
+// validate-param-type.hook.spec.ts
+import { Context, getHookFunction , HttpResponseBadRequest } from '@foal/core';
+import { ValidateParamType } from './validate-param-type';
+
+const ctx = new Context({
+  // fake request object
+  params: { id: 'xxx' }
+});
+const controller = {
+  paramType: 'number'
+};
+const hook = getHookFunction(ValidateParamType()).bind(controller);
+
+const response = hook(ctx, new ServiceManager());
+
+if (!isHttpResponseBadRequest(response)) {
+  throw new Error('The hook should return an HttpResponseBadRequest object.');
+}
 ```
 
 ### Mocking services

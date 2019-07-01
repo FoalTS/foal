@@ -3,15 +3,15 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { controller } from '../common';
-import { Get, Post } from '../core';
+import { Get, Post, ServiceManager } from '../core';
 import { createOpenApiDocument } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
-  ApiOperation, ApiParameter, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
+  ApiOperation, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
 } from './decorators';
 import {
   IApiCallback, IApiExternalDocumentation, IApiOperation, IApiParameter, IApiPaths,
-  IApiResponse, IApiSecurityRequirement, IApiServer, IApiTag
+  IApiRequestBody, IApiResponse, IApiSecurityRequirement, IApiServer, IApiTag
 } from './interfaces';
 
 describe('createOpenApiDocument', () => {
@@ -38,6 +38,20 @@ describe('createOpenApiDocument', () => {
       };
       @ApiInfo(metadata)
       class Controller {}
+
+      const document = createOpenApiDocument(Controller);
+      strictEqual(document.info, metadata);
+    });
+
+    it('the API information (dynamic API information).', () => {
+      const metadata = {
+        title: 'foo',
+        version: '0.0.0'
+      };
+      @ApiInfo((controller: Controller) => controller.metadata)
+      class Controller {
+        metadata = metadata;
+      }
 
       const document = createOpenApiDocument(Controller);
       strictEqual(document.info, metadata);
@@ -436,7 +450,7 @@ describe('createOpenApiDocument', () => {
     deepStrictEqual(document.tags, [ tag1, tag2, tag3, tag4 ]);
   });
 
-  it('should the operations completed with the operation pieces defined in the sub-controllers.', () => {
+  it('should return the operations completed with the operation pieces defined in the sub-controllers.', () => {
     const response: IApiResponse = { description: 'Unauthorized' };
     const parameter: IApiParameter = { in: 'cookie', name: 'foo' };
 
@@ -521,6 +535,142 @@ describe('createOpenApiDocument', () => {
         }
       }
     });
+  });
+
+  it('should use the controller instances to retreive the dynamic metadata.', () => {
+    @ApiRequestBody(controller => controller.requestBody)
+    @ApiDefineCallback('callback1', controller => controller.callback)
+    class SubController {
+      requestBody: IApiRequestBody = {
+        content: {
+          'application/xml': {}
+        }
+      };
+      callback: IApiCallback = {
+        a: { $ref: 'foobar' }
+      };
+
+      @Post('/bar')
+      bar() {}
+    }
+
+    @ApiInfo(infoMetadata)
+    @ApiRequestBody(controller => controller.requestBody2)
+    @ApiDefineCallback('callback2', controller => controller.callback2)
+    class Controller {
+      subControllers = [ SubController ];
+
+      requestBody: IApiRequestBody = {
+        content: {
+          'application/json': {}
+        }
+      };
+      requestBody2: IApiRequestBody = {
+        content: {
+          'application/json': {
+            schema: {}
+          }
+        }
+      };
+
+      callback2: IApiCallback = {
+        b: { $ref: 'foobar' }
+      };
+      callback3: IApiCallback = {
+        c: { $ref: 'foobar' }
+      };
+
+      @Get('/foo')
+      @ApiRequestBody(controller => controller.requestBody)
+      @ApiDefineCallback('callback3', controller => controller.callback3)
+      foo() {}
+
+      @Get('/barfoo')
+      barfoo() {}
+    }
+
+    const controllers = new ServiceManager();
+
+    const document = createOpenApiDocument(Controller, controllers);
+    deepStrictEqual(document.paths, {
+      '/bar': {
+        post: {
+          requestBody: {
+            content: {
+              'application/xml': {}
+            }
+          },
+          responses: {}
+        }
+      },
+      '/barfoo': {
+        get: {
+          requestBody: {
+            content: {
+              'application/json': { schema: {} }
+            }
+          },
+          responses: {}
+        }
+      },
+      '/foo': {
+        get: {
+          requestBody: {
+            content: {
+              'application/json': {}
+            }
+          },
+          responses: {}
+        }
+      }
+    });
+    deepStrictEqual(document.components, {
+      callbacks: {
+        callback1: {
+          a: { $ref: 'foobar' }
+        },
+        callback2: {
+          b: { $ref: 'foobar' }
+        },
+        callback3: {
+          c: { $ref: 'foobar' }
+        }
+      }
+    });
+  });
+
+  it('should retreive the controllers from the given ServiceManager not to reinstantiate them.', () => {
+    class SubController {
+      static count = 0;
+      constructor() {
+        SubController.count++;
+      }
+    }
+
+    @ApiInfo(infoMetadata)
+    class Controller {
+      static count = 0;
+
+      subControllers = [ SubController ];
+      constructor() {
+        Controller.count++;
+      }
+
+      @Get('/foo')
+      foo() {}
+    }
+
+    const controllers = new ServiceManager();
+    controllers.get(Controller);
+    controllers.get(SubController);
+
+    strictEqual(Controller.count, 1);
+    strictEqual(SubController.count, 1);
+
+    createOpenApiDocument(Controller, controllers);
+
+    strictEqual(Controller.count, 1);
+    strictEqual(SubController.count, 1);
   });
 
 });

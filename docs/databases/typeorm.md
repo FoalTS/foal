@@ -43,7 +43,7 @@ TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Micro
 
 ## Integration in FoalTS
 
-TypeORM is integrated by default in every new FoalTS project. This lets you quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the section *Using another ORM*.
+TypeORM is integrated by default in every new FoalTS project. This lets you quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](./using-another-orm.md).
 
 ### Initial configuration
 

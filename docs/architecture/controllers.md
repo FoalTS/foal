@@ -245,7 +245,6 @@ In case the body parameter is a stream, you must specify it using the `stream` o
 new HttpResponseOK(myStream, { stream: true })
 ```
 
-
 ### Adding Headers
 
 *Example*
@@ -297,7 +296,7 @@ class AppController {
 }
 ```
 
-> The `maxAge` cookie directive defines the number of **seconds** until the cookie expires.
+> The `maxAge` cookie directive defines the number of **seconds** until the cookie expires. Versions prior to version 1 used milliseconds.
 
 ## Testing Controllers
 

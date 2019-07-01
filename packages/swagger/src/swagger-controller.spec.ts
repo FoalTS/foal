@@ -6,8 +6,8 @@ import { Readable } from 'stream';
 
 // 3p
 import {
-  ApiInfo, Context, getHttpMethod, getPath, isHttpResponseBadRequest,
-  isHttpResponseMovedPermanently, isHttpResponseNotFound, isHttpResponseOK
+  ApiInfo, Context, createController, getHttpMethod, getPath,
+  isHttpResponseBadRequest, isHttpResponseMovedPermanently, isHttpResponseNotFound, isHttpResponseOK, ServiceManager
 } from '@foal/core';
 
 // FoalTS
@@ -79,6 +79,33 @@ describe('SwaggerController', () => {
         });
       });
 
+      it('should not re-instanciate controllers.', () => {
+        const info = {
+          title: 'Api',
+          version: '1.0.0',
+        };
+
+        @ApiInfo(info)
+        class ApiController {
+          static count = 0;
+          constructor() {
+            ApiController.count++;
+          }
+        }
+
+        class ConcreteClass extends SwaggerController {
+          options = { controllerClass: ApiController };
+        }
+
+        const servicesAndControllers = new ServiceManager();
+        servicesAndControllers.get(ApiController);
+        const controller = createController(ConcreteClass, servicesAndControllers);
+
+        strictEqual(ApiController.count, 1);
+        controller.getOpenApiDefinition(ctx);
+        strictEqual(ApiController.count, 1);
+      });
+
     });
 
     describe('given options is an array', () => {
@@ -148,6 +175,36 @@ describe('SwaggerController', () => {
           openapi: '3.0.0',
           paths: {}
         });
+      });
+
+      it('should not re-instanciate controllers.', () => {
+        const info = {
+          title: 'Api',
+          version: '1.0.0',
+        };
+
+        @ApiInfo(info)
+        class ApiController {
+          static count = 0;
+          constructor() {
+            ApiController.count++;
+          }
+        }
+
+        class ConcreteClass extends SwaggerController {
+          options = [
+            { name: 'v2', controllerClass: ApiController },
+          ];
+        }
+        const servicesAndControllers = new ServiceManager();
+        servicesAndControllers.get(ApiController);
+        const controller = createController(ConcreteClass, servicesAndControllers);
+
+        const ctx = new Context({ query: { name: 'v2' } });
+
+        strictEqual(ApiController.count, 1);
+        controller.getOpenApiDefinition(ctx);
+        strictEqual(ApiController.count, 1);
       });
 
     });

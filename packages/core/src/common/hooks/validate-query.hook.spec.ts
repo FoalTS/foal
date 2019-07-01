@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
@@ -59,11 +59,26 @@ describe('ValidateQuery', () => {
     it('should return an HttpResponseBadRequest with a defined `body` property if '
         + 'ctx.request.query is not validated by ajv.', () => {
       const hook = getHookFunction(ValidateQuery(schema));
-      const ctx = new Context({});
+      const ctx = new Context({ query: { foo: 'xxx' } });
 
       const actual = hook(ctx, new ServiceManager());
-      ok(actual instanceof HttpResponseBadRequest);
-      notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      if (!(actual instanceof HttpResponseBadRequest)) {
+        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+      }
+
+      deepStrictEqual(actual.body, {
+        query: [
+          {
+            dataPath: '.foo',
+            keyword: 'type',
+            message: 'should be integer',
+            params: {
+              type: 'integer'
+            },
+            schemaPath: '#/properties/foo/type'
+          }
+        ]
+      });
     });
 
   });
