@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';

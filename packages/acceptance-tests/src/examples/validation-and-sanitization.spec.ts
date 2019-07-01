@@ -34,6 +34,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
     describe('Validation & Sanitization of HTTP Requests', () => {
 
       // Test compilation
+      // tslint:disable-next-line:no-unused-variable
       class MyController {
 
         @Post('/user')

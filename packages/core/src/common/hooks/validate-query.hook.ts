@@ -1,5 +1,3 @@
-import * as Ajv from 'ajv';
-
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiQueryParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';

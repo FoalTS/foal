@@ -1,6 +1,3 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiCookieParameter } from '../../openapi';

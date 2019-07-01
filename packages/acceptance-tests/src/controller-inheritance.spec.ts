@@ -7,7 +7,6 @@ import { getRepository } from 'typeorm';
 
 // FoalTs
 import {
-  ApiDefineSchema,
   ApiInfo,
   ApiParameter,
   ApiRequestBody,
@@ -21,7 +20,6 @@ import {
   HttpResponse,
   HttpResponseCreated,
   HttpResponseNotFound,
-  IApiInfo,
   IApiSchema,
   IOpenAPI,
   Patch,

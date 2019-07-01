@@ -1,5 +1,4 @@
 import { deepStrictEqual, strictEqual } from 'assert';
-import { controller } from '../../common';
 import {
   ApiCallback, ApiDeprecated, ApiExternalDoc, ApiOperation, ApiOperationDescription, ApiOperationId,
   ApiOperationSummary, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag

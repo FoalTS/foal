@@ -1,6 +1,5 @@
 import { Class } from '../../core';
-import { IApiOperation, IApiResponses } from '../interfaces';
-import { Dynamic } from '../utils';
+import { IApiOperation } from '../interfaces';
 import { getApiCallbacks } from './get-api-callbacks';
 import { getApiDeprecated } from './get-api-deprecated';
 import { getApiExternalDocs } from './get-api-external-docs';
