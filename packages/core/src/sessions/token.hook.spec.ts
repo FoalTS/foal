@@ -557,7 +557,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         throw new Error('ctx.session should be defined');
       }
       ctx.session.set('something', 1); // set "isModified" to "true"
-      await postHookFunction(ctx, services, new HttpResponseOK());
+      await postHookFunction(new HttpResponseOK());
 
       strictEqual(services.get(Store).updateCalledWith, ctx.session);
       strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
@@ -579,7 +579,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         throw new Error('ctx.session should be defined');
       }
       // Do not set "isModified" to "true"
-      await postHookFunction(ctx, services, new HttpResponseOK());
+      await postHookFunction(new HttpResponseOK());
 
       strictEqual(services.get(Store).updateCalledWith, undefined);
       strictEqual(services.get(Store).extendLifeTimeCalledWith, session.sessionID);
@@ -603,7 +603,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           throw new Error('ctx.session should be defined');
         }
         const response = new HttpResponseOK();
-        await postHookFunction(ctx, services, response);
+        await postHookFunction(response);
 
         deepStrictEqual(response.getCookies(), {});
       });
@@ -633,7 +633,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           throw new Error('ctx.session should be defined');
         }
         const response = new HttpResponseOK();
-        await postHookFunction(ctx, services, response);
+        await postHookFunction(response);
 
         const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(value, session.getToken());

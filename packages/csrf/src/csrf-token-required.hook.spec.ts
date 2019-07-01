@@ -271,7 +271,7 @@ describe('CsrfTokenRequired', () => {
         }
 
         const response = new HttpResponseOK();
-        await postHookFunction(ctx, services, response);
+        await postHookFunction(response);
 
         const { value } = response.getCookie('csrfToken');
         if (!value) {

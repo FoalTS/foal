@@ -65,7 +65,7 @@ export function CsrfTokenRequired(options: { doubleSubmitCookie?: boolean } = {}
       return new HttpResponseForbidden('Bad csrf token.');
     }
 
-    return async (ctx, services, response: HttpResponse) => {
+    return async (response: HttpResponse) => {
       // TODO: ONLY IF DOUBLE SUBMIT COOKIE
       // TODO: just once
       const secret = config.get<string>('settings.csrf.secret');

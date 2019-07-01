@@ -138,7 +138,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       ctx.user = user;
     }
 
-    return async (ctx, services, response: HttpResponse) => {
+    return async (response: HttpResponse) => {
       if (session.isModified) {
         await store.update(session);
       } else {
