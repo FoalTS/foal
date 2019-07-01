@@ -1,26 +1,25 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiRequestBody, ApiResponse, IApiRequestBody } from '../../openapi';
+import { ApiRequestBody, ApiResponse, IApiRequestBody, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
 
 /**
  * Hook factory validating the body of the request against a AJV schema.
  *
  * @export
- * @param {object} schema - Schema used to validate the body request.
+ * @param {(object | ((controller: any) => object))} schema - Schema used to validate the body request.
  * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
-export function ValidateBody(schema: object, options: { openapi?: boolean } = {}): HookDecorator {
+export function ValidateBody(
+  schema: object | ((controller: any) => object), options: { openapi?: boolean } = {}
+): HookDecorator {
   const ajv = getAjvInstance();
-  const isValid = ajv.compile(schema);
 
-  function validate(ctx: Context) {
-    if (!isValid(ctx.request.body)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+  function validate(this: any, ctx: Context) {
+    const ajvSchema = typeof schema === 'function' ? schema(this) : schema;
+    if (!ajv.validate(ajvSchema, ctx.request.body)) {
+      return new HttpResponseBadRequest({ body: ajv.errors });
     }
   }
 
@@ -31,12 +30,16 @@ export function ValidateBody(schema: object, options: { openapi?: boolean } = {}
       return;
     }
 
-    const requestBody: IApiRequestBody = {
-      content: {
-        'application/json': { schema }
-      },
-      required: true
-    };
+    function makeRequestBody(schema: IApiSchema): IApiRequestBody {
+      return {
+        content: {
+          'application/json': { schema }
+        },
+        required: true
+      };
+    }
+
+    const requestBody = typeof schema === 'function' ? c => makeRequestBody(schema(c)) : makeRequestBody(schema);
 
     if (propertyKey) {
       ApiRequestBody(requestBody)(target, propertyKey);

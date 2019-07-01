@@ -4,6 +4,10 @@ Building an Open API requires to allow Cross-Origin Request Sharing.
 
 ## Enable Cross-Origin Resource Sharing (CORS)
 
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
+
+--
+
 > If you are building a web application, you may not need to enable CORS for your API. See [here](../frontend-integration/angular-react-vue.md) the section *Origins that Do not Match*.
 
 If you want different origins to make requests to your API from a browser, you need to enable [Cross-Origin Resource Sharing](https://www.html5rocks.com/en/tutorials/cors/).
@@ -11,7 +15,7 @@ If you want different origins to make requests to your API from a browser, you n
 You can do that by adding a route handler and a special hook to your API root controller (`APIController` in this example).
 
 ```typescript
-@Hook(() => (ctx, services, response) => {
+@Hook(() => response => {
   // Every response of this controller and its sub-controllers will be added this header.
   response.setHeader('Access-Control-Allow-Origin', '*');
 })

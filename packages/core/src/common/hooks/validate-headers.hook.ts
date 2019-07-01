@@ -1,6 +1,3 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../..';
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
@@ -25,7 +22,7 @@ export function ValidateHeaders(schema: object, options: { openapi?: boolean } =
 
   function validate(ctx: Context) {
     if (!isValid(ctx.request.headers)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ headers: isValid.errors });
     }
   }
 

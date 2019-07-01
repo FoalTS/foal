@@ -1,6 +1,3 @@
-// 3p
-import * as Ajv from 'ajv';
-
 // FoalTS
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiCookieParameter } from '../../openapi';
@@ -25,7 +22,7 @@ export function ValidateCookies(schema: object, options: { openapi?: boolean } =
 
   function validate(ctx: Context) {
     if (!isValid(ctx.request.cookies)) {
-      return new HttpResponseBadRequest(isValid.errors as Ajv.ErrorObject[]);
+      return new HttpResponseBadRequest({ cookies: isValid.errors });
     }
   }
 
