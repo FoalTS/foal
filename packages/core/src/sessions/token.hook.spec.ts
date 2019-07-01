@@ -654,7 +654,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       strictEqual(getApiSecurity(Foobar), undefined);
       strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar), {});
+      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
     it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
@@ -664,7 +664,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       strictEqual(getApiSecurity(Foobar), undefined);
       strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar), {});
+      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
     it('unless options.openapi is false.', () => {
@@ -673,11 +673,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       strictEqual(getApiSecurity(Foobar), undefined);
       strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar), {});
+      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
     function testClass(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar);
+      const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           bearerAuth: {
@@ -726,7 +726,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     function testMethod(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar, 'foo');
+      const actualComponents = getApiComponents(Foobar, new Foobar(), 'foo');
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           bearerAuth: {
@@ -782,7 +782,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       @Token({ store: Store, openapi: true, cookie: true })
       class Foobar {}
 
-      const actualComponents = getApiComponents(Foobar);
+      const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           cookieAuth: {
@@ -810,7 +810,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       @Token({ store: Store, openapi: true, cookie: true })
       class Foobar {}
 
-      const actualComponents = getApiComponents(Foobar);
+      const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           cookieAuth: {

@@ -753,7 +753,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       @JWT({ openapi: true, cookie: true })
       class Foobar {}
 
-      const actualComponents = getApiComponents(Foobar);
+      const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           cookieAuth: {
@@ -781,7 +781,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       @JWT({ openapi: true, cookie: true })
       class Foobar {}
 
-      const actualComponents = getApiComponents(Foobar);
+      const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
           cookieAuth: {
