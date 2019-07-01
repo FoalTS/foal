@@ -151,14 +151,14 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       .expect('location', '/home')
       .then(response => {
         strictEqual(Array.isArray(response.header['set-cookie']), true);
-        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
+        token = response.header['set-cookie'][0].split('sessionID=')[1].split(';')[0];
       });
   });
 
   it('can access routes once they signed up.', () => {
     return request(app)
       .get('/api/products')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, []);
@@ -168,7 +168,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
   it('can log out.', () => {
     return request(app)
       .get('/logout')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('location', '/login')
       .then(response => {
@@ -180,7 +180,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
   it('cannot access routes once they are logged out.', async () => {
     await request(app)
       .get('/api/products')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(401)
       .expect({
         code: 'invalid_token',
@@ -189,7 +189,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
     await request(app)
       .get('/home')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('Location', '/login');
   });
@@ -217,14 +217,14 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
       .expect('location', '/home')
       .then(response => {
         strictEqual(Array.isArray(response.header['set-cookie']), true);
-        token = response.header['set-cookie'][0].split('auth=')[1].split(';')[0];
+        token = response.header['set-cookie'][0].split('sessionID=')[1].split(';')[0];
       });
   });
 
   it('can access routes once they are logged in.', () => {
     return request(app)
       .get('/api/products')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(200)
       .then(response => {
         deepStrictEqual(response.body, []);
@@ -234,7 +234,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
   it('can log out.', () => {
     return request(app)
       .get('/logout')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('location', '/login')
       .then(response => {
@@ -246,7 +246,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
   it('cannot access routes once they are logged out.', async () => {
     await request(app)
       .get('/api/products')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(401)
       .expect({
         code: 'invalid_token',
@@ -255,7 +255,7 @@ describe('[Authentication|auth token|cookie|redirection] Users', () => {
 
     await request(app)
       .get('/home')
-      .set('Cookie', `auth=${token}`)
+      .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('Location', '/login');
   });
