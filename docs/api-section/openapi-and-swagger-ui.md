@@ -366,6 +366,18 @@ export class OpenApiController extends SwaggerController {
 }
 ```
 
+### Using a Static File
+
+If you prefer to write manually your OpenAPI document, you can add an `openapi.yml` file in the `public/` directory and configure your `SwaggerController` as follows:
+
+```typescript
+import { SwaggerController } from '@foal/swagger';
+
+export class OpenApiController extends SwaggerController {
+  options = { url: '/openapi.yml' };
+}
+
+```
 
 ## Advanced
 
