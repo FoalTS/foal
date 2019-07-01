@@ -31,9 +31,10 @@ describe('RedisStore', () => {
     });
   });
 
-  after(() => {
-    redisClient.end(true);
-  });
+  after(() => Promise.all([
+    redisClient.end(true),
+    store.getRedisInstance().end(true)
+  ]));
 
   function asyncSet(key: string, value: string) {
     return new Promise((resolve, reject) => {

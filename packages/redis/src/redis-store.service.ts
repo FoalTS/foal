@@ -101,7 +101,7 @@ export class RedisStore extends SessionStore {
 
   async cleanUpExpiredSessions(): Promise<void> {}
 
-  private getRedisInstance() {
+  getRedisInstance() {
     if (!this.redisClient) {
       const redisURI = this.config.get('redis.uri');
       this.redisClient = createClient(redisURI);

@@ -157,6 +157,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     delete process.env.SETTINGS_SESSION_SECRET;
     return Promise.all([
       disconnect(),
+      app.foal.services.get(RedisStore).getRedisInstance().end(true),
       redisClient.end(true)
     ]);
   });
