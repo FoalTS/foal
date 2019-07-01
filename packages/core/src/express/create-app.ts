@@ -52,6 +52,7 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
   app.use(cookieParser());
 
   const services = new ServiceManager();
+  app.foal = { services };
   const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
     switch (route.httpMethod) {

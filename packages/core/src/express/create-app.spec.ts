@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
-import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put } from '../core';
+import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager } from '../core';
 import { createApp } from './create-app';
 
 describe('createApp', () => {
@@ -230,6 +230,13 @@ describe('createApp', () => {
     const actual = createApp(class {}, expected);
 
     strictEqual(actual, expected);
+  });
+
+  it('should make the serviceManager available from the express instance.', () => {
+    const app = createApp(class {});
+
+    strictEqual(typeof app.foal, 'object');
+    strictEqual(app.foal.services instanceof ServiceManager, true);
   });
 
 });
