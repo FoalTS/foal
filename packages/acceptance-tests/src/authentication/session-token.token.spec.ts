@@ -16,7 +16,7 @@ import {
 } from '@foal/core';
 import { FoalSession, TypeORMStore } from '@foal/typeorm';
 
-describe('[Authentication|auth token|no cookie|no redirection] Users', () => {
+describe('[Authentication|session token|no cookie|no redirection] Users', () => {
 
   let app: any;
   let token: string;
