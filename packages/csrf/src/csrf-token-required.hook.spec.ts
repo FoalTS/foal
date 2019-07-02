@@ -3,8 +3,14 @@ import { strictEqual } from 'assert';
 
 // 3p
 import {
-  Config, ConfigMock, Context, getHookFunction,
-  HttpResponseOK, isHttpResponse, isHttpResponseForbidden, ServiceManager, Session, verifySignedToken
+  Config,
+  ConfigMock,
+  Context,
+  getHookFunction,
+  isHttpResponse,
+  isHttpResponseForbidden,
+  ServiceManager,
+  Session
 } from '@foal/core';
 
 // FoalTS

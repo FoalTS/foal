@@ -4,7 +4,6 @@ import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT
 } from './constants';
-import { Session } from './session';
 import { setSessionCookie } from './set-session-cookie';
 
 describe('setSessionCookie', () => {

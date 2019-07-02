@@ -1,6 +1,5 @@
 import {
-  Config, Context, generateSignedToken, generateToken, Hook,
-  HookDecorator, HttpResponse, HttpResponseForbidden, verifySignedToken
+  Config, Context, Hook, HookDecorator, HttpResponseForbidden, verifySignedToken
 } from '@foal/core';
 
 function getRequestToken(req: Context['request']): string | undefined {
