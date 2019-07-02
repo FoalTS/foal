@@ -4,7 +4,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
-import { SessionStore } from './session-store';
+import { SessionOptions, SessionStore } from './session-store';
 
 describe('SessionStore', () => {
 
@@ -119,11 +119,78 @@ describe('SessionStore', () => {
 
   });
 
+  describe('has a "applySessionOptions" method that', () => {
+
+    class Store extends SessionStore {
+      createAndSaveSession(sessionContent: object): Promise<Session> {
+        throw new Error('Method not implemented.');
+      }
+      update(session: Session): Promise<void> {
+        throw new Error('Method not implemented.');
+      }
+      destroy(sessionID: string): Promise<void> {
+        throw new Error('Method not implemented.');
+      }
+      read(sessionID: string): Promise<Session | undefined> {
+        throw new Error('Method not implemented.');
+      }
+      extendLifeTime(sessionID: string): Promise<void> {
+        throw new Error('Method not implemented.');
+      }
+      clear(): Promise<void> {
+        throw new Error('Method not implemented.');
+      }
+      cleanUpExpiredSessions(): Promise<void> {
+        throw new Error('Method not implemented.');
+      }
+
+      getID(): Promise<string> {
+        return this.generateSessionID();
+      }
+      applyOptions(content: object, options: SessionOptions): Promise<void> {
+        return this.applySessionOptions(content, options);
+      }
+    }
+
+    it('should keep the content as is if options.csrfToken is undefined.', async () => {
+      const store = new Store();
+      const content = {};
+      store.applyOptions(content, {});
+      deepStrictEqual(content, {});
+    });
+
+    it('should keep the content as is if options.csrfToken is false.', async () => {
+      const store = new Store();
+      const content = {};
+      store.applyOptions(content, { csrfToken: false });
+      deepStrictEqual(content, {});
+    });
+
+    it('should generate a random base64url-encoded string which size is 128 bits'
+        + ' and add it in a `csrfToken` property.', async () => {
+      const store = new Store();
+      const content = {};
+      await store.applyOptions(content, { csrfToken: true });
+
+      const csrfToken = (content as any).csrfToken;
+      strictEqual(typeof csrfToken, 'string');
+      const buffer = Buffer.from(csrfToken, 'base64');
+      strictEqual(buffer.length, 32);
+      strictEqual(csrfToken.includes('='), false);
+
+      // The below tests are bad because the ID is different each time this test is ran.
+      strictEqual(csrfToken.includes('+'), false);
+      strictEqual(csrfToken.includes('/'), false);
+    });
+
+  });
+
   describe('has a "createAndSaveSessionFromUser" method that', () => {
 
     it('should call "createAndSaveSession" with the user ID and return the created session.', async () => {
       class Store extends SessionStore {
-        async createAndSaveSession(sessionContent: object): Promise<Session> {
+        async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+          await this.applySessionOptions(sessionContent, options);
           return new Session('xxx', sessionContent, 36);
         }
         update(session: Session): Promise<void> {
@@ -149,10 +216,12 @@ describe('SessionStore', () => {
 
       const user = { id: 1 };
 
-      const session = await new Store().createAndSaveSessionFromUser(user);
+      const session = await new Store().createAndSaveSessionFromUser(user, { csrfToken: true });
 
       strictEqual(session.sessionID, 'xxx');
-      deepStrictEqual(session.getContent(), { userId: 1 });
+      const content: any = session.getContent();
+      strictEqual(content.userId, 1);
+      strictEqual(typeof content.csrfToken, 'string');
       strictEqual(session.createdAt, 36);
     });
 

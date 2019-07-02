@@ -91,6 +91,11 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
       });
 
+      it('should support session options.', async () => {
+        const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
+        strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+      });
+
     });
 
     describe('has a "update" method that', () => {

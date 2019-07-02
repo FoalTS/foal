@@ -1,6 +1,6 @@
 export { logOut } from './log-out.util';
 export { removeSessionCookie } from './remove-session-cookie';
-export { SessionStore } from './session-store';
+export { SessionStore, SessionOptions } from './session-store';
 export { Session } from './session';
 export { setSessionCookie } from './set-session-cookie';
 export { TokenOptional } from './token-optional.hook';

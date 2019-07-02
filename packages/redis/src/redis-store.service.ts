@@ -1,4 +1,4 @@
-import { Config, dependency, Session, SessionStore } from '@foal/core';
+import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 export class RedisStore extends SessionStore {
@@ -8,11 +8,12 @@ export class RedisStore extends SessionStore {
 
   private redisClient;
 
-  async createAndSaveSession(sessionContent: object): Promise<Session> {
+  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     const createdAt = Date.now();
     const sessionID = await this.generateSessionID();
+    await this.applySessionOptions(sessionContent, options);
 
     return new Promise<Session>((resolve, reject) => {
       const data = JSON.stringify({ content: sessionContent, createdAt });

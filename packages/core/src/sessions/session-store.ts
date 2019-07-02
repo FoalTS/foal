@@ -4,6 +4,10 @@ import { Config } from '../core';
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
 
+export interface SessionOptions {
+  csrfToken?: boolean;
+}
+
 /**
  * Abstract class to be override when creating a session storage service.
  *
@@ -57,21 +61,33 @@ export abstract class SessionStore {
     return result;
   }
 
-  createAndSaveSessionFromUser(user: { id: string|number }): Promise<Session> {
-    return this.createAndSaveSession({ userId: user.id });
+  /**
+   * Create and save an new session from a user.
+   *
+   * @param {({ id: string|number })} user - User id.
+   * @param {SessionOptions} options - Session options.
+   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
+   * @returns {Promise<Session>} The created session.
+   * @memberof SessionStore
+   */
+  createAndSaveSessionFromUser(user: { id: string|number }, options?: SessionOptions): Promise<Session> {
+    return this.createAndSaveSession({ userId: user.id }, options);
   }
 
   /**
    * Create and save a new session.
    *
    * This method *MUST* call the `generateSessionID` method to generate the session ID.
+   * This method *MUST* call the `applySessionOptions` method to extend the sessionContent.
    *
    * @abstract
    * @param {object} sessionContent - The content of the session (often includes the user ID).
+   * @param {SessionOptions} options - Session options.
+   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
    * @returns {Promise<Session>} The created session.
    * @memberof SessionStore
    */
-  abstract createAndSaveSession(sessionContent: object): Promise<Session>;
+  abstract createAndSaveSession(sessionContent: object, options?: SessionOptions): Promise<Session>;
   /**
    * Update and extend the lifetime of a session.
    *
@@ -143,5 +159,21 @@ export abstract class SessionStore {
    */
   protected async generateSessionID(): Promise<string> {
     return generateToken();
+  }
+
+  /**
+   * Apply session options to the given session content.
+   *
+   * @protected
+   * @param {object} content - Session content.
+   * @param {SessionOptions} options - Session options.
+   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
+   * @returns {Promise<void>}
+   * @memberof SessionStore
+   */
+  protected async applySessionOptions(content: object, options: SessionOptions): Promise<void> {
+    if (options.csrfToken) {
+      (content as any).csrfToken = await generateToken();
+    }
   }
 }

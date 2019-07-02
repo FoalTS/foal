@@ -94,6 +94,11 @@ describe('RedisStore', () => {
       strictEqual(session.createdAt <= dateAfter, true);
     });
 
+    it('should support session options.', async () => {
+      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
+      strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+    });
+
     it('should generate an ID and create a new session in the database.', async () => {
       const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 

@@ -1,4 +1,4 @@
-import { Config, dependency, Session, SessionStore } from '@foal/core';
+import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -20,8 +20,9 @@ export class TypeORMStore extends SessionStore {
   @dependency
   config: Config;
 
-  async createAndSaveSession(sessionContent: object): Promise<Session> {
+  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
+    await this.applySessionOptions(sessionContent, options);
 
     const date = Date.now();
 
