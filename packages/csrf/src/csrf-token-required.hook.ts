@@ -49,12 +49,10 @@ export function CsrfTokenRequired(options: { doubleSubmitCookie?: boolean } = {}
 
       const token = ctx.session.get<string>('csrfToken');
       if (!token) {
-        const token = await generateToken();
-        ctx.session.set('csrfToken', token);
-        expectedToken = token;
-      } else {
-        expectedToken = token;
+        throw new Error('No CSRF token found in the session.');
       }
+
+      expectedToken = token;
     }
 
     if ([ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)) {
@@ -64,16 +62,5 @@ export function CsrfTokenRequired(options: { doubleSubmitCookie?: boolean } = {}
     if (expectedToken !== getRequestToken(ctx.request)) {
       return new HttpResponseForbidden('Bad csrf token.');
     }
-
-    return async (response: HttpResponse) => {
-      // TODO: ONLY IF DOUBLE SUBMIT COOKIE
-      // TODO: just once
-      const secret = config.get<string>('settings.csrf.secret');
-      const token = await generateSignedToken(secret);
-      response.setCookie('csrfToken', token);
-
-      // ELSE
-      // refresh csrf session cookie if it exists.
-    };
   });
 }

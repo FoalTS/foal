@@ -41,21 +41,18 @@ describe('CsrfTokenRequired', () => {
       }
     });
 
-    it('should add the session key "csrfToken" if it does not exist.', async () => {
-      const ctx = new Context<any, Session>({ headers: {} });
+    it('should throw if the session content has no CSRF token.', async () => {
+      const ctx = new Context({});
       ctx.session = new Session('a', {}, 0);
-
-      strictEqual(ctx.session.get('csrfToken'), undefined);
-      await hook(ctx, services);
-      strictEqual(typeof ctx.session.get('csrfToken'), 'string');
-    });
-
-    it('should not modify the session key "csrfToken" if it already exists.', async () => {
-      const ctx = new Context<any, Session>({ headers: {} });
-      ctx.session = new Session('a', { csrfToken: 'xxx' }, 0);
-
-      await hook(ctx, services);
-      strictEqual(ctx.session.get('csrfToken'), 'xxx');
+      try {
+        await hook(ctx, services);
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          'No CSRF token found in the session.'
+        );
+      }
     });
 
     describe('should verify the csrf token and', () => {
@@ -257,33 +254,6 @@ describe('CsrfTokenRequired', () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'OPTIONS', cookies: { csrfToken: token } });
       ctx.session = new Session('a', {}, 0);
       strictEqual(await hook(ctx, services), undefined);
-    });
-
-    describe('should return a hook post function that sets a "csrfToken" cookie that', () => {
-
-      it('should contain a signed token.', async () => {
-        const ctx = new Context<any, Session>({ query: { _csrf: token }, cookies: { csrfToken: token } });
-        ctx.session = new Session('a', {}, 0);
-
-        const postHookFunction = await hook(ctx, services);
-        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-          throw new Error('The hook should return an hook post function');
-        }
-
-        const response = new HttpResponseOK();
-        await postHookFunction(response);
-
-        const { value } = response.getCookie('csrfToken');
-        if (!value) {
-          throw new Error('The cookie "csrfToken" does not exist.');
-        }
-        if (!verifySignedToken(value, secret)) {
-          throw new Error('Invalid signature for the token.');
-        }
-      });
-
-      // should have the proper directives.
-
     });
 
   });
