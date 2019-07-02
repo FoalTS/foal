@@ -6,7 +6,7 @@ import {
 import { SessionStore } from './session-store';
 
 export function setSessionCookie(response: HttpResponse, token: string): void {
-  const cookieName = Config.get('settings.session.cookieName', SESSION_DEFAULT_COOKIE_NAME);
+  const cookieName = Config.get('settings.session.cookie.name', SESSION_DEFAULT_COOKIE_NAME);
   const options: CookieOptions = {
     domain: Config.get('settings.session.cookie.domain'),
     httpOnly: Config.get('settings.session.cookie.httpOnly', SESSION_DEFAULT_COOKIE_HTTP_ONLY),
