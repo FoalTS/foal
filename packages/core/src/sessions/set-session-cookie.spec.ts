@@ -9,7 +9,7 @@ import { setSessionCookie } from './set-session-cookie';
 
 describe('setSessionCookie', () => {
 
-  let session: Session;
+  let token: string;
   let response: HttpResponse;
 
   before(() => process.env.SETTINGS_SESSION_SECRET = 'secret');
@@ -18,18 +18,18 @@ describe('setSessionCookie', () => {
 
   beforeEach(() => {
     response = new HttpResponseOK();
-    session = new Session('xxx', {}, 0);
+    token = 'xxx';
   });
 
   describe('should set a session cookie in the response', () => {
 
     describe('given no configuration option is provided', () => {
 
-      beforeEach(() => setSessionCookie(response, session));
+      beforeEach(() => setSessionCookie(response, token));
 
       it('with the proper default name and value.', () => {
         const { value } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(value, session.getToken());
+        strictEqual(value, token);
       });
 
       it('with the proper default "domain" directive.', () => {
@@ -73,7 +73,7 @@ describe('setSessionCookie', () => {
         process.env.SETTINGS_SESSION_COOKIE_PATH = '/foo';
         process.env.SETTINGS_SESSION_COOKIE_SAME_SITE = 'strict';
         process.env.SETTINGS_SESSION_COOKIE_SECURE = 'true';
-        setSessionCookie(response, session);
+        setSessionCookie(response, token);
       });
 
       afterEach(() => {
@@ -87,7 +87,7 @@ describe('setSessionCookie', () => {
 
       it('with the proper default name and value.', () => {
         const { value } = response.getCookie('auth2');
-        strictEqual(value, session.getToken());
+        strictEqual(value, token);
       });
 
       it('with the proper default "domain" directive.', () => {

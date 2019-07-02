@@ -56,7 +56,8 @@ export class AuthController {
     const session = await this.store.createAndSaveSessionFromUser(user);
 
     const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session);
+    const token = session.getToken();
+    setSessionCookie(response, token);
     return response;
   }
 

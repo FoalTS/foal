@@ -66,7 +66,8 @@ describe('[Authentication|auth token|cookie|no redirection] Users', () => {
 
       const session = await this.store.createAndSaveSessionFromUser(user);
       const response = new HttpResponseNoContent();
-      setSessionCookie(response, session);
+      const token = session.getToken();
+      setSessionCookie(response, token);
       return response;
     }
 
@@ -85,7 +86,8 @@ describe('[Authentication|auth token|cookie|no redirection] Users', () => {
 
       const session = await this.store.createAndSaveSessionFromUser(user);
       const response = new HttpResponseNoContent();
-      setSessionCookie(response, session);
+      const token = session.getToken();
+      setSessionCookie(response, token);
       return response;
     }
 

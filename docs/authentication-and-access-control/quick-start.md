@@ -226,7 +226,8 @@ export class AuthController {
 
     const session = await this.store.createAndSaveSessionFromUser(user);
     const response = new HttpResponseNoContent();
-    setSessionCookie(response, session);
+    const token = session.getToken();
+    setSessionCookie(response, token);
     return response;
   }
 
@@ -245,7 +246,8 @@ export class AuthController {
 
     const session = await this.store.createAndSaveSessionFromUser(user);
     const response = new HttpResponseNoContent();
-    setSessionCookie(response, session);
+    const token = session.getToken();
+    setSessionCookie(response, token);
     return response;
   }
 
@@ -315,7 +317,8 @@ export class AuthController {
 
     const session = await this.store.createAndSaveSessionFromUser(user);
     const response = new HttpResponseRedirect('/home');
-    setSessionCookie(response, session);
+    const token = session.getToken();
+    setSessionCookie(response, token);
     return response;
   }
 
@@ -334,7 +337,8 @@ export class AuthController {
 
     const session = await this.store.createAndSaveSessionFromUser(user);
     const response = new HttpResponseRedirect('/home');
-    setSessionCookie(response, session);
+    const token = session.getToken();
+    setSessionCookie(response, token);
     return response;
   }
 

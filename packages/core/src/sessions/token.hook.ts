@@ -145,7 +145,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         await store.extendLifeTime(session.sessionID);
       }
       if (options.cookie) {
-        setSessionCookie(response, session);
+        setSessionCookie(response, session.getToken());
       }
     };
   });
