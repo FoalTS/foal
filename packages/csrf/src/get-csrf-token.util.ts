@@ -8,7 +8,7 @@ export async function getCsrfToken(session?: Session): Promise<string> {
   if (session) {
     const csrfToken = session.get<string>('csrfToken');
     if (!csrfToken) {
-      throw new Error('getCsrfToken requires the use of @CsrfTokenRequired.');
+      throw new Error('CSRF token is missing in the session.');
     }
     return csrfToken;
   }

@@ -50,7 +50,7 @@ describe('getCsrfToken', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          'getCsrfToken requires the use of @CsrfTokenRequired.'
+          'CSRF token is missing in the session.'
         );
       }
     });
