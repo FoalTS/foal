@@ -70,6 +70,7 @@ describe('setSessionCookie', () => {
         process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
         process.env.SETTINGS_SESSION_COOKIE_DOMAIN = 'example.com';
         process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY = 'false';
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '36';
         process.env.SETTINGS_SESSION_COOKIE_PATH = '/foo';
         process.env.SETTINGS_SESSION_COOKIE_SAME_SITE = 'strict';
         process.env.SETTINGS_SESSION_COOKIE_SECURE = 'true';
@@ -80,6 +81,7 @@ describe('setSessionCookie', () => {
         delete process.env.SETTINGS_SESSION_COOKIE_NAME;
         delete process.env.SETTINGS_SESSION_COOKIE_DOMAIN;
         delete process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY;
+        delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
         delete process.env.SETTINGS_SESSION_COOKIE_PATH;
         delete process.env.SETTINGS_SESSION_COOKIE_SAME_SITE;
         delete process.env.SETTINGS_SESSION_COOKIE_SECURE;
@@ -117,7 +119,7 @@ describe('setSessionCookie', () => {
 
       it('with the proper "maxAge" directive.', () => {
         const { options } = response.getCookie('auth2');
-        strictEqual(options.maxAge, SESSION_DEFAULT_INACTIVITY_TIMEOUT);
+        strictEqual(options.maxAge, 36);
       });
 
     });
