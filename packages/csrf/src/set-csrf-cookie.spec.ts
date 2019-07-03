@@ -56,7 +56,7 @@ describe('setCsrfCookie', () => {
 
       it('with the proper "maxAge" directive.', () => {
         const { options } = response.getCookie(CSRF_DEFAULT_COOKIE_NAME);
-        strictEqual(options.maxAge, undefined);
+        strictEqual(options.hasOwnProperty('maxAge'), false);
       });
 
     });
