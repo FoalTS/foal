@@ -1,6 +1,13 @@
 import { Config, CookieOptions, HttpResponse } from '@foal/core';
 import { CSRF_DEFAULT_COOKIE_NAME, CSRF_DEFAULT_COOKIE_PATH } from './constants';
 
+/**
+ * Send the CSRF token in a cookie.
+ *
+ * @export
+ * @param {HttpResponse} response - The HTTP response
+ * @param {string} csrfToken - The CSRF token
+ */
 export function setCsrfCookie(response: HttpResponse, csrfToken: string): void {
   const cookieName = Config.get('settings.csrf.cookie.name', CSRF_DEFAULT_COOKIE_NAME);
   const options: CookieOptions = {

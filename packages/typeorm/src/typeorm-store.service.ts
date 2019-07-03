@@ -1,6 +1,12 @@
 import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
 
+/**
+ *
+ *
+ * @export
+ * @class FoalSession
+ */
 @Entity()
 export class FoalSession {
   @PrimaryColumn()
@@ -16,6 +22,13 @@ export class FoalSession {
   updatedAt: number;
 }
 
+/**
+ * TypeORM store.
+ *
+ * @export
+ * @class TypeORMStore
+ * @extends {SessionStore}
+ */
 export class TypeORMStore extends SessionStore {
   @dependency
   config: Config;

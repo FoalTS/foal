@@ -1,6 +1,13 @@
 import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
+/**
+ * Redis Store
+ *
+ * @export
+ * @class RedisStore
+ * @extends {SessionStore}
+ */
 export class RedisStore extends SessionStore {
 
   @dependency

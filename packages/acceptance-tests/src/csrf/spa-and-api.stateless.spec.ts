@@ -3,10 +3,8 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context,
   controller,
   createApp,
-  Get,
   HttpResponseCreated,
   HttpResponseOK,
   Post,
