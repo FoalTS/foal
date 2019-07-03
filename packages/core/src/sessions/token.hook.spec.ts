@@ -161,7 +161,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           }
           deepStrictEqual(response.body, {
             code: 'invalid_request',
-            description: 'Auth cookie not found.'
+            description: 'Session cookie not found.'
           });
         });
 

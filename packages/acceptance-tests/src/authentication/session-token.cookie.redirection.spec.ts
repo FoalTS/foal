@@ -136,7 +136,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
       .expect(400)
       .expect({
         code: 'invalid_request',
-        description: 'Auth cookie not found.'
+        description: 'Session cookie not found.'
       });
 
     await request(app)

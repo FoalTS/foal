@@ -56,7 +56,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         if (options.redirectTo) {
           return new HttpResponseRedirect(options.redirectTo);
         }
-        return new InvalidRequestResponse('Auth cookie not found.');
+        return new InvalidRequestResponse('Session cookie not found.');
       }
 
       token = content;
