@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@foal/core": "^0.8.9",
+    "@foal/csrf": "^0.8.9",
     "@foal/formidable": "^0.8.9",
     "@foal/jwks-rsa": "^0.8.9",
     "@foal/jwt": "^0.8.9",
