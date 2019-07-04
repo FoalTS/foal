@@ -5,7 +5,7 @@ import { createConnection, getManager } from '@foal/typeorm/node_modules/typeorm
 import { Permission, User } from '../app/entities';
 
 export async function main() {
-  await createConnection();
+  await createConnection(require('../../ormconfig.json'));
 
   const user = new User();
   user.email = 'john@foalts.org';

@@ -53,7 +53,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login?invalid_credentials=true');
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSessionFromUser(user, { csrfToken: true });
 
     const response = new HttpResponseRedirect('/');
     const token = session.getToken();
