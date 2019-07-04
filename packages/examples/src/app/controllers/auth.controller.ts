@@ -22,7 +22,7 @@ export class AuthController {
   @dependency
   store: TypeORMStore;
 
-  @Get('/logout')
+  @Post('/logout')
   async logout(ctx: Context) {
     await logOut(ctx, this.store, { cookie: true });
 
@@ -63,6 +63,6 @@ export class AuthController {
 
   @Get('/login')
   renderLogin(ctx: Context) {
-    return render('./templates/login.html', { csrfToken: 'csrf token' }, __dirname);
+    return render('./templates/login.html', {});
   }
 }

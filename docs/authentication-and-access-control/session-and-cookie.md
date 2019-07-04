@@ -61,7 +61,7 @@ export class User {
 *auth.controller.ts*
 ```typescript
 export class AuthController {
-  @Get('/logout')
+  @Post('/logout')
   logout(ctx: Context) {
     logOut(ctx);
     return new HttpResponseNoContent();
@@ -138,7 +138,7 @@ export class User {
 *auth.controller.ts*
 ```typescript
 export class AuthController {
-  @Get('/logout')
+  @Post('/logout')
   logout(ctx: Context) {
     logOut(ctx);
     return new HttpResponseRedirect('/login');

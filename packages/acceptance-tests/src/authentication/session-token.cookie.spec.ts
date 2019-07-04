@@ -91,7 +91,7 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
       return response;
     }
 
-    @Get('/logout')
+    @Post('/logout')
     async logout(ctx) {
       await logOut(ctx, this.store, { cookie: true });
       const response = new HttpResponseNoContent();
@@ -158,7 +158,7 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Cookie', `sessionID=${token}`)
       .expect(204)
       .then(response => {
@@ -214,7 +214,7 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Cookie', `sessionID=${token}`)
       .expect(204)
       .then(response => {

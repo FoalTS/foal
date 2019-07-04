@@ -84,7 +84,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     @dependency
     store: RedisStore;
 
-    @Get('/logout')
+    @Post('/logout')
     async logout(ctx: Context<any, Session>) {
       await logOut(ctx, this.store);
       return new HttpResponseNoContent();
@@ -218,7 +218,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
 
     /* Log out */
 
-    await request(app).get('/logout').set('Authorization', `Bearer ${token}`).expect(204);
+    await request(app).post('/logout').set('Authorization', `Bearer ${token}`).expect(204);
 
     /* Try to access routes that require authentication and a specific permission */
 

@@ -12,7 +12,7 @@ export class ViewController {
   home(ctx: Context) {
     return render('./templates/home.html', {
       csrfToken: getCsrfToken(ctx.session)
-    }, __dirname);
+    });
   }
 
   @Get('/admin')
@@ -20,7 +20,7 @@ export class ViewController {
   admin(ctx: Context) {
     return render('./templates/admin.html', {
       csrfToken: getCsrfToken(ctx.session)
-    }, __dirname);
+    });
   }
 
 }

@@ -90,7 +90,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
       return response;
     }
 
-    @Get('/logout')
+    @Post('/logout')
     async logout(ctx: Context) {
       await logOut(ctx, this.store, { cookie: true });
       const response = new HttpResponseRedirect('/login');
@@ -169,7 +169,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('location', '/login')
@@ -235,7 +235,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Cookie', `sessionID=${token}`)
       .expect(302)
       .expect('location', '/login')

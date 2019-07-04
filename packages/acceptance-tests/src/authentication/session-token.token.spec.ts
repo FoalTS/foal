@@ -88,7 +88,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
       });
     }
 
-    @Get('/logout')
+    @Post('/logout')
     async logout(ctx: Context) {
       await logOut(ctx, this.store);
       return new HttpResponseNoContent();
@@ -153,7 +153,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Authorization', `Bearer ${token}`)
       .expect(204);
   });
@@ -205,7 +205,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
 
   it('can log out.', () => {
     return request(app)
-      .get('/logout')
+      .post('/logout')
       .set('Authorization', `Bearer ${token}`)
       .expect(204);
   });

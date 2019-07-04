@@ -94,7 +94,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       return this.generateLoginResponse(user);
     }
 
-    @Get('/logout')
+    @Post('/logout')
     @JWTRequired({ cookie: true })
     async logout() {
       return new HttpResponseNoContent()
