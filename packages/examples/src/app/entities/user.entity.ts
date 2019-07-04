@@ -21,4 +21,4 @@ export class User extends UserWithPermissions {
 
 }
 
-export { Group, Permission, FoalSession } from '@foal/typeorm';
+export { Group, Permission } from '@foal/typeorm';

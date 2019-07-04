@@ -1,15 +1,53 @@
 // 3p
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // FoalTS
 import { createService, Session, SessionStore } from '@foal/core';
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { FoalSession, TypeORMStore } from './typeorm-store.service';
+import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
+
+interface PlainSession {
+  sessionID: string;
+  sessionContent: object;
+  createdAt: number;
+  updatedAt: number;
+}
+
+async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
+  await getConnection().query(`
+    INSERT INTO foal_session (session_id, session_content, created_at, updated_at)
+    VALUES ('${session.sessionID}', '${JSON.stringify(session.sessionContent)}',
+            ${session.createdAt.toString()}, ${session.updatedAt.toString()})
+  `);
+  return session;
+}
+
+async function readSessionsFromDB(): Promise<PlainSession[]> {
+  const sessions: DatabaseSession[] = await getConnection().query('SELECT * FROM foal_session');
+  return sessions.map(session => ({
+    createdAt: parseInt(session.created_at, 10),
+    sessionContent: JSON.parse(session.session_content),
+    sessionID: session.session_id,
+    updatedAt: parseInt(session.updated_at, 10),
+  }));
+}
+
+async function findByID(sessionID: string): Promise<PlainSession> {
+  const sessions: DatabaseSession[] = await getConnection().query(
+    `SELECT * FROM foal_session WHERE session_id='${sessionID}'`
+  );
+  strictEqual(sessions.length, 1);
+  return {
+    createdAt: parseInt(sessions[0].created_at, 10),
+    sessionContent: JSON.parse(sessions[0].session_content),
+    sessionID: sessions[0].session_id,
+    updatedAt: parseInt(sessions[0].updated_at, 10),
+  };
+}
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
   describe(`with ${type}`, () => {
-
     let store: TypeORMStore;
 
     before(async () => {
@@ -19,9 +57,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ FoalSession ],
             password: 'test',
-            synchronize: true,
             type,
             username: 'test',
           });
@@ -30,9 +66,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ FoalSession ],
             password: 'test',
-            synchronize: true,
             type,
             username: 'test',
           });
@@ -41,18 +75,22 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
-            entities: [ FoalSession ],
-            synchronize: true,
             type,
           });
           break;
         default:
           break;
       }
-      store = createService(TypeORMStore);
     });
 
-    beforeEach(() => getRepository(FoalSession).clear());
+    beforeEach(async () => {
+      store = createService(TypeORMStore);
+      const queryRunner = getConnection().createQueryRunner();
+      if (await queryRunner.hasTable('foal_session')) {
+        await queryRunner.clearTable('foal_session');
+      }
+      await queryRunner.release();
+    });
 
     after(() => getConnection().close());
 
@@ -63,10 +101,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         await store.createAndSaveSession({ foo: 'bar' });
         const dateAfter = Date.now();
 
-        const sessionA = await getRepository(FoalSession).findOne();
-        if (!sessionA) {
-          throw new Error('sessionA should be defined.');
-        }
+        const sessions = await readSessionsFromDB();
+        strictEqual(sessions.length, 1);
+        const sessionA = sessions[0];
+
         notStrictEqual(sessionA.sessionID, undefined);
         deepStrictEqual(sessionA.sessionContent, { foo: 'bar' });
 
@@ -82,10 +120,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should return a representation (Session object) of the created session.', async () => {
         const session = await store.createAndSaveSession({ foo: 'bar' });
 
-        const sessionA = await getRepository(FoalSession).findOne();
-        if (!sessionA) {
-          throw new Error('sessionA should be defined.');
-        }
+        const sessions = await readSessionsFromDB();
+        strictEqual(sessions.length, 1);
+        const sessionA = sessions[0];
+
         strictEqual(session.sessionID, sessionA.sessionID);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
         strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
@@ -101,89 +139,55 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "update" method that', () => {
 
       it('should update the content of the session if the session exists.', async () => {
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
-
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
         await store.update(new Session(session1.sessionID, { bar: 'foo' }, session1.createdAt));
 
-        const sessionA = await getRepository(FoalSession).findOne({ sessionID: session1.sessionID });
-        if (!sessionA) {
-          throw new Error('sessionA should be defined');
-        }
+        const sessionA = await findByID(session1.sessionID);
         deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
         deepStrictEqual(parseInt(sessionA.createdAt.toString(), 10), session1.createdAt);
 
-        const sessionB = await getRepository(FoalSession).findOne({ sessionID: session2.sessionID });
-        if (!sessionB) {
-          throw new Error('sessionB should be defined');
-        }
+        const sessionB = await findByID(session2.sessionID);
         deepStrictEqual(sessionB.sessionContent, {});
         deepStrictEqual(parseInt(sessionB.createdAt.toString(), 10), session2.createdAt);
       });
 
       it('should update the lifetime (inactiviy) if the session exists.', async () => {
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
-
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
         const dateBefore = Date.now();
         await store.update(new Session(session1.sessionID, session1.sessionContent, session1.createdAt));
         const dateAfter = Date.now();
 
-        const sessionA = await getRepository(FoalSession).findOne({ sessionID: session1.sessionID });
-        if (!sessionA) {
-          throw new Error('sessionA should be defined');
-        }
+        const sessionA = await findByID(session1.sessionID);
         const updatedAtA = parseInt(sessionA.updatedAt.toString(), 10);
         strictEqual(dateBefore <= updatedAtA, true);
         strictEqual(updatedAtA <= dateAfter, true);
 
-        const sessionB = await getRepository(FoalSession).findOne({ sessionID: session2.sessionID });
-        if (!sessionB) {
-          throw new Error('sessionB should be defined');
-        }
+        const sessionB = await findByID(session2.sessionID);
         strictEqual(parseInt(sessionB.updatedAt.toString(), 10), session2.updatedAt);
-      });
-
-      it('should create the session if it does not exist (with the proper lifetime).', async () => {
-        const session = new Session('aaa', { bar: 'foo' }, 36);
-
-        const dateBefore = Date.now();
-        await store.update(session);
-        const dateAfter = Date.now();
-
-        const sessionA = await getRepository(FoalSession).findOne({ sessionID: session.sessionID });
-        if (!sessionA) {
-          throw new Error('sessionA should be defined.');
-        }
-        strictEqual(sessionA.sessionID, session.sessionID);
-        deepStrictEqual(sessionA.sessionContent, session.getContent());
-        strictEqual(parseInt(sessionA.createdAt.toString(), 10), session.createdAt);
-
-        const updatedAtA = parseInt(sessionA.updatedAt.toString(), 10);
-        strictEqual(dateBefore <= updatedAtA, true);
-        strictEqual(updatedAtA <= dateAfter, true);
       });
 
     });
@@ -191,25 +195,24 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "destroy" method that', () => {
 
       it('should delete the session from its ID.', async () => {
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
-
-        strictEqual(await getRepository(FoalSession).count(), 2);
+        strictEqual((await readSessionsFromDB()).length, 2);
 
         await store.destroy(session1.sessionID);
 
-        const sessions = await getRepository(FoalSession).find();
+        const sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         strictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
         notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
@@ -230,13 +233,12 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should return undefined if the session has expired (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now() - inactivity * 1000;
-
-        await getRepository(FoalSession).save(session1);
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now() - inactivity * 1000,
+        });
 
         const session = await store.read(session1.sessionID);
         strictEqual(session, undefined);
@@ -244,29 +246,27 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should delete the session if it has expired (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now() - inactivity * 1000,
+        });
 
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
-
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now() - inactivity * 1000;
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
-
-        let sessions = await getRepository(FoalSession).find();
+        let sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 2);
         notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
         notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
 
         await store.read(session2.sessionID);
 
-        sessions = await getRepository(FoalSession).find();
+        sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
         strictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
@@ -275,13 +275,12 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should return undefined if the session has expired (absolute).', async () => {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now() - absolute * 1000;
-        session1.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save(session1);
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now() - absolute * 1000,
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
 
         const session = await store.read(session1.sessionID);
         strictEqual(session, undefined);
@@ -290,47 +289,45 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should delete the session if it has expired (absolute).', async () => {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now() - absolute * 1000,
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now() - absolute * 1000;
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
-
-        let sessions = await getRepository(FoalSession).find();
+        let sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 2);
         notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
         notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
 
         await store.read(session2.sessionID);
 
-        sessions = await getRepository(FoalSession).find();
+        sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
         strictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
       });
 
       it('should return the session.', async () => {
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
-
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = { foo: 'bar' };
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
+        await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: { foo: 'bar' },
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
         const session = await store.read(session2.sessionID);
         if (!session) {
@@ -348,36 +345,29 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should extend the lifetime of session (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now() - Math.round(inactivity * 1000 / 2);
-
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now() - Math.round(inactivity * 1000 / 2);
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
+        const session1 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
+        });
+        const session2 = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
+        });
 
         const dateBefore = Date.now();
         await store.extendLifeTime(session1.sessionID);
         const dateAfter = Date.now();
 
-        const session = await getRepository(FoalSession).findOne({ sessionID: session1.sessionID });
-        if (!session) {
-          throw new Error('The session should exist.');
-        }
+        const session = await findByID(session1.sessionID);
         notStrictEqual(session1.updatedAt, session.updatedAt);
         strictEqual(dateBefore <= session.updatedAt, true);
         strictEqual(session.updatedAt <= dateAfter, true);
 
-        const sessionB = await getRepository(FoalSession).findOne({ sessionID: session2.sessionID });
-        if (!sessionB) {
-          throw new Error('The session should exist.');
-        }
+        const sessionB = await findByID(session2.sessionID);
         strictEqual(session2.updatedAt.toString(), sessionB.updatedAt.toString());
       });
 
@@ -390,25 +380,24 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "clear" method that', () => {
 
       it('should remove all sessions.', async () => {
-        const session1 = new FoalSession();
-        session1.sessionID = 'a';
-        session1.sessionContent = {};
-        session1.createdAt = Date.now();
-        session1.updatedAt = Date.now();
+        await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: { foo: 'bar' },
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
-        const session2 = new FoalSession();
-        session2.sessionID = 'b';
-        session2.sessionContent = {};
-        session2.createdAt = Date.now();
-        session2.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ session1, session2 ]);
-
-        strictEqual(await getRepository(FoalSession).count(), 2);
+        strictEqual((await readSessionsFromDB()).length, 2);
 
         await store.clear();
 
-        strictEqual(await getRepository(FoalSession).count(), 0);
+        strictEqual((await readSessionsFromDB()).length, 0);
       });
 
     });
@@ -418,28 +407,27 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should remove expired sessions due to inactivity.', async () => {
         const inactivityTimeout = SessionStore.getExpirationTimeouts().inactivity;
 
-        const currentSession = new FoalSession();
-        currentSession.sessionID = 'a';
-        currentSession.sessionContent = {};
-        currentSession.createdAt = Date.now();
-        currentSession.updatedAt = Date.now() - inactivityTimeout * 1000 + 5000;
+        const currentSession = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
+        });
+        const expiredSession = await insertSessionIntoDB({
+          createdAt: Date.now(),
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now() - inactivityTimeout * 1000,
+        });
 
-        const expiredSession = new FoalSession();
-        expiredSession.sessionID = 'b';
-        expiredSession.sessionContent = {};
-        expiredSession.createdAt = Date.now();
-        expiredSession.updatedAt = Date.now() - inactivityTimeout * 1000;
-
-        await getRepository(FoalSession).save([ currentSession, expiredSession ]);
-
-        let sessions = await getRepository(FoalSession).find();
+        let sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 2);
         notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
         notStrictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
 
         await store.cleanUpExpiredSessions();
 
-        sessions = await getRepository(FoalSession).find();
+        sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
         strictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
@@ -448,28 +436,27 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should remove expired sessions due to absolute timeout.', async () => {
         const absoluteTimeout = SessionStore.getExpirationTimeouts().absolute;
 
-        const currentSession = new FoalSession();
-        currentSession.sessionID = 'a';
-        currentSession.sessionContent = {};
-        currentSession.createdAt = Date.now() - absoluteTimeout * 1000 + 5000;
-        currentSession.updatedAt = Date.now();
+        const currentSession = await insertSessionIntoDB({
+          createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
+          sessionContent: {},
+          sessionID: 'a',
+          updatedAt: Date.now(),
+        });
+        const expiredSession = await insertSessionIntoDB({
+          createdAt: Date.now() - absoluteTimeout * 1000,
+          sessionContent: {},
+          sessionID: 'b',
+          updatedAt: Date.now(),
+        });
 
-        const expiredSession = new FoalSession();
-        expiredSession.sessionID = 'b';
-        expiredSession.sessionContent = {};
-        expiredSession.createdAt = Date.now() - absoluteTimeout * 1000;
-        expiredSession.updatedAt = Date.now();
-
-        await getRepository(FoalSession).save([ currentSession, expiredSession ]);
-
-        let sessions = await getRepository(FoalSession).find();
+        let sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 2);
         notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
         notStrictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
 
         await store.cleanUpExpiredSessions();
 
-        sessions = await getRepository(FoalSession).find();
+        sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
         strictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);

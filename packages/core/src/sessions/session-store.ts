@@ -91,7 +91,7 @@ export abstract class SessionStore {
   /**
    * Update and extend the lifetime of a session.
    *
-   * The internal behavior is similar to "update or insert".
+   * Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
    *
    * @abstract
    * @param {Session} session - The session containaing the updated content.

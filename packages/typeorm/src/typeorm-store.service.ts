@@ -1,25 +1,11 @@
 import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
-import { Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
+import { Connection, getConnection, ObjectLiteral, Table } from 'typeorm';
 
-/**
- *
- *
- * @export
- * @class FoalSession
- */
-@Entity()
-export class FoalSession {
-  @PrimaryColumn()
-  sessionID: string;
-
-  @Column('simple-json')
-  sessionContent: object;
-
-  @Column({ type: 'bigint' })
-  createdAt: number;
-
-  @Column({ type: 'bigint' })
-  updatedAt: number;
+export interface DatabaseSession {
+  session_id: string;
+  session_content: string;
+  created_at: string;
+  updated_at: string;
 }
 
 /**
@@ -33,47 +19,63 @@ export class TypeORMStore extends SessionStore {
   @dependency
   config: Config;
 
+  private tableCreated = false;
+
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
     await this.applySessionOptions(sessionContent, options);
 
     const date = Date.now();
 
-    const session = new FoalSession();
-    session.sessionID = sessionID;
-    session.sessionContent = sessionContent;
-    session.updatedAt = date;
-    session.createdAt = date;
-
-    await getRepository(FoalSession).save(session);
+    await this.execQuery(
+      `INSERT INTO foal_session (session_id, session_content, updated_at, created_at)
+      VALUES (:sessionID, :sessionContent, :date, :date)`,
+      {
+        date,
+        sessionContent: JSON.stringify(sessionContent),
+        sessionID,
+      }
+    );
 
     return new Session(sessionID, sessionContent, date);
   }
 
   async update(session: Session): Promise<void> {
-    const foalSession = new FoalSession();
-    foalSession.sessionID = session.sessionID;
-    foalSession.sessionContent = session.getContent();
-    foalSession.createdAt = session.createdAt;
-    foalSession.updatedAt = Date.now();
-    await getRepository(FoalSession).save(foalSession);
+    await this.execQuery(
+      `UPDATE foal_session
+      SET updated_at=:updatedAt, created_at=:createdAt, session_content=:sessionContent
+      WHERE session_id=:sessionID`,
+      {
+        createdAt: session.createdAt,
+        sessionContent: JSON.stringify(session.getContent()),
+        sessionID: session.sessionID,
+        updatedAt: Date.now()
+      }
+    );
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await getRepository(FoalSession).delete({ sessionID });
+    await this.execQuery(
+      `DELETE FROM foal_session WHERE session_id=:sessionID`,
+      { sessionID }
+    );
   }
 
   async read(sessionID: string): Promise<Session | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
-    const session = await getRepository(FoalSession).findOne({ sessionID });
-    if (!session) {
+    const sessions = await this.execQuery(
+      `SELECT * FROM foal_session WHERE session_id=:sessionID`,
+      { sessionID }
+    );
+    if (sessions.length === 0) {
       return undefined;
     }
+    const session: DatabaseSession = sessions[0];
 
-    // TypeORM bug?: depending on the database "createAt" and "updatedAt" may be a string or a number.
-    const createdAt = parseInt(session.createdAt.toString(), 10);
-    const updatedAt = parseInt(session.updatedAt.toString(), 10);
+    const createdAt = parseInt(session.created_at.toString(), 10);
+    const updatedAt = parseInt(session.updated_at.toString(), 10);
+    const sessionContent = JSON.parse(session.session_content);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
@@ -85,26 +87,79 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(session.sessionID, session.sessionContent, createdAt);
+    return new Session(session.session_id, sessionContent, createdAt);
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
-    await getRepository(FoalSession).update({ sessionID }, { updatedAt: Date.now() });
+    await this.execQuery(
+      'UPDATE foal_session SET updated_at=:updatedAt WHERE session_id=:sessionID',
+      { sessionID, updatedAt: Date.now() }
+    );
   }
 
   async clear(): Promise<void> {
-    await getRepository(FoalSession).delete({});
+    await this.execQuery(`DELETE FROM foal_session`, {});
   }
 
   async cleanUpExpiredSessions(): Promise<void> {
     const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await getRepository(FoalSession)
-      .createQueryBuilder()
-      .delete()
-      .where([
-        { updatedAt: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) },
-        { createdAt: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
-      ])
-      .execute();
+    await this.execQuery(
+      `DELETE FROM foal_session
+      WHERE updated_at < :updatedAtMax OR created_at < :createdAtMax`,
+      {
+        createdAtMax: Date.now() - expiredTimeouts.absolute * 1000,
+        updatedAtMax: Date.now() - expiredTimeouts.inactivity * 1000,
+      }
+    );
   }
+
+  private async execQuery(query: string, parameters: ObjectLiteral): Promise<any> {
+    const connection = await this.getConnection();
+    const [ escapedQuery, escapedParams ] = connection.driver.escapeQueryWithParameters(
+      query, parameters, {}
+    );
+    return connection.query(escapedQuery, escapedParams);
+  }
+
+  private async getConnection(): Promise<Connection> {
+    const connection = getConnection();
+    if (!this.tableCreated) {
+      const table = new Table({
+        columns: [
+          {
+            isPrimary: true, // TODO: test isPrimary
+            name: 'session_id',
+            type: 'varchar',
+          },
+          {
+            isNullable: false,
+            name: 'session_content',
+            type: 'text',
+          },
+          {
+            isNullable: false,
+            name: 'created_at',
+            type: 'bigint',
+          },
+          {
+            isNullable: false,
+            name: 'updated_at',
+            type: 'bigint',
+          },
+        ],
+        name: 'foal_session',
+      });
+      const queryRunner = connection.createQueryRunner();
+      try {
+        await queryRunner.createTable(table, true);
+      } catch (error) {
+        throw error;
+      } finally {
+        await queryRunner.release();
+      }
+      this.tableCreated = true;
+    }
+    return connection;
+  }
+
 }

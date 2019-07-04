@@ -14,7 +14,7 @@ import {
   TokenRequired
 } from '@foal/core';
 import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
-import { FoalSession, TypeORMStore } from '@foal/typeorm';
+import { TypeORMStore } from '@foal/typeorm';
 
 describe('[CSRF|spa and api|stateful] Users', () => {
 
@@ -61,7 +61,6 @@ describe('[CSRF|spa and api|stateful] Users', () => {
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
-      entities: [ FoalSession ],
       synchronize: true,
       type: 'sqlite',
     });

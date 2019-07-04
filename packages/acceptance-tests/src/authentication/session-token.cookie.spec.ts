@@ -15,7 +15,7 @@ import {
   logOut, Post, removeSessionCookie, setSessionCookie,
   TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
-import { FoalSession, TypeORMStore } from '@foal/typeorm';
+import { TypeORMStore } from '@foal/typeorm';
 
 describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
@@ -112,7 +112,7 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
-      entities: [ User, FoalSession ],
+      entities: [ User ],
       synchronize: true,
       type: 'sqlite',
     });

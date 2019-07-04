@@ -12,7 +12,6 @@ import {
 } from '@foal/core';
 import {
   fetchUserWithPermissions,
-  FoalSession,
   Group,
   Permission,
   PermissionRequired,
@@ -49,7 +48,7 @@ describe('[Authorization|permissions] Users', () => {
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
-      entities: [ User, FoalSession, Permission, Group ],
+      entities: [ User, Permission, Group ],
       synchronize: true,
       type: 'sqlite',
     });
