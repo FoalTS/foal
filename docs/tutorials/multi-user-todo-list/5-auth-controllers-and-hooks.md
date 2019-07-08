@@ -129,7 +129,7 @@ Great, so far you can authenticate users. But as you have not yet added access c
 
 The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if no user was logged in. 
 
-> FoalTS versions prior to version 1 used the `LoginRequired` hook. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
+> FoalTS versions prior to version 1 used the `LoginRequired` hook. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md).
 
 Update the controllers.
 

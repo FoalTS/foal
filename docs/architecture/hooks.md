@@ -179,7 +179,7 @@ class MyController {
 
 ### Executing Logic After the Controller Method
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/architecture/hooks.md).
 
 A hook can also be used to execute extra logic after the controller method. To do so, you can return a *hook post function* inside the hook. This function will be executed after the controller method. It takes exactly one parameter: the `HttpResponse` object returned by the controller.
 
