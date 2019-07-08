@@ -1,3 +1,9 @@
+/**
+ * FoalTS
+ * Copyright(c) 2017-2019 Loïc Poullain <loic.poullain@centraliens.net>
+ * Released under the MIT License.
+ */
+
 import 'source-map-support/register';
 
 // std
@@ -5,18 +11,15 @@ import * as http from 'http';
 
 // 3p
 import { Config, createApp } from '@foal/core';
-import * as sqliteStoreFactory from 'connect-sqlite3';
-import { createConnection } from 'typeorm';
+import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { AppController } from './app/app.controller';
 
 async function main() {
-  await createConnection();
+  await createConnection(require('../ormconfig.json'));
 
-  const app = createApp(AppController, {
-    store: session => new (sqliteStoreFactory(session))({ db: 'test_db.sqlite' }),
-  });
+  const app = createApp(AppController);
 
   const httpServer = http.createServer(app);
   const port = Config.get('port', 3001);

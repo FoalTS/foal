@@ -32,7 +32,7 @@ export class ConfigMock implements Config {
    * @memberof ConfigMock
    */
   get<T = any>(key: string, defaultValue?: T | undefined): T {
-    return this.map.get(key) || defaultValue;
+    return this.map.has(key) ? this.map.get(key) : defaultValue;
   }
 
   /**

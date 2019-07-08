@@ -3,6 +3,7 @@ import { ApiDefineSecurityScheme, ApiResponse, Config, HookDecorator, IApiSecuri
 import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
+import { JWT_DEFAULT_COOKIE_NAME } from './constants';
 import { JWT, JWTOptions } from './jwt.hook';
 
 /**
@@ -35,13 +36,22 @@ export function JWTOptional(options: JWTOptions = {}, verifyOptions: VerifyOptio
       return;
     }
 
-    const securityScheme: IApiSecurityScheme = {
-      bearerFormat: 'JWT',
-      scheme: 'bearer',
-      type: 'http',
-    };
+    if (options.cookie) {
+      const securityScheme: IApiSecurityScheme = {
+        in: 'cookie',
+        name: Config.get('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME),
+        type: 'apiKey',
+      };
+      ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);
+    } else {
+      const securityScheme: IApiSecurityScheme = {
+        bearerFormat: 'JWT',
+        scheme: 'bearer',
+        type: 'http',
+      };
+      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
+    }
 
-    ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
     ApiResponse(401, { description: 'JWT is invalid.' })(target, propertyKey);
   };
 }

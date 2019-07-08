@@ -1,18 +1,41 @@
 // 3p
 import {
-  Context, Get, HttpResponseRedirect, logIn,
-  logOut, Post, render, ValidateBody, verifyPassword
+  Context,
+  dependency,
+  Get,
+  HttpResponseRedirect,
+  Post,
+  removeSessionCookie,
+  render,
+  Session,
+  setSessionCookie,
+  TokenRequired,
+  ValidateBody,
+  verifyPassword
 } from '@foal/core';
-import { getRepository } from 'typeorm';
+import { TypeORMStore } from '@foal/typeorm';
+import { getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { User } from '../entities';
 
 export class AuthController {
-  @Get('/logout')
-  logout(ctx: Context) {
-    logOut(ctx);
-    return new HttpResponseRedirect('/login');
+  @dependency
+  store: TypeORMStore;
+
+  @Post('/logout')
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    redirectTo: '/login',
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<any, Session>) {
+    await this.store.destroy(ctx.session.sessionID);
+
+    const response = new HttpResponseRedirect('/login');
+    removeSessionCookie(response);
+    return response;
   }
 
   @Post('/login')
@@ -37,13 +60,16 @@ export class AuthController {
       return new HttpResponseRedirect('/login?invalid_credentials=true');
     }
 
-    logIn(ctx, user);
+    const session = await this.store.createAndSaveSessionFromUser(user, { csrfToken: true });
 
-    return new HttpResponseRedirect('/');
+    const response = new HttpResponseRedirect('/');
+    const token = session.getToken();
+    setSessionCookie(response, token);
+    return response;
   }
 
   @Get('/login')
   renderLogin(ctx: Context) {
-    return render('./templates/login.html', { csrfToken: ctx.request.csrfToken() }, __dirname);
+    return render('./templates/login.html', {});
   }
 }

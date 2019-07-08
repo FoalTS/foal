@@ -7,9 +7,7 @@
     "debug": true,
     "loggerFormat": "dev",
     "session": {
-      "secret": "my secret",
-      "resave": true,
-      "saveUninitialized": true
+      "secret": "my secret"
     },
     "staticPath": "public/",
     "templateEngine": "@foal/ejs"

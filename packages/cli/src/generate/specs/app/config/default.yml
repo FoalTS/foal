@@ -5,12 +5,6 @@ settings:
   debug: false
   loggerFormat: tiny
   staticPath: public/
-  session:
-    cookie:
-      path: /
-    resave: false
-    saveUnitialized: false
-    secret: my-secret
 
 database:
   database: './db.sqlite3'

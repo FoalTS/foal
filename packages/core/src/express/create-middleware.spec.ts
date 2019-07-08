@@ -254,7 +254,7 @@ describe('createMiddleware', () => {
             .setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
           const serverErrorResponse = new HttpResponseInternalServerError()
             .setCookie('cookie1', 'cookie1_value_c')
-            .setCookie('cookie2', 'cookie2_value_c', { httpOnly: true });
+            .setCookie('cookie2', 'cookie2_value_c', { maxAge: 60 });
 
           app.get('/success', createMiddleware(
             route(() => successResponse),
@@ -278,7 +278,10 @@ describe('createMiddleware', () => {
               .expect('Set-Cookie', 'cookie1=cookie1_value_b; Path=/,cookie2=cookie2_value_b; Path=/; HttpOnly'),
             request(app)
               .get('/server-error')
-              .expect('Set-Cookie', 'cookie1=cookie1_value_c; Path=/,cookie2=cookie2_value_c; Path=/; HttpOnly'),
+              .then(response => {
+                const beginning = response.header['set-cookie'][1].split('; Expires')[0];
+                strictEqual(beginning, 'cookie2=cookie2_value_c; Max-Age=60; Path=/');
+              })
           ]);
         });
 

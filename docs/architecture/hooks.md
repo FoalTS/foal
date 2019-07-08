@@ -21,24 +21,24 @@ Foal provides a number of hooks to handle the most common scenarios.
 
 - `ValidateBody`, `ValidateHeader`, `ValidateHeaders`, `ValidatePathParam`, `ValidateParams`, `ValidateCookie`, `ValidateCookies`, `ValidateQueryParam` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation-and-sanitization.md)).
 - `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
-- `JWTRequired`, `JWTOptional`, `LoginRequired`, `LoginOptional` authenticate the user by filling the `ctx.user` property.
+- `JWTRequired`, `JWTOptional`, `TokenRequired`, `TokenOptional` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
 
 ## Use
 
 A hook can decorate a controller method or the controller itself. If it decorates the controller then it applies to all its methods and sub-controllers.
 
-In the below example, `LoginRequired` applies to `listProducts` and `addProduct`.
+In the below example, `JWTRequired` applies to `listProducts` and `addProduct`.
 
 *Example:*
 ```typescript
 import {
-  Get, HttpResponseCreated, HttpResponseOK,
-  LoginRequired, Post, ValidateBody
+  Get, HttpResponseCreated, HttpResponseOK, Post, ValidateBody
 } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
 
-@LoginRequired(/* ... */)
-class ApiController {
+@JWTRequired()
+class AppController {
   private products = [
     { name: 'Hoover' }
   ];

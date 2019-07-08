@@ -43,11 +43,11 @@
   * [Use Mongoose (MongoDB)](./databases/using-mongoose.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
-  * [Introduction](./authentication-and-access-control/introduction.md)
+  * [Quick Start](./authentication-and-access-control/quick-start.md)
   * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
-  * [Session & Cookie (authentication)](./authentication-and-access-control/session-and-cookie.md)
-  * [JWT (authentication)](./authentication-and-access-control/jwt.md)
-  * [Password Management](./authentication-and-access-control/password-management.md)
+  * [Passwords](./authentication-and-access-control/password-management.md)
+  * [Session Tokens (authentication)](./authentication-and-access-control/session-tokens.md)
+  * [JSON Web Tokens (authentication)](./authentication-and-access-control/jwt.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation & Sanitization](./validation-and-sanitization.md)
@@ -84,6 +84,7 @@
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
   * [Upload & Download Files](./cookbook/upload-and-download-files.md)
+  * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [ExpressJS](./cookbook/expressjs.md)

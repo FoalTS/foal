@@ -1,6 +1,5 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
-import * as crypto from 'crypto';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -58,8 +57,8 @@ function validateProjectName(name: string) {
   return !specialChars.find(char => name.includes(char));
 }
 
-export async function createApp({ name, sessionSecret, autoInstall, initRepo, mongodb = false, yaml = false }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
+export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
+  { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
     yaml?: boolean }) {
   const names = getNames(name);
 
@@ -80,10 +79,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
     ));
   }
 
-  const locals = {
-    ...names,
-    sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
-  };
+  const locals = names;
 
      // Validating whether if the project-name follows npm naming conventions
   if (!validateProjectName(name)) {

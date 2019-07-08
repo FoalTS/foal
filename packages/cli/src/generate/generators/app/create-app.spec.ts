@@ -9,7 +9,7 @@ describe('createApp', () => {
   afterEach(() => testEnv.rmDirAndFilesIfExist('../test-foo-bar'));
 
   it('should render the config templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('config/default.json')
@@ -25,7 +25,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (YAML option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', yaml: true });
+    await createApp({ name: 'test-fooBar', yaml: true });
 
     testEnv
       .shouldNotExist('config/default.json')
@@ -41,7 +41,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec('config/default.json')
@@ -57,7 +57,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (MongoDB & YAML options).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true, yaml: true });
+    await createApp({ name: 'test-fooBar', mongodb: true, yaml: true });
 
     testEnv
       .shouldNotExist('config/default.json')
@@ -73,7 +73,7 @@ describe('createApp', () => {
   });
 
   it('should copy the public directory.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('public/index.html')
@@ -81,28 +81,28 @@ describe('createApp', () => {
   });
 
   it('shoud copy the src/e2e templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/e2e/index.ts');
   });
 
   it('shoud copy the src/e2e templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec('src/e2e/index.mongodb.ts', 'src/e2e/index.ts');
   });
 
   it('shoud copy the src/scripts templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/scripts/create-user.ts');
   });
 
   it('shoud copy the src/scripts templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec(
@@ -112,7 +112,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/controllers templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/app/controllers/index.ts')
@@ -121,14 +121,14 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/hooks templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/app/hooks/index.ts');
   });
 
   it('should render the src/app/entities templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/app/entities/index.ts')
@@ -137,7 +137,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/models templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec('src/app/models/index.ts')
@@ -146,21 +146,21 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/services templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/app/services/index.ts');
  });
 
   it('should render the src/app templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/app/app.controller.ts');
   });
 
   it('should render the src templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('src/e2e.ts')
@@ -169,7 +169,7 @@ describe('createApp', () => {
   });
 
   it('should render the src templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec('src/e2e.ts')
@@ -178,7 +178,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates.', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret' });
+    await createApp({ name: 'test-fooBar' });
 
     testEnv
       .validateSpec('gitignore', '.gitignore')
@@ -194,7 +194,7 @@ describe('createApp', () => {
       .validateSpec('tslint.json');
   });
   it('should render the root templates (YAML option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', yaml: true });
+    await createApp({ name: 'test-fooBar', yaml: true });
 
     testEnv
       .validateSpec('gitignore', '.gitignore')
@@ -211,7 +211,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true });
+    await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
       .validateSpec('gitignore', '.gitignore')
@@ -228,7 +228,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates (MongoDB & YAML options).', async () => {
-    await createApp({ name: 'test-fooBar', sessionSecret: 'my-secret', mongodb: true, yaml: true });
+    await createApp({ name: 'test-fooBar', mongodb: true, yaml: true });
 
     testEnv
       .validateSpec('gitignore', '.gitignore')

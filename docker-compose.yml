@@ -42,6 +42,11 @@ services:
     image: "mongo:3.4.1"
     ports:
       - "27017:27017"
+  
+  redis:
+    image: "redis:4.0.14"
+    ports:
+      - "6379:6379"
 
   adminer:
     image: adminer

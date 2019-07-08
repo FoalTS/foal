@@ -27,7 +27,8 @@
     "sqlite",
     "database",
     "TypeORM",
-    "ORM"
+    "ORM",
+    "session"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"

@@ -1,11 +1,11 @@
 // 3p
-import { createConnection, getManager } from 'typeorm';
+import { createConnection, getManager } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { Permission, User } from '../app/entities';
 
-async function main() {
-  await createConnection();
+export async function main() {
+  await createConnection(require('../../ormconfig.json'));
 
   const user = new User();
   user.email = 'john@foalts.org';
@@ -25,5 +25,3 @@ async function main() {
     await getManager().save([ permission, user, user2 ])
   );
 }
-
-main();

@@ -4,15 +4,17 @@
   "version": "0.8.9",
   "description": "Acceptance tests of the framework",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.{ts,tsx}\"",
-    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
+    "test": "mocha --require ts-node/register --file \"./src/init.ts\" \"./src/**/*.spec.{ts,tsx}\"",
+    "dev:test": "mocha --require ts-node/register --file \"./src/init.ts\" --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
   },
   "dependencies": {
     "@foal/core": "^0.8.9",
+    "@foal/csrf": "^0.8.9",
     "@foal/formidable": "^0.8.9",
     "@foal/jwks-rsa": "^0.8.9",
     "@foal/jwt": "^0.8.9",
     "@foal/mongoose": "^0.8.9",
+    "@foal/redis": "^0.8.9",
     "@foal/typeorm": "^0.8.9",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
@@ -26,6 +28,7 @@
     "mongoose": "^5.4.9",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "redis": "^2.8.0",
     "sqlite3": "^4.0.4",
     "superagent": "^5.0.5",
     "supertest": "^3.3.0",

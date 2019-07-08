@@ -73,7 +73,10 @@ Controllers may have sub-controllers. Hooks can be attached to the controllers o
 Here's an example of what a FoalTS application may look like.
 
 ```typescript
-@LoginRequired(/* ... */)
+import { Context, Get, HttpResponseNotFound, HttpResponseOK, Log } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired()
 class ApiController {
   private products = [
     { id: 1, name: 'phone' },
