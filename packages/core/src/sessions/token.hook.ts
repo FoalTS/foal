@@ -37,6 +37,7 @@ export interface TokenOptions {
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
+  extendLifeTimeOrUpdate?: boolean;
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
@@ -136,6 +137,10 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         return new InvalidTokenResponse('The token does not match any user.');
       }
       ctx.user = user;
+    }
+
+    if (options.extendLifeTimeOrUpdate === false) {
+      return;
     }
 
     return async (response: HttpResponse) => {

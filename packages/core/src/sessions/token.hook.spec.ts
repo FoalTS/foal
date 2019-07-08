@@ -534,6 +534,20 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   });
 
+  it('should not return a post-hook function if options.extendLifeTimeOrUpdate is false.', async () => {
+    const hook = getHookFunction(Token({ store: Store, extendLifeTimeOrUpdate: false }));
+
+    const session = await services.get(Store).createAndSaveSession({ userId: 22 });
+    const token = session.getToken();
+
+    const ctx = new Context({
+      get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+    });
+
+    const postHookFunction = await hook(ctx, services);
+    strictEqual(postHookFunction, undefined);
+  });
+
   describe('should return a post-hook function that', () => {
 
     beforeEach(() => {
