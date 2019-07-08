@@ -418,3 +418,20 @@ settings:
 ```
 SETTINGS_CSRF_ENABLED=false
 ```
+
+### Advanced
+
+The directives of the cookie written by `setCsrfCookie` can be override in the configuration.
+
+*Example with config/default.yml*
+```yml
+settings:
+  csrf:
+    cookie:
+      name: my-custom-name
+      domain: example.com
+      path: /foo # default: /
+      sameSite: lax
+      secure: true
+      maxAge: 10000
+```

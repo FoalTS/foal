@@ -87,13 +87,27 @@ export class User {
 
 ## SPA + API / Mobile + API (no cookies)
 
--> Authorization header. Bearer
+With these implementations, the user logs in with the route `POST /login` and receives a token in exchange in the response body. Then, when the user makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.
 
-CORS and frontend integration
+```
+Authorization: Bearer my-token
+```
+
+You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or use [Frontend Integration](../frontend-integration/angular-react-vue.md) to get this example  work with an SPA.
 
 ### Sessions Tokens
 
-Provide a secret.
+First generate a secret:
+
+```
+foal createsecret
+```
+
+And save this secret in a `.env` file:
+
+```
+SETTINGS_SESSION_SECRET=my-secret
+```
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -170,7 +184,17 @@ export class ApiController {
 
 ### JSON Web Tokens
 
-Provide a secret.
+First generate a secret:
+
+```
+foal createsecret
+```
+
+And save this secret in a `.env` file:
+
+```
+SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my-secret
+```
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -249,14 +273,25 @@ export class ApiController {
 
 ## SPA + API (with cookies)
 
-Session Tokens.
-CLI Angular
-Mention CSRF
-CORS & frontend integration
+> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
+
+In this implementation, the authentication is managed with cookies.
+
+You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or use [Frontend Integration](../frontend-integration/angular-react-vue.md) to get this example  work with an SPA.
 
 ### Session Tokens
 
-Provide a secret.
+First generate a secret:
+
+```
+foal createsecret
+```
+
+And save this secret in a `.env` file:
+
+```
+SETTINGS_SESSION_SECRET=my-secret
+```
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -337,11 +372,22 @@ export class ApiController {
 
 ## Regular Web Applications (with cookies and redirections)
 
-Provide a secret.
+> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
 
-SSR & templates
-Session Tokens
-Mention CSRF
+In this implementation, the authentication is managed with cookies and redirections.
+
+
+First generate a secret:
+
+```
+foal createsecret
+```
+
+And save this secret in a `.env` file:
+
+```
+SETTINGS_SESSION_SECRET=my-secret
+```
 
 *src/app/app.controller.ts*
 ```typescript
