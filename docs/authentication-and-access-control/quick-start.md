@@ -1,14 +1,62 @@
 # Quick Start
 
-This section explains how authentication and authorization are handled in FoalTS.
+> This document describes changes and new features introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here]().
 
-*Authorization*, also known as *Access Control*, is mediating access to resources on the basis of identity. It answers the question *What the user is allowed to do?*. In this way it differs from *authentication* which, upstream, answers the question *Who is the user?*.
+*Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 
-FoalTS offers several ways to manage authentication and authorization based on your needs and the complexity of your application.
+> *Example: a user enters their login credentials to connect to the application*.
 
-FoalTS provides two ways to manage authentication : Session Tokens & JWT.
+*Authorization*, also known as *Access Control*, is the process of determining what an authenticated user is allowed to do. It answers the question *Does the user has the right to do what they ask?*.
 
-Session Tokens: They are probably the easiest way to manage authentication with Foal. Expiration is automatically managed, revocation is easy. These tokens uses sessions. But don’t be scare, Foal solves common issues that appear with session in other frameworks. (SPA, serverless and scalability, hot reloading)
+> *Example: a user tries to access the administrator page*.
+
+This document focuses on explaining how authentication works in FoalTS and gives several code examples to get started quickly. Further explanations are given in other pages of the documentation.
+
+## The Basics
+
+The strength of FoalTS authentication system is that it can be used in a wide variety of applications. Whether you want to build a stateless REST API that uses social ID tokens or a traditional web application with templates, cookies and redirects, FoalTS provides you with the tools to do so. You can choose the elements you need and build your own authentication process.
+
+| Auth Support ||
+| --- | --- | 
+| Kind of Application | API, Regular Web App, SPA+API, Mobile+API |
+| State management | Stateful (Session Tokens), Stateless (JSON Web Tokens) |
+| Credentials | Passwords, Social |
+| Token storage | Cookies, localStorage, Mobile, etc |
+
+Whatever architecture you choose, the authentication process will always follow the same pattern.
+
+**Step 1: the user logs in.**
+> *In some architectures, this step might be delegated to an external service: Google, Cognito, Auth0, etc*
+1. Verify the credentials (email & password, username & password, social, etc).
+2. Generate a token (stateless or stateful).
+3. Return the token to the client (in a cookie, in the response body or in a header).
+
+**Step 2: once logged in, the user keeps being authenticated on subsequent requests.**
+1. On each request, receive and check the token and retrieve the associated user if the token is valid.
+
+![Authentication architecture](./auth-architecture.png)
+
+### The Available Tokens (step 1)
+
+FoalTS provides two ways to generate tokens:
+
+- **Session Tokens** (stateful): They are probably the easiest way to manage authentication with Foal. Creation is straightforward, expiration is managed automatically and revocation is easy. Using session tokens keeps your code concise and does not require additional knowledge.
+
+> Unlike other restrictive session management systems, FoalTS sessions are not limited to traditional applications that use cookies, redirection and server-side rendering. You can choose to use sessions without cookies, in a SPA+API or Mobile+API architecture and deploy your application to a serverless environment.
+
+- **JSON Web Tokens** (stateless): For more advanced developers, JWTs can be used to create stateless authentication or authentication that works with external social providers.
+
+### The Authentication Hooks (step 2)
+
+In step 2, the hooks `TokenRequired`  and `TokenOptional` take care of checking the session tokens and retrieve their associated user. The same applies to `JWTRequired` and `JWTOptional` with JSON Web Tokens.
+
+You will find more information in the documentation pages dedicated to them.
+
+## Code Examples
+
+The four examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
+
+For these examples, we will use TypeORM as default ORM and emails and passwords as credentials. An API will allow authenticated users to list *products* with the request `GET /api/products`.
 
 *src/app/app.controller.ts*
 ```typescript
@@ -39,9 +87,13 @@ export class User {
 
 ## SPA + API / Mobile + API (no cookies)
 
--> Authorization header
+-> Authorization header. Bearer
+
+CORS and frontend integration
 
 ### Sessions Tokens
+
+Provide a secret.
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -96,7 +148,7 @@ export class AuthController {
     });
   }
 
-  @Get('/logout')
+  @Post('/logout')
   async logout(ctx: Context) {
     await logOut(ctx, this.store);
     return new HttpResponseNoContent();
@@ -116,6 +168,8 @@ export class ApiController {
 ```
 
 ### JSON Web Tokens
+
+Provide a secret.
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -197,8 +251,11 @@ export class ApiController {
 Session Tokens.
 CLI Angular
 Mention CSRF
+CORS & frontend integration
 
 ### Session Tokens
+
+Provide a secret.
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -251,7 +308,7 @@ export class AuthController {
     return response;
   }
 
-  @Get('/logout')
+  @Post('/logout')
   async logout(ctx) {
     await logOut(ctx, this.store, { cookie: true });
     const response = new HttpResponseNoContent();
@@ -273,6 +330,8 @@ export class ApiController {
 ```
 
 ## Regular Web Applications (with cookies and redirections)
+
+Provide a secret.
 
 SSR & templates
 Session Tokens
@@ -342,7 +401,7 @@ export class AuthController {
     return response;
   }
 
-  @Get('/logout')
+  @Post('/logout')
   async logout(ctx: Context) {
     await logOut(ctx, this.store, { cookie: true });
     const response = new HttpResponseRedirect('/login');
