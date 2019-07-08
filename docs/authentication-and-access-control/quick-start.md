@@ -97,7 +97,7 @@ Provide a secret.
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { dependency, Get, Post, ValidateBody } from '@foal/core';
+import { dependency, Get, Post, Session, TokenRequired, ValidateBody } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 // ... to complete
 
@@ -148,11 +148,12 @@ export class AuthController {
     });
   }
 
-  @Post('/logout')
-  async logout(ctx: Context) {
-    await logOut(ctx, this.store);
-    return new HttpResponseNoContent();
-  }
+    @Post('/logout')
+    @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
+    async logout(ctx: Context<any, Session>) {
+      await this.store.destroy(ctx.session.sessionID);
+      return new HttpResponseNoContent();
+    }
 }
 ```
 
@@ -309,8 +310,13 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx) {
-    await logOut(ctx, this.store, { cookie: true });
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<any, Session>) {
+    await this.store.destroy(ctx.session.sessionID);
     const response = new HttpResponseNoContent();
     removeSessionCookie(response);
     return response;
@@ -402,8 +408,14 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx: Context) {
-    await logOut(ctx, this.store, { cookie: true });
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    redirectTo: '/login',
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<any, Session>) {
+    await this.store.destroy(ctx.session.sessionID);
     const response = new HttpResponseRedirect('/login');
     removeSessionCookie(response);
     return response;

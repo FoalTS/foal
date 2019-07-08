@@ -13,7 +13,6 @@ import {
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseUnauthorized,
-  logOut,
   Post,
   Session,
   TokenRequired,
@@ -85,8 +84,9 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     store: RedisStore;
 
     @Post('/logout')
+    @TokenRequired({ store: RedisStore, extendLifeTimeOrUpdate: false })
     async logout(ctx: Context<any, Session>) {
-      await logOut(ctx, this.store);
+      await this.store.destroy(ctx.session.sessionID);
       return new HttpResponseNoContent();
     }
 

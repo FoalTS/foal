@@ -1,4 +1,3 @@
-export { logOut } from './log-out.util';
 export { removeSessionCookie } from './remove-session-cookie';
 export { SessionStore, SessionOptions } from './session-store';
 export { Session } from './session';

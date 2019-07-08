@@ -4,11 +4,12 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  logOut,
   Post,
   removeSessionCookie,
   render,
+  Session,
   setSessionCookie,
+  TokenRequired,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -23,8 +24,14 @@ export class AuthController {
   store: TypeORMStore;
 
   @Post('/logout')
-  async logout(ctx: Context) {
-    await logOut(ctx, this.store, { cookie: true });
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    redirectTo: '/login',
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<any, Session>) {
+    await this.store.destroy(ctx.session.sessionID);
 
     const response = new HttpResponseRedirect('/login');
     removeSessionCookie(response);
