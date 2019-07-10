@@ -60,17 +60,19 @@ describe('Config', () => {
     });
 
     it('should return the value of the .env file if it exists (LF).', () => {
-      const fileContent = 'DB_HOST=localhost\nSETTINGS_SESSION_NAME=id\nFOO_BAR=3\n';
+      const fileContent = 'DB_HOST=localhost\nSETTINGS_SESSION_NAME=id\nFOO_BAR=a==\n';
       writeFileSync('.env', fileContent, 'utf8');
 
       strictEqual(Config.get('settings.sessionName'), 'id');
+      strictEqual(Config.get('foo.bar'), 'a==');
     });
 
     it('should return the value of the .env file if it exists (CRLF).', () => {
-      const fileContent = 'DB_HOST=localhost\r\nSETTINGS_SESSION_NAME=id\r\nFOO_BAR=3\n';
+      const fileContent = 'DB_HOST=localhost\r\nSETTINGS_SESSION_NAME=id\r\nFOO_BAR=a==\n';
       writeFileSync('.env', fileContent, 'utf8');
 
       strictEqual(Config.get('settings.sessionName'), 'id');
+      strictEqual(Config.get('foo.bar'), 'a==');
     });
 
     it('should return the value of the config/default.json file if it exists.', () => {
