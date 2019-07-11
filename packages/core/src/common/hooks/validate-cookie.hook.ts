@@ -2,6 +2,7 @@
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiCookieParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { isFunction } from './is-function.util';
 
 /**
  * Hook - Validate a specific cookie against an AJV schema.
@@ -26,7 +27,7 @@ export function ValidateCookie(
   function validate(this: any, ctx: Context) {
     const cookiesSchema = {
       properties: {
-        [name]: typeof schema === 'function' ? schema(this) : schema
+        [name]: isFunction(schema) ? schema(this) : schema
       },
       required: required ? [ name ] : [],
       type: 'object',
@@ -51,7 +52,7 @@ export function ValidateCookie(
       return result;
     }
 
-    const apiCookieParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiCookieParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiCookieParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

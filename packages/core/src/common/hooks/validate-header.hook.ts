@@ -2,6 +2,7 @@
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiHeaderParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { isFunction } from './is-function.util';
 
 /**
  * Hook - Validate a specific header against an AJV schema.
@@ -27,7 +28,7 @@ export function ValidateHeader(
   function validate(this: any, ctx: Context) {
     const headersSchema = {
       properties: {
-        [name]: typeof schema === 'function' ? schema(this) : schema
+        [name]: isFunction(schema) ? schema(this) : schema
       },
       required: required ? [ name ] : [],
       type: 'object',
@@ -52,7 +53,7 @@ export function ValidateHeader(
       return result;
     }
 
-    const apiHeaderParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiHeaderParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiHeaderParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

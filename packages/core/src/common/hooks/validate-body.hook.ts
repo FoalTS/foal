@@ -2,6 +2,7 @@
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiRequestBody, ApiResponse, IApiRequestBody, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { isFunction } from './is-function.util';
 
 /**
  * Hook factory validating the body of the request against a AJV schema.
@@ -17,7 +18,7 @@ export function ValidateBody(
   const ajv = getAjvInstance();
 
   function validate(this: any, ctx: Context) {
-    const ajvSchema = typeof schema === 'function' ? schema(this) : schema;
+    const ajvSchema = isFunction(schema) ? schema(this) : schema;
     if (!ajv.validate(ajvSchema, ctx.request.body)) {
       return new HttpResponseBadRequest({ body: ajv.errors });
     }
@@ -39,7 +40,7 @@ export function ValidateBody(
       };
     }
 
-    const requestBody = typeof schema === 'function' ? c => makeRequestBody(schema(c)) : makeRequestBody(schema);
+    const requestBody = isFunction(schema) ? c => makeRequestBody(schema(c)) : makeRequestBody(schema);
 
     if (propertyKey) {
       ApiRequestBody(requestBody)(target, propertyKey);

@@ -2,6 +2,7 @@
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiQueryParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { isFunction } from './is-function.util';
 
 /**
  * Hook - Validate a specific query parameter against an AJV schema.
@@ -26,7 +27,7 @@ export function ValidateQueryParam(
   function validate(this: any, ctx: Context) {
     const querySchema = {
       properties: {
-        [name]: typeof schema === 'function' ? schema(this) : schema
+        [name]: isFunction(schema) ? schema(this) : schema
       },
       required: required ? [ name ] : [],
       type: 'object',
@@ -51,7 +52,7 @@ export function ValidateQueryParam(
       return result;
     }
 
-    const apiQueryParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiQueryParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiQueryParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

@@ -2,6 +2,7 @@
 import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
 import { ApiParameter, ApiResponse, IApiPathParameter, IApiSchema } from '../../openapi';
 import { getAjvInstance } from '../utils';
+import { isFunction } from './is-function.util';
 
 /**
  * Hook - Validate a specific path parameter against an AJV schema.
@@ -24,7 +25,7 @@ export function ValidatePathParam(
   function validate(this: any, ctx: Context) {
     const paramsSchema = {
       properties: {
-        [name]: typeof schema === 'function' ? schema(this) : schema
+        [name]: isFunction(schema) ? schema(this) : schema
       },
       required: [ name ],
       type: 'object',
@@ -45,7 +46,7 @@ export function ValidatePathParam(
       return { in: 'path', name, required: true, schema };
     }
 
-    const apiPathParameter = typeof schema === 'function' ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiPathParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiPathParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
