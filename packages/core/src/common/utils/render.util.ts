@@ -37,7 +37,7 @@ export function renderToString(template: string, locals: object): string {
  * `templatePath` together.
  * @returns {Promise<HttpResponseOK>}
  */
-export async function render(templatePath: string, locals: object, dirname?: string): Promise<HttpResponseOK> {
+export async function render(templatePath: string, locals: object = {}, dirname?: string): Promise<HttpResponseOK> {
   const path = dirname ? join(dirname, templatePath) : templatePath;
   const template = await promisify(readFile)(path, 'utf8');
 

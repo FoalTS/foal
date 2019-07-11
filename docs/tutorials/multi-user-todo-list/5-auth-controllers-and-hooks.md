@@ -1,6 +1,21 @@
 # Auth Controllers and Hooks
 
-So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out. Here is what we want:
+So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
+
+> Before this, you must provide a *secret* to the authentication system. You can generate such one with the following command:
+>
+> ```
+> foal createsecret
+> ```
+>
+> Then create a `.env` file containing your secret at the root of your project.
+>
+> *.env*
+> ```
+> SETTINGS_SESSION_SECRET=my-secret
+> ```
+
+Here is the architecture that we want:
 
 1. Users load the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, users are redirected to `/signin?bad_credentials=true`. The `bad_credentials` parameter tells the page to show the error message `Invalid email or password`.
 1. Users can view, create and delete their todos in the page `/`.
@@ -14,11 +29,11 @@ When the user presses the `Log out` button in the todo-list page, the page reque
 
 ## The Login and Main Pages
 
-Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list.zip).
+Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v1.zip).
 
 Empty the `public/` directory.
 
-Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` templates to `src/app/controllers/templates/`.
+Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` files to a new directory `templates/` at the root of your project.
 
 Open the `app.controller.ts` file and add three new routes to serve the pages.
 
@@ -34,17 +49,17 @@ export class AppController {
 
   @Get('/')
   index() {
-    return render('./controllers/templates/index.html', {}, __dirname);
+    return render('templates/index.html');
   }
 
   @Get('/signin')
   signin() {
-    return render('./controllers/templates/signin.html', {}, __dirname);
+    return render('templates/signin.html');
   }
 
   @Get('/signup')
   signup() {
-    return render('./controllers/templates/signup.html', {}, __dirname);
+    return render('templates/signup.html');
   }
 }
 
@@ -67,14 +82,17 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, Get, HttpResponseRedirect,
-  logIn, logOut, Post, ValidateBody, verifyPassword
+  Context, dependency, HttpResponseRedirect, Post, Session,
+  setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
 
 import { User } from '../entities';
 
 export class AuthController {
+  @dependency
+  store: TypeORMStore;
 
   @Post('/login')
   // Validate the request body.
@@ -100,17 +118,27 @@ export class AuthController {
       return new HttpResponseRedirect('/signin?bad_credentials=true');
     }
 
-    // Add the user to the current session.
-    logIn(ctx, user);
+    // Create a session associated with the user.
+    const session = await this.store.createAndSaveSessionFromUser(user);
 
     // Redirect the user to the home page on success.
-    return new HttpResponseRedirect('/');
+    const response = new HttpResponseRedirect('/');
+    // Save the session token in a cookie in order to authenticate
+    // the user in future requests.
+    setSessionCookie(response, session.getToken())
+    return response;
   }
 
-  @Get('/logout')
-  logout(ctx) {
-    // Remove the user from the session.
-    logOut(ctx);
+  @Post('/logout')
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    redirectTo: '/signin',
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<User, Session>) {
+    // Destroy the user session.
+    await this.store.destroy(ctx.session.sessionID);
 
     // Redirect the user to the signin page.
     return new HttpResponseRedirect('/signin');
@@ -144,9 +172,13 @@ export class AppController {
 
   @Get('/')
   @TokenRequired({
+    // The session token is expected to be in a cookie.
     cookie: true,
-    redirect: '/signin',
+    // Redirect the user to /signin if they are not logged in.
+    redirectTo: '/signin',
+    // Specify the "store" where the session was created.
     store: TypeORMStore,
+    // Make ctx.user be an instance of User.
     user: fetchUser(User),
   })
   index() {

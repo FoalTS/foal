@@ -20,12 +20,12 @@ In order to use sessions, you must provide a base64-encoded secret in either:
     *Example with config/default.yml*
     ```yaml
     settings:
-      settings:
+      session:
         secret: xxx
     ```
 - or in a `.env` file or in an environment variable:
     ```
-    SETTINGS_SETTINGS_SECRET=xxx
+    SETTINGS_SESSION_SECRET=xxx
     ```
 
 You can generate such a secret with the CLI command:

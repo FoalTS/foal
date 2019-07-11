@@ -1,6 +1,11 @@
 # The User & Todo Models
 
-First delete the `db.sqlite3` database from the root directory. You will define new models in this tutorial that would conflict with the old definition of its tables.
+First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
+
+```
+npm run build:migrations
+npm run migrations
+```
 
 ## The User Model
 
@@ -72,4 +77,45 @@ In the database the `todo` table will look like this:
 | text       | varchar   | NOT NULL                            |
 | ownerId    | integer   | NOT NULL                            |
 +------------+-----------+-------------------------------------+
+```
+
+## The Migrations
+
+The last step is to create/update the tables in the database. As in the first tutorial, you will use migrations for this.
+
+Build the application.
+
+```
+npm run build:app
+```
+
+Generate the migrations from the entities.
+
+```
+npm run migration:generate -- --name=user-and-todo
+```
+
+A new file is added in `src/migrations`.
+
+```typescript
+import {MigrationInterface, QueryRunner} from "typeorm";
+
+export class userAndTodo1562765487944 implements MigrationInterface {
+
+    public async up(queryRunner: QueryRunner): Promise<any> {
+        // SQL queries...
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<any> {
+        // SQL queries...
+    }
+
+}
+```
+
+Then build and run the new migration file.
+
+```
+npm run build:migrations
+npm run migration:run
 ```

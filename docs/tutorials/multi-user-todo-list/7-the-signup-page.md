@@ -12,14 +12,17 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, HttpResponseRedirect, logIn, Post, ValidateBody } from '@foal/core';
+import { Context, dependency, HttpResponseRedirect, Post, setSessionCookie, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
+import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
 
 // App
 import { User } from '../entities';
 
 export class SignupController {
+  @dependency
+  store: TypeORMStore;
 
   @Post()
   @ValidateBody({
@@ -49,11 +52,15 @@ export class SignupController {
     await user.setPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    // Log the user in.
-    logIn(ctx, user);
+    // Create the user session.
+    const session = await this.store.createAndSaveSessionFromUser(user);
 
     // Redirect the user to her/his to-do list.
-    return new HttpResponseRedirect('/');
+    const reponse = new HttpResponseRedirect('/');
+    // Save the session token in a cookie in order to authenticate
+    // the user in future requests.
+    setSessionCookie(response, session.getToken())
+    return response;
   }
 
 }

@@ -7,6 +7,7 @@
     "staticPath": "public/"
   },
   "database": {
-    "database": "./db.sqlite3"
+    "database": "./db.sqlite3",
+    "synchronize": false
   }
 }

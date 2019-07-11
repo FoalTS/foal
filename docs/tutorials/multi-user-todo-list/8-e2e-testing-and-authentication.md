@@ -28,18 +28,12 @@ describe('The server', () => {
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
-    await createConnection({
-      // Choose a test database. You don't want to run your tests on your production data.
-      database: 'e2e_db.sqlite3',
-      // Drop the schema when the connection is established.
-      dropSchema: true,
-      // Register the models that are used.
-      entities: [User, Permission, Group, Todo],
-      // Auto create the database schema.
-      synchronize: true,
-      // Specify the type of database.
-      type: 'sqlite',
-    });
+    // The connection uses the configuration defined in the file config/test.json.
+    // By default, the file has three connection options:
+    //  "database": "./e2e_db.sqlite3" -> Use a different database for running the tests.
+    // "synchronize": true ->  Auto create the database schema when the connection is established.
+    // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
+    await createConnection();
     app = createApp(AppController);
   });
 
