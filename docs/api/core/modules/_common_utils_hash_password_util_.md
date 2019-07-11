@@ -1,33 +1,31 @@
-[@foal/core](../README.md) > ["auth/utils/encrypt-password.util"](../modules/_auth_utils_encrypt_password_util_.md)
+[@foal/core](../README.md) > ["common/utils/hash-password.util"](../modules/_common_utils_hash_password_util_.md)
 
-# External module: "auth/utils/encrypt-password.util"
+# External module: "common/utils/hash-password.util"
 
 ## Index
 
 ### Functions
 
-* [encryptPassword](_auth_utils_encrypt_password_util_.md#encryptpassword)
-* [parsePassword](_auth_utils_encrypt_password_util_.md#parsepassword)
+* [hashPassword](_common_utils_hash_password_util_.md#hashpassword)
+* [parsePassword](_common_utils_hash_password_util_.md#parsepassword)
 
 ---
 
 ## Functions
 
-<a id="encryptpassword"></a>
+<a id="hashpassword"></a>
 
-###  encryptPassword
+###  hashPassword
 
-▸ **encryptPassword**(plainTextPassword: *`string`*, options?: *`object`*): `Promise`<`string`>
+▸ **hashPassword**(plainTextPassword: *`string`*, options?: *`object`*): `Promise`<`string`>
 
-*Defined in [auth/utils/encrypt-password.util.ts:34](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/encrypt-password.util.ts#L34)*
+*Defined in [common/utils/hash-password.util.ts:32](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/hash-password.util.ts#L32)*
 
 Hash a password using the PBKDF2 algorithm.
 
 Configured to use PBKDF2 + HMAC + SHA256. The result is a 64 byte binary string (or hex if the legacy option is true).
 
 The random salt is 16 bytes long. The number of iterations is 150000. The length key is 32 bytes long.
-
-Note: This function is badly named. It does not encrypt passwords but salt and hash them.
 
 *__export__*: 
 
@@ -53,7 +51,7 @@ ___
 
 ▸ **parsePassword**(password: *`string`*): `Promise`<`string`>
 
-*Defined in [auth/utils/encrypt-password.util.ts:8](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/auth/utils/encrypt-password.util.ts#L8)*
+*Defined in [common/utils/hash-password.util.ts:8](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/hash-password.util.ts#L8)*
 
 Legacy function to hash passwords. Only kept for backward compatibility.
 

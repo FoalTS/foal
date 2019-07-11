@@ -45,7 +45,7 @@
 
 *Overrides HttpResponseBadRequest.__constructor*
 
-*Defined in [jwt.hook.ts:23](https://github.com/FoalTS/foal/blob/cf326d07/packages/jwt/src/jwt.hook.ts#L23)*
+*Defined in [jwt.hook.ts:24](https://github.com/FoalTS/foal/blob/07f00115/packages/jwt/src/jwt.hook.ts#L24)*
 
 **Parameters:**
 
@@ -67,7 +67,7 @@ ___
 
 *Inherited from HttpResponse.body*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:26*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:28*
 
 ___
 <a id="ishttpresponse"></a>
@@ -78,7 +78,7 @@ ___
 
 *Inherited from HttpResponse.isHttpResponse*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:32*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:34*
 
 Property used internally by isHttpResponse.
 
@@ -93,7 +93,7 @@ ___
 
 *Inherited from HttpResponseBadRequest.isHttpResponseBadRequest*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:485*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:489*
 
 Property used internally by isHttpResponseBadRequest.
 
@@ -108,7 +108,7 @@ ___
 
 *Inherited from HttpResponseClientError.isHttpResponseClientError*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:447*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:451*
 
 Property used internally by isHttpResponseClientError.
 
@@ -125,7 +125,7 @@ ___
 
 *Overrides HttpResponse.statusCode*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:486*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:490*
 
 ___
 <a id="statusmessage"></a>
@@ -138,7 +138,7 @@ ___
 
 *Overrides HttpResponse.statusMessage*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:487*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:491*
 
 ___
 <a id="stream"></a>
@@ -149,7 +149,7 @@ ___
 
 *Inherited from HttpResponse.stream*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:56*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:58*
 
 Specify if the body property is a stream.
 
@@ -169,7 +169,7 @@ ___
 
 *Inherited from HttpResponse.getCookie*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:110*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:114*
 
 Read the value and directives of a cookie added with setCookie.
 
@@ -194,7 +194,7 @@ ___
 
 *Inherited from HttpResponse.getCookies*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:121*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:125*
 
 Read all the cookies added with setCookie.
 
@@ -213,7 +213,7 @@ ___
 
 *Inherited from HttpResponse.getHeader*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:83*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:86*
 
 Read the value of a header added with setHeader.
 
@@ -238,7 +238,7 @@ ___
 
 *Inherited from HttpResponse.getHeaders*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:90*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:93*
 
 Read all the headers added with setHeader.
 
@@ -252,11 +252,11 @@ ___
 
 ###  setCookie
 
-▸ **setCookie**(name: *`string`*, value: *`string`*, options?: *`CookieOptions`*): `void`
+▸ **setCookie**(name: *`string`*, value: *`string`*, options?: *`CookieOptions`*): `this`
 
 *Inherited from HttpResponse.setCookie*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:101*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:105*
 
 Add or replace a cookie in the response.
 
@@ -270,18 +270,18 @@ Add or replace a cookie in the response.
 | value | `string` |  The cookie value. |
 | `Optional` options | `CookieOptions` |
 
-**Returns:** `void`
+**Returns:** `this`
 
 ___
 <a id="setheader"></a>
 
 ###  setHeader
 
-▸ **setHeader**(name: *`string`*, value: *`string`*): `void`
+▸ **setHeader**(name: *`string`*, value: *`string`*): `this`
 
 *Inherited from HttpResponse.setHeader*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:74*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/jwt/node_modules/@foal/core/lib/core/http/http-responses.d.ts:77*
 
 Add or replace a header in the response.
 
@@ -294,7 +294,7 @@ Add or replace a header in the response.
 | name | `string` |  The header name. |
 | value | `string` |  The value name. |
 
-**Returns:** `void`
+**Returns:** `this`
 
 ___
 

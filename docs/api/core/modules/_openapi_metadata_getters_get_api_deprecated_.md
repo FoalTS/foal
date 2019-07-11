@@ -16,9 +16,9 @@
 
 ###  getApiDeprecated
 
-▸ **getApiDeprecated**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `boolean` \| `undefined`
+▸ **getApiDeprecated**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `boolean` \| `function` \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-deprecated.ts:4](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-deprecated.ts#L4)*
+*Defined in [openapi/metadata-getters/get-api-deprecated.ts:4](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-deprecated.ts#L4)*
 
 **Parameters:**
 
@@ -27,7 +27,7 @@
 | controllerClass | [Class](_core_class_interface_.md#class) |
 | `Optional` propertyKey | `undefined` \| `string` |
 
-**Returns:** `boolean` \| `undefined`
+**Returns:** `boolean` \| `function` \| `undefined`
 
 ___
 

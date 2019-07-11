@@ -16,15 +16,19 @@
 
 ###  getApiComponents
 
-▸ **getApiComponents**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)
+▸ **getApiComponents**<`T`>(controllerClass: *[Class](_core_class_interface_.md#class)<`T`>*, controller: *`T`*, propertyKey?: *`undefined` \| `string`*): [IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)
 
-*Defined in [openapi/metadata-getters/get-api-components.ts:7](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-components.ts#L7)*
+*Defined in [openapi/metadata-getters/get-api-components.ts:8](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-components.ts#L8)*
 
+**Type parameters:**
+
+#### T 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| controllerClass | [Class](_core_class_interface_.md#class) |
+| controllerClass | [Class](_core_class_interface_.md#class)<`T`> |
+| controller | `T` |
 | `Optional` propertyKey | `undefined` \| `string` |
 
 **Returns:** [IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)

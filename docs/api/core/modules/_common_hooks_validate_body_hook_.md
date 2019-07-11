@@ -16,9 +16,9 @@
 
 ###  ValidateBody
 
-▸ **ValidateBody**(schema: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
+▸ **ValidateBody**(schema: *`object` \| `function`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-body.hook.ts:13](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/hooks/validate-body.hook.ts#L13)*
+*Defined in [common/hooks/validate-body.hook.ts:15](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-body.hook.ts#L15)*
 
 Hook factory validating the body of the request against a AJV schema.
 
@@ -26,9 +26,15 @@ Hook factory validating the body of the request against a AJV schema.
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| schema | `object` |  Schema used to validate the body request. |
+**schema: `object` \| `function`**
+
+Schema used to validate the body request.
+
+**`Default value` options: `object`**
+
+| Name | Type |
+| ------ | ------ |
+| `Optional` openapi | `undefined` \| `false` \| `true` |
 
 **Returns:** [HookDecorator](_core_hooks_.md#hookdecorator)
 - The hook.

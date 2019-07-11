@@ -14,6 +14,7 @@
 
 ### Functions
 
+* [createControllerOrService](_core_service_manager_.md#createcontrollerorservice)
 * [createService](_core_service_manager_.md#createservice)
 * [dependency](_core_service_manager_.md#dependency-1)
 
@@ -21,13 +22,34 @@
 
 ## Functions
 
+<a id="createcontrollerorservice"></a>
+
+###  createControllerOrService
+
+▸ **createControllerOrService**<`ControllerOrService`>(controllerOrServiceClass: *[Class](_core_class_interface_.md#class)<`ControllerOrService`>*, dependencies?: *`object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `ControllerOrService`
+
+*Defined in [core/service-manager.ts:36](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L36)*
+
+**Type parameters:**
+
+#### ControllerOrService 
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| controllerOrServiceClass | [Class](_core_class_interface_.md#class)<`ControllerOrService`> |
+| `Optional` dependencies | `object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md) |
+
+**Returns:** `ControllerOrService`
+
+___
 <a id="createservice"></a>
 
 ###  createService
 
 ▸ **createService**<`Service`>(serviceClass: *[Class](_core_class_interface_.md#class)<`Service`>*, dependencies?: *`object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `Service`
 
-*Defined in [core/service-manager.ts:32](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L32)*
+*Defined in [core/service-manager.ts:32](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L32)*
 
 Create a new service with its dependencies.
 
@@ -55,7 +77,7 @@ ___
 
 ▸ **dependency**(target: *`any`*, propertyKey: *`string`*): `void`
 
-*Defined in [core/service-manager.ts:15](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L15)*
+*Defined in [core/service-manager.ts:15](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L15)*
 
 Decorator injecting a service inside a controller or another service.
 

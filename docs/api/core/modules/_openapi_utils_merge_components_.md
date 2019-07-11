@@ -18,7 +18,7 @@
 
 ▸ **mergeComponents**(components1: *[IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)*, components2: *[IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)*): [IApiComponents](../interfaces/_openapi_interfaces_.iapicomponents.md)
 
-*Defined in [openapi/utils/merge-components.ts:3](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/utils/merge-components.ts#L3)*
+*Defined in [openapi/utils/merge-components.ts:3](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/utils/merge-components.ts#L3)*
 
 **Parameters:**
 

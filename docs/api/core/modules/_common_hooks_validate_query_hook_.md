@@ -16,9 +16,9 @@
 
 ###  ValidateQuery
 
-▸ **ValidateQuery**(schema: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
+▸ **ValidateQuery**(schema: *`object`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-query.hook.ts:13](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/hooks/validate-query.hook.ts#L13)*
+*Defined in [common/hooks/validate-query.hook.ts:14](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-query.hook.ts#L14)*
 
 Hook factory validating the query of the request against a AJV schema.
 
@@ -26,9 +26,15 @@ Hook factory validating the query of the request against a AJV schema.
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| schema | `object` |  Schema used to validate the query request. |
+**schema: `object`**
+
+Schema used to validate the query request.
+
+**`Default value` options: `object`**
+
+| Name | Type |
+| ------ | ------ |
+| `Optional` openapi | `undefined` \| `false` \| `true` |
 
 **Returns:** [HookDecorator](_core_hooks_.md#hookdecorator)
 - The hook.

@@ -18,7 +18,7 @@
 
 ▸ **validate**(schema: *`object`*, data: *`any`*): `void`
 
-*Defined in [common/utils/validate.util.ts:13](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/utils/validate.util.ts#L13)*
+*Defined in [common/utils/validate.util.ts:13](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/validate.util.ts#L13)*
 
 Validate an object against an AJV schema. If the object is not validated, the function throws a ValidationError with the failure details.
 

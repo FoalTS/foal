@@ -22,7 +22,7 @@
 
 ▸ **isValidationError**(err: *`object`*): `boolean`
 
-*Defined in [common/errors/validation-error.ts:30](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/errors/validation-error.ts#L30)*
+*Defined in [common/errors/validation-error.ts:30](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/errors/validation-error.ts#L30)*
 
 Check if an error is an instance of ValidationError.
 

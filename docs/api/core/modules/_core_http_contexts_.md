@@ -8,9 +8,5 @@
 
 * [Context](../classes/_core_http_contexts_.context.md)
 
-### Interfaces
-
-* [HTTPRequest](../interfaces/_core_http_contexts_.httprequest.md)
-
 ---
 
