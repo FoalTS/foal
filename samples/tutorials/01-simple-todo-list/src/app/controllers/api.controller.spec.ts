@@ -1,12 +1,3 @@
-# Unit Testing
-
-The last step of this tutorial is to add some unit tests to the `ApiController`.
-
-A unit test file ends with the `spec.ts` extension and is usually placed next to the file it is testing.
-
-Open the file `api.controller.spec.ts` and replace its content.
-
-```typescript
 // std
 // The `assert` module provides a simple set of assertion tests.
 import { ok, strictEqual } from 'assert';
@@ -77,28 +68,3 @@ describe('ApiController', () => {
   });
 
 });
-
-```
-
-> As a controller method returns an `HttpResponse` object, it is really easy to test the status and body of the response.
-
-
-> If the controller method takes a `Context` object as argument, you can instantiate one like this: `new Context({ /* content of the express request object */})`.
-
-Run the tests.
-
-```
-npm run test
-```
-
-> This command watches at your tests and tested files in the `app/` and `scripts/` directories. When a file is modified, it automatically recompiles and re-runs your tests.
-
-You should now end up with this output:
-
-![Unit tests output](./unit-tests-output.png)
-
-Congratulations! You have reached the end of this tutorial!
-
-If you have any questions, feel free to open an issue on Github!
-
-> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code-v1.zip).

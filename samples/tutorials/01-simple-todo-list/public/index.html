@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Todo App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="box">
+      <h1>To-Do List</h1>
+      <div class="row" v-for="todo in todos" :key="todo.id">
+        <div class="text">{{ todo.text }}</div>
+        <div class="checkbox-wrapper">
+          <input type="checkbox" v-on:click="deleteTodo(todo, $event)">
+        </div>
+      </div>
+      <div class="row">
+        <input type="text" class="text-input" v-on:keyup.enter="addNewTodo" v-model="newTodoText" placeholder="Type a new to-do and press Enter">
+      </div>
+    </div>
+
+    <div class="box error-box" v-if="error">
+      <div class="error-header">Error {{ error.status }}: {{ error.statusText }}</div>
+      <div class="error-body">
+        <strong>Request:</strong>
+        <br>
+        - Method: {{ error.method }}
+        <br>
+        - URL: {{ error.url }}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
