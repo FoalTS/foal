@@ -1,0 +1,5 @@
+{
+  "mongodb": {
+    "uri": "mongodb://localhost:27017/e2e-my-app"
+  }
+}
