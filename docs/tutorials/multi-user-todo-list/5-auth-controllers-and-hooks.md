@@ -82,8 +82,8 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, dependency, HttpResponseRedirect, Post, Session,
-  setSessionCookie, TokenRequired, ValidateBody, verifyPassword
+  Context, dependency, HttpResponseRedirect, Post, removeSessionCookie,
+  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -125,7 +125,7 @@ export class AuthController {
     const response = new HttpResponseRedirect('/');
     // Save the session token in a cookie in order to authenticate
     // the user in future requests.
-    setSessionCookie(response, session.getToken())
+    setSessionCookie(response, session.getToken());
     return response;
   }
 
@@ -140,8 +140,11 @@ export class AuthController {
     // Destroy the user session.
     await this.store.destroy(ctx.session.sessionID);
 
-    // Redirect the user to the signin page.
-    return new HttpResponseRedirect('/signin');
+    // Redirect the user to the home page on success.
+    const response = new HttpResponseRedirect('/signin');
+    // Remove the cookie where the session token is stored.
+    removeSessionCookie(response);
+    return response;
   }
 }
 
@@ -162,11 +165,10 @@ The usual way to handle authorization is to use a *hook*. In this case, you are 
 Update the controllers.
 
 ```typescript
-import { controller, Get, TokenRequired, render } from '@foal/core';
-import { fetchUser, TypeORMStore } from '@foal/typeorm';
+import { controller, Get, render, TokenRequired } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
-import { User } from './entities';
 
 export class AppController {
 
@@ -177,9 +179,7 @@ export class AppController {
     // Redirect the user to /signin if they are not logged in.
     redirectTo: '/signin',
     // Specify the "store" where the session was created.
-    store: TypeORMStore,
-    // Make ctx.user be an instance of User.
-    user: fetchUser(User),
+    store: TypeORMStore
   })
   index() {
     ...
@@ -191,10 +191,22 @@ export class AppController {
 ```
 
 ```typescript
+import {
+  Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
+  HttpResponseNotFound, HttpResponseOK, Post,
+  TokenRequired, ValidateBody, ValidateParams
+} from '@foal/core';
+import { fetchUser, TypeORMStore } from '@foal/typeorm';
+import { getRepository } from 'typeorm';
+
+import { Todo, User } from '../entities';
+
+
 @TokenRequired({
   cookie: true,
   store: TypeORMStore,
-  user: fetchUser(User)
+  // Make ctx.user be an instance of User.
+  user: fetchUser(User),
 })
 export class ApiController {
 

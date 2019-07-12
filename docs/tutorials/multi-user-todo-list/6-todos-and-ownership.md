@@ -12,7 +12,7 @@ Go back to the `ApiController` and update the `getTodos` route.
   }
 ```
 
-> The `Context` object contains three properties:
+> The `Context` object contains four properties:
 > - the express [request object](https://expressjs.com/en/4x/api.html#req),
 > - an empty object called `state` which can be used to share data between hooks, 
 > - a `session` object,

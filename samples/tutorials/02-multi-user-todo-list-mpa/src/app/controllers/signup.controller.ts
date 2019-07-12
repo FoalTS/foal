@@ -1,16 +1,3 @@
-# The Sign Up Page
-
-The sign up page, that is served in the app controller, makes a request `POST /signup` when the button `Create an account` is pressed.
-
-Create a new controller to handle this route.
-
-```
-foal generate controller signup --register
-```
-
-Open the new file and replace its content.
-
-```typescript
 // 3p
 import { Context, dependency, HttpResponseRedirect, Post, setSessionCookie, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
@@ -64,7 +51,3 @@ export class SignupController {
   }
 
 }
-
-```
-
-You can now create new users with the signup page.

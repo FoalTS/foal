@@ -1,12 +1,3 @@
-# E2E Testing and Authentication
-
-The last part of this tutorial explains how to write and run *end-to-end* tests. The purpose of these tests is not to verify that each feature of each component works, but to check that these components work properly together.
-
-The tests are located in the `src/e2e/` directory. The command to run them in development is `npm run e2e`. E2E tests generally use the `supertest` library which provides a high-level abstraction for testing HTTP.
-
-Open `index.ts` in `src/e2e` and replace its content.
-
-```typescript
 // std
 // The `assert` module provides a simple set of assertion tests.
 import { ok } from 'assert';
@@ -27,7 +18,7 @@ describe('The server', () => {
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
-    // The connection uses the configuration defined in the file config/e2e.json.
+    // The connection uses the configuration defined in the file config/test.json.
     // By default, the file has three connection options:
     //  "database": "./e2e_db.sqlite3" -> Use a different database for running the tests.
     // "synchronize": true ->  Auto create the database schema when the connection is established.
@@ -82,17 +73,3 @@ describe('The server', () => {
   });
 
 });
-
-```
-
-Now run the tests.
-
-```
-npm run e2e
-```
-
-The output should look like this:
-
-![E2E tests output](./e2e_output.png)
-
-Congratulations, you have reached the end of this tutorial!

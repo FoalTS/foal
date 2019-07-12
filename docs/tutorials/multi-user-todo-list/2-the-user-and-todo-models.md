@@ -4,7 +4,7 @@ First of all, if you have downloaded the source code of the previous tutorial, c
 
 ```
 npm run build:migrations
-npm run migrations
+npm run migration:run
 ```
 
 ## The User Model
