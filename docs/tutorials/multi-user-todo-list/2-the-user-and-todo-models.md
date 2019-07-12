@@ -1,6 +1,11 @@
 # The User & Todo Models
 
-First delete the `db.sqlite3` database from the root directory. You will define new models in this tutorial that would conflict with the old definition of its tables.
+First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
+
+```
+npm run build:migrations
+npm run migration:run
+```
 
 ## The User Model
 
@@ -9,7 +14,7 @@ Then open the `user.entity.ts` file from the `src/app/entities` directory. The `
 Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
-import { encryptPassword } from '@foal/core';
+import { hashPassword } from '@foal/core';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -25,14 +30,16 @@ export class User {
   password: string;
 
   async setPassword(password: string) {
-    this.password = await encryptPassword(password);
+    this.password = await hashPassword(password);
   }
 
 }
 
 ```
 
-The `setPassword` method uses `encryptPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+The `setPassword` method uses `hashPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+
+> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
 
 ## The Todo Model
 
@@ -70,4 +77,45 @@ In the database the `todo` table will look like this:
 | text       | varchar   | NOT NULL                            |
 | ownerId    | integer   | NOT NULL                            |
 +------------+-----------+-------------------------------------+
+```
+
+## The Migrations
+
+The last step is to create/update the tables in the database. As in the first tutorial, you will use migrations for this.
+
+Build the application.
+
+```
+npm run build:app
+```
+
+Generate the migrations from the entities.
+
+```
+npm run migration:generate -- --name=user-and-todo
+```
+
+A new file is added in `src/migrations`.
+
+```typescript
+import {MigrationInterface, QueryRunner} from "typeorm";
+
+export class userAndTodo1562765487944 implements MigrationInterface {
+
+    public async up(queryRunner: QueryRunner): Promise<any> {
+        // SQL queries...
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<any> {
+        // SQL queries...
+    }
+
+}
+```
+
+Then build and run the new migration file.
+
+```
+npm run build:migrations
+npm run migration:run
 ```

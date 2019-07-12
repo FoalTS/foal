@@ -1,6 +1,21 @@
 # Auth Controllers and Hooks
 
-So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out. Here is what we want:
+So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
+
+> Before this, you must provide a *secret* to the authentication system. You can generate such one with the following command:
+>
+> ```
+> foal createsecret
+> ```
+>
+> Then create a `.env` file containing your secret at the root of your project.
+>
+> *.env*
+> ```
+> SETTINGS_SESSION_SECRET=my-secret
+> ```
+
+Here is the architecture that we want:
 
 1. Users load the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, users are redirected to `/signin?bad_credentials=true`. The `bad_credentials` parameter tells the page to show the error message `Invalid email or password`.
 1. Users can view, create and delete their todos in the page `/`.
@@ -14,11 +29,11 @@ When the user presses the `Log out` button in the todo-list page, the page reque
 
 ## The Login and Main Pages
 
-Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list.zip).
+Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v1.zip).
 
 Empty the `public/` directory.
 
-Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` templates to `src/app/controllers/templates/`.
+Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` files to a new directory `templates/` at the root of your project.
 
 Open the `app.controller.ts` file and add three new routes to serve the pages.
 
@@ -34,17 +49,17 @@ export class AppController {
 
   @Get('/')
   index() {
-    return render('./controllers/templates/index.html', {}, __dirname);
+    return render('templates/index.html');
   }
 
   @Get('/signin')
   signin() {
-    return render('./controllers/templates/signin.html', {}, __dirname);
+    return render('templates/signin.html');
   }
 
   @Get('/signup')
   signup() {
-    return render('./controllers/templates/signup.html', {}, __dirname);
+    return render('templates/signup.html');
   }
 }
 
@@ -67,14 +82,17 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, Get, HttpResponseRedirect,
-  logIn, logOut, Post, ValidateBody, verifyPassword
+  Context, dependency, HttpResponseRedirect, Post, removeSessionCookie,
+  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
 
 import { User } from '../entities';
 
 export class AuthController {
+  @dependency
+  store: TypeORMStore;
 
   @Post('/login')
   // Validate the request body.
@@ -100,20 +118,33 @@ export class AuthController {
       return new HttpResponseRedirect('/signin?bad_credentials=true');
     }
 
-    // Add the user to the current session.
-    logIn(ctx, user);
+    // Create a session associated with the user.
+    const session = await this.store.createAndSaveSessionFromUser(user);
 
     // Redirect the user to the home page on success.
-    return new HttpResponseRedirect('/');
+    const response = new HttpResponseRedirect('/');
+    // Save the session token in a cookie in order to authenticate
+    // the user in future requests.
+    setSessionCookie(response, session.getToken());
+    return response;
   }
 
-  @Get('/logout')
-  logout(ctx) {
-    // Remove the user from the session.
-    logOut(ctx);
+  @Post('/logout')
+  @TokenRequired({
+    cookie: true,
+    extendLifeTimeOrUpdate: false,
+    redirectTo: '/signin',
+    store: TypeORMStore,
+  })
+  async logout(ctx: Context<User, Session>) {
+    // Destroy the user session.
+    await this.store.destroy(ctx.session.sessionID);
 
-    // Redirect the user to the signin page.
-    return new HttpResponseRedirect('/signin');
+    // Redirect the user to the home page on success.
+    const response = new HttpResponseRedirect('/signin');
+    // Remove the cookie where the session token is stored.
+    removeSessionCookie(response);
+    return response;
   }
 }
 
@@ -123,25 +154,33 @@ export class AuthController {
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 
-## The LoginRequired Hook
+## The TokenRequired Hook
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `LoginRequired` which returns a 401 error or redirects the user if no user was logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if no user was logged in. 
+
+> FoalTS versions prior to version 1 used the `LoginRequired` hook. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/tutorials/multi-user-todo-list/5-auth-controllers-and-hooks.md).
 
 Update the controllers.
 
 ```typescript
-import { controller, Get, LoginRequired, render } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
+import { controller, Get, render, TokenRequired } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
-import { User } from './entities';
 
 export class AppController {
 
   @Get('/')
-  @LoginRequired({ redirect: '/signin', user: fetchUser(User) })
+  @TokenRequired({
+    // The session token is expected to be in a cookie.
+    cookie: true,
+    // Redirect the user to /signin if they are not logged in.
+    redirectTo: '/signin',
+    // Specify the "store" where the session was created.
+    store: TypeORMStore
+  })
   index() {
     ...
   }
@@ -152,7 +191,23 @@ export class AppController {
 ```
 
 ```typescript
-@LoginRequired({ user: fetchUser(User) })
+import {
+  Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
+  HttpResponseNotFound, HttpResponseOK, Post,
+  TokenRequired, ValidateBody, ValidateParams
+} from '@foal/core';
+import { fetchUser, TypeORMStore } from '@foal/typeorm';
+import { getRepository } from 'typeorm';
+
+import { Todo, User } from '../entities';
+
+
+@TokenRequired({
+  cookie: true,
+  store: TypeORMStore,
+  // Make ctx.user be an instance of User.
+  user: fetchUser(User),
+})
 export class ApiController {
 
   ...

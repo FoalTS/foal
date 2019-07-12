@@ -16,33 +16,33 @@ Document Path:          /api/users
 Document Length:        20 bytes
 
 Concurrency Level:      10
-Time taken for tests:   0.142 seconds
+Time taken for tests:   0.178 seconds
 Complete requests:      100
 Failed requests:        0
 Total transferred:      42000 bytes
 HTML transferred:       2000 bytes
-Requests per second:    703.58 [#/sec] (mean)
-Time per request:       14.213 [ms] (mean)
-Time per request:       1.421 [ms] (mean, across all concurrent requests)
-Transfer rate:          288.58 [Kbytes/sec] received
+Requests per second:    562.85 [#/sec] (mean)
+Time per request:       17.767 [ms] (mean)
+Time per request:       1.777 [ms] (mean, across all concurrent requests)
+Transfer rate:          230.86 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.3      0       3
-Processing:     9   12   3.0     12      21
-Waiting:        7   10   3.3      9      19
-Total:          9   12   3.0     12      21
+Connect:        0    0   0.4      0       3
+Processing:     6   15   7.3     14      37
+Waiting:        5   13   7.7     10      35
+Total:          6   15   7.3     14      37
 
 Percentage of the requests served within a certain time (ms)
-  50%     12
-  66%     13
-  75%     14
-  80%     14
-  90%     19
-  95%     20
-  98%     21
-  99%     21
- 100%     21 (longest request)
+  50%     14
+  66%     17
+  75%     17
+  80%     18
+  90%     28
+  95%     35
+  98%     37
+  99%     37
+ 100%     37 (longest request)
 ========================================================================
 Framework: FoalTS
 ========================================================================
@@ -58,34 +58,33 @@ Server Hostname:        localhost
 Server Port:            3000
 
 Document Path:          /api/users
-Document Length:        97 bytes
+Document Length:        20 bytes
 
 Concurrency Level:      10
-Time taken for tests:   0.143 seconds
+Time taken for tests:   0.181 seconds
 Complete requests:      100
 Failed requests:        0
-Non-2xx responses:      100
-Total transferred:      49700 bytes
-HTML transferred:       9700 bytes
-Requests per second:    700.27 [#/sec] (mean)
-Time per request:       14.280 [ms] (mean)
-Time per request:       1.428 [ms] (mean, across all concurrent requests)
-Transfer rate:          339.88 [Kbytes/sec] received
+Total transferred:      42000 bytes
+HTML transferred:       2000 bytes
+Requests per second:    551.44 [#/sec] (mean)
+Time per request:       18.134 [ms] (mean)
+Time per request:       1.813 [ms] (mean, across all concurrent requests)
+Transfer rate:          226.17 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.1      0       1
-Processing:     7   12   5.3     11      28
-Waiting:        6   12   5.3     11      27
-Total:          7   13   5.3     11      28
+Connect:        0    0   0.3      0       3
+Processing:     7   15   5.3     15      27
+Waiting:        7   15   5.3     15      24
+Total:          7   16   5.3     16      27
 
 Percentage of the requests served within a certain time (ms)
-  50%     11
-  66%     12
-  75%     13
-  80%     13
-  90%     27
-  95%     27
-  98%     28
-  99%     28
- 100%     28 (longest request)
+  50%     16
+  66%     18
+  75%     21
+  80%     22
+  90%     22
+  95%     24
+  98%     24
+  99%     27
+ 100%     27 (longest request)

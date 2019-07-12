@@ -18,7 +18,7 @@
 
 ▸ **schemaFromTypeDefs**(...sources: *`string`[]*): `object`
 
-*Defined in [schema-from-type-defs.ts:11](https://github.com/FoalTS/foal/blob/cf326d07/packages/graphql/src/schema-from-type-defs.ts#L11)*
+*Defined in [schema-from-type-defs.ts:11](https://github.com/FoalTS/foal/blob/07f00115/packages/graphql/src/schema-from-type-defs.ts#L11)*
 
 Build a GraphQL schema from several sources.
 

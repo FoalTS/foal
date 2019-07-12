@@ -43,11 +43,11 @@
   * [Use Mongoose (MongoDB)](./databases/using-mongoose.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
-  * [Introduction](./authentication-and-access-control/introduction.md)
+  * [Quick Start](./authentication-and-access-control/quick-start.md)
   * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
-  * [Session & Cookie (authentication)](./authentication-and-access-control/session-and-cookie.md)
-  * [JWT (authentication)](./authentication-and-access-control/jwt.md)
-  * [Password Management](./authentication-and-access-control/password-management.md)
+  * [Passwords](./authentication-and-access-control/password-management.md)
+  * [Session Tokens (authentication)](./authentication-and-access-control/session-tokens.md)
+  * [JSON Web Tokens (authentication)](./authentication-and-access-control/jwt.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation & Sanitization](./validation-and-sanitization.md)
@@ -80,12 +80,14 @@
   * [XSS Protection](./security/xss-protection.md)
 * Utilities
   * [Static Files](./utilities/static-files.md)
-  * [Templating](./utilities/templating.md)
+  * [Templates (SSR)](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
   * [Upload & Download Files](./cookbook/upload-and-download-files.md)
+  * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
+  * [ExpressJS](./cookbook/expressjs.md)
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
@@ -95,10 +97,12 @@
 ## Upgrading
 
 * [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
+* [To v1](https://github.com/FoalTS/foal/releases/tag/v1.0.0)
 
 ## API Reference
 
 * [@foal/core](./api/core/README.md)
+* [@foal/csrf](./api/csrf/README.md)
 * [@foal/ejs](./api/ejs/README.md)
 * [@foal/formidable](./api/formidable/README.md)
 * [@foal/graphql](./api/graphql/README.md)
@@ -106,5 +110,6 @@
 * [@foal/jwt](./api/jwt/README.md)
 * [@foal/mongoose](./api/mongoose/README.md)
 * [@foal/password](./api/password/README.md)
+* [@foal/redis](./api/password/README.md)
 * [@foal/swagger](./api/swagger/README.md)
 * [@foal/typeorm](./api/typeorm/README.md)

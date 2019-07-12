@@ -88,13 +88,12 @@ describe('createMiddleware', () => {
       strictEqual(actualServiceManager, expectedServiceManager);
     });
 
-    it('should call the sync and async post hook functions (with the ctx, the given ServiceManager and the response)'
+    it('should call the sync and async post hook functions with the response'
         + ' after the controller method.', async () => {
       let str = '';
       const expectedServiceManager = new ServiceManager();
       const expectedReponse = new HttpResponseOK();
 
-      let actualServiceManager: ServiceManager|undefined;
       let actualResponse: HttpResponse|undefined;
 
       const route: Route = {
@@ -103,10 +102,9 @@ describe('createMiddleware', () => {
           return expectedReponse;
         }},
         hooks: [
-          () => async ctx => { await 1; str = `${ctx.state.str}a`; },
-          () => ctx => ctx.state.str += 'b',
-          () => (ctx, services, response) => {
-            actualServiceManager = services;
+          ctx => async () => { await 1; str = `${ctx.state.str}a`; },
+          ctx => () => { ctx.state.str += 'b'; },
+          () => response => {
             actualResponse = response;
           }
         ],
@@ -122,7 +120,6 @@ describe('createMiddleware', () => {
       await middleware(request, response);
 
       strictEqual(str, 'cba');
-      strictEqual(actualServiceManager, expectedServiceManager);
       strictEqual(actualResponse, expectedReponse);
     });
 
@@ -249,15 +246,15 @@ describe('createMiddleware', () => {
 
         it('should send a response with the suitable cookies.', () => {
           const app = express();
-          const successResponse = new HttpResponseCreated();
-          successResponse.setCookie('cookie1', 'cookie1_value_a');
-          successResponse.setCookie('cookie2', 'cookie2_value_a', { httpOnly: true });
-          const clientErrorResponse = new HttpResponseBadRequest();
-          clientErrorResponse.setCookie('cookie1', 'cookie1_value_b');
-          clientErrorResponse.setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
-          const serverErrorResponse = new HttpResponseInternalServerError();
-          serverErrorResponse.setCookie('cookie1', 'cookie1_value_c');
-          serverErrorResponse.setCookie('cookie2', 'cookie2_value_c', { httpOnly: true });
+          const successResponse = new HttpResponseCreated()
+            .setCookie('cookie1', 'cookie1_value_a')
+            .setCookie('cookie2', 'cookie2_value_a', { httpOnly: true });
+          const clientErrorResponse = new HttpResponseBadRequest()
+            .setCookie('cookie1', 'cookie1_value_b')
+            .setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
+          const serverErrorResponse = new HttpResponseInternalServerError()
+            .setCookie('cookie1', 'cookie1_value_c')
+            .setCookie('cookie2', 'cookie2_value_c', { maxAge: 60 });
 
           app.get('/success', createMiddleware(
             route(() => successResponse),
@@ -281,7 +278,10 @@ describe('createMiddleware', () => {
               .expect('Set-Cookie', 'cookie1=cookie1_value_b; Path=/,cookie2=cookie2_value_b; Path=/; HttpOnly'),
             request(app)
               .get('/server-error')
-              .expect('Set-Cookie', 'cookie1=cookie1_value_c; Path=/,cookie2=cookie2_value_c; Path=/; HttpOnly'),
+              .then(response => {
+                const beginning = response.header['set-cookie'][1].split('; Expires')[0];
+                strictEqual(beginning, 'cookie2=cookie2_value_c; Max-Age=60; Path=/');
+              })
           ]);
         });
 

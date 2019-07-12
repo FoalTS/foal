@@ -1,6 +1,5 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
-import * as crypto from 'crypto';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -58,8 +57,8 @@ function validateProjectName(name: string) {
   return !specialChars.find(char => name.includes(char));
 }
 
-export async function createApp({ name, sessionSecret, autoInstall, initRepo, mongodb = false, yaml = false }:
-  { name: string, sessionSecret?: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
+export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
+  { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
     yaml?: boolean }) {
   const names = getNames(name);
 
@@ -80,10 +79,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
     ));
   }
 
-  const locals = {
-    ...names,
-    sessionSecret: sessionSecret ? sessionSecret : crypto.randomBytes(16).toString('hex')
-  };
+  const locals = names;
 
      // Validating whether if the project-name follows npm naming conventions
   if (!validateProjectName(name)) {
@@ -99,8 +95,7 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
 
   generator
     .copyFileFromTemplates('gitignore', '.gitignore')
-    .copyFileFromTemplatesOnlyIf(!mongodb && !yaml, 'ormconfig.json')
-    .copyFileFromTemplatesOnlyIf(!mongodb && yaml, 'ormconfig.yml')
+    .copyFileFromTemplatesOnlyIf(!mongodb, 'ormconfig.js')
     .renderTemplateOnlyIf(!mongodb && !yaml, 'package.json', locals)
     .renderTemplateOnlyIf(!mongodb && yaml, 'package.yaml.json', locals, 'package.json')
     .renderTemplateOnlyIf(mongodb && !yaml, 'package.mongodb.json', locals, 'package.json')
@@ -119,11 +114,15 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
       .renderTemplateOnlyIf(!mongodb && !yaml, 'config/development.json', locals)
       .renderTemplateOnlyIf(!mongodb && yaml, 'config/development.yml', locals)
       .renderTemplateOnlyIf(mongodb && !yaml, 'config/development.mongodb.json', locals, 'config/development.json')
-      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
       .renderTemplateOnlyIf(mongodb && yaml, 'config/development.mongodb.yml', locals, 'config/development.yml')
+      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/e2e.json', locals)
+      .renderTemplateOnlyIf(!mongodb && yaml, 'config/e2e.yml', locals)
+      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
       .renderTemplateOnlyIf(mongodb && yaml, 'config/e2e.mongodb.yml', locals, 'config/e2e.yml')
       .renderTemplateOnlyIf(!yaml, 'config/production.json', locals)
       .renderTemplateOnlyIf(yaml, 'config/production.yml', locals)
+      .renderTemplateOnlyIf(!yaml, 'config/test.json', locals)
+      .renderTemplateOnlyIf(yaml, 'config/test.yml', locals)
       // Public
       .mkdirIfDoesNotExist('public')
       .copyFileFromTemplates('public/index.html')
@@ -156,17 +155,12 @@ export async function createApp({ name, sessionSecret, autoInstall, initRepo, mo
           // Services
           .mkdirIfDoesNotExist('src/app/services')
           .copyFileFromTemplates('src/app/services/index.ts')
-          // Sub-apps
-          .mkdirIfDoesNotExist('src/app/sub-apps')
-          .copyFileFromTemplates('src/app/sub-apps/index.ts')
         // E2E
         .mkdirIfDoesNotExist('src/e2e')
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/e2e/index.ts')
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/e2e/index.mongodb.ts', 'src/e2e/index.ts')
         // Scripts
         .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-group.ts')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-perm.ts')
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
 

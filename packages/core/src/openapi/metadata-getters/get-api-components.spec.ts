@@ -38,7 +38,20 @@ describe('getApiComponents', () => {
       @ApiDefineCallback('callback', callback)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        callbacks: { callback }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic callbacks).', () => {
+      @ApiDefineCallback('callback', (controller: Controller) => controller.callback)
+      class Controller {
+        callback = callback;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         callbacks: { callback }
@@ -51,7 +64,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         callbacks: { callback }
@@ -66,7 +79,20 @@ describe('getApiComponents', () => {
       @ApiDefineExample('example', example)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        examples: { example }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic example).', () => {
+      @ApiDefineExample('example', (controller: Controller) => controller.example)
+      class Controller {
+        example = example;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         examples: { example }
@@ -79,7 +105,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         examples: { example }
@@ -94,7 +120,20 @@ describe('getApiComponents', () => {
       @ApiDefineHeader('header', header)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        headers: { header }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic header).', () => {
+      @ApiDefineHeader('header', (controller: Controller) => controller.header)
+      class Controller {
+        header = header;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         headers: { header }
@@ -107,7 +146,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         headers: { header }
@@ -122,7 +161,20 @@ describe('getApiComponents', () => {
       @ApiDefineLink('link', link)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        links: { link }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic link).', () => {
+      @ApiDefineLink('link', (controller: Controller) => controller.link)
+      class Controller {
+        link = link;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         links: { link }
@@ -135,7 +187,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         links: { link }
@@ -150,7 +202,20 @@ describe('getApiComponents', () => {
       @ApiDefineParameter('parameter', parameter)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        parameters: { parameter }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic parameter).', () => {
+      @ApiDefineParameter('parameter', (controller: Controller) => controller.parameter)
+      class Controller {
+        parameter = parameter;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         parameters: { parameter }
@@ -163,7 +228,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         parameters: { parameter }
@@ -178,7 +243,20 @@ describe('getApiComponents', () => {
       @ApiDefineRequestBody('requestBody', requestBody)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        requestBodies: { requestBody }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic request body).', () => {
+      @ApiDefineRequestBody('requestBody', (controller: Controller) => controller.requestBody)
+      class Controller {
+        requestBody = requestBody;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         requestBodies: { requestBody }
@@ -191,7 +269,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         requestBodies: { requestBody }
@@ -206,7 +284,20 @@ describe('getApiComponents', () => {
       @ApiDefineResponse('response', response)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        responses: { response }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic response).', () => {
+      @ApiDefineResponse('response', (controller: Controller) => controller.response)
+      class Controller {
+        response = response;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         responses: { response }
@@ -219,7 +310,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         responses: { response }
@@ -234,7 +325,20 @@ describe('getApiComponents', () => {
       @ApiDefineSchema('schema', schema)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        schemas: { schema }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic schema).', () => {
+      @ApiDefineSchema('schema', (controller: Controller) => controller.schema)
+      class Controller {
+        schema = schema;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         schemas: { schema }
@@ -247,7 +351,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         schemas: { schema }
@@ -262,7 +366,20 @@ describe('getApiComponents', () => {
       @ApiDefineSecurityScheme('securityScheme', securityScheme)
       class Controller {}
 
-      const actual = getApiComponents(Controller);
+      const actual = getApiComponents(Controller, new Controller());
+
+      deepStrictEqual(actual, {
+        securitySchemes: { securityScheme }
+      } as IApiComponents);
+    });
+
+    it('a class (dynamic scheme).', () => {
+      @ApiDefineSecurityScheme('securityScheme', (controller: Controller) => controller.securityScheme)
+      class Controller {
+        securityScheme = securityScheme;
+      }
+
+      const actual = getApiComponents(Controller, new Controller());
 
       deepStrictEqual(actual, {
         securitySchemes: { securityScheme }
@@ -275,7 +392,7 @@ describe('getApiComponents', () => {
         foo() {}
       }
 
-      const actual = getApiComponents(Controller, 'foo');
+      const actual = getApiComponents(Controller, new Controller(), 'foo');
 
       deepStrictEqual(actual, {
         securitySchemes: { securityScheme }

@@ -16,9 +16,9 @@
 
 ###  getApiRequestBody
 
-▸ **getApiRequestBody**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `undefined`
+▸ **getApiRequestBody**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-request-body.ts:5](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-request-body.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-request-body.ts:5](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-request-body.ts#L5)*
 
 **Parameters:**
 
@@ -27,7 +27,7 @@
 | controllerClass | [Class](_core_class_interface_.md#class) |
 | `Optional` propertyKey | `undefined` \| `string` |
 
-**Returns:** [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `undefined`
+**Returns:** [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` \| `undefined`
 
 ___
 

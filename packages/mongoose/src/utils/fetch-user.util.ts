@@ -7,8 +7,8 @@ import { Model } from 'mongoose';
  * It returns undefined if no document can be found.
  *
  * This function is usually used by:
- * - LoginRequired (@foal/core)
- * - LoginOptional (@foal/core)
+ * - TokenRequired (@foal/core)
+ * - TokenOptional (@foal/core)
  * - JWTRequired (@foal/jwt)
  * - JWTOptional (@foal/jwt)
  *

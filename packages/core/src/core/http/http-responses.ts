@@ -9,6 +9,8 @@ import { getType } from 'mime';
 /**
  * Cookie options of the HttpResponse.setCookie method.
  *
+ * The value of maxAge is in seconds.
+ *
  * @export
  * @interface CookieOptions
  */
@@ -81,10 +83,12 @@ export abstract class HttpResponse {
    *
    * @param {string} name - The header name.
    * @param {string} value - The value name.
+   * @returns {this}
    * @memberof HttpResponse
    */
-  setHeader(name: string, value: string): void {
+  setHeader(name: string, value: string): this {
     this.headers[name] = value;
+    return this;
   }
 
   /**
@@ -115,10 +119,12 @@ export abstract class HttpResponse {
    * @param {string} name - The cookie name.
    * @param {string} value - The cookie value.
    * @param {CookieOptions} [options={}] - The cookie directives if any.
+   * @returns {this}
    * @memberof HttpResponse
    */
-  setCookie(name: string, value: string, options: CookieOptions = {}): void {
+  setCookie(name: string, value: string, options: CookieOptions = {}): this {
     this.cookies[name] = { value, options };
+    return this;
   }
 
   /**
@@ -299,12 +305,13 @@ export async function createHttpResponseFile(options:
   if (mimeType) {
     response.setHeader('Content-Type', mimeType);
   }
-  response.setHeader('Content-Length', stats.size.toString());
-  response.setHeader(
-    'Content-Disposition',
-    (options.forceDownload ? 'attachement' : 'inline')
-    + `; filename="${options.filename || file}"`
-  );
+  response
+    .setHeader('Content-Length', stats.size.toString())
+    .setHeader(
+      'Content-Disposition',
+      (options.forceDownload ? 'attachement' : 'inline')
+      + `; filename="${options.filename || file}"`
+    );
 
   return response;
 }

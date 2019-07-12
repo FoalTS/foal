@@ -11,7 +11,7 @@ import { ServiceManager } from './service-manager';
  *
  * @export
  */
-export type HookPostFunction = (ctx: Context, services: ServiceManager, response: HttpResponse) => void | Promise<void>;
+export type HookPostFunction = (response: HttpResponse) => void | Promise<void>;
 
 /**
  * Interface of a function from which a hook can be created.
@@ -29,17 +29,17 @@ export type HookFunction = (ctx: Context, services: ServiceManager) =>
 export type HookDecorator = (target: any, propertyKey?: string) => any;
 
 /**
- * Create a hook from a function.
+ * Create a hook from one or several functions.
  *
  * @export
- * @param {HookFunction} hookFunction - The function from which the hook should be created.
+ * @param {...HookFunction[]} hookFunctions - The function(s) from which the hook should be created.
  * @returns {HookDecorator} - The hook decorator.
  */
-export function Hook(hookFunction: HookFunction): HookDecorator {
+export function Hook(...hookFunctions: HookFunction[]): HookDecorator {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
     const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
-    hooks.unshift(hookFunction);
+    hooks.unshift(...hookFunctions);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
   };
 }
@@ -49,11 +49,40 @@ export function Hook(hookFunction: HookFunction): HookDecorator {
  *
  * @export
  * @param {HookDecorator} hook - The hook decorator.
- * @returns {HookFunction} - The hook function.
+ * @returns {HookFunction} The hook function.
  */
 export function getHookFunction(hook: HookDecorator): HookFunction {
   @hook
   class Foo {}
 
   return Reflect.getOwnMetadata('hooks', Foo)[0];
+}
+
+/**
+ * Get the functions from which the hook was made.
+ *
+ * @export
+ * @param {HookDecorator} hook - The hook decorator.
+ * @returns {HookFunction[]} The hook functions.
+ */
+export function getHookFunctions(hook: HookDecorator): HookFunction[] {
+  @hook
+  class Foo {}
+
+  return Reflect.getOwnMetadata('hooks', Foo);
+}
+
+/**
+ * Group multiple hooks into a new one.
+ *
+ * @export
+ * @param {...HookDecorator[]} hookDecorators - The hooks to merge.
+ * @returns {HookDecorator} The new hook.
+ */
+export function MergeHooks(...hookDecorators: HookDecorator[]): HookDecorator {
+  const hookFunctions: HookFunction[] = [];
+  for (const hook of hookDecorators) {
+    hookFunctions.push(...getHookFunctions(hook));
+  }
+  return Hook(...hookFunctions);
 }

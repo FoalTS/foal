@@ -4,14 +4,10 @@
     "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
-    "staticUrl": "public/",
-    "session": {
-      "cookie": {
-        "path": "/"
-      },
-      "resave": false,
-      "saveUninitialized": false,
-      "secret": "/* sessionSecret */"
-    }
+    "staticPath": "public/"
+  },
+  "database": {
+    "database": "./db.sqlite3",
+    "synchronize": false
   }
 }

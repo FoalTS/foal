@@ -18,7 +18,7 @@
 
 ▸ **mergeOperations**(operation1: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)*, operation2: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)*): [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)
 
-*Defined in [openapi/utils/merge-operations.ts:3](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/utils/merge-operations.ts#L3)*
+*Defined in [openapi/utils/merge-operations.ts:3](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/utils/merge-operations.ts#L3)*
 
 **Parameters:**
 

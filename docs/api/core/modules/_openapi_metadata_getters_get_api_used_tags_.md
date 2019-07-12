@@ -16,9 +16,9 @@
 
 ###  getApiUsedTags
 
-▸ **getApiUsedTags**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `string`[] \| `undefined`
+▸ **getApiUsedTags**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): (`string` \| `function`)[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-used-tags.ts:4](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-used-tags.ts#L4)*
+*Defined in [openapi/metadata-getters/get-api-used-tags.ts:4](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-used-tags.ts#L4)*
 
 **Parameters:**
 
@@ -27,7 +27,7 @@
 | controllerClass | [Class](_core_class_interface_.md#class) |
 | `Optional` propertyKey | `undefined` \| `string` |
 
-**Returns:** `string`[] \| `undefined`
+**Returns:** (`string` \| `function`)[] \| `undefined`
 
 ___
 

@@ -18,6 +18,7 @@ Serve Swagger UI to visualize and interact with API resources.
 
 ### Properties
 
+* [controllers](_swagger_controller_.swaggercontroller.md#controllers)
 * [options](_swagger_controller_.swaggercontroller.md#options)
 
 ### Methods
@@ -32,13 +33,22 @@ Serve Swagger UI to visualize and interact with API resources.
 
 ## Properties
 
+<a id="controllers"></a>
+
+###  controllers
+
+**● controllers**: *`ServiceManager`*
+
+*Defined in [swagger-controller.ts:27](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L27)*
+
+___
 <a id="options"></a>
 
 ### `<Abstract>` options
 
 **● options**: *`object` \| `object` \| (`object` \| `object`)[]*
 
-*Defined in [swagger-controller.ts:41](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L41)*
+*Defined in [swagger-controller.ts:44](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L44)*
 
 Specify the OpenAPI Specification(s) and their location(s).
 
@@ -60,7 +70,7 @@ ___
 
 ▸ **getOpenApiDefinition**(ctx: *`Context`*): `HttpResponseNotFound` \| `HttpResponseOK` \| `HttpResponseBadRequest`
 
-*Defined in [swagger-controller.ts:51](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L51)*
+*Defined in [swagger-controller.ts:54](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L54)*
 
 **Parameters:**
 
@@ -77,7 +87,7 @@ ___
 
 ▸ **index**(ctx: *`Context`*): `Promise`<`HttpResponseOK` \| `HttpResponseMovedPermanently`>
 
-*Defined in [swagger-controller.ts:77](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L77)*
+*Defined in [swagger-controller.ts:80](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L80)*
 
 **Parameters:**
 
@@ -94,7 +104,7 @@ ___
 
 ▸ **swaggerUi**(): `Promise`<`HttpResponseOK`>
 
-*Defined in [swagger-controller.ts:113](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L113)*
+*Defined in [swagger-controller.ts:115](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L115)*
 
 **Returns:** `Promise`<`HttpResponseOK`>
 
@@ -105,7 +115,7 @@ ___
 
 ▸ **swaggerUiBundle**(): `Promise`<`HttpResponseOK`>
 
-*Defined in [swagger-controller.ts:121](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L121)*
+*Defined in [swagger-controller.ts:123](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L123)*
 
 **Returns:** `Promise`<`HttpResponseOK`>
 
@@ -116,7 +126,7 @@ ___
 
 ▸ **swaggerUiStandalonePreset**(): `Promise`<`HttpResponseOK`>
 
-*Defined in [swagger-controller.ts:129](https://github.com/FoalTS/foal/blob/cf326d07/packages/swagger/src/swagger-controller.ts#L129)*
+*Defined in [swagger-controller.ts:131](https://github.com/FoalTS/foal/blob/07f00115/packages/swagger/src/swagger-controller.ts#L131)*
 
 **Returns:** `Promise`<`HttpResponseOK`>
 

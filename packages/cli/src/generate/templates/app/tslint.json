@@ -18,7 +18,8 @@
     "no-unused-variable": true,
     "no-duplicate-imports": true,
     "no-var-requires": false,
-    "member-access": [true, "no-public"]
+    "member-access": [true, "no-public"],
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": [],
   "linterOptions": {

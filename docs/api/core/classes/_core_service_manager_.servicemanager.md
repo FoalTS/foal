@@ -33,7 +33,7 @@ Identity Mapper that instantiates and returns service singletons.
 
 **● map**: *`Map`<[Class](../modules/_core_class_interface_.md#class)<`any`>, `any`>* =  new Map()
 
-*Defined in [core/service-manager.ts:62](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L62)*
+*Defined in [core/service-manager.ts:70](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L70)*
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 ▸ **get**<`Service`>(serviceClass: *[Class](../modules/_core_class_interface_.md#class)<`Service`>*): `Service`
 
-*Defined in [core/service-manager.ts:85](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L85)*
+*Defined in [core/service-manager.ts:93](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L93)*
 
 Get (and create if necessary) the service singleton.
 
@@ -72,7 +72,7 @@ ___
 
 ▸ **set**<`Service`>(serviceClass: *[Class](../modules/_core_class_interface_.md#class)<`Service`>*, service: *`any`*): `void`
 
-*Defined in [core/service-manager.ts:73](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/service-manager.ts#L73)*
+*Defined in [core/service-manager.ts:81](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/service-manager.ts#L81)*
 
 Add manually a service to the identity mapper. This function is useful during tests to inject mocks.
 

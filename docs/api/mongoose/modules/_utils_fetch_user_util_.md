@@ -18,7 +18,7 @@
 
 ▸ **fetchUser**(userModel: *`Model`<`any`>*): `function`
 
-*Defined in [utils/fetch-user.util.ts:19](https://github.com/FoalTS/foal/blob/cf326d07/packages/mongoose/src/utils/fetch-user.util.ts#L19)*
+*Defined in [utils/fetch-user.util.ts:19](https://github.com/FoalTS/foal/blob/07f00115/packages/mongoose/src/utils/fetch-user.util.ts#L19)*
 
 Create a function that finds the first document that matches some id.
 
@@ -26,8 +26,8 @@ It returns undefined if no document can be found.
 
 This function is usually used by:
 
-*   LoginRequired (@foal/core)
-*   LoginOptional (@foal/core)
+*   TokenRequired (@foal/core)
+*   TokenOptional (@foal/core)
 *   JWTRequired (@foal/jwt)
 *   JWTOptional (@foal/jwt)
 

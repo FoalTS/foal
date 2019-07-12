@@ -43,29 +43,43 @@ TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Micro
 
 ## Integration in FoalTS
 
-TypeORM is integrated by default in every new FoalTS project. This lets you quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the section *Using another ORM*.
+TypeORM is integrated by default in every new FoalTS project. This lets you quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](./using-another-orm.md).
 
 ### Initial configuration
 
-When creating a new project, an `SQLite` database is used by default as it does not require any additional installation. The connection configuration is stored in `ormconfig.json` located at the root of your project.
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/databases/typeorm.md).
 
-```json
-{
-  "type": "sqlite",
-  "database": "./db.sqlite3",
-  "entities": ["lib/app/**/*.entity.js"],
-  "migrations": ["lib/migrations/*.js"],
-  "cli": {
-    "migrationsDir": "src/migrations"
+When creating a new project, an `SQLite` database is used by default as it does not require any additional installation. The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
+
+*ormconfig.js*
+```js
+const { Config } = require('@foal/core');
+
+module.exports = {
+  type: "sqlite",
+  database: Config.get('database.database'),
+  dropSchema: Config.get('database.dropSchema', false),
+  entities: ["build/app/**/*.entity.js"],
+  migrations: ["build/migrations/*.js"],
+  cli: {
+    migrationsDir: "src/migrations"
   },
-  "synchronize": true
+  synchronize: Config.get('database.synchronize', false)
 }
-
 ```
 
-Database configuration and credentials can be stored in this file or in environment variables (ideal for deployment).
-
-The `synchronize` option auto creates the database schema on every application launch. This allows fast development: you can edit and save your models and the database changes. In production, you should use [migrations](./generate-and-run-migrations.md) to make sure you do not loose prod data.
+*default.json (example)*
+```json
+{
+  "port": 3001,
+  "settings": {
+    ...
+  },
+  "database": {
+    "database": "./db.sqlite3"
+  }
+}
+```
 
 ### The `typeorm` and `@foal/typeorm` packages
 

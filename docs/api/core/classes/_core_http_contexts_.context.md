@@ -6,6 +6,7 @@ Class instantiated on each request. It includes:
 
 *   the express request object,
 *   the user object if available,
+*   the session object if available,
 *   and a `state` object that can be used to pass data across several hooks.
 
 *__export__*: 
@@ -16,6 +17,7 @@ Class instantiated on each request. It includes:
 
 ## Type parameters
 #### User 
+#### ContextSession 
 ## Hierarchy
 
 **Context**
@@ -29,6 +31,7 @@ Class instantiated on each request. It includes:
 ### Properties
 
 * [request](_core_http_contexts_.context.md#request)
+* [session](_core_http_contexts_.context.md#session)
 * [state](_core_http_contexts_.context.md#state)
 * [user](_core_http_contexts_.context.md#user)
 
@@ -42,7 +45,7 @@ Class instantiated on each request. It includes:
 
 ⊕ **new Context**(request: *`any`*): [Context](_core_http_contexts_.context.md)
 
-*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L29)*
+*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/contexts.ts#L19)*
 
 Creates an instance of Context.
 
@@ -64,9 +67,18 @@ ___
 
 ###  request
 
-**● request**: *[HTTPRequest](../interfaces/_core_http_contexts_.httprequest.md)*
+**● request**: *`Request`*
 
-*Defined in [core/http/contexts.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L29)*
+*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/contexts.ts#L19)*
+
+___
+<a id="session"></a>
+
+###  session
+
+**● session**: *`ContextSession`*
+
+*Defined in [core/http/contexts.ts:18](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/contexts.ts#L18)*
 
 ___
 <a id="state"></a>
@@ -75,7 +87,7 @@ ___
 
 **● state**: *`object`*
 
-*Defined in [core/http/contexts.ts:27](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L27)*
+*Defined in [core/http/contexts.ts:16](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/contexts.ts#L16)*
 
 #### Type declaration
 
@@ -88,7 +100,7 @@ ___
 
 **● user**: *`User`*
 
-*Defined in [core/http/contexts.ts:28](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/core/http/contexts.ts#L28)*
+*Defined in [core/http/contexts.ts:17](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/contexts.ts#L17)*
 
 ___
 

@@ -15,6 +15,16 @@ describe('ConfigMock', () => {
       strictEqual(actual, expected);
     });
 
+    it('should return the value given previously with the "set" method (falsy value).', () => {
+      const expected = false;
+
+      const config = new ConfigMock();
+      config.set('settings.foo.bar', expected);
+
+      const actual = config.get('settings.foo.bar');
+      strictEqual(actual, expected);
+    });
+
     it('should return the default value if no value was previously provided.', () => {
       const expected = 'barfoo';
 

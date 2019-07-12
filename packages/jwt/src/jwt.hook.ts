@@ -6,6 +6,7 @@ import {
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
+import { JWT_DEFAULT_COOKIE_NAME } from './constants';
 import { isInvalidTokenError } from './invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
@@ -39,6 +40,13 @@ export interface JWTOptions {
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
+  /**
+   * Add openapi metadata to the class or class method.
+   *
+   * @type {boolean}
+   * @memberof JWTOptions
+   */
+  openapi?: boolean;
 }
 
 /**
@@ -56,7 +64,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
     let token: string;
     if (options.cookie) {
-      const cookieName = config.get<string>('settings.jwt.cookieName', 'auth');
+      const cookieName = config.get<string>('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -120,9 +128,8 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
     if (secretOrPublicKey === undefined) {
       throw new Error(
-        'You must provide a settings.jwt.secretOrPublicKey in default.json or '
-          + 'in the SETTINGS_JWT_SECRET_OR_PUBLIC_KEY environment variable.'
-        );
+        '[CONFIG] You must provide a secret or public key with the configuration key settings.jwt.secretOrPublicKey.'
+      );
     }
 
     let payload;

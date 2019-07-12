@@ -9,8 +9,8 @@ import { parse } from 'yamljs';
 // FoalTS
 import {
   ApiDefineSchema, ApiDefineSecurityScheme, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
-  ApiOperation, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer,
-  ApiUseTag, controller, createOpenApiDocument, Delete, Get, Post, Put
+  ApiOperation, ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiParameter, ApiRequestBody,
+  ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag, controller, createOpenApiDocument, Delete, Get, Post, Put
 } from '@foal/core';
 
 it('OpenAPI', async () => {
@@ -159,11 +159,8 @@ it('OpenAPI', async () => {
   })
   class PetController {
     @Put()
-    @ApiOperation({
-      operationId: 'updatePet',
-      responses: {},
-      summary: 'Update an existing pet',
-    })
+    @ApiOperationId('updatePet')
+    @ApiOperationSummary('Update an existing pet')
     @ApiRequestBody({
       content: {
         'application/json': {
@@ -185,11 +182,8 @@ it('OpenAPI', async () => {
     updatePet() { }
 
     @Post()
-    @ApiOperation({
-      operationId: 'addPet',
-      responses: {},
-      summary: 'Add a new pet to the store'
-    })
+    @ApiOperationId('addPet')
+    @ApiOperationSummary('Add a new pet to the store')
     @ApiRequestBody({
       content: {
         'application/json': {
@@ -209,12 +203,9 @@ it('OpenAPI', async () => {
     addPet() { }
 
     @Get('/findByStatus')
-    @ApiOperation({
-      description: 'Multiple status values can be provided with comma separated strings',
-      operationId: 'findPetsByStatus',
-      responses: {},
-      summary: 'Finds Pets by status',
-    })
+    @ApiOperationId('findPetsByStatus')
+    @ApiOperationSummary('Finds Pets by status')
+    @ApiOperationDescription('Multiple status values can be provided with comma separated strings')
     @ApiParameter({
       description: 'Status values that need to be considered for filter',
       explode: true,
@@ -255,13 +246,10 @@ it('OpenAPI', async () => {
     findPetsByStatus() { }
 
     @Get('/findByTags')
-    @ApiOperation({
-      description: 'Muliple tags can be provided with comma separated strings. Use         tag1,'
-        + '\ntag2, tag3 for testing.',
-      operationId: 'findPetsByTags',
-      responses: {},
-      summary: 'Finds Pets by tags'
-    })
+    @ApiOperationId('findPetsByTags')
+    @ApiOperationDescription('Muliple tags can be provided with comma separated strings. Use         tag1,'
+    + '\ntag2, tag3 for testing.')
+    @ApiOperationSummary('Finds Pets by tags')
     @ApiParameter({
       description: 'Tags to filter by',
       explode: true,
@@ -299,12 +287,9 @@ it('OpenAPI', async () => {
     findPetsByTags() { }
 
     @Get('/:petId')
-    @ApiOperation({
-      description: 'Returns a single pet',
-      operationId: 'getPetById',
-      responses: {},
-      summary: 'Find pet by ID',
-    })
+    @ApiOperationId('getPetById')
+    @ApiOperationSummary('Find pet by ID')
+    @ApiOperationDescription('Returns a single pet')
     @ApiParameter({
       description: 'ID of pet to return',
       in: 'path',

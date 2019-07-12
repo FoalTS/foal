@@ -18,7 +18,7 @@
 
 ▸ **mergeTags**(tags1: *[IApiTag](../interfaces/_openapi_interfaces_.iapitag.md)[] \| `undefined`*, tags2: *[IApiTag](../interfaces/_openapi_interfaces_.iapitag.md)[] \| `undefined`*): [IApiTag](../interfaces/_openapi_interfaces_.iapitag.md)[] \| `undefined`
 
-*Defined in [openapi/utils/merge-tags.ts:3](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/utils/merge-tags.ts#L3)*
+*Defined in [openapi/utils/merge-tags.ts:3](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/utils/merge-tags.ts#L3)*
 
 **Parameters:**
 

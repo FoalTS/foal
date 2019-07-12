@@ -10,16 +10,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@foal/core");
+const jwt_1 = require("@foal/jwt");
 class AppController {
+    constructor() {
+        this.subControllers = [
+            core_1.controller('/api', ApiController)
+        ];
+    }
+}
+class ApiController {
     index() {
-        return new core_1.HttpResponseOK('Hello world!');
+        return new core_1.HttpResponseOK([{ name: 'someone' }]);
     }
 }
 __decorate([
-    core_1.Get('/'),
+    core_1.Get('/users'),
+    jwt_1.JWTRequired(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AppController.prototype, "index", null);
+], ApiController.prototype, "index", null);
 const app = core_1.createApp(AppController);
 app.listen(3000);

@@ -1,6 +1,6 @@
 {
   "name": "@foal/graphql",
-  "version": "0.8.9",
+  "version": "1.0.0",
   "description": "GraphQL integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -38,7 +38,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.9",
+    "@foal/core": "^1.0.0",
     "ajv": "^6.10.0",
     "glob": "^7.1.4"
   },

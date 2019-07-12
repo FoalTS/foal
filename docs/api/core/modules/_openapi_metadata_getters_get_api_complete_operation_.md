@@ -16,15 +16,19 @@
 
 ###  getApiCompleteOperation
 
-▸ **getApiCompleteOperation**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)
+▸ **getApiCompleteOperation**<`T`>(controllerClass: *[Class](_core_class_interface_.md#class)<`T`>*, controller: *`T`*, propertyKey?: *`undefined` \| `string`*): [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)
 
-*Defined in [openapi/metadata-getters/get-api-complete-operation.ts:14](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-complete-operation.ts#L14)*
+*Defined in [openapi/metadata-getters/get-api-complete-operation.ts:17](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-complete-operation.ts#L17)*
 
+**Type parameters:**
+
+#### T 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| controllerClass | [Class](_core_class_interface_.md#class) |
+| controllerClass | [Class](_core_class_interface_.md#class)<`T`> |
+| controller | `T` |
 | `Optional` propertyKey | `undefined` \| `string` |
 
 **Returns:** [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)
