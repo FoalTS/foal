@@ -16,7 +16,7 @@ If you use cookies, make sure to let them only be sent to the server when the re
 
 *config/production.yml (example)*
 
-```yml
+```yaml
 settings:
   // If you use sessions
   session:
@@ -43,7 +43,7 @@ SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
 You can generate 256-bit secrets encoded in base64 with the following command:
 
 ```
-foal createapp
+foal createsecret
 ```
 
 ## 4. Database Credentials & Migrations
