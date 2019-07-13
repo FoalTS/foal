@@ -27,18 +27,12 @@ describe('ApiController', () => {
 
   // Create a connection to the database before running all the tests.
   before(async () => {
-    connection = await createConnection({
-      // Choose a test database. You don't want to run your tests on your production data.
-      database: './test_db.sqlite3',
-      // Drop the schema when the connection is established.
-      dropSchema: true,
-      // Register the models that are used.
-      entities: [ Todo ],
-      // Auto create the database schema.
-      synchronize: true,
-      // Specify the type of database.
-      type: 'sqlite',
-    });
+    // The connection uses the configuration defined in the file config/test.json.
+    // By default, the file has three connection options:
+    //  "database": "./test_db.sqlite3" -> Use a different database for running the tests.
+    // "synchronize": true ->  Auto create the database schema when the connection is established.
+    // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
+    connection = await createConnection();
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
@@ -107,4 +101,4 @@ Congratulations! You have reached the end of this tutorial!
 
 If you have any questions, feel free to open an issue on Github!
 
-> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code.zip).
+> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code-v1.zip).

@@ -1,6 +1,6 @@
 {
   "name": "@foal/typeorm",
-  "version": "0.8.9",
+  "version": "1.0.0",
   "description": "FoalTS integration of TypeORM",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -27,7 +27,8 @@
     "sqlite",
     "database",
     "TypeORM",
-    "ORM"
+    "ORM",
+    "session"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
@@ -45,7 +46,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^0.8.9"
+    "@foal/core": "^1.0.0"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"

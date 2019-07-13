@@ -94,22 +94,22 @@ test_rest_api GET "http://localhost:3001/products/ab" 400
 
 test_rest_api_with_body POST "http://localhost:3001/products" 201 '{ "text": "value1" }'
 test_rest_api_with_body POST "http://localhost:3001/products" 400 '{}'
-test_rest_api_with_body POST "http://localhost:3001/products/1" 405
+test_rest_api_with_body POST "http://localhost:3001/products/1" 404
 
 test_rest_api GET "http://localhost:3001/products/1" 200
 
-test_rest_api_with_body PUT "http://localhost:3001/products" 405
+test_rest_api_with_body PUT "http://localhost:3001/products" 404
 test_rest_api_with_body PUT "http://localhost:3001/products/1" 200 '{ "text": "value2" }'
 test_rest_api_with_body PUT "http://localhost:3001/products/1" 400 '{}'
 test_rest_api_with_body PUT "http://localhost:3001/products/20000" 404 '{ "text": "value2" }'
 test_rest_api_with_body PUT "http://localhost:3001/products/ab" 400 '{ "text": "value2" }'
 
-test_rest_api_with_body PATCH "http://localhost:3001/products" 405
+test_rest_api_with_body PATCH "http://localhost:3001/products" 404
 test_rest_api_with_body PATCH "http://localhost:3001/products/1" 200 '{ "text": "value2" }'
 test_rest_api_with_body PATCH "http://localhost:3001/products/20000" 404 '{ "text": "value2" }'
 test_rest_api_with_body PATCH "http://localhost:3001/products/ab" 400 '{ "text": "value2" }'
 
-test_rest_api DELETE "http://localhost:3001/products" 405
+test_rest_api DELETE "http://localhost:3001/products" 404
 test_rest_api DELETE "http://localhost:3001/products/1" 204
 test_rest_api DELETE "http://localhost:3001/products/1" 404
 test_rest_api DELETE "http://localhost:3001/products/ab" 400
@@ -119,13 +119,6 @@ pm2 delete index
 # Test the default shell scripts to create permissions, groups and users.
 npm run build:scripts
 
-# foal run-script create-perm name="My first permission" codeName="my-first-perm"
-# foal run-script create-perm name="My second permission" codeName="my-second-perm"
-
-# foal run-script create-group name="My group" codeName="my-group" permissions='[ "my-second-perm" ]'
-# foal run-script create-group name="My group2" codeName="my-group2"
-
-# foal run-script create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 foal run create-user
 
 #################################################################

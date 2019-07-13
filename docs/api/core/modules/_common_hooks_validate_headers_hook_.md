@@ -16,9 +16,9 @@
 
 ###  ValidateHeaders
 
-▸ **ValidateHeaders**(schema: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
+▸ **ValidateHeaders**(schema: *`object`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-headers.hook.ts:13](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/common/hooks/validate-headers.hook.ts#L13)*
+*Defined in [common/hooks/validate-headers.hook.ts:15](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-headers.hook.ts#L15)*
 
 Hook factory validating the headers of the request against a AJV schema.
 
@@ -26,9 +26,15 @@ Hook factory validating the headers of the request against a AJV schema.
 
 **Parameters:**
 
-| Name | Type | Description |
-| ------ | ------ | ------ |
-| schema | `object` |  Schema used to validate the headers request. |
+**schema: `object`**
+
+Schema used to validate the headers request.
+
+**`Default value` options: `object`**
+
+| Name | Type |
+| ------ | ------ |
+| `Optional` openapi | `undefined` \| `false` \| `true` |
 
 **Returns:** [HookDecorator](_core_hooks_.md#hookdecorator)
 - The hook.

@@ -1,32 +1,22 @@
 import { Request } from 'express';
-
-/**
- * Interface of the express request object. It also includes
- * a `session` property and a `csrfToken` method.
- *
- * @export
- * @interface HTTPRequest
- * @extends {Request}
- */
-export interface HTTPRequest extends Request {
-  session: any;
-  csrfToken: () => string;
-}
+import { Session } from '../../sessions';
 
 /**
  * Class instantiated on each request. It includes:
  * - the express request object,
  * - the user object if available,
+ * - the session object if available,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
  * @class Context
  * @template User
  */
-export class Context<User = any> {
+export class Context<User = any, ContextSession = Session|undefined> {
   state: { [key: string]: any } = {};
   user: User;
-  request: HTTPRequest;
+  session: ContextSession;
+  request: Request;
 
   /**
    * Creates an instance of Context.

@@ -188,6 +188,13 @@ describe('ServiceManager', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
     });
 
+    it('should return itself if the given serviceClass has a isServiceManager static property.', () => {
+      class ServiceManager {
+        static isServiceManager = true;
+      }
+      strictEqual(serviceManager.get(ServiceManager), serviceManager);
+    });
+
     it('should return an instance of the given Service.', () => {
       ok(serviceManager.get(Foobar) instanceof Foobar);
     });

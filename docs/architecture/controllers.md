@@ -88,127 +88,266 @@ export class AppController {
 
 ## Contexts & HTTP Requests
 
+### The `Context` object
+
 On every request, the controller method is called with a `Context` object. This context is unique and specific to the request.
 
-It has three properties:
-- the express [request object](http://expressjs.com/en/4x/api.html#req) which gives information on the request. It includes a session object and the `csrfToken` method that generates and returns the [CSRF Token](https://en.wikipedia.org/wiki/Cross-site_request_forgery),
-- the `user` property which is undefined or not depedending on if a user was authenticated,
-- and a `state` object which is a mere object to forward information between [hooks](./hooks.md).
+It has four properties:
+- a `request` (type: `Request`) giving information about the HTTP request received,
+- a `state` (type: `object`) which can be used to share data between hooks (see [Hooks](./hooks.md)),
+- a `user` (type: `any` or `undefined`) giving information on the current user (see [Authentication](../authentication-and-access-control/quick-start.md)),
+- and a `session` (type: `Session` or `undefined`) containing the session data if you use sessions.
 
+### HTTP Requests
 
-*Example*:
+The `request` property is an [ExpressJS](http://expressjs.com/) request object. Its complete documentation can be consulted [here](http://expressjs.com/en/4x/api.html#req). The below sections detail common use cases.
+
+#### Read the Body
+
+The request body is accessible with the `body` attribute. Form data and JSON objects are automatically converted to JavaScript objects in FoalTS.
+
+```
+POST /products
+
+{
+  "name": "milk"
+}
+```
+
 ```typescript
-import { Context, Post } from '@foal/core';
+import { Context, HttpResponseCreated, Post } from '@foal/core';
 
 class AppController {
-  private products = [];
-
   @Post('/products')
-  addProduct(ctx: Context) {
-    this.products.push(ctx.request.body);
+  createProduct(ctx: Context) {
+    const requestBody = ctx.request.body;
+    // Do something.
+    return new HttpResponseCreated();
   }
 }
 ```
 
-You can specify a *type argument* to the  `Context` class for more commodity.
+#### Read Path Parameters
 
-*Example:*
+Path parameters are accessible with the `params` attribute.
+
+```
+GET /products/3
+```
+
 ```typescript
-import { Context, HttpResponseOK, LoginRequired, Post } from '@foal/core';
-
-interface User {
-  firstName: string;
-  lastName: string;
-}
+import { Context, HttpResponseOK, Post } from '@foal/core';
 
 class AppController {
-  @Get('/users/me')
-  @LoginRequired(/* ... */)
-  getFullUserName(ctx: Context<User>) {
-    const firstName = ctx.user.firstName;
-    const lastName = ctx.user.lastName;
-    return new HttpResponseOK(
-      firstName + ' ' + lastName
-    );
+  @Get('/products/:id')
+  createProduct(ctx: Context) {
+    const productId = ctx.request.params.id;
+    // Do something.
+    return new HttpResponseOK(/* something */);
+  }
+}
+```
+
+#### Read Query Parameters
+
+Query parameters are accessible with the `query` attribute.
+
+```
+GET /products?limit=3
+```
+
+```typescript
+import { Context, HttpResponseOK, Post } from '@foal/core';
+
+class AppController {
+  @Get('/products')
+  createProduct(ctx: Context) {
+    const limit = ctx.request.query.limit;
+    // Do something.
+    return new HttpResponseOK(/* something */);
+  }
+}
+```
+
+#### Read Headers
+
+Headers are accessible with the `get` method.
+
+```typescript
+import { Context, Get } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index(ctx: Context) {
+    const token: string|undefined = ctx.request.get('Authorization');
+    // ...
+  }
+}
+```
+
+#### Read Cookies
+
+Cookies are accessible with the `cookies` attribute.
+
+```typescript
+import { Context, Get } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index(ctx: Context) {
+    const sessionID: string|undefined = ctx.request.cookies.sessionID;
+    // ...
   }
 }
 ```
 
 ## HTTP Responses
 
-Controllers return their HTTP responses through `HttpResponse` objects.
+HTTP responses are defined using `HttpResponse` objects. Each controller method must return an instance of this class (or a *promise* of this instance).
 
-Here are the available options:
+Here are subclasses that you can use:
+| HTTP method | Response class | Is abstract? |
+|---|---|---|
+|  | **2XX Success** | |
+| 2XX | `HttpResponseSuccess` | yes |
+| 200 | `HttpResponseOK` | no |
+| 201 | `HttpResponseCreated` | no |
+|  | **3XX Redirection** | |
+| 3XX | `HttpResponseRedirection` | yes |
+| 301 | `HttpResponseMovedPermanently` | no |
+| 302 | `HttpResponseRedirect` | no |
+|  | **4XX Client errors** | |
+| 4XX | `HttpResponseClientError` | yes |
+| 400 | `HttpResponseBadRequest` | no |
+| 401 | `HttpResponseUnauthorized` | no |
+| 403 | `HttpResponseForbidden` | no |
+| 404 | `HttpResponseNotFound` | no |
+| 405 | `HttpResponseMethodNotAllowed` | no |
+| 409 | `HttpResponseConflict` | no |
+|  | **5XX Server errors** | |
+| 5XX | `HttpResponseServerError` | yes |
+| 500 | `HttpResponseInternalServerError` | no |
+| 501 | `HttpResponseNotImplemented` | no |
 
-`abstract class HttpResponseSuccess` (2xx):
-- `class HttpResponseOK` (200)
-- `class HttpResponseCreated` (201)
+Most of these responses accept a `body` at instantiation. It can be a `Buffer` object, a string, an object, a number, an array, or even a Node.JS stream.
 
-`abstract class HttpResponseRedirection` (3xx):
-- `class HttpResponseRedirect` (302)
-
-`abstract class HttpResponseClientError` (4xx):
-- `class HttpResponseBadRequest` (400)
-- `class HttpResponseUnauthorized` (401)
-- `class HttpResponseForbidden` (403)
-- `class HttpResponseNotFound` (404)
-- `class HttpResponseMethodNotAllowed` (405)
-- `class HttpResponseConflict` (409)
-
-`abstract class HttpResponseServerError` (5xx):
-- `class HttpResponseInternalServerError` (500)
-- `class HttpResponseNotImplemented` (501)
-
-The `HttpResponseSuccess`, `HttpResponseClientError` and `HttpResponseServerError` constructors can take an optional argument `body` which is used as the body of the reponse.
-
-Ex: `new HttpResponseBadRequest({ message: 'The foo field is missing.' })`
-
-If the `body` is a stream, you need to pass a second argument as follows:
-
-`new HttpResponseOK(myFileStream, { stream: true })`
-
-The `HttpResponse` class has also 7 methods to set/get cookies and headers:
+*Example with a body*
 ```typescript
-({
-  setHeader(name: string, value: string);
-
-  getHeader(name: string): string|undefined;
-
-  getHeaders(): { [key: string]: string };
-
-  setCookie(name: string, value: string, options: CookieOptions = {}): void;
-
-  getCookie(name: string): { value: string|undefined, options: CookieOptions };
-
-  getCookies(): { [key: string]: { value: string|undefined, options: CookieOptions } };
+new HttpResponseBadRequest({
+  message: 'The foo field is missing.'
 })
 ```
 
-Eventually, to check if an object is an instance of `HttpResponse` you can use the `isHttpResponse(obj): boolean` utility. An analog function exists for each sub-class of `HttpResponse` (`isHttpResponseNotFound`, etc).
+In case the body parameter is a stream, you must specify it using the `stream` option.
+
+*Example with a Node.JS stream as body*
+```typescript
+new HttpResponseOK(myStream, { stream: true })
+```
+
+### Adding Headers
+
+*Example*
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index() {
+    return new HttpResponseOK()
+      .setHeader('Cache-Control', 'max-age=604800, public');
+  }
+}
+```
+
+### Adding cookies
+
+*Example with no cookie directives*
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index() {
+    return new HttpResponseOK()
+      .setCookie('state', 'foobar');
+  }
+}
+```
+
+*Example with cookie directives*
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index() {
+    return new HttpResponseOK()
+      .setCookie('sessionID', 'xxxx', {
+        domain: 'example.com'
+        // expires: new Date(2020, 12, 12),
+        httpOnly: true,
+        maxAge: 3600,
+        path: '/',
+        secure: true
+        sameSite: 'lax',
+      });
+  }
+}
+```
+
+> The `maxAge` cookie directive defines the number of **seconds** until the cookie expires. Versions prior to version 1 used milliseconds.
 
 ## Testing Controllers
 
 A controller is a simple class and so can be tested as is. Note that [hooks](./hooks.md) are ignored upon testing.
 
+*api.controller.ts (example)*
 ```typescript
-class MyController {
-  @Get('/foo')
-  @LoginRequired()
-  foo(ctx: Context) {
-    return new HttpResponseOK('Ok!'):
+class ApiController {
+  @Get('/users/me')
+  @JWTRequired()
+  getCurrentUser(ctx: Context) {
+    return new HttpResponseOK(ctx.user):
   }
 }
 ```
 
+*api.controller.spec.ts (example)*
 ```typescript
-import { ok } from 'assert';
+import { strictEqual } from 'assert';
 
-import { Context, createController, HttpResponseOK } from '@foal/core';
+import { Context, createController, HttpResponseOK, isHttpResponseOK } from '@foal/core';
 
-const controller = createController(MyController);
-const ctx = new Context({});
-ok(controller.foo(ctx) instanceof HttpResponseOK);
+import { ApiController } from './api.controller';
+
+describe('ApiController', () => {
+
+  it('should return the current user.', () => {
+    // Instantiate the controller.
+    const controller = createController(ApiController);
+
+    // Create a fake user (the current user)
+    const user = { name: 'Alix' };
+
+    // Create a fake Context object to simulate the request.
+    const ctx = new Context({}); // "{}" is the request body.
+    ctx.user = user;
+
+    // Execute the controller method and save the response.
+    const response = controller.getCurrentUser(ctx);
+
+    if (!isHttpResponseOK(response)) {
+      throw new Error('The response should be an HttpResponseOK');
+    }
+
+    strictEqual(response.body, user);
+  });
+
+});
 ```
+
+> Due to the way packages are managed by npm, you should always use `isHttpResponseOK(response)` rather than `response instanceof HttpResponseOK` to avoid reference bugs.
 
 ## Inheriting Controllers
 

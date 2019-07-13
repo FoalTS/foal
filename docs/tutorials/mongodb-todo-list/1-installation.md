@@ -70,7 +70,7 @@ You've started the development server.
 
 > **Port 3001 already in use?**
 >
-> You can define in `config/default.js` which port the application is using.
+> You can define in `config/default.json` which port the application is using.
 
 Go to `http://localhost:3001` in your browser. You should see the text *Welcome to the future* <3.
 

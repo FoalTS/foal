@@ -38,7 +38,7 @@ A group can have permissions. A user can have permissions and belong to groups t
 
 **● groups**: *[Group](_entities_group_entity_.group.md)[]*
 
-*Defined in [entities/user-with-permissions.entity.ts:25](https://github.com/FoalTS/foal/blob/cf326d07/packages/typeorm/src/entities/user-with-permissions.entity.ts#L25)*
+*Defined in [entities/user-with-permissions.entity.ts:25](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/user-with-permissions.entity.ts#L25)*
 
 ___
 <a id="id"></a>
@@ -47,7 +47,7 @@ ___
 
 **● id**: *`number`*
 
-*Defined in [entities/user-with-permissions.entity.ts:21](https://github.com/FoalTS/foal/blob/cf326d07/packages/typeorm/src/entities/user-with-permissions.entity.ts#L21)*
+*Defined in [entities/user-with-permissions.entity.ts:21](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/user-with-permissions.entity.ts#L21)*
 
 ___
 <a id="userpermissions"></a>
@@ -56,7 +56,7 @@ ___
 
 **● userPermissions**: *[Permission](_entities_permission_entity_.permission.md)[]*
 
-*Defined in [entities/user-with-permissions.entity.ts:29](https://github.com/FoalTS/foal/blob/cf326d07/packages/typeorm/src/entities/user-with-permissions.entity.ts#L29)*
+*Defined in [entities/user-with-permissions.entity.ts:29](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/user-with-permissions.entity.ts#L29)*
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 ▸ **hasPerm**(codeName: *`string`*): `boolean`
 
-*Defined in [entities/user-with-permissions.entity.ts:39](https://github.com/FoalTS/foal/blob/cf326d07/packages/typeorm/src/entities/user-with-permissions.entity.ts#L39)*
+*Defined in [entities/user-with-permissions.entity.ts:39](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/user-with-permissions.entity.ts#L39)*
 
 Check if a user has a given permission. The user must have been retreived from the db with their groups and permissions. Otherwise, the method will always return false.
 

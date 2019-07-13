@@ -1,0 +1,137 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: avenir next,helvetica neue,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+}
+
+#app {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f7f7f7;
+}
+
+.box {
+  padding: 30px;
+  width: 310px;
+  letter-spacing: 1px;
+  color: rgba(74,74,74,.9);
+  background-color: #fff;
+  box-shadow: 0 12px 44px 0 rgba(0,0,0,.06);
+}
+
+.error {
+  color: darkred;
+}
+
+.error-sm {
+  font-size: small;
+}
+
+.box>h1 {
+  color: black;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+.row:hover {
+  background-color: lightgray;
+}
+
+.text {
+  flex-grow: 1;
+}
+
+.checkbox-wrapper {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.row:last-of-type {
+  border-bottom: none;
+}
+
+.row:last-of-type:hover {
+  background-color: initial;
+}
+
+.text-input {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group>div {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.btn {
+  background-color: #126cda;
+  border-color: #126cda;
+  color: #fff;
+  border-radius: 30px;
+  padding: 0.5rem 2rem;
+
+  text-decoration: none;
+
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.btn-orange {
+  background-color: #da7312;
+  border-color: #da7d12;
+}
+
+.btn-sm {
+  line-height: 1;
+  padding: 6px;
+  font-size: 0.7rem;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.btn-wrapper>button:hover {
+  background-color: #0f58b3;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 10px;
+}

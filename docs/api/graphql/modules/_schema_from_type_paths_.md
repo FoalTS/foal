@@ -18,7 +18,7 @@
 
 ▸ **schemaFromTypePaths**(...paths: *`string`[]*): `Promise`<`object`>
 
-*Defined in [schema-from-type-paths.ts:12](https://github.com/FoalTS/foal/blob/cf326d07/packages/graphql/src/schema-from-type-paths.ts#L12)*
+*Defined in [schema-from-type-paths.ts:12](https://github.com/FoalTS/foal/blob/07f00115/packages/graphql/src/schema-from-type-paths.ts#L12)*
 
 Build a GraphQL schema from several files containing the type definitions.
 

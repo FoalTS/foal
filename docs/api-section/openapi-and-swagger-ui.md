@@ -98,6 +98,9 @@ Using the `@ApiOperation` decorator can sometimes be cumbersome. That is why Foa
 
 | Operation Decorators |
 | --- |
+| `@ApiOperationSummary` |
+| `@ApiOperationId` |
+| `@ApiOperationDescription` |
 | `@ApiServer` |
 | `@ApiRequestBody` |
 | `@ApiSecurityRequirement` |
@@ -206,6 +209,78 @@ paths:
           description: not found
 ```
 
+### Use Existing Hooks
+
+> This section describes a new feature introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
+
+The addition of these decorators can sometimes be quite redundant with existing hooks. For example, if we want to write OpenAPI documentation for authentication and validation of the request body, we may end up with something like this.
+
+```typescript
+@JWTRequired()
+@ApiSecurityRequirement({ bearerAuth: [] })
+@ApiDefineSecurityScheme('bearerAuth', {
+  type: 'http',
+  scheme: 'bearer',
+  bearerFormat: 'JWT'
+})
+export class ApiController {
+  
+  @Post('/products')
+  @ValidateBody(schema)
+  @ApiRequestBody({
+     required: true,
+     content: {
+       'application/json': { schema }
+     }
+  })
+  createProducts() {
+    
+  }
+
+}
+```
+
+To avoid this, it is possible to generate the OpenAPI documentation from the validation and authentication hooks using the `openapi` option.
+
+```typescript
+@JWTRequired({ openapi: true })
+export class ApiController {
+  
+  @Post('/products')
+  @ValidateBody(schema, { openapi: true })
+  createProducts() {
+    // ...
+  }
+
+}
+```
+
+More simply, you can globally set the [configuration key](../deployment-and-environments/configuration.md) `setting.openapi.useHooks` to `true` so that each authentication and validation hooks generates documentation.
+
+```yaml
+settings:
+  openapi:
+    useHooks: true
+```
+
+Note that this global configuration can always be override by setting the `openapi` option on each hook.
+
+```typescript
+export class ApiController {
+  
+  @Post('/products')
+  // Generate automatically the OpenAPI spec for the request body
+  @ValidateBody(schema)
+  // Choose to write a customize spec for the path parameters
+  @ValidateParams(schema2, { openapi: false })
+  @ApiParameter( ... )
+  createProducts() {
+    // ...
+  }
+
+}
+```
+
 ## Swagger UI
 
 ![Example of Swagger UI](./swagger.png)
@@ -291,8 +366,70 @@ export class OpenApiController extends SwaggerController {
 }
 ```
 
+### Using a Static File
+
+If you prefer to write manually your OpenAPI document, you can add an `openapi.yml` file in the `public/` directory and configure your `SwaggerController` as follows:
+
+```typescript
+import { SwaggerController } from '@foal/swagger';
+
+export class OpenApiController extends SwaggerController {
+  options = { url: '/openapi.yml' };
+}
+
+```
 
 ## Advanced
+
+### Using Controller Properties
+
+```typescript
+import { ApiRequestBody, IApiRequestBody, Post } from '@foal/core';
+
+class ApiController {
+
+  requestBody: IApiRequestBody = {
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object'
+        }
+      }
+    },
+    required: true
+  };
+
+  @Post('/products')
+  // This is invalid:
+  // @ApiRequestBody(this.requestBody)
+  // This is valid:
+  @ApiRequestBody(controller => controller.requestBody)
+  createProduct() {
+    // ...
+  }
+
+}
+```
+
+### The `OpenAPI` service
+
+```typescript
+import { dependency, Get, HttpResponseOK, OpenAPI } from '@foal/core';
+
+import { ApiController } from './api.controller';
+
+export class OpenApiController {
+  @dependency
+  openapi: OpenAPI;
+
+  @Get('/openapi.json')
+  readDocument() {
+    return new HttpResponseOK(
+      this.openapi.createDocument(ApiController)
+    );
+  }
+}
+```
 
 ### In-Depth Overview
 

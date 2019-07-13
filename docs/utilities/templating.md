@@ -1,28 +1,189 @@
-# Templating
+# Templates - Server-Side Rendering
 
-FoalTS comes up with several tools to render templates.
+> This document describes new features introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/utilities/templating.md).
 
-## `render(templatePath: string, locals: object, dirname: string): HttpResponseOK`
+Regular Web Applications rely on _templates_ to dynamically generate HTML pages on the server. These templates are text files that contain static content as well as a special syntax describing how the data should be inserted dynamically. During an HTTP request, the application loads and renders the template using the given contextual data and sends back the page to the client.
 
-Renders the template with the given locals and then returns an `HttpResponseOK` whose body is the rendered template.
+This technique is known as _Server-Side Rendering (or SSR)_.
 
-Example:
-```typescript
-render('./templates/my-template.html', { title: 'foobar' }, __dirname);
+Here is an example of what a template might look like:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% title %}</title>
+</head>
+<body>
+  {% for user in users %}
+    * {{ user.name }}
+  {% else %}
+      No users have been found.
+  {% endfor %}
+</body>
+</html>
 ```
 
-## Using a different template engine
+## Rendering Templates
 
-By default FoalTS uses [ejs](http://ejs.co/) as template engine but you can use a different one.
+FoalTS provides a minimalist template engine to render templates. This engine replaces all the occurrences of `{{ myVariableName }}` with the given values.
 
-To do so, you need to create a package that exports a function `renderToString(template: string, locals: object): string` and then to add your package name in `config/default.js` as follows:
+Here is an example showing how to use it:
+
+*templates/index.html*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+</head>
+<body>
+  Hello {{ name }}!
+</body>
+</html>
+```
+
+*src/app/app.controller.ts*
+```typescript
+import { Get, render } from '@foal/core';
+
+export class AppController {
+  @Get('/')
+  index() {
+    return render('./templates/index.html', {
+      name: 'Alix',
+      title: 'Home'
+    });
+  }
+}
+```
+
+*Output (GET /)*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+<body>
+  Hello Alix!
+</body>
+</html>
+```
+
+## Using Another Template Engine
+
+External template engines, such as [EJS](https://www.npmjs.com/package/ejs) or [pug](https://www.npmjs.com/package/pug), are also supported and can be configured for the current project using the configuration key `settings.templateEngine`.
+
+Here is an example showing how to configure `config/default.json` (or `config/default.yml`) with [twig](https://www.npmjs.com/package/twig), a JS implementation of the Twig PHP templating language.
+
+```
+npm install twig
+```
 
 ```json
 {
-  ...
   "settings": {
-    "templateEngine": "my-package-name"
+    "templateEngine": "twig"
+    ...
   }
   ...
 }
 ```
+
+```yaml
+settings:
+  templateEngine: twig
+  ...
+...
+```
+
+Then the `render` function uses this engine under the hood to render the templates.
+
+> Note: Only [Express compatible](https://expressjs.com/en/resources/template-engines.html) template engines are supported (which represents the large majority of those available on npm).
+
+*templates/index.html (Twig example)*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+  <ul>
+    {% for user in users %}
+      <li>{{ user.name }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
+```
+
+*src/app/app.controller.ts (Twig example)*
+```typescript
+import { Get } from '@foal/core';
+
+export class AppController {
+  @Get('/')
+  index() {
+    return render('./templates/index.html', {
+      users: [
+        { name: 'John' },
+        { name: 'Mary' }
+      ]
+    });
+  }
+}
+```
+
+*Output (GET /) (Twig example)*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+  <ul>
+    <li>John</li>
+    <li>Mary</li>
+  </ul>
+</body>
+</html>
+```
+
+## Templates Location
+
+By default, the `render` function loads templates from the project root directory.
+
+```typescript
+// |- config
+// |- src
+// '- templates
+//   '- login.html
+render('./templates/login.html', { /* ... */ })
+```
+
+But the path can also be relative to the controller file. The `render` function accepts a third parameter `dirname` for this purpose.
+
+```typescript
+/* login.controller.ts */
+
+// |- config
+// '- src
+//   '- app
+//     '- controllers
+//       |- templates
+//       | '- login.html
+//       '- login.controller.ts
+render('./templates/login.html', { /* ... */ }, __dirname)
+```
+
+## The Legacy Package `@foal/ejs`
+
+Previous versions of FoalTS (<v1.0.0) only accepted a certain format for template engines. The package `@foal/ejs` was an adapter of EJS for the framework. Since FoalTS now supports Express-compatible template engines, prefer using the `ejs` library directly in the future.

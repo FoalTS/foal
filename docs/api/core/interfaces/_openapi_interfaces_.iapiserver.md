@@ -32,7 +32,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:263](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L263)*
+*Defined in [openapi/interfaces.ts:263](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L263)*
 
 An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
 
@@ -49,7 +49,7 @@ ___
 
 **● url**: *`string`*
 
-*Defined in [openapi/interfaces.ts:253](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L253)*
+*Defined in [openapi/interfaces.ts:253](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L253)*
 
 A URL to the target host. This URL supports Server Variables and MAY be relative, to indicate that the host location is relative to the location where the OpenAPI document is being served. Variable substitutions will be made when a variable is named in {brackets}.
 
@@ -66,7 +66,7 @@ ___
 
 **● variables**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:275](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L275)*
+*Defined in [openapi/interfaces.ts:275](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L275)*
 
 A map between a variable name and its value. The value is used for substitution in the server's URL template.
 

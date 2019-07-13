@@ -4,7 +4,7 @@ In this tutorial you will learn how to manage users, authentication and authoriz
 
 For that, you are going to create a multi-user to-do list. It will extend the application created in the previous tutorial [Simple To-Do List](../simple-todo-list/1-installation.md) that you must follow before going through this one.
 
-> The source code of the first tutorial is available [here](https://foalts.org/simple-todo-list-source-code.zip).
+> The source code of the first tutorial is available [here](https://foalts.org/simple-todo-list-source-code-v1.zip).
 
 The application will have three pages:
 - a sign up page where users can create a new account with an email and a password,

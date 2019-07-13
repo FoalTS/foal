@@ -31,7 +31,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● name**: *`string`*
 
-*Defined in [openapi/interfaces.ts:221](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L221)*
+*Defined in [openapi/interfaces.ts:221](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L221)*
 
 The license name used for the API.
 
@@ -48,7 +48,7 @@ ___
 
 **● url**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:230](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L230)*
+*Defined in [openapi/interfaces.ts:230](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L230)*
 
 A URL to the license used for the API. MUST be in the format of a URL.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * FoalTS
- * Copyright(c) 2017-2018 Loïc Poullain <loic.poullain@centraliens.net>
+ * Copyright(c) 2017-2019 Loïc Poullain <loic.poullain@centraliens.net>
  * Released under the MIT License.
  */
 
@@ -96,7 +96,7 @@ program
   .on('--help', () => {
     console.log('');
     console.log('Available types:');
-    [ 'controller', 'entity', 'hook', 'model', 'sub-app', 'service', 'vscode-config' ]
+    [ 'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config' ]
       .forEach(t => console.log(`  ${t}`));
   })
   .action(async (type: string, name: string, options) => {
@@ -124,7 +124,7 @@ program
         createScript({ name });
         break;
       case 'service':
-        createService({ name, type: 'Empty' });
+        createService({ name });
         break;
       case 'vscode-config':
         createVSCodeConfig();

@@ -13,13 +13,12 @@ import { ok } from 'assert';
 
 // 3p
 import { createApp } from '@foal/core';
-import { Group, Permission } from '@foal/typeorm';
 import * as request from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
-import { Todo, User } from '../app/entities';
+import { User } from '../app/entities';
 
 // Define a group of tests.
 describe('The server', () => {
@@ -28,18 +27,12 @@ describe('The server', () => {
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
-    await createConnection({
-      // Choose a test database. You don't want to run your tests on your production data.
-      database: 'e2e_db.sqlite3',
-      // Drop the schema when the connection is established.
-      dropSchema: true,
-      // Register the models that are used.
-      entities: [User, Permission, Group, Todo],
-      // Auto create the database schema.
-      synchronize: true,
-      // Specify the type of database.
-      type: 'sqlite',
-    });
+    // The connection uses the configuration defined in the file config/e2e.json.
+    // By default, the file has three connection options:
+    //  "database": "./e2e_db.sqlite3" -> Use a different database for running the tests.
+    // "synchronize": true ->  Auto create the database schema when the connection is established.
+    // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
+    await createConnection();
     app = createApp(AppController);
   });
 
@@ -49,10 +42,11 @@ describe('The server', () => {
   // Define a nested group of tests.
   describe('on GET /api/todos requests', () => {
 
-    it('should return a 401 status if the user did not signed in.', () => {
+    it('should return a 400 status if the user did not signed in.', () => {
       return request(app)
         .get('/api/todos')
-        .expect(401);
+        .expect(400)
+        .expect({ code: 'invalid_request', description: 'Session cookie not found.' });
     });
 
     it('should return a 200 status if the user did signed in.', async () => {

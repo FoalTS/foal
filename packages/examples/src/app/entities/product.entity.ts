@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 @Entity()
 export class Product {

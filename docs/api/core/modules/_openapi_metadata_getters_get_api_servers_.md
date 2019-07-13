@@ -16,9 +16,9 @@
 
 ###  getApiServers
 
-▸ **getApiServers**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md)[] \| `undefined`
+▸ **getApiServers**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): ([IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) \| `function`)[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-servers.ts:5](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-servers.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-servers.ts:5](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-servers.ts#L5)*
 
 **Parameters:**
 
@@ -27,7 +27,7 @@
 | controllerClass | [Class](_core_class_interface_.md#class) |
 | `Optional` propertyKey | `undefined` \| `string` |
 
-**Returns:** [IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md)[] \| `undefined`
+**Returns:** ([IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) \| `function`)[] \| `undefined`
 
 ___
 

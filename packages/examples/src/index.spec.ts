@@ -1,3 +1,1 @@
-it('A test', () => {
-  console.log('This is a test');
-});
+it('A test');

@@ -52,7 +52,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● 1XX**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1244](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1244)*
+*Defined in [openapi/interfaces.ts:1244](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1244)*
 
 Any HTTP status code can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A Reference Object can link to a response that is defined in the OpenAPI Object's components/responses section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character X. For example, 2XX represents all response codes between \[200-299\]. Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
 
@@ -69,7 +69,7 @@ ___
 
 **● 2XX**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1261](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1261)*
+*Defined in [openapi/interfaces.ts:1261](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1261)*
 
 Any HTTP status code can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A Reference Object can link to a response that is defined in the OpenAPI Object's components/responses section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character X. For example, 2XX represents all response codes between \[200-299\]. Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
 
@@ -86,7 +86,7 @@ ___
 
 **● 3XX**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1278](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1278)*
+*Defined in [openapi/interfaces.ts:1278](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1278)*
 
 Any HTTP status code can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A Reference Object can link to a response that is defined in the OpenAPI Object's components/responses section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character X. For example, 2XX represents all response codes between \[200-299\]. Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
 
@@ -103,7 +103,7 @@ ___
 
 **● 4XX**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1295](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1295)*
+*Defined in [openapi/interfaces.ts:1295](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1295)*
 
 Any HTTP status code can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A Reference Object can link to a response that is defined in the OpenAPI Object's components/responses section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character X. For example, 2XX represents all response codes between \[200-299\]. Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
 
@@ -120,7 +120,7 @@ ___
 
 **● 5XX**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1312](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1312)*
+*Defined in [openapi/interfaces.ts:1312](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1312)*
 
 Any HTTP status code can be used as the property name, but only one property per code, to describe the expected response for that HTTP status code. A Reference Object can link to a response that is defined in the OpenAPI Object's components/responses section. This field MUST be enclosed in quotation marks (for example, "200") for compatibility between JSON and YAML. To define a range of response codes, this field MAY contain the uppercase wildcard character X. For example, 2XX represents all response codes between \[200-299\]. Only the following range definitions are allowed: 1XX, 2XX, 3XX, 4XX, and 5XX. If a response is defined using an explicit code, the explicit code definition takes precedence over the range definition for that code.
 
@@ -137,7 +137,7 @@ ___
 
 **● default**: *[IApiResponse](_openapi_interfaces_.iapiresponse.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1210](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1210)*
+*Defined in [openapi/interfaces.ts:1210](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1210)*
 
 The documentation of responses other than the ones declared for specific HTTP response codes. Use this field to cover undeclared responses. A Reference Object can link to a response that the OpenAPI Object's components/responses section defines.
 

@@ -32,7 +32,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1580](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1580)*
+*Defined in [openapi/interfaces.ts:1580](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1580)*
 
 A short description for the tag. CommonMark syntax MAY be used for rich text representation.
 
@@ -49,7 +49,7 @@ ___
 
 **● externalDocs**: *[IApiExternalDocumentation](_openapi_interfaces_.iapiexternaldocumentation.md)*
 
-*Defined in [openapi/interfaces.ts:1589](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1589)*
+*Defined in [openapi/interfaces.ts:1589](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1589)*
 
 Additional external documentation for this tag.
 
@@ -66,7 +66,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1570](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/interfaces.ts#L1570)*
+*Defined in [openapi/interfaces.ts:1570](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1570)*
 
 The name of the tag.
 

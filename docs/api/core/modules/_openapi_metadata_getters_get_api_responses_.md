@@ -16,9 +16,9 @@
 
 ###  getApiResponses
 
-▸ **getApiResponses**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiResponses](../interfaces/_openapi_interfaces_.iapiresponses.md) \| `undefined`
+▸ **getApiResponses**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [Dynamic](_openapi_utils_dynamic_type_.md#dynamic)<[IApiResponses](../interfaces/_openapi_interfaces_.iapiresponses.md)> \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-responses.ts:5](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/metadata-getters/get-api-responses.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-responses.ts:6](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/metadata-getters/get-api-responses.ts#L6)*
 
 **Parameters:**
 
@@ -27,7 +27,7 @@
 | controllerClass | [Class](_core_class_interface_.md#class) |
 | `Optional` propertyKey | `undefined` \| `string` |
 
-**Returns:** [IApiResponses](../interfaces/_openapi_interfaces_.iapiresponses.md) \| `undefined`
+**Returns:** [Dynamic](_openapi_utils_dynamic_type_.md#dynamic)<[IApiResponses](../interfaces/_openapi_interfaces_.iapiresponses.md)> \| `undefined`
 
 ___
 

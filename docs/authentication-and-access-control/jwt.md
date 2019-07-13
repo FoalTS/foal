@@ -125,7 +125,7 @@ export class LoginController {
 
 *user.entity.ts*
 ```typescript
-import { encryptPassword } from '@foal/core';
+import { hashPassword } from '@foal/core';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -141,7 +141,7 @@ export class User extends BaseEntity {
   password: string;
 
   async setPassword(password: string) {
-    this.password = await encryptPassword(password);
+    this.password = await hashPassword(password);
   }
 
 }
@@ -205,6 +205,8 @@ You can provide your own function (in the case you want to use a cache database 
 
 ## Refresh the tokens
 
+> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/authentication-and-access-control/jwt.md).
+
 Having a too-long expiration date for JSON Web Tokens is not recommend as it increases exposure to attacks based on token hijacking. If an attacker succeeds in stealing a token with an insufficient expiration date, he/she will have plenty of time to make other attacks and harm your application.
 
 In order to minimize the exposure, it is recommend to set a short expiration date (15 minutes for common applications) to quickly invalidate tokens. In this way, even if a token is stolen, it will quickly become unusable since it will have expired.
@@ -228,14 +230,14 @@ export function RefreshJWT(): HookDecorator {
       return;
     }
 
-    return (ctx, services, response: HttpResponse) => {
+    return (response: HttpResponse) => {
       const newToken = sign(
         // The below object assumes that ctx.user is
         // the decoded payload (default behavior).
         {
           email: ctx.user.email,
-          id: ctx.user.id,
-          sub: ctx.user.subject,
+          // id: ctx.user.id,
+          // sub: ctx.user.subject,
         },
         Config.get<string>('settings.jwt.secretOrPublicKey'),
         { expiresIn: '15m' }
@@ -268,6 +270,8 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
   const token = sign(
     {
+      // TypeScript v3.5.1 and v3.5.2 have a bug which makes the compilation fail
+      // with the property "sub". This can be fixed by adding "as any" after the object.
       sub: '90485234', // Required
       id: 90485234,
       email: 'mary@foalts.org'

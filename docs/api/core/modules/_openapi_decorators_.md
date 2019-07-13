@@ -23,6 +23,9 @@
 * [ApiExternalDoc](_openapi_decorators_.md#apiexternaldoc)
 * [ApiInfo](_openapi_decorators_.md#apiinfo)
 * [ApiOperation](_openapi_decorators_.md#apioperation)
+* [ApiOperationDescription](_openapi_decorators_.md#apioperationdescription)
+* [ApiOperationId](_openapi_decorators_.md#apioperationid)
+* [ApiOperationSummary](_openapi_decorators_.md#apioperationsummary)
 * [ApiParameter](_openapi_decorators_.md#apiparameter)
 * [ApiRequestBody](_openapi_decorators_.md#apirequestbody)
 * [ApiResponse](_openapi_decorators_.md#apiresponse)
@@ -40,7 +43,7 @@
 
 ▸ **AddMetadataItem**<`T`>(metadataKey: *`string`*, item: *`T`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:12](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L12)*
+*Defined in [openapi/decorators.ts:12](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L12)*
 
 **Type parameters:**
 
@@ -61,7 +64,7 @@ ___
 
 ▸ **AddMetadataProperty**(metadataKey: *`string`*, key: *`string`*, property: *`any`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:21](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L21)*
+*Defined in [openapi/decorators.ts:21](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L21)*
 
 **Parameters:**
 
@@ -78,16 +81,16 @@ ___
 
 ###  ApiCallback
 
-▸ **ApiCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:73](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L73)*
+*Defined in [openapi/decorators.ts:94](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L94)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| callback | [IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| callback | [IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -96,16 +99,16 @@ ___
 
 ###  ApiDefineCallback
 
-▸ **ApiDefineCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:113](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L113)*
+*Defined in [openapi/decorators.ts:153](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L153)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| callback | [IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| callback | [IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -114,16 +117,16 @@ ___
 
 ###  ApiDefineExample
 
-▸ **ApiDefineExample**(key: *`string`*, example: *[IApiExample](../interfaces/_openapi_interfaces_.iapiexample.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineExample**(key: *`string`*, example: *[IApiExample](../interfaces/_openapi_interfaces_.iapiexample.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:93](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L93)*
+*Defined in [openapi/decorators.ts:122](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L122)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| example | [IApiExample](../interfaces/_openapi_interfaces_.iapiexample.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| example | [IApiExample](../interfaces/_openapi_interfaces_.iapiexample.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -132,16 +135,16 @@ ___
 
 ###  ApiDefineHeader
 
-▸ **ApiDefineHeader**(key: *`string`*, header: *[IApiHeader](_openapi_interfaces_.md#iapiheader) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineHeader**(key: *`string`*, header: *[IApiHeader](_openapi_interfaces_.md#iapiheader) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:101](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L101)*
+*Defined in [openapi/decorators.ts:134](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L134)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| header | [IApiHeader](_openapi_interfaces_.md#iapiheader) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| header | [IApiHeader](_openapi_interfaces_.md#iapiheader) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -150,16 +153,16 @@ ___
 
 ###  ApiDefineLink
 
-▸ **ApiDefineLink**(key: *`string`*, link: *[IApiLink](../interfaces/_openapi_interfaces_.iapilink.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineLink**(key: *`string`*, link: *[IApiLink](../interfaces/_openapi_interfaces_.iapilink.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:109](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L109)*
+*Defined in [openapi/decorators.ts:147](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L147)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| link | [IApiLink](../interfaces/_openapi_interfaces_.iapilink.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| link | [IApiLink](../interfaces/_openapi_interfaces_.iapilink.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -168,16 +171,16 @@ ___
 
 ###  ApiDefineParameter
 
-▸ **ApiDefineParameter**(key: *`string`*, parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineParameter**(key: *`string`*, parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:89](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L89)*
+*Defined in [openapi/decorators.ts:116](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L116)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| parameter | [IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| parameter | [IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -186,16 +189,16 @@ ___
 
 ###  ApiDefineRequestBody
 
-▸ **ApiDefineRequestBody**(key: *`string`*, requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineRequestBody**(key: *`string`*, requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:97](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L97)*
+*Defined in [openapi/decorators.ts:128](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L128)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| requestBody | [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| requestBody | [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -204,16 +207,16 @@ ___
 
 ###  ApiDefineResponse
 
-▸ **ApiDefineResponse**(key: *`string`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineResponse**(key: *`string`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:85](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L85)*
+*Defined in [openapi/decorators.ts:110](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L110)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| response | [IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| response | [IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -222,16 +225,16 @@ ___
 
 ###  ApiDefineSchema
 
-▸ **ApiDefineSchema**(key: *`string`*, schema: *[IApiSchema](../interfaces/_openapi_interfaces_.iapischema.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineSchema**(key: *`string`*, schema: *[IApiSchema](../interfaces/_openapi_interfaces_.iapischema.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:81](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L81)*
+*Defined in [openapi/decorators.ts:104](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L104)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| schema | [IApiSchema](../interfaces/_openapi_interfaces_.iapischema.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| schema | [IApiSchema](../interfaces/_openapi_interfaces_.iapischema.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -240,16 +243,16 @@ ___
 
 ###  ApiDefineSecurityScheme
 
-▸ **ApiDefineSecurityScheme**(key: *`string`*, securityScheme: *[IApiSecurityScheme](_openapi_interfaces_.md#iapisecurityscheme) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiDefineSecurityScheme**(key: *`string`*, securityScheme: *[IApiSecurityScheme](_openapi_interfaces_.md#iapisecurityscheme) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:105](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L105)*
+*Defined in [openapi/decorators.ts:140](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L140)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | `string` |
-| securityScheme | [IApiSecurityScheme](_openapi_interfaces_.md#iapisecurityscheme) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| securityScheme | [IApiSecurityScheme](_openapi_interfaces_.md#iapisecurityscheme) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -258,15 +261,15 @@ ___
 
 ###  ApiDefineTag
 
-▸ **ApiDefineTag**(tag: *[IApiTag](../interfaces/_openapi_interfaces_.iapitag.md)*): `(Anonymous function)`
+▸ **ApiDefineTag**(tag: *[IApiTag](../interfaces/_openapi_interfaces_.iapitag.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:42](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L42)*
+*Defined in [openapi/decorators.ts:57](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L57)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| tag | [IApiTag](../interfaces/_openapi_interfaces_.iapitag.md) |
+| tag | [IApiTag](../interfaces/_openapi_interfaces_.iapitag.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -275,15 +278,15 @@ ___
 
 ###  ApiDeprecated
 
-▸ **ApiDeprecated**(deprecated?: *`boolean`*): `function`
+▸ **ApiDeprecated**(deprecated?: *`boolean` \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:77](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L77)*
+*Defined in [openapi/decorators.ts:100](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L100)*
 
 **Parameters:**
 
 | Name | Type | Default value |
 | ------ | ------ | ------ |
-| `Default value` deprecated | `boolean` | true |
+| `Default value` deprecated | `boolean` \| `function` | true |
 
 **Returns:** `function`
 
@@ -292,15 +295,15 @@ ___
 
 ###  ApiExternalDoc
 
-▸ **ApiExternalDoc**(externalDoc: *[IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md)*): `function`
+▸ **ApiExternalDoc**(externalDoc: *[IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:46](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L46)*
+*Defined in [openapi/decorators.ts:61](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L61)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| externalDoc | [IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md) |
+| externalDoc | [IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md) \| `function` |
 
 **Returns:** `function`
 
@@ -309,15 +312,15 @@ ___
 
 ###  ApiInfo
 
-▸ **ApiInfo**(info: *[IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md)*): `function`
+▸ **ApiInfo**(info: *[IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:30](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L30)*
+*Defined in [openapi/decorators.ts:31](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L31)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| info | [IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md) |
+| info | [IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md) \| `function` |
 
 **Returns:** `function`
 
@@ -326,15 +329,66 @@ ___
 
 ###  ApiOperation
 
-▸ **ApiOperation**(operation: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)*): `function`
+▸ **ApiOperation**(operation: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:50](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L50)*
+*Defined in [openapi/decorators.ts:67](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L67)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| operation | [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md) |
+| operation | [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md) \| `function` |
+
+**Returns:** `function`
+
+___
+<a id="apioperationdescription"></a>
+
+###  ApiOperationDescription
+
+▸ **ApiOperationDescription**(description: *`string` \| `function`*): `function`
+
+*Defined in [openapi/decorators.ts:35](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L35)*
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| description | `string` \| `function` |
+
+**Returns:** `function`
+
+___
+<a id="apioperationid"></a>
+
+###  ApiOperationId
+
+▸ **ApiOperationId**(operationId: *`string` \| `function`*): `function`
+
+*Defined in [openapi/decorators.ts:39](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L39)*
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| operationId | `string` \| `function` |
+
+**Returns:** `function`
+
+___
+<a id="apioperationsummary"></a>
+
+###  ApiOperationSummary
+
+▸ **ApiOperationSummary**(summary: *`string` \| `function`*): `function`
+
+*Defined in [openapi/decorators.ts:43](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L43)*
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| summary | `string` \| `function` |
 
 **Returns:** `function`
 
@@ -343,15 +397,15 @@ ___
 
 ###  ApiParameter
 
-▸ **ApiParameter**(parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiParameter**(parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:58](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L58)*
+*Defined in [openapi/decorators.ts:75](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L75)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| parameter | [IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| parameter | [IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -360,15 +414,15 @@ ___
 
 ###  ApiRequestBody
 
-▸ **ApiRequestBody**(requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `function`
+▸ **ApiRequestBody**(requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:62](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L62)*
+*Defined in [openapi/decorators.ts:81](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L81)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| requestBody | [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| requestBody | [IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `function`
 
@@ -377,16 +431,16 @@ ___
 
 ###  ApiResponse
 
-▸ **ApiResponse**(key: *"default" \| "1XX" \| "2XX" \| "3XX" \| "4XX" \| "5XX" \| `number`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md)*): `(Anonymous function)`
+▸ **ApiResponse**(key: *"default" \| "1XX" \| "2XX" \| "3XX" \| "4XX" \| "5XX" \| `number`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:66](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L66)*
+*Defined in [openapi/decorators.ts:87](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L87)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
 | key | "default" \| "1XX" \| "2XX" \| "3XX" \| "4XX" \| "5XX" \| `number` |
-| response | [IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) |
+| response | [IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -395,15 +449,15 @@ ___
 
 ###  ApiSecurityRequirement
 
-▸ **ApiSecurityRequirement**(securityRequirement: *[IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md)*): `(Anonymous function)`
+▸ **ApiSecurityRequirement**(securityRequirement: *[IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:38](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L38)*
+*Defined in [openapi/decorators.ts:51](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L51)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| securityRequirement | [IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md) |
+| securityRequirement | [IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -412,15 +466,15 @@ ___
 
 ###  ApiServer
 
-▸ **ApiServer**(server: *[IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md)*): `(Anonymous function)`
+▸ **ApiServer**(server: *[IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:34](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L34)*
+*Defined in [openapi/decorators.ts:47](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L47)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| server | [IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) |
+| server | [IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) \| `function` |
 
 **Returns:** `(Anonymous function)`
 
@@ -429,15 +483,15 @@ ___
 
 ###  ApiUseTag
 
-▸ **ApiUseTag**(tag: *`string`*): `(Anonymous function)`
+▸ **ApiUseTag**(tag: *`string` \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:54](https://github.com/FoalTS/foal/blob/cf326d07/packages/core/src/openapi/decorators.ts#L54)*
+*Defined in [openapi/decorators.ts:71](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/decorators.ts#L71)*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| tag | `string` |
+| tag | `string` \| `function` |
 
 **Returns:** `(Anonymous function)`
 

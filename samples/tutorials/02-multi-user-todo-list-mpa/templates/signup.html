@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="box signin">
+      <h1>Sign Up</h1>
+      <form action="/signup" method="post">
+        <div class="form-group">
+          <div>
+            <label for="email">Email</label>
+          </div>
+          <div>
+            <input type="email" class="text-input" id="email" name="email" placeholder="Email" required>
+          </div>
+          <div class="error error-sm" id="emailAlreadyTaken">
+            This email has already an account.
+          </div>
+        </div>
+        <div class="form-group">
+          <div>
+            <label for="password">Password</label>
+          </div>
+          <div>
+            <input type="password" class="text-input" id="password" name="password" placeholder="Password" required>
+          </div>
+          <div class="error error-sm" id="passwordTooCommon">
+            This password is too common. Please choose another one.
+          </div>
+        </div>
+        <div class="btn-wrapper text-center">
+          <button type="submit" class="btn">Create an account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    var url = new URL(window.location.href);
+    var passwordTooCommon = url.searchParams.get('password_too_common');
+    if (!passwordTooCommon) {
+      document.getElementById('passwordTooCommon').style.display = 'none';
+    }
+    var emailAlreadyTaken = url.searchParams.get('email_already_taken');
+    if (!emailAlreadyTaken) {
+      document.getElementById('emailAlreadyTaken').style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>

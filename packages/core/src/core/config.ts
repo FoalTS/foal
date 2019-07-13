@@ -104,7 +104,8 @@ export class Config {
       const envFileContent = readFileSync('.env', 'utf8');
       this.cache.dotEnv = {};
       envFileContent.replace(/\r\n/g, '\n').split('\n').forEach(line => {
-        const [ key, value ] = line.split('=');
+        const [ key, ...values ] = line.split('=');
+        const value = values.join('=');
         this.cache.dotEnv[key] = value;
       });
     }

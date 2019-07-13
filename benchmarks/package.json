@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@foal/core": "^0.8.7",
-    "@foal/jwt": "^0.8.7",
+    "@foal/core": "^1.0.0",
+    "@foal/jwt": "^1.0.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "helmet": "^3.16.0",

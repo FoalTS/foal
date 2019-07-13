@@ -1,4 +1,4 @@
-// import { encryptPassword } from '@foal/core';
+// import { hashPassword } from '@foal/core';
 import { /*Column, */Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -14,7 +14,7 @@ export class User {
   // password: string;
 
   // async setPassword(password: string) {
-  //   this.password = await encryptPassword(password);
+  //   this.password = await hashPassword(password);
   // }
 
 }

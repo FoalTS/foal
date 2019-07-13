@@ -47,6 +47,47 @@ async function main() {
 
 ### Creating Permissions with a Shell Script (CLI)
 
+Create a new script with this command:
+```
+foal generate script create-perm
+```
+
+Replace the content of the new created file `src/scripts/create-perm.ts` with the following:
+```typescript
+// 3p
+import { Permission } from '@foal/typeorm';
+import { createConnection, getConnection, getManager } from 'typeorm';
+
+export const schema = {
+  additionalProperties: false,
+  properties: {
+    codeName: { type: 'string', maxLength: 100 },
+    name: { type: 'string' },
+  },
+  required: [ 'name', 'codeName' ],
+  type: 'object',
+};
+
+export async function main(args) {
+  const permission = new Permission();
+  permission.codeName = args.codeName;
+  permission.name = args.name;
+
+  await createConnection();
+
+  try {
+    console.log(
+      await getManager().save(permission)
+    );
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    await getConnection().close();
+  }
+}
+```
+
+Then you can create a permission through the command line.
 ```sh
 npm run build:scripts
 foal run create-perm name="Permission to access the secret" codeName="access-secret"
@@ -102,6 +143,59 @@ async function main() {
 
 ### Creating Groups with a Shell Script (CLI)
 
+Create a new script with this command:
+```
+foal generate script create-group
+```
+
+Replace the content of the new created file `src/scripts/create-group.ts` with the following:
+```typescript
+// 3p
+import { Group, Permission } from '@foal/typeorm';
+import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+
+export const schema = {
+  additionalProperties: false,
+  properties: {
+    codeName: { type: 'string', maxLength: 100 },
+    name: { type: 'string', maxLength: 80 },
+    permissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] }
+  },
+  required: [ 'name', 'codeName' ],
+  type: 'object',
+};
+
+export async function main(args) {
+  const group = new Group();
+  group.permissions = [];
+  group.codeName = args.codeName;
+  group.name = args.name;
+
+  await createConnection();
+
+  for (const codeName of args.permissions as string[]) {
+    const permission = await getRepository(Permission).findOne({ codeName });
+    if (!permission) {
+      console.log(`No permission with the code name "${codeName}" was found.`);
+      return;
+    }
+    group.permissions.push(permission);
+  }
+
+  try {
+    console.log(
+      await getManager().save(group)
+    );
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    await getConnection().close();
+  }
+}
+
+```
+
+Then you can create a group through the command line.
 ```sh
 npm run build:scripts
 foal run create-perm name="Permission to delete users" codeName="delete-users"
@@ -140,6 +234,9 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 
 ### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
+Uncomment the code in the file `src/scripts/create-user.ts`.
+
+Then you can create a user with their permissions and groups through the command line.
 ```sh
 npm run build:scripts
 foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
@@ -149,13 +246,15 @@ foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" 
 
 If you want the `hasPerm` method to work on the context `user` property, you must use the `fetchUserWithPermissions` function in the authentication hook.
 
-*Example with JWT*
+*Example with JSON Web Tokens*
 ```typescript
 import { Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 import { fetchUserWithPermissions } from '@foal/typeorm';
 
-@JWTRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({
+  user: fetchUserWithPermissions(User)
+})
 export class ProductController {
   @Get('/products')
   readProduct(ctx) {
@@ -167,12 +266,15 @@ export class ProductController {
 }
 ```
 
-*Example with sessions and sookies*
+*Example with Sessions Tokens*
 ```typescript
-import { Get, LoginRequired } from '@foal/core';
-import { fetchUserWithPermissions } from '@foal/typeorm';
+import { Get, TokenRequired } from '@foal/core';
+import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 
-@LoginRequired({ user: fetchUserWithPermissions(User) })
+@TokenRequired({
+  store: TypeORMStore,
+  user: fetchUserWithPermissions(User)
+})
 export class ProductController {
   @Get('/products')
   readProduct(ctx) {
@@ -186,17 +288,33 @@ export class ProductController {
 
 ## The PermissionRequired Hook
 
-The `PermissionRequired(perm: string, options: { redirect?: string } = {})` hook:
-- returns a `401 Unauthorized` if no user is authenticated and `options.redirect` is undefined,
-- redirects the page to the given path if no user is authenticated and  `options.redirect` is defined,
-- returns a `403 Forbidden` if the user does not have the given permission. The `perm` argument is the `codeName` of the permission.
+> This requires the use of `fetchUserWithPermissions`.
+
+```typescript
+@PermissionRequired('perm')
+```
+
+| Context | Response |
+| --- | --- |
+| `ctx.user` is undefined | 401 - UNAUTHORIZED |
+| `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
+
+```typescript
+@PermissionRequired('perm', { redirect: '/login' })
+```
+
+| Context | Response |
+| --- | --- |
+| `ctx.user` is undefined | Redirects to `/login` (302 - FOUND) |
+| `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 *Example*
 ```typescript
-import { Get, LoginRequired } from '@foal/core';
+import { Get } from '@foal/core';
 import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { JWTRequired } from '@foal/jwt';
 
-@LoginRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({ user: fetchUserWithPermissions(User) })
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')

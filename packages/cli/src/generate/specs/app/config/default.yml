@@ -4,10 +4,7 @@ settings:
   csrf: false
   debug: false
   loggerFormat: tiny
-  staticUrl: public/
-  session:
-    cookie:
-      path: /
-    resave: false
-    saveUnitialized: false
-    secret: my-secret
+  staticPath: public/
+
+database:
+  database: './db.sqlite3'

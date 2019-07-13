@@ -44,7 +44,7 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
       }
 
       for (const postFn of hookPostFunctions) {
-        await postFn(ctx, services, response);
+        await postFn(response);
       }
 
       res.status(response.statusCode);
@@ -52,7 +52,12 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
       const cookies = response.getCookies();
       // tslint:disable-next-line:forin
       for (const cookieName in cookies) {
-        res.cookie(cookieName, cookies[cookieName].value, cookies[cookieName].options);
+        const options = cookies[cookieName].options;
+        if (options.maxAge !== undefined) {
+          // Convert seconds to milliseconds to make it work with Express.
+          options.maxAge = options.maxAge * 1000;
+        }
+        res.cookie(cookieName, cookies[cookieName].value, options);
       }
 
       if (isHttpResponseRedirect(response) || isHttpResponseMovedPermanently(response)) {
