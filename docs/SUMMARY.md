@@ -89,6 +89,7 @@
   * [404 Page](./cookbook/404-page.md)
   * [ExpressJS](./cookbook/expressjs.md)
   * [Custom Directory Structure](./cookbook/custom-directory-structure.md)
+  * [Limit Repeated Requests](./cookbook/limit-repeated-requests.md)
 * Deployment & Environments
   * [Configuration](./deployment-and-environments/configuration.md)
   * [Ship to Production](./deployment-and-environments/ship-to-production.md)
