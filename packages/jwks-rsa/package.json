@@ -9,7 +9,8 @@
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
-    "prepublish": "npm run build"
+    "prepublish": "npm run snyk-protect; npm run build",
+    "snyk-protect": "snyk protect"
   },
   "engines": {
     "node": ">=8"
@@ -42,7 +43,8 @@
     "lib/"
   ],
   "dependencies": {
-    "jwks-rsa": "^1.5.1"
+    "jwks-rsa": "^1.5.1",
+    "snyk": "^1.193.1"
   },
   "peerDependencies": {
     "@foal/jwt": "^0.8.8"
@@ -59,5 +61,6 @@
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
     "typescript": "^2.5.2"
-  }
+  },
+  "snyk": true
 }
