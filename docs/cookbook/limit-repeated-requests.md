@@ -12,7 +12,7 @@ import * as http from 'http';
 // 3p
 import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
-import { createApp } from '@foal/core'
+import { Config, createApp } from '@foal/core'
 
 // App
 import { AppController } from './app/app.controller';
