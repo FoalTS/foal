@@ -1,6 +1,8 @@
 # CONTRIBUTING
 
-Thanks for your interest in FoalTS! There are several ways to contribute. **Writing documentation and reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
+Thanks for your interest in FoalTS!
+
+There are several ways to contribute. **Writing documentation and reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
 
 - [Submit an issue](#submit-an-issue)
 - [Submit a PR](#submit-a-pr)
@@ -36,8 +38,16 @@ You can also run the tests of only one package by going to its directory and run
 
 ### General guidelines
 
-- All new code should have tests.
-- Use linting rules.
+When writting code, use the *Test-Driven Developpement (TDD)* approach.
+1. Write a test.
+2. Check that the test fails.
+3. Write just enough code to make the test pass.
+4. Check that the test succeeds.
+5. Reiterate.
+
+This method may seem cumbersome at first glance, but it ensures that every line of code in the framework is tested. Reviewers must pull the branch and verify that the tests are actually testing something. If they change even one line of code, they must see that at least one of the tests fails.
+
+**A PR without tests is automatically rejected.**
 
 ## Security
 
