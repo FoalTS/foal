@@ -24,7 +24,7 @@ install:
 
 script:
   - npm run lint
-  - ./unit_test.sh
+  - lerna run test
   - ./e2e_test.sh
 
 after_success:
