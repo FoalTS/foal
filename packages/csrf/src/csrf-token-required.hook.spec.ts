@@ -176,6 +176,19 @@ describe('CsrfTokenRequired', () => {
       strictEqual(response.body, 'Cookie "csrfToken" not found.');
     });
 
+    it('should return an HttpResponseForbidden object if the csrf cookie is not found (custom name).', async () => {
+      config.set('settings.csrf.cookie.name', 'csrf');
+
+      const ctx = new Context<any, Session>({ cookies: { csrfToken: 'xxx' } });
+      ctx.session = new Session('a', {}, 0);
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseForbidden(response)) {
+        throw new Error('The hook should have returned an HttpResponseForbidden object.');
+      }
+      strictEqual(response.body, 'Cookie "csrf" not found.');
+    });
+
     describe('should verify the csrf token and', () => {
 
       it('should return an HttpResponseForbidden object if the the signature of the cookie "csrfToken"'

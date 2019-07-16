@@ -1,6 +1,7 @@
 import {
   Config, Context, Hook, HookDecorator, HttpResponseForbidden, verifySignedToken
 } from '@foal/core';
+import { CSRF_DEFAULT_COOKIE_NAME } from './constants';
 
 function getRequestToken(req: Context['request']): string | undefined {
   return (req.body && req.body._csrf)
@@ -29,9 +30,10 @@ export function CsrfTokenRequired(options: { doubleSubmitCookie?: boolean } = {}
         );
       }
 
-      const token: string|undefined = ctx.request.cookies.csrfToken;
+      const cookieName = config.get('settings.csrf.cookie.name', CSRF_DEFAULT_COOKIE_NAME);
+      const token: string|undefined = ctx.request.cookies[cookieName];
       if (!token) {
-        return new HttpResponseForbidden('Cookie "csrfToken" not found.');
+        return new HttpResponseForbidden(`Cookie "${cookieName}" not found.`);
       }
 
       if (!verifySignedToken(token, secret)) {
