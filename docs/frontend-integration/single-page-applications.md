@@ -23,23 +23,27 @@ This works fine until the user presses the refresh button, shares the link or sa
 One technique to solve this problem is to add a handler responsible for processing uncaught requests. It returns the `index.html` page in all cases. This way, the browser loads the application which then looks at the address bar and displays the appropriate page.
 
 ```typescript
-import { readFile } from 'fs';
-import { promisify } from 'util';
+import { Context, controller, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
 
-import { controller, Get, HttpResponseOK } from '@foal/core';
-
-import { ApiController, AuthController } from './controllers';
+import { ApiController } from './controllers';
 
 export class AppController {
   subControllers = [
     controller('/api', ApiController),
-    controller('/auth', AuthController)
+    // ...
   ];
 
   @Get('*')
-  async notFound() {
-    const index = await promisify(readFile)('./public/index.html', 'utf8');
-    return new HttpResponseOK(index);
+  renderApp(ctx: Context) {
+    if (!ctx.request.accepts('html')) {
+      return new HttpResponseNotFound();
+    }
+
+    return createHttpResponseFile({
+      directory: './public',
+      file: 'index.html'
+    });
+    // OR render('./templates/index.html');
   }
 }
 ```
