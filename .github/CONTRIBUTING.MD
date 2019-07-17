@@ -18,7 +18,7 @@ If you find a security vulnerability, please do NOT open an issue. Email loic.po
 
 ## Submit a PR
 
-If the PR is about code (not documentation), please submit an issue first to discuss on this.
+If the PR is about code (not documentation), please submit an issue first to discuss on this. There are also [pending issues](https://github.com/FoalTS/foal/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) that may require your help.
 
 ### Set up the development/test environment
 
