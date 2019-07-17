@@ -4,7 +4,7 @@ import * as request from 'supertest';
 // FoalTS
 import { Context, controller, createApp, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
 
-describe('[Docs] Single Page Applications (SPA)', () => {
+describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
 
   it('Using Frontend Routers', () => {
     class ApiController {}
