@@ -32,6 +32,7 @@ const token = await generateSignedToken(secret);
 **Verify and read a signed token**
 ```typescript
 import { verifySignedToken } from '@foal/core';
+
 const signedTokenToVerify = 'xxx.yyy';
 const result = await verifySignedToken(signedTokenToVerify, secret);
 if (result === false) {

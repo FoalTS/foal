@@ -9,7 +9,6 @@ import * as request from 'supertest';
 import { createApp } from '@foal/core';
 
 it('[Docs] Cookbook > ExpressJS', async () => {
-
   let called = false;
   class AppController {}
 
