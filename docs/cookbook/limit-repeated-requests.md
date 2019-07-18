@@ -18,6 +18,8 @@ import * as rateLimit from 'express-rate-limit';
 import { AppController } from './app/app.controller';
 
 async function main() {
+    // Connection to the database(s)...
+    
     const expressApp = express();
     expressApp.use(rateLimit({
       max: 100, // limit each IP to 100 requests per windowMs
@@ -31,7 +33,7 @@ async function main() {
     const httpServer = http.createServer(app);
     const port = Config.get('port', 3001);
     httpServer.listen(port, () => {
-        console.log(`Listening on port ${port}...`);    
+        console.log(`Listening on port ${port}...`);
     });
 }
 

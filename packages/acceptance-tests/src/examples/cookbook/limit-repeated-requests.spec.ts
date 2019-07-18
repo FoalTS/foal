@@ -11,6 +11,8 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
 
   // Only test compilation
   async function main() {
+    // Connection to the database(s)...
+
     const expressApp = express();
     expressApp.use(rateLimit({
       max: 100, // limit each IP to 100 requests per windowMs
