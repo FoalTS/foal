@@ -4,6 +4,7 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as logger from 'morgan';
 
+
 // FoalTS
 import {
   Class,
@@ -25,13 +26,17 @@ import { notFound } from './not-found';
  */
 export function createApp(rootControllerClass: Class, expressInstance?) {
   const app = expressInstance || express();
+  const LOG_FORMAT_NONE = 'none';
 
-  const loggerFormat = Config.get(
+  const loggerFormat: string =  Config.get(
     'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
 
-  app.use(logger(loggerFormat));
+  if (loggerFormat !== LOG_FORMAT_NONE) {
+    app.use(logger(loggerFormat));
+  }
+
   app.use((_, res, next) => {
     res.removeHeader('X-Powered-By');
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -42,13 +47,14 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
     res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
     next();
   });
+
   app.use(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticPath', 'public'))
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
-  app.use(bodyParser.text({ type: [ 'text/*', 'application/graphql' ] }));
+  app.use(bodyParser.text({ type: ['text/*', 'application/graphql'] }));
   app.use(cookieParser());
 
   const services = new ServiceManager();
