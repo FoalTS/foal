@@ -15,7 +15,7 @@
     "dev:test:express": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/express/**/*.spec.ts\"",
     "dev:test:openapi": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/openapi/**/*.spec.ts\"",
     "dev:test:sessions": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/sessions/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && copy-cli \"./src/**/500.debug.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "engines": {
@@ -90,6 +90,7 @@
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
+    "copy": "^0.3.2",
     "ejs": "^2.6.2",
     "mocha": "^5.2.0",
     "mysql": "^2.15.0",
