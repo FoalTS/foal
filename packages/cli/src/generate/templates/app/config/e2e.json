@@ -2,6 +2,7 @@
   "database": {
     "database": "./e2e_db.sqlite3",
     "dropSchema": true,
+    "loggerFormat": "none",
     "synchronize": true
   }
 }
