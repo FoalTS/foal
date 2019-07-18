@@ -24,6 +24,11 @@ function renderDebug500(stack): string {
  */
 export function handleErrors(debug: boolean, logFn = console.error) {
   return (err, req, res, next) => {
+    if (err.expose && err.status) {
+      next(err);
+      return;
+    }
+
     logFn(err.stack);
     if (debug) {
       res.status(500)
