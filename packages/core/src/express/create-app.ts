@@ -4,7 +4,6 @@ import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as logger from 'morgan';
 
-
 // FoalTS
 import {
   Class,
