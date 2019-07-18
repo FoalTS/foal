@@ -20,5 +20,5 @@ export function createHook({ name }: { name: string }) {
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.hook';\n`;
       return content;
-    });
+    }, { allowFailure: true });
 }

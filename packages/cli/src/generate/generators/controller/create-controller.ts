@@ -26,7 +26,7 @@ export function createController({ name, type, register }: { name: string, type:
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
       return content;
-    });
+    }, { allowFailure: true });
 
   if (register) {
     const path = `/${names.kebabName}${type === 'REST' ? 's' : ''}`;

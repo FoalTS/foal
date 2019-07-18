@@ -38,5 +38,5 @@ export function createModel({ name, checkMongoose }: { name: string, checkMongoo
       const exportNames = [ `I${names.upperFirstCamelName}`, names.upperFirstCamelName ].sort();
       content += `export { ${exportNames.join(', ')} } from './${names.kebabName}.model';\n`;
       return content;
-    });
+    }, { allowFailure: true });
 }
