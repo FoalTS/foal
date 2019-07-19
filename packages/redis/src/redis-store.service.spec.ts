@@ -213,6 +213,7 @@ describe('RedisStore', () => {
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
       await asyncSet('session:a', JSON.stringify(sessionA));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       await store.read('a');
 
