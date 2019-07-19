@@ -47,6 +47,16 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
     express.static(Config.get('settings.staticPath', 'public'))
   );
   app.use(express.json());
+  app.use((err, req, res, next) => {
+    if (err.type !== 'entity.parse.failed') {
+      next(err);
+      return;
+    }
+    res.status(err.status).send({
+      body: err.body,
+      message: err.message
+    });
+  });
   app.use(express.urlencoded({ extended: false }));
   app.use(bodyParser.text({ type: [ 'text/*', 'application/graphql' ] }));
   app.use(cookieParser());
