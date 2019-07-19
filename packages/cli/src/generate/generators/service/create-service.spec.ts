@@ -38,6 +38,11 @@ describe('createService', () => {
           .validateSpec('index.ts', 'index.ts');
       });
 
+      it('should not throw an error if index.ts does not exist.', () => {
+        testEnv.rmfileIfExists('index.ts');
+        createService({ name: 'test-fooBar' });
+      });
+
     });
 
   }

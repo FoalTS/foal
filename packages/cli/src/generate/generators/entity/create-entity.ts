@@ -20,5 +20,5 @@ export function createEntity({ name }: { name: string }) {
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.entity';\n`;
       return content;
-    });
+    }, { allowFailure: true });
 }

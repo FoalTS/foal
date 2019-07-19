@@ -20,6 +20,6 @@ export function createService({ name }: { name: string }) {
     .updateFile('index.ts', content => {
       content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.service';\n`;
       return content;
-    });
+    }, { allowFailure: true });
 
 }
