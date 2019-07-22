@@ -10,6 +10,7 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
   class AppController {}
 
   // Only test compilation
+  // tslint:disable-next-line
   async function main() {
     // Connection to the database(s)...
 
