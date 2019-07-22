@@ -2,11 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>INTERNAL SERVER ERROR</title>
+  <title>{{ name }}</title>
 </head>
+<style>
+  html, body {
+    height: 100%;
+    }
+  body {
+    margin: 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  }
+  pre {
+    white-space: pre-line;
+    border: 1px solid #3887e7;
+    border-radius: 3px;
+    padding: 15px;
+  }
+  h1 {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  h3 {
+    color: #176edb;
+  }
+  .container {
+    max-width:600px;
+    margin: 10% 10% 0 10%;
+  }
+  .container-error-stack {
+    max-width:100%;
+    margin: 5% 10%;
+  }
+  .text-container {
+    margin-top: 50px;
+    line-height: 1.5;
+  }
+  img {
+    max-width: 100px;
+    float: left; 
+    display: block;
+    margin: 0px 15px 15px 0px;
+    }
+</style>
+
 <body>
-  <h1>500 - INTERNAL SERVER ERROR</h1>
-  <pre>{{ stack }}</pre>
-  You are seeing this error because you have settings.debug set to true in your configuration file.
+ <div class="container">
+    <div>    
+      <a href="https://foalts.org">
+        <img src="https://foalts.org/assets/img/logo_400.png" alt="Foal Logo">
+      </a>
+    </div>
+    <div class="text-container">
+        <h1>{{ name }}</h1>
+        <h3>{{ message }}</h3>
+    </div>
+ </div>
+ <div class="container-error-stack">
+    <pre>{{ stack }}</pre>
+ </div>
 </body>
 </html>
