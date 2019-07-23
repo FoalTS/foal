@@ -27,6 +27,7 @@ Whatever architecture you choose, the authentication process will always follow 
 
 **Step 1: the user logs in.**
 > *In some architectures, this step might be delegated to an external service: Google, Cognito, Auth0, etc*
+
 1. Verify the credentials (email & password, username & password, social, etc).
 2. Generate a token (stateless or stateful).
 3. Return the token to the client (in a cookie, in the response body or in a header).
