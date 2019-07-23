@@ -9,7 +9,7 @@ import {
   ServiceManager
 } from '@foal/core';
 
-describe('[Docs] Hooks', () => {
+describe('[Docs] Architecture > Hooks', () => {
 
   it('Testing Hooks', () => {
     // validate-body.hook.ts

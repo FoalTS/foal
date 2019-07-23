@@ -8,7 +8,7 @@ import { createApp } from '@foal/core';
 const app = createApp(AppController);
 ```
 
-The returned value is an ExpressJS application that can be used as is to create an HTTP server. *FoalTS is not designed to integrate Express middlewares in its controllers*. However, if for any reason you need to apply globally a middleware to the application, you can provide your own express instance to `createApp`.
+The returned value is an ExpressJS application that can be used as is to create an HTTP server. *FoalTS is not designed to integrate Express middlewares in its controllers or hooks*. However, if for any reason you need to apply globally a middleware to the application, you can provide your own express instance to `createApp`.
 
 ```typescript
 import { createApp } from '@foal/core';
