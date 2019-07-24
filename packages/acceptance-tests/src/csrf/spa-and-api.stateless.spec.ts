@@ -42,11 +42,14 @@ describe('[CSRF|spa and api|stateless] Users', () => {
 
   before(async () => {
     process.env.SETTINGS_CSRF_SECRET = 'csrf-secret';
+    // Custom CSRF cookie name
+    process.env.SETTINGS_CSRF_COOKIE_NAME = '_csrf';
     app = createApp(AppController);
   });
 
   after(async () => {
     delete process.env.SETTINGS_CSRF_SECRET;
+    delete process.env.SETTINGS_CSRF_COOKIE_NAME;
   });
 
   it('can log in and get a CSRF token.', () => {
@@ -55,14 +58,14 @@ describe('[CSRF|spa and api|stateless] Users', () => {
       .expect(200)
       .then(response => {
         const cookies = response.header['set-cookie'];
-        csrfToken = cookies[0].split('csrfToken=')[1].split(';')[0];
+        csrfToken = cookies[0].split('_csrf=')[1].split(';')[0];
       });
   });
 
   it('cannot access POST routes with no CSRF token.', () => {
     return request(app)
       .post('/api/products')
-      .set('Cookie', [`csrfToken=${csrfToken}`])
+      .set('Cookie', [`_csrf=${csrfToken}`])
       .expect(403)
       .expect('Bad csrf token.');
   });
@@ -70,7 +73,7 @@ describe('[CSRF|spa and api|stateless] Users', () => {
   it('can access POST routes with the CSRF token.', () => {
     return request(app)
       .post('/api/products')
-      .set('Cookie', [`csrfToken=${csrfToken}`])
+      .set('Cookie', [`_csrf=${csrfToken}`])
       .set('X-CSRF-TOKEN', csrfToken)
       .expect(201);
   });

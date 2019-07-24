@@ -6,6 +6,5 @@ settings:
   loggerFormat: tiny
   staticPath: public/
 
-database:
-  database: './db.sqlite3'
-  synchronize: false
+mongodb:
+  uri: mongodb://localhost:27017/test-foo-bar

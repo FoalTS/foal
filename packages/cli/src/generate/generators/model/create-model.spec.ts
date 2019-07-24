@@ -37,6 +37,11 @@ describe('createModel', () => {
           .validateSpec('index.ts', 'index.ts');
       });
 
+      it('should not throw an error if index.ts does not exist.', () => {
+        testEnv.rmfileIfExists('index.ts');
+        createModel({ name: 'test-fooBar' });
+      });
+
       it('should should order the export in index.ts.', () => {
         createModel({ name: 'a-test-fooBar' });
 

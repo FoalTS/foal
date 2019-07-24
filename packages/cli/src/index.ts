@@ -88,18 +88,22 @@ program
     }
   });
 
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'model'|'sub-app'|'script'|'service'|'vscode-config';
+const generateTypes: GenerateType[] = [
+  'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config'
+];
+
 program
   .command('generate <type> [name]')
   .description('Generate and/or modify files.')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
   .alias('g')
   .on('--help', () => {
-    console.log('');
+    console.log();
     console.log('Available types:');
-    [ 'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config' ]
-      .forEach(t => console.log(`  ${t}`));
+    generateTypes.forEach(t => console.log(`  ${t}`));
   })
-  .action(async (type: string, name: string, options) => {
+  .action(async (type: GenerateType, name: string, options) => {
     name = name || 'no-name';
     switch (type) {
       case 'controller':
@@ -132,13 +136,7 @@ program
       default:
         console.error();
         console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:\n`));
-        console.error(red('  controller'));
-        console.error(red('  entity'));
-        console.error(red('  hook'));
-        console.error(red('  model'));
-        console.error(red('  sub-app'));
-        console.error(red('  service'));
-        console.error(red('  vscode-config'));
+        generateTypes.forEach(t => console.error(red(`  ${t}`)));
         console.error();
     }
   });

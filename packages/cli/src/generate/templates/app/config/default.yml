@@ -8,3 +8,4 @@ settings:
 
 database:
   database: './db.sqlite3'
+  synchronize: false

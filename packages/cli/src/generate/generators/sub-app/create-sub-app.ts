@@ -40,9 +40,6 @@ export function createSubApp({ name }: { name: string }) {
       // Entities
       .mkdirIfDoesNotExist('entities')
       .copyFileFromTemplates('entities/index.ts')
-      // Sub-apps
-      .mkdirIfDoesNotExist('sub-apps')
-      .copyFileFromTemplates('sub-apps/index.ts')
       // Services
       .mkdirIfDoesNotExist('services')
       .copyFileFromTemplates('services/index.ts');

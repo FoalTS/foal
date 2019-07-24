@@ -44,15 +44,15 @@ describe('createApp', () => {
     await createApp({ name: 'test-fooBar', mongodb: true });
 
     testEnv
-      .validateSpec('config/default.json')
+      .validateSpec('config/default.mongodb.json', 'config/default.json')
       .shouldNotExist('config/default.yml')
-      .validateSpec('config/development.mongodb.json', 'config/development.json')
+      .validateSpec('config/development.json')
       .shouldNotExist('config/development.yml')
       .validateSpec('config/e2e.mongodb.json', 'config/e2e.json')
       .shouldNotExist('config/e2e.yml')
       .validateSpec('config/production.json')
       .shouldNotExist('config/production.yml')
-      .validateSpec('config/test.json')
+      .validateSpec('config/test.mongodb.json', 'config/test.json')
       .shouldNotExist('config/test.yml');
   });
 
@@ -61,15 +61,15 @@ describe('createApp', () => {
 
     testEnv
       .shouldNotExist('config/default.json')
-      .validateSpec('config/default.yml')
+      .validateSpec('config/default.mongodb.yml', 'config/default.yml')
       .shouldNotExist('config/development.json')
-      .validateSpec('config/development.mongodb.yml', 'config/development.yml')
+      .validateSpec('config/development.yml')
       .shouldNotExist('config/e2e.json')
       .validateSpec('config/e2e.mongodb.yml', 'config/e2e.yml')
       .shouldNotExist('config/production.json')
       .validateSpec('config/production.yml')
       .shouldNotExist('config/test.json')
-      .validateSpec('config/test.yml');
+      .validateSpec('config/test.mongodb.yml', 'config/test.yml');
   });
 
   it('should copy the public directory.', async () => {

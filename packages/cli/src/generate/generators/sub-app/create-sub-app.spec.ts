@@ -160,34 +160,6 @@ describe('createSubApp', () => {
 
   });
 
-  describe('should render the sub-apps templates.', () => {
-
-    function test(prefix = '') {
-      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
-
-      createSubApp({ name: 'test-fooBar' });
-
-      const expected = readFileFromTemplatesSpec('sub-app/sub-apps/index.1.ts');
-      const actual = readFileFromRoot(`${prefix}test-foo-bar/sub-apps/index.ts`);
-      strictEqual(actual, expected);
-    }
-
-    it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
-      test('src/app/sub-apps/');
-    });
-
-    it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
-      test('sub-apps/');
-    });
-
-    it('in the current directory otherwise.', () => {
-      test();
-    });
-
-  });
-
   describe('should render the services templates.', () => {
 
     function test(prefix = '') {
