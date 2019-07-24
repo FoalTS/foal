@@ -36,6 +36,11 @@ describe('createHook', () => {
           .validateSpec('index.ts', 'index.ts');
       });
 
+      it('should not throw an error if index.ts does not exist.', () => {
+        testEnv.rmfileIfExists('index.ts');
+        createHook({ name: 'test-fooBar' });
+      });
+
     });
 
   }

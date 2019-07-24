@@ -16,6 +16,11 @@ const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
  */
 export function handleErrors(debug: boolean, logFn = console.error) {
   return async (err, req, res, next) => {
+    if (err.expose && err.status) {
+      next(err);
+      return;
+    }
+
     logFn(err.stack);
 
     if (!debug) {

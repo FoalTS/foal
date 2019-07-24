@@ -1,6 +1,0 @@
-mongodb:
-  uri: mongodb://localhost:27017//* kebabName */
-
-settings:
-  debug: true
-  loggerFormat: dev

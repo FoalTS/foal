@@ -1,6 +1,0 @@
-mongodb:
-  uri: mongodb://localhost:27017/test-foo-bar
-
-settings:
-  debug: true
-  loggerFormat: dev

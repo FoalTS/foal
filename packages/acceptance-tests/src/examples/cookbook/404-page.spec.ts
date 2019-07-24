@@ -4,8 +4,7 @@ import * as request from 'supertest';
 // FoalTS
 import { createApp, Get, HttpResponseNotFound, HttpResponseOK } from '@foal/core';
 
-it('404 page: users should be able to define a controller method that catches requests'
-  + ' that have no handler.', async () => {
+it('[Docs] Cookbook > 404 Page', async () => {
 
   class ViewController {
     @Get('/home')
