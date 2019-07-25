@@ -33,7 +33,7 @@ async function main() {
   const httpServer = http.createServer(app);
   const port = Config.get('port', 3001);
   httpServer.listen(port, () => {
-      console.log(`Listening on port ${port}...`);
+    console.log(`Listening on port ${port}...`);
   });
 }
 
