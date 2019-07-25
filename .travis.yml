@@ -24,7 +24,7 @@ install:
 
 script:
   - npm run lint
-  - lerna run test
+  - lerna run --no-bail test
   - ./e2e_test.sh
 
 after_success:

@@ -32,7 +32,7 @@ Run `lerna bootstrap`.
 
 ### Run tests and linting
 
-Run `lerna run test` and `npm run lint` from the root directory.
+Run `lerna run --no-bail test` and `npm run lint` from the root directory.
 
 You can also run the tests of only one package by going to its directory and running `npm run test` or `npm run dev:test` (watch mode).
 
