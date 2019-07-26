@@ -72,7 +72,7 @@ In the browser, your HTTP client must also have its `withCredentials` option set
 
 **Examples**
 
-*XMLHttpRequest*
+*[XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)*
 ```javascript
 const xhr = new XMLHttpRequest();
 xhr.open('GET', 'http://example.com/', true); 
@@ -80,17 +80,17 @@ xhr.withCredentials = true;
 xhr.send(null);
 ```
 
-*Angular HttpClient*
-```javascript
-this.http.get('http://example.com/', { withCredentials: true });
-```
-
-*Axios*
+*[Axios](https://github.com/axios/axios)*
 ```javascript
 axios.get('http://example.com/', { withCredentials: true });
 ```
 
-*fetch*
+*[Angular HttpClient](https://angular.io/guide/http)*
+```javascript
+this.http.get('http://example.com/', { withCredentials: true });
+```
+
+*[fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)*
 ```javascript
 fetch('http://example.com/', { credentials: 'include' });
 ```
