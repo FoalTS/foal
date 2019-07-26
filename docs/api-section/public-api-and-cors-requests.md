@@ -38,7 +38,7 @@ export class ApiController {
 }
 ```
 
-## CORS Requests and Authentication
+## CORS Requests and `Authorization` header
 
 If your API requires a token to be sent in the `Authorization` header, then the name of this header should be specified in the `options` handler.
 
@@ -50,3 +50,48 @@ If your API requires a token to be sent in the `Authorization` header, then the 
     return response;
   }
 ```
+
+> The same goes with other headers: `X-Requested-With`, etc.
+
+## CORS Requests and Cookies
+
+If your API uses cookies (for authentication for example), then you should specify it in the `options` handler.
+
+```typescript
+  @Options('*')
+  options(ctx: Context) {
+    const response = new HttpResponseNoContent();
+    // You may need to allow other headers depending on what you need.
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    response.setHeader('Access-Control-Allow-Credentials', 'true');
+    return response;
+  }
+```
+
+In the browser, your HTTP client must also have its `withCredentials` option set to `true`.
+
+**Examples**
+
+*XMLHttpRequest*
+```javascript
+const xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://example.com/', true); 
+xhr.withCredentials = true; 
+xhr.send(null);
+```
+
+*Angular HttpClient*
+```javascript
+this.http.get('http://example.com/', { withCredentials: true });
+```
+
+*Axios*
+```javascript
+axios.get('http://example.com/', { withCredentials: true });
+```
+
+*fetch*
+```javascript
+fetch('http://example.com/', { credentials: 'include' });
+```
+
