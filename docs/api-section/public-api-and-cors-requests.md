@@ -8,7 +8,7 @@ Building an Open API requires to allow Cross-Origin Request Sharing.
 
 --
 
-> If you are building a web application, you may not need to enable CORS for your API. See [here](../frontend-integration/angular-react-vue.md) the section *Origins that Do not Match*.
+> If you are building a web application, **you may not need to enable CORS for your API**. See [here](../frontend-integration/angular-react-vue.md) the section *Origins that Do not Match*.
 
 If you want different origins to make requests to your API from a browser, you need to enable [Cross-Origin Resource Sharing](https://www.html5rocks.com/en/tutorials/cors/).
 
@@ -55,17 +55,13 @@ If your API requires a token to be sent in the `Authorization` header, then the 
 
 ## CORS Requests and Cookies
 
-If your API uses cookies (for authentication for example), then you should specify it in the `options` handler.
+If your API uses cookies (for authentication for example), then you should specify it in the hook with the `Access-Control-Allow-Credentials` header.
 
 ```typescript
-  @Options('*')
-  options(ctx: Context) {
-    const response = new HttpResponseNoContent();
-    // You may need to allow other headers depending on what you need.
-    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    response.setHeader('Access-Control-Allow-Credentials', 'true');
-    return response;
-  }
+@Hook((ctx: Context) => response => {
+  response.setHeader('Access-Control-Allow-Origin', ctx.request.get('Origin') || '*');
+  response.setHeader('Access-Control-Allow-Credentials', 'true');
+})
 ```
 
 In the browser, your HTTP client must also have its `withCredentials` option set to `true`.
