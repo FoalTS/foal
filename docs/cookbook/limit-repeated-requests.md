@@ -57,7 +57,7 @@ main();
 ```
 
 
-**Rate limiting with CORS**
+## Rate limiting with CORS
 
 If you need CORS headers in a rate limited response, you will need to manually add the headers in the rate limiter `handler` function accordingly.
 
