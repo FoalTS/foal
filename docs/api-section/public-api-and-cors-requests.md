@@ -28,6 +28,7 @@ export class ApiController {
   @Options('*')
   options(ctx: Context) {
     const response = new HttpResponseNoContent();
+    response.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, PATCH, DELETE');
     // You may need to allow other headers depending on what you need.
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return response;
@@ -46,6 +47,7 @@ If your API requires a token to be sent in the `Authorization` header, then the 
   @Options('*')
   options(ctx: Context) {
     const response = new HttpResponseNoContent();
+    response.setHeader('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, PATCH, DELETE');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
     return response;
   }
