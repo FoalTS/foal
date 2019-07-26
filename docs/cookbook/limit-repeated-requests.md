@@ -15,7 +15,7 @@ import * as http from 'http';
 // 3p
 import { Config, createApp } from '@foal/core';
 import * as express from 'express';
-import rateLimit from 'express-rate-limit';
+import * as rateLimit from 'express-rate-limit';
 
 // App
 import { AppController } from './app/app.controller';
