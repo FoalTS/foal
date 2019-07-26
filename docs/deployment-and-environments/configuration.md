@@ -160,7 +160,7 @@ For example, FoalTS uses the configuration key `settings.debug` to determine if 
 You should not create new configuration keys in the `settings` namespace as this may conflict with future versions of the framework.
 
 *default.yml (default)*
-```yml
+```yaml
 port: 3001
 
 settings:
@@ -215,7 +215,7 @@ module.exports = {
 ```
 
 *default.yml (example)*
-```yml
+```yaml
 port: 3001
 
 settings:
@@ -226,7 +226,7 @@ database:
 ```
 
 *test.yml (example)*
-```yml
+```yaml
 database:
   database: './test_db.sqlite3'
   dropSchema: true
