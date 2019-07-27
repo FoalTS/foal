@@ -38,7 +38,7 @@
     <script>
     window.onload = function() {
       // Begin Swagger UI call region
-      const ui = SwaggerUIBundle({
+      const ui = SwaggerUIBundle(Object.assign({
         urls: [{"name":"spec1","url":"xxx"},{"name":"spec2","url":"yyy"}],
         'urls.primaryName': "spec2",
         dom_id: '#swagger-ui',
@@ -51,7 +51,7 @@
           SwaggerUIBundle.plugins.DownloadUrl
         ],
         layout: "StandaloneLayout"
-      })
+      },{}))
       // End Swagger UI call region
 
       window.ui = ui
