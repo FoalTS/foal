@@ -312,45 +312,46 @@ describe('SwaggerController', () => {
         strictEqual(response.body, expected);
 
       });
-    it('should properly render the template given options are { url: "xxx" } and uiOptions are { docExpansion:"none" }', async () => {
-      class ConcreteClass extends SwaggerController {
-        options = {
-          url: "xxx"
+    it('should properly render the template given options are { url: "xxx" } and uiOptions are { docExpansion:"none" }'
+      , async () => {
+        class ConcreteClass extends SwaggerController {
+          options = {
+            url: 'xxx'
+          };
+          uiOptions = { docExpansion: 'none' };
         }
-        uiOptions = { docExpansion: "none" }
-      }
-      const controller = new ConcreteClass();
-      const response = await controller.index(ctx);
+        const controller = new ConcreteClass();
+        const response = await controller.index(ctx);
 
-      if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
-      }
+        if (!isHttpResponseOK(response)) {
+          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+        }
 
-      strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
 
-      const expected = readFileSync(join(__dirname, 'index.url.ui-options.spec.html'), 'utf8');
-      strictEqual(response.body, expected);
-    });
-    it('should properly render the template given options are [{ url: "v1.json", name: "v1" }] and uiOptions are { docExpansion:"none" }', async () => {
-      class ConcreteClass extends SwaggerController {
-        options = [
-          { name: 'v1', url: 'v1.json' },
-        ]
-        uiOptions = { docExpansion: "none" }
-      }
-      const controller = new ConcreteClass();
-      const response = await controller.index(ctx);
+        const expected = readFileSync(join(__dirname, 'index.url.ui-options.spec.html'), 'utf8');
+        strictEqual(response.body, expected);
+      });
+    it('should properly render the template given options are [{ url: "v1.json", name: "v1" }] and uiOptions are' +
+      '{ docExpansion:"none" }', async () => {
+        class ConcreteClass extends SwaggerController {
+          options = [
+            { name: 'v1', url: 'v1.json' },
+          ];
+          uiOptions = { docExpansion: 'none' };
+        }
+        const controller = new ConcreteClass();
+        const response = await controller.index(ctx);
 
-      if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
-      }
+        if (!isHttpResponseOK(response)) {
+          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+        }
 
-      strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
 
-      const expected = readFileSync(join(__dirname, 'index.no-primary.ui-options.spec.html'), 'utf8');
-      strictEqual(response.body, expected);
-    });
-
+        const expected = readFileSync(join(__dirname, 'index.no-primary.ui-options.spec.html'), 'utf8');
+        strictEqual(response.body, expected);
+      });
 
   });
 

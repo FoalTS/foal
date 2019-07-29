@@ -49,7 +49,7 @@ export abstract class SwaggerController {
 
     )[]);
 
-  uiOptions: object={}
+  uiOptions: object = {};
 
   /* Spec file(s) */
 
@@ -92,7 +92,7 @@ export abstract class SwaggerController {
       const url = isUrlOption(this.options) ? this.options.url : 'openapi.json';
       body = template
         .replace('{{ urls }}', `url: "${url}"`)
-        .replace('{{ primaryName }}', '')
+        .replace('{{ primaryName }}', '');
     } else {
       let primaryName: string = '';
       const options = this.options
