@@ -211,7 +211,7 @@ export class ApiController {
 The cookie default directives can be override in the configuration.
 
 *Example with config/default.yml*
-```yml
+```yaml
 settings:
   session:
     cookie:
@@ -273,7 +273,7 @@ The second is the absolute timeout. Whatever the activity is, the session will e
 These values can be override with the [configuration keys](../deployment-and-environments/configuration.md) `settings.session.expirationTimeouts.inactivity` and `settings.session.expirationTimeouts.absolute`. The time periods must be specified in seconds.
 
 *Example with config/default.yml*
-```yml
+```yaml
 settings:
   session:
     secret: xxx

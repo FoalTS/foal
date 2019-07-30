@@ -42,6 +42,8 @@
   <a href="https://foalts.gitbook.io/docs/content/">Documentation</a>
   -
   <a href="https://twitter.com/foalts">Twitter</a>
+  -
+  <a href="https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ">YouTube</a>
 </p>
 
 FoalTS is a Node.js framework for building HTTP APIs and Web applications with a rich interface (Angular / React / Vue). It is written in TypeScript and offers many built-in dev tools and components to handle extremely common scenarios. Simple, testable and progressive, Foal accelerates development while leaving you in control of your code.

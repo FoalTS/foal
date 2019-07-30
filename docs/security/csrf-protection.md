@@ -279,7 +279,7 @@ First set the configuration key `settings.csrf.cookie.maxAge` to a very large nu
 ```
 
 *Example with config/default.yml*
-```yml
+```yaml
 settings:
   csrf:
     cookie:
@@ -424,7 +424,7 @@ SETTINGS_CSRF_ENABLED=false
 The directives of the cookie written by `setCsrfCookie` can be override in the configuration.
 
 *Example with config/default.yml*
-```yml
+```yaml
 settings:
   csrf:
     cookie:
