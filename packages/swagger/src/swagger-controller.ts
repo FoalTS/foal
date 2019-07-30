@@ -41,14 +41,23 @@ export abstract class SwaggerController {
    *            )[])}
    * @memberof SwaggerController
    */
-  abstract options: ({ url: string } |
-  { controllerClass: Class } |
-    (
-      { name: string, url: string, primary?: boolean } |
-      { name: string, controllerClass: Class, primary?: boolean }
+  abstract options: { url: string } |
+           { controllerClass: Class } |
+           (
+             { name: string, url: string, primary?: boolean } |
+             { name: string, controllerClass: Class, primary?: boolean }
+           )[];
 
-    )[]);
-
+  /**
+   * Extend Swagger UI options.
+   * 
+   * See https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/.
+   *
+   * @type {object}
+   * @example
+   * uiOptions = { docExpansion: 'none' };
+   * @memberof SwaggerController
+   */
   uiOptions: object = {};
 
   /* Spec file(s) */

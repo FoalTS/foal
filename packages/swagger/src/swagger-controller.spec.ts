@@ -60,7 +60,7 @@ describe('SwaggerController', () => {
         };
 
         @ApiInfo(info)
-        class ApiController { }
+        class ApiController {}
 
         class ConcreteClass extends SwaggerController {
           options = { controllerClass: ApiController };
@@ -154,7 +154,7 @@ describe('SwaggerController', () => {
         };
 
         @ApiInfo(info)
-        class ApiController { }
+        class ApiController {}
 
         class ConcreteClass extends SwaggerController {
           options = [
@@ -255,7 +255,7 @@ describe('SwaggerController', () => {
 
     it('should properly render the template given options are AppController.', async () => {
       class ConcreteClass extends SwaggerController {
-        options = { controllerClass: class { } };
+        options = { controllerClass: class {} };
       }
       const controller = new ConcreteClass();
       const response = await controller.index(ctx);
@@ -275,7 +275,7 @@ describe('SwaggerController', () => {
         class ConcreteClass extends SwaggerController {
           options = [
             { name: 'v1', url: 'v1.json' },
-            { name: 'v2', controllerClass: class { } },
+            { name: 'v2', controllerClass: class {} },
           ];
         }
         const controller = new ConcreteClass();
@@ -289,7 +289,7 @@ describe('SwaggerController', () => {
 
         const expected = readFileSync(join(__dirname, 'index.no-primary.spec.html'), 'utf8');
         strictEqual(response.body, expected);
-      });
+    });
 
     it('should properly render the template given options are [{ url: "xxx", name: "spec1" }, '
       + '{ url: "yyy", name: "spec2", primary: true }].', async () => {
@@ -311,7 +311,8 @@ describe('SwaggerController', () => {
         const expected = readFileSync(join(__dirname, 'index.primary.spec.html'), 'utf8');
         strictEqual(response.body, expected);
 
-      });
+    });
+
     it('should properly render the template given options are { url: "xxx" } and uiOptions are { docExpansion:"none" }'
       , async () => {
         class ConcreteClass extends SwaggerController {
@@ -331,7 +332,8 @@ describe('SwaggerController', () => {
 
         const expected = readFileSync(join(__dirname, 'index.url.ui-options.spec.html'), 'utf8');
         strictEqual(response.body, expected);
-      });
+    });
+
     it('should properly render the template given options are [{ url: "v1.json", name: "v1" }] and uiOptions are' +
       '{ docExpansion:"none" }', async () => {
         class ConcreteClass extends SwaggerController {
@@ -351,7 +353,7 @@ describe('SwaggerController', () => {
 
         const expected = readFileSync(join(__dirname, 'index.no-primary.ui-options.spec.html'), 'utf8');
         strictEqual(response.body, expected);
-      });
+    });
 
   });
 
