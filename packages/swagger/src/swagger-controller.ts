@@ -41,12 +41,15 @@ export abstract class SwaggerController {
    *            )[])}
    * @memberof SwaggerController
    */
-  abstract options: { url: string } |
-           { controllerClass: Class } |
-           (
-             { name: string, url: string, primary?: boolean } |
-             { name: string, controllerClass: Class, primary?: boolean }
-           )[];
+  abstract options: ({ url: string } |
+  { controllerClass: Class } |
+    (
+      { name: string, url: string, primary?: boolean } |
+      { name: string, controllerClass: Class, primary?: boolean }
+
+    )[]);
+
+  uiOptions: object = {};
 
   /* Spec file(s) */
 
@@ -106,7 +109,7 @@ export abstract class SwaggerController {
         .replace('{{ urls }}', `urls: ${JSON.stringify(options)}`)
         .replace('{{ primaryName }}', primaryName);
     }
-
+    body = body.replace('{{ uiOptions }}', JSON.stringify(this.uiOptions));
     return new HttpResponseOK(body)
       .setHeader('Content-Type', 'text/html; charset=utf-8');
   }
