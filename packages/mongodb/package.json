@@ -1,0 +1,60 @@
+{
+  "name": "@foal/mongodb",
+  "version": "1.0.1",
+  "description": "MongoDB package for FoalTS session",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "docs": "typedoc --out ../../docs/api/mongodb src/index.ts --readme none --theme markdown",
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "build": "rimraf lib && copy-cli \"./src/**.txt.gz\" lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "FoalTS",
+    "foal",
+    "ODM",
+    "ORM",
+    "session",
+    "auth",
+    "database",
+    "MongoDB"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "lib/"
+  ],
+  "dependencies": {
+    "mongodb": "3.2.7"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.43",
+    "@types/mongodb": "3.1.31",
+    "@types/node": "^10.5.6",
+    "copy": "^0.3.2",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.6.2",
+    "ts-node": "^3.3.0",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.2.0",
+    "typescript": "^2.5.2"
+  }
+}
