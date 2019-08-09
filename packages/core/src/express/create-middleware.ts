@@ -2,6 +2,7 @@ import {
   Context,
   HookPostFunction,
   HttpResponse,
+  HttpResponseOK,
   isHttpResponse,
   isHttpResponseMovedPermanently,
   isHttpResponseRedirect,
@@ -37,6 +38,10 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
 
       if (!isHttpResponse(response)) {
         response = await route.controller[route.propertyKey](ctx);
+        
+        if (typeof response !== 'undefined' && !isHttpResponse(response)) {
+          response = new HttpResponseOK(response);
+        }
       }
 
       if (!isHttpResponse(response)) {
