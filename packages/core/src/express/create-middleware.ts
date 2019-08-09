@@ -9,6 +9,8 @@ import {
   ServiceManager
 } from '../core';
 
+import { utils } from 'realm-utils';
+
 /**
  * Create an express middleware from a Route and the application services.
  *
@@ -36,7 +38,19 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
       }
 
       if (!isHttpResponse(response)) {
-        response = await route.controller[route.propertyKey](ctx);
+        const requiredParams = utils.getParameterNamesFromFunction(route.controller[route.propertyKey]);
+        const params = {
+            ctx,
+            context: ctx,
+            ...ctx.request.params
+        };
+
+        let args = requiredParams.map(param => params[param]);
+        if (args.length === 0) {
+            args = [ctx]
+        }
+
+        response = await route.controller[route.propertyKey](...args);
       }
 
       if (!isHttpResponse(response)) {
