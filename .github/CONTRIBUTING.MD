@@ -2,7 +2,7 @@
 
 Thanks for your interest in FoalTS!
 
-There are several ways to contribute. **Writing documentation and reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
+There are several ways to contribute. **Reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
 
 - [Submit an issue](#submit-an-issue)
 - [Submit a PR](#submit-a-pr)
@@ -37,6 +37,8 @@ Run `lerna run --no-bail test` and `npm run lint` from the root directory.
 You can also run the tests of only one package by going to its directory and running `npm run test` or `npm run dev:test` (watch mode).
 
 ### General guidelines
+
+Do not install any new dependencies unless they have been approved.
 
 When writting code, use the *Test-Driven Developpement (TDD)* approach.
 1. Write a test.
