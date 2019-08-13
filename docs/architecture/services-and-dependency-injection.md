@@ -69,6 +69,8 @@ class MyServiceA {
 }
 ```
 
+> Note: Circular dependencies are not supported. In most cases, when two services are dependent on each other, the creation of a third service containing the functionalities required by both services solves the dependency problem.
+
 ## Testing services
 
 Services are classes and so can be tested as is.
