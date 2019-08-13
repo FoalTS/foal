@@ -1,8 +1,21 @@
 import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { Collection, MongoClient } from 'mongodb';
 
-export class MongoDBStore extends SessionStore {
+export interface DatabaseSession {
+  _id: string;
+  sessionContent: object;
+  createdAt: number;
+  updatedAt: number;
+}
 
+/**
+ * MongoDB store.
+ *
+ * @export
+ * @class MongoDBStore
+ * @extends {SessionStore}
+ */
+export class MongoDBStore extends SessionStore {
   @dependency
   config: Config;
 
@@ -49,7 +62,7 @@ export class MongoDBStore extends SessionStore {
     if (sessions.length === 0) {
       return undefined;
     }
-    const session = sessions[0];
+    const session: DatabaseSession = sessions[0];
 
     if (Date.now() - session.updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);

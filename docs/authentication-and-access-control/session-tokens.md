@@ -326,7 +326,7 @@ export async function main(args) {
     args.sessionID = sessionID;
   }
 
-  const store = createService(TypeORMStore); // OR RedisStore, etc
+  const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
   await store.destroy(args.sessionID);
 }
 ```
@@ -356,7 +356,7 @@ import { createConnection } from 'typeorm';
 export async function main() {
   await createConnection();
 
-  const store = createService(TypeORMStore); // OR RedisStore, etc
+  const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
   await store.clear();
 }
 ```
@@ -375,7 +375,7 @@ foal run revoke-all-sessions
 
 ## Session Stores
 
-FoalTS currently offers two built-in session stores: `TypeORMStore` and `RedisStore`. Others will come in the future (such as `MongoDBStore`). If you need a specific one, you can submit a Github issue or even create your own store (see section below).
+FoalTS currently offers three built-in session stores: `TypeORMStore`, `MongoDBStore` `RedisStore`. Others will come in the future. If you need a specific one, you can submit a Github issue or even create your own store (see section below).
 
 ### TypeORMStore (SQL Databases: Postgres, MySQL, SQLite, etc)
 
@@ -431,6 +431,50 @@ In order to use this store, you must provide the redis URI in either:
     ```
     REDIS_URI=redis://localhost:6379
     ```
+
+### MongoDBStore
+
+```
+npm install @foal/mongodb
+```
+
+This store saves your session states in a MongoDB database (using the collection `foalSessions`). In order to use it, you must provide the MongoDB URI in either:
+- a configuration file
+
+    *Example with config/default.yml*
+    ```yaml
+    mongodb:
+      uri: 'mongodb://localhost:27017'
+    ```
+- or in a `.env` file or in an environment variable:
+    ```
+    MONGODB_URI=mongodb://localhost:27017
+    ```
+
+Due to the nature of MongoDB databases, not all expired sessions are deleted by default (we cannot define a time period after which a document must be deleted). However, the session store provides us with a `cleanUpExpiredSessions` function to manually delete all expired sessions. It is recommended to periodically call this method using, for example, a shell script.
+
+*src/scripts/clean-up-expired-sessions.ts*
+```typescript
+import { createService } from '@foal/core';
+import { MongoDBStore } from '@foal/mongodb';
+
+export async function main() {
+  const store = createService(MongoDBStore);
+  await store.cleanUpExpiredSessions();
+}
+```
+
+Build the script.
+
+```
+npm run build:scripts
+```
+
+Run the script.
+
+```
+foal run clean-up-expired-sessions
+```
 
 ### Custom Store
 
