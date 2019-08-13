@@ -1,4 +1,4 @@
-import { SessionStore, SessionOptions, Session, dependency, Config } from '@foal/core';
+import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 export class MongoDBStore extends SessionStore {
@@ -35,17 +35,18 @@ export class MongoDBStore extends SessionStore {
           updatedAt: Date.now()
         }
       }
-    )
+    );
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').deleteOne({ _id: sessionID })
+    await (await this.getMongoDBInstance()).db().collection('foalSessions').deleteOne({ _id: sessionID });
   }
 
   async read(sessionID: string): Promise<Session | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
-    
-    const sessions = await (await this.getMongoDBInstance()).db().collection('foalSessions').find({ _id: sessionID }).toArray();
+
+    const sessions = await (await this.getMongoDBInstance()).db().collection('foalSessions')
+      .find({ _id: sessionID }).toArray();
     if (sessions.length === 0) {
       return undefined;
     }
@@ -72,7 +73,7 @@ export class MongoDBStore extends SessionStore {
           updatedAt: Date.now()
         }
       }
-    )
+    );
   }
 
   async clear(): Promise<void> {
@@ -92,7 +93,7 @@ export class MongoDBStore extends SessionStore {
   async getMongoDBInstance(): Promise<MongoClient> {
     if (!this.mongoDBClient) {
       const mongoDBURI = this.config.get('mongodb.uri');
-      this.mongoDBClient = await MongoClient.connect(mongoDBURI)
+      this.mongoDBClient = await MongoClient.connect(mongoDBURI);
     }
     return this.mongoDBClient;
   }
