@@ -1,5 +1,5 @@
 import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
-import { MongoClient } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
 export class MongoDBStore extends SessionStore {
 
@@ -13,7 +13,7 @@ export class MongoDBStore extends SessionStore {
     await this.applySessionOptions(sessionContent, options);
 
     const date = Date.now();
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').insertOne({
+    await (await this.getSessionCollection()).insertOne({
       _id: sessionID,
       createdAt: date,
       sessionContent,
@@ -24,7 +24,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async update(session: Session): Promise<void> {
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').updateOne(
+    await (await this.getSessionCollection()).updateOne(
       {
         _id: session.sessionID
       },
@@ -39,14 +39,13 @@ export class MongoDBStore extends SessionStore {
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').deleteOne({ _id: sessionID });
+    await (await this.getSessionCollection()).deleteOne({ _id: sessionID });
   }
 
   async read(sessionID: string): Promise<Session | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
-    const sessions = await (await this.getMongoDBInstance()).db().collection('foalSessions')
-      .find({ _id: sessionID }).toArray();
+    const sessions = await (await this.getSessionCollection()).find({ _id: sessionID }).toArray();
     if (sessions.length === 0) {
       return undefined;
     }
@@ -66,7 +65,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').updateOne(
+    await (await this.getSessionCollection()).updateOne(
       { _id: sessionID },
       {
         $set: {
@@ -77,12 +76,12 @@ export class MongoDBStore extends SessionStore {
   }
 
   async clear(): Promise<void> {
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').deleteMany({});
+    await (await this.getSessionCollection()).deleteMany({});
   }
 
   async cleanUpExpiredSessions(): Promise<void> {
     const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await (await this.getMongoDBInstance()).db().collection('foalSessions').deleteMany({
+    await (await this.getSessionCollection()).deleteMany({
       $or: [
         { createdAt: { $lt: Date.now() - expiredTimeouts.absolute * 1000 } },
         { updatedAt: { $lt: Date.now() - expiredTimeouts.inactivity * 1000 } }
@@ -96,6 +95,11 @@ export class MongoDBStore extends SessionStore {
       this.mongoDBClient = await MongoClient.connect(mongoDBURI);
     }
     return this.mongoDBClient;
+  }
+
+  private async getSessionCollection(): Promise<Collection> {
+    const mongoClient = await this.getMongoDBInstance();
+    return mongoClient.db().collection('foalSessions');
   }
 
 }

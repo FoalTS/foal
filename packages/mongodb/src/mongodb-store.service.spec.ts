@@ -68,11 +68,11 @@ describe('MongoDBStore', () => {
       notStrictEqual(sessionA._id, undefined);
       deepStrictEqual(sessionA.sessionContent, { foo: 'bar' });
 
-      const createdAt = parseInt(sessionA.createdAt.toString(), 10);
+      const createdAt = sessionA.createdAt;
       strictEqual(dateBefore <= createdAt, true);
       strictEqual(createdAt <= dateAfter, true);
 
-      const updatedAt = parseInt(sessionA.updatedAt.toString(), 10);
+      const updatedAt = sessionA.updatedAt;
       strictEqual(dateBefore <= updatedAt, true);
       strictEqual(updatedAt <= dateAfter, true);
     });
@@ -86,7 +86,7 @@ describe('MongoDBStore', () => {
 
       strictEqual(session.sessionID, sessionA._id);
       deepStrictEqual(session.getContent(), { foo: 'bar' });
-      strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
+      strictEqual(session.createdAt, sessionA.createdAt);
     });
 
     it('should support session options.', async () => {
