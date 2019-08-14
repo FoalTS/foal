@@ -1,6 +1,10 @@
 # Comparison with Other Frameworks
 
-Feel free to suggest changes to keep the page up to date or correct inaccuracies, if necessary. You can also [open an issue](https://github.com/FoalTS/foal/issues/new) if you have other examples of differentiation to share.
+This page is definitely the most difficult one in the guide to write. If you are here, it is probably because you want to know if you should choose Foal over another framework. There are many in Node's ecosystem and picking one is not always an easy task. This page aims to help you on this path.
+
+Of course, I prefer FoalTS and I sincerely believe that it solves a number of problems better than any other framework out there. This is why I put so much effort into it. However, I will try, in this document, to be as objective as possible to show you the differences between FoalTS and other frameworks.
+
+As no comparison is perfect, I also recommend that you download and test them yourself. This will allow you to make your own opinion about each one and choose the one that suits you best. FoalTS *get-started* tutorial can be found [here](./tutorials/simple-todo-list/1-installation.md).
 
 ## NestJS
 
