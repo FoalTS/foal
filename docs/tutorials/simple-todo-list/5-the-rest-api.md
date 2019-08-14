@@ -87,7 +87,7 @@ Add the create and delete features.
   }
 ```
 
-The `Context` objet, which is passed to each route handler, contains the express [request object](https://expressjs.com/en/4x/api.html#req). This represents the HTTP request and has properties for the request query string, parameters, body, HTTP headers, and so on.
+The `Context` object, which is passed to each route handler, contains the express [request object](https://expressjs.com/en/4x/api.html#req). This represents the HTTP request and has properties for the request query string, parameters, body, HTTP headers, and so on.
 
 Now type a new todo in the input text and press Enter. The task appears in the todo list. Refresh the page, it should still be there. If you click on the checkbox, the todo is successfully deleted.
 
