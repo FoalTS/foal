@@ -10,7 +10,9 @@ As no comparison is perfect, I would also recommend that you download and test t
 
 ## Express, Koa, Fastify
 
-routing, cookie parsing, JSON stringifying
+[Express](https://expressjs.com/), [Koa](https://koajs.com/) and [Fastify](https://www.fastify.io/) are all low-level frameworks that mainly take care of routing requests, handling errors, and parsing cookies, URLs, headers and bodies. They present themselves as *fast*, *minimalist* and *low overhead* and are not intented to be provided with a complete environment (CLI, ORM, auth, access control, test tools, etc).
+
+Many high-level frameworks use them as underlay for their core. This is the case of FoalTS which is based on Express.
 
 ## NestJS
 
