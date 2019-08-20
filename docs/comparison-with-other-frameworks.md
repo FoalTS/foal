@@ -16,8 +16,22 @@ Many high-level frameworks use them as underlay for their core. This is the case
 
 ## NestJS
 
-FoalTS and NestJS are both Node.js frameworks that support TypeScript natively. They have some differences though:
+[Nest](https://docs.nestjs.com/) has been one of the first Node.JS frameworks that natively supports TypeScript and provides code architecture based on controllers, services and modules.
 
-- NestJS architecture is greatly inspired by Angular. **Foal's architecture is meant to be simpler and easily approachable from non-Angular developers**. You'll only find three "components" in Foal: controllers, services and hooks. The goal is to give more freedom to developers. They don't spend time trying to understand how the framework wants them doing what they want to do. Instead, the framework lets them build their app in their own way.
+### Complexity & Learning Curve
 
-- **FoalTS** is also more than a TypeScript framework. Not only does it bring architecture. But it **also offers many dev tools and utils out-of-the-box useful in many scenarios**. For example, in FoalTS, you have utils to hash passwords, validate and sanitize request bodies, control access through groups and permissions, write and run unit tests, generate database migrations or manage configuration variables between several environments.
+If you are familiar with [Angular](https://angular.io/) or have background in Java and C#, then you will probably feel comfortable with Nest. The framework is presented as *heavily inspired by Angular* and takes many concepts from frameworks such as .NET or Spring. 
+
+If, however, you are familiar with frameworks such as [Express](https://expressjs.com/), [Koa](https://koajs.com/) or [Fastify](https://www.fastify.io/), or if you are a fullstack developer using [React](https://reactjs.org/) or [Vue](http://vuejs.org/), then you will probably be more comfortable with Foal. The architecture will seem more natural and straightforward and you will not have to face a steep learning curve. 
+
+Foal defends the view that, to make developers more productive, a framework architecture should be as simple and intuitive as possible to allow them to read, write, debug and maintain code more easily. Its [dependency injection](./architecture/services-and-dependency-injection.md) system is an example of this.
+
+> FoalTS architecture also uses far fewer *TypeScript decorators*. They are only used when the readability of the code needs to be improved.
+
+### Philosophy & Objectives
+
+The two frameworks have also philosophical differences in their objectives. Nest focuses on providing application *architecture* to developpers.
+
+Foal TS, while providing the architecture, aims also to offer a rich development environment and ready-to-use components to build from end to end a complete application.
+
+For example, in Foal, you have tools to [connect](./frontend-integration/angular-react-vue.md) your backend to your [VueJS](http://vuejs.org/) application, set up an [authentication system](./authentication-and-access-control/quick-start.md) (stateless or stateful) with passwords that suits your SPA+API architecture and configure access control based on [groups and permissions](./authentication-and-access-control/groups-and-permissions.md). You will not waste time on reinventhing the wheel or searching for external libraries (even if you can still use them and integrate them into Foal). Your only concern is to work on *business logic*.
