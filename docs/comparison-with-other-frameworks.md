@@ -16,7 +16,7 @@ Many high-level frameworks use them as underlay for their core. This is the case
 
 ## NestJS
 
-[Nest](https://docs.nestjs.com/) has been one of the first Node.JS frameworks that natively supports TypeScript and provides code architecture based on controllers, services and modules.
+[Nest](https://docs.nestjs.com/) is a Node.JS framework that has gained in popularity in recent years. It has been one of the first frameworks that natively supports TypeScript and provides code architecture based on controllers, services and modules.
 
 ### Complexity & Learning Curve
 
@@ -35,3 +35,13 @@ The two frameworks have also philosophical differences in their objectives. Nest
 Foal TS, while providing the architecture, aims also to offer a rich development environment and ready-to-use components to build from end to end a complete application.
 
 For example, in Foal, you have tools to [connect](./frontend-integration/angular-react-vue.md) your backend to your [VueJS](http://vuejs.org/) application, set up an [authentication system](./authentication-and-access-control/quick-start.md) (stateless or stateful) with passwords that suits your SPA+API architecture and configure access control based on [groups and permissions](./authentication-and-access-control/groups-and-permissions.md). You will not waste time on reinventhing the wheel or searching for external libraries (even if you can still use them and integrate them into Foal). Your only concern is to work on *business logic*.
+
+## Routing Controllers
+
+[Routing Controllers](https://www.npmjs.com/package/routing-controllers) framework is the other first Node.JS framework that has natively supported TypeScript and provided controller classes as architecture.
+
+It integrates interesting libraries such as [class-transformer](https://github.com/typestack/class-transformer) and [class-validator](https://github.com/typestack/class-validator) to unserialize and validate request bodies.
+
+Compared to Routing Controllers, Foal aims to go further (it also uses fewer decorators). Not only does it bring TypeScript and controller classes, but it also offers many ready-to-use components and tools to build a complete application (CLI, auth, Swagger UI, access aontrol, OpenAPI, shell scripts, GraphQL, generators, etc).
+
+> As for August 2019, the development of the framework seems to have stopped. The last published version (version 0.7.7) was one year ago.
