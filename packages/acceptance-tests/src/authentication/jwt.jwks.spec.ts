@@ -85,6 +85,12 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
     const domain = Config.get('auth0.domain');
     const audience = Config.get('auth0.audience');
     const token = Config.get('auth0.token');
+
+    if (token === undefined) {
+      console.log('AUTH0_TOKEN not defined. Skipping this test...');
+      return;
+    }
+
     class AppController {
 
       @Get('/api/users/me')
@@ -128,6 +134,11 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
     let token: string;
     const region = Config.get('cognito.region');
     const userPoolId = Config.get('cognito.userPoolId');
+
+    if (refreshToken === undefined) {
+      console.log('COGNITO_REFRESH_TOKEN not defined. Skipping this test...');
+      return;
+    }
 
     try {
       const { body } = await superagent
