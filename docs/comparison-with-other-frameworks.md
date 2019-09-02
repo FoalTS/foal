@@ -42,6 +42,14 @@ For example, in Foal, you have tools to [connect](./frontend-integration/angular
 
 It integrates interesting libraries such as [class-transformer](https://github.com/typestack/class-transformer) and [class-validator](https://github.com/typestack/class-validator) to unserialize and validate request bodies.
 
-Compared to Routing Controllers, Foal aims to go further (it also uses fewer decorators). Not only does it bring TypeScript and controller classes, but it also offers many ready-to-use components and tools to build a complete application (CLI, auth, Swagger UI, access aontrol, OpenAPI, shell scripts, GraphQL, generators, etc).
+Compared to Routing Controllers, Foal aims to go further (it also uses fewer decorators). Not only does it bring TypeScript and controller classes, but it also offers many ready-to-use components and tools to build a complete application (CLI, auth, Swagger UI, access control, OpenAPI, shell scripts, GraphQL, generators, etc).
 
 > As for August 2019, the development of the framework seems to have stopped. The last published version (version 0.7.7) was one year ago.
+
+## AdonisJS
+
+## Loopback
+
+### Version 3
+
+### Version 4
