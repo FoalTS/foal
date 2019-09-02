@@ -2,7 +2,7 @@
 
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
 
-You will use the `ValidateBody` and `ValidateParams` hooks to validate and sanitize incoming data.
+You will use the `ValidateBody` and `ValidateParams` hooks to validate and sanitize incoming data.
 
 A *hook* is a decorator that is attached to a route handler (a controller method). It is executed before the method and is therefore particularly suitable for validation or access control.
 
