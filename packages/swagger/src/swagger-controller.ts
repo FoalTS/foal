@@ -50,7 +50,7 @@ export abstract class SwaggerController {
 
   /**
    * Extend Swagger UI options.
-   * 
+   *
    * See https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/.
    *
    * @type {object}
