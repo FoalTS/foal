@@ -1,3 +1,5 @@
+// std
+import { strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -5,6 +7,8 @@ import {
   getHookFunction,
   Hook,
   HttpResponseBadRequest,
+  HttpResponseOK,
+  isHttpResponse,
   isHttpResponseBadRequest,
   ServiceManager
 } from '@foal/core';
@@ -33,6 +37,29 @@ describe('[Docs] Architecture > Hooks', () => {
     if (!isHttpResponseBadRequest(response)) {
       throw new Error('The hook should return an HttpResponseBadRequest object.');
     }
+  });
+
+  it('Testing Hook Post Functions', async () => {
+    // add-xxx-header.hook.ts
+    function AddXXXHeader() {
+      return Hook(ctx => response => {
+        response.setHeader('XXX', 'YYY');
+      });
+    }
+
+    // add-xxx-header.hook.spec.ts
+    const ctx = new Context({});
+    const hook = getHookFunction(AddXXXHeader());
+
+    const postHookFunction = await hook(ctx, new ServiceManager());
+    if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+      throw new Error('The hook should return a post hook function');
+    }
+
+    const response = new HttpResponseOK();
+    await postHookFunction(response);
+
+    strictEqual(response.getHeader('XXX'), 'YYY');
   });
 
   it('Testing Hooks Using this', () => {

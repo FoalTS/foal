@@ -302,6 +302,44 @@ it('ValidateBody', () => {
 });
 ```
 
+### Testing Hook Post Functions
+
+```typescript
+// add-xxx-header.hook.ts
+import { Hook } from '@foal/core';
+
+export function AddXXXHeader() {
+  return Hook(ctx => response => {
+    response.setHeader('XXX', 'YYY');
+  });
+}
+```
+
+```typescript
+// add-xxx-header.hook.spec.ts
+import { strictEqual } from 'assert';
+import {
+  Context, getHookFunction, HttpResponseOK,
+  isHttpResponse, ServiceManager
+} from '@foal/core';
+import { AddXXXHeader } from './add-xxx-header.hook';
+
+it('AddXXXHeader', () => {
+  const ctx = new Context({});
+  const hook = getHookFunction(AddXXXHeader());
+  
+  const postHookFunction = await hook(ctx, new ServiceManager());
+  if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+    throw new Error('The hook should return a post hook function');
+  }
+
+  const response = new HttpResponseOK();
+  await postHookFunction(response);
+
+  strictEqual(response.getHeader('XXX'), 'YYY');
+});
+```
+
 ### Testing Hooks that Use `this`
 
 ```typescript
