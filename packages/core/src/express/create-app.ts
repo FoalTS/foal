@@ -15,6 +15,15 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
+interface ExpressApplication extends express.Express {
+  [name: string]: any;
+}
+
+interface ExpressOptions {
+  preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+  postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+}
+
 /**
  * Create an express application from the root controller of the Foal project.
  *
@@ -23,8 +32,19 @@ import { notFound } from './not-found';
  * @param {*} [expressInstance] - Optional express instance to be used as base.
  * @returns The express application.
  */
-export function createApp(rootControllerClass: Class, expressInstance?) {
-  const app = expressInstance || express();
+export function createApp(rootControllerClass: Class, expressInstance?: ExpressApplication|ExpressOptions) {
+  let app: ExpressApplication = express();
+
+  if (expressInstance && typeof expressInstance === 'function') {
+    app = expressInstance;
+  }
+
+  if (expressInstance && typeof expressInstance === 'object') {
+    for (const middleware of expressInstance.preMiddlewares || []) {
+      app.use(middleware);
+    }
+  }
+
   const LOG_FORMAT_NONE = 'none';
 
   const loggerFormat: string =  Config.get(
@@ -94,6 +114,13 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
         break;
     }
   }
+
+  if (expressInstance && typeof expressInstance === 'object') {
+    for (const middleware of expressInstance.postMiddlewares || []) {
+      app.use(middleware);
+    }
+  }
+
   app.use(notFound());
   app.use(handleErrors(Config.get('settings.debug', false), console.error));
 
