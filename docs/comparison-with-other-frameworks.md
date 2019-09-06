@@ -48,15 +48,25 @@ Compared to Routing Controllers, Foal aims to go further (it also uses fewer dec
 
 ## Loopback
 
-[Loopback](https://loopback.io/) is one of the first *high-level* API framework that has been available in Node's ecosystem. Its first version was released in 2013. 
+[Loopback](https://loopback.io/) is probably the first *high-level* API framework that has been available in Node's ecosystem. Its first version was released in 2013.
 
 ### Version 3
 
+With its CLI and built-in components, Loopback allows you to quickly bootstrap and document an API by running only a few commands. The framework provides token-based authentication, an ACL system, an API explorer as well as adapters to connect to different data sources.
 
+If you are a fullstack developper and you need to quickly build an API that does not require customization and you do not want to spend time on the backend, then Loopack might be a good choice. Otherwise, if your API is more complex or if you want more freedom to build it, then you should take a look at Foal.
+
+FoalTS, in its own way, also provides the above features (auth, Swagger UI, ...) but its architecture is less opinionated. 
+
+It defends the view that a framework should not introduce too much abstractions or do too much magic. If this might help to quickly bootstrap an API, complexity is a brake in the long term. At some point, we always need to customize the application, implement specialized things or use an 3rd-part library. This is difficult to do in constraining and opinionated architecture. Also abstraction and complexity, doc.
+
+In Foal, great importance is also given to the documentation.
 
 ### Version 4
 
 To do. Feel free to open an issue to share your experience!
+
+> Unlike Loopback 3, the new version supports GraphQL & TypeScript.
 
 ## AdonisJS
 
