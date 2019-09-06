@@ -46,10 +46,18 @@ Compared to Routing Controllers, Foal aims to go further (it also uses fewer dec
 
 > As for August 2019, the development of the framework seems to have stopped. The last published version (version 0.7.7) was one year ago.
 
-## AdonisJS
-
 ## Loopback
+
+[Loopback](https://loopback.io/) is one of the first *high-level* API framework that has been available in Node's ecosystem. Its first version was released in 2013. 
 
 ### Version 3
 
+
+
 ### Version 4
+
+To do. Feel free to open an issue to share your experience!
+
+## AdonisJS
+
+To do. Feel free to open an issue to share your experience!
