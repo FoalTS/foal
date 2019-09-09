@@ -25,22 +25,27 @@ interface ExpressOptions {
 }
 
 /**
- * Create an express application from the root controller of the Foal project.
+ * Create an Express application from the root controller.
  *
  * @export
  * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
- * @param {*} [expressInstance] - Optional express instance to be used as base.
+ * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * Express middlewares.
+ * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * middlewares to be executed before the controllers and hooks.
+ * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns The express application.
  */
-export function createApp(rootControllerClass: Class, expressInstance?: ExpressApplication|ExpressOptions) {
+export function createApp(rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions) {
   let app: ExpressApplication = express();
 
-  if (expressInstance && typeof expressInstance === 'function') {
-    app = expressInstance;
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'function') {
+    app = expressInstanceOrOptions;
   }
 
-  if (expressInstance && typeof expressInstance === 'object') {
-    for (const middleware of expressInstance.preMiddlewares || []) {
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
+    for (const middleware of expressInstanceOrOptions.preMiddlewares || []) {
       app.use(middleware);
     }
   }
@@ -115,8 +120,8 @@ export function createApp(rootControllerClass: Class, expressInstance?: ExpressA
     }
   }
 
-  if (expressInstance && typeof expressInstance === 'object') {
-    for (const middleware of expressInstance.postMiddlewares || []) {
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
+    for (const middleware of expressInstanceOrOptions.postMiddlewares || []) {
       app.use(middleware);
     }
   }
