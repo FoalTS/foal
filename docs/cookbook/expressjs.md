@@ -21,7 +21,6 @@ const app = createApp(AppController, expressApp);
 
 In case your are migrating your ExpressJS application to FoalTS, you can access FoalTS service manager using `app.foal.services`.
 
-
 ```typescript
 import { createApp } from '@foal/core';
 
