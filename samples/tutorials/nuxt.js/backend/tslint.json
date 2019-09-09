@@ -1,0 +1,28 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+      "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "quotemark": [true, "single"],
+    "no-console": false,
+    "interface-name": false,
+    "max-classes-per-file": false,
+    "array-type": [true, "array"],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "no-empty": false,
+    "no-shadowed-variable": false,
+    "trailing-comma": false,
+    "no-empty-interface": false,
+    "no-unused-variable": true,
+    "no-duplicate-imports": true,
+    "no-var-requires": false,
+    "member-access": [true, "no-public"],
+    "object-literal-sort-keys": false
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": "src/migrations/*.ts"
+  }
+}
