@@ -203,6 +203,8 @@ describe('RedisStore', () => {
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
       await asyncSet('session:a', JSON.stringify(sessionA));
+      // The line below fixes Travis test failures.
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const session = await store.read('a');
       strictEqual(session, undefined);
@@ -213,6 +215,7 @@ describe('RedisStore', () => {
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
       await asyncSet('session:a', JSON.stringify(sessionA));
+      // The line below fixes Travis test failures.
       await new Promise(resolve => setTimeout(resolve, 200));
 
       await store.read('a');
