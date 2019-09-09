@@ -28,6 +28,7 @@
     "jsonwebtoken": "^8.3.0",
     "mocha": "^5.2.0",
     "mongoose": "^5.4.9",
+    "nuxt": "^2.9.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "redis": "^2.8.0",
