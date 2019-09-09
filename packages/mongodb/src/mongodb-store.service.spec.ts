@@ -16,9 +16,10 @@ interface PlainSession {
 }
 
 describe('MongoDBStore', () => {
+  const MONGODB_URI = 'mongodb://localhost:27017/db';
+
   let store: MongoDBStore;
-  const MONGODB_URI = 'mongodb://localhost:27017';
-  const config = new ConfigMock();
+  let config: ConfigMock;
   let mongoDBClient: MongoClient;
 
   async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
@@ -39,14 +40,15 @@ describe('MongoDBStore', () => {
   }
 
   before(async () => {
-    mongoDBClient = await MongoClient.connect(MONGODB_URI);
+    mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
+    config = new ConfigMock();
     store = createService(MongoDBStore, { config });
   });
 
   beforeEach(async () => {
     config.reset();
     config.set('mongodb.uri', MONGODB_URI);
-    await mongoDBClient.db().collection('foalSessions').remove({});
+    await mongoDBClient.db().collection('foalSessions').deleteMany({});
   });
 
   after(async () => Promise.all([
