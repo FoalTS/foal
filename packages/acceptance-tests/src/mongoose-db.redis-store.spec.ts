@@ -55,7 +55,8 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     isAdmin: boolean;
   }
 
-  const UserModel: Model<IUser> = model('User', UserSchema);
+  // We need to call the model 'User2' here not to conflict with another test in this package.
+  const UserModel: Model<IUser> = model('User2', UserSchema);
 
   function AdminRequired() {
     return Hook((ctx: Context<IUser>) => {
