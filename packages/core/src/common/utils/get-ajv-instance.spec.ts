@@ -47,13 +47,14 @@ describe('getAjvInstance', () => {
       process.env.SETTINGS_AJV_COERCE_TYPES = 'false';
       process.env.SETTINGS_AJV_REMOVE_ADDITIONAL = 'false';
       process.env.SETTINGS_AJV_USE_DEFAULTS = 'false';
+      process.env.SETTINGS_AJV_NULLABLE = 'true';
     });
 
     it('should accept custom configuration from the Config.', () => {
       const schema = {
         additionalProperties: false,
         properties: {
-          foo: { type: 'number', default: 4 }
+          foo: { type: 'number', default: 4, nullable: true }
         },
         type: 'object',
       };
@@ -77,6 +78,12 @@ describe('getAjvInstance', () => {
       const data3 = {};
       ajv.validate(schema, data3);
       strictEqual((data3 as any).foo, undefined);
+
+      // nullable
+      const data4 = {
+        foo: null
+      };
+      strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
     });
 
     after(() => {
@@ -84,6 +91,7 @@ describe('getAjvInstance', () => {
       delete process.env.SETTINGS_AJV_COERCE_TYPES;
       delete process.env.SETTINGS_AJV_REMOVE_ADDITIONAL;
       delete process.env.SETTINGS_AJV_USE_DEFAULTS;
+      delete process.env.SETTINGS_AJV_NULLABLE;
     });
 
   });

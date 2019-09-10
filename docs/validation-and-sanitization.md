@@ -21,7 +21,7 @@ Foal uses this [baseline ajv configuration](https://github.com/epoberezkin/ajv#o
 }
 ```
 
-You can override these settings with the config file `config/default.json` or using the environment variables `SETTINGS_AJV_COERCE_TYPE`, `SETTINGS_AJV_REMOVE_ADDITIONAL` and `SETTINGS_AJV_USE_DEFAULTS`.
+You can override these settings with the config file `config/default.json` or using the environment variables `SETTINGS_AJV_COERCE_TYPE`, `SETTINGS_AJV_REMOVE_ADDITIONAL`, `SETTINGS_AJV_USE_DEFAULTS` and `SETTINGS_AJV_NULLABLE`.
 
 *Example*
 ```json

@@ -17,7 +17,8 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
  *  - useDefaults: true (Replace missing properties and items with the values from corresponding `default` keyword)
  *
  * This configuration can be overrided using the file `config/default.json` or through environment
- * variables: SETTINGS_AJV_COERCE_TYPES, SETTINGS_AJV_REMOVE_ADDITIONAL, SETTINGS_AJV_USE_DEFAULTS.
+ * variables: SETTINGS_AJV_COERCE_TYPES, SETTINGS_AJV_REMOVE_ADDITIONAL, SETTINGS_AJV_USE_DEFAULTS,
+ * SETTINGS_AJV_NULLABLE.
  *
  * @export
  * @returns {Ajv.Ajv} The AJV instance
@@ -26,6 +27,7 @@ export function getAjvInstance(): Ajv.Ajv {
   if (!_instanceWrapper.instance) {
     _instanceWrapper.instance = new Ajv({
       coerceTypes: Config.get('settings.ajv.coerceTypes', true),
+      nullable: Config.get('settings.ajv.nullable'),
       removeAdditional: Config.get('settings.ajv.removeAdditional', true),
       useDefaults: Config.get('settings.ajv.useDefaults', true),
     });
