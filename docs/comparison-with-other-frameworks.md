@@ -48,19 +48,15 @@ Compared to Routing Controllers, Foal aims to go further (it also uses fewer dec
 
 ## Loopback
 
-[Loopback](https://loopback.io/) is probably the first *high-level* API framework that has been available in Node's ecosystem. Its first version was released in 2013.
+[Loopback](https://loopback.io/) is an API framework that aims to *make easy to build modern applications that require complex integrations*. Its first version was released in 2013.
 
 ### Version 3
 
-With its CLI and built-in components, Loopback allows you to quickly bootstrap and document an API by running only a few commands. The framework provides token-based authentication, an ACL system, an API explorer as well as adapters to connect to different data sources.
+Foal and Loopback share similarities in the way they both provide components to manage authentication, access control or to document APIs. However, they have different approaches to how they should help developers build APIs.
 
-If you are a fullstack developper and you need to quickly build an API that does not require customization and you do not want to spend time on the backend, then Loopack might be a good choice. Otherwise, if your API is more complex or if you want more freedom to build it, then you should take a look at Foal.
+Loopback's architecture is *opinionated* and allows developers to quickly create an API at the beginning of a project without too much effort. With a few commands, you can generate a simple application with authentication, an ACL and visual documentation of the API. If your API is simple and you do not want to spend too much time on the backend, then Loopback can be a good choice.
 
-FoalTS, in its own way, also provides the above features (auth, Swagger UI, ...) but its architecture is less opinionated. 
-
-It defends the view that a framework should not introduce too much abstractions or do too much magic. If this might help to quickly bootstrap an API, complexity is a brake in the long term. At some point, we always need to customize the application, implement specialized things or use an 3rd-part library. This is difficult to do in constraining and opinionated architecture. Also abstraction and complexity, doc.
-
-In Foal, great importance is also given to the documentation.
+If, however, your API is more complex or if you want more freedom to build it, then Foal is probably better. The framework's architecture intends to be as little opinionated as possible to keep it simple and intuitive. I strongly believe that, if an opinionated architecture can help to quickly build an API at the beginning of a project, it can also become a brake in the long term. Doing too much *magic* or introducing too much abstractions can make the application harder to maintain, debug, customize or extend as the application grows up. At some point, we always need to implement specialized things or use a third-party library without being constrained. FoalTS allows you to do this thanks to its precise, simple and clean architecture.
 
 ### Version 4
 
@@ -68,6 +64,11 @@ To do. Feel free to open an issue to share your experience!
 
 > Unlike Loopback 3, the new version supports GraphQL & TypeScript.
 
-## AdonisJS
+## Adonis 4
 
 To do. Feel free to open an issue to share your experience!
+
+- Foal is written in TypeScript and Adonis in JavaScript.
+- The architecture is pretty different: Adonis defines its routes with functions whereas Foal uses classes and decorators.
+- Adonis has its own ORM: [Lucid](https://adonisjs.com/docs/4.0/lucid). Foal uses [TypeORM](http://typeorm.io) or [Mongoose](https://mongoosejs.com/).
+- Foal supports OpenAPI, Swagger UI and GraphQL.
