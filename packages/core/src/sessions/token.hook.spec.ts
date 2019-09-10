@@ -437,7 +437,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     describe('given options.user is defined', () => {
 
-      it('with the user retrieved from the database.', async () => {
+      it('with the user retrieved from the database (userId is a number).', async () => {
+        const fetchUser = async id => id === 1 ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
         const session = await services.get(Store).createAndSaveSession({ userId: 1 });
@@ -452,14 +453,54 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         strictEqual(ctx.user, user);
       });
 
-      it('or throw an Error if the session userId is not of type "string" or "number".', async () => {
+      it('with the user retrieved from the database (userId is a string).', async () => {
+        const fetchUser = async id => id === '1' ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: true });
-        const sessionID = session.sessionID;
-        let token = session.getToken();
+        const session = await services.get(Store).createAndSaveSession({ userId: '1' });
+        const token = session.getToken();
 
-        let ctx = new Context({
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const response = await hook(ctx, services);
+        strictEqual(isHttpResponse(response), false);
+        strictEqual(ctx.user, user);
+      });
+
+      // TODO: In versions 2+ of FoalTS, the userID should be of type any.
+      it('with the user retrieved from the database (userId is a MongoDB ObjectID).', async () => {
+        const fetchUser = async id => id === 'xjeldksjqkd' ? user : null;
+        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+
+        // "MongoDB ObjectID"
+        const objectId = {
+          toString() {
+            return 'xjeldksjqkd';
+          }
+        };
+        const session = await services.get(Store).createAndSaveSession({ userId: objectId });
+        const token = session.getToken();
+
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const response = await hook(ctx, services);
+        strictEqual(isHttpResponse(response), false);
+        strictEqual(ctx.user, user);
+      });
+
+      it('or throw an Error if the session userId is not of type "string" or "number" or'
+          + 'does not have a "toString" method.', async () => {
+        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+
+        const session = await services.get(Store).createAndSaveSession({ userId: null });
+        const sessionID = session.sessionID;
+        const token = session.getToken();
+
+        const ctx = new Context({
           get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
         });
 
@@ -469,22 +510,9 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         } catch (error) {
           strictEqual(
             error.message,
-            `The "userId" value of the session ${sessionID} must be a string or a number. Got "boolean".`
+            `The "userId" value of the session ${sessionID} must be a string or a number. Got "object".`
           );
         }
-
-        // Should not throw with a number or a string
-        token = (await services.get(Store).createAndSaveSession({ userId: 'my string' })).getToken();
-        ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-        await hook(ctx, services);
-
-        token = (await services.get(Store).createAndSaveSession({ userId: 33 })).getToken();
-        ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-        await hook(ctx, services);
       });
 
       it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '
