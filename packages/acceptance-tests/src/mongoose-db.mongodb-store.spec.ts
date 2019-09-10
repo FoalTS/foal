@@ -19,19 +19,21 @@ import {
   ValidateBody,
   verifyPassword
 } from '@foal/core';
-import { RedisStore } from '@foal/redis';
+import { MongoDBStore } from '@foal/mongodb';
+import { MongoClient } from 'mongodb';
 import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
-import { createClient } from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
 import { fetchUser } from '@foal/mongoose';
 
-describe('[Sample] Mongoose DB & Redis Store', async () => {
+describe('[Sample] Mongoose DB & MongoDB Store', async () => {
+
+  const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
 
   let app: any;
   let token: string;
-  let redisClient: any;
+  let mongoClient: MongoClient;
 
   const UserSchema: Schema = new Schema({
     email: {
@@ -55,8 +57,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     isAdmin: boolean;
   }
 
-  // We need to call the model 'User2' here not to conflict with another test in this package.
-  const UserModel: Model<IUser> = model('User2', UserSchema);
+  const UserModel: Model<IUser> = model('User', UserSchema);
 
   function AdminRequired() {
     return Hook((ctx: Context<IUser>) => {
@@ -66,7 +67,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     });
   }
 
-  @TokenRequired({ user: fetchUser(UserModel), store: RedisStore })
+  @TokenRequired({ user: fetchUser(UserModel), store: MongoDBStore })
   class MyController {
     @Get('/foo')
     foo() {
@@ -82,10 +83,10 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
 
   class AuthController {
     @dependency
-    store: RedisStore;
+    store: MongoDBStore;
 
     @Post('/logout')
-    @TokenRequired({ store: RedisStore, extendLifeTimeOrUpdate: false })
+    @TokenRequired({ store: MongoDBStore, extendLifeTimeOrUpdate: false })
     async logout(ctx: Context<any, Session>) {
       await this.store.destroy(ctx.session.sessionID);
       return new HttpResponseNoContent();
@@ -111,7 +112,6 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
-
       const session = await this.store.createAndSaveSessionFromUser({ id: user._id });
       return new HttpResponseOK({
         token: session.getToken()
@@ -128,22 +128,16 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
 
   before(async () => {
     process.env.SETTINGS_SESSION_SECRET = 'session-secret';
-    await connect('mongodb://localhost:27017/e2e_db', { useNewUrlParser: true, useCreateIndex: true });
+    process.env.MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
+    await connect(MONGODB_URI, { useNewUrlParser: true, useCreateIndex: true });
 
-    redisClient = createClient();
+    mongoClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
 
     await new Promise((resolve, reject) => {
       UserModel.deleteMany({}, err => err ? reject(err) : resolve());
     });
 
-    await new Promise((resolve, reject) => {
-      redisClient.flushdb((err, success) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(success);
-      });
-    });
+    await mongoClient.db().collection('foalSessions').deleteMany({});
 
     const user = new UserModel();
     user.email = 'john@foalts.org';
@@ -154,12 +148,13 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     app = createApp(AppController);
   });
 
-  after(() => {
+  after(async () => {
     delete process.env.SETTINGS_SESSION_SECRET;
+    delete process.env.MONGODB_URI;
     return Promise.all([
       disconnect(),
-      app.foal.services.get(RedisStore).getRedisInstance().end(true),
-      redisClient.end(true)
+      (await app.foal.services.get(MongoDBStore).getMongoDBInstance()).close(),
+      mongoClient.close()
     ]);
   });
 

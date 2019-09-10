@@ -115,7 +115,7 @@ import { getCsrfToken } from '@foal/csrf';
 @TokenRequired({
   cookie: true,
   redirectTo: '/login',
-  store: TypeORMStore, // Or another store: RedisStore, etc.
+  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
 })
 class PageController {
   @Get('/home')
@@ -179,7 +179,7 @@ import { CsrfTokenRequired } from '@foal/csrf';
 
 @TokenRequired({
   cookie: true,
-  store: TypeORMStore, // Or another store: RedisStore, etc.
+  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
 })
 @CsrfTokenRequired()
 class ApiController {
@@ -325,7 +325,7 @@ import { CsrfTokenRequired } from '@foal/csrf';
 
 @TokenRequired({
   cookie: true,
-  store: TypeORMStore, // Or another store: RedisStore, etc.
+  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
 })
 @CsrfTokenRequired()
 class ApiController {

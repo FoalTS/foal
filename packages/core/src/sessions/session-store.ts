@@ -14,7 +14,7 @@ export interface SessionOptions {
  * A session store peforms CRUD operations on sessions and can store them in
  * a database, file system, memory, etc.
  *
- * Examples of SessionStore: TypeORMStore, RedisStore.
+ * Examples of SessionStore: TypeORMStore, RedisStore, MongoDBStore.
  *
  * @export
  * @abstract

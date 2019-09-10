@@ -13,6 +13,7 @@
     "@foal/formidable": "^1.0.1",
     "@foal/jwks-rsa": "^1.0.1",
     "@foal/jwt": "^1.0.1",
+    "@foal/mongodb": "^1.0.1",
     "@foal/mongoose": "^1.0.1",
     "@foal/redis": "^1.0.1",
     "@foal/typeorm": "^1.0.1",
