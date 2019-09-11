@@ -18,7 +18,7 @@
 
 ▸ **ValidateCookie**(name: *`string`*, schema?: *`object` \| `function`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-cookie.hook.ts:19](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-cookie.hook.ts#L19)*
+*Defined in [common/hooks/validate-cookie.hook.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/hooks/validate-cookie.hook.ts#L19)*
 
 Hook - Validate a specific cookie against an AJV schema.
 

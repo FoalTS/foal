@@ -13,6 +13,20 @@ FoalTS uses [morgan](https://www.npmjs.com/package/morgan) to log the HTTP reque
 }
 ```
 
+## Disabling HTTP Request Logging
+In some scenarios and environments, you might want to disable http request logging. You can achieve this by setting the `loggerFormat` configuration option to `none`. 
+
+```json
+  {
+    ...
+    "settings": {
+      "loggerFormat":"none",
+      ...
+    }
+  }
+```
+
+
 ## Logging Hook
 
 FoalTS provides a convenient hook for logging debug messages: `Log(message: string, options: LogOptions = {})`.

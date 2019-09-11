@@ -4,6 +4,11 @@
 
 ## Index
 
+### Interfaces
+
+* [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
+* [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)
+
 ### Functions
 
 * [createApp](_express_create_app_.md#createapp)
@@ -16,11 +21,11 @@
 
 ###  createApp
 
-▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstance?: *`any`*): `any`
+▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstanceOrOptions?: *[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)*): [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
 
-*Defined in [express/create-app.ts:26](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/express/create-app.ts#L26)*
+*Defined in [express/create-app.ts:40](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/express/create-app.ts#L40)*
 
-Create an express application from the root controller of the Foal project.
+Create an Express application from the root controller.
 
 *__export__*: 
 
@@ -29,9 +34,9 @@ Create an express application from the root controller of the Foal project.
 | Name | Type | Description |
 | ------ | ------ | ------ |
 | rootControllerClass | [Class](_core_class_interface_.md#class) |  The root controller, usually called \`AppController\` and located in \`src/app\`. |
-| `Optional` expressInstance | `any` |
+| `Optional` expressInstanceOrOptions | [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md) |
 
-**Returns:** `any`
+**Returns:** [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
 The express application.
 
 ___

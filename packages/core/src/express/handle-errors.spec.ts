@@ -12,6 +12,9 @@ describe('handleErrors', () => {
 
   describe('should return an error-handling middleware which', () => {
 
+    const default500page = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
+    + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
+
     it('should log the error stack with the given log function.', () => {
       let str = '';
       const logFn = (msg: string) => str = msg;
@@ -42,25 +45,33 @@ describe('handleErrors', () => {
       const app = express();
       app.use((req, res, next) => { throw new Error(); });
       app.use(handleErrors(false, () => {}));
+
       return request(app)
         .get('/')
-        .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
-                + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>');
+        .expect(500)
+        .expect(default500page);
     });
 
     it('should send the debug html 500 page with a stack if debug is true.', () => {
-      const err = new Error();
+      const err = new Error('This is an error');
 
       const app = express();
       app.use((req, res, next) => { throw err; });
       app.use(handleErrors(true, () => {}));
 
-      const stack = `<pre>${err.stack}</pre>`;
-      const info = 'You are seeing this error because you have debug set to true in your configuration file.';
       return request(app)
         .get('/')
-        .expect('<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
-                + `<h1>500 - INTERNAL SERVER ERROR</h1>${stack}${info}</body></html>`);
+        .expect(500)
+        .then(response => {
+          strictEqual(response.text.includes('Error: This is an error'), true);
+          strictEqual(response.text.includes('at Context.it'), true);
+          strictEqual(
+            response.text.includes(
+              'You are seeing this error because you have settings.debug set to true in your configuration file.'
+            ),
+            true,
+          );
+        });
     });
 
   });

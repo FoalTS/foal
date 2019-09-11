@@ -18,7 +18,7 @@
 
 **● JWT_DEFAULT_COOKIE_NAME**: *"auth"* = "auth"
 
-*Defined in [constants.ts:1](https://github.com/FoalTS/foal/blob/07f00115/packages/jwt/src/constants.ts#L1)*
+*Defined in [constants.ts:1](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/constants.ts#L1)*
 
 ___
 

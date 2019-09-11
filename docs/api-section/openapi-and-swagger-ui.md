@@ -681,3 +681,21 @@ export class ApiController {
   }
 }
 ```
+
+### Extend Swagger UI options
+
+[Swagger UI options](https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/) can be extended using the `uiOptions` property.
+
+*Example*
+```typescript
+import { SwaggerController } from '@foal/swagger';
+
+import { ApiController } from './api.controller';
+
+export class OpenApiController extends SwaggerController {
+  options = { controllerClass: ApiController };
+
+  uiOptions = { docExpansion: 'full' };
+}
+
+```

@@ -45,7 +45,7 @@
 
 *Overrides HttpResponseBadRequest.__constructor*
 
-*Defined in [jwt.hook.ts:24](https://github.com/FoalTS/foal/blob/07f00115/packages/jwt/src/jwt.hook.ts#L24)*
+*Defined in [jwt.hook.ts:24](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L24)*
 
 **Parameters:**
 

@@ -18,7 +18,7 @@
 
 ▸ **ValidateCookies**(schema: *`object`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-cookies.hook.ts:15](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-cookies.hook.ts#L15)*
+*Defined in [common/hooks/validate-cookies.hook.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/hooks/validate-cookies.hook.ts#L15)*
 
 Hook factory validating the cookies of the request against a AJV schema.
 
@@ -37,7 +37,7 @@ Schema used to validate the cookies request.
 | `Optional` openapi | `undefined` \| `false` \| `true` |
 
 **Returns:** [HookDecorator](_core_hooks_.md#hookdecorator)
-- The hook.
+*   The hook.
 
 ___
 

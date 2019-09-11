@@ -15,23 +15,52 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
+interface ExpressApplication extends express.Express {
+  [name: string]: any;
+}
+
+interface ExpressOptions {
+  preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+  postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+}
+
 /**
- * Create an express application from the root controller of the Foal project.
+ * Create an Express application from the root controller.
  *
  * @export
  * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
- * @param {*} [expressInstance] - Optional express instance to be used as base.
+ * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * Express middlewares.
+ * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * middlewares to be executed before the controllers and hooks.
+ * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns The express application.
  */
-export function createApp(rootControllerClass: Class, expressInstance?) {
-  const app = expressInstance || express();
+export function createApp(rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions) {
+  let app: ExpressApplication = express();
 
-  const loggerFormat = Config.get(
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'function') {
+    app = expressInstanceOrOptions;
+  }
+
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
+    for (const middleware of expressInstanceOrOptions.preMiddlewares || []) {
+      app.use(middleware);
+    }
+  }
+
+  const LOG_FORMAT_NONE = 'none';
+
+  const loggerFormat: string =  Config.get(
     'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
 
-  app.use(logger(loggerFormat));
+  if (loggerFormat !== LOG_FORMAT_NONE) {
+    app.use(logger(loggerFormat));
+  }
+
   app.use((_, res, next) => {
     res.removeHeader('X-Powered-By');
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -42,6 +71,7 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
     res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
     next();
   });
+
   app.use(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticPath', 'public'))
@@ -58,7 +88,7 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
     });
   });
   app.use(express.urlencoded({ extended: false }));
-  app.use(bodyParser.text({ type: [ 'text/*', 'application/graphql' ] }));
+  app.use(bodyParser.text({ type: ['text/*', 'application/graphql'] }));
   app.use(cookieParser());
 
   const services = new ServiceManager();
@@ -89,6 +119,13 @@ export function createApp(rootControllerClass: Class, expressInstance?) {
         break;
     }
   }
+
+  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
+    for (const middleware of expressInstanceOrOptions.postMiddlewares || []) {
+      app.use(middleware);
+    }
+  }
+
   app.use(notFound());
   app.use(handleErrors(Config.get('settings.debug', false), console.error));
 

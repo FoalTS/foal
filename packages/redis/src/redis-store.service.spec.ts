@@ -9,18 +9,18 @@ import { RedisStore } from './redis-store.service';
 describe('RedisStore', () => {
 
   let store: RedisStore;
-  const REDIS_URL = 'redis://localhost:6379';
+  const REDIS_URI = 'redis://localhost:6379';
   const config = new ConfigMock();
   let redisClient;
 
   before(() => {
-    redisClient = createClient(REDIS_URL);
-    store = createService(RedisStore);
+    redisClient = createClient(REDIS_URI);
+    store = createService(RedisStore, { config });
   });
 
   beforeEach(async () => {
     config.reset();
-    config.set('redis.url', REDIS_URL);
+    config.set('redis.uri', REDIS_URI);
     await new Promise((resolve, reject) => {
       redisClient.flushdb((err, success) => {
         if (err) {
@@ -203,6 +203,8 @@ describe('RedisStore', () => {
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
       await asyncSet('session:a', JSON.stringify(sessionA));
+      // The line below fixes Travis test failures.
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const session = await store.read('a');
       strictEqual(session, undefined);
@@ -213,6 +215,8 @@ describe('RedisStore', () => {
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
       await asyncSet('session:a', JSON.stringify(sessionA));
+      // The line below fixes Travis test failures.
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       await store.read('a');
 

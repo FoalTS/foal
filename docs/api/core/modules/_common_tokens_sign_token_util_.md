@@ -19,7 +19,7 @@
 
 ▸ **sign**(base64Value: *`string`*, base64Secret: *`string`*): `Buffer`
 
-*Defined in [common/tokens/sign-token.util.ts:7](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/tokens/sign-token.util.ts#L7)*
+*Defined in [common/tokens/sign-token.util.ts:7](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/sign-token.util.ts#L7)*
 
 **Parameters:**
 
@@ -37,7 +37,7 @@ ___
 
 ▸ **signToken**(unsignedToken: *`string`*, secret: *`string`*): `string`
 
-*Defined in [common/tokens/sign-token.util.ts:13](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/tokens/sign-token.util.ts#L13)*
+*Defined in [common/tokens/sign-token.util.ts:13](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/sign-token.util.ts#L13)*
 
 **Parameters:**
 

@@ -22,7 +22,7 @@
 
 ▸ **isObjectDoesNotExist**(err: *`object`*): `boolean`
 
-*Defined in [common/errors/object-does-not-exist.ts:30](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/errors/object-does-not-exist.ts#L30)*
+*Defined in [common/errors/object-does-not-exist.ts:30](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/errors/object-does-not-exist.ts#L30)*
 
 Check if an error is an instance of ObjectDoesNotExist.
 

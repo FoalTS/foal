@@ -32,6 +32,7 @@ describe('createApp', () => {
 
   afterEach(() => {
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
+    delete process.env.SETTING_DEBUG;
   });
 
   it('should include security headers in HTTP responses.', async () => {
@@ -230,6 +231,74 @@ describe('createApp', () => {
     const actual = createApp(class {}, expected);
 
     strictEqual(actual, expected);
+  });
+
+  it('should use the optional preMiddlewares if they are given.', () => {
+    class AppController {
+      @Get('/')
+      get(ctx: Context) {
+        return new HttpResponseOK(
+          (ctx.request as any).foalMessage
+        );
+      }
+    }
+
+    const app = createApp(AppController, {
+      preMiddlewares: [
+        (req, res, next) => { req.foalMessage = 'Hello world!'; next(); }
+      ]
+    });
+
+    return request(app)
+      .get('/')
+      .expect(200)
+      .expect('Hello world!');
+  });
+
+  it('should use the optional postMiddlewares if they are given (in good time).', () => {
+    process.env.SETTINGS_DEBUG = 'true';
+
+    class AppController {
+      @Get('/a')
+      getA(ctx: Context) {
+        return new HttpResponseOK('a');
+      }
+      @Get('/c')
+      getC(ctx: Context) {
+        throw new Error('This is an error');
+      }
+    }
+
+    const app = createApp(AppController, {
+      postMiddlewares: [
+        express.Router().get('/a', (req, res) => res.send('a2')),
+        express.Router().get('/b', (req, res) => res.send('b2')),
+        (err, req, res, next) => {
+          err.message += '!!!';
+          next(err);
+        }
+      ]
+    });
+
+    return Promise.all([
+      request(app)
+        .get('/a')
+        .expect(200)
+        .expect('a'),
+      request(app)
+        .get('/b')
+        .expect(200)
+        .expect('b2'),
+      request(app)
+        .get('/c')
+        .expect(500)
+        .then(response => {
+          strictEqual(
+            response.text.includes('This is an error!!!'),
+            true
+          );
+        })
+    ]);
   });
 
   it('should make the serviceManager available from the express instance.', () => {

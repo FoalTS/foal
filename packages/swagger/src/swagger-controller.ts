@@ -48,6 +48,18 @@ export abstract class SwaggerController {
              { name: string, controllerClass: Class, primary?: boolean }
            )[];
 
+  /**
+   * Extend Swagger UI options.
+   *
+   * See https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/.
+   *
+   * @type {object}
+   * @example
+   * uiOptions = { docExpansion: 'none' };
+   * @memberof SwaggerController
+   */
+  uiOptions: object = {};
+
   /* Spec file(s) */
 
   @Get('/openapi.json')
@@ -106,7 +118,7 @@ export abstract class SwaggerController {
         .replace('{{ urls }}', `urls: ${JSON.stringify(options)}`)
         .replace('{{ primaryName }}', primaryName);
     }
-
+    body = body.replace('{{ uiOptions }}', JSON.stringify(this.uiOptions));
     return new HttpResponseOK(body)
       .setHeader('Content-Type', 'text/html; charset=utf-8');
   }

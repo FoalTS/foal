@@ -18,7 +18,7 @@
 
 ▸ **generateSignedToken**(secret: *`string`*): `Promise`<`string`>
 
-*Defined in [common/tokens/generate-signed-token.util.ts:4](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/tokens/generate-signed-token.util.ts#L4)*
+*Defined in [common/tokens/generate-signed-token.util.ts:4](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/generate-signed-token.util.ts#L4)*
 
 **Parameters:**
 

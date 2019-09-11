@@ -8,6 +8,7 @@ cd ../formidable && npm run test || exit 1
 cd ../graphql && npm run test || exit 1
 cd ../jwks-rsa && npm run test || exit 1
 cd ../jwt && npm run test || exit 1
+cd ../mongodb && npm run test || exit 1
 cd ../mongoose && npm run test || exit 1
 cd ../password && npm run test || exit 1
 cd ../redis && npm run test || exit 1

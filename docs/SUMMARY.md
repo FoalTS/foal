@@ -61,6 +61,7 @@
   * [Single Page Applications](./frontend-integration/single-page-applications.md)
   * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
   * [JSX Server-Side Rendering](./frontend-integration/jsx-server-side-rendering.md)
+  * [Nuxt.js](./frontend-integration/nuxt.js.md)
 * CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
@@ -110,6 +111,7 @@
 * [@foal/graphql](./api/graphql/README.md)
 * [@foal/jwks-rsa](./api/jwks-rsa/README.md)
 * [@foal/jwt](./api/jwt/README.md)
+* [@foal/mongodb](./api/mongodb/README.md)
 * [@foal/mongoose](./api/mongoose/README.md)
 * [@foal/password](./api/password/README.md)
 * [@foal/redis](./api/password/README.md)

@@ -7,4 +7,5 @@ export class OpenApiController extends SwaggerController {
     { name: 'v1', controllerClass: ApiV1Controller },
     { name: 'v2', controllerClass: ApiV2Controller, primary: true }
   ];
+  uiOptions = { docExpansion: 'none' };
 }

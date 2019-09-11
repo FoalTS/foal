@@ -18,7 +18,7 @@
 
 ▸ **parseForm**(form: *`IncomingForm`*, ctx: *`Context`*): `Promise`<`object`>
 
-*Defined in [parse-form.ts:13](https://github.com/FoalTS/foal/blob/07f00115/packages/formidable/src/parse-form.ts#L13)*
+*Defined in [parse-form.ts:13](https://github.com/FoalTS/foal/blob/aac11366/packages/formidable/src/parse-form.ts#L13)*
 
 Promisify IncomingForm.parse.
 

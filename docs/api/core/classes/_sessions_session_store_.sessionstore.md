@@ -6,7 +6,7 @@ Abstract class to be override when creating a session storage service.
 
 A session store peforms CRUD operations on sessions and can store them in a database, file system, memory, etc.
 
-Examples of SessionStore: TypeORMStore, RedisStore.
+Examples of SessionStore: TypeORMStore, RedisStore, MongoDBStore.
 
 *__export__*: 
 
@@ -44,7 +44,7 @@ Examples of SessionStore: TypeORMStore, RedisStore.
 
 ▸ **applySessionOptions**(content: *`object`*, options: *[SessionOptions](../interfaces/_sessions_session_store_.sessionoptions.md)*): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:174](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L174)*
+*Defined in [sessions/session-store.ts:174](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L174)*
 
 Apply session options to the given session content.
 
@@ -66,7 +66,7 @@ ___
 
 ▸ **cleanUpExpiredSessions**(): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:151](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L151)*
+*Defined in [sessions/session-store.ts:151](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L151)*
 
 Some session stores may need to run periodically background jobs to cleanup expired sessions.
 
@@ -85,7 +85,7 @@ ___
 
 ▸ **clear**(): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:141](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L141)*
+*Defined in [sessions/session-store.ts:141](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L141)*
 
 Clear all sessions.
 
@@ -102,7 +102,7 @@ ___
 
 ▸ **createAndSaveSession**(sessionContent: *`object`*, options?: *[SessionOptions](../interfaces/_sessions_session_store_.sessionoptions.md)*): `Promise`<[Session](_sessions_session_.session.md)>
 
-*Defined in [sessions/session-store.ts:90](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L90)*
+*Defined in [sessions/session-store.ts:90](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L90)*
 
 Create and save a new session.
 
@@ -129,7 +129,7 @@ ___
 
 ▸ **createAndSaveSessionFromUser**(user: *`object`*, options?: *[SessionOptions](../interfaces/_sessions_session_store_.sessionoptions.md)*): `Promise`<[Session](_sessions_session_.session.md)>
 
-*Defined in [sessions/session-store.ts:73](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L73)*
+*Defined in [sessions/session-store.ts:73](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L73)*
 
 Create and save an new session from a user.
 
@@ -157,7 +157,7 @@ ___
 
 ▸ **destroy**(sessionID: *`string`*): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:110](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L110)*
+*Defined in [sessions/session-store.ts:110](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L110)*
 
 Delete a session, whether it exists or not.
 
@@ -180,7 +180,7 @@ ___
 
 ▸ **extendLifeTime**(sessionID: *`string`*): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:133](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L133)*
+*Defined in [sessions/session-store.ts:133](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L133)*
 
 Extend the lifetime of a session from its ID. The duration is the inactivity timeout.
 
@@ -205,14 +205,14 @@ ___
 
 ▸ **generateSessionID**(): `Promise`<`string`>
 
-*Defined in [sessions/session-store.ts:160](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L160)*
+*Defined in [sessions/session-store.ts:160](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L160)*
 
 Generate a 128-bit base64url-encoded session ID.
 
 *__memberof__*: SessionStore
 
 **Returns:** `Promise`<`string`>
-- The session ID.
+*   The session ID.
 
 ___
 <a id="read"></a>
@@ -221,7 +221,7 @@ ___
 
 ▸ **read**(sessionID: *`string`*): `Promise`<[Session](_sessions_session_.session.md) \| `undefined`>
 
-*Defined in [sessions/session-store.ts:121](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L121)*
+*Defined in [sessions/session-store.ts:121](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L121)*
 
 Read a session from its ID.
 
@@ -247,7 +247,7 @@ ___
 
 ▸ **update**(session: *[Session](_sessions_session_.session.md)*): `Promise`<`void`>
 
-*Defined in [sessions/session-store.ts:101](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L101)*
+*Defined in [sessions/session-store.ts:101](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L101)*
 
 Update and extend the lifetime of a session.
 
@@ -272,7 +272,7 @@ ___
 
 ▸ **getExpirationTimeouts**(): `object`
 
-*Defined in [sessions/session-store.ts:43](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/session-store.ts#L43)*
+*Defined in [sessions/session-store.ts:43](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session-store.ts#L43)*
 
 Read session expiration timeouts from the configuration.
 

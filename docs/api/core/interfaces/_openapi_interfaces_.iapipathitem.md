@@ -42,7 +42,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● $ref**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:501](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L501)*
+*Defined in [openapi/interfaces.ts:501](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L501)*
 
 Allows for an external definition of this path item. The referenced structure MUST be in the format of a Path Item Object. If there are conflicts between the referenced definition and this Path Item's definition, the behavior is _undefined_.
 
@@ -59,7 +59,7 @@ ___
 
 **● delete**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:556](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L556)*
+*Defined in [openapi/interfaces.ts:556](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L556)*
 
 A definition of a DELETE operation on this path.
 
@@ -76,7 +76,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:520](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L520)*
+*Defined in [openapi/interfaces.ts:520](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L520)*
 
 An optional, string description, intended to apply to all operations in this path. CommonMark syntax MAY be used for rich text representation.
 
@@ -93,7 +93,7 @@ ___
 
 **● get**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:529](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L529)*
+*Defined in [openapi/interfaces.ts:529](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L529)*
 
 A definition of a GET operation on this path.
 
@@ -110,7 +110,7 @@ ___
 
 **● head**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:574](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L574)*
+*Defined in [openapi/interfaces.ts:574](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L574)*
 
 A definition of a HEAD operation on this path.
 
@@ -127,7 +127,7 @@ ___
 
 **● options**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:565](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L565)*
+*Defined in [openapi/interfaces.ts:565](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L565)*
 
 A definition of a OPTIONS operation on this path.
 
@@ -144,7 +144,7 @@ ___
 
 **● parameters**: *([IApiReference](_openapi_interfaces_.iapireference.md) \| [IApiPathParameter](_openapi_interfaces_.iapipathparameter.md) \| [IApiQueryParameter](_openapi_interfaces_.iapiqueryparameter.md) \| [IApiHeaderParameter](_openapi_interfaces_.iapiheaderparameter.md) \| [IApiCookieParameter](_openapi_interfaces_.iapicookieparameter.md))[]*
 
-*Defined in [openapi/interfaces.ts:615](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L615)*
+*Defined in [openapi/interfaces.ts:615](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L615)*
 
 A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location. The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
 
@@ -161,7 +161,7 @@ ___
 
 **● patch**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:583](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L583)*
+*Defined in [openapi/interfaces.ts:583](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L583)*
 
 A definition of a PATCH operation on this path.
 
@@ -178,7 +178,7 @@ ___
 
 **● post**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:547](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L547)*
+*Defined in [openapi/interfaces.ts:547](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L547)*
 
 A definition of a POST operation on this path.
 
@@ -195,7 +195,7 @@ ___
 
 **● put**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:538](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L538)*
+*Defined in [openapi/interfaces.ts:538](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L538)*
 
 A definition of a PUT operation on this path.
 
@@ -212,7 +212,7 @@ ___
 
 **● servers**: *[IApiServer](_openapi_interfaces_.iapiserver.md)[]*
 
-*Defined in [openapi/interfaces.ts:601](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L601)*
+*Defined in [openapi/interfaces.ts:601](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L601)*
 
 An alternative server array to service all operations in this path.
 
@@ -229,7 +229,7 @@ ___
 
 **● summary**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:510](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L510)*
+*Defined in [openapi/interfaces.ts:510](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L510)*
 
 An optional, string summary, intended to apply to all operations in this path.
 
@@ -246,7 +246,7 @@ ___
 
 **● trace**: *[IApiOperation](_openapi_interfaces_.iapioperation.md)*
 
-*Defined in [openapi/interfaces.ts:592](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L592)*
+*Defined in [openapi/interfaces.ts:592](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L592)*
 
 A definition of a TRACE operation on this path.
 
