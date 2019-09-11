@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "High level web framework to create enterprise-grade Node.JS applications.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -86,7 +86,7 @@
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "@foal/ejs": "^1.0.1",
+    "@foal/ejs": "^1.1.0",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.1.2",
     "@types/supertest": "^2.0.5",
