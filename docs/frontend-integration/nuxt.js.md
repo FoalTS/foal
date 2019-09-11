@@ -17,45 +17,57 @@ When the CLI asks which server framework to choose, select *None*.
 
 ## Set Up
 
-Go to your server directory and install `nuxt`.
+1. Go to your server directory and install `nuxt`.
+    
+    ```
+    npm install nuxt
+    ```
 
-```
-npm install nuxt
-```
+2. Then update your `src/index.ts` file as follows:
 
-Then update your `src/index.ts` file as follows:
+    ```typescript
+    import { Builder, Nuxt } from 'nuxt';
+    // ...
 
-```typescript
-import { Builder, Nuxt } from 'nuxt';
-// ...
+    // Import and Set Nuxt.js options
+    const config = require('../../frontend/nuxt.config.js');
+    config.dev = Config.get('settings.debug', true);
 
-// Import and Set Nuxt.js options
-const config = require('../../frontend/nuxt.config.js');
-config.dev = Config.get('settings.debug', true);
+    async function main() {
+      // Init Nuxt.js
+      const nuxt = new Nuxt(config);
 
-async function main() {
-  // Init Nuxt.js
-  const nuxt = new Nuxt(config);
+      // Build only in dev mode
+      if (config.dev) {
+        const builder = new Builder(nuxt);
+        await builder.build();
+      } else {
+        await nuxt.ready();
+      }
+    
+      // ...
 
-  // Build only in dev mode
-  if (config.dev) {
-    const builder = new Builder(nuxt);
-    await builder.build();
-  } else {
-    await nuxt.ready();
-  }
+      const app = createApp(AppController, {
+        postMiddlewares: [
+          nuxt.render
+        ]
+      });
+    
+      // ...
+    }
 
-  // ...
+    main();
 
-  const app = createApp(AppController, {
-    postMiddlewares: [
-      nuxt.render
-    ]
-  });
+    ```
+    
+3. Delete the file `index.html` in `backend/public`.
 
-  // ...
-}
+4. Open the file `nuxt.config.js` in the `frontend/` directory and update its first lines as follows:
 
-main();
+    ```typescript
+    module.exports = {
+      srcDir: '../frontend',
+      // ...
+    }
+    ```
 
-```
