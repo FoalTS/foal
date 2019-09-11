@@ -33,7 +33,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● authorizationCode**: *[IApiAuthorizationCodeOAuthFlow](_openapi_interfaces_.iapiauthorizationcodeoauthflow.md)*
 
-*Defined in [openapi/interfaces.ts:2012](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L2012)*
+*Defined in [openapi/interfaces.ts:2012](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L2012)*
 
 Configuration for the OAuth Authorization Code flow. Previously called accessCode in OpenAPI 2.0.
 
@@ -50,7 +50,7 @@ ___
 
 **● clientCredentials**: *[IApiClientCredentialsOAuthFlow](_openapi_interfaces_.iapiclientcredentialsoauthflow.md)*
 
-*Defined in [openapi/interfaces.ts:2002](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L2002)*
+*Defined in [openapi/interfaces.ts:2002](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L2002)*
 
 Configuration for the OAuth Client Credentials flow. Previously called application in OpenAPI 2.0.
 
@@ -67,7 +67,7 @@ ___
 
 **● implicit**: *[IApiImplicitOAuthFlow](_openapi_interfaces_.iapiimplicitoauthflow.md)*
 
-*Defined in [openapi/interfaces.ts:1983](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1983)*
+*Defined in [openapi/interfaces.ts:1983](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1983)*
 
 Configuration for the OAuth Implicit flow
 
@@ -84,7 +84,7 @@ ___
 
 **● password**: *[IApiPasswordOAuthFlow](_openapi_interfaces_.iapipasswordoauthflow.md)*
 
-*Defined in [openapi/interfaces.ts:1992](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1992)*
+*Defined in [openapi/interfaces.ts:1992](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1992)*
 
 Configuration for the OAuth Resource Owner Password flow
 

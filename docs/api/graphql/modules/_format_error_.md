@@ -18,7 +18,7 @@
 
 ▸ **formatError**<`R`>(resolver: *`function`*, formatFunction?: *`function`*): `function`
 
-*Defined in [format-error.ts:15](https://github.com/FoalTS/foal/blob/07f00115/packages/graphql/src/format-error.ts#L15)*
+*Defined in [format-error.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/format-error.ts#L15)*
 
 Catch errors rejected and thrown to reject a new one.
 

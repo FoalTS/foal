@@ -35,7 +35,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● contact**: *[IApiContact](_openapi_interfaces_.iapicontact.md)*
 
-*Defined in [openapi/interfaces.ts:143](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L143)*
+*Defined in [openapi/interfaces.ts:143](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L143)*
 
 The contact information for the exposed API.
 
@@ -52,7 +52,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:125](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L125)*
+*Defined in [openapi/interfaces.ts:125](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L125)*
 
 A short description of the application. CommonMark syntax MAY be used for rich text representation.
 
@@ -69,7 +69,7 @@ ___
 
 **● license**: *[IApiLicense](_openapi_interfaces_.iapilicense.md)*
 
-*Defined in [openapi/interfaces.ts:152](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L152)*
+*Defined in [openapi/interfaces.ts:152](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L152)*
 
 The license information for the exposed API.
 
@@ -86,7 +86,7 @@ ___
 
 **● termsOfService**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:134](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L134)*
+*Defined in [openapi/interfaces.ts:134](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L134)*
 
 A URL to the Terms of Service for the API. MUST be in the format of a URL.
 
@@ -103,7 +103,7 @@ ___
 
 **● title**: *`string`*
 
-*Defined in [openapi/interfaces.ts:115](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L115)*
+*Defined in [openapi/interfaces.ts:115](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L115)*
 
 The title of the application.
 
@@ -120,7 +120,7 @@ ___
 
 **● version**: *`string`*
 
-*Defined in [openapi/interfaces.ts:162](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L162)*
+*Defined in [openapi/interfaces.ts:162](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L162)*
 
 The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
 

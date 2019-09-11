@@ -39,7 +39,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1525](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1525)*
+*Defined in [openapi/interfaces.ts:1525](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1525)*
 
 A description of the link. CommonMark syntax MAY be used for rich text representation.
 
@@ -56,7 +56,7 @@ ___
 
 **● operationId**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1490](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1490)*
+*Defined in [openapi/interfaces.ts:1490](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1490)*
 
 The name of an existing, resolvable OAS operation, as defined with a unique operationId. This field is mutually exclusive of the operationRef field.
 
@@ -73,7 +73,7 @@ ___
 
 **● operationRef**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1480](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1480)*
+*Defined in [openapi/interfaces.ts:1480](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1480)*
 
 A relative or absolute reference to an OAS operation. This field is mutually exclusive of the operationId field, and MUST point to an Operation Object. Relative operationRef values MAY be used to locate an existing Operation Object in the OpenAPI definition.
 
@@ -90,7 +90,7 @@ ___
 
 **● parameters**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1505](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1505)*
+*Defined in [openapi/interfaces.ts:1505](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1505)*
 
 A map representing parameters to pass to an operation as specified with operationId or identified via operationRef. The key is the parameter name to be used, whereas the value can be a constant or an expression to be evaluated and passed to the linked operation. The parameter name can be qualified using the parameter location \[{in}.\]{name} for operations that use the same parameter name in different locations (e.g. path.id).
 
@@ -107,7 +107,7 @@ ___
 
 **● requestBody**: *`any` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1516](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1516)*
+*Defined in [openapi/interfaces.ts:1516](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1516)*
 
 A literal value or {expression} to use as a request body when calling the target operation.
 
@@ -124,7 +124,7 @@ ___
 
 **● server**: *[IApiServer](_openapi_interfaces_.iapiserver.md)*
 
-*Defined in [openapi/interfaces.ts:1534](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1534)*
+*Defined in [openapi/interfaces.ts:1534](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1534)*
 
 A server object to be used by the target operation.
 

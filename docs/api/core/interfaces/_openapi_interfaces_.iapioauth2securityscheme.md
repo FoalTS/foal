@@ -28,7 +28,7 @@
 
 *Inherited from [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[description](_openapi_interfaces_.iapiabstractsecurityscheme.md#description)*
 
-*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1876)*
+*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1876)*
 
 A short description for security scheme. CommonMark syntax MAY be used for rich text representation.
 
@@ -45,7 +45,7 @@ ___
 
 **● flows**: *[IApiOAuthFlows](_openapi_interfaces_.iapioauthflows.md)*
 
-*Defined in [openapi/interfaces.ts:1936](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1936)*
+*Defined in [openapi/interfaces.ts:1936](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1936)*
 
 An object containing configuration information for the flow types supported.
 
@@ -64,7 +64,7 @@ ___
 
 *Overrides [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[type](_openapi_interfaces_.iapiabstractsecurityscheme.md#type)*
 
-*Defined in [openapi/interfaces.ts:1927](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1927)*
+*Defined in [openapi/interfaces.ts:1927](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1927)*
 
 ___
 

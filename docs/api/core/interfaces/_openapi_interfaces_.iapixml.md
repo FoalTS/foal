@@ -36,7 +36,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● attribute**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1841](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1841)*
+*Defined in [openapi/interfaces.ts:1841](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1841)*
 
 Declares whether the property definition translates to an attribute instead of an element. Default value is false.
 
@@ -53,7 +53,7 @@ ___
 
 **● name**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1813](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1813)*
+*Defined in [openapi/interfaces.ts:1813](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1813)*
 
 Replaces the name of the element/attribute used for the described schema property. When defined within items, it will affect the name of the individual XML elements within the list. When defined alongside type being array (outside the items), it will affect the wrapping element and only if wrapped is true. If wrapped is false, it will be ignored.
 
@@ -70,7 +70,7 @@ ___
 
 **● namespace**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1822](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1822)*
+*Defined in [openapi/interfaces.ts:1822](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1822)*
 
 The URI of the namespace definition. Value MUST be in the form of an absolute URI.
 
@@ -87,7 +87,7 @@ ___
 
 **● prefix**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1831](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1831)*
+*Defined in [openapi/interfaces.ts:1831](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1831)*
 
 The prefix to be used for the name.
 
@@ -104,7 +104,7 @@ ___
 
 **● wrapped**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1853](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1853)*
+*Defined in [openapi/interfaces.ts:1853](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1853)*
 
 MAY be used only for an array definition. Signifies whether the array is wrapped (for example, ) or unwrapped (). Default value is false. The definition takes effect only when defined alongside type being array (outside the items).
 

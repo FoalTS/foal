@@ -18,7 +18,7 @@
 
 ▸ **TokenOptional**(options: *[TokenOptions](../interfaces/_sessions_token_hook_.tokenoptions.md)*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [sessions/token-optional.hook.ts:7](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/token-optional.hook.ts#L7)*
+*Defined in [sessions/token-optional.hook.ts:7](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/token-optional.hook.ts#L7)*
 
 **Parameters:**
 

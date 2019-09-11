@@ -22,7 +22,7 @@
 
 ▸ **getAjvInstance**(): `Ajv.Ajv`
 
-*Defined in [common/utils/get-ajv-instance.ts:25](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/get-ajv-instance.ts#L25)*
+*Defined in [common/utils/get-ajv-instance.ts:26](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/get-ajv-instance.ts#L26)*
 
 Return the Ajv instance used internally by FoalTS.
 
@@ -32,7 +32,7 @@ It has this default configuration:
 *   removeAdditional: true (Remove additional properties when `additionalProperties` keyword is false.)
 *   useDefaults: true (Replace missing properties and items with the values from corresponding `default` keyword)
 
-This configuration can be overrided using the file `config/default.json` or through environment variables: SETTINGS\_AJV\_COERCE\_TYPES, SETTINGS\_AJV\_REMOVE\_ADDITIONAL, SETTINGS\_AJV\_USE\_DEFAULTS.
+This configuration can be overrided using the file `config/default.json` or through environment variables: SETTINGS\_AJV\_COERCE\_TYPES, SETTINGS\_AJV\_REMOVE\_ADDITIONAL, SETTINGS\_AJV\_USE\_DEFAULTS, SETTINGS\_AJV\_NULLABLE.
 
 *__export__*: 
 
@@ -49,7 +49,7 @@ ___
 
 **_instanceWrapper**: *`object`*
 
-*Defined in [common/utils/get-ajv-instance.ts:7](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/get-ajv-instance.ts#L7)*
+*Defined in [common/utils/get-ajv-instance.ts:7](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/get-ajv-instance.ts#L7)*
 
 <a id="_instancewrapper.instance"></a>
 
@@ -57,7 +57,7 @@ ___
 
 **● instance**: *`null`* =  null
 
-*Defined in [common/utils/get-ajv-instance.ts:8](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/get-ajv-instance.ts#L8)*
+*Defined in [common/utils/get-ajv-instance.ts:8](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/get-ajv-instance.ts#L8)*
 
 ___
 

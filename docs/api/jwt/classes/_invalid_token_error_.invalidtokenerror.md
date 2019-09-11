@@ -28,7 +28,7 @@
 
 **● isInvalidTokenError**: *`boolean`* = true
 
-*Defined in [invalid-token.error.ts:2](https://github.com/FoalTS/foal/blob/07f00115/packages/jwt/src/invalid-token.error.ts#L2)*
+*Defined in [invalid-token.error.ts:2](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/invalid-token.error.ts#L2)*
 
 ___
 <a id="message"></a>

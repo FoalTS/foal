@@ -18,7 +18,7 @@
 
 ▸ **PermissionRequired**(perm: *`string`*, options?: *`object`*): `HookDecorator`
 
-*Defined in [hooks/permission-required.hook.ts:23](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/hooks/permission-required.hook.ts#L23)*
+*Defined in [hooks/permission-required.hook.ts:23](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/hooks/permission-required.hook.ts#L23)*
 
 Hook factory to check if a user can access a route based on their permissions.
 

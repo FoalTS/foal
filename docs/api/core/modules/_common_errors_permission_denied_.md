@@ -22,7 +22,7 @@
 
 ▸ **isPermissionDenied**(err: *`object`*): `boolean`
 
-*Defined in [common/errors/permission-denied.ts:30](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/errors/permission-denied.ts#L30)*
+*Defined in [common/errors/permission-denied.ts:30](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/errors/permission-denied.ts#L30)*
 
 Check if an error is an instance of PermissionDenied.
 

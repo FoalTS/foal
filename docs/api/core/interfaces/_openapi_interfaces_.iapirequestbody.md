@@ -32,7 +32,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● content**: *`object`*
 
-*Defined in [openapi/interfaces.ts:1022](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1022)*
+*Defined in [openapi/interfaces.ts:1022](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1022)*
 
 The content of the request body. The key is a media type or media type range and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/\*
 
@@ -53,7 +53,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:1009](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1009)*
+*Defined in [openapi/interfaces.ts:1009](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1009)*
 
 A brief description of the request body. This could contain examples of use. CommonMark syntax MAY be used for rich text representation.
 
@@ -70,7 +70,7 @@ ___
 
 **● required**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:1033](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L1033)*
+*Defined in [openapi/interfaces.ts:1033](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1033)*
 
 Determines if the request body is required in the request. Defaults to false.
 

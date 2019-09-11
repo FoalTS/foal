@@ -18,7 +18,7 @@
 
 ▸ **ValidatePathParam**(name: *`string`*, schema: *`object` \| `function`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-path-param.hook.ts:18](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/hooks/validate-path-param.hook.ts#L18)*
+*Defined in [common/hooks/validate-path-param.hook.ts:18](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/hooks/validate-path-param.hook.ts#L18)*
 
 Hook - Validate a specific path parameter against an AJV schema.
 

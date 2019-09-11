@@ -61,7 +61,7 @@
 
 ▸ **createHttpResponseFile**(options: *`object`*): `Promise`<[HttpResponseOK](../classes/_core_http_http_responses_.httpresponseok.md)>
 
-*Defined in [core/http/http-responses.ts:287](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L287)*
+*Defined in [core/http/http-responses.ts:287](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L287)*
 
 Create an HttpResponseOK whose content is the specified file. If returned in a controller, the server sends the file in streaming.
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **isHttpResponse**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:177](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L177)*
+*Defined in [core/http/http-responses.ts:177](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L177)*
 
 Check if an object is an instance of HttpResponse.
 
@@ -102,7 +102,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponse. False otherwise.
+*   True if the error is an instance of HttpResponse. False otherwise.
 
 ___
 <a id="ishttpresponsebadrequest"></a>
@@ -111,7 +111,7 @@ ___
 
 ▸ **isHttpResponseBadRequest**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:635](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L635)*
+*Defined in [core/http/http-responses.ts:635](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L635)*
 
 Check if an object is an instance of HttpResponseBadRequest.
 
@@ -126,8 +126,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseBadRequest.
-False otherwise.
+*   True if the error is an instance of HttpResponseBadRequest. False otherwise.
 
 ___
 <a id="ishttpresponseclienterror"></a>
@@ -136,7 +135,7 @@ ___
 
 ▸ **isHttpResponseClientError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:589](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L589)*
+*Defined in [core/http/http-responses.ts:589](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L589)*
 
 Check if an object is an instance of HttpResponseClientError.
 
@@ -151,8 +150,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseClientError.
-False otherwise.
+*   True if the error is an instance of HttpResponseClientError. False otherwise.
 
 ___
 <a id="ishttpresponseconflict"></a>
@@ -161,7 +159,7 @@ ___
 
 ▸ **isHttpResponseConflict**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:863](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L863)*
+*Defined in [core/http/http-responses.ts:863](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L863)*
 
 Check if an object is an instance of HttpResponseConflict.
 
@@ -176,7 +174,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseConflict. False otherwise.
+*   True if the error is an instance of HttpResponseConflict. False otherwise.
 
 ___
 <a id="ishttpresponsecreated"></a>
@@ -185,7 +183,7 @@ ___
 
 ▸ **isHttpResponseCreated**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:359](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L359)*
+*Defined in [core/http/http-responses.ts:359](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L359)*
 
 Check if an object is an instance of HttpResponseCreated.
 
@@ -200,7 +198,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseCreated. False otherwise.
+*   True if the error is an instance of HttpResponseCreated. False otherwise.
 
 ___
 <a id="ishttpresponseforbidden"></a>
@@ -209,7 +207,7 @@ ___
 
 ▸ **isHttpResponseForbidden**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:727](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L727)*
+*Defined in [core/http/http-responses.ts:727](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L727)*
 
 Check if an object is an instance of HttpResponseForbidden.
 
@@ -224,7 +222,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseForbidden. False otherwise.
+*   True if the error is an instance of HttpResponseForbidden. False otherwise.
 
 ___
 <a id="ishttpresponseinternalservererror"></a>
@@ -233,7 +231,7 @@ ___
 
 ▸ **isHttpResponseInternalServerError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:950](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L950)*
+*Defined in [core/http/http-responses.ts:950](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L950)*
 
 Check if an object is an instance of HttpResponseInternalServerError.
 
@@ -248,8 +246,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of
-HttpResponseInternalServerError. False otherwise.
+*   True if the error is an instance of HttpResponseInternalServerError. False otherwise.
 
 ___
 <a id="ishttpresponsemethodnotallowed"></a>
@@ -258,7 +255,7 @@ ___
 
 ▸ **isHttpResponseMethodNotAllowed**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:818](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L818)*
+*Defined in [core/http/http-responses.ts:818](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L818)*
 
 Check if an object is an instance of HttpResponseMethodNotAllowed.
 
@@ -273,8 +270,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseMethodNotAllowed.
-False otherwise.
+*   True if the error is an instance of HttpResponseMethodNotAllowed. False otherwise.
 
 ___
 <a id="ishttpresponsemovedpermanently"></a>
@@ -283,7 +279,7 @@ ___
 
 ▸ **isHttpResponseMovedPermanently**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:496](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L496)*
+*Defined in [core/http/http-responses.ts:496](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L496)*
 
 Check if an object is an instance of HttpResponseMovedPermanently.
 
@@ -298,8 +294,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an
-instance of HttpResponseMovedPermanently. False otherwise.
+*   True if the error is an instance of HttpResponseMovedPermanently. False otherwise.
 
 ___
 <a id="ishttpresponsenocontent"></a>
@@ -308,7 +303,7 @@ ___
 
 ▸ **isHttpResponseNoContent**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:403](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L403)*
+*Defined in [core/http/http-responses.ts:403](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L403)*
 
 Check if an object is an instance of HttpResponseNoContent.
 
@@ -323,7 +318,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseNoContent. False otherwise.
+*   True if the error is an instance of HttpResponseNoContent. False otherwise.
 
 ___
 <a id="ishttpresponsenotfound"></a>
@@ -332,7 +327,7 @@ ___
 
 ▸ **isHttpResponseNotFound**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:772](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L772)*
+*Defined in [core/http/http-responses.ts:772](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L772)*
 
 Check if an object is an instance of HttpResponseNotFound.
 
@@ -347,7 +342,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseNotFound. False otherwise.
+*   True if the error is an instance of HttpResponseNotFound. False otherwise.
 
 ___
 <a id="ishttpresponsenotimplemented"></a>
@@ -356,7 +351,7 @@ ___
 
 ▸ **isHttpResponseNotImplemented**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:996](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L996)*
+*Defined in [core/http/http-responses.ts:996](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L996)*
 
 Check if an object is an instance of HttpResponseNotImplemented.
 
@@ -371,8 +366,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseNotImplemented.
-False otherwise.
+*   True if the error is an instance of HttpResponseNotImplemented. False otherwise.
 
 ___
 <a id="ishttpresponseok"></a>
@@ -381,7 +375,7 @@ ___
 
 ▸ **isHttpResponseOK**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:268](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L268)*
+*Defined in [core/http/http-responses.ts:268](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L268)*
 
 Check if an object is an instance of HttpResponseOK.
 
@@ -396,7 +390,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseOK. False otherwise.
+*   True if the error is an instance of HttpResponseOK. False otherwise.
 
 ___
 <a id="ishttpresponseredirect"></a>
@@ -405,7 +399,7 @@ ___
 
 ▸ **isHttpResponseRedirect**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:542](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L542)*
+*Defined in [core/http/http-responses.ts:542](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L542)*
 
 Check if an object is an instance of HttpResponseRedirect.
 
@@ -420,7 +414,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseRedirect. False otherwise.
+*   True if the error is an instance of HttpResponseRedirect. False otherwise.
 
 ___
 <a id="ishttpresponseredirection"></a>
@@ -429,7 +423,7 @@ ___
 
 ▸ **isHttpResponseRedirection**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:450](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L450)*
+*Defined in [core/http/http-responses.ts:450](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L450)*
 
 Check if an object is an instance of HttpResponseRedirection.
 
@@ -444,8 +438,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseRedirection.
-False otherwise.
+*   True if the error is an instance of HttpResponseRedirection. False otherwise.
 
 ___
 <a id="ishttpresponseservererror"></a>
@@ -454,7 +447,7 @@ ___
 
 ▸ **isHttpResponseServerError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:904](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L904)*
+*Defined in [core/http/http-responses.ts:904](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L904)*
 
 Check if an object is an instance of HttpResponseServerError.
 
@@ -469,8 +462,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseServerError.
-False otherwise.
+*   True if the error is an instance of HttpResponseServerError. False otherwise.
 
 ___
 <a id="ishttpresponsesuccess"></a>
@@ -479,7 +471,7 @@ ___
 
 ▸ **isHttpResponseSuccess**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:223](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L223)*
+*Defined in [core/http/http-responses.ts:223](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L223)*
 
 Check if an object is an instance of HttpResponseSuccess.
 
@@ -494,7 +486,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseSuccess. False otherwise.
+*   True if the error is an instance of HttpResponseSuccess. False otherwise.
 
 ___
 <a id="ishttpresponseunauthorized"></a>
@@ -503,7 +495,7 @@ ___
 
 ▸ **isHttpResponseUnauthorized**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:682](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/http/http-responses.ts#L682)*
+*Defined in [core/http/http-responses.ts:682](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L682)*
 
 Check if an object is an instance of HttpResponseUnauthorized.
 
@@ -518,8 +510,7 @@ This function is a help when you have several packages using @foal/core. Npm can
 | obj | `any` |  The object to check. |
 
 **Returns:** `boolean`
-- True if the error is an instance of HttpResponseUnauthorized.
-False otherwise.
+*   True if the error is an instance of HttpResponseUnauthorized. False otherwise.
 
 ___
 

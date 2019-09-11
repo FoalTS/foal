@@ -31,7 +31,7 @@ Entity representing a group. A group can have permissions.
 
 **● codeName**: *`string`*
 
-*Defined in [entities/group.entity.ts:23](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/group.entity.ts#L23)*
+*Defined in [entities/group.entity.ts:23](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/entities/group.entity.ts#L23)*
 
 ___
 <a id="id"></a>
@@ -40,7 +40,7 @@ ___
 
 **● id**: *`number`*
 
-*Defined in [entities/group.entity.ts:17](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/group.entity.ts#L17)*
+*Defined in [entities/group.entity.ts:17](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/entities/group.entity.ts#L17)*
 
 ___
 <a id="name"></a>
@@ -49,7 +49,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [entities/group.entity.ts:20](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/group.entity.ts#L20)*
+*Defined in [entities/group.entity.ts:20](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/entities/group.entity.ts#L20)*
 
 ___
 <a id="permissions"></a>
@@ -58,7 +58,7 @@ ___
 
 **● permissions**: *[Permission](_entities_permission_entity_.permission.md)[]*
 
-*Defined in [entities/group.entity.ts:27](https://github.com/FoalTS/foal/blob/07f00115/packages/typeorm/src/entities/group.entity.ts#L27)*
+*Defined in [entities/group.entity.ts:27](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/entities/group.entity.ts#L27)*
 
 ___
 

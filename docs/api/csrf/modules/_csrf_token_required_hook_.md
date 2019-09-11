@@ -19,7 +19,7 @@
 
 ▸ **CsrfTokenRequired**(options?: *`object`*): `HookDecorator`
 
-*Defined in [csrf-token-required.hook.ts:14](https://github.com/FoalTS/foal/blob/07f00115/packages/csrf/src/csrf-token-required.hook.ts#L14)*
+*Defined in [csrf-token-required.hook.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/csrf/src/csrf-token-required.hook.ts#L15)*
 
 **Parameters:**
 
@@ -38,7 +38,7 @@ ___
 
 ▸ **getRequestToken**(req: *`Request`*): `string` \| `undefined`
 
-*Defined in [csrf-token-required.hook.ts:5](https://github.com/FoalTS/foal/blob/07f00115/packages/csrf/src/csrf-token-required.hook.ts#L5)*
+*Defined in [csrf-token-required.hook.ts:6](https://github.com/FoalTS/foal/blob/aac11366/packages/csrf/src/csrf-token-required.hook.ts#L6)*
 
 **Parameters:**
 

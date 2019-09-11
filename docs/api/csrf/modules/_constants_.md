@@ -19,7 +19,7 @@
 
 **● CSRF_DEFAULT_COOKIE_NAME**: *`string`* = "csrfToken"
 
-*Defined in [constants.ts:6](https://github.com/FoalTS/foal/blob/07f00115/packages/csrf/src/constants.ts#L6)*
+*Defined in [constants.ts:6](https://github.com/FoalTS/foal/blob/aac11366/packages/csrf/src/constants.ts#L6)*
 
 ___
 <a id="csrf_default_cookie_path"></a>
@@ -28,7 +28,7 @@ ___
 
 **● CSRF_DEFAULT_COOKIE_PATH**: *`string`* = "/"
 
-*Defined in [constants.ts:5](https://github.com/FoalTS/foal/blob/07f00115/packages/csrf/src/constants.ts#L5)*
+*Defined in [constants.ts:5](https://github.com/FoalTS/foal/blob/aac11366/packages/csrf/src/constants.ts#L5)*
 
 CSRF
 

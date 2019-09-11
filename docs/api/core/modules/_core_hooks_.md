@@ -27,7 +27,7 @@
 
 **Ƭ HookDecorator**: *`function`*
 
-*Defined in [core/hooks.ts:29](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L29)*
+*Defined in [core/hooks.ts:29](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L29)*
 
 Interface of a hook. It is actually the interface of a decorator.
 
@@ -52,7 +52,7 @@ ___
 
 **Ƭ HookFunction**: *`function`*
 
-*Defined in [core/hooks.ts:21](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L21)*
+*Defined in [core/hooks.ts:21](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L21)*
 
 Interface of a function from which a hook can be created.
 
@@ -77,7 +77,7 @@ ___
 
 **Ƭ HookPostFunction**: *`function`*
 
-*Defined in [core/hooks.ts:14](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L14)*
+*Defined in [core/hooks.ts:14](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L14)*
 
 Interface of a function that can be returned in a hook function. This function is then executed after the controller method execution.
 
@@ -104,7 +104,7 @@ ___
 
 ▸ **Hook**(...hookFunctions: *[HookFunction](_core_hooks_.md#hookfunction)[]*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [core/hooks.ts:38](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L38)*
+*Defined in [core/hooks.ts:38](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L38)*
 
 Create a hook from one or several functions.
 
@@ -117,7 +117,7 @@ Create a hook from one or several functions.
 | `Rest` hookFunctions | [HookFunction](_core_hooks_.md#hookfunction)[] |  The function(s) from which the hook should be created. |
 
 **Returns:** [HookDecorator](_core_hooks_.md#hookdecorator)
-- The hook decorator.
+*   The hook decorator.
 
 ___
 <a id="mergehooks"></a>
@@ -126,7 +126,7 @@ ___
 
 ▸ **MergeHooks**(...hookDecorators: *[HookDecorator](_core_hooks_.md#hookdecorator)[]*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [core/hooks.ts:82](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L82)*
+*Defined in [core/hooks.ts:82](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L82)*
 
 Group multiple hooks into a new one.
 
@@ -148,7 +148,7 @@ ___
 
 ▸ **getHookFunction**(hook: *[HookDecorator](_core_hooks_.md#hookdecorator)*): [HookFunction](_core_hooks_.md#hookfunction)
 
-*Defined in [core/hooks.ts:54](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L54)*
+*Defined in [core/hooks.ts:54](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L54)*
 
 Get the function from which the hook was made.
 
@@ -170,7 +170,7 @@ ___
 
 ▸ **getHookFunctions**(hook: *[HookDecorator](_core_hooks_.md#hookdecorator)*): [HookFunction](_core_hooks_.md#hookfunction)[]
 
-*Defined in [core/hooks.ts:68](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/core/hooks.ts#L68)*
+*Defined in [core/hooks.ts:68](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/hooks.ts#L68)*
 
 Get the functions from which the hook was made.
 

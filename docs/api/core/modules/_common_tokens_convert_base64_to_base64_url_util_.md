@@ -18,7 +18,7 @@
 
 ▸ **convertBase64ToBase64url**(str: *`string`*): `string`
 
-*Defined in [common/tokens/convert-base64-to-base64-url.util.ts:8](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/tokens/convert-base64-to-base64-url.util.ts#L8)*
+*Defined in [common/tokens/convert-base64-to-base64-url.util.ts:8](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/convert-base64-to-base64-url.util.ts#L8)*
 
 Convert a base64-encode string into a base64url-encode string with no equals.
 

@@ -39,7 +39,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● refreshUrl**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:2032](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L2032)*
+*Defined in [openapi/interfaces.ts:2032](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L2032)*
 
 The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL.
 
@@ -56,7 +56,7 @@ ___
 
 **● scopes**: *`object`*
 
-*Defined in [openapi/interfaces.ts:2044](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/openapi/interfaces.ts#L2044)*
+*Defined in [openapi/interfaces.ts:2044](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L2044)*
 
 The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it.
 

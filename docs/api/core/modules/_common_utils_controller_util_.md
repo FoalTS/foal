@@ -18,7 +18,7 @@
 
 ▸ **controller**(path: *`string`*, controllerClass: *[Class](_core_class_interface_.md#class)*): [Class](_core_class_interface_.md#class)
 
-*Defined in [common/utils/controller.util.ts:16](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/utils/controller.util.ts#L16)*
+*Defined in [common/utils/controller.util.ts:16](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/controller.util.ts#L16)*
 
 Define the HTTP path of a controller class. This function is usually called when adding the controller as a sub-controller.
 

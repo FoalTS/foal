@@ -111,6 +111,7 @@
 * [@foal/graphql](./api/graphql/README.md)
 * [@foal/jwks-rsa](./api/jwks-rsa/README.md)
 * [@foal/jwt](./api/jwt/README.md)
+* [@foal/mongodb](./api/mongodb/README.md)
 * [@foal/mongoose](./api/mongoose/README.md)
 * [@foal/password](./api/password/README.md)
 * [@foal/redis](./api/password/README.md)

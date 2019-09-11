@@ -18,7 +18,7 @@
 
 ▸ **verifySignedToken**(signedToken: *`string`*, secret: *`string`*): `string` \| `false`
 
-*Defined in [common/tokens/verify-signed-token.util.ts:19](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/common/tokens/verify-signed-token.util.ts#L19)*
+*Defined in [common/tokens/verify-signed-token.util.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/verify-signed-token.util.ts#L19)*
 
 Verify a base64-encoded (or base64url-encoded) signed token against a secret.
 
@@ -36,7 +36,7 @@ Returns the token without its signature otherwise.
 | secret | `string` |  The base64-encoded secret with which the token is supposed to have been signed with. |
 
 **Returns:** `string` \| `false`
-- False or the unsigned token.
+*   False or the unsigned token.
 
 ___
 

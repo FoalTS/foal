@@ -18,7 +18,7 @@
 
 ▸ **removeSessionCookie**(response: *[HttpResponse](../classes/_core_http_http_responses_.httpresponse.md)*): `void`
 
-*Defined in [sessions/remove-session-cookie.ts:13](https://github.com/FoalTS/foal/blob/07f00115/packages/core/src/sessions/remove-session-cookie.ts#L13)*
+*Defined in [sessions/remove-session-cookie.ts:13](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/remove-session-cookie.ts#L13)*
 
 Delete the browser cookie containing the session token.
 
