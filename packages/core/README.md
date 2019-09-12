@@ -34,6 +34,9 @@
   <a href="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg">
     <img src="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg" alt="2FA">
   </a>
+  <a href="https://discord.gg/QUrJv98">
+    <img src="https://img.shields.io/badge/Chat-Discord-blue.svg" alt="2FA">
+  </a>
 </p>
 
 [Github](https://github.com/FoalTS/foal) - [Twitter](https://twitter.com/FoalTs) - [Website](https://foalts.org/) - [Documentation](https://foalts.gitbook.io/docs/) - [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
