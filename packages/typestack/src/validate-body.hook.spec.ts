@@ -4,7 +4,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // 3p
 import { Context, getHookFunction, isHttpResponseBadRequest, ServiceManager } from '@foal/core';
 import { Expose } from 'class-transformer';
-import { IsDefined, IsNumber, Min } from 'class-validator';
+import { IsNumber, Min } from 'class-validator';
 
 // FoalTS
 import { ValidateBody } from './validate-body.hook';

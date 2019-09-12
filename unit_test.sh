@@ -14,6 +14,7 @@ cd ../password && npm run test || exit 1
 cd ../redis && npm run test || exit 1
 cd ../swagger && npm run test || exit 1
 cd ../typeorm && npm run test || exit 1
+cd ../typestack && npm run test || exit 1
 # @foal/core at the end because code coverage takes time.
 cd ../core && npm run test || exit 1
 cd ../..
