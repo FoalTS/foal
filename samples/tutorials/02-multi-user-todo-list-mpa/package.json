@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@foal/core": "^1.0.0",
-    "@foal/password": "^0.8.9",
+    "@foal/password": "^1.1.1",
     "@foal/typeorm": "^1.0.0",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
@@ -46,6 +46,6 @@
     "supertest": "^3.3.0",
     "supervisor": "^0.12.0",
     "tslint": "^5.10.0",
-    "typescript": "^3.3.3"
+    "typescript": "~3.5.3"
   }
 }
