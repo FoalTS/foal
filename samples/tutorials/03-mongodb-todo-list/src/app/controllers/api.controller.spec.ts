@@ -18,9 +18,9 @@ describe('ApiController', () => {
   // Create a connection to the database before running all the tests.
   before(async () => {
     const uri = Config.get<string>('mongodb.uri');
-    connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+    connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
-    await Todo.remove({});
+    await Todo.deleteMany({});
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.

@@ -16,7 +16,7 @@ export const schema = {
 export async function main(args) {
   // Create a new connection to the database.
   const uri = Config.get<string>('mongodb.uri');
-  connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+  connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
   // Create a new task with the text given in the command line.
   const todo = new Todo();

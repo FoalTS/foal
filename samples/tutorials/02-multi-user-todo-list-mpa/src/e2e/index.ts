@@ -18,7 +18,7 @@ describe('The server', () => {
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
-    // The connection uses the configuration defined in the file config/test.json.
+    // The connection uses the configuration defined in the file config/e2e.json.
     // By default, the file has three connection options:
     //  "database": "./e2e_db.sqlite3" -> Use a different database for running the tests.
     // "synchronize": true ->  Auto create the database schema when the connection is established.

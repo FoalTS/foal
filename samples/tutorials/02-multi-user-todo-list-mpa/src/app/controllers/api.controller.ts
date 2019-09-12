@@ -11,7 +11,8 @@ import { Todo, User } from '../entities';
 @TokenRequired({
   cookie: true,
   store: TypeORMStore,
-  user: fetchUser(User)
+  // Make ctx.user be an instance of User.
+  user: fetchUser(User),
 })
 export class ApiController {
 
@@ -62,7 +63,7 @@ export class ApiController {
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
     const todo = await getRepository(Todo).findOne({
-      id: ctx.request.params.id,
+      id: (ctx.request.params as any).id,
       // Do not return the todo if it does not belong to the current user.
       owner: ctx.user
     });

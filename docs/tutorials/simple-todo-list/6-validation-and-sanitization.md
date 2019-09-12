@@ -56,7 +56,7 @@ export class ApiController {
     type: 'object',
   })
   async deleteTodo(ctx: Context) {
-    const todo = await getRepository(Todo).findOne({ id: ctx.request.params.id });
+    const todo = await getRepository(Todo).findOne({ id: (ctx.request.params as any).id });
     if (!todo) {
       return new HttpResponseNotFound();
     }
