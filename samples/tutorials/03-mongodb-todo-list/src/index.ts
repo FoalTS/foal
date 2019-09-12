@@ -12,7 +12,7 @@ import { AppController } from './app/app.controller';
 
 async function main() {
   const uri = Config.get<string>('mongodb.uri');
-  connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+  connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
   const app = createApp(AppController);
 
@@ -23,4 +23,5 @@ async function main() {
   });
 }
 
-main();
+main()
+  .catch(err => { console.error(err); process.exit(1); });

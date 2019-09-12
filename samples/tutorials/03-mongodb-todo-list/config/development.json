@@ -1,7 +1,4 @@
 {
-  "mongodb": {
-    "uri": "mongodb://localhost:27017/my-app"
-  },
   "settings": {
     "debug": true,
     "loggerFormat": "dev"
