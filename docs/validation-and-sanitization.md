@@ -514,7 +514,7 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 
 ## With a Validation Class (class-validator)
 
-The [class-validator](https://github.com/typestack/class-validator#readme) library can also be used in Foal to validate an object against a validation class.
+The [class-validator](https://github.com/typestack/class-validator) library can also be used in Foal to validate an object against a validation class.
 
 ```
 npm install class-validator
@@ -555,7 +555,7 @@ validate(post).then(errors => { // errors is an array of validation errors
 npm install @foal/typestack
 ```
 
-If you want to use it within a hook to validate request bodies, you can install the `@foal/typestack` package for this. It provides a `@ValidateBody` hook that validates the body against a given validator. This body is also unserialized and turned into an instance of the class.
+If you want to use it within a hook to validate request bodies, you can install the package `@foal/typestack` for this. It provides a `@ValidateBody` hook that validates the body against a given validator. This body is also unserialized and turned into an instance of the class.
 
 *social-post.validator.ts*
 ```typescript
@@ -620,7 +620,7 @@ POST /
 ]
 ```
 
-The hook takes also an optional parameter to specify the options of the [class-transformer]() and [class-validator]() libraries.
+The hook takes also an optional parameter to specify the options of the [class-transformer](https://github.com/typestack/class-transformer) and [class-validator](https://github.com/typestack/class-validator) libraries.
 
 ### Usage with TypeORM entities
 
