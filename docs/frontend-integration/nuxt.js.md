@@ -2,7 +2,7 @@
 
 [Nuxt.js](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
 
-This document explains how to use it in conjunction with FoalTS. A sample source code can be found on [Github](https://github.com/FoalTS/foal/tree/master/samples/nuxt.js).
+This document explains how to use it in conjunction with FoalTS. A sample source code can be found on [Github](https://github.com/FoalTS/foal/tree/master/samples/tutorials/nuxt.js).
 
 ## Installation
 
