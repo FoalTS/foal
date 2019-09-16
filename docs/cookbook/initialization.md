@@ -26,7 +26,7 @@ main();
 
 ## The `AppController.init` method
 
-Sometimes, however, this approach is not sufficient because we need to call the methods of some services. In this case, you can add an `init` method to the root controller class that will be called before the application is fully created. This method can be synchronous or asynchronous.
+Sometimes, however, this approach is not sufficient because we need to call the methods of some services. In this case, you can add an `init` method to the root controller class which will be called before the application is fully created. This method can be synchronous or asynchronous.
 
 *Example 1*
 ```typescript
@@ -76,7 +76,7 @@ main();
 
 ## Best Practices
 
-If your initialization consists of several asynchronous tasks, you may want to perform them in *parallel*. This will reduce the initialization time, which has a real impact if you use a serverless architecture.
+If your initialization consists of several asynchronous tasks, you may want to perform them in *parallel*. This will reduce the initialization time, which has an impact if you use a serverless architecture.
 
 ```typescript
 export class AppController {
