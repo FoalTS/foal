@@ -552,37 +552,10 @@ validate(post).then(errors => { // errors is an array of validation errors
 ### Usage with a Hook
 
 ```
-npm install class-transformer
+npm install @foal/typestack
 ```
 
-The below code shows how to create a hook to validate the request body with a validation class.
-
-*validate-body-from-class.hook.ts*
-```typescript
-import { Class, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
-import { ClassTransformOptions, plainToClass } from 'class-transformer';
-import { validate, ValidatorOptions } from 'class-validator';
-
-interface ValidateBodyFromClassOptions {
-  validator?: ValidatorOptions;
-  transformer?: ClassTransformOptions;
-}
-
-export function ValidateBodyFromClass(cls: Class, options: ValidateBodyFromClassOptions = {}): HookDecorator {
-  return Hook(async ctx => {
-    if (typeof ctx.request.body !== 'object' || ctx.request.body === null) {
-      return new HttpResponseBadRequest('The request body should be a valid JSON.');
-    }
-
-    const instance = plainToClass(cls, ctx.request.body, options.transformer);
-    const errors = await validate(instance, options.validator);
-    if (errors.length > 0) {
-      return new HttpResponseBadRequest(errors);
-    }
-  });
-}
-
-```
+If you want to use it within a hook to validate request bodies, you can install the `@foal/typestack` package for this. It provides a `@ValidateBody` hook that validates the body against a given validator. This body is also unserialized and turned into an instance of the class.
 
 *social-post.validator.ts*
 ```typescript
@@ -603,14 +576,15 @@ export class SocialPost {
 *social-post.controller.ts*
 ```typescript
 import { HttpResponseCreated, Post } from '@foal/core';
-import { ValidateBodyFromClass } from '../hooks';
+import { ValidateBody } from '@foal/typestack';
 import { SocialPost } from './social-post.validator';
 
 export class SocialPostController {
 
   @Post()
-  @ValidateBodyFromClass(SocialPost, { /* options if relevant */ })
-  createSocialPost() {
+  @ValidateBody(SocialPost, { /* options if relevant */ })
+  createSocialPost(ctx) {
+    // ctx.request.body is an instance of SocialPost.
     // ...
     return new HttpResponseCreated();
   }
@@ -645,6 +619,8 @@ POST /
   }
 ]
 ```
+
+The hook takes also an optional parameter to specify the options of the [class-transformer]() and [class-validator]() libraries.
 
 ### Usage with TypeORM entities
 
