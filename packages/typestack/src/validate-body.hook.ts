@@ -7,6 +7,16 @@ export interface ValidateBodyOptions {
   validator?: ValidatorOptions;
 }
 
+/**
+ * Hook factory validating the request body against a validator class. It also transforms
+ * the request body into an instance of the class.
+ *
+ * @export
+ * @param {Class} cls - The validator class (see `class-validator` and `class-tranformer` packages).
+ * @param {ValidateBodyOptions} [options={}] - Options to pass to the libraries`class-validator`
+ * and `class-tranformer`.
+ * @returns {HookDecorator} - The hook.
+ */
 export function ValidateBody(cls: Class, options: ValidateBodyOptions = {}): HookDecorator {
   return Hook(async ctx => {
     if (typeof ctx.request.body !== 'object' || ctx.request.body === null) {
