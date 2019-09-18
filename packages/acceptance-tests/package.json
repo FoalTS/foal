@@ -17,6 +17,7 @@
     "@foal/mongoose": "^1.1.1",
     "@foal/redis": "^1.1.1",
     "@foal/typeorm": "^1.1.1",
+    "@foal/typestack": "^1.1.1",
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
     "@types/react": "^16.8.14",
