@@ -84,6 +84,7 @@
   * [Templates (SSR)](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
+  * [Initialization](./cookbook/initialization.md)
   * [Upload & Download Files](./cookbook/upload-and-download-files.md)
   * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
