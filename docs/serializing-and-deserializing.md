@@ -72,7 +72,7 @@ Additional options can be provided to the `classToPlain` or `plainToClass` funct
 ## Usage with a Hook
 
 ```
-npm install @foal/typestack
+npm install class-transformer @foal/typestack
 ```
 
 If you want to use `class-transformer` within a hook to transform request bodies, you can install the package `@foal/typestack` for this. It provides a `@UnserializeBody` hook that transforms the request body into an instance of a given class.

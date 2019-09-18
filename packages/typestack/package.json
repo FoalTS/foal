@@ -41,14 +41,18 @@
   "files": [
     "lib/"
   ],
-  "dependencies": {
-    "@foal/core": "^1.1.1",
+  "peerDependencies": {
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0"
+  },
+  "dependencies": {
+    "@foal/core": "^1.1.1"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.10.0",
     "copy": "^0.3.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
