@@ -20,6 +20,7 @@ interface ExpressApplication extends express.Express {
 }
 
 interface ExpressOptions {
+  expressInstance?: ExpressApplication;
   preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
@@ -31,6 +32,8 @@ interface ExpressOptions {
  * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
  * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares.
+ * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * returned application.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
@@ -47,6 +50,9 @@ export function createApp(
   }
 
   if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
+    if (expressInstanceOrOptions.expressInstance) {
+      app = expressInstanceOrOptions.expressInstance;
+    }
     for (const middleware of expressInstanceOrOptions.preMiddlewares || []) {
       app.use(middleware);
     }

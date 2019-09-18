@@ -233,6 +233,15 @@ describe('createApp', () => {
     strictEqual(actual, expected);
   });
 
+  it('should use the optional options.expressInstance if one is given.', () => {
+    const expected = express();
+    const actual = createApp(class {}, {
+      expressInstance: expected
+    });
+
+    strictEqual(actual, expected);
+  });
+
   it('should use the optional preMiddlewares if they are given.', () => {
     class AppController {
       @Get('/')
