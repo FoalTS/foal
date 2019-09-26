@@ -12,7 +12,7 @@ describe('The server', () => {
 
   before(() => {
     const uri = Config.get<string>('mongodb.uri');
-    connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+    connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
     app = createApp(AppController);
   });
 
