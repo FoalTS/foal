@@ -18,7 +18,7 @@
 
 ▸ **setSessionCookie**(response: *[HttpResponse](../classes/_core_http_http_responses_.httpresponse.md)*, token: *`string`*): `void`
 
-*Defined in [sessions/set-session-cookie.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/set-session-cookie.ts#L15)*
+*Defined in [sessions/set-session-cookie.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/set-session-cookie.ts#L15)*
 
 Send the session token in a cookie.
 

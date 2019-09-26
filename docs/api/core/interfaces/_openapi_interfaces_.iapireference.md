@@ -34,7 +34,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● $ref**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1616](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1616)*
+*Defined in [openapi/interfaces.ts:1616](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1616)*
 
 The reference string.
 

@@ -51,7 +51,7 @@ This class can also be used as a service.
 
 **● yaml**: *`any`*
 
-*Defined in [core/config.ts:91](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L91)*
+*Defined in [core/config.ts:91](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L91)*
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 ▸ **get**<`T`>(key: *`string`*, defaultValue?: *[T]()*): `T`
 
-*Defined in [core/config.ts:225](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L225)*
+*Defined in [core/config.ts:225](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L225)*
 
 Access environment variables and configuration files.
 
@@ -102,7 +102,7 @@ ___
 
 ▸ **clearCache**(): `void`
 
-*Defined in [core/config.ts:83](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L83)*
+*Defined in [core/config.ts:83](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L83)*
 
 Clear the cache of the loaded files.
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **convertType**(value: *`string`*): `boolean` \| `number` \| `string`
 
-*Defined in [core/config.ts:172](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L172)*
+*Defined in [core/config.ts:172](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L172)*
 
 **Parameters:**
 
@@ -136,7 +136,7 @@ ___
 
 ▸ **dotToUnderscore**(str: *`string`*): `string`
 
-*Defined in [core/config.ts:165](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L165)*
+*Defined in [core/config.ts:165](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L165)*
 
 **Parameters:**
 
@@ -153,7 +153,7 @@ ___
 
 ▸ **get**<`T`>(key: *`string`*, defaultValue?: *[T]()*): `T`
 
-*Defined in [core/config.ts:39](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L39)*
+*Defined in [core/config.ts:39](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L39)*
 
 Access environment variables and configuration files.
 
@@ -194,7 +194,7 @@ ___
 
 ▸ **getValue**(config: *`object`*, propertyPath: *`string`*): `any`
 
-*Defined in [core/config.ts:189](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L189)*
+*Defined in [core/config.ts:189](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L189)*
 
 **Parameters:**
 
@@ -212,7 +212,7 @@ ___
 
 ▸ **getYAMLInstance**(): `false` \| `any`
 
-*Defined in [core/config.ts:150](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L150)*
+*Defined in [core/config.ts:150](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L150)*
 
 **Returns:** `false` \| `any`
 
@@ -223,7 +223,7 @@ ___
 
 ▸ **readDotEnvValue**(name: *`string`*): `string` \| `boolean` \| `number` \| `undefined`
 
-*Defined in [core/config.ts:98](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L98)*
+*Defined in [core/config.ts:98](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L98)*
 
 **Parameters:**
 
@@ -240,7 +240,7 @@ ___
 
 ▸ **readJSONValue**(path: *`string`*, key: *`string`*): `any`
 
-*Defined in [core/config.ts:118](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L118)*
+*Defined in [core/config.ts:118](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L118)*
 
 **Parameters:**
 
@@ -258,7 +258,7 @@ ___
 
 ▸ **readYAMLValue**(path: *`string`*, key: *`string`*): `any`
 
-*Defined in [core/config.ts:131](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L131)*
+*Defined in [core/config.ts:131](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L131)*
 
 **Parameters:**
 
@@ -279,7 +279,7 @@ ___
 
 **cache**: *`object`*
 
-*Defined in [core/config.ts:92](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L92)*
+*Defined in [core/config.ts:92](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L92)*
 
 <a id="cache.dotenv"></a>
 
@@ -287,7 +287,7 @@ ___
 
 **● dotEnv**: *`undefined`* =  undefined
 
-*Defined in [core/config.ts:93](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L93)*
+*Defined in [core/config.ts:93](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L93)*
 
 ___
 <a id="cache.json"></a>
@@ -296,7 +296,7 @@ ___
 
 **● json**: *`object`*
 
-*Defined in [core/config.ts:94](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L94)*
+*Defined in [core/config.ts:94](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L94)*
 
 #### Type declaration
 
@@ -307,7 +307,7 @@ ___
 
 **● yaml**: *`object`*
 
-*Defined in [core/config.ts:95](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/config.ts#L95)*
+*Defined in [core/config.ts:95](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config.ts#L95)*
 
 #### Type declaration
 

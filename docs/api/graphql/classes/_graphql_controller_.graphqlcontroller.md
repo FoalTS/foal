@@ -38,7 +38,7 @@ GraphQL controller compatible compatible with the common GraphQL clients ([graph
 
 **● resolvers**: *`object`*
 
-*Defined in [graphql.controller.ts:44](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L44)*
+*Defined in [graphql.controller.ts:44](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L44)*
 
 ___
 <a id="schema"></a>
@@ -47,7 +47,7 @@ ___
 
 **● schema**: *`object` \| `Promise`<`object`>*
 
-*Defined in [graphql.controller.ts:43](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L43)*
+*Defined in [graphql.controller.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L43)*
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 ▸ **get**(ctx: *`Context`*): `Promise`<`HttpResponseBadRequest` \| `HttpResponseOK`>
 
-*Defined in [graphql.controller.ts:51](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L51)*
+*Defined in [graphql.controller.ts:51](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L51)*
 
 **Parameters:**
 
@@ -76,7 +76,7 @@ ___
 
 ▸ **getResolverContext**(ctx: *`Context`*): `object`
 
-*Defined in [graphql.controller.ts:46](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L46)*
+*Defined in [graphql.controller.ts:46](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L46)*
 
 **Parameters:**
 
@@ -93,7 +93,7 @@ ___
 
 ▸ **post**(ctx: *`Context`*): `Promise`<`HttpResponse`>
 
-*Defined in [graphql.controller.ts:79](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L79)*
+*Defined in [graphql.controller.ts:79](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L79)*
 
 **Parameters:**
 
@@ -110,7 +110,7 @@ ___
 
 ▸ **postApplicationGraphQL**(ctx: *`Context`*): `Promise`<`HttpResponse`>
 
-*Defined in [graphql.controller.ts:104](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/graphql.controller.ts#L104)*
+*Defined in [graphql.controller.ts:104](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L104)*
 
 **Parameters:**
 

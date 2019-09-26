@@ -18,7 +18,7 @@
 
 ▸ **createMiddleware**(route: *[Route](../interfaces/_core_routes_route_interface_.route.md)*, services: *[ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `function`
 
-*Defined in [express/create-middleware.ts:20](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/express/create-middleware.ts#L20)*
+*Defined in [express/create-middleware.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-middleware.ts#L20)*
 
 Create an express middleware from a Route and the application services.
 

@@ -64,7 +64,7 @@
 
 **Ƭ IApiHeader**: *`Pick`<[IApiHeaderParameter](../interfaces/_openapi_interfaces_.iapiheaderparameter.md), `Exclude`<`keyof IApiHeaderParameter`, "in" \| "name">>*
 
-*Defined in [openapi/interfaces.ts:1549](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1549)*
+*Defined in [openapi/interfaces.ts:1549](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1549)*
 
 The Header Object follows the structure of the Parameter Object with the following changes:
 
@@ -83,7 +83,7 @@ ___
 
 **Ƭ IApiParameter**: *[IApiPathParameter](../interfaces/_openapi_interfaces_.iapipathparameter.md) \| [IApiQueryParameter](../interfaces/_openapi_interfaces_.iapiqueryparameter.md) \| [IApiHeaderParameter](../interfaces/_openapi_interfaces_.iapiheaderparameter.md) \| [IApiCookieParameter](../interfaces/_openapi_interfaces_.iapicookieparameter.md)*
 
-*Defined in [openapi/interfaces.ts:989](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L989)*
+*Defined in [openapi/interfaces.ts:989](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L989)*
 
 Describes a single operation parameter.
 
@@ -107,7 +107,7 @@ ___
 
 **Ƭ IApiSecurityScheme**: *[IApiApiKeySecurityScheme](../interfaces/_openapi_interfaces_.iapiapikeysecurityscheme.md) \| [IApiHttpSecurityScheme](../interfaces/_openapi_interfaces_.iapihttpsecurityscheme.md) \| [IApiOAuth2SecurityScheme](../interfaces/_openapi_interfaces_.iapioauth2securityscheme.md) \| [IApiOpenIdConnectSecurityScheme](../interfaces/_openapi_interfaces_.iapiopenidconnectsecurityscheme.md)*
 
-*Defined in [openapi/interfaces.ts:1963](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1963)*
+*Defined in [openapi/interfaces.ts:1963](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1963)*
 
 Defines a security scheme that can be used by the operations. Supported schemes are HTTP authentication, an API key (either as a header, a cookie parameter or as a query parameter), OAuth2's common flows (implicit, password, application and access code) as defined in RFC6749, and OpenID Connect Discovery.
 

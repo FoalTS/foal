@@ -32,7 +32,7 @@ Service to create OpenAPI documents.
 
 **● controllers**: *[ServiceManager](_core_service_manager_.servicemanager.md)*
 
-*Defined in [openapi/openapi.service.ts:13](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/openapi.service.ts#L13)*
+*Defined in [openapi/openapi.service.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/openapi.service.ts#L13)*
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **createDocument**(controllerClass: *[Class](../modules/_core_class_interface_.md#class)*): [IOpenAPI](../interfaces/_openapi_interfaces_.iopenapi.md)
 
-*Defined in [openapi/openapi.service.ts:22](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/openapi.service.ts#L22)*
+*Defined in [openapi/openapi.service.ts:22](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/openapi.service.ts#L22)*
 
 Create an OpenAPI document from a controller class.
 

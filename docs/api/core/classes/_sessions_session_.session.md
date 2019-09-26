@@ -47,7 +47,7 @@ Representation of a server/database session.
 
 ⊕ **new Session**(sessionID: *`string`*, sessionContent: *`object`*, createdAt: *`number`*): [Session](_sessions_session_.session.md)
 
-*Defined in [sessions/session.ts:30](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L30)*
+*Defined in [sessions/session.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L30)*
 
 **Parameters:**
 
@@ -69,7 +69,7 @@ ___
 
 **● createdAt**: *`number`*
 
-*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L32)*
+*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L32)*
 
 ___
 <a id="modified"></a>
@@ -78,7 +78,7 @@ ___
 
 **● modified**: *`boolean`* = false
 
-*Defined in [sessions/session.ts:30](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L30)*
+*Defined in [sessions/session.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L30)*
 
 ___
 <a id="sessioncontent"></a>
@@ -87,7 +87,7 @@ ___
 
 **● sessionContent**: *`object`*
 
-*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L32)*
+*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L32)*
 
 ___
 <a id="sessionid"></a>
@@ -96,7 +96,7 @@ ___
 
 **● sessionID**: *`string`*
 
-*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L32)*
+*Defined in [sessions/session.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L32)*
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 **get isModified**(): `boolean`
 
-*Defined in [sessions/session.ts:45](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L45)*
+*Defined in [sessions/session.ts:45](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L45)*
 
 Return true if an element was added/replaces in the session
 
@@ -132,7 +132,7 @@ ___
 
 ▸ **get**<`T`>(key: *`string`*, defaultValue: *`any`*): `T`
 
-*Defined in [sessions/session.ts:70](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L70)*
+*Defined in [sessions/session.ts:70](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L70)*
 
 The value of an element in the session content.
 
@@ -152,7 +152,7 @@ The value of an element in the session content.
 **Returns:** `T` \| `undefined`
 The property valye
 
-*Defined in [sessions/session.ts:71](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L71)*
+*Defined in [sessions/session.ts:71](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L71)*
 
 **Type parameters:**
 
@@ -173,7 +173,7 @@ ___
 
 ▸ **getContent**(): `object`
 
-*Defined in [sessions/session.ts:100](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L100)*
+*Defined in [sessions/session.ts:100](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L100)*
 
 Get a copy of the session content.
 
@@ -189,7 +189,7 @@ ___
 
 ▸ **getToken**(): `string`
 
-*Defined in [sessions/session.ts:86](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L86)*
+*Defined in [sessions/session.ts:86](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L86)*
 
 Get the session token. This token is used by `@TokenRequired` and `@TokenOptional` to retreive the session and the authenticated user if she/he exists.
 
@@ -205,7 +205,7 @@ ___
 
 ▸ **set**(key: *`string`*, value: *`any`*): `void`
 
-*Defined in [sessions/session.ts:57](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L57)*
+*Defined in [sessions/session.ts:57](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L57)*
 
 Add/replace an element in the session. This operation is not saved in the saved unless you call SessionStore.update(session).
 
@@ -227,7 +227,7 @@ ___
 
 ▸ **verifyTokenAndGetId**(token: *`string`*): `string` \| `false`
 
-*Defined in [sessions/session.ts:21](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/sessions/session.ts#L21)*
+*Defined in [sessions/session.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session.ts#L21)*
 
 Verify a session token and return the sessionID if the token is valid.
 

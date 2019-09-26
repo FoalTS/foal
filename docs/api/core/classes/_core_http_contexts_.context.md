@@ -45,7 +45,7 @@ Class instantiated on each request. It includes:
 
 ⊕ **new Context**(request: *`any`*): [Context](_core_http_contexts_.context.md)
 
-*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/contexts.ts#L19)*
+*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/contexts.ts#L19)*
 
 Creates an instance of Context.
 
@@ -69,7 +69,7 @@ ___
 
 **● request**: *`Request`*
 
-*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/contexts.ts#L19)*
+*Defined in [core/http/contexts.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/contexts.ts#L19)*
 
 ___
 <a id="session"></a>
@@ -78,7 +78,7 @@ ___
 
 **● session**: *`ContextSession`*
 
-*Defined in [core/http/contexts.ts:18](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/contexts.ts#L18)*
+*Defined in [core/http/contexts.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/contexts.ts#L18)*
 
 ___
 <a id="state"></a>
@@ -87,7 +87,7 @@ ___
 
 **● state**: *`object`*
 
-*Defined in [core/http/contexts.ts:16](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/contexts.ts#L16)*
+*Defined in [core/http/contexts.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/contexts.ts#L16)*
 
 #### Type declaration
 
@@ -100,7 +100,7 @@ ___
 
 **● user**: *`User`*
 
-*Defined in [core/http/contexts.ts:17](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/contexts.ts#L17)*
+*Defined in [core/http/contexts.ts:17](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/contexts.ts#L17)*
 
 ___
 

@@ -19,7 +19,7 @@
 
 ▸ **render**(templatePath: *`string`*, locals?: *`object`*, dirname?: *`undefined` \| `string`*): `Promise`<[HttpResponseOK](../classes/_core_http_http_responses_.httpresponseok.md)>
 
-*Defined in [common/utils/render.util.ts:40](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/render.util.ts#L40)*
+*Defined in [common/utils/render.util.ts:40](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/render.util.ts#L40)*
 
 Render a template in a new HttpResponseOK object.
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **renderToString**(template: *`string`*, locals: *`object`*): `string`
 
-*Defined in [common/utils/render.util.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/render.util.ts#L19)*
+*Defined in [common/utils/render.util.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/render.util.ts#L19)*
 
 Util function to render a template. Minimalist built-in template engine for FoalTS.
 

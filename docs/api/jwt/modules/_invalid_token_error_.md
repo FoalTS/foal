@@ -22,7 +22,7 @@
 
 ▸ **isInvalidTokenError**(obj: *`any`*): `boolean`
 
-*Defined in [invalid-token.error.ts:5](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/invalid-token.error.ts#L5)*
+*Defined in [invalid-token.error.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/invalid-token.error.ts#L5)*
 
 **Parameters:**
 

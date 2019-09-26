@@ -36,7 +36,7 @@ The value of maxAge is in seconds.
 
 **● domain**: *`undefined` \| `string`*
 
-*Defined in [core/http/http-responses.ts:18](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L18)*
+*Defined in [core/http/http-responses.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L18)*
 
 ___
 <a id="expires"></a>
@@ -45,7 +45,7 @@ ___
 
 **● expires**: *`Date`*
 
-*Defined in [core/http/http-responses.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L19)*
+*Defined in [core/http/http-responses.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L19)*
 
 ___
 <a id="httponly"></a>
@@ -54,7 +54,7 @@ ___
 
 **● httpOnly**: *`undefined` \| `false` \| `true`*
 
-*Defined in [core/http/http-responses.ts:20](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L20)*
+*Defined in [core/http/http-responses.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L20)*
 
 ___
 <a id="maxage"></a>
@@ -63,7 +63,7 @@ ___
 
 **● maxAge**: *`undefined` \| `number`*
 
-*Defined in [core/http/http-responses.ts:21](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L21)*
+*Defined in [core/http/http-responses.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L21)*
 
 ___
 <a id="path"></a>
@@ -72,7 +72,7 @@ ___
 
 **● path**: *`undefined` \| `string`*
 
-*Defined in [core/http/http-responses.ts:22](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L22)*
+*Defined in [core/http/http-responses.ts:22](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L22)*
 
 ___
 <a id="samesite"></a>
@@ -81,7 +81,7 @@ ___
 
 **● sameSite**: *"strict" \| "lax"*
 
-*Defined in [core/http/http-responses.ts:24](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L24)*
+*Defined in [core/http/http-responses.ts:24](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L24)*
 
 ___
 <a id="secure"></a>
@@ -90,7 +90,7 @@ ___
 
 **● secure**: *`undefined` \| `false` \| `true`*
 
-*Defined in [core/http/http-responses.ts:23](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/core/http/http-responses.ts#L23)*
+*Defined in [core/http/http-responses.ts:23](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L23)*
 
 ___
 

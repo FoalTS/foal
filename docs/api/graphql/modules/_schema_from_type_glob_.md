@@ -18,7 +18,7 @@
 
 ▸ **schemaFromTypeGlob**(pattern: *`string`*): `Promise`<`object`>
 
-*Defined in [schema-from-type-glob.ts:11](https://github.com/FoalTS/foal/blob/aac11366/packages/graphql/src/schema-from-type-glob.ts#L11)*
+*Defined in [schema-from-type-glob.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/schema-from-type-glob.ts#L11)*
 
 Build a GraphQL schema from several files containing the type definitions.
 

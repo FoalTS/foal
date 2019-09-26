@@ -18,7 +18,7 @@
 
 ▸ **getCsrfToken**(session?: *`Session`*): `Promise`<`string`>
 
-*Defined in [get-csrf-token.util.ts:3](https://github.com/FoalTS/foal/blob/aac11366/packages/csrf/src/get-csrf-token.util.ts#L3)*
+*Defined in [get-csrf-token.util.ts:3](https://github.com/FoalTS/foal/blob/538afb23/packages/csrf/src/get-csrf-token.util.ts#L3)*
 
 **Parameters:**
 

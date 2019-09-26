@@ -18,7 +18,7 @@
 
 ▸ **ValidateBody**(schema: *`object` \| `function`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-body.hook.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/hooks/validate-body.hook.ts#L15)*
+*Defined in [common/hooks/validate-body.hook.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/validate-body.hook.ts#L15)*
 
 Hook factory validating the body of the request against a AJV schema.
 

@@ -28,7 +28,7 @@
 
 *Inherited from [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[description](_openapi_interfaces_.iapiabstractsecurityscheme.md#description)*
 
-*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1876)*
+*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1876)*
 
 A short description for security scheme. CommonMark syntax MAY be used for rich text representation.
 
@@ -45,7 +45,7 @@ ___
 
 **● openIdConnectUrl**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1950](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1950)*
+*Defined in [openapi/interfaces.ts:1950](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1950)*
 
 OpenId Connect URL to discover OAuth2 configuration values. This MUST be in the form of a URL.
 
@@ -64,7 +64,7 @@ ___
 
 *Overrides [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[type](_openapi_interfaces_.iapiabstractsecurityscheme.md#type)*
 
-*Defined in [openapi/interfaces.ts:1940](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1940)*
+*Defined in [openapi/interfaces.ts:1940](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1940)*
 
 ___
 

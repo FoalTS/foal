@@ -49,7 +49,7 @@ TypeORM store.
 
 **● config**: *`Config`*
 
-*Defined in [typeorm-store.service.ts:20](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L20)*
+*Defined in [typeorm-store.service.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L20)*
 
 ___
 <a id="tablecreated"></a>
@@ -58,7 +58,7 @@ ___
 
 **● tableCreated**: *`boolean`* = false
 
-*Defined in [typeorm-store.service.ts:22](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L22)*
+*Defined in [typeorm-store.service.ts:22](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L22)*
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 *Overrides SessionStore.cleanUpExpiredSessions*
 
-*Defined in [typeorm-store.service.ts:104](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L104)*
+*Defined in [typeorm-store.service.ts:104](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L104)*
 
 **Returns:** `Promise`<`void`>
 
@@ -109,7 +109,7 @@ ___
 
 *Overrides SessionStore.clear*
 
-*Defined in [typeorm-store.service.ts:100](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L100)*
+*Defined in [typeorm-store.service.ts:100](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L100)*
 
 **Returns:** `Promise`<`void`>
 
@@ -122,7 +122,7 @@ ___
 
 *Overrides SessionStore.createAndSaveSession*
 
-*Defined in [typeorm-store.service.ts:24](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L24)*
+*Defined in [typeorm-store.service.ts:24](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L24)*
 
 **Parameters:**
 
@@ -172,7 +172,7 @@ ___
 
 *Overrides SessionStore.destroy*
 
-*Defined in [typeorm-store.service.ts:57](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L57)*
+*Defined in [typeorm-store.service.ts:57](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L57)*
 
 **Parameters:**
 
@@ -189,7 +189,7 @@ ___
 
 ▸ **execQuery**(query: *`string`*, parameters: *`ObjectLiteral`*): `Promise`<`any`>
 
-*Defined in [typeorm-store.service.ts:116](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L116)*
+*Defined in [typeorm-store.service.ts:116](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L116)*
 
 **Parameters:**
 
@@ -209,7 +209,7 @@ ___
 
 *Overrides SessionStore.extendLifeTime*
 
-*Defined in [typeorm-store.service.ts:93](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L93)*
+*Defined in [typeorm-store.service.ts:93](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L93)*
 
 **Parameters:**
 
@@ -244,7 +244,7 @@ ___
 
 ▸ **getConnection**(): `Promise`<`Connection`>
 
-*Defined in [typeorm-store.service.ts:124](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L124)*
+*Defined in [typeorm-store.service.ts:124](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L124)*
 
 **Returns:** `Promise`<`Connection`>
 
@@ -257,7 +257,7 @@ ___
 
 *Overrides SessionStore.read*
 
-*Defined in [typeorm-store.service.ts:64](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L64)*
+*Defined in [typeorm-store.service.ts:64](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L64)*
 
 **Parameters:**
 
@@ -276,7 +276,7 @@ ___
 
 *Overrides SessionStore.update*
 
-*Defined in [typeorm-store.service.ts:43](https://github.com/FoalTS/foal/blob/aac11366/packages/typeorm/src/typeorm-store.service.ts#L43)*
+*Defined in [typeorm-store.service.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L43)*
 
 **Parameters:**
 

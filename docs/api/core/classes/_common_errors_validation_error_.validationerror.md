@@ -41,7 +41,7 @@ Represent an incorrect data format.
 
 ⊕ **new ValidationError**(content?: *`any`*): [ValidationError](_common_errors_validation_error_.validationerror.md)
 
-*Defined in [common/errors/validation-error.ts:9](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/errors/validation-error.ts#L9)*
+*Defined in [common/errors/validation-error.ts:9](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/errors/validation-error.ts#L9)*
 
 **Parameters:**
 
@@ -61,7 +61,7 @@ ___
 
 **● content**: *`any`*
 
-*Defined in [common/errors/validation-error.ts:11](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/errors/validation-error.ts#L11)*
+*Defined in [common/errors/validation-error.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/errors/validation-error.ts#L11)*
 
 ___
 <a id="isvalidationerror"></a>
@@ -70,7 +70,7 @@ ___
 
 **● isValidationError**: *`true`* = true
 
-*Defined in [common/errors/validation-error.ts:9](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/errors/validation-error.ts#L9)*
+*Defined in [common/errors/validation-error.ts:9](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/errors/validation-error.ts#L9)*
 
 ___
 <a id="message"></a>
