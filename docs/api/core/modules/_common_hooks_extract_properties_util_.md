@@ -18,7 +18,7 @@
 
 ▸ **extractProperties**(schema: *`object`*): `object`[]
 
-*Defined in [common/hooks/extract-properties.util.ts:8](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/hooks/extract-properties.util.ts#L8)*
+*Defined in [common/hooks/extract-properties.util.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/extract-properties.util.ts#L8)*
 
 Returns the properties of an AJV schema of type object.
 

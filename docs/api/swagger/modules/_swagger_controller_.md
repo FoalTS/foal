@@ -22,7 +22,7 @@
 
 ▸ **isUrlOption**(option: *`any`*): `boolean`
 
-*Defined in [swagger-controller.ts:14](https://github.com/FoalTS/foal/blob/aac11366/packages/swagger/src/swagger-controller.ts#L14)*
+*Defined in [swagger-controller.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/swagger/src/swagger-controller.ts#L14)*
 
 **Parameters:**
 

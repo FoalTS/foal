@@ -18,7 +18,7 @@
 
 ▸ **getApiOperation**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md) \| `function` \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-operation.ts:5](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/metadata-getters/get-api-operation.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-operation.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/metadata-getters/get-api-operation.ts#L5)*
 
 **Parameters:**
 

@@ -1,14 +1,14 @@
-# Seriazalizing and Deserializing
+# Serializing and Deserializing
 
 This document shows how to serialize class instances into plain objects and, conversely, how to deserialize plain objects into class instances. It is based on the [class-transformer](https://github.com/typestack/class-transformer) library.
 
 Serialization is particularly interesting if you need to transform HTTP request bodies into model instances or, inversely, convert model instances into plain objects to be returned in HTTP responses.
 
+## The `class-tranformer` library
+
 ```
 npm install class-transformer
 ```
-
-## The `class-tranformer` library
 
 The `class-transformer` has two main functions to transform objects: `plainToClass` and `classToPlain`. Some examples of their use are given below.
 
@@ -71,23 +71,11 @@ Additional options can be provided to the `classToPlain` or `plainToClass` funct
  
 ## Usage with a Hook
 
-The below code shows how to create a hook to unserialize the request body.
-
-*unserialize-body.hook.ts*
-```typescript
-import { Class, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
-import { ClassTransformOptions, plainToClass } from 'class-transformer';
-
-export function UnserializeBody(cls: Class, options?: ClassTransformOptions): HookDecorator {
-  return Hook(ctx => {
-    if (typeof ctx.request.body !== 'object' || ctx.request.body === null) {
-      return new HttpResponseBadRequest('The request body should be a valid JSON.');
-    }
-    ctx.request.body = plainToClass(cls, ctx.request.body, options);
-  });
-}
-
 ```
+npm install class-transformer @foal/typestack
+```
+
+If you want to use `class-transformer` within a hook to transform request bodies, you can install the package `@foal/typestack` for this. It provides a `@UnserializeBody` hook that transforms the request body into an instance of a given class.
 
 *product.entity.ts*
 ```typescript
@@ -107,8 +95,8 @@ export class Product extends BaseEntity {
 *api.controller.ts*
 ```typescript
 import { HttpResponseCreated, Post, ValidateBody } from '@foal/core';
+import { UnserializeBody } from '@foal/typestack';
 import { Product } from '../entities';
-import { UnserializeBody } from '../hooks';
 
 export class ApiController {
 
@@ -131,3 +119,5 @@ export class ApiController {
 
 }
 ```
+
+The hook takes also an optional parameter to specify the options of the [class-transformer](https://github.com/typestack/class-transformer) library.

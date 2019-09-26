@@ -20,7 +20,13 @@ import * as express from 'express';
 
 const expressApp = express();
 expressApp.use(/* an Express middleware */)
+
 const app = createApp(AppController, expressApp);
+// OR
+const app = createApp(AppController, {
+  expressInstance: expressApp
+});
+
 ```
 
 ## Pre and Post Express Middlewares

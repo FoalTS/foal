@@ -45,7 +45,7 @@
 
 *Overrides HttpResponseUnauthorized.__constructor*
 
-*Defined in [jwt.hook.ts:12](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L12)*
+*Defined in [jwt.hook.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L12)*
 
 **Parameters:**
 

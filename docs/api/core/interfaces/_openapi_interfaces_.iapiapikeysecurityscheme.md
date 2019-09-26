@@ -29,7 +29,7 @@
 
 *Inherited from [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[description](_openapi_interfaces_.iapiabstractsecurityscheme.md#description)*
 
-*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1876)*
+*Defined in [openapi/interfaces.ts:1876](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1876)*
 
 A short description for security scheme. CommonMark syntax MAY be used for rich text representation.
 
@@ -46,7 +46,7 @@ ___
 
 **● in**: *"query" \| "header" \| "cookie"*
 
-*Defined in [openapi/interfaces.ts:1898](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1898)*
+*Defined in [openapi/interfaces.ts:1898](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1898)*
 
 The location of the API key. Valid values are "query", "header" or "cookie".
 
@@ -63,7 +63,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [openapi/interfaces.ts:1889](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1889)*
+*Defined in [openapi/interfaces.ts:1889](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1889)*
 
 The name of the header, query or cookie parameter to be used.
 
@@ -82,7 +82,7 @@ ___
 
 *Overrides [IApiAbstractSecurityScheme](_openapi_interfaces_.iapiabstractsecurityscheme.md).[type](_openapi_interfaces_.iapiabstractsecurityscheme.md#type)*
 
-*Defined in [openapi/interfaces.ts:1880](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L1880)*
+*Defined in [openapi/interfaces.ts:1880](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1880)*
 
 ___
 

@@ -37,7 +37,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● components**: *[IApiComponents](_openapi_interfaces_.iapicomponents.md)*
 
-*Defined in [openapi/interfaces.ts:59](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L59)*
+*Defined in [openapi/interfaces.ts:59](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L59)*
 
 An element to hold various schemas for the specification.
 
@@ -54,7 +54,7 @@ ___
 
 **● externalDocs**: *[IApiExternalDocumentation](_openapi_interfaces_.iapiexternaldocumentation.md)*
 
-*Defined in [openapi/interfaces.ts:93](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L93)*
+*Defined in [openapi/interfaces.ts:93](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L93)*
 
 Additional external documentation.
 
@@ -71,7 +71,7 @@ ___
 
 **● info**: *[IApiInfo](_openapi_interfaces_.iapiinfo.md)*
 
-*Defined in [openapi/interfaces.ts:30](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L30)*
+*Defined in [openapi/interfaces.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L30)*
 
 Provides metadata about the API. The metadata MAY be used by tooling as required.
 
@@ -88,7 +88,7 @@ ___
 
 **● openapi**: *`string`*
 
-*Defined in [openapi/interfaces.ts:21](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L21)*
+*Defined in [openapi/interfaces.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L21)*
 
 This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses. The openapi field SHOULD be used by tooling specifications and clients to interpret the OpenAPI document. This is not related to the API info.version string.
 
@@ -105,7 +105,7 @@ ___
 
 **● paths**: *[IApiPaths](_openapi_interfaces_.iapipaths.md)*
 
-*Defined in [openapi/interfaces.ts:50](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L50)*
+*Defined in [openapi/interfaces.ts:50](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L50)*
 
 The available paths and operations for the API.
 
@@ -122,7 +122,7 @@ ___
 
 **● security**: *[IApiSecurityRequirement](_openapi_interfaces_.iapisecurityrequirement.md)[]*
 
-*Defined in [openapi/interfaces.ts:71](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L71)*
+*Defined in [openapi/interfaces.ts:71](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L71)*
 
 A declaration of which security mechanisms can be used across the API. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. Individual operations can override this definition.
 
@@ -139,7 +139,7 @@ ___
 
 **● servers**: *[IApiServer](_openapi_interfaces_.iapiserver.md)[]*
 
-*Defined in [openapi/interfaces.ts:41](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L41)*
+*Defined in [openapi/interfaces.ts:41](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L41)*
 
 An array of Server Objects, which provide connectivity information to a target server. If the servers property is not provided, or is an empty array, the default value would be a Server Object with a url value of /.
 
@@ -156,7 +156,7 @@ ___
 
 **● tags**: *[IApiTag](_openapi_interfaces_.iapitag.md)[]*
 
-*Defined in [openapi/interfaces.ts:84](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L84)*
+*Defined in [openapi/interfaces.ts:84](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L84)*
 
 A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
 

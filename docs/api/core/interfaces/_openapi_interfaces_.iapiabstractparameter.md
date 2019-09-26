@@ -40,7 +40,7 @@
 
 **● content**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:918](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L918)*
+*Defined in [openapi/interfaces.ts:918](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L918)*
 
 A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
 
@@ -55,7 +55,7 @@ ___
 
 **● deprecated**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:847](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L847)*
+*Defined in [openapi/interfaces.ts:847](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L847)*
 
 Specifies that a parameter is deprecated and SHOULD be transitioned out of usage. Default value is false.
 
@@ -72,7 +72,7 @@ ___
 
 **● description**: *`undefined` \| `string`*
 
-*Defined in [openapi/interfaces.ts:826](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L826)*
+*Defined in [openapi/interfaces.ts:826](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L826)*
 
 A brief description of the parameter. This could contain examples of use. CommonMark syntax MAY be used for rich text representation.
 
@@ -89,7 +89,7 @@ ___
 
 **● example**: *`any`*
 
-*Defined in [openapi/interfaces.ts:894](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L894)*
+*Defined in [openapi/interfaces.ts:894](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L894)*
 
 Example of the media type. The example SHOULD match the specified schema and encoding properties if present. The example field is mutually exclusive of the examples field. Furthermore, if referencing a schema which contains an example, the example value SHALL override the example provided by the schema. To represent examples of media types that cannot naturally be represented in JSON or YAML, a string value can contain the example with escaping where necessary.
 
@@ -106,7 +106,7 @@ ___
 
 **● examples**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:906](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L906)*
+*Defined in [openapi/interfaces.ts:906](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L906)*
 
 Examples of the media type. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The examples field is mutually exclusive of the example field. Furthermore, if referencing a schema which contains an example, the examples value SHALL override the example provided by the schema.
 
@@ -121,7 +121,7 @@ ___
 
 **● explode**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:871](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L871)*
+*Defined in [openapi/interfaces.ts:871](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L871)*
 
 When this is true, parameter values of type array or object generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect. When style is form, the default value is true. For all other styles, the default value is false.
 
@@ -138,7 +138,7 @@ ___
 
 **● in**: *"query" \| "header" \| "path" \| "cookie"*
 
-*Defined in [openapi/interfaces.ts:816](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L816)*
+*Defined in [openapi/interfaces.ts:816](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L816)*
 
 The location of the parameter. Possible values are "query", "header", "path" or "cookie".
 
@@ -155,7 +155,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [openapi/interfaces.ts:807](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L807)*
+*Defined in [openapi/interfaces.ts:807](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L807)*
 
 The name of the parameter. Parameter names are case sensitive.
 
@@ -176,7 +176,7 @@ ___
 
 **● required**: *`undefined` \| `false` \| `true`*
 
-*Defined in [openapi/interfaces.ts:837](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L837)*
+*Defined in [openapi/interfaces.ts:837](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L837)*
 
 Determines whether this parameter is mandatory. If the parameter location is "path", this property is REQUIRED and its value MUST be true. Otherwise, the property MAY be included and its default value is false.
 
@@ -193,7 +193,7 @@ ___
 
 **● schema**: *[IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:880](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L880)*
+*Defined in [openapi/interfaces.ts:880](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L880)*
 
 The schema defining the type used for the parameter.
 
@@ -210,7 +210,7 @@ ___
 
 **● style**: *"matrix" \| "label" \| "form" \| "simple" \| "spaceDelimited" \| "pipeDelimited" \| "deepObject"*
 
-*Defined in [openapi/interfaces.ts:859](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/openapi/interfaces.ts#L859)*
+*Defined in [openapi/interfaces.ts:859](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L859)*
 
 Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of in): for query - form; for path - simple; for header - simple; for cookie - form.
 

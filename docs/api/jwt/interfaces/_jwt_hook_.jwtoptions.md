@@ -32,7 +32,7 @@ Options of the hooks created by JWTRequired and JWTOptional.
 
 **● blackList**: *`undefined` \| `function`*
 
-*Defined in [jwt.hook.ts:41](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L41)*
+*Defined in [jwt.hook.ts:41](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L41)*
 
 ___
 <a id="cookie"></a>
@@ -41,7 +41,7 @@ ___
 
 **● cookie**: *`undefined` \| `false` \| `true`*
 
-*Defined in [jwt.hook.ts:42](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L42)*
+*Defined in [jwt.hook.ts:42](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L42)*
 
 ___
 <a id="openapi"></a>
@@ -50,7 +50,7 @@ ___
 
 **● openapi**: *`undefined` \| `false` \| `true`*
 
-*Defined in [jwt.hook.ts:49](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L49)*
+*Defined in [jwt.hook.ts:49](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L49)*
 
 Add openapi metadata to the class or class method.
 
@@ -65,7 +65,7 @@ ___
 
 **● secretOrPublicKey**: *`undefined` \| `function`*
 
-*Defined in [jwt.hook.ts:40](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L40)*
+*Defined in [jwt.hook.ts:40](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L40)*
 
 ___
 <a id="user"></a>
@@ -74,7 +74,7 @@ ___
 
 **● user**: *`undefined` \| `function`*
 
-*Defined in [jwt.hook.ts:39](https://github.com/FoalTS/foal/blob/aac11366/packages/jwt/src/jwt.hook.ts#L39)*
+*Defined in [jwt.hook.ts:39](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L39)*
 
 ___
 

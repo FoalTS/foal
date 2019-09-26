@@ -8,7 +8,7 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager } from '../core';
-import { createApp } from './create-app';
+import { createAndInitApp, createApp } from './create-app';
 
 describe('createApp', () => {
 
@@ -233,6 +233,15 @@ describe('createApp', () => {
     strictEqual(actual, expected);
   });
 
+  it('should use the optional options.expressInstance if one is given.', () => {
+    const expected = express();
+    const actual = createApp(class {}, {
+      expressInstance: expected
+    });
+
+    strictEqual(actual, expected);
+  });
+
   it('should use the optional preMiddlewares if they are given.', () => {
     class AppController {
       @Get('/')
@@ -345,6 +354,78 @@ describe('createApp', () => {
         body: '{ \"foo\": \"bar\", }',
         message: 'Unexpected token } in JSON at position 16'
       });
+  });
+
+});
+
+describe('createAndInitApp', () => {
+
+  it('should call createApp and return asynchronously its express instance.', async () => {
+    class AppController {
+      @Get('/ping')
+      ping() {
+        return new HttpResponseOK('pong');
+      }
+    }
+
+    const app = await createAndInitApp(AppController, {
+      postMiddlewares: [
+        express.Router().get('/ping2', (req, res) => res.send('pong'))
+      ]
+    });
+
+    await request(app)
+      .get('/ping')
+      .expect('pong');
+
+    await request(app)
+      .get('/ping2')
+      .expect('pong');
+  });
+
+  it('should call AppController.init if it exists.', () => {
+    let called = false;
+
+    class AppController {
+      init() {
+        called = true;
+      }
+    }
+
+    createAndInitApp(AppController);
+
+    strictEqual(called, true);
+  });
+
+  it('should wait until the end of AppController.init execution before returning the express instance.', async () => {
+    let called = false;
+
+    class AppController {
+      async init() {
+        await 1;
+        await 1;
+        called = true;
+      }
+    }
+
+    await createAndInitApp(AppController);
+
+    strictEqual(called, true);
+  });
+
+  it('should throw any errors rejected in AppController.init.', async () => {
+    class AppController {
+      init() {
+        return Promise.reject(new Error('Initialization failed.'));
+      }
+    }
+
+    try {
+      await createAndInitApp(AppController);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      strictEqual(error.message, 'Initialization failed.');
+    }
   });
 
 });

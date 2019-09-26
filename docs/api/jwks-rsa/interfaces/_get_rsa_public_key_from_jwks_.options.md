@@ -33,7 +33,7 @@
 
 **● cache**: *`undefined` \| `false` \| `true`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:15](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L15)*
+*Defined in [get-rsa-public-key-from-jwks.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L15)*
 
 ___
 <a id="cachemaxage"></a>
@@ -42,7 +42,7 @@ ___
 
 **● cacheMaxAge**: *`undefined` \| `number`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:17](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L17)*
+*Defined in [get-rsa-public-key-from-jwks.ts:17](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L17)*
 
 ___
 <a id="cachemaxentries"></a>
@@ -51,7 +51,7 @@ ___
 
 **● cacheMaxEntries**: *`undefined` \| `number`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:16](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L16)*
+*Defined in [get-rsa-public-key-from-jwks.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L16)*
 
 ___
 <a id="jwksrequestsperminute"></a>
@@ -60,7 +60,7 @@ ___
 
 **● jwksRequestsPerMinute**: *`undefined` \| `number`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:18](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L18)*
+*Defined in [get-rsa-public-key-from-jwks.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L18)*
 
 ___
 <a id="jwksuri"></a>
@@ -69,7 +69,7 @@ ___
 
 **● jwksUri**: *`string`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:13](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L13)*
+*Defined in [get-rsa-public-key-from-jwks.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L13)*
 
 ___
 <a id="ratelimit"></a>
@@ -78,7 +78,7 @@ ___
 
 **● rateLimit**: *`undefined` \| `false` \| `true`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:14](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L14)*
+*Defined in [get-rsa-public-key-from-jwks.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L14)*
 
 ___
 <a id="requestheaders"></a>
@@ -87,7 +87,7 @@ ___
 
 **● requestHeaders**: *[Headers](_get_rsa_public_key_from_jwks_.headers.md)*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:20](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L20)*
+*Defined in [get-rsa-public-key-from-jwks.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L20)*
 
 ___
 <a id="strictssl"></a>
@@ -96,7 +96,7 @@ ___
 
 **● strictSsl**: *`undefined` \| `false` \| `true`*
 
-*Defined in [get-rsa-public-key-from-jwks.ts:19](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L19)*
+*Defined in [get-rsa-public-key-from-jwks.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L19)*
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **handleSigningKeyError**(err: *`Error`*, cb: *`function`*): `any`
 
-*Defined in [get-rsa-public-key-from-jwks.ts:21](https://github.com/FoalTS/foal/blob/aac11366/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L21)*
+*Defined in [get-rsa-public-key-from-jwks.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L21)*
 
 **Parameters:**
 

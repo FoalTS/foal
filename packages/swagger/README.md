@@ -31,6 +31,9 @@
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
   </a>
+  <a href="https://discord.gg/QUrJv98">
+    <img src="https://img.shields.io/badge/Chat-Discord-blue.svg" alt="2FA">
+  </a>
 </p>
 
 [Github](https://github.com/FoalTS/foal) - [Twitter](https://twitter.com/FoalTs) - [Website](https://foalts.org/) - [Documentation](https://foalts.gitbook.io/docs/) - [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)

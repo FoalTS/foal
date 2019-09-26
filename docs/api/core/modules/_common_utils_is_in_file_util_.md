@@ -18,7 +18,7 @@
 
 ▸ **isInFile**(path: *`string`*): `function`
 
-*Defined in [common/utils/is-in-file.util.ts:12](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/utils/is-in-file.util.ts#L12)*
+*Defined in [common/utils/is-in-file.util.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/is-in-file.util.ts#L12)*
 
 Generate a function checking if a string is included in a text file.
 

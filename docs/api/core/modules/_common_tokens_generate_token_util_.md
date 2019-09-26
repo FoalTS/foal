@@ -18,7 +18,7 @@
 
 ▸ **generateToken**(): `Promise`<`string`>
 
-*Defined in [common/tokens/generate-token.util.ts:14](https://github.com/FoalTS/foal/blob/aac11366/packages/core/src/common/tokens/generate-token.util.ts#L14)*
+*Defined in [common/tokens/generate-token.util.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/tokens/generate-token.util.ts#L14)*
 
 Generate a 128-bit base64url-encoded token.
 

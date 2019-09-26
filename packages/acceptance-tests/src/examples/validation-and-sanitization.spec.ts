@@ -1,18 +1,14 @@
 
 // 3p
-import { ClassTransformOptions, plainToClass } from 'class-transformer';
-import { Contains, Length, validate, ValidatorOptions } from 'class-validator';
+import { Contains, Length } from '@foal/typestack/node_modules/class-validator';
 import * as request from 'supertest';
 
 // FoalTS
 import {
-  Class,
   Context,
   createApp,
   Get,
-  Hook,
-  HookDecorator,
-  HttpResponseBadRequest,
+  HttpResponseCreated,
   HttpResponseOK,
   Post,
   ValidateBody,
@@ -25,7 +21,7 @@ import {
   ValidateQuery,
   ValidateQueryParam
 } from '@foal/core';
-import { HttpResponseCreated } from '../../../typeorm/node_modules/@foal/core/lib/core';
+import { ValidateBody as ValidateBodyFromClass} from '@foal/typestack';
 
 describe('[Docs] Input Validation & Sanitization', () => {
 
@@ -500,25 +496,6 @@ describe('[Docs] Input Validation & Sanitization', () => {
   describe('With a Validation Class (class-validator)', () => {
 
     it('Usage with a Hook', () => {
-      interface ValidateBodyFromClassOptions {
-        validator?: ValidatorOptions;
-        transformer?: ClassTransformOptions;
-      }
-
-      function ValidateBodyFromClass(cls: Class, options: ValidateBodyFromClassOptions = {}): HookDecorator {
-        return Hook(async ctx => {
-          if (typeof ctx.request.body !== 'object' || ctx.request.body === null) {
-            return new HttpResponseBadRequest('The request body should be a valid JSON.');
-          }
-
-          const instance = plainToClass(cls, ctx.request.body, options.transformer);
-          const errors = await validate(instance, options.validator);
-          if (errors.length > 0) {
-            return new HttpResponseBadRequest(errors);
-          }
-        });
-      }
-
       class SocialPost {
 
         @Length(10, 20)
