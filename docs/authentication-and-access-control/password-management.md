@@ -4,9 +4,11 @@ Every application must store passwords using a cryptographic technique. FoalTS p
 
 ## The `hashPassword` function
 
+> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
+
 The `hashPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) algorithm with a SHA256 hash. It takes as parameters the password in plain text and an optional `options` object. It returns a promise which value is a password hash.
 
-> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
+> The function generates a unique cryptographically-strong random salt for each password. This salt is returned by the function beside the password hash.
 
 **Parameters**
 
