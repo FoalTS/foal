@@ -17,7 +17,7 @@ const postBodySchema = {
   properties: {
     operationName: { type: 'string' },
     query: { type: 'string' },
-    variables: { type: 'object' },
+    variables: { type: ['object', 'null'] },
   },
   required: ['query'],
   type: 'object',
