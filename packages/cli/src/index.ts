@@ -154,6 +154,6 @@ program
 program.parse(process.argv);
 
 // Shows help if no arguments are provided
-if (!program.args.length) {
+if (process.argv.length == 2) {
   program.outputHelp();
 }
