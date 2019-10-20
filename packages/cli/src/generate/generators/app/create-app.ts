@@ -188,8 +188,8 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     });
   }
 
-  log('  📔 Initializing git repository...');
   if (initRepo) {
+    log('  📔 Initializing git repository...');
     await initGitRepo(names.kebabName);
   }
 
