@@ -1,5 +1,6 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
+import { existsSync, mkdirSync } from 'fs';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -88,7 +89,13 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     );
     return;
   }
-  mkdirIfDoesNotExist(names.kebabName);
+  if (existsSync(names.kebabName)) {
+    console.log(
+      red(`\n ${red(`The target directory "${name}" already exists. Please remove it before proceeding.`)}`)
+    )
+    return;
+  }
+  mkdirSync(names.kebabName);
 
   log('  📂 Creating files...');
   const generator = new Generator('app', names.kebabName, { noLogs: true });
