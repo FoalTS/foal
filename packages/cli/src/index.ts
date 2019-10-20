@@ -37,11 +37,12 @@ program
 program
   .command('createapp <name>')
   .description('Create a new project.')
+  .option('-I, --no-install', "Don't autoinstall packages using yarn or npm (uses first available)")
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
     createApp({
-      autoInstall: true,
+      autoInstall: options.install,
       initRepo: true,
       mongodb: options.mongodb || false,
       name,

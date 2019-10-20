@@ -166,9 +166,9 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
 
-  log('');
-  log('  📦 Installing the dependencies...');
   if (autoInstall) {
+    log('');
+    log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
     const args = [ 'install' ];
     const options: SpawnOptions = {
@@ -196,8 +196,10 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   log(`
   👉 Run the following commands to get started:
 
-    $ ${cyan(`cd ${names.kebabName}`)}
-    $ ${cyan('npm run develop')}
-`
+` + [
+  `cd ${names.kebabName}`,
+  ...!autoInstall ? [`npm install`] : [],
+  'npm run develop'
+].map(cmd => '    $ ' + cyan(cmd)).join('\n') + '\n'
   );
 }
