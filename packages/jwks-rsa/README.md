@@ -16,8 +16,8 @@
   <a href="https://badge.fury.io/js/%40foal%2Fjwks-rsa">
     <img src="https://badge.fury.io/js/%40foal%2Fjwks-rsa.svg" alt="npm version">
   </a>
-  <a href="https://travis-ci.org/FoalTS/foal">
-    <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
+  <a href="https://github.com/FoalTS/foal/actions">
+    <img src="https://github.com/FoalTS/foal/workflows/Test/badge.svg" alt="Build Status">
   </a>
   <a href="https://snyk.io/test/npm/@foal/jwks-rsa">
     <img src="https://snyk.io/test/npm/@foal/jwks-rsa/badge.svg" alt="Known Vulnerabilities">

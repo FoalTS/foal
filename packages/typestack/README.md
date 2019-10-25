@@ -16,8 +16,8 @@
   <a href="https://badge.fury.io/js/%40foal%2Ftypestack">
     <img src="https://badge.fury.io/js/%40foal%2Ftypestack.svg" alt="npm version">
   </a>
-  <a href="https://travis-ci.org/FoalTS/foal">
-    <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status">
+  <a href="https://github.com/FoalTS/foal/actions">
+    <img src="https://github.com/FoalTS/foal/workflows/Test/badge.svg" alt="Build Status">
   </a>
   <a href="https://codecov.io/github/FoalTS/foal">
     <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
