@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [node:8, node:10]
+        node-version: ["node:8", "node:10"]
 
     services:
       mysql:
