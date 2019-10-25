@@ -60,6 +60,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
             database: 'test',
             dropSchema: true,
             password: 'test',
+            port: type === 'mysql' ? 3308 : 3307,
             type,
             username: 'test',
           });

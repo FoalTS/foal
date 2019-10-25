@@ -12,16 +12,16 @@ jobs:
         node-version: [8.x, 10.x]
 
     services:
-      # mysql is already installed on ubuntu
-      # mysql:
-      #   image: mysql:5.7.10
-      #   ports:
-      #     - 3306:3306
-      #   env:
-      #     MYSQL_ROOT_PASSWORD: admin
-      #     MYSQL_USER: test
-      #     MYSQL_PASSWORD: test
-      #     MYSQL_DATABASE: test
+      mysql:
+        image: mysql:5.7.10
+        ports:
+          # Another version of MySQL is installed on the vm and already uses the port 3306.
+          - 3308:3306
+        env:
+          MYSQL_ROOT_PASSWORD: admin
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_DATABASE: test
 
       mariadb:
         image: mariadb:10.1.16
@@ -63,9 +63,10 @@ jobs:
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages
-      run: |
-        lerna bootstrap
-        cd packages/cli && npm link && cd ../..
+      run: lerna bootstrap
+    - name: Create CLI symlink in the global folder
+      run: npm link
+      working-directory: packages/cli
     - name: Check package linting
       run: npm run lint
     - name: Run unit and acceptance tests (TypeScript)

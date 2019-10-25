@@ -19,6 +19,7 @@ describe('UserWithPermissions', () => {
     dropSchema: true,
     entities: [User, Group, Permission],
     password: 'test',
+    port: 3308,
     synchronize: true,
     type: 'mysql',
     username: 'test',

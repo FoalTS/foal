@@ -26,6 +26,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
             dropSchema: true,
             entities: [User, Group, Permission],
             password: 'test',
+            port: type === 'mysql' ? 3308 : 3307,
             synchronize: true,
             type,
             username: 'test',
