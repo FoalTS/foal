@@ -58,6 +58,6 @@
     "ts-node": "^3.3.0",
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
-    "typescript": "^2.5.2"
+    "typescript": "~3.5.3"
   }
 }

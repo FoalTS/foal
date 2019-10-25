@@ -39,7 +39,7 @@
     "supertest": "^3.3.0",
     "ts-node": "^3.3.0",
     "typeorm": "^0.2.14",
-    "typescript": "^2.5.2",
+    "typescript": "~3.5.3",
     "yamljs": "^0.3.0"
   }
 }

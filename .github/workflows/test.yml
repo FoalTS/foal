@@ -11,6 +11,47 @@ jobs:
       matrix:
         node-version: [8.x, 10.x]
 
+    services:
+      mysql:
+        image: mysql:5.7.10
+        ports:
+          # Another version of MySQL is installed on the vm and already uses the port 3306.
+          - 3308:3306
+        env:
+          MYSQL_ROOT_PASSWORD: admin
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_DATABASE: test
+
+      mariadb:
+        image: mariadb:10.1.16
+        ports:
+          - 3307:3306
+        env:
+          MYSQL_ROOT_PASSWORD: admin
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+          MYSQL_DATABASE: test
+
+      postgres:
+        image: postgres:9.6.1
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+
+      mongodb:
+        image: mongo:3.4.1
+        ports:
+          - 27017:27017
+
+      redis:
+        image: redis:4.0.14
+        ports:
+          - 6379:6379
+
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -22,12 +63,18 @@ jobs:
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages
-      run: |
-        lerna bootstrap
-        cd packages/cli && npm link && cd ../..
+      run: lerna bootstrap
+    - name: Create CLI symlink in the global folder
+      run: npm link
+      working-directory: packages/cli
     - name: Check package linting
       run: npm run lint
     - name: Run unit and acceptance tests (TypeScript)
       run: lerna run --no-bail test
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
+    - name: Send code coverage report to Codecov
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: packages/core/coverage/*.json
