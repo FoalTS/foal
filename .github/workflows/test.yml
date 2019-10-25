@@ -73,3 +73,8 @@ jobs:
       run: lerna run --no-bail test
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
+    - name: Send code coverage report to Codecov
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: packages/core/coverage/*.json
