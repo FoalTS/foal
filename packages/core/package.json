@@ -104,7 +104,7 @@
     "twig": "^1.13.3",
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
-    "typescript": "^2.5.2",
+    "typescript": "~3.5.3",
     "yamljs": "^0.3.0"
   }
 }

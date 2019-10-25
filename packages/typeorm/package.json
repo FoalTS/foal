@@ -63,6 +63,6 @@
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
     "typeorm": "0.2.14",
-    "typescript": "^2.5.2"
+    "typescript": "~3.5.3"
   }
 }
