@@ -15,15 +15,16 @@ jobs:
         node-version: ["node:8", "node:10"]
 
     services:
-      mysql:
-        image: mysql:5.7.10
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: admin
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_DATABASE: test
+      # mysql is already installed on ubuntu
+      # mysql:
+      #   image: mysql:5.7.10
+      #   ports:
+      #     - 3306:3306
+      #   env:
+      #     MYSQL_ROOT_PASSWORD: admin
+      #     MYSQL_USER: test
+      #     MYSQL_PASSWORD: test
+      #     MYSQL_DATABASE: test
 
       mariadb:
         image: mariadb:10.1.16
