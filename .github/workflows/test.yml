@@ -16,7 +16,7 @@ jobs:
         image: mysql:5.7.10
         ports:
           - 3306:3306
-        environment:
+        env:
           MYSQL_ROOT_PASSWORD: admin
           MYSQL_USER: test
           MYSQL_PASSWORD: test
@@ -26,7 +26,7 @@ jobs:
         image: mariadb:10.1.16
         ports:
           - 3307:3306
-        environment:
+        env:
           MYSQL_ROOT_PASSWORD: admin
           MYSQL_USER: test
           MYSQL_PASSWORD: test
@@ -36,7 +36,7 @@ jobs:
         image: postgres:9.6.1
         ports:
           - 5432:5432
-        environment:
+        env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: test
