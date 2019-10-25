@@ -834,9 +834,9 @@ describe('GraphQLController', () => {
           deepStrictEqual(response.body, [{
             dataPath: '.variables',
             keyword: 'type',
-            message: 'should be object',
+            message: 'should be object,null',
             params: {
-              type: 'object'
+              type: 'object,null'
             },
             schemaPath: '#/properties/variables/type'
           }]);
@@ -883,6 +883,26 @@ describe('GraphQLController', () => {
           const query = `{ hello }`;
           const ctx = new Context({
             body: { query },
+            get: () => 'application/json',
+            query: {}
+          });
+          const response = await controller.post(ctx);
+
+          if (!isHttpResponseOK(response)) {
+            throw new Error('The controller should have returned an HttpResponseOK instance.');
+          }
+
+          deepStrictEqual(response.body, {
+            data: {
+              hello: null
+            }
+          });
+        });
+
+        it('with a "data" property if the GraphQL schema validates the body (with variables === null).', async () => {
+          const query = `{ hello }`;
+          const ctx = new Context({
+            body: { query, variables: null },
             get: () => 'application/json',
             query: {}
           });
