@@ -11,6 +11,12 @@ jobs:
       matrix:
         node-version: [8.x, 10.x]
 
+    services:
+      redis:
+        image: "redis:4.0.14"
+        ports:
+          - 6379:6379
+
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
