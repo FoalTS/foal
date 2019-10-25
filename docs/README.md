@@ -1,7 +1,7 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![node version](https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg)
 ![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)
-![Build Status](https://travis-ci.org/FoalTS/foal.svg?branch=add-travis)
+[![Actions Status](https://github.com/FoalTS/foal/workflows/Test/badge.svg)](https://github.com/FoalTS/foal/actions)
 ![Code coverage](https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg)
 ![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
