@@ -18,12 +18,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install global dependencies (lerna, pm2, codecov)
+      run: npm install -g lerna pm2 codecov
+    - name: Install project dependencies
+      run: npm install
+    - name: Install package dependencies and build packages
       run: |
-        npm install -g lerna
-        npm install -g pm2
-        npm install -g codecov
-    - name: Install dependencies and build the packages
-      run: |
-        npm install
         lerna bootstrap
-      
+        cd packages/cli && npm link && cd ../..
+    - name: Check package linting
+      run: npm run lint
+    - name: Run unit and acceptance tests (TypeScript)
+      run: lerna run --no-bail test
+    - name: Run acceptance tests (Bash)
+      run: ./e2e_test.sh
