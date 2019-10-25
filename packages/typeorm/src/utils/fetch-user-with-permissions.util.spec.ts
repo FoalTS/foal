@@ -17,10 +17,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
 
     let user: User;
 
-    before(async () => {
+    before(async function() {
       switch (type) {
         case 'mysql':
         case 'mariadb':
+          // Increase timeout to make the test pass on Github Actions VM.
+          this.timeout(4000);
           await createConnection({
             database: 'test',
             dropSchema: true,
