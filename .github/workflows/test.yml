@@ -7,9 +7,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    container:
+      image:  ${{ matrix.node-version }}
+
     strategy:
       matrix:
-        node-version: [8.x, 10.x]
+        node-version: [node:8, node:10]
 
     services:
       mysql:
@@ -53,10 +56,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
     - name: Install global dependencies (lerna, pm2, codecov)
       run: npm install -g lerna pm2 codecov
     - name: Install project dependencies
