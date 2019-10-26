@@ -1,5 +1,5 @@
 module.exports = {
-  'env': {
+  env: {
     'browser': true,
     'es6': true,
     'node': true
@@ -10,15 +10,15 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
-  'parser': '@typescript-eslint/parser',
-  'parserOptions': {
-    'project': 'tsconfig.json',
-    'sourceType': 'module'
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json',
+    sourceType: 'module'
   },
-  'plugins': [
+  plugins: [
     '@typescript-eslint'
   ],
-  'rules': {
+  rules: {
     '@typescript-eslint/array-type': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
       'error', { 'accessibility': 'no-public' }
