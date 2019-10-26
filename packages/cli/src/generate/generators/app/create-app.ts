@@ -85,13 +85,13 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
      // Validating whether if the project-name follows npm naming conventions
   if (!validateProjectName(name)) {
     console.log(
-      red(`\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`)
+      `\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`
     );
     return;
   }
   if (existsSync(names.kebabName)) {
     console.log(
-      red(`\n ${red(`The target directory "${name}" already exists. Please remove it before proceeding.`)}`)
+      `\n ${red(`The target directory "${name}" already exists. Please remove it before proceeding.`)}`
     )
     return;
   }
