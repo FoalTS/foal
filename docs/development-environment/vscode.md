@@ -10,11 +10,13 @@ But using VS Code is not mandatory to develop a FoalTS app. So feel free to use 
 
 ## Configuring the linting
 
-In order to directly print the tslint errors in VS Code and auto-fix the problems on save you need to install the `TSLint` extension.
+In order to directly print the ESLint errors in VS Code and auto-fix the problems on save you need to install the `ESLint` extension which can be found in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-> *To open the menu with the search bar, use `Cmd`+`Shift`+`P` or  `Ctrl`+`Shift`+`P`.*
+It can be installed by launching VS Code Quick Open (`Ctrl+P` or `Cmd+P`), pasting the following command, and pressing enter:
 
-![TSLint installation and configuration](./tslint.gif)
+```
+ext install dbaeumer.vscode-eslint
+```
 
 ## Debugging with VS Code
 
