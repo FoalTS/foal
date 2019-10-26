@@ -106,7 +106,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .copyFileFromTemplatesOnlyIf(!mongodb, 'tsconfig.migrations.json')
     .copyFileFromTemplates('tsconfig.scripts.json')
     .copyFileFromTemplates('tsconfig.test.json')
-    .copyFileFromTemplates('tslint.json')
+    .copyFileFromTemplates('.eslintrc.js')
       // Config
       .mkdirIfDoesNotExist('config')
       .renderTemplateOnlyIf(!mongodb && !yaml, 'config/default.json', locals)

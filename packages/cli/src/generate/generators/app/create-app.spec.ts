@@ -191,7 +191,7 @@ describe('createApp', () => {
       .validateSpec('tsconfig.migrations.json')
       .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
-      .validateSpec('tslint.json');
+      .validateSpec('.eslintrc.js');
   });
   it('should render the root templates (YAML option).', async () => {
     await createApp({ name: 'test-fooBar', yaml: true });
@@ -207,7 +207,7 @@ describe('createApp', () => {
       .validateSpec('tsconfig.migrations.json')
       .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
-      .validateSpec('tslint.json');
+      .validateSpec('.eslintrc.js');
   });
 
   it('should render the root templates (MongoDB option).', async () => {
@@ -224,7 +224,7 @@ describe('createApp', () => {
       .shouldNotExist('tsconfig.migrations.json')
       .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
-      .validateSpec('tslint.json');
+      .validateSpec('.eslintrc.js');
   });
 
   it('should render the root templates (MongoDB & YAML options).', async () => {
@@ -241,7 +241,7 @@ describe('createApp', () => {
       .shouldNotExist('tsconfig.migrations.json')
       .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
-      .validateSpec('tslint.json');
+      .validateSpec('.eslintrc.js');
   });
 
 });
