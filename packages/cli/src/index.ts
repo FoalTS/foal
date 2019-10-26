@@ -43,8 +43,8 @@ program
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
     createApp({
-      autoInstall: options.install,
-      initRepo: options.git,
+      autoInstall: options.install as boolean,
+      initRepo: options.git as boolean,
       mongodb: options.mongodb || false,
       name,
       yaml: options.yaml || false
