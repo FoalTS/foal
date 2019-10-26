@@ -205,7 +205,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
 
 ` + [
   `cd ${names.kebabName}`,
-  ...!autoInstall ? [`npm install`] : [],
+  ...(autoInstall ? [] : [`npm install`]),
   'npm run develop'
 ].map(cmd => '    $ ' + cyan(cmd)).join('\n') + '\n'
   );
