@@ -10,7 +10,6 @@ import {
   Generator,
   getNames,
   initGitRepo,
-  mkdirIfDoesNotExist,
 } from '../../utils';
 
 function isYarnInstalled() {
@@ -92,7 +91,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   if (existsSync(names.kebabName)) {
     console.log(
       red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
-    )
+    );
     return;
   }
   mkdirSync(names.kebabName);
