@@ -46,6 +46,7 @@
   * [Quick Start](./authentication-and-access-control/quick-start.md)
   * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
   * [Passwords](./authentication-and-access-control/password-management.md)
+  * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Session Tokens (authentication)](./authentication-and-access-control/session-tokens.md)
   * [JSON Web Tokens (authentication)](./authentication-and-access-control/jwt.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
