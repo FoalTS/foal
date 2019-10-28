@@ -10,16 +10,20 @@ import { Permission } from './permission.entity';
 
 describe('Group', () => {
 
-  beforeEach(() => createConnection({
-    database: 'test',
-    dropSchema: true,
-    entities: [Group, Permission],
-    password: 'test',
-    port: 3308,
-    synchronize: true,
-    type: 'mysql',
-    username: 'test',
-  }));
+  beforeEach(function() {
+    // Increase timeout to make the test pass on Github Actions VM.
+    this.timeout(4000);
+    createConnection({
+      database: 'test',
+      dropSchema: true,
+      entities: [Group, Permission],
+      password: 'test',
+      port: 3308,
+      synchronize: true,
+      type: 'mysql',
+      username: 'test',
+    });
+  });
 
   afterEach(() => getConnection().close());
 

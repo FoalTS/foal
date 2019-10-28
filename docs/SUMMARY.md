@@ -45,10 +45,10 @@
 * Authentication & Access Control
   * [Quick Start](./authentication-and-access-control/quick-start.md)
   * [User Class & create-user Script](./authentication-and-access-control/user-class.md)
-  * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Passwords](./authentication-and-access-control/password-management.md)
   * [Session Tokens (authentication)](./authentication-and-access-control/session-tokens.md)
   * [JSON Web Tokens (authentication)](./authentication-and-access-control/jwt.md)
+  * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation & Sanitization](./validation-and-sanitization.md)
