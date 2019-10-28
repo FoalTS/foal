@@ -37,12 +37,14 @@ program
 program
   .command('createapp <name>')
   .description('Create a new project.')
+  .option('-G, --no-git', 'Don\'t initialize a git repository')
+  .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
   .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
   .action((name: string, options) => {
     createApp({
-      autoInstall: true,
-      initRepo: true,
+      autoInstall: options.install as boolean,
+      initRepo: options.git as boolean,
       mongodb: options.mongodb || false,
       name,
       yaml: options.yaml || false
@@ -153,6 +155,6 @@ program
 program.parse(process.argv);
 
 // Shows help if no arguments are provided
-if (!program.args.length) {
+if (process.argv.length === 2) {
   program.outputHelp();
 }
