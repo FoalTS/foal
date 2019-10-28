@@ -1,3 +1,6 @@
+<!--
+Please read the contribution guidelines first. A PR without (robust) tests will not be approved.
+-->
 # Issue
 
 # Solution and steps
