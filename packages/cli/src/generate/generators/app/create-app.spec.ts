@@ -1,3 +1,7 @@
+// std
+import { strictEqual } from 'assert';
+import { mkdirSync, readdirSync } from 'fs';
+
 // FoalTS
 import { TestEnvironment } from '../../utils';
 import { createApp } from './create-app';
@@ -7,6 +11,16 @@ describe('createApp', () => {
   const testEnv = new TestEnvironment('app', 'test-foo-bar');
 
   afterEach(() => testEnv.rmDirAndFilesIfExist('../test-foo-bar'));
+
+  it('should abort the project creation if a directory already exists.', async () => {
+    mkdirSync('test-foo-bar');
+
+    await createApp({ name: 'test-fooBar' });
+
+    const files = readdirSync('test-foo-bar');
+
+    strictEqual(files.length, 0);
+  });
 
   it('should render the config templates.', async () => {
     await createApp({ name: 'test-fooBar' });
