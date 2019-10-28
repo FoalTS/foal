@@ -13,7 +13,7 @@ describe('Group', () => {
   beforeEach(function() {
     // Increase timeout to make the test pass on Github Actions VM.
     this.timeout(4000);
-    createConnection({
+    return createConnection({
       database: 'test',
       dropSchema: true,
       entities: [Group, Permission],
