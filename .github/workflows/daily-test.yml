@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest]
         node-version: [8.x, 10.x]
     steps:
     - uses: actions/checkout@v1
@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Install pm2
+      run: npm install -g pm2
     - name: Install FoalTS CLI
       run: npm install -g @foal/cli
     - name: Run acceptance tests (Bash)
