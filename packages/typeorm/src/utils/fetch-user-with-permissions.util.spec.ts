@@ -22,7 +22,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
         case 'mysql':
         case 'mariadb':
           // Increase timeout to make the test pass on Github Actions VM.
-          this.timeout(4000);
+          this.timeout(6000);
           await createConnection({
             database: 'test',
             dropSchema: true,
