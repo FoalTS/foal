@@ -7,10 +7,18 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
         node-version: [8.x, 10.x]
+    
+    services:
+      mongodb:
+        image: mongo:3.4.1
+        ports:
+          - 27017:27017
+    
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
