@@ -31,6 +31,8 @@ export abstract class AbstractProvider {
   protected readonly baseAuthEndpointParams: object;
   protected readonly baseTokenEndpointParams: object;
 
+  protected readonly defaultScopes = '';
+
   // protected scopeSeparator = ' ';
 
   private get config() {
@@ -50,7 +52,7 @@ export abstract class AbstractProvider {
     // url.searchParams.set('client_id', this.config.clientId);
     // url.searchParams.set('redirect_uri', this.config.redirectUri);
 
-    // // Add a scope if one is given.
+    // // Add a scope if one is given. Or use the default ones.
     // if (scope && scope.length > 0) {
     //   url.searchParams.set('scope', scope.join(' '));
     // }
@@ -69,6 +71,7 @@ export abstract class AbstractProvider {
     // // Return a redirection response with the state as cookie.
     // return new HttpResponseRedirect(url.href)
     //   .setCookie(STATE_COOKIE_NAME, state);
+    // Which cookie parameters? HTTPS vs HTTP.
     return new HttpResponseRedirect('');
   }
 
