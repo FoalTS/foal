@@ -13,9 +13,7 @@ Once done, you should receive:
 - a *client ID* that is public and identifies your application,
 - and possibly a *client secret* that must not be revealed and can therefore only be used on the backend side.
 
-## Google
-
-### Technique 1: SPA, Mobile, TVs & Devices (only Google)
+## Google 1
 
 > This section assumes that Google is the only authentication solution you use in your application. You do not use other social providers or passwords.
 
@@ -101,29 +99,22 @@ function onSignIn(googleUser) {
 }
 ```
 
-### Technique 2: SPA, Mobile, TVs & Devices (several providers)
+## Google 2
 
-TODO.
+> This method uses cookies.
 
-### Technique 3: SPA & Regular web applications (cookies required)
-
+```
+npm install @foal/social
+```
 
 Coming soon.
 
 ## Facebook
 
-### Technique 1: SPA, Mobile, TVs & Devices (only Facebook)
+> This method uses cookies.
 
-TODO.
-
-### Technique 2: SPA, Mobile, TVs & Devices (several providers)
-
-### Technique 3: SPA & Regular web applications (cookies required)
+```
+npm install @foal/social
+```
 
 Coming soon.
-
-## Auth0
-
-## AWS Cognito
-
-## Firebase
