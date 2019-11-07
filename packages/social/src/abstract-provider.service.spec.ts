@@ -1,12 +1,12 @@
 // std
-import { notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 import { URLSearchParams } from 'url';
 
 // 3p
-import { ConfigMock, createService, isHttpResponseRedirect } from '@foal/core';
+import { ConfigMock, Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK, isHttpResponseRedirect } from '@foal/core';
 
 // FoalTS
-import { AbstractProvider, SocialTokens } from './abstract-provider.service';
+import { AbstractProvider, AuthorizationError, InvalidStateError, SocialTokens, TokenError } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
 
@@ -19,7 +19,7 @@ describe('AbstractProvider', () => {
       redirectUri: 'settings.social.example.redirectUri'
     };
     protected authEndpoint = 'https://example2.com/auth';
-    protected tokenEndpoint = 'https://example2.com/token';
+    protected tokenEndpoint = 'http://localhost:3000/token';
     getUserFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
@@ -27,12 +27,15 @@ describe('AbstractProvider', () => {
 
   let provider: ConcreteProvider;
   let configInstance: ConfigMock;
+  const clientId = 'clientIdXXX';
+  const clientSecret = 'clientSecretYYY';
+  const redirectUri = 'https://example.com/callback';
 
   before(() => {
     configInstance = new ConfigMock();
-    configInstance.set('settings.social.example.clientId', 'xxx');
-    configInstance.set('settings.social.example.clientSecret', 'yyy');
-    configInstance.set('settings.social.example.redirectUri', 'https://example.com/callback');
+    configInstance.set('settings.social.example.clientId', clientId);
+    configInstance.set('settings.social.example.clientSecret', clientSecret);
+    configInstance.set('settings.social.example.redirectUri', redirectUri);
 
     provider = createService(ConcreteProvider, { configInstance });
   });
@@ -49,7 +52,10 @@ describe('AbstractProvider', () => {
       it('with a redirect path which contains a client ID, a response type, a redirect URI.', async () => {
         const response = await provider.redirect();
         ok(response.path.startsWith(
-          'https://example2.com/auth?response_type=code&client_id=xxx&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
+          'https://example2.com/auth?'
+          + 'response_type=code&'
+          + 'client_id=clientIdXXX&'
+          + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
         ));
       });
 
@@ -151,6 +157,144 @@ describe('AbstractProvider', () => {
         strictEqual(searchParams.get('foobar'), 'barfoo');
       });
 
+    });
+
+  });
+
+  describe('has a "getTokens" method that', () => {
+
+    class ConcreteProvider2 extends ConcreteProvider {
+      baseTokenEndpointParams = {
+        foo: 'bar'
+      };
+    }
+    let server;
+
+    before(() => {
+      provider = createService(ConcreteProvider2, { configInstance });
+    });
+
+    afterEach(() => {
+      if (server) {
+        server.close();
+      }
+    });
+
+    it('should throw an InvalidStateError if the query param "state" is not equal '
+        + 'to the cookie state value.', async () => {
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {},
+      });
+      try {
+        await provider.getTokens(ctx);
+        throw new Error('getTokens should have thrown an InvalidStateError.');
+      } catch (error) {
+        if (!(error instanceof InvalidStateError)) {
+          throw error;
+        }
+      }
+    });
+
+    it('should throw an AuthorizationError if the request contains a query param "error".', async () => {
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          error: 'access_denied',
+          error_description: 'yyy',
+          error_uri: 'zzz',
+          state: 'xxx',
+        },
+      });
+      try {
+        await provider.getTokens(ctx);
+        throw new Error('getTokens should have thrown an AuthorizationError.');
+      } catch (error) {
+        if (!(error instanceof AuthorizationError)) {
+          throw error;
+        }
+        strictEqual(error.error, 'access_denied');
+        strictEqual(error.errorDescription, 'yyy');
+        strictEqual(error.errorUri, 'zzz');
+      }
+    });
+
+    it('should send a request which contains a grant type, a code, a redirect URI,'
+      + 'a client ID, a client secret and custom params and return the response body.', async () => {
+      class AppController {
+        @Get('/token')
+        token(ctx: Context) {
+          const { grant_type, code, redirect_uri, client_id, client_secret, foo } = ctx.request.query;
+          strictEqual(grant_type, 'authorization_code');
+          strictEqual(code, 'an_authorization_code');
+          strictEqual(redirect_uri, redirectUri);
+          strictEqual(client_id, clientId);
+          strictEqual(client_secret, clientSecret);
+          strictEqual(foo, 'bar');
+          return new HttpResponseOK({
+            accessToken: 'an_access_token',
+            tokenType: 'bearer'
+          });
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      const actual = await provider.getTokens(ctx);
+      const expected: SocialTokens = {
+        accessToken: 'an_access_token',
+        tokenType: 'bearer'
+      };
+      deepStrictEqual(actual, expected);
+    });
+
+    it('should throw a TokenError if the token endpoint returns an error.', async () => {
+      class AppController {
+        @Get('/token')
+        token(ctx: Context) {
+          return new HttpResponseBadRequest({
+            error: 'bad request'
+          });
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      try {
+        await provider.getTokens(ctx);
+        throw new Error('getTokens should have thrown a TokenError.');
+      } catch (error) {
+        if (!(error instanceof TokenError)) {
+          throw error;
+        }
+        deepStrictEqual(error.error, {
+          error: 'bad request'
+        });
+      }
     });
 
   });

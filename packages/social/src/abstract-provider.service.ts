@@ -5,6 +5,7 @@ import { promisify } from 'util';
 
 // 3p
 import { Config, Context, dependency, HttpResponseRedirect } from '@foal/core';
+import * as fetch from 'node-fetch';
 
 export interface SocialTokens {
   accessToken: string;
@@ -15,6 +16,22 @@ export interface SocialTokens {
 export interface SocialUser {
   profile: any;
   tokens: SocialTokens;
+}
+
+export class InvalidStateError extends Error {}
+export class AuthorizationError extends Error {
+  constructor(
+    readonly error: string,
+    readonly errorDescription?: string,
+    readonly errorUri?: string,
+  ) {
+    super();
+  }
+}
+export class TokenError extends Error {
+  constructor(readonly error) {
+    super();
+  }
 }
 
 const STATE_COOKIE_NAME = 'oauth2-state';
@@ -76,23 +93,41 @@ export abstract class AbstractProvider {
     return new HttpResponseRedirect(url.href)
       .setCookie(STATE_COOKIE_NAME, state);
     // Which cookie parameters? HTTPS vs HTTP.
+    // Short lifetime to remove it automatically?
   }
 
   async getTokens(ctx: Context): Promise<SocialTokens> {
-    // Properly and precisely handle errors and exceptions.
-    // In any case remove the STATE_COOKIE_NAME cookie
-    //
-    // Verify that the request contains an auth code and does not have errors. Throws an error otherwise.
-    // Verify that the state param exists and is valid. Throws an error otherwise.
-    // In the controller, maybe have a util "errorsToHttpResponses" to use in the "catch".
-    //
-    // Make a request to this.tokenEndpoint with the proper parameters (clientId, clientSecret, code, redirectUri).
-    // Use baseTokenEndpointParams.
-    // Return the access token and additional tokens.
-    return {
-      accessToken: 'x',
-      tokenType: 'y'
-    };
+    if (ctx.request.query.state !== ctx.request.cookies[STATE_COOKIE_NAME]) {
+      throw new InvalidStateError();
+    }
+    if (ctx.request.query.error) {
+      throw new AuthorizationError(
+        ctx.request.query.error,
+        ctx.request.query.error_description,
+        ctx.request.query.error_uri,
+      );
+    }
+
+    const url = new URL(this.tokenEndpoint);
+    url.searchParams.set('grant_type', 'authorization_code');
+    url.searchParams.set('code', ctx.request.query.code || '');
+    url.searchParams.set('redirect_uri', this.config.redirectUri);
+    url.searchParams.set('client_id', this.config.clientId);
+    url.searchParams.set('client_secret', this.config.clientSecret);
+
+    // tslint:disable-next-line:forin
+    for (const key in this.baseTokenEndpointParams) {
+      url.searchParams.set(key, this.baseTokenEndpointParams[key]);
+    }
+
+    const response = await fetch(url.href);
+    const body = await response.json();
+
+    if (!response.ok) {
+      throw new TokenError(body);
+    }
+
+    return body;
   }
 
   async getUser(ctx: Context): Promise<SocialUser> {
