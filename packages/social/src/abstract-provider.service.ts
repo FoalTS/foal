@@ -13,8 +13,8 @@ export interface SocialTokens {
   [name: string]: any;
 }
 
-export interface SocialUser {
-  profile: any;
+export interface SocialUser<Profile = any> {
+  profile: Profile;
   tokens: SocialTokens;
 }
 
@@ -130,17 +130,10 @@ export abstract class AbstractProvider {
     return body;
   }
 
-  async getUser(ctx: Context): Promise<SocialUser> {
-    // Call getTokens.
-    // Call getUserFromTokens (async).
-    // Return the results of these two methods.
-    return {
-      profile: {},
-      tokens: {
-        accessToken: 'x',
-        tokenType: 'y'
-      }
-    };
+  async getUser<Profile>(ctx: Context): Promise<SocialUser<Profile>> {
+    const tokens = await this.getTokens(ctx);
+    const profile = await this.getUserFromTokens(tokens);
+    return { profile, tokens };
   }
 
   private async getState(): Promise<string> {

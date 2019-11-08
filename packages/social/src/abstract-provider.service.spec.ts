@@ -3,10 +3,25 @@ import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 import { URLSearchParams } from 'url';
 
 // 3p
-import { ConfigMock, Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK, isHttpResponseRedirect } from '@foal/core';
+import {
+  ConfigMock,
+  Context,
+  createApp,
+  createService,
+  Get,
+  HttpResponseBadRequest,
+  HttpResponseOK,
+  isHttpResponseRedirect
+} from '@foal/core';
 
 // FoalTS
-import { AbstractProvider, AuthorizationError, InvalidStateError, SocialTokens, TokenError } from './abstract-provider.service';
+import {
+  AbstractProvider,
+  AuthorizationError,
+  InvalidStateError,
+  SocialTokens,
+  TokenError
+} from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
 
@@ -31,7 +46,7 @@ describe('AbstractProvider', () => {
   const clientSecret = 'clientSecretYYY';
   const redirectUri = 'https://example.com/callback';
 
-  before(() => {
+  beforeEach(() => {
     configInstance = new ConfigMock();
     configInstance.set('settings.social.example.clientId', clientId);
     configInstance.set('settings.social.example.clientSecret', clientSecret);
@@ -170,7 +185,7 @@ describe('AbstractProvider', () => {
     }
     let server;
 
-    before(() => {
+    beforeEach(() => {
       provider = createService(ConcreteProvider2, { configInstance });
     });
 
@@ -295,6 +310,132 @@ describe('AbstractProvider', () => {
           error: 'bad request'
         });
       }
+    });
+
+  });
+
+  describe('has a "getUser" method that', () => {
+
+    let server;
+
+    beforeEach(() => {
+      provider = createService(ConcreteProvider, { configInstance });
+    });
+
+    afterEach(() => {
+      if (server) {
+        server.close();
+      }
+    });
+
+    it('should return the tokens.', async () => {
+      class AppController {
+        @Get('/token')
+        token() {
+          return new HttpResponseOK({
+            accessToken: 'an_access_token',
+            tokenType: 'bearer'
+          });
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      class ConcreteProvider2 extends ConcreteProvider {
+        getUserFromTokens(tokens: SocialTokens) {
+          // Do not throw an error.
+        }
+      }
+      provider = createService(ConcreteProvider2, { configInstance });
+
+      const { tokens } = await provider.getUser(ctx);
+      const expectedTokens: SocialTokens = {
+        accessToken: 'an_access_token',
+        tokenType: 'bearer'
+      };
+      deepStrictEqual(tokens, expectedTokens);
+    });
+
+    it('should call the "getUserFromTokens" method with the retrieved tokens.', async () => {
+      const tokens: SocialTokens = {
+        accessToken: 'an_access_token',
+        tokenType: 'bearer'
+      };
+
+      class AppController {
+        @Get('/token')
+        token() {
+          return new HttpResponseOK(tokens);
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      let calledWith: null|SocialTokens = null;
+      class ConcreteProvider2 extends ConcreteProvider {
+        getUserFromTokens(tokens: SocialTokens) {
+          calledWith = tokens;
+        }
+      }
+      provider = createService(ConcreteProvider2, { configInstance });
+
+      await provider.getUser(ctx);
+      deepStrictEqual(calledWith, tokens);
+    });
+
+    it('should return the profile returned by the "getUserFromTokens" method.', async () => {
+      class AppController {
+        @Get('/token')
+        token() {
+          return new HttpResponseOK({
+            accessToken: 'an_access_token',
+            tokenType: 'bearer'
+          });
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      const expectedProfile = { email: 'alix@foalts.org' };
+      class ConcreteProvider2 extends ConcreteProvider {
+        async getUserFromTokens() {
+          return expectedProfile;
+        }
+      }
+      provider = createService(ConcreteProvider2, { configInstance });
+
+      const { profile } = await provider.getUser(ctx);
+      strictEqual(profile, expectedProfile);
     });
 
   });
