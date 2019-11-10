@@ -50,7 +50,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0",
+    "@foal/core": "~1.2.0",
     "node-fetch": "~2.6.0"
   },
   "devDependencies": {

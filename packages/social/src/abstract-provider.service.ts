@@ -8,8 +8,8 @@ import { Config, Context, dependency, HttpResponseRedirect } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 export interface SocialTokens {
-  accessToken: string;
-  tokenType: string;
+  access_token: string;
+  token_type: string;
   [name: string]: any;
 }
 

@@ -251,8 +251,8 @@ describe('AbstractProvider', () => {
           strictEqual(client_secret, clientSecret);
           strictEqual(foo, 'bar');
           return new HttpResponseOK({
-            accessToken: 'an_access_token',
-            tokenType: 'bearer'
+            access_token: 'an_access_token',
+            token_type: 'bearer'
           });
         }
       }
@@ -271,8 +271,8 @@ describe('AbstractProvider', () => {
 
       const actual = await provider.getTokens(ctx);
       const expected: SocialTokens = {
-        accessToken: 'an_access_token',
-        tokenType: 'bearer'
+        access_token: 'an_access_token',
+        token_type: 'bearer'
       };
       deepStrictEqual(actual, expected);
     });
@@ -333,8 +333,8 @@ describe('AbstractProvider', () => {
         @Get('/token')
         token() {
           return new HttpResponseOK({
-            accessToken: 'an_access_token',
-            tokenType: 'bearer'
+            access_token: 'an_access_token',
+            token_type: 'bearer'
           });
         }
       }
@@ -360,16 +360,16 @@ describe('AbstractProvider', () => {
 
       const { tokens } = await provider.getUser(ctx);
       const expectedTokens: SocialTokens = {
-        accessToken: 'an_access_token',
-        tokenType: 'bearer'
+        access_token: 'an_access_token',
+        token_type: 'bearer'
       };
       deepStrictEqual(tokens, expectedTokens);
     });
 
     it('should call the "getUserFromTokens" method with the retrieved tokens.', async () => {
       const tokens: SocialTokens = {
-        accessToken: 'an_access_token',
-        tokenType: 'bearer'
+        access_token: 'an_access_token',
+        token_type: 'bearer'
       };
 
       class AppController {
@@ -408,8 +408,8 @@ describe('AbstractProvider', () => {
         @Get('/token')
         token() {
           return new HttpResponseOK({
-            accessToken: 'an_access_token',
-            tokenType: 'bearer'
+            access_token: 'an_access_token',
+            token_type: 'bearer'
           });
         }
       }
