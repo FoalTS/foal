@@ -8,10 +8,10 @@ import {
   Context,
   createApp,
   createService,
-  Get,
   HttpResponseBadRequest,
   HttpResponseOK,
-  isHttpResponseRedirect
+  isHttpResponseRedirect,
+  Post
 } from '@foal/core';
 
 // FoalTS
@@ -241,9 +241,11 @@ describe('AbstractProvider', () => {
     it('should send a request which contains a grant type, a code, a redirect URI,'
       + 'a client ID, a client secret and custom params and return the response body.', async () => {
       class AppController {
-        @Get('/token')
+        @Post('/token')
         token(ctx: Context) {
-          const { grant_type, code, redirect_uri, client_id, client_secret, foo } = ctx.request.query;
+          console.log(typeof ctx.request.body);
+          const { grant_type, code, redirect_uri, client_id, client_secret, foo } = ctx.request.body;
+          console.log(grant_type);
           strictEqual(grant_type, 'authorization_code');
           strictEqual(code, 'an_authorization_code');
           strictEqual(redirect_uri, redirectUri);
@@ -279,8 +281,8 @@ describe('AbstractProvider', () => {
 
     it('should throw a TokenError if the token endpoint returns an error.', async () => {
       class AppController {
-        @Get('/token')
-        token(ctx: Context) {
+        @Post('/token')
+        token() {
           return new HttpResponseBadRequest({
             error: 'bad request'
           });
@@ -330,7 +332,7 @@ describe('AbstractProvider', () => {
 
     it('should return the tokens.', async () => {
       class AppController {
-        @Get('/token')
+        @Post('/token')
         token() {
           return new HttpResponseOK({
             access_token: 'an_access_token',
@@ -373,7 +375,7 @@ describe('AbstractProvider', () => {
       };
 
       class AppController {
-        @Get('/token')
+        @Post('/token')
         token() {
           return new HttpResponseOK(tokens);
         }
@@ -405,7 +407,7 @@ describe('AbstractProvider', () => {
 
     it('should return the profile returned by the "getUserFromTokens" method.', async () => {
       class AppController {
-        @Get('/token')
+        @Post('/token')
         token() {
           return new HttpResponseOK({
             access_token: 'an_access_token',

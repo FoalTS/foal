@@ -1,6 +1,6 @@
 // std
 import { randomBytes } from 'crypto';
-import { URL } from 'url';
+import { URL, URLSearchParams } from 'url';
 import { promisify } from 'util';
 
 // 3p
@@ -108,19 +108,22 @@ export abstract class AbstractProvider {
       );
     }
 
-    const url = new URL(this.tokenEndpoint);
-    url.searchParams.set('grant_type', 'authorization_code');
-    url.searchParams.set('code', ctx.request.query.code || '');
-    url.searchParams.set('redirect_uri', this.config.redirectUri);
-    url.searchParams.set('client_id', this.config.clientId);
-    url.searchParams.set('client_secret', this.config.clientSecret);
+    const params = new URLSearchParams();
+    params.set('grant_type', 'authorization_code');
+    params.set('code', ctx.request.query.code || '');
+    params.set('redirect_uri', this.config.redirectUri);
+    params.set('client_id', this.config.clientId);
+    params.set('client_secret', this.config.clientSecret);
 
     // tslint:disable-next-line:forin
     for (const key in this.baseTokenEndpointParams) {
-      url.searchParams.set(key, this.baseTokenEndpointParams[key]);
+      params.set(key, this.baseTokenEndpointParams[key]);
     }
 
-    const response = await fetch(url.href);
+    const response = await fetch(this.tokenEndpoint, {
+      body: params,
+      method: 'POST',
+    });
     const body = await response.json();
 
     if (!response.ok) {
