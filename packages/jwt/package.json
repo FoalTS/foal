@@ -40,9 +40,9 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0",
+    "@foal/core": "~1.2.0",
     "@types/jsonwebtoken": "^8.3.0",
-    "jsonwebtoken": "^8.3.0"
+    "jsonwebtoken": "~8.5.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",

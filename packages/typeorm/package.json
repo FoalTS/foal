@@ -46,7 +46,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0"
+    "@foal/core": "~1.2.0"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"

@@ -41,8 +41,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0",
-    "swagger-ui-dist": "^3.22.0"
+    "@foal/core": "~1.2.0",
+    "swagger-ui-dist": "~3.24.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",

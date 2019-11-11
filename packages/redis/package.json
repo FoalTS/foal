@@ -39,8 +39,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0",
-    "redis": "^2.8.0"
+    "@foal/core": "~1.2.0",
+    "redis": "~2.8.0"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.43",

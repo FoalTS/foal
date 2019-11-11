@@ -50,6 +50,6 @@
     "typescript": "~3.5.3"
   },
   "dependencies": {
-    "@foal/core": "^1.2.0"
+    "@foal/core": "~1.2.0"
   }
 }
