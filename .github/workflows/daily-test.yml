@@ -10,7 +10,7 @@ jobs:
     
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-latest]
         node-version: [8.x, 10.x]
     
     services:
