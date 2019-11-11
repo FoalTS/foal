@@ -6,5 +6,5 @@ export {
   TokenError,
   AuthorizationError
 } from './abstract-provider.service';
-export { GoogleProvider } from './google-provider.service';
+export { GoogleProvider, InvalidJWTError } from './google-provider.service';
 export { FacebookProvider } from './facebook-provider.service';

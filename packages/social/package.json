@@ -56,6 +56,8 @@
   "devDependencies": {
     "@types/mocha": "^2.2.43",
     "@types/node": "^10.5.6",
+    "@types/jsonwebtoken": "~8.3.5",
+    "jsonwebtoken": "~8.5.1",
     "copy": "^0.3.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
