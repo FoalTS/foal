@@ -11,14 +11,28 @@ Every unit test file should be placed next to the file it tests with the same na
   '- my-service.service.spec.ts
 ```
 
-## Write, Build and Run Unit Tests
+## Build and Run Unit Tests
 
-- `npm run test` - Build the unit tests code and execute them. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
-- `npm run build:test` - Build the unit tests code (compile the typescript files and copy the templates).
-- `npm run build:test:w` - Build the unit tests code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
-- `npm run start:test` - Execute the unit tests from the built files.
-- `npm run start:test:w` - Execute the unit tests from the built files and do it again whenever one of these files changes (watch mode).
+### Watch mode (for development)
 
+```
+npm run test
+```
+
+This command builds and executes the unit tests. If you modify a file and save it, the code is rebuilt and the tests are run again. This is particularly useful in development: you do not need to re-run the command every time you make code changes.
+
+The process runs forever until you stop it.
+
+### Simple mode (for CI and Git hooks)
+
+If you need to build and run the tests only once, you can use these two commands:
+
+```sh
+npm run build:test # Build the unit tests code (compile the typescript files and copy the templates)
+npm run start:test # Execute the unit tests from the built files
+```
+
+These commands are particularly useful when you want to integrate your tests into a CI pipeline or a Git hook.
 
 ## Testing Controllers
 

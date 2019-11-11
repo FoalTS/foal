@@ -2,13 +2,28 @@
 
 End-to-end tests are located in the `src/e2e` directory.
 
-## Write, Build and Run E2E Tests
+## Build and Run E2E Tests
 
-- `npm run e2e` - Build the e2e tests code and execute them. If a file changes then the code is rebuilt and the tests are executed again. This is usually **the only command that you need during development**.
-- `npm run build:e2e` - Build the e2e tests code (compile the typescript files and copy the templates).
-- `npm run build:e2e:w` - Build the e2e tests code (compile the typescript files and copy the templates) and do it again whenever a file changes (watch mode).
-- `npm run start:e2e` - Execute the e2e tests from the built files.
-- `npm run start:e2e:w` - Execute the e2e tests from the built files and do it again whenever one of these files changes (watch mode).
+### Watch mode (for development)
+
+```
+npm run e2e
+```
+
+This command builds and executes the e2e tests. If you modify a file and save it, the code is rebuilt and the tests are run again. This is particularly useful in development: you do not need to re-run the command every time you make code changes.
+
+The process runs forever until you stop it.
+
+### Simple mode (for CI and Git hooks)
+
+If you need to build and run the tests only once, you can use these two commands:
+
+```sh
+npm run build:e2e # Build the e2e tests code (compile the typescript files and copy the templates)
+npm run start:e2e # Execute the e2e tests from the built files
+```
+
+These commands are particularly useful when you want to integrate your tests into a CI pipeline or a Git hook.
 
 ## The `SuperTest` library
 
