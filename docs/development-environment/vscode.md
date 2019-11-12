@@ -18,6 +18,16 @@ It can be installed by launching VS Code Quick Open (`Ctrl+P` or `Cmd+P`), pasti
 ext install dbaeumer.vscode-eslint
 ```
 
+Then, you will need to activate it for TypeScript on your settings (`Ctrl+,` or `Cmd+,`):
+
+1. Editing `eslint.validate` so that it has `"typescript"` with `"autoFix": true` by adding this to your `settings.json`:
+  ```
+  "eslint.validate": [
+    { "language": "typescript", "autoFix": true }
+  ],
+  ```
+2. Activating `eslint.autoFixOnSave` if you want it to auto fix when you save (keep in mind it doesn't work with `files.autoSave` set to `afterDelay`).
+
 ## Debugging with VS Code
 
 Run the following command to create the suitable debug config files.
