@@ -12,6 +12,8 @@ export class GoogleProvider extends AbstractProvider {
   protected authEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
   protected tokenEndpoint = 'https://oauth2.googleapis.com/token';
 
+  protected defaultScopes: string[] = [ 'openid', 'profile', 'email' ];
+
   getUserFromTokens(tokens: SocialTokens): object {
     try {
       const encodedPayload = tokens.id_token.split('.')[1];

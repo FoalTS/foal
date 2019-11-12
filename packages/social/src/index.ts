@@ -7,4 +7,4 @@ export {
   AuthorizationError
 } from './abstract-provider.service';
 export { GoogleProvider, InvalidJWTError } from './google-provider.service';
-export { FacebookProvider } from './facebook-provider.service';
+export { FacebookProvider, ProfileError } from './facebook-provider.service';

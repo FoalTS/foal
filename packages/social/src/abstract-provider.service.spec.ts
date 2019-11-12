@@ -243,9 +243,7 @@ describe('AbstractProvider', () => {
       class AppController {
         @Post('/token')
         token(ctx: Context) {
-          console.log(typeof ctx.request.body);
           const { grant_type, code, redirect_uri, client_id, client_secret, foo } = ctx.request.body;
-          console.log(grant_type);
           strictEqual(grant_type, 'authorization_code');
           strictEqual(code, 'an_authorization_code');
           strictEqual(redirect_uri, redirectUri);
