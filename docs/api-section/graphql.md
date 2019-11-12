@@ -326,6 +326,42 @@ export class ApiController extends GraphQLController {
 }
 ```
 
+## Using TypeGraphQL
+
+> *[TypeGraphQL](https://typegraphql.ml/) is a library that allows you to create GraphQL schemas and resolvers with TypeScript classes and decorators.*
+
+You can use TypeGraphQL by simply calling its `buildSchema` function.
+
+*Example*
+```typescript
+import { GraphQLController } from '@foal/graphql';
+import { buildSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
+
+@ObjectType()
+class Recipe {
+  @Field()
+  title: string;
+}
+
+@Resolver(Recipe)
+class RecipeResolver {
+
+  @Query(returns => Recipe)
+  async recipe() {
+    return {
+      title: 'foobar'
+    };
+  }
+
+}
+
+export class ApiController extends GraphQLController {
+  schema = buildSchema({
+    resolvers: [ RecipeResolver ]
+  });
+}
+```
+
 ## Advanced
 
 ### Override the Resolver Context
