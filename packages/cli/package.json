@@ -12,7 +12,7 @@
     "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
     "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
     "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/create-secret/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
+    "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -a -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
   "engines": {
