@@ -39,5 +39,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { 'args':  'none' }],
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/require-await': 'off'
-  }
+  },
+  ignorePatterns: [
+    'src/migrations/*.ts'
+  ]
 };
