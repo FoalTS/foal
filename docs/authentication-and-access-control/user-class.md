@@ -68,7 +68,7 @@ Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a 
 ```typescript
 import { hashPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 ​
 @Entity()
 export class User extends UserWithPermissions {
@@ -82,9 +82,11 @@ export class User extends UserWithPermissions {
   @Column()
   password: string;
 ​
-  async setPassword(password: string) {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
     // Hash the password before storing it in the database
-    this.password = await hashPassword(password, { legacy: true });
+    this.password = await hashPassword(this.password, { legacy: true });
   }​
 }
 
@@ -92,7 +94,7 @@ export { Group, Permission } from '@foal/typeorm';
 
 ```
 
-> Note: When creating a new user programmatically you should use the `setPassword` method instead of assigning directly the `password` property. Otherwise the password will be stored in clear text in the database.
+> Note: The `BeforeInsert` and `BeforeUpdate` are typeORM decorators for Entity Listeners that run before the entity is saved in the db. In this example they take care of hashing the password. More info about `Entity Listeners` in the [typeORM docs](https://typeorm.io/#/listeners-and-subscribers)
 
 ### The create-user Shell Script
 
