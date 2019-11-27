@@ -42,7 +42,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@types/mongoose": "~5.3.12"
+    "@types/mongoose": "~5.5.32"
   },
   "peerDependencies": {
     "mongoose": "^5.4.9"
