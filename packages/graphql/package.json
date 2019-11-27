@@ -40,7 +40,8 @@
   "dependencies": {
     "@foal/core": "~1.2.0",
     "ajv": "~6.10.0",
-    "glob": "~7.1.4"
+    "glob": "~7.1.4",
+    "type-graphql": "^0.17.5"
   },
   "devDependencies": {
     "@types/mocha": "~2.2.43",
