@@ -11,6 +11,11 @@ jobs:
       matrix:
         node-version: [8.x, 10.x]
 
+    env:
+      AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+      AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+      AUTH0_TOKEN: ${{ secrets.AUTH0_TOKEN }}
+
     services:
       mysql:
         image: mysql:5.7.10

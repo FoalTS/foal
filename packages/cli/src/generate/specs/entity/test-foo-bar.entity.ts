@@ -1,4 +1,4 @@
-// @ts-ignore : 'Column' is declared but its value is never read.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

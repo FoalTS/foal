@@ -20,7 +20,8 @@
     "e2e": "npm run build:e2e && concurrently \"npm run build:e2e:w\" \"npm run start:e2e:w\"",
     "build:scripts": "tsc -p tsconfig.scripts.json",
     "build:scripts:w": "tsc -p tsconfig.scripts.json -w",
-    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "lint": "eslint --ext ts src",
+    "lint:fix": "eslint --ext ts --fix src",
     "build:migrations": "tsc -p tsconfig.migrations.json",
     "migration:generate": "./node_modules/.bin/typeorm migration:generate",
     "migration:run": "./node_modules/.bin/typeorm migration:run",
@@ -44,7 +45,9 @@
     "mocha": "^5.2.0",
     "supertest": "^3.3.0",
     "supervisor": "^0.12.0",
-    "tslint": "^5.10.0",
+    "eslint": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.7.0",
     "typescript": "~3.5.3"
   }
 }

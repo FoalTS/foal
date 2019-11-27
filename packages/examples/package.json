@@ -40,22 +40,22 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/core": "^1.2.0",
-    "@foal/social": "^1.2.0",
-    "@foal/typeorm": "^1.2.0",
-    "source-map-support": "^0.5.6",
-    "sqlite3": "^4.1.0",
-    "typeorm": "^0.2.20",
-    "yamljs": "^0.3.0"
+    "@foal/core": "~1.2.0",
+    "@foal/social": "~1.2.0",
+    "@foal/typeorm": "~1.2.0",
+    "source-map-support": "~0.5.16",
+    "sqlite3": "~4.1.0",
+    "typeorm": "~0.2.20",
+    "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^1.2.0",
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^10.1.1",
-    "concurrently": "^3.5.1",
-    "copy": "^0.3.2",
-    "mocha": "^5.2.0",
-    "supervisor": "^0.12.0",
+    "@foal/cli": "~1.2.0",
+    "@types/mocha": "~2.2.43",
+    "@types/node": "~10.1.1",
+    "concurrently": "~3.5.1",
+    "copy": "~0.3.2",
+    "mocha": "~5.2.0",
+    "supervisor": "~0.12.0",
     "typescript": "~3.5.3"
   }
 }
