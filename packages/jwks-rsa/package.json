@@ -48,16 +48,16 @@
     "@foal/jwt": "^1.2.0"
   },
   "devDependencies": {
-    "@foal/core": "^1.2.0",
-    "@foal/jwt": "^1.2.0",
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^10.5.6",
-    "mocha": "^5.2.0",
-    "rimraf": "^2.6.2",
-    "sqlite3": "^4.0.4",
-    "ts-node": "^3.3.0",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0",
+    "@foal/core": "~1.2.0",
+    "@foal/jwt": "~1.2.0",
+    "@types/mocha": "~2.2.43",
+    "@types/node": "~10.5.6",
+    "mocha": "~5.2.0",
+    "rimraf": "~2.6.2",
+    "sqlite3": "~4.0.4",
+    "ts-node": "~3.3.0",
+    "typedoc": "~0.14.2",
+    "typedoc-plugin-markdown": "~1.2.0",
     "typescript": "~3.5.3"
   }
 }

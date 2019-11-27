@@ -43,19 +43,19 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0",
+    "@foal/core": "~1.2.0",
     "mongodb": "3.2.7"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.43",
+    "@types/mocha": "~2.2.43",
     "@types/mongodb": "3.1.31",
-    "@types/node": "^10.5.6",
-    "copy": "^0.3.2",
-    "mocha": "^5.2.0",
-    "rimraf": "^2.6.2",
-    "ts-node": "^3.3.0",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0",
+    "@types/node": "~10.5.6",
+    "copy": "~0.3.2",
+    "mocha": "~5.2.0",
+    "rimraf": "~2.6.2",
+    "ts-node": "~3.3.0",
+    "typedoc": "~0.14.2",
+    "typedoc-plugin-markdown": "~1.2.0",
     "typescript": "~3.5.3"
   }
 }
