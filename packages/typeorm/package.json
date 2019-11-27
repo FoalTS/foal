@@ -46,22 +46,22 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.2.0"
+    "@foal/core": "~1.2.0"
   },
   "peerDependencies": {
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^10.5.6",
-    "mocha": "^5.2.0",
-    "mysql": "^2.16.0",
-    "pg": "^7.7.1",
-    "rimraf": "^2.6.2",
-    "sqlite3": "^4.0.4",
-    "ts-node": "^3.3.0",
-    "typedoc": "^0.14.2",
-    "typedoc-plugin-markdown": "^1.2.0",
+    "@types/mocha": "~2.2.43",
+    "@types/node": "~10.5.6",
+    "mocha": "~5.2.0",
+    "mysql": "~2.16.0",
+    "pg": "~7.7.1",
+    "rimraf": "~2.6.2",
+    "sqlite3": "~4.0.4",
+    "ts-node": "~3.3.0",
+    "typedoc": "~0.14.2",
+    "typedoc-plugin-markdown": "~1.2.0",
     "typeorm": "0.2.14",
     "typescript": "~3.5.3"
   }

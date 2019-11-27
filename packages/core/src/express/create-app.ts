@@ -1,5 +1,4 @@
 // 3p
-import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as logger from 'morgan';
@@ -96,7 +95,7 @@ export function createApp(
     });
   });
   app.use(express.urlencoded({ extended: false }));
-  app.use(bodyParser.text({ type: ['text/*', 'application/graphql'] }));
+  app.use(express.text({ type: ['text/*', 'application/graphql'] }));
   app.use(cookieParser());
 
   const services = new ServiceManager();
