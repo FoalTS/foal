@@ -38,7 +38,7 @@ You can also run the tests of only one package by going to its directory and run
 
 ### General guidelines
 
-Do not install any new dependencies unless they have been approved.
+Do not install any new dependencies unless they have been approved. Dependencies should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).
 
 When writting code, use the *Test-Driven Developpement (TDD)* approach.
 1. Write a test.
