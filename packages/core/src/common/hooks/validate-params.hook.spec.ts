@@ -32,7 +32,7 @@ describe('ValidateParams', () => {
       const ctx = new Context({});
       ctx.request.params = {
         foo: 3
-      };
+      } as any;
 
       const actual = hook(ctx, new ServiceManager());
       strictEqual(actual instanceof HttpResponseBadRequest, false);
