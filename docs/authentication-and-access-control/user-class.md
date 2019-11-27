@@ -92,7 +92,7 @@ export class User {
 
 ```
 
-> Note: The `BeforeInsert` and `BeforeUpdate` are typeORM decorators for Entity Listeners that run before the entity is saved in the db. In this example they take care of hashing the password. More info about `Entity Listeners` in the [typeORM docs](https://typeorm.io/#/listeners-and-subscribers)
+> Note: The `BeforeInsert` and `BeforeUpdate` are TypeORM decorators for Entity Listeners that run before the entity is saved in the db. In this example they take care of hashing the password. More info about `Entity Listeners` in the [TypeORM docs](https://typeorm.io/#/listeners-and-subscribers)
 
 ### The create-user Shell Script
 
