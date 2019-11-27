@@ -10,11 +10,23 @@ But using VS Code is not mandatory to develop a FoalTS app. So feel free to use 
 
 ## Configuring the linting
 
-In order to directly print the tslint errors in VS Code and auto-fix the problems on save you need to install the `TSLint` extension.
+In order to directly print the ESLint errors in VS Code and auto-fix the problems on save you need to install the `ESLint` extension which can be found in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-> *To open the menu with the search bar, use `Cmd`+`Shift`+`P` or  `Ctrl`+`Shift`+`P`.*
+It can be installed by launching VS Code Quick Open (`Ctrl+P` or `Cmd+P`), pasting the following command, and pressing enter:
 
-![TSLint installation and configuration](./tslint.gif)
+```
+ext install dbaeumer.vscode-eslint
+```
+
+Then, you will need to activate it for TypeScript on your settings (`Ctrl+,` or `Cmd+,`):
+
+1. Editing `eslint.validate` so that it has `"typescript"` with `"autoFix": true` by adding this to your `settings.json`:
+  ```
+  "eslint.validate": [
+    { "language": "typescript", "autoFix": true }
+  ],
+  ```
+2. Activating `eslint.autoFixOnSave` if you want it to auto fix when you save (keep in mind it doesn't work with `files.autoSave` set to `afterDelay`).
 
 ## Debugging with VS Code
 
