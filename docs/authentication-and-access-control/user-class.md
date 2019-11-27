@@ -67,30 +67,28 @@ Go to `src/app/entities/user.entity.ts` and add two new columns: an email and a 
 
 ```typescript
 import { hashPassword } from '@foal/core';
-import { UserWithPermissions } from '@foal/typeorm';
 import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
-​
+
 @Entity()
-export class User extends UserWithPermissions {
-​
+export class User {
+
   @PrimaryGeneratedColumn()
   id: number;
-​
+
   @Column({ unique: true })
   email: string;
-​
+
   @Column()
   password: string;
-​
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
     // Hash the password before storing it in the database
-    this.password = await hashPassword(this.password, { legacy: true });
-  }​
-}
+    this.password = await hashPassword(this.password);
+  }
 
-export { Group, Permission } from '@foal/typeorm';
+}
 
 ```
 
