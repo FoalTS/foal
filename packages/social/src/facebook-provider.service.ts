@@ -24,7 +24,7 @@ export class FacebookProvider extends AbstractProvider {
   protected tokenEndpoint = 'https://graph.facebook.com/v5.0/oauth/access_token';
   protected profileEndpoint = 'https://graph.facebook.com/v5.0/me';
 
-  protected fields: string[] = [ 'id', 'name', 'email', 'verified', 'link' ];
+  protected fields: string[] = [ 'id', 'name', 'email' ];
 
   protected defaultScopes: string[] = [ 'email' ];
 

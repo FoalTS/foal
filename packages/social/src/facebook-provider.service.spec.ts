@@ -37,7 +37,7 @@ describe('FacebookProvider', () => {
         token(ctx: Context) {
           const { access_token, fields } = ctx.request.query;
           strictEqual(access_token, 'an_access_token');
-          strictEqual(fields, 'id,name,email,verified,link');
+          strictEqual(fields, 'id,name,email');
           return new HttpResponseOK(profile);
         }
       }

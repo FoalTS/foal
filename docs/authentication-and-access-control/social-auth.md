@@ -13,7 +13,7 @@ Once done, you should receive:
 - a *client ID* that is public and identifies your application,
 - and possibly a *client secret* that must not be revealed and can therefore only be used on the backend side.
 
-## Google 1
+## Google 1 (for SPA and Mobile)
 
 > This section assumes that Google is the only authentication solution you use in your application. You do not use other social providers or passwords.
 
@@ -30,6 +30,8 @@ First, register your application to Google and add a "Sign-In" button to your fr
   - [iOS](https://developers.google.com/identity/sign-in/ios/start?ver=objc)
   - [Website](https://developers.google.com/identity/sign-in/web/sign-in)
   - [TVs and Devices](https://developers.google.com/identity/sign-in/devices)
+
+![Google 1](./google1.png)
 
 Then, in the backend, add a configuration file that will contain the client ID. This can be an `.env`, YAML or JSON file:
 
@@ -107,7 +109,59 @@ function onSignIn(googleUser) {
 npm install @foal/social
 ```
 
-Coming soon.
+First, register your application to Google: go to [this page](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin) and click on `Configure a project`. Do not follow the other instructions given in this page.
+
+When prompted, select the option `Web server`.
+
+![Google 2](./google2.png)
+
+You should get in exchange a client ID and a client secret.
+
+Then, in the backend, add a `.env` configuration file to store them.
+
+```
+SOCIAL_GOOGLE_CLIENT_ID=xxx.apps.googleusercontent.com
+SOCIAL_GOOGLE_CLIENT_SECRET=yyy
+```
+
+*auth.controller.ts*
+```typescript
+// 3p
+import {
+  Context,
+  dependency,
+  Get,
+  HttpResponseRedirect,
+  setSessionCookie,
+} from '@foal/core';
+import { GoogleProvider } from '@foal/social';
+import { TypeORMStore } from '@foal/typeorm';
+
+export class AuthController {
+  @dependency
+  google: GoogleProvider;
+
+  @dependency
+  store: TypeORMStore;
+
+  @Get('/signin/google')
+  redirectToGoogle() {
+    return this.google.redirect();
+  }
+
+  @Get('/signin/google/cb')
+  async handleGoogleRedirection(ctx: Context) {
+    const googleUser = await this.google.getUser(ctx);
+    const session = await this.store.createAndSaveSession({
+      profile: googleUser.profile
+    });
+    const response = new HttpResponseRedirect('/');
+    setSessionCookie(response, session.getToken());
+    return response;
+  }
+
+}
+```
 
 ## Facebook
 
