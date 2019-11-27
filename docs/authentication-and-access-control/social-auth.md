@@ -1,5 +1,9 @@
 # Social Authentication
 
+> Social authentication is available in Foal v1.3.0 onwards.
+
+--
+
 > FoalTS social authentication is based on OAuth2 protocol.
 
 To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
