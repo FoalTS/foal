@@ -26,6 +26,7 @@ import { HttpLink } from 'apollo-link-http';
 import { buildSchema } from 'graphql';
 import { request } from 'graphql-request';
 import gql from 'graphql-tag';
+import { buildSchema as buildTypeGraphQLSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
 
 // FoalTS
 import { get } from 'http';
@@ -220,6 +221,63 @@ describe('[Acceptance test] GraphQLController', () => {
           ]
         }
       ]
+    });
+  });
+
+  it('should support TypeGraphQL.', async () => {
+    @ObjectType()
+    class Recipe {
+      @Field()
+      title: string;
+    }
+
+    @Resolver(Recipe)
+    class RecipeResolver {
+
+      @Query(returns => Recipe)
+      async recipe() {
+        return {
+          title: 'foobar'
+        };
+      }
+
+    }
+
+    class ApiController extends GraphQLController {
+      schema = buildTypeGraphQLSchema({
+        resolvers: [ RecipeResolver ]
+      });
+    }
+
+    class AppController {
+      subControllers = [
+        controller('/graphql', ApiController)
+      ];
+    }
+
+    server = createApp(AppController).listen(3000);
+
+    const response = await new Promise((resolve, reject) => {
+      get('http://localhost:3000/graphql?query={recipe{title}}', resp => {
+        let data = '';
+        resp.on('data', chunk => {
+          data += chunk;
+        });
+        resp.on('end', () => {
+          console.log(data);
+          resolve(JSON.parse(data));
+        });
+      }).on('error', err => {
+        reject(err);
+      });
+    });
+
+    deepStrictEqual(response, {
+      data: {
+        recipe: {
+          title: 'foobar'
+        }
+      }
     });
   });
 
