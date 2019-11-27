@@ -225,7 +225,7 @@ Open **a new terminal/console**.
 
 Enter the database credentials.
 
-*On Max and Linux*
+*On Mac and Linux*
 ```sh
 export DATABASE_HOST=<the previous saved endpoint>
 export DATABASE_USERNAME=<the database username> # in the tutorial, it is myusername
