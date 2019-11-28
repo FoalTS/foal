@@ -125,9 +125,17 @@ describe('AbstractProvider', () => {
       it('with a generated state to protect against CSRF attacks.', async () => {
         const response = await provider.redirect();
         const stateCookieValue = response.getCookie(STATE_COOKIE_NAME).value;
+        const stateCookieOptions = response.getCookie(STATE_COOKIE_NAME).options;
         if (typeof stateCookieValue !== 'string') {
           throw new Error('Cookie not found.');
         }
+
+        deepStrictEqual(stateCookieOptions, {
+          httpOnly: true,
+          maxAge: 300,
+          path: '/',
+          secure: false
+        });
 
         const searchParams = new URLSearchParams(response.path);
         const stateParamValue = searchParams.get('state');
@@ -137,6 +145,15 @@ describe('AbstractProvider', () => {
 
         strictEqual(stateParamValue, stateCookieValue);
         notStrictEqual(stateCookieValue.length, 0);
+      });
+
+      it('with a generated state in a cookie whose secure option is defined with the config.', async () => {
+        configInstance.set('settings.social.cookie.secure', true);
+
+        const response = await provider.redirect();
+        const { options } = response.getCookie(STATE_COOKIE_NAME);
+
+        strictEqual(options.secure, true);
       });
 
       it('with a redirect path which contains extra parameters if any are provided by the class.', async () => {

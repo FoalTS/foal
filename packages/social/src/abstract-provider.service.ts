@@ -91,9 +91,12 @@ export abstract class AbstractProvider {
 
     // Return a redirection response with the state as cookie.
     return new HttpResponseRedirect(url.href)
-      .setCookie(STATE_COOKIE_NAME, state);
-    // Which cookie parameters? HTTPS vs HTTP.
-    // Short lifetime to remove it automatically?
+      .setCookie(STATE_COOKIE_NAME, state, {
+        httpOnly: true,
+        maxAge: 300,
+        path: '/',
+        secure: this.configInstance.get('settings.social.cookie.secure', false)
+      });
   }
 
   async getTokens(ctx: Context): Promise<SocialTokens> {
