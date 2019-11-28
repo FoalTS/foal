@@ -2,16 +2,12 @@
 
 > Social authentication is available in Foal v1.3.0 onwards.
 
---
-
-> FoalTS social authentication is based on OAuth2 protocol.
-
-To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
+FoalTS social authentication is based on OAuth2 protocol. To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
 
 Usually your are required to provide:
 - an *application name*,
 - a *logo*,
-- and *redirect URIs* where the social provider should redirect the users after successful authentication (ex: `http://localhost:3001`, `https://example.com`)
+- and *redirect URIs* where the social provider should redirect the users after successful authentication (ex: `http://localhost:3001/signin/google/cb`, `https://example.com/signin/facebook/cb`)
 
 Once done, you should receive:
 - a *client ID* that is public and identifies your application,
@@ -21,9 +17,7 @@ Once done, you should receive:
 
 > This section assumes that Google is the only authentication solution you use in your application. You do not use other social providers or passwords.
 
---
-
-> A sample application can be found [here](https://github.com/FoalTS/foal/tree/master/samples/google-auth).
+*A sample application can be found [here](https://github.com/FoalTS/foal/tree/master/samples/google-auth).*
 
 ```
 npm install @foal/jwt @foal/jwks-rsa
@@ -145,9 +139,6 @@ export class AuthController {
   @dependency
   google: GoogleProvider;
 
-  @dependency
-  store: TypeORMStore;
-
   @Get('/signin/google')
   redirectToGoogle() {
     return this.google.redirect();
@@ -155,7 +146,7 @@ export class AuthController {
 
   @Get('/signin/google/cb')
   async handleGoogleRedirection(ctx: Context) {
-    const googleUser = await this.google.getUser(ctx);
+    const googleUser = await this.google.getUserInfo(ctx);
     const session = await this.store.createAndSaveSession({
       profile: googleUser.profile
     });

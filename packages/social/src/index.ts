@@ -1,10 +1,10 @@
 export {
   AbstractProvider,
-  SocialUser,
+  UserInfoAndTokens,
   SocialTokens,
   InvalidStateError,
   TokenError,
   AuthorizationError
 } from './abstract-provider.service';
 export { GoogleProvider, InvalidJWTError } from './google-provider.service';
-export { FacebookProvider, ProfileError } from './facebook-provider.service';
+export { FacebookProvider, UserInfoError } from './facebook-provider.service';

@@ -11,7 +11,7 @@ import { GoogleProvider, InvalidJWTError } from './google-provider.service';
 
 describe('GoogleProvider', () => {
 
-  describe('has a "getUserFromTokens" that', () => {
+  describe('has a "getUserInfoFromTokens" that', () => {
 
     // TODO: Maybe improve this.
     it('should throw an InvalidJWTError if the id_token is not a valid JWT.', () => {
@@ -24,8 +24,8 @@ describe('GoogleProvider', () => {
       const provider = createService(GoogleProvider);
 
       try {
-        provider.getUserFromTokens(tokens);
-        throw new Error('The "getUserFromTokens" method should have thrown an InvalidJWTError.');
+        provider.getUserInfoFromTokens(tokens);
+        throw new Error('The "getUserInfoFromTokens" method should have thrown an InvalidJWTError.');
       } catch (error) {
         if (!(error instanceof InvalidJWTError)) {
           throw error;
@@ -45,7 +45,7 @@ describe('GoogleProvider', () => {
       };
 
       const provider = createService(GoogleProvider);
-      const user = provider.getUserFromTokens(tokens);
+      const user = provider.getUserInfoFromTokens(tokens);
 
       deepStrictEqual(user, payload);
     });

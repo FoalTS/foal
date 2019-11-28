@@ -7,7 +7,7 @@ import * as fetch from 'node-fetch';
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
 
-export class ProfileError extends Error {
+export class UserInfoError extends Error {
   constructor(readonly error) {
     super();
   }
@@ -22,14 +22,14 @@ export class FacebookProvider extends AbstractProvider {
 
   protected authEndpoint = 'https://www.facebook.com/v5.0/dialog/oauth';
   protected tokenEndpoint = 'https://graph.facebook.com/v5.0/oauth/access_token';
-  protected profileEndpoint = 'https://graph.facebook.com/v5.0/me';
+  protected userInfoEndpoint = 'https://graph.facebook.com/v5.0/me';
 
   protected fields: string[] = [ 'id', 'name', 'email' ];
 
   protected defaultScopes: string[] = [ 'email' ];
 
-  async getUserFromTokens(tokens: SocialTokens) {
-    const url = new URL(this.profileEndpoint);
+  async getUserInfoFromTokens(tokens: SocialTokens) {
+    const url = new URL(this.userInfoEndpoint);
     url.searchParams.set('access_token', tokens.access_token);
     url.searchParams.set('fields', this.fields.join(','));
 
@@ -37,7 +37,7 @@ export class FacebookProvider extends AbstractProvider {
     const body = await response.json();
 
     if (!response.ok) {
-      throw new ProfileError(body);
+      throw new UserInfoError(body);
     }
 
     return body;

@@ -14,7 +14,7 @@ export class GoogleProvider extends AbstractProvider {
 
   protected defaultScopes: string[] = [ 'openid', 'profile', 'email' ];
 
-  getUserFromTokens(tokens: SocialTokens): object {
+  getUserInfoFromTokens(tokens: SocialTokens): object {
     try {
       const encodedPayload = tokens.id_token.split('.')[1];
       const decodedPayload = Buffer.from(encodedPayload, 'base64').toString('utf8');

@@ -35,7 +35,7 @@ describe('AbstractProvider', () => {
     };
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserFromTokens(tokens: SocialTokens) {
+    getUserInfoFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
   }
@@ -331,7 +331,7 @@ describe('AbstractProvider', () => {
 
   });
 
-  describe('has a "getUser" method that', () => {
+  describe('has a "getUserInfo" method that', () => {
 
     let server;
 
@@ -369,13 +369,13 @@ describe('AbstractProvider', () => {
       });
 
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserFromTokens(tokens: SocialTokens) {
+        getUserInfoFromTokens(tokens: SocialTokens) {
           // Do not throw an error.
         }
       }
       provider = createService(ConcreteProvider2, { configInstance });
 
-      const { tokens } = await provider.getUser(ctx);
+      const { tokens } = await provider.getUserInfo(ctx);
       const expectedTokens: SocialTokens = {
         access_token: 'an_access_token',
         token_type: 'bearer'
@@ -383,7 +383,7 @@ describe('AbstractProvider', () => {
       deepStrictEqual(tokens, expectedTokens);
     });
 
-    it('should call the "getUserFromTokens" method with the retrieved tokens.', async () => {
+    it('should call the "getUserInfoFromTokens" method with the retrieved tokens.', async () => {
       const tokens: SocialTokens = {
         access_token: 'an_access_token',
         token_type: 'bearer'
@@ -410,17 +410,17 @@ describe('AbstractProvider', () => {
 
       let calledWith: null|SocialTokens = null;
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserFromTokens(tokens: SocialTokens) {
+        getUserInfoFromTokens(tokens: SocialTokens) {
           calledWith = tokens;
         }
       }
       provider = createService(ConcreteProvider2, { configInstance });
 
-      await provider.getUser(ctx);
+      await provider.getUserInfo(ctx);
       deepStrictEqual(calledWith, tokens);
     });
 
-    it('should return the profile returned by the "getUserFromTokens" method.', async () => {
+    it('should return the user info returned by the "getUserInfoFromTokens" method.', async () => {
       class AppController {
         @Post('/token')
         token() {
@@ -443,16 +443,16 @@ describe('AbstractProvider', () => {
         },
       });
 
-      const expectedProfile = { email: 'alix@foalts.org' };
+      const expectedUserInfo = { email: 'alix@foalts.org' };
       class ConcreteProvider2 extends ConcreteProvider {
-        async getUserFromTokens() {
-          return expectedProfile;
+        async getUserInfoFromTokens() {
+          return expectedUserInfo;
         }
       }
       provider = createService(ConcreteProvider2, { configInstance });
 
-      const { profile } = await provider.getUser(ctx);
-      strictEqual(profile, expectedProfile);
+      const { userInfo } = await provider.getUserInfo(ctx);
+      strictEqual(userInfo, expectedUserInfo);
     });
 
   });

@@ -26,10 +26,8 @@ export class AuthController {
 
   @Get('/signin/google/cb')
   async handleGoogleRedirection(ctx: Context) {
-    const user = await this.google.getUser(ctx);
-    const session = await this.store.createAndSaveSession({
-      profile: user.profile
-    });
+    const { userInfo } = await this.google.getUserInfo(ctx);
+    const session = await this.store.createAndSaveSession({ userInfo });
     const response = new HttpResponseRedirect('/');
     setSessionCookie(response, session.getToken());
     return response;
@@ -42,10 +40,8 @@ export class AuthController {
 
   @Get('/signin/facebook/cb')
   async handleFacebookRedirection(ctx: Context) {
-    const user = await this.facebook.getUser(ctx);
-    const session = await this.store.createAndSaveSession({
-      profile: user.profile
-    });
+    const { userInfo } = await this.facebook.getUserInfo(ctx);
+    const session = await this.store.createAndSaveSession({ userInfo });
     const response = new HttpResponseRedirect('/');
     setSessionCookie(response, session.getToken());
     return response;

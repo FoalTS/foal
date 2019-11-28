@@ -12,7 +12,7 @@ export class AppController {
   @TokenRequired({ cookie: true, store: TypeORMStore, redirectTo: '/signin' })
   index(ctx: Context<any, Session>) {
     return render('./templates/index.html', {
-      profile: JSON.stringify(ctx.session.get('profile'))
+      userInfo: JSON.stringify(ctx.session.get('userInfo'))
     });
   }
 

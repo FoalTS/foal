@@ -13,8 +13,8 @@ export interface SocialTokens {
   [name: string]: any;
 }
 
-export interface SocialUser<Profile = any> {
-  profile: Profile;
+export interface UserInfoAndTokens<UserInfo = any> {
+  userInfo: UserInfo;
   tokens: SocialTokens;
 }
 
@@ -63,7 +63,7 @@ export abstract class AbstractProvider {
     };
   }
 
-  abstract getUserFromTokens(tokens: SocialTokens): any;
+  abstract getUserInfoFromTokens(tokens: SocialTokens): any;
 
   async redirect({ scopes, params }: { scopes?: string[], params?: object } = {}): Promise<HttpResponseRedirect> {
     // Build the authorization URL.
@@ -136,10 +136,10 @@ export abstract class AbstractProvider {
     return body;
   }
 
-  async getUser<Profile>(ctx: Context): Promise<SocialUser<Profile>> {
+  async getUserInfo<UserInfo>(ctx: Context): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
-    const profile = await this.getUserFromTokens(tokens);
-    return { profile, tokens };
+    const userInfo = await this.getUserInfoFromTokens(tokens);
+    return { userInfo, tokens };
   }
 
   private async getState(): Promise<string> {
