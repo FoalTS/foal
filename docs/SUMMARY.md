@@ -106,7 +106,6 @@
 ## Community
 
 * [Twitter](https://twitter.com/foalts)
-* [Github](https://github.com/FoalTS/foal)
 * [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
 * [Discord](https://discord.gg/QUrJv98)
 * [Awesome Foal TS](https://github.com/FoalTS/awesome-foalts)
