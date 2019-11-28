@@ -103,6 +103,14 @@
 * [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
 * [To v1](https://github.com/FoalTS/foal/releases/tag/v1.0.0)
 
+## Community
+
+* [Twitter](https://twitter.com/foalts)
+* [Github](https://github.com/FoalTS/foal)
+* [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
+* [Discord](https://discord.gg/QUrJv98)
+* [Awesome Foal TS](https://github.com/FoalTS/awesome-foalts)
+
 ## API Reference
 
 * [@foal/core](./api/core/README.md)
