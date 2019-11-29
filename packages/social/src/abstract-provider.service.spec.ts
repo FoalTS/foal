@@ -173,16 +173,7 @@ describe('AbstractProvider', () => {
 
   describe('has a "getTokens" method that', () => {
 
-    class ConcreteProvider2 extends ConcreteProvider {
-      baseTokenEndpointParams = {
-        foo: 'bar'
-      };
-    }
     let server;
-
-    beforeEach(() => {
-      provider = createService(ConcreteProvider2, { configInstance });
-    });
 
     afterEach(() => {
       if (server) {
@@ -234,17 +225,16 @@ describe('AbstractProvider', () => {
     });
 
     it('should send a request which contains a grant type, a code, a redirect URI,'
-      + 'a client ID, a client secret and custom params and return the response body.', async () => {
+      + 'a client ID and a client secret and return the response body.', async () => {
       class AppController {
         @Post('/token')
         token(ctx: Context) {
-          const { grant_type, code, redirect_uri, client_id, client_secret, foo } = ctx.request.body;
+          const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
           strictEqual(grant_type, 'authorization_code');
           strictEqual(code, 'an_authorization_code');
           strictEqual(redirect_uri, redirectUri);
           strictEqual(client_id, clientId);
           strictEqual(client_secret, clientSecret);
-          strictEqual(foo, 'bar');
           return new HttpResponseOK({
             access_token: 'an_access_token',
             token_type: 'bearer'

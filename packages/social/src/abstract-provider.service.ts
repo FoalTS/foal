@@ -48,8 +48,6 @@ export abstract class AbstractProvider {
   protected readonly abstract authEndpoint: string;
   protected readonly abstract tokenEndpoint: string;
 
-  protected readonly baseTokenEndpointParams: object = {};
-
   protected readonly defaultScopes: string[] = [];
 
   protected readonly scopeSeparator: string = ' ';
@@ -115,11 +113,6 @@ export abstract class AbstractProvider {
     params.set('redirect_uri', this.config.redirectUri);
     params.set('client_id', this.config.clientId);
     params.set('client_secret', this.config.clientSecret);
-
-    // tslint:disable-next-line:forin
-    for (const key in this.baseTokenEndpointParams) {
-      params.set(key, this.baseTokenEndpointParams[key]);
-    }
 
     const response = await fetch(this.tokenEndpoint, {
       body: params,
