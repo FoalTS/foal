@@ -27,7 +27,7 @@ const STATE_COOKIE_NAME = 'oauth2-state';
 
 describe('AbstractProvider', () => {
 
-  class ConcreteProvider extends AbstractProvider {
+  class ConcreteProvider extends AbstractProvider<any, any> {
     protected configPaths = {
       clientId: 'settings.social.example.clientId',
       clientSecret: 'settings.social.example.clientSecret',
@@ -159,9 +159,7 @@ describe('AbstractProvider', () => {
       it('with a redirect path which contains extra parameters if any are provided to the method.', async () => {
         provider = createService(ConcreteProvider, { configInstance });
 
-        const response = await provider.redirect({
-          params: { foo: 'bar2' }
-        });
+        const response = await provider.redirect({}, { foo: 'bar2' });
         const searchParams = new URLSearchParams(response.path);
 
         strictEqual(searchParams.get('foo'), 'bar2');
@@ -380,16 +378,16 @@ describe('AbstractProvider', () => {
       });
 
       let calledWithTokens: null|SocialTokens = null;
-      let calledWithParams: null|object = null;
+      let calledWithParams: null|any = null;
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: object } = {}) {
+        getUserInfoFromTokens(tokens: SocialTokens, params?: any) {
           calledWithTokens = tokens;
           calledWithParams = params || null;
         }
       }
       provider = createService(ConcreteProvider2, { configInstance });
 
-      await provider.getUserInfo(ctx, { params });
+      await provider.getUserInfo(ctx, params);
       deepStrictEqual(calledWithTokens, tokens);
       deepStrictEqual(calledWithParams, params);
     });

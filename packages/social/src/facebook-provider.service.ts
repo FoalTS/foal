@@ -7,13 +7,21 @@ import * as fetch from 'node-fetch';
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
 
+export interface FacebookAuthParams {
+  auth_type?: 'rerequest';
+}
+
+export interface FacebookUserInfoParams {
+  fields?: string[];
+}
+
 export class UserInfoError extends Error {
   constructor(readonly error) {
     super();
   }
 }
 
-export class FacebookProvider extends AbstractProvider {
+export class FacebookProvider extends AbstractProvider<FacebookAuthParams, FacebookUserInfoParams> {
   protected configPaths = {
     clientId: 'settings.social.facebook.clientId',
     clientSecret: 'settings.social.facebook.clientSecret',
@@ -28,7 +36,7 @@ export class FacebookProvider extends AbstractProvider {
 
   protected defaultScopes: string[] = [ 'email' ];
 
-  async getUserInfoFromTokens(tokens: SocialTokens) {
+  async getUserInfoFromTokens(tokens: SocialTokens, params?: FacebookUserInfoParams) {
     const url = new URL(this.userInfoEndpoint);
     url.searchParams.set('access_token', tokens.access_token);
     url.searchParams.set('fields', this.fields.join(','));

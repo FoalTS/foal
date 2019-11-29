@@ -36,7 +36,11 @@ export class TokenError extends Error {
 
 const STATE_COOKIE_NAME = 'oauth2-state';
 
-export abstract class AbstractProvider {
+export interface ObjectType {
+  [name: string]: any;
+}
+
+export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType> {
   @dependency
   configInstance: Config;
 
@@ -60,9 +64,9 @@ export abstract class AbstractProvider {
     };
   }
 
-  abstract getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: any }): any;
+  abstract getUserInfoFromTokens(tokens: SocialTokens, params?: UserInfoParameters): any;
 
-  async redirect({ scopes, params }: { scopes?: string[], params?: any } = {}): Promise<HttpResponseRedirect> {
+  async redirect({ scopes }: { scopes?: string[] } = {}, params?: AuthParameters): Promise<HttpResponseRedirect> {
     // Build the authorization URL.
     const url = new URL(this.authEndpoint);
     url.searchParams.set('response_type', 'code');
@@ -80,9 +84,11 @@ export abstract class AbstractProvider {
     url.searchParams.set('state', state);
 
     // Add extra parameters to the URL.
-    // tslint:disable-next-line:forin
-    for (const key in params) {
-      url.searchParams.set(key, params[key]);
+    if (params) {
+      // tslint:disable-next-line:forin
+      for (const key in params) {
+        url.searchParams.set(key, params[key]);
+      }
     }
 
     // Return a redirection response with the state as cookie.
@@ -127,11 +133,9 @@ export abstract class AbstractProvider {
     return body;
   }
 
-  async getUserInfo<UserInfo>(
-    ctx: Context, { params }: { params?: any } = {}
-  ): Promise<UserInfoAndTokens<UserInfo>> {
+  async getUserInfo<UserInfo>(ctx: Context, params?: UserInfoParameters): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
-    const userInfo = await this.getUserInfoFromTokens(tokens, { params });
+    const userInfo = await this.getUserInfoFromTokens(tokens, params);
     return { userInfo, tokens };
   }
 
