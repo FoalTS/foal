@@ -62,7 +62,7 @@ export abstract class AbstractProvider {
     };
   }
 
-  abstract getUserInfoFromTokens(tokens: SocialTokens): any;
+  abstract getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: object }): any;
 
   async redirect({ scopes, params }: { scopes?: string[], params?: object } = {}): Promise<HttpResponseRedirect> {
     // Build the authorization URL.
@@ -134,9 +134,11 @@ export abstract class AbstractProvider {
     return body;
   }
 
-  async getUserInfo<UserInfo>(ctx: Context): Promise<UserInfoAndTokens<UserInfo>> {
+  async getUserInfo<UserInfo>(
+    ctx: Context, { params }: { params?: object } = {}
+  ): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
-    const userInfo = await this.getUserInfoFromTokens(tokens);
+    const userInfo = await this.getUserInfoFromTokens(tokens, { params });
     return { userInfo, tokens };
   }
 

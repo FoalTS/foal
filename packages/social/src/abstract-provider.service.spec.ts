@@ -361,10 +361,13 @@ describe('AbstractProvider', () => {
       deepStrictEqual(tokens, expectedTokens);
     });
 
-    it('should call the "getUserInfoFromTokens" method with the retrieved tokens.', async () => {
+    it('should call the "getUserInfoFromTokens" method with the retrieved tokens and the given params.', async () => {
       const tokens: SocialTokens = {
         access_token: 'an_access_token',
         token_type: 'bearer'
+      };
+      const params = {
+        fields: [ 'email' ]
       };
 
       class AppController {
@@ -386,16 +389,19 @@ describe('AbstractProvider', () => {
         },
       });
 
-      let calledWith: null|SocialTokens = null;
+      let calledWithTokens: null|SocialTokens = null;
+      let calledWithParams: null|object = null;
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens) {
-          calledWith = tokens;
+        getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: object } = {}) {
+          calledWithTokens = tokens;
+          calledWithParams = params || null;
         }
       }
       provider = createService(ConcreteProvider2, { configInstance });
 
-      await provider.getUserInfo(ctx);
-      deepStrictEqual(calledWith, tokens);
+      await provider.getUserInfo(ctx, { params });
+      deepStrictEqual(calledWithTokens, tokens);
+      deepStrictEqual(calledWithParams, params);
     });
 
     it('should return the user info returned by the "getUserInfoFromTokens" method.', async () => {
