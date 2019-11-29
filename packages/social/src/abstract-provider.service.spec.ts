@@ -156,29 +156,8 @@ describe('AbstractProvider', () => {
         strictEqual(options.secure, true);
       });
 
-      it('with a redirect path which contains extra parameters if any are provided by the class.', async () => {
-        class ConcreteProvider2 extends ConcreteProvider {
-          baseAuthEndpointParams = {
-            foo: 'bar'
-          };
-        }
-        provider = createService(ConcreteProvider2, { configInstance });
-
-        const response = await provider.redirect();
-        const searchParams = new URLSearchParams(response.path);
-
-        strictEqual(searchParams.get('foo'), 'bar');
-      });
-
       it('with a redirect path which contains extra parameters if any are provided to the method.', async () => {
-        class ConcreteProvider2 extends ConcreteProvider {
-          baseAuthEndpointParams = {
-            // This checks that the base params will be extended.
-            foo: 'bar',
-            foobar: 'barfoo'
-          };
-        }
-        provider = createService(ConcreteProvider2, { configInstance });
+        provider = createService(ConcreteProvider, { configInstance });
 
         const response = await provider.redirect({
           params: { foo: 'bar2' }
@@ -186,7 +165,6 @@ describe('AbstractProvider', () => {
         const searchParams = new URLSearchParams(response.path);
 
         strictEqual(searchParams.get('foo'), 'bar2');
-        strictEqual(searchParams.get('foobar'), 'barfoo');
       });
 
     });

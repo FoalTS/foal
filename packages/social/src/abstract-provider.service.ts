@@ -48,7 +48,6 @@ export abstract class AbstractProvider {
   protected readonly abstract authEndpoint: string;
   protected readonly abstract tokenEndpoint: string;
 
-  protected readonly baseAuthEndpointParams: object = {};
   protected readonly baseTokenEndpointParams: object = {};
 
   protected readonly defaultScopes: string[] = [];
@@ -83,10 +82,9 @@ export abstract class AbstractProvider {
     url.searchParams.set('state', state);
 
     // Add extra parameters to the URL.
-    const extraParams = Object.assign({}, this.baseAuthEndpointParams, params);
     // tslint:disable-next-line:forin
-    for (const key in extraParams) {
-      url.searchParams.set(key, extraParams[key]);
+    for (const key in params) {
+      url.searchParams.set(key, params[key]);
     }
 
     // Return a redirection response with the state as cookie.
