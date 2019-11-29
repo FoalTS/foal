@@ -1,5 +1,19 @@
+// 3p
+import { Context, HttpResponseRedirect } from '@foal/core';
+
 // FoalTS
-import { AbstractProvider, SocialTokens } from './abstract-provider.service';
+import { AbstractProvider, SocialTokens, UserInfoAndTokens } from './abstract-provider.service';
+
+export interface GoogleAuthParams {
+  nonce?: string;
+  prompt?: 'none'|'consent'|'select_account';
+  display?: string;
+  login_hint?: string;
+  access_type?: 'offline'|'online';
+  include_granted_scopes?: true|false;
+  'openid.realm'?: string;
+  hd: string;
+}
 
 export class InvalidJWTError extends Error {}
 
@@ -13,6 +27,14 @@ export class GoogleProvider extends AbstractProvider {
   protected tokenEndpoint = 'https://oauth2.googleapis.com/token';
 
   protected defaultScopes: string[] = [ 'openid', 'profile', 'email' ];
+
+  redirect({ scopes, params }: { scopes?: string[], params?: GoogleAuthParams } = {}): Promise<HttpResponseRedirect> {
+    return super.redirect({ scopes, params });
+  }
+
+  getUserInfo<UserInfo>(ctx: Context): Promise<UserInfoAndTokens<UserInfo>> {
+    return super.getUserInfo(ctx);
+  }
 
   getUserInfoFromTokens(tokens: SocialTokens): object {
     try {

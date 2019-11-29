@@ -60,9 +60,9 @@ export abstract class AbstractProvider {
     };
   }
 
-  abstract getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: object }): any;
+  abstract getUserInfoFromTokens(tokens: SocialTokens, { params }: { params?: any }): any;
 
-  async redirect({ scopes, params }: { scopes?: string[], params?: object } = {}): Promise<HttpResponseRedirect> {
+  async redirect({ scopes, params }: { scopes?: string[], params?: any } = {}): Promise<HttpResponseRedirect> {
     // Build the authorization URL.
     const url = new URL(this.authEndpoint);
     url.searchParams.set('response_type', 'code');
@@ -128,7 +128,7 @@ export abstract class AbstractProvider {
   }
 
   async getUserInfo<UserInfo>(
-    ctx: Context, { params }: { params?: object } = {}
+    ctx: Context, { params }: { params?: any } = {}
   ): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
     const userInfo = await this.getUserInfoFromTokens(tokens, { params });
