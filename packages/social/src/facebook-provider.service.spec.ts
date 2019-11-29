@@ -27,9 +27,7 @@ describe('FacebookProvider', () => {
       }
     });
 
-    it('should send a request with the access token and the default user info parameters '
-        + 'and return the response body.', async () => {
-
+    it('should send a request with the access token and the default fields and return the response body.', async () => {
       const userInfo = { email: 'john@foalts.org' };
 
       class AppController {
@@ -51,6 +49,28 @@ describe('FacebookProvider', () => {
 
       const actual = await provider.getUserInfoFromTokens(tokens);
       deepStrictEqual(actual, userInfo);
+    });
+
+    it('should accept custom fields to use in the request.', async () => {
+      class AppController {
+        @Get('/users/me')
+        token(ctx: Context) {
+          const { fields } = ctx.request.query;
+          strictEqual(fields, 'first_name,last_name');
+          return new HttpResponseOK({});
+        }
+      }
+
+      server = createApp(AppController).listen(3000);
+
+      const tokens: SocialTokens = {
+        access_token: 'an_access_token',
+        token_type: 'token_type'
+      };
+
+      await provider.getUserInfoFromTokens(tokens, {
+        fields: [ 'first_name', 'last_name' ]
+      });
     });
 
     it('should throw a UserInfoError if the user info endpoint returns an error.', async () => {

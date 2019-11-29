@@ -39,7 +39,8 @@ export class FacebookProvider extends AbstractProvider<FacebookAuthParams, Faceb
   async getUserInfoFromTokens(tokens: SocialTokens, params?: FacebookUserInfoParams) {
     const url = new URL(this.userInfoEndpoint);
     url.searchParams.set('access_token', tokens.access_token);
-    url.searchParams.set('fields', this.fields.join(','));
+    const fields = params && params.fields ? params.fields : this.fields;
+    url.searchParams.set('fields', fields.join(','));
 
     const response = await fetch(url.href);
     const body = await response.json();
