@@ -18,7 +18,7 @@
 
 ▸ **isFunction**(schema: *`object` \| `function`*): `boolean`
 
-*Defined in [common/hooks/is-function.util.ts:1](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/is-function.util.ts#L1)*
+*Defined in [common/hooks/is-function.util.ts:1](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/is-function.util.ts#L1)*
 
 **Parameters:**
 

@@ -27,7 +27,7 @@
 
 **● jwksClient**: *`any`* =  require('jwks-rsa')
 
-*Defined in [get-rsa-public-key-from-jwks.ts:3](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L3)*
+*Defined in [get-rsa-public-key-from-jwks.ts:3](https://github.com/FoalTS/foal/blob/70cc46bd/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L3)*
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **getRSAPublicKeyFromJWKS**(options: *[Options](../interfaces/_get_rsa_public_key_from_jwks_.options.md)*): `function`
 
-*Defined in [get-rsa-public-key-from-jwks.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L32)*
+*Defined in [get-rsa-public-key-from-jwks.ts:32](https://github.com/FoalTS/foal/blob/70cc46bd/packages/jwks-rsa/src/get-rsa-public-key-from-jwks.ts#L32)*
 
 Create a function to retreive the RSA public key from a JWKS endpoint based on the kid of the given JWT header.
 

@@ -18,7 +18,7 @@
 
 ▸ **fetchUser**(userEntityClass: *`Class`<`object`>*): `function`
 
-*Defined in [utils/fetch-user.util.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/utils/fetch-user.util.ts#L20)*
+*Defined in [utils/fetch-user.util.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/utils/fetch-user.util.ts#L20)*
 
 Create a function that finds the first entity that matches some id.
 

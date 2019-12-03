@@ -33,7 +33,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● encoding**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1097](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1097)*
+*Defined in [openapi/interfaces.ts:1097](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L1097)*
 
 A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The encoding object SHALL only apply to requestBody objects when the media type is multipart or application/x-www-form-urlencoded.
 
@@ -50,7 +50,7 @@ ___
 
 **● example**: *`any`*
 
-*Defined in [openapi/interfaces.ts:1067](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1067)*
+*Defined in [openapi/interfaces.ts:1067](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L1067)*
 
 Example of the media type. The example object SHOULD be in the correct format as specified by the media type. The example field is mutually exclusive of the examples field. Furthermore, if referencing a schema which contains an example, the example value SHALL override the example provided by the schema.
 
@@ -67,7 +67,7 @@ ___
 
 **● examples**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:1081](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1081)*
+*Defined in [openapi/interfaces.ts:1081](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L1081)*
 
 Examples of the media type. Each example object SHOULD match the media type and specified schema if present. The examples field is mutually exclusive of the example field. Furthermore, if referencing a schema which contains an example, the examples value SHALL override the example provided by the schema.
 
@@ -84,7 +84,7 @@ ___
 
 **● schema**: *[IApiSchema](_openapi_interfaces_.iapischema.md) \| [IApiReference](_openapi_interfaces_.iapireference.md)*
 
-*Defined in [openapi/interfaces.ts:1054](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L1054)*
+*Defined in [openapi/interfaces.ts:1054](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L1054)*
 
 The schema defining the content of the request, response, or parameter.
 

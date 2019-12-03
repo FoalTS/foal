@@ -18,7 +18,7 @@
 
 ▸ **TokenRequired**(options: *[TokenOptions](../interfaces/_sessions_token_hook_.tokenoptions.md)*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [sessions/token-required.hook.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token-required.hook.ts#L7)*
+*Defined in [sessions/token-required.hook.ts:9](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token-required.hook.ts#L9)*
 
 **Parameters:**
 

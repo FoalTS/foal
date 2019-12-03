@@ -27,7 +27,7 @@
 
 **● cookie**: *`undefined` \| `false` \| `true`*
 
-*Defined in [sessions/token.hook.ts:37](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L37)*
+*Defined in [sessions/token.hook.ts:39](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L39)*
 
 ___
 <a id="extendlifetimeorupdate"></a>
@@ -36,7 +36,7 @@ ___
 
 **● extendLifeTimeOrUpdate**: *`undefined` \| `false` \| `true`*
 
-*Defined in [sessions/token.hook.ts:40](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L40)*
+*Defined in [sessions/token.hook.ts:42](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L42)*
 
 ___
 <a id="openapi"></a>
@@ -45,7 +45,7 @@ ___
 
 **● openapi**: *`undefined` \| `false` \| `true`*
 
-*Defined in [sessions/token.hook.ts:39](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L39)*
+*Defined in [sessions/token.hook.ts:41](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L41)*
 
 ___
 <a id="redirectto"></a>
@@ -54,7 +54,7 @@ ___
 
 **● redirectTo**: *`undefined` \| `string`*
 
-*Defined in [sessions/token.hook.ts:38](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L38)*
+*Defined in [sessions/token.hook.ts:40](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L40)*
 
 ___
 <a id="store"></a>
@@ -63,7 +63,7 @@ ___
 
 **● store**: *[Class](../modules/_core_class_interface_.md#class)<[SessionStore](../classes/_sessions_session_store_.sessionstore.md)>*
 
-*Defined in [sessions/token.hook.ts:36](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L36)*
+*Defined in [sessions/token.hook.ts:38](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L38)*
 
 ___
 <a id="user"></a>
@@ -72,7 +72,7 @@ ___
 
 **● user**: *`undefined` \| `function`*
 
-*Defined in [sessions/token.hook.ts:35](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/token.hook.ts#L35)*
+*Defined in [sessions/token.hook.ts:37](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/token.hook.ts#L37)*
 
 ___
 

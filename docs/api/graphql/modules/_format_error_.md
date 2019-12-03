@@ -18,7 +18,7 @@
 
 ▸ **formatError**<`R`>(resolver: *`function`*, formatFunction?: *`function`*): `function`
 
-*Defined in [format-error.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/format-error.ts#L15)*
+*Defined in [format-error.ts:15](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/format-error.ts#L15)*
 
 Catch errors rejected and thrown to reject a new one.
 
@@ -39,7 +39,7 @@ Catch errors rejected and thrown to reject a new one.
 | `Default value` formatFunction | `function` |  maskAndLogError |
 
 **Returns:** `function`
-- The new function.
+*   The new function.
 
 ___
 

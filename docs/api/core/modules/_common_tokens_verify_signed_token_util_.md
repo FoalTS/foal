@@ -18,7 +18,7 @@
 
 ▸ **verifySignedToken**(signedToken: *`string`*, secret: *`string`*): `string` \| `false`
 
-*Defined in [common/tokens/verify-signed-token.util.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/tokens/verify-signed-token.util.ts#L19)*
+*Defined in [common/tokens/verify-signed-token.util.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/tokens/verify-signed-token.util.ts#L19)*
 
 Verify a base64-encoded (or base64url-encoded) signed token against a secret.
 

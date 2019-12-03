@@ -18,7 +18,7 @@
 
 ▸ **getApiSecurity**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): ([IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md) \| `function`)[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-security.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/metadata-getters/get-api-security.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-security.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/metadata-getters/get-api-security.ts#L5)*
 
 **Parameters:**
 

@@ -28,7 +28,7 @@
 
 **Ƭ HttpMethod**: *"POST" \| "GET" \| "PUT" \| "PATCH" \| "DELETE" \| "HEAD" \| "OPTIONS"*
 
-*Defined in [core/http/http-methods.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L7)*
+*Defined in [core/http/http-methods.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L7)*
 
 HTTP methods available.
 
@@ -42,7 +42,7 @@ ___
 
 ▸ **Delete**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:100](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L100)*
+*Defined in [core/http/http-methods.ts:100](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L100)*
 
 Decorator specifying that a controller method handles DELETE requests.
 
@@ -64,7 +64,7 @@ ___
 
 ▸ **Get**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:44](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L44)*
+*Defined in [core/http/http-methods.ts:44](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L44)*
 
 Decorator specifying that a controller method handles GET requests.
 
@@ -86,7 +86,7 @@ ___
 
 ▸ **Head**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L16)*
+*Defined in [core/http/http-methods.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L16)*
 
 Decorator specifying that a controller method handles HEAD requests.
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **Options**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L30)*
+*Defined in [core/http/http-methods.ts:30](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L30)*
 
 Decorator specifying that a controller method handles OPTIONS requests.
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **Patch**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:86](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L86)*
+*Defined in [core/http/http-methods.ts:86](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L86)*
 
 Decorator specifying that a controller method handles PATCH requests.
 
@@ -152,7 +152,7 @@ ___
 
 ▸ **Post**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:58](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L58)*
+*Defined in [core/http/http-methods.ts:58](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L58)*
 
 Decorator specifying that a controller method handles POST requests.
 
@@ -174,7 +174,7 @@ ___
 
 ▸ **Put**(path?: *`undefined` \| `string`*): `(Anonymous function)`
 
-*Defined in [core/http/http-methods.ts:72](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-methods.ts#L72)*
+*Defined in [core/http/http-methods.ts:72](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-methods.ts#L72)*
 
 Decorator specifying that a controller method handles PUT requests.
 

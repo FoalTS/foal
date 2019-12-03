@@ -22,7 +22,7 @@
 
 ▸ **escape**(str: *`string`*): `string`
 
-*Defined in [common/utils/escape.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L20)*
+*Defined in [common/utils/escape.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L20)*
 
 Escape a string following OWASP recommandations to prevent XSS attacks.
 
@@ -49,7 +49,7 @@ ___
 
 **escapeMap**: *`object`*
 
-*Defined in [common/utils/escape.ts:1](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L1)*
+*Defined in [common/utils/escape.ts:1](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L1)*
 
 <a id="escapemap._"></a>
 
@@ -57,7 +57,7 @@ ___
 
 **● &quot;**: *`string`* = "&quot;"
 
-*Defined in [common/utils/escape.ts:2](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L2)*
+*Defined in [common/utils/escape.ts:2](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L2)*
 
 ___
 <a id="escapemap._-1"></a>
@@ -66,7 +66,7 @@ ___
 
 **● &amp;**: *`string`* = "&amp;"
 
-*Defined in [common/utils/escape.ts:3](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L3)*
+*Defined in [common/utils/escape.ts:3](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L3)*
 
 ___
 <a id="escapemap._-2"></a>
@@ -75,7 +75,7 @@ ___
 
 **● &#x27;**: *`string`* = "&#x27;"
 
-*Defined in [common/utils/escape.ts:4](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L4)*
+*Defined in [common/utils/escape.ts:4](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L4)*
 
 ___
 <a id="escapemap._-3"></a>
@@ -84,7 +84,7 @@ ___
 
 **● /**: *`string`* = "&#x2F;"
 
-*Defined in [common/utils/escape.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L5)*
+*Defined in [common/utils/escape.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L5)*
 
 ___
 <a id="escapemap._-4"></a>
@@ -93,7 +93,7 @@ ___
 
 **● &lt;**: *`string`* = "&lt;"
 
-*Defined in [common/utils/escape.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L6)*
+*Defined in [common/utils/escape.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L6)*
 
 ___
 <a id="escapemap._-5"></a>
@@ -102,7 +102,7 @@ ___
 
 **● &gt;**: *`string`* = "&gt;"
 
-*Defined in [common/utils/escape.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape.ts#L7)*
+*Defined in [common/utils/escape.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape.ts#L7)*
 
 ___
 

@@ -18,7 +18,7 @@
 
 ▸ **createController**<`Controller`>(controllerClass: *[Class](_core_class_interface_.md#class)<`Controller`>*, dependencies?: *`object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `Controller`
 
-*Defined in [core/controllers.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/controllers.ts#L18)*
+*Defined in [core/controllers.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/controllers.ts#L18)*
 
 Create a new controller with its dependencies.
 

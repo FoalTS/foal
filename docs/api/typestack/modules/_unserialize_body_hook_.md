@@ -18,7 +18,7 @@
 
 ▸ **UnserializeBody**(cls: *`Class`*, options?: *`ClassTransformOptions`*): `HookDecorator`
 
-*Defined in [unserialize-body.hook.ts:4](https://github.com/FoalTS/foal/blob/538afb23/packages/typestack/src/unserialize-body.hook.ts#L4)*
+*Defined in [unserialize-body.hook.ts:4](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typestack/src/unserialize-body.hook.ts#L4)*
 
 **Parameters:**
 

@@ -61,7 +61,7 @@
 
 ▸ **createHttpResponseFile**(options: *`object`*): `Promise`<[HttpResponseOK](../classes/_core_http_http_responses_.httpresponseok.md)>
 
-*Defined in [core/http/http-responses.ts:287](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L287)*
+*Defined in [core/http/http-responses.ts:287](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L287)*
 
 Create an HttpResponseOK whose content is the specified file. If returned in a controller, the server sends the file in streaming.
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **isHttpResponse**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:177](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L177)*
+*Defined in [core/http/http-responses.ts:177](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L177)*
 
 Check if an object is an instance of HttpResponse.
 
@@ -111,7 +111,7 @@ ___
 
 ▸ **isHttpResponseBadRequest**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:635](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L635)*
+*Defined in [core/http/http-responses.ts:635](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L635)*
 
 Check if an object is an instance of HttpResponseBadRequest.
 
@@ -135,7 +135,7 @@ ___
 
 ▸ **isHttpResponseClientError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:589](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L589)*
+*Defined in [core/http/http-responses.ts:589](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L589)*
 
 Check if an object is an instance of HttpResponseClientError.
 
@@ -159,7 +159,7 @@ ___
 
 ▸ **isHttpResponseConflict**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:863](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L863)*
+*Defined in [core/http/http-responses.ts:863](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L863)*
 
 Check if an object is an instance of HttpResponseConflict.
 
@@ -183,7 +183,7 @@ ___
 
 ▸ **isHttpResponseCreated**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:359](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L359)*
+*Defined in [core/http/http-responses.ts:359](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L359)*
 
 Check if an object is an instance of HttpResponseCreated.
 
@@ -207,7 +207,7 @@ ___
 
 ▸ **isHttpResponseForbidden**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:727](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L727)*
+*Defined in [core/http/http-responses.ts:727](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L727)*
 
 Check if an object is an instance of HttpResponseForbidden.
 
@@ -231,7 +231,7 @@ ___
 
 ▸ **isHttpResponseInternalServerError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:950](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L950)*
+*Defined in [core/http/http-responses.ts:950](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L950)*
 
 Check if an object is an instance of HttpResponseInternalServerError.
 
@@ -255,7 +255,7 @@ ___
 
 ▸ **isHttpResponseMethodNotAllowed**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:818](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L818)*
+*Defined in [core/http/http-responses.ts:818](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L818)*
 
 Check if an object is an instance of HttpResponseMethodNotAllowed.
 
@@ -279,7 +279,7 @@ ___
 
 ▸ **isHttpResponseMovedPermanently**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:496](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L496)*
+*Defined in [core/http/http-responses.ts:496](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L496)*
 
 Check if an object is an instance of HttpResponseMovedPermanently.
 
@@ -303,7 +303,7 @@ ___
 
 ▸ **isHttpResponseNoContent**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:403](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L403)*
+*Defined in [core/http/http-responses.ts:403](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L403)*
 
 Check if an object is an instance of HttpResponseNoContent.
 
@@ -327,7 +327,7 @@ ___
 
 ▸ **isHttpResponseNotFound**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:772](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L772)*
+*Defined in [core/http/http-responses.ts:772](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L772)*
 
 Check if an object is an instance of HttpResponseNotFound.
 
@@ -351,7 +351,7 @@ ___
 
 ▸ **isHttpResponseNotImplemented**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:996](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L996)*
+*Defined in [core/http/http-responses.ts:996](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L996)*
 
 Check if an object is an instance of HttpResponseNotImplemented.
 
@@ -375,7 +375,7 @@ ___
 
 ▸ **isHttpResponseOK**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:268](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L268)*
+*Defined in [core/http/http-responses.ts:268](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L268)*
 
 Check if an object is an instance of HttpResponseOK.
 
@@ -399,7 +399,7 @@ ___
 
 ▸ **isHttpResponseRedirect**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:542](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L542)*
+*Defined in [core/http/http-responses.ts:542](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L542)*
 
 Check if an object is an instance of HttpResponseRedirect.
 
@@ -423,7 +423,7 @@ ___
 
 ▸ **isHttpResponseRedirection**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:450](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L450)*
+*Defined in [core/http/http-responses.ts:450](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L450)*
 
 Check if an object is an instance of HttpResponseRedirection.
 
@@ -447,7 +447,7 @@ ___
 
 ▸ **isHttpResponseServerError**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:904](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L904)*
+*Defined in [core/http/http-responses.ts:904](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L904)*
 
 Check if an object is an instance of HttpResponseServerError.
 
@@ -471,7 +471,7 @@ ___
 
 ▸ **isHttpResponseSuccess**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:223](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L223)*
+*Defined in [core/http/http-responses.ts:223](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L223)*
 
 Check if an object is an instance of HttpResponseSuccess.
 
@@ -495,7 +495,7 @@ ___
 
 ▸ **isHttpResponseUnauthorized**(obj: *`any`*): `boolean`
 
-*Defined in [core/http/http-responses.ts:682](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/http/http-responses.ts#L682)*
+*Defined in [core/http/http-responses.ts:682](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/http/http-responses.ts#L682)*
 
 Check if an object is an instance of HttpResponseUnauthorized.
 

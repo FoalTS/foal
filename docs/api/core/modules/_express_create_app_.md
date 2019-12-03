@@ -24,7 +24,7 @@
 
 ▸ **createAndInitApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstanceOrOptions?: *[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)*): `Promise`<[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)>
 
-*Defined in [express/create-app.ts:156](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-app.ts#L156)*
+*Defined in [express/create-app.ts:155](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L155)*
 
 Create an Express application from the root controller and call its "init" method if it exists.
 
@@ -47,7 +47,7 @@ ___
 
 ▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstanceOrOptions?: *[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)*): [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
 
-*Defined in [express/create-app.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-app.ts#L43)*
+*Defined in [express/create-app.ts:42](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L42)*
 
 Create an Express application from the root controller.
 

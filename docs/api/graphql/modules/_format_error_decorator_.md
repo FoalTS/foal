@@ -18,7 +18,7 @@
 
 ▸ **FormatError**(formatFunction?: *`function`*): `function`
 
-*Defined in [format-error.decorator.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/format-error.decorator.ts#L13)*
+*Defined in [format-error.decorator.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/format-error.decorator.ts#L13)*
 
 Catch errors rejected and thrown to reject a new one.
 

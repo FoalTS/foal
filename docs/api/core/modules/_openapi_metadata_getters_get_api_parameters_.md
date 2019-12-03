@@ -18,7 +18,7 @@
 
 ▸ **getApiParameters**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): ([IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| [IApiPathParameter](../interfaces/_openapi_interfaces_.iapipathparameter.md) \| [IApiQueryParameter](../interfaces/_openapi_interfaces_.iapiqueryparameter.md) \| [IApiHeaderParameter](../interfaces/_openapi_interfaces_.iapiheaderparameter.md) \| [IApiCookieParameter](../interfaces/_openapi_interfaces_.iapicookieparameter.md) \| `function`)[] \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-parameters.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/metadata-getters/get-api-parameters.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-parameters.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/metadata-getters/get-api-parameters.ts#L5)*
 
 **Parameters:**
 

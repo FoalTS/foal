@@ -22,7 +22,7 @@
 
 ▸ **ValidateBody**(cls: *`Class`*, options?: *[ValidateBodyOptions](../interfaces/_validate_body_hook_.validatebodyoptions.md)*): `HookDecorator`
 
-*Defined in [validate-body.hook.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/typestack/src/validate-body.hook.ts#L20)*
+*Defined in [validate-body.hook.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typestack/src/validate-body.hook.ts#L20)*
 
 Hook factory validating the request body against a validator class. It also transforms the request body into an instance of the class.
 

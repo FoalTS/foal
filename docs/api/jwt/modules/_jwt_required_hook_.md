@@ -18,7 +18,7 @@
 
 ▸ **JWTRequired**(options?: *[JWTOptions](../interfaces/_jwt_hook_.jwtoptions.md)*, verifyOptions?: *`VerifyOptions`*): `HookDecorator`
 
-*Defined in [jwt-required.hook.ts:34](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt-required.hook.ts#L34)*
+*Defined in [jwt-required.hook.ts:34](https://github.com/FoalTS/foal/blob/70cc46bd/packages/jwt/src/jwt-required.hook.ts#L34)*
 
 Hook factory to authenticate users using JSON Web Tokens.
 

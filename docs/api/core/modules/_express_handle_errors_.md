@@ -23,7 +23,7 @@
 **● page500**: *`string`* =  '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
                 + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>'
 
-*Defined in [express/handle-errors.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/handle-errors.ts#L6)*
+*Defined in [express/handle-errors.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/handle-errors.ts#L6)*
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 ▸ **handleErrors**(debug: *`boolean`*, logFn?: *`error`*): `(Anonymous function)`
 
-*Defined in [express/handle-errors.ts:17](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/handle-errors.ts#L17)*
+*Defined in [express/handle-errors.ts:17](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/handle-errors.ts#L17)*
 
 Create an express middleware to return a 500 HTML page if an error is thrown and is not caught.
 

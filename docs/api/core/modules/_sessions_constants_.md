@@ -22,7 +22,7 @@
 
 **● SESSION_DEFAULT_ABSOLUTE_TIMEOUT**: *`number`* =  7 * 24 * 60 * 60
 
-*Defined in [sessions/constants.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/constants.ts#L11)*
+*Defined in [sessions/constants.ts:11](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/constants.ts#L11)*
 
 ___
 <a id="session_default_cookie_http_only"></a>
@@ -31,7 +31,7 @@ ___
 
 **● SESSION_DEFAULT_COOKIE_HTTP_ONLY**: *`boolean`* = true
 
-*Defined in [sessions/constants.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/constants.ts#L6)*
+*Defined in [sessions/constants.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/constants.ts#L6)*
 
 ___
 <a id="session_default_cookie_name"></a>
@@ -40,7 +40,7 @@ ___
 
 **● SESSION_DEFAULT_COOKIE_NAME**: *`string`* = "sessionID"
 
-*Defined in [sessions/constants.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/constants.ts#L7)*
+*Defined in [sessions/constants.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/constants.ts#L7)*
 
 ___
 <a id="session_default_cookie_path"></a>
@@ -49,7 +49,7 @@ ___
 
 **● SESSION_DEFAULT_COOKIE_PATH**: *`string`* = "/"
 
-*Defined in [sessions/constants.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/constants.ts#L5)*
+*Defined in [sessions/constants.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/constants.ts#L5)*
 
 Sessions
 
@@ -60,7 +60,7 @@ ___
 
 **● SESSION_DEFAULT_INACTIVITY_TIMEOUT**: *`number`* =  15 * 60
 
-*Defined in [sessions/constants.ts:10](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/constants.ts#L10)*
+*Defined in [sessions/constants.ts:10](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/constants.ts#L10)*
 
 ___
 

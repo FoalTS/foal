@@ -22,7 +22,7 @@
 
 **● csrfToken**: *`undefined` \| `false` \| `true`*
 
-*Defined in [sessions/session-store.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/sessions/session-store.ts#L8)*
+*Defined in [sessions/session-store.ts:8](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/sessions/session-store.ts#L8)*
 
 ___
 

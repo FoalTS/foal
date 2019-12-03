@@ -43,7 +43,7 @@
 
 ▸ **AddMetadataItem**<`T`>(metadataKey: *`string`*, item: *`T`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L12)*
+*Defined in [openapi/decorators.ts:12](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L12)*
 
 **Type parameters:**
 
@@ -64,7 +64,7 @@ ___
 
 ▸ **AddMetadataProperty**(metadataKey: *`string`*, key: *`string`*, property: *`any`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L21)*
+*Defined in [openapi/decorators.ts:21](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L21)*
 
 **Parameters:**
 
@@ -83,7 +83,7 @@ ___
 
 ▸ **ApiCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:94](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L94)*
+*Defined in [openapi/decorators.ts:94](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L94)*
 
 **Parameters:**
 
@@ -101,7 +101,7 @@ ___
 
 ▸ **ApiDefineCallback**(key: *`string`*, callback: *[IApiCallback](../interfaces/_openapi_interfaces_.iapicallback.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:153](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L153)*
+*Defined in [openapi/decorators.ts:153](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L153)*
 
 **Parameters:**
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **ApiDefineExample**(key: *`string`*, example: *[IApiExample](../interfaces/_openapi_interfaces_.iapiexample.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:122](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L122)*
+*Defined in [openapi/decorators.ts:122](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L122)*
 
 **Parameters:**
 
@@ -137,7 +137,7 @@ ___
 
 ▸ **ApiDefineHeader**(key: *`string`*, header: *[IApiHeader](_openapi_interfaces_.md#iapiheader) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:134](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L134)*
+*Defined in [openapi/decorators.ts:134](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L134)*
 
 **Parameters:**
 
@@ -155,7 +155,7 @@ ___
 
 ▸ **ApiDefineLink**(key: *`string`*, link: *[IApiLink](../interfaces/_openapi_interfaces_.iapilink.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:147](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L147)*
+*Defined in [openapi/decorators.ts:147](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L147)*
 
 **Parameters:**
 
@@ -173,7 +173,7 @@ ___
 
 ▸ **ApiDefineParameter**(key: *`string`*, parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:116](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L116)*
+*Defined in [openapi/decorators.ts:116](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L116)*
 
 **Parameters:**
 
@@ -191,7 +191,7 @@ ___
 
 ▸ **ApiDefineRequestBody**(key: *`string`*, requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:128](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L128)*
+*Defined in [openapi/decorators.ts:128](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L128)*
 
 **Parameters:**
 
@@ -209,7 +209,7 @@ ___
 
 ▸ **ApiDefineResponse**(key: *`string`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:110](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L110)*
+*Defined in [openapi/decorators.ts:110](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L110)*
 
 **Parameters:**
 
@@ -227,7 +227,7 @@ ___
 
 ▸ **ApiDefineSchema**(key: *`string`*, schema: *[IApiSchema](../interfaces/_openapi_interfaces_.iapischema.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:104](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L104)*
+*Defined in [openapi/decorators.ts:104](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L104)*
 
 **Parameters:**
 
@@ -245,7 +245,7 @@ ___
 
 ▸ **ApiDefineSecurityScheme**(key: *`string`*, securityScheme: *[IApiSecurityScheme](_openapi_interfaces_.md#iapisecurityscheme) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:140](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L140)*
+*Defined in [openapi/decorators.ts:140](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L140)*
 
 **Parameters:**
 
@@ -263,7 +263,7 @@ ___
 
 ▸ **ApiDefineTag**(tag: *[IApiTag](../interfaces/_openapi_interfaces_.iapitag.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:57](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L57)*
+*Defined in [openapi/decorators.ts:57](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L57)*
 
 **Parameters:**
 
@@ -280,7 +280,7 @@ ___
 
 ▸ **ApiDeprecated**(deprecated?: *`boolean` \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:100](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L100)*
+*Defined in [openapi/decorators.ts:100](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L100)*
 
 **Parameters:**
 
@@ -297,7 +297,7 @@ ___
 
 ▸ **ApiExternalDoc**(externalDoc: *[IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:61](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L61)*
+*Defined in [openapi/decorators.ts:61](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L61)*
 
 **Parameters:**
 
@@ -314,7 +314,7 @@ ___
 
 ▸ **ApiInfo**(info: *[IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:31](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L31)*
+*Defined in [openapi/decorators.ts:31](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L31)*
 
 **Parameters:**
 
@@ -331,7 +331,7 @@ ___
 
 ▸ **ApiOperation**(operation: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:67](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L67)*
+*Defined in [openapi/decorators.ts:67](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L67)*
 
 **Parameters:**
 
@@ -348,7 +348,7 @@ ___
 
 ▸ **ApiOperationDescription**(description: *`string` \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:35](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L35)*
+*Defined in [openapi/decorators.ts:35](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L35)*
 
 **Parameters:**
 
@@ -365,7 +365,7 @@ ___
 
 ▸ **ApiOperationId**(operationId: *`string` \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:39](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L39)*
+*Defined in [openapi/decorators.ts:39](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L39)*
 
 **Parameters:**
 
@@ -382,7 +382,7 @@ ___
 
 ▸ **ApiOperationSummary**(summary: *`string` \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L43)*
+*Defined in [openapi/decorators.ts:43](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L43)*
 
 **Parameters:**
 
@@ -399,7 +399,7 @@ ___
 
 ▸ **ApiParameter**(parameter: *[IApiParameter](_openapi_interfaces_.md#iapiparameter) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:75](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L75)*
+*Defined in [openapi/decorators.ts:75](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L75)*
 
 **Parameters:**
 
@@ -416,7 +416,7 @@ ___
 
 ▸ **ApiRequestBody**(requestBody: *[IApiRequestBody](../interfaces/_openapi_interfaces_.iapirequestbody.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `function`
 
-*Defined in [openapi/decorators.ts:81](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L81)*
+*Defined in [openapi/decorators.ts:81](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L81)*
 
 **Parameters:**
 
@@ -433,7 +433,7 @@ ___
 
 ▸ **ApiResponse**(key: *"default" \| "1XX" \| "2XX" \| "3XX" \| "4XX" \| "5XX" \| `number`*, response: *[IApiResponse](../interfaces/_openapi_interfaces_.iapiresponse.md) \| [IApiReference](../interfaces/_openapi_interfaces_.iapireference.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:87](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L87)*
+*Defined in [openapi/decorators.ts:87](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L87)*
 
 **Parameters:**
 
@@ -451,7 +451,7 @@ ___
 
 ▸ **ApiSecurityRequirement**(securityRequirement: *[IApiSecurityRequirement](../interfaces/_openapi_interfaces_.iapisecurityrequirement.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:51](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L51)*
+*Defined in [openapi/decorators.ts:51](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L51)*
 
 **Parameters:**
 
@@ -468,7 +468,7 @@ ___
 
 ▸ **ApiServer**(server: *[IApiServer](../interfaces/_openapi_interfaces_.iapiserver.md) \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:47](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L47)*
+*Defined in [openapi/decorators.ts:47](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L47)*
 
 **Parameters:**
 
@@ -485,7 +485,7 @@ ___
 
 ▸ **ApiUseTag**(tag: *`string` \| `function`*): `(Anonymous function)`
 
-*Defined in [openapi/decorators.ts:71](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/decorators.ts#L71)*
+*Defined in [openapi/decorators.ts:71](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/decorators.ts#L71)*
 
 **Parameters:**
 

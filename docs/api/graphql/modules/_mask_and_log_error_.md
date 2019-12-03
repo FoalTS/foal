@@ -18,7 +18,7 @@
 
 ▸ **maskAndLogError**(err: *`any`*): `any`
 
-*Defined in [mask-and-log-error.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/mask-and-log-error.ts#L13)*
+*Defined in [mask-and-log-error.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/mask-and-log-error.ts#L13)*
 
 Log errors and mask them if the configuration key "settings.debug" is not true.
 

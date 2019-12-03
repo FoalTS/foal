@@ -20,7 +20,7 @@
 
 ▸ **createOpenApiDocument**(controllerClass: *[Class](_core_class_interface_.md#class)*, controllers?: *[ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): [IOpenAPI](../interfaces/_openapi_interfaces_.iopenapi.md)
 
-*Defined in [openapi/create-open-api-document.ts:99](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/create-open-api-document.ts#L99)*
+*Defined in [openapi/create-open-api-document.ts:99](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/create-open-api-document.ts#L99)*
 
 Create an OpenAPI document from a controller class.
 
@@ -43,7 +43,7 @@ ___
 
 ▸ **getPaths**(controllerClass: *[Class](_core_class_interface_.md#class)*, operation: *[IApiOperation](../interfaces/_openapi_interfaces_.iapioperation.md)*, controllers: *[ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `object`
 
-*Defined in [openapi/create-open-api-document.ts:28](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/create-open-api-document.ts#L28)*
+*Defined in [openapi/create-open-api-document.ts:28](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/create-open-api-document.ts#L28)*
 
 **Parameters:**
 
@@ -62,7 +62,7 @@ ___
 
 ▸ **throwErrorIfDuplicatePaths**(paths: *[IApiPaths](../interfaces/_openapi_interfaces_.iapipaths.md)*): `void`
 
-*Defined in [openapi/create-open-api-document.ts:9](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/create-open-api-document.ts#L9)*
+*Defined in [openapi/create-open-api-document.ts:9](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/create-open-api-document.ts#L9)*
 
 **Parameters:**
 

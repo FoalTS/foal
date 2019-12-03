@@ -22,7 +22,7 @@
 
 **● list**: *`string`[]*
 
-*Defined in [is-common.util.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/password/src/is-common.util.ts#L7)*
+*Defined in [is-common.util.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/password/src/is-common.util.ts#L7)*
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 ▸ **isCommon**(password: *`string`*): `Promise`<`boolean`>
 
-*Defined in [is-common.util.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/password/src/is-common.util.ts#L16)*
+*Defined in [is-common.util.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/password/src/is-common.util.ts#L16)*
 
 Test if a password belongs to a list of 10k common passwords.
 
@@ -47,7 +47,7 @@ Test if a password belongs to a list of 10k common passwords.
 | password | `string` |  The password to test. |
 
 **Returns:** `Promise`<`boolean`>
-- True if the password is found in the list. False otherwise.
+*   True if the password is found in the list. False otherwise.
 
 ___
 

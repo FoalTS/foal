@@ -18,7 +18,7 @@
 
 ▸ **escapeProp**(object: *`object`*, propName: *`string`*): `void`
 
-*Defined in [common/utils/escape-prop.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/utils/escape-prop.ts#L13)*
+*Defined in [common/utils/escape-prop.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/utils/escape-prop.ts#L13)*
 
 Escape a string property of an object following OWASP recommandations to prevent XSS attacks.
 

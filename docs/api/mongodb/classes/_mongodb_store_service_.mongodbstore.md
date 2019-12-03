@@ -49,7 +49,7 @@ MongoDB store.
 
 **● config**: *`Config`*
 
-*Defined in [mongodb-store.service.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L20)*
+*Defined in [mongodb-store.service.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L20)*
 
 ___
 <a id="mongodbclient"></a>
@@ -58,7 +58,7 @@ ___
 
 **● mongoDBClient**: *`MongoClient`*
 
-*Defined in [mongodb-store.service.ts:22](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L22)*
+*Defined in [mongodb-store.service.ts:22](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L22)*
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 *Overrides SessionStore.cleanUpExpiredSessions*
 
-*Defined in [mongodb-store.service.ts:95](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L95)*
+*Defined in [mongodb-store.service.ts:95](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L95)*
 
 **Returns:** `Promise`<`void`>
 
@@ -109,7 +109,7 @@ ___
 
 *Overrides SessionStore.clear*
 
-*Defined in [mongodb-store.service.ts:91](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L91)*
+*Defined in [mongodb-store.service.ts:91](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L91)*
 
 **Returns:** `Promise`<`void`>
 
@@ -122,7 +122,7 @@ ___
 
 *Overrides SessionStore.createAndSaveSession*
 
-*Defined in [mongodb-store.service.ts:24](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L24)*
+*Defined in [mongodb-store.service.ts:24](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L24)*
 
 **Parameters:**
 
@@ -172,7 +172,7 @@ ___
 
 *Overrides SessionStore.destroy*
 
-*Defined in [mongodb-store.service.ts:54](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L54)*
+*Defined in [mongodb-store.service.ts:54](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L54)*
 
 **Parameters:**
 
@@ -191,7 +191,7 @@ ___
 
 *Overrides SessionStore.extendLifeTime*
 
-*Defined in [mongodb-store.service.ts:80](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L80)*
+*Defined in [mongodb-store.service.ts:80](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L80)*
 
 **Parameters:**
 
@@ -226,7 +226,7 @@ ___
 
 ▸ **getMongoDBInstance**(): `Promise`<`MongoClient`>
 
-*Defined in [mongodb-store.service.ts:105](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L105)*
+*Defined in [mongodb-store.service.ts:105](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L105)*
 
 **Returns:** `Promise`<`MongoClient`>
 
@@ -237,7 +237,7 @@ ___
 
 ▸ **getSessionCollection**(): `Promise`<`Collection`>
 
-*Defined in [mongodb-store.service.ts:113](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L113)*
+*Defined in [mongodb-store.service.ts:113](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L113)*
 
 **Returns:** `Promise`<`Collection`>
 
@@ -250,7 +250,7 @@ ___
 
 *Overrides SessionStore.read*
 
-*Defined in [mongodb-store.service.ts:58](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L58)*
+*Defined in [mongodb-store.service.ts:58](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L58)*
 
 **Parameters:**
 
@@ -269,7 +269,7 @@ ___
 
 *Overrides SessionStore.update*
 
-*Defined in [mongodb-store.service.ts:39](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L39)*
+*Defined in [mongodb-store.service.ts:39](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L39)*
 
 **Parameters:**
 

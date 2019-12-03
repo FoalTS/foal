@@ -22,7 +22,7 @@
 
 ▸ **Log**(message: *`string`*, options?: *[LogOptions](../interfaces/_common_hooks_log_hook_.logoptions.md)*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/log.hook.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L32)*
+*Defined in [common/hooks/log.hook.ts:32](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L32)*
 
 Hook factory logging a message with optional information on the HTTP request.
 

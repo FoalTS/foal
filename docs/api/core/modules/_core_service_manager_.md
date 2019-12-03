@@ -28,7 +28,7 @@
 
 ▸ **createControllerOrService**<`ControllerOrService`>(controllerOrServiceClass: *[Class](_core_class_interface_.md#class)<`ControllerOrService`>*, dependencies?: *`object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `ControllerOrService`
 
-*Defined in [core/service-manager.ts:36](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/service-manager.ts#L36)*
+*Defined in [core/service-manager.ts:36](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/service-manager.ts#L36)*
 
 **Type parameters:**
 
@@ -49,7 +49,7 @@ ___
 
 ▸ **createService**<`Service`>(serviceClass: *[Class](_core_class_interface_.md#class)<`Service`>*, dependencies?: *`object` \| [ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): `Service`
 
-*Defined in [core/service-manager.ts:32](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/service-manager.ts#L32)*
+*Defined in [core/service-manager.ts:32](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/service-manager.ts#L32)*
 
 Create a new service with its dependencies.
 
@@ -77,7 +77,7 @@ ___
 
 ▸ **dependency**(target: *`any`*, propertyKey: *`string`*): `void`
 
-*Defined in [core/service-manager.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/service-manager.ts#L15)*
+*Defined in [core/service-manager.ts:15](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/service-manager.ts#L15)*
 
 Decorator injecting a service inside a controller or another service.
 
