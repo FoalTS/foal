@@ -2,11 +2,11 @@
 
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
 
-You will use the `ValidateBody` and `ValidateParams` hooks to validate and sanitize incoming data.
+You will use the `ValidateBody` and `ValidatePathParam` hooks to validate and sanitize incoming data.
 
 A *hook* is a decorator that is attached to a route handler (a controller method). It is executed before the method and is therefore particularly suitable for validation or access control.
 
-The `ValidateBody` and `ValidateParams` check respectively the `body` and `params` properties of the request object. They take a schema as unique argument.
+The `ValidateBody` and `ValidatePathParam` check respectively the `body` and `params` properties of the request object. They take a schema as unique argument.
 
 > FoalTS uses [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema validator, to define its schemas.
 
@@ -15,7 +15,7 @@ Let's add validation and sanitization to your application. In fact, you have alr
 ```typescript
 import {
   ...
-  ValidateBody, ValidateParams
+  ValidateBody, ValidatePathParam
 } from '@foal/core';
 
 export class ApiController {
@@ -46,12 +46,8 @@ export class ApiController {
   }
 
   @Delete('/todos/:id')
-  @ValidateParams({
-    properties: {
-      id: { type: 'string' }
-    },
-    type: 'object',
-  })
+  // The id should be a string. If it is not, the hook returns a "400 - Bad Request" error.
+  @ValidatePathParam('id', { type: 'string' })
   async deleteTodo(ctx: Context) {
     const todo = await Todo.findById(ctx.request.params.id);
     if (!todo) {

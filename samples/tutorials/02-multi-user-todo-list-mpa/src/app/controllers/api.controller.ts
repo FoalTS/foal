@@ -1,7 +1,7 @@
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  TokenRequired, ValidateBody, ValidateParams
+  TokenRequired, ValidateBody, ValidatePathParam
 } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -51,15 +51,8 @@ export class ApiController {
   }
 
   @Delete('/todos/:id')
-  @ValidateParams({
-    properties: {
-      // The id should be a number. If it is not (the request.params object
-      // always has string properties) the hook tries to convert it to a number
-      // before returning a "400 - Bad Request".
-      id: { type: 'number' }
-    },
-    type: 'object',
-  })
+  // The id should be a number. If it is not, the hook returns a "400 - Bad Request" error.
+  @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
     const todo = await getRepository(Todo).findOne({
