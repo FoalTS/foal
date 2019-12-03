@@ -1,7 +1,7 @@
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  ValidateBody, ValidateParams
+  ValidateBody, ValidatePathParam
 } from '@foal/core';
 
 import { Todo } from '../models';
@@ -41,12 +41,8 @@ export class ApiController {
   }
 
   @Delete('/todos/:id')
-  @ValidateParams({
-    properties: {
-      id: { type: 'string' }
-    },
-    type: 'object',
-  })
+  // The id should be a string. If it is not, the hook returns a "400 - Bad Request" error.
+  @ValidatePathParam('id', { type: 'string' })
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
     const todo = await Todo.findById(ctx.request.params.id);
