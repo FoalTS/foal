@@ -72,6 +72,6 @@ You've started the development server.
 >
 > You can define in `config/default.json` which port the application is using.
 
-Go to `http://localhost:3001` in your browser. You should see the text *Welcome to the future* <3.
+Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the text *Welcome to the future* <3.
 
 Congratulations, you now have a server running!
