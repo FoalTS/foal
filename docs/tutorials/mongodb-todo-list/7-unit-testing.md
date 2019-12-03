@@ -22,7 +22,7 @@ Then open the file `api.controller.spec.ts` and replace its content.
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { Config, createController, getHttpMethod, getPath, HttpResponseOK, isHttpResponseOK } from '@foal/core';
+import { Config, createController, getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
 import { connect, disconnect } from 'mongoose';
 
 // App
@@ -77,7 +77,7 @@ describe('ApiController', () => {
       const response = await controller.getTodos();
       ok(isHttpResponseOK(response), 'response should be an instance of HttpResponseOK.');
 
-      const body = (response as HttpResponseOK).body;
+      const body = response.body;
 
       ok(Array.isArray(body), 'The body of the response should be an array.');
       strictEqual(body[0].text, 'Todo 1');
