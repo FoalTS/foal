@@ -11,6 +11,8 @@ import { Session } from './session';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
+// TODO: Add missing documentation.
+
 class InvalidRequestResponse extends HttpResponseBadRequest {
 
   constructor(description: string) {
