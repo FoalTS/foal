@@ -113,16 +113,4 @@
 
 ## API Reference
 
-* [@foal/core](./api/core/README.md)
-* [@foal/csrf](./api/csrf/README.md)
-* [@foal/ejs](./api/ejs/README.md)
-* [@foal/formidable](./api/formidable/README.md)
-* [@foal/graphql](./api/graphql/README.md)
-* [@foal/jwks-rsa](./api/jwks-rsa/README.md)
-* [@foal/jwt](./api/jwt/README.md)
-* [@foal/mongodb](./api/mongodb/README.md)
-* [@foal/mongoose](./api/mongoose/README.md)
-* [@foal/password](./api/password/README.md)
-* [@foal/redis](./api/password/README.md)
-* [@foal/swagger](./api/swagger/README.md)
-* [@foal/typeorm](./api/typeorm/README.md)
+* [API reference](https://github.com/FoalTS/foal/tree/master/docs/api)
