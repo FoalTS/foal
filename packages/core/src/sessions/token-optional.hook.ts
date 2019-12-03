@@ -4,6 +4,8 @@ import { ApiDefineSecurityScheme, ApiResponse, IApiSecurityScheme } from '../ope
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { Token, TokenOptions } from './token.hook';
 
+// TODO: Add missing documentation.
+
 export function TokenOptional(options: TokenOptions): HookDecorator {
   return (target: any, propertyKey?: string) =>  {
     Token(false, options)(target, propertyKey);

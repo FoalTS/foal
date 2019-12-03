@@ -31,7 +31,7 @@
 
 **● ajv**: *`Ajv`* =  new Ajv()
 
-*Defined in [graphql.controller.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L30)*
+*Defined in [graphql.controller.ts:30](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L30)*
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 ▸ **sanitize**(o: *`object`*): `object`
 
-*Defined in [graphql.controller.ts:26](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L26)*
+*Defined in [graphql.controller.ts:26](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L26)*
 
 **Parameters:**
 
@@ -63,7 +63,7 @@ ___
 
 **getQuerySchema**: *`object`*
 
-*Defined in [graphql.controller.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L6)*
+*Defined in [graphql.controller.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L6)*
 
 <a id="getqueryschema.required"></a>
 
@@ -71,7 +71,7 @@ ___
 
 **● required**: *`string`[]* =  ['query']
 
-*Defined in [graphql.controller.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L12)*
+*Defined in [graphql.controller.ts:12](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L12)*
 
 ___
 <a id="getqueryschema.type"></a>
@@ -80,7 +80,7 @@ ___
 
 **● type**: *`string`* = "object"
 
-*Defined in [graphql.controller.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L13)*
+*Defined in [graphql.controller.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L13)*
 
 ___
 <a id="getqueryschema.properties"></a>
@@ -89,7 +89,7 @@ ___
 
 **properties**: *`object`*
 
-*Defined in [graphql.controller.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L7)*
+*Defined in [graphql.controller.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L7)*
 
 <a id="getqueryschema.properties.operationname"></a>
 
@@ -97,7 +97,7 @@ ___
 
 **operationName**: *`object`*
 
-*Defined in [graphql.controller.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L8)*
+*Defined in [graphql.controller.ts:8](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L8)*
 
 <a id="getqueryschema.properties.operationname.type-1"></a>
 
@@ -105,7 +105,7 @@ ___
 
 **● type**: *`string`* = "string"
 
-*Defined in [graphql.controller.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L8)*
+*Defined in [graphql.controller.ts:8](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L8)*
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 **query**: *`object`*
 
-*Defined in [graphql.controller.ts:9](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L9)*
+*Defined in [graphql.controller.ts:9](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L9)*
 
 <a id="getqueryschema.properties.query.type-2"></a>
 
@@ -124,7 +124,7 @@ ___
 
 **● type**: *`string`* = "string"
 
-*Defined in [graphql.controller.ts:9](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L9)*
+*Defined in [graphql.controller.ts:9](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L9)*
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 **variables**: *`object`*
 
-*Defined in [graphql.controller.ts:10](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L10)*
+*Defined in [graphql.controller.ts:10](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L10)*
 
 <a id="getqueryschema.properties.variables.type-3"></a>
 
@@ -143,7 +143,7 @@ ___
 
 **● type**: *`string`* = "string"
 
-*Defined in [graphql.controller.ts:10](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L10)*
+*Defined in [graphql.controller.ts:10](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L10)*
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 **postBodySchema**: *`object`*
 
-*Defined in [graphql.controller.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L16)*
+*Defined in [graphql.controller.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L16)*
 
 <a id="postbodyschema.required-1"></a>
 
@@ -166,7 +166,7 @@ ___
 
 **● required**: *`string`[]* =  ['query']
 
-*Defined in [graphql.controller.ts:22](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L22)*
+*Defined in [graphql.controller.ts:22](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L22)*
 
 ___
 <a id="postbodyschema.type-4"></a>
@@ -175,7 +175,7 @@ ___
 
 **● type**: *`string`* = "object"
 
-*Defined in [graphql.controller.ts:23](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L23)*
+*Defined in [graphql.controller.ts:23](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L23)*
 
 ___
 <a id="postbodyschema.properties-1"></a>
@@ -184,7 +184,7 @@ ___
 
 **properties**: *`object`*
 
-*Defined in [graphql.controller.ts:17](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L17)*
+*Defined in [graphql.controller.ts:17](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L17)*
 
 <a id="postbodyschema.properties-1.operationname-1"></a>
 
@@ -192,7 +192,7 @@ ___
 
 **operationName**: *`object`*
 
-*Defined in [graphql.controller.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L18)*
+*Defined in [graphql.controller.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L18)*
 
 <a id="postbodyschema.properties-1.operationname-1.type-5"></a>
 
@@ -200,7 +200,7 @@ ___
 
 **● type**: *`string`* = "string"
 
-*Defined in [graphql.controller.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L18)*
+*Defined in [graphql.controller.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L18)*
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 **query**: *`object`*
 
-*Defined in [graphql.controller.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L19)*
+*Defined in [graphql.controller.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L19)*
 
 <a id="postbodyschema.properties-1.query-1.type-6"></a>
 
@@ -219,7 +219,7 @@ ___
 
 **● type**: *`string`* = "string"
 
-*Defined in [graphql.controller.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L19)*
+*Defined in [graphql.controller.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L19)*
 
 ___
 
@@ -230,15 +230,15 @@ ___
 
 **variables**: *`object`*
 
-*Defined in [graphql.controller.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L20)*
+*Defined in [graphql.controller.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L20)*
 
 <a id="postbodyschema.properties-1.variables-1.type-7"></a>
 
 ####  type
 
-**● type**: *`string`* = "object"
+**● type**: *`string`[]* =  ['object', 'null']
 
-*Defined in [graphql.controller.ts:20](https://github.com/FoalTS/foal/blob/538afb23/packages/graphql/src/graphql.controller.ts#L20)*
+*Defined in [graphql.controller.ts:20](https://github.com/FoalTS/foal/blob/70cc46bd/packages/graphql/src/graphql.controller.ts#L20)*
 
 ___
 

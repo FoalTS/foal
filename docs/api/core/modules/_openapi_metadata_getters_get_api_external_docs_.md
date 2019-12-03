@@ -18,7 +18,7 @@
 
 ▸ **getApiExternalDocs**(controllerClass: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): [IApiExternalDocumentation](../interfaces/_openapi_interfaces_.iapiexternaldocumentation.md) \| `function` \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-external-docs.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/metadata-getters/get-api-external-docs.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-external-docs.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/metadata-getters/get-api-external-docs.ts#L5)*
 
 **Parameters:**
 

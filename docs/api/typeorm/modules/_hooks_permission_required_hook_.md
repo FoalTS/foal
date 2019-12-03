@@ -18,7 +18,7 @@
 
 ▸ **PermissionRequired**(perm: *`string`*, options?: *`object`*): `HookDecorator`
 
-*Defined in [hooks/permission-required.hook.ts:23](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/hooks/permission-required.hook.ts#L23)*
+*Defined in [hooks/permission-required.hook.ts:23](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/hooks/permission-required.hook.ts#L23)*
 
 Hook factory to check if a user can access a route based on their permissions.
 
@@ -39,7 +39,7 @@ The name of the permission.
 | `Optional` redirect | `undefined` \| `string` |  Optional URL path to redirect users that do not have the right permission. |
 
 **Returns:** `HookDecorator`
-- The hook.
+*   The hook.
 
 ___
 

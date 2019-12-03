@@ -35,7 +35,7 @@ my-app/
     scripts/
   package.json
   tsconfig.*.json
-  tslint.json
+  .eslintrc.js
 ```
 
 The outer `my-app` root directory is just a container for your project.
@@ -48,7 +48,7 @@ The outer `my-app` root directory is just a container for your project.
   - The inner `scripts/` folder contains scripts intended to be called from the command line (ex: create-user).
 - The `package.json` lists the dependencies and commands of the project.
 - The `tsconfig.*.json` files list the TypeScript compiler configuration for each `npm` command.
-- Finally the linting configuration can be found in the `tslint.json` file.
+- Finally the linting configuration can be found in the `.eslintrc.js` file.
 
 > **TypeScript**
 >

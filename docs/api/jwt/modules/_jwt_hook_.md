@@ -27,7 +27,7 @@
 
 ▸ **JWT**(required: *`boolean`*, options: *[JWTOptions](../interfaces/_jwt_hook_.jwtoptions.md)*, verifyOptions: *`VerifyOptions`*): `HookDecorator`
 
-*Defined in [jwt.hook.ts:61](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L61)*
+*Defined in [jwt.hook.ts:61](https://github.com/FoalTS/foal/blob/70cc46bd/packages/jwt/src/jwt.hook.ts#L61)*
 
 Sub-function used by JWTRequired and JWTOptional to avoid code duplication.
 

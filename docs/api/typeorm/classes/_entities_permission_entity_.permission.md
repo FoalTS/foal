@@ -30,7 +30,7 @@ Entity representing a permission.
 
 **● codeName**: *`string`*
 
-*Defined in [entities/permission.entity.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/entities/permission.entity.ts#L19)*
+*Defined in [entities/permission.entity.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/entities/permission.entity.ts#L19)*
 
 ___
 <a id="id"></a>
@@ -39,7 +39,7 @@ ___
 
 **● id**: *`number`*
 
-*Defined in [entities/permission.entity.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/entities/permission.entity.ts#L13)*
+*Defined in [entities/permission.entity.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/entities/permission.entity.ts#L13)*
 
 ___
 <a id="name"></a>
@@ -48,7 +48,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [entities/permission.entity.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/entities/permission.entity.ts#L16)*
+*Defined in [entities/permission.entity.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/entities/permission.entity.ts#L16)*
 
 ___
 

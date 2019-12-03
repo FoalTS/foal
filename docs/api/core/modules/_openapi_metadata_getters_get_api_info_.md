@@ -18,7 +18,7 @@
 
 ▸ **getApiInfo**(controllerClass: *[Class](_core_class_interface_.md#class)*): [IApiInfo](../interfaces/_openapi_interfaces_.iapiinfo.md) \| `function` \| `undefined`
 
-*Defined in [openapi/metadata-getters/get-api-info.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/metadata-getters/get-api-info.ts#L5)*
+*Defined in [openapi/metadata-getters/get-api-info.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/metadata-getters/get-api-info.ts#L5)*
 
 **Parameters:**
 

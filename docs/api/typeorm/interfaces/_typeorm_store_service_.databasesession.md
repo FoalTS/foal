@@ -25,7 +25,7 @@
 
 **● created_at**: *`string`*
 
-*Defined in [typeorm-store.service.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L7)*
+*Defined in [typeorm-store.service.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/typeorm-store.service.ts#L7)*
 
 ___
 <a id="session_content"></a>
@@ -34,7 +34,7 @@ ___
 
 **● session_content**: *`string`*
 
-*Defined in [typeorm-store.service.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L6)*
+*Defined in [typeorm-store.service.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/typeorm-store.service.ts#L6)*
 
 ___
 <a id="session_id"></a>
@@ -43,7 +43,7 @@ ___
 
 **● session_id**: *`string`*
 
-*Defined in [typeorm-store.service.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L5)*
+*Defined in [typeorm-store.service.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/typeorm-store.service.ts#L5)*
 
 ___
 <a id="updated_at"></a>
@@ -52,7 +52,7 @@ ___
 
 **● updated_at**: *`string`*
 
-*Defined in [typeorm-store.service.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/typeorm/src/typeorm-store.service.ts#L8)*
+*Defined in [typeorm-store.service.ts:8](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typeorm/src/typeorm-store.service.ts#L8)*
 
 ___
 

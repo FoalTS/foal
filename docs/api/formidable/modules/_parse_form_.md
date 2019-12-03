@@ -18,7 +18,7 @@
 
 ▸ **parseForm**(form: *`IncomingForm`*, ctx: *`Context`*): `Promise`<`object`>
 
-*Defined in [parse-form.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/formidable/src/parse-form.ts#L13)*
+*Defined in [parse-form.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/formidable/src/parse-form.ts#L13)*
 
 Promisify IncomingForm.parse.
 
@@ -32,7 +32,7 @@ Promisify IncomingForm.parse.
 | ctx | `Context` |  The Context instance. |
 
 **Returns:** `Promise`<`object`>
->} The fields and files inside an object.
+> } The fields and files inside an object.
 
 ___
 

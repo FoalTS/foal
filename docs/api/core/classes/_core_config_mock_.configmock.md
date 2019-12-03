@@ -40,7 +40,7 @@ Mock the Config class when it is used as a service.
 
 **● map**: *`Map`<`string`, `any`>* =  new Map()
 
-*Defined in [core/config-mock.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config-mock.ts#L12)*
+*Defined in [core/config-mock.ts:12](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/config-mock.ts#L12)*
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 ▸ **get**<`T`>(key: *`string`*, defaultValue?: *`T` \| `undefined`*): `T`
 
-*Defined in [core/config-mock.ts:34](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config-mock.ts#L34)*
+*Defined in [core/config-mock.ts:34](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/config-mock.ts#L34)*
 
 Return the config value previously given with ConfigMock.set.
 
@@ -80,7 +80,7 @@ ___
 
 ▸ **reset**(): `void`
 
-*Defined in [core/config-mock.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config-mock.ts#L43)*
+*Defined in [core/config-mock.ts:43](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/config-mock.ts#L43)*
 
 Clear every config value previously given with Config.set.
 
@@ -95,7 +95,7 @@ ___
 
 ▸ **set**(key: *`string`*, value: *`any`*): `void`
 
-*Defined in [core/config-mock.ts:21](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/config-mock.ts#L21)*
+*Defined in [core/config-mock.ts:21](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/config-mock.ts#L21)*
 
 Set an configuration variable.
 

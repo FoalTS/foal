@@ -48,7 +48,7 @@ Redis Store
 
 **● config**: *`Config`*
 
-*Defined in [redis-store.service.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L14)*
+*Defined in [redis-store.service.ts:14](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L14)*
 
 ___
 <a id="redisclient"></a>
@@ -57,7 +57,7 @@ ___
 
 **● redisClient**: *`any`*
 
-*Defined in [redis-store.service.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L16)*
+*Defined in [redis-store.service.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L16)*
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 *Overrides SessionStore.cleanUpExpiredSessions*
 
-*Defined in [redis-store.service.ts:110](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L110)*
+*Defined in [redis-store.service.ts:110](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L110)*
 
 **Returns:** `Promise`<`void`>
 
@@ -108,7 +108,7 @@ ___
 
 *Overrides SessionStore.clear*
 
-*Defined in [redis-store.service.ts:99](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L99)*
+*Defined in [redis-store.service.ts:99](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L99)*
 
 **Returns:** `Promise`<`void`>
 
@@ -121,7 +121,7 @@ ___
 
 *Overrides SessionStore.createAndSaveSession*
 
-*Defined in [redis-store.service.ts:18](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L18)*
+*Defined in [redis-store.service.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L18)*
 
 **Parameters:**
 
@@ -171,7 +171,7 @@ ___
 
 *Overrides SessionStore.destroy*
 
-*Defined in [redis-store.service.ts:51](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L51)*
+*Defined in [redis-store.service.ts:51](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L51)*
 
 **Parameters:**
 
@@ -190,7 +190,7 @@ ___
 
 *Overrides SessionStore.extendLifeTime*
 
-*Defined in [redis-store.service.ts:86](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L86)*
+*Defined in [redis-store.service.ts:86](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L86)*
 
 **Parameters:**
 
@@ -225,7 +225,7 @@ ___
 
 ▸ **getRedisInstance**(): `any`
 
-*Defined in [redis-store.service.ts:112](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L112)*
+*Defined in [redis-store.service.ts:112](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L112)*
 
 **Returns:** `any`
 
@@ -238,7 +238,7 @@ ___
 
 *Overrides SessionStore.read*
 
-*Defined in [redis-store.service.ts:62](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L62)*
+*Defined in [redis-store.service.ts:62](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L62)*
 
 **Parameters:**
 
@@ -257,7 +257,7 @@ ___
 
 *Overrides SessionStore.update*
 
-*Defined in [redis-store.service.ts:37](https://github.com/FoalTS/foal/blob/538afb23/packages/redis/src/redis-store.service.ts#L37)*
+*Defined in [redis-store.service.ts:37](https://github.com/FoalTS/foal/blob/70cc46bd/packages/redis/src/redis-store.service.ts#L37)*
 
 **Parameters:**
 

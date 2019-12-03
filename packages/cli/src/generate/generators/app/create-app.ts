@@ -1,5 +1,6 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
+import { existsSync, mkdirSync } from 'fs';
 
 // 3p
 import { cyan, red } from 'colors/safe';
@@ -9,7 +10,6 @@ import {
   Generator,
   getNames,
   initGitRepo,
-  mkdirIfDoesNotExist,
 } from '../../utils';
 
 function isYarnInstalled() {
@@ -84,11 +84,17 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
      // Validating whether if the project-name follows npm naming conventions
   if (!validateProjectName(name)) {
     console.log(
-      red(`\n ${red(`${name} doesn't follow the npm naming conventions. Kindly give a vaild project-name`)}`)
+      red(`\n ${name} doesn't follow the npm naming conventions. Kindly give a valid project-name.`)
     );
     return;
   }
-  mkdirIfDoesNotExist(names.kebabName);
+  if (existsSync(names.kebabName)) {
+    console.log(
+      red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
+    );
+    return;
+  }
+  mkdirSync(names.kebabName);
 
   log('  📂 Creating files...');
   const generator = new Generator('app', names.kebabName, { noLogs: true });
@@ -106,7 +112,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .copyFileFromTemplatesOnlyIf(!mongodb, 'tsconfig.migrations.json')
     .copyFileFromTemplates('tsconfig.scripts.json')
     .copyFileFromTemplates('tsconfig.test.json')
-    .copyFileFromTemplates('tslint.json')
+    .copyFileFromTemplates('.eslintrc.js')
       // Config
       .mkdirIfDoesNotExist('config')
       .renderTemplateOnlyIf(!mongodb && !yaml, 'config/default.json', locals)
@@ -166,9 +172,9 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
         .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
 
-  log('');
-  log('  📦 Installing the dependencies...');
   if (autoInstall) {
+    log('');
+    log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
     const args = [ 'install' ];
     const options: SpawnOptions = {
@@ -188,16 +194,18 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     });
   }
 
-  log('  📔 Initializing git repository...');
   if (initRepo) {
+    log('  📔 Initializing git repository...');
     await initGitRepo(names.kebabName);
   }
 
   log(`
   👉 Run the following commands to get started:
 
-    $ ${cyan(`cd ${names.kebabName}`)}
-    $ ${cyan('npm run develop')}
-`
+` + [
+  `cd ${names.kebabName}`,
+  ...(autoInstall ? [] : [`npm install`]),
+  'npm run develop'
+].map(cmd => '    $ ' + cyan(cmd)).join('\n') + '\n'
   );
 }

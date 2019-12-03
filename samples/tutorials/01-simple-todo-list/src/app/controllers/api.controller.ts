@@ -53,7 +53,7 @@ export class ApiController {
   })
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
-    const todo = await getRepository(Todo).findOne({ id: (ctx.request.params as any).id });
+    const todo = await getRepository(Todo).findOne({ id: +ctx.request.params.id });
 
     // Return a 404 Not Found response if no such todo exists.
     if (!todo) {

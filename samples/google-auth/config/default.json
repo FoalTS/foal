@@ -1,0 +1,13 @@
+{
+  "port": 3001,
+  "settings": {
+    "csrf": false,
+    "debug": false,
+    "loggerFormat": "tiny",
+    "staticPath": "public/"
+  },
+  "database": {
+    "database": "./db.sqlite3",
+    "synchronize": false
+  }
+}

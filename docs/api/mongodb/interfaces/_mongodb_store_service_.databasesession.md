@@ -25,7 +25,7 @@
 
 **● _id**: *`string`*
 
-*Defined in [mongodb-store.service.ts:5](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L5)*
+*Defined in [mongodb-store.service.ts:5](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L5)*
 
 ___
 <a id="createdat"></a>
@@ -34,7 +34,7 @@ ___
 
 **● createdAt**: *`number`*
 
-*Defined in [mongodb-store.service.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L7)*
+*Defined in [mongodb-store.service.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L7)*
 
 ___
 <a id="sessioncontent"></a>
@@ -43,7 +43,7 @@ ___
 
 **● sessionContent**: *`object`*
 
-*Defined in [mongodb-store.service.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L6)*
+*Defined in [mongodb-store.service.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L6)*
 
 ___
 <a id="updatedat"></a>
@@ -52,7 +52,7 @@ ___
 
 **● updatedAt**: *`number`*
 
-*Defined in [mongodb-store.service.ts:8](https://github.com/FoalTS/foal/blob/538afb23/packages/mongodb/src/mongodb-store.service.ts#L8)*
+*Defined in [mongodb-store.service.ts:8](https://github.com/FoalTS/foal/blob/70cc46bd/packages/mongodb/src/mongodb-store.service.ts#L8)*
 
 ___
 

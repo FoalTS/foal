@@ -19,7 +19,7 @@
 
 ▸ **getMethods**(obj: *`object` \| `null`*): `string`[]
 
-*Defined in [core/routes/make-controller-routes.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/make-controller-routes.ts#L14)*
+*Defined in [core/routes/make-controller-routes.ts:14](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/make-controller-routes.ts#L14)*
 
 Recursively get the property names of an object and its prototypes.
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **makeControllerRoutes**(parentPath: *`string`*, parentHooks: *[HookFunction](_core_hooks_.md#hookfunction)[]*, controllerClass: *[Class](_core_class_interface_.md#class)*, services: *[ServiceManager](../classes/_core_service_manager_.servicemanager.md)*): [Route](../interfaces/_core_routes_route_interface_.route.md)[]
 
-*Defined in [core/routes/make-controller-routes.ts:30](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/make-controller-routes.ts#L30)*
+*Defined in [core/routes/make-controller-routes.ts:30](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/make-controller-routes.ts#L30)*
 
 Recursively create the routes of a controller and its subcontrollers from the controller class definition.
 

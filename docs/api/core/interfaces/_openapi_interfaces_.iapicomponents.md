@@ -38,7 +38,7 @@ Source: [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2
 
 **● callbacks**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:447](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L447)*
+*Defined in [openapi/interfaces.ts:447](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L447)*
 
 An object to hold reusable Callback Objects.
 
@@ -55,7 +55,7 @@ ___
 
 **● examples**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:382](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L382)*
+*Defined in [openapi/interfaces.ts:382](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L382)*
 
 An object to hold reusable Example Objects.
 
@@ -72,7 +72,7 @@ ___
 
 **● headers**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:408](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L408)*
+*Defined in [openapi/interfaces.ts:408](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L408)*
 
 An object to hold reusable Header Objects.
 
@@ -89,7 +89,7 @@ ___
 
 **● links**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:434](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L434)*
+*Defined in [openapi/interfaces.ts:434](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L434)*
 
 An object to hold reusable Link Objects.
 
@@ -106,7 +106,7 @@ ___
 
 **● parameters**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:369](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L369)*
+*Defined in [openapi/interfaces.ts:369](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L369)*
 
 An object to hold reusable Parameter Objects.
 
@@ -123,7 +123,7 @@ ___
 
 **● requestBodies**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:395](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L395)*
+*Defined in [openapi/interfaces.ts:395](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L395)*
 
 An object to hold reusable Request Body Objects.
 
@@ -140,7 +140,7 @@ ___
 
 **● responses**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:356](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L356)*
+*Defined in [openapi/interfaces.ts:356](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L356)*
 
 An object to hold reusable Response Objects.
 
@@ -157,7 +157,7 @@ ___
 
 **● schemas**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:343](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L343)*
+*Defined in [openapi/interfaces.ts:343](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L343)*
 
 An object to hold reusable Schema Objects.
 
@@ -174,7 +174,7 @@ ___
 
 **● securitySchemes**: *`undefined` \| `object`*
 
-*Defined in [openapi/interfaces.ts:421](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/interfaces.ts#L421)*
+*Defined in [openapi/interfaces.ts:421](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/interfaces.ts#L421)*
 
 An object to hold reusable Security Scheme Objects.
 

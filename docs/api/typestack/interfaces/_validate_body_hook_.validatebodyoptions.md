@@ -23,7 +23,7 @@
 
 **● transformer**: *`ClassTransformOptions`*
 
-*Defined in [validate-body.hook.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/typestack/src/validate-body.hook.ts#L6)*
+*Defined in [validate-body.hook.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typestack/src/validate-body.hook.ts#L6)*
 
 ___
 <a id="validator"></a>
@@ -32,7 +32,7 @@ ___
 
 **● validator**: *`ValidatorOptions`*
 
-*Defined in [validate-body.hook.ts:7](https://github.com/FoalTS/foal/blob/538afb23/packages/typestack/src/validate-body.hook.ts#L7)*
+*Defined in [validate-body.hook.ts:7](https://github.com/FoalTS/foal/blob/70cc46bd/packages/typestack/src/validate-body.hook.ts#L7)*
 
 ___
 

@@ -18,7 +18,7 @@
 
 **Ƭ Dynamic**: *`object`*
 
-*Defined in [openapi/utils/dynamic.type.ts:6](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/openapi/utils/dynamic.type.ts#L6)*
+*Defined in [openapi/utils/dynamic.type.ts:6](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/openapi/utils/dynamic.type.ts#L6)*
 
 Make every property of T accept a function.
 

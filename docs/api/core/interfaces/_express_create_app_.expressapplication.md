@@ -2,6 +2,10 @@
 
 # Interface: ExpressApplication
 
+## Type parameters
+#### P :  `Params`
+#### ResBody 
+#### ReqBody 
 ## Hierarchy
 
  `Express`
@@ -11,9 +15,9 @@
 ## Callable
 ▸ **__call**(req: *`Request` \| `IncomingMessage`*, res: *`Response` \| `ServerResponse`*): `any`
 
-▸ **__call**(req: *`Request`*, res: *`Response`*, next: *`NextFunction`*): `any`
+▸ **__call**(req: *`Request`<`P`, `ResBody`, `ReqBody`>*, res: *`Response`<`ResBody`>*, next: *`NextFunction`*): `any`
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:852*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:874*
 
 Express instance itself is a request handler, which could be invoked without third argument.
 
@@ -26,14 +30,14 @@ Express instance itself is a request handler, which could be invoked without thi
 
 **Returns:** `any`
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:34*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:41*
 
 **Parameters:**
 
 | Name | Type |
 | ------ | ------ |
-| req | `Request` |
-| res | `Response` |
+| req | `Request`<`P`, `ResBody`, `ReqBody`> |
+| res | `Response`<`ResBody`> |
 | next | `NextFunction` |
 
 **Returns:** `any`
@@ -130,7 +134,7 @@ Express instance itself is a request handler, which could be invoked without thi
 
 *Inherited from Application._router*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1030*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1052*
 
 Used to get all registered routes in Express Application
 
@@ -143,7 +147,7 @@ ___
 
 *Inherited from IRouter.all*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:96*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:109*
 
 Special-cased "all" method, applying the given route `path`, middleware, and callback to _every_ HTTP method.
 
@@ -156,7 +160,7 @@ ___
 
 *Inherited from IRouter.checkout*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:105*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:118*
 
 ___
 <a id="connect"></a>
@@ -167,7 +171,7 @@ ___
 
 *Inherited from IRouter.connect*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:106*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:119*
 
 ___
 <a id="copy"></a>
@@ -178,7 +182,7 @@ ___
 
 *Inherited from IRouter.copy*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:107*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:120*
 
 ___
 <a id="delete"></a>
@@ -189,7 +193,7 @@ ___
 
 *Inherited from IRouter.delete*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:100*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:113*
 
 ___
 <a id="get"></a>
@@ -202,7 +206,7 @@ ___
 
 *Overrides IRouter.get*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:916*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:938*
 
 ___
 <a id="head"></a>
@@ -213,7 +217,7 @@ ___
 
 *Inherited from IRouter.head*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:103*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:116*
 
 ___
 <a id="locals"></a>
@@ -224,7 +228,7 @@ ___
 
 *Inherited from Application.locals*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1015*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1037*
 
 ___
 <a id="lock"></a>
@@ -235,7 +239,7 @@ ___
 
 *Inherited from IRouter.lock*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:108*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:121*
 
 ___
 <a id="m_search"></a>
@@ -246,7 +250,7 @@ ___
 
 *Inherited from IRouter.&amp;quot;m-search&amp;quot;*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:113*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:126*
 
 ___
 <a id="map"></a>
@@ -257,7 +261,7 @@ ___
 
 *Inherited from Application.map*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1013*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1035*
 
 ___
 <a id="merge"></a>
@@ -268,7 +272,7 @@ ___
 
 *Inherited from IRouter.merge*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:109*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:122*
 
 ___
 <a id="mkactivity"></a>
@@ -279,7 +283,7 @@ ___
 
 *Inherited from IRouter.mkactivity*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:110*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:123*
 
 ___
 <a id="mkcol"></a>
@@ -290,7 +294,7 @@ ___
 
 *Inherited from IRouter.mkcol*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:111*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:124*
 
 ___
 <a id="mountpath"></a>
@@ -301,7 +305,7 @@ ___
 
 *Inherited from Application.mountpath*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1048*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1070*
 
 The app.mountpath property contains one or more path patterns on which a sub-app was mounted.
 
@@ -314,7 +318,7 @@ ___
 
 *Inherited from IRouter.move*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:112*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:125*
 
 ___
 <a id="notify"></a>
@@ -325,7 +329,7 @@ ___
 
 *Inherited from IRouter.notify*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:114*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:127*
 
 ___
 <a id="on"></a>
@@ -338,7 +342,7 @@ ___
 
 *Overrides EventEmitter.on*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1043*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1065*
 
 The mount event is fired on a sub-app, when it is mounted on a parent app. The parent app is passed to the callback function.
 
@@ -368,7 +372,7 @@ ___
 
 *Inherited from IRouter.options*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:102*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:115*
 
 ___
 <a id="patch"></a>
@@ -379,7 +383,7 @@ ___
 
 *Inherited from IRouter.patch*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:101*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:114*
 
 ___
 <a id="post"></a>
@@ -390,7 +394,7 @@ ___
 
 *Inherited from IRouter.post*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:98*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:111*
 
 ___
 <a id="propfind"></a>
@@ -401,7 +405,7 @@ ___
 
 *Inherited from IRouter.propfind*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:115*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:128*
 
 ___
 <a id="proppatch"></a>
@@ -412,7 +416,7 @@ ___
 
 *Inherited from IRouter.proppatch*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:116*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:129*
 
 ___
 <a id="purge"></a>
@@ -423,7 +427,7 @@ ___
 
 *Inherited from IRouter.purge*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:117*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:130*
 
 ___
 <a id="put"></a>
@@ -434,7 +438,7 @@ ___
 
 *Inherited from IRouter.put*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:99*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:112*
 
 ___
 <a id="report"></a>
@@ -445,7 +449,7 @@ ___
 
 *Inherited from IRouter.report*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:118*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:131*
 
 ___
 <a id="request"></a>
@@ -456,7 +460,7 @@ ___
 
 *Inherited from Express.request*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1052*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1074*
 
 ___
 <a id="resource"></a>
@@ -467,7 +471,7 @@ ___
 
 *Inherited from Application.resource*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1011*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1033*
 
 ___
 <a id="response"></a>
@@ -478,7 +482,7 @@ ___
 
 *Inherited from Express.response*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1053*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1075*
 
 ___
 <a id="router"></a>
@@ -489,7 +493,7 @@ ___
 
 *Inherited from Application.router*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1007*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1029*
 
 ___
 <a id="routes"></a>
@@ -500,7 +504,7 @@ ___
 
 *Inherited from Application.routes*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1025*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1047*
 
 The app.routes object houses all of the routes defined mapped by the associated HTTP verb. This object may be used for introspection capabilities, for example Express uses this internally not only for routing but to provide default OPTIONS behaviour unless app.options() is used. Your application or framework may also remove routes by simply by removing them from this object.
 
@@ -513,7 +517,7 @@ ___
 
 *Inherited from IRouter.search*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:119*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:132*
 
 ___
 <a id="settings"></a>
@@ -524,7 +528,7 @@ ___
 
 *Inherited from Application.settings*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1009*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1031*
 
 ___
 <a id="stack"></a>
@@ -535,7 +539,7 @@ ___
 
 *Inherited from IRouter.stack*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:131*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:144*
 
 Stack of configured routes
 
@@ -548,7 +552,7 @@ ___
 
 *Inherited from IRouter.subscribe*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:120*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:133*
 
 ___
 <a id="trace"></a>
@@ -559,7 +563,7 @@ ___
 
 *Inherited from IRouter.trace*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:121*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:134*
 
 ___
 <a id="unlock"></a>
@@ -570,7 +574,7 @@ ___
 
 *Inherited from IRouter.unlock*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:122*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:135*
 
 ___
 <a id="unsubscribe"></a>
@@ -581,7 +585,7 @@ ___
 
 *Inherited from IRouter.unsubscribe*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:123*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:136*
 
 ___
 <a id="use"></a>
@@ -594,7 +598,7 @@ ___
 
 *Overrides IRouter.use*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1032*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1054*
 
 ___
 <a id="defaultmaxlisteners"></a>
@@ -605,7 +609,7 @@ ___
 
 *Inherited from EventEmitter.defaultMaxListeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:8*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1011*
 
 ___
 
@@ -621,7 +625,7 @@ ___
 
 *Overrides EventEmitter.addListener*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:10*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1013*
 
 **Parameters:**
 
@@ -641,7 +645,7 @@ ___
 
 *Inherited from Application.defaultConfiguration*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:871*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:893*
 
 Initialize application configuration.
 
@@ -652,11 +656,11 @@ ___
 
 ###  disable
 
-▸ **disable**(setting: *`string`*): `Application`
+▸ **disable**(setting: *`string`*): `this`
 
 *Inherited from Application.disable*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:967*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:989*
 
 Disable `setting`.
 
@@ -666,7 +670,7 @@ Disable `setting`.
 | ------ | ------ |
 | setting | `string` |
 
-**Returns:** `Application`
+**Returns:** `this`
 
 ___
 <a id="disabled"></a>
@@ -677,7 +681,7 @@ ___
 
 *Inherited from Application.disabled*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:961*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:983*
 
 Check if `setting` is disabled.
 
@@ -704,7 +708,7 @@ ___
 
 *Overrides EventEmitter.emit*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:22*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1025*
 
 **Parameters:**
 
@@ -720,11 +724,11 @@ ___
 
 ###  enable
 
-▸ **enable**(setting: *`string`*): `Application`
+▸ **enable**(setting: *`string`*): `this`
 
 *Inherited from Application.enable*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:964*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:986*
 
 Enable `setting`.
 
@@ -734,7 +738,7 @@ Enable `setting`.
 | ------ | ------ |
 | setting | `string` |
 
-**Returns:** `Application`
+**Returns:** `this`
 
 ___
 <a id="enabled"></a>
@@ -745,7 +749,7 @@ ___
 
 *Inherited from Application.enabled*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:949*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:971*
 
 Check if `setting` is enabled (truthy).
 
@@ -766,11 +770,11 @@ ___
 
 ###  engine
 
-▸ **engine**(ext: *`string`*, fn: *`function`*): `Application`
+▸ **engine**(ext: *`string`*, fn: *`function`*): `this`
 
 *Inherited from Application.engine*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:901*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:923*
 
 Register the given template engine callback `fn` as `ext`.
 
@@ -797,7 +801,7 @@ Some template engines do not follow this convention, the [Consolidate.js](https:
 | ext | `string` |
 | fn | `function` |
 
-**Returns:** `Application`
+**Returns:** `this`
 
 ___
 <a id="eventnames"></a>
@@ -810,7 +814,7 @@ ___
 
 *Overrides EventEmitter.eventNames*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:23*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1026*
 
 **Returns:** `Array`<`string` \| `symbol`>
 
@@ -825,7 +829,7 @@ ___
 
 *Overrides EventEmitter.getMaxListeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:19*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1022*
 
 **Returns:** `number`
 
@@ -838,7 +842,7 @@ ___
 
 *Inherited from Application.init*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:866*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:888*
 
 Initialize the server.
 
@@ -867,7 +871,7 @@ ___
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1000*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1022*
 
 Listen for connections.
 
@@ -890,7 +894,7 @@ http.createServer(app).listen(80); https.createServer({ ... }, app).listen(443);
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1001*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1023*
 
 **Parameters:**
 
@@ -904,7 +908,7 @@ http.createServer(app).listen(80); https.createServer({ ... }, app).listen(443);
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1002*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1024*
 
 **Parameters:**
 
@@ -917,7 +921,7 @@ http.createServer(app).listen(80); https.createServer({ ... }, app).listen(443);
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1003*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1025*
 
 **Parameters:**
 
@@ -929,7 +933,7 @@ http.createServer(app).listen(80); https.createServer({ ... }, app).listen(443);
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1004*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1026*
 
 **Parameters:**
 
@@ -942,7 +946,7 @@ http.createServer(app).listen(80); https.createServer({ ... }, app).listen(443);
 
 *Inherited from Application.listen*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1005*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1027*
 
 **Parameters:**
 
@@ -964,7 +968,7 @@ ___
 
 *Overrides EventEmitter.listenerCount*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:24*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1027*
 
 **Parameters:**
 
@@ -985,7 +989,7 @@ ___
 
 *Overrides EventEmitter.listeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:20*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1023*
 
 **Parameters:**
 
@@ -1006,7 +1010,7 @@ ___
 
 *Overrides EventEmitter.off*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:16*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1019*
 
 **Parameters:**
 
@@ -1028,7 +1032,7 @@ ___
 
 *Overrides EventEmitter.once*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:12*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1015*
 
 **Parameters:**
 
@@ -1052,7 +1056,7 @@ ___
 
 *Overrides IRouter.param*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:918*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:940*
 
 **Parameters:**
 
@@ -1067,7 +1071,7 @@ ___
 
 *Overrides IRouter.param*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:925*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:947*
 
 Alternatively, you can pass only a callback, in which case you have the opportunity to alter the app.param()
 
@@ -1090,7 +1094,7 @@ ___
 
 *Inherited from Application.path*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:937*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:959*
 
 Return the app's absolute pathname based on the parent(s) that have mounted it.
 
@@ -1109,7 +1113,7 @@ ___
 
 *Overrides EventEmitter.prependListener*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:13*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1016*
 
 **Parameters:**
 
@@ -1131,7 +1135,7 @@ ___
 
 *Overrides EventEmitter.prependOnceListener*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:14*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1017*
 
 **Parameters:**
 
@@ -1153,7 +1157,7 @@ ___
 
 *Overrides EventEmitter.rawListeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:21*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1024*
 
 **Parameters:**
 
@@ -1174,7 +1178,7 @@ ___
 
 *Overrides EventEmitter.removeAllListeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:17*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1020*
 
 **Parameters:**
 
@@ -1195,7 +1199,7 @@ ___
 
 *Overrides EventEmitter.removeListener*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:15*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1018*
 
 **Parameters:**
 
@@ -1217,7 +1221,7 @@ ___
 
 *Inherited from Application.render*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:980*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1002*
 
 Render the given view `name` name with `options` and a callback accepting an error and the rendered template string.
 
@@ -1237,7 +1241,7 @@ app.render('email', { name: 'Tobi' }, function(err, html){ // ... })
 
 *Inherited from Application.render*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:981*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:1003*
 
 **Parameters:**
 
@@ -1257,7 +1261,7 @@ ___
 
 *Inherited from IRouter.route*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:127*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:140*
 
 **Parameters:**
 
@@ -1272,11 +1276,11 @@ ___
 
 ###  set
 
-▸ **set**(setting: *`string`*, val: *`any`*): `Application`
+▸ **set**(setting: *`string`*, val: *`any`*): `this`
 
 *Inherited from Application.set*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:915*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/express-serve-static-core/index.d.ts:937*
 
 Assign `setting` to `val`, or return `setting`'s value.
 
@@ -1291,7 +1295,7 @@ Mounted servers inherit their parent server's settings.
 | setting | `string` |
 | val | `any` |
 
-**Returns:** `Application`
+**Returns:** `this`
 
 ___
 <a id="setmaxlisteners"></a>
@@ -1304,7 +1308,7 @@ ___
 
 *Overrides EventEmitter.setMaxListeners*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:18*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1021*
 
 **Parameters:**
 
@@ -1323,7 +1327,7 @@ ___
 
 *Inherited from EventEmitter.listenerCount*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/events.d.ts:7*
+*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/core/node_modules/@types/node/index.d.ts:1010*
 
 *__deprecated__*: since v4.0.0
 

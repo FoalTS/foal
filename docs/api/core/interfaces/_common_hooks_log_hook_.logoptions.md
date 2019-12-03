@@ -32,7 +32,7 @@ Options of the `Log` hook.
 
 **● body**: *`undefined` \| `false` \| `true`*
 
-*Defined in [common/hooks/log.hook.ts:10](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L10)*
+*Defined in [common/hooks/log.hook.ts:10](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L10)*
 
 ___
 <a id="headers"></a>
@@ -41,7 +41,7 @@ ___
 
 **● headers**: *`string`[] \| `boolean`*
 
-*Defined in [common/hooks/log.hook.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L12)*
+*Defined in [common/hooks/log.hook.ts:12](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L12)*
 
 ___
 <a id="logfn"></a>
@@ -50,7 +50,7 @@ ___
 
 **● logFn**: *`undefined` \| `function`*
 
-*Defined in [common/hooks/log.hook.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L14)*
+*Defined in [common/hooks/log.hook.ts:14](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L14)*
 
 ___
 <a id="params"></a>
@@ -59,7 +59,7 @@ ___
 
 **● params**: *`undefined` \| `false` \| `true`*
 
-*Defined in [common/hooks/log.hook.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L11)*
+*Defined in [common/hooks/log.hook.ts:11](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L11)*
 
 ___
 <a id="query"></a>
@@ -68,7 +68,7 @@ ___
 
 **● query**: *`undefined` \| `false` \| `true`*
 
-*Defined in [common/hooks/log.hook.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/log.hook.ts#L13)*
+*Defined in [common/hooks/log.hook.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/log.hook.ts#L13)*
 
 ___
 

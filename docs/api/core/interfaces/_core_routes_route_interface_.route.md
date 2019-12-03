@@ -32,7 +32,7 @@ Represent a Foal route with its controller handler and hooks.
 
 **● controller**: *`any`*
 
-*Defined in [core/routes/route.interface.ts:14](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/route.interface.ts#L14)*
+*Defined in [core/routes/route.interface.ts:14](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/route.interface.ts#L14)*
 
 ___
 <a id="hooks"></a>
@@ -41,7 +41,7 @@ ___
 
 **● hooks**: *[HookFunction](../modules/_core_hooks_.md#hookfunction)[]*
 
-*Defined in [core/routes/route.interface.ts:13](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/route.interface.ts#L13)*
+*Defined in [core/routes/route.interface.ts:13](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/route.interface.ts#L13)*
 
 ___
 <a id="httpmethod"></a>
@@ -50,7 +50,7 @@ ___
 
 **● httpMethod**: *[HttpMethod](../modules/_core_http_http_methods_.md#httpmethod)*
 
-*Defined in [core/routes/route.interface.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/route.interface.ts#L11)*
+*Defined in [core/routes/route.interface.ts:11](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/route.interface.ts#L11)*
 
 ___
 <a id="path"></a>
@@ -59,7 +59,7 @@ ___
 
 **● path**: *`string`*
 
-*Defined in [core/routes/route.interface.ts:12](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/route.interface.ts#L12)*
+*Defined in [core/routes/route.interface.ts:12](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/route.interface.ts#L12)*
 
 ___
 <a id="propertykey"></a>
@@ -68,7 +68,7 @@ ___
 
 **● propertyKey**: *`string`*
 
-*Defined in [core/routes/route.interface.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/route.interface.ts#L15)*
+*Defined in [core/routes/route.interface.ts:15](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/route.interface.ts#L15)*
 
 ___
 

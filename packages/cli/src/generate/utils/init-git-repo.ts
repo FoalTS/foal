@@ -14,14 +14,14 @@ export async function initGitRepo(root: string) {
 
   const hasCommand = await execute(['--version']).then(() => true, () => false);
   if (!hasCommand) {
-    console.log('Git not installed. Skipping initialization of git.');
+    console.log('    Git not installed. Skipping initialization of git.');
     return;
   }
 
   const insideRepo = await execute(['rev-parse', '--is-inside-work-tree'])
     .then(() => true, () => false);
   if (insideRepo) {
-    console.log('Directory is already under version control. Skipping initialization of git.');
+    console.log('     Directory is already under version control. Skipping initialization of git.');
     return;
   }
 
@@ -30,7 +30,7 @@ export async function initGitRepo(root: string) {
     await execute(['add', '.']);
     await execute(['commit', '-m "Initial commit"']);
   } catch {
-    console.log('Initialization of git failed.');
+    console.log('    Initialization of git failed.');
   }
 
 }

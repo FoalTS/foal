@@ -45,7 +45,7 @@
 
 *Overrides HttpResponseBadRequest.__constructor*
 
-*Defined in [jwt.hook.ts:24](https://github.com/FoalTS/foal/blob/538afb23/packages/jwt/src/jwt.hook.ts#L24)*
+*Defined in [jwt.hook.ts:24](https://github.com/FoalTS/foal/blob/70cc46bd/packages/jwt/src/jwt.hook.ts#L24)*
 
 **Parameters:**
 
@@ -74,7 +74,7 @@ ___
 
 ###  isHttpResponse
 
-**● isHttpResponse**: *`boolean`*
+**● isHttpResponse**: *`true`* = true
 
 *Inherited from HttpResponse.isHttpResponse*
 
@@ -89,7 +89,7 @@ ___
 
 ###  isHttpResponseBadRequest
 
-**● isHttpResponseBadRequest**: *`boolean`*
+**● isHttpResponseBadRequest**: *`true`* = true
 
 *Inherited from HttpResponseBadRequest.isHttpResponseBadRequest*
 
@@ -104,7 +104,7 @@ ___
 
 ###  isHttpResponseClientError
 
-**● isHttpResponseClientError**: *`boolean`*
+**● isHttpResponseClientError**: *`true`* = true
 
 *Inherited from HttpResponseClientError.isHttpResponseClientError*
 
@@ -182,8 +182,7 @@ Read the value and directives of a cookie added with setCookie.
 | name | `string` |  The cookie name. |
 
 **Returns:** `object`
-)} The cookie value and directives
-or undefined and an empty object if the cookie does not exist.
+)} The cookie value and directives or undefined and an empty object if the cookie does not exist.
 
 ___
 <a id="getcookies"></a>
@@ -201,8 +200,7 @@ Read all the cookies added with setCookie.
 *__memberof__*: HttpResponse
 
 **Returns:** `object`
-})}
-The name, value and directives of the cookies.
+})} The name, value and directives of the cookies.
 
 ___
 <a id="getheader"></a>
@@ -226,8 +224,7 @@ Read the value of a header added with setHeader.
 | name | `string` |  The header name. |
 
 **Returns:** `string` \| `undefined`
-The header value or undefined if it
-does not exist.
+The header value or undefined if it does not exist.
 
 ___
 <a id="getheaders"></a>
@@ -245,7 +242,7 @@ Read all the headers added with setHeader.
 *__memberof__*: HttpResponse
 
 **Returns:** `object`
-- The headers.
+*   The headers.
 
 ___
 <a id="setcookie"></a>

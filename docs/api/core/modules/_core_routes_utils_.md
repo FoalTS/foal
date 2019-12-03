@@ -21,7 +21,7 @@
 
 ▸ **getHttpMethod**(target: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `string` \| `undefined`
 
-*Defined in [core/routes/utils.ts:31](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/utils.ts#L31)*
+*Defined in [core/routes/utils.ts:31](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/utils.ts#L31)*
 
 Get the HTTP method of a controller method.
 
@@ -44,7 +44,7 @@ ___
 
 ▸ **getMetadata**(metadataKey: *`string`*, target: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `any`
 
-*Defined in [core/routes/utils.ts:16](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/utils.ts#L16)*
+*Defined in [core/routes/utils.ts:16](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/utils.ts#L16)*
 
 Get metadata of a class or a class method.
 
@@ -68,7 +68,7 @@ ___
 
 ▸ **getPath**(target: *[Class](_core_class_interface_.md#class)*, propertyKey?: *`undefined` \| `string`*): `string` \| `undefined`
 
-*Defined in [core/routes/utils.ts:43](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/utils.ts#L43)*
+*Defined in [core/routes/utils.ts:43](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/utils.ts#L43)*
 
 Get the path of a controller method.
 
@@ -91,7 +91,7 @@ ___
 
 ▸ **join**(...paths: *(`undefined` \| `string`)[]*): `string`
 
-*Defined in [core/routes/utils.ts:54](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/core/routes/utils.ts#L54)*
+*Defined in [core/routes/utils.ts:54](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/core/routes/utils.ts#L54)*
 
 Join several HTTP request paths together.
 

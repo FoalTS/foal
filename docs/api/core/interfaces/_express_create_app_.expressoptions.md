@@ -24,25 +24,25 @@
 
 **● expressInstance**: *[ExpressApplication](_express_create_app_.expressapplication.md)*
 
-*Defined in [express/create-app.ts:23](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-app.ts#L23)*
+*Defined in [express/create-app.ts:22](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L22)*
 
 ___
 <a id="postmiddlewares"></a>
 
 ### `<Optional>` postMiddlewares
 
-**● postMiddlewares**: *(`RequestHandler` \| `ErrorRequestHandler`)[]*
+**● postMiddlewares**: *(`RequestHandler`<`ParamsDictionary`> \| `ErrorRequestHandler`<`ParamsDictionary`>)[]*
 
-*Defined in [express/create-app.ts:25](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-app.ts#L25)*
+*Defined in [express/create-app.ts:24](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L24)*
 
 ___
 <a id="premiddlewares"></a>
 
 ### `<Optional>` preMiddlewares
 
-**● preMiddlewares**: *(`RequestHandler` \| `ErrorRequestHandler`)[]*
+**● preMiddlewares**: *(`RequestHandler`<`ParamsDictionary`> \| `ErrorRequestHandler`<`ParamsDictionary`>)[]*
 
-*Defined in [express/create-app.ts:24](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/express/create-app.ts#L24)*
+*Defined in [express/create-app.ts:23](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L23)*
 
 ___
 

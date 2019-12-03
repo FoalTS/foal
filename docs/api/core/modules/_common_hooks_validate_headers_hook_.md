@@ -18,7 +18,7 @@
 
 ▸ **ValidateHeaders**(schema: *`object`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-headers.hook.ts:15](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/validate-headers.hook.ts#L15)*
+*Defined in [common/hooks/validate-headers.hook.ts:15](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/validate-headers.hook.ts#L15)*
 
 Hook factory validating the headers of the request against a AJV schema.
 

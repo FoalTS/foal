@@ -18,7 +18,7 @@
 
 ▸ **setCsrfCookie**(response: *`HttpResponse`*, csrfToken: *`string`*): `void`
 
-*Defined in [set-csrf-cookie.ts:11](https://github.com/FoalTS/foal/blob/538afb23/packages/csrf/src/set-csrf-cookie.ts#L11)*
+*Defined in [set-csrf-cookie.ts:11](https://github.com/FoalTS/foal/blob/70cc46bd/packages/csrf/src/set-csrf-cookie.ts#L11)*
 
 Send the CSRF token in a cookie.
 

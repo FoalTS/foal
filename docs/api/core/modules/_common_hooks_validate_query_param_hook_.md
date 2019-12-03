@@ -18,7 +18,7 @@
 
 ▸ **ValidateQueryParam**(name: *`string`*, schema?: *`object` \| `function`*, options?: *`object`*): [HookDecorator](_core_hooks_.md#hookdecorator)
 
-*Defined in [common/hooks/validate-query-param.hook.ts:19](https://github.com/FoalTS/foal/blob/538afb23/packages/core/src/common/hooks/validate-query-param.hook.ts#L19)*
+*Defined in [common/hooks/validate-query-param.hook.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/common/hooks/validate-query-param.hook.ts#L19)*
 
 Hook - Validate a specific query parameter against an AJV schema.
 
