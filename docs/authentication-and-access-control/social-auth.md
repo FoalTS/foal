@@ -101,6 +101,8 @@ Additional parameters can passed to the `redirect` and `getUserInfo` methods dep
 
 ### Google
 
+Provider name: `GoogleProvider`.
+
 https://developers.google.com/identity/protocols/OpenIDConnect
 
 ![Google 2](./google2.png)
@@ -115,6 +117,8 @@ this.google.redirect({}, { access_type: 'offline' });
 ```
 
 ### Facebook
+
+Provider name: `FacebookProvider`.
 
 #### Permissions
 
