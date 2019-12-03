@@ -1,0 +1,18 @@
+port: 3001
+
+settings:
+  openapi:
+    useHooks: true
+  debug: true
+  loggerFormat: dev
+  session:
+    secret: 'my secret'
+  staticPath: 'public/'
+  social:
+    google:
+      clientId: '635863747771-ihd9cqkij7eb6dsh4o0pel0licaouftk.apps.googleusercontent.com'
+      redirectUri: 'http://localhost:3001/signin/google/cb'
+    facebook:
+      clientId: '2347404038904704'
+      redirectUri: 'http://localhost:3001/signin/facebook/cb'
+

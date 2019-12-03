@@ -12,6 +12,7 @@ cd ../mongodb && npm run test || exit 1
 cd ../mongoose && npm run test || exit 1
 cd ../password && npm run test || exit 1
 cd ../redis && npm run test || exit 1
+cd ../social && npm run test || exit 1
 cd ../swagger && npm run test || exit 1
 cd ../typeorm && npm run test || exit 1
 cd ../typestack && npm run test || exit 1

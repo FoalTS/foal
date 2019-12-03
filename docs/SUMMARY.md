@@ -48,6 +48,7 @@
   * [Passwords](./authentication-and-access-control/password-management.md)
   * [Session Tokens (authentication)](./authentication-and-access-control/session-tokens.md)
   * [JSON Web Tokens (authentication)](./authentication-and-access-control/jwt.md)
+  * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
 * [Validation & Sanitization](./validation-and-sanitization.md)
