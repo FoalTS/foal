@@ -21,6 +21,13 @@ export class UserInfoError extends Error {
   }
 }
 
+/**
+ * Facebook social provider.
+ *
+ * @export
+ * @class FacebookProvider
+ * @extends {AbstractProvider<FacebookAuthParams, FacebookUserInfoParams>}
+ */
 export class FacebookProvider extends AbstractProvider<FacebookAuthParams, FacebookUserInfoParams> {
   protected configPaths = {
     clientId: 'settings.social.facebook.clientId',

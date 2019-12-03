@@ -14,6 +14,13 @@ export interface GoogleAuthParams {
 
 export class InvalidJWTError extends Error {}
 
+/**
+ * Google social provider.
+ *
+ * @export
+ * @class GoogleProvider
+ * @extends {AbstractProvider<GoogleAuthParams, never>}
+ */
 export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never> {
   protected configPaths = {
     clientId: 'settings.social.google.clientId',
