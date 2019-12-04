@@ -65,7 +65,6 @@ export class AuthorizationError extends Error {
       + `- description: ${errorDescription}\n`
       + `- URI: ${errorUri}`
     );
-    // this.name = 'AuthorizationError';
   }
 }
 
