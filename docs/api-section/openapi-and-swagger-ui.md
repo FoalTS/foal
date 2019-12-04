@@ -136,8 +136,8 @@ export class ApiController {
   // is equivalent to
 
   @Get('/products')
-  @ApiResponse(200, 'successful operation')
-  @ApiResponse(404, 'not found')
+  @ApiResponse(200, { description: 'successful operation' })
+  @ApiResponse(404, { description: 'not found' })
   readProducts() {
     // ...
   }
