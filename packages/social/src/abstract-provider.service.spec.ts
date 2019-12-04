@@ -25,6 +25,101 @@ import {
 
 const STATE_COOKIE_NAME = 'oauth2-state';
 
+describe('InvalidStateError', () => {
+
+  it('should have a "message" property.', () => {
+    const err = {
+      foo: 'bar'
+    };
+    const error = new InvalidStateError();
+
+    strictEqual(
+      error.message,
+      'Suspicious operation: the state of the callback does not match the state of the authorization request.');
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new InvalidStateError();
+
+    strictEqual(error.name, 'InvalidStateError');
+  });
+
+});
+
+describe('AuthorizationError', () => {
+
+  it('should have a "message" property.', () => {
+    const error = new AuthorizationError('error1', 'error description', 'error URI');
+
+    strictEqual(
+      error.message,
+      `The authorization server returned an error. Impossible to get an authorization code.
+- error: error1
+- description: error description
+- URI: error URI`
+    );
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new AuthorizationError('error1', 'error description', 'error URI');
+
+    strictEqual(error.name, 'AuthorizationError');
+  });
+
+  it('should have an "error" property.', () => {
+    const error = new AuthorizationError('error1', 'error description', 'error URI');
+
+    strictEqual(error.error, 'error1');
+  });
+
+  it('should have an "errorDescription" property.', () => {
+    const error = new AuthorizationError('error1', 'error description', 'error URI');
+
+    strictEqual(error.errorDescription, 'error description');
+  });
+
+  it('should have an "errorUri" property.', () => {
+    const error = new AuthorizationError('error1', 'error description', 'error URI');
+
+    strictEqual(error.errorUri, 'error URI');
+  });
+
+});
+
+describe('TokenError', () => {
+
+  it('should have a "message" property.', () => {
+    const err = {
+      foo: 'bar'
+    };
+    const error = new TokenError(err);
+
+    strictEqual(
+      error.message,
+      `The authorization server returned an error. Impossible to get an access token.
+{
+  "foo": "bar"
+}`
+    );
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new TokenError({});
+
+    strictEqual(error.name, 'TokenError');
+  });
+
+  it('should have an "error" property.', () => {
+    const err = {
+      foo: 'bar'
+    };
+    const error = new TokenError(err);
+
+    strictEqual(error.error, err);
+  });
+
+});
+
 describe('AbstractProvider', () => {
 
   class ConcreteProvider extends AbstractProvider<any, any> {

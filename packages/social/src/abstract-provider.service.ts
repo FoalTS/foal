@@ -38,7 +38,12 @@ export interface UserInfoAndTokens<UserInfo = any> {
  * @class InvalidStateError
  * @extends {Error}
  */
-export class InvalidStateError extends Error {}
+export class InvalidStateError extends Error {
+  readonly name = 'InvalidStateError';
+  constructor() {
+    super('Suspicious operation: the state of the callback does not match the state of the authorization request.');
+  }
+}
 
 /**
  * Error thrown if the authorization server returns an error.
@@ -48,12 +53,19 @@ export class InvalidStateError extends Error {}
  * @extends {Error}
  */
 export class AuthorizationError extends Error {
+  readonly name = 'AuthorizationError';
   constructor(
     readonly error: string,
     readonly errorDescription?: string,
     readonly errorUri?: string,
   ) {
-    super();
+    super(
+      'The authorization server returned an error. Impossible to get an authorization code.\n'
+      + `- error: ${error}\n`
+      + `- description: ${errorDescription}\n`
+      + `- URI: ${errorUri}`
+    );
+    // this.name = 'AuthorizationError';
   }
 }
 
@@ -65,8 +77,13 @@ export class AuthorizationError extends Error {
  * @extends {Error}
  */
 export class TokenError extends Error {
-  constructor(readonly error) {
-    super();
+  readonly name = 'TokenError';
+
+  constructor(readonly error: any) {
+    super(
+      'The authorization server returned an error. Impossible to get an access token.\n'
+      + JSON.stringify(error, null, 2)
+    );
   }
 }
 
