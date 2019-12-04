@@ -28,9 +28,6 @@ const STATE_COOKIE_NAME = 'oauth2-state';
 describe('InvalidStateError', () => {
 
   it('should have a "message" property.', () => {
-    const err = {
-      foo: 'bar'
-    };
     const error = new InvalidStateError();
 
     strictEqual(
