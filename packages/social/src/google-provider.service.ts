@@ -12,7 +12,9 @@ export interface GoogleAuthParams {
   hd?: string;
 }
 
-export class InvalidJWTError extends Error {}
+export class InvalidJWTError extends Error {
+  readonly name = 'InvalidJWTError';
+}
 
 /**
  * Google social provider.

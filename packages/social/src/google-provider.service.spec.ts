@@ -9,6 +9,22 @@ import { sign } from 'jsonwebtoken';
 import { SocialTokens } from './abstract-provider.service';
 import { GoogleProvider, InvalidJWTError } from './google-provider.service';
 
+describe('InvalidJWTError', () => {
+
+  it('should have a "message" property.', () => {
+    const error = new InvalidJWTError('foobar');
+
+    strictEqual(error.message, 'foobar');
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new InvalidJWTError();
+
+    strictEqual(error.name, 'InvalidJWTError');
+  });
+
+});
+
 describe('GoogleProvider', () => {
 
   describe('has a "getUserInfoFromTokens" that', () => {
