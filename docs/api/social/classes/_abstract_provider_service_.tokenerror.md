@@ -40,7 +40,7 @@ Error thrown if the token endpoint does not return a 2xx response.
 
 ⊕ **new TokenError**(error: *`any`*): [TokenError](_abstract_provider_service_.tokenerror.md)
 
-*Defined in [abstract-provider.service.ts:67](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L67)*
+*Defined in [abstract-provider.service.ts:79](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L79)*
 
 **Parameters:**
 
@@ -60,7 +60,7 @@ ___
 
 **● error**: *`any`*
 
-*Defined in [abstract-provider.service.ts:68](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L68)*
+*Defined in [abstract-provider.service.ts:81](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L81)*
 
 ___
 <a id="message"></a>
@@ -78,11 +78,11 @@ ___
 
 ###  name
 
-**● name**: *`string`*
+**● name**: *"TokenError"* = "TokenError"
 
-*Inherited from Error.name*
+*Overrides Error.name*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/social/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:963*
+*Defined in [abstract-provider.service.ts:79](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L79)*
 
 ___
 <a id="stack"></a>

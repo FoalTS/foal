@@ -31,7 +31,7 @@
 
 **● STATE_COOKIE_NAME**: *"oauth2-state"* = "oauth2-state"
 
-*Defined in [abstract-provider.service.ts:73](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L73)*
+*Defined in [abstract-provider.service.ts:89](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L89)*
 
 ___
 

@@ -36,11 +36,11 @@ ___
 
 ###  name
 
-**● name**: *`string`*
+**● name**: *"InvalidJWTError"* = "InvalidJWTError"
 
-*Inherited from Error.name*
+*Overrides Error.name*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/social/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:963*
+*Defined in [google-provider.service.ts:16](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/google-provider.service.ts#L16)*
 
 ___
 <a id="stack"></a>

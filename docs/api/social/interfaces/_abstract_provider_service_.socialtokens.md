@@ -34,7 +34,7 @@ Tokens returned by an OAuth2 authorization server.
 
 **● access_token**: *`string`*
 
-*Defined in [abstract-provider.service.ts:17](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L17)*
+*Defined in [abstract-provider.service.ts:17](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L17)*
 
 ___
 <a id="token_type"></a>
@@ -43,7 +43,7 @@ ___
 
 **● token_type**: *`string`*
 
-*Defined in [abstract-provider.service.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L18)*
+*Defined in [abstract-provider.service.ts:18](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L18)*
 
 ___
 

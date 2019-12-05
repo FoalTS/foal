@@ -58,7 +58,7 @@ Abstract class that any social provider must inherit from.
 
 **● authEndpoint**: *`string`*
 
-*Defined in [abstract-provider.service.ts:117](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L117)*
+*Defined in [abstract-provider.service.ts:133](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L133)*
 
 URL of the authorization endpoint from which we retrieve an authorization code.
 
@@ -75,7 +75,7 @@ ___
 
 **● configInstance**: *`Config`*
 
-*Defined in [abstract-provider.service.ts:90](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L90)*
+*Defined in [abstract-provider.service.ts:106](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L106)*
 
 ___
 <a id="configpaths"></a>
@@ -84,7 +84,7 @@ ___
 
 **● configPaths**: *`object`*
 
-*Defined in [abstract-provider.service.ts:104](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L104)*
+*Defined in [abstract-provider.service.ts:120](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L120)*
 
 Configuration paths from which the client ID, client secret and redirect URI must be retrieved.
 
@@ -109,7 +109,7 @@ ___
 
 **● defaultScopes**: *`string`[]* =  []
 
-*Defined in [abstract-provider.service.ts:135](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L135)*
+*Defined in [abstract-provider.service.ts:151](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L151)*
 
 Default scopes requested by the social provider.
 
@@ -124,7 +124,7 @@ ___
 
 **● scopeSeparator**: *`string`* = " "
 
-*Defined in [abstract-provider.service.ts:144](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L144)*
+*Defined in [abstract-provider.service.ts:160](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L160)*
 
 Character used to separate the scopes in the URL.
 
@@ -139,7 +139,7 @@ ___
 
 **● tokenEndpoint**: *`string`*
 
-*Defined in [abstract-provider.service.ts:126](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L126)*
+*Defined in [abstract-provider.service.ts:142](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L142)*
 
 URL of the token endpoint from which we retrieve an access token.
 
@@ -159,7 +159,7 @@ ___
 
 **get config**(): `object`
 
-*Defined in [abstract-provider.service.ts:146](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L146)*
+*Defined in [abstract-provider.service.ts:162](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L162)*
 
 **Returns:** `object`
 
@@ -173,7 +173,7 @@ ___
 
 ▸ **getState**(): `Promise`<`string`>
 
-*Defined in [abstract-provider.service.ts:268](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L268)*
+*Defined in [abstract-provider.service.ts:284](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L284)*
 
 **Returns:** `Promise`<`string`>
 
@@ -184,7 +184,7 @@ ___
 
 ▸ **getTokens**(ctx: *`Context`*): `Promise`<[SocialTokens](../interfaces/_abstract_provider_service_.socialtokens.md)>
 
-*Defined in [abstract-provider.service.ts:219](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L219)*
+*Defined in [abstract-provider.service.ts:235](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L235)*
 
 Function to use in the controller method that handles the provider redirection.
 
@@ -208,7 +208,7 @@ ___
 
 ▸ **getUserInfo**<`UserInfo`>(ctx: *`Context`*, params?: *[UserInfoParameters]()*): `Promise`<[UserInfoAndTokens](../interfaces/_abstract_provider_service_.userinfoandtokens.md)<`UserInfo`>>
 
-*Defined in [abstract-provider.service.ts:262](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L262)*
+*Defined in [abstract-provider.service.ts:278](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L278)*
 
 Function to use in the controller method that handles the provider redirection.
 
@@ -238,7 +238,7 @@ ___
 
 ▸ **getUserInfoFromTokens**(tokens: *[SocialTokens](../interfaces/_abstract_provider_service_.socialtokens.md)*, params?: *[UserInfoParameters]()*): `any`
 
-*Defined in [abstract-provider.service.ts:165](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L165)*
+*Defined in [abstract-provider.service.ts:181](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L181)*
 
 Retrieve user information from the tokens returned by the authorization server.
 
@@ -265,7 +265,7 @@ ___
 
 ▸ **redirect**(__namedParameters?: *`object`*, params?: *[AuthParameters]()*): `Promise`<`HttpResponseRedirect`>
 
-*Defined in [abstract-provider.service.ts:175](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L175)*
+*Defined in [abstract-provider.service.ts:191](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L191)*
 
 Returns an HttpResponseRedirect object to use to redirect the user to the social provider's authorization page.
 
