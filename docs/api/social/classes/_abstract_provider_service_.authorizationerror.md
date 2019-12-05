@@ -42,7 +42,7 @@ Error thrown if the authorization server returns an error.
 
 ⊕ **new AuthorizationError**(error: *`string`*, errorDescription?: *`undefined` \| `string`*, errorUri?: *`undefined` \| `string`*): [AuthorizationError](_abstract_provider_service_.authorizationerror.md)
 
-*Defined in [abstract-provider.service.ts:50](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L50)*
+*Defined in [abstract-provider.service.ts:56](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L56)*
 
 **Parameters:**
 
@@ -64,7 +64,7 @@ ___
 
 **● error**: *`string`*
 
-*Defined in [abstract-provider.service.ts:52](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L52)*
+*Defined in [abstract-provider.service.ts:58](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L58)*
 
 ___
 <a id="errordescription"></a>
@@ -73,7 +73,7 @@ ___
 
 **● errorDescription**: *`undefined` \| `string`*
 
-*Defined in [abstract-provider.service.ts:53](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L53)*
+*Defined in [abstract-provider.service.ts:59](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L59)*
 
 ___
 <a id="erroruri"></a>
@@ -82,7 +82,7 @@ ___
 
 **● errorUri**: *`undefined` \| `string`*
 
-*Defined in [abstract-provider.service.ts:54](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L54)*
+*Defined in [abstract-provider.service.ts:60](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L60)*
 
 ___
 <a id="message"></a>
@@ -100,11 +100,11 @@ ___
 
 ###  name
 
-**● name**: *`string`*
+**● name**: *"AuthorizationError"* = "AuthorizationError"
 
-*Inherited from Error.name*
+*Overrides Error.name*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/social/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:963*
+*Defined in [abstract-provider.service.ts:56](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L56)*
 
 ___
 <a id="stack"></a>

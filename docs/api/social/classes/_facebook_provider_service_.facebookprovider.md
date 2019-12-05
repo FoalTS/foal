@@ -51,7 +51,7 @@ Facebook social provider.
 
 *Overrides [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[authEndpoint](_abstract_provider_service_.abstractprovider.md#authendpoint)*
 
-*Defined in [facebook-provider.service.ts:38](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L38)*
+*Defined in [facebook-provider.service.ts:43](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L43)*
 
 ___
 <a id="configinstance"></a>
@@ -62,7 +62,7 @@ ___
 
 *Inherited from [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[configInstance](_abstract_provider_service_.abstractprovider.md#configinstance)*
 
-*Defined in [abstract-provider.service.ts:90](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L90)*
+*Defined in [abstract-provider.service.ts:106](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L106)*
 
 ___
 <a id="defaultscopes"></a>
@@ -73,7 +73,7 @@ ___
 
 *Overrides [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[defaultScopes](_abstract_provider_service_.abstractprovider.md#defaultscopes)*
 
-*Defined in [facebook-provider.service.ts:44](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L44)*
+*Defined in [facebook-provider.service.ts:49](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L49)*
 
 ___
 <a id="fields"></a>
@@ -82,7 +82,7 @@ ___
 
 **● fields**: *`string`[]* =  [ 'id', 'name', 'email' ]
 
-*Defined in [facebook-provider.service.ts:42](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L42)*
+*Defined in [facebook-provider.service.ts:47](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L47)*
 
 ___
 <a id="scopeseparator"></a>
@@ -93,7 +93,7 @@ ___
 
 *Inherited from [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[scopeSeparator](_abstract_provider_service_.abstractprovider.md#scopeseparator)*
 
-*Defined in [abstract-provider.service.ts:144](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L144)*
+*Defined in [abstract-provider.service.ts:160](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L160)*
 
 Character used to separate the scopes in the URL.
 
@@ -110,7 +110,7 @@ ___
 
 *Overrides [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[tokenEndpoint](_abstract_provider_service_.abstractprovider.md#tokenendpoint)*
 
-*Defined in [facebook-provider.service.ts:39](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L39)*
+*Defined in [facebook-provider.service.ts:44](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L44)*
 
 ___
 <a id="userinfoendpoint"></a>
@@ -119,7 +119,7 @@ ___
 
 **● userInfoEndpoint**: *`string`* = "https://graph.facebook.com/v5.0/me"
 
-*Defined in [facebook-provider.service.ts:40](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L40)*
+*Defined in [facebook-provider.service.ts:45](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L45)*
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 *Inherited from [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[getTokens](_abstract_provider_service_.abstractprovider.md#gettokens)*
 
-*Defined in [abstract-provider.service.ts:219](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L219)*
+*Defined in [abstract-provider.service.ts:235](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L235)*
 
 Function to use in the controller method that handles the provider redirection.
 
@@ -159,7 +159,7 @@ ___
 
 *Inherited from [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[getUserInfo](_abstract_provider_service_.abstractprovider.md#getuserinfo)*
 
-*Defined in [abstract-provider.service.ts:262](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L262)*
+*Defined in [abstract-provider.service.ts:278](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L278)*
 
 Function to use in the controller method that handles the provider redirection.
 
@@ -191,7 +191,7 @@ ___
 
 *Overrides [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[getUserInfoFromTokens](_abstract_provider_service_.abstractprovider.md#getuserinfofromtokens)*
 
-*Defined in [facebook-provider.service.ts:46](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L46)*
+*Defined in [facebook-provider.service.ts:51](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L51)*
 
 **Parameters:**
 
@@ -211,7 +211,7 @@ ___
 
 *Inherited from [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[redirect](_abstract_provider_service_.abstractprovider.md#redirect)*
 
-*Defined in [abstract-provider.service.ts:175](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/abstract-provider.service.ts#L175)*
+*Defined in [abstract-provider.service.ts:191](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L191)*
 
 Returns an HttpResponseRedirect object to use to redirect the user to the social provider's authorization page.
 
@@ -242,7 +242,7 @@ ___
 
 *Overrides [AbstractProvider](_abstract_provider_service_.abstractprovider.md).[configPaths](_abstract_provider_service_.abstractprovider.md#configpaths)*
 
-*Defined in [facebook-provider.service.ts:32](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L32)*
+*Defined in [facebook-provider.service.ts:37](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L37)*
 
 <a id="configpaths.clientid"></a>
 
@@ -250,7 +250,7 @@ ___
 
 **● clientId**: *`string`* = "settings.social.facebook.clientId"
 
-*Defined in [facebook-provider.service.ts:33](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L33)*
+*Defined in [facebook-provider.service.ts:38](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L38)*
 
 ___
 <a id="configpaths.clientsecret"></a>
@@ -259,7 +259,7 @@ ___
 
 **● clientSecret**: *`string`* = "settings.social.facebook.clientSecret"
 
-*Defined in [facebook-provider.service.ts:34](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L34)*
+*Defined in [facebook-provider.service.ts:39](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L39)*
 
 ___
 <a id="configpaths.redirecturi"></a>
@@ -268,7 +268,7 @@ ___
 
 **● redirectUri**: *`string`* = "settings.social.facebook.redirectUri"
 
-*Defined in [facebook-provider.service.ts:35](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L35)*
+*Defined in [facebook-provider.service.ts:40](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L40)*
 
 ___
 

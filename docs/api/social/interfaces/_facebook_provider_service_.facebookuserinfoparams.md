@@ -22,7 +22,7 @@
 
 **● fields**: *`string`[]*
 
-*Defined in [facebook-provider.service.ts:15](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L15)*
+*Defined in [facebook-provider.service.ts:15](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L15)*
 
 ___
 

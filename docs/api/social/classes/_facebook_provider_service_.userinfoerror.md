@@ -32,7 +32,7 @@
 
 ⊕ **new UserInfoError**(error: *`any`*): [UserInfoError](_facebook_provider_service_.userinfoerror.md)
 
-*Defined in [facebook-provider.service.ts:18](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L18)*
+*Defined in [facebook-provider.service.ts:19](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L19)*
 
 **Parameters:**
 
@@ -52,7 +52,7 @@ ___
 
 **● error**: *`any`*
 
-*Defined in [facebook-provider.service.ts:19](https://github.com/FoalTS/foal/blob/70cc46bd/packages/social/src/facebook-provider.service.ts#L19)*
+*Defined in [facebook-provider.service.ts:21](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L21)*
 
 ___
 <a id="message"></a>
@@ -70,11 +70,11 @@ ___
 
 ###  name
 
-**● name**: *`string`*
+**● name**: *"UserInfoError"* = "UserInfoError"
 
-*Inherited from Error.name*
+*Overrides Error.name*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/social/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:963*
+*Defined in [facebook-provider.service.ts:19](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/facebook-provider.service.ts#L19)*
 
 ___
 <a id="stack"></a>

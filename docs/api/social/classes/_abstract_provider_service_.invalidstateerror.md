@@ -18,6 +18,10 @@ Error thrown if the state does not match.
 
 ## Index
 
+### Constructors
+
+* [constructor](_abstract_provider_service_.invalidstateerror.md#constructor)
+
 ### Properties
 
 * [message](_abstract_provider_service_.invalidstateerror.md#message)
@@ -26,6 +30,20 @@ Error thrown if the state does not match.
 * [Error](_abstract_provider_service_.invalidstateerror.md#error)
 
 ---
+
+## Constructors
+
+<a id="constructor"></a>
+
+###  constructor
+
+⊕ **new InvalidStateError**(): [InvalidStateError](_abstract_provider_service_.invalidstateerror.md)
+
+*Defined in [abstract-provider.service.ts:42](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L42)*
+
+**Returns:** [InvalidStateError](_abstract_provider_service_.invalidstateerror.md)
+
+___
 
 ## Properties
 
@@ -44,11 +62,11 @@ ___
 
 ###  name
 
-**● name**: *`string`*
+**● name**: *"InvalidStateError"* = "InvalidStateError"
 
-*Inherited from Error.name*
+*Overrides Error.name*
 
-*Defined in /Users/loicpoullain/projects/FoalTS/foal/packages/social/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:963*
+*Defined in [abstract-provider.service.ts:42](https://github.com/FoalTS/foal/blob/145b6b04/packages/social/src/abstract-provider.service.ts#L42)*
 
 ___
 <a id="stack"></a>
