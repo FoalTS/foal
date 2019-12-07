@@ -46,17 +46,11 @@ Every file using JSX must now have the extension `.tsx`.
 npm install react react-dom @types/react-dom
 ```
 
-This example shows how to use JSX SSR with React. It assumes that both `view.controller.tsx` and `template.html` files are in the same directory.
+This example shows how to use JSX SSR with React. It assumes that `templates` directory is in the root, next to src.
 
 *view.controller.tsx*
 ```typescript
-// std
-import { readFile } from 'fs';
-import { join } from 'path';
-import { promisify } from 'util';
-
-// 3p
-import { Get, HttpResponseOK } from '@foal/core';
+import { Get, render } from '@foal/core';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 
@@ -65,23 +59,17 @@ export class ViewController {
   @Get('/')
   async index() {
     const content = ReactDOMServer.renderToString(<div>Hello world!</div>);
-    const page = await this.renderFullPage(content);
 
-    const response = new HttpResponseOK(page);
-    response.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return response;
-  }
-
-  private async renderFullPage(content: string): Promise<string> {
-    const template = await promisify(readFile)(join(__dirname, 'template.html'), 'utf8');
-    return template.replace('{{ content }}', content);
+    return render('./templates/index.html', {
+      content,
+    });
   }
 
 }
 
 ```
 
-*template.html*
+*./templates/index.html*
 ```html
 <!DOCTYPE html>
 <html lang="en">
