@@ -11,7 +11,7 @@ it('Foal should support JSX Server-Side Rendering with React.', async () => {
     @Get('/')
     async index() {
       const content = ReactDOMServer.renderToString(<div>Hello world!</div>);
-  
+
       return render('./templates/index.jsx.html', {
         content,
       });
