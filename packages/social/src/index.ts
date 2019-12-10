@@ -7,10 +7,14 @@ export {
   AuthorizationError,
   ObjectType
 } from './abstract-provider.service';
-export { GoogleProvider, InvalidJWTError, GoogleAuthParams } from './google-provider.service';
+export {
+  GithubProvider,
+  GithubAuthParams,
+} from './github-provider.service';
 export {
   FacebookProvider,
-  UserInfoError,
   FacebookAuthParams,
   FacebookUserInfoParams
 } from './facebook-provider.service';
+export { GoogleProvider, InvalidJWTError, GoogleAuthParams } from './google-provider.service';
+export { UserInfoError } from './user-info.error';
