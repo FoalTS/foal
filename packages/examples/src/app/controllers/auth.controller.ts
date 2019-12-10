@@ -6,7 +6,7 @@ import {
   HttpResponseRedirect,
   setSessionCookie,
 } from '@foal/core';
-import { FacebookProvider, GoogleProvider } from '@foal/social';
+import { FacebookProvider, GithubProvider, GoogleProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
 export class AuthController {
@@ -15,6 +15,9 @@ export class AuthController {
 
   @dependency
   facebook: FacebookProvider;
+
+  @dependency
+  github: GithubProvider;
 
   @dependency
   store: TypeORMStore;
@@ -41,6 +44,20 @@ export class AuthController {
   @Get('/signin/facebook/cb')
   async handleFacebookRedirection(ctx: Context) {
     const { userInfo } = await this.facebook.getUserInfo(ctx);
+    const session = await this.store.createAndSaveSession({ userInfo });
+    const response = new HttpResponseRedirect('/');
+    setSessionCookie(response, session.getToken());
+    return response;
+  }
+
+  @Get('/signin/github')
+  redirectToGithub() {
+    return this.github.redirect();
+  }
+
+  @Get('/signin/github/cb')
+  async handleGithubRedirection(ctx: Context) {
+    const { userInfo } = await this.github.getUserInfo(ctx);
     const session = await this.store.createAndSaveSession({ userInfo });
     const response = new HttpResponseRedirect('/');
     setSessionCookie(response, session.getToken());
