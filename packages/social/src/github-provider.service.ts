@@ -17,7 +17,7 @@ export class GithubProvider extends AbstractProvider<GithubAuthParams, never> {
     redirectUri: 'settings.social.github.redirectUri',
   };
   protected authEndpoint = 'https://github.com/login/oauth/authorize';
-  protected tokenEndpoint: 'https://github.com/login/oauth/access_token';
+  protected tokenEndpoint = 'https://github.com/login/oauth/access_token';
   protected userInfoEndpoint = 'https://api.github.com/user';
 
   async getUserInfoFromTokens(tokens: SocialTokens) {
