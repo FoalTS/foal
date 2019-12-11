@@ -17,4 +17,5 @@ export {
   FacebookUserInfoParams
 } from './facebook-provider.service';
 export { GoogleProvider, InvalidJWTError, GoogleAuthParams } from './google-provider.service';
+export { LinkedInProvider, LinkedInUserInfoParams } from './linkedin-provider.service';
 export { UserInfoError } from './user-info.error';
