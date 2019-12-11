@@ -3,10 +3,11 @@ import {
   Context,
   dependency,
   Get,
+  HttpResponse,
   HttpResponseRedirect,
   setSessionCookie,
 } from '@foal/core';
-import { FacebookProvider, GithubProvider, GoogleProvider } from '@foal/social';
+import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
 export class AuthController {
@@ -20,6 +21,9 @@ export class AuthController {
   github: GithubProvider;
 
   @dependency
+  linkedin: LinkedInProvider;
+
+  @dependency
   store: TypeORMStore;
 
   @Get('/signin/google')
@@ -30,10 +34,7 @@ export class AuthController {
   @Get('/signin/google/cb')
   async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
-    const session = await this.store.createAndSaveSession({ userInfo });
-    const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session.getToken());
-    return response;
+    return this.createSessionAndSaveUserInfo(userInfo);
   }
 
   @Get('/signin/facebook')
@@ -44,10 +45,7 @@ export class AuthController {
   @Get('/signin/facebook/cb')
   async handleFacebookRedirection(ctx: Context) {
     const { userInfo } = await this.facebook.getUserInfo(ctx);
-    const session = await this.store.createAndSaveSession({ userInfo });
-    const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session.getToken());
-    return response;
+    return this.createSessionAndSaveUserInfo(userInfo);
   }
 
   @Get('/signin/github')
@@ -58,6 +56,21 @@ export class AuthController {
   @Get('/signin/github/cb')
   async handleGithubRedirection(ctx: Context) {
     const { userInfo } = await this.github.getUserInfo(ctx);
+    return this.createSessionAndSaveUserInfo(userInfo);
+  }
+
+  @Get('/signin/linkedin')
+  redirectToLinkedIn() {
+    return this.linkedin.redirect();
+  }
+
+  @Get('/signin/linkedin/cb')
+  async handleLinkedInRedirection(ctx: Context) {
+    const { userInfo } = await this.linkedin.getUserInfo(ctx);
+    return this.createSessionAndSaveUserInfo(userInfo);
+  }
+
+  private async createSessionAndSaveUserInfo(userInfo: any): Promise<HttpResponse> {
     const session = await this.store.createAndSaveSession({ userInfo });
     const response = new HttpResponseRedirect('/');
     setSessionCookie(response, session.getToken());

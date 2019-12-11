@@ -18,4 +18,7 @@ settings:
     github:
       clientId: '990d351d6696637faa20'
       redirectUri: 'http://localhost:3001/signin/github/cb'
+    linkedin:
+      clientId: '77na9s6izn8vrs'
+      redirectUri: 'http://localhost:3001/signin/linkedin/cb'
 
