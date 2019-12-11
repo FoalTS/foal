@@ -23,6 +23,8 @@ export class LinkedInProvider extends AbstractProvider<never, LinkedInUserInfoPa
   protected tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
   protected userInfoEndpoint = 'https://api.linkedin.com/v2/me';
 
+  protected defaultScopes: string[] = [ 'r_liteprofile' ];
+
   async getUserInfoFromTokens(tokens: SocialTokens, params: LinkedInUserInfoParams = {}) {
     const url = new URL(this.userInfoEndpoint);
 
