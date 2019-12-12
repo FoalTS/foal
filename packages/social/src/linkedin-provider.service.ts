@@ -10,6 +10,7 @@ import { UserInfoError } from './user-info.error';
 
 export interface LinkedInUserInfoParams {
   projection?: string;
+  fields?: string[];
 }
 
 export class LinkedInProvider extends AbstractProvider<never, LinkedInUserInfoParams> {
@@ -30,6 +31,9 @@ export class LinkedInProvider extends AbstractProvider<never, LinkedInUserInfoPa
 
     if (params.projection) {
       url.searchParams.set('projection', params.projection);
+    }
+    if (params.fields) {
+      url.searchParams.set('fields', params.fields.join(','));
     }
 
     const response = await fetch(url.href, {
