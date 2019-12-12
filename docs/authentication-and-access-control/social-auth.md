@@ -162,6 +162,8 @@ const { userInfo } = await this.facebook.getUserInfo(ctx, {
 
 ### Github
 
+> Github provider is available in Foal v1.4.0 onwards.
+
 |Service name| Default scopes | Available scopes |
 |---|---|---|
 | `GithubProvider` | none | [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
@@ -191,6 +193,8 @@ this.github.redirect({ /* ... */ }, {
 > *Source: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters*
 
 ### LinkedIn
+
+> LinkedIn provider is available in Foal v1.4.0 onwards.
 
 |Service name| Default scopes | Available scopes |
 |---|---|---|
