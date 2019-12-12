@@ -10,6 +10,13 @@ export interface GithubAuthParams {
   allow_signup?: boolean;
 }
 
+/**
+ * Github social provider.
+ *
+ * @export
+ * @class GithubProvider
+ * @extends {AbstractProvider<GithubAuthParams, never>}
+ */
 export class GithubProvider extends AbstractProvider<GithubAuthParams, never> {
   protected configPaths = {
     clientId: 'settings.social.github.clientId',

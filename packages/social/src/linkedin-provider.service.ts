@@ -13,6 +13,13 @@ export interface LinkedInUserInfoParams {
   fields?: string[];
 }
 
+/**
+ * LinkedIn social provider.
+ *
+ * @export
+ * @class LinkedInProvider
+ * @extends {AbstractProvider<never, LinkedInUserInfoParams>}
+ */
 export class LinkedInProvider extends AbstractProvider<never, LinkedInUserInfoParams> {
   protected configPaths = {
     clientId: 'settings.social.linkedin.clientId',
