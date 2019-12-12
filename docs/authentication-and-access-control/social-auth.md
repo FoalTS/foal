@@ -101,44 +101,120 @@ Additional parameters can passed to the `redirect` and `getUserInfo` methods dep
 
 ### Google
 
-Provider name: `GoogleProvider`.
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `GoogleProvider` | `openid`, `profile`, `email` | [Google scopes](https://developers.google.com/identity/protocols/googlescopes) |
 
-https://developers.google.com/identity/protocols/OpenIDConnect
+#### Register an OAuth application
 
-![Google 2](./google2.png)
+Visit the [Google API Console](https://console.developers.google.com/apis/credentials) to obtain a client ID and a client secret.
 
-Default scopes: profile, email.
+#### Redirection parameters
 
-#### Get a Refresh Token
+The `redirect` method of the `GoogleProvider` accepts additional parameters. These parameters and their description are listed [here](https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters) and are all optional.
 
+*Example*
 ```typescript
-this.google.redirect({}, { access_type: 'offline' });
-}
+this.google.redirect({ /* ... */ }, {
+  access_type: 'offline'
+})
 ```
 
 ### Facebook
 
-Provider name: `FacebookProvider`.
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `FacebookProvider` | `email` | [Facebook permissions](https://developers.facebook.com/docs/facebook-login/permissions/) |
 
-#### Permissions
+#### Register an OAuth application
 
-https://developers.facebook.com/docs/facebook-login/permissions/
+Visit [Facebook's developper website](https://developers.facebook.com/) to create an application and obtain a client ID and a client secret.
 
-Facebook permissions can be requested using OAuth2 *scopes*.
+#### Redirection parameters
 
-Default scopes: email.
+The `redirect` method of the `FacebookProvider` accepts an additional `auth_type` parameter which is optional.
 
+*Example*
 ```typescript
-this.facebook.redirect({ scopes: [ 'email', 'user_birthday' ] });
+this.facebook.redirect({ /* ... */ }, {
+  auth_type: 'rerequest'
+});
 ```
 
-#### Re-request
+|Name|Type|Description|
+|---|---|---|
+|`auth_type`|`'rerequest'`|If a user has already declined a permission, the Facebook Login Dialog box will no longer ask for this permission. The `auth_type` parameter explicity tells Facebook to ask the user again for the denied permission.|
 
-If a user has already declined a permission, Facebook Login Dialog will not ask for this permission again. You will need to explicity tell it to re-ask for the declined permission by using the `auth_type` parameter.
+#### User info parameters
 
+The `getUserInfo` and `getUserInfoFromTokens` methods of the `FacebookProvider` accept an additional `fields` parameter which is optional.
+
+*Example*
 ```typescript
-this.facebook.redirect({}, { auth_type: 'rerequest' });
+const { userInfo } = await this.facebook.getUserInfo(ctx, {
+  fields: [ 'email' ]
+})
 ```
+
+|Name|Type|Description|
+|---|---|---|
+|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `redirect` method. Default: `['id', 'name', 'email'].`|
+
+### Github
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `GithubProvider` | none | [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
+
+#### Register an OAuth application
+
+Visit [this page](https://github.com/settings/applications/new) to create an application and obtain a client ID and a client secret.
+
+Additional documentation on Github's redirect URLs can be found [here](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#redirect-urls).
+
+#### Redirection parameters
+
+The `redirect` method of the `GithubProvider` accepts additional parameters. These parameters and their description are listed below and are all optional.
+
+*Example*
+```typescript
+this.github.redirect({ /* ... */ }, {
+  allow_signup: false
+})
+```
+
+|Name|Type|Description|
+|---|---|---|
+| `login` | `string` | Suggests a specific account to use for signing in and authorizing the app. |
+| `allow_signup` | `boolean` | Whether or not unauthenticated users will be offered an option to sign up for GitHub during the OAuth flow. The default is `true`. Use `false` in the case that a policy prohibits signups. |
+
+> *Source: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters*
+
+### LinkedIn
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `LinkedInProvider` | `r_liteprofile` | [API documentation](https://docs.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api) |
+
+#### Register an OAuth application
+
+Visit [this page](https://www.linkedin.com/developers/apps/new) to create an application and obtain a client ID and a client secret.
+
+#### User info parameters
+
+The `getUserInfo` and `getUserInfoFromTokens` methods of the `LinkedInProvider` accept an additional `projection` parameter which is optional.
+
+*Example*
+```typescript
+const { userInfo } = await this.linkedin.getUserInfo(ctx, {
+  fields: [ 'id', 'firstName' ]
+})
+```
+
+|Name|Type|Description|
+|---|---|---|
+| `fields` | `string[]` | List of fields that the returned user info object should contain. Additional documentation on [field projections](https://developer.linkedin.com/docs/guide/v2/concepts/projections). |
+| `projection` | `string` | LinkedIn projection parameter. |
 
 ## Sign In and Sign Up Example
 
@@ -207,94 +283,6 @@ export class AuthController {
     return response;
   }
 
-}
-```
-
-## Other techniques
-
-### Google
-
-> This section assumes that Google is the only authentication solution you use in your application. You do not use other social providers or passwords. This section does not use the `@foal/social` package.
-
-*A sample application can be found [here](https://github.com/FoalTS/foal/tree/master/samples/google-auth).*
-
-```
-npm install @foal/jwt @foal/jwks-rsa
-```
-
-First, register your application to Google and add a "Sign-In" button to your frontend:
-  - [Android](https://developers.google.com/identity/sign-in/android/start)
-  - [iOS](https://developers.google.com/identity/sign-in/ios/start?ver=objc)
-  - [Website](https://developers.google.com/identity/sign-in/web/sign-in)
-  - [TVs and Devices](https://developers.google.com/identity/sign-in/devices)
-
-![Google 1](./google1.png)
-
-Then, in the backend, add a configuration file that will contain the client ID. This can be an `.env`, YAML or JSON file:
-
-*.env (option 1)*
-```
-SOCIAL_GOOGLE_CLIENT_ID=xxx.apps.googleusercontent.com
-```
-
-*config/default.yml (option 2)*
-```yaml
-social:
-  google:
-    clientId: xxx.apps.googleusercontent.com
-```
-
-*config/default.json (option 3)*
-```json
-{
-  "social": {
-    "google": {
-      "clientId": "xxx.apps.googleusercontent.com"
-    }
-  }
-}
-```
-
-Finally, add the `@JWTRequired` hook to your protected routes:
-
-*api.controller.ts*
-```typescript
-import { Config, Context, Get, HttpResponseOK } from '@foal/core';
-import { getRSAPublicKeyFromJWKS } from '@foal/jwks-rsa';
-import { JWTRequired } from '@foal/jwt';
-
-@JWTRequired({
-  secretOrPublicKey: getRSAPublicKeyFromJWKS({
-    jwksUri: 'https://www.googleapis.com/oauth2/v3/certs',
-  })
-}, {
-  audience: Config.get('social.google.clientId'),
-  issuer: [ 'accounts.google.com', 'https://accounts.google.com' ]
-})
-export class ApiController {
-
-  @Get('/')
-  index(ctx: Context) {
-    return new HttpResponseOK(
-      `Your email is ${ctx.user.email}!`
-    );
-  }
-
-}
-```
-
-Now, when making a request to the backend, your frontend must include the Google **ID token** in the `Authorization` header using the `Bearer` scheme:
-
-```
-Authorization: Bearer xxx.yyy.zzz
-```
-
-For example, in a browser, you can retrieve this token with the following code:
-
-```javascript
-function onSignIn(googleUser) {
-  var id_token = googleUser.getAuthResponse().id_token;
-  // ...
 }
 ```
 
