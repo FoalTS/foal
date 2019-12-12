@@ -1,10 +1,6 @@
 # Generate and Run Migrations
 
-> This document describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/databases/generate-and-run-migrations.md).
-
 Database migrations are a way of propagating changes you make to your entities into your database schema. The changes you make to your models (adding a field, deleting an entity, etc.) do not automatically modify your database. You have to do it yourself.
-
-> Versions prior to version 1 used TypeORM `synchronize` option to update the schema on every application launch. This option is considered unsafe (see section below) and is disabled by default in new versions.
 
 You have two options: update the database schema manually (using database software, for example) or run migrations.
 

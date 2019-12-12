@@ -1,7 +1,5 @@
 # Quick Start
 
-> This document describes changes and new features introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/authentication-and-access-control/introduction.md).
-
 *Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 
 > *Example: a user enters their login credentials to connect to the application*.
