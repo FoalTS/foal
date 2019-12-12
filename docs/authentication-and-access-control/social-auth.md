@@ -101,44 +101,120 @@ Additional parameters can passed to the `redirect` and `getUserInfo` methods dep
 
 ### Google
 
-Provider name: `GoogleProvider`.
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `GoogleProvider` | `openid`, `profile`, `email` | [Google scopes](https://developers.google.com/identity/protocols/googlescopes) |
 
-https://developers.google.com/identity/protocols/OpenIDConnect
+#### Register an OAuth application
 
-![Google 2](./google2.png)
+Visit the [Google API Console](https://console.developers.google.com/apis/credentials) to obtain a client ID and a client secret.
 
-Default scopes: profile, email.
+#### Redirection parameters
 
-#### Get a Refresh Token
+The `redirect` method of the `GoogleProvider` accepts additional parameters. These parameters and their description are listed [here](https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters) and are all optional.
 
+*Example*
 ```typescript
-this.google.redirect({}, { access_type: 'offline' });
-}
+this.google.redirect({ /* ... */ }, {
+  access_type: 'offline'
+})
 ```
 
 ### Facebook
 
-Provider name: `FacebookProvider`.
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `FacebookProvider` | `email` | [Facebook permissions](https://developers.facebook.com/docs/facebook-login/permissions/) |
 
-#### Permissions
+#### Register an OAuth application
 
-https://developers.facebook.com/docs/facebook-login/permissions/
+Visit [Facebook's developper website](https://developers.facebook.com/) to create an application and obtain a client ID and a client secret.
 
-Facebook permissions can be requested using OAuth2 *scopes*.
+#### Redirection parameters
 
-Default scopes: email.
+The `redirect` method of the `FacebookProvider` accepts an additional `auth_type` parameter which is optional.
 
+*Example*
 ```typescript
-this.facebook.redirect({ scopes: [ 'email', 'user_birthday' ] });
+this.facebook.redirect({ /* ... */ }, {
+  auth_type: 'rerequest'
+});
 ```
 
-#### Re-request
+|Name|Type|Description|
+|---|---|---|
+|`auth_type`|`'rerequest'`|If a user has already declined a permission, the Facebook Login Dialog box will no longer ask for this permission. The `auth_type` parameter explicity tells Facebook to ask the user again for the denied permission.|
 
-If a user has already declined a permission, Facebook Login Dialog will not ask for this permission again. You will need to explicity tell it to re-ask for the declined permission by using the `auth_type` parameter.
+#### User info parameters
 
+The `getUserInfo` and `getUserInfoFromTokens` methods of the `FacebookProvider` accept an additional `fields` parameter which is optional.
+
+*Example*
 ```typescript
-this.facebook.redirect({}, { auth_type: 'rerequest' });
+const { userInfo } = await this.facebook.getUserInfo(ctx, {
+  fields: [ 'email' ]
+})
 ```
+
+|Name|Type|Description|
+|---|---|---|
+|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `redirect` method. Default: `['id', 'name', 'email'].`|
+
+### Github
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `GithubProvider` | none | [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
+
+#### Register an OAuth application
+
+Visit [this page](https://github.com/settings/applications/new) to create an application and obtain a client ID and a client secret.
+
+Additional documentation on Github's redirect URLs can be found [here](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#redirect-urls).
+
+#### Redirection parameters
+
+The `redirect` method of the `GithubProvider` accepts additional parameters. These parameters and their description are listed below and are all optional.
+
+*Example*
+```typescript
+this.github.redirect({ /* ... */ }, {
+  allow_signup: false
+})
+```
+
+|Name|Type|Description|
+|---|---|---|
+| `login` | `string` | Suggests a specific account to use for signing in and authorizing the app. |
+| `allow_signup` | `boolean` | Whether or not unauthenticated users will be offered an option to sign up for GitHub during the OAuth flow. The default is `true`. Use `false` in the case that a policy prohibits signups. |
+
+> *Source: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters*
+
+### LinkedIn
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `LinkedInProvider` | `r_liteprofile` | [API documentation](https://docs.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api) |
+
+#### Register an OAuth application
+
+Visit [this page](https://www.linkedin.com/developers/apps/new) to create an application and obtain a client ID and a client secret.
+
+#### User info parameters
+
+The `getUserInfo` and `getUserInfoFromTokens` methods of the `LinkedInProvider` accept an additional `projection` parameter which is optional.
+
+*Example*
+```typescript
+const { userInfo } = await this.linkedin.getUserInfo(ctx, {
+  fields: [ 'id', 'firstName' ]
+})
+```
+
+|Name|Type|Description|
+|---|---|---|
+| `fields` | `string[]` | List of fields that the returned user info object should contain. Additional documentation on [field projections](https://developer.linkedin.com/docs/guide/v2/concepts/projections). |
+| `projection` | `string` | LinkedIn projection parameter. |
 
 ## Sign In and Sign Up Example
 
