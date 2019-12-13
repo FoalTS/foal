@@ -102,4 +102,4 @@ See the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.gi
 
 ## License
 
-MIT
+MIT 
