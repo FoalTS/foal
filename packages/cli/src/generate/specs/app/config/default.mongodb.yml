@@ -4,7 +4,9 @@ settings:
   csrf: false
   debug: false
   loggerFormat: tiny
-  staticPath: public/
+  session:
+    cookie:
+      sameSite: lax
 
 mongodb:
   uri: mongodb://localhost:27017/test-foo-bar
