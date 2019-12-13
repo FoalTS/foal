@@ -47,8 +47,6 @@ TypeORM is integrated by default in every new FoalTS project. This lets you quic
 
 ### Initial configuration
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/databases/typeorm.md).
-
 When creating a new project, an `SQLite` database is used by default as it does not require any additional installation. The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
 
 *ormconfig.js*

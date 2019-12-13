@@ -39,8 +39,6 @@ export class User {
 
 The `setPassword` method uses `hashPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
 
-> Note: In previous versions of FoalTS (<v1.0.0), this function was named `encryptPassword`. 
-
 ## The Todo Model
 
 The Todo model defined in the previous tutorial now needs a `owner` property to know which user it belongs to.

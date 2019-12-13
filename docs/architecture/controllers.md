@@ -296,7 +296,7 @@ class AppController {
 }
 ```
 
-> The `maxAge` cookie directive defines the number of **seconds** until the cookie expires. Versions prior to version 1 used milliseconds.
+> The `maxAge` cookie directive defines the number of **seconds** until the cookie expires.
 
 ## Testing Controllers
 
