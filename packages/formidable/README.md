@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <i>A Web framework to create enterprise-grade Node.JS applications</i>
+  <i>A Node.js and TypeScript framework, all-inclusive.</i>
   <br>
   <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
