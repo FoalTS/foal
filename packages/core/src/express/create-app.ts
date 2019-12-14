@@ -106,29 +106,7 @@ export function createApp(
   app.foal = { services };
   const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
-    switch (route.httpMethod) {
-      case 'DELETE':
-        app.delete(route.path, createMiddleware(route, services));
-        break;
-      case 'GET':
-        app.get(route.path, createMiddleware(route, services));
-        break;
-      case 'PATCH':
-        app.patch(route.path, createMiddleware(route, services));
-        break;
-      case 'POST':
-        app.post(route.path, createMiddleware(route, services));
-        break;
-      case 'PUT':
-        app.put(route.path, createMiddleware(route, services));
-        break;
-      case 'HEAD':
-        app.head(route.path, createMiddleware(route, services));
-        break;
-      case 'OPTIONS':
-        app.options(route.path, createMiddleware(route, services));
-        break;
-    }
+    app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
 
   if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
