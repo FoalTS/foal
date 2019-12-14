@@ -20,6 +20,9 @@ interface ExpressApplication extends express.Express {
 
 interface ExpressOptions {
   expressInstance?: ExpressApplication;
+  methods?: {
+    handleError?: boolean;
+  };
   preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
