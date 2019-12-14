@@ -18,7 +18,7 @@ interface ExpressApplication extends express.Express {
   [name: string]: any;
 }
 
-interface ExpressOptions {
+interface CreateAppOptions {
   expressInstance?: ExpressApplication;
   methods?: {
     handleError?: boolean;
@@ -33,7 +33,7 @@ interface ExpressOptions {
  * @export
  * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
  * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
- * Express middlewares.
+ * Express middlewares or other settings.
  * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
  * returned application.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
@@ -43,7 +43,7 @@ interface ExpressOptions {
  * @returns {ExpressApplication} The express application.
  */
 export function createApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions
+  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
 ): ExpressApplication {
   let app: ExpressApplication = express();
 
@@ -147,7 +147,7 @@ export function createApp(
  *
  * @export
  * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
@@ -156,7 +156,7 @@ export function createApp(
  * @returns {Promise<ExpressApplication>} The express application.
  */
 export async function createAndInitApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions
+  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
 ): Promise<ExpressApplication> {
   const app = createApp(rootControllerClass, expressInstanceOrOptions);
 
