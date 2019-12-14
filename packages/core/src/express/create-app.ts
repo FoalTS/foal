@@ -4,14 +4,15 @@ import * as express from 'express';
 import * as logger from 'morgan';
 
 // FoalTS
+import { renderError } from '../common';
 import {
   Class,
   Config,
+  Context,
   makeControllerRoutes,
   ServiceManager
 } from '../core';
 import { createMiddleware } from './create-middleware';
-import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
 interface ExpressApplication extends express.Express {
@@ -137,7 +138,16 @@ export function createApp(
   }
 
   app.use(notFound());
-  app.use(handleErrors(Config.get('settings.debug', false), console.error));
+  app.use(async (err, req, res, next) => {
+    if (err.expose && err.status) {
+      next(err);
+      return;
+    }
+
+    console.error(err.stack);
+
+    res.status(500).send(await renderError(err, { ctx: new Context(req) }));
+  });
 
   return app;
 }
