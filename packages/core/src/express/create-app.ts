@@ -28,6 +28,40 @@ interface CreateAppOptions {
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
 
+function handleJsonErrors(err, req, res, next) {
+  if (err.type !== 'entity.parse.failed') {
+    next(err);
+    return;
+  }
+  res.status(err.status).send({
+    body: err.body,
+    message: err.message
+  });
+}
+
+function protectionHeaders(_, res, next) {
+  res.removeHeader('X-Powered-By');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  res.setHeader('X-Download-Options', 'noopen');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  next();
+}
+
+function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptions): CreateAppOptions {
+  if (!expressInstanceOrOptions) {
+    return {};
+  }
+
+  if (typeof expressInstanceOrOptions === 'function') {
+    return { expressInstance: expressInstanceOrOptions };
+  }
+
+  return expressInstanceOrOptions;
+}
+
 /**
  * Create an Express application from the root controller.
  *
@@ -46,73 +80,44 @@ interface CreateAppOptions {
 export function createApp(
   rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
 ): ExpressApplication {
-  let app: ExpressApplication = express();
+  const options = getOptions(expressInstanceOrOptions);
+  const app: ExpressApplication = options.expressInstance || express();
 
-  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'function') {
-    app = expressInstanceOrOptions;
+  for (const middleware of options.preMiddlewares || []) {
+    app.use(middleware);
   }
 
-  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
-    if (expressInstanceOrOptions.expressInstance) {
-      app = expressInstanceOrOptions.expressInstance;
-    }
-    for (const middleware of expressInstanceOrOptions.preMiddlewares || []) {
-      app.use(middleware);
-    }
-  }
-
-  const LOG_FORMAT_NONE = 'none';
-
-  const loggerFormat: string =  Config.get(
+  const loggerFormat: string = Config.get(
     'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
 
-  if (loggerFormat !== LOG_FORMAT_NONE) {
+  if (loggerFormat !== 'none') {
     app.use(logger(loggerFormat));
   }
 
-  app.use((_, res, next) => {
-    res.removeHeader('X-Powered-By');
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-DNS-Prefetch-Control', 'off');
-    res.setHeader('X-Download-Options', 'noopen');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
-    next();
-  });
+  app.use(protectionHeaders);
 
   app.use(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticPath', 'public'))
   );
   app.use(express.json());
-  app.use((err, req, res, next) => {
-    if (err.type !== 'entity.parse.failed') {
-      next(err);
-      return;
-    }
-    res.status(err.status).send({
-      body: err.body,
-      message: err.message
-    });
-  });
+  app.use(handleJsonErrors);
   app.use(express.urlencoded({ extended: false }));
   app.use(express.text({ type: ['text/*', 'application/graphql'] }));
   app.use(cookieParser());
 
   const services = new ServiceManager();
   app.foal = { services };
+
   const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
     app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
 
-  if (expressInstanceOrOptions && typeof expressInstanceOrOptions === 'object') {
-    for (const middleware of expressInstanceOrOptions.postMiddlewares || []) {
-      app.use(middleware);
-    }
+  for (const middleware of options.postMiddlewares || []) {
+    app.use(middleware);
   }
 
   app.use(notFound());
@@ -126,6 +131,9 @@ export function createApp(
 
     res.status(500).send(await renderError(err, { ctx: new Context(req) }));
   });
+
+  // Avoir accès au contrôleur racine
+  // Avoir accès au contexte.
 
   return app;
 }
