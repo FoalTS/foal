@@ -41,7 +41,7 @@ describe('sendResponse', () => {
     ]);
   });
 
-  it('should send the response body (no stream).', () => {
+  it('should send the response body (stream).', () => {
     const stream = new Readable({
       read() {
         this.push('Stream ');

@@ -18,7 +18,7 @@ interface ExpressApplication extends express.Express {
   [name: string]: any;
 }
 
-interface CreateAppOptions {
+export interface CreateAppOptions {
   expressInstance?: ExpressApplication;
   methods?: {
     handleError?: boolean;
@@ -130,7 +130,8 @@ export function createApp(
 
   // Handle errors.
   app.use(notFound());
-  app.use(handleErrors());
+  const controller = app.foal.services.get(AppController);
+  app.use(handleErrors(options, controller));
 
   return app;
 }
