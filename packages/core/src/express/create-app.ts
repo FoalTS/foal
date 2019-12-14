@@ -66,7 +66,7 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  * Create an Express application from the root controller.
  *
  * @export
- * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
+ * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
  * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares or other settings.
  * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
@@ -78,7 +78,7 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  * @returns {ExpressApplication} The express application.
  */
 export function createApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
+  AppController: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
 ): ExpressApplication {
   const options = getOptions(expressInstanceOrOptions);
   const app: ExpressApplication = options.expressInstance || express();
@@ -119,7 +119,7 @@ export function createApp(
   app.foal = { services };
 
   // Resolve the controllers and hooks and add them to the express instance.
-  const routes = makeControllerRoutes('', [], rootControllerClass, services);
+  const routes = makeControllerRoutes('', [], AppController, services);
   for (const route of routes) {
     app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
@@ -149,7 +149,7 @@ export function createApp(
  * Create an Express application from the root controller and call its "init" method if it exists.
  *
  * @export
- * @param {Class} rootControllerClass - The root controller, usually called `AppController` and located in `src/app`.
+ * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
  * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
@@ -159,11 +159,11 @@ export function createApp(
  * @returns {Promise<ExpressApplication>} The express application.
  */
 export async function createAndInitApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
+  AppController: Class, expressInstanceOrOptions?: ExpressApplication|CreateAppOptions
 ): Promise<ExpressApplication> {
-  const app = createApp(rootControllerClass, expressInstanceOrOptions);
+  const app = createApp(AppController, expressInstanceOrOptions);
 
-  const controller = app.foal.services.get(rootControllerClass);
+  const controller = app.foal.services.get(AppController);
   if (controller.init) {
     await controller.init();
   }
