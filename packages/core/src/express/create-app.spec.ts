@@ -318,25 +318,6 @@ describe('createApp', () => {
     strictEqual(app.foal.services instanceof ServiceManager, true);
   });
 
-  it('should not ignore client errors thrown in express middlewares.', () => {
-    class AppController {
-      @Post('/foo')
-      post(ctx: Context) {
-        return new HttpResponseOK({ body: ctx.request.body });
-      }
-    }
-    const app = createApp(AppController);
-
-    return request(app)
-      .post('/foo')
-      .set('Content-Type', 'text/html; charset=foo')
-      .send('bar')
-      .expect(415)
-      .then(response => {
-        strictEqual(response.text.includes('UnsupportedMediaTypeError: unsupported charset'), true);
-      });
-  });
-
   it('should send a pretty error if the JSON in the request body is invalid.', () => {
     class AppController {
       @Post('/foo')
