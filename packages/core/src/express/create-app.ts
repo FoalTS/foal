@@ -28,7 +28,7 @@ interface CreateAppOptions {
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
 
-function handleJsonErrors(err, req, res, next) {
+function handleJsonErrors(err, _, res, next) {
   if (err.type !== 'entity.parse.failed') {
     next(err);
     return;
@@ -83,43 +83,53 @@ export function createApp(
   const options = getOptions(expressInstanceOrOptions);
   const app: ExpressApplication = options.expressInstance || express();
 
+  // Add optional pre-middlewares.
   for (const middleware of options.preMiddlewares || []) {
     app.use(middleware);
   }
 
+  // Log requests.
   const loggerFormat: string = Config.get(
     'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
-
   if (loggerFormat !== 'none') {
     app.use(logger(loggerFormat));
   }
 
   app.use(protectionHeaders);
 
+  // Serve static files.
   app.use(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticPath', 'public'))
   );
+
+  // Parse request body.
   app.use(express.json());
   app.use(handleJsonErrors);
   app.use(express.urlencoded({ extended: false }));
   app.use(express.text({ type: ['text/*', 'application/graphql'] }));
+
+  // Parse cookies.
   app.use(cookieParser());
 
+  // Create the service and controller manager.
   const services = new ServiceManager();
   app.foal = { services };
 
+  // Resolve the controllers and hooks and add them to the express instance.
   const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
     app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
 
+  // Add optional post-middlewares.
   for (const middleware of options.postMiddlewares || []) {
     app.use(middleware);
   }
 
+  // Handle errors.
   app.use(notFound());
   app.use(async (err, req, res, next) => {
     if (err.expose && err.status) {
@@ -131,9 +141,6 @@ export function createApp(
 
     res.status(500).send(await renderError(err, { ctx: new Context(req) }));
   });
-
-  // Avoir accès au contrôleur racine
-  // Avoir accès au contexte.
 
   return app;
 }
