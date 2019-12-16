@@ -36,6 +36,20 @@ describe('createMiddleware', () => {
       };
     }
 
+    it('should assign a "foal" object with a Context object to the Express request object.', async () => {
+      let context;
+      const app = express()
+        .use(createMiddleware(route(ctx => {
+          context = ctx;
+          return new HttpResponseOK();
+        }), new ServiceManager()));
+      await request(app)
+        .get('/')
+        .end();
+
+      strictEqual(context.request.foal.ctx, context);
+    });
+
     it('should call the controller method with a context created from the request.', async () => {
       let body = {};
       const route: Route = {

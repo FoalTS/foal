@@ -20,6 +20,8 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
   return async (req, res, next) => {
     try {
       const ctx = new Context(req);
+      (req.foal) = { ctx };
+
       let response: undefined | HttpResponse;
 
       const hookPostFunctions: HookPostFunction[] = [];
