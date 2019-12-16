@@ -144,11 +144,8 @@ describe('handleErrors', () => {
         const app = express()
           .use((req, res, next) => {
             expectedContext = new Context(req);
-            next({
-              ctx: expectedContext,
-              error: expectedError,
-              type: 'FOAL_ERROR',
-            });
+            (req as any).foal = { ctx: expectedContext };
+            throw expectedError;
           })
           .use(handleErrors(options, appController, () => {}));
         await request(app)
