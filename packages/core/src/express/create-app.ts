@@ -107,10 +107,11 @@ export function createApp(
   );
 
   // Parse request body.
-  app.use(express.json());
+  const limit = Config.get('settings.bodyParser.limit');
+  app.use(express.json({ limit }));
   app.use(handleJsonErrors);
-  app.use(express.urlencoded({ extended: false }));
-  app.use(express.text({ type: ['text/*', 'application/graphql'] }));
+  app.use(express.urlencoded({ extended: false, limit }));
+  app.use(express.text({ type: ['text/*', 'application/graphql'], limit }));
 
   // Parse cookies.
   app.use(cookieParser());

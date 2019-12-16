@@ -1,5 +1,6 @@
 // std
 import { strictEqual } from 'assert';
+import { Buffer } from 'buffer';
 
 // 3p
 import * as express from 'express';
@@ -33,6 +34,7 @@ describe('createApp', () => {
   afterEach(() => {
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
     delete process.env.SETTING_DEBUG;
+    delete process.env.SETTINGS_BODY_PARSER_LIMIT;
   });
 
   it('should include security headers in HTTP responses.', async () => {
@@ -225,6 +227,50 @@ describe('createApp', () => {
       .type('application/graphql')
       .send('{ me { name } }')
       .expect({ body: '{ me { name } }' });
+  });
+
+  it('should accept higher or lower request body size if this is specified in the configuration.', async () => {
+    process.env.SETTINGS_BODY_PARSER_LIMIT = '10';
+
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK();
+      }
+    }
+
+    const app = createApp(MyController);
+    await Promise.all([
+      // Text
+      request(app)
+        .post('/foo')
+        .type('text/plain')
+        .send(Buffer.alloc(10, 'a').toString('utf8'))
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .type('text/plain')
+        .send(Buffer.alloc(11, 'a').toString('utf8'))
+        .expect(413), // 413 = Payload Too Large
+      // JSON
+      request(app)
+        .post('/foo')
+        .send({ e: 'a' })
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .send({ e: 'aka' })
+        .expect(413), // 413 = Payload Too Large
+      // URL encoded
+      request(app)
+        .post('/foo')
+        .send('foo=bar')
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .send('foo=barrrrr')
+        .expect(413), // 413 = Payload Too Large
+    ]);
   });
 
   it('should use the optional express instance if one is given.', () => {
