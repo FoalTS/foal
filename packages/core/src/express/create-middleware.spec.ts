@@ -4,7 +4,6 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import * as express from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { Readable } from 'stream';
 import * as request from 'supertest';
 
 // FoalTS
@@ -13,10 +12,7 @@ import {
   HttpResponse,
   HttpResponseBadRequest,
   HttpResponseCreated,
-  HttpResponseInternalServerError,
-  HttpResponseMovedPermanently,
   HttpResponseOK,
-  HttpResponseRedirect,
   Route,
   ServiceManager
 } from '../core';
