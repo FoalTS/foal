@@ -128,6 +128,12 @@ describe('createApp', () => {
 
   it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', () => {
     class MyController {
+      @Head('/foo')
+      head() {
+        // A HEAD response does not have a body.
+        return new HttpResponseOK()
+          .setHeader('foo', 'bar');
+      }
       @Get('/foo')
       get() {
         return new HttpResponseOK('get');
@@ -148,11 +154,6 @@ describe('createApp', () => {
       delete() {
         return new HttpResponseOK('delete');
       }
-      @Head('/foo')
-      head() {
-        // A HEAD response does not have a body.
-        return new HttpResponseOK();
-      }
       @Options('/foo')
       options() {
         return new HttpResponseOK('options');
@@ -165,7 +166,7 @@ describe('createApp', () => {
       request(app).patch('/foo').expect('patch'),
       request(app).put('/foo').expect('put'),
       request(app).delete('/foo').expect('delete'),
-      request(app).head('/foo').expect(200),
+      request(app).head('/foo').expect(200).expect('foo', 'bar'),
       request(app).options('/foo').expect('options'),
     ]);
   });
@@ -361,25 +362,6 @@ describe('createApp', () => {
 
     strictEqual(typeof app.foal, 'object');
     strictEqual(app.foal.services instanceof ServiceManager, true);
-  });
-
-  it('should not ignore client errors thrown in express middlewares.', () => {
-    class AppController {
-      @Post('/foo')
-      post(ctx: Context) {
-        return new HttpResponseOK({ body: ctx.request.body });
-      }
-    }
-    const app = createApp(AppController);
-
-    return request(app)
-      .post('/foo')
-      .set('Content-Type', 'text/html; charset=foo')
-      .send('bar')
-      .expect(415)
-      .then(response => {
-        strictEqual(response.text.includes('UnsupportedMediaTypeError: unsupported charset'), true);
-      });
   });
 
   it('should send a pretty error if the JSON in the request body is invalid.', () => {

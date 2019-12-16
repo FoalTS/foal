@@ -4,7 +4,6 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 // 3p
 import * as express from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { Readable } from 'stream';
 import * as request from 'supertest';
 
 // FoalTS
@@ -13,10 +12,7 @@ import {
   HttpResponse,
   HttpResponseBadRequest,
   HttpResponseCreated,
-  HttpResponseInternalServerError,
-  HttpResponseMovedPermanently,
   HttpResponseOK,
-  HttpResponseRedirect,
   Route,
   ServiceManager
 } from '../core';
@@ -35,6 +31,20 @@ describe('createMiddleware', () => {
         propertyKey: 'fn'
       };
     }
+
+    it('should assign a "foal" object with a Context object to the Express request object.', async () => {
+      let context;
+      const app = express()
+        .use(createMiddleware(route(ctx => {
+          context = ctx;
+          return new HttpResponseOK();
+        }), new ServiceManager()));
+      await request(app)
+        .get('/')
+        .end();
+
+      strictEqual(context.request.foal.ctx, context);
+    });
 
     it('should call the controller method with a context created from the request.', async () => {
       let body = {};
@@ -124,204 +134,21 @@ describe('createMiddleware', () => {
     });
 
     describe('when the controller method returns or resolves an instance of HttpResponseSuccess,'
-      + ' HttpResponseClientError or HttpResponseServerError', () => {
+      + ' HttpResponseClientError, HttpResponseServerError or HttpResponseRedirection.', () => {
 
-        it('should send a response with the suitable status.', () => {
+        it('should send the response.', () => {
           const app = express();
 
           app.get('/success', createMiddleware(
-            route(() => new HttpResponseCreated()),
-            new ServiceManager()
-          ));
-          app.get('/client-error', createMiddleware(
-            route(async () => new HttpResponseBadRequest()),
-            new ServiceManager()
-          ));
-          app.get('/server-error', createMiddleware(
-            route(() => new HttpResponseInternalServerError()),
+            route(() => new HttpResponseCreated().setHeader('foo', 'bar')),
             new ServiceManager()
           ));
 
-          return Promise.all([
-            request(app)
-              .get('/success')
-              .expect(201),
-            request(app)
-              .get('/client-error')
-              .expect(400),
-            request(app)
-              .get('/server-error')
-              .expect(500),
-          ]);
+          return request(app)
+            .get('/success')
+            .expect(201)
+            .expect('foo', 'bar');
         });
-
-        it('should send a response with a suitable body depending on response.body.', () => {
-          const app = express();
-
-          app.get('/a', createMiddleware(
-            route(() => new HttpResponseOK('foo')),
-            new ServiceManager()
-          ));
-          app.get('/b', createMiddleware(
-            route(async () => new HttpResponseOK({ message: 'bar' })),
-            new ServiceManager()
-          ));
-          app.get('/c', createMiddleware(
-            route(() => new HttpResponseOK(3)),
-            new ServiceManager()
-          ));
-          app.get('/d', createMiddleware(
-            route(() => new HttpResponseOK()),
-            new ServiceManager()
-          ));
-
-          const stream = new Readable({
-            read() {
-              this.push('Stream ');
-              this.push('content');
-              this.push(null);
-            }
-          });
-
-          app.get('/e', createMiddleware(
-            route(() => new HttpResponseOK(stream, { stream: true })),
-            new ServiceManager()
-          ));
-
-          return Promise.all([
-            request(app)
-              .get('/a')
-              .expect('foo'),
-            request(app)
-              .get('/b')
-              .expect({ message: 'bar' }),
-            request(app)
-              .get('/c')
-              .expect('3'),
-            request(app)
-              .get('/d')
-              .then(response => {
-                deepStrictEqual(response.body, {});
-              }),
-            request(app)
-              .get('/e')
-              .expect('Stream content')
-          ]);
-        });
-
-        it('should send a response with the suitable headers.', () => {
-          const app = express();
-          const successResponse = new HttpResponseCreated();
-          successResponse.setHeader('X-CSRF-Token', 'aaa');
-          const clientErrorResponse = new HttpResponseBadRequest();
-          clientErrorResponse.setHeader('X-CSRF-Token', 'bbb');
-          const serverErrorResponse = new HttpResponseInternalServerError();
-          serverErrorResponse.setHeader('X-CSRF-Token', 'ccc');
-
-          app.get('/success', createMiddleware(
-            route(() => successResponse),
-            new ServiceManager()
-          ));
-          app.get('/client-error', createMiddleware(
-            route(async () => clientErrorResponse),
-            new ServiceManager()
-          ));
-          app.get('/server-error', createMiddleware(
-            route(() => serverErrorResponse),
-            new ServiceManager()
-          ));
-
-          return Promise.all([
-            request(app)
-              .get('/success')
-              .expect('X-CSRF-Token', 'aaa'),
-            request(app)
-              .get('/client-error')
-              .expect('X-CSRF-Token', 'bbb'),
-            request(app)
-              .get('/server-error')
-              .expect('X-CSRF-Token', 'ccc'),
-          ]);
-        });
-
-        it('should send a response with the suitable cookies.', () => {
-          const app = express();
-          const successResponse = new HttpResponseCreated()
-            .setCookie('cookie1', 'cookie1_value_a')
-            .setCookie('cookie2', 'cookie2_value_a', { httpOnly: true });
-          const clientErrorResponse = new HttpResponseBadRequest()
-            .setCookie('cookie1', 'cookie1_value_b')
-            .setCookie('cookie2', 'cookie2_value_b', { httpOnly: true });
-          const serverErrorResponse = new HttpResponseInternalServerError()
-            .setCookie('cookie1', 'cookie1_value_c')
-            .setCookie('cookie2', 'cookie2_value_c', { maxAge: 60 });
-
-          app.get('/success', createMiddleware(
-            route(() => successResponse),
-            new ServiceManager()
-          ));
-          app.get('/client-error', createMiddleware(
-            route(async () => clientErrorResponse),
-            new ServiceManager()
-          ));
-          app.get('/server-error', createMiddleware(
-            route(() => serverErrorResponse),
-            new ServiceManager()
-          ));
-
-          return Promise.all([
-            request(app)
-              .get('/success')
-              .expect('Set-Cookie', 'cookie1=cookie1_value_a; Path=/,cookie2=cookie2_value_a; Path=/; HttpOnly'),
-            request(app)
-              .get('/client-error')
-              .expect('Set-Cookie', 'cookie1=cookie1_value_b; Path=/,cookie2=cookie2_value_b; Path=/; HttpOnly'),
-            request(app)
-              .get('/server-error')
-              .then(response => {
-                const beginning = response.header['set-cookie'][1].split('; Expires')[0];
-                strictEqual(beginning, 'cookie2=cookie2_value_c; Max-Age=60; Path=/');
-              })
-          ]);
-        });
-
-    });
-
-    describe('when the controller method returns or resolves an instance of HttpResponseRedirection', () => {
-
-      it('should redirect the page with the correct status (301).', () => {
-        const app = express();
-        app.get('/a', createMiddleware(route(() => new HttpResponseMovedPermanently('/b')), new ServiceManager()));
-        app.get('/b', (req, res) => res.send('foo'));
-
-        return request(app)
-          .get('/a')
-          .expect('location', '/b')
-          .expect(301);
-      });
-
-      it('should redirect the page with the correct status (302).', () => {
-        const app = express();
-        app.get('/a', createMiddleware(route(() => new HttpResponseRedirect('/b')), new ServiceManager()));
-        app.get('/b', (req, res) => res.send('foo'));
-
-        return request(app)
-          .get('/a')
-          .expect('location', '/b')
-          .expect(302);
-      });
-
-      it('should redirect the page with the suitable headers.', () => {
-        const app = express();
-        const response = new HttpResponseRedirect('/b');
-        response.setHeader('X-CSRF-Token', 'aaa');
-        app.get('/a', createMiddleware(route(() => response), new ServiceManager()));
-        app.get('/b', (req, res) => res.send('foo'));
-
-        return request(app)
-          .get('/a')
-          .expect('X-CSRF-Token', 'aaa');
-      });
 
     });
 
