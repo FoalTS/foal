@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as request from 'supertest';
 
 // FoalTS
-import { HttpResponseOK } from '../core';
+import { Context, HttpResponseOK } from '../core';
 import { CreateAppOptions } from './create-app';
 import { handleErrors } from './handle-errors';
 
@@ -66,12 +66,15 @@ describe('handleErrors', () => {
       it('when options.methods is not defined.', () => test(
         {}, { handleError: () => new HttpResponseOK() }
       ));
+
       it('when options.methods.handleErrors is not defined.', () => test(
         { methods: {} }, { handleError: () => new HttpResponseOK() }
       ));
+
       it('when options.methods.handleErrors is false.', () => test(
         { methods: { handleError: false } }, { handleError: () => new HttpResponseOK() }
       ));
+
       it('when options.methods.handleErrors is true and AppController.handleError is undefined.', () => test(
         { methods: { handleError: true } }, {}
       ));
@@ -87,22 +90,15 @@ describe('handleErrors', () => {
       };
 
       it('should return the response of the method (sync).', () => {
-        const error = new Error();
-        let req2: express.Request|null = null;
         const appController = {
-          handleError(err, req) {
-            strictEqual(err, error);
-            strictEqual(req, req2);
+          handleError() {
             return new HttpResponseOK('hello')
               .setHeader('foo', 'bar');
           }
         };
 
         const app = express()
-          .use((req, res, next) => {
-            req2 = req;
-            throw error;
-          })
+          .use((req, res, next) => { throw new Error(); })
           .use(handleErrors(options, appController, () => {}));
         return request(app)
           .get('/')
@@ -112,12 +108,34 @@ describe('handleErrors', () => {
       });
 
       it('should return the response of the method (async).', () => {
-        const error = new Error();
-        let req2: express.Request|null = null;
         const appController = {
-          async handleError(err, req) {
-            strictEqual(err, error);
-            strictEqual(req, req2);
+          async handleError() {
+            return new HttpResponseOK('hello')
+              .setHeader('foo', 'bar');
+          }
+        };
+
+        const app = express()
+          .use((req, res, next) => { throw new Error(); })
+          .use(handleErrors(options, appController, () => {}));
+        return request(app)
+          .get('/')
+          .expect(200)
+          .expect('foo', 'bar')
+          .expect('hello');
+      });
+
+      it('should call the method with the error and the context (if error thrown in Foal components).', async () => {
+        const expectedError = new Error();
+        let expectedContext: any = null;
+
+        let actualError: any = null;
+        let actualContext: any = null;
+
+        const appController = {
+          async handleError(err, ctx) {
+            actualError = err;
+            actualContext = ctx;
             return new HttpResponseOK('hello')
               .setHeader('foo', 'bar');
           }
@@ -125,15 +143,53 @@ describe('handleErrors', () => {
 
         const app = express()
           .use((req, res, next) => {
-            req2 = req;
-            throw error;
+            expectedContext = new Context(req);
+            next({
+              ctx: expectedContext,
+              error: expectedError,
+              type: 'FOAL_ERROR',
+            });
           })
           .use(handleErrors(options, appController, () => {}));
-        return request(app)
+        await request(app)
           .get('/')
-          .expect(200)
-          .expect('foo', 'bar')
-          .expect('hello');
+          .expect(200);
+
+        strictEqual(actualError, expectedError);
+        strictEqual(actualContext, expectedContext);
+      });
+
+      it('should call the method with the error and a context (if error thrown in Express middlewares).', async () => {
+        const expectedError = new Error();
+        let expectedRequest: any = null;
+
+        let actualError: any = null;
+        let actualContext: any = null;
+
+        const appController = {
+          async handleError(err, ctx) {
+            actualError = err;
+            actualContext = ctx;
+            return new HttpResponseOK('hello')
+              .setHeader('foo', 'bar');
+          }
+        };
+
+        const app = express()
+          .use((req, res, next) => {
+            expectedRequest = req;
+            throw expectedError;
+          })
+          .use(handleErrors(options, appController, () => {}));
+        await request(app)
+          .get('/')
+          .expect(200);
+
+        strictEqual(actualError, expectedError);
+        if (!(actualContext instanceof Context)) {
+          throw new Error('The second argument of handleError should be a Context');
+        }
+        strictEqual(actualContext.request, expectedRequest);
       });
 
       it('should return the default 500 template if the method throws an Error.', () => {
