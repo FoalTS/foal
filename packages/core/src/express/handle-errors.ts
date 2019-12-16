@@ -45,10 +45,10 @@ export function handleErrors(
       try {
         response = await appController.handleError(err, ctx);
       } catch (error) {
-        response = await renderError(err, { ctx });
+        response = await renderError(err, ctx);
       }
     } else {
-      response = await renderError(err, { ctx });
+      response = await renderError(err, ctx);
     }
     sendResponse(response, res);
   };
