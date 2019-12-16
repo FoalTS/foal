@@ -1,8 +1,8 @@
 // std
 import { strictEqual } from 'assert';
+import { Buffer } from 'buffer';
 
 // 3p
-import { Buffer } from 'buffer';
 import * as express from 'express';
 import * as request from 'supertest';
 
