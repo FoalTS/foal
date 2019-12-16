@@ -8,7 +8,7 @@ import { CreateAppOptions } from './create-app';
 import { sendResponse } from './send-response';
 
 /**
- *
+ * Create an express middleware to return a 500 HTML page if an error is thrown and is not caught.
  *
  * @export
  * @param {CreateAppOptions} options - Options supplied to `createApp`.
