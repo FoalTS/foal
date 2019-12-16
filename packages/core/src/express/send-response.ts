@@ -4,6 +4,14 @@ import { Response } from 'express';
 // FoalTS
 import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } from '../core';
 
+/**
+ * Convert a FoalTS response to an Express response.
+ *
+ * @export
+ * @param {HttpResponse} response - FoalTS response.
+ * @param {Response} res - Express response used in middlewares.
+ * @returns {void}
+ */
 export function sendResponse(response: HttpResponse, res: Response): void {
   res.status(response.statusCode);
   res.set(response.getHeaders());

@@ -66,10 +66,12 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  *
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(ExpressApplication|ExpressOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares or other settings.
  * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
  * returned application.
+ * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
+ * used to handle errors.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
@@ -142,7 +144,11 @@ export function createApp(
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
  * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
- * Express middlewares.
+ * Express middlewares or other settings.
+ * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * returned application.
+ * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
+ * used to handle errors.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
