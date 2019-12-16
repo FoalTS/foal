@@ -83,7 +83,8 @@ export function createApp(
     Config.get('settings.staticPathPrefix', ''),
     express.static(Config.get('settings.staticPath', 'public'))
   );
-  app.use(express.json());
+  const limit = Config.get('settings.bodyParser.limit');
+  app.use(express.json({ limit }));
   app.use((err, req, res, next) => {
     if (err.type !== 'entity.parse.failed') {
       next(err);
@@ -94,8 +95,8 @@ export function createApp(
       message: err.message
     });
   });
-  app.use(express.urlencoded({ extended: false }));
-  app.use(express.text({ type: ['text/*', 'application/graphql'] }));
+  app.use(express.urlencoded({ extended: false, limit }));
+  app.use(express.text({ type: ['text/*', 'application/graphql'], limit }));
   app.use(cookieParser());
 
   const services = new ServiceManager();
