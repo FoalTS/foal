@@ -116,7 +116,7 @@ module.exports = {
 With this configuration, database credentials can be provided in a YAML, a JSON or a `.env `configuration file or in environment variables.
 
 *config/default.yml (example 1)*
-```yml
+```yaml
 # ...
 
 database:
@@ -185,7 +185,7 @@ In the example below, we add two new options:
 - and `synchronize` synchronizes the database tables with your entities so your do not have to generate and run migrations during testing.
 
 *config/test.yml*
-```yml
+```yaml
 # ...
 
 database:
