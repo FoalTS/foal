@@ -11,7 +11,7 @@ describe('RedisStore', () => {
   let store: RedisStore;
   const REDIS_URI = 'redis://localhost:6379';
   const config = new ConfigMock();
-  let redisClient;
+  let redisClient: any;
 
   before(() => {
     redisClient = createClient(REDIS_URI);
@@ -22,7 +22,7 @@ describe('RedisStore', () => {
     config.reset();
     config.set('redis.uri', REDIS_URI);
     await new Promise((resolve, reject) => {
-      redisClient.flushdb((err, success) => {
+      redisClient.flushdb((err: any, success: any) => {
         if (err) {
           return reject(err);
         }
@@ -38,7 +38,7 @@ describe('RedisStore', () => {
 
   function asyncSet(key: string, value: string) {
     return new Promise((resolve, reject) => {
-      redisClient.set(key, value, (err, success) => {
+      redisClient.set(key, value, (err: any, success: any) => {
         if (err) {
           return reject(err);
         }
@@ -49,7 +49,7 @@ describe('RedisStore', () => {
 
   function asyncExpire(key: string, value: number) {
     return new Promise((resolve, reject) => {
-      redisClient.expire(key, value, (err, success) => {
+      redisClient.expire(key, value, (err: any, success: any) => {
         if (err) {
           return reject(err);
         }
@@ -60,7 +60,7 @@ describe('RedisStore', () => {
 
   function asyncGet(key: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      redisClient.get(key, (err, val) => {
+      redisClient.get(key, (err: any, val: string) => {
         if (err) {
           return reject(err);
         }
@@ -71,7 +71,7 @@ describe('RedisStore', () => {
 
   function asyncTTL(key: string): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-      redisClient.ttl(key, (err, val) => {
+      redisClient.ttl(key, (err: any, val: number) => {
         if (err) {
           return reject(err);
         }

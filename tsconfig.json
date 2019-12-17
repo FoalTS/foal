@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "./lib/",
-    "noImplicitAny": false,
+    "baseUrl": ".",
     "module": "commonjs",
     "target": "es2017",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "baseUrl": ".",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
     "declaration": true,
     "lib": [
       "es2017",

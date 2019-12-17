@@ -1,5 +1,6 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
+import { Server } from 'http';
 
 // 3p
 import { Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
@@ -17,7 +18,7 @@ describe('GithubProvider', () => {
       userInfoEndpoint = 'http://localhost:3000/users/me';
     }
 
-    let server;
+    let server: Server;
     let provider: GithubProvider;
 
     beforeEach(() => {

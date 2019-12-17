@@ -1,14 +1,19 @@
-// FoalTS
+// std
+import { strictEqual } from 'assert';
+import { Server } from 'http';
+
+// 3p
 import { createApp, Get, HttpResponseOK } from '@foal/core';
 import { isInvalidTokenError } from '@foal/jwt';
-import { strictEqual } from 'assert';
+
+// FoalTS
 import { getRSAPublicKeyFromJWKS, Options } from './get-rsa-public-key-from-jwks';
 
 describe('getRSAPublicKeyFromJWKS', () => {
 
   describe('return a function that', () => {
 
-    let server;
+    let server: Server;
 
     class AppController {
       @Get('/.well-known/jwks.json')

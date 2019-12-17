@@ -68,7 +68,7 @@ export class Generator {
     let content = template;
     for (const key in locals) {
       if (locals.hasOwnProperty(key)) {
-        content = content.split(`/* ${key} */`).join(locals[key]);
+        content = content.split(`/* ${key} */`).join((locals as any)[key]);
       }
     }
     writeFileSync(join(this.root, destPath), content, 'utf8');

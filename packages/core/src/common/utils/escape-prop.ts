@@ -7,10 +7,10 @@ import { escape } from './escape';
  * cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md
  *
  * @export
- * @param {object} object - The object which contains the property to escape.
+ * @param {any} object - The object which contains the property to escape.
  * @param {string} propName - The property name.
  */
-export function escapeProp(object: object, propName: string): void {
+export function escapeProp(object: any, propName: string): void {
   const type = typeof object[propName];
   if (type !== 'string') {
     throw new TypeError(`${propName} should be a string (got ${type}).`);

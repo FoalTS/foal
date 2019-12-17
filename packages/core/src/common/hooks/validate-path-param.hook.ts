@@ -46,7 +46,7 @@ export function ValidatePathParam(
       return { in: 'path', name, required: true, schema };
     }
 
-    const apiPathParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiPathParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiPathParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

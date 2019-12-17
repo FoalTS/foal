@@ -2,7 +2,6 @@
   "compilerOptions": {
     "outDir": "build",
     "sourceMap": true,
-    "noImplicitAny": false,
     "module": "commonjs",
     "target": "es2017",
     "emitDecoratorMetadata": true,

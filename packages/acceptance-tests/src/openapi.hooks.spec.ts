@@ -31,9 +31,7 @@ describe('Foal', () => {
         },
         type: 'object',
       })
-      createProduct(ctx) {
-
-      }
+      createProduct() {}
     }
 
     const yamlDocument = readFileSync(join(__dirname, './assets/openapi.hooks.yml'), 'utf8');

@@ -17,6 +17,7 @@
 // std
 import { deepStrictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
+import { get, Server } from 'http';
 
 // 3p
 import { controller, createApp, dependency } from '@foal/core';
@@ -29,7 +30,6 @@ import gql from 'graphql-tag';
 import { buildSchema as buildTypeGraphQLSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
 
 // FoalTS
-import { get } from 'http';
 import { FormatError } from './format-error.decorator';
 import { GraphQLController } from './graphql.controller';
 import { schemaFromTypeGlob } from './schema-from-type-glob';
@@ -45,7 +45,7 @@ type User {
 
 describe('[Acceptance test] GraphQLController', () => {
 
-  let server;
+  let server: Server;
 
   afterEach(() => {
     if (existsSync('./test-dir/my-defs.graphql')) {
@@ -61,7 +61,7 @@ describe('[Acceptance test] GraphQLController', () => {
 
   describe('should support common GraphQL clients such as', () => {
     class AppResolver {
-      user(args, context, info) {
+      user(args: any, context: any, info: any) {
         return {
           id: args.id,
           name: 'someone!'
@@ -117,7 +117,7 @@ describe('[Acceptance test] GraphQLController', () => {
 
   it('should work with type definitions located in separate files.', async () => {
     class AppResolver {
-      user(args, context, info) {
+      user(args: any, context: any, info: any) {
         return {
           id: args.id,
           name: 'someone!'

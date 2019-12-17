@@ -133,7 +133,7 @@ describe('handleErrors', () => {
         let actualContext: any = null;
 
         const appController = {
-          async handleError(err, ctx) {
+          async handleError(err: Error, ctx: Context) {
             actualError = err;
             actualContext = ctx;
             return new HttpResponseOK('hello')
@@ -164,7 +164,7 @@ describe('handleErrors', () => {
         let actualContext: any = null;
 
         const appController = {
-          async handleError(err, ctx) {
+          async handleError(err: Error, ctx: Context) {
             actualError = err;
             actualContext = ctx;
             return new HttpResponseOK('hello')

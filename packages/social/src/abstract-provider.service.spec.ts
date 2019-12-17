@@ -1,5 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { Server } from 'http';
 import { URLSearchParams } from 'url';
 
 // 3p
@@ -263,7 +264,7 @@ describe('AbstractProvider', () => {
 
   describe('has a "getTokens" method that', () => {
 
-    let server;
+    let server: Server;
 
     afterEach(() => {
       if (server) {
@@ -392,7 +393,7 @@ describe('AbstractProvider', () => {
 
   describe('has a "getUserInfo" method that', () => {
 
-    let server;
+    let server: Server;
 
     beforeEach(() => {
       provider = createService(ConcreteProvider, { configInstance });

@@ -68,7 +68,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { codeName: string, name: string }) {
   const permission = new Permission();
   permission.codeName = args.codeName;
   permission.name = args.name;
@@ -165,7 +165,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { codeName: string, name: string, permissions: string[] }) {
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;
@@ -173,7 +173,7 @@ export async function main(args) {
 
   await createConnection();
 
-  for (const codeName of args.permissions as string[]) {
+  for (const codeName of args.permissions) {
     const permission = await getRepository(Permission).findOne({ codeName });
     if (!permission) {
       console.log(`No permission with the code name "${codeName}" was found.`);
@@ -248,7 +248,7 @@ If you want the `hasPerm` method to work on the context `user` property, you mus
 
 *Example with JSON Web Tokens*
 ```typescript
-import { Get } from '@foal/core';
+import { Context, Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 import { fetchUserWithPermissions } from '@foal/typeorm';
 
@@ -257,7 +257,7 @@ import { fetchUserWithPermissions } from '@foal/typeorm';
 })
 export class ProductController {
   @Get('/products')
-  readProduct(ctx) {
+  readProduct(ctx: Context) {
     if (!ctx.user.hasPerm('read-products')) {
       return new HttpResponseForbidden();
     }
@@ -268,7 +268,7 @@ export class ProductController {
 
 *Example with Sessions Tokens*
 ```typescript
-import { Get, TokenRequired } from '@foal/core';
+import { Context, Get, TokenRequired } from '@foal/core';
 import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 
 @TokenRequired({
@@ -277,7 +277,7 @@ import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 })
 export class ProductController {
   @Get('/products')
-  readProduct(ctx) {
+  readProduct(ctx: Context) {
     if (!ctx.user.hasPerm('read-products')) {
       return new HttpResponseForbidden();
     }
@@ -310,7 +310,7 @@ export class ProductController {
 
 *Example*
 ```typescript
-import { Get } from '@foal/core';
+import { Context, Get } from '@foal/core';
 import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
 import { JWTRequired } from '@foal/jwt';
 
@@ -318,7 +318,7 @@ import { JWTRequired } from '@foal/jwt';
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')
-  readProduct(ctx) {
+  readProduct(ctx: Context) {
     return new HttpResponseOK([]);
   }
 }

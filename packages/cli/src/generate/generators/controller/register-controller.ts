@@ -6,12 +6,13 @@ function createNamedImport(specifiers: string[], path: string): string {
 
 function addImport(source: string, importDeclaration: string): string {
   const regex = new RegExp('import (.*) from (.*);', 'g');
-  let lastOccurence;
-  let lastExec;
+  let lastOccurence: RegExpExecArray|undefined;
+  let lastExec: RegExpExecArray|null;
   while ((lastExec = regex.exec(source)) !== null) {
     lastOccurence = lastExec;
   }
-  const endPos = lastOccurence.index + lastOccurence[0].length;
+  // TODO: remove the "as RegExpExecArray".
+  const endPos = (lastOccurence as RegExpExecArray).index + (lastOccurence as RegExpExecArray)[0].length;
   return source.substr(0, endPos) + '\n' + importDeclaration + source.substr(endPos);
 }
 
