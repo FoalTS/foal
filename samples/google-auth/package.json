@@ -35,7 +35,7 @@
     "@foal/jwt": "^1.2.0",
     "@foal/typeorm": "^1.0.0",
     "source-map-support": "^0.5.1",
-    "sqlite3": "^4.0.0",
+    "sqlite3": "^4.1.1",
     "typeorm": "^0.2.6"
   },
   "devDependencies": {
