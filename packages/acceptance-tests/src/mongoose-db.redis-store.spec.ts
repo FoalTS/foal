@@ -22,7 +22,7 @@ import {
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
-import { createClient, RedisClient } from 'redis';
+import * as redis from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
@@ -32,7 +32,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
 
   let app: ExpressApplication;
   let token: string;
-  let redisClient: RedisClient;
+  let redisClient: redis.RedisClient;
 
   const UserSchema: Schema = new Schema({
     email: {
@@ -131,7 +131,7 @@ describe('[Sample] Mongoose DB & Redis Store', async () => {
     process.env.SETTINGS_SESSION_SECRET = 'session-secret';
     await connect('mongodb://localhost:27017/e2e_db', { useNewUrlParser: true, useCreateIndex: true });
 
-    redisClient = createClient();
+    redisClient = redis.createClient();
 
     await new Promise((resolve, reject) => {
       UserModel.deleteMany({}, err => err ? reject(err) : resolve());
