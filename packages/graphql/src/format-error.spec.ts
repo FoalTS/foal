@@ -25,7 +25,7 @@ describe('formatError', () => {
       function resolver() {
         return Promise.reject(new Error('hello'));
       }
-      function formatFunction(err) {
+      function formatFunction(err: Error) {
         return new Error(err.message + '!!!');
       }
 
@@ -45,7 +45,7 @@ describe('formatError', () => {
       function resolver() {
         throw new Error('hello');
       }
-      function formatFunction(err) {
+      function formatFunction(err: Error) {
         return new Error(err.message + '!!!');
       }
 
@@ -65,7 +65,7 @@ describe('formatError', () => {
       function resolver() {
         return Promise.reject(new Error('hello'));
       }
-      function formatFunction(err) {
+      function formatFunction(err: Error) {
         return Promise.resolve(new Error(err.message + '!!!'));
       }
 

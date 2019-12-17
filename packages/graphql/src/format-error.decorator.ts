@@ -11,7 +11,7 @@ import { maskAndLogError } from './mask-and-log-error';
  * @returns {(target, methodName, descriptor) => any}
  */
 export function FormatError(formatFunction: (err: any) => any = maskAndLogError):
-    (target, methodName, descriptor) => any {
+    (target: any, methodName: string, descriptor: PropertyDescriptor) => any {
   return (target, methodName, descriptor) => {
     descriptor.value = formatError(descriptor.value, formatFunction);
     return descriptor;
