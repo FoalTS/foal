@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
-import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager } from '../core';
+import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager, dependency } from '../core';
 import { createAndInitApp, createApp } from './create-app';
 
 describe('createApp', () => {
@@ -75,7 +75,7 @@ describe('createApp', () => {
   });
 
   it('should serve static files (with the proper headers).', async () => {
-    const app = createApp(class {});
+    const app = createApp(class { });
     await request(app)
       .get('/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
@@ -86,7 +86,7 @@ describe('createApp', () => {
   it('should support custom path prefix when serving static files.', async () => {
     process.env.SETTINGS_STATIC_PATH_PREFIX = '/prefix';
 
-    const app = createApp(class {});
+    const app = createApp(class { });
     await request(app)
       .get('/prefix/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
@@ -112,7 +112,7 @@ describe('createApp', () => {
   });
 
   it('should return 404 "Not Found" on requests that have no handlers.', () => {
-    const app = createApp(class {});
+    const app = createApp(class { });
     return Promise.all([
       request(app).get('/foo').expect(404),
       request(app).post('/foo').expect(404),
@@ -228,14 +228,14 @@ describe('createApp', () => {
 
   it('should use the optional express instance if one is given.', () => {
     const expected = express();
-    const actual = createApp(class {}, expected);
+    const actual = createApp(class { }, expected);
 
     strictEqual(actual, expected);
   });
 
   it('should use the optional options.expressInstance if one is given.', () => {
     const expected = express();
-    const actual = createApp(class {}, {
+    const actual = createApp(class { }, {
       expressInstance: expected
     });
 
@@ -311,7 +311,7 @@ describe('createApp', () => {
   });
 
   it('should make the serviceManager available from the express instance.', () => {
-    const app = createApp(class {});
+    const app = createApp(class { });
 
     strictEqual(typeof app.foal, 'object');
     strictEqual(app.foal.services instanceof ServiceManager, true);
@@ -356,6 +356,32 @@ describe('createApp', () => {
       });
   });
 
+  it('should use serviceManager if provided', async () => {
+    class SomeService {
+      test() { throw new Error('Shout not get called'); }
+    }
+    class MockService {
+      test() { return 'bar'; }
+    }
+    class AppController {
+      @dependency
+      myService: SomeService
+
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK(this.myService.test());
+      }
+    }
+    const serviceManager = new ServiceManager();
+    serviceManager.set(SomeService, new MockService());
+
+    const app = createApp(AppController, {}, serviceManager);
+
+    return await request(app)
+      .post('/foo')
+      .expect(200)
+      .expect('bar');
+  });
 });
 
 describe('createAndInitApp', () => {

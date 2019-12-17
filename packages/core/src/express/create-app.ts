@@ -37,10 +37,14 @@ interface ExpressOptions {
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
+ * @param {(ServiceManager)} serviceManager - Prebuilt and configured Service Manager for optionally overriding the 
+ * mapped identities.
  * @returns {ExpressApplication} The express application.
  */
 export function createApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions
+  rootControllerClass: Class,
+  expressInstanceOrOptions?: ExpressApplication | ExpressOptions,
+  serviceManager?: ServiceManager
 ): ExpressApplication {
   let app: ExpressApplication = express();
 
@@ -59,7 +63,7 @@ export function createApp(
 
   const LOG_FORMAT_NONE = 'none';
 
-  const loggerFormat: string =  Config.get(
+  const loggerFormat: string = Config.get(
     'settings.loggerFormat',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
@@ -98,7 +102,7 @@ export function createApp(
   app.use(express.text({ type: ['text/*', 'application/graphql'] }));
   app.use(cookieParser());
 
-  const services = new ServiceManager();
+  const services = serviceManager || new ServiceManager();
   app.foal = { services };
   const routes = makeControllerRoutes('', [], rootControllerClass, services);
   for (const route of routes) {
@@ -153,7 +157,7 @@ export function createApp(
  * @returns {Promise<ExpressApplication>} The express application.
  */
 export async function createAndInitApp(
-  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication|ExpressOptions
+  rootControllerClass: Class, expressInstanceOrOptions?: ExpressApplication | ExpressOptions
 ): Promise<ExpressApplication> {
   const app = createApp(rootControllerClass, expressInstanceOrOptions);
 
