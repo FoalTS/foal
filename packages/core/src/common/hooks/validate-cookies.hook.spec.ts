@@ -42,7 +42,7 @@ describe('ValidateCookies', () => {
         + ' ajv for the given schema.', () => {
       const hook = getHookFunction(ValidateCookies(schema));
 
-      function context(cookies) {
+      function context(cookies: any) {
         const ctx = new Context({});
         ctx.request.cookies = cookies;
         return ctx;

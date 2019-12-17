@@ -301,7 +301,9 @@ describe('createApp', () => {
 
     const app = createApp(AppController, {
       preMiddlewares: [
-        (req, res, next) => { req.foalMessage = 'Hello world!'; next(); }
+        (req: express.Request, res: express.Response, next: express.NextFunction) => {
+          (req as any).foalMessage = 'Hello world!'; next();
+        }
       ]
     });
 

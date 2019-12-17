@@ -52,7 +52,7 @@ export function ValidateQueryParam(
       return result;
     }
 
-    const apiQueryParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiQueryParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiQueryParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

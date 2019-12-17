@@ -35,7 +35,7 @@ describe('ValidateBody', () => {
           + ' ajv for the given schema.', () => {
         const hook = getHookFunction(ValidateBody(schema));
 
-        function context(body) {
+        function context(body: any) {
           const ctx = new Context({});
           ctx.request.body = body;
           return ctx;
@@ -91,7 +91,7 @@ describe('ValidateBody', () => {
           + ' ajv for the given schema.', () => {
         const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind({ schema });
 
-        function context(body) {
+        function context(body: any) {
           const ctx = new Context({});
           ctx.request.body = body;
           return ctx;

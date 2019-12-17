@@ -52,7 +52,7 @@ export function ValidateCookie(
       return result;
     }
 
-    const apiCookieParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiCookieParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiCookieParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

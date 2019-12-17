@@ -42,7 +42,7 @@ describe('ValidateParams', () => {
         + ' ajv for the given schema.', () => {
       const hook = getHookFunction(ValidateParams(schema));
 
-      function context(params) {
+      function context(params: any) {
         const ctx = new Context({});
         ctx.request.params = params;
         return ctx;

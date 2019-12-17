@@ -27,7 +27,7 @@ export interface CreateAppOptions {
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
 
-function handleJsonErrors(err, _, res, next) {
+function handleJsonErrors(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
   if (err.type !== 'entity.parse.failed') {
     next(err);
     return;
@@ -38,7 +38,7 @@ function handleJsonErrors(err, _, res, next) {
   });
 }
 
-function protectionHeaders(_, res, next) {
+function protectionHeaders(req: express.Request, res: express.Response, next: express.NextFunction) {
   res.removeHeader('X-Powered-By');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-DNS-Prefetch-Control', 'off');

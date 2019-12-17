@@ -7,13 +7,12 @@ import { Log } from './log.hook';
 
 describe('Log', () => {
 
-  let logFn;
+  let logFn: (message?: any, ...optionalParams: any[]) => void;
+  let msgs: any[];
 
   beforeEach(() => {
-    logFn = (...args) => {
-      logFn.msgs = logFn.msgs || [];
-      logFn.msgs.push(args);
-    };
+    msgs = [];
+    logFn = (...args) => msgs.push(args);
   });
 
   it('should log the message.', () => {
@@ -22,8 +21,8 @@ describe('Log', () => {
     const ctx = new Context({});
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 1);
-    strictEqual(logFn.msgs[0][0], 'foo');
+    strictEqual(msgs.length, 1);
+    strictEqual(msgs[0][0], 'foo');
   });
 
   it('should log the request body if options.body = true.', () => {
@@ -33,9 +32,9 @@ describe('Log', () => {
     const ctx = new Context({ body });
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 2);
-    strictEqual(logFn.msgs[1][0], 'Body: ');
-    strictEqual(logFn.msgs[1][1], body);
+    strictEqual(msgs.length, 2);
+    strictEqual(msgs[1][0], 'Body: ');
+    strictEqual(msgs[1][1], body);
   });
 
   it('should log the request params if options.params = true.', () => {
@@ -45,9 +44,9 @@ describe('Log', () => {
     const ctx = new Context({ params });
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 2);
-    strictEqual(logFn.msgs[1][0], 'Params: ');
-    strictEqual(logFn.msgs[1][1], params);
+    strictEqual(msgs.length, 2);
+    strictEqual(msgs[1][0], 'Params: ');
+    strictEqual(msgs[1][1], params);
   });
 
   it('should log the request query if options.query = true.', () => {
@@ -57,9 +56,9 @@ describe('Log', () => {
     const ctx = new Context({ query });
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 2);
-    strictEqual(logFn.msgs[1][0], 'Query: ');
-    strictEqual(logFn.msgs[1][1], query);
+    strictEqual(msgs.length, 2);
+    strictEqual(msgs[1][0], 'Query: ');
+    strictEqual(msgs[1][1], query);
   });
 
   it('should log the request headers if options.headers is a string array.', () => {
@@ -74,12 +73,12 @@ describe('Log', () => {
     const ctx = new Context({ headers });
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 3);
-    strictEqual(logFn.msgs[1][0], 'my-header1: ');
-    strictEqual(logFn.msgs[1][1], 'header 1');
-    strictEqual(logFn.msgs[2][0], 'my-header2: ');
+    strictEqual(msgs.length, 3);
+    strictEqual(msgs[1][0], 'my-header1: ');
+    strictEqual(msgs[1][1], 'header 1');
+    strictEqual(msgs[2][0], 'my-header2: ');
     // Test the case
-    strictEqual(logFn.msgs[2][1], 'header 2');
+    strictEqual(msgs[2][1], 'header 2');
   });
 
   it('should log all the request headers if options.headers = true.', () => {
@@ -93,9 +92,9 @@ describe('Log', () => {
     const ctx = new Context({ headers });
     hook(ctx, new ServiceManager());
 
-    strictEqual(logFn.msgs.length, 2);
-    strictEqual(logFn.msgs[1][0], 'Headers: ');
-    strictEqual(logFn.msgs[1][1], headers);
+    strictEqual(msgs.length, 2);
+    strictEqual(msgs[1][0], 'Headers: ');
+    strictEqual(msgs[1][1], headers);
   });
 
 });

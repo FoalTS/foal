@@ -22,7 +22,7 @@ describe('createMiddleware', () => {
 
   describe('should create a middleware that', () => {
 
-    function route(fn): Route {
+    function route(fn: (...args: any) => any): Route {
       return {
         controller: { fn },
         hooks: [],
@@ -33,17 +33,23 @@ describe('createMiddleware', () => {
     }
 
     it('should assign a "foal" object with a Context object to the Express request object.', async () => {
-      let context;
+      let context: Context|undefined;
+
       const app = express()
         .use(createMiddleware(route(ctx => {
           context = ctx;
           return new HttpResponseOK();
         }), new ServiceManager()));
+
       await request(app)
         .get('/')
         .end();
 
-      strictEqual(context.request.foal.ctx, context);
+      if (!context) {
+        throw new Error('context should be defined');
+      }
+
+      strictEqual((context.request as any).foal.ctx, context);
     });
 
     it('should call the controller method with a context created from the request.', async () => {
@@ -63,7 +69,7 @@ describe('createMiddleware', () => {
 
       const middleware = createMiddleware(route, new ServiceManager());
 
-      await middleware(request, response);
+      await middleware(request, response, () => {});
 
       deepStrictEqual(body, request.body);
     });
@@ -92,7 +98,7 @@ describe('createMiddleware', () => {
 
       const middleware = createMiddleware(route, expectedServiceManager);
 
-      await middleware(request, response);
+      await middleware(request, response, () => {});
 
       strictEqual(str, 'abc');
       strictEqual(actualServiceManager, expectedServiceManager);
@@ -127,7 +133,7 @@ describe('createMiddleware', () => {
 
       const middleware = createMiddleware(route, expectedServiceManager);
 
-      await middleware(request, response);
+      await middleware(request, response, () => {});
 
       strictEqual(str, 'cba');
       strictEqual(actualResponse, expectedReponse);
@@ -158,7 +164,7 @@ describe('createMiddleware', () => {
       it('should forward an Error to the next error-handling middleware.', done => {
         const app = express();
         app.get('/a', createMiddleware(route(() => ({})), new ServiceManager()));
-        app.use((err, req, res, next) => {
+        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'The controller method "fn" should return an HttpResponse.');
@@ -184,7 +190,7 @@ describe('createMiddleware', () => {
         path: '',
         propertyKey: 'bar'
       }, new ServiceManager()));
-      app.use((err, req, res, next) => {
+      app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         try {
           ok(err instanceof Error);
           strictEqual(err.message, 'Error thrown in a hook.');
@@ -204,7 +210,7 @@ describe('createMiddleware', () => {
           route(() => { throw new Error('Error thrown in a controller method.'); }),
           new ServiceManager())
         );
-        app.use((err, req, res, next) => {
+        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'Error thrown in a controller method.');
@@ -228,7 +234,7 @@ describe('createMiddleware', () => {
         path: '',
         propertyKey: 'bar'
       }, new ServiceManager()));
-      app.use((err, req, res, next) => {
+      app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         try {
           ok(err instanceof Error);
           strictEqual(err.message, 'Error rejected in a hook.');
@@ -248,7 +254,7 @@ describe('createMiddleware', () => {
           route(async () => { throw new Error('Error rejected in a controller method.'); }),
           new ServiceManager())
         );
-        app.use((err, req, res, next) => {
+        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'Error rejected in a controller method.');

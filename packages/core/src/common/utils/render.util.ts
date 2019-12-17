@@ -13,10 +13,10 @@ import { Config, HttpResponseOK } from '../../core';
  *
  * @export
  * @param {string} template - The template.
- * @param {object} locals - The variables required by the template.
+ * @param {any} locals - The variables required by the template.
  * @returns {string} The rendered template.
  */
-export function renderToString(template: string, locals: object): string {
+export function renderToString(template: string, locals: any): string {
   // tslint:disable-next-line:forin
   for (const key in locals) {
     template = template.replace(new RegExp(`{{ ${key} }}`, 'g'), locals[key]);
@@ -46,7 +46,7 @@ export async function render(templatePath: string, locals: object = {}, dirname?
     const { renderToString, __express } = require(templateEngine);
     if (__express) {
       return new Promise<HttpResponseOK>((resolve, reject) => {
-        __express(path, locals, (err, html) => {
+        __express(path, locals, (err: any, html: string) => {
           if (err) {
             return reject(err);
           }
