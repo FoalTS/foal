@@ -10,7 +10,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: any) {
   await createConnection();
 
   // Do something.
