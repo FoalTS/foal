@@ -94,7 +94,7 @@ export class Product extends BaseEntity {
 
 *api.controller.ts*
 ```typescript
-import { HttpResponseCreated, Post, ValidateBody } from '@foal/core';
+import { Context, HttpResponseCreated, Post, ValidateBody } from '@foal/core';
 import { UnserializeBody } from '@foal/typestack';
 import { Product } from '../entities';
 
@@ -110,7 +110,7 @@ export class ApiController {
     type: 'object',
   })
   @UnserializeBody(Product)
-  async createProduct(ctx) {
+  async createProduct(ctx: Context) {
     // ctx.request.body is an instance of Product
     const product = ctx.request.body;
     await product.save();

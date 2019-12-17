@@ -6,7 +6,7 @@ You can schedule jobs using [shell scripts](../development-environment/create-an
 
 *scripts/fetch-metrics.ts*
 ```typescript
-export function main(args) {
+export function main(args: any) {
   // Do some stuff
 }
 
@@ -18,7 +18,7 @@ export function main(args) {
 import { scheduleJob } from 'node-schedule';
 import { main as fetchMetrics } from './fetch-metrics';
 
-export async function main(args) {
+export async function main(args: any) {
   console.log('Scheduling the job...');
 
   // Run the fetch-metrics script every day at 10:00 AM.

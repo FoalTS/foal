@@ -13,7 +13,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: any) {
+export async function main(args: { codeName: string, name: string, permissions: string[] }) {
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;
@@ -25,7 +25,7 @@ export async function main(args: any) {
     type: 'sqlite',
   });
 
-  for (const codeName of args.permissions as string[]) {
+  for (const codeName of args.permissions) {
     const permission = await getRepository(Permission).findOne({ codeName });
     if (!permission) {
       console.log(`No permission with the code name "${codeName}" was found.`);

@@ -80,14 +80,14 @@ Authorization: Bearer my-session-token
 The hooks `@TokenRequired` and `@TokenOptional` will then check the token and retrieve the associated session and user.
 
 ```typescript
-import { Get, HttpResponseOK, TokenRequired } from '@foal/core';
+import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 @TokenRequired({ store: TypeORMStore })
 class ApiController {
 
   @Get('/products')
-  readProducts(ctx) {
+  readProducts(ctx: Context) {
     // ctx.user and ctx.session are defined.
     return new HttpResponseOK();
   }
@@ -112,7 +112,7 @@ The hooks will assign the value it returns to `ctx.user`.
 For example, you can use the `fetchUser` function to retrieve the user from the database:
 
 ```typescript
-import { Get, HttpResponseOK, TokenRequired } from '@foal/core';
+import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 
 import { User } from '../entities';
@@ -124,7 +124,7 @@ import { User } from '../entities';
 class ApiController {
 
   @Get('/products')
-  readProducts(ctx) {
+  readProducts(ctx: Context) {
     // ctx.user is an instance of User
     return new HttpResponseOK();
   }
@@ -309,7 +309,7 @@ export const schema = {
   }
 }
 
-export async function main(args) {
+export async function main(args: { sessionID?: string, token?: string }) {
   if (!args.sessionID && !args.token) {
     console.error('You must provide the session token or session ID.');
     return;

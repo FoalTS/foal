@@ -12,7 +12,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: any) {
+export async function main(args: { codeName: string, name: string }) {
   const permission = new Permission();
   permission.codeName = args.codeName;
   permission.name = args.name;
