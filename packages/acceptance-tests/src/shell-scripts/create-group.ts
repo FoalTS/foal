@@ -13,7 +13,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: any) {
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;

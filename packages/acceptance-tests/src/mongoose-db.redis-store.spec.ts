@@ -6,6 +6,7 @@ import {
   Context,
   createApp,
   dependency,
+  ExpressApplication,
   Get,
   hashPassword,
   Hook,
@@ -21,7 +22,7 @@ import {
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
-import { createClient } from 'redis';
+import { createClient, RedisClient } from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
@@ -29,9 +30,9 @@ import { fetchUser } from '@foal/mongoose';
 
 describe('[Sample] Mongoose DB & Redis Store', async () => {
 
-  let app: any;
+  let app: ExpressApplication;
   let token: string;
-  let redisClient: any;
+  let redisClient: RedisClient;
 
   const UserSchema: Schema = new Schema({
     email: {

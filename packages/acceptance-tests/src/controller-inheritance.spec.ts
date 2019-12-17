@@ -34,10 +34,10 @@ describe('FoalTS', () => {
     /* Abstract */
 
     interface CRUDService {
-      create(body: any);
-      findById(id: any);
-      update(id: any, body: any);
-      deleteById(id: any);
+      create(body: any): any;
+      findById(id: any): any;
+      update(id: any, body: any): any;
+      deleteById(id: any): any;
     }
 
     abstract class BaseController {

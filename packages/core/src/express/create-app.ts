@@ -14,7 +14,7 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-interface ExpressApplication extends express.Express {
+export interface ExpressApplication extends express.Express {
   [name: string]: any;
 }
 

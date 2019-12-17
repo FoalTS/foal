@@ -1,6 +1,7 @@
 // std
 import { deepStrictEqual } from 'assert';
 import { readFileSync } from 'fs';
+import { Server } from 'http';
 import { join } from 'path';
 
 // 3p
@@ -15,7 +16,7 @@ import { JWTRequired } from '@foal/jwt';
 
 describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retreived', () => {
 
-  let server;
+  let server: Server;
 
   afterEach(() => {
     if (server) {
