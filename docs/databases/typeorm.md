@@ -169,6 +169,7 @@ npm install pg --save
 ## Configuration and Testing
 
 When running the command `npm run test` with the above configuration, FoalTS will try to retrieve the database configuration in this order:
+
 1. Environment variables.
 2. `.env` file.
 3. `config/test.yml` and `config/test.json`.
