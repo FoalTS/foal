@@ -41,7 +41,7 @@ export function getRSAPublicKeyFromJWKS(options: Options): (header: any, payload
     const client = jwksClient(options);
 
     return new Promise<string>((resolve, reject) => {
-      client.getSigningKey(kid, (err, key) => {
+      client.getSigningKey(kid, (err: any, key: any) => {
         if (err) {
           return reject(err.name === 'SigningKeyNotFoundError' ? new InvalidTokenError('invalid kid') : err);
         }
