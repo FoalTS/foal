@@ -15,7 +15,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { email: string, password: string }) {
   await createConnection();
 
   const user = new User();
