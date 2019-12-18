@@ -27,7 +27,7 @@ export async function main() {
 ```typescript
 import { Context, HttpResponse, renderError } from '@foal/core';
 
-function sendErrorToAnExternalService(error, user) {
+function sendErrorToAnExternalService(error: Error, user: User) {
   // ...
 }
 

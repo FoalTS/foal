@@ -45,7 +45,7 @@ class AppController {
 
   @Get('/products')
   listProducts() {
-    return new HttpResponseOK(this.products)
+    return new HttpResponseOK(this.products);
   }
 
   @Post('/products')

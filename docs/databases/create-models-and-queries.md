@@ -35,6 +35,8 @@ The class `Product` represents the database table and its instances represent th
 ## Using Entities
 
 ```typescript
+import { getRepository } from 'typeorm';
+
 const repository = getRepository(Product);
 
 const product = new Product();
@@ -53,6 +55,8 @@ await repository.remove(chair);
 ## Queries
 
 ```typescript
+import { getRepository } from 'typeorm';
+
 const firstProduct = await getRepository(Product)
   .createQueryBuilder('product')
   .where('product.id = :id', { id: 1 })

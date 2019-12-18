@@ -178,7 +178,7 @@ export class AuthController {
 FoalTS sessions can also be used with cookies. The hook `cookie` option and the `setSessionCookie` and `removeSessionCookie` funtions are dedicated to this use.
 
 ```typescript
-import { setSessionCookie, removeSessionCookie } from '@foal/core';
+import { HttpResponseOK, Post, removeSessionCookie, setSessionCookie, TokenRequired } from '@foal/core';
 
 export class AuthController {
 
@@ -481,8 +481,10 @@ foal run clean-up-expired-sessions
 If necessary, you can also create your own session store. This one must inherit the abstract class `SessionStore`.
 
 ```typescript
+import { Session, SessionOptions } from '@foal/core';
+
 class CustomSessionStore extends SessionStore {
-  createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
+  createAndSaveSession(sessionContent: any, options?: SessionOptions | undefined): Promise<Session> {
     throw new Error('Method not implemented.');
   }
   update(session: Session): Promise<void> {

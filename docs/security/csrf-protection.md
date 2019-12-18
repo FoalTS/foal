@@ -214,7 +214,7 @@ foal createsecret
 1. Generate a token and send it in a cookie when rendering a page.
 
 ```typescript
-import { Get, HttpResponseOK, setCsrfCookie } from '@foal/core';
+import { Context, Get, HttpResponseOK, setCsrfCookie } from '@foal/core';
 import { getCsrfToken } from '@foal/csrf';
 
 class PageController {

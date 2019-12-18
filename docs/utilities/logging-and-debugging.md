@@ -69,7 +69,7 @@ Here's an example on how to use it with Foal:
 import * as winston from 'winston';
 
 export class LoggerService {
-  private logger;
+  private logger: any;
 
   constructor() {
     this.logger = winston.createLogger({
@@ -82,15 +82,15 @@ export class LoggerService {
     });
   }
 
-  info(msg) {
+  info(msg: string) {
     this.logger.info(msg);
   }
 
-  warn(msg) {
+  warn(msg: string) {
     this.logger.warn(msg);
   }
 
-  error(msg) {
+  error(msg: string) {
     this.logger.error(msg);
   }
 

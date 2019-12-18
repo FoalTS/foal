@@ -15,6 +15,8 @@ If you want different origins to make requests to your API from a browser, you n
 You can do that by adding a route handler and a special hook to your API root controller (`APIController` in this example).
 
 ```typescript
+import { Context, Hook, HttpResponseNoContent, Options } from '@foal/core';
+
 @Hook(() => response => {
   // Every response of this controller and its sub-controllers will be added this header.
   response.setHeader('Access-Control-Allow-Origin', '*');
@@ -60,7 +62,7 @@ If your API requires a token to be sent in the `Authorization` header, then the 
 If your API uses cookies (for authentication for example), then you should specify it in the hook with the `Access-Control-Allow-Credentials` header.
 
 ```typescript
-@Hook((ctx: Context) => response => {
+@Hook(ctx => response => {
   response.setHeader('Access-Control-Allow-Origin', ctx.request.get('Origin') || '*');
   response.setHeader('Access-Control-Allow-Credentials', 'true');
 })

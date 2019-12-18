@@ -30,7 +30,7 @@ import { dependency, Get, HttpResponseOK } from '@foal/core';
 
 class AppController {
   @dependency
-  logger: Logger
+  logger: Logger;
 
   @Get('/')
   index() {
