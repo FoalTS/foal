@@ -43,7 +43,7 @@
     "react": "~16.8.6",
     "react-dom": "~16.8.6",
     "redis": "~2.8.0",
-    "sqlite3": "~4.0.4",
+    "sqlite3": "~4.1.1",
     "superagent": "~5.0.5",
     "supertest": "~3.3.0",
     "ts-node": "~3.3.0",
