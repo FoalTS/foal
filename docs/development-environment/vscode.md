@@ -21,10 +21,10 @@ ext install dbaeumer.vscode-eslint
 Then, you will need to configure it for TypeScript and make it fix the errors on save (when it is possible).
 
 1. Open the *Command Palette* (`Ctrl`+`Shift`+`P` or `Cmd`+`Shift`+`P`) and type `Open Settings (JSON)`.
-  
+
     ![Open VSCode Settings](./open-vscode-settings.png)
 
-2. Then extend the settings to add the below options.
+2. Then extend the settings to add the options below.
 
     ```json
     {
