@@ -10,23 +10,33 @@ But using VS Code is not mandatory to develop a FoalTS app. So feel free to use 
 
 ## Configuring the linting
 
-In order to directly print the ESLint errors in VS Code and auto-fix the problems on save you need to install the `ESLint` extension which can be found in the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+In order to directly print the ESLint errors in VS Code and auto-fix the problems on save you need to install the `ESLint` extension.
 
-It can be installed by launching VS Code Quick Open (`Ctrl+P` or `Cmd+P`), pasting the following command, and pressing enter:
+It can be installed by launching *VS Code Quick Open* (`Ctrl`+`P` or `Cmd`+`P`), pasting the following command, and pressing enter:
 
 ```
 ext install dbaeumer.vscode-eslint
 ```
 
-Then, you will need to activate it for TypeScript on your settings (`Ctrl+,` or `Cmd+,`):
+Then, you will need to configure it for TypeScript and make it fix the errors on save (when it is possible).
 
-1. Editing `eslint.validate` so that it has `"typescript"` with `"autoFix": true` by adding this to your `settings.json`:
-  ```
-  "eslint.validate": [
-    { "language": "typescript", "autoFix": true }
-  ],
-  ```
-2. Activating `eslint.autoFixOnSave` if you want it to auto fix when you save (keep in mind it doesn't work with `files.autoSave` set to `afterDelay`).
+1. Open the *Command Palette* (`Ctrl`+`Shift`+`P` or `Cmd`+`Shift`+`P`) and type `Open Settings (JSON)`.
+  
+    ![Open VSCode Settings](./open-vscode-settings.png)
+
+2. Then extend the settings to add the below options.
+
+    ```json
+    {
+      // ...
+      "eslint.validate": [
+          "typescript"
+      ],
+      "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+      }
+    }
+    ```
 
 ## Debugging with VS Code
 
