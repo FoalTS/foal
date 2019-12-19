@@ -115,7 +115,8 @@ module.exports = {
 
 With this configuration, database credentials can be provided in a YAML, a JSON or a `.env `configuration file or in environment variables.
 
-*config/default.yml (example 1)*
+{% code-tabs %}
+{% code-tabs-item title="config/default.yml" %}
 ```yaml
 # ...
 
@@ -126,8 +127,8 @@ database:
   password: password
   database: my-db
 ```
-
-*config/default.json (example 2)*
+{% endcode-tabs-item %}
+{% code-tabs-item title="config/default.json" %}
 ```json
 {
   // ...
@@ -140,15 +141,17 @@ database:
   }
 }
 ```
-
-*.env or environment variables (example 3)*
-```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```json
 DATABASE_HOST=localhost
 DATABASE_PORT=3306
 DATABASE_USERNAME=root
 DATABASE_PASSWORD=password
 DATABASE_DATABASE=my-db
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ### MySQL / MariaDB
 
