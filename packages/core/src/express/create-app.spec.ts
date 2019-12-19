@@ -358,7 +358,7 @@ describe('createApp', () => {
 
   it('should use serviceManager if provided', async () => {
     class SomeService {
-      test() { throw new Error('Shout not get called'); }
+      test() { throw new Error('should not get called'); }
     }
     class MockService {
       test() { return 'bar'; }
