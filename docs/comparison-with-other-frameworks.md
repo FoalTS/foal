@@ -30,7 +30,7 @@ Foal defends the view that, to make developers more productive, a framework arch
 
 ### Philosophy & Objectives
 
-The two frameworks have also philosophical differences in their objectives. Nest focuses on providing application *architecture* to developpers.
+The two frameworks have also philosophical differences in their objectives. Nest focuses on providing application *architecture* to developers.
 
 Foal TS, while providing the architecture, aims also to offer a rich development environment and ready-to-use components to build from end to end a complete application.
 
