@@ -1,1 +1,1 @@
-export const foobar = 1;
+export { AbstractDisk, FileDoesNotExist } from './abstract-disk';
