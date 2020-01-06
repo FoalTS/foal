@@ -6,7 +6,7 @@ import { Readable } from 'stream';
 import { HttpResponseOK } from '@foal/core';
 
 // FoalTS
-import { AbstractDisk } from './abstract-disk';
+import { AbstractDisk } from './abstract-disk.service';
 
 describe('AbstractDisk', () => {
 

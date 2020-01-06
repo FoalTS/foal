@@ -1,1 +1,1 @@
-export { AbstractDisk, FileDoesNotExist } from './abstract-disk';
+export { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
