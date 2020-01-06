@@ -27,36 +27,6 @@ function log(msg: string) {
   }
 }
 
-function validateProjectName(name: string) {
-  // As per npm naming conventions (https://www.npmjs.com/package/validate-npm-package-name)
-  const specialChars = ['!',
-    '@',
-    '#',
-    '$',
-    '%',
-    '^',
-    '&',
-    '*',
-    '(',
-    ')',
-    '/',
-    '\\',
-    '+',
-    '{',
-    '}',
-    '[',
-    ']',
-    ':',
-    ';',
-    '<',
-    '>',
-    ',',
-    '.',
-    '?'
- ];
-  return !specialChars.find(char => name.includes(char));
-}
-
 export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
   { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
     yaml?: boolean }) {
@@ -81,13 +51,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
 
   const locals = names;
 
-     // Validating whether if the project-name follows npm naming conventions
-  if (!validateProjectName(name)) {
-    console.log(
-      red(`\n ${name} doesn't follow the npm naming conventions. Kindly give a valid project-name.`)
-    );
-    return;
-  }
   if (existsSync(names.kebabName)) {
     console.log(
       red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
