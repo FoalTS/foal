@@ -6,7 +6,21 @@ import { Readable } from 'stream';
 import { HttpResponseOK } from '@foal/core';
 
 // FoalTS
-import { AbstractDisk } from './abstract-disk.service';
+import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
+
+describe('FileDoesNotExist', () => {
+
+  it('should set a property "filename".', () => {
+    const error = new FileDoesNotExist('foo/test.txt');
+    strictEqual(error.filename, 'foo/test.txt');
+  });
+
+  it('should instanciate with the proper message.', () => {
+    const error = new FileDoesNotExist('foo/test.txt');
+    strictEqual(error.message, 'The file "foo/test.txt" does not exist.');
+  });
+
+});
 
 describe('AbstractDisk', () => {
 

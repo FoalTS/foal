@@ -1,5 +1,4 @@
 // std
-import { Buffer } from 'buffer';
 import { basename } from 'path';
 import { Readable } from 'stream';
 
@@ -14,6 +13,9 @@ type Type<C extends 'buffer'|'stream'> =
 
 export class FileDoesNotExist extends Error {
   readonly name = 'FileDoesNotExist';
+  constructor(readonly filename: string) {
+    super(`The file "${filename}" does not exist.`);
+  }
 }
 
 export abstract class AbstractDisk {
