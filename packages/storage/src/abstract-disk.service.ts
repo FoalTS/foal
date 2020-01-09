@@ -22,7 +22,7 @@ export abstract class AbstractDisk {
   abstract write(
     dirname: string,
     content: Buffer|Readable,
-    options?: { name?: string },
+    options?: { name?: string } | { extension?: string },
   ): Promise<{ path: string }>;
 
   abstract read<C extends 'buffer'|'stream'>(path: string, content: C): Promise<{
@@ -52,4 +52,15 @@ export abstract class AbstractDisk {
         + `; filename="${options.filename || basename(path)}"`
       );
   }
+
+  protected hasName(options: any): options is { name: string } {
+    // options.name === '' returns false;
+    return !!options.name;
+  }
+
+  protected hasExtension(options: any): options is { extension: string } {
+    // options.extension === '' returns false;
+    return !!options.extension;
+  }
+
 }

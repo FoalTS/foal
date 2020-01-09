@@ -1,11 +1,13 @@
 // std
+import { createReadStream, createWriteStream, readFile, stat, unlink, writeFile } from 'fs';
+import { join } from 'path';
 import { Readable } from 'stream';
+import { promisify } from 'util';
+
+// 3p
+import { Config, dependency, generateToken } from '@foal/core';
 
 // FoalTS
-import { Config, dependency } from '@foal/core';
-import { createReadStream, readFile, ReadStream, stat, unlink, WriteStream } from 'fs';
-import { join } from 'path';
-import { promisify } from 'util';
 import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
 
 export class LocalDisk extends AbstractDisk {
@@ -13,12 +15,30 @@ export class LocalDisk extends AbstractDisk {
   @dependency
   config: Config;
 
-  write(
+  async write(
     dirname: string,
     content: Buffer | Readable,
-    options?: { name?: string | undefined; } | undefined
+    options: { name?: string } | { extension?: string } = {}
   ): Promise<{ path: string; }> {
-    throw new Error('Method not implemented.');
+    let name = this.hasName(options) ? options.name : await generateToken();
+
+    if (this.hasExtension(options)) {
+      name = `${name}.${options.extension}`;
+    }
+
+    const path = join(dirname, name);
+
+    if (content instanceof Buffer) {
+      await promisify(writeFile)(this.getPath(path), content);
+    } else {
+      await new Promise(resolve => {
+        content
+          .pipe(createWriteStream(this.getPath(path)))
+          .on('close', resolve);
+      });
+    }
+
+    return { path };
   }
 
   async read<C extends 'buffer' | 'stream'>(
