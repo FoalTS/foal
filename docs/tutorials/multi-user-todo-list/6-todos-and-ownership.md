@@ -29,7 +29,12 @@ Update the api controller.
 ```typescript
   @Post('/todos')
   @ValidateBody({
-    ...
+    additionalProperties: false,
+    properties: {
+      text: { type: 'string' }
+    },
+    required: [ 'text' ],
+    type: 'object',
   })
   async postTodo(ctx: Context) {
     const todo = new Todo();
@@ -43,9 +48,7 @@ Update the api controller.
   }
 
   @Delete('/todos/:id')
-  @ValidateParams({
-    ...
-  })
+  @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
     const todo = await getRepository(Todo).findOne({
       id: +ctx.request.params.id,
