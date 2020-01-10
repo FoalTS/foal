@@ -1,5 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { Server } from 'http';
 import { URLSearchParams } from 'url';
 
 // 3p
@@ -263,7 +264,7 @@ describe('AbstractProvider', () => {
 
   describe('has a "getTokens" method that', () => {
 
-    let server;
+    let server: Server;
 
     afterEach(() => {
       if (server) {
@@ -319,6 +320,7 @@ describe('AbstractProvider', () => {
       class AppController {
         @Post('/token')
         token(ctx: Context) {
+          strictEqual(ctx.request.headers.accept, 'application/json');
           const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
           strictEqual(grant_type, 'authorization_code');
           strictEqual(code, 'an_authorization_code');
@@ -391,7 +393,7 @@ describe('AbstractProvider', () => {
 
   describe('has a "getUserInfo" method that', () => {
 
-    let server;
+    let server: Server;
 
     beforeEach(() => {
       provider = createService(ConcreteProvider, { configInstance });

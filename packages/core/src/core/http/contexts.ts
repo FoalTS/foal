@@ -23,7 +23,7 @@ export class Context<User = any, ContextSession = Session|undefined> {
    * @param {*} request - Either the express request object or a mock (for testing).
    * @memberof Context
    */
-  constructor(request) {
+  constructor(request: any) {
     this.request = request;
   }
 }

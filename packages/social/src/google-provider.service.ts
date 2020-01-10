@@ -3,7 +3,7 @@ import { AbstractProvider, SocialTokens } from './abstract-provider.service';
 
 export interface GoogleAuthParams {
   nonce?: string;
-  prompt?: 'none'|'consent'|'select_account';
+  prompt?: string;
   display?: string;
   login_hint?: string;
   access_type?: 'offline'|'online';

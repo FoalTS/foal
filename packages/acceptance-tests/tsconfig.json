@@ -6,7 +6,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,
-    "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "declaration": true,

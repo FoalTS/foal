@@ -10,15 +10,15 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context, controller, createApp, dependency, Get, hashPassword, HttpResponseOK,
-  HttpResponseRedirect, Post, removeSessionCookie,
+  Context, controller, createApp, dependency, ExpressApplication, Get, hashPassword,
+  HttpResponseOK, HttpResponseRedirect, Post, removeSessionCookie,
   Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 describe('[Authentication|session token|cookie|redirection] Users', () => {
 
-  let app: any;
+  let app: ExpressApplication;
   let token: string;
 
   @Entity()

@@ -26,7 +26,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { email: string, password: string }) {
   await createConnection();
 
   const user = new User();
@@ -101,7 +101,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { owner: string, text: string }) {
   const connection = await createConnection();
 
   const user = await connection.getRepository(User).findOne({ email: args.owner });

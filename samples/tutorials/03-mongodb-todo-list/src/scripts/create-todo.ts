@@ -13,7 +13,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { text: string }) {
   // Create a new connection to the database.
   const uri = Config.get<string>('mongodb.uri');
   connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });

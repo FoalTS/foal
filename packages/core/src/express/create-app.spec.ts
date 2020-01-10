@@ -1,5 +1,6 @@
 // std
 import { strictEqual } from 'assert';
+import { Buffer } from 'buffer';
 
 // 3p
 import * as express from 'express';
@@ -33,6 +34,7 @@ describe('createApp', () => {
   afterEach(() => {
     delete process.env.SETTINGS_STATIC_PATH_PREFIX;
     delete process.env.SETTING_DEBUG;
+    delete process.env.SETTINGS_BODY_PARSER_LIMIT;
   });
 
   it('should include security headers in HTTP responses.', async () => {
@@ -126,6 +128,12 @@ describe('createApp', () => {
 
   it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', () => {
     class MyController {
+      @Head('/foo')
+      head() {
+        // A HEAD response does not have a body.
+        return new HttpResponseOK()
+          .setHeader('foo', 'bar');
+      }
       @Get('/foo')
       get() {
         return new HttpResponseOK('get');
@@ -146,11 +154,6 @@ describe('createApp', () => {
       delete() {
         return new HttpResponseOK('delete');
       }
-      @Head('/foo')
-      head() {
-        // A HEAD response does not have a body.
-        return new HttpResponseOK();
-      }
       @Options('/foo')
       options() {
         return new HttpResponseOK('options');
@@ -163,7 +166,7 @@ describe('createApp', () => {
       request(app).patch('/foo').expect('patch'),
       request(app).put('/foo').expect('put'),
       request(app).delete('/foo').expect('delete'),
-      request(app).head('/foo').expect(200),
+      request(app).head('/foo').expect(200).expect('foo', 'bar'),
       request(app).options('/foo').expect('options'),
     ]);
   });
@@ -226,6 +229,50 @@ describe('createApp', () => {
       .expect({ body: '{ me { name } }' });
   });
 
+  it('should accept higher or lower request body size if this is specified in the configuration.', async () => {
+    process.env.SETTINGS_BODY_PARSER_LIMIT = '10';
+
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK();
+      }
+    }
+
+    const app = createApp(MyController);
+    await Promise.all([
+      // Text
+      request(app)
+        .post('/foo')
+        .type('text/plain')
+        .send(Buffer.alloc(10, 'a').toString('utf8'))
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .type('text/plain')
+        .send(Buffer.alloc(11, 'a').toString('utf8'))
+        .expect(413), // 413 = Payload Too Large
+      // JSON
+      request(app)
+        .post('/foo')
+        .send({ e: 'a' })
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .send({ e: 'aka' })
+        .expect(413), // 413 = Payload Too Large
+      // URL encoded
+      request(app)
+        .post('/foo')
+        .send('foo=bar')
+        .expect(200),
+      request(app)
+        .post('/foo')
+        .send('foo=barrrrr')
+        .expect(413), // 413 = Payload Too Large
+    ]);
+  });
+
   it('should use the optional express instance if one is given.', () => {
     const expected = express();
     const actual = createApp(class {}, expected);
@@ -254,7 +301,9 @@ describe('createApp', () => {
 
     const app = createApp(AppController, {
       preMiddlewares: [
-        (req, res, next) => { req.foalMessage = 'Hello world!'; next(); }
+        (req: express.Request, res: express.Response, next: express.NextFunction) => {
+          (req as any).foalMessage = 'Hello world!'; next();
+        }
       ]
     });
 
@@ -315,25 +364,6 @@ describe('createApp', () => {
 
     strictEqual(typeof app.foal, 'object');
     strictEqual(app.foal.services instanceof ServiceManager, true);
-  });
-
-  it('should not ignore client errors thrown in express middlewares.', () => {
-    class AppController {
-      @Post('/foo')
-      post(ctx: Context) {
-        return new HttpResponseOK({ body: ctx.request.body });
-      }
-    }
-    const app = createApp(AppController);
-
-    return request(app)
-      .post('/foo')
-      .set('Content-Type', 'text/html; charset=foo')
-      .send('bar')
-      .expect(415)
-      .then(response => {
-        strictEqual(response.text.includes('UnsupportedMediaTypeError: unsupported charset'), true);
-      });
   });
 
   it('should send a pretty error if the JSON in the request body is invalid.', () => {

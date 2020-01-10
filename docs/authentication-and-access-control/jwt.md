@@ -57,6 +57,7 @@ JSON Web Tokens are generated from JavaScript objects that usually contain infor
 The below example shows how to generate a one-hour token using a secret.
 
 ```typescript
+import { Config } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
@@ -264,6 +265,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 - Each JSON Web Token must have a `subject` property (or `sub`) which is a string containing the user id. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
   ```typescript
+  import { Config } from '@foal/core';
   import { sign } from 'jsonwebtoken';
 
   const token = sign(
@@ -403,6 +405,7 @@ JWT_PRIVATE_KEY=my_private_key
 
 *Example*
 ```typescript
+import { Config } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(

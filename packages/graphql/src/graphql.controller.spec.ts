@@ -260,7 +260,7 @@ describe('GraphQLController', () => {
                     },
                   },
                   type: GraphQLString,
-                  resolve(obj, args, context, info) {
+                  resolve(obj: any, args: any, context: any, info: any) {
                     return JSON.stringify(args);
                   }
                 }
@@ -295,7 +295,7 @@ describe('GraphQLController', () => {
               fields: {
                 hello: {
                   type: GraphQLString,
-                  resolve(obj, args, context, info) {
+                  resolve(obj: any, args: any, context: any, info: any) {
                     return context.request.foo;
                   }
                 }
@@ -331,7 +331,7 @@ describe('GraphQLController', () => {
               fields: {
                 hello: {
                   type: GraphQLString,
-                  resolve(obj, args, context, info) {
+                  resolve(obj: any, args: any, context: any, info: any) {
                     return context.foo;
                   }
                 }
@@ -600,7 +600,7 @@ describe('GraphQLController', () => {
                       },
                     },
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return JSON.stringify(args);
                     }
                   }
@@ -635,7 +635,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.request.foo;
                     }
                   }
@@ -671,7 +671,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.foo;
                     }
                   }
@@ -989,7 +989,7 @@ describe('GraphQLController', () => {
                       },
                     },
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return JSON.stringify(args);
                     }
                   }
@@ -1026,7 +1026,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.request.foo;
                     }
                   }
@@ -1064,7 +1064,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.foo;
                     }
                   }
@@ -1263,7 +1263,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.request.foo;
                     }
                   }
@@ -1303,7 +1303,7 @@ describe('GraphQLController', () => {
                 fields: {
                   hello: {
                     type: GraphQLString,
-                    resolve(obj, args, context, info) {
+                    resolve(obj: any, args: any, context: any, info: any) {
                       return context.foo;
                     }
                   }

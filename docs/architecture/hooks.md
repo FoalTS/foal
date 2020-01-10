@@ -33,7 +33,7 @@ In the below example, `JWTRequired` applies to `listProducts` and `addProduct`.
 *Example:*
 ```typescript
 import {
-  Get, HttpResponseCreated, HttpResponseOK, Post, ValidateBody
+  Context, Get, HttpResponseCreated, HttpResponseOK, Post, ValidateBody
 } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 
@@ -45,7 +45,7 @@ class AppController {
 
   @Get('/products')
   listProducts() {
-    return new HttpResponseOK(this.products)
+    return new HttpResponseOK(this.products);
   }
 
   @Post('/products')
@@ -57,7 +57,7 @@ class AppController {
     additionalProperties: false,
     required: [ 'name' ]
   })
-  addProduct(ctx) {
+  addProduct(ctx: Context) {
     this.products.push(ctx.request.body);
     return new HttpResponseCreated();
   }

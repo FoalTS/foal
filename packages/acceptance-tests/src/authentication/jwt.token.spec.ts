@@ -11,8 +11,8 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, Context, controller, createApp, Get,
-  hashPassword, HttpResponseOK,
+  Config, Context, controller, createApp, ExpressApplication,
+  Get, hashPassword, HttpResponseOK,
   HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
 } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
@@ -20,7 +20,7 @@ import { fetchUser } from '@foal/typeorm';
 
 describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
-  let app: any;
+  let app: ExpressApplication;
   let token: string;
 
   let blackList: string[];

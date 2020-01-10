@@ -1,20 +1,24 @@
-import { readFile } from 'fs';
-import { join } from 'path';
-import { promisify } from 'util';
-import { renderToString } from '../common/utils/render.util';
+// 3p
+import { ErrorRequestHandler } from 'express';
 
-const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
-                + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
+// FoalTS
+import { renderError } from '../common';
+import { Context, HttpResponse } from '../core';
+import { CreateAppOptions } from './create-app';
+import { sendResponse } from './send-response';
 
 /**
  * Create an express middleware to return a 500 HTML page if an error is thrown and is not caught.
  *
  * @export
- * @param {boolean} debug - Specify if the error stack should be included in the page.
+ * @param {CreateAppOptions} options - Options supplied to `createApp`.
+ * @param {*} appController - Instance of the root controller class (App).
  * @param {*} [logFn=console.error]
- * @returns The express middleware.
+ * @returns {ErrorRequestHandler}
  */
-export function handleErrors(debug: boolean, logFn = console.error) {
+export function handleErrors(
+  options: CreateAppOptions, appController: any, logFn = console.error
+): ErrorRequestHandler {
   return async (err, req, res, next) => {
     if (err.expose && err.status) {
       next(err);
@@ -23,18 +27,18 @@ export function handleErrors(debug: boolean, logFn = console.error) {
 
     logFn(err.stack);
 
-    if (!debug) {
-      res.status(500).send(page500);
-      return;
-    }
+    const ctx = (req as any).foal ? (req as any).foal.ctx : new Context(req);
 
-    const template = await promisify(readFile)(join(__dirname, '500.debug.html'), 'utf8');
-    res.status(500).send(
-      renderToString(template, {
-        message: err.message,
-        name: err.name,
-        stack: err.stack,
-      })
-    );
+    let response: HttpResponse;
+    if (options.methods && options.methods.handleError && appController.handleError) {
+      try {
+        response = await appController.handleError(err, ctx);
+      } catch (error) {
+        response = await renderError(err, ctx);
+      }
+    } else {
+      response = await renderError(err, ctx);
+    }
+    sendResponse(response, res);
   };
 }

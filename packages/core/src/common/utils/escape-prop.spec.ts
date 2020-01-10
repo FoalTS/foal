@@ -18,7 +18,7 @@ describe('escapeProp', () => {
     const o = {};
     throws(
       () => escapeProp(o, 'foobar'),
-      err => err instanceof TypeError && err.message === 'foobar should be a string (got undefined).',
+      (err: any) => err instanceof TypeError && err.message === 'foobar should be a string (got undefined).',
     );
   });
 

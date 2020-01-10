@@ -1,1 +1,1 @@
-export { createApp, createAndInitApp } from './create-app';
+export { createApp, createAndInitApp, ExpressApplication } from './create-app';

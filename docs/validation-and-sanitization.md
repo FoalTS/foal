@@ -475,12 +475,12 @@ export class AppController {
 ### Sanitization Example
 
 ```typescript
-import { Get, HttpResponseOK, ValidateQuery } from '@foal/core';
+import { Context, Get, HttpResponseOK, ValidateQuery } from '@foal/core';
 
 export class AppController {
 
   @Get('/no-sanitization')
-  noSanitization(ctx) {
+  noSanitization(ctx: Context) {
     return new HttpResponseOK(ctx.request.query);
   }
 
@@ -494,7 +494,7 @@ export class AppController {
     required: [ 'name', 'apiKey' ],
     type: 'object'
   })
-  sanitization(ctx) {
+  sanitization(ctx: Context) {
     return new HttpResponseOK(ctx.request.query);
   }
 
@@ -573,7 +573,7 @@ export class SocialPost {
 
 *social-post.controller.ts*
 ```typescript
-import { HttpResponseCreated, Post } from '@foal/core';
+import { Context, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { SocialPost } from './social-post.validator';
 
@@ -581,7 +581,7 @@ export class SocialPostController {
 
   @Post()
   @ValidateBody(SocialPost, { /* options if relevant */ })
-  createSocialPost(ctx) {
+  createSocialPost(ctx: Context) {
     // ctx.request.body is an instance of SocialPost.
     // ...
     return new HttpResponseCreated();

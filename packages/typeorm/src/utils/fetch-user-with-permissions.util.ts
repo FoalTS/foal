@@ -19,8 +19,8 @@ import { getRepository } from 'typeorm';
  * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(
-      userEntityClass: Class<{ id: number|string }>
-    ): (id: number|string) => Promise<any> {
+  userEntityClass: Class<{ id: number|string }>
+): (id: number|string) => Promise<any> {
   return (id: number|string) => getRepository(userEntityClass).findOne(
     { id },
     { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }

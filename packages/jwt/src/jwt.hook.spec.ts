@@ -76,7 +76,7 @@ const header1 = {
 export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
 
-  const fetchUser = async id => id === '1' ? user : null;
+  const fetchUser = async (id: string|number) => id === '1' ? user : null;
 
   const hook = getHookFunction(JWT({ user: fetchUser }));
 
@@ -483,7 +483,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       it('with the decoded payload (header & secret from options.secretOrPublicKey).', async () => {
         config.reset();
-        const secretOrPublicKey = async (header, payload) => {
+        const secretOrPublicKey = async (header: any, payload: any) => {
           deepStrictEqual(header, {
             alg: 'HS256',
             typ: 'JWT'

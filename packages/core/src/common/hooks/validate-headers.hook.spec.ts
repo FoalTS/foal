@@ -48,7 +48,7 @@ describe('ValidateHeaders', () => {
       };
       const hook = getHookFunction(ValidateHeaders(schema));
 
-      function context(headers) {
+      function context(headers: any) {
         const ctx = new Context({});
         ctx.request.headers = headers;
         return ctx;

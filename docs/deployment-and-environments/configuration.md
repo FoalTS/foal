@@ -199,7 +199,7 @@ You can however customize the `ormconfig.js` file to make it work with FoalTS co
 const { Config } = require('@foal/core');
 
 module.exports = {
-  type: "sqlite",
+  type: 'sqlite',
   database: Config.get('database.database'),
   dropSchema: Config.get('database.dropSchema', false),
   entities: ["build/app/**/*.entity.js"],

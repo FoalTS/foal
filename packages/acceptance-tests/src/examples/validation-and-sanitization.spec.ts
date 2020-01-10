@@ -457,7 +457,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
       class AppController {
 
         @Get('/no-sanitization')
-        noSanitization(ctx) {
+        noSanitization(ctx: Context) {
           return new HttpResponseOK(ctx.request.query);
         }
 
@@ -471,7 +471,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           required: [ 'name', 'apiKey' ],
           type: 'object'
         })
-        sanitization(ctx) {
+        sanitization(ctx: Context) {
           return new HttpResponseOK(ctx.request.query);
         }
 

@@ -20,7 +20,7 @@ describe('validate', () => {
     };
 
     throws(() => validate(schema, object), ValidationError);
-    throws(() => validate(schema, object), err => {
+    throws(() => validate(schema, object), (err: any) => {
       deepStrictEqual(err.content, [
         {
           dataPath: '.a',

@@ -20,7 +20,7 @@ import { TokenRequired } from './token-required.hook';
 export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, required: boolean) {
   const user = { id: 1 };
 
-  const fetchUser = async id => id === 1 ? user : null;
+  const fetchUser = async (id: number|string) => id === 1 ? user : null;
 
   class Store extends SessionStore {
     updateCalledWith: Session|undefined = undefined;
@@ -438,7 +438,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     describe('given options.user is defined', () => {
 
       it('with the user retrieved from the database (userId is a number).', async () => {
-        const fetchUser = async id => id === 1 ? user : null;
+        const fetchUser = async (id: number|string) => id === 1 ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
         const session = await services.get(Store).createAndSaveSession({ userId: 1 });
@@ -454,7 +454,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the user retrieved from the database (userId is a string).', async () => {
-        const fetchUser = async id => id === '1' ? user : null;
+        const fetchUser = async (id: number|string) => id === '1' ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
         const session = await services.get(Store).createAndSaveSession({ userId: '1' });
@@ -471,7 +471,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       // TODO: In versions 2+ of FoalTS, the userID should be of type any.
       it('with the user retrieved from the database (userId is a MongoDB ObjectID).', async () => {
-        const fetchUser = async id => id === 'xjeldksjqkd' ? user : null;
+        const fetchUser = async (id: number|string) => id === 'xjeldksjqkd' ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
         // "MongoDB ObjectID"

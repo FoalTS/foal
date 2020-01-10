@@ -6,7 +6,6 @@
 
 You can upload files to your local file system using the library [formidable](https://www.npmjs.com/package/formidable). It will automatically parse the incoming form and save the submitted file(s) in the directory of your choice. A random id is generated for each saved file.
 
-
 ```sh
 npm install formidable @types/formidable
 npm install @foal/formidable

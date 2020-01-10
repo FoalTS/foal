@@ -1,13 +1,16 @@
+// 3p
+import { RequestHandler } from 'express';
+
+// FoalTS
 import {
   Context,
   HookPostFunction,
   HttpResponse,
   isHttpResponse,
-  isHttpResponseMovedPermanently,
-  isHttpResponseRedirect,
   Route,
   ServiceManager
 } from '../core';
+import { sendResponse } from './send-response';
 
 /**
  * Create an express middleware from a Route and the application services.
@@ -17,10 +20,12 @@ import {
  * @param {ServiceManager} services - The application services.
  * @returns {(...args) => any} The express middleware.
  */
-export function createMiddleware(route: Route, services: ServiceManager): (...args) => any {
+export function createMiddleware(route: Route, services: ServiceManager): RequestHandler {
   return async (req, res, next) => {
     try {
       const ctx = new Context(req);
+      (req as any).foal = { ctx };
+
       let response: undefined | HttpResponse;
 
       const hookPostFunctions: HookPostFunction[] = [];
@@ -47,34 +52,7 @@ export function createMiddleware(route: Route, services: ServiceManager): (...ar
         await postFn(response);
       }
 
-      res.status(response.statusCode);
-      res.set(response.getHeaders());
-      const cookies = response.getCookies();
-      // tslint:disable-next-line:forin
-      for (const cookieName in cookies) {
-        const options = cookies[cookieName].options;
-        if (options.maxAge !== undefined) {
-          // Convert seconds to milliseconds to make it work with Express.
-          options.maxAge = options.maxAge * 1000;
-        }
-        res.cookie(cookieName, cookies[cookieName].value, options);
-      }
-
-      if (isHttpResponseRedirect(response) || isHttpResponseMovedPermanently(response)) {
-        res.redirect(response.statusCode, response.path);
-        return;
-      }
-
-      if (typeof response.body === 'number') {
-        response.body = response.body.toString();
-      }
-
-      if (response.stream === true) {
-        response.body.pipe(res);
-        return;
-      }
-
-      res.send(response.body);
+      sendResponse(response, res);
     } catch (err) {
       next(err);
     }
