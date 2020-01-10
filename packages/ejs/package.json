@@ -1,6 +1,6 @@
 {
   "name": "@foal/ejs",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "EJS template package for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
