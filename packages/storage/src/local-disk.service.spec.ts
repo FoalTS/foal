@@ -62,7 +62,18 @@ describe('LocalDisk', () => {
 
   describe('has a "write" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.');
+    it('should throw an Error if no directory is specified in the config.', async () => {
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      try {
+        await disk.write('foo', Buffer.from('hello', 'utf8'));
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+        );
+      }
+    });
 
     it('should write the file at the given path (buffer) (name given).', async () => {
       strictEqual(existsSync('uploaded/foo/test.txt'), false);
@@ -105,7 +116,18 @@ describe('LocalDisk', () => {
 
   describe('has a "read" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.');
+    it('should throw an Error if no directory is specified in the config.', async () => {
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      try {
+        await disk.read('foo', 'buffer');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+        );
+      }
+    });
 
     it('should read the file at the given path (buffer).', async () => {
       writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
@@ -160,7 +182,18 @@ describe('LocalDisk', () => {
 
   describe('has a "delete" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.');
+    it('should throw an Error if no directory is specified in the config.', async () => {
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      try {
+        await disk.delete('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+        );
+      }
+    });
 
     it('should delete the file at the given path.', async () => {
       writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
