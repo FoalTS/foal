@@ -190,8 +190,6 @@ The `config/` directory files also have a precedence system inside the directory
 
 ## Database Configuration (TypeORM)
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/deployment-and-environments/configuration.md).
-
 TypeORM uses a [different system](http://typeorm.io/#/using-ormconfig) for its configuration based on the file `ormconfig.js` located at the root of the project directory.
 
 You can however customize the `ormconfig.js` file to make it work with FoalTS configuration system.

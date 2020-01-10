@@ -206,8 +206,6 @@ You can provide your own function (in the case you want to use a cache database 
 
 ## Refresh the tokens
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/authentication-and-access-control/jwt.md).
-
 Having a too-long expiration date for JSON Web Tokens is not recommend as it increases exposure to attacks based on token hijacking. If an attacker succeeds in stealing a token with an insufficient expiration date, he/she will have plenty of time to make other attacks and harm your application.
 
 In order to minimize the exposure, it is recommend to set a short expiration date (15 minutes for common applications) to quickly invalidate tokens. In this way, even if a token is stolen, it will quickly become unusable since it will have expired.

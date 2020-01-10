@@ -1,7 +1,5 @@
 # Generate (and Verify) Tokens
 
-> This section describes new features introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
-
 In many situations, we need to generate tokens and then verify them (for example in the flow of a password reset). This document shows how to do so with FoalTS.
 
 ## Unsigned Tokens (simple case)
