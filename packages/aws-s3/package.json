@@ -1,11 +1,11 @@
 {
-  "name": "@foal/storage",
+  "name": "@foal/aws-s3",
   "version": "1.5.0",
-  "description": "Storage components for FoalTS",
+  "description": "AWS S3 storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "docs": "typedoc --out ../../docs/api/storage src/index.ts --readme none --theme markdown",
+    "docs": "typedoc --out ../../docs/api/aws-s3 src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
@@ -42,8 +42,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.5.0",
-    "mime": "~2.4.4"
+    "@foal/storage": "^1.5.0",
+    "aws-sdk": "~2.604.0"
   },
   "devDependencies": {
     "@types/mocha": "~2.2.43",
