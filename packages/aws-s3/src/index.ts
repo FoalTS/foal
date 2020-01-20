@@ -1,1 +1,1 @@
-export const something = 1;
+export { S3Disk, S3Disk as ConcreteDisk } from './s3-disk.service';

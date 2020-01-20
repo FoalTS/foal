@@ -1,15 +1,16 @@
 // std
 import { strictEqual } from 'assert';
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
-import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { createService } from '@foal/core';
+import { Config, createService } from '@foal/core';
+import { FileDoesNotExist } from '@foal/storage';
+import * as S3 from 'aws-sdk/clients/s3';
 
 // FoalTS
-import { FileDoesNotExist } from './abstract-disk.service';
-import { LocalDisk } from './local-disk.service';
+import { S3Disk } from './s3-disk.service';
+
+const bucketName = 'foal-test';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Buffer[] = [];
@@ -20,78 +21,95 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
   });
 }
 
-function rmDirAndFilesIfExist(path: string) {
-  if (!existsSync(path)) {
+async function rmObjectsIfExist(s3: S3) {
+  const response = await s3.listObjects({
+    Bucket: bucketName
+  }).promise();
+
+  const objects: { Key: string }[] = [];
+  for (const { Key } of response.Contents || []) {
+    if (Key) {
+      objects.push({ Key });
+    }
+  }
+
+  if (objects.length === 0) {
     return;
   }
 
-  const files = readdirSync(path);
-  for (const file of files) {
-    const stats = statSync(join(path, file));
-
-    if (stats.isDirectory()) {
-      rmDirAndFilesIfExist(join(path, file));
-    } else {
-      unlinkSync(join(path, file));
+  await s3.deleteObjects({
+    Bucket: bucketName,
+    Delete: {
+      Objects: objects,
+      Quiet: false
     }
-  }
-
-  rmdirSync(path);
+  }).promise();
 }
 
-describe('LocalDisk', () => {
+describe('S3Disk', () => {
 
-  let disk: LocalDisk;
+  let disk: S3Disk;
+  let s3: S3;
+
+  before(() => s3 = new S3({
+    accessKeyId: Config.get<string|undefined>('settings.aws.accessKeyId'),
+    apiVersion: '2006-03-01',
+    secretAccessKey: Config.get<string|undefined>('settings.aws.secretAccessKey'),
+  }));
 
   beforeEach(() => {
-    process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
-    if (!existsSync('uploaded')) {
-      mkdirSync('uploaded');
-    }
-    if (!existsSync('uploaded/foo')) {
-      mkdirSync('uploaded/foo');
-    }
+    process.env.SETTINGS_DISK_S3_BUCKET = bucketName;
 
-    disk = createService(LocalDisk);
+    disk = createService(S3Disk);
   });
 
-  afterEach(() => {
-    delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
-    rmDirAndFilesIfExist('uploaded');
+  afterEach(async () => {
+    delete process.env.SETTINGS_DISK_S3_BUCKET;
+    await rmObjectsIfExist(s3);
   });
 
   describe('has a "write" method that', () => {
 
     it('should throw an Error if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
           error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
         );
       }
     });
 
     it('should write the file at the given path (buffer) (name given).', async () => {
-      strictEqual(existsSync('uploaded/foo/test.txt'), false);
-
       await disk.write('foo', Buffer.from('hello', 'utf8'), { name: 'test.txt' });
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
-      strictEqual(readFileSync('uploaded/foo/test.txt', 'utf8'), 'hello');
+
+      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
+      if (!(response.Body instanceof Buffer)) {
+        throw new Error('response.Body should be a buffer');
+      }
+      strictEqual(
+        response.Body.toString('utf8'),
+        'hello'
+      );
     });
 
     it('should write the file at the given path (stream) (name given).', async () => {
-      strictEqual(existsSync('uploaded/foo/test.txt'), false);
-
       const stream = new Readable();
       stream.push(Buffer.from('hello', 'utf8'));
       stream.push(null);
       await disk.write('foo', stream, { name: 'test.txt' });
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
-      strictEqual(readFileSync('uploaded/foo/test.txt', 'utf8'), 'hello');
+
+      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
+      if (!(response.Body instanceof Buffer)) {
+        throw new Error('response.Body should be a buffer');
+      }
+      strictEqual(
+        response.Body.toString('utf8'),
+        'hello'
+      );
     });
 
     it('should return the path of the file (name given).', async () => {
@@ -117,29 +135,35 @@ describe('LocalDisk', () => {
   describe('has a "read" method that', () => {
 
     it('should throw an Error if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
           error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
         );
       }
     });
 
     it('should read the file at the given path (buffer).', async () => {
-      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+      await s3.putObject({
+        Body: 'hello',
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
 
       const { file } = await disk.read('foo/test.txt', 'buffer');
       strictEqual(file.toString('utf8'), 'hello');
     });
 
     it('should read the file at the given path (stream).', async () => {
-      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+      await s3.putObject({
+        Body: 'hello',
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
 
       const { file } = await disk.read('foo/test.txt', 'stream');
       const buffer = await streamToBuffer(file);
@@ -171,16 +195,22 @@ describe('LocalDisk', () => {
     });
 
     it('should return the file size (buffer).', async () => {
-      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+      await s3.putObject({
+        Body: Buffer.from('hello', 'utf8'),
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
 
       const { size } = await disk.read('foo/test.txt', 'buffer');
       strictEqual(size, 5);
     });
 
     it('should return the file size (stream).', async () => {
-      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+      await s3.putObject({
+        Body: Buffer.from('hello', 'utf8'),
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
 
       const { size } = await disk.read('foo/test.txt', 'stream');
       strictEqual(size, 5);
@@ -191,35 +221,38 @@ describe('LocalDisk', () => {
   describe('has a "delete" method that', () => {
 
     it('should throw an Error if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
           error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
+          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
         );
       }
     });
 
     it('should delete the file at the given path.', async () => {
-      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
-      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+      await s3.putObject({
+        Body: 'hello',
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
 
       await disk.delete('foo/test.txt');
-      strictEqual(existsSync('uploaded/foo/test.txt'), false);
-    });
 
-    it('should throw a FileDoesNotExist if there is no file at the given path.', async () => {
       try {
-        await disk.delete('foo/test.txt');
-        throw new Error('An error should have been thrown.');
+        const response = await s3.getObject({
+          Bucket: bucketName,
+          Key: 'foo/test.txt',
+        }).promise();
+        console.log(response);
+        throw new Error('An error should have been thrown');
       } catch (error) {
-        if (!(error instanceof FileDoesNotExist)) {
-          throw new Error('The method should have thrown a FileDoesNotExist error.');
+        if (error.code !== 'NoSuchKey') {
+          throw error;
         }
-        strictEqual(error.filename, 'foo/test.txt');
       }
     });
 

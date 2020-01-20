@@ -32,6 +32,7 @@ export class LocalDisk extends AbstractDisk {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
       await new Promise(resolve => {
+        // TODO: improve error handling between streams and promises
         content
           .pipe(createWriteStream(this.getPath(path)))
           .on('close', resolve);
