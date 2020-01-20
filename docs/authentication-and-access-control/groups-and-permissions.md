@@ -214,6 +214,8 @@ import { Entity } from 'typeorm';
 export class User extends UserWithPermissions {
 
 }
+
+export { Group, Permission } from '@foal/typeorm';
 ```
 
 `UserWithPermissions` is an abstract class that has useful features to handle access control through permissions and groups. You must extend your `User` entity from this class to use permissions and groups.
