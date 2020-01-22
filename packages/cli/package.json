@@ -5,9 +5,11 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret",
+    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
+    "test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/rmdir/**/*.spec.ts\"",
+    "dev:test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/rmdir/**/*.spec.ts\"",
     "test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
     "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
     "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
