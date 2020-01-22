@@ -26,6 +26,7 @@ import {
   createSubApp,
   createVSCodeConfig,
 } from './generate';
+import { rmdir } from './rmdir';
 import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
@@ -142,6 +143,11 @@ program
         console.error();
     }
   });
+
+program
+  .command('rmdir <name>')
+  .description('Remove a directory and all its contents, including any subdirectories and files.')
+  .action((name: string) => rmdir(name));
 
 // Validation for random commands
 program
