@@ -27,13 +27,8 @@ describe('rmdir', () => {
     if (existsSync('temp-test')) { rmdirSync('temp-test'); }
   });
 
-  it('should throw an error if the file at the given path does not exist.', async () => {
-    try {
-      await rmdir('a-file-that-does-not-exist.txt');
-      throw new Error('rmdir should have thrown an Error.');
-    } catch (error) {
-      strictEqual(error.code, 'ENOENT');
-    }
+  it('should not throw if the directory at the given path does not exist.', async () => {
+    await rmdir('does-not-exist');
   });
 
   it('should throw an Error if the given path is not the path of a directory.', async () => {

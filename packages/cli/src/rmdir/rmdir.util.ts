@@ -11,7 +11,15 @@ import { promisify } from 'util';
  * @returns {Promise<void>}
  */
 export async function rmdir(path: string): Promise<void> {
-  const contents = await promisify(readdir)(path);
+  let contents: string[];
+  try {
+    contents = await promisify(readdir)(path);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return;
+    }
+    throw error;
+  }
 
   await Promise.all(contents.map(content => {
     const subPath = join(path, content);

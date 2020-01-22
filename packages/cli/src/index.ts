@@ -147,7 +147,17 @@ program
 program
   .command('rmdir <name>')
   .description('Remove a directory and all its contents, including any subdirectories and files.')
-  .action((name: string) => rmdir(name));
+  .action(async (name: string) => {
+    try {
+      await rmdir(name);
+    } catch (error) {
+      if (error.code === 'ENOTDIR') {
+        console.log(red(error.message));
+        return;
+      }
+      throw error;
+    }
+  });
 
 // Validation for random commands
 program
