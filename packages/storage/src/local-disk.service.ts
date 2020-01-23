@@ -6,6 +6,7 @@ import { promisify } from 'util';
 
 // 3p
 import { Config, dependency, generateToken } from '@foal/core';
+import * as pump from 'pump';
 
 // FoalTS
 import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
@@ -31,11 +32,15 @@ export class LocalDisk extends AbstractDisk {
     if (content instanceof Buffer) {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
-      await new Promise(resolve => {
-        // TODO: improve error handling between streams and promises
-        content
-          .pipe(createWriteStream(this.getPath(path)))
-          .on('close', resolve);
+      await new Promise((resolve, reject) => {
+        pump(content, createWriteStream(this.getPath(path)), err => {
+          // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
+          // TODO: test the error case.
+          if (err) {
+            return reject(err);
+          }
+          resolve();
+        });
       });
     }
 
@@ -61,7 +66,12 @@ export class LocalDisk extends AbstractDisk {
       throw error;
     }
     if (content === 'stream') {
-      file = createReadStream(this.getPath(path));
+      file = createReadStream(this.getPath(path))
+        // Do not kill the process (and crash the server) if the stream emits an error.
+        // Note: users can still add other listeners to the stream to "catch" the error.
+        // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
+        // TODO: test this line.
+        .on('error', () => {});
     }
 
     return {

@@ -43,7 +43,8 @@
   ],
   "dependencies": {
     "@foal/core": "^1.5.0",
-    "mime": "~2.4.4"
+    "mime": "~2.4.4",
+    "pump": "^3.0.0"
   },
   "devDependencies": {
     "@types/mocha": "~2.2.43",
