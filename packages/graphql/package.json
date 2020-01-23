@@ -39,7 +39,7 @@
   ],
   "dependencies": {
     "@foal/core": "^1.5.0",
-    "ajv": "~6.10.0",
+    "ajv": "~6.11.0",
     "glob": "~7.1.4"
   },
   "devDependencies": {
