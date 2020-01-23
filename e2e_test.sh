@@ -23,6 +23,10 @@ foal g script bar-script
 # Test linting
 npm run lint
 
+# Build and run the unit tests
+npm run build:test
+npm run start:test
+
 # Build the app
 npm run build:app
 
@@ -30,10 +34,6 @@ npm run build:app
 npm run migration:generate -- -n my-migration
 npm run build:migrations
 npm run migration:run
-
-# Build and run the unit tests
-npm run build:test
-npm run start:test
 
 # Build and run the e2e tests
 npm run build:e2e
@@ -143,12 +143,12 @@ foal g model flight
 # Test linting
 npm run lint
 
-# Build the app
-npm run build:app
-
 # Build and run the unit tests
 npm run build:test
 npm run start:test
+
+# Build the app
+npm run build:app
 
 # Build and run the e2e tests
 npm run build:e2e
