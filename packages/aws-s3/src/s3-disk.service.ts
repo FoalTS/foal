@@ -45,51 +45,45 @@ export class S3Disk extends AbstractDisk {
     path: string,
     content: C
   ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
-    if (content === 'buffer') {
-      try {
+    try {
+      if (content === 'buffer') {
         const { Body, ContentLength } = await this.s3.getObject({
           Bucket: this.getBucket(),
           Key: path,
         }).promise();
+
         return {
           file: Body as any,
           size: ContentLength as number
         };
-      } catch (error) {
-        if (error.code === 'NoSuchKey') {
-          throw new FileDoesNotExist(path);
-        }
-        // TODO: test this line.
-        throw error;
       }
-    }
 
-    return new Promise((resolve, reject) => {
-      this.s3
-        .getObject({
-          Bucket: this.getBucket(),
-          Key: path,
-        })
-        .on('httpHeaders', function(this: any, statusCode, headers, response) {
-          if (statusCode === 400) {
-            // This if-condition is a hack.
-            // If the s3 object has not sent a request yet, it may send two requests here.
-            // The first one returns a 400 response that requires the client to send the
-            // request to the proper AWS region.
-            // This is a tricky bug that only appears if we run one test.
-            // We ignore the first request here by exiting the function.
-            return;
-          }
-          if (statusCode === 404) {
-            this.abort();
-            return reject(new FileDoesNotExist(path));
-          }
-          resolve({
-            file: response.httpResponse.createUnbufferedStream() as any,
-            size: parseInt(headers['content-length'], 10),
-          });
-        }).send();
-    });
+      const { ContentLength }  = await this.s3.headObject({
+        Bucket: this.getBucket(),
+        Key: path,
+      }).promise();
+
+      const stream = this.s3.getObject({
+        Bucket: this.getBucket(),
+        Key: path,
+      }).createReadStream()
+        // Do not kill the process (and crash the server) if the stream emits an error.
+        // Note: users can still add other listeners to the stream to "catch" the error.
+        // Note: error streams are unlikely to occur ("headObject" may have thrown these errors previously).
+        // TODO: test this line.
+        .on('error', () => {});
+
+      return {
+        file: stream as any,
+        size: ContentLength as number
+      };
+    } catch (error) {
+      if (error.code === 'NoSuchKey' || error.code === 'NotFound') {
+        throw new FileDoesNotExist(path);
+      }
+      // TODO: test this line.
+      throw error;
+    }
   }
 
   async delete(path: string): Promise<void> {
