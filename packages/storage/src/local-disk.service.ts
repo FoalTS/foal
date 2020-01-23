@@ -51,13 +51,25 @@ export class LocalDisk extends AbstractDisk {
     path: string,
     content: C
   ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
-    let file: any;
-    let size: number;
     try {
-      size = (await promisify(stat)(this.getPath(path))).size;
+      const { size } = await promisify(stat)(this.getPath(path));
+
       if (content === 'buffer') {
-        file = await promisify(readFile)(this.getPath(path));
+        return {
+          file: await promisify(readFile)(this.getPath(path)) as any,
+          size
+        };
       }
+
+      return {
+        file: createReadStream(this.getPath(path))
+          // Do not kill the process (and crash the server) if the stream emits an error.
+          // Note: users can still add other listeners to the stream to "catch" the error.
+          // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
+          // TODO: test this line.
+          .on('error', () => {}) as any,
+        size
+      };
     } catch (error) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);
@@ -65,19 +77,7 @@ export class LocalDisk extends AbstractDisk {
       // TODO: test this line.
       throw error;
     }
-    if (content === 'stream') {
-      file = createReadStream(this.getPath(path))
-        // Do not kill the process (and crash the server) if the stream emits an error.
-        // Note: users can still add other listeners to the stream to "catch" the error.
-        // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
-        // TODO: test this line.
-        .on('error', () => {});
-    }
 
-    return {
-      file,
-      size
-    };
   }
 
   async delete(path: string): Promise<void> {
