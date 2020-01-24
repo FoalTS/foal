@@ -30,6 +30,21 @@ To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foa
 npm install graphql @foal/graphql
 ```
 
+Due to a change in a minor version of `graphql` you had to do a slight modification to `tsconfig.json` adding a library called `ESNext.AsyncIterable` in the `lib` section.
+
+```json
+{
+  "compilerOptions": {
+    ...
+    "lib": [
+      ...
+      "ESNext.AsyncIterable"
+    ]
+  }
+  ...
+}
+```
+
 ## Basic Usage
 
 The main component of the package is the abstract `GraphQLController`. Inheriting this class allows you to create a controller that is compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc) or any client that follows the HTTP specification defined [here](https://graphql.org/learn/serving-over-http/).
