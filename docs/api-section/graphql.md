@@ -30,7 +30,7 @@ To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foa
 npm install graphql @foal/graphql
 ```
 
-Due to a change in a minor version of `graphql` you had to do a slight modification to `tsconfig.json` adding a library called `ESNext.AsyncIterable` in the `lib` section.
+Due to a specificity of the `graphql` library, you must also modify your `tsconfig.json` as follows:
 
 ```json
 {
