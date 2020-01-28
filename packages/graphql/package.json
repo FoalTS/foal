@@ -48,7 +48,7 @@
     "apollo-cache-inmemory": "~1.5.1",
     "apollo-client": "~2.5.1",
     "apollo-link-http": "~1.5.14",
-    "graphql": "~14.3.0",
+    "graphql": "~14.6.0",
     "graphql-request": "~1.8.2",
     "graphql-tag": "~2.10.1",
     "mocha": "~5.2.0",
