@@ -7,7 +7,9 @@ import * as request from 'supertest';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
-import { Context, Delete, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager, dependency } from '../core';
+import {
+  Context, Delete, dependency, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager
+} from '../core';
 import { createAndInitApp, createApp } from './create-app';
 
 describe('createApp', () => {
@@ -356,7 +358,7 @@ describe('createApp', () => {
       });
   });
 
-  it('should use serviceManager if provided', async () => {
+  it('should use serviceManager if provided.', async () => {
     class SomeService {
       test() { throw new Error('should not get called'); }
     }
@@ -365,7 +367,7 @@ describe('createApp', () => {
     }
     class AppController {
       @dependency
-      myService: SomeService
+      myService: SomeService;
 
       @Post('/foo')
       post(ctx: Context) {

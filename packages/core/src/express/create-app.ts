@@ -37,7 +37,7 @@ interface ExpressOptions {
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
- * @param {(ServiceManager)} serviceManager - Prebuilt and configured Service Manager for optionally overriding the 
+ * @param {(ServiceManager)} serviceManager - Prebuilt and configured Service Manager for optionally overriding the
  * mapped identities.
  * @returns {ExpressApplication} The express application.
  */
