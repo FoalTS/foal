@@ -407,7 +407,9 @@ describe('createApp', () => {
     const serviceManager = new ServiceManager();
     serviceManager.set(SomeService, new MockService());
 
-    const app = createApp(AppController, {}, serviceManager);
+    const app = createApp(AppController, {
+      serviceManager
+    });
 
     return await request(app)
       .post('/foo')

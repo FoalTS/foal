@@ -45,7 +45,7 @@ ___
 
 ###  createApp
 
-▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstanceOrOptions?: *[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md, serviceManager?: *[ServiceManager](../classes/_core_service_manager_.servicemanager.md)*) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)*): [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
+▸ **createApp**(rootControllerClass: *[Class](_core_class_interface_.md#class)*, expressInstanceOrOptions?: *[ExpressApplication](../interfaces/_express_create_app_.expressapplication.md) \| [ExpressOptions](../interfaces/_express_create_app_.expressoptions.md)*): [ExpressApplication](../interfaces/_express_create_app_.expressapplication.md)
 
 *Defined in [express/create-app.ts:42](https://github.com/FoalTS/foal/blob/70cc46bd/packages/core/src/express/create-app.ts#L42)*
 

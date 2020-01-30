@@ -23,6 +23,7 @@ export interface CreateAppOptions {
   methods?: {
     handleError?: boolean;
   };
+  serviceManager?: ServiceManager;
   preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
   postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
 }
@@ -72,18 +73,17 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  * returned application.
  * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
+ * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
+ * optionally overriding the mapped identities.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
- * @param {(ServiceManager)} serviceManager - Prebuilt and configured Service Manager for optionally overriding the
- * mapped identities.
  * @returns {ExpressApplication} The express application.
  */
 export function createApp(
   AppController: Class,
   expressInstanceOrOptions?: ExpressApplication | CreateAppOptions,
-  serviceManager?: ServiceManager
 ): ExpressApplication {
   const options = getOptions(expressInstanceOrOptions);
   const app: ExpressApplication = options.expressInstance || express();
@@ -121,7 +121,7 @@ export function createApp(
   app.use(cookieParser());
 
   // Create the service and controller manager.
-  const services = serviceManager || new ServiceManager();
+  const services = options.serviceManager || new ServiceManager();
   app.foal = { services };
 
   // Resolve the controllers and hooks and add them to the express instance.
@@ -154,6 +154,8 @@ export function createApp(
  * returned application.
  * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
+ * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
+ * optionally overriding the mapped identities.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
  * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
