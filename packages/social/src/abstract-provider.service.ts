@@ -253,6 +253,9 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
     const response = await fetch(this.tokenEndpoint, {
       body: params,
+      headers: {
+        Accept: 'application/json'
+      },
       method: 'POST',
     });
     const body = await response.json();

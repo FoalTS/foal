@@ -115,7 +115,7 @@ class WeatherService {
   temp = 14;
 
   @dependency
-  conversion: ConversionService
+  conversion: ConversionService;
 
   getWeather(): string {
     const temp = this.conversion.celsiusToFahrenheit(this.temp);

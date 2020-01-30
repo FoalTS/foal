@@ -53,7 +53,7 @@ export function ValidateHeader(
       return result;
     }
 
-    const apiHeaderParameter = isFunction(schema) ? c => makeParameter(schema(c)) : makeParameter(schema);
+    const apiHeaderParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
 
     ApiParameter(apiHeaderParameter)(target, propertyKey);
     ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);

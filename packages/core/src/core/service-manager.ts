@@ -48,13 +48,15 @@ export function createControllerOrService<ControllerOrService>(
     serviceManager = dependencies;
   } else if (typeof dependencies === 'object') {
     controllerOrServiceDependencies.forEach(dep => {
-      const serviceMock = dependencies[dep.propertyKey];
+      const serviceMock = (dependencies as any)[dep.propertyKey];
       if (serviceMock) {
         serviceManager.set(dep.serviceClass, serviceMock);
       }
     });
   }
-  controllerOrServiceDependencies.forEach(dep => service[dep.propertyKey] = serviceManager.get(dep.serviceClass));
+  controllerOrServiceDependencies.forEach(dep => {
+    (service as any)[dep.propertyKey] = serviceManager.get(dep.serviceClass);
+  });
 
   return service;
 }

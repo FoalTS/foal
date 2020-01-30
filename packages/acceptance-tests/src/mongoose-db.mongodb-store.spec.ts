@@ -6,6 +6,7 @@ import {
   Context,
   createApp,
   dependency,
+  ExpressApplication,
   Get,
   hashPassword,
   Hook,
@@ -31,7 +32,7 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
 
   const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
 
-  let app: any;
+  let app: ExpressApplication;
   let token: string;
   let mongoClient: MongoClient;
 

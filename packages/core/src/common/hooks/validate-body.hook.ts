@@ -40,7 +40,7 @@ export function ValidateBody(
       };
     }
 
-    const requestBody = isFunction(schema) ? c => makeRequestBody(schema(c)) : makeRequestBody(schema);
+    const requestBody = isFunction(schema) ? (c: any) => makeRequestBody(schema(c)) : makeRequestBody(schema);
 
     if (propertyKey) {
       ApiRequestBody(requestBody)(target, propertyKey);

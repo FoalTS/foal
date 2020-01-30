@@ -33,7 +33,7 @@ In the below example, `JWTRequired` applies to `listProducts` and `addProduct`.
 *Example:*
 ```typescript
 import {
-  Get, HttpResponseCreated, HttpResponseOK, Post, ValidateBody
+  Context, Get, HttpResponseCreated, HttpResponseOK, Post, ValidateBody
 } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 
@@ -45,7 +45,7 @@ class AppController {
 
   @Get('/products')
   listProducts() {
-    return new HttpResponseOK(this.products)
+    return new HttpResponseOK(this.products);
   }
 
   @Post('/products')
@@ -57,7 +57,7 @@ class AppController {
     additionalProperties: false,
     required: [ 'name' ]
   })
-  addProduct(ctx) {
+  addProduct(ctx: Context) {
     this.products.push(ctx.request.body);
     return new HttpResponseCreated();
   }
@@ -151,8 +151,6 @@ class MyController {
 
 You can also have access to the controller instance through the `this` keyword.
 
-> Note: versions prior to version 1 do not support this feature. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
-
 *Example*
 ```typescript
 import { Get, getAjvInstance, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
@@ -178,8 +176,6 @@ class MyController {
 ```
 
 ### Executing Logic After the Controller Method
-
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/architecture/hooks.md).
 
 A hook can also be used to execute extra logic after the controller method. To do so, you can return a *hook post function* inside the hook. This function will be executed after the controller method. It takes exactly one parameter: the `HttpResponse` object returned by the controller.
 
@@ -225,8 +221,6 @@ class MyController {
 ```
 
 ## Grouping Several Hooks into One
-
-> This section describes a new feature introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0).
 
 In case you need to group several hooks together, the `MergeHooks` function can be used to do this.
 

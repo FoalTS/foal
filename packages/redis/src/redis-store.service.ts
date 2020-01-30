@@ -13,7 +13,7 @@ export class RedisStore extends SessionStore {
   @dependency
   config: Config;
 
-  private redisClient;
+  private redisClient: any;
 
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
@@ -24,7 +24,7 @@ export class RedisStore extends SessionStore {
 
     return new Promise<Session>((resolve, reject) => {
       const data = JSON.stringify({ content: sessionContent, createdAt });
-      this.getRedisInstance().set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, err => {
+      this.getRedisInstance().set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -39,7 +39,7 @@ export class RedisStore extends SessionStore {
 
     return new Promise<void>((resolve, reject) => {
       const data = JSON.stringify({ content: session.getContent(), createdAt: session.createdAt });
-      this.getRedisInstance().set(`session:${session.sessionID}`, data, 'EX', inactivity, err => {
+      this.getRedisInstance().set(`session:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -50,7 +50,7 @@ export class RedisStore extends SessionStore {
 
   destroy(sessionID: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.getRedisInstance().del(`session:${sessionID}`, err => {
+      this.getRedisInstance().del(`session:${sessionID}`, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -63,7 +63,7 @@ export class RedisStore extends SessionStore {
     const absolute = SessionStore.getExpirationTimeouts().absolute;
 
     return new Promise<Session | undefined>((resolve, reject) => {
-      this.getRedisInstance().get(`session:${sessionID}`, async (err, val: string|null) => {
+      this.getRedisInstance().get(`session:${sessionID}`, async (err: any, val: string|null) => {
         if (err) {
           return reject(err);
         }
@@ -87,7 +87,7 @@ export class RedisStore extends SessionStore {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     return new Promise<void>((resolve, reject) => {
-      this.getRedisInstance().expire(`session:${sessionID}`, inactivity, err => {
+      this.getRedisInstance().expire(`session:${sessionID}`, inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -98,7 +98,7 @@ export class RedisStore extends SessionStore {
 
   clear(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.getRedisInstance().flushdb(err => {
+      this.getRedisInstance().flushdb((err: any) => {
         if (err) {
           return reject(err);
         }

@@ -59,8 +59,6 @@ validate(schema, data);
 
 ### Validation & Sanitization of HTTP Requests
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/validation-and-sanitization.md).
-
 FoalTS provides many hooks to validate and sanitize HTTP requests. When validation fails, they return an `HttpResponseBadRequest` object whose body contains the validation errors.
 
 *Example*
@@ -477,12 +475,12 @@ export class AppController {
 ### Sanitization Example
 
 ```typescript
-import { Get, HttpResponseOK, ValidateQuery } from '@foal/core';
+import { Context, Get, HttpResponseOK, ValidateQuery } from '@foal/core';
 
 export class AppController {
 
   @Get('/no-sanitization')
-  noSanitization(ctx) {
+  noSanitization(ctx: Context) {
     return new HttpResponseOK(ctx.request.query);
   }
 
@@ -496,7 +494,7 @@ export class AppController {
     required: [ 'name', 'apiKey' ],
     type: 'object'
   })
-  sanitization(ctx) {
+  sanitization(ctx: Context) {
     return new HttpResponseOK(ctx.request.query);
   }
 
@@ -575,7 +573,7 @@ export class SocialPost {
 
 *social-post.controller.ts*
 ```typescript
-import { HttpResponseCreated, Post } from '@foal/core';
+import { Context, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { SocialPost } from './social-post.validator';
 
@@ -583,7 +581,7 @@ export class SocialPostController {
 
   @Post()
   @ValidateBody(SocialPost, { /* options if relevant */ })
-  createSocialPost(ctx) {
+  createSocialPost(ctx: Context) {
     // ctx.request.body is an instance of SocialPost.
     // ...
     return new HttpResponseCreated();

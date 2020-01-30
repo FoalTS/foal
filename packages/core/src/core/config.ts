@@ -88,8 +88,8 @@ export class Config {
     };
   }
 
-  private static yaml;
-  private static cache: { dotEnv: any, json: object, yaml: object } = {
+  private static yaml: any;
+  private static cache: { dotEnv: any, json: any, yaml: any } = {
     dotEnv: undefined,
     json: {},
     yaml: {},
@@ -186,7 +186,7 @@ export class Config {
     return value;
   }
 
-  private static getValue(config: object, propertyPath: string): any {
+  private static getValue(config: any, propertyPath: string): any {
     const properties = propertyPath.split('.');
     let result = config;
     for (const property of properties) {

@@ -1,8 +1,5 @@
 # CSRF protection
 
-
-> This document describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/security/csrf-protection.md).
-
 > Cross-Site Request Forgery (CSRF) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user’s web browser to perform an unwanted action on a trusted site when the user is authenticated.
 >
 > *Source: [OWASP](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md)*
@@ -62,6 +59,7 @@ npm install @foal/csrf
 In addition to the `SameSite` directive it is strongly recommended to use a token-based mitigation technique to provide a robust defense.
 
 Here is the principle:
+
 1. The server generates a token (stateless or stateful) and sends it to the browser (in the HTML page or in a separate cookie). An attacker performing a CSRF attack is not able to guess or read this token.
 2. In each subsequent POST, PUT, PATH or DELETE request, the client must include this token in a specific header, in the body of the request or in the URL parameters to prove the "origin" of the request.
 3.  If the CSRF token is not present or is incorrect, the server returns an error 403 - FORBIDDEN with the message `Bad csrf token.`.
@@ -214,7 +212,7 @@ foal createsecret
 1. Generate a token and send it in a cookie when rendering a page.
 
 ```typescript
-import { Get, HttpResponseOK, setCsrfCookie } from '@foal/core';
+import { Context, Get, HttpResponseOK, setCsrfCookie } from '@foal/core';
 import { getCsrfToken } from '@foal/csrf';
 
 class PageController {

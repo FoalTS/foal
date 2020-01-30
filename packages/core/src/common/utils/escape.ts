@@ -18,5 +18,5 @@ const escapeMap = {
  * @returns {string} The escaped string.
  */
 export function escape(str: string): string {
-  return str.replace(/[&<>"'\/]/g, match => escapeMap[match]);
+  return str.replace(/[&<>"'\/]/g, match => escapeMap[match as '&'|'<'|'>'|'"'|'\''|'/']);
 }

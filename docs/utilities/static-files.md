@@ -32,8 +32,6 @@ You can change the directory where the static files are served using the configu
 }
 ```
 
-> Note: In previous versions of FoalTS (<v1.0.0), this parameter was badly named `staticUrl`.
-
 # Add a virtual prefix path
 
 You can add a virtual prefix path using the configuration key `staticPathPrefix`.

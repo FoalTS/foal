@@ -1,7 +1,5 @@
 # Session Tokens
 
-> This document describes changes and new features introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/authentication-and-access-control/session-and-cookie.md).
-
 ## Introduction
 
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
@@ -80,14 +78,14 @@ Authorization: Bearer my-session-token
 The hooks `@TokenRequired` and `@TokenOptional` will then check the token and retrieve the associated session and user.
 
 ```typescript
-import { Get, HttpResponseOK, TokenRequired } from '@foal/core';
+import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 @TokenRequired({ store: TypeORMStore })
 class ApiController {
 
   @Get('/products')
-  readProducts(ctx) {
+  readProducts(ctx: Context) {
     // ctx.user and ctx.session are defined.
     return new HttpResponseOK();
   }
@@ -112,7 +110,7 @@ The hooks will assign the value it returns to `ctx.user`.
 For example, you can use the `fetchUser` function to retrieve the user from the database:
 
 ```typescript
-import { Get, HttpResponseOK, TokenRequired } from '@foal/core';
+import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 
 import { User } from '../entities';
@@ -124,7 +122,7 @@ import { User } from '../entities';
 class ApiController {
 
   @Get('/products')
-  readProducts(ctx) {
+  readProducts(ctx: Context) {
     // ctx.user is an instance of User
     return new HttpResponseOK();
   }
@@ -178,7 +176,7 @@ export class AuthController {
 FoalTS sessions can also be used with cookies. The hook `cookie` option and the `setSessionCookie` and `removeSessionCookie` funtions are dedicated to this use.
 
 ```typescript
-import { setSessionCookie, removeSessionCookie } from '@foal/core';
+import { HttpResponseOK, Post, removeSessionCookie, setSessionCookie, TokenRequired } from '@foal/core';
 
 export class AuthController {
 
@@ -309,7 +307,7 @@ export const schema = {
   }
 }
 
-export async function main(args) {
+export async function main(args: { sessionID?: string, token?: string }) {
   if (!args.sessionID && !args.token) {
     console.error('You must provide the session token or session ID.');
     return;
@@ -481,8 +479,10 @@ foal run clean-up-expired-sessions
 If necessary, you can also create your own session store. This one must inherit the abstract class `SessionStore`.
 
 ```typescript
+import { Session, SessionOptions } from '@foal/core';
+
 class CustomSessionStore extends SessionStore {
-  createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
+  createAndSaveSession(sessionContent: any, options?: SessionOptions | undefined): Promise<Session> {
     throw new Error('Method not implemented.');
   }
   update(session: Session): Promise<void> {

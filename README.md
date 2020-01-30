@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <i>:fire: A Web framework to create enterprise-grade Node.JS applications :boom: :rocket:</i>
+  <i>:fire: A Node.js and TypeScript framework, all-inclusive. :boom: :rocket:</i>
   <br>
   <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
@@ -102,4 +102,4 @@ See the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.gi
 
 ## License
 
-MIT
+MIT 

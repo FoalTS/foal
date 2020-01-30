@@ -57,6 +57,7 @@ JSON Web Tokens are generated from JavaScript objects that usually contain infor
 The below example shows how to generate a one-hour token using a secret.
 
 ```typescript
+import { Config } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
@@ -205,8 +206,6 @@ You can provide your own function (in the case you want to use a cache database 
 
 ## Refresh the tokens
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/authentication-and-access-control/jwt.md).
-
 Having a too-long expiration date for JSON Web Tokens is not recommend as it increases exposure to attacks based on token hijacking. If an attacker succeeds in stealing a token with an insufficient expiration date, he/she will have plenty of time to make other attacks and harm your application.
 
 In order to minimize the exposure, it is recommend to set a short expiration date (15 minutes for common applications) to quickly invalidate tokens. In this way, even if a token is stolen, it will quickly become unusable since it will have expired.
@@ -266,6 +265,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 - Each JSON Web Token must have a `subject` property (or `sub`) which is a string containing the user id. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
   ```typescript
+  import { Config } from '@foal/core';
   import { sign } from 'jsonwebtoken';
 
   const token = sign(
@@ -405,6 +405,7 @@ JWT_PRIVATE_KEY=my_private_key
 
 *Example*
 ```typescript
+import { Config } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(

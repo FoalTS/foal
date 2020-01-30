@@ -19,13 +19,9 @@ export class User {
 }
 ```
 
-## TypeORM
+## The ORM
 
-FoalTS uses [TypeORM](typeorm.io/) as default *Object-Relational Mapping* to access your database(s). It is probably the most mature ORM in the Node.js ecosystem and supports both [Active Record](https://en.wikipedia.org/wiki/Active_record_pattern) and [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) patterns.
-
-> *TypeORM helps you to develop any kind of application that uses databases - from small applications with a few tables to large scale enterprise applications with multiple databases.*
->
-> Source: http://typeorm.io
+FoalTS uses [TypeORM](typeorm.io/) as default *Object-Relational Mapping*. This allows you to create classes to interact with your database tables (or collections). TypeORM is written in TypeScript and supports both [Active Record](https://en.wikipedia.org/wiki/Active_record_pattern) and [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) patterns.
 
 Here is a non-exhaustive list of its features:
 - migrations and automatic migrations generation
@@ -41,28 +37,26 @@ TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Micro
 > Although this documentation presents the basic features of TypeORM, you may be interested in reading the [official documentation](http://typeorm.io) to learn more advanced features.
 
 
-## Integration in FoalTS
+## Use with FoalTS
 
-TypeORM is integrated by default in every new FoalTS project. This lets you quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](./using-another-orm.md).
+TypeORM is integrated by default in each new FoalTS project. This allows you to quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](./using-another-orm.md).
 
-### Initial configuration
+### Initial Configuration
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/databases/typeorm.md).
-
-When creating a new project, an `SQLite` database is used by default as it does not require any additional installation. The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
+When creating a new project, an `SQLite` database is used by default as it does not require any additional installation (the data is saved in a file). The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
 
 *ormconfig.js*
 ```js
 const { Config } = require('@foal/core');
 
 module.exports = {
-  type: "sqlite",
+  type: 'sqlite',
   database: Config.get('database.database'),
   dropSchema: Config.get('database.dropSchema', false),
-  entities: ["build/app/**/*.entity.js"],
-  migrations: ["build/migrations/*.js"],
+  entities: ['build/app/**/*.entity.js'],
+  migrations: ['build/migrations/*.js'],
   cli: {
-    migrationsDir: "src/migrations"
+    migrationsDir: 'src/migrations'
   },
   synchronize: Config.get('database.synchronize', false)
 }
@@ -81,58 +75,150 @@ module.exports = {
 }
 ```
 
-### The `typeorm` and `@foal/typeorm` packages
+### Packages
 
-The `typeorm` package is the official package of the library. It includes everything you need to create models and make requests.
+```
+npm install typeorm @foal/typeorm
+```
 
-The `@foal/typeorm` package contains components based on TypeORM to be used with the [authentication system](../authentication-and-access-control/introduction.md) (the `UserWithPermissions` model is an example).
+Two packages are required to use TypeORM with FoalTS:
+- The package [typeorm](https://www.npmjs.com/package/typeorm) which is the official one of the ORM. It includes everything you need to create models and make database requests.
+- The package [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm) (maintained by FoalTS) which contains additional components. These are particularly useful when using FoalTS [authentication and authorization system](../authentication-and-access-control/introduction.md).
 
-### The database drivers
+## Database Configuration Examples
 
-You need to install a *database driver* for each database you are connecting to. The SQLite driver is installed by default in every new project.
+This section shows how to configure **MySQL** or **PostgreSQL** with Foal.
 
-- for **MySQL** or **MariaDB**
+*ormconfig.js*
+```js
+const { Config } = require('@foal/core');
 
-  ```npm install mysql --save``` (you can install mysql2 instead as well)
+module.exports = {
+  type: 'mysql', // or 'postgres'
 
-- for **PostgreSQL**
+  host: Config.get('database.host'),
+  port: Config.get('database.port'),
+  username: Config.get('database.username'),
+  password: Config.get('database.password'),
+  database: Config.get('database.database'),
 
-  ```npm install pg --save```
+  dropSchema: Config.get('database.dropSchema', false),
+  synchronize: Config.get('database.synchronize', false),
+  
+  entities: ["build/app/**/*.entity.js"],
+  migrations: ["build/migrations/*.js"],
+  cli: {
+    migrationsDir: "src/migrations"
+  },
+}
+```
 
-- for **SQLite**
+With this configuration, database credentials can be provided in a YAML, a JSON or a `.env `configuration file or in environment variables.
 
-  ```npm install sqlite3 --save```
+{% code-tabs %}
+{% code-tabs-item title="config/default.yml" %}
+```yaml
+# ...
 
-- for **Microsoft SQL Server**
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: password
+  database: my-db
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="config/default.json" %}
+```json
+{
+  // ...
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "password",
+    "database": "my-db"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```json
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=password
+DATABASE_DATABASE=my-db
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
-  ```npm install mssql --save```
+### MySQL / MariaDB
 
-- for **sql.js**
+Install `mysql` or `mysql3` drivers.
 
-  ```npm install sql.js --save```
-
-- for **MongoDB**
-
-  ```npm install mongodb --save```
-
-## Quick tips to create a database (in development)
-
-### MySQL
-
-1. Open a terminal.
-2. Connect to `mysql` by running `mysql -u root --password`.
-3. Enter `CREATE DATABASE foal_examples_todo_list;`.
-4. Quit `mysql` by taping `exit`.
+```sh
+npm install mysql --save # mysql2 is also supported
+```
 
 ### PostgreSQL
 
-1. Open a terminal.
-2. Connect to `psql` by running `psql -U postgres`.
-3. Enter `CREATE DATABASE foal_examples_todo_list;`.
-4. Quit `psql` by taping `\q`.
+Install `pg` driver.
 
-### Microsoft SQL Server (MSSQL)
+```sh
+npm install pg --save
+```
 
-Follow [these instructions](https://docs.microsoft.com/en-us/sql/linux/sql-server-linux-develop-use-vscode).
+## Configuration and Testing
 
+When running the command `npm run test` with the above configuration, FoalTS will try to retrieve the database configuration in this order:
 
+1. Environment variables.
+2. `.env` file.
+3. `config/test.yml` and `config/test.json`.
+4. `config/default.yml` and `config/default.json`.
+
+For example, if the environment variable `DATABASE_PASSWORD` is defined, Foal will use its value. Otherwise, it will look at the `.env` file to see if it is defined here. If it is not, it will go through the YAML and JSON `config/` files.
+
+In this way, you can define a default configuration in the `config/default.{yml|json}` file to use both during development and testing and override some settings in `config/test.{yml|json}` during testing.
+
+> You learn more on how configuration works in Foal [here](../deployment-and-environments/configuration.md)
+
+In the example below, we add two new options:
+- `dropSchema` clears the database each time we call `createConnection`
+- and `synchronize` synchronizes the database tables with your entities so your do not have to generate and run migrations during testing.
+
+*config/test.yml*
+```yaml
+# ...
+
+database:
+  username: 'test'
+  password: 'test'
+  database: 'test'
+  dropSchema: true
+  sychronize: true
+```
+
+*Example of a test*
+```typescript
+import { createConnection, Connection } from 'typeorm';
+
+describe('xxx', () => {
+
+  let connection: Connection;
+
+  beforeEach(() => connection = await createConnection())
+
+  afterEach(() => {
+    if (connection) {
+      connection.close()
+    }
+  });
+
+  it('yyy', () => {
+    // ...
+  });
+
+});
+```

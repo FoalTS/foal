@@ -17,7 +17,7 @@ describe('runScript', () => {
 
   it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
     let msg;
-    const log = message => msg = message;
+    const log = (message: any) => msg = message;
     runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
@@ -31,7 +31,7 @@ describe('runScript', () => {
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
     let msg;
-    const log = message => msg = message;
+    const log = (message: any) => msg = message;
     runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
@@ -46,7 +46,7 @@ describe('runScript', () => {
     writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
     let msg;
-    const log = message => msg = message;
+    const log = (message: any) => msg = message;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
@@ -68,7 +68,7 @@ describe('runScript', () => {
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
     let msg;
-    const log = message => msg = message;
+    const log = (message: any) => msg = message;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 

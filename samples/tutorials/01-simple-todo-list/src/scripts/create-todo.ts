@@ -12,7 +12,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: { text: string }) {
   // Create a new connection to the database.
   const connection = await createConnection();
 

@@ -6,6 +6,7 @@ import * as fetch from 'node-fetch';
 
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
+import { UserInfoError } from './user-info.error';
 
 export interface FacebookAuthParams {
   auth_type?: 'rerequest';
@@ -13,17 +14,6 @@ export interface FacebookAuthParams {
 
 export interface FacebookUserInfoParams {
   fields?: string[];
-}
-
-export class UserInfoError extends Error {
-  readonly name = 'UserInfoError';
-
-  constructor(readonly error: any) {
-    super(
-      'The resource server returned an error. Impossible to access the user\'s information.\n'
-      + JSON.stringify(error, null, 2)
-    );
-  }
 }
 
 /**

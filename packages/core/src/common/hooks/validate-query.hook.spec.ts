@@ -42,7 +42,7 @@ describe('ValidateQuery', () => {
         + 'ajv for the given schema.', () => {
       const hook = getHookFunction(ValidateQuery(schema));
 
-      function context(query) {
+      function context(query: any) {
         const ctx = new Context({});
         ctx.request.query = query;
         return ctx;

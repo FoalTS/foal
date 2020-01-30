@@ -4,10 +4,6 @@ Building an Open API requires to allow Cross-Origin Request Sharing.
 
 ## Enable Cross-Origin Resource Sharing (CORS)
 
-> This section describes changes introduced in version 1.0.0. Instructions to upgrade to the new release can be found [here](https://github.com/FoalTS/foal/releases/tag/v1.0.0). Old documentation can be found [here](https://github.com/FoalTS/foal/blob/v0.8/docs/api-section/public-api-and-cors-requests.md).
-
---
-
 > If you are building a web application, **you may not need to enable CORS for your API**. See [here](../frontend-integration/angular-react-vue.md) the section *Origins that Do not Match*.
 
 If you want different origins to make requests to your API from a browser, you need to enable [Cross-Origin Resource Sharing](https://www.html5rocks.com/en/tutorials/cors/).
@@ -15,6 +11,8 @@ If you want different origins to make requests to your API from a browser, you n
 You can do that by adding a route handler and a special hook to your API root controller (`APIController` in this example).
 
 ```typescript
+import { Context, Hook, HttpResponseNoContent, Options } from '@foal/core';
+
 @Hook(() => response => {
   // Every response of this controller and its sub-controllers will be added this header.
   response.setHeader('Access-Control-Allow-Origin', '*');
@@ -60,7 +58,7 @@ If your API requires a token to be sent in the `Authorization` header, then the 
 If your API uses cookies (for authentication for example), then you should specify it in the hook with the `Access-Control-Allow-Credentials` header.
 
 ```typescript
-@Hook((ctx: Context) => response => {
+@Hook(ctx => response => {
   response.setHeader('Access-Control-Allow-Origin', ctx.request.get('Origin') || '*');
   response.setHeader('Access-Control-Allow-Credentials', 'true');
 })
