@@ -1,5 +1,6 @@
 // 3p
 import { Response } from 'express';
+import * as pump from 'pump';
 
 // FoalTS
 import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } from '../core';
@@ -36,7 +37,7 @@ export function sendResponse(response: HttpResponse, res: Response): void {
   }
 
   if (response.stream === true) {
-    response.body.pipe(res);
+    pump(response.body, res);
     return;
   }
 
