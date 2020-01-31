@@ -51,10 +51,18 @@ describe('S3Disk', () => {
   let disk: S3Disk;
   let s3: S3;
 
+  const accessKeyId = Config.get<string|undefined>('settings.aws.accessKeyId');
+  const secretAccessKey = Config.get<string|undefined>('settings.aws.secretAccessKey');
+
+  if (!accessKeyId) {
+    console.warn('SETTINGS_AWS_ACCESS_KEY_ID not defined. Skipping S3Disk tests...');
+    return;
+  }
+
   before(() => s3 = new S3({
-    accessKeyId: Config.get<string|undefined>('settings.aws.accessKeyId'),
+    accessKeyId,
     apiVersion: '2006-03-01',
-    secretAccessKey: Config.get<string|undefined>('settings.aws.secretAccessKey'),
+    secretAccessKey,
   }));
 
   beforeEach(() => {
