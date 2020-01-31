@@ -41,8 +41,8 @@ The outer `my-app` root directory is just a container for your project.
 - The `config/` directory contains configuration files for your different environments (production, test, development, e2e, etc).
 - The `node_modules/` directory contains all the prod and dev dependencies of your project.
 - The static files are located in the `public/` directory. They are usually images, CSS and client JavaScript files and are served directly when the server is running.
-- The `src/` directory contains all the source code of the application (TypeScript files and HTML templates).
-  - The inner `app/` directory includes the components of your server (controllers, templates, services, hooks, sub-apps).
+- The `src/` directory contains all the source code of the application.
+  - The inner `app/` directory includes the components of your server (controllers, services and hooks).
   - End-to-end tests are located in the `e2e/` directory.
   - The inner `scripts/` folder contains scripts intended to be called from the command line (ex: create-user).
 - The `ormconfig.js` file defines the configuration and credentials of the database(s) connection(s). They can also be passed through environment variables.
@@ -72,6 +72,6 @@ You've started the development server.
 >
 > You can define in `config/default.json` which port the application is using.
 
-Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the text *Welcome to the future* <3.
+Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the text *Welcome to the future*.
 
 Congratulations, you now have a server running!

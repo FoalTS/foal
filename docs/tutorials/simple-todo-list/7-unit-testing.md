@@ -12,7 +12,7 @@ Open the file `api.controller.spec.ts` and replace its content.
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { createController, getHttpMethod, getPath, HttpResponseOK, isHttpResponseOK } from '@foal/core';
+import { createController, getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
 import { Connection, createConnection } from 'typeorm';
 
 // App
