@@ -44,9 +44,10 @@
   "dependencies": {
     "@foal/core": "^1.5.0",
     "mime": "~2.4.4",
-    "pump": "^3.0.0"
+    "pump": "~3.0.0"
   },
   "devDependencies": {
+    "@foal/internal-test": "~1.5.0",
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.5.6",
     "copy": "~0.3.2",
