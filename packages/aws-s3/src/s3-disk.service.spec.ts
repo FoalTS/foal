@@ -65,7 +65,22 @@ describe('S3Disk', () => {
 
   afterEach(async () => {
     delete process.env.SETTINGS_DISK_S3_BUCKET;
+    delete process.env.SETTINGS_AWS_ENDPOINT;
     await rmObjectsIfExist(s3);
+  });
+
+  it('should accept a S3 custom endpoint in the config.', async () => {
+    // This test assumes that the "delete" method tries at least to connect to AWS.
+    process.env.SETTINGS_AWS_ENDPOINT = 'foobar';
+    try {
+      await disk.delete('foo/test.txt');
+      throw new Error('An error should have been thrown.');
+    } catch (error) {
+      strictEqual(
+        error.code,
+        'UnknownEndpoint'
+      );
+    }
   });
 
   describe('has a "write" method that', () => {

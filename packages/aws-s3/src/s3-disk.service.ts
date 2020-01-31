@@ -8,16 +8,7 @@ import * as S3 from 'aws-sdk/clients/s3';
 
 export class S3Disk extends AbstractDisk {
 
-  private readonly s3: S3;
-
-  constructor() {
-    super();
-    this.s3 = new S3({
-      accessKeyId: Config.get<string|undefined>('settings.aws.accessKeyId'),
-      apiVersion: '2006-03-01',
-      secretAccessKey: Config.get<string|undefined>('settings.aws.secretAccessKey'),
-    });
-  }
+  private s3: S3;
 
   async write(
     dirname: string,
@@ -32,7 +23,7 @@ export class S3Disk extends AbstractDisk {
 
     const path = `${dirname}/${name}`;
 
-    await this.s3.upload({
+    await this.getS3().upload({
       Body: content,
       Bucket: this.getBucket(),
       Key: path,
@@ -47,7 +38,7 @@ export class S3Disk extends AbstractDisk {
   ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
     try {
       if (content === 'buffer') {
-        const { Body, ContentLength } = await this.s3.getObject({
+        const { Body, ContentLength } = await this.getS3().getObject({
           Bucket: this.getBucket(),
           Key: path,
         }).promise();
@@ -58,12 +49,12 @@ export class S3Disk extends AbstractDisk {
         };
       }
 
-      const { ContentLength }  = await this.s3.headObject({
+      const { ContentLength }  = await this.getS3().headObject({
         Bucket: this.getBucket(),
         Key: path,
       }).promise();
 
-      const stream = this.s3.getObject({
+      const stream = this.getS3().getObject({
         Bucket: this.getBucket(),
         Key: path,
       }).createReadStream()
@@ -87,7 +78,7 @@ export class S3Disk extends AbstractDisk {
   }
 
   async delete(path: string): Promise<void> {
-    await this.s3.deleteObject({
+    await this.getS3().deleteObject({
       Bucket: this.getBucket(),
       Key: path
     }).promise();
@@ -101,6 +92,18 @@ export class S3Disk extends AbstractDisk {
       );
     }
     return bucket;
+  }
+
+  private getS3(): S3 {
+    if (!this.s3) {
+      this.s3 = new S3({
+        accessKeyId: Config.get<string|undefined>('settings.aws.accessKeyId'),
+        apiVersion: '2006-03-01',
+        endpoint: Config.get<string|undefined>('settings.aws.endpoint'),
+        secretAccessKey: Config.get<string|undefined>('settings.aws.secretAccessKey'),
+      });
+    }
+    return this.s3;
   }
 
 }
