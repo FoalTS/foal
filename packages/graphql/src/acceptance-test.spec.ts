@@ -57,6 +57,7 @@ describe('[Acceptance test] GraphQLController', () => {
     if (server) {
       server.close();
     }
+    delete process.env.SETTINGS_DEBUG;
   });
 
   describe('should support common GraphQL clients such as', () => {

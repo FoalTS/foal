@@ -5,16 +5,13 @@ import { Readable } from 'stream';
 import { promisify } from 'util';
 
 // 3p
-import { Config, dependency, generateToken } from '@foal/core';
+import { Config, generateToken } from '@foal/core';
 import * as pump from 'pump';
 
 // FoalTS
 import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
 
 export class LocalDisk extends AbstractDisk {
-
-  @dependency
-  config: Config;
 
   async write(
     dirname: string,
@@ -93,7 +90,7 @@ export class LocalDisk extends AbstractDisk {
   }
 
   private getPath(path: string): string {
-    const directory = this.config.get<string>('settings.disk.local.directory', '');
+    const directory = Config.get<string>('settings.disk.local.directory', '');
     if (!directory) {
       throw new Error(
         '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'

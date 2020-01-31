@@ -37,6 +37,10 @@ describe('Config', () => {
     delete process.env.TEST_FOO_FOO_BAR1;
     delete process.env.TEST_FOO_FOO_BAR2;
     delete process.env.TEST_FOO_FOO_BAR3;
+    delete process.env.TEST_FOO_FOO_BAR4;
+    delete process.env.TEST_FOO_FOO_BAR5;
+    delete process.env.TEST_FOO_FOO_BAR6;
+    delete process.env.TEST_FOO_FOO_BAR7;
     delete process.env.DB_USERNAME;
 
     removeFile('.env');
