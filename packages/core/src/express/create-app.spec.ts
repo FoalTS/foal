@@ -23,6 +23,7 @@ describe('createApp', () => {
 
   after(() => {
     delete process.env.SETTINGS_STATIC_PATH;
+    delete process.env.SETTINGS_DEBUG;
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
