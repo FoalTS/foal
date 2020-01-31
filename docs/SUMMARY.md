@@ -63,6 +63,8 @@
   * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
   * [JSX Server-Side Rendering](./frontend-integration/jsx-server-side-rendering.md)
   * [Nuxt.js](./frontend-integration/nuxt.js.md)
+* File Storage
+  * [Local & Cloud Storage](./file-storage/local-and-cloud-storage.md)
 * CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
