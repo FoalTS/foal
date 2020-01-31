@@ -216,3 +216,54 @@ class MyController {
   }
 }
 ```
+
+## Injecting other Instances
+
+To manually inject instances into the identity mapper, you can also provide your own `ServiceManager` to the `createApp` function (usually located at `src/index.ts`).
+
+*src/index.ts (example)*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { Connection, createConnection } from 'typeorm';
+
+import { AppController } from './app/app.controller';
+
+async function main() {
+  const connection = await createConnection();
+
+  const serviceManager = new ServiceManager();
+  serviceManager.set(Connection, connection);
+
+  const app = createApp(AppController, {
+    serviceManager
+  });
+
+  // ...
+}
+
+// ...
+```
+
+> Note: Interfaces cannot be passed to the `set` method.
+
+*src/controllers/api.controller.ts (example)*
+```typescript
+import { dependency, Get, HttpResponseOK } from '@foal/core';
+import { Connection } from 'typeorm';
+
+import { Product } from '../entities';
+
+class ApiController {
+
+  @dependency
+  connection: Connection;
+
+  @Get('/products')
+  async readProducts() {
+    const products = await this.connection.getRepository(Product).find();
+    return new HttpResponseOK(products);
+  }
+
+}
+
+```
