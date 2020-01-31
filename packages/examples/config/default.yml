@@ -8,6 +8,9 @@ settings:
   session:
     secret: 'my secret'
   staticPath: 'public/'
+  disk:
+    s3:
+      bucket: 'foal-test'
   social:
     google:
       clientId: '635863747771-ihd9cqkij7eb6dsh4o0pel0licaouftk.apps.googleusercontent.com'
