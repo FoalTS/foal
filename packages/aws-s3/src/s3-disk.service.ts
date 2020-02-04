@@ -6,6 +6,13 @@ import { Config, generateToken } from '@foal/core';
 import { AbstractDisk, FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
+/**
+ * File storage to read, write and delete files in AWS S3.
+ *
+ * @export
+ * @class S3Disk
+ * @extends {AbstractDisk}
+ */
 export class S3Disk extends AbstractDisk {
 
   private s3: S3;

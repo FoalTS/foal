@@ -11,6 +11,13 @@ import * as pump from 'pump';
 // FoalTS
 import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
 
+/**
+ * File storage to write, read and delete files in the local file system.
+ *
+ * @export
+ * @class LocalDisk
+ * @extends {AbstractDisk}
+ */
 export class LocalDisk extends AbstractDisk {
 
   async write(

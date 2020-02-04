@@ -13,6 +13,16 @@ type Type<C extends 'buffer'|'stream'> =
   C extends 'stream' ? Readable :
   never;
 
+/**
+ * File storage.
+ *
+ * This disk looks at the value of the configuration key "settings.disk.driver"
+ * to know which disk to use (LocalDisk, S3Disk, etc).
+ *
+ * @export
+ * @class Disk
+ * @extends {AbstractDisk}
+ */
 export class Disk extends AbstractDisk {
 
   @dependency

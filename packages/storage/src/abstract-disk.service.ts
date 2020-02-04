@@ -11,6 +11,14 @@ type Type<C extends 'buffer'|'stream'> =
   C extends 'stream' ? Readable :
   never;
 
+/**
+ * Error thrown by the file storage (disk) if the file could
+ * not be found.
+ *
+ * @export
+ * @class FileDoesNotExist
+ * @extends {Error}
+ */
 export class FileDoesNotExist extends Error {
   readonly name = 'FileDoesNotExist';
   constructor(readonly filename: string) {
@@ -18,20 +26,81 @@ export class FileDoesNotExist extends Error {
   }
 }
 
+/**
+ * Agnostic file storage.
+ *
+ * @export
+ * @abstract
+ * @class AbstractDisk
+ */
 export abstract class AbstractDisk {
+
+  /**
+   * Asynchronously write a file. If the file already exists, it is replaced.
+   *
+   *
+   * @abstract
+   * @param {string} dirname - Name or path of the directory where the file must
+   * be saved.
+   * @param {(Buffer|Readable)} content - Content of the file (buffer or readable
+   * stream).
+   * @param {({ name?: string } | { extension?: string })} [options] - Optional name
+   * or extension of the file. If no name is provided, the method generates one.
+   * @returns {Promise<{ path: string }>} The path of the file containing the
+   * directory name and the filename.
+   * @memberof AbstractDisk
+   */
   abstract write(
     dirname: string,
     content: Buffer|Readable,
     options?: { name?: string } | { extension?: string },
   ): Promise<{ path: string }>;
 
+  /**
+   * Asynchronously read a file. If the file does not exist, the method
+   * throws a FileDoesNotExist error.
+   *
+   * @abstract
+   * @template C
+   * @param {string} path - Path of the file containing the directory name
+   * and the file name.
+   * @param {C} content - Specifies if the returned value should be a stream
+   * or a buffer.
+   * @returns {Promise<{
+   *     file: Type<C>;
+   *     size: number;
+   *   }>} The file data (stream or buffer) and its size.
+   * @memberof AbstractDisk
+   */
   abstract read<C extends 'buffer'|'stream'>(path: string, content: C): Promise<{
     file: Type<C>;
     size: number;
   }>;
 
+  /**
+   * Asynchronously delete a file. If the file does not exist, the method
+   * may or may throw a FileDoesNotExist error.
+   *
+   * @abstract
+   * @param {string} path - The path of the file.
+   * @returns {Promise<void>}
+   * @memberof AbstractDisk
+   */
   abstract delete(path: string): Promise<void>;
 
+  /**
+   * Create an HttpResponse object to download or display the file in the
+   * browser.
+   *
+   * @param {string} path - The path of the file.
+   * @param {{ forceDownload?: boolean, filename?: string }} [options={}]
+   * @param {boolean} [options.forceDownload=false] - Indicate if the browser should download
+   * the file directly without trying to display it in the window.
+   * @param {filename} [options.string=options.file] - Default name used by the browser when
+   * saving the file to the disk.
+   * @returns {Promise<HttpResponse>}
+   * @memberof AbstractDisk
+   */
   async createHttpResponse(
     path: string,
     options: { forceDownload?: boolean, filename?: string } = {}
@@ -53,11 +122,27 @@ export abstract class AbstractDisk {
       );
   }
 
+  /**
+   * Returns true if the write options has a "name" property.
+   *
+   * @protected
+   * @param {*} options - Write options.
+   * @returns {options is { name: string }} True or false.
+   * @memberof AbstractDisk
+   */
   protected hasName(options: any): options is { name: string } {
     // options.name === '' returns false;
     return !!options.name;
   }
 
+  /**
+   * Returns true if the write options has a "extension" property.
+   *
+   * @protected
+   * @param {*} options - Write options.
+   * @returns {options is { extension: string }} True or false.
+   * @memberof AbstractDisk
+   */
   protected hasExtension(options: any): options is { extension: string } {
     // options.extension === '' returns false;
     return !!options.extension;
