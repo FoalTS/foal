@@ -27,6 +27,24 @@ export class FileDoesNotExist extends Error {
 }
 
 /**
+ * Check if an object is an instance of FileDoesNotExist.
+ *
+ * This function is a help when you have several packages using @foal/storage.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is FileDoesNotExist} - True if the error is an instance of FileDoesNotExist. False otherwise.
+ */
+export function isFileDoesNotExist(obj: any): obj is FileDoesNotExist {
+  return obj instanceof FileDoesNotExist ||
+    (typeof obj === 'object' && obj !== null && obj.name === 'FileDoesNotExist');
+}
+
+/**
  * Agnostic file storage.
  *
  * @export
@@ -62,8 +80,7 @@ export abstract class AbstractDisk {
    *
    * @abstract
    * @template C
-   * @param {string} path - Path of the file containing the directory name
-   * and the file name.
+   * @param {string} path - Path of the file.
    * @param {C} content - Specifies if the returned value should be a stream
    * or a buffer.
    * @returns {Promise<{

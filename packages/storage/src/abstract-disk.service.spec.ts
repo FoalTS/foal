@@ -6,7 +6,7 @@ import { Readable } from 'stream';
 import { HttpResponseOK } from '@foal/core';
 
 // FoalTS
-import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
+import { AbstractDisk, FileDoesNotExist, isFileDoesNotExist } from './abstract-disk.service';
 
 describe('FileDoesNotExist', () => {
 
@@ -18,6 +18,28 @@ describe('FileDoesNotExist', () => {
   it('should instanciate with the proper message.', () => {
     const error = new FileDoesNotExist('foo/test.txt');
     strictEqual(error.message, 'The file "foo/test.txt" does not exist.');
+  });
+
+});
+
+describe('isFileDoesNotExist', () => {
+
+  it('should return true if the given object is an instance of FileDoesNotExist.', () => {
+    const err = new FileDoesNotExist('');
+    strictEqual(isFileDoesNotExist(err), true);
+  });
+
+  it('should return true if the given object has a "name" property equal to "FileDoesNotExist".', () => {
+    const err = { name: 'FileDoesNotExist' };
+    strictEqual(isFileDoesNotExist(err), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponse and if it '
+      + 'has no property isHttpResponse.', () => {
+    const err = {};
+    strictEqual(isFileDoesNotExist(err), false);
+    strictEqual(isFileDoesNotExist(undefined), false);
+    strictEqual(isFileDoesNotExist(null), false);
   });
 
 });
