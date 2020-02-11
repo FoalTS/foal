@@ -14,8 +14,6 @@ describe('handleErrors', () => {
 
   describe('should return an error-handling middleware which', () => {
 
-    before(() => delete process.env.SETTINGS_DEBUG);
-
     it('should ignore Express client errors and forward them to the new error-handling middleware.', () => {
       const app = express()
         .use(express.text({ type: 'text/*' }))

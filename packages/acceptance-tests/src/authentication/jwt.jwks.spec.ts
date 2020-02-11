@@ -88,7 +88,7 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
     const token = Config.get('auth0.token');
 
     if (token === undefined) {
-      console.log('AUTH0_TOKEN not defined. Skipping this test...');
+      console.warn('AUTH0_TOKEN not defined. Skipping this test...');
       return;
     }
 
@@ -137,7 +137,7 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
     const userPoolId = Config.get('cognito.userPoolId');
 
     if (refreshToken === undefined) {
-      console.log('COGNITO_REFRESH_TOKEN not defined. Skipping this test...');
+      console.warn('COGNITO_REFRESH_TOKEN not defined. Skipping this test...');
       return;
     }
 

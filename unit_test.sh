@@ -1,5 +1,6 @@
 cd packages
 cd acceptance-tests && npm run test || exit 1
+cd ../aws-s3 && npm run test || exit 1
 cd ../cli && npm run test || exit 1
 cd ../csrf && npm run test || exit 1
 cd ../ejs && npm run test || exit 1
@@ -13,6 +14,7 @@ cd ../mongoose && npm run test || exit 1
 cd ../password && npm run test || exit 1
 cd ../redis && npm run test || exit 1
 cd ../social && npm run test || exit 1
+cd ../storage && npm run test || exit 1
 cd ../swagger && npm run test || exit 1
 cd ../typeorm && npm run test || exit 1
 cd ../typestack && npm run test || exit 1

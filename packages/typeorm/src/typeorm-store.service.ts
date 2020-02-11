@@ -1,4 +1,4 @@
-import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Session, SessionOptions, SessionStore } from '@foal/core';
 import { Connection, getConnection, ObjectLiteral, Table } from 'typeorm';
 
 export interface DatabaseSession {
@@ -16,9 +16,6 @@ export interface DatabaseSession {
  * @extends {SessionStore}
  */
 export class TypeORMStore extends SessionStore {
-  @dependency
-  config: Config;
-
   private tableCreated = false;
 
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {

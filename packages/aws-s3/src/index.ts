@@ -4,4 +4,4 @@
  * Released under the MIT License.
  */
 
-export { MongoDBStore } from './mongodb-store.service';
+export { S3Disk, S3Disk as ConcreteDisk } from './s3-disk.service';

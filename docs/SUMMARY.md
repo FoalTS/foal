@@ -63,6 +63,9 @@
   * [Angular, React & Vue](./frontend-integration/angular-react-vue.md)
   * [JSX Server-Side Rendering](./frontend-integration/jsx-server-side-rendering.md)
   * [Nuxt.js](./frontend-integration/nuxt.js.md)
+* File System
+  * [Local & Cloud Storage](./file-system/local-and-cloud-storage.md)
+  * [Upload & Download Files](./file-system/upload-and-download-files.md)
 * CLI & Development Environment
   * [Build & Start the App](./development-environment/build-and-start-the-app.md)
   * [Create & Run Scripts](./development-environment/create-and-run-scripts.md)
@@ -81,13 +84,11 @@
   * [CSRF Protection](./security/csrf-protection.md)
   * [XSS Protection](./security/xss-protection.md)
 * Utilities
-  * [Static Files](./utilities/static-files.md)
   * [Templates (SSR)](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
   * [Initialization](./cookbook/initialization.md)
   * [Error Handling](./cookbook/error-handling.md)
-  * [Upload & Download Files](./cookbook/upload-and-download-files.md)
   * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)

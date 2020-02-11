@@ -282,6 +282,7 @@ export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
  * the file directly without trying to display it in the window.
  * @param {filename} [options.string=options.file] - Default name used by the browser when
  * saving the file to the disk.
+ * @deprecated
  * @returns {Promise<HttpResponseOK>}
  */
 export async function createHttpResponseFile(options:
