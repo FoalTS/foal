@@ -209,6 +209,8 @@ class FileService {
 } 
 ```
 
+> Note: Backslashes `\` and slashes `/` at the end of the directory name are not supported. For example, `avatars/img_60` is valid but `avatars\img_60` and `avatars/img_60/` both invalid.
+
 ### Delete files
 
 Files can be deleted using the asynchronous `delete` method. Depending on the file storage, the method may or may not reject a `FileDoesNotExist` error if the file is not found.
