@@ -229,7 +229,7 @@ This example shows how to implement a sign in and sign up flow with sessions and
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Product {
+export class User {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -272,7 +272,7 @@ export class AuthController {
   async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
 
-    let user = getRepository(User).findOne({ email: userInfo.email });
+    let user = await getRepository(User).findOne({ email: userInfo.email });
 
     if (!user) {
       // If the user has not already signed up, then add them to the database.

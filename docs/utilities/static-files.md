@@ -40,7 +40,7 @@ You can add a virtual prefix path using the configuration key `staticPathPrefix`
 ```json
 {
   "settings": {
-    "staticPathPrefix": "static/"
+    "staticPathPrefix": "/static"
   }
 }
 ```

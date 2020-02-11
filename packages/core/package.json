@@ -77,7 +77,7 @@
   },
   "dependencies": {
     "@types/express": "~4.17.2",
-    "ajv": "~6.10.2",
+    "ajv": "~6.11.0",
     "cookie-parser": "~1.4.4",
     "express": "~4.17.1",
     "mime": "~2.4.4",

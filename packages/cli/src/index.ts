@@ -26,6 +26,7 @@ import {
   createSubApp,
   createVSCodeConfig,
 } from './generate';
+import { rmdir } from './rmdir';
 import { runScript } from './run-script';
 
 // tslint:disable-next-line:no-var-requires
@@ -140,6 +141,21 @@ program
         console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:\n`));
         generateTypes.forEach(t => console.error(red(`  ${t}`)));
         console.error();
+    }
+  });
+
+program
+  .command('rmdir <name>')
+  .description('Remove a directory and all its contents, including any subdirectories and files.')
+  .action(async (name: string) => {
+    try {
+      await rmdir(name);
+    } catch (error) {
+      if (error.code === 'ENOTDIR') {
+        console.log(red(error.message));
+        return;
+      }
+      throw error;
     }
   });
 
