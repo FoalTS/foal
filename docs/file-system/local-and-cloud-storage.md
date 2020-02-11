@@ -37,7 +37,6 @@ The name of the directory where the files are located is specified with the conf
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-
 ```yml
 settings:
   disk:
@@ -45,7 +44,6 @@ settings:
     local:
       directory: 'uploaded'
 ```
-
 {% endcode-tabs-item %}
 {% code-tabs-item title="JSON" %}
 ```json
@@ -83,7 +81,6 @@ AWS credentials are specified with the configuration keys `settings.aws.accessKe
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-
 ```yml
 settings:
   aws:
@@ -94,7 +91,6 @@ settings:
     s3:
       bucket: 'uploaded'
 ```
-
 {% endcode-tabs-item %}
 {% code-tabs-item title="JSON" %}
 ```json
@@ -299,13 +295,11 @@ If you want to use it through the `Disk` service, your service must be published
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-
 ```yml
 settings:
   disk:
     driver: 'package-name'
 ```
-
 {% endcode-tabs-item %}
 {% code-tabs-item title="JSON" %}
 ```json
