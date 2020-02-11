@@ -134,7 +134,7 @@ function createHttpResponseFile(options: {
 
 - The `directory` option is the folder path where the file is located (ex: `uploaded/`).
 - The `file` option is the file name with its extension (ex: `my_pdf.pdf`). If the provided string is a path (ex: `downloaded/aaa.pdf`), then Foal will automatically extracts the file name (i.e `aaa.pdf`).
-- The `forceDownload` indicates whether the response should include the header `Content-Disposition: attachment`. If so, browsers will no try to display the returned file (for example with the browser PDF viewer) and will download the file directly.
+- The `forceDownload` option indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly.
 - The `filename` option is the default name proposed by the browser when saving the file. If it is not specified, Foal will use the `file` value instead.
 
 #### Example with no database
