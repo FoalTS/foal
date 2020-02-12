@@ -95,7 +95,7 @@ This example shows how to attach a profile picture to a user and how to retrieve
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'local'
@@ -198,7 +198,7 @@ If necessary, this directory can be modified using the configuration key `settin
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   staticPath: assets
 ```
@@ -225,7 +225,7 @@ In case you need to add a virtual prefix path to your static files, you can do s
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   staticPathPrefix: /static
 ```

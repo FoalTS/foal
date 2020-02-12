@@ -25,7 +25,7 @@ npm install @foal/storage
 Next, you will need to provide the name of the storage to be used with the configuration key `setings.disk.driver`. In the case of the local filesystem, this is `local`. In other cases, an additional package must be installed. Then the name to be provided is the name of the package.
 
 *Example*
-```yml
+```yaml
 settings:
   disk:
     driver: local
@@ -37,7 +37,7 @@ The name of the directory where the files are located is specified with the conf
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'local'
@@ -81,7 +81,7 @@ AWS credentials are specified with the configuration keys `settings.aws.accessKe
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   aws:
     accessKeyId: xxx
@@ -295,7 +295,7 @@ If you want to use it through the `Disk` service, your service must be published
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'package-name'
