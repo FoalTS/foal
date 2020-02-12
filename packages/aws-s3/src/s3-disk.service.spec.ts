@@ -10,7 +10,10 @@ import * as S3 from 'aws-sdk/clients/s3';
 // FoalTS
 import { S3Disk } from './s3-disk.service';
 
-const bucketName = 'foal-test';
+console.log(process.env.S3_BUCKET_NAME);
+
+// Isolate each job with a different S3 bucket.
+const bucketName = process.env.S3_BUCKET_NAME || 'foal-test';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Buffer[] = [];

@@ -78,6 +78,8 @@ jobs:
       run: npm run lint
     - name: Run unit and acceptance tests (TypeScript)
       run: lerna run --no-bail test
+      env:
+        S3_BUCKET_NAME: ${{ join('foal-test', matrix.node-version) }}
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
     - name: Send code coverage report to Codecov
