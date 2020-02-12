@@ -125,6 +125,25 @@ SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
+*index.html*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <img src="/profile" alt="">
+  <form action="/profile" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="profile" id="profile">
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+</body>
+</html>
+```
+
 *user.entity.ts*
 ```typescript
 import {
@@ -145,9 +164,9 @@ export class User extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { basename } from 'join';
+import { basename } from 'path';
 
-import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseOK, Post } from '@foal/core';
+import { Context, dependency, Get, Post, HttpResponseNotFound, HttpResponseRedirect } from '@foal/core';
 import { parseForm } from '@foal/formidable';
 import { Disk } from '@foal/storage';
 import { IncomingForm } from 'formidable';
@@ -172,17 +191,22 @@ export class AppController {
     if (user.profile) {
       await this.disk.delete(user.profile);
     }
-    user.profile = files.profile.path;
+
+    user.profile = basename(files.profile.path);
     await user.save();
 
-    return new HttpResponseOK();
+    return new HttpResponseRedirect('/');
   }
 
   @Get('/profile')
   async downloadProfilePicture(ctx: Context<User>) {
-    const { path } = ctx.user;
+    const { profile } = ctx.user;
 
-    return this.disk.createHttpResponse(basename(path));
+    if (!profile) {
+      return new HttpResponseNotFound()
+    }
+
+    return this.disk.createHttpResponse(profile);
   }
 
 }
