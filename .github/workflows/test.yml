@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x]
+        node-version: [8, 10]
 
     env:
       AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
@@ -17,6 +17,7 @@ jobs:
       AUTH0_TOKEN: ${{ secrets.AUTH0_TOKEN }}
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
       SETTINGS_AWS_SECRET_ACCESS_KEY: ${{ secrets.SETTINGS_AWS_SECRET_ACCESS_KEY }}
+      NODE_VERSION: ${{ matrix.node-version }}
 
     services:
       mysql:
@@ -78,8 +79,6 @@ jobs:
       run: npm run lint
     - name: Run unit and acceptance tests (TypeScript)
       run: lerna run --no-bail test
-      env:
-        S3_BUCKET_NAME: ${{ join('foal-test', matrix.node-version) }}
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
     - name: Send code coverage report to Codecov
