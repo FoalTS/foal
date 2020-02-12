@@ -10,10 +10,8 @@ import * as S3 from 'aws-sdk/clients/s3';
 // FoalTS
 import { S3Disk } from './s3-disk.service';
 
-console.log('node version', process.env.NODE_VERSION);
-
 // Isolate each job with a different S3 bucket.
-const bucketName = process.env.S3_BUCKET_NAME || 'foal-test';
+const bucketName = `foal-test-${process.env.NODE_VERSION || 8}`;
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Buffer[] = [];
