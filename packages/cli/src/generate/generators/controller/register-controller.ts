@@ -4,50 +4,53 @@ function createNamedImport(specifiers: string[], path: string): string {
   return `import { ${specifiers.join(', ')} } from '${path}';`;
 }
 
-function addImport(source: string, importDeclaration: string): string {
+function addImport(fileContent: string, importDeclaration: string): string {
   const regex = new RegExp('import (.*) from (.*);', 'g');
   let lastOccurence: RegExpExecArray|undefined;
   let lastExec: RegExpExecArray|null;
-  while ((lastExec = regex.exec(source)) !== null) {
+  while ((lastExec = regex.exec(fileContent)) !== null) {
     lastOccurence = lastExec;
   }
-  // TODO: remove the "as RegExpExecArray".
-  const endPos = (lastOccurence as RegExpExecArray).index + (lastOccurence as RegExpExecArray)[0].length;
-  return source.substr(0, endPos) + '\n' + importDeclaration + source.substr(endPos);
+  if (lastOccurence === undefined) {
+    return `${importDeclaration}\n\n${fileContent}`;
+  }
+  const endPos = lastOccurence.index + lastOccurence[0].length;
+  return fileContent.substr(0, endPos) + '\n' + importDeclaration + fileContent.substr(endPos);
 }
 
-function addSpecifierToNamedImport(source: string, path: string, specifier: string): string {
-  let namedImportFound = false;
+function extendImport(fileContent: string, path: string, specifier: string): string {
   const pathRegex = path.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-  const result = source
-    .replace(new RegExp(`import {(.*)} from \'${pathRegex}\';`), (str, content: string) => {
-      namedImportFound = true;
+  const importRegex = new RegExp(`import {(.*)} from \'${pathRegex}\';`);
 
+  if (!importRegex.test(fileContent)) {
+    throw new ImportNotFound();
+  }
+
+  return fileContent
+    .replace(importRegex, (str, content: string) => {
       const importSpecifiers = content.split(',').map(imp => imp.trim());
-      if (importSpecifiers.includes('controller')) {
+      if (importSpecifiers.includes(specifier)) {
         return str;
       }
       importSpecifiers.push(specifier);
       importSpecifiers.sort((a, b) => a.localeCompare(b));
       return createNamedImport(importSpecifiers, path);
     });
-  if (!namedImportFound) {
-    throw new ImportNotFound();
-  }
-  return result;
 }
 
-export function registerController(parentControllerContent: string, controllerName: string, path: string): string {
+function addOrExtendImport(fileContent: string, specifier: string, path: string): string {
   try {
-    parentControllerContent = addSpecifierToNamedImport(parentControllerContent, './controllers', controllerName);
+    return extendImport(fileContent, path, specifier);
   } catch (err) {
-    const namedImport = createNamedImport([ controllerName ], './controllers');
-    parentControllerContent = addImport(parentControllerContent, namedImport);
+    const namedImport = createNamedImport([ specifier ], path);
+    return addImport(fileContent, namedImport);
   }
-  try {
-    parentControllerContent = addSpecifierToNamedImport(parentControllerContent, '@foal/core', 'controller');
-  } catch (err) {}
-  parentControllerContent = parentControllerContent
+}
+
+export function registerController(fileContent: string, controllerName: string, path: string): string {
+  fileContent = addOrExtendImport(fileContent, controllerName, './controllers');
+  fileContent = addOrExtendImport(fileContent, 'controller', '@foal/core');
+  return fileContent
     .replace(/( *)subControllers = \[((.|\n)*)\];/, (str, spaces, content: string) => {
       const regex = /controller\((.*)\)/g;
       const controllerCalls = content.match(regex) || [];
@@ -55,5 +58,4 @@ export function registerController(parentControllerContent: string, controllerNa
       const formattedCalls = controllerCalls.join(`,\n${spaces}  `);
       return `${spaces}subControllers = [\n${spaces}  ${formattedCalls}\n${spaces}];`;
     });
-  return parentControllerContent;
 }

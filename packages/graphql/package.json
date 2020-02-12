@@ -1,6 +1,6 @@
 {
   "name": "@foal/graphql",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "GraphQL integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -38,8 +38,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.5.0",
-    "ajv": "~6.10.0",
+    "@foal/core": "^1.6.0",
+    "ajv": "~6.11.0",
     "glob": "~7.1.4"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "apollo-cache-inmemory": "~1.5.1",
     "apollo-client": "~2.5.1",
     "apollo-link-http": "~1.5.14",
-    "graphql": "~14.3.0",
+    "graphql": "~14.6.0",
     "graphql-request": "~1.8.2",
     "graphql-tag": "~2.10.1",
     "mocha": "~5.2.0",

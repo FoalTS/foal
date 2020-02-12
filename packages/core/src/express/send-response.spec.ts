@@ -53,6 +53,21 @@ describe('sendResponse', () => {
       .expect('Stream content');
   });
 
+  it('should prevent the process from being killed if the response body (stream) emits an error.', () => {
+    // Note: The "pump" module actually does more than that and takes care of closing each stream if one is closed.
+    const stream = new Readable({
+      read() {
+        this.push('Stream ');
+        this.push('content');
+        this.push(null);
+      }
+    });
+    setTimeout(() => stream.emit('error', new Error('hello')), 1000);
+
+    return execSendResponse(new HttpResponseOK(stream, { stream: true }))
+      .expect('Stream content');
+  });
+
   it('should send the headers.', () => {
     const successResponse = new HttpResponseCreated();
     successResponse.setHeader('X-CSRF-Token', 'aaa');

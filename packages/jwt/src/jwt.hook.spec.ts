@@ -93,8 +93,9 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   beforeEach(() => {
     config.reset();
     config.set('settings.jwt.secretOrPublicKey', secret);
-    delete process.env.SETTINGS_JWT_COOKIE_NAME;
   });
+
+  afterEach(() => delete process.env.SETTINGS_JWT_COOKIE_NAME);
 
   describe('should validate the request and', () => {
 

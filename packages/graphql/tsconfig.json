@@ -11,7 +11,8 @@
     "declaration": true,
     "lib": [
       "es2017",
-      "dom"
+      "dom",
+      "ESNext.AsyncIterable"
     ]
   },
   "include": [

@@ -4,7 +4,7 @@ import { existsSync, writeFileSync } from 'fs';
 
 // FoalTS
 import {
-  mkdirIfNotExists,
+  mkdirIfDoesNotExist,
   readFileFromRoot,
   readFileFromTemplatesSpec,
   rmDirAndFilesIfExist,
@@ -56,17 +56,17 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in src/app/sub-apps/ if src/app/ exists.', () => {
-      mkdirIfNotExists('src/app');
+      mkdirIfDoesNotExist('src/app');
       test('src/app/sub-apps/', false);
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 
@@ -89,12 +89,12 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 
@@ -117,12 +117,12 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 
@@ -145,12 +145,12 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 
@@ -173,12 +173,12 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 
@@ -201,12 +201,12 @@ describe('createSubApp', () => {
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('src/app/sub-apps');
+      mkdirIfDoesNotExist('src/app/sub-apps');
       test('src/app/sub-apps/');
     });
 
     it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfNotExists('sub-apps');
+      mkdirIfDoesNotExist('sub-apps');
       test('sub-apps/');
     });
 

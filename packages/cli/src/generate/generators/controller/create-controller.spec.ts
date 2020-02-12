@@ -84,6 +84,17 @@ describe('createController', () => {
       testEnv.copyFileFromMocks('index.ts');
     });
 
+    // TODO: refactor these tests and their mock and spec files.
+
+    it('should add all the imports if none exists.', () => {
+      testEnv.copyFileFromMocks('app.controller.no-import.ts', '../app.controller.ts');
+
+      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+
+      testEnv
+        .validateSpec('app.controller.no-import.ts', '../app.controller.ts');
+    });
+
     it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
       testEnv.copyFileFromMocks('app.controller.controller-import.ts', '../app.controller.ts');
 
