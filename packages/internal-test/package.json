@@ -1,7 +1,7 @@
 {
   "name": "@foal/internal-test",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -34,7 +34,6 @@
   "files": [
     "lib/"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.5.6",
