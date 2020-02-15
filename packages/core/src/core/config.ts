@@ -1,6 +1,39 @@
 // 3p
 import { existsSync, readFileSync } from 'fs';
 
+function dotToUnderscore(str: string): string {
+  return str
+    .replace(/([A-Z])/g, letter => `_${letter}`)
+    .replace(/\./g, '_')
+    .toUpperCase();
+}
+
+export class ConfigTypeError extends Error {
+  constructor(readonly key: string, readonly expected: string, readonly actual: string) {
+    super(
+      `The value of the configuration key "${key}" has an invalid type.\n`
+      + '\n'
+      + `Expected a "${expected}", but got a "${actual}".`
+    );
+  }
+}
+
+export class ConfigNotFoundError extends Error {
+  constructor(readonly key: string, readonly msg?: string) {
+    super(
+      `No value found for the configuration key "${key}".\n\n`
+      + (msg ? `${msg}\n\n` : '')
+      + 'To pass a value, you can use:\n'
+      + `- the environment variable ${dotToUnderscore(key)},\n`
+      + `- the ".env" file with the variable ${dotToUnderscore(key)},\n`
+      + `- the JSON file "config/${process.env.NODE_ENV || 'development'}.json" with the path "${key}",\n`
+      + `- the YAML file "config/${process.env.NODE_ENV || 'development'}.yml" with the path "${key}",\n`
+      + `- the JSON file "config/default.json" with the path "${key}", or\n`
+      + `- the YAML file "config/default.yml" with the path "${key}".`
+    );
+  }
+}
+
 /**
  * Static class to access environment variables and configuration files.
  *
@@ -163,10 +196,7 @@ export class Config {
   }
 
   private static dotToUnderscore(str: string): string {
-    return str
-      .replace(/([A-Z])/g, letter => `_${letter}`)
-      .replace(/\./g, '_')
-      .toUpperCase();
+    return dotToUnderscore(str);
   }
 
   private static convertType(value: string): boolean | number | string {

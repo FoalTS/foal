@@ -4,5 +4,5 @@ export * from './http';
 export * from './hooks';
 export * from './routes';
 export { ConfigMock } from './config-mock';
-export { Config } from './config';
+export { Config, ConfigNotFoundError, ConfigTypeError } from './config';
 export { createService, dependency, ServiceManager } from './service-manager';
