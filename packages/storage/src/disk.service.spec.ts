@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { ConfigNotFoundError, ConfigTypeError, createService } from '@foal/core';
+import { ConfigNotFoundError, createService } from '@foal/core';
 
 // FoalTS
 import { Disk } from './disk.service';

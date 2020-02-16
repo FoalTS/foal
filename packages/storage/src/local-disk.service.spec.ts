@@ -117,7 +117,7 @@ describe('LocalDisk', () => {
 
   describe('has a "read" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
       try {
         await disk.read('foo', 'buffer');
@@ -192,7 +192,7 @@ describe('LocalDisk', () => {
 
   describe('has a "delete" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
       try {
         await disk.delete('foo');
