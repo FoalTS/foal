@@ -5,7 +5,7 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { createService } from '@foal/core';
+import { ConfigNotFoundError, createService } from '@foal/core';
 
 // FoalTS
 import { FileDoesNotExist } from './abstract-disk.service';
@@ -62,16 +62,17 @@ describe('LocalDisk', () => {
 
   describe('has a "write" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
+        strictEqual(error.msg, 'You must provide a directory name when using local file storage (LocalDisk).');
       }
     });
 
@@ -122,10 +123,11 @@ describe('LocalDisk', () => {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
+        strictEqual(error.msg, 'You must provide a directory name when using local file storage (LocalDisk).');
       }
     });
 
@@ -196,10 +198,11 @@ describe('LocalDisk', () => {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
+        strictEqual(error.msg, 'You must provide a directory name when using local file storage (LocalDisk).');
       }
     });
 

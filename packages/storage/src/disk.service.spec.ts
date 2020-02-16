@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { createService } from '@foal/core';
+import { ConfigNotFoundError, ConfigTypeError, createService } from '@foal/core';
 
 // FoalTS
 import { Disk } from './disk.service';
@@ -27,10 +27,11 @@ describe('Disk', () => {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a driver name with the configuration key settings.disk.driver.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.driver');
+        strictEqual(error.msg, 'You must provide a driver name when using file storage (Disk).');
       }
     });
 
@@ -40,10 +41,10 @@ describe('Disk', () => {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
       }
     });
 
@@ -96,10 +97,11 @@ describe('Disk', () => {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a driver name with the configuration key settings.disk.driver.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.driver');
+        strictEqual(error.msg, 'You must provide a driver name when using file storage (Disk).');
       }
     });
 
@@ -109,10 +111,10 @@ describe('Disk', () => {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
       }
     });
 
@@ -165,10 +167,11 @@ describe('Disk', () => {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a driver name with the configuration key settings.disk.driver.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.driver');
+        strictEqual(error.msg, 'You must provide a driver name when using file storage (Disk).');
       }
     });
 
@@ -178,10 +181,10 @@ describe('Disk', () => {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
       }
     });
 

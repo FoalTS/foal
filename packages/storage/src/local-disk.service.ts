@@ -97,12 +97,11 @@ export class LocalDisk extends AbstractDisk {
   }
 
   private getPath(path: string): string {
-    const directory = Config.get<string>('settings.disk.local.directory', '');
-    if (!directory) {
-      throw new Error(
-        '[CONFIG] You must provide a directory name with the configuration key settings.disk.local.directory.'
-      );
-    }
+    const directory = Config.getOrThrow(
+      'settings.disk.local.directory',
+      'string',
+      'You must provide a directory name when using local file storage (LocalDisk).'
+    );
     return join(directory, path);
   }
 

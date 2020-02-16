@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 import { Readable } from 'stream';
 
 // 3p
-import { Config, createService } from '@foal/core';
+import { Config, ConfigNotFoundError, createService } from '@foal/core';
 import { FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
@@ -94,16 +94,17 @@ describe('S3Disk', () => {
 
   describe('has a "write" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an Error if no bucket is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown.');
+        }
+        strictEqual(error.key, 'settings.disk.s3.bucket');
+        strictEqual(error.msg, 'You must provide a bucket name when using AWS S3 file storage (S3Disk).');
       }
     });
 
@@ -158,16 +159,17 @@ describe('S3Disk', () => {
 
   describe('has a "read" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an Error if no bucket is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown.');
+        }
+        strictEqual(error.key, 'settings.disk.s3.bucket');
+        strictEqual(error.msg, 'You must provide a bucket name when using AWS S3 file storage (S3Disk).');
       }
     });
 
@@ -244,16 +246,17 @@ describe('S3Disk', () => {
 
   describe('has a "delete" method that', () => {
 
-    it('should throw an Error if no directory is specified in the config.', async () => {
+    it('should throw an Error if no bucket is specified in the config.', async () => {
       delete process.env.SETTINGS_DISK_S3_BUCKET;
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown.');
+        }
+        strictEqual(error.key, 'settings.disk.s3.bucket');
+        strictEqual(error.msg, 'You must provide a bucket name when using AWS S3 file storage (S3Disk).');
       }
     });
 
