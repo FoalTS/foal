@@ -5,6 +5,7 @@ import { strictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { createService } from '../service-manager';
 import { Config } from './config';
+import { ConfigTypeError } from './config-type.error';
 
 function removeFile(path: string) {
   if (existsSync(path)) {
@@ -278,6 +279,193 @@ api:
         testResponseTime('settings.sessionSecret');
         testResponseTime('auth.alg');
       });
+    });
+
+  });
+
+  describe('when get2 is called', () => {
+
+    it('should return the configuration value.', () => {
+      process.env.TEST_FOO_FOO_BAR = 'value1';
+      strictEqual(Config.get2('test.foo.fooBar'), 'value1');
+    });
+
+    it('should return the default value if the key does not exist.', () => {
+      strictEqual(Config.get2('aa.bbbCcc.y', 'any', false), false);
+    });
+
+    it('should, when type === "boolean", convert the configuration value to a boolean if possible.', () => {
+      process.env.TEST_FOO_FOO_BAR = 'true';
+      const actual = Config.get2('test.foo.fooBar', 'boolean');
+      strictEqual(actual, true);
+
+      process.env.TEST_FOO_FOO_BAR = 'false';
+      const actual2 = Config.get2('test.foo.fooBar', 'boolean');
+      strictEqual(actual2, false);
+    });
+
+    it('should, when type === "number", convert the configuration value to a number if possible.', () => {
+      process.env.TEST_FOO_FOO_BAR = '564';
+      const actual = Config.get2('test.foo.fooBar', 'number');
+      strictEqual(actual, 564);
+    });
+
+    it('should, when type === "boolean|string", convert the configuration value to a boolean if possible.', () => {
+      process.env.TEST_FOO_FOO_BAR = 'true';
+      const actual = Config.get2('test.foo.fooBar', 'boolean|string');
+      strictEqual(actual, true);
+
+      process.env.TEST_FOO_FOO_BAR = 'false';
+      const actual2 = Config.get2('test.foo.fooBar', 'boolean|string');
+      strictEqual(actual2, false);
+    });
+
+    it('should throw a ConfigTypeError if the configuration value does not have the expected type (string).', () => {
+      const fileContent = JSON.stringify({
+        a: 'z',
+        b: 1,
+        c: true,
+      });
+      mkdirSync('config');
+      writeFileSync('config/default.json', fileContent, 'utf8');
+
+      strictEqual(Config.get2('a', 'string'), 'z');
+
+      try {
+        Config.get2('b', 'string');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'b');
+        strictEqual(error.expected, 'string');
+        strictEqual(error.actual, 'number');
+      }
+
+      try {
+        Config.get2('c', 'string');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'c');
+        strictEqual(error.expected, 'string');
+        strictEqual(error.actual, 'boolean');
+      }
+    });
+
+    it('should throw a ConfigTypeError if the configuration value does not have the expected type (number).', () => {
+      const fileContent = JSON.stringify({
+        a: 'z',
+        b: 1,
+        c: true,
+        d: '  '
+      });
+      mkdirSync('config');
+      writeFileSync('config/default.json', fileContent, 'utf8');
+
+      try {
+        Config.get2('a', 'number');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'a');
+        strictEqual(error.expected, 'number');
+        strictEqual(error.actual, 'string');
+      }
+
+      strictEqual(Config.get2('b', 'number'), 1);
+
+      try {
+        Config.get2('c', 'number');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'c');
+        strictEqual(error.expected, 'number');
+        strictEqual(error.actual, 'boolean');
+      }
+
+      try {
+        Config.get2('d', 'number');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'd');
+        strictEqual(error.expected, 'number');
+        strictEqual(error.actual, 'string');
+      }
+    });
+
+    it('should throw a ConfigTypeError if the configuration value does not have the expected type (boolean).', () => {
+      const fileContent = JSON.stringify({
+        a: 'z',
+        b: 1,
+        c: true,
+      });
+      mkdirSync('config');
+      writeFileSync('config/default.json', fileContent, 'utf8');
+
+      try {
+        Config.get2('a', 'boolean');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'a');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+      }
+
+      try {
+        Config.get2('b', 'boolean');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'b');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'number');
+      }
+
+      strictEqual(Config.get2('c', 'boolean'), true);
+    });
+
+    it('should throw a ConfigTypeError if the configuration value does not have the expected type (boolean|string).',
+    () => {
+      const fileContent = JSON.stringify({
+        a: 'z',
+        b: 1,
+        c: true,
+      });
+      mkdirSync('config');
+      writeFileSync('config/default.json', fileContent, 'utf8');
+
+      strictEqual(Config.get2('a', 'boolean|string'), 'z');
+
+      try {
+        Config.get2('b', 'boolean|string');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'b');
+        strictEqual(error.expected, 'boolean|string');
+        strictEqual(error.actual, 'number');
+      }
+
+      strictEqual(Config.get2('c', 'boolean|string'), true);
     });
 
   });

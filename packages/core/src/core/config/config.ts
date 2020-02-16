@@ -2,7 +2,17 @@
 import { existsSync, readFileSync } from 'fs';
 
 // FoalTS
+import { ConfigTypeError } from './config-type.error';
 import { dotToUnderscore } from './utils';
+
+type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'any';
+
+type ValueType<T extends ValueStringType> =
+  T extends 'string' ? string :
+  T extends 'number' ? number :
+  T extends 'boolean' ? boolean :
+  T extends 'boolean|string' ? boolean|string :
+  any;
 
 /**
  * Static class to access environment variables and configuration files.
@@ -48,6 +58,50 @@ export class Config {
       return value;
     }
     return defaultValue as T;
+  }
+
+  static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
+  static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
+  static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
+    const value = this.readConfigValue(key);
+    if (type === 'boolean|string' && typeof value !== 'boolean') {
+      if (value === 'true') {
+        return true as any;
+      }
+      if (value === 'false') {
+        return false as any;
+      }
+      if (typeof value !== 'string') {
+        throw new ConfigTypeError(key, 'boolean|string', typeof value);
+      }
+    }
+    if (type === 'string' && typeof value !== 'string') {
+      throw new ConfigTypeError(key, 'string', typeof value);
+    }
+    if (type === 'number' && typeof value !== 'number') {
+      if (typeof value === 'string' && value.replace(/ /g, '') !== '') {
+        const n = Number(value);
+        if (!isNaN(n)) {
+          return n as any;
+        }
+      }
+      throw new ConfigTypeError(key, 'number', typeof value);
+    }
+    if (type === 'boolean' && typeof value !== 'boolean') {
+      if (value === 'true') {
+        return true as any;
+      }
+      if (value === 'false') {
+        return false as any;
+      }
+      throw new ConfigTypeError(key, 'boolean', typeof value);
+    }
+
+    if (value === undefined) {
+      return defaultValue;
+    }
+
+    return value;
   }
 
   /**
