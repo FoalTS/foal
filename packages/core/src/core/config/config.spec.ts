@@ -3,8 +3,8 @@ import { strictEqual } from 'assert';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
+import { createService } from '../service-manager';
 import { Config, ConfigNotFoundError, ConfigTypeError } from './config';
-import { createService } from './service-manager';
 
 describe('ConfigTypeError', () => {
 
@@ -108,17 +108,10 @@ describe('Config', () => {
 
   let initialEnv: string|undefined;
 
-  before(() => initialEnv = process.env.NODE_ENV);
-
   beforeEach(() => Config.clearCache());
 
   afterEach(() => {
-    if (initialEnv === undefined) {
-      // Assigning undefined to process.env.NODE_ENV makes process.env.NODE_ENV equal to "undefined"!
-      delete process.env.NODE_ENV;
-    } else {
-      process.env.NODE_ENV = initialEnv;
-    }
+    delete process.env.NODE_ENV;
     delete process.env.BAR_FOO;
     delete process.env.TEST_FOO_FOO_BAR;
     delete process.env.TEST_FOO_FOO_BAR1;
