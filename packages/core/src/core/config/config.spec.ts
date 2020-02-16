@@ -5,6 +5,7 @@ import { strictEqual } from 'assert';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { createService } from '../service-manager';
 import { Config } from './config';
+import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
 
 function removeFile(path: string) {
@@ -466,6 +467,38 @@ api:
       }
 
       strictEqual(Config.get2('c', 'boolean|string'), true);
+    });
+
+  });
+
+  describe('when getOrThrow is called', () => {
+
+    it('should return the configuration value.', () => {
+      process.env.TEST_FOO_FOO_BAR = 'value1';
+      strictEqual(Config.getOrThrow('test.foo.fooBar'), 'value1');
+    });
+
+    it('should throw a ConfigNotFoundError if the configuration key has no associated value.', () => {
+      try {
+        Config.getOrThrow('b');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'b');
+      }
+
+      try {
+        Config.getOrThrow('b', 'any', 'You must provide something.');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'b');
+        strictEqual(error.msg, 'You must provide something.');
+      }
     });
 
   });

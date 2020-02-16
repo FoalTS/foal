@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from 'fs';
 
 // FoalTS
+import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
 import { dotToUnderscore } from './utils';
 
@@ -101,6 +102,14 @@ export class Config {
       return defaultValue;
     }
 
+    return value;
+  }
+
+  static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
+    const value = this.get2(key, type);
+    if (value === undefined) {
+      throw new ConfigNotFoundError(key, msg);
+    }
     return value;
   }
 
