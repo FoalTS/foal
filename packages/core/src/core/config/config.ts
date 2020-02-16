@@ -40,40 +40,13 @@ export class Config {
    * @memberof Config
    */
   static get<T = any>(key: string, defaultValue?: T): T {
-    const underscoreName = dotToUnderscore(key);
-
-    const envValue = process.env[underscoreName];
-    if (envValue !== undefined) {
-      return this.convertType(envValue) as any;
+    let value = this.readConfigValue(key);
+    if (typeof value === 'string') {
+      value = this.convertType(value);
     }
-
-    const dotEnvValue = this.readDotEnvValue(underscoreName);
-    if (dotEnvValue !== undefined) {
-      return dotEnvValue as any;
+    if (value !== undefined) {
+      return value;
     }
-
-    const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
-    const envJSONValue = this.readJSONValue(envJSONFilePath, key);
-    if (envJSONValue !== undefined) {
-      return envJSONValue;
-    }
-
-    const envYamlFilePath = `config/${process.env.NODE_ENV || 'development'}.yml`;
-    const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
-    if (envYAMLValue !== undefined) {
-      return envYAMLValue;
-    }
-
-    const defaultJSONValue = this.readJSONValue('config/default.json', key);
-    if (defaultJSONValue !== undefined) {
-      return defaultJSONValue;
-    }
-
-    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
-    if (defaultYAMLValue !== undefined) {
-      return defaultYAMLValue;
-    }
-
     return defaultValue as T;
   }
 
@@ -98,7 +71,43 @@ export class Config {
     yaml: {},
   };
 
-  private static readDotEnvValue(name: string): string | boolean | number | undefined {
+  private static readConfigValue(key: string): any {
+    const underscoreName = dotToUnderscore(key);
+
+    const envValue = process.env[underscoreName];
+    if (envValue !== undefined) {
+      return envValue;
+    }
+
+    const dotEnvValue = this.readDotEnvValue(underscoreName);
+    if (dotEnvValue !== undefined) {
+      return dotEnvValue;
+    }
+
+    const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
+    const envJSONValue = this.readJSONValue(envJSONFilePath, key);
+    if (envJSONValue !== undefined) {
+      return envJSONValue;
+    }
+
+    const envYamlFilePath = `config/${process.env.NODE_ENV || 'development'}.yml`;
+    const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
+    if (envYAMLValue !== undefined) {
+      return envYAMLValue;
+    }
+
+    const defaultJSONValue = this.readJSONValue('config/default.json', key);
+    if (defaultJSONValue !== undefined) {
+      return defaultJSONValue;
+    }
+
+    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
+    if (defaultYAMLValue !== undefined) {
+      return defaultYAMLValue;
+    }
+  }
+
+  private static readDotEnvValue(name: string): string | undefined {
     if (!this.cache.dotEnv) {
       if (!existsSync('.env')) {
         return;
@@ -114,7 +123,7 @@ export class Config {
     }
 
     if (this.cache.dotEnv[name] !== undefined) {
-      return this.convertType(this.cache.dotEnv[name]);
+      return this.cache.dotEnv[name];
     }
   }
 
