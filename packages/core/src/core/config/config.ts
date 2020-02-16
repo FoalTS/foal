@@ -40,7 +40,7 @@ export class Config {
    * @memberof Config
    */
   static get<T = any>(key: string, defaultValue?: T): T {
-    const underscoreName = this.dotToUnderscore(key);
+    const underscoreName = dotToUnderscore(key);
 
     const envValue = process.env[underscoreName];
     if (envValue !== undefined) {
@@ -163,10 +163,6 @@ export class Config {
       this.yaml = false;
     }
     return this.yaml;
-  }
-
-  private static dotToUnderscore(str: string): string {
-    return dotToUnderscore(str);
   }
 
   private static convertType(value: string): boolean | number | string {
