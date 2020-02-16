@@ -19,8 +19,6 @@ function removeFile(path: string) {
 
 describe('Config', () => {
 
-  let initialEnv: string|undefined;
-
   beforeEach(() => Config.clearCache());
 
   afterEach(() => {
@@ -72,6 +70,46 @@ describe('Config', () => {
       strictEqual(Config.get('foo.bar'), 'a==');
     });
 
+    it('should return, when NODE_ENV is defined, the value of the config/${NODE_ENV}.json file if it exists.', () => {
+      process.env.NODE_ENV = 'test';
+      const fileContent = JSON.stringify({
+        auth: { subSection: { key1: 'aaa' } }
+      });
+      mkdirSync('config');
+      writeFileSync('config/test.json', fileContent, 'utf8');
+
+      strictEqual(Config.get('auth.subSection.key1'), 'aaa');
+    });
+
+    it('should return, when NODE_ENV is defined, the value of the config/${NODE_ENV}.yml file if it exists.', () => {
+      process.env.NODE_ENV = 'test';
+      const fileContent = 'hh:\n  subSection:\n    au: ji\n';
+      mkdirSync('config');
+      writeFileSync('config/test.yml', fileContent, 'utf8');
+
+      strictEqual(Config.get('hh.subSection.au'), 'ji');
+    });
+
+    it('should return, when NODE_ENV is not defined, the value of the config/development.json '
+    + 'file if it exists.', () => {
+      const fileContent = JSON.stringify({
+        a: 'b'
+      });
+      mkdirSync('config');
+      writeFileSync('config/development.json', fileContent, 'utf8');
+
+      strictEqual(Config.get('a'), 'b');
+    });
+
+    it('should return, when NODE_ENV is not defined, the value of the config/development.yml '
+    + 'file if it exists.', () => {
+      const ymlFileContent = 'c: d';
+      mkdirSync('config');
+      writeFileSync('config/development.yml', ymlFileContent, 'utf8');
+
+      strictEqual(Config.get('c'), 'd');
+    });
+
     it('should return the value of the config/default.json file if it exists.', () => {
       const fileContent = JSON.stringify({
         jwt: { subSection: { secretOrPublicKey: 'xxx' } }
@@ -90,32 +128,43 @@ describe('Config', () => {
       strictEqual(Config.get('aa.subSection.wx'), 'y');
     });
 
-    it('should return the value of the config/${env}.json file if it exists.', () => {
-      process.env.NODE_ENV = 'test';
-      const fileContent = JSON.stringify({
-        auth: { subSection: { key1: 'aaa' } }
-      });
-      mkdirSync('config');
-      writeFileSync('config/test.json', fileContent, 'utf8');
-
-      strictEqual(Config.get('auth.subSection.key1'), 'aaa');
-    });
-
-    it('should return the value of the config/{env}.yml file if it exists.', () => {
-      process.env.NODE_ENV = 'test';
-      const fileContent = 'hh:\n  subSection:\n    au: ji\n';
-      mkdirSync('config');
-      writeFileSync('config/test.yml', fileContent, 'utf8');
-
-      strictEqual(Config.get('hh.subSection.au'), 'ji');
-    });
-
     it('should return undefined if the key does not exist and if no default value is provided.', () => {
       strictEqual(Config.get('aa.bbbCcc.y'), undefined);
     });
 
     it('should return the default value if the key does not exist.', () => {
       strictEqual(Config.get('aa.bbbCcc.y', false), false);
+    });
+
+    it('should look at the different values / files in the correct order.', () => {
+      process.env.NODE_ENV = 'test';
+      mkdirSync('config');
+
+      const dotEnvFileContent = 'BAR_FOO=foo2';
+      const envJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
+      const envYAMLFileContent = 'barFoo: foo4';
+      const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
+      const defaultYAMLFileContent = 'barFoo: foo6';
+
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo7');
+
+      writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo6');
+
+      writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo5');
+
+      writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo4');
+
+      writeFileSync('config/test.json', envJSONFileContent, 'utf8');
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo3');
+
+      writeFileSync('.env', dotEnvFileContent, 'utf8');
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo2');
+
+      process.env.BAR_FOO = 'foo1';
+      strictEqual(Config.get('barFoo', 'foo7'), 'foo1');
     });
 
     it('should parse environment variable values.', () => {
@@ -153,51 +202,6 @@ describe('Config', () => {
       strictEqual(Config.get('foo.bar5'), 200);
       strictEqual(Config.get('foo.bar6'), '');
       strictEqual(Config.get('foo.bar7'), '   ');
-    });
-
-    it('should use "development" as default environment if none is specified.', () => {
-      const fileContent = JSON.stringify({
-        a: 'b'
-      });
-      mkdirSync('config');
-      writeFileSync('config/development.json', fileContent, 'utf8');
-
-      const ymlFileContent = 'c: d';
-      writeFileSync('config/development.yml', ymlFileContent, 'utf8');
-
-      strictEqual(Config.get('a'), 'b');
-      strictEqual(Config.get('c'), 'd');
-    });
-
-    it('should look at the different values / files in the correct order.', () => {
-      process.env.NODE_ENV = 'test';
-      mkdirSync('config');
-
-      const dotEnvFileContent = 'BAR_FOO=foo2';
-      const envJSONFileContent = JSON.stringify({ barFoo: 'foo3' });
-      const envYAMLFileContent = 'barFoo: foo4';
-      const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
-      const defaultYAMLFileContent = 'barFoo: foo6';
-
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo7');
-
-      writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo6');
-
-      writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo5');
-
-      writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo4');
-
-      writeFileSync('config/test.json', envJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo3');
-
-      writeFileSync('.env', dotEnvFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo2');
-
-      process.env.BAR_FOO = 'foo1';
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo1');
     });
 
     describe('should not take too long', () => {
