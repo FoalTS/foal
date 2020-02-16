@@ -65,6 +65,11 @@ export class Config {
   static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
   static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
     const value = this.readConfigValue(key);
+
+    if (value === undefined) {
+      return defaultValue;
+    }
+
     if (type === 'boolean|string' && typeof value !== 'boolean') {
       if (value === 'true') {
         return true as any;
@@ -96,10 +101,6 @@ export class Config {
         return false as any;
       }
       throw new ConfigTypeError(key, 'boolean', typeof value);
-    }
-
-    if (value === undefined) {
-      return defaultValue;
     }
 
     return value;

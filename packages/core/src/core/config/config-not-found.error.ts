@@ -1,6 +1,8 @@
 import { dotToUnderscore } from './utils';
 
 export class ConfigNotFoundError extends Error {
+  readonly name = 'ConfigNotFoundError';
+
   constructor(readonly key: string, readonly msg?: string) {
     super(
       `No value found for the configuration key "${key}".\n\n`
