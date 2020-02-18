@@ -87,7 +87,7 @@ export class AppController {
 
 Uploading files from the browser to Cloud storage is currently not supported. You may build your own solution for this with [FoalTS file system](./local-and-cloud-storage.md) and the library [busboy](https://www.npmjs.com/package/busboy).
 
-*A dedicated hook should be added in February-March 2020.*
+*A dedicated hook should be added in February-March 2020 (see [Github issue](https://github.com/FoalTS/foal/issues/560)).*
 
 ## Example with a Database
 
