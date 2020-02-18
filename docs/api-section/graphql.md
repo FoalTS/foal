@@ -377,6 +377,49 @@ export class ApiController extends GraphQLController {
 }
 ```
 
+#### Dependency Injection
+
+TypeGraphQL also supports dependency injection, which fits nicely with Foal's `ServiceManager`, so you can access all of your Foal services from a TypeGraphQL resolver. By modifying the above example just a bit, we get:
+
+```typescript
+class Logger {
+  log(message: string) {
+    console.log(`${new Date()} - ${message}`);
+  }
+}
+
+@ObjectType()
+class Recipe {
+  @Field()
+  title: string;
+}
+
+@Resolver(Recipe)
+class RecipeResolver {
+  @dependency
+  logger: Logger
+
+  @Query(returns => Recipe)
+  async recipe(@Arg("recipeId") recipeId: string) {
+    this.logger(`Looking for recipe ${recipeId}`);
+
+    return {
+      title: 'foobar'
+    };
+  }
+
+}
+
+export class ApiController extends GraphQLController {
+  schema = buildSchema({
+    resolvers: [ RecipeResolver ],
+    container: new ServiceManager()
+  });
+}
+```
+
+More info about using the `container` property in TypeGraphQL [here](https://typegraphql.ml/docs/dependency-injection.html).
+
 ## Advanced
 
 ### Override the Resolver Context
