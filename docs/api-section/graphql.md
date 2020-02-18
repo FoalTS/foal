@@ -401,7 +401,7 @@ class RecipeResolver {
 
   @Query(returns => Recipe)
   async recipe(@Arg("recipeId") recipeId: string) {
-    this.logger(`Looking for recipe ${recipeId}`);
+    this.logger.log(`Looking for recipe ${recipeId}`);
 
     return {
       title: 'foobar'
