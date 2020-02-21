@@ -43,6 +43,8 @@
   ],
   "dependencies": {
     "@foal/core": "^1.6.0",
+    "@types/busboy": "~0.2.3",
+    "busboy": "~0.3.1",
     "mime": "~2.4.4",
     "pump": "~3.0.0"
   },
@@ -50,9 +52,11 @@
     "@foal/internal-test": "^1.6.0",
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.5.6",
+    "@types/supertest": "~2.0.8",
     "copy": "~0.3.2",
     "mocha": "~5.2.0",
     "rimraf": "~2.6.2",
+    "supertest": "~4.0.2",
     "ts-node": "~3.3.0",
     "typedoc": "~0.14.2",
     "typedoc-plugin-markdown": "~1.2.0",
