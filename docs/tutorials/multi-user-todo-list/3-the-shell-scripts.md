@@ -11,7 +11,7 @@ Open the file and replace its content with the following:
 ```typescript
 // 3p
 import { isCommon } from '@foal/password';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -39,7 +39,7 @@ export async function main(args: { email: string, password: string }) {
     await user.setPassword(args.password);
 
     console.log(
-      await getManager().save(user)
+      await connection.manager.save(user)
     );
   } catch (error) {
     console.log(error.message);
