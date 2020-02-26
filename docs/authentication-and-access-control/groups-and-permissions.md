@@ -152,7 +152,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+import { createConnection, getManager, getRepository } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
