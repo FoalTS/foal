@@ -39,7 +39,8 @@ module.exports = {
     'sort-keys': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { 'args':  'none' }],
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/require-await': 'off'
+    '@typescript-eslint/require-await': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
   },
   ignorePatterns: [
     'src/migrations/*.ts'
