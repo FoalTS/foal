@@ -59,12 +59,10 @@ export interface JWTOptions {
  * @returns {HookDecorator}
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
-  return Hook(async (ctx, services) => {
-    const config = services.get(Config);
-
+  return Hook(async ctx => {
     let token: string;
     if (options.cookie) {
-      const cookieName = config.get<string>('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get<string>('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -124,7 +122,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         throw error;
       }
     } else {
-      secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
+      secretOrPublicKey = Config.get<string|undefined>('settings.jwt.secretOrPublicKey');
     }
     if (secretOrPublicKey === undefined) {
       throw new Error(

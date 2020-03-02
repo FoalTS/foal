@@ -3,8 +3,8 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Class, Config, ConfigMock, Context, getApiComponents,
-  getApiResponses, getApiSecurity, getHookFunction, IApiComponents,
+  Class, ConfigNotFoundError, Context,
+  getApiComponents, getApiResponses, getApiSecurity, getHookFunction, IApiComponents,
   IApiResponses, IApiSecurityRequirement, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
@@ -82,20 +82,15 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   const secret = 'my_secret';
   let services: ServiceManager;
-  let config: ConfigMock;
 
-  before(() => {
-    services = new ServiceManager();
-    config = new ConfigMock();
-    services.set(Config, config);
+  before(() => services = new ServiceManager());
+
+  beforeEach(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = secret);
+
+  afterEach(() => {
+    delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+    delete process.env.SETTINGS_JWT_COOKIE_NAME;
   });
-
-  beforeEach(() => {
-    config.reset();
-    config.set('settings.jwt.secretOrPublicKey', secret);
-  });
-
-  afterEach(() => delete process.env.SETTINGS_JWT_COOKIE_NAME);
 
   describe('should validate the request and', () => {
 
@@ -357,7 +352,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should throw an error if no secretOrPublicKey is set in the Config and options.secretOrPublicKey is'
         + ' not defined.', async () => {
       // Remove the secret.
-      config.reset();
+      delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
 
       let err: Error|undefined;
       try {
@@ -483,7 +478,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & secret from options.secretOrPublicKey).', async () => {
-        config.reset();
+        delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
         const secretOrPublicKey = async (header: any, payload: any) => {
           deepStrictEqual(header, {
             alg: 'HS256',
@@ -506,8 +501,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & public key).', async () => {
-        config.reset();
-        config.set('settings.jwt.secretOrPublicKey', publicKey);
+        process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = publicKey;
 
         const hook = getHookFunction(JWT());
 
@@ -540,7 +534,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (cookie with a custom name & secret).', async () => {
-        config.set('settings.jwt.cookieName', 'xxx');
+        process.env.SETTINGS_JWT_COOKIE_NAME = 'xxx';
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const jwt = sign({ foo: 'bar' }, secret, {});
