@@ -13,24 +13,22 @@ function getRequestToken(req: Context['request']): string | undefined {
 }
 
 export function CsrfTokenRequired(options: { doubleSubmitCookie?: boolean } = {}): HookDecorator {
-  return Hook(async (ctx, services) => {
-    const config = services.get(Config);
-
-    if (!config.get('settings.csrf.enabled', true)) {
+  return Hook(async ctx => {
+    if (!Config.get('settings.csrf.enabled', true)) {
       return;
     }
 
     let expectedToken: string;
 
     if (options.doubleSubmitCookie) {
-      const secret = config.get<string|undefined>('settings.csrf.secret');
+      const secret = Config.get<string|undefined>('settings.csrf.secret');
       if (!secret) {
         throw new Error(
           '[CONFIG] You must provide a secret with the configuration key settings.csrf.secret.'
         );
       }
 
-      const cookieName = config.get('settings.csrf.cookie.name', CSRF_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get('settings.csrf.cookie.name', CSRF_DEFAULT_COOKIE_NAME);
       const token: string|undefined = ctx.request.cookies[cookieName];
       if (!token) {
         return new HttpResponseForbidden(`Cookie "${cookieName}" not found.`);
