@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { createService, Session, SessionStore } from '@foal/core';
+import { ConfigNotFoundError, createService, Session, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
@@ -54,6 +54,23 @@ describe('MongoDBStore', () => {
     mongoDBClient.close(),
     (await store.getMongoDBInstance()).close()
   ]));
+
+  it('should throw a ConfigNotFoundError if no redis URI is provided.', async () => {
+    delete process.env.MONGODB_URI;
+
+    try {
+      await createService(MongoDBStore).getMongoDBInstance();
+    } catch (error) {
+      if (!(error instanceof ConfigNotFoundError)) {
+        throw new Error('A ConfigNotFoundError should have been thrown');
+      }
+      strictEqual(error.key, 'mongodb.uri');
+      strictEqual(error.msg, 'You must provide the URI of your database when using MongoDBStore.');
+      return;
+    }
+
+    throw new Error('An error should have been thrown.');
+  });
 
   describe('has a "createAndSaveSession" method that', () => {
 

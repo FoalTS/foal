@@ -102,7 +102,11 @@ export class MongoDBStore extends SessionStore {
 
   async getMongoDBInstance(): Promise<MongoClient> {
     if (!this.mongoDBClient) {
-      const mongoDBURI = Config.get('mongodb.uri');
+      const mongoDBURI = Config.getOrThrow(
+        'mongodb.uri',
+        'string',
+        'You must provide the URI of your database when using MongoDBStore.'
+      );
       this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
     }
     return this.mongoDBClient;
