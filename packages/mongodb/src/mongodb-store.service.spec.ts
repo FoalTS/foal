@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { ConfigMock, createService, Session, SessionStore } from '@foal/core';
+import { createService, Session, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
@@ -19,7 +19,6 @@ describe('MongoDBStore', () => {
   const MONGODB_URI = 'mongodb://localhost:27017/db';
 
   let store: MongoDBStore;
-  let config: ConfigMock;
   let mongoDBClient: MongoClient;
 
   async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
@@ -41,15 +40,15 @@ describe('MongoDBStore', () => {
 
   before(async () => {
     mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
-    config = new ConfigMock();
-    store = createService(MongoDBStore, { config });
+    store = createService(MongoDBStore);
   });
 
   beforeEach(async () => {
-    config.reset();
-    config.set('mongodb.uri', MONGODB_URI);
+    process.env.MONGODB_URI = MONGODB_URI;
     await mongoDBClient.db().collection('foalSessions').deleteMany({});
   });
+
+  afterEach(() => delete process.env.MONGODB_URI);
 
   after(async () => Promise.all([
     mongoDBClient.close(),
