@@ -365,10 +365,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       if (!err) {
         throw new Error('An error should be thrown since there is not secret.');
       }
-      strictEqual(
-        err.message,
-        '[CONFIG] You must provide a secret or public key with the configuration key settings.jwt.secretOrPublicKey.'
-      );
+      if (!(err instanceof ConfigNotFoundError)) {
+        throw new Error('A ConfigNotFoundError should have been thrown');
+      }
+      strictEqual(err.key, 'settings.jwt.secretOrPublicKey');
+      strictEqual(err.msg, 'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.');
     });
 
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {

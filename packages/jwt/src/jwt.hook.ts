@@ -62,7 +62,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
   return Hook(async ctx => {
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get<string>('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -111,7 +111,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('invalid token');
     }
 
-    let secretOrPublicKey: string|undefined;
+    let secretOrPublicKey: string;
     if (options.secretOrPublicKey) {
       try {
         secretOrPublicKey = await options.secretOrPublicKey(decoded.header, decoded.payload);
@@ -122,11 +122,10 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         throw error;
       }
     } else {
-      secretOrPublicKey = Config.get<string|undefined>('settings.jwt.secretOrPublicKey');
-    }
-    if (secretOrPublicKey === undefined) {
-      throw new Error(
-        '[CONFIG] You must provide a secret or public key with the configuration key settings.jwt.secretOrPublicKey.'
+      secretOrPublicKey = Config.getOrThrow(
+        'settings.jwt.secretOrPublicKey',
+        'string',
+        'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
       );
     }
 
