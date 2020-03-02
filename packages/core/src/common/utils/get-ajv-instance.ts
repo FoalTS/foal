@@ -26,10 +26,10 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
 export function getAjvInstance(): Ajv.Ajv {
   if (!_instanceWrapper.instance) {
     _instanceWrapper.instance = new Ajv({
-      coerceTypes: Config.get('settings.ajv.coerceTypes', true),
-      nullable: Config.get('settings.ajv.nullable'),
-      removeAdditional: Config.get('settings.ajv.removeAdditional', true),
-      useDefaults: Config.get('settings.ajv.useDefaults', true),
+      coerceTypes: Config.get2('settings.ajv.coerceTypes', 'boolean', true),
+      nullable: Config.get2('settings.ajv.nullable', 'boolean'),
+      removeAdditional: Config.get2('settings.ajv.removeAdditional', 'boolean|string', true) as boolean|'all'|'failing',
+      useDefaults: Config.get2('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty'|'shared',
     });
   }
   return _instanceWrapper.instance;

@@ -1,4 +1,5 @@
 import { strictEqual } from 'assert';
+import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
 describe('getAjvInstance', () => {
@@ -42,7 +43,7 @@ describe('getAjvInstance', () => {
 
   describe('', () => {
 
-    before(() => {
+    beforeEach(() => {
       delete _instanceWrapper.instance;
       process.env.SETTINGS_AJV_COERCE_TYPES = 'false';
       process.env.SETTINGS_AJV_REMOVE_ADDITIONAL = 'false';
@@ -84,6 +85,42 @@ describe('getAjvInstance', () => {
         foo: null
       };
       strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
+    });
+
+    it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
+      process.env.SETTINGS_AJV_COERCE_TYPES = 'hello';
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.coerceTypes');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
+    });
+
+    it('should throw a ConfigTypeError when the value of `settings.ajv.nullable` has an invalid type.', () => {
+      process.env.SETTINGS_AJV_NULLABLE = 'hello';
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.nullable');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
     });
 
     after(() => {

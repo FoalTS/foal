@@ -94,8 +94,9 @@ export function createApp(
   }
 
   // Log requests.
-  const loggerFormat: string = Config.get(
+  const loggerFormat = Config.get2(
     'settings.loggerFormat',
+    'string',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
   if (loggerFormat !== 'none') {
@@ -106,8 +107,8 @@ export function createApp(
 
   // Serve static files.
   app.use(
-    Config.get('settings.staticPathPrefix', ''),
-    express.static(Config.get('settings.staticPath', 'public'))
+    Config.get2('settings.staticPathPrefix', 'string', ''),
+    express.static(Config.get2('settings.staticPath', 'string', 'public'))
   );
 
   // Parse request body.
