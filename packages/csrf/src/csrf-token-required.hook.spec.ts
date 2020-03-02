@@ -3,6 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import {
+  ConfigNotFoundError,
   Context,
   getHookFunction,
   isHttpResponse,
@@ -155,10 +156,11 @@ describe('CsrfTokenRequired', () => {
         await hook(ctx, services);
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a secret with the configuration key settings.csrf.secret.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.csrf.secret');
+        strictEqual(error.msg, 'You must provide a secret when using @CsrfTokenRequired.');
       }
     });
 

@@ -19,10 +19,11 @@ export class Session {
    * @memberof Session
    */
   static verifyTokenAndGetId(token: string): string|false {
-    const secret = Config.get<string|undefined>('settings.session.secret');
-    if (!secret) {
-      throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
-    }
+    const secret = Config.getOrThrow(
+      'settings.session.secret',
+      'string',
+      'You must provide a secret when using sessions.'
+    );
 
     return verifySignedToken(token, secret);
   }
@@ -84,10 +85,11 @@ export class Session {
    * @memberof Session
    */
   getToken(): string {
-    const secret = Config.get<string|undefined>('settings.session.secret');
-    if (!secret) {
-      throw new Error('[CONFIG] You must provide a secret with the configuration key settings.session.secret.');
-    }
+    const secret = Config.getOrThrow(
+      'settings.session.secret',
+      'string',
+      'You must provide a secret when using sessions.'
+    );
     return signToken(this.sessionID, secret);
   }
 

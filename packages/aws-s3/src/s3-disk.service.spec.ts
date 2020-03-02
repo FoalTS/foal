@@ -52,8 +52,8 @@ describe('S3Disk', () => {
   let disk: S3Disk;
   let s3: S3;
 
-  const accessKeyId = Config.get<string|undefined>('settings.aws.accessKeyId');
-  const secretAccessKey = Config.get<string|undefined>('settings.aws.secretAccessKey');
+  const accessKeyId = Config.get2('settings.aws.accessKeyId', 'string');
+  const secretAccessKey = Config.get2('settings.aws.secretAccessKey', 'string');
 
   if (!accessKeyId) {
     console.warn('SETTINGS_AWS_ACCESS_KEY_ID not defined. Skipping S3Disk tests...');

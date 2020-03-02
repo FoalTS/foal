@@ -11,7 +11,7 @@ import { connect } from 'mongoose';
 import { AppController } from './app/app.controller';
 
 async function main() {
-  const uri = Config.get<string>('mongodb.uri');
+  const uri = Config.getOrThrow('mongodb.uri', 'string');
   connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
   const app = createApp(AppController);

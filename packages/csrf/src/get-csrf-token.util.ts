@@ -1,7 +1,7 @@
 import { Config, generateSignedToken, Session } from '@foal/core';
 
 export async function getCsrfToken(session?: Session): Promise<string> {
-  if (!Config.get('settings.csrf.enabled', true)) {
+  if (!Config.get2('settings.csrf.enabled', 'boolean', true)) {
     return 'CSRF protection disabled';
   }
 
@@ -13,11 +13,10 @@ export async function getCsrfToken(session?: Session): Promise<string> {
     return csrfToken;
   }
 
-  const secret = Config.get<string|undefined>('settings.csrf.secret');
-  if (!secret) {
-    throw new Error(
-      '[CONFIG] You must provide a secret with the configuration key settings.csrf.secret.'
-    );
-  }
+  const secret = Config.getOrThrow(
+    'settings.csrf.secret',
+    'string',
+    'You must provide a secret when using the function "getCsrfToken".'
+  );
   return generateSignedToken(secret);
 }
