@@ -6,13 +6,14 @@ import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
 import { dotToUnderscore } from './utils';
 
-type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'any';
+type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'number|string'|'any';
 
 type ValueType<T extends ValueStringType> =
   T extends 'string' ? string :
   T extends 'number' ? number :
   T extends 'boolean' ? boolean :
   T extends 'boolean|string' ? boolean|string :
+  T extends 'number|string' ? number|string :
   any;
 
 /**
@@ -79,6 +80,17 @@ export class Config {
       }
       if (typeof value !== 'string') {
         throw new ConfigTypeError(key, 'boolean|string', typeof value);
+      }
+    }
+    if (type === 'number|string' && typeof value !== 'number') {
+      if (typeof value !== 'string') {
+        throw new ConfigTypeError(key, 'number|string', typeof value);
+      }
+      if (value.replace(/ /g, '') !== '') {
+        const n = Number(value);
+        if (!isNaN(n)) {
+            return n as any;
+          }
       }
     }
     if (type === 'string' && typeof value !== 'string') {

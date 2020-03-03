@@ -321,6 +321,16 @@ api:
       strictEqual(actual2, false);
     });
 
+    it('should, when type === "number|string", convert the configuration value to a number if possible.', () => {
+      process.env.TEST_FOO_FOO_BAR = '46';
+      let actual = Config.get2('test.foo.fooBar', 'number|string');
+      strictEqual(actual, 46);
+
+      process.env.TEST_FOO_FOO_BAR = '  ';
+      actual = Config.get2('test.foo.fooBar', 'number|string');
+      strictEqual(actual, '  ');
+    });
+
     it('should throw a ConfigTypeError if the configuration value does not have the expected type (string).', () => {
       const fileContent = JSON.stringify({
         a: 'z',
@@ -467,6 +477,33 @@ api:
       }
 
       strictEqual(Config.get2('c', 'boolean|string'), true);
+    });
+
+    it('should throw a ConfigTypeError if the configuration value does not have the expected type (number|string).',
+    () => {
+      const fileContent = JSON.stringify({
+        a: 'z',
+        b: 1,
+        c: true,
+      });
+      mkdirSync('config');
+      writeFileSync('config/default.json', fileContent, 'utf8');
+
+      strictEqual(Config.get2('a', 'number|string'), 'z');
+
+      try {
+        Config.get2('c', 'number|string');
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('The error should be an instance of ConfigTypeError.');
+        }
+        strictEqual(error.key, 'c');
+        strictEqual(error.expected, 'number|string');
+        strictEqual(error.actual, 'boolean');
+      }
+
+      strictEqual(Config.get2('b', 'number|string'), 1);
     });
 
   });
