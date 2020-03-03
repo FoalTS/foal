@@ -3,7 +3,7 @@ import { ErrorRequestHandler } from 'express';
 
 // FoalTS
 import { renderError } from '../common';
-import { Context, HttpResponse } from '../core';
+import { Config, Context, HttpResponse } from '../core';
 import { CreateAppOptions } from './create-app';
 import { sendResponse } from './send-response';
 
@@ -25,7 +25,9 @@ export function handleErrors(
       return;
     }
 
-    logFn(err.stack);
+    if (Config.get<boolean>('settings.logErrors', true)) {
+      logFn(err.stack);
+    }
 
     const ctx = (req as any).foal ? (req as any).foal.ctx : new Context(req);
 

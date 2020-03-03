@@ -10,20 +10,21 @@ Foal offers several utils and hooks to handle both validation and sanitization. 
 
 ### Ajv, the JSON Schema Validator
 
-The default validation and sanitization system is based on [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](http://epoberezkin.github.io/ajv/). 
+FoalTS default validation and sanitization system is based on [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](http://epoberezkin.github.io/ajv/). 
 
-Foal uses this [baseline ajv configuration](https://github.com/epoberezkin/ajv#options-to-modify-validated-data) under the hood:
-```typescript
-{
-  coerceTypes: true,  // change data type of data to match type keyword
-  removeAdditional: true, // remove additional properties
-  useDefaults: true, // replace missing properties and items with the values from corresponding default keyword
-}
-```
+### Options
 
-You can override these settings with the config file `config/default.json` or using the environment variables `SETTINGS_AJV_COERCE_TYPE`, `SETTINGS_AJV_REMOVE_ADDITIONAL`, `SETTINGS_AJV_USE_DEFAULTS` and `SETTINGS_AJV_NULLABLE`.
+Here is the list of AJV options that can be overridden with FoalTS configuration system.
 
-*Example*
+| Ajv option | Configuration key | FoalTS default |
+| --- | --- | --- |
+| coerceTypes | `settings.ajv.coerceType` | true |
+| removeAdditional | `settings.ajv.removeAdditional` | true |
+| useDefaults | `settings.ajv.useDefaults` | true |
+| nullable | `settings.ajv.nullable` | / |
+| allErrors | `settings.ajv.allErrors` | / |
+
+*Example: config/default.json*
 ```json
 {
   "settings": {
