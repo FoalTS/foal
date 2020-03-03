@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert';
-import { Config, ConfigTypeError } from '../../core';
+import { ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
 describe('getAjvInstance', () => {
