@@ -112,7 +112,7 @@ export function createApp(
   );
 
   // Parse request body.
-  const limit = Config.get('settings.bodyParser.limit');
+  const limit = Config.get2('settings.bodyParser.limit', 'number|string');
   app.use(express.json({ limit }));
   app.use(handleJsonErrors);
   app.use(express.urlencoded({ extended: false, limit }));
