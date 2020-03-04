@@ -1,6 +1,21 @@
 // 3p
 import { existsSync, readFileSync } from 'fs';
 
+// FoalTS
+import { ConfigNotFoundError } from './config-not-found.error';
+import { ConfigTypeError } from './config-type.error';
+import { dotToUnderscore } from './utils';
+
+type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'number|string'|'any';
+
+type ValueType<T extends ValueStringType> =
+  T extends 'string' ? string :
+  T extends 'number' ? number :
+  T extends 'boolean' ? boolean :
+  T extends 'boolean|string' ? boolean|string :
+  T extends 'number|string' ? number|string :
+  any;
+
 /**
  * Static class to access environment variables and configuration files.
  *
@@ -37,41 +52,102 @@ export class Config {
    * @memberof Config
    */
   static get<T = any>(key: string, defaultValue?: T): T {
-    const underscoreName = this.dotToUnderscore(key);
-
-    const envValue = process.env[underscoreName];
-    if (envValue !== undefined) {
-      return this.convertType(envValue) as any;
+    let value = this.readConfigValue(key);
+    if (typeof value === 'string') {
+      value = this.convertType(value);
     }
-
-    const dotEnvValue = this.readDotEnvValue(underscoreName);
-    if (dotEnvValue !== undefined) {
-      return dotEnvValue as any;
+    if (value !== undefined) {
+      return value;
     }
-
-    const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
-    const envJSONValue = this.readJSONValue(envJSONFilePath, key);
-    if (envJSONValue !== undefined) {
-      return envJSONValue;
-    }
-
-    const envYamlFilePath = `config/${process.env.NODE_ENV || 'development'}.yml`;
-    const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
-    if (envYAMLValue !== undefined) {
-      return envYAMLValue;
-    }
-
-    const defaultJSONValue = this.readJSONValue('config/default.json', key);
-    if (defaultJSONValue !== undefined) {
-      return defaultJSONValue;
-    }
-
-    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
-    if (defaultYAMLValue !== undefined) {
-      return defaultYAMLValue;
-    }
-
     return defaultValue as T;
+  }
+
+  /**
+   * Read the configuration value associated with the given key. Optionaly check its type.
+   *
+   * @static
+   * @template T
+   * @param {string} key - The configuration key.
+   * @param {T} [type] - The expected type of the returned value.
+   * @param {ValueType<T>} [defaultValue] - A default value if none is found.
+   * @returns {ValueType<T>|undefined} The configuration value
+   * @memberof Config
+   */
+  static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
+  static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
+  static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
+    const value = this.readConfigValue(key);
+
+    if (value === undefined) {
+      return defaultValue;
+    }
+
+    if (type === 'boolean|string' && typeof value !== 'boolean') {
+      if (value === 'true') {
+        return true as any;
+      }
+      if (value === 'false') {
+        return false as any;
+      }
+      if (typeof value !== 'string') {
+        throw new ConfigTypeError(key, 'boolean|string', typeof value);
+      }
+    }
+    if (type === 'number|string' && typeof value !== 'number') {
+      if (typeof value !== 'string') {
+        throw new ConfigTypeError(key, 'number|string', typeof value);
+      }
+      if (value.replace(/ /g, '') !== '') {
+        const n = Number(value);
+        if (!isNaN(n)) {
+            return n as any;
+          }
+      }
+    }
+    if (type === 'string' && typeof value !== 'string') {
+      throw new ConfigTypeError(key, 'string', typeof value);
+    }
+    if (type === 'number' && typeof value !== 'number') {
+      if (typeof value === 'string' && value.replace(/ /g, '') !== '') {
+        const n = Number(value);
+        if (!isNaN(n)) {
+          return n as any;
+        }
+      }
+      throw new ConfigTypeError(key, 'number', typeof value);
+    }
+    if (type === 'boolean' && typeof value !== 'boolean') {
+      if (value === 'true') {
+        return true as any;
+      }
+      if (value === 'false') {
+        return false as any;
+      }
+      throw new ConfigTypeError(key, 'boolean', typeof value);
+    }
+
+    return value;
+  }
+
+  /**
+   * Read the configuration value associated with the given key. Optionaly check its type.
+   *
+   * Throw an ConfigNotFoundError if no value is found.
+   *
+   * @static
+   * @template T
+   * @param {string} key - The configuration key.
+   * @param {T} [type] - The expected type of the returned value.
+   * @param {string} [msg] - The message of the ConfigNotFoundError if no value is found.
+   * @returns {ValueType<T>} The configuration value.
+   * @memberof Config
+   */
+  static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
+    const value = this.get2(key, type);
+    if (value === undefined) {
+      throw new ConfigNotFoundError(key, msg);
+    }
+    return value;
   }
 
   /**
@@ -95,7 +171,43 @@ export class Config {
     yaml: {},
   };
 
-  private static readDotEnvValue(name: string): string | boolean | number | undefined {
+  private static readConfigValue(key: string): any {
+    const underscoreName = dotToUnderscore(key);
+
+    const envValue = process.env[underscoreName];
+    if (envValue !== undefined) {
+      return envValue;
+    }
+
+    const dotEnvValue = this.readDotEnvValue(underscoreName);
+    if (dotEnvValue !== undefined) {
+      return dotEnvValue;
+    }
+
+    const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
+    const envJSONValue = this.readJSONValue(envJSONFilePath, key);
+    if (envJSONValue !== undefined) {
+      return envJSONValue;
+    }
+
+    const envYamlFilePath = `config/${process.env.NODE_ENV || 'development'}.yml`;
+    const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
+    if (envYAMLValue !== undefined) {
+      return envYAMLValue;
+    }
+
+    const defaultJSONValue = this.readJSONValue('config/default.json', key);
+    if (defaultJSONValue !== undefined) {
+      return defaultJSONValue;
+    }
+
+    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
+    if (defaultYAMLValue !== undefined) {
+      return defaultYAMLValue;
+    }
+  }
+
+  private static readDotEnvValue(name: string): string | undefined {
     if (!this.cache.dotEnv) {
       if (!existsSync('.env')) {
         return;
@@ -111,7 +223,7 @@ export class Config {
     }
 
     if (this.cache.dotEnv[name] !== undefined) {
-      return this.convertType(this.cache.dotEnv[name]);
+      return this.cache.dotEnv[name];
     }
   }
 
@@ -160,13 +272,6 @@ export class Config {
       this.yaml = false;
     }
     return this.yaml;
-  }
-
-  private static dotToUnderscore(str: string): string {
-    return str
-      .replace(/([A-Z])/g, letter => `_${letter}`)
-      .replace(/\./g, '_')
-      .toUpperCase();
   }
 
   private static convertType(value: string): boolean | number | string {

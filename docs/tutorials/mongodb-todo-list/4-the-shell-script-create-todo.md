@@ -35,7 +35,7 @@ export const schema = {
 
 export async function main(args: { text: string }) {
   // Create a new connection to the database.
-  const uri = Config.get<string>('mongodb.uri');
+  const uri = Config.getOrThrow('mongodb.uri', 'string');
   connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
   // Create a new task with the text given in the command line.

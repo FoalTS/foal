@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { Session, verifySignedToken } from '@foal/core';
+import { ConfigNotFoundError, Session, verifySignedToken } from '@foal/core';
 import { getCsrfToken } from './get-csrf-token.util';
 
 describe('getCsrfToken', () => {
@@ -24,10 +24,11 @@ describe('getCsrfToken', () => {
         await getCsrfToken();
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a secret with the configuration key settings.csrf.secret.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.csrf.secret');
+        strictEqual(error.msg, 'You must provide a secret when using the function "getCsrfToken".');
       }
     });
 

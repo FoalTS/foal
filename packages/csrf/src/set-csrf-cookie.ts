@@ -9,16 +9,16 @@ import { CSRF_DEFAULT_COOKIE_NAME, CSRF_DEFAULT_COOKIE_PATH } from './constants'
  * @param {string} csrfToken - The CSRF token
  */
 export function setCsrfCookie(response: HttpResponse, csrfToken: string): void {
-  const cookieName = Config.get('settings.csrf.cookie.name', CSRF_DEFAULT_COOKIE_NAME);
+  const cookieName = Config.get2('settings.csrf.cookie.name', 'string', CSRF_DEFAULT_COOKIE_NAME);
   const options: CookieOptions = {
-    domain: Config.get('settings.csrf.cookie.domain'),
+    domain: Config.get2('settings.csrf.cookie.domain', 'string'),
     httpOnly: false,
-    path: Config.get('settings.csrf.cookie.path', CSRF_DEFAULT_COOKIE_PATH),
-    sameSite: Config.get('settings.csrf.cookie.sameSite'),
-    secure: Config.get('settings.csrf.cookie.secure')
+    path: Config.get2('settings.csrf.cookie.path', 'string', CSRF_DEFAULT_COOKIE_PATH),
+    sameSite: Config.get2('settings.csrf.cookie.sameSite', 'string') as 'strict'|'lax'|'none'|undefined,
+    secure: Config.get2('settings.csrf.cookie.secure', 'boolean')
   };
   // Express does not support options.maxAge === undefined.
-  const maxAge = Config.get<number|undefined>('settings.csrf.cookie.maxAge');
+  const maxAge = Config.get2('settings.csrf.cookie.maxAge', 'number');
   if (maxAge) {
     options.maxAge = maxAge;
   }
