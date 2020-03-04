@@ -17,7 +17,6 @@ export function sendResponse(response: HttpResponse, res: Response): void {
   res.status(response.statusCode);
   res.set(response.getHeaders());
   const cookies = response.getCookies();
-  // tslint:disable-next-line:forin
   for (const cookieName in cookies) {
     const options = cookies[cookieName].options;
     if (options.maxAge !== undefined) {

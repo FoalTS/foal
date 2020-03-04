@@ -18,7 +18,8 @@
       "no-unused-variable": true,
       "no-duplicate-imports": true,
       "no-conditional-assignment": false,
-      "member-access": [true, "no-public"]
+      "member-access": [true, "no-public"],
+      "forin": false
     },
     "rulesDirectory": [],
     "linterOptions": {

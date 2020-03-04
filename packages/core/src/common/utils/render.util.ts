@@ -17,7 +17,6 @@ import { Config, HttpResponseOK } from '../../core';
  * @returns {string} The rendered template.
  */
 export function renderToString(template: string, locals: any): string {
-  // tslint:disable-next-line:forin
   for (const key in locals) {
     template = template.replace(new RegExp(`{{ ${key} }}`, 'g'), locals[key]);
   }
