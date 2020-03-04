@@ -62,6 +62,17 @@ export class Config {
     return defaultValue as T;
   }
 
+  /**
+   * Read the configuration value associated with the given key. Optionaly check its type.
+   *
+   * @static
+   * @template T
+   * @param {string} key - The configuration key.
+   * @param {T} [type] - The expected type of the returned value.
+   * @param {ValueType<T>} [defaultValue] - A default value if none is found.
+   * @returns {ValueType<T>|undefined} The configuration value
+   * @memberof Config
+   */
   static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
   static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
   static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
@@ -118,6 +129,19 @@ export class Config {
     return value;
   }
 
+  /**
+   * Read the configuration value associated with the given key. Optionaly check its type.
+   *
+   * Throw an ConfigNotFoundError if no value is found.
+   *
+   * @static
+   * @template T
+   * @param {string} key - The configuration key.
+   * @param {T} [type] - The expected type of the returned value.
+   * @param {string} [msg] - The message of the ConfigNotFoundError if no value is found.
+   * @returns {ValueType<T>} The configuration value.
+   * @memberof Config
+   */
   static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
     const value = this.get2(key, type);
     if (value === undefined) {
