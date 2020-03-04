@@ -80,23 +80,6 @@ describe('RedisStore', () => {
     });
   }
 
-  it('should throw a ConfigNotFoundError if no redis URI is provided.', () => {
-    delete process.env.REDIS_URI;
-
-    try {
-      createService(RedisStore).getRedisInstance();
-    } catch (error) {
-      if (!(error instanceof ConfigNotFoundError)) {
-        throw new Error('A ConfigNotFoundError should have been thrown');
-      }
-      strictEqual(error.key, 'redis.uri');
-      strictEqual(error.msg, 'You must provide the URI of your database when using RedisStore.');
-      return;
-    }
-
-    throw new Error('An error should have been thrown');
-  });
-
   describe('has a "createAndSaveSession" method that', () => {
 
     it('should return a representation (Session object) of the created session.', async () => {
