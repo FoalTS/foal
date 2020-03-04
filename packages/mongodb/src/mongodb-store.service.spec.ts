@@ -55,7 +55,7 @@ describe('MongoDBStore', () => {
     (await store.getMongoDBInstance()).close()
   ]));
 
-  it('should throw a ConfigNotFoundError if no redis URI is provided.', async () => {
+  it('should throw a ConfigNotFoundError if no MongoDB URI is provided.', async () => {
     delete process.env.MONGODB_URI;
 
     try {
