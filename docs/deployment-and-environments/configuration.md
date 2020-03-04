@@ -165,7 +165,7 @@ const debug = Config.get('settings.debug');
 
 #### Type coercion and type variable
 
-You can force the TypeScript type returned by the variable this way :
+You can force the TypeScript type returned by the variable this way:
 ```typescript
 const debug = Config.get<boolean>('settings.debug');
 ```

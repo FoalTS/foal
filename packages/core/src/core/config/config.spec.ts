@@ -490,6 +490,7 @@ api:
       writeFileSync('config/default.json', fileContent, 'utf8');
 
       strictEqual(Config.get2('a', 'number|string'), 'z');
+      strictEqual(Config.get2('b', 'number|string'), 1);
 
       try {
         Config.get2('c', 'number|string');
@@ -502,8 +503,6 @@ api:
         strictEqual(error.expected, 'number|string');
         strictEqual(error.actual, 'boolean');
       }
-
-      strictEqual(Config.get2('b', 'number|string'), 1);
     });
 
   });
