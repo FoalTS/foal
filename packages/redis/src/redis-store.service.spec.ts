@@ -1,5 +1,5 @@
 // 3p
-import { ConfigNotFoundError, createService, Session, SessionStore } from '@foal/core';
+import { createService, Session, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
