@@ -132,7 +132,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     let payload: any;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secretOrPublicKey as string, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
