@@ -29,7 +29,22 @@ describe('ValidateMultipartFormDataBody', () => {
     return createApp(AppController);
   }
 
-  it('should return an HttpResponseBadRequest if the request is not of type multipart/form-data');
+  it('should return an HttpResponseBadRequest if the request is not of type multipart/form-data.', async () => {
+    const app = createAppWithHook({
+      files: {}
+    }, { body: null});
+
+    await request(app)
+      .post('/')
+      .send({})
+      .expect(400)
+      .expect({
+        headers: {
+          error: 'INVALID_MULTIPART_FORM_DATA_REQUEST',
+          message: 'Unsupported content type: application/json'
+        }
+      });
+  });
 
   describe('should set ctx.request.body.fields with the fields', () => {
 
@@ -110,7 +125,19 @@ describe('ValidateMultipartFormDataBody', () => {
 
   });
 
-  it('should ignore the upload of unexpected files.');
+  it('should ignore the upload of unexpected files.', async () => {
+    const actual: { body: any } = { body: null };
+    const app = createAppWithHook({
+      files: {}
+    }, actual);
+
+    await request(app)
+      .post('/')
+      .attach('foobar', createReadStream('src/image.test.png'))
+      .expect(200);
+
+    deepStrictEqual(actual.body.files.foobar, undefined);
+  });
 
   describe('when a file is not uploaded and it is not required', () => {
 
@@ -236,7 +263,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   });
 
-  describe('when a file is uploaded and uploadTo is undefined', () => {
+  describe('when a file is uploaded and saveTo is undefined', () => {
 
     it('should set ctx.request.files with the buffered file if the option "multiple" is not defined.', async () => {
       const actual: { body: any } = { body: null };
@@ -293,7 +320,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   });
 
-  describe('when a file is uploaded and uploadTo is defined', () => {
+  describe('when a file is uploaded and saveTo is defined', () => {
 
     it('should save the file to the disk and set ctx.request.files with its path'
       + ' if the option "multiple" is not defined.');

@@ -1,12 +1,16 @@
+// 3p
 import { getAjvInstance, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
 import * as Busboy from 'busboy';
+
+// FoalTS
+import { Disk } from './disk.service';
 
 export interface MultipartFormDataSchema {
   fields?: {
     [key: string]: any;
   };
   files: {
-    [key: string]: { required: boolean, multiple?: boolean, uploadTo?: string }
+    [key: string]: { required: boolean, multiple?: boolean, saveTo?: string }
   };
 }
 
@@ -20,29 +24,37 @@ function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
   });
 }
 
-function convertStream(stream: NodeJS.ReadableStream, uploadTo?: string): Promise<any> {
-  return streamToBuffer(stream);
-}
-
 export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): HookDecorator {
-  return Hook(ctx => new Promise(resolve => {
+  return Hook((ctx, services) => new Promise(resolve => {
     const fields: any = {};
     const files: any = {};
     for (const name in schema.files) {
       files[name] = schema.files[name].multiple ? [] : null;
     }
 
-    const busboy = new Busboy({ headers: ctx.request.headers });
+    let busboy: busboy.Busboy;
+    try {
+      busboy = new Busboy({ headers: ctx.request.headers });
+    } catch (error) {
+      return resolve(new HttpResponseBadRequest({ headers: {
+        error: 'INVALID_MULTIPART_FORM_DATA_REQUEST',
+        message: error.message
+      }}));
+    }
     busboy.on('field', (name, value) => fields[name] = value);
-    busboy.on('file', async (name, stream) => {
-      // if (!(schema.files.hasOwnProperty(name))) {
-      //   // Maybe we must consume the stream.
-      //   return;
-      // }
+    busboy.on('file', (name, stream) => {
+      if (!(schema.files.hasOwnProperty(name))) {
+        stream.on('data', () => {});
+        // TODO: handle this error.
+        stream.on('error', () => {});
+        return;
+      }
       const options = schema.files[name];
 
+      // const disk = services.get(Disk);
+      // // Pb of the extension
+      // const promise = options.saveTo ? disk.write(options.saveTo, stream as any) : streamToBuffer(stream);
       const promise = streamToBuffer(stream);
-      // const promise = convertStream(stream, options.uploadTo);
 
       if (options.multiple) {
         files[name].push(promise);
@@ -54,9 +66,9 @@ export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): 
     busboy.on('finish', () => resolve(validate()));
 
     async function validate() {
-      // Wait for all uploads to finish.
+      // Wait for all saves to finish.
       // When busboy "finish" event is emitted, it means all busboy streams have ended.
-      // It does not mean that other upload streams/promises have ended/been resolved.
+      // It does not mean that other Disk streams/promises have ended/been resolved.
       // TODO: if this fails, delete all the uploaded files.
       for (const name in files) {
         if (Array.isArray(files[name])) {
