@@ -22,7 +22,7 @@ export class LocalDisk extends AbstractDisk {
 
   async write(
     dirname: string,
-    content: Buffer | Readable,
+    content: Buffer | NodeJS.ReadableStream,
     options: { name?: string } | { extension?: string } = {}
   ): Promise<{ path: string; }> {
     let name = this.hasName(options) ? options.name : await generateToken();
