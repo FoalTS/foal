@@ -1,12 +1,14 @@
 // std
-import { deepStrictEqual } from 'assert';
-import { createReadStream, readFileSync } from 'fs';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync } from 'fs';
+import { join } from 'path';
 
 // 3p
-import { Context, createApp, ExpressApplication, HttpResponseOK, Post } from '@foal/core';
+import { Context, createApp, createService, ExpressApplication, HttpResponseOK, Post } from '@foal/core';
 import * as request from 'supertest';
 
 // FoalTS
+import { Disk } from './disk.service';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {
@@ -32,7 +34,7 @@ describe('ValidateMultipartFormDataBody', () => {
   it('should return an HttpResponseBadRequest if the request is not of type multipart/form-data.', async () => {
     const app = createAppWithHook({
       files: {}
-    }, { body: null});
+    }, { body: null });
 
     await request(app)
       .post('/')
@@ -298,57 +300,195 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should set ctx.request.files with an array of the buffered fileS if the option "multiple" is "true".',
-    async () => {
+      async () => {
+        const actual: { body: any } = { body: null };
+        const app = createAppWithHook({
+          files: {
+            foobar: { required: true, multiple: true }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .expect(200);
+
+        deepStrictEqual(actual.body.files.foobar, [
+          readFileSync('src/image.test.png'),
+          readFileSync('src/image.test2.png'),
+        ]);
+      });
+
+  });
+
+  describe('when a file is uploaded and saveTo is defined', () => {
+
+    let disk: Disk;
+
+    beforeEach(() => {
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+
+      disk = createService(Disk);
+    });
+
+    afterEach(() => {
+      delete process.env.SETTINGS_DISK_DRIVER;
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
+    it('should save the file to the disk and set ctx.request.files with its path'
+      + ' if the option "multiple" is not defined.', async () => {
+        const actual: { body: any } = { body: null };
+        const app = createAppWithHook({
+          files: {
+            foobar: { required: false, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .expect(200);
+
+        strictEqual(typeof actual.body.files.foobar, 'object');
+        notStrictEqual(actual.body.files.foobar, null);
+
+        const path = actual.body.files.foobar.path;
+        strictEqual(typeof path, 'string');
+
+        deepStrictEqual(
+          readFileSync('src/image.test.png'),
+          (await disk.read(path, 'buffer')).file
+        );
+      }
+    );
+
+    it('should save the file to the disk and set ctx.request.files with its path'
+      + ' if the option "multiple" is "false.', async () => {
+        const actual: { body: any } = { body: null };
+        const app = createAppWithHook({
+          files: {
+            foobar: { required: false, multiple: false, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .expect(200);
+
+        strictEqual(typeof actual.body.files.foobar, 'object');
+        notStrictEqual(actual.body.files.foobar, null);
+
+        const path = actual.body.files.foobar.path;
+        strictEqual(typeof path, 'string');
+
+        deepStrictEqual(
+          readFileSync('src/image.test.png'),
+          (await disk.read(path, 'buffer')).file
+        );
+      }
+    );
+
+    it('should save the file to the disk and set ctx.request.files with an array'
+      + ' of the pathS  if the option "multiple" is "true".', async () => {
+        const actual: { body: any } = { body: null };
+        const app = createAppWithHook({
+          files: {
+            foobar: { required: false, multiple: true, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .expect(200);
+
+        strictEqual(typeof actual.body.files.foobar, 'object');
+        notStrictEqual(actual.body.files.foobar, null);
+
+        if (!Array.isArray(actual.body.files.foobar)) {
+          throw new Error('"files.foobar" should an array.');
+        }
+
+        const path = actual.body.files.foobar[0].path;
+        strictEqual(typeof path, 'string');
+
+        deepStrictEqual(
+          readFileSync('src/image.test.png'),
+          (await disk.read(path, 'buffer')).file
+        );
+
+        const path2 = actual.body.files.foobar[1].path;
+        strictEqual(typeof path2, 'string');
+
+        deepStrictEqual(
+          readFileSync('src/image.test2.png'),
+          (await disk.read(path2, 'buffer')).file
+        );
+      }
+    );
+
+    it('should keep the extension of the file if it has one.', async () => {
       const actual: { body: any } = { body: null };
       const app = createAppWithHook({
         files: {
-          foobar: { required: true, multiple: true }
+          foobar: { required: false, saveTo: 'images' }
         }
       }, actual);
 
       await request(app)
         .post('/')
         .attach('foobar', createReadStream('src/image.test.png'))
-        .attach('foobar', createReadStream('src/image.test2.png'))
         .expect(200);
 
-      deepStrictEqual(actual.body.files.foobar, [
-        readFileSync('src/image.test.png'),
-        readFileSync('src/image.test2.png'),
-      ]);
+      strictEqual(typeof actual.body.files.foobar, 'object');
+      notStrictEqual(actual.body.files.foobar, null);
+
+      const path: string = actual.body.files.foobar.path;
+      strictEqual(typeof path, 'string');
+
+      const fragments = path.split('.');
+      strictEqual(fragments.length, 2);
+      strictEqual(fragments[1], 'png');
     });
 
-  });
+    it('should not keep the extension of the file if it has none.', async () => {
+      const actual: { body: any } = { body: null };
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, saveTo: 'images' }
+        }
+      }, actual);
 
-  describe('when a file is uploaded and saveTo is defined', () => {
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'), { filename: 'my_image' })
+        .expect(200);
 
-    it('should save the file to the disk and set ctx.request.files with its path'
-      + ' if the option "multiple" is not defined.');
+      strictEqual(typeof actual.body.files.foobar, 'object');
+      notStrictEqual(actual.body.files.foobar, null);
 
-    it('should save the file to the disk and set ctx.request.files with its path'
-      + ' if the option "multiple" is "false".');
+      const path: string = actual.body.files.foobar.path;
+      strictEqual(typeof path, 'string');
 
-    it('should save the file to the disk and set ctx.request.files with an array'
-      + ' of the pathS  if the option "multiple" is "true".');
+      const fragments = path.split('.');
+      strictEqual(fragments.length, 1);
+    });
 
-  });
-
-  // it('should return an HttpResponseBadRequest if a file is missing.', () => {
-  //   const actual: { body: any } = { body: null };
-  //   const app = createAppWithHook({
-  //     files: [ ['images'], 'logo' ]
-  //   }, actual);
-
-  //   return request(app)
-  //     .post('/')
-  //     .field('hello', 'world')
-  //     .expect(400)
-  //     .expect({
-  //       body: {
-  //         error: 'MISSING_FILE',
-  //         message: 'The file "logo" is missing.'
-  //       }
-  //     });
-  // });
+});
 
 });

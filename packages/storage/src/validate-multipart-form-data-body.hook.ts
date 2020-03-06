@@ -1,3 +1,6 @@
+// std
+import { extname } from 'path';
+
 // 3p
 import { getAjvInstance, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
 import * as Busboy from 'busboy';
@@ -42,7 +45,7 @@ export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): 
       }}));
     }
     busboy.on('field', (name, value) => fields[name] = value);
-    busboy.on('file', (name, stream) => {
+    busboy.on('file', (name, stream, filename) => {
       if (!(schema.files.hasOwnProperty(name))) {
         stream.on('data', () => {});
         // TODO: handle this error.
@@ -51,10 +54,9 @@ export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): 
       }
       const options = schema.files[name];
 
-      // const disk = services.get(Disk);
-      // // Pb of the extension
-      // const promise = options.saveTo ? disk.write(options.saveTo, stream as any) : streamToBuffer(stream);
-      const promise = streamToBuffer(stream);
+      const disk = services.get(Disk);
+      const extension = extname(filename).replace('.', '');
+      const promise = options.saveTo ? disk.write(options.saveTo, stream, { extension }) : streamToBuffer(stream);
 
       if (options.multiple) {
         files[name].push(promise);
