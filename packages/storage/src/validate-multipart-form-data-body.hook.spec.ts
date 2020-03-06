@@ -1,6 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync } from 'fs';
+import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
 // 3p
