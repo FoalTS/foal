@@ -97,6 +97,8 @@ You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or
 
 ### Sessions Tokens
 
+> warning: version 2
+
 First generate a secret:
 
 ```
@@ -111,7 +113,7 @@ SETTINGS_SESSION_SECRET=my-secret
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { dependency, Get, Post, Session, TokenRequired, ValidateBody } from '@foal/core';
+import { dependency, Get, Post, TokenOptional, TokenRequired, ValidateBody } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 // ... to complete
 
@@ -163,9 +165,12 @@ export class AuthController {
   }
 
     @Post('/logout')
-    @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
-    async logout(ctx: Context<any, Session>) {
-      await this.store.destroy(ctx.session.sessionID);
+    @TokenOptional({ store: TypeORMStore })
+    async logout(ctx: Context) {
+      if (ctx.session) {
+        await ctx.session.destroy();
+      }
+
       return new HttpResponseNoContent();
     }
 }
@@ -281,6 +286,8 @@ You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or
 
 ### Session Tokens
 
+> warning: version 2
+
 First generate a secret:
 
 ```
@@ -345,16 +352,16 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @TokenRequired({
+  @TokenOptional({
     cookie: true,
-    extendLifeTimeOrUpdate: false,
     store: TypeORMStore,
   })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    const response = new HttpResponseNoContent();
-    removeSessionCookie(response);
-    return response;
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
+
+    return new HttpResponseNoContent();
   }
 }
 ```
@@ -371,6 +378,8 @@ export class ApiController {
 ```
 
 ## Regular Web Applications (with cookies and redirections)
+
+> warning: version 2
 
 > As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
 
@@ -454,17 +463,17 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @TokenRequired({
+  @TokenOptional({
     cookie: true,
-    extendLifeTimeOrUpdate: false,
     redirectTo: '/login',
     store: TypeORMStore,
   })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    const response = new HttpResponseRedirect('/login');
-    removeSessionCookie(response);
-    return response;
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
+
+    return new HttpResponseRedirect('/login');
   }
 }
 ```

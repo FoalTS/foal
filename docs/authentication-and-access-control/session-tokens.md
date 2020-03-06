@@ -149,10 +149,12 @@ class ApiController {
 
 ### Destroy the Session (Log Out)
 
-Sessions are can be destroyed (i.e users can be logged out) using the `destroy` method of the session store.
+> warning: version 2
+
+Sessions are can be destroyed (i.e users can be logged out) using their `destroy` method.
 
 ```typescript
-import { Context, dependency, HttpResponseNoContent, TokenRequired, Session } from '@foal/core';
+import { Context, dependency, HttpResponseNoContent, TokenOptional } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 export class AuthController {
@@ -160,9 +162,11 @@ export class AuthController {
   store: TypeORMStore;
 
   @Post('/logout')
-  @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
+  @TokenOptional({ store: TypeORMStore })
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
     return new HttpResponseNoContent();
   }
 

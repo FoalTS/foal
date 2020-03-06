@@ -82,8 +82,8 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, dependency, HttpResponseRedirect, Post, removeSessionCookie,
-  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
+  Context, dependency, HttpResponseRedirect, Post,
+  setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -130,21 +130,19 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @TokenRequired({
+  @TokenOptional({
     cookie: true,
-    extendLifeTimeOrUpdate: false,
     redirectTo: '/signin',
     store: TypeORMStore,
   })
-  async logout(ctx: Context<User, Session>) {
+  async logout(ctx: Context) {
     // Destroy the user session.
-    await this.store.destroy(ctx.session.sessionID);
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
 
     // Redirect the user to the home page on success.
-    const response = new HttpResponseRedirect('/signin');
-    // Remove the cookie where the session token is stored.
-    removeSessionCookie(response);
-    return response;
+    return new HttpResponseRedirect('/signin');
   }
 }
 
