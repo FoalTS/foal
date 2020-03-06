@@ -1,6 +1,7 @@
 // FoalTS
 import { signToken, verifySignedToken } from '../common';
 import { Config } from '../core';
+import { SessionStore } from './session-store';
 
 /**
  * Representation of a server/database session.
@@ -30,7 +31,12 @@ export class Session {
 
   private modified = false;
 
-  constructor(readonly sessionID: string, private sessionContent: any, readonly createdAt: number) {
+  constructor(
+    readonly store: SessionStore,
+    readonly sessionID: string,
+    private sessionContent: any,
+    readonly createdAt: number
+  ) {
     if (sessionID.includes('.')) {
       throw new Error('A session ID cannot include dots.');
     }

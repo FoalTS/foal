@@ -123,7 +123,7 @@ describe('RedisStore', () => {
       await asyncSet('session:a', JSON.stringify(data));
       strictEqual(await asyncGet('session:a'), JSON.stringify(data));
 
-      const session = new Session('a', data.content, data.createdAt);
+      const session = new Session({} as any, 'a', data.content, data.createdAt);
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -143,7 +143,7 @@ describe('RedisStore', () => {
       await asyncSet('session:a', JSON.stringify(data));
       strictEqual(await asyncGet('session:a'), JSON.stringify(data));
 
-      const session = new Session('a', data.content, data.createdAt);
+      const session = new Session({} as any, 'a', data.content, data.createdAt);
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -154,7 +154,7 @@ describe('RedisStore', () => {
     it('should create the session if it does not exist (with the proper lifetime).', async () => {
       strictEqual(await asyncGet('session:a'), null);
 
-      const session = new Session('a', { foo: 'bar' }, Date.now());
+      const session = new Session({} as any, 'a', { foo: 'bar' }, Date.now());
 
       await store.update(session);
 

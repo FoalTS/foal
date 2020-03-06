@@ -45,7 +45,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     }
     async createAndSaveSession(sessionContent: object): Promise<Session> {
       const sessionID = await this.generateSessionID();
-      const session = new Session(sessionID, sessionContent, Date.now());
+      const session = new Session({} as any, sessionID, sessionContent, Date.now());
       this.sessions.push(session);
       return session;
     }

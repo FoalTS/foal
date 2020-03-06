@@ -155,7 +155,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           updatedAt: Date.now(),
         });
 
-        await store.update(new Session(session1.sessionID, { bar: 'foo' }, session1.createdAt));
+        await store.update(new Session({} as any, session1.sessionID, { bar: 'foo' }, session1.createdAt));
 
         const sessionA = await findByID(session1.sessionID);
         deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
@@ -181,7 +181,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         });
 
         const dateBefore = Date.now();
-        await store.update(new Session(session1.sessionID, session1.sessionContent, session1.createdAt));
+        await store.update(new Session({} as any, session1.sessionID, session1.sessionContent, session1.createdAt));
         const dateAfter = Date.now();
 
         const sessionA = await findByID(session1.sessionID);
