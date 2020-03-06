@@ -102,6 +102,7 @@ describe('MongoDBStore', () => {
       strictEqual(sessions.length, 1);
       const sessionA = sessions[0];
 
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, sessionA._id);
       deepStrictEqual(session.getContent(), { foo: 'bar' });
       strictEqual(session.createdAt, sessionA.createdAt);
@@ -311,6 +312,7 @@ describe('MongoDBStore', () => {
       if (!session) {
         throw new Error('TypeORMStore.read should not return undefined.');
       }
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, session2._id);
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, session2.createdAt);

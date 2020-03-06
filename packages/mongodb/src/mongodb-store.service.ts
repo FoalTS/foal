@@ -31,7 +31,7 @@ export class MongoDBStore extends SessionStore {
       updatedAt: date,
     });
 
-    return new Session({} as any, sessionID, sessionContent, date);
+    return new Session(this, sessionID, sessionContent, date);
   }
 
   async update(session: Session): Promise<void> {
@@ -72,7 +72,7 @@ export class MongoDBStore extends SessionStore {
       return undefined;
     }
 
-    return new Session({} as any, session._id, session.sessionContent, session.createdAt);
+    return new Session(this, session._id, session.sessionContent, session.createdAt);
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {

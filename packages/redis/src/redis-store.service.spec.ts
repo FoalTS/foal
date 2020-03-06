@@ -87,6 +87,7 @@ describe('RedisStore', () => {
       const session = await store.createAndSaveSession({ foo: 'bar' });
       const dateAfter = Date.now();
 
+      strictEqual(session.store, store);
       notStrictEqual(session.sessionID, undefined);
       deepStrictEqual(session.getContent(), { foo: 'bar' });
 
@@ -234,6 +235,7 @@ describe('RedisStore', () => {
       if (!session) {
         throw new Error('RedisStore.read should not return undefined.');
       }
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, 'b');
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, createdAt);

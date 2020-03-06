@@ -25,7 +25,7 @@ export class RedisStore extends SessionStore {
         if (err) {
           return reject(err);
         }
-        const session = new Session({} as any, sessionID, sessionContent, createdAt);
+        const session = new Session(this, sessionID, sessionContent, createdAt);
         resolve(session);
       });
     });
@@ -68,7 +68,7 @@ export class RedisStore extends SessionStore {
           return resolve(undefined);
         }
         const data = JSON.parse(val);
-        const session = new Session({} as any, sessionID, data.content, data.createdAt);
+        const session = new Session(this, sessionID, data.content, data.createdAt);
 
         if (Date.now() - session.createdAt > absolute * 1000) {
           await this.destroy(sessionID);

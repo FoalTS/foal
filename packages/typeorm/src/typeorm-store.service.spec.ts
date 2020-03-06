@@ -127,6 +127,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
+        strictEqual(session.store, store);
         strictEqual(session.sessionID, sessionA.sessionID);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
         strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
@@ -336,6 +337,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         if (!session) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
+        strictEqual(session.store, store);
         strictEqual(session.sessionID, session2.sessionID);
         strictEqual(session.get('foo'), 'bar');
         strictEqual(session.createdAt, session2.createdAt);
