@@ -30,6 +30,7 @@ export class Session {
   }
 
   private modified = false;
+  private destroyed = false;
 
   constructor(
     readonly store: SessionStore,
@@ -51,6 +52,17 @@ export class Session {
    */
   get isModified(): boolean {
     return this.modified;
+  }
+
+  /**
+   * Return true if the session has been destroyed.
+   *
+   * @readonly
+   * @type {boolean}
+   * @memberof Session
+   */
+  get isDestroyed(): boolean {
+    return this.destroyed;
   }
 
   /**
@@ -107,6 +119,17 @@ export class Session {
    */
   getContent(): object {
     return { ...this.sessionContent };
+  }
+
+  /**
+   * Destroy the session in the session store.
+   *
+   * @returns {Promise<void>}
+   * @memberof Session
+   */
+  async destroy(): Promise<void> {
+    await this.store.destroy(this.sessionID);
+    this.destroyed = true;
   }
 
 }

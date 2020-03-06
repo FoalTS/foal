@@ -214,4 +214,32 @@ describe('Session', () => {
 
   });
 
+  describe('has a "destroy" method that', () => {
+
+    class ConcreteSessionStore2 extends ConcreteSessionStore {
+      calledWith: string|undefined;
+
+      async destroy(sessionID: string): Promise<void> {
+        this.calledWith = sessionID;
+      }
+    }
+
+    it('should call the "destroy" method of the store to destroy itself.', async () => {
+      const store = new ConcreteSessionStore2();
+      const session = new Session(store, 'a', {}, 0);
+
+      await session.destroy();
+      strictEqual(store.calledWith, 'a');
+    });
+
+    it('should make this.isDestroyed return "true".', async () => {
+      const store = new ConcreteSessionStore2();
+      const session = new Session(store, 'a', {}, 0);
+
+      strictEqual(session.isDestroyed, false);
+      await session.destroy();
+      strictEqual(session.isDestroyed, true);
+    });
+  });
+
 });
