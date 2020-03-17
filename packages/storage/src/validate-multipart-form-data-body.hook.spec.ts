@@ -4,7 +4,9 @@ import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, unli
 import { join } from 'path';
 
 // 3p
-import { Context, createApp, createService, ExpressApplication, HttpResponseOK, Post } from '@foal/core';
+import {
+  Class, Context, createApp, createService, ExpressApplication, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+} from '@foal/core';
 import * as request from 'supertest';
 
 // FoalTS
@@ -489,6 +491,118 @@ describe('ValidateMultipartFormDataBody', () => {
       strictEqual(fragments.length, 1);
     });
 
-});
+  });
+
+  describe('should define an API specification', () => {
+
+    const schema: MultipartFormDataSchema = {
+      fields: {
+        bar: { type: 'integer' },
+        foo: { type: 'integer' },
+      },
+      files: {
+        album: { required: false, multiple: true },
+        profile: { required: true }
+      }
+    };
+    const expectedRequestBody: IApiRequestBody = {
+      content: {
+        'multipart/form-data': {
+          schema: {
+            properties: {
+              album: {
+                items: {
+                  format: 'binary',
+                  type: 'string',
+                },
+                type: 'array',
+              },
+              bar: {
+                type: 'integer'
+              },
+              foo: {
+                type: 'integer'
+              },
+              profile: {
+                format: 'binary',
+                type: 'string',
+              },
+            },
+            required: [ 'bar', 'foo', 'profile' ],
+            type: 'object',
+          }
+        }
+      }
+    };
+
+    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
+      @ValidateMultipartFormDataBody(schema)
+      class Foobar {}
+
+      deepStrictEqual(getApiRequestBody(Foobar), undefined);
+    });
+
+    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      @ValidateMultipartFormDataBody(schema)
+      class Foobar {}
+
+      deepStrictEqual(getApiRequestBody(Foobar), undefined);
+    });
+
+    it('unless options.openapi is false.', () => {
+      @ValidateMultipartFormDataBody(schema)
+      class Foobar {}
+
+      deepStrictEqual(getApiRequestBody(Foobar), undefined);
+    });
+
+    function testClass(Foobar: Class) {
+      const actualRequestBody = getApiRequestBody(Foobar);
+      deepStrictEqual(actualRequestBody, expectedRequestBody);
+    }
+
+    it('if options.openapi is true (class decorator).', () => {
+      @ValidateMultipartFormDataBody(schema, { openapi: true })
+      class Foobar {}
+
+      testClass(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      @ValidateMultipartFormDataBody(schema)
+      class Foobar {}
+
+      testClass(Foobar);
+    });
+
+    function testMethod(Foobar: Class) {
+      const actualRequestBody = getApiRequestBody(Foobar, 'foo');
+      deepStrictEqual(actualRequestBody, expectedRequestBody);
+    }
+
+    it('if options.openapi is true (method decorator).', () => {
+      class Foobar {
+        @ValidateMultipartFormDataBody(schema, { openapi: true })
+        foo() {}
+      }
+
+      testMethod(Foobar);
+    });
+
+    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @ValidateMultipartFormDataBody(schema)
+        foo() {}
+      }
+
+      testMethod(Foobar);
+    });
+
+  });
 
 });

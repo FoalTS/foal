@@ -2,7 +2,9 @@
 import { extname } from 'path';
 
 // 3p
-import { getAjvInstance, Hook, HookDecorator, HttpResponseBadRequest } from '@foal/core';
+import {
+  ApiRequestBody, Config, getAjvInstance, Hook, HookDecorator, HttpResponseBadRequest, IApiRequestBody, IApiSchema
+} from '@foal/core';
 import * as Busboy from 'busboy';
 
 // FoalTS
@@ -27,7 +29,7 @@ function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
   });
 }
 
-export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): HookDecorator {
+const hook = (schema: MultipartFormDataSchema): HookDecorator => {
   return Hook((ctx, services) => new Promise(resolve => {
     const fields: any = {};
     const files: any = {};
@@ -106,4 +108,64 @@ export function ValidateMultipartFormDataBody(schema: MultipartFormDataSchema): 
     // TODO: Use pump instead. Add a reject here? Add a reject on on('file')?
     ctx.request.pipe(busboy);
   }));
+};
+
+export function ValidateMultipartFormDataBody(
+  schema: MultipartFormDataSchema, options: { openapi?: boolean } = {}
+): HookDecorator {
+  return (target: any, propertyKey?: string) =>  {
+    hook(schema)(target, propertyKey);
+
+    if (options.openapi === false ||
+      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+    ) {
+      return;
+    }
+
+    const required = schema.fields ? Object.keys(schema.fields) : [];
+    const properties: {
+      [key: string]: IApiSchema;
+    } = {
+      ...schema.fields
+    };
+
+    for (const key in schema.files) {
+      const file = schema.files[key];
+      if (file.required) {
+        required.push(key);
+      }
+      if (file.multiple) {
+        properties[key] = {
+          items: {
+            format: 'binary',
+            type: 'string',
+          },
+          type: 'array',
+        };
+      } else {
+        properties[key] = {
+          format: 'binary',
+          type: 'string',
+        };
+      }
+    }
+
+    const requestBody: IApiRequestBody = {
+      content: {
+        'multipart/form-data': {
+          schema: {
+            properties,
+            required,
+            type: 'object',
+          }
+        }
+      }
+    };
+
+    if (propertyKey) {
+      ApiRequestBody(requestBody)(target, propertyKey);
+    } else {
+      ApiRequestBody(requestBody)(target);
+    }
+  };
 }
