@@ -3,8 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import {
-  Config,
-  ConfigMock,
+  ConfigNotFoundError,
   Context,
   getHookFunction,
   isHttpResponse,
@@ -18,14 +17,13 @@ import { CsrfTokenRequired } from './csrf-token-required.hook';
 
 describe('CsrfTokenRequired', () => {
 
+  afterEach(() => delete process.env.SETTINGS_CSRF_ENABLED);
+
   it('should not thow any error nor return an HttResponse object if settings.csrf.enabled is false.', async () => {
     const hook = getHookFunction(CsrfTokenRequired());
     const ctx = new Context({});
     const services = new ServiceManager();
-    const config = new ConfigMock();
-    services.set(Config, config);
-
-    config.set('settings.csrf.enabled', false);
+    process.env.SETTINGS_CSRF_ENABLED = 'false';
     strictEqual(isHttpResponse(await hook(ctx, services)), false);
   });
 
@@ -140,28 +138,29 @@ describe('CsrfTokenRequired', () => {
 
     const hook = getHookFunction(CsrfTokenRequired({ doubleSubmitCookie: true }));
     const services = new ServiceManager();
-    const config = new ConfigMock();
-    services.set(Config, config);
 
     const secret = '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY';
     const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk';
 
-    beforeEach(() => {
-      config.reset();
-      config.set('settings.csrf.secret', secret);
+    beforeEach(() => process.env.SETTINGS_CSRF_SECRET = secret);
+
+    afterEach(() => {
+      delete process.env.SETTINGS_CSRF_SECRET;
+      delete process.env.SETTINGS_CSRF_COOKIE_NAME;
     });
 
     it('should throw an error if the configuration key settings.csrf.secret is empty.', async () => {
-      config.reset();
+      delete process.env.SETTINGS_CSRF_SECRET;
       const ctx = new Context({});
       try {
         await hook(ctx, services);
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a secret with the configuration key settings.csrf.secret.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.csrf.secret');
+        strictEqual(error.msg, 'You must provide a secret when using @CsrfTokenRequired.');
       }
     });
 
@@ -177,7 +176,7 @@ describe('CsrfTokenRequired', () => {
     });
 
     it('should return an HttpResponseForbidden object if the csrf cookie is not found (custom name).', async () => {
-      config.set('settings.csrf.cookie.name', 'csrf');
+      process.env.SETTINGS_CSRF_COOKIE_NAME = 'csrf';
 
       const ctx = new Context<any, Session>({ cookies: { csrfToken: 'xxx' } });
       ctx.session = new Session('a', {}, 0);

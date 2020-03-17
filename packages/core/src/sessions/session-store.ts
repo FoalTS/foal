@@ -42,8 +42,12 @@ export abstract class SessionStore {
    */
   static getExpirationTimeouts(): { inactivity: number , absolute: number } {
     const result = {
-      absolute: Config.get('settings.session.expirationTimeouts.absolute', SESSION_DEFAULT_ABSOLUTE_TIMEOUT),
-      inactivity: Config.get('settings.session.expirationTimeouts.inactivity', SESSION_DEFAULT_INACTIVITY_TIMEOUT),
+      absolute: Config.get2('settings.session.expirationTimeouts.absolute', 'number', SESSION_DEFAULT_ABSOLUTE_TIMEOUT),
+      inactivity: Config.get2(
+        'settings.session.expirationTimeouts.inactivity',
+        'number',
+        SESSION_DEFAULT_INACTIVITY_TIMEOUT
+      ),
     };
     if (result.absolute < 0) {
       throw new Error('[CONFIG] The value of settings.session.expirationTimeouts.absolute must be a positive number.');

@@ -42,7 +42,7 @@
     "lib/"
   ],
   "dependencies": {
-    "jwks-rsa": "~1.6.0"
+    "jwks-rsa": "~1.7.0"
   },
   "peerDependencies": {
     "@foal/jwt": "^1.2.0"

@@ -48,12 +48,11 @@ export class Disk extends AbstractDisk {
   }
 
   private getDriverDisk(): AbstractDisk {
-    const driver = Config.get<string>('settings.disk.driver', '');
-    if (!driver) {
-      throw new Error(
-        '[CONFIG] You must provide a driver name with the configuration key settings.disk.driver.'
-      );
-    }
+    const driver = Config.getOrThrow(
+      'settings.disk.driver',
+      'string',
+      'You must provide a driver name when using file storage (Disk).'
+    );
 
     if (driver === 'local') {
       return this.services.get(LocalDisk);

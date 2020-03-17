@@ -92,22 +92,20 @@ export class S3Disk extends AbstractDisk {
   }
 
   private getBucket(): string {
-    const bucket = Config.get<string>('settings.disk.s3.bucket', '');
-    if (!bucket) {
-      throw new Error(
-        '[CONFIG] You must provide a bucket name with the configuration key settings.disk.s3.bucket.'
-      );
-    }
-    return bucket;
+    return Config.getOrThrow(
+      'settings.disk.s3.bucket',
+      'string',
+      'You must provide a bucket name when using AWS S3 file storage (S3Disk).'
+    );
   }
 
   private getS3(): S3 {
     if (!this.s3) {
       this.s3 = new S3({
-        accessKeyId: Config.get<string|undefined>('settings.aws.accessKeyId'),
+        accessKeyId: Config.get2('settings.aws.accessKeyId', 'string'),
         apiVersion: '2006-03-01',
-        endpoint: Config.get<string|undefined>('settings.aws.endpoint'),
-        secretAccessKey: Config.get<string|undefined>('settings.aws.secretAccessKey'),
+        endpoint: Config.get2('settings.aws.endpoint', 'string'),
+        secretAccessKey: Config.get2('settings.aws.secretAccessKey', 'string'),
       });
     }
     return this.s3;

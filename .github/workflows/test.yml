@@ -77,8 +77,46 @@ jobs:
       working-directory: packages/cli
     - name: Check package linting
       run: npm run lint
-    - name: Run unit and acceptance tests (TypeScript)
-      run: lerna run --no-bail test
+    - name: Run unit tests of @foal/acceptance-tests
+      run: cd packages/acceptance-tests && npm run test
+    - name: Run unit tests of @foal/aws-s3
+      run: cd packages/aws-s3 && npm run test
+    - name: Run unit tests of @foal/cli
+      run: cd packages/cli && npm run test
+    - name: Run unit tests of @foal/csrf
+      run: cd packages/csrf && npm run test
+    - name: Run unit tests of @foal/ejs
+      run: cd packages/ejs && npm run test
+    - name: Run unit tests of @foal/examples
+      run: cd packages/examples && npm run test
+    - name: Run unit tests of @foal/formidable
+      run: cd packages/formidable && npm run test
+    - name: Run unit tests of @foal/graphql
+      run: cd packages/graphql && npm run test
+    - name: Run unit tests of @foal/jwks-rsa
+      run: cd packages/jwks-rsa && npm run test
+    - name: Run unit tests of @foal/jwt
+      run: cd packages/jwt && npm run test
+    - name: Run unit tests of @foal/mongodb
+      run: cd packages/mongodb && npm run test
+    - name: Run unit tests of @foal/mongoose
+      run: cd packages/mongoose && npm run test
+    - name: Run unit tests of @foal/password
+      run: cd packages/password && npm run test
+    - name: Run unit tests of @foal/redis
+      run: cd packages/redis && npm run test
+    - name: Run unit tests of @foal/social
+      run: cd packages/social && npm run test
+    - name: Run unit tests of @foal/storage
+      run: cd packages/storage && npm run test
+    - name: Run unit tests of @foal/swagger
+      run: cd packages/swagger && npm run test
+    - name: Run unit tests of @foal/typeorm
+      run: cd packages/typeorm && npm run test
+    - name: Run unit tests of @foal/typestack
+      run: cd packages/typestack && npm run test
+    - name: Run unit tests of @foal/core
+      run: cd packages/core && npm run test
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
     - name: Send code coverage report to Codecov

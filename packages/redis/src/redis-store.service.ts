@@ -1,4 +1,4 @@
-import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 /**
@@ -9,9 +9,6 @@ import { createClient } from 'redis';
  * @extends {SessionStore}
  */
 export class RedisStore extends SessionStore {
-
-  @dependency
-  config: Config;
 
   private redisClient: any;
 
@@ -111,7 +108,7 @@ export class RedisStore extends SessionStore {
 
   getRedisInstance() {
     if (!this.redisClient) {
-      const redisURI = this.config.get('redis.uri');
+      const redisURI = Config.get2('redis.uri', 'string');
       this.redisClient = createClient(redisURI);
     }
     return this.redisClient ;

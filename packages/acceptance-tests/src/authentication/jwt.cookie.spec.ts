@@ -99,7 +99,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
     async logout() {
       return new HttpResponseNoContent()
         .setCookie(
-          Config.get('settings.jwt.cookieName', 'auth'),
+          Config.get2('settings.jwt.cookieName', 'string', 'auth'),
           '',
           { ...cookieOptions, maxAge: 0 }
         );
@@ -111,7 +111,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
         id: user.id,
       };
 
-      const secret = Config.get<string>('settings.jwt.secretOrPublicKey');
+      const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
 
       token = await new Promise<string>((resolve, reject) => {
         sign(payload, secret, { subject: user.id.toString(), expiresIn: '1h' }, (err, value: string) => {
@@ -123,7 +123,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       });
       return new HttpResponseNoContent()
         .setCookie(
-          Config.get('settings.jwt.cookieName', 'auth'),
+          Config.get2('settings.jwt.cookieName', 'string', 'auth'),
           token,
           { ...cookieOptions, maxAge: 3600 }
         );

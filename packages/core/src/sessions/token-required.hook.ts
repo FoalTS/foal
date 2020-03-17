@@ -10,14 +10,16 @@ export function TokenRequired(options: TokenOptions): HookDecorator {
   return (target: any, propertyKey?: string) =>  {
     Token(true, options)(target, propertyKey);
 
-    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
+    if (options.openapi === false ||
+      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+    ) {
       return;
     }
 
     if (options.cookie) {
       const securityScheme: IApiSecurityScheme = {
         in: 'cookie',
-        name: Config.get('settings.session.cookie.name', SESSION_DEFAULT_COOKIE_NAME),
+        name: Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
         type: 'apiKey',
       };
       ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);
