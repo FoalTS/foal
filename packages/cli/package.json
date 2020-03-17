@@ -54,7 +54,7 @@
   "dependencies": {
     "ajv": "~6.12.0",
     "colors": "~1.4.0",
-    "commander": "~2.15.1"
+    "commander": "~5.0.0"
   },
   "devDependencies": {
     "@types/mocha": "~5.2.0",
