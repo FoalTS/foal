@@ -87,6 +87,7 @@ describe('RedisStore', () => {
       const session = await store.createAndSaveSession({ foo: 'bar' });
       const dateAfter = Date.now();
 
+      strictEqual(session.store, store);
       notStrictEqual(session.sessionID, undefined);
       deepStrictEqual(session.getContent(), { foo: 'bar' });
 
@@ -123,7 +124,7 @@ describe('RedisStore', () => {
       await asyncSet('session:a', JSON.stringify(data));
       strictEqual(await asyncGet('session:a'), JSON.stringify(data));
 
-      const session = new Session('a', data.content, data.createdAt);
+      const session = new Session({} as any, 'a', data.content, data.createdAt);
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -143,7 +144,7 @@ describe('RedisStore', () => {
       await asyncSet('session:a', JSON.stringify(data));
       strictEqual(await asyncGet('session:a'), JSON.stringify(data));
 
-      const session = new Session('a', data.content, data.createdAt);
+      const session = new Session({} as any, 'a', data.content, data.createdAt);
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -154,7 +155,7 @@ describe('RedisStore', () => {
     it('should create the session if it does not exist (with the proper lifetime).', async () => {
       strictEqual(await asyncGet('session:a'), null);
 
-      const session = new Session('a', { foo: 'bar' }, Date.now());
+      const session = new Session({} as any, 'a', { foo: 'bar' }, Date.now());
 
       await store.update(session);
 
@@ -234,6 +235,7 @@ describe('RedisStore', () => {
       if (!session) {
         throw new Error('RedisStore.read should not return undefined.');
       }
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, 'b');
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, createdAt);

@@ -12,8 +12,8 @@ import * as request from 'supertest';
 import {
   Context, controller, createApp, dependency, ExpressApplication, Get,
   hashPassword, HttpResponseNoContent, HttpResponseOK,
-  HttpResponseUnauthorized, Post, removeSessionCookie, Session,
-  setSessionCookie, TokenRequired, ValidateBody, verifyPassword
+  HttpResponseUnauthorized, Post,
+  setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
@@ -92,16 +92,16 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
     }
 
     @Post('/logout')
-    @TokenRequired({
+    @TokenOptional({
       cookie: true,
-      extendLifeTimeOrUpdate: false,
       store: TypeORMStore,
     })
-    async logout(ctx: Context<any, Session>) {
-      await this.store.destroy(ctx.session.sessionID);
-      const response = new HttpResponseNoContent();
-      removeSessionCookie(response);
-      return response;
+    async logout(ctx: Context) {
+      if (ctx.session) {
+        await ctx.session.destroy();
+      }
+
+      return new HttpResponseNoContent();
     }
   }
 

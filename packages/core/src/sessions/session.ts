@@ -1,6 +1,7 @@
 // FoalTS
 import { signToken, verifySignedToken } from '../common';
 import { Config } from '../core';
+import { SessionStore } from './session-store';
 
 /**
  * Representation of a server/database session.
@@ -29,8 +30,14 @@ export class Session {
   }
 
   private modified = false;
+  private destroyed = false;
 
-  constructor(readonly sessionID: string, private sessionContent: any, readonly createdAt: number) {
+  constructor(
+    readonly store: SessionStore,
+    readonly sessionID: string,
+    private sessionContent: any,
+    readonly createdAt: number
+  ) {
     if (sessionID.includes('.')) {
       throw new Error('A session ID cannot include dots.');
     }
@@ -45,6 +52,17 @@ export class Session {
    */
   get isModified(): boolean {
     return this.modified;
+  }
+
+  /**
+   * Return true if the session has been destroyed.
+   *
+   * @readonly
+   * @type {boolean}
+   * @memberof Session
+   */
+  get isDestroyed(): boolean {
+    return this.destroyed;
   }
 
   /**
@@ -101,6 +119,17 @@ export class Session {
    */
   getContent(): object {
     return { ...this.sessionContent };
+  }
+
+  /**
+   * Destroy the session in the session store.
+   *
+   * @returns {Promise<void>}
+   * @memberof Session
+   */
+  async destroy(): Promise<void> {
+    await this.store.destroy(this.sessionID);
+    this.destroyed = true;
   }
 
 }

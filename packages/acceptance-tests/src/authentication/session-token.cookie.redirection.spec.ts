@@ -11,8 +11,8 @@ import * as request from 'supertest';
 // FoalTS
 import {
   Context, controller, createApp, dependency, ExpressApplication, Get, hashPassword,
-  HttpResponseOK, HttpResponseRedirect, Post, removeSessionCookie,
-  Session, setSessionCookie, TokenRequired, ValidateBody, verifyPassword
+  HttpResponseOK, HttpResponseRedirect, Post,
+  setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
@@ -91,17 +91,17 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     }
 
     @Post('/logout')
-    @TokenRequired({
+    @TokenOptional({
       cookie: true,
-      extendLifeTimeOrUpdate: false,
       redirectTo: '/login',
       store: TypeORMStore,
     })
-    async logout(ctx: Context<any, Session>) {
-      await this.store.destroy(ctx.session.sessionID);
-      const response = new HttpResponseRedirect('/login');
-      removeSessionCookie(response);
-      return response;
+    async logout(ctx: Context) {
+      if (ctx.session) {
+        await ctx.session.destroy();
+      }
+
+      return new HttpResponseRedirect('/login');
     }
 
     @Get('/home')

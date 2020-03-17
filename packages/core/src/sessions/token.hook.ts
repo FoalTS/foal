@@ -39,7 +39,6 @@ export interface TokenOptions {
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
-  extendLifeTimeOrUpdate?: boolean;
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
@@ -144,11 +143,14 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       ctx.user = user;
     }
 
-    if (options.extendLifeTimeOrUpdate === false) {
-      return;
-    }
-
     return async (response: HttpResponse) => {
+      if (session.isDestroyed) {
+        if (options.cookie) {
+          removeSessionCookie(response);
+        }
+        return;
+      }
+
       if (session.isModified) {
         await store.update(session);
       } else {

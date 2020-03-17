@@ -102,6 +102,7 @@ describe('MongoDBStore', () => {
       strictEqual(sessions.length, 1);
       const sessionA = sessions[0];
 
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, sessionA._id);
       deepStrictEqual(session.getContent(), { foo: 'bar' });
       strictEqual(session.createdAt, sessionA.createdAt);
@@ -130,7 +131,7 @@ describe('MongoDBStore', () => {
         updatedAt: Date.now(),
       });
 
-      await store.update(new Session(session1._id, { bar: 'foo' }, session1.createdAt));
+      await store.update(new Session({} as any, session1._id, { bar: 'foo' }, session1.createdAt));
 
       const sessionA = await findByID(session1._id);
       deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
@@ -156,7 +157,7 @@ describe('MongoDBStore', () => {
       });
 
       const dateBefore = Date.now();
-      await store.update(new Session(session1._id, session1.sessionContent, session1.createdAt));
+      await store.update(new Session({} as any, session1._id, session1.sessionContent, session1.createdAt));
       const dateAfter = Date.now();
 
       const sessionA = await findByID(session1._id);
@@ -311,6 +312,7 @@ describe('MongoDBStore', () => {
       if (!session) {
         throw new Error('TypeORMStore.read should not return undefined.');
       }
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, session2._id);
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, session2.createdAt);
