@@ -40,12 +40,14 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
     const disk = services.get(Disk);
 
     const fileSizeLimit = Config.get2('settings.multipartRequests.fileSizeLimit', 'number');
+    const fileNumberLimit = Config.get2('settings.multipartRequests.fileNumberLimit', 'number');
     let busboy: busboy.Busboy;
     try {
       busboy = new Busboy({
         headers: ctx.request.headers,
         limits: {
-          fileSize: fileSizeLimit
+          fileSize: fileSizeLimit,
+          files: fileNumberLimit
         }
       });
     } catch (error) {
@@ -56,6 +58,8 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
     }
 
     let sizeLimitReached: boolean|string = false;
+    let numberLimitReached = false;
+
     busboy.on('field', (name, value) => fields[name] = value);
     busboy.on('file', (name, stream, filename) => {
       stream.on('limit', () => sizeLimitReached = name);
@@ -80,6 +84,7 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
 
       files[name] = promise;
     });
+    busboy.on('filesLimit', () => numberLimitReached = true);
     busboy.on('finish', () => resolve(validate()));
 
     async function validate() {
@@ -121,16 +126,15 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
         });
       }
 
-      // // Vérifier si ça compte tous les fichiers d'un ajout multiple. Sinon ça sert à rien.
-      // if (numberLimitReached) {
-      //   await deleteUploadedFiles();
-      //   return new HttpResponseBadRequest({
-      //     body: {
-      //       error: 'FILE_NUMBER_LIMIT_REACHED',
-      //       message: `Too many files updated. The max number of files is XXX`
-      //     }
-      //   });
-      // }
+      if (numberLimitReached) {
+        await deleteUploadedFiles();
+        return new HttpResponseBadRequest({
+          body: {
+            error: 'FILE_NUMBER_LIMIT_REACHED',
+            message: `Too many files updated. The maximum number of files allowed is ${fileNumberLimit}.`
+          }
+        });
+      }
 
       // Validate the fields
       const ajv = getAjvInstance();

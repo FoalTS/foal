@@ -240,6 +240,70 @@ describe('ValidateMultipartFormDataBody', () => {
 
   });
 
+  describe('when the max number of files has been reached', () => {
+
+    beforeEach(() => {
+      process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT = '1';
+
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+    });
+
+    afterEach(() => {
+      delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT;
+
+      delete process.env.SETTINGS_DISK_DRIVER;
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
+    it('should return an HttpResponseBadRequest.', async () => {
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, multiple: true },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .expect(400)
+        .expect({
+          body: {
+            error: 'FILE_NUMBER_LIMIT_REACHED',
+            message: 'Too many files updated. The maximum number of files allowed is 1.'
+          }
+        });
+    });
+
+    it('should not have uploaded the files.', async () => {
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, multiple: true, saveTo: 'images' },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .expect(400); // Test that no error is rejected in the hook (error 500).
+
+      strictEqual(readdirSync('uploaded/images').length, 0);
+    });
+
+  });
+
   it('should ignore the upload of unexpected files.', async () => {
     const actual: { body: any } = { body: null };
     const app = createAppWithHook({
