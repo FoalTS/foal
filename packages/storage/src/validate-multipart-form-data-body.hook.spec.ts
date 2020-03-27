@@ -94,16 +94,12 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
-    let disk: Disk;
-
     beforeEach(() => {
       process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
-
-      disk = createService(Disk);
     });
 
     afterEach(() => {
@@ -252,16 +248,12 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when a file is not uploaded but it is required', () => {
 
-    let disk: Disk;
-
     beforeEach(() => {
       process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
-
-      disk = createService(Disk);
     });
 
     afterEach(() => {
@@ -472,7 +464,7 @@ describe('ValidateMultipartFormDataBody', () => {
     );
 
     it('should save the file to the disk and set ctx.request.files with its path'
-      + ' if the option "multiple" is "false.', async () => {
+      + ' if the option "multiple" is "false".', async () => {
         const actual: { body: any } = { body: null };
         const app = createAppWithHook({
           files: {
