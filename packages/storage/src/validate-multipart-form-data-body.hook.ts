@@ -37,6 +37,8 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       files[name] = schema.files[name].multiple ? [] : null;
     }
 
+    const disk = services.get(Disk);
+
     let busboy: busboy.Busboy;
     try {
       busboy = new Busboy({ headers: ctx.request.headers });
@@ -49,8 +51,10 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
     busboy.on('field', (name, value) => fields[name] = value);
     busboy.on('file', (name, stream, filename) => {
       if (!(schema.files.hasOwnProperty(name))) {
+        // Ignore unexpected files
         stream.on('data', () => {});
-        // TODO: handle this error.
+        // TODO: Test the line below.
+        // Ignore errors of unexpected files.
         stream.on('error', () => {});
         return;
       }
@@ -75,6 +79,8 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       // It does not mean that other Disk streams/promises have ended/been resolved.
       // TODO: if this fails, delete all the uploaded files.
       for (const name in files) {
+        // Note: Errors rejected by `disk.write` and `streamToBuffer` are thrown here in
+        // the `validate` function.
         if (Array.isArray(files[name])) {
           files[name] = await Promise.all(files[name]);
           continue;
@@ -82,17 +88,32 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
         files[name] = await files[name];
       }
 
+      async function deleteUploadedFiles() {
+        for (const name in files) {
+          if (!schema.files[name].saveTo) {
+            continue;
+          }
+          if (Array.isArray(files[name])) {
+            await Promise.all(files[name].map(({ path }: { path: string }) => disk.delete(path)));
+            continue;
+          }
+          if (files[name] !== null) {
+            await disk.delete(files[name].path);
+          }
+        }
+      }
+
       // Validate the fields
       const ajv = getAjvInstance();
       if (schema.fields && !ajv.validate(schema.fields, fields)) {
-        // TODO: Delete each uploaded file.
+        await deleteUploadedFiles();
         return new HttpResponseBadRequest({ body: ajv.errors });
       }
 
       // Validate the files
       for (const name in schema.files) {
         if ((files[name] === null || files[name].length === 0) && schema.files[name].required) {
-          // TODO: Delete each uploaded file.
+          await deleteUploadedFiles();
           return new HttpResponseBadRequest({
             body: {
               error: 'MISSING_FILE',

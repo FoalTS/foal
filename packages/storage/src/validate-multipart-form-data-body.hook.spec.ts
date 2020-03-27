@@ -94,8 +94,31 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
+    let disk: Disk;
+
+    beforeEach(() => {
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+
+      disk = createService(Disk);
+    });
+
+    afterEach(() => {
+      delete process.env.SETTINGS_DISK_DRIVER;
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
     it('should return an HttpResponseBadRequest.', async () => {
-      const actual: { body: any } = { body: null };
       const app = createAppWithHook({
         fields: {
           properties: {
@@ -104,7 +127,7 @@ describe('ValidateMultipartFormDataBody', () => {
           type: 'object',
         },
         files: {}
-      }, actual);
+      }, { body: null });
 
       await request(app)
         .post('/')
@@ -125,7 +148,33 @@ describe('ValidateMultipartFormDataBody', () => {
         });
     });
 
-    it('should not have uploaded the files.');
+    it('should not have uploaded the files.', async () => {
+      const app = createAppWithHook({
+        fields: {
+          properties: {
+            name: { type: 'boolean' }
+          },
+          type: 'object',
+        },
+        files: {
+          foobar: { required: false, multiple: true, saveTo: 'images' },
+          foobar2: { required: false, multiple: false, saveTo: 'images' },
+          foobar3: { required: false, multiple: false, saveTo: 'images' },
+          foobar4: { required: false, multiple: false },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .attach('foobar4', createReadStream('src/image.test2.png'))
+        .field('name', 'hello')
+        .expect(400); // Test that no error is rejected in the hook (error 500).
+
+      strictEqual(readdirSync('uploaded/images').length, 0);
+    });
 
   });
 
@@ -203,6 +252,30 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when a file is not uploaded but it is required', () => {
 
+    let disk: Disk;
+
+    beforeEach(() => {
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+
+      disk = createService(Disk);
+    });
+
+    afterEach(() => {
+      delete process.env.SETTINGS_DISK_DRIVER;
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
     it('should return an HttpResponseBadRequest (multiple === undefined).', () => {
       const actual: { body: any } = { body: null };
       const app = createAppWithHook({
@@ -263,7 +336,28 @@ describe('ValidateMultipartFormDataBody', () => {
         });
     });
 
-    it('should not have uploaded the other files.');
+    it('should not have uploaded the other files.', async () => {
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, multiple: true, saveTo: 'images' },
+          foobar2: { required: false, multiple: false, saveTo: 'images' },
+          foobar3: { required: false, multiple: false, saveTo: 'images' },
+          foobar4: { required: false, multiple: false },
+          requiredFoobar: { required: true },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .attach('foobar4', createReadStream('src/image.test2.png'))
+        .field('name', 'hello')
+        .expect(400); // Test that no error is rejected in the hook (error 500).
+
+      strictEqual(readdirSync('uploaded/images').length, 0);
+    });
 
   });
 
