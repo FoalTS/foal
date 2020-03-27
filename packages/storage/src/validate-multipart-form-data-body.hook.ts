@@ -30,7 +30,7 @@ function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
 }
 
 const hook = (schema: MultipartFormDataSchema): HookDecorator => {
-  return Hook((ctx, services) => new Promise(resolve => {
+  return Hook((ctx, services) => new Promise((resolve, reject) => {
     const fields: any = {};
     const files: any = {};
     for (const name in schema.files) {
@@ -60,7 +60,6 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       }
       const options = schema.files[name];
 
-      const disk = services.get(Disk);
       const extension = extname(filename).replace('.', '');
       const promise = options.saveTo ? disk.write(options.saveTo, stream, { extension }) : streamToBuffer(stream);
 
@@ -77,7 +76,6 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       // Wait for all saves to finish.
       // When busboy "finish" event is emitted, it means all busboy streams have ended.
       // It does not mean that other Disk streams/promises have ended/been resolved.
-      // TODO: if this fails, delete all the uploaded files.
       for (const name in files) {
         // Note: Errors rejected by `disk.write` and `streamToBuffer` are thrown here in
         // the `validate` function.
@@ -126,8 +124,9 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       ctx.request.body = { fields, files };
     }
 
-    // TODO: Use pump instead. Add a reject here? Add a reject on on('file')?
     ctx.request.pipe(busboy);
+    // TODO: Test the reject here
+    busboy.on('error', reject);
   }));
 };
 
