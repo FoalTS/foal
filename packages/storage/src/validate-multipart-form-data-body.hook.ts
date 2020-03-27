@@ -39,17 +39,27 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
 
     const disk = services.get(Disk);
 
+    const fileSizeLimit = Config.get2('settings.multipartRequests.fileSizeLimit', 'number');
     let busboy: busboy.Busboy;
     try {
-      busboy = new Busboy({ headers: ctx.request.headers });
+      busboy = new Busboy({
+        headers: ctx.request.headers,
+        limits: {
+          fileSize: fileSizeLimit
+        }
+      });
     } catch (error) {
       return resolve(new HttpResponseBadRequest({ headers: {
         error: 'INVALID_MULTIPART_FORM_DATA_REQUEST',
         message: error.message
       }}));
     }
+
+    let sizeLimitReached: boolean|string = false;
     busboy.on('field', (name, value) => fields[name] = value);
     busboy.on('file', (name, stream, filename) => {
+      stream.on('limit', () => sizeLimitReached = name);
+
       if (!(schema.files.hasOwnProperty(name))) {
         // Ignore unexpected files
         stream.on('data', () => {});
@@ -100,6 +110,27 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
           }
         }
       }
+
+      if (sizeLimitReached) {
+        await deleteUploadedFiles();
+        return new HttpResponseBadRequest({
+          body: {
+            error: 'FILE_SIZE_LIMIT_REACHED',
+            message: `The file "${sizeLimitReached}" is too large. The maximum file size is ${fileSizeLimit} bytes.`
+          }
+        });
+      }
+
+      // // Vérifier si ça compte tous les fichiers d'un ajout multiple. Sinon ça sert à rien.
+      // if (numberLimitReached) {
+      //   await deleteUploadedFiles();
+      //   return new HttpResponseBadRequest({
+      //     body: {
+      //       error: 'FILE_NUMBER_LIMIT_REACHED',
+      //       message: `Too many files updated. The max number of files is XXX`
+      //     }
+      //   });
+      // }
 
       // Validate the fields
       const ajv = getAjvInstance();

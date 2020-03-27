@@ -174,6 +174,72 @@ describe('ValidateMultipartFormDataBody', () => {
 
   });
 
+  describe('when the max file size has been reached', () => {
+
+    beforeEach(() => {
+      process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT = '200000';
+
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+    });
+
+    afterEach(() => {
+      delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT;
+
+      delete process.env.SETTINGS_DISK_DRIVER;
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
+    it('should return an HttpResponseBadRequest.', async () => {
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false },
+          foobar2: { required: false },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .expect(400)
+        .expect({
+          body: {
+            error: 'FILE_SIZE_LIMIT_REACHED',
+            message: 'The file "foobar2" is too large. The maximum file size is 200000 bytes.'
+          }
+        });
+    });
+
+    it('should not have uploaded the files.', async () => {
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, saveTo: 'images' },
+          foobar2: { required: false, saveTo: 'images' },
+        }
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .expect(400); // Test that no error is rejected in the hook (error 500).
+
+      strictEqual(readdirSync('uploaded/images').length, 0);
+    });
+
+  });
+
   it('should ignore the upload of unexpected files.', async () => {
     const actual: { body: any } = { body: null };
     const app = createAppWithHook({
