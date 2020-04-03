@@ -1,8 +1,8 @@
 # Upload & Download Files
 
-## Configuration
+Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 
-Before being able to upload and download files, you need to configure [FoalTS filesystem](../local-and-cloud-storage.md). 
+## Configuration
 
 First install the package.
 
@@ -10,7 +10,7 @@ First install the package.
 npm install @foal/storage
 ```
 
-Then specify in your configuration the storage to be used (the local file system in this case).
+Then specify in your configuration the file storage to be used and its settings. In this example, we will use the local file system with the `uploaded` directory (you must create it at the root of your project).
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
@@ -44,8 +44,6 @@ SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-Finally, create a new directory named `uploaded` at the root of your project.
-
 ## File Uploads
 
 > This technique is available in Foal v1.7 onwards.
@@ -75,38 +73,24 @@ export class UserController {
 }
 ```
 
-In order to validate and parse files, you must specify their names with the `files` option. Each file can take three settings:
-- the `required` option specifies if the file is required or not. If it is 
+The names of the file fields must be provided in the `files` parameter of the hook. Uploaded files which are not listed here are simply ignored.
 
-The files
-Expected files are listed with the `files` option. Files not listed here are ignored by the hook.
+The `required` parameter tells the hook if it should return a `400 - BAD REQUEST` error if no file has been uploaded for the given field. In this case, the controller method is not executed.
 
+When the upload is successful, the request body object is set with the buffer files.
 
-Options must be provided to the hook to list the files that are expected to be received.
-
-null values and empty arrays if no file and not required
-
-multiple values
-
-files not mentionned are ignored
-
-if required and null or empty -> message missing files
-
-| Value of `required` | Value of `multiple` | Files uploaded | Hook behavior |
-| --- | --- | --- | --- |
-| `true` | `true|false` | None | The server returns an `400 - BAD REQUEST` error. |
-| `false` | `false` (default) | None | The value of `Context.request.body.files.xxx` is `null`. |
-| `false` | `true` | None | The value of `Context.request.body.files.xxx` is an empty array. |
-| `true|false` | `false` (default) | At least one | The value of `Context.request.body.files.xxx` is a buffer. |
-| `true|false` | `true` | At least one | The value of `Context.request.body.files.xxx` is an array of buffers. |
+| Value of `multiple` | Files uploaded | Value in the request object |
+|  --- | --- | --- |
+| `false` (default) | None |  `null` |
+| | At least one | A buffer |
+| `true` | None | An empty array |
+|  | At least one | An array of buffers |
 
 ### Using Local or Cloud Storage (streaming)
 
-Works same but. -> need to read before
+Instead of using buffers, you can also choose to save directly the file to your local or Cloud storage. To do this, you need to add the name of the target directory in your hook options. The value returned in the `ctx` is an object containing the relative path of the file.
 
-extension if it exists
-
-result: same but not buffers, { path } (more precisely the value return by Disk.write)
+> With the previous configuration, this path is relative to the `uploaded` directory. Note that must create the `uploaded/images` and `uploaded/images/profiles` directories before you can upload a file.
 
 ```typescript
 import { Context, Post } from '@foal/core';
@@ -130,11 +114,69 @@ export class UserController {
 
 ### Adding Fields
 
-Explain le moins possible ou avec des validations client pour des raisons de perf
+Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook.
+
+```typescript
+import { Context, Post } from '@foal/core';
+import { ValidateMultipartFormDataBody } from '@foal/storage';
+
+export class UserController {
+
+  @Post('/profile')
+  @ValidateMultipartFormDataBody({
+    fields: {
+      description: { type: 'string' }
+    },
+    files: {
+      profile: { required: true }
+    }
+  })
+  uploadProfilePhoto(ctx: Context) {
+    const { path } = ctx.request.body.files.profile;
+    // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
+    const { description } = ctx.request.body.fields;
+  }
+
+}
+```
 
 ### Specifying File Limits
 
-Options and messages
+Optional settings can be provided in the configuration to limit the size or number of files uploaded.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yml
+settings:
+  multipartRequests:
+    fileSizeLimit: 1024
+    fileNumberLimit: 4
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "multipartRequests": {
+      "fileSizeLimit": 1024,
+      "fileNumberLimit": 4,
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT=1024
+SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+| Setting | Type | Description |
+| --- | --- | --- |
+| fileSizeLimit | number | The maximum file size (in bytes). |
+| fileNumberLimit | number | The maximum number of files (useful for `multiple` file fields). |
 
 ## File Downloads
 
@@ -176,6 +218,8 @@ class ApiController {
 
 This example shows how to attach a profile picture to a user and how to retrieve and update it.
 
+Create a new directory `uploaded/images/profiles` at the root of your project.
+
 *user.entity.ts*
 ```typescript
 import {
@@ -196,7 +240,7 @@ export class User extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseOK, Post } from '@foal/core';
+import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
 import { User } from './entities';
@@ -214,7 +258,7 @@ export class AppController {
       profile: { required: true, saveTo: 'images/profiles' }
     }
   })
-  async updateProfilePicture(ctx: Context<User>) {
+  async uploadProfilePicture(ctx: Context<User>) {
     const user = ctx.user;
     if (user.profile) {
       await this.disk.delete(user.profile);
@@ -223,7 +267,7 @@ export class AppController {
     user.profile = ctx.body.files.profile.path;
     await user.save();
 
-    return new HttpResponseOK();
+    return new HttpResponseRedirect('/');
   }
 
   @Get('/profile')
@@ -237,7 +281,26 @@ export class AppController {
     return this.disk.createHttpResponse(path);
   }
 
+  @Get('/')
+  index() {
+    return render('./templates/index.html');
+  }
+
 }
+```
+
+*templates/index.html*
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <img src="/profile">
+  <form action="/profile" method="post" enctype="multipart/form-data">
+      <input type="file" name="profile">
+      <input type="submit" value="Upload image" name="submit">
+  </form>
+</body>
+</html>
 ```
 
 ## Static Files
