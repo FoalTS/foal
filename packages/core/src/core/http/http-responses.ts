@@ -152,7 +152,6 @@ export abstract class HttpResponse {
    */
   getCookies(): { [key: string]: { value: string|undefined, options: CookieOptions } } {
     const cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
-    // tslint:disable-next-line:forin
     for (const cookieName in this.cookies) {
       const { value, options } = this.cookies[cookieName];
       cookies[cookieName] = { value, options: { ...options } };

@@ -207,7 +207,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
     // Add extra parameters to the URL.
     if (params) {
-      // tslint:disable-next-line:forin
       for (const key in params) {
         url.searchParams.set(key, params[key]);
       }

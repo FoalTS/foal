@@ -9,7 +9,6 @@ import { mergeComponents, mergeOperations, mergeTags } from './utils';
 function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   const originalPaths: string[] = [];
   const convertedPaths: string[] = [];
-  // tslint:disable-next-line:forin
   for (const path in paths) {
     const convertedPath = path.replace(/{.*}/g, () => '#');
     const index = convertedPaths.indexOf(convertedPath);
@@ -47,7 +46,6 @@ function getPaths(
 
       const subPaths = o.paths;
       const subControllerPath = getPath(subControllerClass) || '';
-      // tslint:disable-next-line:forin
       for (const subPath in subPaths) {
         const subPathItem = subPaths[subPath];
         paths[subControllerPath + subPath] = {
