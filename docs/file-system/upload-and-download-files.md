@@ -264,7 +264,7 @@ export class AppController {
       await this.disk.delete(user.profile);
     }
 
-    user.profile = ctx.body.files.profile.path;
+    user.profile = ctx.request.body.files.profile.path;
     await user.save();
 
     return new HttpResponseRedirect('/');
@@ -278,7 +278,7 @@ export class AppController {
       return new HttpResponseNotFound();
     }
 
-    return this.disk.createHttpResponse(path);
+    return this.disk.createHttpResponse(profile);
   }
 
   @Get('/')
