@@ -29,6 +29,16 @@ function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
   });
 }
 
+async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () => void): Promise<{ error?: any }> {
+  try {
+    await fn();
+  } catch (error) {
+    errCallback();
+    return { error };
+  }
+  return {};
+}
+
 const hook = (schema: MultipartFormDataSchema): HookDecorator => {
   return Hook((ctx, services) => new Promise((resolve, reject) => {
     const fields: any = {};
@@ -59,9 +69,10 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
 
     let sizeLimitReached: boolean|string = false;
     let numberLimitReached = false;
+    let latestFileHasBeenUploaded: Promise<{ error?: any }> = Promise.resolve({});
 
     busboy.on('field', (name, value) => fields[name] = value);
-    busboy.on('file', (name, stream, filename) => {
+    busboy.on('file', (name, stream, filename) => latestFileHasBeenUploaded = convertRejectedPromise(async () => {
       stream.on('limit', () => sizeLimitReached = name);
 
       if (!(schema.files.hasOwnProperty(name))) {
@@ -75,45 +86,54 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       const options = schema.files[name];
 
       const extension = extname(filename).replace('.', '');
-      const promise = options.saveTo ? disk.write(options.saveTo, stream, { extension }) : streamToBuffer(stream);
+
+      let file: any;
+      if (options.saveTo) {
+        file = await disk.write(options.saveTo, stream, { extension });
+      } else {
+        file = await streamToBuffer(stream);
+      }
 
       if (options.multiple) {
-        files[name].push(promise);
+        files[name].push(file);
         return;
       }
 
-      files[name] = promise;
-    });
+      files[name] = file;
+    }, () => stream.resume()));
     busboy.on('filesLimit', () => numberLimitReached = true);
     busboy.on('finish', () => resolve(validate()));
+
+    async function deleteUploadedFiles() {
+      for (const name in files) {
+        if (!schema.files[name].saveTo) {
+          continue;
+        }
+        if (Array.isArray(files[name])) {
+          await Promise.all(files[name].map(({ path }: { path: string }) => disk.delete(path)));
+          continue;
+        }
+        if (files[name] !== null) {
+          await disk.delete(files[name].path);
+        }
+      }
+    }
 
     async function validate() {
       // Wait for all saves to finish.
       // When busboy "finish" event is emitted, it means all busboy streams have ended.
       // It does not mean that other Disk streams/promises have ended/been resolved.
-      for (const name in files) {
-        // Note: Errors rejected by `disk.write` and `streamToBuffer` are thrown here in
-        // the `validate` function.
-        if (Array.isArray(files[name])) {
-          files[name] = await Promise.all(files[name]);
-          continue;
-        }
-        files[name] = await files[name];
-      }
+      const { error } =  await latestFileHasBeenUploaded;
 
-      async function deleteUploadedFiles() {
-        for (const name in files) {
-          if (!schema.files[name].saveTo) {
-            continue;
-          }
-          if (Array.isArray(files[name])) {
-            await Promise.all(files[name].map(({ path }: { path: string }) => disk.delete(path)));
-            continue;
-          }
-          if (files[name] !== null) {
-            await disk.delete(files[name].path);
-          }
-        }
+      // We can only rely upon resolved promises to detect errors in the "finish" handlers.
+      // Otherwise, we would attach a "catch" handler _after_ the promise may have been rejected.
+      // The code below is an example of this problem:
+      //    const promise = Promise.reject("error");
+      //    setTimeout(() => {
+      //      promise.catch(() => console.log("The promise is caught"));
+      //    }, 1000)
+      if (error) {
+        throw error;
       }
 
       if (sizeLimitReached) {

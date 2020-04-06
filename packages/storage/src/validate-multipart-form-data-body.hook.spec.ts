@@ -547,6 +547,7 @@ describe('ValidateMultipartFormDataBody', () => {
     beforeEach(() => {
       process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+      process.env.SETTINGS_LOG_ERRORS = 'false';
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
@@ -557,6 +558,7 @@ describe('ValidateMultipartFormDataBody', () => {
     afterEach(() => {
       delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      delete process.env.SETTINGS_LOG_ERRORS;
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -564,6 +566,40 @@ describe('ValidateMultipartFormDataBody', () => {
       }
       rmdirSync('uploaded/images');
       rmdirSync('uploaded');
+    });
+
+    it('should not kill the process if Disk.write throws an error.', async () => {
+      delete process.env.SETTINGS_DISK_DRIVER;
+
+      const actual: { body: any } = { body: null };
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, saveTo: 'images' },
+          foobar2: { required: false },
+        }
+      }, actual);
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .expect(500);
+    });
+
+    it('should not kill the process if Disk.write rejects an error.', async () => {
+      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+
+      const actual: { body: any } = { body: null };
+      const app = createAppWithHook({
+        files: {
+          foobar: { required: false, saveTo: 'images' },
+          foobar2: { required: false }
+        }
+      }, actual);
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .expect(500);
     });
 
     it('should save the file to the disk and set ctx.request.files with its path'
