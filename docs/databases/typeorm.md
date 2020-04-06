@@ -21,7 +21,7 @@ export class User {
 
 ## The ORM
 
-FoalTS uses [TypeORM](typeorm.io/) as default *Object-Relational Mapping*. This allows you to create classes to interact with your database tables (or collections). TypeORM is written in TypeScript and supports both [Active Record](https://en.wikipedia.org/wiki/Active_record_pattern) and [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) patterns.
+FoalTS uses [TypeORM](https://typeorm.io/) as default *Object-Relational Mapping*. This allows you to create classes to interact with your database tables (or collections). TypeORM is written in TypeScript and supports both [Active Record](https://en.wikipedia.org/wiki/Active_record_pattern) and [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) patterns.
 
 Here is a non-exhaustive list of its features:
 - migrations and automatic migrations generation
@@ -34,7 +34,7 @@ Here is a non-exhaustive list of its features:
 
 TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Microsoft SQL Server / Oracle / sql.js) as well as the MongoDB NoSQL database.
 
-> Although this documentation presents the basic features of TypeORM, you may be interested in reading the [official documentation](http://typeorm.io) to learn more advanced features.
+> Although this documentation presents the basic features of TypeORM, you may be interested in reading the [official documentation](https://typeorm.io/) to learn more advanced features.
 
 
 ## Use with FoalTS

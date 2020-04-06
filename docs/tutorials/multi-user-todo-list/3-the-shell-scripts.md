@@ -11,7 +11,7 @@ Open the file and replace its content with the following:
 ```typescript
 // 3p
 import { isCommon } from '@foal/password';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -27,26 +27,25 @@ export const schema = {
 };
 
 export async function main(args: { email: string, password: string }) {
-  await createConnection();
-
-  const user = new User();
-  user.email = args.email;
-
-  if (await isCommon(args.password)) {
-    console.log('This password is too common. Please choose another one.');
-    return;
-  }
-  await user.setPassword(args.password);
-
+  const connection = await createConnection();
   try {
+    const user = new User();
+    user.email = args.email;
+
+    if (await isCommon(args.password)) {
+      console.log('This password is too common. Please choose another one.');
+      return;
+    }
+    await user.setPassword(args.password);
+
     console.log(
-      await getManager().save(user)
+      await connection.manager.save(user)
     );
   } catch (error) {
     console.log(error.message);
+  } finally {
+    await connection.close();
   }
-
-  await getConnection().close();
 }
 
 ```
@@ -103,23 +102,26 @@ export const schema = {
 
 export async function main(args: { owner: string, text: string }) {
   const connection = await createConnection();
+  try {
+    const user = await connection.getRepository(User).findOne({ email: args.owner });
 
-  const user = await connection.getRepository(User).findOne({ email: args.owner });
+    if (!user) {
+      console.log('No user was found with the email ' + args.owner);
+      return;
+    }
 
-  if (!user) {
-    console.log('No user was found with the email ' + args.owner);
-    return;
+    const todo = new Todo();
+    todo.text = args.text;
+    todo.owner = user;
+
+    console.log(
+      await connection.manager.save(todo)
+    );
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    await connection.close();
   }
-
-  const todo = new Todo();
-  todo.text = args.text;
-  todo.owner = user;
-
-  console.log(
-    await connection.manager.save(todo)
-  );
-
-  await connection.close();
 }
 
 ```

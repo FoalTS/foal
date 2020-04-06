@@ -162,12 +162,12 @@ export class AuthController {
     });
   }
 
-    @Post('/logout')
-    @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
-    async logout(ctx: Context<any, Session>) {
-      await this.store.destroy(ctx.session.sessionID);
-      return new HttpResponseNoContent();
-    }
+  @Post('/logout')
+  @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
+  async logout(ctx: Context<any, Session>) {
+    await this.store.destroy(ctx.session.sessionID);
+    return new HttpResponseNoContent();
+  }
 }
 ```
 

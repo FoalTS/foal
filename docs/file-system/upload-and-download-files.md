@@ -146,7 +146,7 @@ Optional settings can be provided in the configuration to limit the size or numb
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   multipartRequests:
     fileSizeLimit: 1024
@@ -313,7 +313,7 @@ If necessary, this directory can be modified using the configuration key `settin
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   staticPath: assets
 ```
@@ -340,7 +340,7 @@ In case you need to add a virtual prefix path to your static files, you can do s
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   staticPathPrefix: /static
 ```
