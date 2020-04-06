@@ -43,6 +43,8 @@
     "@foal/aws-s3": "^1.6.0",
     "@foal/core": "^1.6.0",
     "@foal/social": "^1.6.0",
+    "@foal/swagger": "^1.6.0",
+    "@foal/storage": "^1.6.0",
     "@foal/typeorm": "^1.6.0",
     "source-map-support": "~0.5.16",
     "sqlite3": "~4.1.0",
