@@ -14,7 +14,7 @@ Then specify in your configuration the file storage to be used and its settings.
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'local'
