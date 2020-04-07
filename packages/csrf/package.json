@@ -1,6 +1,6 @@
 {
   "name": "@foal/csrf",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "CSRF protection for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -50,6 +50,6 @@
     "typescript": "~3.5.3"
   },
   "dependencies": {
-    "@foal/core": "^1.6.0"
+    "@foal/core": "^1.7.0"
   }
 }
