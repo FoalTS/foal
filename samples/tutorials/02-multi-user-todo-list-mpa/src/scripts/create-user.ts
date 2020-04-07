@@ -1,6 +1,6 @@
 // 3p
 import { isCommon } from '@foal/password';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -15,25 +15,24 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { email: string, password: string }) {
-  await createConnection();
-
-  const user = new User();
-  user.email = args.email;
-
-  if (await isCommon(args.password)) {
-    console.log('This password is too common. Please choose another one.');
-    return;
-  }
-  await user.setPassword(args.password);
-
+export async function main(args: { email: string; password: string }) {
+  const connection = await createConnection();
   try {
+    const user = new User();
+    user.email = args.email;
+
+    if (await isCommon(args.password)) {
+      console.log('This password is too common. Please choose another one.');
+      return;
+    }
+    await user.setPassword(args.password);
+
     console.log(
-      await getManager().save(user)
+      await connection.manager.save(user)
     );
   } catch (error) {
     console.log(error.message);
+  } finally {
+    await connection.close();
   }
-
-  await getConnection().close();
 }
