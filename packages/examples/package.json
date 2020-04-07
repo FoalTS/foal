@@ -19,6 +19,9 @@
     "migration:run": "./node_modules/.bin/typeorm migration:run",
     "migration:revert": "./node_modules/.bin/typeorm migration:revert"
   },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
+  },
   "engines": {
     "node": ">=8"
   },

@@ -7,6 +7,9 @@
     "test": "mocha --require ts-node/register \"./src/**/*.spec.{ts,tsx}\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
   },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
+  },
   "dependencies": {
     "@foal/core": "^1.7.0",
     "@foal/csrf": "^1.7.0",

@@ -18,6 +18,9 @@
     "build": "rimraf lib && copy-cli \"./src/**/500.debug.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
+  },
   "engines": {
     "node": ">=8"
   },
