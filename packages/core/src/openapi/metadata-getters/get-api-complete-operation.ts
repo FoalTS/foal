@@ -60,7 +60,6 @@ export function getApiCompleteOperation<T>(
   const responses = getApiResponses(controllerClass, propertyKey);
   if (responses) {
     completeOperation.responses = {};
-    // tslint:disable-next-line:forin
     for (const key in responses) {
       const response = responses[key];
       completeOperation.responses[key] = typeof response === 'function' ? response(controller) : response;
@@ -70,7 +69,6 @@ export function getApiCompleteOperation<T>(
   const callbacks = getApiCallbacks(controllerClass, propertyKey);
   if (callbacks) {
     completeOperation.callbacks = {};
-    // tslint:disable-next-line:forin
     for (const key in callbacks) {
       const callback = callbacks[key];
       completeOperation.callbacks[key] = typeof callback === 'function' ? callback(controller) : callback;

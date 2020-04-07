@@ -1,4 +1,4 @@
-import { Config, dependency, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
 import { Collection, MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
@@ -16,8 +16,6 @@ export interface DatabaseSession {
  * @extends {SessionStore}
  */
 export class MongoDBStore extends SessionStore {
-  @dependency
-  config: Config;
 
   private mongoDBClient: MongoClient;
 
@@ -104,7 +102,11 @@ export class MongoDBStore extends SessionStore {
 
   async getMongoDBInstance(): Promise<MongoClient> {
     if (!this.mongoDBClient) {
-      const mongoDBURI = this.config.get('mongodb.uri');
+      const mongoDBURI = Config.getOrThrow(
+        'mongodb.uri',
+        'string',
+        'You must provide the URI of your database when using MongoDBStore.'
+      );
       this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
     }
     return this.mongoDBClient;

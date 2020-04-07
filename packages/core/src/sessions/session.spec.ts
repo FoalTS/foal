@@ -3,6 +3,7 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { createHmac } from 'crypto';
 
 // FoalTS
+import { ConfigNotFoundError } from '../core';
 import { Session } from './session';
 
 describe('Session', () => {
@@ -79,10 +80,11 @@ describe('Session', () => {
         session.getToken();
         throw new Error('Session.getToken should have thrown an Error.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a secret with the configuration key settings.session.secret.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.session.secret');
+        strictEqual(error.msg, 'You must provide a secret when using sessions.');
       }
     });
 
@@ -136,10 +138,11 @@ describe('Session', () => {
         Session.verifyTokenAndGetId('xxx.yyy');
         throw new Error('Session.getToken should have thrown an Error.');
       } catch (error) {
-        strictEqual(
-          error.message,
-          '[CONFIG] You must provide a secret with the configuration key settings.session.secret.'
-        );
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.session.secret');
+        strictEqual(error.msg, 'You must provide a secret when using sessions.');
       }
     });
 

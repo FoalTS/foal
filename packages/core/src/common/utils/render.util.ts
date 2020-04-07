@@ -17,7 +17,6 @@ import { Config, HttpResponseOK } from '../../core';
  * @returns {string} The rendered template.
  */
 export function renderToString(template: string, locals: any): string {
-  // tslint:disable-next-line:forin
   for (const key in locals) {
     template = template.replace(new RegExp(`{{ ${key} }}`, 'g'), locals[key]);
   }
@@ -41,7 +40,7 @@ export async function render(templatePath: string, locals: object = {}, dirname?
   const path = dirname ? join(dirname, templatePath) : templatePath;
   const template = await promisify(readFile)(path, 'utf8');
 
-  const templateEngine = Config.get<string|undefined>('settings.templateEngine');
+  const templateEngine = Config.get2('settings.templateEngine', 'string');
   if (templateEngine) {
     const { renderToString, __express } = require(templateEngine);
     if (__express) {

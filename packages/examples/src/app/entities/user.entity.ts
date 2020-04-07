@@ -15,6 +15,9 @@ export class User extends UserWithPermissions {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  profile: string;
+
   async setPassword(password: string): Promise<void> {
     this.password = await hashPassword(password);
   }

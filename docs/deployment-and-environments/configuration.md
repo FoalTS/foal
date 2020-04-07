@@ -31,6 +31,8 @@ SETTINGS_CSRF_SECRET=YKvV281Z8nbkPowDLkMTTIrg
 
 Both formats, JSON and YAML, are supported. Choose the one that suits you the best.
 
+{% code-tabs %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "port": 3001,
@@ -51,7 +53,8 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
   }
 }
 ```
-
+{% endcode-tabs-item %}
+{% code-tabs-item title="YAML" %}
 ```yaml
 port: 3001
 
@@ -68,6 +71,8 @@ settings:
 database:
   database: './db.sqlite3'
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 > **YAML support**
 >
@@ -87,69 +92,100 @@ database:
 
 ## Accessing Configuration Values
 
-Configuration can be read using the static class `Config` and its method `get`.
+The `Config` class provides two static methods for accessing configuration values: `get2` and `getOrThrow`. Use of `Config.get` is also possible, but is deprecated.
+
+### The `Config.get2` method
+
+> Available since v1.7
+
+This function takes the configuration key as parameter.
 
 ```typescript
 import { Config } from '@foal/core';
 
-const secret = Config.get('settings.jwt.secretOrPublicKey');
+const secret = Config.get2('settings.jwt.secretOrPublicKey');
 ```
 
-In the above example, the `Config` will search for these configurations. If none is found, then `undefined` is returned.
+In this example, FoalTS will try to retrieve the configuration value via:
+- the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
+- the `.env` file with the variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
+- the JSON file `config/development.json` with the path `settings.jwt.secretOrPublicKey`,
+- the YAML file `config/development.yml` with the path `settings.jwt.secretOrPublicKey`,
+- the JSON file `config/default.json` with the path `settings.jwt.secretOrPublicKey`,
+- or the YAML file `config/default.yml` with the path `settings.jwt.secretOrPublicKey`.
 
-*`.env` file or environment variable (example)*
-```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=xxx
-```
+If no value is found, the method returns `undefined`.
 
-*`default.json` file (or `production.json`, `test.json`, etc) (example)*
-```json
-{
-  "settings": {
-    "jwt": {
-      "secretOrPublicKey": "xxx"
-    }
-  }
-}
-```
+If the `NODE_ENV` environment variable is set, Foal will look at `${NODE_ENV}.json` (resp. `${NODE_ENV}.yml`) instead of `development.json` (resp. `development.yml`).
 
-The method also accepts a default value if no value is found in the configuration.
+#### Specifying a type
 
 ```typescript
 import { Config } from '@foal/core';
 
+const foobar = Config.get2('settings.foobar', 'boolean|string');
+// foobar is of type boolean|string|undefined
+```
+
+The method also accepts a second optional parameter to define the type of the returned value. When it is set, Foal checks that the configuration value has the correct type and if it does not, it throws a `ConfigTypeError`. In case the value is provided via an environment variable or the `.env` file, the method will try to convert it to the desired type (e.g. `"true"` becomes `true`). If it does not succeed, a `ConfigTypeError` is also thrown.
+
+| Allowed types |
+| --- |
+| string |
+| number |
+| boolean |
+| boolean\|string |
+| number\|string |
+| any |
+
+#### Specifying a default value
+
+The third optional parameter of the method allows you to define a default value if none is found in the configuration.
+
+```typescript
+const foobar = Config.get2('settings.foobar', 'boolean', false);
+// foobar is of type boolean
+```
+
+### The `Config.getOrThrow` method
+
+> Available since v1.7
+
+```typescript
+const foobar = Config.getOrThrow('settings.foobar', 'boolean');
+// foobar is of type boolean
+```
+
+This method has the same behavior as `Config.get2` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
+
+### The deprecated `Config.get` method
+
+> Deprecated since v1.7
+
+```typescript
+import { Config } from '@foal/core';
+
+const debug = Config.get('settings.debug');
+```
+
+#### Type coercion and type variable
+
+You can force the TypeScript type returned by the variable this way:
+```typescript
+const debug = Config.get<boolean>('settings.debug');
+```
+
+But this is considered unsafe because the method does not check whether the returned value is of the desired type.
+
+The method always attempts to convert values to a boolean or a number, regardless of the TypeScript type provided.. The value `"36"` will always be returned as `36`.
+
+#### Specifying a default value
+
+A default variable can be provided as second argument of the method.
+
+```typescript
 const debug = Config.get('settings.debug', false);
 ```
-
-> **Type coercion**
->
-> Environment variable values are auto-converted to numbers and booleans whenever possible. The same goes for `.env` values.
->
-> *`.env` file (example)*
-> ```
-> SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY=3600
-> ```
->
-> ```typescript
->import { Config } from '@foal/core';
->
-> const expTimout = Config.get('settings.session.expirationTimeouts.inactivity');
-> // expTimout is of type "number" (not "string")
-> ```
-
---
-
-> **Type variable**
->
-> By default, `Config.get` return type is `any`. You can change this value to another type if needed.
->
-> ```typescript
-> import { Config } from '@foal/core';
-> 
-> const debug = Config.get<boolean>('settings.debug');
-> ```
-> 
-> Note that this technique only forces the *TypeScript type* which may be different from the *real* JavaScript type.
 
 ## Configuration & FoalTS Components
 

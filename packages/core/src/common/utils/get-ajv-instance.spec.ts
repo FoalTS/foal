@@ -1,4 +1,5 @@
-import { strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
+import { ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
 describe('getAjvInstance', () => {
@@ -42,12 +43,13 @@ describe('getAjvInstance', () => {
 
   describe('', () => {
 
-    before(() => {
+    beforeEach(() => {
       delete _instanceWrapper.instance;
       process.env.SETTINGS_AJV_COERCE_TYPES = 'false';
       process.env.SETTINGS_AJV_REMOVE_ADDITIONAL = 'false';
       process.env.SETTINGS_AJV_USE_DEFAULTS = 'false';
       process.env.SETTINGS_AJV_NULLABLE = 'true';
+      process.env.SETTINGS_AJV_ALL_ERRORS = 'true';
     });
 
     it('should accept custom configuration from the Config.', () => {
@@ -84,6 +86,90 @@ describe('getAjvInstance', () => {
         foo: null
       };
       strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
+
+      // allErrors
+      const schema5 = {
+        properties: {
+          a: { type: 'number' },
+          b: { type: 'number' },
+        },
+        type: 'object',
+      };
+      const data5 = {
+        a: 'c',
+        b: 'd'
+      };
+      strictEqual(ajv.validate(schema5, data5), false);
+      deepStrictEqual(ajv.errors, [
+        {
+          dataPath: '.a',
+          keyword: 'type',
+          message: 'should be number',
+          params: { type: 'number' },
+          schemaPath: '#/properties/a/type',
+        },
+        {
+          dataPath: '.b',
+          keyword: 'type',
+          message: 'should be number',
+          params: { type: 'number' },
+          schemaPath: '#/properties/b/type',
+        },
+      ]);
+    });
+
+    it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
+      process.env.SETTINGS_AJV_COERCE_TYPES = 'hello';
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.coerceTypes');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
+    });
+
+    it('should throw a ConfigTypeError when the value of `settings.ajv.nullable` has an invalid type.', () => {
+      process.env.SETTINGS_AJV_NULLABLE = 'hello';
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.nullable');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
+    });
+
+    it('should throw a ConfigTypeError when the value of `settings.ajv.allErrors` has an invalid type.', () => {
+      process.env.SETTINGS_AJV_ALL_ERRORS = 'hello';
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.allErrors');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
     });
 
     after(() => {
@@ -92,6 +178,7 @@ describe('getAjvInstance', () => {
       delete process.env.SETTINGS_AJV_REMOVE_ADDITIONAL;
       delete process.env.SETTINGS_AJV_USE_DEFAULTS;
       delete process.env.SETTINGS_AJV_NULLABLE;
+      delete process.env.SETTINGS_AJV_ALL_ERRORS;
     });
 
   });

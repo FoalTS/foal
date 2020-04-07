@@ -160,6 +160,8 @@ class FileService {
 } 
 ```
 
+> To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
+
 ### Write files
 
 Files can be saved using the asynchronous `write` method. This method accepts a buffer or a readable stream. If no name is provided, it is automatically generated and used to save the file in the given directory. In this case, a file extension can also be provided to the method.
@@ -231,38 +233,9 @@ class FileService {
 
 ### Create an HttpResponse
 
-The service also provides a special method for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.
+The service also provides a special method `createHttpResponse` for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.
 
-```typescript
-import { dependency, Get } from '@foal/core';
-import { Disk } from '@foal/storage';
-
-class ApiController {
-
-  @dependency
-  disk: Disk;
-
-  @Get('/download')
-  download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg');
-  }
-
-  @Get('/download2')
-  download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg', {
-      forceDownload: true,
-      filename: 'avatar.jpg'
-    });
-  }
-
-}
-```
-
-| Option | Type | Description |
-| --- | --- | --- |
-| forceDownload | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
-| filename | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the path (`foo.jpg` in the example). |
-
+The documentation can be found [here](./upload-and-download-files#file-downloads).
 
 ## Using a Specific Storage
 

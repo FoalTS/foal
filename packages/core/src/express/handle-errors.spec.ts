@@ -14,6 +14,8 @@ describe('handleErrors', () => {
 
   describe('should return an error-handling middleware which', () => {
 
+    afterEach(() => delete process.env.SETTINGS_LOG_ERRORS);
+
     it('should ignore Express client errors and forward them to the new error-handling middleware.', () => {
       const app = express()
         .use(express.text({ type: 'text/*' }))
@@ -36,14 +38,32 @@ describe('handleErrors', () => {
 
       const middleware = handleErrors({}, {}, logFn);
 
-      const app = express();
-      app.use((req, res, next) => { throw err; });
-      app.use(middleware);
+      const app = express()
+        .use((req, res, next) => { throw err; })
+        .use(middleware);
       return request(app)
         .get('/')
         .then(res => {
           strictEqual(str, err.stack);
         });
+    });
+
+    it('should not log the error if the value of the configuration key settings.logErrors is false.', async () => {
+      process.env.SETTINGS_LOG_ERRORS = 'false';
+      let str = null;
+      const logFn = (msg: string) => str = msg;
+      const err = new Error();
+
+      const middleware = handleErrors({}, {}, logFn);
+
+      const app = express()
+        .use((req, res, next) => { throw err; })
+        .use(middleware);
+      await request(app)
+        .get('/')
+        .expect(500);
+
+      strictEqual(str, null);
     });
 
     describe('should render the default 500 template', () => {

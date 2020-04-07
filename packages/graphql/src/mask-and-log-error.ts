@@ -13,7 +13,7 @@ import { Config } from '@foal/core';
 export function maskAndLogError(err: any): any {
   console.log(err);
 
-  if (Config.get('settings.debug')) {
+  if (Config.get2('settings.debug', 'boolean')) {
     return err;
   }
 

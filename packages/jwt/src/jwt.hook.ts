@@ -59,12 +59,10 @@ export interface JWTOptions {
  * @returns {HookDecorator}
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
-  return Hook(async (ctx, services) => {
-    const config = services.get(Config);
-
+  return Hook(async ctx => {
     let token: string;
     if (options.cookie) {
-      const cookieName = config.get<string>('settings.jwt.cookieName', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -113,7 +111,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('invalid token');
     }
 
-    let secretOrPublicKey: string|undefined;
+    let secretOrPublicKey: string;
     if (options.secretOrPublicKey) {
       try {
         secretOrPublicKey = await options.secretOrPublicKey(decoded.header, decoded.payload);
@@ -124,18 +122,17 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         throw error;
       }
     } else {
-      secretOrPublicKey = config.get<string|undefined>('settings.jwt.secretOrPublicKey');
-    }
-    if (secretOrPublicKey === undefined) {
-      throw new Error(
-        '[CONFIG] You must provide a secret or public key with the configuration key settings.jwt.secretOrPublicKey.'
+      secretOrPublicKey = Config.getOrThrow(
+        'settings.jwt.secretOrPublicKey',
+        'string',
+        'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
       );
     }
 
     let payload: any;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secretOrPublicKey as string, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });

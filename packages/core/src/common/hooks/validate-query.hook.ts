@@ -28,7 +28,10 @@ export function ValidateQuery(schema: object, options: { openapi?: boolean } = {
   return (target: any, propertyKey?: string) =>  {
     Hook(validate)(target, propertyKey);
 
-    if (options.openapi === false || (options.openapi === undefined && !Config.get('settings.openapi.useHooks'))) {
+    if (
+      options.openapi === false ||
+      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+    ) {
       return;
     }
 

@@ -1,5 +1,5 @@
 // 3p
-import { ConfigMock, createService, Session, SessionStore } from '@foal/core';
+import { createService, Session, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
@@ -10,17 +10,15 @@ describe('RedisStore', () => {
 
   let store: RedisStore;
   const REDIS_URI = 'redis://localhost:6379';
-  const config = new ConfigMock();
   let redisClient: any;
 
   before(() => {
     redisClient = createClient(REDIS_URI);
-    store = createService(RedisStore, { config });
+    store = createService(RedisStore);
   });
 
   beforeEach(async () => {
-    config.reset();
-    config.set('redis.uri', REDIS_URI);
+    process.env.REDIS_URI = REDIS_URI;
     await new Promise((resolve, reject) => {
       redisClient.flushdb((err: any, success: any) => {
         if (err) {
@@ -30,6 +28,8 @@ describe('RedisStore', () => {
       });
     });
   });
+
+  afterEach(() => delete process.env.REDIS_URI);
 
   after(() => Promise.all([
     redisClient.end(true),
