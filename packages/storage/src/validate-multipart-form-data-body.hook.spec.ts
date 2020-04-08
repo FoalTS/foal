@@ -56,10 +56,7 @@ describe('ValidateMultipartFormDataBody', () => {
       const actual: { body: any } = { body: null };
       const app = createAppWithHook({
         fields: {
-          properties: {
-            name: { type: 'string' }
-          },
-          type: 'object',
+          name: { type: 'string' }
         },
         files: {}
       }, actual);
@@ -67,6 +64,7 @@ describe('ValidateMultipartFormDataBody', () => {
       await request(app)
         .post('/')
         .field('name', 'hello')
+        .field('unexpectedName', 'world')
         .expect(200);
 
       deepStrictEqual(actual.body.fields, {
@@ -114,13 +112,10 @@ describe('ValidateMultipartFormDataBody', () => {
       rmdirSync('uploaded');
     });
 
-    it('should return an HttpResponseBadRequest.', async () => {
+    it('should return an HttpResponseBadRequest (invalid values).', async () => {
       const app = createAppWithHook({
         fields: {
-          properties: {
-            name: { type: 'boolean' }
-          },
-          type: 'object',
+          name: { type: 'boolean' }
         },
         files: {}
       }, { body: null });
@@ -144,13 +139,38 @@ describe('ValidateMultipartFormDataBody', () => {
         });
     });
 
+    it('should return an HttpResponseBadRequest (missing values).', async () => {
+      const app = createAppWithHook({
+        fields: {
+          name: { type: 'string' },
+          name2: { type: 'string' }
+        },
+        files: {}
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .field('name', 'hello')
+        .expect(400)
+        .expect({
+          body: [
+            {
+              dataPath: '',
+              keyword: 'required',
+              message: 'should have required property \'name2\'',
+              params: {
+                missingProperty: 'name2'
+              },
+              schemaPath: '#/required',
+            }
+          ]
+        });
+    });
+
     it('should not have uploaded the files.', async () => {
       const app = createAppWithHook({
         fields: {
-          properties: {
-            name: { type: 'boolean' }
-          },
-          type: 'object',
+          name: { type: 'boolean' }
         },
         files: {
           foobar: { required: false, multiple: true, saveTo: 'images' },

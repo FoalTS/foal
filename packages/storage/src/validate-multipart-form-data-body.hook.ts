@@ -158,7 +158,13 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
 
       // Validate the fields
       const ajv = getAjvInstance();
-      if (schema.fields && !ajv.validate(schema.fields, fields)) {
+      const ajvSchema = {
+        additionalProperties: false,
+        properties: schema.fields,
+        required: Object.keys(schema.fields || {}),
+        type: 'object',
+      };
+      if (schema.fields && !ajv.validate(ajvSchema, fields)) {
         await deleteUploadedFiles();
         return new HttpResponseBadRequest({ body: ajv.errors });
       }
