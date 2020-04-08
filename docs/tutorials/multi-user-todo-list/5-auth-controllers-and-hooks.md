@@ -192,7 +192,7 @@ export class AppController {
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  TokenRequired, ValidateBody, ValidateParams
+  TokenRequired, ValidateBody, ValidatePathParam
 } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
