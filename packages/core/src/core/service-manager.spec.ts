@@ -182,7 +182,7 @@ describe('ServiceManager', () => {
 
   beforeEach(() => serviceManager = new ServiceManager());
 
-  describe('when get is called', () => {
+  describe('when "get" is called', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
@@ -195,43 +195,65 @@ describe('ServiceManager', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
     });
 
-    it('should return an instance of the given Service.', () => {
-      ok(serviceManager.get(Foobar) instanceof Foobar);
-    });
-
-    it('should always return the same value for the same given Service.', () => {
-      strictEqual(serviceManager.get(Foobar), serviceManager.get(Foobar));
-    });
-
-    it('should return an instance of the given Service which dependencies are instances that can be retreived'
-        + ' by the same method.', () => {
-      class Foobar2 {}
-
-      class Foobar3 {
-        @dependency
-        foobar: Foobar;
-
-        @dependency
-        foobar2: Foobar2;
-      }
-
-      // foobar3 is "gotten" in the middle on purpose.
-      const foobar = serviceManager.get(Foobar);
-      const foobar3 = serviceManager.get(Foobar3);
-      const foobar2 = serviceManager.get(Foobar2);
-
-      strictEqual(foobar3.foobar, foobar);
-      strictEqual(foobar3.foobar2, foobar2);
-    });
-
-  });
-
-  describe('when set is called', () => {
-
-    it('should register the given service instance.', () => {
+    it('should return the service registered with the "set" method.', () => {
       const service = new Foobar();
       serviceManager.set(Foobar, service);
       strictEqual(serviceManager.get(Foobar), service);
+    });
+
+    describe('if the service has not been registered with the "set" method', () => {
+
+      it('should instantiate and return the service.', () => {
+        ok(serviceManager.get(Foobar) instanceof Foobar);
+      });
+
+      it('should instantiate the service only once.', () => {
+        strictEqual(serviceManager.get(Foobar), serviceManager.get(Foobar));
+      });
+
+      it('should instantiate the service with all its dependencies.', () => {
+        class Foobar2 {}
+
+        class Foobar3 {
+          @dependency
+          foobar: Foobar;
+
+          @dependency
+          foobar2: Foobar2;
+        }
+
+        // foobar3 is "gotten" in the middle on purpose.
+        const foobar = serviceManager.get(Foobar);
+        const foobar3 = serviceManager.get(Foobar3);
+        const foobar2 = serviceManager.get(Foobar2);
+
+        strictEqual(foobar3.foobar, foobar);
+        strictEqual(foobar3.foobar2, foobar2);
+      });
+
+      it('should instantiate the service with all inherited dependencies.', () => {
+        class Foobar {}
+        class Foobar2 {}
+
+        class ParentService {
+          @dependency
+          foobar: Foobar;
+        }
+        class ChildService extends ParentService {}
+        class ChildService2 extends ParentService {
+          @dependency
+          foobar2: Foobar2;
+        }
+
+        const childService = serviceManager.get(ChildService);
+        const childService2 = serviceManager.get(ChildService2);
+
+        notStrictEqual(childService.foobar, undefined);
+        strictEqual((childService as any).foobar2, undefined);
+        notStrictEqual(childService2.foobar, undefined);
+        notStrictEqual(childService2.foobar2, undefined);
+      });
+
     });
 
   });

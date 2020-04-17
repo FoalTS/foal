@@ -33,32 +33,23 @@ export function createService<Service>(serviceClass: Class<Service>, dependencie
   return createControllerOrService(serviceClass, dependencies);
 }
 
-export function createControllerOrService<ControllerOrService>(
-  controllerOrServiceClass: Class<ControllerOrService>, dependencies?: object|ServiceManager
-): ControllerOrService {
-  const controllerOrServiceDependencies: Dependency[] = Reflect.getMetadata(
-    'dependencies', controllerOrServiceClass.prototype
-  ) || [];
+export function createControllerOrService<T>(serviceClass: Class<T>, dependencies?: object|ServiceManager): T {
+  const metadata: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
   let serviceManager = new ServiceManager();
-
-  const service = new controllerOrServiceClass();
 
   if (dependencies instanceof ServiceManager) {
     serviceManager = dependencies;
   } else if (typeof dependencies === 'object') {
-    controllerOrServiceDependencies.forEach(dep => {
+    metadata.forEach(dep => {
       const serviceMock = (dependencies as any)[dep.propertyKey];
       if (serviceMock) {
         serviceManager.set(dep.serviceClass, serviceMock);
       }
     });
   }
-  controllerOrServiceDependencies.forEach(dep => {
-    (service as any)[dep.propertyKey] = serviceManager.get(dep.serviceClass);
-  });
 
-  return service;
+  return serviceManager.get(serviceClass);
 }
 
 /**
@@ -69,7 +60,7 @@ export function createControllerOrService<ControllerOrService>(
  */
 export class ServiceManager {
 
-  readonly map: Map<Class<any>, any>  = new Map();
+  private readonly map: Map<Class<any>, any>  = new Map();
 
   /**
    * Add manually a service to the identity mapper. This function is
@@ -99,16 +90,24 @@ export class ServiceManager {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
+
     // Get the service if it exists.
     if (this.map.get(serviceClass)) {
       return this.map.get(serviceClass);
     }
 
     // If the service has not been instantiated yet then do it.
-    const service = createControllerOrService(serviceClass, this);
+    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
-    // Save and return the service.
+    const service = new serviceClass();
+
+    for (const dependency of dependencies) {
+      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass);
+    }
+
+    // Save the service.
     this.map.set(serviceClass, service);
+
     return service;
   }
 
