@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { createService, dependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
 
@@ -26,7 +26,7 @@ describe('dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA = [
+    const expectedDependenciesA: Dependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService2', serviceClass: MyService2 },
     ];
@@ -34,9 +34,50 @@ describe('dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB = [
+    const expectedDependenciesB: Dependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService3', serviceClass: MyService3 },
+    ];
+    const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
+
+    deepStrictEqual(actualDependenciesB, expectedDependenciesB);
+  });
+
+});
+
+describe('Dependency', () => {
+
+  it('should add the property key and the service ID to the class metaproperty "dependencies".', () => {
+    class MyService1 {}
+    class MyService2 {}
+    class MyService3 {}
+
+    class MyParentServiceOrController {
+      @Dependency('service 1')
+      myService1: MyService1;
+    }
+
+    // The dependency decorator should support inheritance and "multiple" inherited classes
+    class MyChildServiceOrControllerA extends MyParentServiceOrController {
+      @Dependency('service 2')
+      myService2: MyService2;
+    }
+    class MyChildServiceOrControllerB extends MyParentServiceOrController {
+      @Dependency('service 3')
+      myService3: MyService3;
+    }
+
+    const expectedDependenciesA: Dependency[] = [
+      { propertyKey: 'myService1', serviceClass: 'service 1' },
+      { propertyKey: 'myService2', serviceClass: 'service 2' },
+    ];
+    const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
+
+    deepStrictEqual(actualDependenciesA, expectedDependenciesA);
+
+    const expectedDependenciesB: Dependency[] = [
+      { propertyKey: 'myService1', serviceClass: 'service 1' },
+      { propertyKey: 'myService3', serviceClass: 'service 3' },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
@@ -199,9 +240,22 @@ describe('ServiceManager', () => {
       const service = new Foobar();
       serviceManager.set(Foobar, service);
       strictEqual(serviceManager.get(Foobar), service);
+
+      const service2 = new Foobar();
+      serviceManager.set('foobar', service2);
+      strictEqual(serviceManager.get('foobar'), service2);
     });
 
     describe('if the service has not been registered with the "set" method', () => {
+
+      it('should throw an error if the service is actually an id.', () => {
+        try {
+          serviceManager.get('foobar');
+          throw new Error('An error should have been thrown.');
+        } catch (error) {
+          strictEqual(error.message, 'No service was found with the identifier "foobar".');
+        }
+      });
 
       it('should instantiate and return the service.', () => {
         ok(serviceManager.get(Foobar) instanceof Foobar);
