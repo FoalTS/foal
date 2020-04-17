@@ -312,4 +312,13 @@ describe('ServiceManager', () => {
 
   });
 
+  describe('when "set" is called', () => {
+
+    it('should return itself.', () => {
+      const serviceManager = new ServiceManager();
+      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
+    });
+
+  });
+
 });

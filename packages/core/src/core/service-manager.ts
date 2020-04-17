@@ -81,10 +81,12 @@ export class ServiceManager {
    *
    * @param {string|Class} serviceIdentifier - The service ID or the service class.
    * @param {*} service - The service object (or mock).
+   * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set(serviceIdentifier: string|Class, service: any): void {
+  set(serviceIdentifier: string|Class, service: any): this {
     this.map.set(serviceIdentifier, service);
+    return this;
   }
 
   /**
