@@ -74,58 +74,87 @@ export function createControllerOrService<T>(serviceClass: Class<T>, dependencie
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|Class, any>  = new Map();
+  private readonly map: Map<string|Class, { booted: boolean, instance: any, isService: boolean }>  = new Map();
+
+  /**
+   * Boot all services. Call the method "boot" of each service if it exists.
+   *
+   * @returns {Promise<void>}
+   * @memberof ServiceManager
+   */
+  async boot(): Promise<void> {
+    const values = Array.from(this.map.values());
+
+    await Promise.all(values.map(async value => {
+      if (value.booted || !value.isService || !value.instance.boot) {
+        return;
+      }
+
+      value.booted = true;
+      await value.instance.boot();
+    }));
+  }
 
   /**
    * Add manually a service to the identity mapper.
    *
-   * @param {string|Class} serviceIdentifier - The service ID or the service class.
-   * @param {*} service - The service object (or mock).
+   * @param {string|Class} identifier - The service ID or the service class.
+   * @param {*} instance - The service object (or mock).
    * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set(serviceIdentifier: string|Class, service: any): this {
-    this.map.set(serviceIdentifier, service);
+  set(identifier: string|Class, instance: any, options: { service: boolean } = { service: false }): this {
+    this.map.set(identifier, {
+      booted: false,
+      instance,
+      isService: options.service
+    });
     return this;
   }
 
   /**
    * Get (and create if necessary) the service singleton.
    *
-   * @param {string|Class} serviceIdentifier - The service ID or the service class.
+   * @param {string|Class} identifier - The service ID or the service class.
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(serviceIdentifier: Class<T>): T;
-  get(serviceIdentifier: string): any;
-  get(serviceIdentifier: string|Class): any {
+  get<T>(identifier: Class<T>): T;
+  get(identifier: string): any;
+  get(identifier: string|Class): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
-    if (serviceIdentifier === ServiceManager || serviceIdentifier.isServiceManager === true) {
+    if (identifier === ServiceManager || identifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
 
     // Get the service if it exists.
-    if (this.map.get(serviceIdentifier)) {
-      return this.map.get(serviceIdentifier);
+    const value = this.map.get(identifier);
+    if (value) {
+      return value.instance;
     }
 
     // Throw an error if the identifier is a string and no value was found in the map.
-    if (typeof serviceIdentifier === 'string') {
-      throw new Error(`No service was found with the identifier "${serviceIdentifier}".`);
+    if (typeof identifier === 'string') {
+      throw new Error(`No service was found with the identifier "${identifier}".`);
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceIdentifier.prototype) || [];
+    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
 
-    const service = new serviceIdentifier();
+    // identifier is a class here.
+    const service = new identifier();
 
     for (const dependency of dependencies) {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
     }
 
     // Save the service.
-    this.map.set(serviceIdentifier, service);
+    this.map.set(identifier, {
+      booted: false,
+      instance: service,
+      isService: true
+    });
 
     return service;
   }

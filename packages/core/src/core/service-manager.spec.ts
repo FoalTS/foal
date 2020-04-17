@@ -223,6 +223,97 @@ describe('ServiceManager', () => {
 
   beforeEach(() => serviceManager = new ServiceManager());
 
+  describe('when "boot" is called', () => {
+
+    it('should call all the "boot" methods of the registered services if they exist.', async () => {
+      let called = false;
+
+      class Foobar2 {
+        boot() {
+          called = true;
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      // Foobar does not have a "boot" method.
+      serviceManager.get(Foobar);
+      // Foobar2 does have a "boot" method.
+      serviceManager.get(Foobar2);
+
+      await serviceManager.boot();
+
+      strictEqual(called, true);
+    });
+
+    it('should reject if at least one call has rejected.', async () => {
+      class Foobar {
+        async boot() {
+          throw new Error('rejected');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      serviceManager.get(Foobar);
+
+      try {
+        await serviceManager.boot();
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        strictEqual(error.message, 'rejected');
+      }
+    });
+
+    it('should not call the "boot" method of instances which are not FoalTS services.', async () => {
+      let called = false;
+      class Service {
+        boot() {
+          called = true;
+        }
+      }
+      class Connection {
+        boot() {
+          throw new Error('This method should have been called.');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      serviceManager.set(Connection, new Connection());
+      // This line tests the options in the "set" method.
+      serviceManager.set(Service, new Service(), { service: true });
+
+      await serviceManager.boot();
+      strictEqual(called, true);
+    });
+
+    it('should boot the services only once.', async () => {
+      let i = 0;
+
+      class Foobar2 {
+        boot() {
+          i++;
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      serviceManager.get(Foobar2);
+
+      await serviceManager.boot();
+      await serviceManager.boot();
+
+      strictEqual(i, 1);
+    });
+
+  });
+
+  describe('when "set" is called', () => {
+
+    it('should return itself.', () => {
+      const serviceManager = new ServiceManager();
+      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
+    });
+
+  });
+
   describe('when "get" is called', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
@@ -310,14 +401,9 @@ describe('ServiceManager', () => {
 
     });
 
-  });
+    it('should boot the service if options.boot is true.');
 
-  describe('when "set" is called', () => {
-
-    it('should return itself.', () => {
-      const serviceManager = new ServiceManager();
-      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
-    });
+    it('should boot the service only once if options.boot is true.');
 
   });
 
