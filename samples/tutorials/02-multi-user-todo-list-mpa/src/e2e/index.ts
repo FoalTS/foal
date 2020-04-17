@@ -14,7 +14,7 @@ import { User } from '../app/entities';
 // Define a group of tests.
 describe('The server', () => {
 
-  let app;
+  let app: any;
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {

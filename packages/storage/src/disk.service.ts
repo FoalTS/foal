@@ -30,7 +30,7 @@ export class Disk extends AbstractDisk {
 
   write(
     dirname: string,
-    content: Buffer|Readable,
+    content: Buffer|NodeJS.ReadableStream,
     options?: { name?: string } | { extension?: string },
   ): Promise<{ path: string }> {
     return this.getDriverDisk().write(dirname, content, options);

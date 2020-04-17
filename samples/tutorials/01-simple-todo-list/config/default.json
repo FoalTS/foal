@@ -4,7 +4,11 @@
     "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
-    "staticPath": "public/"
+    "session": {
+      "cookie": {
+        "sameSite": "lax"
+      }
+    }
   },
   "database": {
     "database": "./db.sqlite3",

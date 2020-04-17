@@ -25,7 +25,7 @@ npm install @foal/storage
 Next, you will need to provide the name of the storage to be used with the configuration key `setings.disk.driver`. In the case of the local filesystem, this is `local`. In other cases, an additional package must be installed. Then the name to be provided is the name of the package.
 
 *Example*
-```yml
+```yaml
 settings:
   disk:
     driver: local
@@ -37,7 +37,7 @@ The name of the directory where the files are located is specified with the conf
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'local'
@@ -81,7 +81,7 @@ AWS credentials are specified with the configuration keys `settings.aws.accessKe
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   aws:
     accessKeyId: xxx
@@ -233,38 +233,9 @@ class FileService {
 
 ### Create an HttpResponse
 
-The service also provides a special method for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.
+The service also provides a special method `createHttpResponse` for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.
 
-```typescript
-import { dependency, Get } from '@foal/core';
-import { Disk } from '@foal/storage';
-
-class ApiController {
-
-  @dependency
-  disk: Disk;
-
-  @Get('/download')
-  download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg');
-  }
-
-  @Get('/download2')
-  download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg', {
-      forceDownload: true,
-      filename: 'avatar.jpg'
-    });
-  }
-
-}
-```
-
-| Option | Type | Description |
-| --- | --- | --- |
-| forceDownload | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
-| filename | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the path (`foo.jpg` in the example). |
-
+The documentation can be found [here](./upload-and-download-files#file-downloads).
 
 ## Using a Specific Storage
 
@@ -297,7 +268,7 @@ If you want to use it through the `Disk` service, your service must be published
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
-```yml
+```yaml
 settings:
   disk:
     driver: 'package-name'

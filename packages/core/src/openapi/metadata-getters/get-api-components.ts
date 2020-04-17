@@ -13,7 +13,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['callbacks']>;
   if (callbacks) {
     components.callbacks = {};
-    // tslint:disable-next-line:forin
     for (const key in callbacks) {
       const callback = callbacks[key];
       components.callbacks[key] = typeof callback === 'function' ? callback(controller) : callback;
@@ -25,7 +24,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['examples']>;
   if (examples) {
     components.examples = {};
-    // tslint:disable-next-line:forin
     for (const key in examples) {
       const example = examples[key];
       components.examples[key] = typeof example === 'function' ? example(controller) : example;
@@ -37,7 +35,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['headers']>;
   if (headers) {
     components.headers = {};
-    // tslint:disable-next-line:forin
     for (const key in headers) {
       const header = headers[key];
       components.headers[key] = typeof header === 'function' ? header(controller) : header;
@@ -49,7 +46,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['links']>;
   if (links) {
     components.links = {};
-    // tslint:disable-next-line:forin
     for (const key in links) {
       const link = links[key];
       components.links[key] = typeof link === 'function' ? link(controller) : link;
@@ -61,7 +57,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['parameters']>;
   if (parameters) {
     components.parameters = {};
-    // tslint:disable-next-line:forin
     for (const key in parameters) {
       const parameter = parameters[key];
       components.parameters[key] = typeof parameter === 'function' ? parameter(controller) : parameter;
@@ -73,7 +68,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['requestBodies']>;
   if (requestBodies) {
     components.requestBodies = {};
-    // tslint:disable-next-line:forin
     for (const key in requestBodies) {
       const requestBody = requestBodies[key];
       components.requestBodies[key] = typeof requestBody === 'function' ? requestBody(controller) : requestBody;
@@ -85,7 +79,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['responses']>;
   if (responses) {
     components.responses = {};
-    // tslint:disable-next-line:forin
     for (const key in responses) {
       const response = responses[key];
       components.responses[key] = typeof response === 'function' ? response(controller) : response;
@@ -97,7 +90,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['schemas']>;
   if (schemas) {
     components.schemas = {};
-    // tslint:disable-next-line:forin
     for (const key in schemas) {
       const schema = schemas[key];
       components.schemas[key] = typeof schema === 'function' ? schema(controller) : schema;
@@ -109,7 +101,6 @@ export function getApiComponents<T>(controllerClass: Class<T>, controller: T, pr
   ) as Dynamic<IApiComponents['securitySchemes']>;
   if (securitySchemes) {
     components.securitySchemes = {};
-    // tslint:disable-next-line:forin
     for (const key in securitySchemes) {
       const scheme = securitySchemes[key];
       components.securitySchemes[key] = typeof scheme === 'function' ? scheme(controller) : scheme;

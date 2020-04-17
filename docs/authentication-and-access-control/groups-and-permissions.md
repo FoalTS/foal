@@ -152,7 +152,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+import { createConnection, getManager, getRepository } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -171,25 +171,26 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  await createConnection();
-
-  for (const codeName of args.permissions) {
-    const permission = await getRepository(Permission).findOne({ codeName });
-    if (!permission) {
-      console.log(`No permission with the code name "${codeName}" was found.`);
-      return;
-    }
-    group.permissions.push(permission);
-  }
-
+  const connection = await createConnection();
   try {
+    for (const codeName of args.permissions) {
+      const permission = await getRepository(Permission).findOne({ codeName });
+      if (!permission) {
+        console.log(
+          `No permission with the code name "${codeName}" was found.`
+        );
+        return;
+      }
+      group.permissions.push(permission);
+    }
+
     console.log(
       await getManager().save(group)
     );
   } catch (error) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }
 

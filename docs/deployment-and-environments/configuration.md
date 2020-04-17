@@ -123,11 +123,11 @@ If the `NODE_ENV` environment variable is set, Foal will look at `${NODE_ENV}.js
 ```typescript
 import { Config } from '@foal/core';
 
-const foobar = Config.get('settings.foobar', 'boolean|string');
+const foobar = Config.get2('settings.foobar', 'boolean|string');
 // foobar is of type boolean|string|undefined
 ```
 
-The method also accepts a second optional parameter to define the type of the returned value. When it is set, Foal checks that the configuration value has the correct type and if it does not, it throws a `ConfigTypeError`. In case the value is provided via an environment variable or the `.env` file, the method will try to convert it to the desired type (e.g. `"true"` becomes ``true``). If it does not succeed, a `ConfigTypeError` is also thrown.
+The method also accepts a second optional parameter to define the type of the returned value. When it is set, Foal checks that the configuration value has the correct type and if it does not, it throws a `ConfigTypeError`. In case the value is provided via an environment variable or the `.env` file, the method will try to convert it to the desired type (e.g. `"true"` becomes `true`). If it does not succeed, a `ConfigTypeError` is also thrown.
 
 | Allowed types |
 | --- |
@@ -143,13 +143,18 @@ The method also accepts a second optional parameter to define the type of the re
 The third optional parameter of the method allows you to define a default value if none is found in the configuration.
 
 ```typescript
-const debug = Config.get('settings.foobar', 'boolean', false);
-// debug is of type boolean
+const foobar = Config.get2('settings.foobar', 'boolean', false);
+// foobar is of type boolean
 ```
 
 ### The `Config.getOrThrow` method
 
 > Available since v1.7
+
+```typescript
+const foobar = Config.getOrThrow('settings.foobar', 'boolean');
+// foobar is of type boolean
+```
 
 This method has the same behavior as `Config.get2` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
 
@@ -172,7 +177,7 @@ const debug = Config.get<boolean>('settings.debug');
 
 But this is considered unsafe because the method does not check whether the returned value is of the desired type.
 
-The method attempts to convert the values to a boolean or a number whenever possible. The value `"36"` will always be returned as `36`.
+The method always attempts to convert values to a boolean or a number, regardless of the TypeScript type provided.. The value `"36"` will always be returned as `36`.
 
 #### Specifying a default value
 

@@ -164,15 +164,15 @@ export class AuthController {
     });
   }
 
-    @Post('/logout')
-    @TokenOptional({ store: TypeORMStore })
-    async logout(ctx: Context) {
-      if (ctx.session) {
-        await ctx.session.destroy();
-      }
-
-      return new HttpResponseNoContent();
+  @Post('/logout')
+  @TokenOptional({ store: TypeORMStore })
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
     }
+
+    return new HttpResponseNoContent();
+  }
 }
 ```
 

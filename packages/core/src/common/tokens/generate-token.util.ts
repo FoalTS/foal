@@ -6,7 +6,7 @@ import { promisify } from 'util';
 import { convertBase64ToBase64url } from './convert-base64-to-base64-url.util';
 
 /**
- * Generate a 128-bit base64url-encoded token.
+ * Generate a 256-bit base64url-encoded token.
  *
  * @export
  * @returns {Promise<string>} The generated token.

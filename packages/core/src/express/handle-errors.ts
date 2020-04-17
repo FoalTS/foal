@@ -25,7 +25,7 @@ export function handleErrors(
       return;
     }
 
-    if (Config.get<boolean>('settings.logErrors', true)) {
+    if (Config.get2('settings.logErrors', 'boolean', true)) {
       logFn(err.stack);
     }
 

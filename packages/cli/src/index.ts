@@ -40,15 +40,15 @@ program
   .description('Create a new project.')
   .option('-G, --no-git', 'Don\'t initialize a git repository')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
-  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite')
-  .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON')
-  .action((name: string, options) => {
+  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite', false)
+  .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
+  .action((name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
     createApp({
-      autoInstall: options.install as boolean,
-      initRepo: options.git as boolean,
-      mongodb: options.mongodb || false,
+      autoInstall: options.install,
+      initRepo: options.git,
+      mongodb: options.mongodb,
       name,
-      yaml: options.yaml || false
+      yaml: options.yaml
     });
   });
 
@@ -87,7 +87,13 @@ program
         connectVue(path);
         break;
       default:
-        console.error('Please provide a valid framework: angular.');
+        console.error();
+        console.error(red(`Unknown framework ${yellow(framework)}. Please provide a valid one:`));
+        console.error();
+        console.error(red('  angular'));
+        console.error(red('  react'));
+        console.error(red('  vue'));
+        console.error();
     }
   });
 
@@ -97,26 +103,25 @@ const generateTypes: GenerateType[] = [
 ];
 
 program
-  .command('generate <type> [name]')
+  .command('generate <type> <name>')
   .description('Generate and/or modify files.')
-  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)')
+  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)', false)
   .alias('g')
   .on('--help', () => {
     console.log();
     console.log('Available types:');
     generateTypes.forEach(t => console.log(`  ${t}`));
   })
-  .action(async (type: GenerateType, name: string, options) => {
-    name = name || 'no-name';
+  .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
     switch (type) {
       case 'controller':
-        createController({ name, type: 'Empty', register: options.register || false  });
+        createController({ name, type: 'Empty', register: options.register  });
         break;
       case 'entity':
         createEntity({ name });
         break;
       case 'rest-api':
-        createRestApi({ name, register: options.register || false });
+        createRestApi({ name, register: options.register });
         break;
       case 'hook':
         createHook({ name });
@@ -138,7 +143,8 @@ program
         break;
       default:
         console.error();
-        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:\n`));
+        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
+        console.error();
         generateTypes.forEach(t => console.error(red(`  ${t}`)));
         console.error();
     }
@@ -152,25 +158,19 @@ program
       await rmdir(name);
     } catch (error) {
       if (error.code === 'ENOTDIR') {
-        console.log(red(error.message));
+        console.error(red(error.message));
         return;
       }
       throw error;
     }
   });
 
-// Validation for random commands
 program
-  .arguments('<command>')
-  .action(cmd => {
+  .on('command:*', (commands: string[]) => {
     program.outputHelp();
-    console.log(red(`\n  Unknown command ${yellow(cmd)}.`));
-    console.log();
+    console.error();
+    console.error(red(`  Unknown command ${yellow(commands[0])}.`));
+    console.error();
   });
 
 program.parse(process.argv);
-
-// Shows help if no arguments are provided
-if (process.argv.length === 2) {
-  program.outputHelp();
-}

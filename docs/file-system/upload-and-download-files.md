@@ -1,16 +1,382 @@
 # Upload & Download Files
 
+Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
+
+## Configuration
+
+First install the package.
+
+```
+npm install @foal/storage
+```
+
+Then specify in your configuration the file storage to be used and its settings. In this example, we will use the local file system with the `uploaded` directory (you must create it at the root of your project).
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  disk:
+    driver: 'local'
+    local:
+      directory: 'uploaded'
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "disk": {
+      "driver": "local",
+      "local": {
+        "directory": "uploaded"
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_DISK_DRIVER=local
+SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+## File Uploads
+
+> This technique is available in Foal v1.7 onwards.
+
+Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
+
+### Using Buffers
+
+```typescript
+import { Context, Post } from '@foal/core';
+import { ValidateMultipartFormDataBody } from '@foal/storage';
+
+export class UserController {
+
+  @Post('/profile')
+  @ValidateMultipartFormDataBody({
+    files: {
+      profile: { required: true },
+      images: { required: false, multiple: true }
+    }
+  })
+  uploadProfilePhoto(ctx: Context) {
+    const buffer = ctx.request.body.files.profile;
+    const buffers = ctx.request.body.files.images;
+  }
+
+}
+```
+
+The names of the file fields must be provided in the `files` parameter of the hook. Uploaded files which are not listed here are simply ignored.
+
+The `required` parameter tells the hook if it should return a `400 - BAD REQUEST` error if no file has been uploaded for the given field. In this case, the controller method is not executed.
+
+When the upload is successful, the request body object is set with the buffer files.
+
+| Value of `multiple` | Files uploaded | Value in the request object |
+|  --- | --- | --- |
+| `false` (default) | None |  `null` |
+| | At least one | A buffer |
+| `true` | None | An empty array |
+|  | At least one | An array of buffers |
+
+### Using Local or Cloud Storage (streaming)
+
+Instead of using buffers, you can also choose to save directly the file to your local or Cloud storage. To do this, you need to add the name of the target directory in your hook options. The value returned in the `ctx` is an object containing the relative path of the file.
+
+> With the previous configuration, this path is relative to the `uploaded` directory. Note that must create the `uploaded/images` and `uploaded/images/profiles` directories before you can upload a file.
+
+```typescript
+import { Context, Post } from '@foal/core';
+import { ValidateMultipartFormDataBody } from '@foal/storage';
+
+export class UserController {
+
+  @Post('/profile')
+  @ValidateMultipartFormDataBody({
+    files: {
+      profile: { required: true, saveTo: 'images/profiles' }
+    }
+  })
+  uploadProfilePhoto(ctx: Context) {
+    const { path } = ctx.request.body.files.profile;
+    // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
+  }
+
+}
+```
+
+### Adding Fields
+
+Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook.
+
+```typescript
+import { Context, Post } from '@foal/core';
+import { ValidateMultipartFormDataBody } from '@foal/storage';
+
+export class UserController {
+
+  @Post('/profile')
+  @ValidateMultipartFormDataBody({
+    fields: {
+      description: { type: 'string' }
+    },
+    files: {
+      profile: { required: true }
+    }
+  })
+  uploadProfilePhoto(ctx: Context) {
+    const { path } = ctx.request.body.files.profile;
+    // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
+    const { description } = ctx.request.body.fields;
+  }
+
+}
+```
+
+### Specifying File Limits
+
+Optional settings can be provided in the configuration to limit the size or number of files uploaded.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  multipartRequests:
+    fileSizeLimit: 1024
+    fileNumberLimit: 4
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "multipartRequests": {
+      "fileSizeLimit": 1024,
+      "fileNumberLimit": 4,
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT=1024
+SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+| Setting | Type | Description |
+| --- | --- | --- |
+| fileSizeLimit | number | The maximum file size (in bytes). |
+| fileNumberLimit | number | The maximum number of files (useful for `multiple` file fields). |
+
 ## File Downloads
 
-### Version 1.6 and higher
+> This technique is available in Foal v1.6 onwards.
 
-The best way to download a file from local or Cloud storage is to call the [createHttpResponse](./local-and-cloud-storage.md#create-an-httpresponse) method of [FoalTS file system](./local-and-cloud-storage.md).
+Files can be downloaded using the method `createHttpResponse` of the `Disk` service. The returned object is optimized for downloading a (large) file in streaming.
 
-### Versions prior to v1.6
+```typescript
+import { dependency, Get } from '@foal/core';
+import { Disk } from '@foal/storage';
 
-> *Deprecated.*
+class ApiController {
 
-In versions prior to v1.6, FoalTS provides the function `createHttpResponseFile` to download files in the browser. It only allows you to download files from the local file system. Cloud storage is not supported.
+  @dependency
+  disk: Disk;
+
+  @Get('/download')
+  download() {
+    return this.disk.createHttpResponse('avatars/foo.jpg');
+  }
+
+  @Get('/download2')
+  download() {
+    return this.disk.createHttpResponse('avatars/foo.jpg', {
+      forceDownload: true,
+      filename: 'avatar.jpg'
+    });
+  }
+
+}
+```
+
+| Option | Type | Description |
+| --- | --- | --- |
+| forceDownload | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
+| filename | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the path (`foo.jpg` in the example). |
+
+## Usage with a Database
+
+This example shows how to attach a profile picture to a user and how to retrieve and update it.
+
+Create a new directory `uploaded/images/profiles` at the root of your project.
+
+*user.entity.ts*
+```typescript
+import {
+  BaseEntity, Column, Entity, PrimaryGeneratedColumn
+} from 'typeorm';
+
+@Entity()
+export class User extends BaseEntity {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  profile: string;
+
+}
+```
+
+*app.controller.ts*
+```typescript
+import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
+import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+
+import { User } from './entities';
+
+// @JWTRequired OR @TokenRequired
+// OR a custom hook that sets Context.user.
+export class AppController {
+
+  @dependency
+  disk: Disk;
+
+  @Post('/profile')
+  @ValidateMultipartFormDataBody({
+    files: {
+      profile: { required: true, saveTo: 'images/profiles' }
+    }
+  })
+  async uploadProfilePicture(ctx: Context<User>) {
+    const user = ctx.user;
+    if (user.profile) {
+      await this.disk.delete(user.profile);
+    }
+
+    user.profile = ctx.request.body.files.profile.path;
+    await user.save();
+
+    return new HttpResponseRedirect('/');
+  }
+
+  @Get('/profile')
+  async downloadProfilePicture(ctx: Context<User>) {
+    const { profile } = ctx.user;
+
+    if (!profile) {
+      return new HttpResponseNotFound();
+    }
+
+    return this.disk.createHttpResponse(profile);
+  }
+
+  @Get('/')
+  index() {
+    return render('./templates/index.html');
+  }
+
+}
+```
+
+*templates/index.html*
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <img src="/profile">
+  <form action="/profile" method="post" enctype="multipart/form-data">
+      <input type="file" name="profile">
+      <input type="submit" value="Upload image" name="submit">
+  </form>
+</body>
+</html>
+```
+
+## Static Files
+
+Static files, such as HTML, CSS, images, and JavaScript, are served by default from the `public` directory.
+
+### Static directory
+
+If necessary, this directory can be modified using the configuration key `settings.staticPath`.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  staticPath: assets
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "staticPath": "assets"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_STATIC_PATH=assets
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+### Virtual prefix path
+
+In case you need to add a virtual prefix path to your static files, you can do so with the `staticPathPrefix` configuration key.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  staticPathPrefix: /static
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "staticPathPrefix": "/static"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_STATIC_PATH_PREFIX=/static
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+*Example*
+| Static file | URL path with no prefix | URL path with the prefix `/static `|
+| --- | --- | --- |
+| index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
+| styles.css | `/styles.css` | `/static/styles.css` |
+| app.js | `/app.js` | `/static/app.js` |
+
+## Deprecated components
+
+### The `createHttpResponseFile` function
+
+> *Deprecated since v1.6. Use the method `createHttpResponseFile` of the `Disk` service instead.*
+
+> **Warning:** This package only allows you to download files from your local file system. It does not work with Cloud storage.
+
+FoalTS provides the function `createHttpResponseFile` to download files in the browser from the server's local file system.
 
 ```typescript
 import { createHttpResponseFile, Get } from '@foal/core';
@@ -35,9 +401,11 @@ class AppController {
 | forceDownload (optional) | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
 | filename (optional) | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the `file` option.
 
-## File Uploads
+### The `@foal/formidable` package
 
-### Local
+> *Deprecated since v1.7. Use the `@ValidateMultipartFormDataBody` hook instead.*
+
+> **Warning:** This package only allows you to upload files to your local file system. It does not work with Cloud storage.
 
 You can upload files to your local file system using the library [formidable](https://www.npmjs.com/package/formidable). It will automatically parse the incoming form and save the submitted file(s) in the directory of your choice. A random id is generated for each saved file.
 
@@ -82,173 +450,3 @@ export class AppController {
 
 }
 ```
-
-### Cloud
-
-Uploading files from the browser to Cloud storage is currently not supported. You may build your own solution for this with [FoalTS file system](./local-and-cloud-storage.md) and the library [busboy](https://www.npmjs.com/package/busboy).
-
-*A dedicated hook should be added in February-March 2020.*
-
-## Example with a Database
-
-This example shows how to attach a profile picture to a user and how to retrieve and update it.
-
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yml
-settings:
-  disk:
-    driver: 'local'
-    local:
-      directory: 'uploaded'
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
-```json
-{
-  "settings": {
-    "disk": {
-      "driver": "local",
-      "local": {
-        "directory": "uploaded"
-      }
-    }
-  }
-}
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
-
-*user.entity.ts*
-```typescript
-import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn
-} from 'typeorm';
-
-@Entity()
-export class User extends BaseEntity {
-
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  profile: string;
-
-}
-```
-
-*app.controller.ts*
-```typescript
-import { basename } from 'join';
-
-import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseOK, Post } from '@foal/core';
-import { parseForm } from '@foal/formidable';
-import { Disk } from '@foal/storage';
-import { IncomingForm } from 'formidable';
-
-import { User } from './entities';
-
-// @JWTRequired OR @TokenRequired
-// OR a custom hook that sets Context.user.
-export class AppController {
-
-  @dependency
-  disk: Disk;
-
-  @Post('/profile')
-  async updateProfilePicture(ctx: Context<User>) {
-    const form = new IncomingForm();
-    form.uploadDir = 'uploaded';
-    form.keepExtensions = true;
-    const { files } = await parseForm(form, ctx);
-
-    const user = ctx.user;
-    if (user.profile) {
-      await this.disk.delete(user.profile);
-    }
-    user.profile = files.profile.path;
-    await user.save();
-
-    return new HttpResponseOK();
-  }
-
-  @Get('/profile')
-  async downloadProfilePicture(ctx: Context<User>) {
-    const { path } = ctx.user;
-
-    return this.disk.createHttpResponse(basename(path));
-  }
-
-}
-```
-
-## Static Files
-
-Static files are served by default from the `public` directory.
-
-### Static directory
-
-If necessary, this directory can be modified using the configuration key `settings.staticPath`.
-
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yml
-settings:
-  staticPath: assets
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
-```json
-{
-  "settings": {
-    "staticPath": "assets"
-  }
-}
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH=assets
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
-
-### Virtual prefix path
-
-In case you need to add a virtual prefix path to your static files, you can do so with the `staticPathPrefix` configuration key.
-
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yml
-settings:
-  staticPathPrefix: /static
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
-```json
-{
-  "settings": {
-    "staticPathPrefix": "/static"
-  }
-}
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH_PREFIX=/static
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
-
-*Example*
-| Static file | URL path with no prefix | URL path with the prefix `/static `|
-| --- | --- | --- |
-| index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
-| styles.css | `/styles.css` | `/static/styles.css` |
-| app.js | `/app.js` | `/static/app.js` |
