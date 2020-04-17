@@ -4,7 +4,21 @@ import { Class } from './class.interface';
 
 export interface Dependency {
   propertyKey: string;
-  serviceClass: Class;
+  // Service class or service ID.
+  serviceClass: string|Class;
+}
+
+/**
+ * Decorator injecting a service inside a controller or another service.
+ *
+ * @param id {string} - The service ID.
+ */
+export function Dependency(id: string) {
+  return (target: any, propertyKey: string) => {
+    const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+    dependencies.push({ propertyKey, serviceClass: id });
+    Reflect.defineMetadata('dependencies', dependencies, target);
+  };
 }
 
 /**
@@ -33,32 +47,23 @@ export function createService<Service>(serviceClass: Class<Service>, dependencie
   return createControllerOrService(serviceClass, dependencies);
 }
 
-export function createControllerOrService<ControllerOrService>(
-  controllerOrServiceClass: Class<ControllerOrService>, dependencies?: object|ServiceManager
-): ControllerOrService {
-  const controllerOrServiceDependencies: Dependency[] = Reflect.getMetadata(
-    'dependencies', controllerOrServiceClass.prototype
-  ) || [];
+export function createControllerOrService<T>(serviceClass: Class<T>, dependencies?: object|ServiceManager): T {
+  const metadata: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
   let serviceManager = new ServiceManager();
-
-  const service = new controllerOrServiceClass();
 
   if (dependencies instanceof ServiceManager) {
     serviceManager = dependencies;
   } else if (typeof dependencies === 'object') {
-    controllerOrServiceDependencies.forEach(dep => {
+    metadata.forEach(dep => {
       const serviceMock = (dependencies as any)[dep.propertyKey];
       if (serviceMock) {
         serviceManager.set(dep.serviceClass, serviceMock);
       }
     });
   }
-  controllerOrServiceDependencies.forEach(dep => {
-    (service as any)[dep.propertyKey] = serviceManager.get(dep.serviceClass);
-  });
 
-  return service;
+  return serviceManager.get(serviceClass);
 }
 
 /**
@@ -69,46 +74,59 @@ export function createControllerOrService<ControllerOrService>(
  */
 export class ServiceManager {
 
-  readonly map: Map<Class<any>, any>  = new Map();
+  private readonly map: Map<string|Class, any>  = new Map();
 
   /**
-   * Add manually a service to the identity mapper. This function is
-   * useful during tests to inject mocks.
+   * Add manually a service to the identity mapper.
    *
-   * @template Service
-   * @param {Class<Service>} serviceClass - The service class representing the key.
-   * @param {*} service - The service object (or mock) representing the value.
+   * @param {string|Class} serviceIdentifier - The service ID or the service class.
+   * @param {*} service - The service object (or mock).
+   * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set<Service>(serviceClass: Class<Service>, service: any): void {
-    this.map.set(serviceClass, service);
+  set(serviceIdentifier: string|Class, service: any): this {
+    this.map.set(serviceIdentifier, service);
+    return this;
   }
 
   /**
    * Get (and create if necessary) the service singleton.
    *
-   * @template Service
-   * @param {Class<Service>} serviceClass - The service class.
-   * @returns {Service} - The service instance.
+   * @param {string|Class} serviceIdentifier - The service ID or the service class.
+   * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<Service>(serviceClass: Class<Service>): Service {
-    // The ts-ignores fix TypeScript bugs.
+  get<T>(serviceIdentifier: Class<T>): T;
+  get(serviceIdentifier: string): any;
+  get(serviceIdentifier: string|Class): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
-    if (serviceClass === ServiceManager || serviceClass.isServiceManager === true) {
+    if (serviceIdentifier === ServiceManager || serviceIdentifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
+
     // Get the service if it exists.
-    if (this.map.get(serviceClass)) {
-      return this.map.get(serviceClass);
+    if (this.map.get(serviceIdentifier)) {
+      return this.map.get(serviceIdentifier);
+    }
+
+    // Throw an error if the identifier is a string and no value was found in the map.
+    if (typeof serviceIdentifier === 'string') {
+      throw new Error(`No service was found with the identifier "${serviceIdentifier}".`);
     }
 
     // If the service has not been instantiated yet then do it.
-    const service = createControllerOrService(serviceClass, this);
+    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceIdentifier.prototype) || [];
 
-    // Save and return the service.
-    this.map.set(serviceClass, service);
+    const service = new serviceIdentifier();
+
+    for (const dependency of dependencies) {
+      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
+    }
+
+    // Save the service.
+    this.map.set(serviceIdentifier, service);
+
     return service;
   }
 

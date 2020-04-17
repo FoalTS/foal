@@ -1,19 +1,24 @@
+// std
+import { deepStrictEqual } from 'assert';
+
 // 3p
 import * as request from 'supertest';
-import { Connection, createConnection, Entity, getConnection, PrimaryGeneratedColumn } from 'typeorm';
+import { Connection, createConnection, Entity, getConnection, PrimaryGeneratedColumn, Repository } from 'typeorm';
 
 // FoalTS
-import { controller, createApp, dependency, Get, HttpResponseOK, ServiceManager } from '@foal/core';
+import { controller, createApp, dependency, Dependency, Get, HttpResponseOK, ServiceManager } from '@foal/core';
 
 describe('[Docs] Architecture > Services', () => {
 
-  it('Injecting other Instances', async () => {
-    @Entity()
-    class Product {
-      @PrimaryGeneratedColumn()
-      id: number;
-    }
+  @Entity()
+  class Product {
+    @PrimaryGeneratedColumn()
+    id: number;
+  }
 
+  afterEach(() => getConnection().close());
+
+  it('Injecting other Instances', async () => {
     class ApiController {
 
       @dependency
@@ -58,6 +63,68 @@ describe('[Docs] Architecture > Services', () => {
       .expect([]);
   });
 
-  afterEach(() => getConnection().close());
+  it('Usage with Interfaces and Generic Classes', async () => {
+    interface ILogger {
+      log(message: any): void;
+    }
+
+    class ApiController {
+
+      @Dependency('product')
+      productRepository: Repository<Product>;
+
+      @Dependency('logger')
+      logger: ILogger;
+
+      @Get('/products')
+      async readProducts() {
+        const products = await this.productRepository.find();
+        this.logger.log(products);
+        return new HttpResponseOK(products);
+      }
+
+    }
+
+    class AppController {
+      subControllers = [
+        controller('/api', ApiController)
+      ];
+    }
+
+    let msg: any = null;
+    class Logger implements ILogger {
+      log(message: any): void {
+        msg = message;
+      }
+    }
+
+    async function main() {
+      const connection = await createConnection({
+        database: 'test_db.sqlite',
+        dropSchema: true,
+        entities: [ Product ],
+        synchronize: true,
+        type: 'sqlite',
+      });
+      const productRepository = connection.getRepository(Product);
+
+      const serviceManager = new ServiceManager()
+        .set('product', productRepository)
+        .set('logger', new Logger());
+
+      const app = createApp(AppController, {
+        serviceManager
+      });
+
+      return app;
+    }
+
+    await request(await main())
+      .get('/api/products')
+      .expect(200)
+      .expect([]);
+
+    deepStrictEqual(msg, []);
+  });
 
 });
