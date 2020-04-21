@@ -13,7 +13,7 @@ import { ok } from 'assert';
 
 // 3p
 import { createApp } from '@foal/core';
-import * as request from 'supertest';
+import request from 'supertest';
 import { createConnection, getConnection } from 'typeorm';
 
 // App
