@@ -74,7 +74,7 @@ export function createControllerOrService<T>(serviceClass: Class<T>, dependencie
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|Class, { booted: boolean, instance: any, isService: boolean }>  = new Map();
+  private readonly map: Map<string|Class, { boot: boolean, service: any }>  = new Map();
 
   /**
    * Boot all services. Call the method "boot" of each service if it exists.
@@ -86,12 +86,10 @@ export class ServiceManager {
     const values = Array.from(this.map.values());
 
     await Promise.all(values.map(async value => {
-      if (value.booted || !value.isService || !value.instance.boot) {
-        return;
+      if (value.boot && value.service.boot) {
+        value.boot = false;
+        await value.service.boot();
       }
-
-      value.booted = true;
-      await value.instance.boot();
     }));
   }
 
@@ -99,15 +97,14 @@ export class ServiceManager {
    * Add manually a service to the identity mapper.
    *
    * @param {string|Class} identifier - The service ID or the service class.
-   * @param {*} instance - The service object (or mock).
+   * @param {*} service - The service object (or mock).
    * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set(identifier: string|Class, instance: any, options: { service: boolean } = { service: false }): this {
+  set(identifier: string|Class, service: any, options: { boot: boolean } = { boot: false }): this {
     this.map.set(identifier, {
-      booted: false,
-      instance,
-      isService: options.service
+      boot: options.boot,
+      service,
     });
     return this;
   }
@@ -131,10 +128,10 @@ export class ServiceManager {
     // Get the service if it exists.
     const value = this.map.get(identifier);
     if (value) {
-      return value.instance;
+      return value.service;
     }
 
-    // Throw an error if the identifier is a string and no value was found in the map.
+    // Throw an error if the identifier is a string and no service was found in the map.
     if (typeof identifier === 'string') {
       throw new Error(`No service was found with the identifier "${identifier}".`);
     }
@@ -151,9 +148,8 @@ export class ServiceManager {
 
     // Save the service.
     this.map.set(identifier, {
-      booted: false,
-      instance: service,
-      isService: true
+      boot: true,
+      service,
     });
 
     return service;

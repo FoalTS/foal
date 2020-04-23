@@ -263,7 +263,7 @@ describe('ServiceManager', () => {
       }
     });
 
-    it('should not call the "boot" method of instances which are not FoalTS services.', async () => {
+    it('should not call by default the "boot" method of instances injected manually.', async () => {
       let called = false;
       class Service {
         boot() {
@@ -279,7 +279,7 @@ describe('ServiceManager', () => {
       const serviceManager = new ServiceManager();
       serviceManager.set(Connection, new Connection());
       // This line tests the options in the "set" method.
-      serviceManager.set(Service, new Service(), { service: true });
+      serviceManager.set(Service, new Service(), { boot: true });
 
       await serviceManager.boot();
       strictEqual(called, true);
