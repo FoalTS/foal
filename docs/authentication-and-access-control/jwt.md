@@ -350,7 +350,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 By default, UTF-8 is used to encode the secret string into bytes when verifying the token. However, you can use another character encoding with the `settings.jwt.secretEncoding` configuration key.
 
-Available encoding are listed [here](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings).
+Available encodings are listed [here](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings).
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
