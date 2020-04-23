@@ -45,7 +45,7 @@
     "nuxt": "~2.9.2",
     "react": "~16.8.6",
     "react-dom": "~16.8.6",
-    "redis": "~2.8.0",
+    "redis": "~3.0.2",
     "sqlite3": "~4.1.1",
     "superagent": "~5.0.5",
     "supertest": "~3.3.0",

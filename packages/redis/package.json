@@ -43,7 +43,7 @@
   ],
   "dependencies": {
     "@foal/core": "^1.7.1",
-    "redis": "~2.8.0"
+    "redis": "~3.0.2"
   },
   "devDependencies": {
     "@types/mocha": "~2.2.43",
