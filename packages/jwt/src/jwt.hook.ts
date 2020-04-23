@@ -129,7 +129,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       );
       const encoding = Config.get2('settings.jwt.secretEncoding', 'string');
       if (encoding) {
-        secretOrPublicKey = Buffer.from(secretOrPublicKey, 'base64');
+        secretOrPublicKey = Buffer.from(secretOrPublicKey, encoding);
       }
     }
 
