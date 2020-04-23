@@ -111,7 +111,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('invalid token');
     }
 
-    let secretOrPublicKey: string;
+    let secretOrPublicKey: string|Buffer;
     if (options.secretOrPublicKey) {
       try {
         secretOrPublicKey = await options.secretOrPublicKey(decoded.header, decoded.payload);
@@ -127,6 +127,10 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         'string',
         'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
       );
+      const encoding = Config.get2('settings.jwt.secretEncoding', 'string');
+      if (encoding) {
+        secretOrPublicKey = Buffer.from(secretOrPublicKey, 'base64');
+      }
     }
 
     let payload: any;
