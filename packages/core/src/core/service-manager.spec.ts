@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { createService, dependency, Dependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
 
@@ -26,7 +26,7 @@ describe('dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA: Dependency[] = [
+    const expectedDependenciesA: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService2', serviceClass: MyService2 },
     ];
@@ -34,7 +34,7 @@ describe('dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB: Dependency[] = [
+    const expectedDependenciesB: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService3', serviceClass: MyService3 },
     ];
@@ -67,7 +67,7 @@ describe('Dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA: Dependency[] = [
+    const expectedDependenciesA: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: 'service 1' },
       { propertyKey: 'myService2', serviceClass: 'service 2' },
     ];
@@ -75,7 +75,7 @@ describe('Dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB: Dependency[] = [
+    const expectedDependenciesB: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: 'service 1' },
       { propertyKey: 'myService3', serviceClass: 'service 3' },
     ];

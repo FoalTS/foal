@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { Class } from './class.interface';
 
-export interface Dependency {
+export interface IDependency {
   propertyKey: string;
   // Service class or service ID.
   serviceClass: string|Class;
@@ -15,7 +15,7 @@ export interface Dependency {
  */
 export function Dependency(id: string) {
   return (target: any, propertyKey: string) => {
-    const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+    const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
     dependencies.push({ propertyKey, serviceClass: id });
     Reflect.defineMetadata('dependencies', dependencies, target);
   };
@@ -28,7 +28,7 @@ export function Dependency(id: string) {
  */
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
-  const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+  const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
   dependencies.push({ propertyKey, serviceClass });
   Reflect.defineMetadata('dependencies', dependencies, target);
 }
@@ -48,7 +48,7 @@ export function createService<Service>(serviceClass: Class<Service>, dependencie
 }
 
 export function createControllerOrService<T>(serviceClass: Class<T>, dependencies?: object|ServiceManager): T {
-  const metadata: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+  const metadata: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
   let serviceManager = new ServiceManager();
 
@@ -108,6 +108,8 @@ export class ServiceManager {
    *
    * @param {string|Class} identifier - The service ID or the service class.
    * @param {*} service - The service object (or mock).
+   * @param {{ boot: boolean }} [options={ boot: false }] If `boot` is true, the service method "boot"
+   * will be executed when calling `ServiceManager.boot` is called.
    * @returns {this} The service manager.
    * @memberof ServiceManager
    */
@@ -147,7 +149,7 @@ export class ServiceManager {
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
+    const dependencies: IDependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
 
     // identifier is a class here.
     const service = new identifier();
