@@ -77,20 +77,30 @@ export class ServiceManager {
   private readonly map: Map<string|Class, { boot: boolean, service: any }>  = new Map();
 
   /**
-   * Boot all services. Call the method "boot" of each service if it exists.
+   * Boot all services : call the method "boot" of each service if it exists.
    *
+   * If a service identifier is provided, only this service will be booted.
+   *
+   * Services are only booted once.
+   *
+   * @param {(string|Class)} [identifier] - The service ID or the service class.
    * @returns {Promise<void>}
    * @memberof ServiceManager
    */
-  async boot(): Promise<void> {
-    const values = Array.from(this.map.values());
-
-    await Promise.all(values.map(async value => {
-      if (value.boot && value.service.boot) {
-        value.boot = false;
-        await value.service.boot();
+  async boot(identifier?: string|Class): Promise<void> {
+    if (typeof identifier !== 'undefined') {
+      const value = this.map.get(identifier);
+      if (!value) {
+        throw new Error(`No service was found with the identifier "${identifier}".`);
       }
-    }));
+      return this.bootService(value);
+    }
+
+    const promises: Promise<void>[] = [];
+    for (const value of this.map.values()) {
+      promises.push(this.bootService(value));
+    }
+    await Promise.all(promises);
   }
 
   /**
@@ -153,6 +163,13 @@ export class ServiceManager {
     });
 
     return service;
+  }
+
+  private async bootService(value: { boot: boolean, service: any }): Promise<void> {
+    if (value.boot && value.service.boot) {
+      value.boot = false;
+      await value.service.boot();
+    }
   }
 
 }

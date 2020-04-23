@@ -225,82 +225,183 @@ describe('ServiceManager', () => {
 
   describe('when "boot" is called', () => {
 
-    it('should call all the "boot" methods of the registered services if they exist.', async () => {
-      let called = false;
+    describe('when no identifier is given', () => {
 
-      class Foobar2 {
-        boot() {
-          called = true;
+      it('should call all the "boot" methods of the registered services if they exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
         }
-      }
 
-      const serviceManager = new ServiceManager();
-      // Foobar does not have a "boot" method.
-      serviceManager.get(Foobar);
-      // Foobar2 does have a "boot" method.
-      serviceManager.get(Foobar2);
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
 
-      await serviceManager.boot();
-
-      strictEqual(called, true);
-    });
-
-    it('should reject if at least one call has rejected.', async () => {
-      class Foobar {
-        async boot() {
-          throw new Error('rejected');
-        }
-      }
-
-      const serviceManager = new ServiceManager();
-      serviceManager.get(Foobar);
-
-      try {
         await serviceManager.boot();
-        throw new Error('An error should have been thrown');
-      } catch (error) {
-        strictEqual(error.message, 'rejected');
-      }
+
+        strictEqual(called, true);
+      });
+
+      it('should reject an error if at least one call has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
+
+        try {
+          await serviceManager.boot();
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
+
+      it('should not call by default the "boot" method of services injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot();
+        strictEqual(called, true);
+      });
+
+      it('should boot the services only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot();
+        await serviceManager.boot();
+
+        strictEqual(i, 1);
+      });
+
     });
 
-    it('should not call by default the "boot" method of instances injected manually.', async () => {
-      let called = false;
-      class Service {
-        boot() {
-          called = true;
+    describe('when an identifier is given', () => {
+
+      it('should throw an error if no registered service is found for the given identifier.', async () => {
+        const serviceManager = new ServiceManager();
+
+        try {
+          await serviceManager.boot('foobar');
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'No service was found with the identifier "foobar".');
         }
-      }
-      class Connection {
-        boot() {
-          throw new Error('This method should have been called.');
+      });
+
+      it('should call all the "boot" method of the given service if it exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
         }
-      }
 
-      const serviceManager = new ServiceManager();
-      serviceManager.set(Connection, new Connection());
-      // This line tests the options in the "set" method.
-      serviceManager.set(Service, new Service(), { boot: true });
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
 
-      await serviceManager.boot();
-      strictEqual(called, true);
-    });
+        await serviceManager.boot(Foobar);
+        strictEqual(called, false);
+        await serviceManager.boot(Foobar2);
 
-    it('should boot the services only once.', async () => {
-      let i = 0;
+        strictEqual(called, true);
+      });
 
-      class Foobar2 {
-        boot() {
-          i++;
+      it('should reject an error if the service has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
         }
-      }
 
-      const serviceManager = new ServiceManager();
-      serviceManager.get(Foobar2);
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
 
-      await serviceManager.boot();
-      await serviceManager.boot();
+        try {
+          await serviceManager.boot(Foobar);
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
 
-      strictEqual(i, 1);
+      it('should not call by default the "boot" method of the service if is has been injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot(Connection);
+        strictEqual(called, false);
+        await serviceManager.boot(Service);
+        strictEqual(called, true);
+      });
+
+      it('should boot the service only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot(Foobar2);
+        await serviceManager.boot(Foobar2);
+
+        strictEqual(i, 1);
+      });
+
     });
 
   });
@@ -400,10 +501,6 @@ describe('ServiceManager', () => {
       });
 
     });
-
-    it('should boot the service if options.boot is true.');
-
-    it('should boot the service only once if options.boot is true.');
 
   });
 
