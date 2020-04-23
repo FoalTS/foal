@@ -157,7 +157,7 @@ class TwitterService {
 
 class DetectorService {
   @dependency
-  twitter: Twitter;
+  twitter: TwitterService;
 
   isFoalTSMentionedInTheLastTweets() {
     const tweets = this.twitter.fetchLastTweets();
