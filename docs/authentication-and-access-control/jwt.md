@@ -346,6 +346,41 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   }
   ```
 
+## Specifying a Different Encoding for Secrets
+
+By default, UTF-8 is used to encode the secret string into bytes when verifying the token. However, you can use another character encoding with the `settings.jwt.secretEncoding` configuration key.
+
+Available encodings are listed [here](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings).
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secretOrPublicKey: HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secretOrPublicKey": "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
+      "secretEncoding": "base64",
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
+SETTINGS_JWT_SECRET_ENCODING=base64
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
 ## Store JWTs in a cookie
 
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).

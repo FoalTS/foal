@@ -327,6 +327,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   describe('should verify the token and', () => {
 
+    afterEach(() => delete process.env.SETTINGS_JWT_SECRET_ENCODING);
+
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.' + toBase64(JSON.stringify(payload1))
@@ -394,7 +396,24 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
-    it('should return an HttpResponseUnauthorized object if the token is expired', async () => {
+    it('should not return an HttpResponseUnauthorized object if the signature is valid'
+      + ' (different secret encoding).', async () => {
+        const hook = getHookFunction(JWT());
+
+        process.env.SETTINGS_JWT_SECRET_ENCODING = 'base64';
+        const token = sign({}, Buffer.from(secret, 'base64'));
+        const ctx = new Context({
+          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        });
+
+        const response = await hook(ctx, services);
+        console.log(response);
+        if (isHttpResponseUnauthorized(response)) {
+          throw new Error('The hook should NOT have returned an instance of HttpResponseUnauthorized');
+        }
+    });
+
+    it('should return an HttpResponseUnauthorized object if the token is expired.', async () => {
       const token = sign({}, secret, { expiresIn: '1' });
       const ctx = new Context({
         get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
