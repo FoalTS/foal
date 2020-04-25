@@ -1,5 +1,5 @@
 // 3p
-import { JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -15,7 +15,7 @@ import { Permission } from './permission.entity';
  * @abstract
  * @class UserWithPermissions
  */
-export abstract class UserWithPermissions {
+export abstract class UserWithPermissions extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

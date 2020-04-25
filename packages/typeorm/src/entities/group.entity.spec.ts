@@ -2,7 +2,7 @@
 import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
+import { BaseEntity, createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -26,6 +26,11 @@ describe('Group', () => {
   });
 
   afterEach(() => getConnection().close());
+
+  it('should extend BaseEntity.', () => {
+    const group = new Group();
+    strictEqual(group instanceof BaseEntity, true);
+  });
 
   it('should have a generated primary key "id".', async () => {
     const group = new Group();

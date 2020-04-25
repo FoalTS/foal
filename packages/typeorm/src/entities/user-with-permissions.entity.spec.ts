@@ -2,7 +2,7 @@
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -30,6 +30,11 @@ describe('UserWithPermissions', () => {
   });
 
   afterEach(() => getConnection().close());
+
+  it('should extend BaseEntity.', () => {
+    const user = new User();
+    strictEqual(user instanceof BaseEntity, true);
+  });
 
   it('should have a generated primary key "id".', async () => {
     const user = new User();

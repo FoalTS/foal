@@ -2,7 +2,7 @@
 import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
+import { BaseEntity, createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Permission } from './permission.entity';
@@ -21,6 +21,11 @@ describe('Permission', () => {
   }));
 
   afterEach(() => getConnection().close());
+
+  it('should extend BaseEntity.', () => {
+    const permission = new Permission();
+    strictEqual(permission instanceof BaseEntity, true);
+  });
 
   it('should have a generated primary key "id".', async () => {
     const permission = new Permission();
