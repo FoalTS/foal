@@ -17,6 +17,28 @@ import { Permission } from './permission.entity';
  */
 export abstract class UserWithPermissions extends BaseEntity {
 
+  static async withPerm<T extends UserWithPermissions>(codeName: string): Promise<T[]> {
+    const userWithUserPermissionsQb = this
+      .createQueryBuilder('user1')
+      .select('user1.id')
+      .innerJoin('user1.userPermissions', 'userPermission')
+      .where('userPermission.codeName = :codeName');
+
+    const userWithGroupPermissionsQb = this
+      .createQueryBuilder('user2')
+      .select('user2.id')
+      .innerJoin('user2.groups', 'group')
+      .innerJoin('group.permissions', 'groupPermission')
+      .where('groupPermission.codeName = :codeName');
+
+    return await this
+      .createQueryBuilder('user')
+      .where('user.id IN (' + userWithUserPermissionsQb.getQuery() + ')')
+      .orWhere('user.id IN (' + userWithGroupPermissionsQb.getQuery() + ')')
+      .setParameters({ codeName })
+      .getMany() as T[];
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 

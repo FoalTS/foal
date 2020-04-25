@@ -1,5 +1,5 @@
 // std
-import { notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
@@ -120,6 +120,95 @@ describe('UserWithPermissions', () => {
       const user = new User();
 
       strictEqual(user.hasPerm('admin'), false);
+    });
+
+  });
+
+  describe('has a static "withPerm" method that', () => {
+
+    it('should return all users which have this permission as user permission.', async () => {
+      const perm1 = new Permission();
+      perm1.codeName = 'perm1';
+      perm1.name = 'Permission 1';
+      await perm1.save();
+
+      const perm2 = new Permission();
+      perm2.codeName = 'perm2';
+      perm2.name = 'Permission 2';
+      await perm2.save();
+
+      const user1 = new User();
+      user1.userPermissions = [ perm1 ];
+      await user1.save();
+
+      const user2 = new User();
+      user2.userPermissions = [ perm1 ];
+      await user2.save();
+
+      const user3 = new User();
+      user3.userPermissions = [ perm2 ];
+      await user3.save();
+
+      const users = await User.withPerm<User>(perm1.codeName);
+      strictEqual(users.length, 2);
+      strictEqual(users[0].id, user1.id);
+      strictEqual(users[1].id, user2.id);
+    });
+
+    it('should return all users which have this permission as group permission.', async () => {
+      const perm1 = new Permission();
+      perm1.codeName = 'perm1';
+      perm1.name = 'Permission 1';
+      await perm1.save();
+
+      const perm2 = new Permission();
+      perm2.codeName = 'perm2';
+      perm2.name = 'Permission 2';
+      await perm2.save();
+
+      const group1 = new Group();
+      group1.codeName = 'group1';
+      group1.name = 'Groupe 1';
+      group1.permissions = [ perm1 ];
+      await group1.save();
+
+      const group2 = new Group();
+      group2.codeName = 'group2';
+      group2.name = 'Groupe 2';
+      group2.permissions = [ perm2 ];
+      await group2.save();
+
+      const user1 = new User();
+      user1.groups = [ group1 ];
+      await user1.save();
+
+      const user2 = new User();
+      user2.groups = [ group1 ];
+      await user2.save();
+
+      const user3 = new User();
+      user3.groups = [ group2 ];
+      await user3.save();
+
+      const users = await User.withPerm<User>(perm1.codeName);
+      strictEqual(users.length, 2);
+      strictEqual(users[0].id, user1.id);
+      strictEqual(users[1].id, user2.id);
+    });
+
+    it('should return instances of the concrete class.', async () => {
+      const perm1 = new Permission();
+      perm1.codeName = 'perm1';
+      perm1.name = 'Permission 1';
+      await perm1.save();
+
+      const user1 = new User();
+      user1.userPermissions = [ perm1 ];
+      await user1.save();
+
+      const users = await User.withPerm<User>(perm1.codeName);
+      strictEqual(users.length, 1);
+      strictEqual(users[0] instanceof User, true);
     });
 
   });
