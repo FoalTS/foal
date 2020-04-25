@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
