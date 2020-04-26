@@ -17,6 +17,17 @@ import { Permission } from './permission.entity';
  */
 export abstract class UserWithPermissions extends BaseEntity {
 
+  /**
+   * Get all users with a given permission.
+   *
+   * This method returns all users that have this permission on their own or through the groups they belong to.
+   *
+   * @static
+   * @template T
+   * @param {string} codeName - The permission codename.
+   * @returns {Promise<T[]>}
+   * @memberof UserWithPermissions
+   */
   static async withPerm<T extends UserWithPermissions>(codeName: string): Promise<T[]> {
     const userWithUserPermissionsQb = this
       .createQueryBuilder('user1')
