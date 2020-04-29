@@ -202,8 +202,6 @@ describe('createApp', () => {
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
       .validateSpec('tsconfig.json')
-      .validateSpec('tsconfig.migrations.json')
-      .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
       .validateSpec('.eslintrc.js');
   });
@@ -218,8 +216,6 @@ describe('createApp', () => {
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
       .validateSpec('tsconfig.json')
-      .validateSpec('tsconfig.migrations.json')
-      .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
       .validateSpec('.eslintrc.js');
   });
@@ -235,8 +231,6 @@ describe('createApp', () => {
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
       .validateSpec('tsconfig.json')
-      .shouldNotExist('tsconfig.migrations.json')
-      .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
       .validateSpec('.eslintrc.js');
   });
@@ -252,8 +246,6 @@ describe('createApp', () => {
       .validateSpec('tsconfig.app.json')
       .validateSpec('tsconfig.e2e.json')
       .validateSpec('tsconfig.json')
-      .shouldNotExist('tsconfig.migrations.json')
-      .validateSpec('tsconfig.scripts.json')
       .validateSpec('tsconfig.test.json')
       .validateSpec('.eslintrc.js');
   });
