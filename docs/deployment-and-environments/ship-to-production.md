@@ -48,10 +48,12 @@ foal createsecret
 
 ## 4. Database Credentials & Migrations
 
+> warning: version 2
+
 Use different credentials for your production database. Specify them using environment variables or a `.env` file.
 
 If you use database migrations, run them on your production server with the following command:
 
 ```
-npm run migration:run
+npm run migrations
 ```

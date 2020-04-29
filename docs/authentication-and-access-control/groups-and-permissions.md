@@ -87,9 +87,11 @@ export async function main(args: { codeName: string, name: string }) {
 }
 ```
 
+> warning: version 2
+
 Then you can create a permission through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-perm name="Permission to access the secret" codeName="access-secret"
 ```
 
@@ -196,9 +198,11 @@ export async function main(args: { codeName: string, name: string, permissions: 
 
 ```
 
+> warning: version 2
+
 Then you can create a group through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-perm name="Permission to delete users" codeName="delete-users"
 foal run create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
 ```
@@ -239,9 +243,11 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 
 Uncomment the code in the file `src/scripts/create-user.ts`.
 
+> warning: version 2
+
 Then you can create a user with their permissions and groups through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
 ```
 

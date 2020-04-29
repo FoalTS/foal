@@ -1,10 +1,12 @@
 # The User & Todo Models
 
+> warning: version 2
+
 First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run build
+npm run migrations
 ```
 
 ## The User Model
@@ -81,16 +83,10 @@ In the database the `todo` table will look like this:
 
 The last step is to create/update the tables in the database. As in the first tutorial, you will use migrations for this.
 
-Build the application.
-
-```
-npm run build:app
-```
-
 Generate the migrations from the entities.
 
 ```
-npm run migration:generate -- --name=user-and-todo
+npm run makemigrations --name=user-and-todo
 ```
 
 A new file is added in `src/migrations`.
@@ -111,9 +107,8 @@ export class userAndTodo1562765487944 implements MigrationInterface {
 }
 ```
 
-Then build and run the new migration file.
+Then run the new migration file.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```

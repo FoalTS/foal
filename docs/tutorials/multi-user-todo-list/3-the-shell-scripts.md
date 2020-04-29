@@ -64,8 +64,10 @@ npm install @foal/password
 
 Now build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Create two new users.
@@ -132,8 +134,10 @@ The `main` function then tries to get the user who has this email. If he or she 
 
 Build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Create new todos for each user.

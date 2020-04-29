@@ -37,8 +37,10 @@ Encapsulating your code in a `main` function without calling it directly in the 
 
 To run a script you first need to build it.
 
+> warning: version 2
+
 ```sh
-npm run build:scripts
+npm run build
 ```
 
 Then you can execute it with this command:

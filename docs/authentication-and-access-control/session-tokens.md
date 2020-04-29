@@ -335,8 +335,10 @@ export async function main(args: { sessionID?: string, token?: string }) {
 
 Build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.
@@ -365,8 +367,10 @@ export async function main() {
 
 Build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.
@@ -405,8 +409,10 @@ export async function main() {
 
 Build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.
@@ -468,8 +474,10 @@ export async function main() {
 
 Build the script.
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.

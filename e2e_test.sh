@@ -27,17 +27,16 @@ npm run lint
 npm run build:test
 npm run start:test
 
-# Build the app
-npm run build:app
-
-# Build and run the migrations
-npm run migration:generate -- -n my-migration
-npm run build:migrations
-npm run migration:run
+# Make and run the migrations
+npm run makemigrations --name=my-migration
+npm run migrations
 
 # Build and run the e2e tests
 npm run build:e2e
 npm run start:e2e
+
+# Build the app
+npm run build:app
 
 # Test the application when it is started
 pm2 start build/index.js
@@ -116,8 +115,8 @@ test_rest_api DELETE "http://localhost:3001/products/ab" 400
 
 pm2 delete index
 
-# Test the default shell scripts to create permissions, groups and users.
-npm run build:scripts
+# Test the default shell scripts to create users.
+npm run build
 
 foal run create-user
 
@@ -168,5 +167,5 @@ test "$response" -ge 200 && test "$response" -le 299
 pm2 delete index
 
 # Test the default shell scripts to create users.
-npm run build:scripts
+npm run build
 foal run create-user
