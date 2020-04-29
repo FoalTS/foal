@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { Class } from './class.interface';
 
-export interface Dependency {
+export interface IDependency {
   propertyKey: string;
   // Service class or service ID.
   serviceClass: string|Class;
@@ -15,7 +15,7 @@ export interface Dependency {
  */
 export function Dependency(id: string) {
   return (target: any, propertyKey: string) => {
-    const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+    const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
     dependencies.push({ propertyKey, serviceClass: id });
     Reflect.defineMetadata('dependencies', dependencies, target);
   };
@@ -28,7 +28,7 @@ export function Dependency(id: string) {
  */
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
-  const dependencies: Dependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
+  const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
   dependencies.push({ propertyKey, serviceClass });
   Reflect.defineMetadata('dependencies', dependencies, target);
 }
@@ -48,7 +48,7 @@ export function createService<Service>(serviceClass: Class<Service>, dependencie
 }
 
 export function createControllerOrService<T>(serviceClass: Class<T>, dependencies?: object|ServiceManager): T {
-  const metadata: Dependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+  const metadata: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
   let serviceManager = new ServiceManager();
 
@@ -74,60 +74,104 @@ export function createControllerOrService<T>(serviceClass: Class<T>, dependencie
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|Class, any>  = new Map();
+  private readonly map: Map<string|Class, { boot: boolean, service: any }>  = new Map();
+
+  /**
+   * Boot all services : call the method "boot" of each service if it exists.
+   *
+   * If a service identifier is provided, only this service will be booted.
+   *
+   * Services are only booted once.
+   *
+   * @param {(string|Class)} [identifier] - The service ID or the service class.
+   * @returns {Promise<void>}
+   * @memberof ServiceManager
+   */
+  async boot(identifier?: string|Class): Promise<void> {
+    if (typeof identifier !== 'undefined') {
+      const value = this.map.get(identifier);
+      if (!value) {
+        throw new Error(`No service was found with the identifier "${identifier}".`);
+      }
+      return this.bootService(value);
+    }
+
+    const promises: Promise<void>[] = [];
+    for (const value of this.map.values()) {
+      promises.push(this.bootService(value));
+    }
+    await Promise.all(promises);
+  }
 
   /**
    * Add manually a service to the identity mapper.
    *
-   * @param {string|Class} serviceIdentifier - The service ID or the service class.
+   * @param {string|Class} identifier - The service ID or the service class.
    * @param {*} service - The service object (or mock).
+   * @param {{ boot: boolean }} [options={ boot: false }] If `boot` is true, the service method "boot"
+   * will be executed when calling `ServiceManager.boot` is called.
    * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set(serviceIdentifier: string|Class, service: any): this {
-    this.map.set(serviceIdentifier, service);
+  set(identifier: string|Class, service: any, options: { boot: boolean } = { boot: false }): this {
+    this.map.set(identifier, {
+      boot: options.boot,
+      service,
+    });
     return this;
   }
 
   /**
    * Get (and create if necessary) the service singleton.
    *
-   * @param {string|Class} serviceIdentifier - The service ID or the service class.
+   * @param {string|Class} identifier - The service ID or the service class.
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(serviceIdentifier: Class<T>): T;
-  get(serviceIdentifier: string): any;
-  get(serviceIdentifier: string|Class): any {
+  get<T>(identifier: Class<T>): T;
+  get(identifier: string): any;
+  get(identifier: string|Class): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
-    if (serviceIdentifier === ServiceManager || serviceIdentifier.isServiceManager === true) {
+    if (identifier === ServiceManager || identifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
       return this;
     }
 
     // Get the service if it exists.
-    if (this.map.get(serviceIdentifier)) {
-      return this.map.get(serviceIdentifier);
+    const value = this.map.get(identifier);
+    if (value) {
+      return value.service;
     }
 
-    // Throw an error if the identifier is a string and no value was found in the map.
-    if (typeof serviceIdentifier === 'string') {
-      throw new Error(`No service was found with the identifier "${serviceIdentifier}".`);
+    // Throw an error if the identifier is a string and no service was found in the map.
+    if (typeof identifier === 'string') {
+      throw new Error(`No service was found with the identifier "${identifier}".`);
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies: Dependency[] = Reflect.getMetadata('dependencies', serviceIdentifier.prototype) || [];
+    const dependencies: IDependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
 
-    const service = new serviceIdentifier();
+    // identifier is a class here.
+    const service = new identifier();
 
     for (const dependency of dependencies) {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
     }
 
     // Save the service.
-    this.map.set(serviceIdentifier, service);
+    this.map.set(identifier, {
+      boot: true,
+      service,
+    });
 
     return service;
+  }
+
+  private async bootService(value: { boot: boolean, service: any }): Promise<void> {
+    if (value.boot && value.service.boot) {
+      value.boot = false;
+      await value.service.boot();
+    }
   }
 
 }

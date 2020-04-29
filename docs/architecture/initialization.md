@@ -2,7 +2,7 @@
 
 In many situations, we need to initialize the application (i.e perform certain actions) before listening to incoming HTTP requests. This is the case, for example, if you need to establish a connection to the database.
 
-There are two ways to achieve this in FoalTS.
+There are three ways to achieve this in FoalTS.
 
 ## The `main` function
 
@@ -72,6 +72,49 @@ async function main() {
 }
 
 main();
+```
+
+## The services `boot` method
+
+> `boot` methods are available in v1.8.0 onwards.
+
+Alternatively you can add a `boot` method in your services. This method can be synchronous or asynchronous.
+
+*Example*
+```typescript
+export class ServiceA {
+
+  async boot() {
+    await doSomething();
+  }
+
+}
+```
+
+Then, you have to call the `boot` method of your service manager (it will be automatically called starting from version 2).
+
+```typescript
+import { createAndInitApp } from '@foal/core';
+
+async function main() {
+  const serviceManager = new ServiceManager();
+  const app = createApp(AppController, {
+    serviceManager
+  });
+  // This line calls the `boot` method of all your services that have one.
+  await serviceManager.boot();
+
+  // ...
+}
+
+main();
+```
+
+If you manually inject services to your service manager and you want their `boot` methods to be called, you must specify this in the `set` method options.
+
+```typescript
+const serviceManager = new ServiceManager();
+serviceManager.set(ServiceA, myServiceInstance, { boot: true })
 ```
 
 ## Best Practices

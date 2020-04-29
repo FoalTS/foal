@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { createService, dependency, Dependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
 
@@ -26,7 +26,7 @@ describe('dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA: Dependency[] = [
+    const expectedDependenciesA: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService2', serviceClass: MyService2 },
     ];
@@ -34,7 +34,7 @@ describe('dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB: Dependency[] = [
+    const expectedDependenciesB: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService3', serviceClass: MyService3 },
     ];
@@ -67,7 +67,7 @@ describe('Dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA: Dependency[] = [
+    const expectedDependenciesA: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: 'service 1' },
       { propertyKey: 'myService2', serviceClass: 'service 2' },
     ];
@@ -75,7 +75,7 @@ describe('Dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB: Dependency[] = [
+    const expectedDependenciesB: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: 'service 1' },
       { propertyKey: 'myService3', serviceClass: 'service 3' },
     ];
@@ -223,6 +223,198 @@ describe('ServiceManager', () => {
 
   beforeEach(() => serviceManager = new ServiceManager());
 
+  describe('when "boot" is called', () => {
+
+    describe('when no identifier is given', () => {
+
+      it('should call all the "boot" methods of the registered services if they exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot();
+
+        strictEqual(called, true);
+      });
+
+      it('should reject an error if at least one call has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
+
+        try {
+          await serviceManager.boot();
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
+
+      it('should not call by default the "boot" method of services injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot();
+        strictEqual(called, true);
+      });
+
+      it('should boot the services only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot();
+        await serviceManager.boot();
+
+        strictEqual(i, 1);
+      });
+
+    });
+
+    describe('when an identifier is given', () => {
+
+      it('should throw an error if no registered service is found for the given identifier.', async () => {
+        const serviceManager = new ServiceManager();
+
+        try {
+          await serviceManager.boot('foobar');
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'No service was found with the identifier "foobar".');
+        }
+      });
+
+      it('should call all the "boot" method of the given service if it exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot(Foobar);
+        strictEqual(called, false);
+        await serviceManager.boot(Foobar2);
+
+        strictEqual(called, true);
+      });
+
+      it('should reject an error if the service has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
+
+        try {
+          await serviceManager.boot(Foobar);
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
+
+      it('should not call by default the "boot" method of the service if is has been injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot(Connection);
+        strictEqual(called, false);
+        await serviceManager.boot(Service);
+        strictEqual(called, true);
+      });
+
+      it('should boot the service only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot(Foobar2);
+        await serviceManager.boot(Foobar2);
+
+        strictEqual(i, 1);
+      });
+
+    });
+
+  });
+
+  describe('when "set" is called', () => {
+
+    it('should return itself.', () => {
+      const serviceManager = new ServiceManager();
+      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
+    });
+
+  });
+
   describe('when "get" is called', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
@@ -308,15 +500,6 @@ describe('ServiceManager', () => {
         notStrictEqual(childService2.foobar2, undefined);
       });
 
-    });
-
-  });
-
-  describe('when "set" is called', () => {
-
-    it('should return itself.', () => {
-      const serviceManager = new ServiceManager();
-      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
     });
 
   });
