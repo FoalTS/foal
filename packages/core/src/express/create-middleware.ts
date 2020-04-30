@@ -1,5 +1,5 @@
 // 3p
-import { RequestHandler } from 'express';
+import { RequestHandler } from 'express-serve-static-core';
 
 // FoalTS
 import {

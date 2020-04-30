@@ -1,6 +1,14 @@
 // 3p
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
+import {
+  ErrorRequestHandler,
+  Express,
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response
+} from 'express-serve-static-core';
 import * as logger from 'morgan';
 
 // FoalTS
@@ -14,7 +22,7 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-export interface ExpressApplication extends express.Express {
+export interface ExpressApplication extends Express {
   [name: string]: any;
 }
 
@@ -24,11 +32,11 @@ export interface CreateAppOptions {
     handleError?: boolean;
   };
   serviceManager?: ServiceManager;
-  preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
-  postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+  preMiddlewares?: (RequestHandler | ErrorRequestHandler)[];
+  postMiddlewares?: (RequestHandler | ErrorRequestHandler)[];
 }
 
-function handleJsonErrors(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+function handleJsonErrors(err: any, req: Request, res: Response, next: NextFunction) {
   if (err.type !== 'entity.parse.failed') {
     next(err);
     return;
@@ -39,7 +47,7 @@ function handleJsonErrors(err: any, req: express.Request, res: express.Response,
   });
 }
 
-function protectionHeaders(req: express.Request, res: express.Response, next: express.NextFunction) {
+function protectionHeaders(req: Request, res: Response, next: NextFunction) {
   res.removeHeader('X-Powered-By');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-DNS-Prefetch-Control', 'off');
@@ -75,9 +83,9 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  * used to handle errors.
  * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns {ExpressApplication} The express application.
  */
@@ -157,9 +165,9 @@ export function createApp(
  * used to handle errors.
  * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns {Promise<ExpressApplication>} The express application.
  */
