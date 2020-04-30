@@ -3,6 +3,11 @@ import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import * as express from 'express';
+import {
+  NextFunction,
+  Request,
+  Response
+} from 'express-serve-static-core';
 import { createRequest, createResponse } from 'node-mocks-http';
 import * as request from 'supertest';
 
@@ -164,7 +169,7 @@ describe('createMiddleware', () => {
       it('should forward an Error to the next error-handling middleware.', done => {
         const app = express();
         app.get('/a', createMiddleware(route(() => ({})), new ServiceManager()));
-        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'The controller method "fn" should return an HttpResponse.');
@@ -190,7 +195,7 @@ describe('createMiddleware', () => {
         path: '',
         propertyKey: 'bar'
       }, new ServiceManager()));
-      app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         try {
           ok(err instanceof Error);
           strictEqual(err.message, 'Error thrown in a hook.');
@@ -210,7 +215,7 @@ describe('createMiddleware', () => {
           route(() => { throw new Error('Error thrown in a controller method.'); }),
           new ServiceManager())
         );
-        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'Error thrown in a controller method.');
@@ -234,7 +239,7 @@ describe('createMiddleware', () => {
         path: '',
         propertyKey: 'bar'
       }, new ServiceManager()));
-      app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+      app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         try {
           ok(err instanceof Error);
           strictEqual(err.message, 'Error rejected in a hook.');
@@ -254,7 +259,7 @@ describe('createMiddleware', () => {
           route(async () => { throw new Error('Error rejected in a controller method.'); }),
           new ServiceManager())
         );
-        app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
           try {
             ok(err instanceof Error);
             strictEqual(err.message, 'Error rejected in a controller method.');

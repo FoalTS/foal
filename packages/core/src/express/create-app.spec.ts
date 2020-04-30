@@ -4,6 +4,11 @@ import { Buffer } from 'buffer';
 
 // 3p
 import * as express from 'express';
+import {
+  NextFunction,
+  Request,
+  Response
+} from 'express-serve-static-core';
 import * as request from 'supertest';
 
 // FoalTS
@@ -304,7 +309,7 @@ describe('createApp', () => {
 
     const app = createApp(AppController, {
       preMiddlewares: [
-        (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        (req: Request, res: Response, next: NextFunction) => {
           (req as any).foalMessage = 'Hello world!'; next();
         }
       ]

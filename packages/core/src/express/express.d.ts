@@ -1,9 +1,14 @@
 declare module 'express' {
-  import { Express, RequestHandler, Response } from 'express-serve-static-core';
+  import { Express, RequestHandler, Response, Router as IRouter } from 'express-serve-static-core';
 
   function express(): Express;
 
   namespace express {
+    function Router(options?: {
+      caseSensitive?: boolean;
+      mergeParams?: boolean;
+      strict?: boolean;
+    }): IRouter;
 
     function json(options?: {
       strict?: boolean;
