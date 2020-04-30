@@ -157,18 +157,24 @@ export class ApiController extends GraphQLController {
 }
 ```
 
-Note that for this to work, you must copy the graphql files during the build. To do this, you can update some lines of your `package.json` as follows:
+Note that for this to work, you must copy the graphql files during the build. To do this, you need to install the `copy` package and update some commands of your `package.json`.
+
+> warning: version 2
+
+```
+npm install copy
+```
 
 ```json
 {
   ...
   "scripts": {
     ...
-    "build:app": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
+    "build:app": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
     ...
-    "build:test": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" && tsc -p tsconfig.test.json",
+    "build:test": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
     ...
-    "build:e2e": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" && tsc -p tsconfig.e2e.json"
+    "build:e2e": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json"
     ...
   }
 }
