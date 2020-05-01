@@ -19,7 +19,7 @@ describe('MongoDBStore', () => {
   const MONGODB_URI = 'mongodb://localhost:27017/db';
 
   let store: MongoDBStore;
-  let mongoDBClient: MongoClient;
+  let mongoDBClient: any;
 
   async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
     await mongoDBClient.db().collection('foalSessions').insertOne(session);

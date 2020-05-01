@@ -1,6 +1,3 @@
-// 3p
-import { Model } from 'mongoose';
-
 /**
  * Create a function that finds the first document that matches some id.
  *
@@ -13,13 +10,13 @@ import { Model } from 'mongoose';
  * - JWTOptional (@foal/jwt)
  *
  * @export
- * @param {Model<any>} userModel - The Mongoose Model
+ * @param {any} userModel - The Mongoose Model
  * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
  */
-export function fetchUser(userModel: Model<any>): (id: number|string) => Promise<any> {
+export function fetchUser(userModel: any): (id: number|string) => Promise<any> {
   return (id: number|string) => {
     return new Promise((resolve, reject) => {
-      userModel.findOne({ _id: id }, (err: any, res: Model<any>|null) => {
+      userModel.findOne({ _id: id }, (err: any, res: any) => {
         if (err) {
           reject(err);
           return;
