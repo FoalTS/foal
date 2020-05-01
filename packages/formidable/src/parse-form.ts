@@ -1,6 +1,17 @@
 // 3p
 import { Context } from '@foal/core';
 
+interface File {
+  size: number;
+  path: string;
+  name: string;
+  type: string;
+  lastModifiedDate?: Date;
+  hash?: string;
+
+  toJSON(): any;
+}
+
 interface Fields {
   [key: string]: string|string[];
 }

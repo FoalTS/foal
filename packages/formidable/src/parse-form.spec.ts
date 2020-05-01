@@ -12,6 +12,17 @@ interface Fields {
   [key: string]: string|string[];
 }
 
+interface File {
+  size: number;
+  path: string;
+  name: string;
+  type: string;
+  lastModifiedDate?: Date;
+  hash?: string;
+
+  toJSON(): any;
+}
+
 interface Files {
   [key: string]: File; // | File[];
 }
