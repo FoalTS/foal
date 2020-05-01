@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { createService, dependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
 
@@ -26,7 +26,7 @@ describe('dependency', () => {
       myService3: MyService3;
     }
 
-    const expectedDependenciesA = [
+    const expectedDependenciesA: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService2', serviceClass: MyService2 },
     ];
@@ -34,9 +34,50 @@ describe('dependency', () => {
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
-    const expectedDependenciesB = [
+    const expectedDependenciesB: IDependency[] = [
       { propertyKey: 'myService1', serviceClass: MyService1 },
       { propertyKey: 'myService3', serviceClass: MyService3 },
+    ];
+    const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
+
+    deepStrictEqual(actualDependenciesB, expectedDependenciesB);
+  });
+
+});
+
+describe('Dependency', () => {
+
+  it('should add the property key and the service ID to the class metaproperty "dependencies".', () => {
+    class MyService1 {}
+    class MyService2 {}
+    class MyService3 {}
+
+    class MyParentServiceOrController {
+      @Dependency('service 1')
+      myService1: MyService1;
+    }
+
+    // The dependency decorator should support inheritance and "multiple" inherited classes
+    class MyChildServiceOrControllerA extends MyParentServiceOrController {
+      @Dependency('service 2')
+      myService2: MyService2;
+    }
+    class MyChildServiceOrControllerB extends MyParentServiceOrController {
+      @Dependency('service 3')
+      myService3: MyService3;
+    }
+
+    const expectedDependenciesA: IDependency[] = [
+      { propertyKey: 'myService1', serviceClass: 'service 1' },
+      { propertyKey: 'myService2', serviceClass: 'service 2' },
+    ];
+    const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
+
+    deepStrictEqual(actualDependenciesA, expectedDependenciesA);
+
+    const expectedDependenciesB: IDependency[] = [
+      { propertyKey: 'myService1', serviceClass: 'service 1' },
+      { propertyKey: 'myService3', serviceClass: 'service 3' },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
@@ -182,7 +223,199 @@ describe('ServiceManager', () => {
 
   beforeEach(() => serviceManager = new ServiceManager());
 
-  describe('when get is called', () => {
+  describe('when "boot" is called', () => {
+
+    describe('when no identifier is given', () => {
+
+      it('should call all the "boot" methods of the registered services if they exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot();
+
+        strictEqual(called, true);
+      });
+
+      it('should reject an error if at least one call has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
+
+        try {
+          await serviceManager.boot();
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
+
+      it('should not call by default the "boot" method of services injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot();
+        strictEqual(called, true);
+      });
+
+      it('should boot the services only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot();
+        await serviceManager.boot();
+
+        strictEqual(i, 1);
+      });
+
+    });
+
+    describe('when an identifier is given', () => {
+
+      it('should throw an error if no registered service is found for the given identifier.', async () => {
+        const serviceManager = new ServiceManager();
+
+        try {
+          await serviceManager.boot('foobar');
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'No service was found with the identifier "foobar".');
+        }
+      });
+
+      it('should call all the "boot" method of the given service if it exist.', async () => {
+        let called = false;
+
+        class Foobar2 {
+          boot() {
+            called = true;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        // Foobar does not have a "boot" method.
+        serviceManager.get(Foobar);
+        // Foobar2 does have a "boot" method.
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot(Foobar);
+        strictEqual(called, false);
+        await serviceManager.boot(Foobar2);
+
+        strictEqual(called, true);
+      });
+
+      it('should reject an error if the service has rejected one.', async () => {
+        class Foobar {
+          async boot() {
+            throw new Error('rejected');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar);
+
+        try {
+          await serviceManager.boot(Foobar);
+          throw new Error('An error should have been thrown');
+        } catch (error) {
+          strictEqual(error.message, 'rejected');
+        }
+      });
+
+      it('should not call by default the "boot" method of the service if is has been injected manually.', async () => {
+        let called = false;
+        class Service {
+          boot() {
+            called = true;
+          }
+        }
+        class Connection {
+          boot() {
+            throw new Error('This method should not have been called.');
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.set(Connection, new Connection());
+        // This line tests the options in the "set" method.
+        serviceManager.set(Service, new Service(), { boot: true });
+
+        await serviceManager.boot(Connection);
+        strictEqual(called, false);
+        await serviceManager.boot(Service);
+        strictEqual(called, true);
+      });
+
+      it('should boot the service only once.', async () => {
+        let i = 0;
+
+        class Foobar2 {
+          boot() {
+            i++;
+          }
+        }
+
+        const serviceManager = new ServiceManager();
+        serviceManager.get(Foobar2);
+
+        await serviceManager.boot(Foobar2);
+        await serviceManager.boot(Foobar2);
+
+        strictEqual(i, 1);
+      });
+
+    });
+
+  });
+
+  describe('when "set" is called', () => {
+
+    it('should return itself.', () => {
+      const serviceManager = new ServiceManager();
+      strictEqual(serviceManager.set(Foobar, {}), serviceManager);
+    });
+
+  });
+
+  describe('when "get" is called', () => {
 
     it('should return itself if the given serviceClass is ServiceManager.', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
@@ -195,43 +428,78 @@ describe('ServiceManager', () => {
       strictEqual(serviceManager.get(ServiceManager), serviceManager);
     });
 
-    it('should return an instance of the given Service.', () => {
-      ok(serviceManager.get(Foobar) instanceof Foobar);
-    });
-
-    it('should always return the same value for the same given Service.', () => {
-      strictEqual(serviceManager.get(Foobar), serviceManager.get(Foobar));
-    });
-
-    it('should return an instance of the given Service which dependencies are instances that can be retreived'
-        + ' by the same method.', () => {
-      class Foobar2 {}
-
-      class Foobar3 {
-        @dependency
-        foobar: Foobar;
-
-        @dependency
-        foobar2: Foobar2;
-      }
-
-      // foobar3 is "gotten" in the middle on purpose.
-      const foobar = serviceManager.get(Foobar);
-      const foobar3 = serviceManager.get(Foobar3);
-      const foobar2 = serviceManager.get(Foobar2);
-
-      strictEqual(foobar3.foobar, foobar);
-      strictEqual(foobar3.foobar2, foobar2);
-    });
-
-  });
-
-  describe('when set is called', () => {
-
-    it('should register the given service instance.', () => {
+    it('should return the service registered with the "set" method.', () => {
       const service = new Foobar();
       serviceManager.set(Foobar, service);
       strictEqual(serviceManager.get(Foobar), service);
+
+      const service2 = new Foobar();
+      serviceManager.set('foobar', service2);
+      strictEqual(serviceManager.get('foobar'), service2);
+    });
+
+    describe('if the service has not been registered with the "set" method', () => {
+
+      it('should throw an error if the service is actually an id.', () => {
+        try {
+          serviceManager.get('foobar');
+          throw new Error('An error should have been thrown.');
+        } catch (error) {
+          strictEqual(error.message, 'No service was found with the identifier "foobar".');
+        }
+      });
+
+      it('should instantiate and return the service.', () => {
+        ok(serviceManager.get(Foobar) instanceof Foobar);
+      });
+
+      it('should instantiate the service only once.', () => {
+        strictEqual(serviceManager.get(Foobar), serviceManager.get(Foobar));
+      });
+
+      it('should instantiate the service with all its dependencies.', () => {
+        class Foobar2 {}
+
+        class Foobar3 {
+          @dependency
+          foobar: Foobar;
+
+          @dependency
+          foobar2: Foobar2;
+        }
+
+        // foobar3 is "gotten" in the middle on purpose.
+        const foobar = serviceManager.get(Foobar);
+        const foobar3 = serviceManager.get(Foobar3);
+        const foobar2 = serviceManager.get(Foobar2);
+
+        strictEqual(foobar3.foobar, foobar);
+        strictEqual(foobar3.foobar2, foobar2);
+      });
+
+      it('should instantiate the service with all inherited dependencies.', () => {
+        class Foobar {}
+        class Foobar2 {}
+
+        class ParentService {
+          @dependency
+          foobar: Foobar;
+        }
+        class ChildService extends ParentService {}
+        class ChildService2 extends ParentService {
+          @dependency
+          foobar2: Foobar2;
+        }
+
+        const childService = serviceManager.get(ChildService);
+        const childService2 = serviceManager.get(ChildService2);
+
+        notStrictEqual(childService.foobar, undefined);
+        strictEqual((childService as any).foobar2, undefined);
+        notStrictEqual(childService2.foobar, undefined);
+        notStrictEqual(childService2.foobar2, undefined);
+      });
+
     });
 
   });

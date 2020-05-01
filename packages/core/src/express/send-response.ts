@@ -1,5 +1,5 @@
 // 3p
-import { Response } from 'express';
+import { Response } from 'express-serve-static-core';
 import * as pump from 'pump';
 
 // FoalTS

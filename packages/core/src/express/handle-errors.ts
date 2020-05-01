@@ -1,5 +1,5 @@
 // 3p
-import { ErrorRequestHandler } from 'express';
+import { ErrorRequestHandler } from 'express-serve-static-core';
 
 // FoalTS
 import { renderError } from '../common';

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 /**
  * Entity representing a permission.
@@ -7,7 +7,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
  * @class Permission
  */
 @Entity()
-export class Permission {
+export class Permission extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

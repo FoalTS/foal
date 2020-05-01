@@ -1,6 +1,6 @@
 {
   "name": "@foal/social",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "Social authentication for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,6 +10,9 @@
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
     "node": ">=8"
@@ -50,7 +53,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.7.1",
+    "@foal/core": "^1.8.0",
     "node-fetch": "~2.6.0"
   },
   "devDependencies": {

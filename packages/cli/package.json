@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -16,6 +16,9 @@
     "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/create-secret/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -a -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
     "node": ">=8"
