@@ -4,11 +4,6 @@ import { Buffer } from 'buffer';
 
 // 3p
 import * as express from 'express';
-import {
-  NextFunction,
-  Request,
-  Response
-} from 'express-serve-static-core';
 import * as request from 'supertest';
 
 // FoalTS
@@ -309,8 +304,8 @@ describe('createApp', () => {
 
     const app = createApp(AppController, {
       preMiddlewares: [
-        (req: Request, res: Response, next: NextFunction) => {
-          (req as any).foalMessage = 'Hello world!'; next();
+        (req: any, res: any, next: (err?: any) => any) => {
+          req.foalMessage = 'Hello world!'; next();
         }
       ]
     });
@@ -337,9 +332,9 @@ describe('createApp', () => {
 
     const app = createApp(AppController, {
       postMiddlewares: [
-        express.Router().get('/a', (req, res) => res.send('a2')),
-        express.Router().get('/b', (req, res) => res.send('b2')),
-        (err, req, res, next) => {
+        express.Router().get('/a', (req: any, res: any) => res.send('a2')),
+        express.Router().get('/b', (req: any, res: any) => res.send('b2')),
+        (err: any, req: any, res: any, next: any) => {
           err.message += '!!!';
           next(err);
         }
@@ -436,7 +431,7 @@ describe('createAndInitApp', () => {
 
     const app = await createAndInitApp(AppController, {
       postMiddlewares: [
-        express.Router().get('/ping2', (req, res) => res.send('pong'))
+        express.Router().get('/ping2', (req: any, res: any) => res.send('pong'))
       ]
     });
 

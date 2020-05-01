@@ -1,5 +1,3 @@
-import { RequestHandler } from 'express-serve-static-core';
-
 const page404 = '<html><head><title>PAGE NOT FOUND</title></head><body><h1>404 - PAGE NOT FOUND</h1></body></html>';
 
 /**
@@ -8,8 +6,8 @@ const page404 = '<html><head><title>PAGE NOT FOUND</title></head><body><h1>404 -
  * @export
  * @returns The express middleware.
  */
-export function notFound(): RequestHandler {
-  return (req, res) => {
+export function notFound() {
+  return (req: any, res: any) => {
     res.status(404)
        .send(page404);
   };

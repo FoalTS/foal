@@ -39,7 +39,7 @@ describe('handleErrors', () => {
       const middleware = handleErrors({}, {}, logFn);
 
       const app = express()
-        .use((req, res, next) => { throw err; })
+        .use((req: any, res: any, next: any) => { throw err; })
         .use(middleware);
       return request(app)
         .get('/')
@@ -57,7 +57,7 @@ describe('handleErrors', () => {
       const middleware = handleErrors({}, {}, logFn);
 
       const app = express()
-        .use((req, res, next) => { throw err; })
+        .use((req: any, res: any, next: any) => { throw err; })
         .use(middleware);
       await request(app)
         .get('/')
@@ -73,7 +73,7 @@ describe('handleErrors', () => {
         + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
 
         const app = express()
-          .use((req, res, next) => { throw new Error(); })
+          .use((req: any, res: any, next: any) => { throw new Error(); })
           .use(handleErrors(options, appController, () => {}));
         return request(app)
           .get('/')
@@ -116,7 +116,7 @@ describe('handleErrors', () => {
         };
 
         const app = express()
-          .use((req, res, next) => { throw new Error(); })
+          .use((req: any, res: any, next: any) => { throw new Error(); })
           .use(handleErrors(options, appController, () => {}));
         return request(app)
           .get('/')
@@ -134,7 +134,7 @@ describe('handleErrors', () => {
         };
 
         const app = express()
-          .use((req, res, next) => { throw new Error(); })
+          .use((req: any, res: any, next: any) => { throw new Error(); })
           .use(handleErrors(options, appController, () => {}));
         return request(app)
           .get('/')
@@ -160,9 +160,9 @@ describe('handleErrors', () => {
         };
 
         const app = express()
-          .use((req, res, next) => {
+          .use((req: any, res: any, next: any) => {
             expectedContext = new Context(req);
-            (req as any).foal = { ctx: expectedContext };
+            req.foal = { ctx: expectedContext };
             throw expectedError;
           })
           .use(handleErrors(options, appController, () => {}));
@@ -191,7 +191,7 @@ describe('handleErrors', () => {
         };
 
         const app = express()
-          .use((req, res, next) => {
+          .use((req: any, res: any, next: any) => {
             expectedRequest = req;
             throw expectedError;
           })
@@ -220,7 +220,7 @@ describe('handleErrors', () => {
         };
 
         const app = express()
-          .use((req, res, next) => { throw new Error('error 1'); })
+          .use((req: any, res: any, next: any) => { throw new Error('error 1'); })
           .use(handleErrors(options, appController, () => {}));
         return request(app)
           .get('/')

@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "A Node.js and TypeScript framework, all-inclusive.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -79,7 +79,6 @@
     "all": true
   },
   "dependencies": {
-    "@types/express-serve-static-core": "4.17.0",
     "ajv": "~6.12.0",
     "cookie-parser": "~1.4.4",
     "express": "~4.17.1",
@@ -89,7 +88,7 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@foal/ejs": "^1.8.0",
+    "@foal/ejs": "^1.8.1",
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.1.2",
     "@types/supertest": "~2.0.5",

@@ -1,6 +1,3 @@
-// 3p
-import { RequestHandler } from 'express-serve-static-core';
-
 // FoalTS
 import {
   Context,
@@ -20,11 +17,11 @@ import { sendResponse } from './send-response';
  * @param {ServiceManager} services - The application services.
  * @returns {(...args) => any} The express middleware.
  */
-export function createMiddleware(route: Route, services: ServiceManager): RequestHandler {
-  return async (req, res, next) => {
+export function createMiddleware(route: Route, services: ServiceManager) {
+  return async (req: any, res: any, next: (err?: any) => any) => {
     try {
       const ctx = new Context(req);
-      (req as any).foal = { ctx };
+      req.foal = { ctx };
 
       let response: undefined | HttpResponse;
 
