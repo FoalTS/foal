@@ -74,7 +74,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
       token = content;
     } else {
-      const authorizationHeader = ctx.request.get('Authorization') as string|undefined || '';
+      const authorizationHeader = ctx.request.get('Authorization') || '';
 
       if (!authorizationHeader) {
         if (!required) {

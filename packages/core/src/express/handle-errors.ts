@@ -1,6 +1,3 @@
-// 3p
-import { ErrorRequestHandler } from 'express-serve-static-core';
-
 // FoalTS
 import { renderError } from '../common';
 import { Config, Context, HttpResponse } from '../core';
@@ -16,10 +13,8 @@ import { sendResponse } from './send-response';
  * @param {*} [logFn=console.error]
  * @returns {ErrorRequestHandler}
  */
-export function handleErrors(
-  options: CreateAppOptions, appController: any, logFn = console.error
-): ErrorRequestHandler {
-  return async (err, req, res, next) => {
+export function handleErrors(options: CreateAppOptions, appController: any, logFn = console.error) {
+  return async (err: any, req: any, res: any, next: (err?: any) => any) => {
     if (err.expose && err.status) {
       next(err);
       return;
@@ -29,7 +24,7 @@ export function handleErrors(
       logFn(err.stack);
     }
 
-    const ctx = (req as any).foal ? (req as any).foal.ctx : new Context(req);
+    const ctx = req.foal ? req.foal.ctx : new Context(req);
 
     let response: HttpResponse;
     if (options.methods && options.methods.handleError && appController.handleError) {
