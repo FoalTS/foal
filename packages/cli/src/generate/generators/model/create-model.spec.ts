@@ -42,13 +42,6 @@ describe('createModel', () => {
         createModel({ name: 'test-fooBar' });
       });
 
-      it('should should order the export in index.ts.', () => {
-        createModel({ name: 'a-test-fooBar' });
-
-        testEnv
-          .validateSpec('index.sorted.ts', 'index.ts');
-      });
-
     });
 
   }
