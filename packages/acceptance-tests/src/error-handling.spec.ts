@@ -58,7 +58,7 @@ describe('FoalTS should support custom error-handling', () => {
         handleError: true
       },
       postMiddlewares: [
-        (err, req, res, next) => {
+        (err: any, req: any, res: any, next: (err?: any) => any) => {
           next(new Error('Hi!'));
         }
       ]
