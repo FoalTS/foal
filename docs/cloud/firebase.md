@@ -115,7 +115,9 @@ Update the `firebase.json` file to specify that the server should use the previo
 
 ## Deploy the Application
 
+> warning: version 2
+
 ```sh
-npm run build:app
+npm run build
 firebase deploy
 ```
