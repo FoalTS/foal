@@ -86,7 +86,7 @@ The last step is to create/update the tables in the database. As in the first tu
 Generate the migrations from the entities.
 
 ```
-npm run makemigrations --name=user-and-todo
+npm run makemigrations
 ```
 
 A new file is added in `src/migrations`.
@@ -94,7 +94,7 @@ A new file is added in `src/migrations`.
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class userAndTodo1562765487944 implements MigrationInterface {
+export class migration1562765487944 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         // SQL queries...

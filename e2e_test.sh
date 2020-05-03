@@ -28,7 +28,7 @@ npm run build:test || exit 1
 npm run start:test || exit 1
 
 # Make and run the migrations
-npm run makemigrations --name=my-migration || exit 1
+npm run makemigrations || exit 1
 npm run migrations || exit 1
 
 # Build and run the e2e tests

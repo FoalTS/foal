@@ -15,7 +15,7 @@
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name ${npm_config_name} && tsc -p tsconfig.app.json",
+    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name migration && tsc -p tsconfig.app.json",
     "migrations": "npx typeorm migration:run",
     "revertmigration": "npx typeorm migration:revert"
   },

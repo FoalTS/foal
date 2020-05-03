@@ -33,7 +33,7 @@ export class PostRefactoringTIMESTAMP implements MigrationInterface {
 Usually, you do not need to write migrations manually. TypeORM offers a powerful feature to generate your migration files based on the changes you make to your entities.
 
 ```sh
-npm run makemigrations --name=name-of-this-migration
+npm run makemigrations
 ```
 
 ### Run the migrations
@@ -67,15 +67,15 @@ export class User {
 2. Make the migration file.
 
 ```
-npm run makemigrations --name=add-user
+npm run makemigrations
 ```
 
-A new file `xxx-add-user.ts` appears in `src/directory`.
+A new file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addUser1561976236112 implements MigrationInterface {
+export class migration1561976236112 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL)`);
@@ -124,15 +124,15 @@ export class User {
 5. Generate another migration file.
 
 ```
-npm run makemigrations --name=add-email-and-password
+npm run makemigrations
 ```
 
-Another file `xxx-add-email-and-password.ts` appears in `src/directory`.
+Another file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addEmailAndPassword1561981516514 implements MigrationInterface {
+export class migration1561981516514 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "temporary_user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password" varchar NOT NULL, CONSTRAINT "UQ_ed766a9782779b8390a2a81f444" UNIQUE ("email"))`);

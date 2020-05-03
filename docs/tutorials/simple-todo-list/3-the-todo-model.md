@@ -40,7 +40,7 @@ Let&#8217;s see how to use them.
 First run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
 
 ```
-npm run makemigrations --name=add-todo-entity
+npm run makemigrations
 ```
 
 A new file appears in the `src/migrations/` directory. Open it.
@@ -48,7 +48,7 @@ A new file appears in the `src/migrations/` directory. Open it.
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addTodoEntity1562755564200 implements MigrationInterface {
+export class migration1562755564200 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "todo" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "text" varchar NOT NULL)`);

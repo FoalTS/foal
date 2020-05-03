@@ -18,7 +18,7 @@
     "lint": "eslint --ext ts src",
     "lint:fix": "eslint --ext ts --fix src",
 
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name ${npm_config_name} && tsc -p tsconfig.app.json",
+    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name migration && tsc -p tsconfig.app.json",
     "migrations": "npx typeorm migration:run",
     "revertmigration": "npx typeorm migration:revert"
   },
