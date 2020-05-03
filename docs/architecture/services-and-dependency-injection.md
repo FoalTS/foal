@@ -157,7 +157,7 @@ class TwitterService {
 
 class DetectorService {
   @dependency
-  twitter: Twitter;
+  twitter: TwitterService;
 
   isFoalTSMentionedInTheLastTweets() {
     const tweets = this.twitter.fetchLastTweets();
@@ -196,7 +196,7 @@ it('DetectorService', () => {
 
 ## Accessing the `ServiceManager`
 
-In rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
+In very rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
 
 ```typescript
 import { dependency, ServiceManager } from '@foal/core';
@@ -261,6 +261,83 @@ class ApiController {
   @Get('/products')
   async readProducts() {
     const products = await this.connection.getRepository(Product).find();
+    return new HttpResponseOK(products);
+  }
+
+}
+
+```
+
+## Usage with Interfaces and Generic Classes
+
+> Interface and generic class injection is available in Foal v1.8 onwards.
+
+Interfaces and generic classes can be injected using strings as IDs. To do this, you will need the `@Dependency` decorator.
+
+*src/services/logger.interface.ts*
+```typescript
+export interface ILogger {
+  log(message: any): void;
+}
+```
+
+*src/services/logger.service.ts*
+```typescript
+import { ILogger } from './logger.interface';
+
+export class Logger implements ILogger {
+  log(message: any): void {
+    console.log(message);
+  }
+}
+```
+
+*src/index.ts (example)*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { Connection, createConnection } from 'typeorm';
+
+import { AppController } from './app/app.controller';
+import { Logger } from './app/services';
+
+async function main() {
+  const connection = await createConnection();
+  const productRepository = connection.getRepository(Product);
+
+  const serviceManager = new ServiceManager()
+    .set('product', productRepository)
+    .set('logger', new Logger());
+
+  const app = createApp(AppController, {
+    serviceManager
+  });
+
+  // ...
+}
+
+// ...
+```
+
+*src/controllers/api.controller.ts (example)*
+```typescript
+import { Dependency, Get, HttpResponseOK } from '@foal/core';
+import { Repository } from 'typeorm';
+
+import { Product } from '../entities';
+import { ILogger } from '../services';
+
+class ApiController {
+
+  @Dependency('product')
+  productRepository: Repository<Product>;
+
+  @Dependency('logger')
+  logger: ILogger;
+
+  @Get('/products')
+  async readProducts() {
+    const products = await this.productRepository.find();
+    this.logger.log(products);
     return new HttpResponseOK(products);
   }
 

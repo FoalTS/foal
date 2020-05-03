@@ -35,8 +35,7 @@ export function createModel({ name, checkMongoose }: { name: string, checkMongoo
   new Generator('model', root)
     .renderTemplate('model.ts', names, `${names.kebabName}.model.ts`)
     .updateFile('index.ts', content => {
-      const exportNames = [ `I${names.upperFirstCamelName}`, names.upperFirstCamelName ].sort();
-      content += `export { ${exportNames.join(', ')} } from './${names.kebabName}.model';\n`;
+      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.model';\n`;
       return content;
     }, { allowFailure: true });
 }

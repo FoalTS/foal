@@ -1,5 +1,4 @@
 // 3p
-import { Response } from 'express';
 import * as pump from 'pump';
 
 // FoalTS
@@ -10,10 +9,10 @@ import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } 
  *
  * @export
  * @param {HttpResponse} response - FoalTS response.
- * @param {Response} res - Express response used in middlewares.
+ * @param {any} res - Express response used in middlewares.
  * @returns {void}
  */
-export function sendResponse(response: HttpResponse, res: Response): void {
+export function sendResponse(response: HttpResponse, res: any): void {
   res.status(response.statusCode);
   res.set(response.getHeaders());
   const cookies = response.getCookies();

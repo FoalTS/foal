@@ -1,6 +1,6 @@
 {
   "name": "@foal/typestack",
-  "version": "1.7.1",
+  "version": "1.8.1",
   "description": "FoalTS for validation and serialization using TypeStack classes",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,6 +10,9 @@
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
     "node": ">=8"
@@ -46,7 +49,7 @@
     "class-validator": "^0.10.0"
   },
   "dependencies": {
-    "@foal/core": "^1.7.1"
+    "@foal/core": "^1.8.1"
   },
   "devDependencies": {
     "@types/mocha": "~2.2.43",

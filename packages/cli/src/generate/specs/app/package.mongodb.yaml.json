@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
-    "@types/mongoose": "^5.3.12",
     "@types/node": "^8.0.47",
     "concurrently": "^3.5.1",
     "mocha": "^5.2.0",

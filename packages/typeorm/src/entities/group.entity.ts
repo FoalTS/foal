@@ -1,5 +1,5 @@
 // 3p
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Permission } from './permission.entity';
@@ -11,7 +11,7 @@ import { Permission } from './permission.entity';
  * @class Group
  */
 @Entity()
-export class Group {
+export class Group extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;

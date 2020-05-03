@@ -1,5 +1,5 @@
 import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
-import { Collection, MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
   _id: string;
@@ -17,7 +17,7 @@ export interface DatabaseSession {
  */
 export class MongoDBStore extends SessionStore {
 
-  private mongoDBClient: MongoClient;
+  private mongoDBClient: any;
 
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
@@ -100,7 +100,7 @@ export class MongoDBStore extends SessionStore {
     });
   }
 
-  async getMongoDBInstance(): Promise<MongoClient> {
+  async getMongoDBInstance(): Promise<any> {
     if (!this.mongoDBClient) {
       const mongoDBURI = Config.getOrThrow(
         'mongodb.uri',
@@ -112,7 +112,7 @@ export class MongoDBStore extends SessionStore {
     return this.mongoDBClient;
   }
 
-  private async getSessionCollection(): Promise<Collection> {
+  private async getSessionCollection(): Promise<any> {
     const mongoClient = await this.getMongoDBInstance();
     return mongoClient.db().collection('foalSessions');
   }

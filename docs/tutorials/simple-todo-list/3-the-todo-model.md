@@ -2,7 +2,7 @@
 
 > warning: version 2
 
-Let's create your first model. The CLI provides a useful command to generate a new file with an empty model.
+Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
 
 ```sh
 foal generate entity todo
@@ -33,9 +33,9 @@ export class Todo {
 
 This class is the representation of the SQL table `todo`. Currently, this table does not exist in the database. You will have to create it.
 
-You can do this manually, using a database software for example, or use migrations, a programmatic way to update a database schema. The advantage of using migrations is that you can create, update and delete your tables directly from the definition of your entities. They also ensure that all your environments (prod, dev) and co-developpers have the same table definitions.
+You can do this manually, using a database software for example, or use migrations, a programmatic way to update a database schema. The advantage of using migrations is that you can create, update and delete your tables directly from the definition of your entities. They also ensure that all your environments (prod, dev) and co-developers have the same table definitions.
 
-Let's see how to use them.
+Let&#8217;s see how to use them.
 
 First run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
 
@@ -86,4 +86,4 @@ Your database (`db.sqlite3`) now contains a new table named `todo`:
 +------------+-----------+-------------------------------------+
 ```
 
-> Alternatively, you can also use the `synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, if this behavior is useful during debug and development, it is not suitable for a production environment (you could lose production data).
+> Alternatively, you can also use the `synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, although this behavior may be useful during debug and development, it is not suitable for a production environment (you could lose production data).
