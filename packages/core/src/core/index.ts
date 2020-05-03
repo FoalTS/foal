@@ -4,4 +4,4 @@ export * from './http';
 export * from './hooks';
 export * from './routes';
 export * from './config';
-export { createService, dependency, ServiceManager } from './service-manager';
+export { createService, dependency, Dependency, ServiceManager } from './service-manager';

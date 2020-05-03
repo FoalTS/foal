@@ -235,7 +235,7 @@ class FileService {
 
 The service also provides a special method `createHttpResponse` for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.
 
-The documentation can be found [here](./upload-and-download-files#file-downloads).
+The documentation can be found [here](./upload-and-download-files.md#file-downloads).
 
 ## Using a Specific Storage
 

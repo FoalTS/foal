@@ -14,21 +14,22 @@ import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-export interface ExpressApplication extends express.Express {
-  [name: string]: any;
-}
+export type ExpressApplication = any;
+
+type Middleware = (req: any, res: any, next: (err?: any) => any) => any;
+type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) => any;
 
 export interface CreateAppOptions {
-  expressInstance?: ExpressApplication;
+  expressInstance?: any;
   methods?: {
     handleError?: boolean;
   };
   serviceManager?: ServiceManager;
-  preMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
-  postMiddlewares?: (express.RequestHandler | express.ErrorRequestHandler)[];
+  preMiddlewares?: (Middleware|ErrorMiddleware)[];
+  postMiddlewares?: (Middleware|ErrorMiddleware)[];
 }
 
-function handleJsonErrors(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+function handleJsonErrors(err: any, req: any, res: any, next: (err?: any) => any) {
   if (err.type !== 'entity.parse.failed') {
     next(err);
     return;
@@ -39,7 +40,7 @@ function handleJsonErrors(err: any, req: express.Request, res: express.Response,
   });
 }
 
-function protectionHeaders(req: express.Request, res: express.Response, next: express.NextFunction) {
+function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
   res.removeHeader('X-Powered-By');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-DNS-Prefetch-Control', 'off');
@@ -50,7 +51,7 @@ function protectionHeaders(req: express.Request, res: express.Response, next: ex
   next();
 }
 
-function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptions): CreateAppOptions {
+function getOptions(expressInstanceOrOptions?: any|CreateAppOptions): CreateAppOptions {
   if (!expressInstanceOrOptions) {
     return {};
   }
@@ -67,26 +68,26 @@ function getOptions(expressInstanceOrOptions?: ExpressApplication|CreateAppOptio
  *
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * @param {(any|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares or other settings.
- * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
  * returned application.
  * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
  * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
- * @returns {ExpressApplication} The express application.
+ * @returns {any} The express application.
  */
 export function createApp(
   AppController: Class,
-  expressInstanceOrOptions?: ExpressApplication | CreateAppOptions,
-): ExpressApplication {
+  expressInstanceOrOptions?: any | CreateAppOptions,
+): any {
   const options = getOptions(expressInstanceOrOptions);
-  const app: ExpressApplication = options.expressInstance || express();
+  const app = options.expressInstance || express();
 
   // Add optional pre-middlewares.
   for (const middleware of options.preMiddlewares || []) {
@@ -149,23 +150,23 @@ export function createApp(
  *
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(ExpressApplication|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
+ * @param {(any|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares or other settings.
- * @param {ExpressApplication} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
  * returned application.
  * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
  * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(express.RequestHandler | express.ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
- * @returns {Promise<ExpressApplication>} The express application.
+ * @returns {Promise<any>} The express application.
  */
 export async function createAndInitApp(
-  AppController: Class, expressInstanceOrOptions?: ExpressApplication | CreateAppOptions
-): Promise<ExpressApplication> {
+  AppController: Class, expressInstanceOrOptions?: any | CreateAppOptions
+): Promise<any> {
   const app = createApp(AppController, expressInstanceOrOptions);
 
   const controller = app.foal.services.get(AppController);

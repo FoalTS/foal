@@ -1,6 +1,6 @@
 {
   "name": "@foal/csrf",
-  "version": "1.7.1",
+  "version": "1.8.1",
   "description": "CSRF protection for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,6 +10,9 @@
     "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
     "node": ">=8"
@@ -50,6 +53,6 @@
     "typescript": "~3.5.3"
   },
   "dependencies": {
-    "@foal/core": "^1.7.1"
+    "@foal/core": "^1.8.1"
   }
 }

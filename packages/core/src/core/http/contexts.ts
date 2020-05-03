@@ -1,5 +1,101 @@
-import { Request } from 'express';
 import { Session } from '../../sessions';
+
+interface Readable {
+  [name: string]: any;
+}
+
+interface IncomingMessage extends Readable {
+  aborted: boolean;
+  complete: boolean;
+  headers: any;
+  // These two lines are present in @types/node but not in Node.js official documentation.
+  // Missing: httpVersionMajor: number;
+  // Missing: httpVersionMinor: string;
+  httpVersion: string;
+  method?: string;
+  rawHeaders: string[];
+  rawTrailers: string[];
+  socket: any;
+  statusCode?: number;
+  statusMessage?: number;
+  trailers: any;
+  url?: string;
+  destroy(err?: any): void;
+  // tslint:disable-next-line:ban-types
+  setTimeout(msecs: number, callback: Function): this;
+}
+
+/**
+ * Express Request interface.
+ *
+ * @interface Request
+ */
+interface Request extends IncomingMessage {
+  app: any;
+  baseUrl: string;
+  body: any;
+  cookies: any;
+  fresh: boolean;
+  // This line is present in @types/express but not in Express official documentation.
+  // host: string; // @deprecated
+  hostname: string;
+  ip: string;
+  ips: string[];
+  method: string;
+  originalUrl: string;
+  params: any;
+  path: string;
+  // The type is a string in @types/express.
+  procotol: 'http'|'https';
+  query: any;
+  route: any;
+  secure: boolean;
+  signedCookies: any;
+  stale: boolean;
+  subdomains: string[];
+  xhr: boolean;
+  // This line has been added based on @types/express in order not to make the url possibly undefined.
+  url: string;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  accepts(): string[];
+  accepts(types: string|string[]): string|false;
+  accepts(...types: string[]): string|false;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  acceptsCharsets(): string[];
+  acceptsCharsets(charset: string|string[]): string|false;
+  acceptsCharsets(...charset: string[]): string|false;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  acceptsEncodings(): string[];
+  acceptsEncodings(encoding: string|string[]): string|false;
+  acceptsEncodings(...encoding: string[]): string|false;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  acceptsLanguages(): string[];
+  acceptsLanguages(lang: string|string[]): string|false;
+  acceptsLanguages(...lang: string[]): string|false;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  get(field: 'set-cookie'): string[] | undefined;
+  get(field: string): string|undefined;
+
+  // This line has been added based on @types/express but it is not present in Express official documentation.
+  header(field: 'set-cookie'): string[] | undefined;
+  header(field: string): string|undefined;
+
+  // The string[] type has been added based on @types/express but it is not present in Express official documentation.
+  is(type: string|string[]): string | false | null;
+
+  /**
+   * @deprecated
+   */
+  param(name: string, defaultValue?: any): any;
+
+  // The undefined type has been added based on @types/express but it is not present in Express official documentation.
+  range(size: number, options?: { combine?: boolean }): -1|-2|any[]|undefined;
+}
 
 /**
  * Class instantiated on each request. It includes:

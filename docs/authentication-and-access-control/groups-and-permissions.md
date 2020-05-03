@@ -326,3 +326,29 @@ export class ProductController {
   }
 }
 ```
+
+## BaseEntity Inheritance
+
+> Available in Foal v1.8.0 onwards.
+
+The classes `Permission`, `Group` and `UserWithPermissions` all extends the `BaseEntity` class so you can access its static and instance methods.
+
+*Example*
+```typescript
+const perm = await Permission.findOneOrFail({ codeName: 'perm1' });
+perm.name = 'Permission1';
+await perm.save();
+```
+
+## Get All Users with a Given Permission
+
+> Available in Foal v1.8.0 onwards.
+
+The class `UserWithPermissions` provides a static method `withPerm` to get all users with a given permission. It returns all users that have this permission on their own or through the groups they belong to.
+
+```typescript
+@Entity()
+class User extends UserWithPermissions {}
+  
+const users = await User.withPerm<User>('perm1');
+```

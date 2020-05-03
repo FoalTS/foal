@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: "test"
 
   mariadb:
-    image: "mariadb:10.1.16"
+    image: "mariadb:10.3.22"
     ports:
       - "3307:3306"
     environment:

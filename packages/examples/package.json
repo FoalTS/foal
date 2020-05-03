@@ -1,6 +1,6 @@
 {
   "name": "@foal/examples",
-  "version": "1.7.1",
+  "version": "1.8.1",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" build",
@@ -18,6 +18,9 @@
     "migration:generate": "./node_modules/.bin/typeorm migration:generate",
     "migration:run": "./node_modules/.bin/typeorm migration:run",
     "migration:revert": "./node_modules/.bin/typeorm migration:revert"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
     "node": ">=8"
@@ -40,19 +43,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/aws-s3": "^1.7.1",
-    "@foal/core": "^1.7.1",
-    "@foal/social": "^1.7.1",
-    "@foal/storage": "^1.7.1",
-    "@foal/swagger": "^1.7.1",
-    "@foal/typeorm": "^1.7.1",
+    "@foal/aws-s3": "^1.8.1",
+    "@foal/core": "^1.8.1",
+    "@foal/social": "^1.8.1",
+    "@foal/storage": "^1.8.1",
+    "@foal/swagger": "^1.8.1",
+    "@foal/typeorm": "^1.8.1",
     "source-map-support": "~0.5.16",
     "sqlite3": "~4.1.0",
     "typeorm": "~0.2.20",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^1.7.1",
+    "@foal/cli": "^1.8.1",
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.1.1",
     "concurrently": "~3.5.1",

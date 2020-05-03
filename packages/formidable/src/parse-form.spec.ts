@@ -4,10 +4,28 @@ import { IncomingMessage } from 'http';
 
 // "3p"
 import { Context } from '@foal/core';
-import { Fields, Files, IncomingForm } from 'formidable';
 
 // FoalTS
 import { parseForm } from './parse-form';
+
+interface Fields {
+  [key: string]: string|string[];
+}
+
+interface File {
+  size: number;
+  path: string;
+  name: string;
+  type: string;
+  lastModifiedDate?: Date;
+  hash?: string;
+
+  toJSON(): any;
+}
+
+interface Files {
+  [key: string]: File; // | File[];
+}
 
 interface FakeIncomingForm {
   parse(req: IncomingMessage, callback?: (err: any, fields: Fields, files: Files) => any): void;
@@ -20,7 +38,7 @@ describe('parseForm', () => {
     const fakeIncomingForm: FakeIncomingForm = {
       parse(req, callback) {}
     };
-    const actual = parseForm(fakeIncomingForm as IncomingForm, ctx);
+    const actual = parseForm(fakeIncomingForm, ctx);
 
     ok(actual instanceof Promise, `${actual} is not a promise`);
   });
@@ -34,7 +52,7 @@ describe('parseForm', () => {
       }
     };
 
-    parseForm(fakeIncomingForm as IncomingForm, ctx);
+    parseForm(fakeIncomingForm, ctx);
 
     strictEqual(request, ctx.request);
   });
@@ -50,7 +68,7 @@ describe('parseForm', () => {
       }
     };
 
-    parseForm(fakeIncomingForm as IncomingForm, ctx)
+    parseForm(fakeIncomingForm, ctx)
       .then(() => done('The promise was resolved.'))
       .catch(error => {
         if (error !== err) {
@@ -73,7 +91,7 @@ describe('parseForm', () => {
       }
     };
 
-    parseForm(fakeIncomingForm as IncomingForm, ctx)
+    parseForm(fakeIncomingForm, ctx)
       .then(data => {
         if (data.fields !== fields || data.files !== files) {
           done(`The promise was resolved but with incorrect fields (${data.fields}) or files (${data.files}).`);
