@@ -36,7 +36,7 @@ npm run build:e2e || exit 1
 npm run start:e2e || exit 1
 
 # Build the app
-npm run build:app
+npm run build || exit 1
 
 # Test the application when it is started
 pm2 start build/index.js || exit 1
@@ -147,7 +147,7 @@ npm run build:test || exit 1
 npm run start:test || exit 1
 
 # Build the app
-npm run build:app || exit 1
+npm run build || exit 1
 
 # Build and run the e2e tests
 npm run build:e2e || exit 1
