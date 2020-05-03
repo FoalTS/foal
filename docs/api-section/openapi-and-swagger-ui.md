@@ -633,8 +633,10 @@ export async function main() {
 
 ```
 
+> warning: version 2
+
 ```
-npm run build:scripts
+npm run build
 foal run generate-openapi-doc
 ```
 

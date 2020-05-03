@@ -32,9 +32,11 @@ export async function main(args: any) {
 
 ```
 
+> warning: version 2
+
 Schedule the job(s):
 ```sh
-npm run build:scripts
+npm run build
 foal run schedule-jobs arg1=value1
 ```
 

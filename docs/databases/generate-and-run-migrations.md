@@ -26,29 +26,26 @@ export class PostRefactoringTIMESTAMP implements MigrationInterface {
 
 ## The Commands
 
+> warning: version 2
+
 ### Generating Migrations Automatically
 
 Usually, you do not need to write migrations manually. TypeORM offers a powerful feature to generate your migration files based on the changes you make to your entities.
 
 ```sh
-# Build the entities
-npm run build:app
-# Generate the migration file based on the entities changes
-npm run migration:generate -- -n name-of-this-migration
-# Build the migration files
-npm run build:migrations
+npm run makemigrations
 ```
 
 ### Run the migrations
 
 ```sh
-npm run migration:run
+npm run migrations
 ```
 
 ### Revert the last migration
 
 ```sh
-npm run migration:revert
+npm run revertmigration
 ```
 
 ### A Complete Example
@@ -67,24 +64,18 @@ export class User {
 }
 ```
 
-2. Build the application.
+2. Make the migration file.
 
 ```
-npm run build:app
+npm run makemigrations
 ```
 
-3. Generate a migration file.
-
-```
-npm run migration:generate -- --name add-user
-```
-
-A new file `xxx-add-user.ts` appears in `src/directory`.
+A new file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addUser1561976236112 implements MigrationInterface {
+export class migration1561976236112 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL)`);
@@ -98,14 +89,13 @@ export class addUser1561976236112 implements MigrationInterface {
 
 ```
 
-4. Build and run the migration.
+3. Run the migration.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```
 
-5. Add new columns to the entity.
+4. Add new columns to the entity.
 
 ```typescript
 import { hashPassword } from '@foal/core';
@@ -131,24 +121,18 @@ export class User {
 
 ```
 
-6. Build the application.
+5. Generate another migration file.
 
 ```
-npm run build:app
+npm run makemigrations
 ```
 
-7. Generate another migration file.
-
-```
-npm run migration:generate -- --name add-email-and-password
-```
-
-Another file `xxx-add-email-and-password.ts` appears in `src/directory`.
+Another file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addEmailAndPassword1561981516514 implements MigrationInterface {
+export class migration1561981516514 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "temporary_user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password" varchar NOT NULL, CONSTRAINT "UQ_ed766a9782779b8390a2a81f444" UNIQUE ("email"))`);
@@ -168,11 +152,10 @@ export class addEmailAndPassword1561981516514 implements MigrationInterface {
 
 ```
 
-8. Build and run the migration.
+6. Run the migration.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```
 
 ## The `synchronize` and `dropSchema` options

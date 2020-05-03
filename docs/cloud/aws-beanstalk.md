@@ -176,10 +176,12 @@ Choose the database engine (postgres in this example) and enter the production d
 
 ## Deploy the Foal Application
 
+> warning: version 2
+
 Build the app.
 
 ```
-npm run build:app
+npm run build
 ```
 
 Create an archive from the directories and files `build/`, `config/`, `public/`, `ormconfig.json`, `package-lock.json` and `package.json`.

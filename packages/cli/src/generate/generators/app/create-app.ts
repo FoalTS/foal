@@ -72,8 +72,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .copyFileFromTemplates('tsconfig.app.json')
     .copyFileFromTemplates('tsconfig.e2e.json')
     .copyFileFromTemplates('tsconfig.json')
-    .copyFileFromTemplatesOnlyIf(!mongodb, 'tsconfig.migrations.json')
-    .copyFileFromTemplates('tsconfig.scripts.json')
     .copyFileFromTemplates('tsconfig.test.json')
     .copyFileFromTemplates('.eslintrc.js')
       // Config

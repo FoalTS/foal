@@ -56,8 +56,10 @@ export async function main(args: { text: string }) {
 
 Build the script.
 
+> warning: version 2
+
 ```sh
-npm run build:scripts
+npm run build
 ```
 
 Then run the script to create tasks in the database.

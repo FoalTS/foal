@@ -27,17 +27,16 @@ npm run lint || exit 1
 npm run build:test || exit 1
 npm run start:test || exit 1
 
-# Build the app
-npm run build:app || exit 1
-
-# Build and run the migrations
-npm run migration:generate -- -n my-migration || exit 1
-npm run build:migrations || exit 1
-npm run migration:run || exit 1
+# Make and run the migrations
+npm run makemigrations || exit 1
+npm run migrations || exit 1
 
 # Build and run the e2e tests
 npm run build:e2e || exit 1
 npm run start:e2e || exit 1
+
+# Build the app
+npm run build || exit 1
 
 # Test the application when it is started
 pm2 start build/index.js || exit 1
@@ -116,9 +115,7 @@ test_rest_api DELETE "http://localhost:3001/products/ab" 400
 
 pm2 delete index || exit 1
 
-# Test the default shell scripts to create permissions, groups and users.
-npm run build:scripts || exit 1
-
+# Test the default shell scripts to create users.
 foal run create-user || exit 1
 
 #################################################################
@@ -147,12 +144,12 @@ npm run lint || exit 1
 npm run build:test || exit 1
 npm run start:test || exit 1
 
-# Build the app
-npm run build:app || exit 1
-
 # Build and run the e2e tests
 npm run build:e2e || exit 1
 npm run start:e2e || exit 1
+
+# Build the app
+npm run build || exit 1
 
 # Test the application when it is started
 PORT=3001 pm2 start build/index.js || exit 1
@@ -168,5 +165,4 @@ test "$response" -ge 200 && test "$response" -le 299
 pm2 delete index || exit 1
 
 # Test the default shell scripts to create users.
-npm run build:scripts || exit 1
 foal run create-user || exit 1
