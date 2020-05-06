@@ -55,7 +55,7 @@ Update the file `package.json` in `functions/`.
   ...
   "main": "build/index.firebase.js",
   "engines": {
-    "node": "8"
+    "node": "10"
   }
   ...
 }
