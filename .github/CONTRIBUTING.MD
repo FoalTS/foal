@@ -70,7 +70,7 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
-## Semantic Versionning
+## Semantic Versioning
 
 The framework follows the semantic versioning specification.
 
@@ -96,14 +96,17 @@ All of major releases are supported for 18 months.
 
 ### `@foal/cli` Package Structure
 
-```sh
-generate # Handles the commands `foal createapp` and `foal generate`
-  |- generators # Contains the code which renders the templates or updates the files
-  |- mocks # Contains some pieces of code used to test the file "updaters"
-  |- specs # Defines how the generated files should look like in different scenarios (specifications)
-  |- templates # Contains the actual templates used to generate the files
-  '- utils # Contains some helpers shared by all the generators
-```
+The directory `src/generate/` contains the source code of the commands `foal createapp` and `foal generate`.
+
+Here is the list of its sub-directories:
+
+| Directory | Description |
+| --- | --- |
+| generators | Contains the code which renders the templates or updates the files |
+| mocks | Contains some pieces of code used to test the file "updaters" |
+| specs | Defines how the generated files should look like in different scenarios (specifications) |
+| templates | Contains the actual templates used to generate the files |
+| utils | Contains some helpers shared by all the generators |
 
 ## Conventions
 
