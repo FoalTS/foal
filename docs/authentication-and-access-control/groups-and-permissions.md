@@ -216,6 +216,7 @@ export class User extends UserWithPermissions {
 
 }
 
+// You MUST export Group and Permission so that TypeORM can generate migrations.
 export { Group, Permission } from '@foal/typeorm';
 ```
 

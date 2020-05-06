@@ -295,9 +295,10 @@ export class Logger implements ILogger {
 *src/index.ts (example)*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 import { AppController } from './app/app.controller';
+import { Product } from './app/entities';
 import { Logger } from './app/services';
 
 async function main() {
@@ -326,7 +327,7 @@ import { Repository } from 'typeorm';
 import { Product } from '../entities';
 import { ILogger } from '../services';
 
-class ApiController {
+export class ApiController {
 
   @Dependency('product')
   productRepository: Repository<Product>;
