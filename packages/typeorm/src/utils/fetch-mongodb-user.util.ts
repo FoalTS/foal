@@ -1,5 +1,6 @@
 // 3p
 import { Class } from '@foal/core';
+// tslint:disable-next-line:no-unused-variable
 import { getMongoRepository, ObjectID } from 'typeorm';
 
 export function fetchMongoDBUser(
