@@ -53,6 +53,15 @@ describe('fetchMongoDBUser', () => {
 
   after(() => getConnection().close());
 
+  it('should throw an Error if the ID is a number.', async () => {
+    try {
+      await fetchMongoDBUser(User)(46);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      strictEqual(error.message, 'Unexpected type for MongoDB user ID: number.');
+    }
+  });
+
   it('should return the user fetched from the database (id).', async () => {
     const actual = await fetchMongoDBUser(User)(user.id.toString());
     notStrictEqual(actual, undefined);
@@ -65,7 +74,7 @@ describe('fetchMongoDBUser', () => {
     strictEqual(user2._id.equals(actual._id), true);
   });
 
-  it('should return undefined if no user is found in the database.', async () => {
+  it('should return undefined if no user is found in the database (string).', async () => {
     const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d');
     strictEqual(actual, undefined);
   });
