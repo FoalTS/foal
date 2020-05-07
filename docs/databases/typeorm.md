@@ -51,14 +51,14 @@ const { Config } = require('@foal/core');
 
 module.exports = {
   type: 'sqlite',
-  database: Config.get('database.database'),
-  dropSchema: Config.get('database.dropSchema', false),
+  database: Config.get2('database.database', 'string'),
+  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
   entities: ['build/app/**/*.entity.js'],
   migrations: ['build/migrations/*.js'],
   cli: {
     migrationsDir: 'src/migrations'
   },
-  synchronize: Config.get('database.synchronize', false)
+  synchronize: Config.get2('database.synchronize', 'boolean', false)
 }
 ```
 
@@ -96,14 +96,14 @@ const { Config } = require('@foal/core');
 module.exports = {
   type: 'mysql', // or 'postgres'
 
-  host: Config.get('database.host'),
-  port: Config.get('database.port'),
-  username: Config.get('database.username'),
-  password: Config.get('database.password'),
-  database: Config.get('database.database'),
+  host: Config.get2('database.host', 'string'),
+  port: Config.get2('database.port', 'number'),
+  username: Config.get2('database.username', 'string'),
+  password: Config.get2('database.password', 'string'),
+  database: Config.get2('database.database', 'string'),
 
-  dropSchema: Config.get('database.dropSchema', false),
-  synchronize: Config.get('database.synchronize', false),
+  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
+  synchronize: Config.get2('database.synchronize', 'boolean', false),
   
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],

@@ -158,35 +158,6 @@ const foobar = Config.getOrThrow('settings.foobar', 'boolean');
 
 This method has the same behavior as `Config.get2` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
 
-### The deprecated `Config.get` method
-
-> Deprecated since v1.7
-
-```typescript
-import { Config } from '@foal/core';
-
-const debug = Config.get('settings.debug');
-```
-
-#### Type coercion and type variable
-
-You can force the TypeScript type returned by the variable this way:
-```typescript
-const debug = Config.get<boolean>('settings.debug');
-```
-
-But this is considered unsafe because the method does not check whether the returned value is of the desired type.
-
-The method always attempts to convert values to a boolean or a number, regardless of the TypeScript type provided.. The value `"36"` will always be returned as `36`.
-
-#### Specifying a default value
-
-A default variable can be provided as second argument of the method.
-
-```typescript
-const debug = Config.get('settings.debug', false);
-```
-
 ## Configuration & FoalTS Components
 
 As mentioned before, FoalTS encourages a strict separation between configuration and code. This is why most FoalTS components (services, controller, hooks) retreive their configuration directly from the config files or environment variables. They use the namespace `settings` for this purpose.
@@ -236,14 +207,14 @@ const { Config } = require('@foal/core');
 
 module.exports = {
   type: 'sqlite',
-  database: Config.get('database.database'),
-  dropSchema: Config.get('database.dropSchema', false),
+  database: Config.get2('database.database', 'string'),
+  dropSchema: Config.get2('database.dropSchema', 'boolean' false),
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],
   cli: {
     migrationsDir: "src/migrations"
   },
-  synchronize: Config.get('database.synchronize', false)
+  synchronize: Config.get2('database.synchronize', 'boolean', false)
 }
 
 ```

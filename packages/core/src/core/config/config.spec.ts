@@ -13,12 +13,6 @@ function removeFile(path: string) {
     unlinkSync(path);
   }
 }
-
-// Compilation tests (types)
-// const anyConfig = Config.get('');
-// const stringConfig = Config.get<string>('', 'default value');
-// const stringConfig2 = Config.get<string|undefined>('');
-
 describe('Config', () => {
 
   beforeEach(() => Config.clearCache());

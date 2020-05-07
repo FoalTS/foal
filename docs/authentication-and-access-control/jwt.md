@@ -66,7 +66,7 @@ const token = sign(
     id: 90485234,
     email: 'mary@foalts.org'
   },
-  Config.get<string>('settings.jwt.secretOrPublicKey'),
+  Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
   { expiresIn: '1h' }
 );
 ```
@@ -113,7 +113,7 @@ export class LoginController {
 
     const token = sign(
       { email: user.email },
-      Config.get<string>('settings.jwt.secretOrPublicKey'),
+      Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
       { expiresIn: '1h' }
     );
 
@@ -238,7 +238,7 @@ export function RefreshJWT(): HookDecorator {
           // id: ctx.user.id,
           // sub: ctx.user.subject,
         },
-        Config.get<string>('settings.jwt.secretOrPublicKey'),
+        Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
         { expiresIn: '15m' }
       );
       response.setHeader('Authorization', newToken);
@@ -276,7 +276,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
       id: 90485234,
       email: 'mary@foalts.org'
     },
-    Config.get<string>('settings.jwt.secretOrPublicKey'),
+    Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
     { expiresIn: '1h' }
   );
   ```
@@ -447,7 +447,7 @@ const token = sign(
   {
     email: 'john@foalts.org'
   },
-  Config.get<string>('jwt.privateKey'),
+  Config.getOrThrow('jwt.privateKey', 'string'),
   { expiresIn: '1h' }
 );
 ```
@@ -588,8 +588,8 @@ import { JWTRequired } from '@foal/jwt';
 // These lines assume that you provided your DOMAIN and AUDIENCE in either
 // an .env file, in environment variables or in one the configuration file 
 // in `config/`.
-const domain = Config.get('auth0.domain');
-const audience = Config.get('auth0.audience');
+const domain = Config.getOrThrow('auth0.domain', 'string');
+const audience = Config.getOrThrow('auth0.audience', 'string');
 
 @JWTRequired({
   secretOrPublicKey: getRSAPublicKeyFromJWKS({
@@ -616,9 +616,9 @@ import { JWTRequired } from '@foal/jwt';
 // These lines assume that you provided your CLIENT_ID, DOMAIN and USER_POOL_ID
 // in either an .env file, in environment variables or in one the configuration 
 // file in `config/`.
-const clientId = Config.get('cognito.clientId');
-const domain = Config.get('cognito.domain');
-const userPoolId = Config.get('cognito.userPoolId');
+const clientId = Config.getOrThrow('cognito.clientId', 'string');
+const domain = Config.getOrThrow('cognito.domain', 'string');
+const userPoolId = Config.getOrThrow('cognito.userPoolId', 'string');
 
 @JWTRequired({
   secretOrPublicKey: getRSAPublicKeyFromJWKS({

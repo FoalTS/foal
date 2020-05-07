@@ -23,19 +23,19 @@ Replace your `ormconfig.js` (or `ormconfig.yml` or `ormconfig.json`) file with t
 const { Config } = require('@foal/core');
 
 module.exports = {
-  type: Config.get('database.type'),
-  url: Config.get('database.url'),
-  database: process.env.RDS_DB_NAME || Config.get('database.name'),
-  port: process.env.RDS_PORT || Config.get('database.port'),
-  host: process.env.RDS_HOSTNAME || Config.get('database.host'),
-  username: process.env.RDS_USERNAME || Config.get('database.username'),
-  password: process.env.RDS_PASSWORD || Config.get('database.password'),
+  type: Config.get2('database.type', 'string'),
+  url: Config.get2('database.url', 'string'),
+  database: process.env.RDS_DB_NAME || Config.get2('database.name', 'string'),
+  port: process.env.RDS_PORT || Config.get2('database.port', 'number'),
+  host: process.env.RDS_HOSTNAME || Config.get2('database.host', 'string'),
+  username: process.env.RDS_USERNAME || Config.get2('database.username', 'string'),
+  password: process.env.RDS_PASSWORD || Config.get2('database.password', 'string'),
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],
   cli: {
     "migrationsDir": "src/migrations"
   },
-  synchronize: Config.get('database.synchronize')
+  synchronize: Config.get2('database.synchronize', 'boolean')
 };
 
 ```
@@ -86,7 +86,7 @@ async function main() {
   const app = createApp(AppController);
 
   const httpServer = http.createServer(app);
-  const port = Config.get('port', 3001);
+  const port = Config.get2('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });
@@ -124,7 +124,7 @@ async function main() {
   });
 
   const httpServer = http.createServer(app);
-  const port = Config.get('port', 3001);
+  const port = Config.get2('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });

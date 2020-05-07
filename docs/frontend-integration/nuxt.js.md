@@ -31,7 +31,7 @@ When the CLI asks which server framework to choose, select *None*.
 
     // Import and Set Nuxt.js options
     const config = require('../../frontend/nuxt.config.js');
-    config.dev = Config.get('settings.debug', true);
+    config.dev = Config.get2('settings.debug', 'boolean', true);
 
     async function main() {
       // Init Nuxt.js
