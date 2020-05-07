@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8, 10]
+        node-version: [10, 12]
 
     env:
       AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}

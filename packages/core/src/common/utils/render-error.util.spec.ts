@@ -43,7 +43,7 @@ describe('renderError', () => {
 
     const text: string = response.body;
     strictEqual(text.includes('Error: This is an error'), true, '"Error: This is an error" not found');
-    strictEqual(text.includes('at Context.it'), true, '"at Context.it" not found');
+    strictEqual(text.includes('at Context.'), true, '"at Context." not found');
     strictEqual(
       text.includes(
         'You are seeing this error because you have settings.debug set to true in your configuration file.'

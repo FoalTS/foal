@@ -81,8 +81,8 @@ describe('Disk', () => {
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
-          error.message,
-          'Cannot find module \'foo\''
+          error.message.startsWith('Cannot find module \'foo\''),
+          true
         );
       }
     });
@@ -151,8 +151,8 @@ describe('Disk', () => {
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
-          error.message,
-          'Cannot find module \'foo\''
+          error.message.startsWith('Cannot find module \'foo\''),
+          true
         );
       }
     });
@@ -221,8 +221,8 @@ describe('Disk', () => {
         throw new Error('An error should have been thrown.');
       } catch (error) {
         strictEqual(
-          error.message,
-          'Cannot find module \'foo\''
+          error.message.startsWith('Cannot find module \'foo\''),
+          true
         );
       }
     });

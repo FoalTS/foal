@@ -23,11 +23,12 @@ firebase init
 
 The CLI displays some prompts:
 
-- Select the `Hosting` option. You may select other options as well but do not select `Functions` (otherwise you will have to delete the `functions/` directory just after).
-
+- Select the `Hosting` option.
 - The default static path must be changed to `functions/public`.
 
 ## Create the Foal Application
+
+Remove the directory `functions`.
 
 Create the Foal application.
 
@@ -42,6 +43,8 @@ You can run locally your application using `npm run develop`.
 
 ## Configure the Project to Make it Work with Firebase
 
+> warning: version 2
+
 Install the dependencies.
 
 ```
@@ -55,7 +58,7 @@ Update the file `package.json` in `functions/`.
   ...
   "main": "build/index.firebase.js",
   "engines": {
-    "node": "8"
+    "node": "10"
   }
   ...
 }
@@ -75,22 +78,6 @@ import { AppController } from './app/app.controller';
 
 export const app = functions.https.onRequest(createApp(AppController));
 
-```
-
-Add the file to `tsconfig.app.json`.
-
-```json
-{
-  "extends": "./tsconfig.json",
-  "include": [
-    "src/app/**/*.ts",
-    "src/index.firebase.ts",
-    "src/index.ts"
-  ],
-  "exclude": [
-    "src/app/**/*.spec.ts"
-  ]
-}
 ```
 
 Update the `firebase.json` file to specify that the server should use the previously exported application. 
@@ -116,6 +103,20 @@ Update the `firebase.json` file to specify that the server should use the previo
 ## Deploy the Application
 
 > warning: version 2
+
+Add the compiler option `skipLibCheck` in your `tsconfig.json`.
+
+```json
+{
+  "compilerOptions": {
+    ...
+    "skipLibCheck": true
+  },
+  ...
+}
+```
+
+Then build and deploy the application.
 
 ```sh
 npm run build

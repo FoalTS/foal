@@ -23,7 +23,7 @@
     "revertmigration": "npx typeorm migration:revert"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "dependencies": {
     "@foal/core": "^1.0.0",
@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
-    "@types/node": "^8.0.47",
+    "@types/node": "^10.5.6",
     "concurrently": "^3.5.1",
     "mocha": "^5.2.0",
     "supertest": "^3.3.0",

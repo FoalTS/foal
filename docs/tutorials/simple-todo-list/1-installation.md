@@ -4,7 +4,7 @@ In this tutorial you will learn how to create a basic web application with FoalT
 
 > **Requirements:**
 >
-> [Node.js](https://nodejs.org/en/) 8 or greater
+> [Node.js](https://nodejs.org/en/) 10 or greater
 
 # Create a New Project
 
