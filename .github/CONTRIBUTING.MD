@@ -53,7 +53,31 @@ Tests can also be run individually for each package using `npm run test` or `npm
 
 **Do not add new dependencies** (unless they have been improved). Do not install `@types` packages.
 
-TODO
+FoalTS is based on very few dependencies for all these reasons:
+- Adding a new dependency often means installing many other packages on which it depends. This phenomenon is often referred to as a *black hole* in Node's ecosystem.
+    - The size of the `node_modules` directory grows very fast. This can slow down deployment and cause problems if a size limit is imposed on the directory (e.g. in a serverless architecture). 
+    - Due to the large number of dependencies to load, the application may be slow to start.
+    - The application is more vulnerable to the release of malicious packages. This is what happened on July 12, 2018 when an [attacker compromised the npm account](https://eslint.org/blog/2018/07/postmortem-for-malicious-package-publishes) of an ESLint maintainer.
+- We have no guarantee that the maintainers follow the same Foal safety rules (2FA enabled on both Github and npm).
+- When a new version of an external package is released (bug fixes, security updates, new features, etc.), it takes time to review each change made in the new version and time to verify that the framework still works as expected with it.
+- Packages may support different versions of TypeScript and Node than those supported by the framework.
+- External packages can become unmaintained.
+- Semantic versioning is not always respected, which is problematic if we want to integrate a security update without introducing breaking changes.
+- If we need a new feature in the external dependency, it may take time for the maintainer(s) to implement it. The feature may also be rejected.
+- The `@types` packages very often lead to issues.
+    - The types may be outdated with respect to the current version.
+    - Semantic versioning is often not respected, which causes the code to break between two *patch* versions.
+    - Type choices may be arbitrary and not decided by the official maintainers.
+    - Two packages using the same `@types` module but with different versions may not work properly together.
+    - Type packages depend on each other by specifying `*` as the version number which causes incompatibilities and great difficulty in defining a replicable environment.
+- The installation is often polluted by messages of indirect dependencies in search of funds.
+
+Some packages, however, can override this policy and be installed if they meet one of the following criteria:
+- Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Examples: `TypeORM`, `Mongoose`.
+- The code requires very specific knowledge. Examples: `pump`, `jsonwebtoken`, `TypeORM`, `Mongoose`.
+- The packages are base packages of the Express.Js framework and can therefore be considered stable, safe and mature. Examples: `cookie-parser`, `morgan`.
+
+> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).
 
 ## Testing and Documentation Policy
 
