@@ -1,8 +1,10 @@
-# Using Mongoose (MongoDB)
+# MongoDB
 
-The previous sections have shown how to use TypeORM with FoalTS. But Foal provides also a support for using [Mongoose](https://mongoosejs.com/), a popular MongoDB ODM.
+FoalTS provides two ways to interact with a MongoDB database in your application: [Mongoose](https://mongoosejs.com/) and [TypeORM](https://typeorm.io/#/).
 
-## Generating a new project with Mongoose/MongoDB
+## Usage with Mongoose
+
+### Generating a new project with Mongoose
 
 When creating an application with the `--mongodb` flag, the CLI generates a new project with `mongoose` and `@foal/mongoose` installed. The `User` model is defined using this ODM as well as the `create-user` script.
 
@@ -10,7 +12,7 @@ When creating an application with the `--mongodb` flag, the CLI generates a new 
 foal createapp my-app --mongodb
 ```
 
-## Generating a model
+### Generating a model
 
 You cannot create *entities* in a Mongoose project, as it is specific to TypeORM. Instead, you can use this command to generate a new model:
 
@@ -18,7 +20,7 @@ You cannot create *entities* in a Mongoose project, as it is specific to TypeORM
 foal g model <name>
 ```
 
-## Mongoose configuration
+### Configuration
 
 The URI of the MongoDB database can be passed through:
 - the config file `config/default.json` with the `mongodb.uri` key,
@@ -34,13 +36,17 @@ The URI of the MongoDB database can be passed through:
 }
 ```
 
-## Running migrations
+### Authentication
 
-The concept of migrations does not exist in MongoDB. That's why there is no migration commands in a Mongoose project.
+#### The `MongoDBStore`
 
-## Usage with `JWTRequired`
+```
+npm install @foal/mongodb
+```
 
-The `@foal/mongoose` package provides a `fetchUser` function to be used with `JWTRequired` or `TokenRequired`. It takes an id as parameter and returns a Mongoose model or undefined if the id does not match any user.
+If you use sessions with `@TokenRequired` or `@TokenOptional`, you must use the `MongoDBStore` from `@foal/mongodb`.
+
+#### The `fetchUser` function
 
 *Example with JSON Web Tokens*:
 ```typescript
@@ -53,8 +59,81 @@ import { User } from '../models';
 class MyController {}
 ```
 
+## Usage with TypeORM
+
+```
+npm uninstall sqlite3
+npm install mongodb
+```
+
+### Configuration
+
+*ormconfig.js*
+```js
+const { Config } = require('@foal/core');
+
+module.exports = {
+  type: "mongodb",
+  database: Config.get2('database.database', 'string'),
+  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
+  entities: ["build/app/**/*.entity.js"],
+  host: Config.get2('database.host', 'string'),
+  port: Config.get2('database.port', 'number'),
+  synchronize: Config.get2('database.synchronize', 'boolean', false)
+}
+
+```
+
+
+*config/default.json*
+```json
+{
+  "database": {
+    "database": "mydb",
+    "host": "localhost",
+    "port": 27017
+  }
+}
+```
+
+### Authentication
+
+#### The `MongoDBStore`
+
+```
+npm install @foal/mongodb
+```
+
+If you use sessions with `@TokenRequired` or `@TokenOptional`, you must use the `MongoDBStore` from `@foal/mongodb`. **The TypeORMStore does not work with noSQL databases.**
+
+#### The `fetchMongoDBUser` function
+
+*user.entity.ts*
+```typescript
+import { Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+
+@Entity()
+export class User {
+
+  @ObjectIdColumn()
+  id: ObjectID;
+
+}
+```
+
+*Example with JSON Web Tokens*:
+```typescript
+import { JWTRequired } from '@foal/jwt';
+import { fetchMongoDBUser } from '@foal/typeorm';
+
+import { User } from '../entities';
+
+@JWTRequired({ user: fetchMongoDBUser(User) })
+class MyController {}
+```
+
 ## Limitations
 
-When using Mongoose in place of TypeORM, there are some features that are not available:
+When using MongoDB, there are some features that are not available:
 - the `foal g rest-api <name>` command,
 - and the *Groups & Permissions* system.
