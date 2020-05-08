@@ -30,7 +30,9 @@ export function connectVue(path: string) {
       pkg.vue.devServer.proxy['^/api'] = { target: 'http://localhost:3001' };
 
       // Output build directory
-      const outputPath = join(relative(path, process.cwd()), 'public');
+      const outputPath = join(relative(path, process.cwd()), 'public')
+        // Make projects generated on Windows build on Unix.
+        .replace(/\\/g, '/');
       pkg.vue.outputDir = outputPath;
 
       return JSON.stringify(pkg, null, 2);
