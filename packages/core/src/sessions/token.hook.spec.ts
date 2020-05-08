@@ -469,7 +469,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         strictEqual(ctx.user, user);
       });
 
-      // TODO: In versions 2+ of FoalTS, the userID should be of type any.
       it('with the user retrieved from the database (userId is a MongoDB ObjectID).', async () => {
         const fetchUser = async (id: number|string) => id === 'xjeldksjqkd' ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
