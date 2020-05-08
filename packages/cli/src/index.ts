@@ -76,6 +76,7 @@ program
     console.log('  vue');
   })
   .action(async (framework: string, path: string) => {
+    path = path.replace(/\\/g, '/');
     switch (framework) {
       case 'angular':
         connectAngular(path);
