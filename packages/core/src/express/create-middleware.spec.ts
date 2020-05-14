@@ -53,10 +53,14 @@ describe('createMiddleware', () => {
     });
 
     it('should call the controller method with a context created from the request.', async () => {
-      let body = {};
+      let ctxBody = null;
+      let params = null;
+      let body = null;
       const route: Route = {
-        controller: { bar: (ctx: Context) => {
-          body = ctx.request.body;
+        controller: { bar: (ctx: Context, paramsBody: any, requestBody: any) => {
+          ctxBody = ctx.request.body;
+          params = paramsBody;
+          body = requestBody;
           return new HttpResponseOK();
         }},
         hooks: [],
@@ -64,14 +68,16 @@ describe('createMiddleware', () => {
         path: '',
         propertyKey: 'bar'
       };
-      const request = createRequest({ body: { foo: 'bar' } });
+      const request = createRequest({ body: { foo: 'bar' }, params: { id: '1' } });
       const response = createResponse();
 
       const middleware = createMiddleware(route, new ServiceManager());
 
       await middleware(request, response, () => {});
 
-      deepStrictEqual(body, request.body);
+      deepStrictEqual(ctxBody, request.body);
+      deepStrictEqual(params, request.params, 'The request params should be passed as the second argument.');
+      deepStrictEqual(body, request.body, 'The request body should be passed as the third argument.');
     });
 
     it('should call the sync and async hooks (with the ctx and the given ServiceManager)'
