@@ -5,7 +5,7 @@ import { existsSync } from 'fs';
 import { Generator, getNames } from '../../utils';
 import { registerController } from './register-controller';
 
-export type ControllerType = 'Empty'|'REST'|'GraphQL'|'Login';
+export type ControllerType = 'Empty'|'REST';
 
 export function createController({ name, type, register }: { name: string, type: ControllerType, register: boolean }) {
   const names = getNames(name);
