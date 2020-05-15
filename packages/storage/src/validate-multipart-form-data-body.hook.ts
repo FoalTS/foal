@@ -9,6 +9,7 @@ import * as Busboy from 'busboy';
 
 // FoalTS
 import { Disk } from './disk.service';
+import { File } from './file';
 
 export interface MultipartFormDataSchema {
   fields?: {
@@ -72,35 +73,45 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
     let latestFileHasBeenUploaded: Promise<{ error?: any }> = Promise.resolve({});
 
     busboy.on('field', (name, value) => fields[name] = value);
-    busboy.on('file', (name, stream, filename) => latestFileHasBeenUploaded = convertRejectedPromise(async () => {
-      stream.on('limit', () => sizeLimitReached = name);
+    busboy.on('file', (name, stream, filename, encoding, mimeType) => {
+      latestFileHasBeenUploaded = convertRejectedPromise(async () => {
+        stream.on('limit', () => sizeLimitReached = name);
 
-      if (!(schema.files.hasOwnProperty(name))) {
-        // Ignore unexpected files
-        stream.on('data', () => {});
-        // TODO: Test the line below.
-        // Ignore errors of unexpected files.
-        stream.on('error', () => {});
-        return;
-      }
-      const options = schema.files[name];
+        if (!(schema.files.hasOwnProperty(name))) {
+          // Ignore unexpected files
+          stream.on('data', () => {});
+          // TODO: Test the line below.
+          // Ignore errors of unexpected files.
+          stream.on('error', () => {});
+          return;
+        }
+        const options = schema.files[name];
 
-      const extension = extname(filename).replace('.', '');
+        const extension = extname(filename).replace('.', '');
 
-      let file: any;
-      if (options.saveTo) {
-        file = await disk.write(options.saveTo, stream, { extension });
-      } else {
-        file = await streamToBuffer(stream);
-      }
+        let path: string|undefined;
+        let buffer: Buffer|undefined;
+        if (options.saveTo) {
+          path = (await disk.write(options.saveTo, stream, { extension })).path;
+        } else {
+          buffer = await streamToBuffer(stream);
+        }
+        const file = new File({
+          buffer,
+          encoding,
+          filename,
+          mimeType,
+          path,
+        });
 
-      if (options.multiple) {
-        files[name].push(file);
-        return;
-      }
+        if (options.multiple) {
+          files[name].push(file);
+          return;
+        }
 
-      files[name] = file;
-    }, () => stream.resume()));
+        files[name] = file;
+      }, () => stream.resume());
+    });
     busboy.on('filesLimit', () => numberLimitReached = true);
     busboy.on('finish', () => resolve(validate()));
 
