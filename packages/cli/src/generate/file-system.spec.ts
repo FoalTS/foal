@@ -334,6 +334,15 @@ describe('FileSystem', () => {
       );
     });
 
+    it('should throw an error if the file does not exist.', () => {
+      try {
+        fs.modify('test-file-system/foobar.txt', content => content);
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        strictEqual(error.message, 'Impossible to modify "test-file-system/foobar.txt": the file does not exist.');
+      }
+    });
+
   });
 
   describe('has a "modifyOnlyIf" method that should', () => {

@@ -215,6 +215,9 @@ export class FileSystem {
    * @memberof FileSystem
    */
   modify(path: string, callback: (content: string) => string): this {
+    if (!existsSync(this.parse(path))) {
+      throw new Error(`Impossible to modify "${path}": the file does not exist.`);
+    }
     const content = readFileSync(this.parse(path), 'utf8');
     this.logUpdate(path);
     writeFileSync(this.parse(path), callback(content), 'utf8');
