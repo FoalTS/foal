@@ -46,22 +46,6 @@ describe('createController', () => {
           .validateSpec('index.ts', 'index.ts');
       });
 
-      it('should render the GraphQL templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'GraphQL', register: false });
-
-        testEnv
-          .validateSpec('test-foo-bar.controller.graphql.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('index.ts', 'index.ts');
-      });
-
-      it('should render the Login templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Login', register: false });
-
-        testEnv
-          .validateSpec('test-foo-bar.controller.login.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('index.ts', 'index.ts');
-      });
-
       it('should not throw an error if index.ts does not exist.', () => {
         testEnv.rmfileIfExists('index.ts');
         createController({ name: 'test-fooBar', type: 'Empty', register: false });
