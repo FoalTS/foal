@@ -115,7 +115,7 @@ program
   .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
     switch (type) {
       case 'controller':
-        createController({ name, type: 'Empty', register: options.register  });
+        createController({ name, register: options.register  });
         break;
       case 'entity':
         createEntity({ name });

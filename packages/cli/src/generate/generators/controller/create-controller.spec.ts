@@ -22,7 +22,7 @@ describe('createController', () => {
       });
 
       it('should render the empty templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Empty', register: false });
+        createController({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
@@ -30,18 +30,10 @@ describe('createController', () => {
           .assertEqual('index.ts', 'controller/index.ts');
       });
 
-      it('should render the REST templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'REST', register: false });
-
-        fs
-          .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.rest.ts')
-          .assertEqual('index.ts', 'controller/index.ts');
-      });
-
       it('should not throw an error if index.ts does not exist.', () => {
         // TODO: replace with "should create index.ts if it does not exist."
         fs.rmfile('index.ts');
-        createController({ name: 'test-fooBar', type: 'Empty', register: false });
+        createController({ name: 'test-fooBar', register: false });
       });
 
     });
@@ -68,7 +60,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.no-import.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.no-import.ts');
@@ -78,7 +70,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.controller-import.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.controller-import.ts');
@@ -88,7 +80,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.no-controller-import.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.no-controller-import.ts');
@@ -98,7 +90,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.core-import.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.core-import.ts');
@@ -108,7 +100,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.empty-property.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.empty-property.ts');
@@ -118,7 +110,7 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.empty-spaced-property.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.empty-spaced-property.ts');
@@ -129,20 +121,10 @@ describe('createController', () => {
       fs
         .copyMock('controller/app.controller.no-empty-property.ts', 'app.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'test-fooBar', register: true });
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.no-empty-property.ts');
-    });
-
-    it('should update the "subControllers" property with a special URL if the controller is a REST controller.', () => {
-      fs
-        .copyMock('controller/app.controller.rest.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'REST', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.rest.ts');
     });
 
   });

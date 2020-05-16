@@ -275,6 +275,7 @@ export class FileSystem {
    * Throws an error if the file or directory exists.
    *
    * @param {string} path - The path relative to the client directory.
+   * @returns {this}
    * @memberof FileSystem
    */
   assertNotExists(path: string): this {
@@ -302,6 +303,7 @@ export class FileSystem {
    * @param {string} actual - The path relative to the client directory.
    * @param {string} expected - The path relative to the `specs/` directory.
    * @param {{ binary: boolean }} [{ binary }={ binary: true }] - Specify if the file is binary.
+   * @returns {this}
    * @memberof FileSystem
    */
   assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
@@ -338,6 +340,7 @@ export class FileSystem {
    *
    * @param {string} src - The source path relative to the `mocks/` directory.
    * @param {string} dest - The destination path relative to the client directory.
+   * @returns {this}
    * @memberof FileSystem
    */
   copyMock(src: string, dest: string): this {

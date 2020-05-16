@@ -3,9 +3,7 @@ import { FileSystem } from '../../file-system';
 import { getNames } from '../../utils';
 import { registerController } from './register-controller';
 
-export type ControllerType = 'Empty'|'REST';
-
-export function createController({ name, type, register }: { name: string, type: ControllerType, register: boolean }) {
+export function createController({ name, register }: { name: string, register: boolean }) {
   const fs = new FileSystem();
 
   let root = '';
@@ -17,7 +15,7 @@ export function createController({ name, type, register }: { name: string, type:
 
   const names = getNames(name);
 
-  const templatePath = `controller/controller.${type.toLowerCase()}.ts`;
+  const templatePath = `controller/controller.empty.ts`;
   const specTemplatePath = `controller/controller.spec.empty.ts`;
 
   const fileName = `${names.kebabName}.controller.ts`;
@@ -29,12 +27,12 @@ export function createController({ name, type, register }: { name: string, type:
     .cd(root)
     .render(templatePath, fileName, names)
     // TODO: the condition "Empty" is not tested.
-    .renderOnlyIf(type === 'Empty', specTemplatePath, specFileName, names)
+    .render(specTemplatePath, specFileName, names)
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`)
     .cd('..')
     .modifyOnlyfIf(register, 'app.controller.ts', content => {
-      const path = `/${names.kebabName}${type === 'REST' ? 's' : ''}`;
+      const path = `/${names.kebabName}`;
       return registerController(content, className, path);
     });
 }
