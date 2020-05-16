@@ -62,7 +62,7 @@ export function createRestApi({ name, register }: { name: string, register: bool
       return registerController(content, `${names.upperFirstCamelName}Controller`, `/${names.kebabName}s`);
     });
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(
       `\n${underline('Next steps:')} Complete ${names.upperFirstCamelName} (${names.kebabName}.entity)`
       + ` and ${names.camelName}Schema (${names.kebabName}.controller).`

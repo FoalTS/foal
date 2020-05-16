@@ -21,7 +21,7 @@ export function createScript({ name }: { name: string }) {
 
   const scriptPath = join(root, './src/scripts/');
   if (!existsSync(scriptPath)) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`\n  This directory is not a Foal project (${scriptPath} does not exist).\n`));
     }
     return;

@@ -7,14 +7,14 @@ export function connectReact(path: string) {
   const fs = new FileSystem();
 
   if (!fs.exists(path)) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`  The directory ${path} does not exist.`));
     }
     return;
   }
 
   if (!fs.exists(join(path, 'package.json'))) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`  The directory ${path} is not a React project (missing package.json).`));
     }
     return;

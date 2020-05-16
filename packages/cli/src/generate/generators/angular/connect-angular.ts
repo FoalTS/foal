@@ -7,21 +7,21 @@ export function connectAngular(path: string) {
   const fs = new FileSystem();
 
   if (!fs.exists(path)) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`  The directory ${path} does not exist.`));
     }
     return;
   }
 
   if (!fs.exists(join(path, 'angular.json'))) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`  The directory ${path} is not an Angular project (missing angular.json).`));
     }
     return;
   }
 
   if (!fs.exists(join(path, 'package.json'))) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`  The directory ${path} is not an Angular project (missing package.json).`));
     }
     return;

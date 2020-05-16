@@ -21,7 +21,7 @@ function isYarnInstalled() {
 }
 
 function log(msg: string) {
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(msg);
   }
 }
@@ -31,7 +31,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     yaml?: boolean }) {
   const names = getNames(name);
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(cyan(
 `====================================================================
 
@@ -53,9 +53,11 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   const fs = new FileSystem();
 
   if (fs.exists(names.kebabName)) {
-    console.log(
-      red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
-    );
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
+      console.log(
+        red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
+      );
+    }
     return;
   }
 
@@ -67,6 +69,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
 
   // TODO: noLogs
   fs
+    .hideLogs()
     .copy('app/gitignore', '.gitignore')
     .copyOnlyIf(!mongodb, 'app/ormconfig.js', 'ormconfig.js')
     .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)

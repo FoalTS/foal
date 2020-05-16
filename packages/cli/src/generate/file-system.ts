@@ -14,7 +14,7 @@ import {
 import { dirname, join } from 'path';
 
 // 3p
-import { green, red } from 'colors/safe';
+import { cyan, green, red } from 'colors/safe';
 
 function rmDirAndFiles(path: string) {
   const files = readdirSync(path);
@@ -43,6 +43,18 @@ export class FileSystem {
   currentDir = '';
 
   private readonly testDir = 'test-generators';
+  private logs = true;
+
+  /**
+   * Do not show create and update logs.
+   *
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  hideLogs(): this {
+    this.logs = false;
+    return this;
+  }
 
   /**
    * Change the current working directory.
@@ -111,6 +123,7 @@ export class FileSystem {
    */
   ensureFile(path: string): this {
     if (!existsSync(this.parse(path))) {
+      this.logCreate(path);
       writeFileSync(this.parse(path), '', 'utf8');
     }
     return this;
@@ -129,6 +142,7 @@ export class FileSystem {
     if (!existsSync(templatePath)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
+    this.logCreate(dest);
     copyFileSync(
       templatePath,
       this.parse(dest)
@@ -170,6 +184,7 @@ export class FileSystem {
     for (const key in locals) {
       content = content.split(`/* ${key} */`).join(locals[key]);
     }
+    this.logCreate(dest);
     writeFileSync(this.parse(dest), content, 'utf8');
     return this;
   }
@@ -201,6 +216,7 @@ export class FileSystem {
    */
   modify(path: string, callback: (content: string) => string): this {
     const content = readFileSync(this.parse(path), 'utf8');
+    this.logUpdate(path);
     writeFileSync(this.parse(path), callback(content), 'utf8');
     return this;
   }
@@ -367,11 +383,31 @@ export class FileSystem {
     unlinkSync(this.parse(path));
   }
 
+  private isTestingEnvironment(): boolean {
+    return process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true';
+  }
+
   private parse(path: string) {
-    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true') {
+    if (this.isTestingEnvironment()) {
       return join(this.testDir, this.currentDir, path);
     }
     return join(this.currentDir, path);
+  }
+
+  private logCreate(path: string) {
+    path = join(this.currentDir, path);
+    //  && !this.options.noLogs
+    if (!this.isTestingEnvironment() && this.logs) {
+      console.log(`${green('CREATE')} ${path}`);
+    }
+  }
+
+  private logUpdate(path: string) {
+    //  && !this.options.noLogs
+    path = join(this.currentDir, path);
+    if (!this.isTestingEnvironment() && this.logs) {
+      console.log(`${cyan('UPDATE')} ${path}`);
+    }
   }
 
 }
