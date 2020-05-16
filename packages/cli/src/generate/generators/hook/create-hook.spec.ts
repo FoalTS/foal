@@ -29,11 +29,12 @@ describe('createHook', () => {
           .assertEqual('index.ts', 'hook/index.ts');
       });
 
-      it('should not throw an error if index.ts does not exist.', () => {
-        // TODO: replace with "should create index.ts if it does not exist."
-        fs
-          .rmfile('index.Ts');
+      it('should create index.ts if it does not exist.', () => {
+        fs.rmfile('index.ts');
+
         createHook({ name: 'test-fooBar' });
+
+        fs.assertExists('index.ts');
       });
 
     });

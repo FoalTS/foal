@@ -29,11 +29,12 @@ describe('createService', () => {
           .assertEqual('index.ts', 'service/index.ts');
       });
 
-      it('should not throw an error if index.ts does not exist.', () => {
-        // TODO: replace with "should create index.ts if it does not exist."
-        fs
-          .rmfile('index.ts');
+      it('should should create index.ts if it does not exist.', () => {
+        fs.rmfile('index.ts');
+
         createService({ name: 'test-fooBar' });
+
+        fs.assertExists('index.ts');
       });
 
     });

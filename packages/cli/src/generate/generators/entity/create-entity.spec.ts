@@ -29,11 +29,12 @@ describe('createEntity', () => {
           .assertEqual('index.ts', 'entity/index.ts');
       });
 
-      it('should not throw an error if index.ts does not exist.', () => {
-        // TODO: replace with "should create index.ts if it does not exist."
-        fs
-          .rmfile('index.ts');
+      it('create index.ts if it does not exist.', () => {
+        fs.rmfile('index.ts');
+
         createEntity({ name: 'test-fooBar' });
+
+        fs.assertExists('index.ts');
       });
 
     });

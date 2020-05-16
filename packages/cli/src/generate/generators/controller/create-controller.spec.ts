@@ -30,10 +30,12 @@ describe('createController', () => {
           .assertEqual('index.ts', 'controller/index.ts');
       });
 
-      it('should not throw an error if index.ts does not exist.', () => {
-        // TODO: replace with "should create index.ts if it does not exist."
+      it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
+
         createController({ name: 'test-fooBar', register: false });
+
+        fs.assertExists('index.ts');
       });
 
     });
@@ -53,8 +55,6 @@ describe('createController', () => {
         .copyMock('controller/index.ts', 'index.ts')
         .cd('..');
     });
-
-    // TODO: refactor these tests and their mock and spec files.
 
     it('should add all the imports if none exists.', () => {
       fs

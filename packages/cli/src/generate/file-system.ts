@@ -263,12 +263,14 @@ export class FileSystem {
    * Throws an error if the file or directory does not exist.
    *
    * @param {string} path - The path relative to the client directory.
+   * @returns {this}
    * @memberof FileSystem
    */
-  assertExists(path: string): void {
+  assertExists(path: string): this {
     if (!existsSync(this.parse(path))) {
       throw new Error(`The file "${path}" does not exist.`);
     }
+    return this;
   }
 
   /**

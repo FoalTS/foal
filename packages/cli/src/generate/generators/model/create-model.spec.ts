@@ -29,9 +29,12 @@ describe('createModel', () => {
           .assertEqual('index.ts', 'model/index.ts');
       });
 
-      it('should not throw an error if index.ts does not exist.', () => {
+      it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
+
         createModel({ name: 'test-fooBar' });
+
+        fs.assertExists('index.ts');
       });
 
     });

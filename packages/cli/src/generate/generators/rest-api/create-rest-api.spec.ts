@@ -2,6 +2,8 @@
 import { FileSystem } from '../../file-system';
 import { createRestApi } from './create-rest-api';
 
+// TODO: add tests like "should create index.ts if it does not exist."
+
 describe('createRestApi', () => {
 
   const fs = new FileSystem();
