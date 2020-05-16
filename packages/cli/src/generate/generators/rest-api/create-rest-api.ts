@@ -1,12 +1,13 @@
 // std
-import { existsSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // 3p
 import { red, underline } from 'colors/safe';
 
 // FoalTS
-import { findProjectPath, Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { findProjectPath, getNames } from '../../utils';
 import { registerController } from '../controller/register-controller';
 
 export function createRestApi({ name, register }: { name: string, register: boolean }) {
@@ -22,50 +23,44 @@ export function createRestApi({ name, register }: { name: string, register: bool
     }
   }
 
-  const names = getNames(name);
+  const fs = new FileSystem();
 
   let entityRoot = '';
   let controllerRoot = '';
-
-  if (existsSync('src/app/entities') && existsSync('src/app/controllers')) {
+  if (fs.exists('src/app/entities') && fs.exists('src/app/controllers')) {
     entityRoot = 'src/app/entities';
     controllerRoot = 'src/app/controllers';
-  } else if (existsSync('entities') && existsSync('controllers')) {
+  } else if (fs.exists('entities') && fs.exists('controllers')) {
     entityRoot = 'entities';
     controllerRoot = 'controllers';
   }
 
-  new Generator('rest-api', entityRoot)
-    .renderTemplate('entity.ts', names, `${names.kebabName}.entity.ts`)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.entity';\n`;
-      return content;
-    });
+  const names = getNames(name);
 
-  const controllerGenerator = new Generator('rest-api', controllerRoot);
+  fs
+    .cd(entityRoot)
+    .render('rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
 
-  controllerGenerator
-    .renderTemplate(
-      controllerRoot ? 'controller.ts' : 'controller.current-dir.ts',
+  fs.currentDir = '';
+
+  fs
+    .cd(controllerRoot)
+    .render(
+      controllerRoot ? 'rest-api/controller.ts' : 'rest-api/controller.current-dir.ts',
+      `${names.kebabName}.controller.ts`,
       names,
-      `${names.kebabName}.controller.ts`
     )
-    .renderTemplate(
-      controllerRoot ? 'controller.spec.ts' : 'controller.spec.current-dir.ts',
+    .render(
+      controllerRoot ? 'rest-api/controller.spec.ts' : 'rest-api/controller.spec.current-dir.ts',
+      `${names.kebabName}.controller.spec.ts`,
       names,
-      `${names.kebabName}.controller.spec.ts`
     )
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
-      return content;
+    .addNamedExportIn('index.ts', `${names.upperFirstCamelName}Controller`, `./${names.kebabName}.controller`)
+    .cd('..')
+    .modifyOnlyfIf(register, 'app.controller.ts', content => {
+      return registerController(content, `${names.upperFirstCamelName}Controller`, `/${names.kebabName}s`);
     });
-
-  if (register) {
-    controllerGenerator
-      .updateFile('../app.controller.ts', content => {
-        return registerController(content, `${names.upperFirstCamelName}Controller`, `/${names.kebabName}s`);
-      }, { allowFailure: true });
-  }
 
   if (process.env.NODE_ENV !== 'test') {
     console.log(
