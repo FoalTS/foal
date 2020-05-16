@@ -1,6 +1,6 @@
 // std
 import { strictEqual } from 'assert';
-import { existsSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 
 // FoalTS
 import {
@@ -12,7 +12,7 @@ import {
 } from '../../utils';
 import { createSubApp } from './create-sub-app';
 
-// TODO: Use TestEnvironment.
+// TODO: Use FileSystem or remove this command.
 
 describe('createSubApp', () => {
 
@@ -170,34 +170,6 @@ describe('createSubApp', () => {
       const expected = readFileFromTemplatesSpec('sub-app/services/index.1.ts');
       const actual = readFileFromRoot(`${prefix}test-foo-bar/services/index.ts`);
       strictEqual(actual, expected);
-    }
-
-    it('in src/app/sub-apps/ if the directory exists.', () => {
-      mkdirIfDoesNotExist('src/app/sub-apps');
-      test('src/app/sub-apps/');
-    });
-
-    it('in sub-apps/ if the directory exists.', () => {
-      mkdirIfDoesNotExist('sub-apps');
-      test('sub-apps/');
-    });
-
-    it('in the current directory otherwise.', () => {
-      test();
-    });
-
-  });
-
-  describe('should create the controllers/templates directory.', () => {
-
-    function test(prefix = '') {
-      writeFileSync(`${prefix}index.ts`, indexInitialContent, 'utf8');
-
-      createSubApp({ name: 'test-fooBar' });
-
-      if (!existsSync(`${prefix}test-foo-bar/controllers/templates`)) {
-        throw new Error('The controllers/templates directory should be created.');
-      }
     }
 
     it('in src/app/sub-apps/ if the directory exists.', () => {
