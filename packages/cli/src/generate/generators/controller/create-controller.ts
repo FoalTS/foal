@@ -1,43 +1,40 @@
-// std
-import { existsSync } from 'fs';
-
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { getNames } from '../../utils';
 import { registerController } from './register-controller';
 
 export type ControllerType = 'Empty'|'REST';
 
 export function createController({ name, type, register }: { name: string, type: ControllerType, register: boolean }) {
+  const fs = new FileSystem();
+
+  let root = '';
+  if (fs.exists('src/app/controllers')) {
+    root = 'src/app/controllers';
+  } else if (fs.exists('controllers')) {
+    root = 'controllers';
+  }
+
   const names = getNames(name);
+
+  const templatePath = `controller/controller.${type.toLowerCase()}.ts`;
+  const specTemplatePath = `controller/controller.spec.empty.ts`;
 
   const fileName = `${names.kebabName}.controller.ts`;
   const specFileName = `${names.kebabName}.controller.spec.ts`;
 
-  let root = '';
+  const className = `${names.upperFirstCamelName}Controller`;
 
-  if (existsSync('src/app/controllers')) {
-    root = 'src/app/controllers';
-  } else if (existsSync('controllers')) {
-    root = 'controllers';
-  }
-
-  const generator = new Generator('controller', root)
-    .renderTemplate(`controller.${type.toLowerCase()}.ts`, names, fileName)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}.controller';\n`;
-      return content;
-    }, { allowFailure: true });
-
-  if (register) {
-    const path = `/${names.kebabName}${type === 'REST' ? 's' : ''}`;
-    generator
-      .updateFile('../app.controller.ts', content => {
-        return registerController(content, `${names.upperFirstCamelName}Controller`, path);
-      }, { allowFailure: true });
-  }
-
-  if (type === 'Empty') {
-    generator
-      .renderTemplate('controller.spec.empty.ts', names, specFileName);
-  }
+  fs
+    .cd(root)
+    .render(templatePath, fileName, names)
+    // TODO: the condition "Empty" is not tested.
+    .renderOnlyIf(type === 'Empty', specTemplatePath, specFileName, names)
+    .ensureFile('index.ts')
+    .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`)
+    .cd('..')
+    .modifyOnlyfIf(register, 'app.controller.ts', content => {
+      const path = `/${names.kebabName}${type === 'REST' ? 's' : ''}`;
+      return registerController(content, className, path);
+    });
 }

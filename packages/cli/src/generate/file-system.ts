@@ -320,7 +320,7 @@ export class FileSystem {
    * @param {string} dest - The destination path relative to the client directory.
    * @memberof FileSystem
    */
-  copyMock(src: string, dest: string): void {
+  copyMock(src: string, dest: string): this {
     const mockPath = join(__dirname, 'mocks', src);
     if (!existsSync(mockPath)) {
       throw new Error(`The mock file "${src}" does not exist.`);
@@ -329,6 +329,7 @@ export class FileSystem {
       mockPath,
       this.parse(dest)
     );
+    return this;
   }
 
   /**
