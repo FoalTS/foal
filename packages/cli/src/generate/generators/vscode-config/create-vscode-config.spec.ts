@@ -1,22 +1,21 @@
 // FoalTS
-import {
-  rmDirAndFilesIfExist,
-  TestEnvironment,
-} from '../../utils';
+import { FileSystem } from '../../file-system';
 import { createVSCodeConfig } from './create-vscode-config';
 
 describe('createVSCodeConfig', () => {
+  const fs = new FileSystem();
 
-  afterEach(() => rmDirAndFilesIfExist('.vscode'));
+  beforeEach(() => fs.setUp());
 
-  const testEnv = new TestEnvironment('vscode-config', '.vscode');
+  afterEach(() => fs.tearDown());
 
   it('should create the directory .vscode/ with default launch.json and tasks.json files.', () => {
     createVSCodeConfig();
 
-    testEnv
-      .validateSpec('launch.json')
-      .validateSpec('tasks.json');
+    fs
+      .cd('.vscode')
+      .assertEqual('launch.json', 'vscode-config/launch.json')
+      .assertEqual('tasks.json', 'vscode-config/tasks.json');
   });
 
 });
