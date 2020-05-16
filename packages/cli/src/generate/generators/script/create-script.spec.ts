@@ -1,13 +1,17 @@
 // FoalTS
+import { FileSystem } from '../../file-system';
 import {
   rmDirAndFilesIfExist,
-  TestEnvironment,
 } from '../../utils';
 import { createScript } from './create-script';
 
 // TODO: Improve the tests. They currently cover partially `createScript`.
 
 describe('createScript', () => {
+
+  const fs = new FileSystem();
+  // TODO: remove this line.
+  (fs as any).testDir = '';
 
   afterEach(() => {
     rmDirAndFilesIfExist('src/scripts');
@@ -17,17 +21,17 @@ describe('createScript', () => {
 
   describe(`when the directory src/scripts/ exists`, () => {
 
-    const testEnv = new TestEnvironment('script', 'src/scripts');
-
     beforeEach(() => {
-      testEnv.mkRootDirIfDoesNotExist();
+      fs
+        .ensureDir('src/scripts')
+        .cd('src/scripts');
     });
 
     it('should copy the empty script file in the proper directory.', () => {
       createScript({ name: 'test-fooBar' });
 
-      testEnv
-        .validateSpec('test-foo-bar.ts');
+      fs
+        .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.ts');
     });
 
   });
