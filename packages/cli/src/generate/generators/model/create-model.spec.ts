@@ -1,44 +1,36 @@
 // FoalTS
-import {
-  rmDirAndFilesIfExist,
-  rmfileIfExists,
-  TestEnvironment,
-} from '../../utils';
+import { FileSystem } from '../../file-system';
 import { createModel } from './create-model';
 
 describe('createModel', () => {
 
-  afterEach(() => {
-    rmDirAndFilesIfExist('src/app');
-    // We cannot remove src/ since the generator code lives within. This is bad testing
-    // approach.
-    rmDirAndFilesIfExist('models');
-    rmfileIfExists('a-test-foo-bar.model.ts');
-    rmfileIfExists('test-foo-bar.model.ts');
-    rmfileIfExists('index.ts');
-  });
+  const fs = new FileSystem();
+
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
 
   function test(root: string) {
 
     describe(`when the directory ${root}/ exists`, () => {
 
-      const testEnv = new TestEnvironment('model', root);
-
       beforeEach(() => {
-        testEnv.mkRootDirIfDoesNotExist();
-        testEnv.copyFileFromMocks('index.ts');
+        fs
+          .ensureDir(root)
+          .cd(root)
+          .copyMock('model/index.ts', 'index.ts');
       });
 
       it('should render the templates in the proper directory.', () => {
         createModel({ name: 'test-fooBar' });
 
-        testEnv
-          .validateSpec('test-foo-bar.model.ts')
-          .validateSpec('index.ts', 'index.ts');
+        fs
+          .assertEqual('test-foo-bar.model.ts', 'model/test-foo-bar.model.ts')
+          .assertEqual('index.ts', 'model/index.ts');
       });
 
       it('should not throw an error if index.ts does not exist.', () => {
-        testEnv.rmfileIfExists('index.ts');
+        fs.rmfile('index.ts');
         createModel({ name: 'test-fooBar' });
       });
 
