@@ -284,7 +284,7 @@ export class FileSystem {
    * @param {{ binary: boolean }} [{ binary }={ binary: true }] - Specify if the file is binary.
    * @memberof FileSystem
    */
-  assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): void {
+  assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
     const specPath = join(__dirname, 'specs', expected);
     if (!existsSync(specPath)) {
       throw new Error(`The spec file "${expected}" does not exist.`);
@@ -310,6 +310,7 @@ export class FileSystem {
         throw new Error(message);
       }
     }
+    return this;
   }
 
   /**
@@ -328,6 +329,16 @@ export class FileSystem {
       mockPath,
       this.parse(dest)
     );
+  }
+
+  /**
+   * Removes a file.
+   *
+   * @param {string} path - The path relative to the client directory.
+   * @memberof FileSystem
+   */
+  rmfile(path: string): void {
+    unlinkSync(this.parse(path));
   }
 
   private parse(path: string) {

@@ -623,4 +623,24 @@ describe('FileSystem', () => {
 
   });
 
+  describe('has a "rmfile" method that', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      writeFileSync('test-generators/hello.txt', 'hello', 'utf8');
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/hello.txt');
+      rmdir('test-generators');
+    });
+
+    it('should remove the file.', () => {
+      fs.rmfile('hello.txt');
+      if (existsSync('test-generators/hello.txt')) {
+        throw new Error('The file "hello.txt" should have been removed.');
+      }
+    });
+  });
+
 });
