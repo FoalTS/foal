@@ -31,6 +31,13 @@ function rmDirAndFiles(path: string) {
   rmdirSync(path);
 }
 
+/**
+ * This class provides more methods that Node std "fs".
+ * It also allows to create an isolated directory during directory.
+ *
+ * @export
+ * @class FileSystem
+ */
 export class FileSystem {
 
   currentDir = '';
@@ -270,9 +277,22 @@ export class FileSystem {
    * @param {string} path - The path relative to the client directory.
    * @memberof FileSystem
    */
-  assertNotExists(path: string): void {
+  assertNotExists(path: string): this {
     if (existsSync(this.parse(path))) {
       throw new Error(`The file "${path}" should not exist.`);
+    }
+    return this;
+  }
+
+  /**
+   * Throws an error if the directory is not empty.
+   *
+   * @param {string} path - The path relative to the client directory.
+   * @memberof FileSystem
+   */
+  assertEmptyDir(path: string): void {
+    if (readdirSync(this.parse(path)).length > 0) {
+      throw new Error(`The directory "${path}" should be empty.`);
     }
   }
 

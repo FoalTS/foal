@@ -438,7 +438,7 @@ describe('FileSystem', () => {
 
   });
 
-  describe('has a "assetExists" that', () => {
+  describe('has an "assetExists" method that', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -465,7 +465,7 @@ describe('FileSystem', () => {
 
   });
 
-  describe('has a "assetNotExists" that', () => {
+  describe('has an "assetNotExists" method that', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -488,6 +488,37 @@ describe('FileSystem', () => {
 
     it('should not throw an error if the file does not exist.', () => {
       fs.assertNotExists('bar');
+    });
+
+  });
+
+  describe('has an "assertEmptyDir" that', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/foo');
+      mkdir('test-generators/bar');
+      writeFileSync('test-generators/foo/foobar', Buffer.alloc(2));
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/foo/foobar');
+      rmdir('test-generators/foo');
+      rmdir('test-generators/bar');
+      rmdir('test-generators');
+    });
+
+    it('should throw an error if the directory is not empty.', () => {
+      try {
+        fs.assertEmptyDir('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(error.message, 'The directory "foo" should be empty.');
+      }
+    });
+
+    it('should not throw an error if the directory is empty.', () => {
+      fs.assertEmptyDir('bar');
     });
 
   });
