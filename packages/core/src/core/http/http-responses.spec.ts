@@ -23,6 +23,7 @@ import {
   HttpResponseRedirection,
   HttpResponseServerError,
   HttpResponseSuccess,
+  HttpResponseTooManyRequests,
   HttpResponseUnauthorized,
   isHttpResponse,
   isHttpResponseBadRequest,
@@ -41,6 +42,7 @@ import {
   isHttpResponseRedirection,
   isHttpResponseServerError,
   isHttpResponseSuccess,
+  isHttpResponseTooManyRequests,
   isHttpResponseUnauthorized
 } from './http-responses';
 
@@ -902,6 +904,61 @@ describe('isHttpResponseConflict', () => {
     strictEqual(isHttpResponseConflict(response), false);
     strictEqual(isHttpResponseConflict(undefined), false);
     strictEqual(isHttpResponseConflict(null), false);
+  });
+
+});
+
+describe('HttpResponseTooManyRequests', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseTooManyRequests();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseTooManyRequests();
+    strictEqual(httpResponse.statusCode, 429);
+    strictEqual(httpResponse.statusMessage, 'TOO MANY REQUESTS');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseTooManyRequests();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseTooManyRequests(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseTooManyRequests();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseTooManyRequests({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+});
+
+describe('isHttpResponseTooManyRequests', () => {
+
+  it('should return true if the given object is an instance of HttpResponseTooManyRequests.', () => {
+    const response = new HttpResponseTooManyRequests();
+    strictEqual(isHttpResponseTooManyRequests(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseTooManyRequests property equal to true.', () => {
+    const response = { isHttpResponseTooManyRequests: true };
+    strictEqual(isHttpResponseTooManyRequests(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseTooManyRequests and if it '
+      + 'has no property isHttpResponseTooManyRequests.', () => {
+    const response = {};
+    strictEqual(isHttpResponseTooManyRequests(response), false);
+    strictEqual(isHttpResponseTooManyRequests(undefined), false);
+    strictEqual(isHttpResponseTooManyRequests(null), false);
   });
 
 });
