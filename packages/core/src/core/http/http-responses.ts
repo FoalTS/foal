@@ -865,6 +865,52 @@ export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseConflict === true);
 }
 
+/**
+ * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
+ *
+ * @export
+ * @class HttpResponseTooManyRequests
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseTooManyRequests extends HttpResponseClientError {
+  /**
+   * Property used internally by isHttpResponseTooManyRequests.
+   *
+   * @memberof HttpResponseTooManyRequests
+   */
+  readonly isHttpResponseTooManyRequests = true;
+  statusCode = 429;
+  statusMessage = 'TOO MANY REQUESTS';
+
+  /**
+   * Create an instance of HttpResponseTooManyRequests.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTooManyRequests
+   */
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTooManyRequests.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTooManyRequests} - True if the error is an instance of HttpResponseTooManyRequests.
+ * False otherwise.
+ */
+export function isHttpResponseTooManyRequests(obj: any): obj is HttpResponseTooManyRequests {
+  return obj instanceof HttpResponseTooManyRequests ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooManyRequests === true);
+}
+
 /* 5xx Server Error */
 
 /**
