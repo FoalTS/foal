@@ -1,5 +1,4 @@
 import { FileSystem } from '../../file-system';
-import { TestEnvironment } from '../../utils';
 import { connectAngular } from './connect-angular';
 
 // TODO: To improve: make the tests (more) independent from each other.
@@ -10,8 +9,6 @@ describe('connectAngular', () => {
   beforeEach(() => fs.setUp());
 
   afterEach(() => fs.tearDown());
-
-  const testEnv = new TestEnvironment('angular');
 
   it('should create a proxy.conf.json file in ${path}/src.', () => {
     fs
