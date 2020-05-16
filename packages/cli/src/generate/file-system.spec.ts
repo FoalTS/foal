@@ -1,6 +1,12 @@
+// std
 import { notStrictEqual, strictEqual } from 'assert';
 import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
+
+// 3p
+import { green, red } from 'colors/safe';
+
+// FoalTS
 import { FileSystem } from './file-system';
 
 function rmdir(path: string) {
@@ -560,16 +566,16 @@ describe('FileSystem', () => {
           error.message,
           `The two files "bar.txt" and "test-file-system/foo.spec.txt" are not equal.\n\n`
           + 'Line 1\n'
-          + ' Expected: hello\n'
-          + ' Actual: hi\n'
-          + '\n'
+          + green(' Expected: hello\n')
+          + red(' Actual: hi')
+          + '\n\n'
           + 'Line 3\n'
-          + ' Expected: world\n'
-          + ' Actual: earth\n'
-          + '\n'
+          + green(' Expected: world\n')
+          + red(' Actual: earth')
+          + '\n\n'
           + 'Line 4\n'
-          + ' Expected: undefined\n'
-          + ' Actual: !'
+          + green(' Expected: undefined\n')
+          + red(' Actual: !')
         );
       }
     });
