@@ -26,7 +26,6 @@ export function createController({ name, register }: { name: string, register: b
   fs
     .cd(root)
     .render(templatePath, fileName, names)
-    // TODO: the condition "Empty" is not tested.
     .render(specTemplatePath, specFileName, names)
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`)
