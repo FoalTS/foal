@@ -40,6 +40,7 @@ export function createRestApi({ name, register }: { name: string, register: bool
   fs
     .cd(entityRoot)
     .render('rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .ensureFile('index.ts')
     .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
 
   fs.currentDir = '';
@@ -56,6 +57,7 @@ export function createRestApi({ name, register }: { name: string, register: bool
       `${names.kebabName}.controller.spec.ts`,
       names,
     )
+    .ensureFile('index.ts')
     .addNamedExportIn('index.ts', `${names.upperFirstCamelName}Controller`, `./${names.kebabName}.controller`)
     .cd('..')
     .modifyOnlyfIf(register, 'app.controller.ts', content => {

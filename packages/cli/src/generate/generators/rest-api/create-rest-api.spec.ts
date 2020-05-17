@@ -44,6 +44,16 @@ describe('createRestApi', () => {
           .assertEqual('index.ts', 'rest-api/index.controllers.ts');
       });
 
+      it('should create the index.ts if they do not exist.', () => {
+        fs.rmfile('entities/index.ts');
+        fs.rmfile('controllers/index.ts');
+
+        createRestApi({ name: 'test-fooBar', register: false });
+
+        fs.assertExists('entities/index.ts');
+        fs.assertExists('controllers/index.ts');
+      });
+
     });
 
     describe(`when the directories ${root}entities/ and ${root}controllers/ exist and "register" is true.`, () => {
@@ -145,6 +155,14 @@ describe('createRestApi', () => {
         .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.ts')
         .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.ts')
         .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
+    });
+
+    it('should create index.ts if it does not exist.', () => {
+      fs.rmfile('index.ts');
+
+      createRestApi({ name: 'test-fooBar', register: false });
+
+      fs.assertExists('index.ts');
     });
 
   });

@@ -67,7 +67,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
 
   log('  📂 Creating files...');
 
-  // TODO: noLogs
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')

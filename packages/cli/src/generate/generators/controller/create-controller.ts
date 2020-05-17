@@ -15,9 +15,6 @@ export function createController({ name, register }: { name: string, register: b
 
   const names = getNames(name);
 
-  const templatePath = `controller/controller.empty.ts`;
-  const specTemplatePath = `controller/controller.spec.empty.ts`;
-
   const fileName = `${names.kebabName}.controller.ts`;
   const specFileName = `${names.kebabName}.controller.spec.ts`;
 
@@ -25,8 +22,8 @@ export function createController({ name, register }: { name: string, register: b
 
   fs
     .cd(root)
-    .render(templatePath, fileName, names)
-    .render(specTemplatePath, specFileName, names)
+    .render('controller/controller.empty.ts', fileName, names)
+    .render('controller/controller.spec.empty.ts', specFileName, names)
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`)
     .cd('..')
