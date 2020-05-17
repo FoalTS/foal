@@ -1,25 +1,23 @@
-// std
-import { existsSync } from 'fs';
-
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { getNames } from '../../utils';
 
 export function createService({ name }: { name: string }) {
-  const names = getNames(name);
+  const fs = new FileSystem();
 
   let root = '';
-
-  if (existsSync('src/app/services')) {
+  if (fs.exists('src/app/services')) {
     root = 'src/app/services';
-  } else if (existsSync('services')) {
+  } else if (fs.exists('services')) {
     root = 'services';
   }
 
-  new Generator('service', root)
-    .renderTemplate('service.empty.ts', names, `${names.kebabName}.service.ts`)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.service';\n`;
-      return content;
-    }, { allowFailure: true });
+  const names = getNames(name);
+
+  fs
+    .cd(root)
+    .render('service/service.empty.ts', `${names.kebabName}.service.ts`, names)
+    .ensureFile('index.ts')
+    .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.service`);
 
 }

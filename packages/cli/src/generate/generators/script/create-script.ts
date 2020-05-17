@@ -6,7 +6,8 @@ import { join, relative } from 'path';
 import { red } from 'colors/safe';
 
 // FoalTS
-import { findProjectPath, Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { findProjectPath, getNames } from '../../utils';
 
 export function createScript({ name }: { name: string }) {
   const names = getNames(name);
@@ -20,13 +21,18 @@ export function createScript({ name }: { name: string }) {
 
   const scriptPath = join(root, './src/scripts/');
   if (!existsSync(scriptPath)) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
       console.log(red(`\n  This directory is not a Foal project (${scriptPath} does not exist).\n`));
     }
     return;
   }
 
-  // Use `relative` to have pretty CREATE logs.
-  new Generator('script', relative(process.cwd(), scriptPath))
-    .copyFileFromTemplates('script.ts', `${names.kebabName}.ts`);
+  const fs = new FileSystem();
+  // TODO: remove this line.
+  (fs as any).testDir = '';
+
+  fs
+    // Use `relative` to have pretty CREATE logs.
+    .cd(relative(process.cwd(), scriptPath))
+    .copy('script/script.ts', `${names.kebabName}.ts`);
 }

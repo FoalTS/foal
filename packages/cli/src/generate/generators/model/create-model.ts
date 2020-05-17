@@ -1,12 +1,13 @@
 // std
-import { existsSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // 3p
 import { red, yellow } from 'colors/safe';
 
 // FoalTS
-import { findProjectPath, Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { findProjectPath, getNames } from '../../utils';
 
 export function createModel({ name, checkMongoose }: { name: string, checkMongoose?: boolean }) {
   const projectPath = findProjectPath();
@@ -22,20 +23,20 @@ export function createModel({ name, checkMongoose }: { name: string, checkMongoo
     }
   }
 
-  const names = getNames(name);
+  const fs = new FileSystem();
 
   let root = '';
-
-  if (existsSync('src/app/models')) {
+  if (fs.exists('src/app/models')) {
     root = 'src/app/models';
-  } else if (existsSync('models')) {
+  } else if (fs.exists('models')) {
     root = 'models';
   }
 
-  new Generator('model', root)
-    .renderTemplate('model.ts', names, `${names.kebabName}.model.ts`)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.model';\n`;
-      return content;
-    }, { allowFailure: true });
+  const names = getNames(name);
+
+  fs
+    .cd(root)
+    .render('model/model.ts', `${names.kebabName}.model.ts`, names)
+    .ensureFile('index.ts')
+    .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.model`);
 }

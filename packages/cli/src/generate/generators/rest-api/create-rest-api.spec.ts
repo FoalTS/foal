@@ -1,119 +1,136 @@
 // FoalTS
-import {
-  rmDirAndFilesIfExist,
-  rmfileIfExists,
-  TestEnvironment,
-} from '../../utils';
+import { FileSystem } from '../../file-system';
 import { createRestApi } from './create-rest-api';
+
+// TODO: add tests like "should create index.ts if it does not exist."
 
 describe('createRestApi', () => {
 
-  afterEach(() => {
-    rmDirAndFilesIfExist('src/app');
-    // We cannot remove src/ since the generator code lives within. This is bad testing
-    // approach.
-    rmDirAndFilesIfExist('entities');
-    rmDirAndFilesIfExist('controllers');
-    rmfileIfExists('app.controller.ts');
-    rmfileIfExists('test-foo-bar.entity.ts');
-    rmfileIfExists('test-foo-bar.controller.ts');
-    rmfileIfExists('test-foo-bar.controller.spec.ts');
-  });
+  const fs = new FileSystem();
+
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
 
   function test(root: string) {
 
     describe(`when the directories ${root}entities/ and ${root}controllers/ exist`, () => {
 
-      const testEntityEnv = new TestEnvironment('rest-api', root + 'entities');
-      const testControllerEnv = new TestEnvironment('rest-api', root + 'controllers');
-
       beforeEach(() => {
-        testEntityEnv.mkRootDirIfDoesNotExist();
-        testEntityEnv.copyFileFromMocks('index.entities.ts', 'index.ts');
-        testControllerEnv.mkRootDirIfDoesNotExist();
-        testControllerEnv.copyFileFromMocks('index.controllers.ts', 'index.ts');
+        fs
+          .ensureDir(root)
+          .cd(root)
+          .ensureDir('entities')
+          .cd('entities')
+          .copyMock('rest-api/index.entities.ts', 'index.ts')
+          .cd('..')
+          .ensureDir('controllers')
+          .cd('controllers')
+          .copyMock('rest-api/index.controllers.ts', 'index.ts')
+          .cd('..');
       });
 
       it('should render the templates in the proper directory.', () => {
         createRestApi({ name: 'test-fooBar', register: false });
 
-        testEntityEnv
-          .validateSpec('test-foo-bar.entity.ts')
-          .validateSpec('index.entities.ts', 'index.ts');
+        fs
+          .cd('entities')
+          .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.ts')
+          .assertEqual('index.ts', 'rest-api/index.entities.ts')
+          .cd('..')
+          .cd('controllers')
+          .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.ts')
+          .assertEqual('index.ts', 'rest-api/index.controllers.ts');
+      });
 
-        testControllerEnv
-          .validateSpec('test-foo-bar.controller.ts')
-          .validateSpec('test-foo-bar.controller.spec.ts')
-          .validateSpec('index.controllers.ts', 'index.ts');
+      it('should create the index.ts if they do not exist.', () => {
+        fs.rmfile('entities/index.ts');
+        fs.rmfile('controllers/index.ts');
+
+        createRestApi({ name: 'test-fooBar', register: false });
+
+        fs.assertExists('entities/index.ts');
+        fs.assertExists('controllers/index.ts');
       });
 
     });
 
     describe(`when the directories ${root}entities/ and ${root}controllers/ exist and "register" is true.`, () => {
 
-      const testEntityEnv = new TestEnvironment('rest-api', root + 'entities');
-      const testControllerEnv = new TestEnvironment('rest-api', root + 'controllers');
-
       beforeEach(() => {
-        testEntityEnv.mkRootDirIfDoesNotExist();
-        testEntityEnv.copyFileFromMocks('index.entities.ts', 'index.ts');
-        testControllerEnv.mkRootDirIfDoesNotExist();
-        testControllerEnv.copyFileFromMocks('index.controllers.ts', 'index.ts');
+        fs
+          .ensureDir(root)
+          .cd(root)
+          .ensureDir('entities')
+          .cd('entities')
+          .copyMock('rest-api/index.entities.ts', 'index.ts')
+          .cd('..')
+          .ensureDir('controllers')
+          .cd('controllers')
+          .copyMock('rest-api/index.controllers.ts', 'index.ts')
+          .cd('..');
       });
 
       it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.controller-import.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.controller-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.controller-import.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.controller-import.ts');
       });
 
       it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.no-controller-import.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.no-controller-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.no-controller-import.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.no-controller-import.ts');
       });
 
       it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.core-import.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.core-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.core-import.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.core-import.ts');
       });
 
       it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.empty-property.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.empty-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.empty-property.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.empty-property.ts');
       });
 
       it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.empty-spaced-property.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.empty-spaced-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.empty-spaced-property.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.empty-spaced-property.ts');
       });
 
       it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
           + ' src/app/app.controller.ts if it exists.', () => {
-        testControllerEnv.copyFileFromMocks('app.controller.no-empty-property.ts', '../app.controller.ts');
+        fs
+          .copyMock('rest-api/app.controller.no-empty-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
-        testControllerEnv
-          .validateSpec('app.controller.no-empty-property.ts', '../app.controller.ts');
+        fs
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.no-empty-property.ts');
       });
 
     });
@@ -125,21 +142,27 @@ describe('createRestApi', () => {
 
   describe('when the directory entities/ or the directory controllers/ does not exist.', () => {
 
-    const testEnv = new TestEnvironment('rest-api', '');
-
     beforeEach(() => {
-      testEnv.mkRootDirIfDoesNotExist();
-      testEnv.copyFileFromMocks('index.current-dir.ts', 'index.ts');
+      fs
+        .copyMock('rest-api/index.current-dir.ts', 'index.ts');
     });
 
     it('should render the templates in the current directory.', () => {
       createRestApi({ name: 'test-fooBar', register: false });
 
-      testEnv
-        .validateSpec('test-foo-bar.entity.ts')
-        .validateSpec('test-foo-bar.controller.current-dir.ts', 'test-foo-bar.controller.ts')
-        .validateSpec('test-foo-bar.controller.spec.current-dir.ts', 'test-foo-bar.controller.spec.ts')
-        .validateSpec('index.current-dir.ts', 'index.ts');
+      fs
+        .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.ts')
+        .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.ts')
+        .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.ts')
+        .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
+    });
+
+    it('should create index.ts if it does not exist.', () => {
+      fs.rmfile('index.ts');
+
+      createRestApi({ name: 'test-fooBar', register: false });
+
+      fs.assertExists('index.ts');
     });
 
   });

@@ -3,9 +3,15 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { join } from 'path';
 
 // FoalTS
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, rmfileIfExists } from '../generate/utils';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../generate/utils';
 import { runScript } from './run-script';
+
+function rmfileIfExists(path: string) {
+  if (existsSync(path)) {
+    unlinkSync(path);
+  }
+}
 
 describe('runScript', () => {
 
