@@ -38,9 +38,9 @@ describe('FileSystem', () => {
     it('should change the current directory.', () => {
       strictEqual(fs.currentDir, '');
       fs.cd('foobar/foo');
-      strictEqual(fs.currentDir, 'foobar/foo');
+      strictEqual(fs.currentDir.replace(/\\/g, '/'), 'foobar/foo');
       fs.cd('../bar');
-      strictEqual(fs.currentDir, 'foobar/bar');
+      strictEqual(fs.currentDir.replace(/\\/g, '/'), 'foobar/bar');
     });
 
   });
