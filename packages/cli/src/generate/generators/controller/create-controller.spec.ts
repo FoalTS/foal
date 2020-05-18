@@ -30,6 +30,13 @@ describe('createController', () => {
           .assertEqual('index.ts', 'controller/index.ts');
       });
 
+      it('should create the directory if it does not exist.', () => {
+        createController({ name: 'barfoo/hello/test-fooBar', register: false });
+
+        fs
+          .assertExists('barfoo/hello/test-foo-bar.controller.ts');
+      });
+
       it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
 
@@ -64,6 +71,17 @@ describe('createController', () => {
 
       fs
         .assertEqual('app.controller.ts', 'controller/app.controller.no-import.ts');
+    });
+
+    it('should add all the imports if none exists (subdir).', () => {
+      fs
+        .ensureDir('controllers/barfoo')
+        .copyMock('controller/app.controller.no-import.ts', 'controllers/barfoo/hello.controller.ts');
+
+      createController({ name: 'barfoo/hello/test-fooBar', register: true });
+
+      fs
+        .assertEqual('controllers/barfoo/hello.controller.ts', 'controller/app.controller.no-import.ts');
     });
 
     it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {

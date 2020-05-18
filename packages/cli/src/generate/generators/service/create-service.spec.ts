@@ -29,6 +29,13 @@ describe('createService', () => {
           .assertEqual('index.ts', 'service/index.ts');
       });
 
+      it('should create the directory if it does not exist.', () => {
+        createService({ name: 'barfoo/hello/test-fooBar' });
+
+        fs
+          .assertExists('barfoo/hello/test-foo-bar.service.ts');
+      });
+
       it('should should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
 
