@@ -3,9 +3,6 @@ import { notStrictEqual, strictEqual } from 'assert';
 import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-// 3p
-import { green, red } from 'colors/safe';
-
 // FoalTS
 import { FileSystem } from './file-system';
 
@@ -807,7 +804,7 @@ describe('FileSystem', () => {
         fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        notStrictEqual(error.message, 'An error should have been thrown.');
+        strictEqual(error.message, '\'hi\\nmy\\nearth\\n!\' === \'hello\\nmy\\nworld\'');
       }
     });
 
@@ -821,29 +818,6 @@ describe('FileSystem', () => {
         throw new Error('An error should have been thrown');
       } catch (error) {
         strictEqual(error.message, 'The spec file "test-file-system/hello.txt" does not exist.');
-      }
-    });
-
-    it('should throw understandable errors.', () => {
-      try {
-        fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
-        throw new Error('An error should have been thrown.');
-      } catch (error) {
-        strictEqual(
-          error.message,
-          `The two files "bar.txt" and "test-file-system/foo.spec.txt" are not equal.\n\n`
-          + 'Line 1\n'
-          + green(' Expected: hello\n')
-          + red(' Actual: hi')
-          + '\n\n'
-          + 'Line 3\n'
-          + green(' Expected: world\n')
-          + red(' Actual: earth')
-          + '\n\n'
-          + 'Line 4\n'
-          + green(' Expected: undefined\n')
-          + red(' Actual: !')
-        );
       }
     });
 

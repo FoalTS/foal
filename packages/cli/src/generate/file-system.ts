@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import {
   copyFileSync,
   existsSync,
@@ -14,7 +14,7 @@ import {
 import { dirname, join } from 'path';
 
 // 3p
-import { cyan, green, red } from 'colors/safe';
+import { cyan, green } from 'colors/safe';
 
 function rmDirAndFiles(path: string) {
   const files = readdirSync(path);
@@ -435,20 +435,10 @@ export class FileSystem {
         readFileSync(specPath)
       );
     } else {
-      const expectedContent = readFileSync(specPath, 'utf8');
-      const actualContent = readFileSync(this.parse(actual), 'utf8');
-      if (expectedContent !== actualContent) {
-        const expectedLines = expectedContent.split('\n');
-        const actualLines = actualContent.split('\n');
-        let message = `The two files "${actual}" and "${expected}" are not equal.`;
-        for (let i = 0; i < Math.max(expectedLines.length, actualLines.length); i++) {
-          if (expectedLines[i] !== actualLines[i]) {
-            message += `\n\nLine ${i + 1}\n`
-            +  `${green(` Expected: ${expectedLines[i]}\n`)}${red(` Actual: ${actualLines[i]}`)}`;
-          }
-        }
-        throw new Error(message);
-      }
+      strictEqual(
+        readFileSync(this.parse(actual), 'utf8'),
+        readFileSync(specPath, 'utf8')
+      );
     }
     return this;
   }
