@@ -18,7 +18,7 @@ describe('createService', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('service/index.ts', 'index.ts');
+          .copyFixture('service/index.ts', 'index.ts');
       });
 
       it('should render the empty templates in the proper directory.', () => {

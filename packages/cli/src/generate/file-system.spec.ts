@@ -622,27 +622,27 @@ describe('FileSystem', () => {
 
   });
 
-  describe('has a "copyMock" method that', () => {
+  describe('has a "copyFixture" method that', () => {
 
-    const mockDir = join(__dirname, 'mocks/test-file-system');
-    const mockPath = join(__dirname, 'mocks/test-file-system/tpl.txt');
+    const fixtureDir = join(__dirname, 'fixtures/test-file-system');
+    const fixturePath = join(__dirname, 'fixtures/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir(mockDir);
-      writeFileSync(mockPath, 'hello', 'utf8');
+      mkdir(fixtureDir);
+      writeFileSync(fixturePath, 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile(mockPath);
-      rmdir(mockDir);
+      rmfile(fixturePath);
+      rmdir(fixtureDir);
 
       rmfile('test-generators/hello.txt');
       rmdir('test-generators');
     });
 
-    it('should copy the file from the `mocks` directory.', () => {
-      fs.copyMock('test-file-system/tpl.txt', 'hello.txt');
+    it('should copy the file from the `fixtures` directory.', () => {
+      fs.copyFixture('test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/hello.txt')) {
         throw new Error('The file "test-generators/hello.txt" does not exist.');
       }
@@ -654,10 +654,10 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        fs.copyMock('test-file-system/foobar.txt', 'hello.txt');
+        fs.copyFixture('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error) {
-        strictEqual(error.message, 'The mock file "test-file-system/foobar.txt" does not exist.');
+        strictEqual(error.message, 'The fixture file "test-file-system/foobar.txt" does not exist.');
       }
     });
 

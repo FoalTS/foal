@@ -13,8 +13,8 @@ describe('connectAngular', () => {
   it('should create a proxy.conf.json file in ${path}/src.', () => {
     fs
       .ensureDir('connector-test/angular/src')
-      .copyMock('angular/angular.json', 'connector-test/angular/angular.json')
-      .copyMock('angular/package.json', 'connector-test/angular/package.json');
+      .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
+      .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
     connectAngular('./connector-test/angular');
 
@@ -29,8 +29,8 @@ describe('connectAngular', () => {
   it('should update angular.json with the proxy file and the output dir.', () => {
     fs
       .ensureDir('connector-test/angular/src')
-      .copyMock('angular/angular.json', 'connector-test/angular/angular.json')
-      .copyMock('angular/package.json', 'connector-test/angular/package.json');
+      .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
+      .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
     connectAngular('./connector-test/angular');
 
@@ -48,8 +48,8 @@ describe('connectAngular', () => {
   it('should update package.json with the "--prod" flag.', () => {
     fs
       .ensureDir('connector-test/angular/src')
-      .copyMock('angular/angular.json', 'connector-test/angular/angular.json')
-      .copyMock('angular/package.json', 'connector-test/angular/package.json');
+      .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
+      .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
     connectAngular('./connector-test/angular');
 

@@ -22,11 +22,11 @@ describe('createRestApi', () => {
           .cd(root)
           .ensureDir('entities')
           .cd('entities')
-          .copyMock('rest-api/index.entities.ts', 'index.ts')
+          .copyFixture('rest-api/index.entities.ts', 'index.ts')
           .cd('..')
           .ensureDir('controllers')
           .cd('controllers')
-          .copyMock('rest-api/index.controllers.ts', 'index.ts')
+          .copyFixture('rest-api/index.controllers.ts', 'index.ts')
           .cd('..');
       });
 
@@ -64,17 +64,17 @@ describe('createRestApi', () => {
           .cd(root)
           .ensureDir('entities')
           .cd('entities')
-          .copyMock('rest-api/index.entities.ts', 'index.ts')
+          .copyFixture('rest-api/index.entities.ts', 'index.ts')
           .cd('..')
           .ensureDir('controllers')
           .cd('controllers')
-          .copyMock('rest-api/index.controllers.ts', 'index.ts')
+          .copyFixture('rest-api/index.controllers.ts', 'index.ts')
           .cd('..');
       });
 
       it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.controller-import.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.controller-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -84,7 +84,7 @@ describe('createRestApi', () => {
 
       it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.no-controller-import.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.no-controller-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -94,7 +94,7 @@ describe('createRestApi', () => {
 
       it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.core-import.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.core-import.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -104,7 +104,7 @@ describe('createRestApi', () => {
 
       it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.empty-property.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.empty-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -114,7 +114,7 @@ describe('createRestApi', () => {
 
       it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.empty-spaced-property.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.empty-spaced-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -125,7 +125,7 @@ describe('createRestApi', () => {
       it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
           + ' src/app/app.controller.ts if it exists.', () => {
         fs
-          .copyMock('rest-api/app.controller.no-empty-property.ts', 'app.controller.ts');
+          .copyFixture('rest-api/app.controller.no-empty-property.ts', 'app.controller.ts');
 
         createRestApi({ name: 'test-fooBar', register: true });
 
@@ -144,7 +144,7 @@ describe('createRestApi', () => {
 
     beforeEach(() => {
       fs
-        .copyMock('rest-api/index.current-dir.ts', 'index.ts');
+        .copyFixture('rest-api/index.current-dir.ts', 'index.ts');
     });
 
     it('should render the templates in the current directory.', () => {

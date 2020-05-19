@@ -18,7 +18,7 @@ describe('createHook', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('hook/index.ts', 'index.ts');
+          .copyFixture('hook/index.ts', 'index.ts');
       });
 
       it('should render the templates in the proper directory.', () => {

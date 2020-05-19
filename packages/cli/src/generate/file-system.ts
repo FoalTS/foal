@@ -357,20 +357,20 @@ export class FileSystem {
   }
 
   /**
-   * Copies a file from the `mocks` directory.
+   * Copies a file from the `fixtures` directory.
    *
-   * @param {string} src - The source path relative to the `mocks/` directory.
+   * @param {string} src - The source path relative to the `fixtures/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
    * @memberof FileSystem
    */
-  copyMock(src: string, dest: string): this {
-    const mockPath = join(__dirname, 'mocks', src);
-    if (!existsSync(mockPath)) {
-      throw new Error(`The mock file "${src}" does not exist.`);
+  copyFixture(src: string, dest: string): this {
+    const fixturePath = join(__dirname, 'fixtures', src);
+    if (!existsSync(fixturePath)) {
+      throw new Error(`The fixture file "${src}" does not exist.`);
     }
     copyFileSync(
-      mockPath,
+      fixturePath,
       this.parse(dest)
     );
     return this;

@@ -18,7 +18,7 @@ describe('createController', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('controller/index.ts', 'index.ts');
+          .copyFixture('controller/index.ts', 'index.ts');
       });
 
       it('should render the empty templates in the proper directory.', () => {
@@ -59,13 +59,13 @@ describe('createController', () => {
       fs
         .ensureDir('src/app/controllers')
         .cd('src/app/controllers')
-        .copyMock('controller/index.ts', 'index.ts')
+        .copyFixture('controller/index.ts', 'index.ts')
         .cd('..');
     });
 
     it('should add all the imports if none exists.', () => {
       fs
-        .copyMock('controller/app.controller.no-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.no-import.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -76,7 +76,7 @@ describe('createController', () => {
     it('should add all the imports if none exists (subdir).', () => {
       fs
         .ensureDir('controllers/barfoo')
-        .copyMock('controller/app.controller.no-import.ts', 'controllers/barfoo/hello.controller.ts');
+        .copyFixture('controller/app.controller.no-import.ts', 'controllers/barfoo/hello.controller.ts');
 
       createController({ name: 'barfoo/hello/test-fooBar', register: true });
 
@@ -86,7 +86,7 @@ describe('createController', () => {
 
     it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
       fs
-        .copyMock('controller/app.controller.controller-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.controller-import.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -96,7 +96,7 @@ describe('createController', () => {
 
     it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
       fs
-        .copyMock('controller/app.controller.no-controller-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.no-controller-import.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -106,7 +106,7 @@ describe('createController', () => {
 
     it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
       fs
-        .copyMock('controller/app.controller.core-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.core-import.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -116,7 +116,7 @@ describe('createController', () => {
 
     it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
       fs
-        .copyMock('controller/app.controller.empty-property.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.empty-property.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -126,7 +126,7 @@ describe('createController', () => {
 
     it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
       fs
-        .copyMock('controller/app.controller.empty-spaced-property.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.empty-spaced-property.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
@@ -137,7 +137,7 @@ describe('createController', () => {
     it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
         + ' src/app/app.controller.ts if it exists.', () => {
       fs
-        .copyMock('controller/app.controller.no-empty-property.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.no-empty-property.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
