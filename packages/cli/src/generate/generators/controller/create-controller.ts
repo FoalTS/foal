@@ -1,5 +1,5 @@
 // FoalTS
-import { basename, dirname, join } from 'path';
+import { basename, dirname } from 'path';
 import { FileSystem } from '../../file-system';
 import { getNames } from '../../utils';
 import { registerController } from './register-controller';
