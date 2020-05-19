@@ -75,13 +75,12 @@ describe('createRestApi', () => {
       it('should register the controller in app.controller.ts.', () => {
         fs
           .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
-  
+
         createRestApi({ name: 'test-fooBar', register: true });
-  
+
         fs
           .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
       });
-
 
     });
 

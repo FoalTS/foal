@@ -283,7 +283,7 @@ export class FileSystem {
           const specifiers = specifiersStr
             .split(',')
             .map(imp => imp.trim());
-          
+
           if (specifiers.includes(specifier)) {
             specifierAlreadyExists = true;
             return subString;
