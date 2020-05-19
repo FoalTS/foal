@@ -443,13 +443,25 @@ describe('FileSystem', () => {
       );
     });
 
-    it('should extend the named import if it already exist.', () => {
+    it('should extend the named import if it already exists and it does not have the specifier.', () => {
       fs.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
       strictEqual(
         readFileSync('test-generators/hello.txt', 'utf8'),
         '// 3p\n'
         + 'import { Hello } from \'./foo.txt\';\n'
         + 'import { MyController, World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should not extend the named import if it already exists but it has already the specifier.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'World', './bar.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
         + '\n'
         + 'class FooBar {}',
       );

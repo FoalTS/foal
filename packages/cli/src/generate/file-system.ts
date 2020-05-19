@@ -272,22 +272,34 @@ export class FileSystem {
       const regex = /import (.*) from '(.*)';/g;
       let endPos = 0;
 
+      let specifierAlreadyExists = false;
       const replacedContent = content.replace(regex, (match, p1, p2, offset: number) => {
         endPos = offset + match.length;
         const namedImportRegex = new RegExp(`import {(.*)} from \'(.*)\';`);
-        return match.replace(namedImportRegex, (subString, specifiers: string, path: string) => {
+        return match.replace(namedImportRegex, (subString, specifiersStr: string, path: string) => {
           if (path !== source) {
             return subString;
           }
-          const newSpecifiers = specifiers
+          const specifiers = specifiersStr
             .split(',')
-            .map(imp => imp.trim())
+            .map(imp => imp.trim());
+          
+          if (specifiers.includes(specifier)) {
+            specifierAlreadyExists = true;
+            return subString;
+          }
+
+          const newSpecifiers = specifiers
             .concat(specifier)
             .sort((a, b) => a.localeCompare(b))
             .join(', ');
           return `import { ${newSpecifiers} } from '${source}';`;
         });
       });
+
+      if (specifierAlreadyExists) {
+        return content;
+      }
 
       if (replacedContent !== content) {
         return replacedContent;
