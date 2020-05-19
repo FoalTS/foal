@@ -476,7 +476,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );
@@ -498,7 +497,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );
@@ -523,7 +521,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );
@@ -550,7 +547,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );
@@ -576,7 +572,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );
@@ -603,7 +598,6 @@ describe('FileSystem', () => {
       );
       fs.addOrExtendClassArrayPropertyIn(
         'foo.txt',
-        'FooBar',
         'subControllers',
         'controller(\'/api\', ApiController)'
       );

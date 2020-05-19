@@ -316,38 +316,41 @@ export class FileSystem {
    * @returns {this}
    * @memberof FileSystem
    */
-  addOrExtendClassArrayPropertyIn(path: string, className: string, propertyName: string, element: string): this {
-    this.modify(path, content => content.replace(new RegExp(`class ${className} {(.*)}`, 's'), (match, p1: string) => {
-      if (/^(\s)*$/.test(p1)) {
-        return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n}`;
-      }
-
-      const replacedMatch = match.replace(
-        new RegExp(`( *)${propertyName} = \\[(.*)\\];`, 's'),
-        (_, spaces, content: string) => {
-          const items = content
-            .replace(/,\n/g, '\n')
-            .split('\n')
-            .map(e => e.trim())
-            .concat(element)
-            .map(e => `${spaces}${spaces}${e}`);
-
-          const cleanItems: string[] = [];
-          for (const item of items) {
-            if (item.trim() !== '') {
-              cleanItems.push(item);
-            }
-          }
-          return `${spaces}${propertyName} = [\n${cleanItems.join(',\n')}\n${spaces}];`;
+  addOrExtendClassArrayPropertyIn(path: string, propertyName: string, element: string): this {
+    this.modify(path, content => content.replace(
+      new RegExp(`class (\\w*) {(.*)}`, 's'),
+      (match, className: string, p2: string) => {
+        if (/^(\s)*$/.test(p2)) {
+          return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n}`;
         }
-      );
 
-      if (replacedMatch !== match) {
-        return replacedMatch;
+        const replacedMatch = match.replace(
+          new RegExp(`( *)${propertyName} = \\[(.*)\\];`, 's'),
+          (_, spaces, content: string) => {
+            const items = content
+              .replace(/,\n/g, '\n')
+              .split('\n')
+              .map(e => e.trim())
+              .concat(element)
+              .map(e => `${spaces}${spaces}${e}`);
+
+            const cleanItems: string[] = [];
+            for (const item of items) {
+              if (item.trim() !== '') {
+                cleanItems.push(item);
+              }
+            }
+            return `${spaces}${propertyName} = [\n${cleanItems.join(',\n')}\n${spaces}];`;
+          }
+        );
+
+        if (replacedMatch !== match) {
+          return replacedMatch;
+        }
+
+        return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n${p2}}`;
       }
-
-      return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n${p1}}`;
-    }));
+    ));
     return this;
   }
 
