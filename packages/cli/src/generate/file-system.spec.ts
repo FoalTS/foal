@@ -397,8 +397,7 @@ describe('FileSystem', () => {
 
   });
 
-
-  describe('has a "addOrExtendNamedImportIn" method that should', () => {
+  describe('has an "addOrExtendNamedImportIn" method that should', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -456,6 +455,170 @@ describe('FileSystem', () => {
         + 'import { MyController, World } from \'./bar.txt\';\n'
         + '\n'
         + 'class FooBar {}',
+      );
+    });
+
+  });
+
+  describe('has an "addOrExtendClassArrayProperty" method that should', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/foo.txt');
+      rmdir('test-generators');
+    });
+
+    it('should add the class property if it does not exist (empty class).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '}',
+      );
+    });
+
+    it('should add the class property if it does not exist (empty class with line returns).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n\n}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '}',
+      );
+    });
+
+    it('should add the class property if it does not exist (class with existing properties).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '  foo = 3;\n'
+        + '  bar() {};\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '\n'
+        + '  foo = 3;\n'
+        + '  bar() {};\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array with line returns).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '\n'
+        + '    ];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array with existing items).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'\/foo\', FooController),\n'
+        + '        BarController,\n'
+        + '    ];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'FooBar',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'\/foo\', FooController),\n'
+        + '        BarController,\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
       );
     });
 

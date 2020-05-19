@@ -255,9 +255,9 @@ export class FileSystem {
   }
 
   /**
-   * Add or extend a named import at the beginning of the file.
+   * Adds or extends a named import at the beginning of the file.
    *
-   * If an import already exists with this path, it is completed.
+   * If an import already exists with this source path, it is completed.
    * If it does not already exist, it is added at the end of all imports.
    *
    * @param {string} path - The file path relative to the client directory.
@@ -300,6 +300,54 @@ export class FileSystem {
 
       return content.substr(0, endPos) + '\n' + newImport + content.substr(endPos);
     });
+
+    return this;
+  }
+
+  /**
+   * Creates or adds an element to the array property of a class.
+   *
+   * If the class does not exist, this method does nothing.
+   *
+   * @param {string} path - The file path relative to the client directory.
+   * @param {string} className - The class name.
+   * @param {string} propertyName - The property name.
+   * @param {string} element - The item to add to the array.
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  addOrExtendClassArrayPropertyIn(path: string, className: string, propertyName: string, element: string): this {
+    this.modify(path, content => content.replace(new RegExp(`class ${className} {(.*)}`, 's'), (match, p1: string) => {
+      if (/^(\s)*$/.test(p1)) {
+        return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n}`;
+      }
+
+      const replacedMatch = match.replace(
+        new RegExp(`( *)${propertyName} = \\[(.*)\\];`, 's'),
+        (_, spaces, content: string) => {
+          const items = content
+            .replace(/,\n/g, '\n')
+            .split('\n')
+            .map(e => e.trim())
+            .concat(element)
+            .map(e => `${spaces}${spaces}${e}`);
+
+          const cleanItems: string[] = [];
+          for (const item of items) {
+            if (item.trim() !== '') {
+              cleanItems.push(item);
+            }
+          }
+          return `${spaces}${propertyName} = [\n${cleanItems.join(',\n')}\n${spaces}];`;
+        }
+      );
+
+      if (replacedMatch !== match) {
+        return replacedMatch;
+      }
+
+      return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n${p1}}`;
+    }));
     return this;
   }
 
