@@ -241,7 +241,7 @@ export class FileSystem {
   }
 
   /**
-   * Add a named import at the bottom of the file
+   * Add a named import at the bottom of the file.
    *
    * @param {string} path - The file path relative to the client directory.
    * @param {string} specifier - The import specifier.
@@ -251,6 +251,55 @@ export class FileSystem {
    */
   addNamedExportIn(path: string, specifier: string, source: string): this {
     this.modify(path, content => `${content}export { ${specifier} } from '${source}';\n`);
+    return this;
+  }
+
+  /**
+   * Add or extend a named import at the beginning of the file.
+   *
+   * If an import already exists with this path, it is completed.
+   * If it does not already exist, it is added at the end of all imports.
+   *
+   * @param {string} path - The file path relative to the client directory.
+   * @param {string} specifier - The import specifier.
+   * @param {string} source - The import source.
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  addOrExtendNamedImportIn(path: string, specifier: string, source: string): this {
+    this.modify(path, content => {
+      // TODO: add tests to support double quotes.
+      const regex = /import (.*) from '(.*)';/g;
+      let endPos = 0;
+
+      const replacedContent = content.replace(regex, (match, p1, p2, offset: number) => {
+        endPos = offset + match.length;
+        const namedImportRegex = new RegExp(`import {(.*)} from \'(.*)\';`);
+        return match.replace(namedImportRegex, (subString, specifiers: string, path: string) => {
+          if (path !== source) {
+            return subString;
+          }
+          const newSpecifiers = specifiers
+            .split(',')
+            .map(imp => imp.trim())
+            .concat(specifier)
+            .sort((a, b) => a.localeCompare(b))
+            .join(', ');
+          return `import { ${newSpecifiers} } from '${source}';`;
+        });
+      });
+
+      if (replacedContent !== content) {
+        return replacedContent;
+      }
+
+      const newImport = `import { ${specifier} } from '${source}';`;
+      if (endPos === 0) {
+        return `${newImport}\n\n${content}`;
+      }
+
+      return content.substr(0, endPos) + '\n' + newImport + content.substr(endPos);
+    });
     return this;
   }
 

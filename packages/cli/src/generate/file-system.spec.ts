@@ -397,6 +397,70 @@ describe('FileSystem', () => {
 
   });
 
+
+  describe('has a "addOrExtendNamedImportIn" method that should', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      writeFileSync(
+        'test-generators/empty.txt',
+        'class FooBar {}',
+        'utf8'
+      );
+      writeFileSync(
+        'test-generators/hello.txt',
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+        'utf8'
+      );
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/empty.txt');
+      rmfile('test-generators/hello.txt');
+      rmdir('test-generators');
+    });
+
+    it('should add a named import at the beginning of the file if none exists.', () => {
+      fs.addOrExtendNamedImportIn('empty.txt', 'FooController', './controllers/foo.controller.txt');
+      strictEqual(
+        readFileSync('test-generators/empty.txt', 'utf8'),
+        'import { FooController } from \'./controllers/foo.controller.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should add a named import after all the imports if it does not already exist.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'FooController', './controllers/foo.controller.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
+        + 'import { FooController } from \'./controllers/foo.controller.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should extend the named import if it already exist.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { MyController, World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+  });
+
   describe('has a "setUp" method that', () => {
 
     afterEach(() => {
