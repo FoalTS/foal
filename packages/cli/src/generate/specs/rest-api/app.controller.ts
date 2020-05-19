@@ -1,8 +1,8 @@
 // 3p
+import { MyController, MyController2, TestFooBarController } from './controllers';
 import { controller } from '@foal/core';
-import { TestFooBarController } from './controllers';
 
-export class MyController {
+export class AppController {
   subControllers = [
     controller('/', MyController),
     controller('/', MyController2),

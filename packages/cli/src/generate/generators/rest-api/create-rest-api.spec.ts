@@ -72,66 +72,16 @@ describe('createRestApi', () => {
           .cd('..');
       });
 
-      it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
+      it('should register the controller in app.controller.ts.', () => {
         fs
-          .copyFixture('rest-api/app.controller.controller-import.ts', 'app.controller.ts');
-
+          .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
+  
         createRestApi({ name: 'test-fooBar', register: true });
-
+  
         fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.controller-import.ts');
+          .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
       });
 
-      it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.no-controller-import.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
-
-        fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.no-controller-import.ts');
-      });
-
-      it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.core-import.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
-
-        fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.core-import.ts');
-      });
-
-      it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.empty-property.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
-
-        fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.empty-property.ts');
-      });
-
-      it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.empty-spaced-property.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
-
-        fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.empty-spaced-property.ts');
-      });
-
-      it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
-          + ' src/app/app.controller.ts if it exists.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.no-empty-property.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
-
-        fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.no-empty-property.ts');
-      });
 
     });
 

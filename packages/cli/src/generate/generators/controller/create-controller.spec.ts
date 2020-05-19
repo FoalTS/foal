@@ -63,86 +63,25 @@ describe('createController', () => {
         .cd('..');
     });
 
-    it('should add all the imports if none exists.', () => {
+    it('should register the controller in app.controller.ts.', () => {
       fs
-        .copyFixture('controller/app.controller.no-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
       fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-import.ts');
+        .assertEqual('app.controller.ts', 'controller/app.controller.ts');
     });
 
-    it('should add all the imports if none exists (subdir).', () => {
+    it('should register the controller in a parent controller (subdir).', () => {
       fs
-        .ensureDir('controllers/barfoo')
-        .copyFixture('controller/app.controller.no-import.ts', 'controllers/barfoo/hello.controller.ts');
+        .ensureDir('controllers/hello')
+        .copyFixture('controller/api.controller.ts', 'controllers/hello/api.controller.ts');
 
-      createController({ name: 'barfoo/hello/test-fooBar', register: true });
-
-      fs
-        .assertEqual('controllers/barfoo/hello.controller.ts', 'controller/app.controller.no-import.ts');
-    });
-
-    it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.controller-import.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
+      createController({ name: 'hello/api/test-fooBar', register: true });
 
       fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.controller-import.ts');
-    });
-
-    it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.no-controller-import.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-controller-import.ts');
-    });
-
-    it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.core-import.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.core-import.ts');
-    });
-
-    it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.empty-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.empty-property.ts');
-    });
-
-    it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.empty-spaced-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.empty-spaced-property.ts');
-    });
-
-    it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
-        + ' src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyFixture('controller/app.controller.no-empty-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-empty-property.ts');
+        .assertEqual('controllers/hello/api.controller.ts', 'controller/api.controller.ts');
     });
 
   });

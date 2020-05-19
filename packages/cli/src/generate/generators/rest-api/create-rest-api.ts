@@ -8,7 +8,6 @@ import { red, underline } from 'colors/safe';
 // FoalTS
 import { FileSystem } from '../../file-system';
 import { findProjectPath, getNames } from '../../utils';
-import { registerController } from '../controller/register-controller';
 
 export function createRestApi({ name, register }: { name: string, register: boolean }) {
   const projectPath = findProjectPath();
@@ -37,6 +36,8 @@ export function createRestApi({ name, register }: { name: string, register: bool
 
   const names = getNames(name);
 
+  const className = `${names.upperFirstCamelName}Controller`;
+
   fs
     .cd(entityRoot)
     .render('rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
@@ -58,11 +59,27 @@ export function createRestApi({ name, register }: { name: string, register: bool
       names,
     )
     .ensureFile('index.ts')
-    .addNamedExportIn('index.ts', `${names.upperFirstCamelName}Controller`, `./${names.kebabName}.controller`)
-    .cd('..')
-    .modifyOnlyfIf(register, 'app.controller.ts', content => {
-      return registerController(content, `${names.upperFirstCamelName}Controller`, `/${names.kebabName}s`);
-    });
+    .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`);
+
+  if (register) {
+    fs
+      .cd('..')
+      .addOrExtendNamedImportIn(
+        'app.controller.ts',
+        'controller',
+        '@foal/core',
+      )
+      .addOrExtendNamedImportIn(
+        'app.controller.ts',
+        className,
+        './controllers'
+      )
+      .addOrExtendClassArrayPropertyIn(
+        'app.controller.ts',
+        'subControllers',
+        `controller('/${names.kebabName}s', ${className})`
+      );
+    }
 
   if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(
