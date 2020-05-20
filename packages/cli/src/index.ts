@@ -26,6 +26,7 @@ import {
   createSubApp,
   createVSCodeConfig,
 } from './generate';
+import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run-script';
 
@@ -119,41 +120,52 @@ program
       console.error();
       return;
     }
-    switch (type) {
-      case 'controller':
-        createController({ name, register: options.register  });
-        break;
-      case 'entity':
-        createEntity({ name });
-        break;
-      case 'rest-api':
-        createRestApi({ name, register: options.register });
-        break;
-      case 'hook':
-        createHook({ name });
-        break;
-      case 'model':
-        createModel({ name, checkMongoose: true });
-        break;
-      case 'sub-app':
-        createSubApp({ name });
-        break;
-      case 'script':
-        createScript({ name });
-        break;
-      case 'service':
-        createService({ name });
-        break;
-      case 'vscode-config':
-        createVSCodeConfig();
-        break;
-      default:
+    try {
+      switch (type) {
+        case 'controller':
+          createController({ name, register: options.register  });
+          break;
+        case 'entity':
+          createEntity({ name });
+          break;
+        case 'rest-api':
+          createRestApi({ name, register: options.register });
+          break;
+        case 'hook':
+          createHook({ name });
+          break;
+        case 'model':
+          createModel({ name, checkMongoose: true });
+          break;
+        case 'sub-app':
+          createSubApp({ name });
+          break;
+        case 'script':
+          createScript({ name });
+          break;
+        case 'service':
+          createService({ name });
+          break;
+        case 'vscode-config':
+          createVSCodeConfig();
+          break;
+        default:
+          console.error();
+          console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
+          console.error();
+          generateTypes.forEach(t => console.error(red(`  ${t}`)));
+          console.error();
+      }
+    } catch (error) {
+      if (error instanceof ClientError) {
         console.error();
-        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
+        console.error(red(error.message));
         console.error();
-        generateTypes.forEach(t => console.error(red(`  ${t}`)));
-        console.error();
+        return;
+      }
+      throw error;
     }
+
   });
 
 program

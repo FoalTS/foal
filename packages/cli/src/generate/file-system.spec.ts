@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSy
 import { join } from 'path';
 
 // FoalTS
-import { FileSystem } from './file-system';
+import { ClientError, FileSystem } from './file-system';
 
 function rmdir(path: string) {
   if (existsSync(path)) {
@@ -331,11 +331,14 @@ describe('FileSystem', () => {
       );
     });
 
-    it('should throw an error if the file does not exist.', () => {
+    it('should throw a ClientError if the file does not exist.', () => {
       try {
         fs.modify('test-file-system/foobar.txt', content => content);
         throw new Error('An error should have been thrown');
       } catch (error) {
+        if (!(error instanceof ClientError)) {
+          throw new Error('The error thrown should be an instance of ClientError.');
+        }
         strictEqual(error.message, 'Impossible to modify "test-file-system/foobar.txt": the file does not exist.');
       }
     });

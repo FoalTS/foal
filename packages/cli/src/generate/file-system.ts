@@ -32,6 +32,16 @@ function rmDirAndFiles(path: string) {
 }
 
 /**
+ * Error thrown by the FileSystem which aims to be pretty
+ * printed without the stacktrace.
+ *
+ * @export
+ * @class ClientError
+ * @extends {Error}
+ */
+export class ClientError extends Error {}
+
+/**
  * This class provides more methods that Node std "fs".
  * It also allows to create an isolated directory during directory.
  *
@@ -216,7 +226,7 @@ export class FileSystem {
    */
   modify(path: string, callback: (content: string) => string): this {
     if (!existsSync(this.parse(path))) {
-      throw new Error(`Impossible to modify "${path}": the file does not exist.`);
+      throw new ClientError(`Impossible to modify "${path}": the file does not exist.`);
     }
     const content = readFileSync(this.parse(path), 'utf8');
     this.logUpdate(path);
