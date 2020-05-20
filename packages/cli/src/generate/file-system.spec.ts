@@ -810,7 +810,9 @@ describe('FileSystem', () => {
         fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        strictEqual(error.message, '\'hi\\nmy\\nearth\\n!\' === \'hello\\nmy\\nworld\'');
+        strictEqual(error.code, 'ERR_ASSERTION');
+        strictEqual(error.message.includes('\'hi\\nmy\\nearth\\n!\''), true);
+        strictEqual(error.message.includes('\'hello\\nmy\\nworld\''), true);
       }
     });
 
