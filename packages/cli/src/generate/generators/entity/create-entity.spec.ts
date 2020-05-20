@@ -18,7 +18,7 @@ describe('createEntity', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('entity/index.ts', 'index.ts');
+          .copyFixture('entity/index.ts', 'index.ts');
       });
 
       it('should render the templates in the proper directory.', () => {

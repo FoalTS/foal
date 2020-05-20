@@ -165,7 +165,8 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     log('');
     log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-    const args = [ 'install' ];
+    // TODO: in version 2, remove the hack "--ignore-engines"
+    const args = [ 'install', '--ignore-engines' ];
     const options: SpawnOptions = {
       cwd: names.kebabName,
       shell: true,

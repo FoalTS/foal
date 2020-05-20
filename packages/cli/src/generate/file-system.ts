@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import {
   copyFileSync,
   existsSync,
@@ -14,7 +14,7 @@ import {
 import { dirname, join } from 'path';
 
 // 3p
-import { cyan, green, red } from 'colors/safe';
+import { cyan, green } from 'colors/safe';
 
 function rmDirAndFiles(path: string) {
   const files = readdirSync(path);
@@ -241,7 +241,7 @@ export class FileSystem {
   }
 
   /**
-   * Add a named import at the bottom of the file
+   * Add a named import at the bottom of the file.
    *
    * @param {string} path - The file path relative to the client directory.
    * @param {string} specifier - The import specifier.
@@ -251,6 +251,135 @@ export class FileSystem {
    */
   addNamedExportIn(path: string, specifier: string, source: string): this {
     this.modify(path, content => `${content}export { ${specifier} } from '${source}';\n`);
+    return this;
+  }
+
+  /**
+   * Adds or extends a named import at the beginning of the file.
+   *
+   * If an import already exists with this source path, it is completed.
+   * If it does not already exist, it is added at the end of all imports.
+   *
+   * @param {string} path - The file path relative to the client directory.
+   * @param {string} specifier - The import specifier.
+   * @param {string} source - The import source.
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  addOrExtendNamedImportIn(path: string, specifier: string, source: string, options?: { logs: boolean }): this {
+    const initialLogs = this.logs;
+    if (options) {
+      this.logs = options.logs;
+    }
+
+    this.modify(path, content => {
+      // TODO: add tests to support double quotes.
+      const regex = /import (.*) from '(.*)';/g;
+      let endPos = 0;
+
+      let specifierAlreadyExists = false;
+      const replacedContent = content.replace(regex, (match, p1, p2, offset: number) => {
+        endPos = offset + match.length;
+        const namedImportRegex = new RegExp(`import {(.*)} from \'(.*)\';`);
+        return match.replace(namedImportRegex, (subString, specifiersStr: string, path: string) => {
+          if (path !== source) {
+            return subString;
+          }
+          const specifiers = specifiersStr
+            .split(',')
+            .map(imp => imp.trim());
+
+          if (specifiers.includes(specifier)) {
+            specifierAlreadyExists = true;
+            return subString;
+          }
+
+          const newSpecifiers = specifiers
+            .concat(specifier)
+            .sort((a, b) => a.localeCompare(b))
+            .join(', ');
+          return `import { ${newSpecifiers} } from '${source}';`;
+        });
+      });
+
+      if (specifierAlreadyExists) {
+        return content;
+      }
+
+      if (replacedContent !== content) {
+        return replacedContent;
+      }
+
+      const newImport = `import { ${specifier} } from '${source}';`;
+      if (endPos === 0) {
+        return `${newImport}\n\n${content}`;
+      }
+
+      return content.substr(0, endPos) + '\n' + newImport + content.substr(endPos);
+    });
+
+    this.logs = initialLogs;
+
+    return this;
+  }
+
+  /**
+   * Creates or adds an element to the array property of a class.
+   *
+   * If the class does not exist, this method does nothing.
+   *
+   * @param {string} path - The file path relative to the client directory.
+   * @param {string} className - The class name.
+   * @param {string} propertyName - The property name.
+   * @param {string} element - The item to add to the array.
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  addOrExtendClassArrayPropertyIn(
+    path: string, propertyName: string, element: string, options?: { logs: boolean }
+  ): this {
+    const initialLogs = this.logs;
+    if (options) {
+      this.logs = options.logs;
+    }
+
+    this.modify(path, content => content.replace(
+      new RegExp(`class (\\w*) {(.*)}`, 's'),
+      (match, className: string, p2: string) => {
+        if (/^(\s)*$/.test(p2)) {
+          return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n}`;
+        }
+
+        const replacedMatch = match.replace(
+          new RegExp(`( *)${propertyName} = \\[(.*)\\];`, 's'),
+          (_, spaces, content: string) => {
+            const items = content
+              .replace(/,\n/g, '\n')
+              .split('\n')
+              .map(e => e.trim())
+              .concat(element)
+              .map(e => `${spaces}${spaces}${e}`);
+
+            const cleanItems: string[] = [];
+            for (const item of items) {
+              if (item.trim() !== '') {
+                cleanItems.push(item);
+              }
+            }
+            return `${spaces}${propertyName} = [\n${cleanItems.join(',\n')}\n${spaces}];`;
+          }
+        );
+
+        if (replacedMatch !== match) {
+          return replacedMatch;
+        }
+
+        return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n${p2}}`;
+      }
+    ));
+
+    this.logs = initialLogs;
+
     return this;
   }
 
@@ -338,39 +467,29 @@ export class FileSystem {
         readFileSync(specPath)
       );
     } else {
-      const expectedContent = readFileSync(specPath, 'utf8');
-      const actualContent = readFileSync(this.parse(actual), 'utf8');
-      if (expectedContent !== actualContent) {
-        const expectedLines = expectedContent.split('\n');
-        const actualLines = actualContent.split('\n');
-        let message = `The two files "${actual}" and "${expected}" are not equal.`;
-        for (let i = 0; i < Math.max(expectedLines.length, actualLines.length); i++) {
-          if (expectedLines[i] !== actualLines[i]) {
-            message += `\n\nLine ${i + 1}\n`
-            +  `${green(` Expected: ${expectedLines[i]}\n`)}${red(` Actual: ${actualLines[i]}`)}`;
-          }
-        }
-        throw new Error(message);
-      }
+      strictEqual(
+        readFileSync(this.parse(actual), 'utf8'),
+        readFileSync(specPath, 'utf8')
+      );
     }
     return this;
   }
 
   /**
-   * Copies a file from the `mocks` directory.
+   * Copies a file from the `fixtures` directory.
    *
-   * @param {string} src - The source path relative to the `mocks/` directory.
+   * @param {string} src - The source path relative to the `fixtures/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
    * @memberof FileSystem
    */
-  copyMock(src: string, dest: string): this {
-    const mockPath = join(__dirname, 'mocks', src);
-    if (!existsSync(mockPath)) {
-      throw new Error(`The mock file "${src}" does not exist.`);
+  copyFixture(src: string, dest: string): this {
+    const fixturePath = join(__dirname, 'fixtures', src);
+    if (!existsSync(fixturePath)) {
+      throw new Error(`The fixture file "${src}" does not exist.`);
     }
     copyFileSync(
-      mockPath,
+      fixturePath,
       this.parse(dest)
     );
     return this;

@@ -18,7 +18,7 @@ describe('createController', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('controller/index.ts', 'index.ts');
+          .copyFixture('controller/index.ts', 'index.ts');
       });
 
       it('should render the empty templates in the proper directory.', () => {
@@ -28,6 +28,13 @@ describe('createController', () => {
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
           .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts')
           .assertEqual('index.ts', 'controller/index.ts');
+      });
+
+      it('should create the directory if it does not exist.', () => {
+        createController({ name: 'barfoo/hello/test-fooBar', register: false });
+
+        fs
+          .assertExists('barfoo/hello/test-foo-bar.controller.ts');
       });
 
       it('should create index.ts if it does not exist.', () => {
@@ -52,79 +59,29 @@ describe('createController', () => {
       fs
         .ensureDir('src/app/controllers')
         .cd('src/app/controllers')
-        .copyMock('controller/index.ts', 'index.ts')
+        .copyFixture('controller/index.ts', 'index.ts')
         .cd('..');
     });
 
-    it('should add all the imports if none exists.', () => {
+    it('should register the controller in app.controller.ts.', () => {
       fs
-        .copyMock('controller/app.controller.no-import.ts', 'app.controller.ts');
+        .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
       createController({ name: 'test-fooBar', register: true });
 
       fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-import.ts');
+        .assertEqual('app.controller.ts', 'controller/app.controller.ts');
     });
 
-    it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
+    it('should register the controller in a parent controller (subdir).', () => {
       fs
-        .copyMock('controller/app.controller.controller-import.ts', 'app.controller.ts');
+        .ensureDir('controllers/hello')
+        .copyFixture('controller/api.controller.ts', 'controllers/hello/api.controller.ts');
 
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.controller-import.ts');
-    });
-
-    it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
-      fs
-        .copyMock('controller/app.controller.no-controller-import.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
+      createController({ name: 'hello/api/test-fooBar', register: true });
 
       fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-controller-import.ts');
-    });
-
-    it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyMock('controller/app.controller.core-import.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.core-import.ts');
-    });
-
-    it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyMock('controller/app.controller.empty-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.empty-property.ts');
-    });
-
-    it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyMock('controller/app.controller.empty-spaced-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.empty-spaced-property.ts');
-    });
-
-    it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
-        + ' src/app/app.controller.ts if it exists.', () => {
-      fs
-        .copyMock('controller/app.controller.no-empty-property.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.no-empty-property.ts');
+        .assertEqual('controllers/hello/api.controller.ts', 'controller/api.controller.ts');
     });
 
   });

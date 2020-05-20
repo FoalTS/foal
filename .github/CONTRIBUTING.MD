@@ -127,7 +127,7 @@ Here is the list of its sub-directories:
 | Directory | Description |
 | --- | --- |
 | generators | Contains the code which renders the templates or updates the files |
-| mocks | Contains some pieces of code used to test the file "updaters" |
+| fixtures | Contains some pieces of code used to test the file "updaters" |
 | specs | Defines how the generated files should look like in different scenarios (specifications) |
 | templates | Contains the actual templates used to generate the files |
 | utils | Contains some helpers shared by all the generators |

@@ -12,7 +12,7 @@ describe('connectVue', () => {
   it('should update package.json to set up the proxy, install ncp and change the output dir.', () => {
    fs
     .ensureDir('connector-test/vue')
-    .copyMock('vue/package.json', 'connector-test/vue/package.json');
+    .copyFixture('vue/package.json', 'connector-test/vue/package.json');
 
    connectVue('./connector-test/vue');
 

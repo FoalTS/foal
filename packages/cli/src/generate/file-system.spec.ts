@@ -3,9 +3,6 @@ import { notStrictEqual, strictEqual } from 'assert';
 import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-// 3p
-import { green, red } from 'colors/safe';
-
 // FoalTS
 import { FileSystem } from './file-system';
 
@@ -397,6 +394,239 @@ describe('FileSystem', () => {
 
   });
 
+  describe('has an "addOrExtendNamedImportIn" method that should', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      writeFileSync(
+        'test-generators/empty.txt',
+        'class FooBar {}',
+        'utf8'
+      );
+      writeFileSync(
+        'test-generators/hello.txt',
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+        'utf8'
+      );
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/empty.txt');
+      rmfile('test-generators/hello.txt');
+      rmdir('test-generators');
+    });
+
+    it('should add a named import at the beginning of the file if none exists.', () => {
+      fs.addOrExtendNamedImportIn('empty.txt', 'FooController', './controllers/foo.controller.txt');
+      strictEqual(
+        readFileSync('test-generators/empty.txt', 'utf8'),
+        'import { FooController } from \'./controllers/foo.controller.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should add a named import after all the imports if it does not already exist.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'FooController', './controllers/foo.controller.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
+        + 'import { FooController } from \'./controllers/foo.controller.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should extend the named import if it already exists and it does not have the specifier.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { MyController, World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+    it('should not extend the named import if it already exists but it has already the specifier.', () => {
+      fs.addOrExtendNamedImportIn('hello.txt', 'World', './bar.txt');
+      strictEqual(
+        readFileSync('test-generators/hello.txt', 'utf8'),
+        '// 3p\n'
+        + 'import { Hello } from \'./foo.txt\';\n'
+        + 'import { World } from \'./bar.txt\';\n'
+        + '\n'
+        + 'class FooBar {}',
+      );
+    });
+
+  });
+
+  describe('has an "addOrExtendClassArrayProperty" method that should', () => {
+
+    beforeEach(() => {
+      mkdir('test-generators');
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/foo.txt');
+      rmdir('test-generators');
+    });
+
+    it('should add the class property if it does not exist (empty class).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '}',
+      );
+    });
+
+    it('should add the class property if it does not exist (empty class with line returns).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n\n}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '}',
+      );
+    });
+
+    it('should add the class property if it does not exist (class with existing properties).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '  foo = 3;\n'
+        + '  bar() {};\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '\n'
+        + '  foo = 3;\n'
+        + '  bar() {};\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array with line returns).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '\n'
+        + '    ];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
+      );
+    });
+
+    it('should extend the class property if it already exists (empty array with existing items).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'\/foo\', FooController),\n'
+        + '        BarController,\n'
+        + '    ];\n'
+        + '}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar {\n'
+        + '    subControllers = [\n'
+        + '        controller(\'\/foo\', FooController),\n'
+        + '        BarController,\n'
+        + '        controller(\'/api\', ApiController)\n'
+        + '    ];\n'
+        + '}',
+      );
+    });
+
+  });
+
   describe('has a "setUp" method that', () => {
 
     afterEach(() => {
@@ -580,7 +810,9 @@ describe('FileSystem', () => {
         fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
         throw new Error('An error should have been thrown.');
       } catch (error) {
-        notStrictEqual(error.message, 'An error should have been thrown.');
+        strictEqual(error.code, 'ERR_ASSERTION');
+        strictEqual(error.message.includes('\'hi\\nmy\\nearth\\n!\''), true);
+        strictEqual(error.message.includes('\'hello\\nmy\\nworld\''), true);
       }
     });
 
@@ -597,52 +829,29 @@ describe('FileSystem', () => {
       }
     });
 
-    it('should throw understandable errors.', () => {
-      try {
-        fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
-        throw new Error('An error should have been thrown.');
-      } catch (error) {
-        strictEqual(
-          error.message,
-          `The two files "bar.txt" and "test-file-system/foo.spec.txt" are not equal.\n\n`
-          + 'Line 1\n'
-          + green(' Expected: hello\n')
-          + red(' Actual: hi')
-          + '\n\n'
-          + 'Line 3\n'
-          + green(' Expected: world\n')
-          + red(' Actual: earth')
-          + '\n\n'
-          + 'Line 4\n'
-          + green(' Expected: undefined\n')
-          + red(' Actual: !')
-        );
-      }
-    });
-
   });
 
-  describe('has a "copyMock" method that', () => {
+  describe('has a "copyFixture" method that', () => {
 
-    const mockDir = join(__dirname, 'mocks/test-file-system');
-    const mockPath = join(__dirname, 'mocks/test-file-system/tpl.txt');
+    const fixtureDir = join(__dirname, 'fixtures/test-file-system');
+    const fixturePath = join(__dirname, 'fixtures/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir(mockDir);
-      writeFileSync(mockPath, 'hello', 'utf8');
+      mkdir(fixtureDir);
+      writeFileSync(fixturePath, 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile(mockPath);
-      rmdir(mockDir);
+      rmfile(fixturePath);
+      rmdir(fixtureDir);
 
       rmfile('test-generators/hello.txt');
       rmdir('test-generators');
     });
 
-    it('should copy the file from the `mocks` directory.', () => {
-      fs.copyMock('test-file-system/tpl.txt', 'hello.txt');
+    it('should copy the file from the `fixtures` directory.', () => {
+      fs.copyFixture('test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/hello.txt')) {
         throw new Error('The file "test-generators/hello.txt" does not exist.');
       }
@@ -654,10 +863,10 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        fs.copyMock('test-file-system/foobar.txt', 'hello.txt');
+        fs.copyFixture('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error) {
-        strictEqual(error.message, 'The mock file "test-file-system/foobar.txt" does not exist.');
+        strictEqual(error.message, 'The fixture file "test-file-system/foobar.txt" does not exist.');
       }
     });
 

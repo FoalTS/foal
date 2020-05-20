@@ -103,7 +103,7 @@ const generateTypes: GenerateType[] = [
 ];
 
 program
-  .command('generate <type> <name>')
+  .command('generate <type> [name]')
   .description('Generate and/or modify files.')
   .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)', false)
   .alias('g')
@@ -113,6 +113,12 @@ program
     generateTypes.forEach(t => console.log(`  ${t}`));
   })
   .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
+    if (!name && type !== 'vscode-config') {
+      console.error();
+      console.error(red(`Argument "name" is required when creating a ${type}. Please provide one.`));
+      console.error();
+      return;
+    }
     switch (type) {
       case 'controller':
         createController({ name, register: options.register  });

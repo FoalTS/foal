@@ -18,7 +18,7 @@ describe('createModel', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyMock('model/index.ts', 'index.ts');
+          .copyFixture('model/index.ts', 'index.ts');
       });
 
       it('should render the templates in the proper directory.', () => {

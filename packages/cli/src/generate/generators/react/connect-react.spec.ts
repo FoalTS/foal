@@ -12,7 +12,7 @@ describe('connectReact', () => {
   it('should update package.json to set up the proxy, install ncp and change the output dir.', () => {
     fs
       .ensureDir('connector-test/react')
-      .copyMock('react/package.json', 'connector-test/react/package.json');
+      .copyFixture('react/package.json', 'connector-test/react/package.json');
 
     connectReact('./connector-test/react');
 
