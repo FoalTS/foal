@@ -49,7 +49,7 @@ If you wish to automatically create a new route attached to this controller, you
 *Example*
 ```shell
 foal g controller api --register
-foal g controller api/auth --register
+foal g controller api/product --register
 ```
 
 *Output*
