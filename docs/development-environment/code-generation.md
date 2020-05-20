@@ -20,10 +20,67 @@ foal g controller <name>
 
 Create a new controller in `./src/app/controllers`, in `./controllers` or in the current directory depending on which folders are found.
 
-If you are in the root directory and you want to automatically register the controller within the app controller you can add the `--register` flag.
+*Example*
+```shell
+foal g controller auth
+foal g controller api/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- controllers/
+   |- api/
+   | |- product.controller.ts
+   | '- index.ts
+   |- auth.controller.ts
+   '- index.ts
+```
+
+### The `--register` flag
 
 ```shell
 foal g controller <name> --register
+```
+
+If you wish to automatically create a new route attached to this controller, you can use the `--register` flag to do so.
+
+*Example*
+```shell
+foal g controller api --register
+foal g controller api/auth --register
+```
+
+*Output*
+```
+src/
+ '- app/
+  |- controllers/
+  | |- api/
+  | | |- product.controller.ts
+  | | '- index.ts
+  | |- api.controller.ts
+  | '- index.ts
+  '- app.controller.ts
+```
+
+*app.controller.ts*
+```typescript
+export class AppController {
+  subControllers = [
+    controller('/api', ApiController)
+  ]
+}
+```
+
+*api.controller.ts*
+```typescript
+export class ApiController {
+  subControllers = [
+    controller('/product', ProductController)
+  ]
+}
 ```
 
 ## Create an entity (simple model)
@@ -90,3 +147,21 @@ foal g service <name>
 ```
 
 Create a new service in `./src/app/services`, in `./services` or in the current directory depending on which folders are found.
+
+*Example*
+```shell
+foal g service auth
+foal g service apis/github
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- services/
+   |- apis/
+   | '- github.service.ts
+   | '- index.ts
+   |- auth.service.ts
+   '- index.ts
+```
