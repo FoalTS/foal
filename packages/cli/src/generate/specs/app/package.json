@@ -35,7 +35,7 @@
     "@foal/typeorm": "^1.0.0",
     "source-map-support": "^0.5.1",
     "sqlite3": "^4.0.0",
-    "typeorm": "^0.2.6"
+    "typeorm": "0.2.24"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
