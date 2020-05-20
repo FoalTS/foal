@@ -29,18 +29,18 @@
   "dependencies": {
     "@foal/core": "^1.0.0",
     "@foal/mongoose": "^1.0.0",
-    "mongoose": "^5.4.9",
-    "source-map-support": "^0.5.1"
+    "mongoose": "~5.4.9",
+    "source-map-support": "~0.5.1"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.1",
-    "@types/node": "^8.0.47",
-    "concurrently": "^3.5.1",
-    "copy": "^0.3.2",
-    "mocha": "^5.2.0",
-    "supertest": "^3.3.0",
-    "supervisor": "^0.12.0",
-    "eslint": "^6.7.0",
+    "@types/mocha": "5.2.1",
+    "@types/node": "8.0.47",
+    "concurrently": "~3.5.1",
+    "copy": "~0.3.2",
+    "mocha": "~5.2.0",
+    "supertest": "~3.3.0",
+    "supervisor": "~0.12.0",
+    "eslint": "~6.7.0",
     "@typescript-eslint/eslint-plugin": "~2.7.0",
     "@typescript-eslint/parser": "~2.7.0",
     "typescript": "~3.5.3"
