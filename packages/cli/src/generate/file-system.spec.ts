@@ -783,6 +783,41 @@ describe('FileSystem', () => {
 
   });
 
+  describe('has a "projectHasDependency" method that', () => {
+
+    let initialPkg: Buffer;
+
+    before(() => {
+      mkdir('test-generators');
+      initialPkg = readFileSync('package.json');
+      writeFileSync('package.json', JSON.stringify({
+        dependencies: {
+          '@foal/core': 'hello',
+          'bar': 'world'
+        }
+      }), 'utf8');
+    });
+
+    after(() => {
+      writeFileSync('package.json', initialPkg);
+      rmdir('test-generators');
+    });
+
+    it('should return true if the project has the dependency in its package.json.', () => {
+      strictEqual(fs.projectHasDependency('bar'), true);
+    });
+
+    it('should return false if the project does not have the dependency in its package.json.', () => {
+      strictEqual(fs.projectHasDependency('foo'), false);
+    });
+
+    it('should not change the current working directory.', () => {
+      fs.projectHasDependency('commander');
+      strictEqual(fs.currentDir, '');
+    });
+
+  });
+
   describe('has a "tearDown" method that', () => {
 
     beforeEach(() => {

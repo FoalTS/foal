@@ -435,6 +435,24 @@ export class FileSystem {
     return this;
   }
 
+  /**
+   * Returns true if the project package.json has this dependency.
+   * Returns false otherwise.
+   *
+   * @param {string} name - The name of the dependency.
+   * @returns {boolean}
+   * @memberof FileSystem
+   */
+  projectHasDependency(name: string): boolean {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    this.currentDir = initialCurrentDir;
+    return pkg.dependencies.hasOwnProperty(name);
+  }
+
   /************************
       Testing Methods
   ************************/
