@@ -135,7 +135,7 @@ program
           createHook({ name });
           break;
         case 'model':
-          createModel({ name, checkMongoose: true });
+          createModel({ name });
           break;
         case 'sub-app':
           createSubApp({ name });
