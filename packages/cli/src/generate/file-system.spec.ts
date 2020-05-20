@@ -42,6 +42,138 @@ describe('FileSystem', () => {
 
   });
 
+  describe('has a "cdProjectRootDir" that', () => {
+
+    let cliPkg: Buffer;
+    let rootPkg: Buffer;
+
+    before(() => {
+      cliPkg = readFileSync('package.json');
+      unlinkSync('package.json');
+
+      rootPkg = readFileSync('../../package.json');
+      unlinkSync('../../package.json');
+    });
+
+    after(() => {
+      writeFileSync('../../package.json', rootPkg);
+      writeFileSync('package.json', cliPkg);
+    });
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/foo');
+      mkdir('test-generators/foo/bar');
+    });
+
+    afterEach(() => {
+      rmfile('test-generators/package.json');
+      rmdir('test-generators/foo/bar');
+      rmdir('test-generators/foo');
+      rmdir('test-generators');
+    });
+
+    it('should root the current working directory to the project root directory.', () => {
+      writeFileSync(
+        'test-generators/package.json',
+        JSON.stringify({
+          dependencies: {
+            '@foal/core': 'versionNumber'
+          }
+        }),
+        'utf8'
+      );
+      fs.cd('foo/bar');
+      fs.cdProjectRootDir();
+      strictEqual(fs.currentDir, '.');
+    });
+
+    it('should throw a ClienError if the package.json is not a valid JSON.', () => {
+      writeFileSync(
+        'test-generators/package.json',
+        'hello',
+        'utf8'
+      );
+
+      fs.cd('foo/bar');
+      try {
+        fs.cdProjectRootDir();
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ClientError)) {
+          throw new Error('The error thrown should be an instance of ClientError.');
+        }
+        strictEqual(
+          error.message,
+          'The file package.json is not a valid JSON. Unexpected token h in JSON at position 0'
+        );
+      }
+    });
+
+    it('should throw a ClienError if the package.json found does not have @foal/core as dependency (no deps).', () => {
+      writeFileSync(
+        'test-generators/package.json',
+        JSON.stringify({}),
+        'utf8'
+      );
+
+      fs.cd('foo/bar');
+      try {
+        fs.cdProjectRootDir();
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ClientError)) {
+          throw new Error('The error thrown should be an instance of ClientError.');
+        }
+        strictEqual(
+          error.message,
+          'This project is not a FoalTS project. The dependency @foal/core is missing in package.json.'
+        );
+      }
+    });
+
+    it('should throw a ClienError if the package.json found does not have @foal/core as dependency (>=1 dep).', () => {
+      writeFileSync(
+        'test-generators/package.json',
+        JSON.stringify({
+          dependencies: {}
+        }),
+        'utf8'
+      );
+
+      fs.cd('foo/bar');
+      try {
+        fs.cdProjectRootDir();
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ClientError)) {
+          throw new Error('The error thrown should be an instance of ClientError.');
+        }
+        strictEqual(
+          error.message,
+          'This project is not a FoalTS project. The dependency @foal/core is missing in package.json.'
+        );
+      }
+    });
+
+    it('should throw a ClientError if no package.json is found.', () => {
+      fs.cd('foo/bar');
+      try {
+        fs.cdProjectRootDir();
+        throw new Error('An error should have been thrown');
+      } catch (error) {
+        if (!(error instanceof ClientError)) {
+          throw new Error('The error thrown should be an instance of ClientError.');
+        }
+        strictEqual(
+          error.message,
+          'This project is not a FoalTS project. No package.json found.'
+        );
+      }
+    });
+
+  });
+
   describe('has a "exists" method that', () => {
 
     beforeEach(() => {
