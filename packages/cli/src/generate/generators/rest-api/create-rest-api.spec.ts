@@ -1,5 +1,8 @@
+// std
+import { strictEqual } from 'assert';
+
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { ClientError, FileSystem } from '../../file-system';
 import { createRestApi } from './create-rest-api';
 
 // TODO: add tests like "should create index.ts if it does not exist."
@@ -18,6 +21,7 @@ describe('createRestApi', () => {
 
       beforeEach(() => {
         fs
+          .copyFixture('rest-api/package.json', 'package.json')
           .ensureDir(root)
           .cd(root)
           .ensureDir('entities')
@@ -60,6 +64,7 @@ describe('createRestApi', () => {
 
       beforeEach(() => {
         fs
+          .copyFixture('rest-api/package.json', 'package.json')
           .ensureDir(root)
           .cd(root)
           .ensureDir('entities')
@@ -93,6 +98,7 @@ describe('createRestApi', () => {
 
     beforeEach(() => {
       fs
+        .copyFixture('rest-api/package.json', 'package.json')
         .copyFixture('rest-api/index.current-dir.ts', 'index.ts');
     });
 
@@ -114,6 +120,25 @@ describe('createRestApi', () => {
       fs.assertExists('index.ts');
     });
 
+  });
+
+  it('should throw a ClientError if the project has the dependency "mongoose".', () => {
+    fs
+      .copyFixture('model/index.ts', 'index.ts')
+      .copyFixture('model/package.mongoose.json', 'package.json');
+
+    try {
+      createRestApi({ name: 'test-fooBar', register: false });
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      if (!(error instanceof ClientError)) {
+        throw new Error('The error thrown should be an instance of ClientError.');
+      }
+      strictEqual(
+        error.message,
+        `"foal generate|g rest-api <name>" cannot be used in a Mongoose project.`
+      );
+    }
   });
 
 });

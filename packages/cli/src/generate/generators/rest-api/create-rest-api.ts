@@ -1,28 +1,16 @@
-// std
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
 // 3p
-import { red, underline } from 'colors/safe';
+import { underline } from 'colors/safe';
 
 // FoalTS
-import { FileSystem } from '../../file-system';
-import { findProjectPath, getNames } from '../../utils';
+import { ClientError, FileSystem } from '../../file-system';
+import { getNames } from '../../utils';
 
 export function createRestApi({ name, register }: { name: string, register: boolean }) {
-  const projectPath = findProjectPath();
-
-  if (projectPath !== null) {
-    const pkg = JSON.parse(readFileSync(join(projectPath, 'package.json'), 'utf8'));
-    if (pkg.dependencies && pkg.dependencies.mongoose) {
-      console.log(red(
-        '\n  "foal generate|g rest-api <name>" cannot be used in a Mongoose project.\n'
-      ));
-      return;
-    }
-  }
-
   const fs = new FileSystem();
+
+  if (fs.projectHasDependency('mongoose')) {
+    throw new ClientError('"foal generate|g rest-api <name>" cannot be used in a Mongoose project.');
+  }
 
   let entityRoot = '';
   let controllerRoot = '';
