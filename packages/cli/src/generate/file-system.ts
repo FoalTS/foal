@@ -266,7 +266,12 @@ export class FileSystem {
    * @returns {this}
    * @memberof FileSystem
    */
-  addOrExtendNamedImportIn(path: string, specifier: string, source: string): this {
+  addOrExtendNamedImportIn(path: string, specifier: string, source: string, options?: { logs: boolean }): this {
+    const initialLogs = this.logs;
+    if (options) {
+      this.logs = options.logs;
+    }
+
     this.modify(path, content => {
       // TODO: add tests to support double quotes.
       const regex = /import (.*) from '(.*)';/g;
@@ -313,6 +318,8 @@ export class FileSystem {
       return content.substr(0, endPos) + '\n' + newImport + content.substr(endPos);
     });
 
+    this.logs = initialLogs;
+
     return this;
   }
 
@@ -328,7 +335,14 @@ export class FileSystem {
    * @returns {this}
    * @memberof FileSystem
    */
-  addOrExtendClassArrayPropertyIn(path: string, propertyName: string, element: string): this {
+  addOrExtendClassArrayPropertyIn(
+    path: string, propertyName: string, element: string, options?: { logs: boolean }
+  ): this {
+    const initialLogs = this.logs;
+    if (options) {
+      this.logs = options.logs;
+    }
+
     this.modify(path, content => content.replace(
       new RegExp(`class (\\w*) {(.*)}`, 's'),
       (match, className: string, p2: string) => {
@@ -363,6 +377,9 @@ export class FileSystem {
         return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n${p2}}`;
       }
     ));
+
+    this.logs = initialLogs;
+
     return this;
   }
 

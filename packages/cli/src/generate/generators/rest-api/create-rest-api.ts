@@ -68,11 +68,13 @@ export function createRestApi({ name, register }: { name: string, register: bool
         'app.controller.ts',
         'controller',
         '@foal/core',
+        { logs: false }
       )
       .addOrExtendNamedImportIn(
         'app.controller.ts',
         className,
-        './controllers'
+        './controllers',
+        { logs: false }
       )
       .addOrExtendClassArrayPropertyIn(
         'app.controller.ts',

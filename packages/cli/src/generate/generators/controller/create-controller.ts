@@ -38,11 +38,13 @@ export function createController({ name, register }: { name: string, register: b
         parentControllerPath,
         'controller',
         '@foal/core',
+        { logs: false }
       )
       .addOrExtendNamedImportIn(
         parentControllerPath,
         className,
-        `./${subdir === '.' ? 'controllers' : basename(subdir)}`
+        `./${subdir === '.' ? 'controllers' : basename(subdir)}`,
+        { logs: false }
       )
       .addOrExtendClassArrayPropertyIn(
         parentControllerPath,
