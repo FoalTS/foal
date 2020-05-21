@@ -7,7 +7,7 @@ import { getNames } from '../../utils';
 
 export function createRestApi({ name, register, auth }: { name: string, register: boolean, auth?: boolean }) {
   auth = auth || false;
-  
+
   const fs = new FileSystem();
 
   if (fs.projectHasDependency('mongoose')) {
@@ -44,14 +44,27 @@ export function createRestApi({ name, register, auth }: { name: string, register
 
     .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.ts', `${names.kebabName}.controller.ts`, names)
     .renderOnlyIf(!isCurrentDir && auth, 'rest-api/controller.auth.ts', `${names.kebabName}.controller.ts`, names)
-    .renderOnlyIf(isCurrentDir && !auth, 'rest-api/controller.current-dir.ts', `${names.kebabName}.controller.ts`, names)
-    .renderOnlyIf(isCurrentDir && auth, 'rest-api/controller.current-dir.auth.ts', `${names.kebabName}.controller.ts`, names)
+    .renderOnlyIf(
+      isCurrentDir && !auth, 'rest-api/controller.current-dir.ts', `${names.kebabName}.controller.ts`, names
+    )
+    .renderOnlyIf(
+      isCurrentDir && auth, 'rest-api/controller.current-dir.auth.ts', `${names.kebabName}.controller.ts`, names
+    )
 
     .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.spec.ts', `${names.kebabName}.controller.spec.ts`, names)
-    .renderOnlyIf(!isCurrentDir && auth, 'rest-api/controller.spec.auth.ts', `${names.kebabName}.controller.spec.ts`, names)
-    .renderOnlyIf(isCurrentDir && !auth, 'rest-api/controller.spec.current-dir.ts', `${names.kebabName}.controller.spec.ts`, names)
-    .renderOnlyIf(isCurrentDir && auth, 'rest-api/controller.spec.current-dir.auth.ts', `${names.kebabName}.controller.spec.ts`, names)
-    
+    .renderOnlyIf(
+      !isCurrentDir && auth, 'rest-api/controller.spec.auth.ts', `${names.kebabName}.controller.spec.ts`, names
+    )
+    .renderOnlyIf(
+      isCurrentDir && !auth, 'rest-api/controller.spec.current-dir.ts', `${names.kebabName}.controller.spec.ts`, names
+    )
+    .renderOnlyIf(
+      isCurrentDir && auth,
+      'rest-api/controller.spec.current-dir.auth.ts',
+      `${names.kebabName}.controller.spec.ts`,
+      names
+    )
+
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`);
 

@@ -42,16 +42,16 @@ describe('TestFooBarController', () => {
 
     [ testFooBar0, testFooBar1, testFooBar2 ] = await testFooBarRepository.save([
       {
+        owner: user1,
         text: 'TestFooBar 0',
-        owner: user1
       },
       {
+        owner: user2,
         text: 'TestFooBar 1',
-        owner: user2
       },
       {
+        owner: user2,
         text: 'TestFooBar 2',
-        owner: user2
       },
     ]);
   });
@@ -83,8 +83,8 @@ describe('TestFooBarController', () => {
 
     it('should support pagination', async () => {
       const testFooBar3 = await getRepository(TestFooBar).save({
+        owner: user2,
         text: 'TestFooBar 3',
-        owner: user2
       });
 
       let ctx = new Context({
@@ -192,8 +192,8 @@ describe('TestFooBarController', () => {
       }
 
       const testFooBar = await getRepository(TestFooBar).findOne({
+        relations: [ 'owner' ],
         where: { text: 'TestFooBar 3' },
-        relations: [ 'owner' ]
       });
 
       if (!testFooBar) {

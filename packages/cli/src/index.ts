@@ -106,8 +106,16 @@ const generateTypes: GenerateType[] = [
 program
   .command('generate <type> [name]')
   .description('Generate and/or modify files.')
-  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller|rest-api)', false)
-  .option('-a, --auth', 'Add an owner to the entities of the generated REST API (only available if type=rest-api)', false)
+  .option(
+    '-r, --register',
+    'Register the controller into app.controller.ts (only available if type=controller|rest-api)',
+    false
+  )
+  .option(
+    '-a, --auth',
+    'Add an owner to the entities of the generated REST API (only available if type=rest-api)',
+    false
+  )
   .alias('g')
   .on('--help', () => {
     console.log();

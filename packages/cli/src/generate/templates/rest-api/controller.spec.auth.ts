@@ -42,16 +42,16 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     [ /* camelName */0, /* camelName */1, /* camelName */2 ] = await /* camelName */Repository.save([
       {
+        owner: user1,
         text: '/* upperFirstCamelName */ 0',
-        owner: user1
       },
       {
+        owner: user2,
         text: '/* upperFirstCamelName */ 1',
-        owner: user2
       },
       {
+        owner: user2,
         text: '/* upperFirstCamelName */ 2',
-        owner: user2
       },
     ]);
   });
@@ -83,8 +83,8 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     it('should support pagination', async () => {
       const /* camelName */3 = await getRepository(/* upperFirstCamelName */).save({
+        owner: user2,
         text: '/* upperFirstCamelName */ 3',
-        owner: user2
       });
 
       let ctx = new Context({
@@ -192,8 +192,8 @@ describe('/* upperFirstCamelName */Controller', () => {
       }
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+        relations: [ 'owner' ],
         where: { text: '/* upperFirstCamelName */ 3' },
-        relations: [ 'owner' ]
       });
 
       if (!/* camelName */) {
