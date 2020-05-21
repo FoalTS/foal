@@ -26,7 +26,7 @@ export async function main(/*args*/) {
   // await user.setPassword(args.password);
 
   const uri = Config.getOrThrow('mongodb.uri', 'string');
-  connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
+  await connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
   try {
     console.log(
@@ -35,6 +35,6 @@ export async function main(/*args*/) {
   } catch (error) {
     console.log(error.message);
   } finally {
-    disconnect();
+    await disconnect();
   }
 }
