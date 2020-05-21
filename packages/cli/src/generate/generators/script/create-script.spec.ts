@@ -22,4 +22,16 @@ describe('createScript', () => {
       .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.ts');
   });
 
+  it('should copy the empty script file in the proper directory (mongoose).', () => {
+    fs
+      .copyFixture('script/package.mongoose.json', 'package.json')
+      .ensureDir('src/scripts');
+
+    createScript({ name: 'test-fooBar' });
+
+    fs
+    .cd('src/scripts')
+      .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.mongoose.ts');
+  });
+
 });

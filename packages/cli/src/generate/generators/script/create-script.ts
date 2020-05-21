@@ -11,10 +11,12 @@ export function createScript({ name }: { name: string }) {
   const names = getNames(name);
 
   const fs = new FileSystem();
+  const isMongoose = fs.projectHasDependency('mongoose');
 
   fs
     // TODO: test this line
     .cdProjectRootDir()
     .cd('src/scripts')
-    .copy('script/script.ts', `${names.kebabName}.ts`);
+    .copyOnlyIf(!isMongoose, 'script/script.ts', `${names.kebabName}.ts`)
+    .copyOnlyIf(isMongoose, 'script/script.mongoose.ts', `${names.kebabName}.ts`)
 }
