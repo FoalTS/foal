@@ -11,14 +11,7 @@ export const schema = {
 };
 
 export async function main(args: any) {
-  const connection = await createConnection();
-
-  try {
-    // Do something.
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    await connection.close();
-  }
+  await createConnection();
+  // MONGOOSE
+  // Do something.
 }
