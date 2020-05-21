@@ -10,6 +10,9 @@ describe('createVSCodeConfig', () => {
   afterEach(() => fs.tearDown());
 
   it('should create the directory .vscode/ with default launch.json and tasks.json files.', () => {
+    fs
+      .copyFixture('vscode-config/package.json', 'package.json');
+
     createVSCodeConfig();
 
     fs

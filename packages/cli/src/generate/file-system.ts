@@ -11,7 +11,7 @@ import {
   unlinkSync,
   writeFileSync
 } from 'fs';
-import { dirname, join } from 'path';
+import { dirname, join, parse } from 'path';
 
 // 3p
 import { cyan, green } from 'colors/safe';
@@ -30,6 +30,16 @@ function rmDirAndFiles(path: string) {
 
   rmdirSync(path);
 }
+
+/**
+ * Error thrown by the FileSystem which aims to be pretty
+ * printed without the stacktrace.
+ *
+ * @export
+ * @class ClientError
+ * @extends {Error}
+ */
+export class ClientError extends Error {}
 
 /**
  * This class provides more methods that Node std "fs".
@@ -57,7 +67,7 @@ export class FileSystem {
   }
 
   /**
-   * Change the current working directory.
+   * Changes the current working directory.
    *
    * @param {string} path - Relative path of the directory.
    * @returns {this}
@@ -65,6 +75,48 @@ export class FileSystem {
    */
   cd(path: string): this {
     this.currentDir = join(this.currentDir, path);
+    return this;
+  }
+
+  /**
+   * Changes the current working directory to the project root
+   * directory.
+   *
+   * It searches for the closer package.json containing @foal/core
+   * as dependency.
+   *
+   * @returns {this}
+   * @memberof FileSystem
+   */
+  cdProjectRootDir(): this {
+    // "/" on Unix, C:\ on Windows
+    const root =  parse(process.cwd()).root;
+
+    while (!this.exists('package.json')) {
+      if (join(process.cwd(), this.parse('.')) === root) {
+        throw new ClientError(
+          'This project is not a FoalTS project. No package.json found.'
+        );
+      }
+      this.cd('..');
+    }
+    const content = readFileSync(this.parse('package.json'), 'utf8');
+
+    let pkg: any;
+    try {
+      pkg = JSON.parse(content);
+    } catch (error) {
+      throw new ClientError(
+        `The file package.json is not a valid JSON. ${error.message}`
+      );
+    }
+
+    if (!pkg.dependencies || !pkg.dependencies['@foal/core']) {
+      throw new ClientError(
+        'This project is not a FoalTS project. The dependency @foal/core is missing in package.json.'
+      );
+    }
+
     return this;
   }
 
@@ -216,7 +268,7 @@ export class FileSystem {
    */
   modify(path: string, callback: (content: string) => string): this {
     if (!existsSync(this.parse(path))) {
-      throw new Error(`Impossible to modify "${path}": the file does not exist.`);
+      throw new ClientError(`Impossible to modify "${path}": the file does not exist.`);
     }
     const content = readFileSync(this.parse(path), 'utf8');
     this.logUpdate(path);
@@ -381,6 +433,24 @@ export class FileSystem {
     this.logs = initialLogs;
 
     return this;
+  }
+
+  /**
+   * Returns true if the project package.json has this dependency.
+   * Returns false otherwise.
+   *
+   * @param {string} name - The name of the dependency.
+   * @returns {boolean}
+   * @memberof FileSystem
+   */
+  projectHasDependency(name: string): boolean {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    this.currentDir = initialCurrentDir;
+    return pkg.dependencies.hasOwnProperty(name);
   }
 
   /************************

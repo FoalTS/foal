@@ -1,47 +1,37 @@
 // FoalTS
 import { FileSystem } from '../../file-system';
-import {
-  rmDirAndFilesIfExist,
-} from '../../utils';
 import { createScript } from './create-script';
-
-// TODO: Improve the tests. They currently cover partially `createScript`.
 
 describe('createScript', () => {
 
   const fs = new FileSystem();
-  // TODO: remove this line.
-  (fs as any).testDir = '';
 
-  afterEach(() => {
-    rmDirAndFilesIfExist('src/scripts');
-    // We cannot remove src/ since the generator code lives within. This is bad testing
-    // approach.
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
+
+  it('should copy the empty script file in the proper directory.', () => {
+    fs
+      .copyFixture('script/package.json', 'package.json')
+      .ensureDir('src/scripts');
+
+    createScript({ name: 'test-fooBar' });
+
+    fs
+    .cd('src/scripts')
+      .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.ts');
   });
 
-  describe(`when the directory src/scripts/ exists`, () => {
+  it('should copy the empty script file in the proper directory (mongoose).', () => {
+    fs
+      .copyFixture('script/package.mongoose.json', 'package.json')
+      .ensureDir('src/scripts');
 
-    beforeEach(() => {
-      fs
-        .ensureDir('src/scripts')
-        .cd('src/scripts');
-    });
+    createScript({ name: 'test-fooBar' });
 
-    it('should copy the empty script file in the proper directory.', () => {
-      createScript({ name: 'test-fooBar' });
-
-      fs
-        .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.ts');
-    });
-
-  });
-
-  describe(`when the directory src/scripts/ does not exist`, () => {
-
-    it('should not throw an error.', () => {
-      createScript({ name: 'test-fooBar' });
-    });
-
+    fs
+    .cd('src/scripts')
+      .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.mongoose.ts');
   });
 
 });
