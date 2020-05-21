@@ -106,14 +106,15 @@ const generateTypes: GenerateType[] = [
 program
   .command('generate <type> [name]')
   .description('Generate and/or modify files.')
-  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)', false)
+  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller|rest-api)', false)
+  .option('-a, --auth', 'Add an owner to the entities of the generated REST API (only available if type=rest-api)', false)
   .alias('g')
   .on('--help', () => {
     console.log();
     console.log('Available types:');
     generateTypes.forEach(t => console.log(`  ${t}`));
   })
-  .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
+  .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
     if (!name && type !== 'vscode-config') {
       console.error();
       console.error(red(`Argument "name" is required when creating a ${type}. Please provide one.`));
@@ -129,7 +130,7 @@ program
           createEntity({ name });
           break;
         case 'rest-api':
-          createRestApi({ name, register: options.register });
+          createRestApi({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
           createHook({ name });
