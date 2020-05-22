@@ -42,7 +42,7 @@
 <p align="center">
   <a href="https://foalts.org/">Website</a>
   -
-  <a href="https://foalts.gitbook.io/docs/content/">Documentation</a>
+  <a href="https://foalts.gitbook.io/docs/">Documentation</a>
   -
   <a href="https://twitter.com/foalts">Twitter</a>
   -
