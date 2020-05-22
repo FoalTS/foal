@@ -10,14 +10,17 @@ import {
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // App
-import { /* upperFirstCamelName */ } from '../entities';
+import { /* upperFirstCamelName */, User } from '../entities';
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
 
 describe('/* upperFirstCamelName */Controller', () => {
 
   let controller: /* upperFirstCamelName */Controller;
+  let /* camelName */0: /* upperFirstCamelName */;
   let /* camelName */1: /* upperFirstCamelName */;
   let /* camelName */2: /* upperFirstCamelName */;
+  let user1: User;
+  let user2: User;
 
   before(() => createConnection());
 
@@ -26,14 +29,29 @@ describe('/* upperFirstCamelName */Controller', () => {
   beforeEach(async () => {
     controller = createController(/* upperFirstCamelName */Controller);
 
-    const repository = getRepository(/* upperFirstCamelName */);
-    await repository.clear();
-    [ /* camelName */1, /* camelName */2 ] = await repository.save([
+    const /* camelName */Repository = getRepository(/* upperFirstCamelName */);
+    const userRepository = getRepository(User);
+
+    await /* camelName */Repository.clear();
+    await userRepository.clear();
+
+    [ user1, user2 ] = await userRepository.save([
+      {},
+      {},
+    ]);
+
+    [ /* camelName */0, /* camelName */1, /* camelName */2 ] = await /* camelName */Repository.save([
       {
-        text: '/* upperFirstCamelName */ 1'
+        owner: user1,
+        text: '/* upperFirstCamelName */ 0',
       },
       {
-        text: '/* upperFirstCamelName */ 2'
+        owner: user2,
+        text: '/* upperFirstCamelName */ 1',
+      },
+      {
+        owner: user2,
+        text: '/* upperFirstCamelName */ 2',
       },
     ]);
   });
@@ -47,6 +65,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     it('should return an HttpResponseOK object with the /* camelName */ list.', async () => {
       const ctx = new Context({ query: {} });
+      ctx.user = user2;
       const response = await controller.find/* upperFirstCamelName */s(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -64,6 +83,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
     it('should support pagination', async () => {
       const /* camelName */3 = await getRepository(/* upperFirstCamelName */).save({
+        owner: user2,
         text: '/* upperFirstCamelName */ 3',
       });
 
@@ -72,6 +92,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           take: 2
         }
       });
+      ctx.user = user2;
       let response = await controller.find/* upperFirstCamelName */s(ctx);
 
       strictEqual(response.body.length, 2);
@@ -84,6 +105,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           skip: 1
         }
       });
+      ctx.user = user2;
       response = await controller.find/* upperFirstCamelName */s(ctx);
 
       strictEqual(response.body.length, 2);
@@ -107,6 +129,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.find/* upperFirstCamelName */ById(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -123,6 +146,21 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.find/* upperFirstCamelName */ById(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound object if the /* camelName */ belongs to another user.', async () => {
+      const ctx = new Context({
+        params: {
+          /* camelName */Id: /* camelName */0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.find/* upperFirstCamelName */ById(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -146,19 +184,24 @@ describe('/* upperFirstCamelName */Controller', () => {
           text: '/* upperFirstCamelName */ 3',
         }
       });
+      ctx.user = user2;
       const response = await controller.create/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseCreated(response)) {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({ text: '/* upperFirstCamelName */ 3' });
+      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+        relations: [ 'owner' ],
+        where: { text: '/* upperFirstCamelName */ 3' },
+      });
 
       if (!/* camelName */) {
         throw new Error('No /* camelName */ 3 was found in the database.');
       }
 
       strictEqual(/* camelName */.text, '/* upperFirstCamelName */ 3');
+      strictEqual(/* camelName */.owner.id, user2.id);
 
       strictEqual(response.body.id, /* camelName */.id);
       strictEqual(response.body.text, /* camelName */.text);
@@ -182,6 +225,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.modify/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -209,6 +253,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       await controller.modify/* upperFirstCamelName */(ctx);
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(/* camelName */1.id);
@@ -229,6 +274,24 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.modify/* upperFirstCamelName */(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the object belongs to another user.', async () => {
+      const ctx = new Context({
+        body: {
+          text: '',
+        },
+        params: {
+          /* camelName */Id: /* camelName */0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.modify/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -254,6 +317,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.replace/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -281,6 +345,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       await controller.replace/* upperFirstCamelName */(ctx);
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne(/* camelName */1.id);
@@ -301,6 +366,24 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.replace/* upperFirstCamelName */(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the object belongs to another user.', async () => {
+      const ctx = new Context({
+        body: {
+          text: '',
+        },
+        params: {
+          /* camelName */Id: /* camelName */0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.replace/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -323,6 +406,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNoContent(response)) {
@@ -340,6 +424,7 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: /* camelName */2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNoContent(response)) {
@@ -357,6 +442,21 @@ describe('/* upperFirstCamelName */Controller', () => {
           /* camelName */Id: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.delete/* upperFirstCamelName */(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the /* camelName */ belongs to another user.', async () => {
+      const ctx = new Context({
+        params: {
+          /* camelName */Id: /* camelName */0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.delete/* upperFirstCamelName */(ctx);
 
       if (!isHttpResponseNotFound(response)) {

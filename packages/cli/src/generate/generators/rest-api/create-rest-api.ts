@@ -5,7 +5,9 @@ import { underline } from 'colors/safe';
 import { ClientError, FileSystem } from '../../file-system';
 import { getNames } from '../../utils';
 
-export function createRestApi({ name, register }: { name: string, register: boolean }) {
+export function createRestApi({ name, register, auth }: { name: string, register: boolean, auth?: boolean }) {
+  auth = auth || false;
+
   const fs = new FileSystem();
 
   if (fs.projectHasDependency('mongoose')) {
@@ -28,24 +30,41 @@ export function createRestApi({ name, register }: { name: string, register: bool
 
   fs
     .cd(entityRoot)
-    .render('rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .renderOnlyIf(!auth, 'rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .renderOnlyIf(auth, 'rest-api/entity.auth.ts', `${names.kebabName}.entity.ts`, names)
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
 
   fs.currentDir = '';
 
+  const isCurrentDir = !controllerRoot;
+
   fs
     .cd(controllerRoot)
-    .render(
-      controllerRoot ? 'rest-api/controller.ts' : 'rest-api/controller.current-dir.ts',
-      `${names.kebabName}.controller.ts`,
-      names,
+
+    .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.ts', `${names.kebabName}.controller.ts`, names)
+    .renderOnlyIf(!isCurrentDir && auth, 'rest-api/controller.auth.ts', `${names.kebabName}.controller.ts`, names)
+    .renderOnlyIf(
+      isCurrentDir && !auth, 'rest-api/controller.current-dir.ts', `${names.kebabName}.controller.ts`, names
     )
-    .render(
-      controllerRoot ? 'rest-api/controller.spec.ts' : 'rest-api/controller.spec.current-dir.ts',
+    .renderOnlyIf(
+      isCurrentDir && auth, 'rest-api/controller.current-dir.auth.ts', `${names.kebabName}.controller.ts`, names
+    )
+
+    .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.spec.ts', `${names.kebabName}.controller.spec.ts`, names)
+    .renderOnlyIf(
+      !isCurrentDir && auth, 'rest-api/controller.spec.auth.ts', `${names.kebabName}.controller.spec.ts`, names
+    )
+    .renderOnlyIf(
+      isCurrentDir && !auth, 'rest-api/controller.spec.current-dir.ts', `${names.kebabName}.controller.spec.ts`, names
+    )
+    .renderOnlyIf(
+      isCurrentDir && auth,
+      'rest-api/controller.spec.current-dir.auth.ts',
       `${names.kebabName}.controller.spec.ts`,
-      names,
+      names
     )
+
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`);
 

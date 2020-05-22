@@ -48,6 +48,20 @@ describe('createRestApi', () => {
           .assertEqual('index.ts', 'rest-api/index.controllers.ts');
       });
 
+      it('should render the templates in the proper directory (--auth flag).', () => {
+        createRestApi({ name: 'test-fooBar', register: false, auth: true });
+
+        fs
+          .cd('entities')
+          .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.auth.ts')
+          .assertEqual('index.ts', 'rest-api/index.entities.ts')
+          .cd('..')
+          .cd('controllers')
+          .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.auth.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.auth.ts')
+          .assertEqual('index.ts', 'rest-api/index.controllers.ts');
+      });
+
       it('should create the index.ts if they do not exist.', () => {
         fs.rmfile('entities/index.ts');
         fs.rmfile('controllers/index.ts');
@@ -109,6 +123,16 @@ describe('createRestApi', () => {
         .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.ts')
         .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.ts')
         .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.ts')
+        .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
+    });
+
+    it('should render the templates in the current directory (--auth flag).', () => {
+      createRestApi({ name: 'test-fooBar', register: false, auth: true });
+
+      fs
+        .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.auth.ts')
+        .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.auth.ts')
+        .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.auth.ts')
         .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
     });
 
