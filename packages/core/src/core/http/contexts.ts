@@ -12,8 +12,8 @@ import { Session } from '../../sessions';
  * @class Context
  * @template User
  */
-export class Context<User = any, ContextSession = Session|undefined> {
-  state: { [key: string]: any } = {};
+export class Context<User = any, ContextSession = Session | undefined, ContextState = any> {
+  state: ContextState = {} as ContextState;
   user: User;
   session: ContextSession;
   request: Request;
