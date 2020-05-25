@@ -7,10 +7,9 @@ import { join } from 'path';
 // 3p
 import { sign } from 'jsonwebtoken';
 import * as superagent from 'superagent';
-import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK } from '@foal/core';
+import { createApp, Get, HttpResponseOK } from '@foal/core';
 import { getRSAPublicKeyFromJWKS } from '@foal/jwks-rsa';
 import { JWTRequired } from '@foal/jwt';
 
