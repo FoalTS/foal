@@ -25,7 +25,7 @@ export interface CookieOptions {
 }
 
 /**
- * Reprensent an HTTP response. This class must be extended.
+ * Represent an HTTP response. This class must be extended.
  * Instances of HttpResponse are returned in hooks and controller
  * methods.
  *
@@ -233,7 +233,7 @@ export function isHttpResponseSuccess(obj: any): obj is HttpResponseSuccess {
  */
 export class HttpResponseOK extends HttpResponseSuccess {
   /**
-   * Property used internally by isHttpResponOK.
+   * Property used internally by isHttpResponseOK.
    *
    * @memberof HttpResponseOK
    */
@@ -309,7 +309,7 @@ export async function createHttpResponseFile(options:
     .setHeader('Content-Length', stats.size.toString())
     .setHeader(
       'Content-Disposition',
-      (options.forceDownload ? 'attachement' : 'inline')
+      (options.forceDownload ? 'attachment' : 'inline')
       + `; filename="${options.filename || file}"`
     );
 
@@ -417,7 +417,7 @@ export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent 
  */
 export abstract class HttpResponseRedirection extends HttpResponse {
   /**
-   * Property used internally by isHttpResponseRediction.
+   * Property used internally by isHttpResponseRedirection.
    *
    * @memberof HttpResponseRedirection
    */
