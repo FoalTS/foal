@@ -304,14 +304,14 @@ describe('createHttpResponseFile', () => {
         ...pngFileOptions,
         forceDownload: true
       });
-      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachement; filename="test-file.png"');
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachment; filename="test-file.png"');
 
       httpResponse = await createHttpResponseFile({
         ...pngFileOptions,
         filename: 'download.png',
         forceDownload: true,
       });
-      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachement; filename="download.png"');
+      strictEqual(httpResponse.getHeader('Content-Disposition'), 'attachment; filename="download.png"');
     });
 
     it('should sanitize the "file" option to only keep the base name.', async () => {
