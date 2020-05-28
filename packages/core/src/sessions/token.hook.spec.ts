@@ -71,6 +71,19 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     services.get(Store).clear();
   });
 
+  it('should throw an error if no store is provided as option.', async () => {
+    const hook = getHookFunction(Token({}));
+
+    const ctx = new Context({});
+
+    try {
+      await hook(ctx, services);
+      throw new Error('The hook should have thrown an error.')
+    } catch (error) {
+      strictEqual(error.message, 'You must provide a SessionStore class to the hook.')
+    }
+  })
+
   describe('should validate the request and', () => {
 
     describe('given options.cookie is false or not defined', () => {

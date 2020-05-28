@@ -35,7 +35,7 @@ class InvalidTokenResponse extends HttpResponseUnauthorized {
 
 export interface TokenOptions {
   user?: (id: string|number) => Promise<any|undefined>;
-  store: Class<SessionStore>;
+  store?: Class<SessionStore>;
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
@@ -44,6 +44,10 @@ export interface TokenOptions {
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
+    if (!options.store) {
+      throw new Error('You must provide a SessionStore class to the hook.');
+    }
+
     const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
