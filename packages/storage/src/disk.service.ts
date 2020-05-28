@@ -60,7 +60,7 @@ export class Disk extends AbstractDisk {
 
     const { ConcreteDisk } = require(driver) as { ConcreteDisk: Class<AbstractDisk>|undefined };
     if (!ConcreteDisk) {
-      throw new Error(`"${driver}" is not a valid driver. Cannot find the "ConcreteClass" export.`);
+      throw new Error(`"${driver}" is not a valid driver. Cannot find the "ConcreteDisk" export.`);
     }
     return this.services.get(ConcreteDisk);
   }
