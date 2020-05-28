@@ -3,7 +3,6 @@ import { strictEqual } from 'assert';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
-import { createService } from '../service-manager';
 import { Config } from './config';
 import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';

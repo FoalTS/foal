@@ -238,23 +238,6 @@ export class Config {
     return this.yaml;
   }
 
-  private static convertType(value: string): boolean | number | string {
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    if (value.replace(/ /g, '') === '') {
-      return value;
-    }
-    const n = Number(value);
-    if (!isNaN(n)) {
-      return n;
-    }
-    return value;
-  }
-
   private static getValue(config: any, propertyPath: string): any {
     const properties = propertyPath.split('.');
     let result = config;
