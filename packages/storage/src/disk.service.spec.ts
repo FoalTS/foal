@@ -69,7 +69,7 @@ describe('Disk', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          '"@foal/core" is not a valid driver. Cannot find the "ConcreteClass" export.'
+          '"@foal/core" is not a valid driver. Cannot find the "ConcreteDisk" export.'
         );
       }
     });
@@ -139,7 +139,7 @@ describe('Disk', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          '"@foal/core" is not a valid driver. Cannot find the "ConcreteClass" export.'
+          '"@foal/core" is not a valid driver. Cannot find the "ConcreteDisk" export.'
         );
       }
     });
@@ -209,7 +209,7 @@ describe('Disk', () => {
       } catch (error) {
         strictEqual(
           error.message,
-          '"@foal/core" is not a valid driver. Cannot find the "ConcreteClass" export.'
+          '"@foal/core" is not a valid driver. Cannot find the "ConcreteDisk" export.'
         );
       }
     });

@@ -35,15 +35,49 @@ class InvalidTokenResponse extends HttpResponseUnauthorized {
 
 export interface TokenOptions {
   user?: (id: string|number) => Promise<any|undefined>;
-  store: Class<SessionStore>;
+  store?: Class<SessionStore>;
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
   extendLifeTimeOrUpdate?: boolean;
 }
 
+function getSessionStoreClass(): Class<SessionStore> {
+  const pkgName = Config.getOrThrow(
+    'settings.session.store',
+    'string',
+    'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
+  );
+
+  let pkg: { ConcreteSessionStore?: Class<SessionStore> };
+  try {
+    pkg = require(pkgName);
+  } catch (err) {
+    // TODO: test this line
+    if (err.code !== 'MODULE_NOT_FOUND') {
+      throw err;
+    }
+    throw new Error(
+      `The package "${pkgName}" provided with the configuration key settings.session.store was not found.`
+      + ' Did you install it?'
+    );
+  }
+
+  if (!pkg.ConcreteSessionStore) {
+    throw new Error(
+      `The package "${pkgName}" does not export a ConcreteSessionStore class.`
+      + ' Are you sure it is a session store package?'
+    );
+  }
+
+  return pkg.ConcreteSessionStore;
+}
+
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
+  const ConcreteSessionStore = options.store || getSessionStoreClass();
+
   return Hook(async (ctx: Context, services: ServiceManager) => {
+
     const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
@@ -103,7 +137,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session ID */
 
-    const store = services.get(options.store);
+    const store = services.get(ConcreteSessionStore);
     const session = await store.read(sessionID);
 
     if (!session) {

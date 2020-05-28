@@ -6,7 +6,7 @@ import { Token, TokenOptions } from './token.hook';
 
 // TODO: Add missing documentation.
 
-export function TokenRequired(options: TokenOptions): HookDecorator {
+export function TokenRequired(options: TokenOptions = {}): HookDecorator {
   return (target: any, propertyKey?: string) =>  {
     Token(true, options)(target, propertyKey);
 
