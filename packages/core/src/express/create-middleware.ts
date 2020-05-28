@@ -38,7 +38,7 @@ export function createMiddleware(route: Route, services: ServiceManager) {
       }
 
       if (!isHttpResponse(response)) {
-        response = await route.controller[route.propertyKey](ctx);
+        response = await route.controller[route.propertyKey](ctx, ctx.request.params, ctx.request.body);
       }
 
       if (!isHttpResponse(response)) {

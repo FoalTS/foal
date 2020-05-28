@@ -1,70 +1,48 @@
 // FoalTS
-import {
-  rmDirAndFilesIfExist,
-  rmfileIfExists,
-  TestEnvironment
-} from '../../utils';
+import { FileSystem } from '../../file-system';
 import { createController } from './create-controller';
 
 describe('createController', () => {
 
-  afterEach(() => {
-    rmDirAndFilesIfExist('src/app');
-    // We cannot remove src/ since the generator code lives within. This is bad testing
-    // approach.
-    rmDirAndFilesIfExist('controllers');
-    rmfileIfExists('test-foo-bar.controller.ts');
-    rmfileIfExists('test-foo-bar.controller.spec.ts');
-    rmfileIfExists('index.ts');
-  });
+  const fs = new FileSystem();
+
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
 
   function test(root: string) {
 
     describe(`when the directory ${root}/ exists`, () => {
 
-      const testEnv = new TestEnvironment('controller', root);
-
       beforeEach(() => {
-        testEnv.mkRootDirIfDoesNotExist();
-        testEnv.copyFileFromMocks('index.ts');
+        fs
+          .ensureDir(root)
+          .cd(root)
+          .copyFixture('controller/index.ts', 'index.ts');
       });
 
       it('should render the empty templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Empty', register: false });
+        createController({ name: 'test-fooBar', register: false });
 
-        testEnv
-          .validateSpec('test-foo-bar.controller.empty.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('test-foo-bar.controller.spec.empty.ts', 'test-foo-bar.controller.spec.ts')
-          .validateSpec('index.ts', 'index.ts');
+        fs
+          .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts')
+          .assertEqual('index.ts', 'controller/index.ts');
       });
 
-      it('should render the REST templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'REST', register: false });
+      it('should create the directory if it does not exist.', () => {
+        createController({ name: 'barfoo/hello/test-fooBar', register: false });
 
-        testEnv
-          .validateSpec('test-foo-bar.controller.rest.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('index.ts', 'index.ts');
+        fs
+          .assertExists('barfoo/hello/test-foo-bar.controller.ts');
       });
 
-      it('should render the GraphQL templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'GraphQL', register: false });
+      it('should create index.ts if it does not exist.', () => {
+        fs.rmfile('index.ts');
 
-        testEnv
-          .validateSpec('test-foo-bar.controller.graphql.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('index.ts', 'index.ts');
-      });
+        createController({ name: 'test-fooBar', register: false });
 
-      it('should render the Login templates in the proper directory.', () => {
-        createController({ name: 'test-fooBar', type: 'Login', register: false });
-
-        testEnv
-          .validateSpec('test-foo-bar.controller.login.ts', 'test-foo-bar.controller.ts')
-          .validateSpec('index.ts', 'index.ts');
-      });
-
-      it('should not throw an error if index.ts does not exist.', () => {
-        testEnv.rmfileIfExists('index.ts');
-        createController({ name: 'test-fooBar', type: 'Empty', register: false });
+        fs.assertExists('index.ts');
       });
 
     });
@@ -77,86 +55,33 @@ describe('createController', () => {
 
   describe('when the directory src/app/controllers exists and if register is true', () => {
 
-    const testEnv = new TestEnvironment('controller', 'src/app/controllers');
-
     beforeEach(() => {
-      testEnv.mkRootDirIfDoesNotExist();
-      testEnv.copyFileFromMocks('index.ts');
+      fs
+        .ensureDir('src/app/controllers')
+        .cd('src/app/controllers')
+        .copyFixture('controller/index.ts', 'index.ts')
+        .cd('..');
     });
 
-    // TODO: refactor these tests and their mock and spec files.
+    it('should register the controller in app.controller.ts.', () => {
+      fs
+        .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
-    it('should add all the imports if none exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.no-import.ts', '../app.controller.ts');
+      createController({ name: 'test-fooBar', register: true });
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.no-import.ts', '../app.controller.ts');
+      fs
+        .assertEqual('app.controller.ts', 'controller/app.controller.ts');
     });
 
-    it('should update the "subControllers" import in src/app/app.controller.ts if it exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.controller-import.ts', '../app.controller.ts');
+    it('should register the controller in a parent controller (subdir).', () => {
+      fs
+        .ensureDir('controllers/hello')
+        .copyFixture('controller/api.controller.ts', 'controllers/hello/api.controller.ts');
 
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
+      createController({ name: 'hello/api/test-fooBar', register: true });
 
-      testEnv
-        .validateSpec('app.controller.controller-import.ts', '../app.controller.ts');
-    });
-
-    it('should add a "subControllers" import in src/app/app.controller.ts if none already exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.no-controller-import.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.no-controller-import.ts', '../app.controller.ts');
-    });
-
-    it('should update the "@foal/core" import in src/app/app.controller.ts if it exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.core-import.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.core-import.ts', '../app.controller.ts');
-    });
-
-    it('should update the "subControllers = []" property in src/app/app.controller.ts if it exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.empty-property.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.empty-property.ts', '../app.controller.ts');
-    });
-
-    it('should update the "subControllers = [ \\n \\n ]" property in src/app/app.controller.ts if it exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.empty-spaced-property.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.empty-spaced-property.ts', '../app.controller.ts');
-    });
-
-    it('should update the "subControllers = [ \\n (.*) \\n ]" property in'
-        + ' src/app/app.controller.ts if it exists.', () => {
-      testEnv.copyFileFromMocks('app.controller.no-empty-property.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'Empty', register: true });
-
-      testEnv
-        .validateSpec('app.controller.no-empty-property.ts', '../app.controller.ts');
-    });
-
-    it('should update the "subControllers" property with a special URL if the controller is a REST controller.', () => {
-      testEnv.copyFileFromMocks('app.controller.rest.ts', '../app.controller.ts');
-
-      createController({ name: 'test-fooBar', type: 'REST', register: true });
-
-      testEnv
-        .validateSpec('app.controller.rest.ts', '../app.controller.ts');
+      fs
+        .assertEqual('controllers/hello/api.controller.ts', 'controller/api.controller.ts');
     });
 
   });

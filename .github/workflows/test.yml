@@ -16,9 +16,6 @@ jobs:
         node-version: [8, 10]
 
     env:
-      AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
-      AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-      AUTH0_TOKEN: ${{ secrets.AUTH0_TOKEN }}
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
       SETTINGS_AWS_SECRET_ACCESS_KEY: ${{ secrets.SETTINGS_AWS_SECRET_ACCESS_KEY }}
       NODE_VERSION: ${{ matrix.node-version }}

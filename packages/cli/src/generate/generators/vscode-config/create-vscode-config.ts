@@ -1,10 +1,12 @@
 // FoalTS
-import { Generator, mkdirIfDoesNotExist } from '../../utils';
+import { FileSystem } from '../../file-system';
 
 export function createVSCodeConfig() {
-  mkdirIfDoesNotExist('.vscode');
-
-  new Generator('vscode-config', '.vscode')
-    .copyFileFromTemplates('launch.json')
-    .copyFileFromTemplates('tasks.json');
+  new FileSystem()
+    // TODO: test this line
+    .cdProjectRootDir()
+    .ensureDir('.vscode')
+    .cd('.vscode')
+    .copy('vscode-config/launch.json', 'launch.json')
+    .copy('vscode-config/tasks.json', 'tasks.json');
 }

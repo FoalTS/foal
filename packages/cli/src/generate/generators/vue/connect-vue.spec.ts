@@ -1,22 +1,23 @@
-import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, TestEnvironment } from '../../utils';
+import { FileSystem } from '../../file-system';
 import { connectVue } from './connect-vue';
 
 describe('connectVue', () => {
 
-  afterEach(() => rmDirAndFilesIfExist('connector-test'));
+  const fs = new FileSystem();
 
-  const testEnv = new TestEnvironment('vue');
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
 
   it('should update package.json to set up the proxy, install ncp and change the output dir.', () => {
-    mkdirIfDoesNotExist('connector-test/vue');
+   fs
+    .ensureDir('connector-test/vue')
+    .copyFixture('vue/package.json', 'connector-test/vue/package.json');
 
-    testEnv
-      .copyFileFromMocks('package.json', 'connector-test/vue/package.json');
+   connectVue('./connector-test/vue');
 
-    connectVue('./connector-test/vue');
-
-    testEnv
-      .validateSpec('package.json', 'connector-test/vue/package.json');
+   fs
+    .assertEqual('connector-test/vue/package.json', 'vue/package.json');
   });
 
   it('should not throw if the path does not exist.', () => {
@@ -24,7 +25,8 @@ describe('connectVue', () => {
   });
 
   it('should not throw if package.json does not exist.', () => {
-    mkdirIfDoesNotExist('connector-test/vue');
+    fs
+      .ensureDir('connector-test/vue');
 
     connectVue('./connector-test/vue');
   });

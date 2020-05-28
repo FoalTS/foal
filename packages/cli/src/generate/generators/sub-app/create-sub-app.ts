@@ -1,46 +1,48 @@
 
-// 3p
-import { existsSync, writeFileSync } from 'fs';
-
 // FoalTS
-import { Generator, getNames, mkdirIfDoesNotExist } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { getNames } from '../../utils';
 
 export function createSubApp({ name }: { name: string }) {
-  const names = getNames(name);
+  const fs = new FileSystem();
+  (fs as any).testDir = '';
 
   let root = '';
-
-  if (existsSync('src/app')) {
-    mkdirIfDoesNotExist('src/app/sub-apps');
-    if (!existsSync('src/app/sub-apps/index.ts')) {
-      writeFileSync('src/app/sub-apps/index.ts', '', 'utf8');
-    }
+  if (fs.exists('src/app')) {
+    fs
+      .ensureDir('src/app/sub-apps')
+      .ensureFile('src/app/sub-apps/index.ts');
     root = 'src/app/sub-apps';
-  } else if (existsSync('sub-apps')) {
+  } else if (fs.exists('sub-apps')) {
     root = 'sub-apps';
   }
 
-  new Generator('sub-app', root)
-    .mkdirIfDoesNotExist(names.kebabName)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName}Controller } from './${names.kebabName}';\n`;
-      return content;
-    });
+  const names = getNames(name);
 
-  new Generator('sub-app', root ? root + '/' + names.kebabName : names.kebabName)
-    .renderTemplate('index.ts', names)
-    .renderTemplate('controller.ts', names, `${names.kebabName}.controller.ts`)
-      // Controllers
-      .mkdirIfDoesNotExist('controllers')
-      .copyFileFromTemplates('controllers/index.ts')
-      .mkdirIfDoesNotExist('controllers/templates')
-      // Hooks
-      .mkdirIfDoesNotExist('hooks')
-      .copyFileFromTemplates('hooks/index.ts')
-      // Entities
-      .mkdirIfDoesNotExist('entities')
-      .copyFileFromTemplates('entities/index.ts')
-      // Services
-      .mkdirIfDoesNotExist('services')
-      .copyFileFromTemplates('services/index.ts');
+  fs
+    .cd(root)
+    .ensureDir(names.kebabName)
+    .addNamedExportIn('index.ts', `${names.upperFirstCamelName}Controller`, `./${names.kebabName}`)
+      .cd(names.kebabName)
+      .render('sub-app/index.ts', 'index.ts', names)
+      .render('sub-app/controller.ts', `${names.kebabName}.controller.ts`, names)
+        // Controllers
+        .ensureDir('controllers')
+        .cd('controllers')
+        .copy('sub-app/controllers/index.ts', 'index.ts')
+        .cd('..')
+        // Hooks
+        .ensureDir('hooks')
+        .cd('hooks')
+        .copy('sub-app/hooks/index.ts', 'index.ts')
+        .cd('..')
+        // Entities
+        .ensureDir('entities')
+        .cd('entities')
+        .copy('sub-app/entities/index.ts', 'index.ts')
+        .cd('..')
+        // Services
+        .ensureDir('services')
+        .cd('services')
+        .copy('sub-app/services/index.ts', 'index.ts');
 }

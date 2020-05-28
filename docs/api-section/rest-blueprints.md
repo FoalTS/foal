@@ -5,10 +5,10 @@
 foal generate rest-api product --register
 ```
 
-Building a REST API is often a common task when creating an application. To avoid reinventing the wheel, FoalTS provides an integrated command to achieve this.
+Building a REST API is often a common task when creating an application. To avoid reinventing the wheel, FoalTS provides a CLI command to achieve this.
 
 ```
-foal generate rest-api <name> [--register]
+foal generate rest-api <name> [--register] [--auth]
 ```
 
 This command generates three files: an entity, a controller and the controller's test. Depending on your directory structure, they may be generated in different locations:
@@ -116,7 +116,18 @@ export const productSchhema = {
 };
 ```
 
-## Generate OpenAPI documentation
+## Using Authentication
+
+If you wish to attach a user to the resource, you can use the `--auth` flag to do so.
+
+*Example:*
+```
+foal generate rest-api product --auth
+```
+
+This flags adds an `owner: User` column to your entity and uses it in the API.
+
+## Generating OpenAPI documentation
 
 The generated controllers also have OpenAPI decorators on their methods to document the API.
 

@@ -351,7 +351,7 @@ describe('TestFooBarController', () => {
       notStrictEqual(testFooBar, undefined);
     });
 
-    it('should return an HttpResponseNotFound if the testFooBar was not fond.', async () => {
+    it('should return an HttpResponseNotFound if the testFooBar was not found.', async () => {
       const ctx = new Context({
         params: {
           testFooBarId: -1

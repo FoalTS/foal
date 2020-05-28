@@ -25,7 +25,7 @@ export interface CookieOptions {
 }
 
 /**
- * Reprensent an HTTP response. This class must be extended.
+ * Represent an HTTP response. This class must be extended.
  * Instances of HttpResponse are returned in hooks and controller
  * methods.
  *
@@ -233,7 +233,7 @@ export function isHttpResponseSuccess(obj: any): obj is HttpResponseSuccess {
  */
 export class HttpResponseOK extends HttpResponseSuccess {
   /**
-   * Property used internally by isHttpResponOK.
+   * Property used internally by isHttpResponseOK.
    *
    * @memberof HttpResponseOK
    */
@@ -309,7 +309,7 @@ export async function createHttpResponseFile(options:
     .setHeader('Content-Length', stats.size.toString())
     .setHeader(
       'Content-Disposition',
-      (options.forceDownload ? 'attachement' : 'inline')
+      (options.forceDownload ? 'attachment' : 'inline')
       + `; filename="${options.filename || file}"`
     );
 
@@ -417,7 +417,7 @@ export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent 
  */
 export abstract class HttpResponseRedirection extends HttpResponse {
   /**
-   * Property used internally by isHttpResponseRediction.
+   * Property used internally by isHttpResponseRedirection.
    *
    * @memberof HttpResponseRedirection
    */
@@ -863,6 +863,52 @@ export class HttpResponseConflict extends HttpResponseClientError {
 export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
   return obj instanceof HttpResponseConflict ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseConflict === true);
+}
+
+/**
+ * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
+ *
+ * @export
+ * @class HttpResponseTooManyRequests
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseTooManyRequests extends HttpResponseClientError {
+  /**
+   * Property used internally by isHttpResponseTooManyRequests.
+   *
+   * @memberof HttpResponseTooManyRequests
+   */
+  readonly isHttpResponseTooManyRequests = true;
+  statusCode = 429;
+  statusMessage = 'TOO MANY REQUESTS';
+
+  /**
+   * Create an instance of HttpResponseTooManyRequests.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTooManyRequests
+   */
+  constructor(body?: any, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTooManyRequests.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTooManyRequests} - True if the error is an instance of HttpResponseTooManyRequests.
+ * False otherwise.
+ */
+export function isHttpResponseTooManyRequests(obj: any): obj is HttpResponseTooManyRequests {
+  return obj instanceof HttpResponseTooManyRequests ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooManyRequests === true);
 }
 
 /* 5xx Server Error */

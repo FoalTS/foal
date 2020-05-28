@@ -37,7 +37,7 @@ export class Session {
   }
 
   /**
-   * Return true if an element was added/replaces in the session
+   * Return true if an element was added/replaced in the session
    *
    * @readonly
    * @type {boolean}
