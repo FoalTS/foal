@@ -1,13 +1,12 @@
 // std
 import { execSync, spawn, SpawnOptions } from 'child_process';
-import { existsSync, mkdirSync } from 'fs';
 
 // 3p
 import { cyan, red } from 'colors/safe';
 
 // FoalTS
+import { FileSystem } from '../../file-system';
 import {
-  Generator,
   getNames,
   initGitRepo,
 } from '../../utils';
@@ -22,7 +21,7 @@ function isYarnInstalled() {
 }
 
 function log(msg: string) {
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(msg);
   }
 }
@@ -32,7 +31,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     yaml?: boolean }) {
   const names = getNames(name);
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(cyan(
 `====================================================================
 
@@ -51,93 +50,121 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
 
   const locals = names;
 
-  if (existsSync(names.kebabName)) {
-    console.log(
-      red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
-    );
+  const fs = new FileSystem();
+
+  if (fs.exists(names.kebabName)) {
+    if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
+      console.log(
+        red(`\n The target directory "${names.kebabName}" already exists. Please remove it before proceeding.`)
+      );
+    }
     return;
   }
-  mkdirSync(names.kebabName);
+
+  fs
+    .ensureDir(names.kebabName)
+    .cd(names.kebabName);
 
   log('  📂 Creating files...');
-  const generator = new Generator('app', names.kebabName, { noLogs: true });
 
-  generator
-    .copyFileFromTemplates('gitignore', '.gitignore')
-    .copyFileFromTemplatesOnlyIf(!mongodb, 'ormconfig.js')
-    .renderTemplateOnlyIf(!mongodb && !yaml, 'package.json', locals)
-    .renderTemplateOnlyIf(!mongodb && yaml, 'package.yaml.json', locals, 'package.json')
-    .renderTemplateOnlyIf(mongodb && !yaml, 'package.mongodb.json', locals, 'package.json')
-    .renderTemplateOnlyIf(mongodb && yaml, 'package.mongodb.yaml.json', locals, 'package.json')
-    .copyFileFromTemplates('tsconfig.app.json')
-    .copyFileFromTemplates('tsconfig.e2e.json')
-    .copyFileFromTemplates('tsconfig.json')
-    .copyFileFromTemplates('tsconfig.test.json')
-    .copyFileFromTemplates('.eslintrc.js')
+  fs
+    .hideLogs()
+    .copy('app/gitignore', '.gitignore')
+    .copyOnlyIf(!mongodb, 'app/ormconfig.js', 'ormconfig.js')
+    .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
+    .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
+    .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
+    .renderOnlyIf(mongodb && yaml, 'app/package.mongodb.yaml.json', 'package.json', locals)
+    .copy('app/tsconfig.app.json', 'tsconfig.app.json')
+    .copy('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
+    .copy('app/tsconfig.json', 'tsconfig.json')
+    .copy('app/tsconfig.test.json', 'tsconfig.test.json')
+    .copy('app/.eslintrc.js', '.eslintrc.js')
       // Config
-      .mkdirIfDoesNotExist('config')
-      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/default.json', locals)
-      .renderTemplateOnlyIf(!mongodb && yaml, 'config/default.yml', locals)
-      .renderTemplateOnlyIf(mongodb && !yaml, 'config/default.mongodb.json', locals, 'config/default.json')
-      .renderTemplateOnlyIf(mongodb && yaml, 'config/default.mongodb.yml', locals, 'config/default.yml')
-      .renderTemplateOnlyIf(!yaml, 'config/development.json', locals)
-      .renderTemplateOnlyIf(yaml, 'config/development.yml', locals)
-      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/e2e.json', locals)
-      .renderTemplateOnlyIf(!mongodb && yaml, 'config/e2e.yml', locals)
-      .renderTemplateOnlyIf(mongodb && !yaml, 'config/e2e.mongodb.json', locals, 'config/e2e.json')
-      .renderTemplateOnlyIf(mongodb && yaml, 'config/e2e.mongodb.yml', locals, 'config/e2e.yml')
-      .renderTemplateOnlyIf(!yaml, 'config/production.json', locals)
-      .renderTemplateOnlyIf(yaml, 'config/production.yml', locals)
-      .renderTemplateOnlyIf(!mongodb && !yaml, 'config/test.json', locals)
-      .renderTemplateOnlyIf(!mongodb && yaml, 'config/test.yml', locals)
-      .renderTemplateOnlyIf(mongodb && !yaml, 'config/test.mongodb.json', locals, 'config/test.json')
-      .renderTemplateOnlyIf(mongodb && yaml, 'config/test.mongodb.yml', locals, 'config/test.yml')
+      .ensureDir('config')
+      .cd('config')
+      .renderOnlyIf(!mongodb && !yaml, 'app/config/default.json', 'default.json', locals)
+      .renderOnlyIf(!mongodb && yaml, 'app/config/default.yml', 'default.yml', locals)
+      .renderOnlyIf(mongodb && !yaml, 'app/config/default.mongodb.json', 'default.json', locals)
+      .renderOnlyIf(mongodb && yaml, 'app/config/default.mongodb.yml', 'default.yml', locals)
+      .renderOnlyIf(!yaml, 'app/config/development.json', 'development.json', locals)
+      .renderOnlyIf(yaml, 'app/config/development.yml', 'development.yml', locals)
+      .renderOnlyIf(!mongodb && !yaml, 'app/config/e2e.json', 'e2e.json', locals)
+      .renderOnlyIf(!mongodb && yaml, 'app/config/e2e.yml', 'e2e.yml', locals)
+      .renderOnlyIf(mongodb && !yaml, 'app/config/e2e.mongodb.json', 'e2e.json', locals)
+      .renderOnlyIf(mongodb && yaml, 'app/config/e2e.mongodb.yml', 'e2e.yml', locals)
+      .renderOnlyIf(!yaml, 'app/config/production.json', 'production.json', locals)
+      .renderOnlyIf(yaml, 'app/config/production.yml', 'production.yml', locals)
+      .renderOnlyIf(!mongodb && !yaml, 'app/config/test.json', 'test.json', locals)
+      .renderOnlyIf(!mongodb && yaml, 'app/config/test.yml', 'test.yml', locals)
+      .renderOnlyIf(mongodb && !yaml, 'app/config/test.mongodb.json', 'test.json', locals)
+      .renderOnlyIf(mongodb && yaml, 'app/config/test.mongodb.yml', 'test.yml', locals)
+      .cd('..')
       // Public
-      .mkdirIfDoesNotExist('public')
-      .copyFileFromTemplates('public/index.html')
-      .copyFileFromTemplates('public/logo.png')
+      .ensureDir('public')
+      .cd('public')
+      .copy('app/public/index.html', 'index.html')
+      .copy('app/public/logo.png', 'logo.png')
+      .cd('..')
       // Src
-      .mkdirIfDoesNotExist('src')
-      .copyFileFromTemplates('src/e2e.ts')
-      .copyFileFromTemplatesOnlyIf(mongodb, 'src/index.mongodb.ts', 'src/index.ts')
-      .copyFileFromTemplatesOnlyIf(!mongodb, 'src/index.ts')
-      .copyFileFromTemplates('src/test.ts')
+      .ensureDir('src')
+      .cd('src')
+      .copy('app/src/e2e.ts', 'e2e.ts')
+      .copyOnlyIf(mongodb, 'app/src/index.mongodb.ts', 'index.ts')
+      .copyOnlyIf(!mongodb, 'app/src/index.ts', 'index.ts')
+      .copy('app/src/test.ts', 'test.ts')
         // App
-        .mkdirIfDoesNotExist('src/app')
-        .copyFileFromTemplates('src/app/app.controller.ts')
+        .ensureDir('app')
+        .cd('app')
+        .copy('app/src/app/app.controller.ts', 'app.controller.ts')
           // Controllers
-          .mkdirIfDoesNotExist('src/app/controllers')
-          .copyFileFromTemplates('src/app/controllers/index.ts')
-          .copyFileFromTemplates('src/app/controllers/api.controller.ts')
-          .copyFileFromTemplates('src/app/controllers/api.controller.spec.ts')
+          .ensureDir('controllers')
+          .cd('controllers')
+          .copy('app/src/app/controllers/index.ts', 'index.ts')
+          .copy('app/src/app/controllers/api.controller.ts', 'api.controller.ts')
+          .copy('app/src/app/controllers/api.controller.spec.ts', 'api.controller.spec.ts')
+          .cd('..')
           // Entities
-          .mkdirIfDoesNotExistOnlyIf(!mongodb, 'src/app/entities')
-          .copyFileFromTemplatesOnlyIf(!mongodb, 'src/app/entities/index.ts')
-          .copyFileFromTemplatesOnlyIf(!mongodb, 'src/app/entities/user.entity.ts')
+          .ensureDirOnlyIf(!mongodb, 'entities')
+          .cd('entities')
+          .copyOnlyIf(!mongodb, 'app/src/app/entities/index.ts', 'index.ts')
+          .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
+          .cd('..')
           // Hooks
-          .mkdirIfDoesNotExist('src/app/hooks')
-          .copyFileFromTemplates('src/app/hooks/index.ts')
+          .ensureDir('hooks')
+          .cd('hooks')
+          .copy('app/src/app/hooks/index.ts', 'index.ts')
+          .cd('..')
           // Models
-          .mkdirIfDoesNotExistOnlyIf(mongodb, 'src/app/models')
-          .copyFileFromTemplatesOnlyIf(mongodb, 'src/app/models/index.ts')
-          .copyFileFromTemplatesOnlyIf(mongodb, 'src/app/models/user.model.ts')
+          .ensureDirOnlyIf(mongodb, 'models')
+          .cd('models')
+          .copyOnlyIf(mongodb, 'app/src/app/models/index.ts', 'index.ts')
+          .copyOnlyIf(mongodb, 'app/src/app/models/user.model.ts', 'user.model.ts')
+          .cd('..')
           // Services
-          .mkdirIfDoesNotExist('src/app/services')
-          .copyFileFromTemplates('src/app/services/index.ts')
+          .ensureDir('services')
+          .cd('services')
+          .copy('app/src/app/services/index.ts', 'index.ts')
+          .cd('..')
+        .cd('..')
         // E2E
-        .mkdirIfDoesNotExist('src/e2e')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/e2e/index.ts')
-        .copyFileFromTemplatesOnlyIf(mongodb, 'src/e2e/index.mongodb.ts', 'src/e2e/index.ts')
+        .ensureDir('e2e')
+        .cd('e2e')
+        .copyOnlyIf(!mongodb, 'app/src/e2e/index.ts', 'index.ts')
+        .copyOnlyIf(mongodb, 'app/src/e2e/index.mongodb.ts', 'index.ts')
+        .cd('..')
         // Scripts
-        .mkdirIfDoesNotExist('src/scripts')
-        .copyFileFromTemplatesOnlyIf(!mongodb, 'src/scripts/create-user.ts')
-        .copyFileFromTemplatesOnlyIf(mongodb, 'src/scripts/create-user.mongodb.ts', 'src/scripts/create-user.ts');
+        .ensureDir('scripts')
+        .cd('scripts')
+        .copyOnlyIf(!mongodb, 'app/src/scripts/create-user.ts', 'create-user.ts')
+        .copyOnlyIf(mongodb, 'app/src/scripts/create-user.mongodb.ts', 'create-user.ts');
 
   if (autoInstall) {
     log('');
     log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-    const args = [ 'install' ];
+    // TODO: in version 2, remove the hack "--ignore-engines"
+    const args = [ 'install', '--ignore-engines' ];
     const options: SpawnOptions = {
       cwd: names.kebabName,
       shell: true,

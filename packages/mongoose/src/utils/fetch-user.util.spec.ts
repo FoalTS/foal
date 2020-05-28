@@ -32,6 +32,15 @@ describe('fetchUser', () => {
 
   after(() => disconnect());
 
+  it('should throw an Error if the ID is a number.', async () => {
+    try {
+      await fetchUser(User)(46);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      strictEqual(error.message, 'Unexpected type for MongoDB user ID: number.');
+    }
+  });
+
   it('should return the user fetched from the database.', async () => {
     const actual = await fetchUser(User)(user._id.toString());
     notStrictEqual(actual, undefined);

@@ -7,10 +7,9 @@ import { join } from 'path';
 // 3p
 import { sign } from 'jsonwebtoken';
 import * as superagent from 'superagent';
-import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK } from '@foal/core';
+import { createApp, Get, HttpResponseOK } from '@foal/core';
 import { getRSAPublicKeyFromJWKS } from '@foal/jwks-rsa';
 import { JWTRequired } from '@foal/jwt';
 
@@ -80,112 +79,6 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
       console.log(error);
       throw error;
     }
-  });
-
-  it('from Auth0.', () => {
-    const domain = Config.get('auth0.domain', 'string');
-    const audience = Config.get('auth0.audience', 'string');
-    const token = Config.get('auth0.token', 'string');
-
-    if (token === undefined) {
-      console.warn('AUTH0_TOKEN not defined. Skipping this test...');
-      return;
-    }
-
-    class AppController {
-
-      @Get('/api/users/me')
-      @JWTRequired({
-        secretOrPublicKey: getRSAPublicKeyFromJWKS({
-          cache: true,
-          jwksRequestsPerMinute: 5,
-          jwksUri: `https://${domain}/.well-known/jwks.json`,
-          rateLimit: true,
-        })
-      }, {
-        algorithms: [ 'RS256' ],
-        audience,
-        issuer: `https://${domain}/`,
-      })
-      getUser() {
-        return new HttpResponseOK({
-          name: 'Alix'
-        });
-      }
-
-    }
-
-    const app = createApp(AppController);
-
-    return request(app)
-      .get('/api/users/me')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .then(response => {
-        deepStrictEqual(response.body, {
-          name: 'Alix'
-        });
-      });
-  });
-
-  it('from AWS Cognito.', async () => {
-    const clientId = Config.get('cognito.clientId', 'string');
-    const domain = Config.get('cognito.domain', 'string');
-    const refreshToken = Config.get('cognito.refreshToken', 'string');
-    let token: string;
-    const region = Config.get('cognito.region', 'string');
-    const userPoolId = Config.get('cognito.userPoolId', 'string');
-
-    if (refreshToken === undefined) {
-      console.warn('COGNITO_REFRESH_TOKEN not defined. Skipping this test...');
-      return;
-    }
-
-    try {
-      const { body } = await superagent
-        .post(`https://${domain}.auth.${region}.amazoncognito.com/oauth2/token`)
-        .send('grant_type=refresh_token')
-        .send(`client_id=${clientId}`)
-        .send(`refresh_token=${refreshToken}`);
-      token = body.id_token;
-    } catch (error) {
-      throw new Error('Requesting a new access token failed.');
-    }
-
-    class AppController {
-
-      @Get('/api/users/me')
-      @JWTRequired({
-        secretOrPublicKey: getRSAPublicKeyFromJWKS({
-          cache: true,
-          jwksRequestsPerMinute: 5,
-          jwksUri: `https://cognito-idp.${region}.amazonaws.com/${userPoolId}/.well-known/jwks.json`,
-          rateLimit: true,
-        })
-      }, {
-        algorithms: [ 'RS256' ],
-        audience: clientId,
-        issuer: `https://cognito-idp.${region}.amazonaws.com/${userPoolId}`,
-      })
-      getUser() {
-        return new HttpResponseOK({
-          name: 'Alix'
-        });
-      }
-
-    }
-
-    const app = createApp(AppController);
-
-    return request(app)
-      .get('/api/users/me')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .then(response => {
-        deepStrictEqual(response.body, {
-          name: 'Alix'
-        });
-      });
   });
 
 });

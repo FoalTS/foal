@@ -120,7 +120,7 @@ import { Context, HttpResponseCreated, Post } from '@foal/core';
 class AppController {
   @Post('/products')
   createProduct(ctx: Context) {
-    const requestBody = ctx.request.body;
+    const body = ctx.request.body;
     // Do something.
     return new HttpResponseCreated();
   }
@@ -140,7 +140,7 @@ import { Context, HttpResponseOK, Post } from '@foal/core';
 
 class AppController {
   @Get('/products/:id')
-  createProduct(ctx: Context) {
+  readProduct(ctx: Context) {
     const productId = ctx.request.params.id;
     // Do something.
     return new HttpResponseOK(/* something */);
@@ -161,7 +161,7 @@ import { Context, HttpResponseOK, Post } from '@foal/core';
 
 class AppController {
   @Get('/products')
-  createProduct(ctx: Context) {
+  readProducts(ctx: Context) {
     const limit = ctx.request.query.limit;
     // Do something.
     return new HttpResponseOK(/* something */);
@@ -197,6 +197,25 @@ class AppController {
   index(ctx: Context) {
     const sessionID: string|undefined = ctx.request.cookies.sessionID;
     // ...
+  }
+}
+```
+
+
+#### The Controller Method Arguments
+
+> Available in Foal v1.9.0 onwards.
+
+The path paramaters and request body are also passed as second and third arguments to the controller method.
+
+```typescript
+import { Context, HttpResponseCreated, Put } from '@foal/core';
+
+class AppController {
+  @Put('/products/:id')
+  updateProduct(ctx: Context, { id }, body) {
+    // Do something.
+    return new HttpResponseCreated();
   }
 }
 ```

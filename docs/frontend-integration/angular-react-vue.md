@@ -32,7 +32,7 @@ mkdir my-app
 cd my-app
 
 foal createapp backend
-npx create-react-app frontend --typescript
+npx create-react-app frontend --template typescript
 
 cd backend
 foal connect react ../frontend

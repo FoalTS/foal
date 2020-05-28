@@ -1,5 +1,7 @@
 # TypeORM
 
+> *FoalTS components using TypeORM officially support the following databases: PostgreSQL, MySQL, MariaDB and SQLite*.
+
 *A simple model:*
 ```typescript
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';

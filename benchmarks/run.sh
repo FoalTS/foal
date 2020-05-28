@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+set -e
 
 # Empty benchmark.txt if it exists.
 :> benchmark.txt

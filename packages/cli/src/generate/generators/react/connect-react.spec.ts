@@ -1,22 +1,23 @@
-import { mkdirIfDoesNotExist, rmDirAndFilesIfExist, TestEnvironment } from '../../utils';
+import { FileSystem } from '../../file-system';
 import { connectReact } from './connect-react';
 
 describe('connectReact', () => {
 
-  afterEach(() => rmDirAndFilesIfExist('connector-test'));
+  const fs = new FileSystem();
 
-  const testEnv = new TestEnvironment('react');
+  beforeEach(() => fs.setUp());
+
+  afterEach(() => fs.tearDown());
 
   it('should update package.json to set up the proxy, install ncp and change the output dir.', () => {
-    mkdirIfDoesNotExist('connector-test/react');
-
-    testEnv
-      .copyFileFromMocks('package.json', 'connector-test/react/package.json');
+    fs
+      .ensureDir('connector-test/react')
+      .copyFixture('react/package.json', 'connector-test/react/package.json');
 
     connectReact('./connector-test/react');
 
-    testEnv
-      .validateSpec('package.json', 'connector-test/react/package.json');
+    fs
+      .assertEqual('connector-test/react/package.json', 'react/package.json');
   });
 
   it('should not throw if the path does not exist.', () => {
@@ -24,7 +25,8 @@ describe('connectReact', () => {
   });
 
   it('should not throw if package.json does not exist.', () => {
-    mkdirIfDoesNotExist('connector-test/react');
+    fs
+      .ensureDir('connector-test/react');
 
     connectReact('./connector-test/react');
   });

@@ -1,23 +1,26 @@
+#!/usr/bin/env sh
+set -e
+
 cd packages
-cd acceptance-tests && npm run test || exit 1
-cd ../aws-s3 && npm run test || exit 1
-cd ../cli && npm run test || exit 1
-cd ../csrf && npm run test || exit 1
-cd ../ejs && npm run test || exit 1
-cd ../examples && npm run test || exit 1
-cd ../formidable && npm run test || exit 1
-cd ../graphql && npm run test || exit 1
-cd ../jwks-rsa && npm run test || exit 1
-cd ../jwt && npm run test || exit 1
-cd ../mongodb && npm run test || exit 1
-cd ../mongoose && npm run test || exit 1
-cd ../password && npm run test || exit 1
-cd ../redis && npm run test || exit 1
-cd ../social && npm run test || exit 1
-cd ../storage && npm run test || exit 1
-cd ../swagger && npm run test || exit 1
-cd ../typeorm && npm run test || exit 1
-cd ../typestack && npm run test || exit 1
+cd acceptance-tests && npm run test
+cd ../aws-s3 && npm run test
+cd ../cli && npm run test
+cd ../csrf && npm run test
+cd ../ejs && npm run test
+cd ../examples && npm run test
+cd ../formidable && npm run test
+cd ../graphql && npm run test
+cd ../jwks-rsa && npm run test
+cd ../jwt && npm run test
+cd ../mongodb && npm run test
+cd ../mongoose && npm run test
+cd ../password && npm run test
+cd ../redis && npm run test
+cd ../social && npm run test
+cd ../storage && npm run test
+cd ../swagger && npm run test
+cd ../typeorm && npm run test
+cd ../typestack && npm run test
 # @foal/core at the end because code coverage takes time.
-cd ../core && npm run test || exit 1
+cd ../core && npm run test
 cd ../..
