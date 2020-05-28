@@ -45,11 +45,24 @@ export interface TokenOptions {
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
     if (!options.store) {
-      Config.getOrThrow(
+      const pkgName = Config.getOrThrow(
         'settings.session.store',
         'string',
         'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
       );
+
+      try {
+        require(pkgName);
+      } catch (err) {
+        // TODO: test this line
+        if (err.code !== 'MODULE_NOT_FOUND') {
+          throw err;
+        }
+        throw new Error(
+          `The package "${pkgName}" provided with the configuration key settings.session.store was not found.`
+          + ' Did you install it?'
+        );
+      }
       throw new Error('You must provide a SessionStore class to the hook.');
     }
 

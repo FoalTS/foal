@@ -67,6 +67,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   afterEach(() => {
     delete process.env.SETTINGS_SESSION_SECRET;
     delete process.env.SETTINGS_SESSION_COOKIE_NAME;
+    delete process.env.SETTINGS_SESSION_STORE;
   });
 
   beforeEach(() => {
@@ -92,6 +93,25 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         strictEqual(
           error.msg,
           'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
+        );
+      }
+    });
+
+    it('should throw an error if the package name provided in settings.session.store is not installed.', async () => {
+      process.env.SETTINGS_SESSION_STORE = 'foobarxxx';
+
+      const hook = getHookFunction(Token({}));
+
+      const ctx = new Context({});
+
+      try {
+        await hook(ctx, services);
+        throw new Error('The hook should have thrown an error.')
+      } catch (error) {
+        strictEqual(
+          error.message,
+          'The package "foobarxxx" provided with the configuration key settings.session.store was not found.'
+          + ' Did you install it?'
         );
       }
     });
