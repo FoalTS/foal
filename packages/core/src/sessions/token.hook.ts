@@ -45,6 +45,11 @@ export interface TokenOptions {
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
     if (!options.store) {
+      Config.getOrThrow(
+        'settings.session.store',
+        'string',
+        'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
+      );
       throw new Error('You must provide a SessionStore class to the hook.');
     }
 

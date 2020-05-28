@@ -1,6 +1,9 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
-  Class, Context, getHookFunction,
+  Class,
+  ConfigNotFoundError,
+  Context,
+  getHookFunction,
   HttpResponseOK,
   isHttpResponse,
   isHttpResponseBadRequest,
@@ -71,18 +74,29 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     services.get(Store).clear();
   });
 
-  it('should throw an error if no store is provided as option.', async () => {
-    const hook = getHookFunction(Token({}));
+  describe('when no session store class is provided as option', () => {
 
-    const ctx = new Context({});
+    it('should throw an error if the configuration value settings.session.store is empty.', async () => {
+      const hook = getHookFunction(Token({}));
 
-    try {
-      await hook(ctx, services);
-      throw new Error('The hook should have thrown an error.')
-    } catch (error) {
-      strictEqual(error.message, 'You must provide a SessionStore class to the hook.')
-    }
-  })
+      const ctx = new Context({});
+  
+      try {
+        await hook(ctx, services);
+        throw new Error('The hook should have thrown an error.')
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.session.store');
+        strictEqual(
+          error.msg,
+          'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
+        );
+      }
+    });
+
+  });
 
   describe('should validate the request and', () => {
 
