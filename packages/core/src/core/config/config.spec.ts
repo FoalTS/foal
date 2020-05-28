@@ -43,27 +43,27 @@ describe('Config', () => {
     }
   });
 
-  describe('when get is called (static)', () => {
+  describe('when get2 is called (static)', () => {
 
     it('should return the value of the environment variable if it exists.', () => {
       process.env.TEST_FOO_FOO_BAR = 'value1';
-      strictEqual(Config.get('test.foo.fooBar'), 'value1');
+      strictEqual(Config.get2('test.foo.fooBar'), 'value1');
     });
 
     it('should return the value of the .env file if it exists (LF).', () => {
       const fileContent = 'DB_HOST=localhost\nSETTINGS_SESSION_NAME=id\nFOO_BAR=a==\n';
       writeFileSync('.env', fileContent, 'utf8');
 
-      strictEqual(Config.get('settings.sessionName'), 'id');
-      strictEqual(Config.get('foo.bar'), 'a==');
+      strictEqual(Config.get2('settings.sessionName'), 'id');
+      strictEqual(Config.get2('foo.bar'), 'a==');
     });
 
     it('should return the value of the .env file if it exists (CRLF).', () => {
       const fileContent = 'DB_HOST=localhost\r\nSETTINGS_SESSION_NAME=id\r\nFOO_BAR=a==\n';
       writeFileSync('.env', fileContent, 'utf8');
 
-      strictEqual(Config.get('settings.sessionName'), 'id');
-      strictEqual(Config.get('foo.bar'), 'a==');
+      strictEqual(Config.get2('settings.sessionName'), 'id');
+      strictEqual(Config.get2('foo.bar'), 'a==');
     });
 
     it('should return, when NODE_ENV is defined, the value of the config/${NODE_ENV}.json file if it exists.', () => {
@@ -74,7 +74,7 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/test.json', fileContent, 'utf8');
 
-      strictEqual(Config.get('auth.subSection.key1'), 'aaa');
+      strictEqual(Config.get2('auth.subSection.key1'), 'aaa');
     });
 
     it('should return, when NODE_ENV is defined, the value of the config/${NODE_ENV}.yml file if it exists.', () => {
@@ -83,7 +83,7 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/test.yml', fileContent, 'utf8');
 
-      strictEqual(Config.get('hh.subSection.au'), 'ji');
+      strictEqual(Config.get2('hh.subSection.au'), 'ji');
     });
 
     it('should return, when NODE_ENV is not defined, the value of the config/development.json '
@@ -94,7 +94,7 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/development.json', fileContent, 'utf8');
 
-      strictEqual(Config.get('a'), 'b');
+      strictEqual(Config.get2('a'), 'b');
     });
 
     it('should return, when NODE_ENV is not defined, the value of the config/development.yml '
@@ -103,7 +103,7 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/development.yml', ymlFileContent, 'utf8');
 
-      strictEqual(Config.get('c'), 'd');
+      strictEqual(Config.get2('c'), 'd');
     });
 
     it('should return the value of the config/default.json file if it exists.', () => {
@@ -113,7 +113,7 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/default.json', fileContent, 'utf8');
 
-      strictEqual(Config.get('jwt.subSection.secretOrPublicKey'), 'xxx');
+      strictEqual(Config.get2('jwt.subSection.secretOrPublicKey'), 'xxx');
     });
 
     it('should return the value of the config/default.yml file if it exists.', () => {
@@ -121,15 +121,15 @@ describe('Config', () => {
       mkdirSync('config');
       writeFileSync('config/default.yml', fileContent, 'utf8');
 
-      strictEqual(Config.get('aa.subSection.wx'), 'y');
+      strictEqual(Config.get2('aa.subSection.wx'), 'y');
     });
 
     it('should return undefined if the key does not exist and if no default value is provided.', () => {
-      strictEqual(Config.get('aa.bbbCcc.y'), undefined);
+      strictEqual(Config.get2('aa.bbbCcc.y'), undefined);
     });
 
     it('should return the default value if the key does not exist.', () => {
-      strictEqual(Config.get('aa.bbbCcc.y', false), false);
+      strictEqual(Config.get2('aa.bbbCcc.y', 'any', false), false);
     });
 
     it('should look at the different values / files in the correct order.', () => {
@@ -142,62 +142,25 @@ describe('Config', () => {
       const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
       const defaultYAMLFileContent = 'barFoo: foo6';
 
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo7');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo7');
 
       writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo6');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo6');
 
       writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo5');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo5');
 
       writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo4');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo4');
 
       writeFileSync('config/test.json', envJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo3');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo3');
 
       writeFileSync('.env', dotEnvFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo2');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo2');
 
       process.env.BAR_FOO = 'foo1';
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo1');
-    });
-
-    it('should parse environment variable values.', () => {
-      process.env.TEST_FOO_FOO_BAR1 = 'true';
-      strictEqual(Config.get('test.foo.fooBar1'), true);
-
-      process.env.TEST_FOO_FOO_BAR2 = 'false';
-      strictEqual(Config.get('test.foo.fooBar2'), false);
-
-      process.env.TEST_FOO_FOO_BAR3 = '36';
-      strictEqual(Config.get('test.foo.fooBar3'), 36);
-
-      process.env.TEST_FOO_FOO_BAR4 = '4xxj6lkq8';
-      strictEqual(Config.get('test.foo.fooBar4'), '4xxj6lkq8');
-
-      process.env.TEST_FOO_FOO_BAR5 = '2e2';
-      strictEqual(Config.get('test.foo.fooBar5'), 200);
-
-      process.env.TEST_FOO_FOO_BAR6 = '';
-      strictEqual(Config.get('test.foo.fooBar6'), '');
-
-      process.env.TEST_FOO_FOO_BAR7 = '   ';
-      strictEqual(Config.get('test.foo.fooBar7'), '   ');
-    });
-
-    it('should parse .env values.', () => {
-      const fileContent = 'FOO_BAR1=true\nFOO_BAR2=false\r\nFOO_BAR3=42\n'
-        + 'FOO_BAR4=4xxj6lkq8\nFOO_BAR5=2e2\nFOO_BAR6=\nFOO_BAR7=   \n';
-      writeFileSync('.env', fileContent, 'utf8');
-
-      strictEqual(Config.get('foo.bar1'), true);
-      strictEqual(Config.get('foo.bar2'), false);
-      strictEqual(Config.get('foo.bar3'), 42);
-      strictEqual(Config.get('foo.bar4'), '4xxj6lkq8');
-      strictEqual(Config.get('foo.bar5'), 200);
-      strictEqual(Config.get('foo.bar6'), '');
-      strictEqual(Config.get('foo.bar7'), '   ');
+      strictEqual(Config.get2('barFoo', 'any', 'foo7'), 'foo1');
     });
 
     describe('should not take too long', () => {
@@ -242,7 +205,7 @@ api:
         function testResponseTime(key: string) {
           delete require.cache[require.resolve('yamljs')];
           const time = process.hrtime();
-          Config.get(key);
+          Config.get2(key);
           const diff = process.hrtime(time);
           strictEqual(diff[0], 0);
           strictEqual(diff[1] < 3e6, true, `Expected Config.get to be executed in less than 3ms. Took ${diff[1]} ns.`);
@@ -257,7 +220,7 @@ api:
         function testResponseTime(key: string) {
           delete require.cache[require.resolve('yamljs')];
           const time = process.hrtime();
-          Config.get(key);
+          Config.get2(key);
           const diff = process.hrtime(time);
           strictEqual(diff[0], 0);
           strictEqual(
@@ -266,27 +229,14 @@ api:
           );
         }
 
-        Config.get('barFoo');
-        Config.get('settings.sessionSecret');
-        Config.get('auth.alg');
+        Config.get2('barFoo');
+        Config.get2('settings.sessionSecret');
+        Config.get2('auth.alg');
 
         testResponseTime('barFoo');
         testResponseTime('settings.sessionSecret');
         testResponseTime('auth.alg');
       });
-    });
-
-  });
-
-  describe('when get2 is called', () => {
-
-    it('should return the configuration value.', () => {
-      process.env.TEST_FOO_FOO_BAR = 'value1';
-      strictEqual(Config.get2('test.foo.fooBar'), 'value1');
-    });
-
-    it('should return the default value if the key does not exist.', () => {
-      strictEqual(Config.get2('aa.bbbCcc.y', 'any', false), false);
     });
 
     it('should, when type === "boolean", convert the configuration value to a boolean if possible.', () => {
