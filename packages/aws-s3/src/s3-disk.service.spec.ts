@@ -244,6 +244,47 @@ describe('S3Disk', () => {
 
   });
 
+  describe('has a "readSize" method that', () => {
+
+    it('should throw an Error if no bucket is specified in the config.', async () => {
+      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown.');
+        }
+        strictEqual(error.key, 'settings.disk.s3.bucket');
+        strictEqual(error.msg, 'You must provide a bucket name when using AWS S3 file storage (S3Disk).');
+      }
+    });
+
+    it('should throw a FileDoesNotExist if there is no file at the given path.', async () => {
+      try {
+        await disk.readSize('foo/test.txt');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof FileDoesNotExist)) {
+          throw new Error('The method should have thrown a FileDoesNotExist error.');
+        }
+        strictEqual(error.filename, 'foo/test.txt');
+      }
+    });
+
+    it('should return the file size.', async () => {
+      await s3.putObject({
+        Body: Buffer.from('hello', 'utf8'),
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
+
+      const size = await disk.readSize('foo/test.txt');
+      strictEqual(size, 5);
+    });
+
+  });
+
   describe('has a "delete" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
