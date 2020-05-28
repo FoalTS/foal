@@ -108,7 +108,7 @@ export class RedisStore extends SessionStore {
 
   getRedisInstance() {
     if (!this.redisClient) {
-      const redisURI = Config.get2('redis.uri', 'string');
+      const redisURI = Config.get('redis.uri', 'string');
       this.redisClient = createClient(redisURI);
     }
     return this.redisClient;

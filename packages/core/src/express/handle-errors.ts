@@ -20,7 +20,7 @@ export function handleErrors(options: CreateAppOptions, appController: any, logF
       return;
     }
 
-    if (Config.get2('settings.logErrors', 'boolean', true)) {
+    if (Config.get('settings.logErrors', 'boolean', true)) {
       logFn(err.stack);
     }
 

@@ -94,16 +94,16 @@ database:
 
 The `Config` class provides two static methods for accessing configuration values: `get2` and `getOrThrow`. Use of `Config.get` is also possible, but is deprecated.
 
-### The `Config.get2` method
+### The `Config.get` method
 
-> Available since v1.7
+> warning: version 2
 
 This function takes the configuration key as parameter.
 
 ```typescript
 import { Config } from '@foal/core';
 
-const secret = Config.get2('settings.jwt.secretOrPublicKey');
+const secret = Config.get('settings.jwt.secretOrPublicKey');
 ```
 
 In this example, FoalTS will try to retrieve the configuration value via:
@@ -123,7 +123,7 @@ If the `NODE_ENV` environment variable is set, Foal will look at `${NODE_ENV}.js
 ```typescript
 import { Config } from '@foal/core';
 
-const foobar = Config.get2('settings.foobar', 'boolean|string');
+const foobar = Config.get('settings.foobar', 'boolean|string');
 // foobar is of type boolean|string|undefined
 ```
 
@@ -143,7 +143,7 @@ The method also accepts a second optional parameter to define the type of the re
 The third optional parameter of the method allows you to define a default value if none is found in the configuration.
 
 ```typescript
-const foobar = Config.get2('settings.foobar', 'boolean', false);
+const foobar = Config.get('settings.foobar', 'boolean', false);
 // foobar is of type boolean
 ```
 
@@ -156,7 +156,7 @@ const foobar = Config.getOrThrow('settings.foobar', 'boolean');
 // foobar is of type boolean
 ```
 
-This method has the same behavior as `Config.get2` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
+This method has the same behavior as `Config.get` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
 
 ## Configuration & FoalTS Components
 
@@ -201,20 +201,22 @@ TypeORM uses a [different system](http://typeorm.io/#/using-ormconfig) for its c
 
 You can however customize the `ormconfig.js` file to make it work with FoalTS configuration system.
 
+> warning: version 2
+
 *ormconfig.js (example)*
 ```js
 const { Config } = require('@foal/core');
 
 module.exports = {
   type: 'sqlite',
-  database: Config.get2('database.database', 'string'),
-  dropSchema: Config.get2('database.dropSchema', 'boolean' false),
+  database: Config.get('database.database', 'string'),
+  dropSchema: Config.get('database.dropSchema', 'boolean' false),
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],
   cli: {
     migrationsDir: "src/migrations"
   },
-  synchronize: Config.get2('database.synchronize', 'boolean', false)
+  synchronize: Config.get('database.synchronize', 'boolean', false)
 }
 
 ```

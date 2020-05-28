@@ -216,7 +216,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
         httpOnly: true,
         maxAge: 300,
         path: '/',
-        secure: Config.get2('settings.social.cookie.secure', 'boolean', false)
+        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
       });
   }
 

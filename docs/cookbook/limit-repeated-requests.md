@@ -7,6 +7,8 @@ In FoalTS you can implement a rate limiter like the [express-rate-limit](https:/
 > Note: Because the rate limiter response for rate limited requests does not get handled by FoalTS and its hooks, you need to manually set the default FoalTS headers to the response object of the rate limiter in its `handle` function.
 > If you don't manually set any headers only the default Express.js headers will be set in the response.
 
+> warning: version 2
+
 *src/index.ts*
 ```typescript
 // std
@@ -45,7 +47,7 @@ async function main() {
   const app = createApp(AppController, expressApp);
     
   const httpServer = http.createServer(app);
-  const port = Config.get2('port', 'number', 3001);
+  const port = Config.get('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });

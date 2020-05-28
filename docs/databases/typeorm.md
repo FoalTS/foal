@@ -45,20 +45,22 @@ TypeORM is integrated by default in each new FoalTS project. This allows you to 
 
 When creating a new project, an `SQLite` database is used by default as it does not require any additional installation (the data is saved in a file). The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
 
+> warning: version 2
+
 *ormconfig.js*
 ```js
 const { Config } = require('@foal/core');
 
 module.exports = {
   type: 'sqlite',
-  database: Config.get2('database.database', 'string'),
-  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
+  database: Config.get('database.database', 'string'),
+  dropSchema: Config.get('database.dropSchema', 'boolean', false),
   entities: ['build/app/**/*.entity.js'],
   migrations: ['build/migrations/*.js'],
   cli: {
     migrationsDir: 'src/migrations'
   },
-  synchronize: Config.get2('database.synchronize', 'boolean', false)
+  synchronize: Config.get('database.synchronize', 'boolean', false)
 }
 ```
 
@@ -89,6 +91,8 @@ Two packages are required to use TypeORM with FoalTS:
 
 This section shows how to configure **MySQL** or **PostgreSQL** with Foal.
 
+> warning: version 2
+
 *ormconfig.js*
 ```js
 const { Config } = require('@foal/core');
@@ -96,14 +100,14 @@ const { Config } = require('@foal/core');
 module.exports = {
   type: 'mysql', // or 'postgres'
 
-  host: Config.get2('database.host', 'string'),
-  port: Config.get2('database.port', 'number'),
-  username: Config.get2('database.username', 'string'),
-  password: Config.get2('database.password', 'string'),
-  database: Config.get2('database.database', 'string'),
+  host: Config.get('database.host', 'string'),
+  port: Config.get('database.port', 'number'),
+  username: Config.get('database.username', 'string'),
+  password: Config.get('database.password', 'string'),
+  database: Config.get('database.database', 'string'),
 
-  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
-  synchronize: Config.get2('database.synchronize', 'boolean', false),
+  dropSchema: Config.get('database.dropSchema', 'boolean', false),
+  synchronize: Config.get('database.synchronize', 'boolean', false),
   
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],

@@ -1,7 +1,7 @@
 import { Config, generateSignedToken, Session } from '@foal/core';
 
 export async function getCsrfToken(session?: Session): Promise<string> {
-  if (!Config.get2('settings.csrf.enabled', 'boolean', true)) {
+  if (!Config.get('settings.csrf.enabled', 'boolean', true)) {
     return 'CSRF protection disabled';
   }
 

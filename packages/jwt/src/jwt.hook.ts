@@ -62,7 +62,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
   return Hook(async ctx => {
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -127,7 +127,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         'string',
         'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
       );
-      const encoding = Config.get2('settings.jwt.secretEncoding', 'string');
+      const encoding = Config.get('settings.jwt.secretEncoding', 'string');
       if (encoding) {
         secretOrPublicKey = Buffer.from(secretOrPublicKey, encoding);
       }

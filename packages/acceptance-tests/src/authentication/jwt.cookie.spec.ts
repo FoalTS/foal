@@ -99,7 +99,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
     async logout() {
       return new HttpResponseNoContent()
         .setCookie(
-          Config.get2('settings.jwt.cookieName', 'string', 'auth'),
+          Config.get('settings.jwt.cookieName', 'string', 'auth'),
           '',
           { ...cookieOptions, maxAge: 0 }
         );
@@ -123,7 +123,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
       });
       return new HttpResponseNoContent()
         .setCookie(
-          Config.get2('settings.jwt.cookieName', 'string', 'auth'),
+          Config.get('settings.jwt.cookieName', 'string', 'auth'),
           token,
           { ...cookieOptions, maxAge: 3600 }
         );

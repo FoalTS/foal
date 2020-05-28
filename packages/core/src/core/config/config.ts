@@ -37,9 +37,9 @@ export class Config {
    * @returns {ValueType<T>|undefined} The configuration value
    * @memberof Config
    */
-  static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
-  static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
-  static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
+  static get<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
+  static get<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
+  static get<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
     const value = this.readConfigValue(key);
 
     if (value === undefined) {
@@ -107,7 +107,7 @@ export class Config {
    * @memberof Config
    */
   static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
-    const value = this.get2(key, type);
+    const value = this.get(key, type);
     if (value === undefined) {
       throw new ConfigNotFoundError(key, msg);
     }

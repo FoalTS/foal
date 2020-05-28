@@ -83,9 +83,9 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
   });
 
   it('from Auth0.', () => {
-    const domain = Config.get2('auth0.domain', 'string');
-    const audience = Config.get2('auth0.audience', 'string');
-    const token = Config.get2('auth0.token', 'string');
+    const domain = Config.get('auth0.domain', 'string');
+    const audience = Config.get('auth0.audience', 'string');
+    const token = Config.get('auth0.token', 'string');
 
     if (token === undefined) {
       console.warn('AUTH0_TOKEN not defined. Skipping this test...');
@@ -129,12 +129,12 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
   });
 
   it('from AWS Cognito.', async () => {
-    const clientId = Config.get2('cognito.clientId', 'string');
-    const domain = Config.get2('cognito.domain', 'string');
-    const refreshToken = Config.get2('cognito.refreshToken', 'string');
+    const clientId = Config.get('cognito.clientId', 'string');
+    const domain = Config.get('cognito.domain', 'string');
+    const refreshToken = Config.get('cognito.refreshToken', 'string');
     let token: string;
-    const region = Config.get2('cognito.region', 'string');
-    const userPoolId = Config.get2('cognito.userPoolId', 'string');
+    const region = Config.get('cognito.region', 'string');
+    const userPoolId = Config.get('cognito.userPoolId', 'string');
 
     if (refreshToken === undefined) {
       console.warn('COGNITO_REFRESH_TOKEN not defined. Skipping this test...');

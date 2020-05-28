@@ -95,7 +95,7 @@ export function createApp(
   }
 
   // Log requests.
-  const loggerFormat = Config.get2(
+  const loggerFormat = Config.get(
     'settings.loggerFormat',
     'string',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
@@ -108,12 +108,12 @@ export function createApp(
 
   // Serve static files.
   app.use(
-    Config.get2('settings.staticPathPrefix', 'string', ''),
-    express.static(Config.get2('settings.staticPath', 'string', 'public'))
+    Config.get('settings.staticPathPrefix', 'string', ''),
+    express.static(Config.get('settings.staticPath', 'string', 'public'))
   );
 
   // Parse request body.
-  const limit = Config.get2('settings.bodyParser.limit', 'number|string');
+  const limit = Config.get('settings.bodyParser.limit', 'number|string');
   app.use(express.json({ limit }));
   app.use(handleJsonErrors);
   app.use(express.urlencoded({ extended: false, limit }));

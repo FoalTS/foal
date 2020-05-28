@@ -36,7 +36,7 @@ export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptio
     JWT(true, options, verifyOptions)(target, propertyKey);
 
     if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
     ) {
       return;
     }
@@ -44,7 +44,7 @@ export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptio
     if (options.cookie) {
       const securityScheme: IApiSecurityScheme = {
         in: 'cookie',
-        name: Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
+        name: Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
         type: 'apiKey',
       };
       ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);

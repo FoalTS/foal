@@ -16,6 +16,8 @@ npm uninstall sqlite3 connect-sqlite3
 
 ### Configure the Database Credentials
 
+> warning: version 2
+
 Replace your `ormconfig.js` (or `ormconfig.yml` or `ormconfig.json`) file with this one:
 
 *ormconfig.js*
@@ -23,19 +25,19 @@ Replace your `ormconfig.js` (or `ormconfig.yml` or `ormconfig.json`) file with t
 const { Config } = require('@foal/core');
 
 module.exports = {
-  type: Config.get2('database.type', 'string'),
-  url: Config.get2('database.url', 'string'),
-  database: process.env.RDS_DB_NAME || Config.get2('database.name', 'string'),
-  port: process.env.RDS_PORT || Config.get2('database.port', 'number'),
-  host: process.env.RDS_HOSTNAME || Config.get2('database.host', 'string'),
-  username: process.env.RDS_USERNAME || Config.get2('database.username', 'string'),
-  password: process.env.RDS_PASSWORD || Config.get2('database.password', 'string'),
+  type: Config.get('database.type', 'string'),
+  url: Config.get('database.url', 'string'),
+  database: process.env.RDS_DB_NAME || Config.get('database.name', 'string'),
+  port: process.env.RDS_PORT || Config.get('database.port', 'number'),
+  host: process.env.RDS_HOSTNAME || Config.get('database.host', 'string'),
+  username: process.env.RDS_USERNAME || Config.get('database.username', 'string'),
+  password: process.env.RDS_PASSWORD || Config.get('database.password', 'string'),
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],
   cli: {
     "migrationsDir": "src/migrations"
   },
-  synchronize: Config.get2('database.synchronize', 'boolean')
+  synchronize: Config.get('database.synchronize', 'boolean')
 };
 
 ```
@@ -63,6 +65,8 @@ And complete your configuration file `config/default.json` (or `config/default.y
 
 #### Case 1: The application does not use sessions
 
+> warning: version 2
+
 If you do not use sessions, then remove the store import and the store option from the `createApp` function in the `src/index.ts` file.
 
 ```typescript
@@ -86,7 +90,7 @@ async function main() {
   const app = createApp(AppController);
 
   const httpServer = http.createServer(app);
-  const port = Config.get2('port', 'number', 3001);
+  const port = Config.get('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });
@@ -97,6 +101,8 @@ main();
 ```
 
 #### Case 2: The application uses sessions
+
+> warning: version 2
 
 If your application uses sessions, you need to provide a [session store](https://github.com/expressjs/session#compatible-session-stores).
 
@@ -124,7 +130,7 @@ async function main() {
   });
 
   const httpServer = http.createServer(app);
-  const port = Config.get2('port', 'number', 3001);
+  const port = Config.get('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });

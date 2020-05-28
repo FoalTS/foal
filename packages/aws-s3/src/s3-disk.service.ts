@@ -102,10 +102,10 @@ export class S3Disk extends AbstractDisk {
   private getS3(): S3 {
     if (!this.s3) {
       this.s3 = new S3({
-        accessKeyId: Config.get2('settings.aws.accessKeyId', 'string'),
+        accessKeyId: Config.get('settings.aws.accessKeyId', 'string'),
         apiVersion: '2006-03-01',
-        endpoint: Config.get2('settings.aws.endpoint', 'string'),
-        secretAccessKey: Config.get2('settings.aws.secretAccessKey', 'string'),
+        endpoint: Config.get('settings.aws.endpoint', 'string'),
+        secretAccessKey: Config.get('settings.aws.secretAccessKey', 'string'),
       });
     }
     return this.s3;
