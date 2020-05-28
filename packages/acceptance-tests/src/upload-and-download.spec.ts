@@ -77,7 +77,7 @@ describe('Upload & Download Files', () => {
       .expect(200)
       .expect('Content-Type', 'image/png')
       .expect('Content-Length', image.length.toString())
-      .expect('Content-Disposition', 'attachement; filename="download.png"')
+      .expect('Content-Disposition', 'attachment; filename="download.png"')
       .expect(image);
 
   });

@@ -145,7 +145,7 @@ export abstract class AbstractDisk {
       .setHeader('Content-Length', size.toString())
       .setHeader(
         'Content-Disposition',
-        (options.forceDownload ? 'attachement' : 'inline')
+        (options.forceDownload ? 'attachment' : 'inline')
         + `; filename="${options.filename || basename(path)}"`
       );
   }

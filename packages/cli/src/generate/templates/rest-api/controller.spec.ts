@@ -351,7 +351,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       notStrictEqual(/* camelName */, undefined);
     });
 
-    it('should return an HttpResponseNotFound if the /* camelName */ was not fond.', async () => {
+    it('should return an HttpResponseNotFound if the /* camelName */ was not found.', async () => {
       const ctx = new Context({
         params: {
           /* camelName */Id: -1

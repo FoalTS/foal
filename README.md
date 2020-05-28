@@ -42,7 +42,7 @@
 <p align="center">
   <a href="https://foalts.org/">Website</a>
   -
-  <a href="https://foalts.gitbook.io/docs/content/">Documentation</a>
+  <a href="https://foalts.gitbook.io/docs/">Documentation</a>
   -
   <a href="https://twitter.com/foalts">Twitter</a>
   -
@@ -66,7 +66,7 @@ $ npm run develop
 
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!
 
-:point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/content/) :seedling:
+:point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/) :seedling:
 
 ![Screenshot](./docs/screenshot.png)
 

@@ -1,6 +1,6 @@
 {
   "name": "@foal/mongoose",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "FoalTS integration of Mongoose",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

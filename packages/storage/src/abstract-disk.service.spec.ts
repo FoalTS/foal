@@ -136,13 +136,13 @@ describe('AbstractDisk', () => {
         response = await disk.createHttpResponse(path, {
           forceDownload: true
         });
-        strictEqual(response.getHeader('Content-Disposition'), 'attachement; filename="test-file.png"');
+        strictEqual(response.getHeader('Content-Disposition'), 'attachment; filename="test-file.png"');
 
         response = await disk.createHttpResponse(path, {
           filename: 'download.png',
           forceDownload: true,
         });
-        strictEqual(response.getHeader('Content-Disposition'), 'attachement; filename="download.png"');
+        strictEqual(response.getHeader('Content-Disposition'), 'attachment; filename="download.png"');
       });
 
     });

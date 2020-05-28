@@ -1,24 +1,22 @@
-// std
-import { existsSync } from 'fs';
-
 // FoalTS
-import { Generator, getNames } from '../../utils';
+import { FileSystem } from '../../file-system';
+import { getNames } from '../../utils';
 
 export function createEntity({ name }: { name: string }) {
-  const names = getNames(name);
+  const fs = new FileSystem();
 
   let root = '';
-
-  if (existsSync('src/app/entities')) {
+  if (fs.exists('src/app/entities')) {
     root = 'src/app/entities';
-  } else if (existsSync('entities')) {
+  } else if (fs.exists('entities')) {
     root = 'entities';
   }
 
-  new Generator('entity', root)
-    .renderTemplate('entity.ts', names, `${names.kebabName}.entity.ts`)
-    .updateFile('index.ts', content => {
-      content += `export { ${names.upperFirstCamelName} } from './${names.kebabName}.entity';\n`;
-      return content;
-    }, { allowFailure: true });
+  const names = getNames(name);
+
+  fs
+    .cd(root)
+    .render('entity/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .ensureFile('index.ts')
+    .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
 }
