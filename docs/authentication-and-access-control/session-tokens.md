@@ -371,6 +371,33 @@ Run the script.
 foal run revoke-all-sessions
 ```
 
+## Specifying Globally the Session Store
+
+> Available in Foal v1.10.0 onwards.
+
+In order to avoid passing the session store to the hooks each time, you can provide it via the configuration.
+
+*default.yml*
+```yaml
+settings:
+  session:
+    store: '@foal/typeorm' # or '@foal/mongodb' or '@foal/redis'
+```
+
+```typescript
+// Before
+@TokenRequired({ store: TypeORMStore })
+export class ApiController {
+  // ...
+}
+
+// After
+@TokenRequired()
+export class ApiController {
+  // ...
+}
+```
+
 ## Session Stores
 
 FoalTS currently offers three built-in session stores: `TypeORMStore`, `MongoDBStore` `RedisStore`. Others will come in the future. If you need a specific one, you can submit a Github issue or even create your own store (see section below).
