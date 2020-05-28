@@ -1,6 +1,6 @@
 {
   "name": "@foal/social",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "Social authentication for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -53,7 +53,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.8.1",
+    "@foal/core": "^1.9.0",
     "node-fetch": "~2.6.0"
   },
   "devDependencies": {
