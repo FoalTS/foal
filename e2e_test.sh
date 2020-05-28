@@ -1,8 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
 mkdir e2e-test-temp
 cd e2e-test-temp
 
 # Test app creation
-foal createapp my-app || exit 1
+foal createapp my-app
 cd my-app
 
 # Check some compilation errors
@@ -12,34 +15,34 @@ if grep -Ril "../../Users/loicp" .; then
 fi
 
 # Test the generators
-foal g entity flight || exit 1
-foal g hook foo-bar || exit 1
-foal g service foo || exit 1
-foal g controller bar --register || exit 1
-foal g rest-api product --register || exit 1
-foal g sub-app bar-foo || exit 1
-foal g script bar-script || exit 1
+foal g entity flight
+foal g hook foo-bar
+foal g service foo
+foal g controller bar --register
+foal g rest-api product --register
+foal g sub-app bar-foo
+foal g script bar-script
 
 # Test linting
-npm run lint || exit 1
+npm run lint
 
 # Build and run the unit tests
-npm run build:test || exit 1
-npm run start:test || exit 1
+npm run build:test
+npm run start:test
 
 # Make and run the migrations
-npm run makemigrations || exit 1
-npm run migrations || exit 1
+npm run makemigrations
+npm run migrations
 
 # Build and run the e2e tests
-npm run build:e2e || exit 1
-npm run start:e2e || exit 1
+npm run build:e2e
+npm run start:e2e
 
 # Build the app
-npm run build || exit 1
+npm run build
 
 # Test the application when it is started
-pm2 start build/index.js || exit 1
+pm2 start build/index.js
 sleep 1
 response=$(
     curl http://localhost:3001 \
@@ -113,10 +116,10 @@ test_rest_api DELETE "http://localhost:3001/products/1" 204
 test_rest_api DELETE "http://localhost:3001/products/1" 404
 test_rest_api DELETE "http://localhost:3001/products/ab" 400
 
-pm2 delete index || exit 1
+pm2 delete index
 
 # Test the default shell scripts to create users.
-foal run create-user || exit 1
+foal run create-user
 
 #################################################################
 # Repeat (almost) the same tests with a Mongoose and YAML project
@@ -125,7 +128,7 @@ foal run create-user || exit 1
 cd ..
 
 # Test app creation
-foal createapp my-mongodb-app --mongodb --yaml || exit 1
+foal createapp my-mongodb-app --mongodb --yaml
 cd my-mongodb-app
 
 # Check some compilation errors
@@ -135,24 +138,24 @@ if grep -Ril "../../Users/loicp" .; then
 fi
 
 # Test the generators
-foal g model flight || exit 1
+foal g model flight
 
 # Test linting
-npm run lint || exit 1
+npm run lint
 
 # Build and run the unit tests
-npm run build:test || exit 1
-npm run start:test || exit 1
+npm run build:test
+npm run start:test
 
 # Build and run the e2e tests
-npm run build:e2e || exit 1
-npm run start:e2e || exit 1
+npm run build:e2e
+npm run start:e2e
 
 # Build the app
 npm run build || exit 1
 
 # Test the application when it is started
-PORT=3001 pm2 start build/index.js || exit 1
+PORT=3001 pm2 start build/index.js
 sleep 1
 response=$(
     curl http://localhost:3001 \
@@ -162,7 +165,7 @@ response=$(
 )
 test "$response" -ge 200 && test "$response" -le 299
 
-pm2 delete index || exit 1
+pm2 delete index
 
 # Test the default shell scripts to create users.
-foal run create-user || exit 1
+foal run create-user

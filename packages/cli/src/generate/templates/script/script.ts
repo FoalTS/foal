@@ -11,7 +11,14 @@ export const schema = {
 };
 
 export async function main(args: any) {
-  await createConnection();
+  const connection = await createConnection();
 
-  // Do something.
+  try {
+    // Do something.
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    await connection.close();
+  }
 }

@@ -15,6 +15,9 @@
  */
 export function fetchUser(userModel: any): (id: number|string) => Promise<any> {
   return (id: number|string) => {
+    if (typeof id === 'number') {
+      throw new Error('Unexpected type for MongoDB user ID: number.');
+    }
     return new Promise((resolve, reject) => {
       userModel.findOne({ _id: id }, (err: any, res: any) => {
         if (err) {

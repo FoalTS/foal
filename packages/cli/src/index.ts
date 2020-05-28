@@ -26,6 +26,7 @@ import {
   createSubApp,
   createVSCodeConfig,
 } from './generate';
+import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run-script';
 
@@ -103,51 +104,77 @@ const generateTypes: GenerateType[] = [
 ];
 
 program
-  .command('generate <type> <name>')
+  .command('generate <type> [name]')
   .description('Generate and/or modify files.')
-  .option('-r, --register', 'Register the controller into app.controller.ts (only available if type=controller)', false)
+  .option(
+    '-r, --register',
+    'Register the controller into app.controller.ts (only available if type=controller|rest-api)',
+    false
+  )
+  .option(
+    '-a, --auth',
+    'Add an owner to the entities of the generated REST API (only available if type=rest-api)',
+    false
+  )
   .alias('g')
   .on('--help', () => {
     console.log();
     console.log('Available types:');
     generateTypes.forEach(t => console.log(`  ${t}`));
   })
-  .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
-    switch (type) {
-      case 'controller':
-        createController({ name, type: 'Empty', register: options.register  });
-        break;
-      case 'entity':
-        createEntity({ name });
-        break;
-      case 'rest-api':
-        createRestApi({ name, register: options.register });
-        break;
-      case 'hook':
-        createHook({ name });
-        break;
-      case 'model':
-        createModel({ name, checkMongoose: true });
-        break;
-      case 'sub-app':
-        createSubApp({ name });
-        break;
-      case 'script':
-        createScript({ name });
-        break;
-      case 'service':
-        createService({ name });
-        break;
-      case 'vscode-config':
-        createVSCodeConfig();
-        break;
-      default:
-        console.error();
-        console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
-        console.error();
-        generateTypes.forEach(t => console.error(red(`  ${t}`)));
-        console.error();
+  .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
+    if (!name && type !== 'vscode-config') {
+      console.error();
+      console.error(red(`Argument "name" is required when creating a ${type}. Please provide one.`));
+      console.error();
+      return;
     }
+    try {
+      switch (type) {
+        case 'controller':
+          createController({ name, register: options.register  });
+          break;
+        case 'entity':
+          createEntity({ name });
+          break;
+        case 'rest-api':
+          createRestApi({ name, register: options.register, auth: options.auth });
+          break;
+        case 'hook':
+          createHook({ name });
+          break;
+        case 'model':
+          createModel({ name });
+          break;
+        case 'sub-app':
+          createSubApp({ name });
+          break;
+        case 'script':
+          createScript({ name });
+          break;
+        case 'service':
+          createService({ name });
+          break;
+        case 'vscode-config':
+          createVSCodeConfig();
+          break;
+        default:
+          console.error();
+          console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
+          console.error();
+          generateTypes.forEach(t => console.error(red(`  ${t}`)));
+          console.error();
+      }
+    } catch (error) {
+      if (error instanceof ClientError) {
+        console.error();
+        console.error(red(error.message));
+        console.error();
+        return;
+      }
+      throw error;
+    }
+
   });
 
 program
