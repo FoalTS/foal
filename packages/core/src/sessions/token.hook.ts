@@ -42,28 +42,40 @@ export interface TokenOptions {
   extendLifeTimeOrUpdate?: boolean;
 }
 
+function getSessionStoreClass() {
+  const pkgName = Config.getOrThrow(
+    'settings.session.store',
+    'string',
+    'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
+  );
+
+  let pkg: { ConcreteSessionStore?: Class<SessionStore> };
+  try {
+    pkg = require(pkgName);
+  } catch (err) {
+    // TODO: test this line
+    if (err.code !== 'MODULE_NOT_FOUND') {
+      throw err;
+    }
+    throw new Error(
+      `The package "${pkgName}" provided with the configuration key settings.session.store was not found.`
+      + ' Did you install it?'
+    );
+  }
+
+  if (!pkg.ConcreteSessionStore) {
+    throw new Error(
+      `The package "${pkgName}" does not export a ConcreteSessionStore class.`
+      + ' Are you sure it is a session store package?'
+    );
+  }
+}
+
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
     if (!options.store) {
-      const pkgName = Config.getOrThrow(
-        'settings.session.store',
-        'string',
-        'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
-      );
-
-      try {
-        require(pkgName);
-      } catch (err) {
-        // TODO: test this line
-        if (err.code !== 'MODULE_NOT_FOUND') {
-          throw err;
-        }
-        throw new Error(
-          `The package "${pkgName}" provided with the configuration key settings.session.store was not found.`
-          + ' Did you install it?'
-        );
-      }
-      throw new Error('You must provide a SessionStore class to the hook.');
+      getSessionStoreClass();
+      throw new Error('You musdssss to the hook.');
     }
 
     const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);

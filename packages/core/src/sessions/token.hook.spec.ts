@@ -97,7 +97,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       }
     });
 
-    it('should throw an error if the package name provided in settings.session.store is not installed.', async () => {
+    it('should throw an error if the store package provided in settings.session.store is not installed.', async () => {
       process.env.SETTINGS_SESSION_STORE = 'foobarxxx';
 
       const hook = getHookFunction(Token({}));
@@ -115,6 +115,29 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         );
       }
     });
+
+    it(
+      'should throw an error if the store package provided in settings.session.store'
+      + ' does not export a ConcreteSessionStore.',
+      async () => {
+        process.env.SETTINGS_SESSION_STORE = 'supertest';
+
+        const hook = getHookFunction(Token({}));
+
+        const ctx = new Context({});
+
+        try {
+          await hook(ctx, services);
+          throw new Error('The hook should have thrown an error.');
+        } catch (error) {
+          strictEqual(
+            error.message,
+            'The package "supertest" does not export a ConcreteSessionStore class.'
+            + ' Are you sure it is a session store package?'
+          );
+        }
+      }
+    );
 
   });
 
