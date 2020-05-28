@@ -533,9 +533,4 @@ api:
 
   });
 
-  it('should accept to be used as a service.', () => {
-    const service = createService(Config);
-    strictEqual(service.get('foo', 3), 3);
-  });
-
 });

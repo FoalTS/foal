@@ -303,32 +303,4 @@ export class Config {
     return result;
   }
 
-  /**
-   * Access environment variables and configuration files.
-   *
-   * For example, if it is called with the string `settings.session.secret`,
-   * the method will go through these steps:
-   *
-   * 1. If the environment variable `SETTINGS_SESSION_SECRET` exists, then return its value.
-   * 2. If `.env` exists and has a line `SETTINGS_SESSION_SECRET=`, then return its value.
-   * 3. If `config/${NODE_ENV}.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 4. Same with `config/${NODE_ENV}.yml`.
-   * 5. If `config/default.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 6. Same with `config/default.yml`.
-   *
-   * If none value is found, then the method returns the default value provided as second argument
-   * to the function. If none was given, it returns undefined.
-   *
-   * @template T - TypeScript type of the returned value. Default is `any`.
-   * @param {string} key - Name of the config key using dots and camel case.
-   * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
-   * @returns {T} The configuration value.
-   * @memberof Config
-   */
-  get<T = any>(key: string, defaultValue?: T): T {
-    return Config.get<T>(key, defaultValue);
-  }
-
 }
