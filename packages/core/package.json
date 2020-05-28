@@ -89,6 +89,7 @@
   },
   "devDependencies": {
     "@foal/ejs": "^1.9.0",
+    "@foal/internal-test": "^1.9.0",
     "@types/mocha": "~2.2.43",
     "@types/node": "~10.1.2",
     "@types/supertest": "~2.0.5",

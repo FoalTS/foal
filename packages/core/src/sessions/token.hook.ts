@@ -42,7 +42,7 @@ export interface TokenOptions {
   extendLifeTimeOrUpdate?: boolean;
 }
 
-function getSessionStoreClass() {
+function getSessionStoreClass(): Class<SessionStore> {
   const pkgName = Config.getOrThrow(
     'settings.session.store',
     'string',
@@ -69,14 +69,14 @@ function getSessionStoreClass() {
       + ' Are you sure it is a session store package?'
     );
   }
+
+  return pkg.ConcreteSessionStore;
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
+  const ConcreteSessionStore = options.store || getSessionStoreClass();
+
   return Hook(async (ctx: Context, services: ServiceManager) => {
-    if (!options.store) {
-      getSessionStoreClass();
-      throw new Error('You musdssss to the hook.');
-    }
 
     const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
@@ -137,7 +137,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session ID */
 
-    const store = services.get(options.store);
+    const store = services.get(ConcreteSessionStore);
     const session = await store.read(sessionID);
 
     if (!session) {
