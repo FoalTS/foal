@@ -276,18 +276,22 @@ class ResolverService {
 
 `formatError` and `@FormatError` also accept an optional parameter to override its default behavior. It is a function that takes the error thrown or rejected in the resolver and return the error that must be sent to the client. It may be asynchronous or synchronous.
 
+> warning: version 2
+
 By default, this function is:
 ```typescript
 function maskAndLogError(err: any): any {
   console.log(err);
 
-  if (Config.get('settings.debug')) {
+  if (Config.get('settings.debug', 'boolean')) {
     return err;
   }
 
   return new Error('Internal Server Error');
 }
 ```
+
+> warning: version 2
 
 But we can also imagine other implementations such as:
 ```typescript
@@ -304,7 +308,7 @@ async function maskAndLogError(err: any): Promise<any> {
     return err;
   }
 
-  if (Config.get('settings.debug')) {
+  if (Config.get('settings.debug', 'boolean')) {
     return err;
   }
 

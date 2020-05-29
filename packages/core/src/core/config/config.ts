@@ -27,42 +27,6 @@ type ValueType<T extends ValueStringType> =
 export class Config {
 
   /**
-   * Access environment variables and configuration files.
-   *
-   * For example, if it is called with the string `settings.session.secret`,
-   * the method will go through these steps:
-   *
-   * 1. If the environment variable `SETTINGS_SESSION_SECRET` exists, then return its value.
-   * 2. If `.env` exists and has a line `SETTINGS_SESSION_SECRET=`, then return its value.
-   * 3. If `config/${NODE_ENV}.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 4. Same with `config/${NODE_ENV}.yml`.
-   * 5. If `config/default.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 6. Same with `config/default.yml`.
-   *
-   * If none value is found, then the method returns the default value provided as second argument
-   * to the function. If none was given, it returns undefined.
-   *
-   * @static
-   * @template T - TypeScript type of the returned value. Default is `any`.
-   * @param {string} key - Name of the config key using dots and camel case.
-   * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
-   * @returns {T} The configuration value.
-   * @memberof Config
-   */
-  static get<T = any>(key: string, defaultValue?: T): T {
-    let value = this.readConfigValue(key);
-    if (typeof value === 'string') {
-      value = this.convertType(value);
-    }
-    if (value !== undefined) {
-      return value;
-    }
-    return defaultValue as T;
-  }
-
-  /**
    * Read the configuration value associated with the given key. Optionaly check its type.
    *
    * @static
@@ -73,9 +37,9 @@ export class Config {
    * @returns {ValueType<T>|undefined} The configuration value
    * @memberof Config
    */
-  static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
-  static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
-  static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
+  static get<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
+  static get<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
+  static get<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
     const value = this.readConfigValue(key);
 
     if (value === undefined) {
@@ -143,7 +107,7 @@ export class Config {
    * @memberof Config
    */
   static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
-    const value = this.get2(key, type);
+    const value = this.get(key, type);
     if (value === undefined) {
       throw new ConfigNotFoundError(key, msg);
     }
@@ -274,23 +238,6 @@ export class Config {
     return this.yaml;
   }
 
-  private static convertType(value: string): boolean | number | string {
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    if (value.replace(/ /g, '') === '') {
-      return value;
-    }
-    const n = Number(value);
-    if (!isNaN(n)) {
-      return n;
-    }
-    return value;
-  }
-
   private static getValue(config: any, propertyPath: string): any {
     const properties = propertyPath.split('.');
     let result = config;
@@ -301,34 +248,6 @@ export class Config {
       }
     }
     return result;
-  }
-
-  /**
-   * Access environment variables and configuration files.
-   *
-   * For example, if it is called with the string `settings.session.secret`,
-   * the method will go through these steps:
-   *
-   * 1. If the environment variable `SETTINGS_SESSION_SECRET` exists, then return its value.
-   * 2. If `.env` exists and has a line `SETTINGS_SESSION_SECRET=`, then return its value.
-   * 3. If `config/${NODE_ENV}.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 4. Same with `config/${NODE_ENV}.yml`.
-   * 5. If `config/default.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 6. Same with `config/default.yml`.
-   *
-   * If none value is found, then the method returns the default value provided as second argument
-   * to the function. If none was given, it returns undefined.
-   *
-   * @template T - TypeScript type of the returned value. Default is `any`.
-   * @param {string} key - Name of the config key using dots and camel case.
-   * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
-   * @returns {T} The configuration value.
-   * @memberof Config
-   */
-  get<T = any>(key: string, defaultValue?: T): T {
-    return Config.get<T>(key, defaultValue);
   }
 
 }

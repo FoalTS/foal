@@ -74,12 +74,12 @@ const { Config } = require('@foal/core');
 
 module.exports = {
   type: "mongodb",
-  database: Config.get2('database.database', 'string'),
-  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
+  database: Config.get('database.database', 'string'),
+  dropSchema: Config.get('database.dropSchema', 'boolean', false),
   entities: ["build/app/**/*.entity.js"],
-  host: Config.get2('database.host', 'string'),
-  port: Config.get2('database.port', 'number'),
-  synchronize: Config.get2('database.synchronize', 'boolean', false)
+  host: Config.get('database.host', 'string'),
+  port: Config.get('database.port', 'number'),
+  synchronize: Config.get('database.synchronize', 'boolean', false)
 }
 
 ```

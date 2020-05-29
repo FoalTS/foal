@@ -11,7 +11,7 @@ export function TokenOptional(options: TokenOptions): HookDecorator {
     Token(false, options)(target, propertyKey);
 
     if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
     ) {
       return;
     }
@@ -19,7 +19,7 @@ export function TokenOptional(options: TokenOptions): HookDecorator {
     if (options.cookie) {
       const securityScheme: IApiSecurityScheme = {
         in: 'cookie',
-        name: Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
+        name: Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
         type: 'apiKey',
       };
       ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);

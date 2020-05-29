@@ -247,7 +247,7 @@ export class AuthController {
       email: user.email,
       id: user.id,
     };
-    const secret = Config.get<string>('settings.jwt.secretOrPublicKey');
+    const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
 
     const token = await new Promise<string>((resolve, reject) => {
       sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {

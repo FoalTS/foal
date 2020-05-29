@@ -49,8 +49,8 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
 
     const disk = services.get(Disk);
 
-    const fileSizeLimit = Config.get2('settings.multipartRequests.fileSizeLimit', 'number');
-    const fileNumberLimit = Config.get2('settings.multipartRequests.fileNumberLimit', 'number');
+    const fileSizeLimit = Config.get('settings.multipartRequests.fileSizeLimit', 'number');
+    const fileNumberLimit = Config.get('settings.multipartRequests.fileNumberLimit', 'number');
     let busboy: busboy.Busboy;
     try {
       busboy = new Busboy({
@@ -198,7 +198,7 @@ export function ValidateMultipartFormDataBody(
     hook(schema)(target, propertyKey);
 
     if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
     ) {
       return;
     }

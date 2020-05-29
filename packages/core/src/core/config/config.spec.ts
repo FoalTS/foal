@@ -3,7 +3,6 @@ import { strictEqual } from 'assert';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
-import { createService } from '../service-manager';
 import { Config } from './config';
 import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
@@ -13,12 +12,6 @@ function removeFile(path: string) {
     unlinkSync(path);
   }
 }
-
-// Compilation tests (types)
-// const anyConfig = Config.get('');
-// const stringConfig = Config.get<string>('', 'default value');
-// const stringConfig2 = Config.get<string|undefined>('');
-
 describe('Config', () => {
 
   beforeEach(() => Config.clearCache());
@@ -49,7 +42,7 @@ describe('Config', () => {
     }
   });
 
-  describe('when get is called (static)', () => {
+  describe('when get2 is called (static)', () => {
 
     it('should return the value of the environment variable if it exists.', () => {
       process.env.TEST_FOO_FOO_BAR = 'value1';
@@ -135,7 +128,7 @@ describe('Config', () => {
     });
 
     it('should return the default value if the key does not exist.', () => {
-      strictEqual(Config.get('aa.bbbCcc.y', false), false);
+      strictEqual(Config.get('aa.bbbCcc.y', 'any', false), false);
     });
 
     it('should look at the different values / files in the correct order.', () => {
@@ -148,62 +141,25 @@ describe('Config', () => {
       const defaultJSONFileContent = JSON.stringify({ barFoo: 'foo5' });
       const defaultYAMLFileContent = 'barFoo: foo6';
 
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo7');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo7');
 
       writeFileSync('config/default.yml', defaultYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo6');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo6');
 
       writeFileSync('config/default.json', defaultJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo5');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo5');
 
       writeFileSync('config/test.yml', envYAMLFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo4');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo4');
 
       writeFileSync('config/test.json', envJSONFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo3');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo3');
 
       writeFileSync('.env', dotEnvFileContent, 'utf8');
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo2');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo2');
 
       process.env.BAR_FOO = 'foo1';
-      strictEqual(Config.get('barFoo', 'foo7'), 'foo1');
-    });
-
-    it('should parse environment variable values.', () => {
-      process.env.TEST_FOO_FOO_BAR1 = 'true';
-      strictEqual(Config.get('test.foo.fooBar1'), true);
-
-      process.env.TEST_FOO_FOO_BAR2 = 'false';
-      strictEqual(Config.get('test.foo.fooBar2'), false);
-
-      process.env.TEST_FOO_FOO_BAR3 = '36';
-      strictEqual(Config.get('test.foo.fooBar3'), 36);
-
-      process.env.TEST_FOO_FOO_BAR4 = '4xxj6lkq8';
-      strictEqual(Config.get('test.foo.fooBar4'), '4xxj6lkq8');
-
-      process.env.TEST_FOO_FOO_BAR5 = '2e2';
-      strictEqual(Config.get('test.foo.fooBar5'), 200);
-
-      process.env.TEST_FOO_FOO_BAR6 = '';
-      strictEqual(Config.get('test.foo.fooBar6'), '');
-
-      process.env.TEST_FOO_FOO_BAR7 = '   ';
-      strictEqual(Config.get('test.foo.fooBar7'), '   ');
-    });
-
-    it('should parse .env values.', () => {
-      const fileContent = 'FOO_BAR1=true\nFOO_BAR2=false\r\nFOO_BAR3=42\n'
-        + 'FOO_BAR4=4xxj6lkq8\nFOO_BAR5=2e2\nFOO_BAR6=\nFOO_BAR7=   \n';
-      writeFileSync('.env', fileContent, 'utf8');
-
-      strictEqual(Config.get('foo.bar1'), true);
-      strictEqual(Config.get('foo.bar2'), false);
-      strictEqual(Config.get('foo.bar3'), 42);
-      strictEqual(Config.get('foo.bar4'), '4xxj6lkq8');
-      strictEqual(Config.get('foo.bar5'), 200);
-      strictEqual(Config.get('foo.bar6'), '');
-      strictEqual(Config.get('foo.bar7'), '   ');
+      strictEqual(Config.get('barFoo', 'any', 'foo7'), 'foo1');
     });
 
     describe('should not take too long', () => {
@@ -282,52 +238,39 @@ api:
       });
     });
 
-  });
-
-  describe('when get2 is called', () => {
-
-    it('should return the configuration value.', () => {
-      process.env.TEST_FOO_FOO_BAR = 'value1';
-      strictEqual(Config.get2('test.foo.fooBar'), 'value1');
-    });
-
-    it('should return the default value if the key does not exist.', () => {
-      strictEqual(Config.get2('aa.bbbCcc.y', 'any', false), false);
-    });
-
     it('should, when type === "boolean", convert the configuration value to a boolean if possible.', () => {
       process.env.TEST_FOO_FOO_BAR = 'true';
-      const actual = Config.get2('test.foo.fooBar', 'boolean');
+      const actual = Config.get('test.foo.fooBar', 'boolean');
       strictEqual(actual, true);
 
       process.env.TEST_FOO_FOO_BAR = 'false';
-      const actual2 = Config.get2('test.foo.fooBar', 'boolean');
+      const actual2 = Config.get('test.foo.fooBar', 'boolean');
       strictEqual(actual2, false);
     });
 
     it('should, when type === "number", convert the configuration value to a number if possible.', () => {
       process.env.TEST_FOO_FOO_BAR = '564';
-      const actual = Config.get2('test.foo.fooBar', 'number');
+      const actual = Config.get('test.foo.fooBar', 'number');
       strictEqual(actual, 564);
     });
 
     it('should, when type === "boolean|string", convert the configuration value to a boolean if possible.', () => {
       process.env.TEST_FOO_FOO_BAR = 'true';
-      const actual = Config.get2('test.foo.fooBar', 'boolean|string');
+      const actual = Config.get('test.foo.fooBar', 'boolean|string');
       strictEqual(actual, true);
 
       process.env.TEST_FOO_FOO_BAR = 'false';
-      const actual2 = Config.get2('test.foo.fooBar', 'boolean|string');
+      const actual2 = Config.get('test.foo.fooBar', 'boolean|string');
       strictEqual(actual2, false);
     });
 
     it('should, when type === "number|string", convert the configuration value to a number if possible.', () => {
       process.env.TEST_FOO_FOO_BAR = '46';
-      let actual = Config.get2('test.foo.fooBar', 'number|string');
+      let actual = Config.get('test.foo.fooBar', 'number|string');
       strictEqual(actual, 46);
 
       process.env.TEST_FOO_FOO_BAR = '  ';
-      actual = Config.get2('test.foo.fooBar', 'number|string');
+      actual = Config.get('test.foo.fooBar', 'number|string');
       strictEqual(actual, '  ');
     });
 
@@ -340,10 +283,10 @@ api:
       mkdirSync('config');
       writeFileSync('config/default.json', fileContent, 'utf8');
 
-      strictEqual(Config.get2('a', 'string'), 'z');
+      strictEqual(Config.get('a', 'string'), 'z');
 
       try {
-        Config.get2('b', 'string');
+        Config.get('b', 'string');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -355,7 +298,7 @@ api:
       }
 
       try {
-        Config.get2('c', 'string');
+        Config.get('c', 'string');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -378,7 +321,7 @@ api:
       writeFileSync('config/default.json', fileContent, 'utf8');
 
       try {
-        Config.get2('a', 'number');
+        Config.get('a', 'number');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -389,10 +332,10 @@ api:
         strictEqual(error.actual, 'string');
       }
 
-      strictEqual(Config.get2('b', 'number'), 1);
+      strictEqual(Config.get('b', 'number'), 1);
 
       try {
-        Config.get2('c', 'number');
+        Config.get('c', 'number');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -404,7 +347,7 @@ api:
       }
 
       try {
-        Config.get2('d', 'number');
+        Config.get('d', 'number');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -426,7 +369,7 @@ api:
       writeFileSync('config/default.json', fileContent, 'utf8');
 
       try {
-        Config.get2('a', 'boolean');
+        Config.get('a', 'boolean');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -438,7 +381,7 @@ api:
       }
 
       try {
-        Config.get2('b', 'boolean');
+        Config.get('b', 'boolean');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -449,7 +392,7 @@ api:
         strictEqual(error.actual, 'number');
       }
 
-      strictEqual(Config.get2('c', 'boolean'), true);
+      strictEqual(Config.get('c', 'boolean'), true);
     });
 
     it('should throw a ConfigTypeError if the configuration value does not have the expected type (boolean|string).',
@@ -462,10 +405,10 @@ api:
       mkdirSync('config');
       writeFileSync('config/default.json', fileContent, 'utf8');
 
-      strictEqual(Config.get2('a', 'boolean|string'), 'z');
+      strictEqual(Config.get('a', 'boolean|string'), 'z');
 
       try {
-        Config.get2('b', 'boolean|string');
+        Config.get('b', 'boolean|string');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -476,7 +419,7 @@ api:
         strictEqual(error.actual, 'number');
       }
 
-      strictEqual(Config.get2('c', 'boolean|string'), true);
+      strictEqual(Config.get('c', 'boolean|string'), true);
     });
 
     it('should throw a ConfigTypeError if the configuration value does not have the expected type (number|string).',
@@ -489,11 +432,11 @@ api:
       mkdirSync('config');
       writeFileSync('config/default.json', fileContent, 'utf8');
 
-      strictEqual(Config.get2('a', 'number|string'), 'z');
-      strictEqual(Config.get2('b', 'number|string'), 1);
+      strictEqual(Config.get('a', 'number|string'), 'z');
+      strictEqual(Config.get('b', 'number|string'), 1);
 
       try {
-        Config.get2('c', 'number|string');
+        Config.get('c', 'number|string');
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (!(error instanceof ConfigTypeError)) {
@@ -537,11 +480,6 @@ api:
       }
     });
 
-  });
-
-  it('should accept to be used as a service.', () => {
-    const service = createService(Config);
-    strictEqual(service.get('foo', 3), 3);
   });
 
 });

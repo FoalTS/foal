@@ -41,7 +41,7 @@ export function ValidateQueryParam(
     Hook(validate)(target, propertyKey);
 
     if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
+      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
     ) {
       return;
     }

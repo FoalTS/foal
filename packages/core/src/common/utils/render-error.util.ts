@@ -24,7 +24,7 @@ const page500 = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
 export async function renderError(error: Error, ctx: Context): Promise<HttpResponseInternalServerError> {
   const template = await promisify(readFile)(join(__dirname, '500.debug.html'), 'utf8');
 
-  if (!Config.get2('settings.debug', 'boolean')) {
+  if (!Config.get('settings.debug', 'boolean')) {
     return new HttpResponseInternalServerError(page500);
   }
 

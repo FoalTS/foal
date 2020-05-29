@@ -25,13 +25,15 @@ When the CLI asks which server framework to choose, select *None*.
 
 2. Then update your `src/index.ts` file as follows:
 
+  > warning: version 2
+
     ```typescript
     import { Builder, Nuxt } from 'nuxt';
     // ...
 
     // Import and Set Nuxt.js options
     const config = require('../../frontend/nuxt.config.js');
-    config.dev = Config.get('settings.debug', true);
+    config.dev = Config.get('settings.debug', 'boolean', true);
 
     async function main() {
       // Init Nuxt.js
