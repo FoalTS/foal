@@ -444,7 +444,26 @@ describe('createAndInitApp', () => {
       .expect('pong');
   });
 
-  it('should call AppController.init if it exists.', () => {
+  it('should call ServiceManager.boot.', async () => {
+    let called = false;
+
+    class Service {
+      boot() {
+        called = true;
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+    }
+
+    await createAndInitApp(AppController);
+
+    strictEqual(called, true);
+  });
+
+  it('should call AppController.init if it exists.', async () => {
     let called = false;
 
     class AppController {
@@ -453,7 +472,51 @@ describe('createAndInitApp', () => {
       }
     }
 
-    createAndInitApp(AppController);
+    await createAndInitApp(AppController);
+
+    strictEqual(called, true);
+  });
+
+  it('should call AppController.init after ServiceManager.boot.', async () => {
+    let str = '';
+
+    class Service {
+      boot() {
+        str += 'a';
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+
+      init() {
+        str += 'b';
+      }
+    }
+
+    await createAndInitApp(AppController);
+
+    strictEqual(str, 'ab');
+  });
+
+  it('should wait until the end of ServiceManager.boot execution before returning the express instance.', async () => {
+    let called = false;
+
+    class Service {
+      async boot() {
+        await 1;
+        await 1;
+        called = true;
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+    }
+
+    await createAndInitApp(AppController);
 
     strictEqual(called, true);
   });
@@ -465,6 +528,7 @@ describe('createAndInitApp', () => {
       async init() {
         await 1;
         await 1;
+        await 1;
         called = true;
       }
     }
@@ -472,6 +536,26 @@ describe('createAndInitApp', () => {
     await createAndInitApp(AppController);
 
     strictEqual(called, true);
+  });
+
+  it('should throw any errors rejected in ServiceManager.boot.', async () => {
+    class Service {
+      boot() {
+        return Promise.reject(new Error('Service initialization failed.'));
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+    }
+
+    try {
+      await createAndInitApp(AppController);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      strictEqual(error.message, 'Service initialization failed.');
+    }
   });
 
   it('should throw any errors rejected in AppController.init.', async () => {

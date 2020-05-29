@@ -4,7 +4,7 @@ import { strictEqual } from 'assert';
 // 3p
 import {
   Context,
-  createApp,
+  createAndInitApp,
   dependency,
   ExpressApplication,
   Get,
@@ -149,7 +149,7 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
     user.isAdmin = false;
     await user.save();
 
-    app = createApp(AppController);
+    app = await createAndInitApp(AppController);
   });
 
   after(async () => {
