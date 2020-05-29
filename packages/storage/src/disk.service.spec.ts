@@ -159,6 +159,70 @@ describe('Disk', () => {
 
   });
 
+  describe('has a "readSize" method that', () => {
+
+    it('should throw an Error if no driver is specified in the config.', async () => {
+      delete process.env.SETTINGS_DISK_DRIVER;
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.driver');
+        strictEqual(error.msg, 'You must provide a driver name when using file storage (Disk).');
+      }
+    });
+
+    it('should call LocalDisk.read if the driver is "local".', async () => {
+      process.env.SETTINGS_DISK_DRIVER = 'local';
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.disk.local.directory');
+      }
+    });
+
+    it('should call ConcreteDisk.read of the driver package if the driver is not "local".', async () => {
+      process.env.SETTINGS_DISK_DRIVER = '@foal/internal-test';
+
+      const size = await disk.readSize('foo');
+      strictEqual(size, 22);
+    });
+
+    it('should throw an Error if the driver does not export a ConcreteDisk.', async () => {
+      process.env.SETTINGS_DISK_DRIVER = '@foal/core';
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message,
+          '"@foal/core" is not a valid driver. Cannot find the "ConcreteClass" export.'
+        );
+      }
+    });
+
+    it('should throw an Error if the driver does not exist.', async () => {
+      process.env.SETTINGS_DISK_DRIVER = 'foo';
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        strictEqual(
+          error.message.startsWith('Cannot find module \'foo\''),
+          true
+        );
+      }
+    });
+
+  });
+
   describe('has a "delete" method that', () => {
 
     it('should throw an Error if no driver is specified in the config.', async () => {

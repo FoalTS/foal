@@ -95,6 +95,17 @@ export abstract class AbstractDisk {
   }>;
 
   /**
+   * Asynchronously the size of a file. If the file does not exist, the method
+   * throws a FileDoesNotExist error.
+   *
+   * @abstract
+   * @param {string} path - Path of the file.
+   * @returns {Promise<number>} The size of the file.
+   * @memberof AbstractDisk
+   */
+  abstract readSize(path: string): Promise<number>;
+
+  /**
    * Asynchronously delete a file. If the file does not exist, the method
    * may or may throw a FileDoesNotExist error.
    *

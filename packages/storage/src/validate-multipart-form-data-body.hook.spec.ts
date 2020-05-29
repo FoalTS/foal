@@ -11,6 +11,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Disk } from './disk.service';
+import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {
@@ -518,7 +519,12 @@ describe('ValidateMultipartFormDataBody', () => {
         .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
-      deepStrictEqual(actual.body.files.foobar, readFileSync('src/image.test.png'));
+      deepStrictEqual(actual.body.files.foobar, new File({
+        buffer: readFileSync('src/image.test.png'),
+        encoding: '7bit',
+        filename: 'image.test.png',
+        mimeType: 'image/png',
+      }));
     });
 
     it('should set ctx.request.files with the buffered file if the option "multiple" is "false".', async () => {
@@ -534,7 +540,12 @@ describe('ValidateMultipartFormDataBody', () => {
         .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
-      deepStrictEqual(actual.body.files.foobar, readFileSync('src/image.test.png'));
+      deepStrictEqual(actual.body.files.foobar, new File({
+        buffer: readFileSync('src/image.test.png'),
+        encoding: '7bit',
+        filename: 'image.test.png',
+        mimeType: 'image/png',
+      }));
     });
 
     it('should set ctx.request.files with an array of the buffered fileS if the option "multiple" is "true".',
@@ -553,8 +564,18 @@ describe('ValidateMultipartFormDataBody', () => {
           .expect(200);
 
         deepStrictEqual(actual.body.files.foobar, [
-          readFileSync('src/image.test.png'),
-          readFileSync('src/image.test2.png'),
+          new File({
+            buffer: readFileSync('src/image.test.png'),
+            encoding: '7bit',
+            filename: 'image.test.png',
+            mimeType: 'image/png',
+          }),
+          new File({
+            buffer: readFileSync('src/image.test2.png'),
+            encoding: '7bit',
+            filename: 'image.test2.png',
+            mimeType: 'image/png',
+          }),
         ]);
       });
 
@@ -636,16 +657,21 @@ describe('ValidateMultipartFormDataBody', () => {
           .attach('foobar', createReadStream('src/image.test.png'))
           .expect(200);
 
-        strictEqual(typeof actual.body.files.foobar, 'object');
-        notStrictEqual(actual.body.files.foobar, null);
+        const foobar = actual.body.files.foobar;
+        strictEqual(typeof foobar, 'object');
+        notStrictEqual(foobar, null);
 
-        const path = actual.body.files.foobar.path;
+        const path = foobar.path;
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
           readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
+
+        strictEqual(foobar.encoding, '7bit');
+        strictEqual(foobar.mimeType, 'image/png');
+        strictEqual(foobar.filename, 'image.test.png');
       }
     );
 
@@ -663,16 +689,20 @@ describe('ValidateMultipartFormDataBody', () => {
           .attach('foobar', createReadStream('src/image.test.png'))
           .expect(200);
 
-        strictEqual(typeof actual.body.files.foobar, 'object');
-        notStrictEqual(actual.body.files.foobar, null);
+        const foobar = actual.body.files.foobar;
+        strictEqual(typeof foobar, 'object');
+        notStrictEqual(foobar, null);
 
-        const path = actual.body.files.foobar.path;
+        const path = foobar.path;
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
           readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
+        strictEqual(foobar.encoding, '7bit');
+        strictEqual(foobar.mimeType, 'image/png');
+        strictEqual(foobar.filename, 'image.test.png');
       }
     );
 
@@ -691,28 +721,35 @@ describe('ValidateMultipartFormDataBody', () => {
           .attach('foobar', createReadStream('src/image.test2.png'))
           .expect(200);
 
-        strictEqual(typeof actual.body.files.foobar, 'object');
-        notStrictEqual(actual.body.files.foobar, null);
+        const foobar = actual.body.files.foobar;
+        strictEqual(typeof foobar, 'object');
+        notStrictEqual(foobar, null);
 
-        if (!Array.isArray(actual.body.files.foobar)) {
+        if (!Array.isArray(foobar)) {
           throw new Error('"files.foobar" should an array.');
         }
 
-        const path = actual.body.files.foobar[0].path;
+        const path = foobar[0].path;
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
           readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
+        strictEqual(foobar[0].encoding, '7bit');
+        strictEqual(foobar[0].mimeType, 'image/png');
+        strictEqual(foobar[0].filename, 'image.test.png');
 
-        const path2 = actual.body.files.foobar[1].path;
+        const path2 = foobar[1].path;
         strictEqual(typeof path2, 'string');
 
         deepStrictEqual(
           readFileSync('src/image.test2.png'),
           (await disk.read(path2, 'buffer')).file
         );
+        strictEqual(foobar[1].encoding, '7bit');
+        strictEqual(foobar[1].mimeType, 'image/png');
+        strictEqual(foobar[1].filename, 'image.test2.png');
       }
     );
 

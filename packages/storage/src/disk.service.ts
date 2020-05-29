@@ -43,6 +43,10 @@ export class Disk extends AbstractDisk {
     return this.getDriverDisk().read(path, content);
   }
 
+  async readSize(path: string): Promise<number> {
+    return this.getDriverDisk().readSize(path);
+  }
+
   delete(path: string): Promise<void> {
     return this.getDriverDisk().delete(path);
   }

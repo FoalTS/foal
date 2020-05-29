@@ -72,6 +72,10 @@ describe('AbstractDisk', () => {
       };
     }
 
+    async readSize(path: string): Promise<number> {
+      return -1;
+    }
+
     delete(path: string): Promise<void> {
       throw new Error('Method not implemented.');
     }

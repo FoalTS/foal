@@ -84,6 +84,22 @@ export class S3Disk extends AbstractDisk {
     }
   }
 
+  async readSize(path: string): Promise<number> {
+    try {
+      const { ContentLength }  = await this.getS3().headObject({
+        Bucket: this.getBucket(),
+        Key: path,
+      }).promise();
+      return ContentLength as number;
+    } catch (error) {
+      if (error.code === 'NotFound') {
+        throw new FileDoesNotExist(path);
+      }
+      // TODO: test this line.
+      throw error;
+    }
+  }
+
   async delete(path: string): Promise<void> {
     await this.getS3().deleteObject({
       Bucket: this.getBucket(),

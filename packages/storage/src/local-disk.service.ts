@@ -84,6 +84,20 @@ export class LocalDisk extends AbstractDisk {
 
   }
 
+  async readSize(path: string): Promise<number> {
+    try {
+      const { size } = await promisify(stat)(this.getPath(path));
+      return size;
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new FileDoesNotExist(path);
+      }
+      // TODO: test this line.
+      throw error;
+    }
+
+  }
+
   async delete(path: string): Promise<void> {
     try {
       await promisify(unlink)(this.getPath(path));

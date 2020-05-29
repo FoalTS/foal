@@ -162,6 +162,16 @@ class FileService {
 
 > To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
 
+--
+
+> warning: version 2
+>
+> If you only need to read the file size and not its content, you can use the `readSize` method.
+>
+> ```typescript
+> const size = await this.disk.readSize('avatars/xxx.jpg');
+> ```
+
 ### Write files
 
 Files can be saved using the asynchronous `write` method. This method accepts a buffer or a readable stream. If no name is provided, it is automatically generated and used to save the file in the given directory. In this case, a file extension can also be provided to the method.
