@@ -46,7 +46,7 @@ SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
 
 ## File Uploads
 
-> This technique is available in Foal v1.7 onwards.
+> warning: version 2
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
@@ -66,8 +66,11 @@ export class UserController {
     }
   })
   uploadProfilePhoto(ctx: Context) {
-    const buffer = ctx.request.body.files.profile;
-    const buffers = ctx.request.body.files.images;
+    const { buffer } = ctx.request.body.files.profile;
+    const files = ctx.request.body.files.images;
+    for (const file of files) {
+      // Do something with file.buffer
+    }
   }
 
 }
@@ -111,6 +114,25 @@ export class UserController {
 
 }
 ```
+
+### Accessing File Metadata
+
+> warning: version 2
+
+When uploading files, the browser sends additional metadata. This can be accessed in the controller method.
+
+```typescript
+const file = ctx.request.body.files.profile;
+// file.mimeType, ...
+```
+
+| Property name | Type | Description |
+| --- | --- | --- |
+| `encoding` | `string` | Encoding type of the file |
+| `filename` | `string|undefined` | Name of the file on the user's computer |
+| `mimeType` | `string` | Mime type of the file |
+| `path` | `string` | Path where the file has been saved. If the `saveTo` option was not provided, the value is an empty string. |
+| `buffer` | `Buffer` | Buffer containing the entire file. If the `saveTo` option was provided, the value is an empty buffer. |
 
 ### Adding Fields
 
