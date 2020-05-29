@@ -281,11 +281,11 @@ describe('makeControllerRoutes', () => {
     // bar() {}
     strictEqual(firstThis, undefined);
     routes[0].hooks[0](ctx, services);
-    strictEqual(firstThis instanceof FoobarController, true);
+    strictEqual(firstThis as any instanceof FoobarController, true);
 
     strictEqual(secondThis, undefined);
     routes[0].hooks[1](ctx, services);
-    strictEqual(secondThis instanceof FoobarController, true);
+    strictEqual(secondThis as any instanceof FoobarController, true);
 
     strictEqual(firstThis, secondThis);
   });

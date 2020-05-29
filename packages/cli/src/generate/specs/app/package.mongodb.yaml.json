@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",
-    "@types/node": "^8.0.47",
+    "@types/node": "10.17.24",
     "concurrently": "^3.5.1",
     "mocha": "^5.2.0",
     "supertest": "^3.3.0",
@@ -38,6 +38,6 @@
     "eslint": "^6.7.0",
     "@typescript-eslint/eslint-plugin": "~2.7.0",
     "@typescript-eslint/parser": "~2.7.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.9.3"
   }
 }
