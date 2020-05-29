@@ -169,6 +169,8 @@ export async function createAndInitApp(
 ): Promise<any> {
   const app = createApp(AppController, expressInstanceOrOptions);
 
+  await app.foal.services.boot();
+
   const controller = app.foal.services.get(AppController);
   if (controller.init) {
     await controller.init();
