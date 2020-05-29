@@ -109,17 +109,17 @@ export function createOpenApiDocument(controllerClass: Class, controllers = new 
 
   const operation = getApiCompleteOperation(controllerClass, controller);
 
-  if (operation.servers) {
-    document.servers = operation.servers;
-  }
+  // if (operation.servers) {
+  //   document.servers = operation.servers;
+  // }
 
-  if (operation.security) {
-    document.security = operation.security;
-  }
+  // if (operation.security) {
+  //   document.security = operation.security;
+  // }
 
-  if (operation.externalDocs) {
-    document.externalDocs = operation.externalDocs;
-  }
+  // if (operation.externalDocs) {
+  //   document.externalDocs = operation.externalDocs;
+  // }
 
   delete operation.servers;
   delete operation.externalDocs;
@@ -140,18 +140,18 @@ export function createOpenApiDocument(controllerClass: Class, controllers = new 
 
   document.paths = paths;
 
-  const components = mergeComponents(
-    getApiComponents(controllerClass, controllers.get(controllerClass)),
-    o.components
-  );
-  if (Object.keys(components).length > 0) {
-    document.components = components;
-  }
+  // const components = mergeComponents(
+  //   getApiComponents(controllerClass, controllers.get(controllerClass)),
+  //   o.components
+  // );
+  // if (Object.keys(components).length > 0) {
+  //   document.components = components;
+  // }
 
-  const tags = mergeTags(getApiTags(controllerClass), o.tags);
-  if (tags) {
-    document.tags = tags;
-  }
+  // const tags = mergeTags(getApiTags(controllerClass), o.tags);
+  // if (tags) {
+  //   document.tags = tags;
+  // }
 
   return document;
 }

@@ -1,6 +1,8 @@
 // FoalTS
+import { getApiCompleteOperation, getApiComponents, getApiInfo, getApiTags, IApiInfo, IOpenAPI } from '../../openapi';
 import { Class } from '../class.interface';
 import { HookFunction } from '../hooks';
+import { OpenApi } from '../openapi';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
 import { getMetadata, join } from './utils';
@@ -28,9 +30,52 @@ export function getMethods(obj: object|null): string[] {
  * @returns {Route[]} The created routes.
  */
 
+ // TODO: <T extends boolean>(..., openapi): Generator<T extends true ? { route, openapi }, { route }>
 export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
+  const openApi = services.get(OpenApi);
+
+  // TODO: If openapi && Config.get('settings.openpi')
+
+  // TODO: save the controllers
+  // TODO: The service or this function should prefix the paths with a slash if there is not.
+  // TODO: throw error if dupplicated paths
+  // TODO: gather same methods under their shared path
+
+  const info = getApiInfo(controllerClass);
+  if (info) {
+    const document: IOpenAPI = {
+      info: typeof info === 'function' ? info(controller) : info,
+      openapi: '3.0.0',
+      paths: {}
+    };
+
+    const operation = getApiCompleteOperation(controllerClass, controller);
+    if (operation.servers) {
+      document.servers = operation.servers;
+    }
+    if (operation.security) {
+      document.security = operation.security;
+    }
+    if (operation.externalDocs) {
+      document.externalDocs = operation.externalDocs;
+    }
+
+    // TODO: use mergeComponents
+    const components = getApiComponents(controllerClass, controller);
+    if (Object.keys(components).length > 0) {
+      document.components = components;
+    }
+
+    // TODO: use mergeTags
+    const tags = getApiTags(controllerClass);
+    if (tags) {
+      document.tags = tags;
+    }
+
+    openApi.addDocument(controllerClass, document);
+  }
 
   const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
    .map(hook => hook.bind(controller));
@@ -45,6 +90,7 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
         path: join(controllerPath, route.path),
         propertyKey: route.propertyKey,
       };
+      // TODO: OpenAPI description of the route
     }
   }
 
@@ -63,6 +109,7 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
         path: join(controllerPath, methodPath),
         propertyKey
       };
+      // TODO: OpenAPI description of the route
     }
   }
 }
