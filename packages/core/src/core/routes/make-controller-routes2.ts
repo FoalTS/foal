@@ -28,19 +28,24 @@ export function getMethods(obj: object|null): string[] {
  * @returns {Route[]} The created routes.
  */
 
-export function* makeControllerRoutes2(parentPath: string, parentHooks: HookFunction[],
-                                       controllerClass: Class, services: ServiceManager): Generator<Route> {
-  const controllerHooks = getMetadata('hooks', controllerClass) as HookFunction[] || [];
-  const controllerPath = getMetadata('path', controllerClass) as string|undefined;
-
+export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
 
-  const leftPath = join(parentPath, controllerPath);
-  const leftHooks = parentHooks.concat(controllerHooks.map(hook => hook.bind(controller)));
+  const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
+   .map(hook => hook.bind(controller));
+  const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
   for (const controllerClass of controller.subControllers || []) {
-    yield* makeControllerRoutes2(leftPath, leftHooks, controllerClass, services);
+    for (const route of makeControllerRoutes2(controllerClass, services)) {
+      yield {
+        controller: route.controller,
+        hooks: controllerHooks.concat(route.hooks),
+        httpMethod: route.httpMethod,
+        path: join(controllerPath, route.path),
+        propertyKey: route.propertyKey,
+      };
+    }
   }
 
   for (const propertyKey of getMethods(controllerClass.prototype)) {
@@ -49,10 +54,15 @@ export function* makeControllerRoutes2(parentPath: string, parentHooks: HookFunc
     const httpMethod = getMetadata('httpMethod', controllerClass, propertyKey);
     if (httpMethod) {
       const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined;
-      const methodHooks = getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [];
-      const path = join(leftPath, methodPath);
-      const hooks = [ ...leftHooks, ...methodHooks.map(hook => hook.bind(controller)) ];
-      yield { controller, hooks, httpMethod, path, propertyKey };
+      const methodHooks = (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
+        .map(hook => hook.bind(controller));
+      yield {
+        controller,
+        hooks: controllerHooks.concat(methodHooks),
+        httpMethod,
+        path: join(controllerPath, methodPath),
+        propertyKey
+      };
     }
   }
 }

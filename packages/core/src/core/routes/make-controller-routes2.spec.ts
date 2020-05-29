@@ -20,13 +20,13 @@ describe('makeControllerRoutes2', () => {
   const ctx = new Context({});
   const services = new ServiceManager();
 
-  it('should return the routes from a controller with no paths and hooks.', () => {
+  it('should return the routes from a controller with a method.', () => {
     class FoobarController {
       @Get()
       bar() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
 
     strictEqual(routes.length, 1);
 
@@ -38,21 +38,21 @@ describe('makeControllerRoutes2', () => {
     strictEqual(routes[0].propertyKey, 'bar');
   });
 
-  it('should return the routes from a controller with the parent, controller and method paths.', () => {
+  it('should return the routes from a controller with a method and a path.', () => {
     @Reflect.metadata('path', '/foo/')
     class FoobarController {
       @Get('/bar')
       bar() {}
     }
-    const routes = Array.from(makeControllerRoutes2('barfoo', [], FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
 
     strictEqual(routes.length, 1);
 
     // bar() {}
-    strictEqual(routes[0].path, 'barfoo/foo/bar');
+    strictEqual(routes[0].path, '/foo/bar');
   });
 
-  it('should return the routes from a controller with the parent, controller and method hooks.', () => {
+  it('should return the routes from a controller with a method and controller and method hooks.', () => {
     @Hook(hook3)
     @Hook(hook4)
     class FoobarController {
@@ -61,14 +61,14 @@ describe('makeControllerRoutes2', () => {
       @Hook(hook6)
       bar() {}
     }
-    const routes = Array.from(makeControllerRoutes2('', [ hook1, hook2 ], FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
 
     strictEqual(routes.length, 1);
 
     // bar() {}
     deepStrictEqual(
       routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook1', 'hook2', 'hook3', 'hook4', 'hook5', 'hook6' ]
+      [ 'hook3', 'hook4', 'hook5', 'hook6' ]
     );
   });
 
@@ -83,7 +83,7 @@ describe('makeControllerRoutes2', () => {
       barfoo() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
 
     strictEqual(routes.length, 2);
 
@@ -113,7 +113,7 @@ describe('makeControllerRoutes2', () => {
     }
 
     const services = new ServiceManager();
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController, services));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, services));
 
     strictEqual(routes.length, 1);
 
@@ -130,7 +130,7 @@ describe('makeControllerRoutes2', () => {
     }
 
     const services = new ServiceManager();
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController, services));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, services));
 
     strictEqual(routes.length, 1);
 
@@ -157,7 +157,7 @@ describe('makeControllerRoutes2', () => {
 
     }
 
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController2, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController2, new ServiceManager()));
 
     strictEqual(routes.length, 2);
 
@@ -209,7 +209,7 @@ describe('makeControllerRoutes2', () => {
       ];
     }
 
-    const routes = Array.from(makeControllerRoutes2('bar//', [ hook0 ] , AppController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(AppController, new ServiceManager()));
 
     strictEqual(routes.length, 2);
 
@@ -217,20 +217,20 @@ describe('makeControllerRoutes2', () => {
     ok(routes[0].controller instanceof ApiController);
     deepStrictEqual(
       routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook0', 'hook1', 'hook2', 'hook3' ]
+      [ 'hook1', 'hook2', 'hook3' ]
     );
     strictEqual(routes[0].httpMethod, 'GET');
-    strictEqual(routes[0].path, 'bar/foo/api/flights');
+    strictEqual(routes[0].path, '/foo/api/flights');
     strictEqual(routes[0].propertyKey, 'flights');
 
     // foobar
     ok(routes[1].controller instanceof AuthController);
     deepStrictEqual(
       routes[1].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook0', 'hook1', 'hook4', 'hook5' ]
+      [ 'hook1', 'hook4', 'hook5' ]
     );
     strictEqual(routes[1].httpMethod, 'GET');
-    strictEqual(routes[1].path, 'bar/foo/auth/');
+    strictEqual(routes[1].path, '/foo/auth/');
     strictEqual(routes[1].propertyKey, 'index');
   });
 
@@ -247,7 +247,7 @@ describe('makeControllerRoutes2', () => {
       foo() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2('', [] , AppController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(AppController, new ServiceManager()));
 
     strictEqual(routes.length, 2);
 
@@ -274,7 +274,7 @@ describe('makeControllerRoutes2', () => {
       bar() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2('', [], FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
 
     strictEqual(routes.length, 1);
 
