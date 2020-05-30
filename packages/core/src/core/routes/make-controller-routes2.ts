@@ -81,7 +81,6 @@ function* makeControllerRoutes(
 
   // TODO: If openapi && Config.get('settings.openpi')
   // TODO: save the controllers
-  // TODO: throw error if dupplicated paths
   const controllerTags = getApiTags(controllerClass);
   const controllerComponents = getApiComponents(controllerClass, controller);
   const controllerOperation = getApiCompleteOperation(controllerClass, controller);
