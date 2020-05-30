@@ -8,10 +8,12 @@ import {
   ApiDefineTag,
   ApiExternalDoc,
   ApiInfo,
+  ApiOperation,
   ApiSecurityRequirement,
   ApiServer,
   IApiCallback,
   IApiExternalDocumentation,
+  IApiOperation,
   IApiSecurityRequirement,
   IApiServer,
   IApiTag
@@ -543,6 +545,46 @@ describe('makeControllerRoutes2', () => {
 
       Array.from(makeControllerRoutes2(AppController2, services));
       strictEqual(openApi.getDocument(ApiController2).externalDocs, externalDocs);
+    });
+
+    it('with the paths and operations of the root controller methods.', () => {
+      const operation1: IApiOperation = {
+        responses: {},
+        summary: 'Operation 1',
+      };
+      const operation2: IApiOperation = {
+        responses: {},
+        summary: 'Operation 2',
+      };
+
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        @Post('/bar')
+        @ApiOperation(operation1)
+        bar() {}
+
+        @Get('/foo')
+        @ApiOperation(operation2)
+        foo() {}
+
+        barfoo() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/bar': {
+          post: operation1
+        },
+        '/foo': {
+          get: operation2
+        },
+      });
     });
 
   });

@@ -43,9 +43,11 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
   // TODO: throw error if dupplicated paths
   // TODO: gather same methods under their shared path
 
+  let document: IOpenAPI|undefined;
+
   const info = getApiInfo(controllerClass);
   if (info) {
-    const document: IOpenAPI = {
+    document = {
       info: typeof info === 'function' ? info(controller) : info,
       openapi: '3.0.0',
       paths: {}
@@ -73,8 +75,6 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
     if (tags) {
       document.tags = tags;
     }
-
-    openApi.addDocument(controllerClass, document);
   }
 
   const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
@@ -95,21 +95,35 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
   }
 
   for (const propertyKey of getMethods(controllerClass.prototype)) {
-    if (propertyKey === 'constructor') { continue; }
-
     const httpMethod = getMetadata('httpMethod', controllerClass, propertyKey);
-    if (httpMethod) {
-      const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined;
-      const methodHooks = (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
-        .map(hook => hook.bind(controller));
-      yield {
-        controller,
-        hooks: controllerHooks.concat(methodHooks),
-        httpMethod,
-        path: join(controllerPath, methodPath),
-        propertyKey
-      };
-      // TODO: OpenAPI description of the route
+
+    if (!httpMethod) {
+      continue;
     }
+
+    const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined || '';
+    const methodHooks = (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
+      .map(hook => hook.bind(controller));
+
+    yield {
+      controller,
+      hooks: controllerHooks.concat(methodHooks),
+      httpMethod,
+      path: join(controllerPath, methodPath),
+      propertyKey
+    };
+
+    if (document) {
+      document.paths[methodPath] = {
+        // TODO: use ...paths()
+        // TODO: maybe use a merge
+        [httpMethod.toLowerCase()]: getApiCompleteOperation(controllerClass, controller, propertyKey)
+      };
+    }
+    // TODO: OpenAPI description of the route
+  }
+
+  if (document) {
+    openApi.addDocument(controllerClass, document);
   }
 }

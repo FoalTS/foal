@@ -21,40 +21,6 @@ describe('createOpenApiDocument', () => {
     version: '0.0.0'
   };
 
-  it('should return the paths and operations of the root controller methods.', () => {
-    const operation1: IApiOperation = {
-      responses: {},
-      summary: 'Operation 1',
-    };
-    const operation2: IApiOperation = {
-      responses: {},
-      summary: 'Operation 2',
-    };
-
-    @ApiInfo(infoMetadata)
-    class Controller {
-      @Post('/bar')
-      @ApiOperation(operation1)
-      bar() {}
-
-      @Get('/foo')
-      @ApiOperation(operation2)
-      foo() {}
-
-      barfoo() {}
-    }
-
-    const document = createOpenApiDocument(Controller);
-    deepStrictEqual(document.paths, {
-      '/bar': {
-        post: operation1
-      },
-      '/foo': {
-        get: operation2
-      },
-    });
-  });
-
   it('should return the paths and operations of the sub controllers methods.', () => {
     const operation1: IApiOperation = {
       responses: {},
