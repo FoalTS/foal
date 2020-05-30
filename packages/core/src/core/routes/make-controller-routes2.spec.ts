@@ -6,14 +6,23 @@ import { controller } from '../../common';
 import {
   ApiDefineCallback,
   ApiDefineTag,
+  ApiDeprecated,
   ApiExternalDoc,
   ApiInfo,
   ApiOperation,
+  ApiParameter,
+  ApiRequestBody,
+  ApiResponse,
   ApiSecurityRequirement,
   ApiServer,
+  ApiUseTag,
   IApiCallback,
   IApiExternalDocumentation,
   IApiOperation,
+  IApiParameter,
+  IApiPaths,
+  IApiRequestBody,
+  IApiResponse,
   IApiSecurityRequirement,
   IApiServer,
   IApiTag
@@ -587,7 +596,7 @@ describe('makeControllerRoutes2', () => {
       });
     });
 
-    xit('with the paths and operations of the sub controllers methods.', () => {
+    it('with the paths and operations of the sub controllers methods.', () => {
       const operation1: IApiOperation = {
         responses: {},
         summary: 'Operation 1',
@@ -645,6 +654,249 @@ describe('makeControllerRoutes2', () => {
         '/users/products': {
           get: operation3
         },
+      });
+    });
+
+    it('with the paths with the proper OpenAPI path templating.', () => {
+      const operation1: IApiOperation = {
+        responses: {},
+        summary: 'Operation 1',
+      };
+      const operation2: IApiOperation = {
+        responses: {},
+        summary: 'Operation 2',
+      };
+      const operation3: IApiOperation = {
+        responses: {},
+        summary: 'Operation 3',
+      };
+      const operation4: IApiOperation = {
+        responses: {},
+        summary: 'Operation 4',
+      };
+
+      class BoxController {
+        @Get('/:boxId')
+        @ApiOperation(operation4)
+        readBox() {}
+      }
+
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        subControllers = [
+          controller('/boxes', BoxController)
+        ];
+
+        @Get()
+        @ApiOperation(operation1)
+        index() {}
+
+        @Get('foo')
+        @ApiOperation(operation2)
+        foo() {}
+
+        @Get('/users/:userId/products/:productId')
+        @ApiOperation(operation3)
+        bar() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/': {
+          get: operation1
+        },
+        '/boxes/{boxId}': {
+          get: operation4
+        },
+        '/foo': {
+          get: operation2
+        },
+        '/users/{userId}/products/{productId}': {
+          get: operation3
+        },
+      });
+    });
+
+    it('while gathering several operations (POST, GET, etc) under the same path.', () => {
+      const operation1: IApiOperation = {
+        responses: {},
+        summary: 'Operation 1',
+      };
+      const operation2: IApiOperation = {
+        responses: {},
+        summary: 'Operation 2',
+      };
+      const operation3: IApiOperation = {
+        responses: {},
+        summary: 'Operation 3',
+      };
+      const operation4: IApiOperation = {
+        responses: {},
+        summary: 'Operation 4',
+      };
+
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        subControllers = [
+          SubController1, SubController2
+        ];
+
+        @Get('/foo')
+        @ApiOperation(operation1)
+        foo() {}
+
+        @Post('/foo')
+        @ApiOperation(operation2)
+        foo2() {}
+      }
+
+      class SubController1 {
+        @Get('/bar')
+        @ApiOperation(operation3)
+        foobar() {}
+      }
+
+      class SubController2 {
+        @Post('/bar')
+        @ApiOperation(operation4)
+        foobar() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/bar': {
+          get: operation3,
+          post: operation4,
+        },
+        '/foo': {
+          get: operation1,
+          post: operation2
+        },
+      });
+    });
+
+    it('with the operations completed with the operation pieces defined in the sub-controllers.', () => {
+      const response: IApiResponse = { description: 'Unauthorized' };
+      const parameter: IApiParameter = { in: 'cookie', name: 'foo' };
+
+      @ApiInfo(infoMetadata)
+      @ApiResponse(401, response)
+      class ApiController {
+        subControllers = [
+          SubController
+        ];
+
+        @Post('/barfoo')
+        @ApiUseTag('tag3')
+        barfoo() {}
+      }
+
+      @ApiParameter(parameter)
+      @ApiDeprecated()
+      @ApiUseTag('tag1')
+      class SubController {
+        subControllers = [
+          SubSubController
+        ];
+      }
+
+      @ApiUseTag('tag3')
+      class SubSubController {
+        @Get('/foo')
+        @ApiUseTag('tag2')
+        foo() {}
+
+        @Post('/bar')
+        @ApiDeprecated(false)
+        bar() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/bar': {
+          post: {
+            deprecated: false,
+            parameters: [
+              parameter
+            ],
+            responses: {
+              401: response
+            },
+            tags: [ 'tag1', 'tag3' ]
+          }
+        },
+        '/barfoo': {
+          post: {
+            responses: {
+              401: response
+            },
+            tags: [ 'tag3' ]
+          }
+        },
+        '/foo': {
+          get: {
+            deprecated: true,
+            parameters: [
+              parameter
+            ],
+            responses: {
+              401: response
+            },
+            tags: [ 'tag1', 'tag3', 'tag2' ]
+          },
+        }
+      } as IApiPaths);
+    });
+
+    it('but with not the root servers, security requirements and externalDocs in the paths.', () => {
+      const server: IApiServer = { url: 'http://example.com' };
+      const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
+      const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
+
+      @ApiInfo(infoMetadata)
+      @ApiServer(server)
+      @ApiExternalDoc(externalDocs)
+      @ApiSecurityRequirement(securityRequirement)
+      class ApiController {
+        @Get('/foo')
+        foo() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      const document = openApi.getDocument(ApiController);
+      deepStrictEqual(document.servers, [ server ]);
+      deepStrictEqual(document.externalDocs, externalDocs);
+      deepStrictEqual(document.security, [ securityRequirement ]);
+      deepStrictEqual(document.paths, {
+        '/foo': {
+          get: {
+            responses: {}
+          }
+        }
       });
     });
 
@@ -769,6 +1021,145 @@ describe('makeControllerRoutes2', () => {
       deepStrictEqual(openApi.getDocument(ApiController).tags, [
         tag1, tag3, tag4, tag5, tag6, tag7, tag2, tag2bis
       ]);
+    });
+
+    it('and should throw an Error is some paths are duplicated.', done => {
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        @Get('/api/users/:userId/products/:productId')
+        something() {}
+
+        // Note that there is no beginning slash for the test.
+        @Get('api/users/:userId2/products/:productId2')
+        something2() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      try {
+        Array.from(makeControllerRoutes2(AppController, services));
+        done(new Error('The function should have thrown an Error.'));
+      } catch (error) {
+        strictEqual(
+          error.message,
+          '[OpenAPI] Templated paths with the same hierarchy but different '
+          + 'templated names MUST NOT exist as they are identical.'
+          + '\n  Path 1: /api/users/{userId}/products/{productId}'
+          + '\n  Path 2: /api/users/{userId2}/products/{productId2}'
+        );
+        done();
+      }
+    });
+
+    it('and should use the controller instances to retreive the dynamic metadata.', () => {
+      @ApiRequestBody(controller => controller.requestBody)
+      @ApiDefineCallback('callback1', controller => controller.callback)
+      class SubController {
+        requestBody: IApiRequestBody = {
+          content: {
+            'application/xml': {}
+          }
+        };
+        callback: IApiCallback = {
+          a: { $ref: 'foobar' }
+        };
+
+        @Post('/bar')
+        bar() {}
+      }
+
+      @ApiInfo(infoMetadata)
+      @ApiRequestBody(controller => controller.requestBody2)
+      @ApiDefineCallback('callback2', controller => controller.callback2)
+      class ApiController {
+        subControllers = [ SubController ];
+
+        requestBody: IApiRequestBody = {
+          content: {
+            'application/json': {}
+          }
+        };
+        requestBody2: IApiRequestBody = {
+          content: {
+            'application/json': {
+              schema: {}
+            }
+          }
+        };
+
+        callback2: IApiCallback = {
+          b: { $ref: 'foobar' }
+        };
+        callback3: IApiCallback = {
+          c: { $ref: 'foobar' }
+        };
+
+        @Get('/foo')
+        @ApiRequestBody(controller => controller.requestBody)
+        @ApiDefineCallback('callback3', controller => controller.callback3)
+        foo() {}
+
+        @Get('/barfoo')
+        barfoo() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      const document = openApi.getDocument(ApiController);
+      deepStrictEqual(document.paths, {
+        '/bar': {
+          post: {
+            requestBody: {
+              content: {
+                'application/xml': {}
+              }
+            },
+            responses: {}
+          }
+        },
+        '/barfoo': {
+          get: {
+            requestBody: {
+              content: {
+                'application/json': { schema: {} }
+              }
+            },
+            responses: {}
+          }
+        },
+        '/foo': {
+          get: {
+            requestBody: {
+              content: {
+                'application/json': {}
+              }
+            },
+            responses: {}
+          }
+        }
+      });
+      deepStrictEqual(document.components, {
+        callbacks: {
+          callback1: {
+            a: { $ref: 'foobar' }
+          },
+          callback2: {
+            b: { $ref: 'foobar' }
+          },
+          callback3: {
+            c: { $ref: 'foobar' }
+          }
+        }
+      });
     });
 
   });
