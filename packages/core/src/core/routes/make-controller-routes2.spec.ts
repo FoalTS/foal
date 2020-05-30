@@ -3,7 +3,7 @@ import { deepStrictEqual, ok, strictEqual, throws } from 'assert';
 
 // FoalTS
 import { controller } from '../../common';
-import { 
+import {
   ApiDefineCallback,
   ApiDefineTag,
   ApiExternalDoc,
@@ -585,6 +585,190 @@ describe('makeControllerRoutes2', () => {
           get: operation2
         },
       });
+    });
+
+    xit('with the paths and operations of the sub controllers methods.', () => {
+      const operation1: IApiOperation = {
+        responses: {},
+        summary: 'Operation 1',
+      };
+      const operation2: IApiOperation = {
+        responses: {},
+        summary: 'Operation 2',
+      };
+      const operation3: IApiOperation = {
+        responses: {},
+        summary: 'Operation 3',
+      };
+
+      class ProductController {
+        @Get()
+        @ApiOperation(operation3)
+        index() {}
+      }
+
+      class UserController {
+        subControllers = [
+          controller('/products', ProductController),
+        ];
+
+        @Post('/foo')
+        @ApiOperation(operation2)
+        foo() {}
+      }
+
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        subControllers = [
+          controller('/users', UserController),
+        ];
+
+        @Post('/bar')
+        @ApiOperation(operation1)
+        bar() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/bar': {
+          post: operation1
+        },
+        '/users/foo': {
+          post: operation2
+        },
+        '/users/products': {
+          get: operation3
+        },
+      });
+    });
+
+    it('with the components of the sub-controllers and sub-controllers methods if they exist.', () => {
+      const callback1: IApiCallback = { a: { $ref: '1' } };
+      const callback2: IApiCallback = { a: { $ref: '2' } };
+      const callback2bis: IApiCallback = { a: { $ref: '2bis' } };
+      const callback3: IApiCallback = { a: { $ref: '3' } };
+      const callback4: IApiCallback = { a: { $ref: '4' } };
+      const callback5: IApiCallback = { a: { $ref: '5' } };
+      const callback6: IApiCallback = { a: { $ref: '6' } };
+      const callback7: IApiCallback = { a: { $ref: '7' } };
+
+      @ApiInfo(infoMetadata)
+      @ApiDefineCallback('callback1', callback1)
+      class ApiController {
+        subControllers = [
+          SubController
+        ];
+
+        @Get('/bar')
+        @ApiDefineCallback('callback2', callback2)
+        bar() {}
+
+        @Get('/bar2')
+        @ApiDefineCallback('callback2bis', callback2bis)
+        bar2() {}
+      }
+
+      @ApiDefineCallback('callback3', callback3)
+      @ApiDefineCallback('callback4', callback4)
+      class SubController {
+        subControllers = [
+          SubSubController
+        ];
+      }
+
+      @ApiDefineCallback('callback5', callback5)
+      class SubSubController {
+        @Get('/foo')
+        @ApiDefineCallback('callback6', callback6)
+        foo() {}
+
+        @Get('/foo2')
+        @ApiDefineCallback('callback7', callback7)
+        foo2() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).components, {
+        callbacks: {
+          callback1,
+          callback2,
+          callback2bis,
+          callback3,
+          callback4,
+          callback5,
+          callback6,
+          callback7,
+        }
+      });
+    });
+
+    it('with the tags of the sub-controllers and sub-controllers methods if they exist.', () => {
+      const tag1: IApiTag = { name: '1' };
+      const tag2bis: IApiTag = { name: '2bis' };
+      const tag2: IApiTag = { name: '2' };
+      const tag3: IApiTag = { name: '3' };
+      const tag4: IApiTag = { name: '4' };
+      const tag5: IApiTag = { name: '5' };
+      const tag6: IApiTag = { name: '6' };
+      const tag7: IApiTag = { name: '7' };
+
+      @ApiInfo(infoMetadata)
+      @ApiDefineTag(tag1)
+      class ApiController {
+        subControllers = [
+          SubController
+        ];
+
+        @Get('/bar')
+        @ApiDefineTag(tag2)
+        bar() {}
+
+        @Get('/bar2')
+        @ApiDefineTag(tag2bis)
+        bar2() {}
+      }
+
+      @ApiDefineTag(tag3)
+      @ApiDefineTag(tag4)
+      class SubController {
+        subControllers = [
+          SubSubController
+        ];
+      }
+
+      @ApiDefineTag(tag5)
+      class SubSubController {
+        @Get('/foo')
+        @ApiDefineTag(tag6)
+        foo() {}
+
+        @Get('/foo2')
+        @ApiDefineTag(tag7)
+        foo2() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes2(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).tags, [
+        tag1, tag3, tag4, tag5, tag6, tag7, tag2, tag2bis
+      ]);
     });
 
   });

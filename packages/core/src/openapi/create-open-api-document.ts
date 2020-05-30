@@ -28,8 +28,8 @@ function getPaths(
   controllerClass: Class, operation: IApiOperation, controllers: ServiceManager
 ): { paths: IApiPaths, components: IApiComponents, tags: IApiTag[]|undefined } {
   const paths: IApiPaths = {};
-  let components: IApiComponents = {};
-  let tags: IApiTag[] | undefined;
+  // let components: IApiComponents = {};
+  // let tags: IApiTag[] | undefined;
 
   // Sub-controller methods.
   const controller = controllers.get(controllerClass);
@@ -38,11 +38,11 @@ function getPaths(
       const subControllerOperation = getApiCompleteOperation(subControllerClass, controllers.get(subControllerClass));
       const o = getPaths(subControllerClass, mergeOperations(operation, subControllerOperation), controllers);
 
-      const subControllerComponents = getApiComponents(subControllerClass, controllers.get(subControllerClass));
-      components = mergeComponents(components, mergeComponents(subControllerComponents, o.components));
+      // const subControllerComponents = getApiComponents(subControllerClass, controllers.get(subControllerClass));
+      // components = mergeComponents(components, mergeComponents(subControllerComponents, o.components));
 
-      const subControllerTags = getApiTags(subControllerClass);
-      tags = mergeTags(tags, mergeTags(subControllerTags, o.tags));
+      // const subControllerTags = getApiTags(subControllerClass);
+      // tags = mergeTags(tags, mergeTags(subControllerTags, o.tags));
 
       const subPaths = o.paths;
       const subControllerPath = getPath(subControllerClass) || '';
@@ -64,11 +64,11 @@ function getPaths(
       continue;
     }
 
-    components = mergeComponents(
-      components,
-      getApiComponents(controllerClass, controllers.get(controllerClass), propertyKey)
-    );
-    tags = mergeTags(tags, getApiTags(controllerClass, propertyKey));
+    // components = mergeComponents(
+    //   components,
+    //   getApiComponents(controllerClass, controllers.get(controllerClass), propertyKey)
+    // );
+    // tags = mergeTags(tags, getApiTags(controllerClass, propertyKey));
 
     const path = (getPath(controllerClass, propertyKey) || '')
       .replace(/\:\w*/g, $1 => `{${$1.slice(1)}}`);
@@ -82,7 +82,7 @@ function getPaths(
     };
   }
 
-  return { components, paths, tags };
+  return { components: {}, paths, tags: undefined };
 }
 
 /**

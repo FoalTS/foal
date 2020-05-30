@@ -1,5 +1,14 @@
 // FoalTS
-import { getApiCompleteOperation, getApiComponents, getApiInfo, getApiTags, IApiInfo, IOpenAPI } from '../../openapi';
+import {
+  getApiCompleteOperation,
+  getApiComponents,
+  getApiInfo,
+  getApiTags,
+  IApiComponents,
+  IApiTag,
+  IOpenAPI
+} from '../../openapi';
+import { mergeComponents, mergeTags } from '../../openapi/utils';
 import { Class } from '../class.interface';
 import { HookFunction } from '../hooks';
 import { OpenApi } from '../openapi';
@@ -32,7 +41,7 @@ export function getMethods(obj: object|null): string[] {
 
 function* makeControllerRoutes(
   controllerClass: Class, services: ServiceManager
-): Generator<{ route: Route, openapi?: any }> {
+): Generator<{ route: Route, tags: IApiTag[]|undefined, components: IApiComponents }> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
   const openApi = services.get(OpenApi);
@@ -45,6 +54,12 @@ function* makeControllerRoutes(
   // TODO: gather same methods under their shared path
 
   let document: IOpenAPI|undefined;
+
+  const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
+   .map(hook => hook.bind(controller));
+  const controllerPath = getMetadata('path', controllerClass) as string|undefined;
+  const controllerTags = getApiTags(controllerClass);
+  const controllerComponents = getApiComponents(controllerClass, controller);
 
   const info = getApiInfo(controllerClass);
   if (info) {
@@ -65,35 +80,32 @@ function* makeControllerRoutes(
       document.externalDocs = operation.externalDocs;
     }
 
-    // TODO: use mergeComponents
-    const components = getApiComponents(controllerClass, controller);
-    if (Object.keys(components).length > 0) {
-      document.components = components;
+    if (Object.keys(controllerComponents).length > 0) {
+      document.components = controllerComponents;
     }
 
-    // TODO: use mergeTags
-    const tags = getApiTags(controllerClass);
-    if (tags) {
-      document.tags = tags;
+    if (controllerTags) {
+      document.tags = controllerTags;
     }
   }
 
-  const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
-   .map(hook => hook.bind(controller));
-  const controllerPath = getMetadata('path', controllerClass) as string|undefined;
-
   for (const controllerClass of controller.subControllers || []) {
-    for (const { route } of makeControllerRoutes(controllerClass, services)) {
+    for (const { route, tags, components } of makeControllerRoutes(controllerClass, services)) {
       yield {
+        components: mergeComponents(controllerComponents, components),
         route: {
           controller: route.controller,
           hooks: controllerHooks.concat(route.hooks),
           httpMethod: route.httpMethod,
           path: join(controllerPath, route.path),
           propertyKey: route.propertyKey,
-        }
+        },
+        tags: mergeTags(controllerTags, tags)
       };
-      // TODO: OpenAPI description of the route
+      if (document) {
+        document.tags = mergeTags(document.tags, tags);
+        document.components = mergeComponents(document.components || {}, components);
+      }
     }
   }
 
@@ -107,15 +119,19 @@ function* makeControllerRoutes(
     const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined || '';
     const methodHooks = (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
       .map(hook => hook.bind(controller));
+    const methodTags = getApiTags(controllerClass, propertyKey);
+    const methodComponents = getApiComponents(controllerClass, controller, propertyKey);
 
     yield {
+      components: mergeComponents(controllerComponents, methodComponents),
       route: {
         controller,
         hooks: controllerHooks.concat(methodHooks),
         httpMethod,
         path: join(controllerPath, methodPath),
         propertyKey
-      }
+      },
+      tags: mergeTags(controllerTags, methodTags)
     };
 
     if (document) {
@@ -124,8 +140,9 @@ function* makeControllerRoutes(
         // TODO: maybe use a merge
         [httpMethod.toLowerCase()]: getApiCompleteOperation(controllerClass, controller, propertyKey)
       };
+      document.tags = Array.from(new Set(mergeTags(document.tags, methodTags)));
+      document.components = mergeComponents(document.components || {}, methodComponents);
     }
-    // TODO: OpenAPI description of the route
   }
 
   if (document) {
