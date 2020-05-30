@@ -30,8 +30,9 @@ export function getMethods(obj: object|null): string[] {
  * @returns {Route[]} The created routes.
  */
 
- // TODO: <T extends boolean>(..., openapi): Generator<T extends true ? { route, openapi }, { route }>
-export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
+function* makeControllerRoutes(
+  controllerClass: Class, services: ServiceManager
+): Generator<{ route: Route, openapi?: any }> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
   const openApi = services.get(OpenApi);
@@ -82,13 +83,15 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
   for (const controllerClass of controller.subControllers || []) {
-    for (const route of makeControllerRoutes2(controllerClass, services)) {
+    for (const { route } of makeControllerRoutes(controllerClass, services)) {
       yield {
-        controller: route.controller,
-        hooks: controllerHooks.concat(route.hooks),
-        httpMethod: route.httpMethod,
-        path: join(controllerPath, route.path),
-        propertyKey: route.propertyKey,
+        route: {
+          controller: route.controller,
+          hooks: controllerHooks.concat(route.hooks),
+          httpMethod: route.httpMethod,
+          path: join(controllerPath, route.path),
+          propertyKey: route.propertyKey,
+        }
       };
       // TODO: OpenAPI description of the route
     }
@@ -106,11 +109,13 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
       .map(hook => hook.bind(controller));
 
     yield {
-      controller,
-      hooks: controllerHooks.concat(methodHooks),
-      httpMethod,
-      path: join(controllerPath, methodPath),
-      propertyKey
+      route: {
+        controller,
+        hooks: controllerHooks.concat(methodHooks),
+        httpMethod,
+        path: join(controllerPath, methodPath),
+        propertyKey
+      }
     };
 
     if (document) {
@@ -125,5 +130,11 @@ export function* makeControllerRoutes2(controllerClass: Class, services: Service
 
   if (document) {
     openApi.addDocument(controllerClass, document);
+  }
+}
+
+export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
+  for (const { route } of makeControllerRoutes(controllerClass, services)) {
+    yield route;
   }
 }
