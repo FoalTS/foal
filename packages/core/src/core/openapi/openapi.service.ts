@@ -1,16 +1,20 @@
-import { IOpenAPI } from '../../openapi';
+import { IApiComponents, IOpenAPI } from '../../openapi';
 import { Class } from '../class.interface';
 
 export class OpenApi {
 
-  private map: Map<Class, IOpenAPI> = new Map();
+  private documentMap: Map<Class, IOpenAPI> = new Map();
+  private componentMap: Map<object, IApiComponents|undefined> = new Map();
 
-  addDocument(controllerClass: Class, document: IOpenAPI): void {
-    this.map.set(controllerClass, document);
+  addDocument(controllerClass: Class, document: IOpenAPI, controllers: object[] = []): void {
+    this.documentMap.set(controllerClass, document);
+    for (const controller of controllers) {
+      this.componentMap.set(controller, document.components);
+    }
   }
 
   getDocument(controllerClass: Class): IOpenAPI {
-    const document = this.map.get(controllerClass);
+    const document = this.documentMap.get(controllerClass);
     if (!document) {
       throw new Error(
         `No OpenAPI document found associated with the controller ${controllerClass.name}. `
@@ -18,6 +22,10 @@ export class OpenApi {
       );
     }
     return document;
+  }
+
+  getComponents(controller: object): IApiComponents {
+    return this.componentMap.get(controller) || {};
   }
 
 }

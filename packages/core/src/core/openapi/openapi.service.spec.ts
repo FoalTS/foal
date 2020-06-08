@@ -1,5 +1,5 @@
-import { strictEqual, throws } from 'assert';
-import { IOpenAPI } from '../../openapi';
+import { deepStrictEqual, strictEqual, throws } from 'assert';
+import { IApiComponents, IOpenAPI } from '../../openapi';
 import { createService } from '../service-manager';
 import { OpenApi } from './openapi.service';
 
@@ -46,6 +46,41 @@ describe('OpenApi', () => {
             + 'Are you sure you added the @ApiInfo decorator on the controller?'
         }
       );
+    });
+
+  });
+
+  describe('has a "getComponents" method that', () => {
+
+    it('should return the OpenAPI components of a given controller.', () => {
+      const components: IApiComponents = {
+        callbacks: {
+          callback1: { $ref: 'ref1' }
+        }
+      };
+      const document: IOpenAPI = {
+        components,
+        info: {
+          title: 'An API',
+          version: '1.0.0',
+        },
+        openapi: '3.0.0',
+        paths: {},
+      };
+
+      class ApiController {}
+      class UserController {}
+      class ProductController {}
+
+      const apiController = new ApiController();
+      const userController = new UserController();
+      const productController = new ProductController();
+
+      service.addDocument(ApiController, document, [ apiController, userController ]);
+
+      strictEqual(service.getComponents(apiController), components);
+      strictEqual(service.getComponents(userController), components);
+      deepStrictEqual(service.getComponents(productController), {});
     });
 
   });
