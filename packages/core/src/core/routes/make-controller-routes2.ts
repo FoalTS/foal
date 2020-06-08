@@ -65,9 +65,9 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
  * @returns {Route[]} The created routes.
  */
 
-export function* makeControllerRoutes(
-  controllerClass: Class, services: ServiceManager, openapi: boolean = false
-): Generator<{ route: Route, tags: IApiTag[]|undefined, components: IApiComponents, operation: IApiOperation }> {
+export function* makeControllerRoutes(controllerClass: Class, services: ServiceManager, openapi = false, documentControllers?: object[]): Generator<{
+  route: Route, tags: IApiTag[]|undefined, components: IApiComponents, operation: IApiOperation
+}> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
 
@@ -122,8 +122,13 @@ export function* makeControllerRoutes(
     }
   }
 
+  documentControllers = document ? [] : documentControllers;
+  if (documentControllers) {
+    documentControllers.push(controller);
+  }
+
   for (const controllerClass of controller.subControllers || []) {
-    for (const { route, tags, components, operation } of makeControllerRoutes(controllerClass, services, openapi)) {
+    for (const { route, tags, components, operation } of makeControllerRoutes(controllerClass, services, openapi, documentControllers)) {
       yield {
         // OpenAPI
         components: openapi ? mergeComponents(controllerComponents, components) : {},
@@ -202,6 +207,6 @@ export function* makeControllerRoutes(
   /* OpenAPI */
   if (document) {
     throwErrorIfDuplicatePaths(document.paths);
-    openApi.addDocument(controllerClass, document);
+    openApi.addDocument(controllerClass, document, documentControllers);
   }
 }

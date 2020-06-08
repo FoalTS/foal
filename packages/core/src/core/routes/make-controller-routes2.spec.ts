@@ -18,6 +18,7 @@ import {
   ApiServer,
   ApiUseTag,
   IApiCallback,
+  IApiComponents,
   IApiExternalDocumentation,
   IApiOperation,
   IApiParameter,
@@ -1173,6 +1174,49 @@ describe('makeControllerRoutes', () => {
           }
         }
       });
+    });
+
+    it('with the controller instances.', () => {
+      @ApiDefineCallback('callback2', { $ref: '$ref2' })
+      class UserController {
+        @Get('/foobar')
+        foobar() {}
+      }
+
+      // This controller does not have its own routes but
+      // it may have a controller hook that uses the OpenAPI component.
+      @ApiInfo(infoMetadata)
+      @ApiDefineCallback('callback1', { $ref: '$ref1' })
+      class ApiController {
+        subControllers = [
+          controller('/users', UserController)
+        ];
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      const array = Array.from(makeControllerRoutes(AppController, services));
+      strictEqual(array.length, 1);
+
+      const components: IApiComponents = {
+        callbacks: {
+          callback1: { $ref: '$ref1' },
+          callback2: { $ref: '$ref2' },
+        }
+      };
+      const openApi = services.get(OpenApi);
+
+      const appController = services.get(AppController);
+      const apiController = services.get(ApiController);
+      const userController = services.get(UserController);
+
+      deepStrictEqual(openApi.getComponents(apiController), components);
+      deepStrictEqual(openApi.getComponents(userController), components);
+      deepStrictEqual(openApi.getComponents(appController), {});
     });
 
   });
