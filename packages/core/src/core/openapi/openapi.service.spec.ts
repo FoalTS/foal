@@ -1,4 +1,4 @@
-import { deepStrictEqual, strictEqual, throws } from 'assert';
+import { strictEqual, throws } from 'assert';
 import { IOpenAPI } from '../../openapi';
 import { createService } from '../service-manager';
 import { OpenApi } from './openapi.service';

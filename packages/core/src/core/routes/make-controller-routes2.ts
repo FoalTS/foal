@@ -12,7 +12,6 @@ import {
 } from '../../openapi';
 import { mergeComponents, mergeOperations, mergeTags } from '../../openapi/utils';
 import { Class } from '../class.interface';
-import { Config } from '../config';
 import { HookFunction } from '../hooks';
 import { OpenApi } from '../openapi';
 import { ServiceManager } from '../service-manager';
@@ -167,7 +166,9 @@ export function* makeControllerRoutes(
     /* OpenAPI */
     const methodTags = openapi ? getApiTags(controllerClass, propertyKey) : undefined;
     const methodComponents = openapi ? getApiComponents(controllerClass, controller, propertyKey) : {};
-    const methodOperation = openapi ? getApiCompleteOperation(controllerClass, controller, propertyKey) : { responses: {} };
+    const methodOperation = openapi ?
+      getApiCompleteOperation(controllerClass, controller, propertyKey) :
+      { responses: {} };
     const operation = openapi ? mergeOperations(controllerOperation, methodOperation) : { responses: {} };
 
     yield {
