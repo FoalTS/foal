@@ -48,20 +48,6 @@ describe('OpenApi', () => {
       );
     });
 
-    it('should throw an error if OpenAPI is not enabled in the configuration.', () => {
-      // If OpenAPI is not enabled, createApp would have not registed the document.
-      delete process.env.SETTINGS_OPENAPI_ENABLED;
-      class ApiController {}
-
-      throws(
-        () => service.getDocument(ApiController),
-        {
-          message: 'Impossible to get the OpenAPI document of the controller ApiController. '
-            + 'OpenAPI is not enabled in the configuration.'
-        }
-      );
-    });
-
   });
 
 });
