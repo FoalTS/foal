@@ -13,8 +13,8 @@ import {
 } from '../../openapi';
 import { mergeComponents, mergeOperations, mergeTags } from '../../openapi/utils';
 import { Class } from '../class.interface';
+import { Config } from '../config';
 import { HookFunction } from '../hooks';
-import { HttpMethod } from '../http';
 import { OpenApi } from '../openapi';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
@@ -67,8 +67,8 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
  * @returns {Route[]} The created routes.
  */
 
-function* makeControllerRoutes(
-  controllerClass: Class, services: ServiceManager
+export function* makeControllerRoutes(
+  controllerClass: Class, services: ServiceManager, openapi: boolean = false
 ): Generator<{ route: Route, tags: IApiTag[]|undefined, components: IApiComponents, operation: IApiOperation }> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
@@ -78,22 +78,25 @@ function* makeControllerRoutes(
   const controllerPath = getMetadata('path', controllerClass) as string|undefined;
 
   /* OpenAPI */
+  const info = getApiInfo(controllerClass);
+  // Check if the controller is inside an OpenAPI api. If not, components, operations and tags are discarded.
+  openapi = !!info || openapi;
 
-  // TODO: If openapi && Config.get('settings.openpi')
   // TODO: save the controllers
-  const controllerTags = getApiTags(controllerClass);
-  const controllerComponents = getApiComponents(controllerClass, controller);
-  const controllerOperation = getApiCompleteOperation(controllerClass, controller);
-  delete controllerOperation.servers;
-  delete controllerOperation.externalDocs;
-  delete controllerOperation.security;
+  const controllerTags = openapi ? getApiTags(controllerClass) : undefined;
+  const controllerComponents = openapi ? getApiComponents(controllerClass, controller) : {};
+  const controllerOperation = openapi ? getApiCompleteOperation(controllerClass, controller) : { responses: {} };
+  if (openapi) {
+    delete controllerOperation.servers;
+    delete controllerOperation.externalDocs;
+    delete controllerOperation.security;
+  }
 
   /* OpenAPI */
   const openApi = services.get(OpenApi);
   let document: IOpenAPI|undefined;
 
   /* OpenAPI */
-  const info = getApiInfo(controllerClass);
   if (info) {
     document = {
       info: typeof info === 'function' ? info(controller) : info,
@@ -122,12 +125,12 @@ function* makeControllerRoutes(
   }
 
   for (const controllerClass of controller.subControllers || []) {
-    for (const { route, tags, components, operation } of makeControllerRoutes(controllerClass, services)) {
+    for (const { route, tags, components, operation } of makeControllerRoutes(controllerClass, services, openapi)) {
       yield {
         // OpenAPI
-        components: mergeComponents(controllerComponents, components),
+        components: openapi ? mergeComponents(controllerComponents, components) : {},
         // OpenAPI
-        operation: mergeOperations(controllerOperation, operation),
+        operation: openapi ? mergeOperations(controllerOperation, operation) : { responses: {} },
         route: {
           controller: route.controller,
           hooks: controllerHooks.concat(route.hooks),
@@ -136,7 +139,7 @@ function* makeControllerRoutes(
           propertyKey: route.propertyKey,
         },
         // OpenAPI
-        tags: mergeTags(controllerTags, tags)
+        tags: openapi ? mergeTags(controllerTags, tags) : undefined
       };
       /* OpenAPI */
       if (document) {
@@ -163,14 +166,14 @@ function* makeControllerRoutes(
       .map(hook => hook.bind(controller));
 
     /* OpenAPI */
-    const methodTags = getApiTags(controllerClass, propertyKey);
-    const methodComponents = getApiComponents(controllerClass, controller, propertyKey);
-    const methodOperation = getApiCompleteOperation(controllerClass, controller, propertyKey);
-    const operation = mergeOperations(controllerOperation, methodOperation);
+    const methodTags = openapi ? getApiTags(controllerClass, propertyKey) : undefined;
+    const methodComponents = openapi ? getApiComponents(controllerClass, controller, propertyKey) : {};
+    const methodOperation = openapi ? getApiCompleteOperation(controllerClass, controller, propertyKey) : { responses: {} };
+    const operation = openapi ? mergeOperations(controllerOperation, methodOperation) : { responses: {} };
 
     yield {
       // OpenAPI
-      components: mergeComponents(controllerComponents, methodComponents),
+      components: openapi ? mergeComponents(controllerComponents, methodComponents) : {},
       // OpenAPI
       operation,
       route: {
@@ -181,7 +184,7 @@ function* makeControllerRoutes(
         propertyKey
       },
       // OpenAPI
-      tags: mergeTags(controllerTags, methodTags)
+      tags: openapi ? mergeTags(controllerTags, methodTags) : undefined
     };
 
     /* OpenAPI */
@@ -202,6 +205,8 @@ function* makeControllerRoutes(
     openApi.addDocument(controllerClass, document);
   }
 }
+
+export { makeControllerRoutes as makeControllerRoutes3 };
 
 export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
   for (const { route } of makeControllerRoutes(controllerClass, services)) {

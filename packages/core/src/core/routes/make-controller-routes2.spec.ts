@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, ok, strictEqual, throws } from 'assert';
+import { deepStrictEqual, notDeepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
 
 // FoalTS
 import { controller } from '../../common';
@@ -10,6 +10,7 @@ import {
   ApiExternalDoc,
   ApiInfo,
   ApiOperation,
+  ApiOperationDescription,
   ApiParameter,
   ApiRequestBody,
   ApiResponse,
@@ -31,7 +32,7 @@ import { Hook, HookFunction } from '../hooks';
 import { Context, Get, HttpResponseOK, Post } from '../http';
 import { OpenApi } from '../openapi';
 import { dependency, ServiceManager } from '../service-manager';
-import { makeControllerRoutes2 } from './make-controller-routes2';
+import { makeControllerRoutes, makeControllerRoutes2 } from './make-controller-routes2';
 
 describe('makeControllerRoutes2', () => {
 
@@ -1162,6 +1163,56 @@ describe('makeControllerRoutes2', () => {
       });
     });
 
+  });
+
+  it('should not yield the controller tags, components or operation if it is not part of an OpenAPI API.', () => {
+    @ApiDefineTag({ name: 'tag1' })
+    @ApiDefineCallback('callback1', { $ref: 'ref1' })
+    @ApiOperationDescription('description1')
+    class UserController {
+      @Get('/something')
+      something() {}
+    }
+
+    @ApiInfo({
+      title: 'foo',
+      version: '0.0.0'
+    })
+    class ApiController {
+      subControllers = [
+        controller('/users', UserController)
+      ];
+
+      @Get('/bar')
+      @ApiDefineTag({ name: 'bartag' })
+      @ApiDefineCallback('barcallback', { $ref: 'barref' })
+      @ApiOperationDescription('bardescription')
+      bar() {}
+    }
+
+    class AppController {
+      subControllers = [
+        controller('/api', ApiController)
+      ];
+
+      @Get('/foo')
+      @ApiDefineTag({ name: 'footag' })
+      @ApiDefineCallback('foocallback', { $ref: 'fooref' })
+      @ApiOperationDescription('foodescription')
+      foo() {}
+    }
+
+    for (const { tags, components, operation } of makeControllerRoutes(AppController, new ServiceManager())) {
+      strictEqual(tags, undefined);
+      deepStrictEqual(components, {});
+      deepStrictEqual(operation, { responses: {} });
+    }
+
+    for (const { tags, components, operation } of makeControllerRoutes(ApiController, new ServiceManager())) {
+      notStrictEqual(tags, undefined);
+      notDeepStrictEqual(components, {});
+      notDeepStrictEqual(operation, { responses: {} });
+    }
   });
 
 });
