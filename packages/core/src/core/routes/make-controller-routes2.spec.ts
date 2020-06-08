@@ -32,9 +32,9 @@ import { Hook, HookFunction } from '../hooks';
 import { Context, Get, HttpResponseOK, Post } from '../http';
 import { OpenApi } from '../openapi';
 import { dependency, ServiceManager } from '../service-manager';
-import { makeControllerRoutes, makeControllerRoutes2 } from './make-controller-routes2';
+import { makeControllerRoutes } from './make-controller-routes2';
 
-describe('makeControllerRoutes2', () => {
+describe('makeControllerRoutes', () => {
 
   const hook1: HookFunction = () => new HttpResponseOK('hook1');
   const hook2: HookFunction = () => new HttpResponseOK('hook2');
@@ -52,7 +52,8 @@ describe('makeControllerRoutes2', () => {
       bar() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -70,7 +71,9 @@ describe('makeControllerRoutes2', () => {
       @Get('/bar')
       bar() {}
     }
-    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
+
+    const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -87,7 +90,9 @@ describe('makeControllerRoutes2', () => {
       @Hook(hook6)
       bar() {}
     }
-    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
+
+    const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -109,7 +114,8 @@ describe('makeControllerRoutes2', () => {
       barfoo() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 2);
 
@@ -139,7 +145,8 @@ describe('makeControllerRoutes2', () => {
     }
 
     const services = new ServiceManager();
-    const routes = Array.from(makeControllerRoutes2(FoobarController, services));
+    const routes = Array.from(makeControllerRoutes(FoobarController, services))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -156,7 +163,8 @@ describe('makeControllerRoutes2', () => {
     }
 
     const services = new ServiceManager();
-    const routes = Array.from(makeControllerRoutes2(FoobarController, services));
+    const routes = Array.from(makeControllerRoutes(FoobarController, services))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -183,7 +191,8 @@ describe('makeControllerRoutes2', () => {
 
     }
 
-    const routes = Array.from(makeControllerRoutes2(FoobarController2, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(FoobarController2, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 2);
 
@@ -235,7 +244,8 @@ describe('makeControllerRoutes2', () => {
       ];
     }
 
-    const routes = Array.from(makeControllerRoutes2(AppController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(AppController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 2);
 
@@ -273,7 +283,8 @@ describe('makeControllerRoutes2', () => {
       foo() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2(AppController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(AppController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 2);
 
@@ -300,7 +311,8 @@ describe('makeControllerRoutes2', () => {
       bar() {}
     }
 
-    const routes = Array.from(makeControllerRoutes2(FoobarController, new ServiceManager()));
+    const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
+      .map(({ route }) => route);
 
     strictEqual(routes.length, 1);
 
@@ -338,7 +350,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
 
       throws(
         () => openApi.getDocument(AppController),
@@ -359,7 +371,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
 
       strictEqual(openApi.getDocument(ApiController).openapi, '3.0.0');
     });
@@ -378,7 +390,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
 
       strictEqual(openApi.getDocument(ApiController).info, metadata);
     });
@@ -399,7 +411,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
 
       strictEqual(openApi.getDocument(ApiController).info, metadata);
     });
@@ -414,7 +426,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       strictEqual(openApi.getDocument(ApiController).hasOwnProperty('servers'), false);
 
       const server: IApiServer = {
@@ -431,7 +443,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController2, services));
+      Array.from(makeControllerRoutes(AppController2, services));
       deepStrictEqual(openApi.getDocument(ApiController2).servers, [ server ]);
     });
 
@@ -445,7 +457,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       strictEqual(openApi.getDocument(ApiController).hasOwnProperty('components'), false);
 
       const callback: IApiCallback = {};
@@ -460,7 +472,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController2, services));
+      Array.from(makeControllerRoutes(AppController2, services));
       deepStrictEqual(openApi.getDocument(ApiController2).components, {
         callbacks: { callback }
       });
@@ -476,7 +488,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       strictEqual(openApi.getDocument(ApiController).hasOwnProperty('security'), false);
 
       const securityRequirement: IApiSecurityRequirement = {};
@@ -491,7 +503,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController2, services));
+      Array.from(makeControllerRoutes(AppController2, services));
       deepStrictEqual(openApi.getDocument(ApiController2).security, [ securityRequirement ]);
     });
 
@@ -505,7 +517,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       strictEqual(openApi.getDocument(ApiController).hasOwnProperty('tags'), false);
 
       const tag: IApiTag = {
@@ -522,7 +534,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController2, services));
+      Array.from(makeControllerRoutes(AppController2, services));
       deepStrictEqual(openApi.getDocument(ApiController2).tags, [ tag ]);
     });
 
@@ -536,7 +548,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       strictEqual(openApi.getDocument(ApiController).hasOwnProperty('externalDocs'), false);
 
       const externalDocs: IApiExternalDocumentation = {
@@ -553,7 +565,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController2, services));
+      Array.from(makeControllerRoutes(AppController2, services));
       strictEqual(openApi.getDocument(ApiController2).externalDocs, externalDocs);
     });
 
@@ -586,7 +598,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).paths, {
         '/bar': {
           post: operation1
@@ -644,7 +656,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).paths, {
         '/bar': {
           post: operation1
@@ -707,7 +719,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).paths, {
         '/': {
           get: operation1
@@ -775,7 +787,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).paths, {
         '/bar': {
           get: operation3,
@@ -830,7 +842,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).paths, {
         '/bar': {
           post: {
@@ -887,7 +899,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       const document = openApi.getDocument(ApiController);
       deepStrictEqual(document.servers, [ server ]);
       deepStrictEqual(document.externalDocs, externalDocs);
@@ -952,7 +964,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).components, {
         callbacks: {
           callback1,
@@ -1018,7 +1030,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       deepStrictEqual(openApi.getDocument(ApiController).tags, [
         tag1, tag3, tag4, tag5, tag6, tag7, tag2, tag2bis
       ]);
@@ -1042,7 +1054,7 @@ describe('makeControllerRoutes2', () => {
       }
 
       try {
-        Array.from(makeControllerRoutes2(AppController, services));
+        Array.from(makeControllerRoutes(AppController, services));
         done(new Error('The function should have thrown an Error.'));
       } catch (error) {
         strictEqual(
@@ -1114,7 +1126,7 @@ describe('makeControllerRoutes2', () => {
         ];
       }
 
-      Array.from(makeControllerRoutes2(AppController, services));
+      Array.from(makeControllerRoutes(AppController, services));
       const document = openApi.getDocument(ApiController);
       deepStrictEqual(document.paths, {
         '/bar': {

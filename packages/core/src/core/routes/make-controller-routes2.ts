@@ -3,7 +3,6 @@ import {
   getApiCompleteOperation,
   getApiComponents,
   getApiInfo,
-  getApiOperation,
   getApiTags,
   IApiComponents,
   IApiOperation,
@@ -203,13 +202,5 @@ export function* makeControllerRoutes(
   if (document) {
     throwErrorIfDuplicatePaths(document.paths);
     openApi.addDocument(controllerClass, document);
-  }
-}
-
-export { makeControllerRoutes as makeControllerRoutes3 };
-
-export function* makeControllerRoutes2(controllerClass: Class, services: ServiceManager): Generator<Route> {
-  for (const { route } of makeControllerRoutes(controllerClass, services)) {
-    yield route;
   }
 }
