@@ -5,12 +5,15 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
+import { ApiRequestBody, ApiUseTag, getApiUsedTags } from '../openapi';
 import { getHookFunction, getHookFunctions, Hook, HookFunction, MergeHooks } from './hooks';
 
 describe('Hook', () => {
 
   const hook1: HookFunction = () => { return; };
   const hook2: HookFunction = () => undefined;
+
+  afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
 
   it('should add the hook to the metadata hooks on the method class.', () => {
     class Foobar {
@@ -31,6 +34,156 @@ describe('Hook', () => {
     const actual = Reflect.getOwnMetadata('hooks', Foobar);
     deepStrictEqual(actual, [ hook1, hook2 ]);
   });
+
+  it(
+    'should apply the OpenAPI decorators if options.openapi is undefined and settings.openapi.useHooks is undefined.',
+    () => {
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ])
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, [ 'tag1', 'tag2' ]);
+    }
+  );
+
+  it(
+    'should apply the OpenAPI decorators if options.openapi is undefined and settings.openapi.useHooks is true.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ])
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, [ 'tag1', 'tag2' ]);
+    }
+  );
+
+  it(
+    'should NOT apply the OpenAPI decorators if options.openapi is undefined and settings.openapi.useHooks is false.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ])
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, undefined);
+    }
+  );
+
+  it(
+    'should apply the OpenAPI decorators if options.openapi is true and settings.openapi.useHooks is undefined.',
+    () => {
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: true })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, [ 'tag1', 'tag2' ]);
+    }
+  );
+
+  it(
+    'should apply the OpenAPI decorators if options.openapi is true and settings.openapi.useHooks is true.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: true })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, [ 'tag1', 'tag2' ]);
+    }
+  );
+
+  it(
+    'should apply the OpenAPI decorators if options.openapi is true and settings.openapi.useHooks is false.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: true })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      deepStrictEqual(actual, [ 'tag1', 'tag2' ]);
+    }
+  );
+
+  it(
+    'should NOT apply the OpenAPI decorators if options.openapi is false and settings.openapi.useHooks is undefined.',
+    () => {
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: false })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      strictEqual(actual, undefined);
+    }
+  );
+
+  it(
+    'should NOT apply the OpenAPI decorators if options.openapi is false and settings.openapi.useHooks is true.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: false })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      strictEqual(actual, undefined);
+    }
+  );
+
+  it(
+    'should NOT apply the OpenAPI decorators if options.openapi is false and settings.openapi.useHooks is false.',
+    () => {
+      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      class Foobar {
+        @Hook(hook1, [
+          ApiUseTag('tag1'),
+          ApiUseTag('tag2')
+        ], { openapi: false })
+        barfoo() {}
+      }
+
+      const actual = getApiUsedTags(Foobar, 'barfoo');
+      strictEqual(actual, undefined);
+    }
+  );
 
 });
 

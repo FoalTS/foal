@@ -2,6 +2,8 @@
 import 'reflect-metadata';
 
 // FoalTS
+import { OpenApiDecorator } from '../openapi';
+import { Config } from './config';
 import { Context, HttpResponse } from './http';
 import { ServiceManager } from './service-manager';
 
@@ -35,12 +37,22 @@ export type HookDecorator = (target: any, propertyKey?: string) => any;
  * @param {HookFunction[]} hookFunction - The function from which the hook should be created.
  * @returns {HookDecorator} - The hook decorator.
  */
-export function Hook(hookFunction: HookFunction): HookDecorator {
+export function Hook(
+  hookFunction: HookFunction, openApiDecorators: OpenApiDecorator[] = [], options: { openapi?: boolean } = {}
+): HookDecorator {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
     const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
     hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
+
+    if (!(options.openapi ?? Config.get('settings.openapi.useHooks', 'boolean', true))) {
+      return;
+    }
+
+    for (const openApiDecorator of openApiDecorators.reverse()) {
+      openApiDecorator(target, propertyKey);
+    }
   };
 }
 
