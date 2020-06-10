@@ -32,14 +32,14 @@ export type HookDecorator = (target: any, propertyKey?: string) => any;
  * Create a hook from one or several functions.
  *
  * @export
- * @param {...HookFunction[]} hookFunctions - The function(s) from which the hook should be created.
+ * @param {HookFunction[]} hookFunction - The function from which the hook should be created.
  * @returns {HookDecorator} - The hook decorator.
  */
-export function Hook(...hookFunctions: HookFunction[]): HookDecorator {
+export function Hook(hookFunction: HookFunction): HookDecorator {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
     const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
-    hooks.unshift(...hookFunctions);
+    hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
   };
 }
@@ -80,9 +80,9 @@ export function getHookFunctions(hook: HookDecorator): HookFunction[] {
  * @returns {HookDecorator} The new hook.
  */
 export function MergeHooks(...hookDecorators: HookDecorator[]): HookDecorator {
-  const hookFunctions: HookFunction[] = [];
-  for (const hook of hookDecorators) {
-    hookFunctions.push(...getHookFunctions(hook));
-  }
-  return Hook(...hookFunctions);
+  return (target: any, propertyKey?: string) => {
+    for (const hookDecorator of hookDecorators.reverse()) {
+      hookDecorator(target, propertyKey);
+    }
+  };
 }
