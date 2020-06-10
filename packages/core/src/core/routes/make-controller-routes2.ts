@@ -53,6 +53,15 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   }
 }
 
+function getPath(controllerClass: Class, propertyKey?: string): string {
+  return getMetadata('path', controllerClass, propertyKey) as string|undefined || '';
+}
+
+function getHooks(controllerClass: Class, controller: object, propertyKey?: string): HookFunction[] {
+  return (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
+    .map(hook => hook.bind(controller));
+}
+
 /**
  * Recursively create the routes of a controller and its subcontrollers from the
  * controller class definition.
@@ -65,25 +74,26 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
  * @returns {Route[]} The created routes.
  */
 
-export function* makeControllerRoutes(controllerClass: Class, services: ServiceManager, openapi = false, documentControllers?: object[]): Generator<{
-  route: Route, tags: IApiTag[]|undefined, components: IApiComponents, operation: IApiOperation
+export function* makeControllerRoutes(
+  controllerClass: Class, services: ServiceManager, openapi = false, documentControllers?: object[]
+): Generator<{
+  route: Route, components: IApiComponents, operation: IApiOperation,  tags?: IApiTag[]
 }> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
 
-  const controllerHooks = (getMetadata('hooks', controllerClass) as HookFunction[] || [])
-   .map(hook => hook.bind(controller));
-  const controllerPath = getMetadata('path', controllerClass) as string|undefined;
+  const controllerPath = getPath(controllerClass);
+  const controllerHooks = getHooks(controllerClass, controller);
 
   /* OpenAPI */
   const info = getApiInfo(controllerClass);
   // Check if the controller is inside an OpenAPI api. If not, components, operations and tags are discarded.
   openapi = !!info || openapi;
 
-  // TODO: save the controllers
-  const controllerTags = openapi ? getApiTags(controllerClass) : undefined;
+  /* OpenAPI */
   const controllerComponents = openapi ? getApiComponents(controllerClass, controller) : {};
   const controllerOperation = openapi ? getApiCompleteOperation(controllerClass, controller) : { responses: {} };
+  const controllerTags = openapi ? getApiTags(controllerClass) : undefined;
   if (openapi) {
     delete controllerOperation.servers;
     delete controllerOperation.externalDocs;
@@ -127,33 +137,41 @@ export function* makeControllerRoutes(controllerClass: Class, services: ServiceM
     documentControllers.push(controller);
   }
 
-  for (const controllerClass of controller.subControllers || []) {
-    for (const { route, tags, components, operation } of makeControllerRoutes(controllerClass, services, openapi, documentControllers)) {
-      yield {
-        // OpenAPI
-        components: openapi ? mergeComponents(controllerComponents, components) : {},
-        // OpenAPI
-        operation: openapi ? mergeOperations(controllerOperation, operation) : { responses: {} },
-        route: {
-          controller: route.controller,
-          hooks: controllerHooks.concat(route.hooks),
-          httpMethod: route.httpMethod,
-          path: join(controllerPath, route.path),
-          propertyKey: route.propertyKey,
-        },
-        // OpenAPI
-        tags: openapi ? mergeTags(controllerTags, tags) : undefined
+  function processRoute(route: Route, components: IApiComponents, operation: IApiOperation, tags?: IApiTag[]) {
+    /* OpenAPI */
+    if (document) {
+      const normalizedPath = normalizePath(route.path);
+      document.paths[normalizedPath] = {
+        ...document.paths[normalizedPath], // Potentially undefined
+        [route.httpMethod.toLowerCase()]: mergeOperations(controllerOperation, operation)
       };
-      /* OpenAPI */
-      if (document) {
-        document.tags = mergeTags(document.tags, tags);
-        document.components = mergeComponents(document.components || {}, components);
-        const path = normalizePath(route.path);
-        document.paths[path] = {
-          ...document.paths[path], // Potentially undefined
-          [route.httpMethod.toLowerCase()]: mergeOperations(controllerOperation, operation)
-        };
-      }
+      document.tags = Array.from(new Set(mergeTags(document.tags, tags)));
+      document.components = mergeComponents(document.components || {}, components);
+    }
+
+    return {
+      // OpenAPI
+      components: openapi ? mergeComponents(controllerComponents, components) : {},
+      // OpenAPI
+      operation: openapi ? mergeOperations(controllerOperation, operation) : { responses: {} },
+      route: {
+        controller: route.controller,
+        hooks: controllerHooks.concat(route.hooks),
+        httpMethod: route.httpMethod,
+        path: join(controllerPath, route.path),
+        propertyKey: route.propertyKey,
+      },
+      // OpenAPI
+      tags: openapi ? mergeTags(controllerTags, tags) : undefined
+    };
+  }
+
+  for (const controllerClass of controller.subControllers || []) {
+    for (
+      const { route, components, operation, tags } of
+      makeControllerRoutes(controllerClass, services, openapi, documentControllers)
+    ) {
+      yield processRoute(route, components, operation, tags);
     }
   }
 
@@ -164,44 +182,16 @@ export function* makeControllerRoutes(controllerClass: Class, services: ServiceM
       continue;
     }
 
-    const methodPath = getMetadata('path', controllerClass, propertyKey) as string|undefined || '';
-    const methodHooks = (getMetadata('hooks', controllerClass, propertyKey) as HookFunction[] || [])
-      .map(hook => hook.bind(controller));
+    const path = getPath(controllerClass, propertyKey);
+    const hooks = getHooks(controllerClass, controller, propertyKey);
+    const route = { controller, hooks, httpMethod, path, propertyKey };
 
     /* OpenAPI */
-    const methodTags = openapi ? getApiTags(controllerClass, propertyKey) : undefined;
-    const methodComponents = openapi ? getApiComponents(controllerClass, controller, propertyKey) : {};
-    const methodOperation = openapi ?
-      getApiCompleteOperation(controllerClass, controller, propertyKey) :
-      { responses: {} };
-    const operation = openapi ? mergeOperations(controllerOperation, methodOperation) : { responses: {} };
+    const components = openapi ? getApiComponents(controllerClass, controller, propertyKey) : {};
+    const operation = openapi ? getApiCompleteOperation(controllerClass, controller, propertyKey) : { responses: {} };
+    const tags = openapi ? getApiTags(controllerClass, propertyKey) : undefined;
 
-    yield {
-      // OpenAPI
-      components: openapi ? mergeComponents(controllerComponents, methodComponents) : {},
-      // OpenAPI
-      operation,
-      route: {
-        controller,
-        hooks: controllerHooks.concat(methodHooks),
-        httpMethod,
-        path: join(controllerPath, methodPath),
-        propertyKey
-      },
-      // OpenAPI
-      tags: openapi ? mergeTags(controllerTags, methodTags) : undefined
-    };
-
-    /* OpenAPI */
-    if (document) {
-      const path = normalizePath(methodPath);
-      document.paths[path] = {
-        ...document.paths[path], // Potentially undefined
-        [httpMethod.toLowerCase()]: operation
-      };
-      document.tags = Array.from(new Set(mergeTags(document.tags, methodTags)));
-      document.components = mergeComponents(document.components || {}, methodComponents);
-    }
+    yield processRoute(route, components, operation, tags);
   }
 
   /* OpenAPI */
