@@ -1,9 +1,10 @@
 // std
-import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotThrow, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
 import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiRequestBody, getApiResponses, IApiRequestBody, IApiResponses } from '../../openapi';
+import { OpenApi } from '../../core/openapi';
+import { getApiRequestBody, getApiResponses, IApiRequestBody, IApiResponses, IApiSchema } from '../../openapi';
 import { ValidateBody } from './validate-body.hook';
 
 describe('ValidateBody', () => {
@@ -71,6 +72,53 @@ describe('ValidateBody', () => {
         });
       });
 
+      it('should use the OpenAPI components to validate the request body.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {}
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              user: schema as IApiSchema
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateBody({
+          $ref: '#/components/schemas/user'
+        })).bind(controller);
+        const ctx = new Context({
+          body: {
+            foo: 'hello'
+          }
+        });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          body: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/user/properties/foo/type',
+            }
+          ]
+        });
+      });
+
     });
 
     describe('given schema is a function', () => {
@@ -113,6 +161,55 @@ describe('ValidateBody', () => {
         const actual = hook(ctx, new ServiceManager());
         ok(actual instanceof HttpResponseBadRequest);
         notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
+      });
+
+      it('should use the OpenAPI components to validate the request body.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {
+          schema = {
+            $ref: '#/components/schemas/user'
+          };
+        }
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              user: schema as IApiSchema
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind(controller);
+        const ctx = new Context({
+          body: {
+            foo: 'hello'
+          }
+        });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          body: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/user/properties/foo/type',
+            }
+          ]
+        });
       });
 
     });
