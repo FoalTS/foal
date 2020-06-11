@@ -2,9 +2,10 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, getApiResponses, IApiHeaderParameter, IApiResponses } from '../../openapi';
+import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { getApiParameters, getApiResponses } from '../../openapi';
 import { ValidateHeader } from './validate-header.hook';
+import { OpenApi } from '../../core/openapi';
 
 describe('ValidateHeader', () => {
 
@@ -114,6 +115,49 @@ describe('ValidateHeader', () => {
         strictEqual(response, undefined);
       });
 
+      it('should use the OpenAPI components to validate the header.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {}
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              header: { type: 'integer' }
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateHeader('foo', {
+          $ref: '#/components/schemas/header'
+        })).bind(controller);
+        const ctx = new Context({ headers: { foo: 'a' } });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          headers: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/header/type',
+            }
+          ]
+        });
+      });
+
     });
 
     describe('given schema is a function', () => {
@@ -160,33 +204,59 @@ describe('ValidateHeader', () => {
       strictEqual(response, undefined);
     });
 
+
+    it('should use the OpenAPI components to validate the header.', () => {
+      const services = new ServiceManager();
+      const openApi = services.get(OpenApi);
+
+      class ApiController {
+        schema = {
+          $ref: '#/components/schemas/header'
+        };
+      }
+      const controller = new ApiController();
+
+      openApi.addDocument(ApiController, {
+        components: {
+          schemas: {
+            header: { type: 'integer' }
+          }
+        },
+        info: {
+          title: 'Api',
+          version: '1.0.0',
+        },
+        openapi: '3.0.2',
+        paths: {},
+      }, [ controller ]);
+
+      const hook = getHookFunction(ValidateHeader('foo',  controller => controller.schema))
+        .bind(controller);
+      const ctx = new Context({ headers: { foo: 'a' } });
+
+      const actual = hook(ctx, services);
+      if (!(actual instanceof HttpResponseBadRequest)) {
+        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+      }
+      deepStrictEqual(actual.body, {
+        headers: [
+          {
+            dataPath: '.foo',
+            keyword: 'type',
+            message: 'should be integer',
+            params: { type: 'integer' },
+            schemaPath: '#/components/schemas/header/type',
+          }
+        ]
+      });
+    });
+
   });
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateHeader('foobar', { type: 'string' }, { required: false })
-      @ValidateHeader('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateHeader('foobar', { type: 'string' }, { required: false })
-      @ValidateHeader('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
     it('unless options.openapi is false.', () => {
-      @ValidateHeader('foobar', { type: 'string' }, { openapi: false, required: false })
+      @ValidateHeader('foobar', { type: 'string' }, { required: false, openapi: false })
       @ValidateHeader('barfoo', { type: 'string' }, { openapi: false })
       class Foobar {}
 
@@ -194,114 +264,71 @@ describe('ValidateHeader', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    function testClass(Foobar: Class) {
-      const actual = getApiParameters(Foobar);
-      const expected: IApiHeaderParameter[] = [
-        {
-          in: 'header',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'header',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
 
-      const actualResponses = getApiResponses(Foobar);
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateHeader('foobar', { type: 'string' }, { openapi: true, required: false })
-      @ValidateHeader('barfoo', { type: 'string' }, { openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+    it('with the proper api parameters (object).', () => {
       @ValidateHeader('foobar', { type: 'string' }, { required: false })
       @ValidateHeader('barfoo', { type: 'string' })
       class Foobar {}
 
-      testClass(Foobar);
-    });
+      const actual = getApiParameters(Foobar) || [];
 
-    function testMethod(Foobar: Class) {
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiHeaderParameter[] = [
-        {
-          in: 'header',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'header',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
-
-      const actualResponses = getApiResponses(Foobar, 'foo');
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateHeader('foobar', { type: 'string' }, { openapi: true, required: false })
-        @ValidateHeader('barfoo', { type: 'string' }, { openapi: true })
-        foo() {}
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'header',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
 
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @ValidateHeader('foobar', { type: 'string' }, { required: false })
-        @ValidateHeader('barfoo', { type: 'string' })
-        foo() {}
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
       }
-
-      testMethod(Foobar);
-    });
-
-    it('given schema is a function.', () => {
-      class Foobar {
-        schema = { type: 'string' };
-        @ValidateHeader('barfoo', c => c.schema, { openapi: true })
-        foo() {}
-      }
-
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiHeaderParameter = {
+      deepStrictEqual(actual[1](new Foobar()), {
         in: 'header',
         name: 'barfoo',
         required: true,
         schema: { type: 'string' }
-      };
-      if (actual === undefined) {
-        throw new Error('The Api parameters metadata should be defined.');
+      });
+    });
+
+    it('with the proper api parameters (function).', () => {
+      @ValidateHeader('foobar', (controller: Foobar) => controller.schema, { required: false })
+      @ValidateHeader('barfoo', (controller: Foobar) => controller.schema)
+      class Foobar {
+        schema = { type: 'string' };
       }
-      const schemaFn = actual[0];
-      if (typeof schemaFn !== 'function') {
-        throw new Error('The Api parameter metadata should be a function.');
+
+      const actual = getApiParameters(Foobar) || [];
+
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
-      deepStrictEqual(schemaFn(new Foobar()), expected);
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'header',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
+
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
+      }
+      deepStrictEqual(actual[1](new Foobar()), {
+        in: 'header',
+        name: 'barfoo',
+        required: true,
+        schema: { type: 'string' }
+      });
+    });
+
+    it('with the proper API responses.', () => {
+      @ValidateHeader('foobar', { type: 'string' }, { required: false })
+      @ValidateHeader('barfoo', { type: 'string' })
+      class Foobar {}
+
+      deepStrictEqual(getApiResponses(Foobar), {
+        400: { description: 'Bad request.' }
+      });
     });
 
   });
