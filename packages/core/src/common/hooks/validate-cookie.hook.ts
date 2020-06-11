@@ -1,6 +1,8 @@
 // FoalTS
-import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiCookieParameter, IApiSchema } from '../../openapi';
+import { ValidateFunction } from 'ajv';
+import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
+import { ApiParameter, ApiResponse, IApiCookieParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
 
@@ -21,42 +23,42 @@ export function ValidateCookie(
   schema: object | ((controller: any) => object) = { type: 'string' } ,
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
-  const ajv = getAjvInstance();
   const required = options.required !== false;
 
-  function validate(this: any, ctx: Context) {
-    const cookiesSchema = {
-      properties: {
-        [name]: isFunction(schema) ? schema(this) : schema
-      },
-      required: required ? [ name ] : [],
-      type: 'object',
-    };
-    if (!ajv.validate(cookiesSchema, ctx.request.cookies)) {
-      return new HttpResponseBadRequest({ cookies: ajv.errors });
+  let validateSchema: ValidateFunction|undefined;
+
+  function validate(this: any, ctx: Context, services: ServiceManager) {
+    if (!validateSchema) {
+      const ajvSchema = isFunction(schema) ? schema(this) : schema;
+      const components = services.get(OpenApi).getComponents(this);
+
+      validateSchema = getAjvInstance().compile({
+        components,
+        properties: {
+          [name]: ajvSchema
+        },
+        required: required ? [ name ] : [],
+        type: 'object',
+      });
+    }
+
+    if (!validateSchema(ctx.request.cookies)) {
+      return new HttpResponseBadRequest({ cookies: validateSchema.errors });
     }
   }
 
-  return (target: any, propertyKey?: string) =>  {
-    Hook(validate)(target, propertyKey);
+  const param: IApiCookieParameter = { in: 'cookie', name };
+  if (required) {
+    param.required = required;
+  }
 
-    if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
-    ) {
-      return;
-    }
+  const openapi = [
+    ApiParameter((c: any) => ({
+      ...param,
+      schema: isFunction(schema) ? schema(c) : schema
+    })),
+    ApiResponse(400, { description: 'Bad request.' })
+  ];
 
-    function makeParameter(schema: IApiSchema): IApiCookieParameter {
-      const result: IApiCookieParameter = { in: 'cookie', name, schema };
-      if (required) {
-        result.required = required;
-      }
-      return result;
-    }
-
-    const apiCookieParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
-
-    ApiParameter(apiCookieParameter)(target, propertyKey);
-    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
-  };
+  return Hook(validate, openapi, options);
 }
