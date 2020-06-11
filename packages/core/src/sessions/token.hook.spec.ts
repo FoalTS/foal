@@ -1,6 +1,10 @@
+// std
 import { deepStrictEqual, strictEqual } from 'assert';
+
+// FoalTS
 import {
-  Class, Context, getHookFunction,
+  Context,
+  getHookFunction,
   HttpResponseOK,
   isHttpResponse,
   isHttpResponseBadRequest,
@@ -9,7 +13,7 @@ import {
   ServiceManager
 } from '../core';
 import {
-  getApiComponents, getApiResponses, getApiSecurity, IApiComponents, IApiResponses, IApiSecurityRequirement
+  getApiComponents, getApiResponses, getApiSecurity, IApiComponents, IApiSecurityRequirement
 } from '../openapi';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { Session } from './session';
@@ -748,29 +752,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @Token({ store: Store })
-      class Foobar {}
-
-      strictEqual(getApiSecurity(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @Token({ store: Store })
-      class Foobar {}
-
-      strictEqual(getApiSecurity(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
-    });
-
     it('unless options.openapi is false.', () => {
-      @Token({ store: Store })
+      @Token({ store: Store, openapi: false })
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
@@ -778,112 +761,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
-    function testClass(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar, new Foobar());
-      const expectedComponents: IApiComponents = {
-        securitySchemes: {
-          bearerAuth: {
-            scheme: 'bearer',
-            type: 'http',
-          }
-        }
-      };
-      deepStrictEqual(actualComponents, expectedComponents);
-
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { bearerAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-
-        const actualResponses = getApiResponses(Foobar);
-        const expectedResponses: IApiResponses = {
-          401: { description: 'Auth token is missing or invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-        const actualResponses = getApiResponses(Foobar);
-        const expectedResponses: IApiResponses = {
-          401: { description: 'Auth token is invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      }
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @Token({ store: Store, openapi: true })
+    it('with the proper security scheme (cookie).', () => {
+      @Token({ store: Store, cookie: true })
       class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      @Token({ store: Store })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    function testMethod(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar, new Foobar(), 'foo');
-      const expectedComponents: IApiComponents = {
-        securitySchemes: {
-          bearerAuth: {
-            scheme: 'bearer',
-            type: 'http',
-          }
-        }
-      };
-      deepStrictEqual(actualComponents, expectedComponents);
-
-      const actualSecurityRequirements = getApiSecurity(Foobar, 'foo');
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { bearerAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-
-        const actualResponses = getApiResponses(Foobar, 'foo');
-        const expectedResponses: IApiResponses = {
-          401: { description: 'Auth token is missing or invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-        const actualResponses = getApiResponses(Foobar, 'foo');
-        const expectedResponses: IApiResponses = {
-          401: { description: 'Auth token is invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      }
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @Token({ store: Store, openapi: true })
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @Token({ store: Store })
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('which is different if options.cookie is true.', () => {
-      @Token({ store: Store, openapi: true, cookie: true })
-      class Foobar {}
-
+      
       const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
@@ -895,21 +776,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
+    })
 
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { cookieAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-      }
-    });
-
-    it('which is different if options.cookie is true (cookie name is not the default one).', () => {
+    it('with the proper security scheme (cookie) (cookie name different).', () => {
       process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
-      @Token({ store: Store, openapi: true, cookie: true })
+      @Token({ store: Store, cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -923,17 +794,85 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
+    })
 
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
+    it('with the proper security scheme (no cookie).', () => {
+      @Token({ store: Store })
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar, new Foobar());
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+    });
+
+    if (required) {
+
+      it('with the proper security requirement (cookie).', () => {
+        @Token({ store: Store, cookie: true })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
         const expectedSecurityRequirements: IApiSecurityRequirement[] = [
           { cookieAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      } else {
+      })
+  
+      it('with the proper security requirement (no cookie).', () => {
+        @Token({ store: Store })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      });
+
+      it('with the proper API responses.', () => {
+        @Token({ store: Store })
+        class Foobar {}
+  
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is missing or invalid.' }
+        });
+      });
+
+    } else {
+
+      it('with no security requirement (cookie).', () => {
+        @Token({ store: Store, cookie: true })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
         strictEqual(actualSecurityRequirements, undefined);
-      }
-    });
+      })
+  
+      it('with no security requirement (no cookie).', () => {
+        @Token({ store: Store })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
+        strictEqual(actualSecurityRequirements, undefined);
+      });
+
+      it('with the proper API responses.', () => {
+        @Token({ store: Store })
+        class Foobar {}
+  
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is invalid.' }
+        });
+      });
+
+    }
 
   });
 

@@ -10,6 +10,7 @@ import { removeSessionCookie } from './remove-session-cookie';
 import { Session } from './session';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
+import { ApiResponse, IApiSecurityScheme, ApiDefineSecurityScheme, ApiSecurityRequirement } from '../openapi';
 
 // TODO: Add missing documentation.
 
@@ -42,7 +43,7 @@ export interface TokenOptions {
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
-  return Hook(async (ctx: Context, services: ServiceManager) => {
+  async function hook(ctx: Context, services: ServiceManager) {
     const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
@@ -160,5 +161,48 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         setSessionCookie(response, session.getToken());
       }
     };
-  });
+  }
+
+  let securityScheme: IApiSecurityScheme;
+  if (options.cookie) {
+    securityScheme = {
+      in: 'cookie',
+      name: Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
+      type: 'apiKey',
+    };
+  } else {
+    securityScheme = {
+      scheme: 'bearer',
+      type: 'http',
+    };
+  }
+
+  const openapi = [
+    required ?
+      ApiResponse(401, { description: 'Auth token is missing or invalid.' }) :
+      ApiResponse(401, { description: 'Auth token is invalid.' })
+  ];
+
+  if (options.cookie) {
+    const securityScheme: IApiSecurityScheme = {
+      in: 'cookie',
+      name: Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
+      type: 'apiKey',
+    };
+    openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
+    }
+  } else {
+    const securityScheme: IApiSecurityScheme = {
+      scheme: 'bearer',
+      type: 'http',
+    };
+    openapi.push(ApiDefineSecurityScheme('bearerAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
+    }
+  }
+
+  return Hook(hook, openapi, { openapi: options.openapi });
 }
