@@ -2,9 +2,10 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, getApiResponses, IApiQueryParameter, IApiResponses } from '../../openapi';
+import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { getApiParameters, getApiResponses } from '../../openapi';
 import { ValidateQueryParam } from './validate-query-param.hook';
+import { OpenApi } from '../../core/openapi';
 
 describe('ValidateQueryParam', () => {
 
@@ -105,6 +106,49 @@ describe('ValidateQueryParam', () => {
         strictEqual(response, undefined);
       });
 
+      it('should use the OpenAPI components to validate the query parameter.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {}
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              query: { type: 'integer' }
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateQueryParam('foo', {
+          $ref: '#/components/schemas/query'
+        })).bind(controller);
+        const ctx = new Context({ query: { foo: 'a' } });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          query: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/query/type',
+            }
+          ]
+        });
+      });
+
     });
 
     describe('given schema is a function', () => {
@@ -141,6 +185,52 @@ describe('ValidateQueryParam', () => {
         strictEqual(response, undefined);
       });
 
+      it('should use the OpenAPI components to validate the query parameter.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {
+          schema = {
+            $ref: '#/components/schemas/query'
+          };
+        }
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              query: { type: 'integer' }
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateQueryParam('foo', controller => controller.schema))
+          .bind(controller);
+        const ctx = new Context({ query: { foo: 'a' } });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          query: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/query/type',
+            }
+          ]
+        });
+      });
+
     });
 
     it('should NOT return an HttpResponseBadRequest object if the schema validates the query parameter'
@@ -156,29 +246,8 @@ describe('ValidateQueryParam', () => {
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateQueryParam('foobar', { type: 'string' }, { required: false })
-      @ValidateQueryParam('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateQueryParam('foobar', { type: 'string' }, { required: false })
-      @ValidateQueryParam('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
     it('unless options.openapi is false.', () => {
-      @ValidateQueryParam('foobar', { type: 'string' }, { openapi: false, required: false })
+      @ValidateQueryParam('foobar', { type: 'string' }, { required: false, openapi: false })
       @ValidateQueryParam('barfoo', { type: 'string' }, { openapi: false })
       class Foobar {}
 
@@ -186,114 +255,70 @@ describe('ValidateQueryParam', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    function testClass(Foobar: Class) {
-      const actual = getApiParameters(Foobar);
-      const expected: IApiQueryParameter[] = [
-        {
-          in: 'query',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'query',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
-
-      const actualResponses = getApiResponses(Foobar);
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateQueryParam('foobar', { type: 'string' }, { openapi: true, required: false })
-      @ValidateQueryParam('barfoo', { type: 'string' }, { openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+    it('with the proper api parameters (object).', () => {
       @ValidateQueryParam('foobar', { type: 'string' }, { required: false })
       @ValidateQueryParam('barfoo', { type: 'string' })
       class Foobar {}
 
-      testClass(Foobar);
-    });
+      const actual = getApiParameters(Foobar) || [];
 
-    function testMethod(Foobar: Class) {
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiQueryParameter[] = [
-        {
-          in: 'query',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'query',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
-
-      const actualResponses = getApiResponses(Foobar, 'foo');
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateQueryParam('foobar', { type: 'string' }, { openapi: true, required: false })
-        @ValidateQueryParam('barfoo', { type: 'string' }, { openapi: true })
-        foo() {}
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'query',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
 
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @ValidateQueryParam('foobar', { type: 'string' }, { required: false })
-        @ValidateQueryParam('barfoo', { type: 'string' })
-        foo() {}
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
       }
-
-      testMethod(Foobar);
-    });
-
-    it('given schema is a function.', () => {
-      class Foobar {
-        schema = { type: 'string' };
-        @ValidateQueryParam('barfoo', c => c.schema, { openapi: true })
-        foo() {}
-      }
-
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiQueryParameter = {
+      deepStrictEqual(actual[1](new Foobar()), {
         in: 'query',
         name: 'barfoo',
         required: true,
         schema: { type: 'string' }
-      };
-      if (actual === undefined) {
-        throw new Error('The Api parameters metadata should be defined.');
+      });
+    });
+
+    it('with the proper api parameters (function).', () => {
+      @ValidateQueryParam('foobar', (controller: Foobar) => controller.schema, { required: false })
+      @ValidateQueryParam('barfoo', (controller: Foobar) => controller.schema)
+      class Foobar {
+        schema = { type: 'string' };
       }
-      const schemaFn = actual[0];
-      if (typeof schemaFn !== 'function') {
-        throw new Error('The Api parameter metadata should be a function.');
+
+      const actual = getApiParameters(Foobar) || [];
+
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
-      deepStrictEqual(schemaFn(new Foobar()), expected);
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'query',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
+
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
+      }
+      deepStrictEqual(actual[1](new Foobar()), {
+        in: 'query',
+        name: 'barfoo',
+        required: true,
+        schema: { type: 'string' }
+      });
+    });
+
+    it('with the proper API responses.', () => {
+      @ValidateQueryParam('foobar', { type: 'string' }, { required: false })
+      @ValidateQueryParam('barfoo', { type: 'string' })
+      class Foobar {}
+
+      deepStrictEqual(getApiResponses(Foobar), {
+        400: { description: 'Bad request.' }
+      });
     });
 
   });
