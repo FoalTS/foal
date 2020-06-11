@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // 3p
 import {
-  Class, Context, createApp, createService, ExpressApplication, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+  Context, createApp, createService, ExpressApplication, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
 } from '@foal/core';
 import * as request from 'supertest';
 
@@ -844,72 +844,19 @@ describe('ValidateMultipartFormDataBody', () => {
       }
     };
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateMultipartFormDataBody(schema)
-      class Foobar {}
-
-      deepStrictEqual(getApiRequestBody(Foobar), undefined);
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateMultipartFormDataBody(schema)
-      class Foobar {}
-
-      deepStrictEqual(getApiRequestBody(Foobar), undefined);
-    });
-
     it('unless options.openapi is false.', () => {
-      @ValidateMultipartFormDataBody(schema)
+      @ValidateMultipartFormDataBody(schema, { openapi: false })
       class Foobar {}
 
       deepStrictEqual(getApiRequestBody(Foobar), undefined);
     });
 
-    function testClass(Foobar: Class) {
+    it('with the proper request body.', () => {
+      @ValidateMultipartFormDataBody(schema)
+      class Foobar {}
+
       const actualRequestBody = getApiRequestBody(Foobar);
       deepStrictEqual(actualRequestBody, expectedRequestBody);
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateMultipartFormDataBody(schema, { openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      @ValidateMultipartFormDataBody(schema)
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    function testMethod(Foobar: Class) {
-      const actualRequestBody = getApiRequestBody(Foobar, 'foo');
-      deepStrictEqual(actualRequestBody, expectedRequestBody);
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateMultipartFormDataBody(schema, { openapi: true })
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @ValidateMultipartFormDataBody(schema)
-        foo() {}
-      }
-
-      testMethod(Foobar);
     });
 
   });
