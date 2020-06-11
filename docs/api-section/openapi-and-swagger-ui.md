@@ -270,7 +270,7 @@ export class ApiController {
   // Generate automatically the OpenAPI spec for the request body
   @ValidateBody(schema)
   // Choose to write a customize spec for the path parameters
-  @ValidateParams(schema2, { openapi: false })
+  @ValidatePathParam('id', schema2, { openapi: false })
   @ApiParameter( ... )
   createProducts() {
     // ...

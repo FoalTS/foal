@@ -2,9 +2,9 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
 import { OpenApi } from '../../core/openapi';
-import { getApiParameters, getApiResponses, IApiCookieParameter, IApiResponses } from '../../openapi';
+import { getApiParameters, getApiResponses } from '../../openapi';
 import { ValidateCookie } from './validate-cookie.hook';
 
 describe('ValidateCookie', () => {
