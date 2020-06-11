@@ -1,9 +1,8 @@
 // 3p
-import { ApiDefineSecurityScheme, ApiResponse, Config, HookDecorator, IApiSecurityScheme } from '@foal/core';
+import { HookDecorator } from '@foal/core';
 import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
 import { JWT, JWTOptions } from './jwt.hook';
 
 /**
@@ -29,31 +28,5 @@ import { JWT, JWTOptions } from './jwt.hook';
  * @returns {HookDecorator} The hook.
  */
 export function JWTOptional(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
-  return (target: any, propertyKey?: string) =>  {
-    JWT(false, options, verifyOptions)(target, propertyKey);
-
-    if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
-    ) {
-      return;
-    }
-
-    if (options.cookie) {
-      const securityScheme: IApiSecurityScheme = {
-        in: 'cookie',
-        name: Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
-        type: 'apiKey',
-      };
-      ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);
-    } else {
-      const securityScheme: IApiSecurityScheme = {
-        bearerFormat: 'JWT',
-        scheme: 'bearer',
-        type: 'http',
-      };
-      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
-    }
-
-    ApiResponse(401, { description: 'JWT is invalid.' })(target, propertyKey);
-  };
+  return JWT(false, options, verifyOptions);
 }

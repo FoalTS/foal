@@ -630,29 +630,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @JWT()
-      class Foobar {}
-
-      strictEqual(getApiSecurity(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @JWT()
-      class Foobar {}
-
-      strictEqual(getApiSecurity(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-      deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
-    });
-
     it('unless options.openapi is false.', () => {
-      @JWT()
+      @JWT({ openapi: false })
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
@@ -660,112 +639,9 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
-    function testClass(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar, new Foobar());
-      const expectedComponents: IApiComponents = {
-        securitySchemes: {
-          bearerAuth: {
-            bearerFormat: 'JWT',
-            scheme: 'bearer',
-            type: 'http',
-          }
-        }
-      };
-      deepStrictEqual(actualComponents, expectedComponents);
 
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { bearerAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-
-        const actualResponses = getApiResponses(Foobar);
-        const expectedResponses: IApiResponses = {
-          401: { description: 'JWT is missing or invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-        const actualResponses = getApiResponses(Foobar);
-        const expectedResponses: IApiResponses = {
-          401: { description: 'JWT is invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      }
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @JWT({ openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      @JWT()
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    function testMethod(Foobar: Class) {
-      const actualComponents = getApiComponents(Foobar, new Foobar(), 'foo');
-      const expectedComponents: IApiComponents = {
-        securitySchemes: {
-          bearerAuth: {
-            bearerFormat: 'JWT',
-            scheme: 'bearer',
-            type: 'http',
-          }
-        }
-      };
-      deepStrictEqual(actualComponents, expectedComponents);
-
-      const actualSecurityRequirements = getApiSecurity(Foobar, 'foo');
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { bearerAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-
-        const actualResponses = getApiResponses(Foobar, 'foo');
-        const expectedResponses: IApiResponses = {
-          401: { description: 'JWT is missing or invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-        const actualResponses = getApiResponses(Foobar, 'foo');
-        const expectedResponses: IApiResponses = {
-          401: { description: 'JWT is invalid.' }
-        };
-        deepStrictEqual(actualResponses, expectedResponses);
-      }
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @JWT({ openapi: true })
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @JWT()
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('which is different if options.cookie is true.', () => {
-      @JWT({ openapi: true, cookie: true })
+    it('with the proper security scheme (cookie).', () => {
+      @JWT({  cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -779,21 +655,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
+    })
 
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
-        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
-          { cookieAuth: [] }
-        ];
-        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-      }
-    });
-
-    it('which is different if options.cookie is true (cookie name is not the default one).', () => {
+    it('with the proper security scheme (cookie name different).', () => {
       process.env.SETTINGS_JWT_COOKIE_NAME = 'auth2';
-      @JWT({ openapi: true, cookie: true })
+      @JWT({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -807,17 +673,86 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
+    })
 
-      const actualSecurityRequirements = getApiSecurity(Foobar);
-      if (required) {
+    it('with the proper security scheme (no cookie).', () => {
+      @JWT()
+      class Foobar {}
+
+      const actualComponents = getApiComponents(Foobar, new Foobar());
+      const expectedComponents: IApiComponents = {
+        securitySchemes: {
+          bearerAuth: {
+            bearerFormat: 'JWT',
+            scheme: 'bearer',
+            type: 'http',
+          }
+        }
+      };
+      deepStrictEqual(actualComponents, expectedComponents);
+    })
+
+    if (required) {
+
+      it('with the proper security requirement (cookie).', () => {
+        @JWT({ cookie: true })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
         const expectedSecurityRequirements: IApiSecurityRequirement[] = [
           { cookieAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      } else {
-        strictEqual(actualSecurityRequirements, undefined);
-      }
-    });
+      })
+
+      it('with the proper security requirement (no cookie).', () => {
+        @JWT()
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
+        const expectedSecurityRequirements: IApiSecurityRequirement[] = [
+          { bearerAuth: [] }
+        ];
+        deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
+      })
+
+      it('with the proper API responses.', () => {
+        @JWT()
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'JWT is missing or invalid.' }
+        });
+      })
+
+    } else {
+
+      it('with no security requirement (cookie).', () => {
+        @JWT({ cookie: true })
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
+        strictEqual(actualSecurityRequirements, undefined)
+      })
+
+      it('with no security requirement (no cookie).', () => {
+        @JWT()
+        class Foobar {}
+
+        const actualSecurityRequirements = getApiSecurity(Foobar);
+        strictEqual(actualSecurityRequirements, undefined)
+      })
+
+      it('with the proper API responses.', () => {
+        @JWT()
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'JWT is invalid.' }
+        });
+      })
+
+    }
 
   });
 
