@@ -1,8 +1,10 @@
 // FoalTS
-import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiParameter, ApiResponse, IApiPathParameter, IApiSchema } from '../../openapi';
+import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { ApiParameter, ApiResponse } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
+import { ValidateFunction } from 'ajv';
+import { OpenApi } from '../../core/openapi';
 
 /**
  * Hook - Validate a specific path parameter against an AJV schema.
@@ -20,37 +22,37 @@ export function ValidatePathParam(
   schema: object | ((controller: any) => object),
   options: { openapi?: boolean } = {}
 ): HookDecorator {
-  const ajv = getAjvInstance();
+  let validateSchema: ValidateFunction|undefined;
 
-  function validate(this: any, ctx: Context) {
-    const paramsSchema = {
-      properties: {
-        [name]: isFunction(schema) ? schema(this) : schema
-      },
-      required: [ name ],
-      type: 'object',
-    };
-    if (!ajv.validate(paramsSchema, ctx.request.params)) {
-      return new HttpResponseBadRequest({ pathParams: ajv.errors });
+  function validate(this: any, ctx: Context, services: ServiceManager) {
+    if (!validateSchema) {
+      const ajvSchema = isFunction(schema) ? schema(this) : schema;
+      const components = services.get(OpenApi).getComponents(this);
+
+      validateSchema = getAjvInstance().compile({
+        components,
+        properties: {
+          [name]: ajvSchema
+        },
+        required: [ name ],
+        type: 'object',
+      })
+    }
+
+    if (!validateSchema(ctx.request.params)) {
+      return new HttpResponseBadRequest({ pathParams: validateSchema.errors });
     }
   }
 
-  return (target: any, propertyKey?: string) =>  {
-    Hook(validate)(target, propertyKey);
+  const openapi = [
+    ApiParameter((c: any) => ({
+      in: 'path',
+      name,
+      required: true,
+      schema: isFunction(schema) ? schema(c) : schema, 
+    })),
+    ApiResponse(400, { description: 'Bad request.' })
+  ]
 
-    if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
-    ) {
-      return;
-    }
-
-    function makeParameter(schema: IApiSchema): IApiPathParameter {
-      return { in: 'path', name, required: true, schema };
-    }
-
-    const apiPathParameter = isFunction(schema) ? (c: any) => makeParameter(schema(c)) : makeParameter(schema);
-
-    ApiParameter(apiPathParameter)(target, propertyKey);
-    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
-  };
+  return Hook(validate, openapi, options);
 }
