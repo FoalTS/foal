@@ -5,9 +5,16 @@ import { promisify } from 'util';
 
 // 3p
 import {
-  Class, Context, createHttpResponseFile, createOpenApiDocument,
-  dependency, Get, HttpResponseBadRequest,
-  HttpResponseMovedPermanently, HttpResponseNotFound, HttpResponseOK, ServiceManager
+  Class,
+  Context,
+  createHttpResponseFile,
+  dependency,
+  Get,
+  HttpResponseBadRequest,
+  HttpResponseMovedPermanently,
+  HttpResponseNotFound,
+  HttpResponseOK,
+  OpenApi,
 } from '@foal/core';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 
@@ -24,7 +31,7 @@ function isUrlOption(option: SwaggerController['options']): option is { url: str
  */
 export abstract class SwaggerController {
   @dependency
-  controllers: ServiceManager;
+  openApi: OpenApi;
 
   /**
    * Specify the OpenAPI Specification(s) and their location(s).
@@ -69,7 +76,7 @@ export abstract class SwaggerController {
     }
 
     if (!Array.isArray(this.options)) {
-      const document = createOpenApiDocument(this.options.controllerClass, this.controllers);
+      const document = this.openApi.getDocument(this.options.controllerClass);
       return new HttpResponseOK(document);
     }
 
@@ -83,7 +90,7 @@ export abstract class SwaggerController {
       return new HttpResponseNotFound();
     }
 
-    return new HttpResponseOK(createOpenApiDocument(option.controllerClass, this.controllers));
+    return new HttpResponseOK(this.openApi.getDocument(option.controllerClass));
   }
 
   /* UI */
