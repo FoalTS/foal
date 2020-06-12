@@ -1,5 +1,5 @@
-import { Class } from '../../core';
-import { getMetadata } from '../../core/routes/utils';
+import { Class } from '../../class.interface';
+import { getMetadata } from '../../routes/utils';
 import { IApiParameter, IApiReference } from '../interfaces';
 
 export function getApiParameters(controllerClass: Class, propertyKey?: string):

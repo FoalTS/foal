@@ -1,8 +1,17 @@
-// FoalTS
+// std
 import { ValidateFunction } from 'ajv';
-import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { OpenApi } from '../../core/openapi';
-import { ApiParameter, ApiResponse } from '../../openapi';
+
+// FoalTS
+import {
+  ApiParameter,
+  ApiResponse,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponseBadRequest,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
 

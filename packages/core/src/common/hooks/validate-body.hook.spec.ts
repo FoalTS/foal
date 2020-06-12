@@ -2,9 +2,16 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { OpenApi } from '../../core/openapi';
-import { getApiRequestBody, getApiResponses, IApiSchema } from '../../openapi';
+import {
+  Context,
+  getApiRequestBody,
+  getApiResponses,
+  getHookFunction,
+  HttpResponseBadRequest,
+  IApiSchema,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { ValidateBody } from './validate-body.hook';
 
 describe('ValidateBody', () => {

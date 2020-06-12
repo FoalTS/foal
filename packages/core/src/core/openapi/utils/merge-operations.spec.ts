@@ -1,5 +1,5 @@
 import { deepStrictEqual } from 'assert';
-import { IApiOperation } from '..';
+import { IApiOperation } from '../interfaces';
 import { mergeOperations } from './merge-operations';
 
 describe('mergeOperations', () => {

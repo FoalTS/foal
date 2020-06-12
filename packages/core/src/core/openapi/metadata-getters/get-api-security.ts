@@ -1,5 +1,5 @@
-import { Class } from '../../core';
-import { getMetadata } from '../../core/routes/utils';
+import { Class } from '../../class.interface';
+import { getMetadata } from '../../routes/utils';
 import { IApiSecurityRequirement } from '../interfaces';
 
 export function getApiSecurity(

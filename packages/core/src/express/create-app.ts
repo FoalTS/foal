@@ -127,8 +127,8 @@ export function createApp(
   app.foal = { services };
 
   // Resolve the controllers and hooks and add them to the express instance.
-  const routes = makeControllerRoutes('', [], AppController, services);
-  for (const route of routes) {
+  const routes = makeControllerRoutes(AppController, services);
+  for (const { route } of routes) {
     app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
 

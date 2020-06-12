@@ -1,4 +1,4 @@
-import { Class } from '../../core';
+import { Class } from '../../class.interface';
 import { IApiOperation } from '../interfaces';
 import { getApiCallbacks } from './get-api-callbacks';
 import { getApiDeprecated } from './get-api-deprecated';

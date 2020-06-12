@@ -1,8 +1,8 @@
-import { Class } from '../../core';
+import { Class } from '../../class.interface';
 
 import { IApiComponents } from '../interfaces';
 
-import { getMetadata } from '../../core/routes/utils';
+import { getMetadata } from '../../routes/utils';
 import { Dynamic } from '../utils';
 
 export function getApiComponents<T>(controllerClass: Class<T>, controller: T, propertyKey?: string): IApiComponents {

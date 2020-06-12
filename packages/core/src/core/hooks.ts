@@ -2,9 +2,9 @@
 import 'reflect-metadata';
 
 // FoalTS
-import { OpenApiDecorator } from '../openapi';
 import { Config } from './config';
 import { Context, HttpResponse } from './http';
+import { OpenApiDecorator } from './openapi';
 import { ServiceManager } from './service-manager';
 
 /**

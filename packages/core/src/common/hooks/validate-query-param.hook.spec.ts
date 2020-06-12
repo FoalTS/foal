@@ -2,9 +2,15 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { OpenApi } from '../../core/openapi';
-import { getApiParameters, getApiResponses } from '../../openapi';
+import {
+  Context,
+  getApiParameters,
+  getApiResponses,
+  getHookFunction,
+  HttpResponseBadRequest,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { ValidateQueryParam } from './validate-query-param.hook';
 
 describe('ValidateQueryParam', () => {

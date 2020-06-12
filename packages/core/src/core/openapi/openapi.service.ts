@@ -1,5 +1,5 @@
-import { IApiComponents, IOpenAPI } from '../../openapi';
 import { Class } from '../class.interface';
+import { IApiComponents, IOpenAPI } from './interfaces';
 
 export class OpenApi {
 

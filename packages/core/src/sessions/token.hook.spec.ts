@@ -4,17 +4,19 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import {
   Context,
+  getApiComponents,
+  getApiResponses,
+  getApiSecurity,
   getHookFunction,
   HttpResponseOK,
+  IApiComponents,
+  IApiSecurityRequirement,
   isHttpResponse,
   isHttpResponseBadRequest,
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
-import {
-  getApiComponents, getApiResponses, getApiSecurity, IApiComponents, IApiSecurityRequirement
-} from '../openapi';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { Session } from './session';
 import { SessionStore } from './session-store';

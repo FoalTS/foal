@@ -2,7 +2,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { getMetadata } from '../core/routes/utils';
+import { getMetadata } from '../routes/utils';
 import {
   ApiCallback, ApiDefineCallback, ApiDefineExample, ApiDefineHeader,
   ApiDefineLink, ApiDefineParameter, ApiDefineRequestBody, ApiDefineResponse,

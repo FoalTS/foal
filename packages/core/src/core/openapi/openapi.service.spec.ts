@@ -1,6 +1,9 @@
+// std
 import { deepStrictEqual, strictEqual, throws } from 'assert';
-import { IApiComponents, IOpenAPI } from '../../openapi';
+
+// FoalTS
 import { createService } from '../service-manager';
+import { IApiComponents, IOpenAPI } from './interfaces';
 import { OpenApi } from './openapi.service';
 
 describe('OpenApi', () => {
