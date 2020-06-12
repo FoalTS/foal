@@ -3,9 +3,17 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import {
-  Class, ConfigNotFoundError, Context,
-  getApiComponents, getApiResponses, getApiSecurity, getHookFunction, IApiComponents,
-  IApiResponses, IApiSecurityRequirement, isHttpResponseBadRequest, isHttpResponseUnauthorized, ServiceManager
+  ConfigNotFoundError,
+  Context,
+  getApiComponents,
+  getApiResponses,
+  getApiSecurity,
+  getHookFunction,
+  IApiComponents,
+  IApiSecurityRequirement,
+  isHttpResponseBadRequest,
+  isHttpResponseUnauthorized,
+  ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
@@ -639,7 +647,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       deepStrictEqual(getApiComponents(Foobar, new Foobar()), {});
     });
 
-
     it('with the proper security scheme (cookie).', () => {
       @JWT({  cookie: true })
       class Foobar {}
@@ -655,7 +662,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
-    })
+    });
 
     it('with the proper security scheme (cookie name different).', () => {
       process.env.SETTINGS_JWT_COOKIE_NAME = 'auth2';
@@ -673,7 +680,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
-    })
+    });
 
     it('with the proper security scheme (no cookie).', () => {
       @JWT()
@@ -690,7 +697,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
-    })
+    });
 
     if (required) {
 
@@ -703,7 +710,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           { cookieAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      })
+      });
 
       it('with the proper security requirement (no cookie).', () => {
         @JWT()
@@ -714,7 +721,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           { bearerAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      })
+      });
 
       it('with the proper API responses.', () => {
         @JWT()
@@ -723,7 +730,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'JWT is missing or invalid.' }
         });
-      })
+      });
 
     } else {
 
@@ -732,16 +739,16 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
-        strictEqual(actualSecurityRequirements, undefined)
-      })
+        strictEqual(actualSecurityRequirements, undefined);
+      });
 
       it('with no security requirement (no cookie).', () => {
         @JWT()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
-        strictEqual(actualSecurityRequirements, undefined)
-      })
+        strictEqual(actualSecurityRequirements, undefined);
+      });
 
       it('with the proper API responses.', () => {
         @JWT()
@@ -750,7 +757,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'JWT is invalid.' }
         });
-      })
+      });
 
     }
 

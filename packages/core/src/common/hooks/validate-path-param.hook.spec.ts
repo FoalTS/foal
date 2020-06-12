@@ -3,9 +3,9 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
 import { getApiParameters, getApiResponses } from '../../openapi';
 import { ValidatePathParam } from './validate-path-param.hook';
-import { OpenApi } from '../../core/openapi';
 
 describe('ValidatePathParam', () => {
 

@@ -764,7 +764,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     it('with the proper security scheme (cookie).', () => {
       @Token({ store: Store, cookie: true })
       class Foobar {}
-      
+
       const actualComponents = getApiComponents(Foobar, new Foobar());
       const expectedComponents: IApiComponents = {
         securitySchemes: {
@@ -776,7 +776,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
-    })
+    });
 
     it('with the proper security scheme (cookie) (cookie name different).', () => {
       process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
@@ -794,7 +794,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         }
       };
       deepStrictEqual(actualComponents, expectedComponents);
-    })
+    });
 
     it('with the proper security scheme (no cookie).', () => {
       @Token({ store: Store })
@@ -823,8 +823,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           { cookieAuth: [] }
         ];
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
-      })
-  
+      });
+
       it('with the proper security requirement (no cookie).', () => {
         @Token({ store: Store })
         class Foobar {}
@@ -839,7 +839,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('with the proper API responses.', () => {
         @Token({ store: Store })
         class Foobar {}
-  
+
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is missing or invalid.' }
         });
@@ -853,8 +853,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
         strictEqual(actualSecurityRequirements, undefined);
-      })
-  
+      });
+
       it('with no security requirement (no cookie).', () => {
         @Token({ store: Store })
         class Foobar {}
@@ -866,7 +866,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('with the proper API responses.', () => {
         @Token({ store: Store })
         class Foobar {}
-  
+
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is invalid.' }
         });

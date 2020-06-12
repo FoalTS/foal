@@ -1,7 +1,7 @@
 // 3p
 import {
-  Config, Hook, HookDecorator,
-  HttpResponseBadRequest, HttpResponseUnauthorized, Context, ApiResponse, IApiSecurityScheme, ApiDefineSecurityScheme, ApiSecurityRequirement
+  ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
+  Config, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseUnauthorized, IApiSecurityScheme
 } from '@foal/core';
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
@@ -188,6 +188,6 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
     }
   }
-  
+
   return Hook(hook, openapi, { openapi: options.openapi });
 }

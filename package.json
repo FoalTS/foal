@@ -6,6 +6,7 @@
   },
   "scripts": {
     "lint": "tslint -c tslint.json --project tsconfig.json",
+    "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix",
     "start-docker": "docker stack deploy -c docker-compose.yml dev",
     "stop-docker": "docker stack rm dev"
   },

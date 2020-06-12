@@ -5,12 +5,12 @@ import {
   HttpResponseUnauthorized,
   ServiceManager
 } from '../core';
+import { ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement, IApiSecurityScheme } from '../openapi';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
 import { Session } from './session';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
-import { ApiResponse, IApiSecurityScheme, ApiDefineSecurityScheme, ApiSecurityRequirement } from '../openapi';
 
 // TODO: Add missing documentation.
 
@@ -160,20 +160,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       if (options.cookie) {
         setSessionCookie(response, session.getToken());
       }
-    };
-  }
-
-  let securityScheme: IApiSecurityScheme;
-  if (options.cookie) {
-    securityScheme = {
-      in: 'cookie',
-      name: Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
-      type: 'apiKey',
-    };
-  } else {
-    securityScheme = {
-      scheme: 'bearer',
-      type: 'http',
     };
   }
 

@@ -3,7 +3,16 @@ import { extname } from 'path';
 
 // 3p
 import {
-  ApiRequestBody, Config, getAjvInstance, Hook, HookDecorator, HttpResponseBadRequest, IApiRequestBody, IApiSchema, Context, ServiceManager
+  ApiRequestBody,
+  Config,
+  Context,
+  getAjvInstance,
+  Hook,
+  HookDecorator,
+  HttpResponseBadRequest,
+  IApiRequestBody,
+  IApiSchema,
+  ServiceManager
 } from '@foal/core';
 import * as Busboy from 'busboy';
 
@@ -39,7 +48,6 @@ async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () =
   }
   return {};
 }
-
 
 export function ValidateMultipartFormDataBody(
   schema: MultipartFormDataSchema, options: { openapi?: boolean } = {}
@@ -255,4 +263,4 @@ export function ValidateMultipartFormDataBody(
   ];
 
   return Hook(hook, openapi, options);
-};
+}

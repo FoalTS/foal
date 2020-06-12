@@ -1,10 +1,10 @@
 // FoalTS
+import { ValidateFunction } from 'ajv';
 import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
 import { ApiParameter, ApiResponse, IApiHeaderParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
-import { ValidateFunction } from 'ajv';
-import { OpenApi } from '../../core/openapi';
 
 /**
  * Hook - Validate a specific header against an AJV schema.
@@ -23,9 +23,10 @@ export function ValidateHeader(
   schema: object | ((controller: any) => object) = { type: 'string' },
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
+  // tslint:disable-next-line
   const required = options.required ?? true;
   name = name.toLowerCase();
-  
+
   let validateSchema: ValidateFunction|undefined;
 
   function validate(this: any, ctx: Context, services: ServiceManager) {
@@ -40,7 +41,7 @@ export function ValidateHeader(
         },
         required: required ? [ name ] : [],
         type: 'object',
-      })
+      });
     }
     if (!validateSchema(ctx.request.headers)) {
       return new HttpResponseBadRequest({ headers: validateSchema.errors });
@@ -58,7 +59,7 @@ export function ValidateHeader(
       schema: isFunction(schema) ? schema(c) : schema
     })),
     ApiResponse(400, { description: 'Bad request.' })
-  ]
+  ];
 
   return Hook(validate, openapi, options);
 }

@@ -1,10 +1,10 @@
 // FoalTS
+import { ValidateFunction } from 'ajv';
 import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
 import { ApiParameter, ApiResponse, IApiQueryParameter } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
-import { ValidateFunction } from 'ajv';
-import { OpenApi } from '../../core/openapi';
 
 /**
  * Hook - Validate a specific query parameter against an AJV schema.
@@ -23,8 +23,9 @@ export function ValidateQueryParam(
   schema: object | ((controller: any) => object) = { type: 'string' },
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
+  // tslint:disable-next-line
   const required = options.required ?? true;
-  
+
   let validateSchema: ValidateFunction|undefined;
 
   function validate(this: any, ctx: Context, services: ServiceManager) {
@@ -39,9 +40,9 @@ export function ValidateQueryParam(
         },
         required: required ? [ name ] : [],
         type: 'object',
-      })
+      });
     }
-    
+
     if (!validateSchema(ctx.request.query)) {
       return new HttpResponseBadRequest({ query: validateSchema.errors });
     }
@@ -58,7 +59,7 @@ export function ValidateQueryParam(
       schema: isFunction(schema) ? schema(c) : schema
     })),
     ApiResponse(400, { description: 'Bad request.' })
-  ]
+  ];
 
   return Hook(validate, openapi, options);
 }

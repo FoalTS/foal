@@ -46,6 +46,7 @@ export function Hook(
     hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
 
+    // tslint:disable-next-line
     if (!(options.openapi ?? Config.get('settings.openapi.useHooks', 'boolean', true))) {
       return;
     }

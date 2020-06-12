@@ -1,10 +1,10 @@
 // FoalTS
+import { ValidateFunction } from 'ajv';
 import { Context, Hook, HookDecorator, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
 import { ApiParameter, ApiResponse } from '../../openapi';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
-import { ValidateFunction } from 'ajv';
-import { OpenApi } from '../../core/openapi';
 
 /**
  * Hook - Validate a specific path parameter against an AJV schema.
@@ -36,7 +36,7 @@ export function ValidatePathParam(
         },
         required: [ name ],
         type: 'object',
-      })
+      });
     }
 
     if (!validateSchema(ctx.request.params)) {
@@ -49,10 +49,10 @@ export function ValidatePathParam(
       in: 'path',
       name,
       required: true,
-      schema: isFunction(schema) ? schema(c) : schema, 
+      schema: isFunction(schema) ? schema(c) : schema,
     })),
     ApiResponse(400, { description: 'Bad request.' })
-  ]
+  ];
 
   return Hook(validate, openapi, options);
 }

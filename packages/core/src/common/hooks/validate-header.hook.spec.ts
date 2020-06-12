@@ -3,9 +3,9 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
+import { OpenApi } from '../../core/openapi';
 import { getApiParameters, getApiResponses } from '../../openapi';
 import { ValidateHeader } from './validate-header.hook';
-import { OpenApi } from '../../core/openapi';
 
 describe('ValidateHeader', () => {
 
@@ -204,7 +204,6 @@ describe('ValidateHeader', () => {
       strictEqual(response, undefined);
     });
 
-
     it('should use the OpenAPI components to validate the header.', () => {
       const services = new ServiceManager();
       const openApi = services.get(OpenApi);
@@ -263,7 +262,6 @@ describe('ValidateHeader', () => {
       strictEqual(getApiParameters(Foobar), undefined);
       strictEqual(getApiResponses(Foobar), undefined);
     });
-
 
     it('with the proper api parameters (object).', () => {
       @ValidateHeader('foobar', { type: 'string' }, { required: false })
