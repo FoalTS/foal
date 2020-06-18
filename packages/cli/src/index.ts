@@ -40,7 +40,7 @@ program
   .description('Create a new project.')
   .option('-G, --no-git', 'Don\'t initialize a git repository')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
-  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite', false)
+  .option('-m, --mongodb', 'Generate a new project using MongoDB instead of SQLite', false)
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
   .action((name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
     createApp({

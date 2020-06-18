@@ -20,55 +20,52 @@ import {
   ValidateBody,
   verifyPassword
 } from '@foal/core';
-import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb';
-import { connect, disconnect, Document, Model, model, Schema } from 'mongoose';
+import { RedisStore } from '@foal/redis';
+import * as redis from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
-import { fetchUser } from '@foal/mongoose';
+import { fetchMongoDBUser } from '@foal/typeorm';
+import {
+  Column,
+  Connection,
+  createConnection,
+  Entity,
+  getMongoRepository,
+  ObjectID,
+  ObjectIdColumn
+} from '@foal/typeorm/node_modules/typeorm';
 
-describe('[Sample] Mongoose DB & MongoDB Store', async () => {
-
-  const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
+describe('[Sample] MongoDB & Redis Store', async () => {
 
   let app: ExpressApplication;
   let token: string;
-  let mongoClient: MongoClient;
+  let redisClient: redis.RedisClient;
 
-  const UserSchema: Schema = new Schema({
-    email: {
-      required: true,
-      type: String,
-      unique: true
-    },
-    isAdmin: {
-      required: true,
-      type: Boolean,
-    },
-    password: {
-      required: true,
-      type: String,
-    },
-  });
+  @Entity()
+  class User {
+    @ObjectIdColumn()
+    id: ObjectID;
 
-  interface IUser extends Document {
+    @Column({ unique: true })
     email: string;
+
+    @Column()
     password: string;
+
+    @Column()
     isAdmin: boolean;
   }
 
-  const UserModel: Model<IUser> = model('User', UserSchema);
-
   function AdminRequired() {
-    return Hook((ctx: Context<IUser>) => {
+    return Hook((ctx: Context<User>) => {
       if (!ctx.user.isAdmin) {
         return new HttpResponseForbidden();
       }
     });
   }
 
-  @TokenRequired({ user: fetchUser(UserModel), store: MongoDBStore })
+  @TokenRequired({ user: fetchMongoDBUser(User), store: RedisStore })
   class MyController {
     @Get('/foo')
     foo() {
@@ -84,10 +81,10 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
 
   class AuthController {
     @dependency
-    store: MongoDBStore;
+    store: RedisStore;
 
     @Post('/logout')
-    @TokenOptional({ store: MongoDBStore })
+    @TokenOptional({ store: RedisStore })
     async logout(ctx: Context) {
       if (ctx.session) {
         await ctx.session.destroy();
@@ -107,7 +104,7 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
       type: 'object',
     })
     async login(ctx: Context) {
-      const user = await UserModel.findOne({ email: ctx.request.body.email });
+      const user = await getMongoRepository(User).findOne({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -116,7 +113,8 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
-      const session = await this.store.createAndSaveSessionFromUser({ id: user._id });
+
+      const session = await this.store.createAndSaveSessionFromUser({ id: user.id.toString() });
       return new HttpResponseOK({
         token: session.getToken()
       });
@@ -130,35 +128,47 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
     ];
   }
 
+  let connection: Connection;
+
   before(async () => {
     process.env.SETTINGS_SESSION_SECRET = 'session-secret';
     process.env.MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
-    await connect(MONGODB_URI, { useNewUrlParser: true, useCreateIndex: true });
-
-    mongoClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
-
-    await new Promise((resolve, reject) => {
-      UserModel.deleteMany({}, err => err ? reject(err) : resolve());
+    connection = await createConnection({
+      database: 'e2e_db',
+      dropSchema: true,
+      entities: [User],
+      host: 'localhost',
+      port: 27017,
+      type: 'mongodb',
     });
 
-    await mongoClient.db().collection('foalSessions').deleteMany({});
+    redisClient = redis.createClient();
 
-    const user = new UserModel();
+    await new Promise((resolve, reject) => {
+      redisClient.flushdb((err, success) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(success);
+      });
+    });
+
+    const user = new User();
     user.email = 'john@foalts.org';
     user.password = await hashPassword('password');
     user.isAdmin = false;
-    await user.save();
+    await getMongoRepository(User).save(user);
 
     app = createApp(AppController);
   });
 
-  after(async () => {
+  after(() => {
     delete process.env.SETTINGS_SESSION_SECRET;
     delete process.env.MONGODB_URI;
     return Promise.all([
-      disconnect(),
-      (await app.foal.services.get(MongoDBStore).getMongoDBInstance()).close(),
-      mongoClient.close()
+      connection.close(),
+      app.foal.services.get(RedisStore).getRedisInstance().end(true),
+      redisClient.end(true)
     ]);
   });
 
@@ -204,13 +214,13 @@ describe('[Sample] Mongoose DB & MongoDB Store', async () => {
 
     /* Add the admin group and permission */
 
-    const user2 = await UserModel.findOne({ email: 'john@foalts.org' });
+    const user2 = await getMongoRepository(User).findOne({ email: 'john@foalts.org' });
     if (!user2) {
       throw new Error('John was not found in the database.');
     }
 
     user2.isAdmin = true;
-    await user2.save();
+    await getMongoRepository(User).save(user2);
 
     /* Access the route that requires a specific permission */
 
