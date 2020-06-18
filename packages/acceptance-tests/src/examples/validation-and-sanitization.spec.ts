@@ -355,12 +355,12 @@ describe('[Docs] Input Validation & Sanitization', () => {
     it('Sanitization Example', () => {
       class AppController {
 
-        @Get('/no-sanitization')
+        @Post('/no-sanitization')
         noSanitization(ctx: Context) {
           return new HttpResponseOK(ctx.request.body);
         }
 
-        @Get('/sanitization')
+        @Post('/sanitization')
         @ValidateBody({
           additionalProperties: false,
           properties: {

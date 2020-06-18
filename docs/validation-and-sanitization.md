@@ -396,16 +396,16 @@ export class AppController {
 ### Sanitization Example
 
 ```typescript
-import { Context, Get, HttpResponseOK, ValidateBody } from '@foal/core';
+import { Context, HttpResponseOK, Post, ValidateBody } from '@foal/core';
 
 export class AppController {
 
-  @Get('/no-sanitization')
+  @Post('/no-sanitization')
   noSanitization(ctx: Context) {
     return new HttpResponseOK(ctx.request.body);
   }
 
-  @Get('/sanitization')
+  @Post('/sanitization')
   @ValidateBody({
     additionalProperties: false,
     properties: {
@@ -428,8 +428,8 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 
 | Request | Response  |
 | --- | --- |
-| GET `/no-sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }`| `{ name: 'Alex', age: '34', city: 'Paris' }`
-| GET `/sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }` | `{ name: 'Alex', age: 34 }`
+| POST `/no-sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }`| `{ name: 'Alex', age: '34', city: 'Paris' }`
+| POST `/sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }` | `{ name: 'Alex', age: 34 }`
 
 ## With a Validation Class (class-validator)
 
