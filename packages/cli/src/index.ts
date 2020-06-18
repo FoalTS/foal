@@ -19,7 +19,6 @@ import {
   createController,
   createEntity,
   createHook,
-  createModel,
   createRestApi,
   createScript,
   createService,
@@ -98,9 +97,9 @@ program
     }
   });
 
-type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'model'|'sub-app'|'script'|'service'|'vscode-config';
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'sub-app'|'script'|'service'|'vscode-config';
 const generateTypes: GenerateType[] = [
-  'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config'
+  'controller', 'entity', 'rest-api', 'hook', 'sub-app', 'script', 'service', 'vscode-config'
 ];
 
 program
@@ -142,9 +141,6 @@ program
           break;
         case 'hook':
           createHook({ name });
-          break;
-        case 'model':
-          createModel({ name });
           break;
         case 'sub-app':
           createSubApp({ name });
