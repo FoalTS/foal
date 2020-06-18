@@ -13,7 +13,6 @@ cd ../graphql && npm run test
 cd ../jwks-rsa && npm run test
 cd ../jwt && npm run test
 cd ../mongodb && npm run test
-cd ../mongoose && npm run test
 cd ../password && npm run test
 cd ../redis && npm run test
 cd ../social && npm run test
