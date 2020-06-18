@@ -283,7 +283,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 - The hook must be provided a function that takes a string id (the `subject`) as parameter and returns the value of the `Context.user`. If the function returns `undefined`, the hooks returns an error *401 - UNAUTHORIZED*.
 
-  *Example with TypeORM*
+  *Example with TypeORM (SQL database)*
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
@@ -302,20 +302,20 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   }
   ```
 
-  *Example with Mongoose*
+  *Example with TypeORM (MongoDB)*
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
-  import { fetchUser } from '@foal/mongoose';
+  import { fetchMongoDBUser } from '@foal/typeorm';
 
-  import { User } from '../models';
+  import { User } from '../entities';
 
-  // fetchUser fetches the user from the database using the model User. It returns an instance of User.
-  @JWTRequired({ user: fetchUser(User) })
+  // fetchMongoDBUser fetches the user from the database using the entity User. It returns an instance of User.
+  @JWTRequired({ user: fetchMongoDBUser(User) })
   export class ApiController {
     @Get('/do-something')
     get(ctx: Context) {
-      // ctx.user is the instance returned by fetchUser.
+      // ctx.user is the instance returned by fetchMongoDBUser.
       // ...
     }
   }

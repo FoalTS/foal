@@ -8,7 +8,7 @@ foal createapp my-app
 
 Create a new directory with all the required files to get started.
 
-If you specify the flag `--mongodb`, the new project will use `mongoose` and `@foal/mongoose` in place of `typeorm` and `@foal/typeorm`. You can find more information [here](../databases/using-mongoose.md).
+If you specify the flag `--mongodb`, the CLI will generate a new project using MongoDB instead of SQLite.
 
 If you specify the flag `--yaml`, the new project will use YAML format for its configuration files. You can find more information [here](../deployment-and-environments/configuration.md).
 
@@ -90,14 +90,6 @@ foal g entity <name>
 ```
 
 Create a new entity in `./src/app/entities`, in `./entities` or in the current directory depending on which folders are found.
-
-## Create a model (only for Mongoose)
-
-```shell
-foal g model <name>
-```
-
-Create a new model in `./src/app/models`, in `./models` or in the current directory depending on which folders are found.
 
 ## Create REST API
 
