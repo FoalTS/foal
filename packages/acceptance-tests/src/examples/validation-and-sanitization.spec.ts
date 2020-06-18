@@ -383,12 +383,12 @@ describe('[Docs] Input Validation & Sanitization', () => {
           .post('/no-sanitization')
           .send({ name: 'Alex', age: '34', city: 'Paris' })
           .expect(200)
-          .expect({ name: 'Alex', apiKey: '34', city: 'Paris' }),
+          .expect({ name: 'Alex', age: '34', city: 'Paris' }),
         request(app)
           .post('/sanitization')
           .send({ name: 'Alex', age: '34', city: 'Paris' })
           .expect(200)
-          .expect({ name: 'Alex', apiKey: 34 }),
+          .expect({ name: 'Alex', age: 34 }),
       ]);
     });
 
