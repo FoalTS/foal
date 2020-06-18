@@ -12,10 +12,6 @@ import { JWTOptional, JWTRequired } from '@foal/jwt';
 
 describe('Foal', () => {
 
-  beforeEach(() => process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true');
-
-  afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
   it('should generate OpenAPI spec from hooks.', () => {
 
     @ApiInfo({

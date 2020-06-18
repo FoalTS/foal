@@ -5,8 +5,8 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
-import { ApiUseTag, getApiUsedTags } from '../openapi';
 import { getHookFunction, getHookFunctions, Hook, HookFunction, MergeHooks } from './hooks';
+import { ApiUseTag, getApiUsedTags } from './openapi';
 
 describe('Hook', () => {
 

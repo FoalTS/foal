@@ -125,13 +125,8 @@ export function* makeControllerRoutes(
       document.externalDocs = operation.externalDocs;
     }
 
-    if (Object.keys(controllerComponents).length > 0) {
-      document.components = controllerComponents;
-    }
-
-    if (controllerTags) {
-      document.tags = controllerTags;
-    }
+    document.components = controllerComponents;
+    document.tags = controllerTags;
   }
 
   documentControllers = document ? [] : documentControllers;
@@ -198,6 +193,12 @@ export function* makeControllerRoutes(
 
   /* OpenAPI */
   if (document) {
+    if (document.components && Object.keys(document.components).length === 0) {
+      delete document.components;
+    }
+    if (document.tags && Object.keys(document.tags).length === 0) {
+      delete document.tags;
+    }
     throwErrorIfDuplicatePaths(document.paths);
     openApi.addDocument(controllerClass, document, documentControllers);
   }

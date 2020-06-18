@@ -450,7 +450,10 @@ describe('makeControllerRoutes', () => {
 
     it('with the components if they exist.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController {
+        @Get('/foo')
+        foo() {}
+      }
 
       class AppController {
         subControllers = [
@@ -510,7 +513,10 @@ describe('makeControllerRoutes', () => {
 
     it('with the tags if they exist.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController {
+        @Get('/foo')
+        foo() {}
+      }
 
       class AppController {
         subControllers = [
