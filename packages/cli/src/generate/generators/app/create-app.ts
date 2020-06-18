@@ -110,8 +110,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
       .ensureDir('src')
       .cd('src')
       .copy('app/src/e2e.ts', 'e2e.ts')
-      .copyOnlyIf(mongodb, 'app/src/index.mongodb.ts', 'index.ts')
-      .copyOnlyIf(!mongodb, 'app/src/index.ts', 'index.ts')
+      .copy('app/src/index.ts', 'index.ts')
       .copy('app/src/test.ts', 'test.ts')
         // App
         .ensureDir('app')
@@ -125,21 +124,16 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
           .copy('app/src/app/controllers/api.controller.spec.ts', 'api.controller.spec.ts')
           .cd('..')
           // Entities
-          .ensureDirOnlyIf(!mongodb, 'entities')
+          .ensureDir('entities')
           .cd('entities')
           .copyOnlyIf(!mongodb, 'app/src/app/entities/index.ts', 'index.ts')
           .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
           .cd('..')
+          // TODO: MongoDB entities
           // Hooks
           .ensureDir('hooks')
           .cd('hooks')
           .copy('app/src/app/hooks/index.ts', 'index.ts')
-          .cd('..')
-          // Models
-          .ensureDirOnlyIf(mongodb, 'models')
-          .cd('models')
-          .copyOnlyIf(mongodb, 'app/src/app/models/index.ts', 'index.ts')
-          .copyOnlyIf(mongodb, 'app/src/app/models/user.model.ts', 'user.model.ts')
           .cd('..')
           // Services
           .ensureDir('services')
@@ -150,8 +144,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         // E2E
         .ensureDir('e2e')
         .cd('e2e')
-        .copyOnlyIf(!mongodb, 'app/src/e2e/index.ts', 'index.ts')
-        .copyOnlyIf(mongodb, 'app/src/e2e/index.mongodb.ts', 'index.ts')
+        .copy('app/src/e2e/index.ts', 'index.ts')
         .cd('..')
         // Scripts
         .ensureDir('scripts')

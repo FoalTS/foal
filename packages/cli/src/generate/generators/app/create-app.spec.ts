@@ -103,14 +103,6 @@ describe('createApp', () => {
       .assertEqual('index.ts', 'app/src/e2e/index.ts');
   });
 
-  it('shoud copy the src/e2e templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
-
-    fs
-      .cd('test-foo-bar/src/e2e')
-      .assertEqual('index.ts', 'app/src/e2e/index.mongodb.ts');
-  });
-
   it('shoud copy the src/scripts templates.', async () => {
     await createApp({ name: 'test-fooBar' });
 
@@ -152,19 +144,7 @@ describe('createApp', () => {
       .cd('test-foo-bar/src/app/entities')
       .assertEqual('index.ts', 'app/src/app/entities/index.ts')
       .assertEqual('user.entity.ts', 'app/src/app/entities/user.entity.ts')
-      .cd('..')
-      .assertNotExists('models');
-  });
-
-  it('should render the src/app/models templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
-
-    fs
-      .cd('test-foo-bar/src/app/models')
-      .assertEqual('index.ts', 'app/src/app/models/index.ts')
-      .assertEqual('user.model.ts', 'app/src/app/models/user.model.ts')
-      .cd('..')
-      .assertNotExists('entities');
+      .cd('..');
   });
 
   it('should render the src/app/services templates.', async () => {
@@ -190,16 +170,6 @@ describe('createApp', () => {
       .cd('test-foo-bar/src')
       .assertEqual('e2e.ts', 'app/src/e2e.ts')
       .assertEqual('index.ts', 'app/src/index.ts')
-      .assertEqual('test.ts', 'app/src/test.ts');
-  });
-
-  it('should render the src templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
-
-    fs
-      .cd('test-foo-bar/src')
-      .assertEqual('e2e.ts', 'app/src/e2e.ts')
-      .assertEqual('index.ts', 'app/src/index.mongodb.ts')
       .assertEqual('test.ts', 'app/src/test.ts');
   });
 
