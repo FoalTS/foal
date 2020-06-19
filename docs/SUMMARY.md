@@ -38,10 +38,10 @@
   * [Hooks](./architecture/hooks.md)
   * [Initialization](./architecture/initialization.md)
 * Databases
-  * [SQL Databases (TypeORM)](./databases/typeorm.md)
+  * [SQL Databases](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-  * [MongoDB (TypeORM)](./databases/mongodb.md)
+  * [NoSQL](./databases/mongodb.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Quick Start](./authentication-and-access-control/quick-start.md)
