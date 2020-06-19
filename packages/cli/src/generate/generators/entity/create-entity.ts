@@ -14,9 +14,12 @@ export function createEntity({ name }: { name: string }) {
 
   const names = getNames(name);
 
+  const isMongoDBProject = fs.projectHasDependency('mongodb');
+
   fs
     .cd(root)
-    .render('entity/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .renderOnlyIf(!isMongoDBProject, 'entity/entity.ts', `${names.kebabName}.entity.ts`, names)
+    .renderOnlyIf(isMongoDBProject, 'entity/entity.mongodb.ts', `${names.kebabName}.entity.ts`, names)
     .ensureFile('index.ts')
     .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
 }
