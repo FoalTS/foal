@@ -70,7 +70,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .copyOnlyIf(!mongodb, 'app/ormconfig.js', 'ormconfig.js')
+    .copy('app/ormconfig.js', 'ormconfig.js')
     .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
     .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
     .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
@@ -126,8 +126,9 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
           // Entities
           .ensureDir('entities')
           .cd('entities')
-          .copyOnlyIf(!mongodb, 'app/src/app/entities/index.ts', 'index.ts')
+          .copy('app/src/app/entities/index.ts', 'index.ts')
           .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
+          .copyOnlyIf(mongodb, 'app/src/app/entities/user.entity.mongodb.ts', 'user.entity.ts')
           .cd('..')
           // TODO: MongoDB entities
           // Hooks

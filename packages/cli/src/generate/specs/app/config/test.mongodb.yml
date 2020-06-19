@@ -1,2 +1,2 @@
-mongodb:
-  uri: mongodb://localhost:27017/test-test-foo-bar
+database:
+  url: mongodb://localhost:27017/test-test-foo-bar

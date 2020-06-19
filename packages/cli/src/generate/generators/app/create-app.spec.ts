@@ -147,6 +147,16 @@ describe('createApp', () => {
       .cd('..');
   });
 
+  it('should render the src/app/entities templates (MongoDB).', async () => {
+    await createApp({ name: 'test-fooBar', mongodb: true });
+
+    fs
+      .cd('test-foo-bar/src/app/entities')
+      .assertEqual('index.ts', 'app/src/app/entities/index.ts')
+      .assertEqual('user.entity.ts', 'app/src/app/entities/user.entity.mongodb.ts')
+      .cd('..');
+  });
+
   it('should render the src/app/services templates.', async () => {
     await createApp({ name: 'test-fooBar' });
 
@@ -210,7 +220,7 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertNotExists('ormconfig.js')
+      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.mongodb.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')
@@ -226,7 +236,7 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertNotExists('ormconfig.js')
+      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.mongodb.yaml.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')

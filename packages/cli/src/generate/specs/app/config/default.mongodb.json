@@ -10,7 +10,8 @@
       }
     }
   },
-  "mongodb": {
-    "uri": "mongodb://localhost:27017/test-foo-bar"
+  "database": {
+    "type": "mongodb",
+    "url": "mongodb://localhost:27017/test-foo-bar"
   }
 }
