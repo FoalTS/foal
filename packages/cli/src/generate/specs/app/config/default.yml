@@ -9,5 +9,5 @@ settings:
       sameSite: lax
 
 database:
+  type: sqlite
   database: './db.sqlite3'
-  synchronize: false

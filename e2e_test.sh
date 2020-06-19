@@ -122,7 +122,7 @@ function test_rest_api_with_body () {
 foal run create-user
 
 #################################################################
-# Repeat (almost) the same tests with a Mongoose and YAML project
+# Repeat (almost) the same tests with a MongoDB and YAML project
 #################################################################
 
 cd ..

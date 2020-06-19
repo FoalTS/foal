@@ -11,7 +11,7 @@
     }
   },
   "database": {
-    "database": "./db.sqlite3",
-    "synchronize": false
+    "type": "sqlite",
+    "database": "./db.sqlite3"
   }
 }

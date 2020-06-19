@@ -10,8 +10,8 @@ export function createRestApi({ name, register, auth }: { name: string, register
 
   const fs = new FileSystem();
 
-  if (fs.projectHasDependency('mongoose')) {
-    throw new ClientError('"foal generate|g rest-api <name>" cannot be used in a Mongoose project.');
+  if (fs.projectHasDependency('mongodb')) {
+    throw new ClientError('"foal generate|g rest-api <name>" cannot be used in a MongoDB project.');
   }
 
   let entityRoot = '';

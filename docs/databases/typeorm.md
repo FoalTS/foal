@@ -1,7 +1,5 @@
 # TypeORM
 
-> *FoalTS components using TypeORM officially support the following databases: PostgreSQL, MySQL, MariaDB and SQLite*.
-
 *A simple model:*
 ```typescript
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -34,10 +32,19 @@ Here is a non-exhaustive list of its features:
 - transactions
 - etc
 
-TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Microsoft SQL Server / Oracle / sql.js) as well as the MongoDB NoSQL database.
-
 > Although this documentation presents the basic features of TypeORM, you may be interested in reading the [official documentation](https://typeorm.io/) to learn more advanced features.
 
+## Supported Databases
+
+FoalTS supports officially the following databases:
+
+| Database | Versions |
+| --- | --- |
+| PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) |
+| MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) |
+| MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) |
+| SQLite | 3 |
+| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) |
 
 ## Use with FoalTS
 
