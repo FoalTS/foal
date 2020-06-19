@@ -136,11 +136,7 @@ class ApiController {
 >
 > ```typescript
 > const token = // ...
-> const sessionID = Session.verifyTokenAndGetId(token);
-> if (!sessionID) {
->   throw new Error('Invalid session token.');
-> }
-> const session = await store.read(sessionID);
+> const session = await store.read(token);
 > if (!session) {
 >   throw new Error('Session does not exist or has expired.')
 > }
@@ -306,30 +302,16 @@ import { createConnection } from 'typeorm';
 export const schema = {
   type: 'object',
   properties: {
-    sessionID: { type: 'string' },
     token: { type: 'string' },
-  }
+  },
+  required: [ 'token' ]
 }
 
-export async function main(args: { sessionID?: string, token?: string }) {
-  if (!args.sessionID && !args.token) {
-    console.error('You must provide the session token or session ID.');
-    return;
-  }
-  
+export async function main(args: { token: string }) {
   await createConnection();
 
-  if (!args.sessionID) {
-    const sessionID = Session.verifyTokenAndGetId(args.token);
-    if (!sessionID) {
-      console.error('Invalid session token');
-      return;
-    }
-    args.sessionID = sessionID;
-  }
-
   const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
-  await store.destroy(args.sessionID);
+  await store.destroy(args.token);
 }
 ```
 

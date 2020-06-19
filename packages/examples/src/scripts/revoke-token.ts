@@ -14,12 +14,5 @@ export const schema = {
 
 export async function main({ token }: { token: string }) {
   await createConnection(require('../../ormconfig.json'));
-
-  const sessionID = Session.verifyTokenAndGetId(token);
-  if (!sessionID) {
-    console.log('Invalid token');
-    return;
-  }
-
-  await createService(TypeORMStore).destroy(sessionID);
+  await createService(TypeORMStore).destroy(token);
 }
