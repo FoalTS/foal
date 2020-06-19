@@ -4,7 +4,7 @@ import { strictEqual } from 'assert';
 // 3p
 import {
   Context,
-  createApp,
+  createAndInitApp,
   dependency,
   ExpressApplication,
   Get,
@@ -159,7 +159,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     user.isAdmin = false;
     await getMongoRepository(User).save(user);
 
-    app = createApp(AppController);
+    app = await createAndInitApp(AppController);
   });
 
   after(() => {

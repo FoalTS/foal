@@ -76,7 +76,7 @@ main();
 
 ## The services `boot` method
 
-> `boot` methods are available in v1.8.0 onwards.
+> warning: version 2
 
 Alternatively you can add a `boot` method in your services. This method can be synchronous or asynchronous.
 
@@ -91,31 +91,14 @@ export class ServiceA {
 }
 ```
 
-Then, you have to call the `boot` method of your service manager (it will be automatically called starting from version 2).
+Boot methods are executed before `AppController.init` gets called.
 
-```typescript
-import { createAndInitApp } from '@foal/core';
-
-async function main() {
-  const serviceManager = new ServiceManager();
-  const app = createApp(AppController, {
-    serviceManager
-  });
-  // This line calls the `boot` method of all your services that have one.
-  await serviceManager.boot();
-
-  // ...
-}
-
-main();
-```
-
-If you manually inject services to your service manager and you want their `boot` methods to be called, you must specify this in the `set` method options.
-
-```typescript
-const serviceManager = new ServiceManager();
-serviceManager.set(ServiceA, myServiceInstance, { boot: true })
-```
+> If you manually inject services to your service manager and you want their `boot` methods to be called, you must specify this in the `set` method options.
+> 
+> ```typescript
+> const serviceManager = new ServiceManager();
+> serviceManager.set(ServiceA, myServiceInstance, { boot: true })
+> ```
 
 ## Best Practices
 
