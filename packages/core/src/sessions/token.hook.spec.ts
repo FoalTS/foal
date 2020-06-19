@@ -60,12 +60,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   before(() => services = new ServiceManager());
 
   afterEach(() => {
-    delete process.env.SETTINGS_SESSION_SECRET;
     delete process.env.SETTINGS_SESSION_COOKIE_NAME;
   });
 
   beforeEach(() => {
-    process.env.SETTINGS_SESSION_SECRET = secret;
     services.get(Store).clear();
   });
 

@@ -10,27 +10,6 @@ A session usually begins when the user logs in and ends after a period of inacti
 
 ## Get Started
 
-### Provide a Secret
-
-In order to use sessions, you must provide a base64-encoded secret in either:
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    settings:
-      session:
-        secret: xxx
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    SETTINGS_SESSION_SECRET=xxx
-    ```
-
-You can generate such a secret with the CLI command:
-```
-foal createsecret
-```
-
 ### Choose a Session Store
 
 Then you have to choose where the temporary session state will be stored. FoalTS provides several *session stores* for this. For example, you can use the `TypeORMStore` to save the sessions in your SQL database or the `RedisStore` to save them in a redis cache.

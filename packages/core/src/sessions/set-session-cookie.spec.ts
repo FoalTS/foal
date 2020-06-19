@@ -11,10 +11,6 @@ describe('setSessionCookie', () => {
   let token: string;
   let response: HttpResponse;
 
-  before(() => process.env.SETTINGS_SESSION_SECRET = 'secret');
-
-  after(() => delete process.env.SETTINGS_SESSION_SECRET);
-
   beforeEach(() => {
     response = new HttpResponseOK();
     token = 'xxx';
