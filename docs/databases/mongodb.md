@@ -10,32 +10,35 @@ foal createapp my-app --mongodb
 
 ## Configuration
 
-*ormconfig.js*
-```js
-const { Config } = require('@foal/core');
-
-module.exports = {
-  type: "mongodb",
-  database: Config.get('database.database', 'string'),
-  dropSchema: Config.get('database.dropSchema', 'boolean', false),
-  entities: ["build/app/**/*.entity.js"],
-  host: Config.get('database.host', 'string'),
-  port: Config.get('database.port', 'number'),
-  synchronize: Config.get('database.synchronize', 'boolean', false)
-}
-
+```
+npm install mongodb
 ```
 
-*config/default.json*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+database:
+  type: mongodb
+  url: mongodb://localhost:27017/test-foo-bar
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "database": {
-    "database": "mydb",
-    "host": "localhost",
-    "port": 27017
+    "type": "mongodb",
+    "url": "mongodb://localhost:27017/test-foo-bar"
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+DATABASE_TYPE=mongodb
+DATABASE_URL=mongodb://localhost:27017/test-foo-bar
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Defining Entities and Columns
 
@@ -59,6 +62,13 @@ export class User {
     lastName: string;
     
 }
+```
+
+*Example*
+```typescript
+import { getMongoRepository } from 'typeorm';
+
+const user = await getMongoRepository(User).findOne('xxxx');
 ```
 
 ## Authentication
