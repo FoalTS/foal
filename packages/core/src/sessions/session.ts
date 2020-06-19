@@ -1,6 +1,4 @@
 // FoalTS
-import { signToken } from '../common';
-import { Config } from '../core';
 import { SessionStore } from './session-store';
 
 /**
@@ -78,19 +76,14 @@ export class Session {
   }
 
   /**
-   * Get the session token. This token is used by `@TokenRequired` and `@TokenOptional` to retreive
+   * Get the session ID. This ID is used by `@TokenRequired` and `@TokenOptional` to retreive
    * the session and the authenticated user if she/he exists.
    *
    * @returns {string} - The session token.
    * @memberof Session
    */
   getToken(): string {
-    const secret = Config.getOrThrow(
-      'settings.session.secret',
-      'string',
-      'You must provide a secret when using sessions.'
-    );
-    return signToken(this.sessionID, secret);
+    return this.sessionID;
   }
 
   /**
