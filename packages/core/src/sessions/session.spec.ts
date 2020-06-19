@@ -156,52 +156,6 @@ describe('Session', () => {
 
   });
 
-  describe('has a static "verifyTokenAndGetId" method that', () => {
-
-    afterEach(() => delete process.env.SETTINGS_SESSION_SECRET);
-
-    it('should throw an Error is the configuration key `settings.session.secret` is not defined.', () => {
-      try {
-        Session.verifyTokenAndGetId('xxx.yyy');
-        throw new Error('Session.getToken should have thrown an Error.');
-      } catch (error) {
-        if (!(error instanceof ConfigNotFoundError)) {
-          throw new Error('A ConfigNotFoundError should have been thrown');
-        }
-        strictEqual(error.key, 'settings.session.secret');
-        strictEqual(error.msg, 'You must provide a secret when using sessions.');
-      }
-    });
-
-    it('should return false if the token is not a string.', () => {
-      process.env.SETTINGS_SESSION_SECRET = 'a';
-      strictEqual(Session.verifyTokenAndGetId(3 as any), false);
-    });
-
-    it('should return false if the token format is invalid.', () => {
-      process.env.SETTINGS_SESSION_SECRET = 'a';
-      strictEqual(Session.verifyTokenAndGetId('xxx'), false);
-      strictEqual(Session.verifyTokenAndGetId('.xxx'), false);
-      strictEqual(Session.verifyTokenAndGetId('xxx.'), false);
-      strictEqual(Session.verifyTokenAndGetId('.'), false);
-    });
-
-    it('should verify the token and return false if the signature is incorrect.', () => {
-      process.env.SETTINGS_SESSION_SECRET = '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY';
-      const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZOaaaHS9VepB5dyhJiUIPaa2wfk';
-
-      strictEqual(Session.verifyTokenAndGetId(token), false);
-    });
-
-    it('should verify the token and return the session ID if the signature is correct.', () => {
-      process.env.SETTINGS_SESSION_SECRET = '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY';
-      const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk';
-
-      strictEqual(Session.verifyTokenAndGetId(token), '-_BmZmZmZmZmZmZmZmZmZg');
-    });
-
-  });
-
   describe('has a "getContent" method that', () => {
 
     it('should return a copy of the session content', () => {
