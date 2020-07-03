@@ -54,6 +54,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   const hook = getHookFunction(Token({ store: Store }));
 
+  const secret = 'my_secret';
   let services: ServiceManager;
 
   before(() => services = new ServiceManager());

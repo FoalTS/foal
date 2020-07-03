@@ -1,5 +1,5 @@
 // 3p
-import { createService } from '@foal/core';
+import { createService, Session } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
