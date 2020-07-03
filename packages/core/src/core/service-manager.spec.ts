@@ -27,16 +27,16 @@ describe('dependency', () => {
     }
 
     const expectedDependenciesA: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: MyService1 },
-      { propertyKey: 'myService2', serviceClass: MyService2 },
+      { propertyKey: 'myService1', serviceClassOrID: MyService1 },
+      { propertyKey: 'myService2', serviceClassOrID: MyService2 },
     ];
     const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
     const expectedDependenciesB: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: MyService1 },
-      { propertyKey: 'myService3', serviceClass: MyService3 },
+      { propertyKey: 'myService1', serviceClassOrID: MyService1 },
+      { propertyKey: 'myService3', serviceClassOrID: MyService3 },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
@@ -68,16 +68,16 @@ describe('Dependency', () => {
     }
 
     const expectedDependenciesA: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: 'service 1' },
-      { propertyKey: 'myService2', serviceClass: 'service 2' },
+      { propertyKey: 'myService1', serviceClassOrID: 'service 1' },
+      { propertyKey: 'myService2', serviceClassOrID: 'service 2' },
     ];
     const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
     const expectedDependenciesB: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: 'service 1' },
-      { propertyKey: 'myService3', serviceClass: 'service 3' },
+      { propertyKey: 'myService1', serviceClassOrID: 'service 1' },
+      { propertyKey: 'myService3', serviceClassOrID: 'service 3' },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
