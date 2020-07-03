@@ -1,1 +1,1 @@
-export { createApp, createAndInitApp, ExpressApplication } from './create-app';
+export { createApp, createAndInitApp, ExpressApplication, OPENAPI_SERVICE_ID } from './create-app';

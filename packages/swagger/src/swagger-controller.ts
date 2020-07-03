@@ -9,12 +9,14 @@ import {
   Context,
   createHttpResponseFile,
   dependency,
+  Dependency,
   Get,
   HttpResponseBadRequest,
   HttpResponseMovedPermanently,
   HttpResponseNotFound,
   HttpResponseOK,
   OpenApi,
+  OPENAPI_SERVICE_ID,
 } from '@foal/core';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 
@@ -30,7 +32,7 @@ function isUrlOption(option: SwaggerController['options']): option is { url: str
  * @class SwaggerController
  */
 export abstract class SwaggerController {
-  @dependency
+  @Dependency(OPENAPI_SERVICE_ID)
   openApi: OpenApi;
 
   /**

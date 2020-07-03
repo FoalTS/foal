@@ -8,13 +8,14 @@ import { Readable } from 'stream';
 import {
   ApiInfo,
   Context,
-  createApp,
   getHttpMethod,
   getPath,
   isHttpResponseBadRequest,
   isHttpResponseMovedPermanently,
   isHttpResponseNotFound,
   isHttpResponseOK,
+  OpenApi,
+  OPENAPI_SERVICE_ID,
   ServiceManager
 } from '@foal/core';
 
@@ -75,7 +76,13 @@ describe('SwaggerController', () => {
         }
 
         const services = new ServiceManager();
-        createApp(ApiController, { serviceManager: services });
+        const openApi = services.get(OpenApi);
+        openApi.addDocument(ApiController, {
+          info,
+          openapi: '3.0.0',
+          paths: {}
+        });
+        services.set(OPENAPI_SERVICE_ID, openApi);
 
         const controller = services.get(ConcreteClass);
         const response = controller.getOpenApiDefinition(ctx);
@@ -148,7 +155,13 @@ describe('SwaggerController', () => {
         }
 
         const services = new ServiceManager();
-        createApp(ApiController, { serviceManager: services });
+        const openApi = services.get(OpenApi);
+        openApi.addDocument(ApiController, {
+          info,
+          openapi: '3.0.0',
+          paths: {}
+        });
+        services.set(OPENAPI_SERVICE_ID, openApi);
 
         const controller = services.get(ConcreteClass);
         const ctx = new Context({ query: { name: 'v2' } });
