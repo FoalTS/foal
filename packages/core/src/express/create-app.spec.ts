@@ -1,5 +1,5 @@
 // std
-import { doesNotThrow, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 import { Buffer } from 'buffer';
 
 // 3p
@@ -9,7 +9,7 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import {
-  Context, Delete, dependency, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager
+  Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
 } from '../core';
 import { createAndInitApp, createApp, OPENAPI_SERVICE_ID } from './create-app';
 
@@ -427,7 +427,7 @@ describe('createApp', () => {
       serviceManager
     });
 
-    doesNotThrow(() => serviceManager.get(OPENAPI_SERVICE_ID));
+    strictEqual(serviceManager.get(OPENAPI_SERVICE_ID), serviceManager.get(OpenApi));
   });
 
 });
