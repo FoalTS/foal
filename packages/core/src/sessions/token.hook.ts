@@ -7,7 +7,6 @@ import {
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
-import { Session } from './session';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
@@ -47,7 +46,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Validate the request */
 
-    let token: string;
+    let sessionID: string;
     if (options.cookie) {
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
@@ -61,7 +60,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         return new InvalidRequestResponse('Session cookie not found.');
       }
 
-      token = content;
+      sessionID = content;
     } else {
       const authorizationHeader = ctx.request.get('Authorization') || '';
 
@@ -83,21 +82,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         return new InvalidRequestResponse('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
       }
 
-      token = content;
-    }
-
-    /* Verify the token */
-
-    const sessionID = Session.verifyTokenAndGetId(token);
-    if (!sessionID) {
-      let response: HttpResponse = new InvalidTokenResponse('invalid token');
-      if (options.redirectTo) {
-        response = new HttpResponseRedirect(options.redirectTo);
-      }
-      if (options.cookie) {
-        removeSessionCookie(response);
-      }
-      return response;
+      sessionID = content;
     }
 
     /* Verify the session ID */
