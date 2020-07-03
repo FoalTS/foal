@@ -92,6 +92,10 @@ Too often, tests are set aside in web projects. Considered secondary, many frame
 
 Building a proof of concept or a global application is not the same thing. The first one tests an idea and must be built quickly. The other is a large production system that must be reliable and serve thousands of customers. They both have different objectives and technical concerns. However, it is highly likely that the PoC built today will one day become the global application of tomorrow, with evolving technical goals and needs. FoalTS is designed to support you along the way. At first, the framework provides a default configuration, lightweight components and practical templates to quickly start a new project. Then, as the application evolves, Foal's components, tools and architecture adapt to allow you to customize and scale your product.
 
+## Backers
+
+![backers](./backers.png)
+
 ## Community Chat
 
 You can join the community chat [here](https://discord.gg/QUrJv98).
