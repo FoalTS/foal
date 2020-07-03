@@ -70,7 +70,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .copyOnlyIf(!mongodb, 'app/ormconfig.js', 'ormconfig.js')
+    .copy('app/ormconfig.js', 'ormconfig.js')
     .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
     .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
     .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
@@ -110,8 +110,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
       .ensureDir('src')
       .cd('src')
       .copy('app/src/e2e.ts', 'e2e.ts')
-      .copyOnlyIf(mongodb, 'app/src/index.mongodb.ts', 'index.ts')
-      .copyOnlyIf(!mongodb, 'app/src/index.ts', 'index.ts')
+      .copy('app/src/index.ts', 'index.ts')
       .copy('app/src/test.ts', 'test.ts')
         // App
         .ensureDir('app')
@@ -125,21 +124,17 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
           .copy('app/src/app/controllers/api.controller.spec.ts', 'api.controller.spec.ts')
           .cd('..')
           // Entities
-          .ensureDirOnlyIf(!mongodb, 'entities')
+          .ensureDir('entities')
           .cd('entities')
-          .copyOnlyIf(!mongodb, 'app/src/app/entities/index.ts', 'index.ts')
+          .copy('app/src/app/entities/index.ts', 'index.ts')
           .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
+          .copyOnlyIf(mongodb, 'app/src/app/entities/user.entity.mongodb.ts', 'user.entity.ts')
           .cd('..')
+          // TODO: MongoDB entities
           // Hooks
           .ensureDir('hooks')
           .cd('hooks')
           .copy('app/src/app/hooks/index.ts', 'index.ts')
-          .cd('..')
-          // Models
-          .ensureDirOnlyIf(mongodb, 'models')
-          .cd('models')
-          .copyOnlyIf(mongodb, 'app/src/app/models/index.ts', 'index.ts')
-          .copyOnlyIf(mongodb, 'app/src/app/models/user.model.ts', 'user.model.ts')
           .cd('..')
           // Services
           .ensureDir('services')
@@ -150,8 +145,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         // E2E
         .ensureDir('e2e')
         .cd('e2e')
-        .copyOnlyIf(!mongodb, 'app/src/e2e/index.ts', 'index.ts')
-        .copyOnlyIf(mongodb, 'app/src/e2e/index.mongodb.ts', 'index.ts')
+        .copy('app/src/e2e/index.ts', 'index.ts')
         .cd('..')
         // Scripts
         .ensureDir('scripts')
@@ -163,8 +157,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     log('');
     log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-    // TODO: in version 2, remove the hack "--ignore-engines"
-    const args = [ 'install', '--ignore-engines' ];
+    const args = [ 'install' ];
     const options: SpawnOptions = {
       cwd: names.kebabName,
       shell: true,

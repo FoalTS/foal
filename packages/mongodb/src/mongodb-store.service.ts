@@ -18,13 +18,24 @@ export interface DatabaseSession {
 export class MongoDBStore extends SessionStore {
 
   private mongoDBClient: any;
+  private collection: any;
+
+  async boot() {
+    const mongoDBURI = Config.getOrThrow(
+      'mongodb.uri',
+      'string',
+      'You must provide the URI of your database when using MongoDBStore.'
+    );
+    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
+    this.collection = this.mongoDBClient.db().collection('foalSessions');
+  }
 
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
     await this.applySessionOptions(sessionContent, options);
 
     const date = Date.now();
-    await (await this.getSessionCollection()).insertOne({
+    await this.collection.insertOne({
       _id: sessionID,
       createdAt: date,
       sessionContent,
@@ -35,7 +46,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async update(session: Session): Promise<void> {
-    await (await this.getSessionCollection()).updateOne(
+    await this.collection.updateOne(
       {
         _id: session.sessionID
       },
@@ -50,13 +61,13 @@ export class MongoDBStore extends SessionStore {
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await (await this.getSessionCollection()).deleteOne({ _id: sessionID });
+    await this.collection.deleteOne({ _id: sessionID });
   }
 
   async read(sessionID: string): Promise<Session | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
-    const sessions = await (await this.getSessionCollection()).find({ _id: sessionID }).toArray();
+    const sessions = await this.collection.find({ _id: sessionID }).toArray();
     if (sessions.length === 0) {
       return undefined;
     }
@@ -76,7 +87,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
-    await (await this.getSessionCollection()).updateOne(
+    await this.collection.updateOne(
       { _id: sessionID },
       {
         $set: {
@@ -87,12 +98,12 @@ export class MongoDBStore extends SessionStore {
   }
 
   async clear(): Promise<void> {
-    await (await this.getSessionCollection()).deleteMany({});
+    await this.collection.deleteMany({});
   }
 
   async cleanUpExpiredSessions(): Promise<void> {
     const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await (await this.getSessionCollection()).deleteMany({
+    await this.collection.deleteMany({
       $or: [
         { createdAt: { $lt: Date.now() - expiredTimeouts.absolute * 1000 } },
         { updatedAt: { $lt: Date.now() - expiredTimeouts.inactivity * 1000 } }
@@ -100,21 +111,14 @@ export class MongoDBStore extends SessionStore {
     });
   }
 
-  async getMongoDBInstance(): Promise<any> {
-    if (!this.mongoDBClient) {
-      const mongoDBURI = Config.getOrThrow(
-        'mongodb.uri',
-        'string',
-        'You must provide the URI of your database when using MongoDBStore.'
-      );
-      this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
-    }
+  /**
+   * This method should only be used to close the MongoDB connection.
+   *
+   * @returns {*} The MongoDB connection.
+   * @memberof MongoDBStore
+   */
+  getMongoDBInstance(): any {
     return this.mongoDBClient;
-  }
-
-  private async getSessionCollection(): Promise<any> {
-    const mongoClient = await this.getMongoDBInstance();
-    return mongoClient.db().collection('foalSessions');
   }
 
 }

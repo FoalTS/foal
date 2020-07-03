@@ -1,10 +1,9 @@
 // 3p
-import { Config } from '@foal/core';
 // import { isCommon } from '@foal/password';
-import { connect, disconnect } from 'mongoose';
+import { createConnection, getConnection, getMongoManager } from 'typeorm';
 
 // App
-import { User } from '../app/models';
+import { User } from '../app/entities';
 
 export const schema = {
   additionalProperties: false,
@@ -25,16 +24,15 @@ export async function main(/*args*/) {
   // }
   // await user.setPassword(args.password);
 
-  const uri = Config.getOrThrow('mongodb.uri', 'string');
-  await connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
+  await createConnection();
 
   try {
     console.log(
-      await user.save()
+      await getMongoManager().save(user)
     );
   } catch (error) {
     console.log(error.message);
   } finally {
-    await disconnect();
+    await getConnection().close();
   }
 }

@@ -19,7 +19,6 @@ import {
   createController,
   createEntity,
   createHook,
-  createModel,
   createRestApi,
   createScript,
   createService,
@@ -41,7 +40,7 @@ program
   .description('Create a new project.')
   .option('-G, --no-git', 'Don\'t initialize a git repository')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
-  .option('-m, --mongodb', 'Generate a new project using Mongoose/MongoDB instead of TypeORM/SQLite', false)
+  .option('-m, --mongodb', 'Generate a new project using MongoDB instead of SQLite', false)
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
   .action((name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
     createApp({
@@ -98,9 +97,9 @@ program
     }
   });
 
-type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'model'|'sub-app'|'script'|'service'|'vscode-config';
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'sub-app'|'script'|'service'|'vscode-config';
 const generateTypes: GenerateType[] = [
-  'controller', 'entity', 'rest-api', 'hook', 'model', 'sub-app', 'script', 'service', 'vscode-config'
+  'controller', 'entity', 'rest-api', 'hook', 'sub-app', 'script', 'service', 'vscode-config'
 ];
 
 program
@@ -142,9 +141,6 @@ program
           break;
         case 'hook':
           createHook({ name });
-          break;
-        case 'model':
-          createModel({ name });
           break;
         case 'sub-app':
           createSubApp({ name });

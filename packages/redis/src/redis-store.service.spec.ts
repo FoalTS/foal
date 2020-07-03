@@ -12,13 +12,15 @@ describe('RedisStore', () => {
   const REDIS_URI = 'redis://localhost:6379';
   let redisClient: any;
 
-  before(() => {
+  before(async () => {
+    process.env.REDIS_URI = REDIS_URI;
+
     redisClient = createClient(REDIS_URI);
     store = createService(RedisStore);
+    await store.boot();
   });
 
   beforeEach(async () => {
-    process.env.REDIS_URI = REDIS_URI;
     await new Promise((resolve, reject) => {
       redisClient.flushdb((err: any, success: any) => {
         if (err) {
@@ -29,12 +31,14 @@ describe('RedisStore', () => {
     });
   });
 
-  afterEach(() => delete process.env.REDIS_URI);
+  after(() => {
+    delete process.env.REDIS_URI;
 
-  after(() => Promise.all([
-    redisClient.end(true),
-    store.getRedisInstance().end(true)
-  ]));
+    return Promise.all([
+      redisClient.end(true),
+      store.getRedisInstance().end(true)
+    ]);
+  });
 
   function asyncSet(key: string, value: string) {
     return new Promise((resolve, reject) => {

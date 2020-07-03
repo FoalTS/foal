@@ -23,9 +23,9 @@
   },
   "dependencies": {
     "@foal/core": "^1.0.0",
-    "@foal/mongoose": "^1.0.0",
-    "mongoose": "^5.4.9",
-    "source-map-support": "^0.5.1"
+    "mongodb": "~3.5.0",
+    "source-map-support": "^0.5.1",
+    "typeorm": "0.2.24"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.1",

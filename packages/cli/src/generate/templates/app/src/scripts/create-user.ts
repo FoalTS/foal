@@ -1,7 +1,7 @@
 // 3p
 // import { Group, Permission } from '@foal/typeorm';
 // import { isCommon } from '@foal/password';
-import { createConnection, getConnection, getManager, /*getRepository*/ } from 'typeorm';
+import { createConnection, getConnection, getManager } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -32,7 +32,7 @@ export async function main(/*args*/) {
   await createConnection();
 
   // for (const codeName of args.userPermissions as string[]) {
-  //   const permission = await getRepository(Permission).findOne({ codeName });
+  //   const permission = await Permission.findOne({ codeName });
   //   if (!permission) {
   //     console.log(`No permission with the code name "${codeName}" was found.`);
   //     return;
@@ -41,7 +41,7 @@ export async function main(/*args*/) {
   // }
 
   // for (const codeName of args.groups as string[]) {
-  //   const group = await getRepository(Group).findOne({ codeName });
+  //   const group = await Group.findOne({ codeName });
   //   if (!group) {
   //     console.log(`No group with the code name "${codeName}" was found.`);
   //     return;

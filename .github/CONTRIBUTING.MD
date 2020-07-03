@@ -73,8 +73,8 @@ FoalTS is based on very few dependencies for all these reasons:
 - The installation is often polluted by messages of indirect dependencies in search of funds.
 
 Some packages, however, can override this policy and be installed if they meet one of the following criteria:
-- Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Examples: `TypeORM`, `Mongoose`.
-- The code requires very specific knowledge. Examples: `pump`, `jsonwebtoken`, `TypeORM`, `Mongoose`.
+- Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Example: `TypeORM`.
+- The code requires very specific knowledge. Examples: `pump`, `jsonwebtoken`, `TypeORM`.
 - The packages are base packages of the Express.Js framework and can therefore be considered stable, safe and mature. Examples: `cookie-parser`, `morgan`.
 
 > Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).

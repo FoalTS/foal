@@ -20,14 +20,6 @@
   * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
   * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)
   * [E2E Testing & Auth](./tutorials/multi-user-todo-list/8-e2e-testing-and-authentication.md)
-* MongoDB To-Do List
-  * [Installation](./tutorials/mongodb-todo-list/1-installation.md)
-  * [Introduction](./tutorials/mongodb-todo-list/2-introduction.md)
-  * [The Todo Model](./tutorials/mongodb-todo-list/3-the-todo-model.md)
-  * [The Shell Script create-todo](./tutorials/mongodb-todo-list/4-the-shell-script-create-todo.md)
-  * [The REST API](./tutorials/mongodb-todo-list/5-the-rest-api.md)
-  * [Validation & Sanitization](./tutorials/mongodb-todo-list/6-validation-and-sanitization.md)
-  * [Unit Testing](./tutorials/mongodb-todo-list/7-unit-testing.md)
 
 ## Topic Guides
 
@@ -38,10 +30,10 @@
   * [Hooks](./architecture/hooks.md)
   * [Initialization](./architecture/initialization.md)
 * Databases
-  * [SQL Databases (TypeORM)](./databases/typeorm.md)
+  * [SQL Databases](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-  * [MongoDB (TypeORM or Mongoose)](./databases/mongodb.md)
+  * [NoSQL](./databases/mongodb.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Quick Start](./authentication-and-access-control/quick-start.md)
