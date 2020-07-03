@@ -8,7 +8,6 @@ import {
   Class,
   Context,
   createHttpResponseFile,
-  dependency,
   Dependency,
   Get,
   HttpResponseBadRequest,

@@ -1,5 +1,5 @@
 // std
-import { doesNotThrow, notStrictEqual, strictEqual } from 'assert';
+import { doesNotThrow, strictEqual } from 'assert';
 import { Buffer } from 'buffer';
 
 // 3p
@@ -423,7 +423,7 @@ describe('createApp', () => {
 
     const serviceManager = new ServiceManager();
 
-    const app = createApp(AppController, {
+    createApp(AppController, {
       serviceManager
     });
 
