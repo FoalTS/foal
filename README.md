@@ -94,7 +94,7 @@ Building a proof of concept or a global application is not the same thing. The f
 
 ## Backers
 
-![backers](./backers.png)
+[![backers](./backers.png)](https://github.com/sponsors/LoicPoullain)
 
 ## Community Chat
 
