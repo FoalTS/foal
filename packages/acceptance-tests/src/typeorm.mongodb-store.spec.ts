@@ -6,7 +6,6 @@ import {
   Context,
   createAndInitApp,
   dependency,
-  ExpressApplication,
   Get,
   hashPassword,
   Hook,
@@ -40,7 +39,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
 
   const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
 
-  let app: ExpressApplication;
+  let app: any;
   let token: string;
   let mongoClient: MongoClient;
 

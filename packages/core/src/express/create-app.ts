@@ -17,8 +17,6 @@ import { notFound } from './not-found';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
-export type ExpressApplication = any;
-
 type Middleware = (req: any, res: any, next: (err?: any) => any) => any;
 type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) => any;
 

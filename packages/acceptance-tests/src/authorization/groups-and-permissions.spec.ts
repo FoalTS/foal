@@ -6,7 +6,6 @@ import * as request from 'supertest';
 import {
   createApp,
   createService,
-  ExpressApplication,
   Get,
   HttpResponseNoContent,
   TokenRequired,
@@ -22,7 +21,7 @@ import {
 
 describe('[Authorization|permissions] Users', () => {
 
-  let app: ExpressApplication;
+  let app: any;
   let tokenUser1: string;
   let tokenUser2: string;
 

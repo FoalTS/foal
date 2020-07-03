@@ -6,7 +6,6 @@ import {
   Context,
   controller,
   createApp,
-  ExpressApplication,
   Get,
   HttpResponseCreated,
   HttpResponseOK,
@@ -16,7 +15,7 @@ import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
 
 describe('[CSRF|regular web app|stateless] Users', () => {
 
-  let app: ExpressApplication;
+  let app: any;
   let csrfToken: string;
 
   @CsrfTokenRequired({ doubleSubmitCookie: true })

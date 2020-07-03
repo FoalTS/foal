@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // 3p
 import {
-  Context, createApp, createService, ExpressApplication, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+  Context, createApp, createService, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
 } from '@foal/core';
 import * as request from 'supertest';
 
@@ -22,7 +22,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
-  function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): ExpressApplication {
+  function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): any {
     @ValidateMultipartFormDataBody(schema)
     class AppController {
       @Post('/')

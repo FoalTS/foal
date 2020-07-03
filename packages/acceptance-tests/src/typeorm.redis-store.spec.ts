@@ -6,7 +6,6 @@ import {
   Context,
   createAndInitApp,
   dependency,
-  ExpressApplication,
   Get,
   hashPassword,
   Hook,
@@ -38,7 +37,7 @@ import {
 
 describe('[Sample] MongoDB & Redis Store', async () => {
 
-  let app: ExpressApplication;
+  let app: any;
   let token: string;
   let redisClient: redis.RedisClient;
 
