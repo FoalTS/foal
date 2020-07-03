@@ -4,10 +4,11 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 // 3p
+import * as request from 'supertest';
 import { parse } from 'yamljs';
 
 // FoalTS
-import { ApiInfo, createOpenApiDocument, Get, Post, ValidateBody } from '@foal/core';
+import { ApiDefineSchema, ApiInfo, createApp, createOpenApiDocument, Get, Post, ValidateBody } from '@foal/core';
 import { JWTOptional, JWTRequired } from '@foal/jwt';
 
 describe('Foal', () => {
@@ -66,6 +67,48 @@ describe('Foal', () => {
 
     deepStrictEqual(actualDocument2, expectedDocument2);
 
+  });
+
+  it('should support OpenAPI references in validation hooks.', () => {
+    @ApiInfo({
+      title: 'My API',
+      version: '1.0.0'
+    })
+    @ApiDefineSchema(
+      'product', {
+        properties: {
+          name: { type: 'string' }
+        },
+        required: [ 'name'],
+        type: 'object',
+      }
+    )
+    class ApiController {
+      @Post('/products')
+      @ValidateBody({
+        $ref: '#/components/schemas/product'
+      })
+      createProduct() {}
+    }
+
+    const app = createApp(ApiController);
+    return request(app)
+      .post('/products')
+      .send({})
+      .expect(400)
+      .expect({
+        body: [
+          {
+            dataPath: '',
+            keyword: 'required',
+            message: 'should have required property \'name\'',
+            params: {
+              missingProperty: 'name'
+            },
+            schemaPath: '#/components/schemas/product/required',
+          }
+        ]
+      });
   });
 
 });
