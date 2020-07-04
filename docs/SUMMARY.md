@@ -113,7 +113,3 @@
 * [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
 * [Discord](https://discord.gg/QUrJv98)
 * [Awesome Foal TS](https://github.com/FoalTS/awesome-foalts)
-
-## API Reference
-
-* [API reference](https://github.com/FoalTS/foal/tree/master/docs/api)
