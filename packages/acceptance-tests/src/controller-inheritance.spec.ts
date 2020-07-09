@@ -9,7 +9,6 @@ import { getRepository } from 'typeorm';
 import {
   ApiInfo,
   ApiParameter,
-  ApiRequestBody,
   Class,
   Context,
   createApp,
