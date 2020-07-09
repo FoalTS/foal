@@ -4,8 +4,7 @@ import { Class } from './class.interface';
 
 export interface IDependency {
   propertyKey: string;
-  // Service class or service ID.
-  serviceClass: string|Class;
+  serviceClassOrID: string|Class;
 }
 
 /**
@@ -16,7 +15,7 @@ export interface IDependency {
 export function Dependency(id: string) {
   return (target: any, propertyKey: string) => {
     const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
-    dependencies.push({ propertyKey, serviceClass: id });
+    dependencies.push({ propertyKey, serviceClassOrID: id });
     Reflect.defineMetadata('dependencies', dependencies, target);
   };
 }
@@ -29,7 +28,7 @@ export function Dependency(id: string) {
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
   const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
-  dependencies.push({ propertyKey, serviceClass });
+  dependencies.push({ propertyKey, serviceClassOrID: serviceClass });
   Reflect.defineMetadata('dependencies', dependencies, target);
 }
 
@@ -58,7 +57,7 @@ export function createControllerOrService<T>(serviceClass: Class<T>, dependencie
     metadata.forEach(dep => {
       const serviceMock = (dependencies as any)[dep.propertyKey];
       if (serviceMock) {
-        serviceManager.set(dep.serviceClass, serviceMock);
+        serviceManager.set(dep.serviceClassOrID, serviceMock);
       }
     });
   }
@@ -155,7 +154,7 @@ export class ServiceManager {
     const service = new identifier();
 
     for (const dependency of dependencies) {
-      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
+      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
     }
 
     // Save the service.

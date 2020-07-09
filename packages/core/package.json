@@ -90,7 +90,7 @@
   "devDependencies": {
     "@foal/ejs": "^1.9.0",
     "@types/mocha": "7.0.2",
-    "@types/node": "~10.1.2",
+    "@types/node": "10.17.24",
     "@types/supertest": "~2.0.5",
     "copy": "~0.3.2",
     "ejs": "~2.6.2",
@@ -106,7 +106,7 @@
     "twig": "~1.13.3",
     "typedoc": "~0.14.2",
     "typedoc-plugin-markdown": "~1.2.0",
-    "typescript": "~3.5.3",
+    "typescript": "~3.9.3",
     "yamljs": "~0.3.0"
   }
 }

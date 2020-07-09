@@ -8,7 +8,6 @@ import {
   controller,
   createApp,
   dependency,
-  ExpressApplication,
   Get,
   HttpResponseCreated,
   HttpResponseOK,
@@ -21,7 +20,7 @@ import { TypeORMStore } from '@foal/typeorm';
 
 describe('[CSRF|regular web app|stateful] Users', () => {
 
-  let app: ExpressApplication;
+  let app: any;
   let sessionToken: string;
   let csrfToken: string;
 

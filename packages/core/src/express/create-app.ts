@@ -8,13 +8,14 @@ import {
   Class,
   Config,
   makeControllerRoutes,
+  OpenApi,
   ServiceManager
 } from '../core';
 import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
 
-export type ExpressApplication = any;
+export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
 type Middleware = (req: any, res: any, next: (err?: any) => any) => any;
 type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) => any;
@@ -124,9 +125,13 @@ export function createApp(
   const services = options.serviceManager || new ServiceManager();
   app.foal = { services };
 
+  // Inject the OpenAPI service with an ID string to avoid duplicated singletons
+  // across several npm packages.
+  services.set(OPENAPI_SERVICE_ID, services.get(OpenApi));
+
   // Resolve the controllers and hooks and add them to the express instance.
-  const routes = makeControllerRoutes('', [], AppController, services);
-  for (const route of routes) {
+  const routes = makeControllerRoutes(AppController, services);
+  for (const { route } of routes) {
     app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
   }
 

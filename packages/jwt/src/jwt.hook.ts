@@ -1,7 +1,7 @@
 // 3p
 import {
-  Config, Hook, HookDecorator,
-  HttpResponseBadRequest, HttpResponseUnauthorized
+  ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
+  Config, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseUnauthorized, IApiSecurityScheme
 } from '@foal/core';
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
@@ -59,7 +59,7 @@ export interface JWTOptions {
  * @returns {HookDecorator}
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
-  return Hook(async ctx => {
+  async function hook(ctx: Context) {
     let token: string;
     if (options.cookie) {
       const cookieName = Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
@@ -159,5 +159,35 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     ctx.user = user;
-  });
+  }
+
+  const openapi = [
+    required ?
+      ApiResponse(401, { description: 'JWT is missing or invalid.' }) :
+      ApiResponse(401, { description: 'JWT is invalid.' })
+  ];
+
+  if (options.cookie) {
+    const securityScheme: IApiSecurityScheme = {
+      in: 'cookie',
+      name: Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
+      type: 'apiKey',
+    };
+    openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
+    }
+  } else {
+    const securityScheme: IApiSecurityScheme = {
+      bearerFormat: 'JWT',
+      scheme: 'bearer',
+      type: 'http',
+    };
+    openapi.push(ApiDefineSecurityScheme('bearerAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
+    }
+  }
+
+  return Hook(hook, openapi, { openapi: options.openapi });
 }

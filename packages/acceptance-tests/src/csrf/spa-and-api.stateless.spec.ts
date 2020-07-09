@@ -5,7 +5,6 @@ import * as request from 'supertest';
 import {
   controller,
   createApp,
-  ExpressApplication,
   HttpResponseCreated,
   HttpResponseOK,
   Post,
@@ -14,7 +13,7 @@ import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
 
 describe('[CSRF|spa and api|stateless] Users', () => {
 
-  let app: ExpressApplication;
+  let app: any;
   let csrfToken: string;
 
   class AuthController {

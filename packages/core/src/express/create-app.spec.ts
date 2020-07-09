@@ -9,9 +9,9 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import {
-  Context, Delete, dependency, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager
+  Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
 } from '../core';
-import { createAndInitApp, createApp } from './create-app';
+import { createAndInitApp, createApp, OPENAPI_SERVICE_ID } from './create-app';
 
 describe('createApp', () => {
 
@@ -387,7 +387,7 @@ describe('createApp', () => {
       });
   });
 
-  it('should use serviceManager if provided.', async () => {
+  it('should use the serviceManager if given.', async () => {
     class SomeService {
       test() { throw new Error('should not get called'); }
     }
@@ -415,6 +415,19 @@ describe('createApp', () => {
       .expect(200)
       .expect('bar');
   });
+
+  it('should manually inject the OpenAPI service with a special ID string.', () => {
+    class AppController {}
+
+    const serviceManager = new ServiceManager();
+
+    createApp(AppController, {
+      serviceManager
+    });
+
+    strictEqual(serviceManager.get(OPENAPI_SERVICE_ID), serviceManager.get(OpenApi));
+  });
+
 });
 
 describe('createAndInitApp', () => {

@@ -2,7 +2,7 @@ import {
   ApiOperationDescription, ApiOperationId, ApiOperationSummary, ApiResponse,
   ApiUseTag, Context, Delete, Get, HttpResponseCreated,
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
-  Put, ValidateBody, ValidateParams, ValidateQuery
+  Put, ValidateBody, ValidatePathParam, ValidateQueryParam
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
@@ -29,13 +29,8 @@ export class TestFooBarController {
   )
   @ApiResponse(400, { description: 'Invalid query parameters.' })
   @ApiResponse(200, { description: 'Returns a list of testFooBars.' })
-  @ValidateQuery({
-    properties: {
-      skip: { type: 'number' },
-      take: { type: 'number' },
-    },
-    type: 'object',
-  })
+  @ValidateQueryParam('skip', { type: 'number' }, { required: false })
+  @ValidateQueryParam('take', { type: 'number' }, { required: false })
   async findTestFooBars(ctx: Context<User>) {
     const testFooBars = await getRepository(TestFooBar).find({
       skip: ctx.request.query.skip,
@@ -52,7 +47,7 @@ export class TestFooBarController {
   @ApiOperationSummary('Find a testFooBar by ID.')
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
-  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
+  @ValidatePathParam('testFooBarId', { type: 'number' })
   async findTestFooBarById(ctx: Context<User>) {
     const testFooBar = await getRepository(TestFooBar).findOne({
       id: ctx.request.params.testFooBarId,
@@ -86,7 +81,7 @@ export class TestFooBarController {
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
-  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
+  @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async modifyTestFooBar(ctx: Context<User>) {
     const testFooBar = await getRepository(TestFooBar).findOne({
@@ -111,7 +106,7 @@ export class TestFooBarController {
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
-  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
+  @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody(testFooBarSchema)
   async replaceTestFooBar(ctx: Context<User>) {
     const testFooBar = await getRepository(TestFooBar).findOne({
@@ -135,7 +130,7 @@ export class TestFooBarController {
   @ApiOperationSummary('Delete a testFooBar.')
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
-  @ValidateParams({ properties: { testFooBarId: { type: 'number' } }, type: 'object' })
+  @ValidatePathParam('testFooBarId', { type: 'number' })
   async deleteTestFooBar(ctx: Context<User>) {
     const testFooBar = await getRepository(TestFooBar).findOne({
       id: ctx.request.params.testFooBarId,

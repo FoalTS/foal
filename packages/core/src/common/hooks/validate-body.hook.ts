@@ -1,6 +1,17 @@
+// 3p
+import { ValidateFunction } from 'ajv';
+
 // FoalTS
-import { Config, Context, Hook, HookDecorator, HttpResponseBadRequest } from '../../core';
-import { ApiRequestBody, ApiResponse, IApiRequestBody, IApiSchema } from '../../openapi';
+import {
+  ApiRequestBody,
+  ApiResponse,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponseBadRequest,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { getAjvInstance } from '../utils';
 import { isFunction } from './is-function.util';
 
@@ -9,47 +20,41 @@ import { isFunction } from './is-function.util';
  *
  * @export
  * @param {(object | ((controller: any) => object))} schema - Schema used to validate the body request.
- * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
+ * @param {{ openapi?: boolean }} [options] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
 export function ValidateBody(
-  schema: object | ((controller: any) => object), options: { openapi?: boolean } = {}
+  schema: object | ((controller: any) => object), options?: { openapi?: boolean }
 ): HookDecorator {
-  const ajv = getAjvInstance();
+  let validateSchema: ValidateFunction|undefined;
 
-  function validate(this: any, ctx: Context) {
-    const ajvSchema = isFunction(schema) ? schema(this) : schema;
-    if (!ajv.validate(ajvSchema, ctx.request.body)) {
-      return new HttpResponseBadRequest({ body: ajv.errors });
+  function validate(this: any, ctx: Context, services: ServiceManager) {
+    if (!validateSchema) {
+      const ajvSchema = isFunction(schema) ? schema(this) : schema;
+      const components = services.get(OpenApi).getComponents(this);
+
+      validateSchema = getAjvInstance().compile({
+        ...ajvSchema,
+        components
+      });
+    }
+
+    if (!validateSchema(ctx.request.body)) {
+      return new HttpResponseBadRequest({ body: validateSchema.errors });
     }
   }
 
-  return (target: any, propertyKey?: string) =>  {
-    Hook(validate)(target, propertyKey);
+  const openapi = [
+    ApiRequestBody((c: any) => ({
+      content: {
+        'application/json': {
+          schema: isFunction(schema) ? schema(c) : schema
+        }
+      },
+      required: true
+    })),
+    ApiResponse(400, { description: 'Bad request.' })
+  ];
 
-    if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get('settings.openapi.useHooks', 'boolean'))
-    ) {
-      return;
-    }
-
-    function makeRequestBody(schema: IApiSchema): IApiRequestBody {
-      return {
-        content: {
-          'application/json': { schema }
-        },
-        required: true
-      };
-    }
-
-    const requestBody = isFunction(schema) ? (c: any) => makeRequestBody(schema(c)) : makeRequestBody(schema);
-
-    if (propertyKey) {
-      ApiRequestBody(requestBody)(target, propertyKey);
-    } else {
-      ApiRequestBody(requestBody)(target);
-    }
-
-    ApiResponse(400, { description: 'Bad request.' })(target, propertyKey);
-  };
+  return Hook(validate, openapi, options);
 }

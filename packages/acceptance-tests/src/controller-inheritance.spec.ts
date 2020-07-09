@@ -9,7 +9,6 @@ import { getRepository } from 'typeorm';
 import {
   ApiInfo,
   ApiParameter,
-  ApiRequestBody,
   Class,
   Context,
   createApp,
@@ -52,14 +51,6 @@ describe('FoalTS', () => {
 
       @Post('/')
       @ValidateBody((c: BaseController) => c.schema)
-      @ApiRequestBody((c: BaseController) => ({
-        content: {
-          'application/json': {
-            schema: c.schema
-          }
-        },
-        required: true
-      }))
       async create(ctx: Context): Promise<HttpResponse> {
         const result = await this.service.create(ctx.request.body);
         return new HttpResponseCreated(result);
@@ -94,14 +85,7 @@ describe('FoalTS', () => {
         required: true,
         schema: { type: 'integer' }
       })
-      @ApiRequestBody((c: BaseController) => ({
-        content: {
-          'application/json': {
-            schema: c.schema
-          }
-        },
-        required: true
-      }))
+      @ValidateBody((c: BaseController) => c.schema)
       async update(ctx: Context): Promise<HttpResponse> {
         const result = await this.service.update(ctx.request.params.id, ctx.request.body);
         if (result) {
@@ -192,7 +176,9 @@ describe('FoalTS', () => {
               },
               required: true
             },
-            responses: {}
+            responses: {
+              400: { description: 'Bad request.' }
+            }
           },
         },
         '/{id}': {
@@ -235,7 +221,9 @@ describe('FoalTS', () => {
               },
               required: true
             },
-            responses: {}
+            responses: {
+              400: { description: 'Bad request.' }
+            }
           },
         }
       }

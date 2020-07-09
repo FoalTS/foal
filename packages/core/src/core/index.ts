@@ -1,6 +1,7 @@
 export * from './class.interface';
 export { createController } from './controllers';
 export * from './http';
+export * from './openapi';
 export * from './hooks';
 export * from './routes';
 export * from './config';

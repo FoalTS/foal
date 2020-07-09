@@ -163,7 +163,7 @@ export class AppController {
 }
 ```
 
-#### ValidateHeader & ValidateHeaders
+#### ValidateHeader
 
 It validates the request headers (`Context.request.headers`).
 
@@ -205,27 +205,6 @@ export class AppController {
 }
 ```
 
-*Controller (third example)*
-```typescript
-import { Post, ValidateHeaders } from '@foal/core';
-
-export class AppController {
-  @Get('/products')
-  @ValidateHeaders({
-    properties: {
-      // All properties should be in lower case.
-      'a-number': { type: 'integer' },
-      'authorization': { type: 'string' },
-    },
-    required: [ 'authorization' ],
-    type: 'object'
-  })
-  readProducts() {
-    // ...
-  }
-}
-```
-
 *HTTP response (400 - BAD REQUEST)*
 ```json
 {
@@ -243,7 +222,7 @@ export class AppController {
 }
 ```
 
-#### ValidateCookie & ValidateCookies
+#### ValidateCookie
 
 It validates the request cookies (`Context.request.cookies`).
 
@@ -284,27 +263,6 @@ export class AppController {
 }
 ```
 
-*Controller (third example)*
-```typescript
-import { Post, ValidateCookies } from '@foal/core';
-
-export class AppController {
-  @Get('/products')
-  @Hook(ctx => console.log(ctx.request.cookies))
-  @ValidateCookies({
-    properties: {
-      'A-Number': { type: 'integer' },
-      'Authorization': { type: 'string' },
-    },
-    required: [ 'Authorization' ],
-    type: 'object'
-  })
-  readProducts() {
-    // ...
-  }
-}
-```
-
 *HTTP response (400 - BAD REQUEST)*
 ```json
 {
@@ -322,7 +280,7 @@ export class AppController {
 }
 ```
 
-#### ValidatePathParam & ValidateParams
+#### ValidatePathParam
 
 It validates the request path parameter (`Context.request.params`).
 
@@ -360,24 +318,6 @@ export class AppController {
 }
 ```
 
-*Controller (third example)*
-```typescript
-import { Post, ValidateParams } from '@foal/core';
-
-export class AppController {
-  @Get('/products/:productId')
-  @ValidateParams({
-    properties: {
-      productId: { type: 'integer' }
-    },
-    type: 'object'
-  })
-  readProducts() {
-    // ...
-  }
-}
-```
-
 *HTTP response (400 - BAD REQUEST)*
 ```json
 {
@@ -396,7 +336,7 @@ export class AppController {
 ```
 
 
-#### ValidateQueryParam & ValidateQuery
+#### ValidateQueryParam
 
 It validates the request query (`Context.request.query`).
 
@@ -436,26 +376,6 @@ export class AppController {
 }
 ```
 
-*Controller (third example)*
-```typescript
-import { Post, ValidateQuery } from '@foal/core';
-
-export class AppController {
-  @Get('/products')
-  @ValidateQuery({
-    properties: {
-      'a-number': { type: 'integer' },
-      'authorization': { type: 'string' },
-    },
-    required: [ 'authorization' ],
-    type: 'object'
-  })
-  readProducts() {
-    // ...
-  }
-}
-```
-
 *HTTP response (400 - BAD REQUEST)*
 ```json
 {
@@ -476,27 +396,27 @@ export class AppController {
 ### Sanitization Example
 
 ```typescript
-import { Context, Get, HttpResponseOK, ValidateQuery } from '@foal/core';
+import { Context, HttpResponseOK, Post, ValidateBody } from '@foal/core';
 
 export class AppController {
 
-  @Get('/no-sanitization')
+  @Post('/no-sanitization')
   noSanitization(ctx: Context) {
-    return new HttpResponseOK(ctx.request.query);
+    return new HttpResponseOK(ctx.request.body);
   }
 
-  @Get('/sanitization')
-  @ValidateQuery({
+  @Post('/sanitization')
+  @ValidateBody({
     additionalProperties: false,
     properties: {
-      apiKey: { type: 'number' },
+      age: { type: 'number' },
       name: { type: 'string' },
     },
-    required: [ 'name', 'apiKey' ],
+    required: [ 'name', 'age' ],
     type: 'object'
   })
   sanitization(ctx: Context) {
-    return new HttpResponseOK(ctx.request.query);
+    return new HttpResponseOK(ctx.request.body);
   }
 
 }
@@ -506,10 +426,10 @@ export class AppController {
 
 Assuming that you did not change Foal's default configuration of Ajv (see above), you will get these results:
 
-| Request | Response |
+| Request | Response  |
 | --- | --- |
-| GET `/no-sanitization?name=Alex&apiKey=34&city=Paris`| `{ name: 'Alex', apiKey: '34', city: 'Paris' }`
-| GET `/sanitization?name=Alex&apiKey=34&city=Paris` | `{ name: 'Alex', apiKey: 34 }`
+| POST `/no-sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }`| `{ name: 'Alex', age: '34', city: 'Paris' }`
+| POST `/sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }` | `{ name: 'Alex', age: 34 }`
 
 ## With a Validation Class (class-validator)
 

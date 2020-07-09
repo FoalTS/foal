@@ -13,12 +13,8 @@ import {
   Post,
   ValidateBody,
   ValidateCookie,
-  ValidateCookies,
   ValidateHeader,
-  ValidateHeaders,
-  ValidateParams,
   ValidatePathParam,
-  ValidateQuery,
   ValidateQueryParam
 } from '@foal/core';
 import { ValidateBody as ValidateBodyFromClass} from '@foal/typestack';
@@ -128,7 +124,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
       });
 
-      describe('ValidateHeader & ValidateHeaders', () => {
+      describe('ValidateHeader', () => {
 
         const errors = {
           headers: [
@@ -186,35 +182,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(third example)', () => {
-          class AppController {
-            @Get('/products')
-            @ValidateHeaders({
-              properties: {
-                'a-number': { type: 'integer' },
-                'authorization': { type: 'string' },
-              },
-              required: [ 'authorization' ],
-              type: 'object'
-            })
-            readProducts() {
-              // ...
-            }
-          }
-
-          const app = createApp(AppController);
-
-          return request(app)
-            .get('/products')
-            .set('Authorization', 'xxx')
-            .set('A-Number', 'hello')
-            .expect(400)
-            .expect(errors);
-        });
-
       });
 
-      describe('ValidateCookie & ValidateCookies', () => {
+      describe('ValidateCookie', () => {
 
         const errors = {
           cookies: [
@@ -270,34 +240,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(third example)', () => {
-          class AppController {
-            @Get('/products')
-            @ValidateCookies({
-              properties: {
-                'A-Number': { type: 'integer' },
-                'Authorization': { type: 'string' },
-              },
-              required: [ 'Authorization' ],
-              type: 'object'
-            })
-            readProducts() {
-              // ...
-            }
-          }
-
-          const app = createApp(AppController);
-
-          return request(app)
-            .get('/products')
-            .set('Cookie', [ 'Authorization=xxx', 'A-Number=hello' ])
-            .expect(400)
-            .expect(errors);
-        });
-
       });
 
-      describe('ValidatePathParam & ValidateParams', () => {
+      describe('ValidatePathParam', () => {
 
         const errors = {
           pathParams: [
@@ -349,31 +294,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(third example)', () => {
-          class AppController {
-            @Get('/products/:productId')
-            @ValidateParams({
-              properties: {
-                productId: { type: 'integer' }
-              },
-              type: 'object'
-            })
-            readProducts() {
-              // ...
-            }
-          }
-
-          const app = createApp(AppController);
-
-          return request(app)
-            .get('/products/xxx')
-            .expect(400)
-            .expect(errors);
-        });
-
       });
 
-      describe('ValidateQueryParam & ValidateQuery', () => {
+      describe('ValidateQueryParam', () => {
 
         const errors = {
           query: [
@@ -425,30 +348,6 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(third example)', () => {
-          class AppController {
-            @Get('/products')
-            @ValidateQuery({
-              properties: {
-                'a-number': { type: 'integer' },
-                'authorization': { type: 'string' },
-              },
-              required: [ 'authorization' ],
-              type: 'object'
-            })
-            readProducts() {
-              // ...
-            }
-          }
-
-          const app = createApp(AppController);
-
-          return request(app)
-            .get('/products?authorization=xxx&a-number=hello')
-            .expect(400)
-            .expect(errors);
-        });
-
       });
 
     });
@@ -456,23 +355,23 @@ describe('[Docs] Input Validation & Sanitization', () => {
     it('Sanitization Example', () => {
       class AppController {
 
-        @Get('/no-sanitization')
+        @Post('/no-sanitization')
         noSanitization(ctx: Context) {
-          return new HttpResponseOK(ctx.request.query);
+          return new HttpResponseOK(ctx.request.body);
         }
 
-        @Get('/sanitization')
-        @ValidateQuery({
+        @Post('/sanitization')
+        @ValidateBody({
           additionalProperties: false,
           properties: {
-            apiKey: { type: 'number' },
+            age: { type: 'number' },
             name: { type: 'string' },
           },
-          required: [ 'name', 'apiKey' ],
+          required: [ 'name', 'age' ],
           type: 'object'
         })
         sanitization(ctx: Context) {
-          return new HttpResponseOK(ctx.request.query);
+          return new HttpResponseOK(ctx.request.body);
         }
 
       }
@@ -481,13 +380,15 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
       return Promise.all([
         request(app)
-          .get('/no-sanitization?name=Alex&apiKey=34&city=Paris')
+          .post('/no-sanitization')
+          .send({ name: 'Alex', age: '34', city: 'Paris' })
           .expect(200)
-          .expect({ name: 'Alex', apiKey: '34', city: 'Paris' }),
+          .expect({ name: 'Alex', age: '34', city: 'Paris' }),
         request(app)
-          .get('/sanitization?name=Alex&apiKey=34&city=Paris')
+          .post('/sanitization')
+          .send({ name: 'Alex', age: '34', city: 'Paris' })
           .expect(200)
-          .expect({ name: 'Alex', apiKey: 34 }),
+          .expect({ name: 'Alex', age: 34 }),
       ]);
     });
 

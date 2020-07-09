@@ -40,6 +40,6 @@
   "devDependencies": {
     "rimraf": "~2.6.2",
     "ts-node": "~3.3.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.9.3"
   }
 }

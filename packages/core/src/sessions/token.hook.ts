@@ -1,8 +1,17 @@
 import {
-  Class, Config, Context, Hook, HookDecorator, HttpResponse,
+  ApiDefineSecurityScheme,
+  ApiResponse,
+  ApiSecurityRequirement,
+  Class,
+  Config,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponse,
   HttpResponseBadRequest,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
+  IApiSecurityScheme,
   ServiceManager
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
@@ -41,7 +50,7 @@ export interface TokenOptions {
 }
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
-  return Hook(async (ctx: Context, services: ServiceManager) => {
+  async function hook(ctx: Context, services: ServiceManager) {
     const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
@@ -145,5 +154,34 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         setSessionCookie(response, session.getToken());
       }
     };
-  });
+  }
+
+  const openapi = [
+    required ?
+      ApiResponse(401, { description: 'Auth token is missing or invalid.' }) :
+      ApiResponse(401, { description: 'Auth token is invalid.' })
+  ];
+
+  if (options.cookie) {
+    const securityScheme: IApiSecurityScheme = {
+      in: 'cookie',
+      name: Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME),
+      type: 'apiKey',
+    };
+    openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
+    }
+  } else {
+    const securityScheme: IApiSecurityScheme = {
+      scheme: 'bearer',
+      type: 'http',
+    };
+    openapi.push(ApiDefineSecurityScheme('bearerAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
+    }
+  }
+
+  return Hook(hook, openapi, { openapi: options.openapi });
 }
