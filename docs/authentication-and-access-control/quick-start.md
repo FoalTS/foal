@@ -99,18 +99,6 @@ You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or
 
 > warning: version 2
 
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
-```
-
 *src/app/controllers/auth.controller.ts*
 ```typescript
 import { dependency, Get, Post, TokenOptional, TokenRequired, ValidateBody } from '@foal/core';
@@ -288,18 +276,6 @@ You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or
 
 > warning: version 2
 
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
-```
-
 *src/app/controllers/auth.controller.ts*
 ```typescript
 const credentialsSchema = {
@@ -384,19 +360,6 @@ export class ApiController {
 > As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
 
 In this implementation, the authentication is managed with cookies and redirections.
-
-
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
-```
 
 *src/app/app.controller.ts*
 ```typescript

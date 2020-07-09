@@ -113,7 +113,6 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
   }
 
   before(async () => {
-    process.env.SETTINGS_SESSION_SECRET = 'session-secret';
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
@@ -127,7 +126,6 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
   after(async () => {
     await getConnection().close();
-    delete process.env.SETTINGS_SESSION_SECRET;
   });
 
   it('cannot access protected routes if they are not logged in.', () => {

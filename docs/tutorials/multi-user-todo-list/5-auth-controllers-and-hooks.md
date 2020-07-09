@@ -2,19 +2,6 @@
 
 So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
 
-> Before this, you must provide a *secret* to the authentication system. You can generate such one with the following command:
->
-> ```
-> foal createsecret
-> ```
->
-> Then create a `.env` file containing your secret at the root of your project.
->
-> *.env*
-> ```
-> SETTINGS_SESSION_SECRET=my-secret
-> ```
-
 Here is the architecture that we want:
 
 1. Users load the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, users are redirected to `/signin?bad_credentials=true`. The `bad_credentials` parameter tells the page to show the error message `Invalid email or password`.

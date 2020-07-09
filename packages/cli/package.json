@@ -62,10 +62,10 @@
     "commander": "~5.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "~5.2.0",
+    "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "copyfiles": "~2.0.0",
-    "mocha": "~5.2.0",
+    "mocha": "~8.0.1",
     "rimraf": "~2.6.2",
     "ts-node": "~3.3.0",
     "typescript": "~3.9.3"

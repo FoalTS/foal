@@ -33,8 +33,6 @@ async function main() {
       // Set default FoalTS headers to the response of limited requests
       res.removeHeader('X-Powered-By');
       res.setHeader('X-Content-Type-Options', 'nosniff');
-      res.setHeader('X-DNS-Prefetch-Control', 'off');
-      res.setHeader('X-Download-Options', 'noopen');
       res.setHeader('X-Frame-Options', 'SAMEORIGIN');
       res.setHeader('X-XSS-Protection', '1; mode=block');
       res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
@@ -69,8 +67,6 @@ expressApp.use(rateLimit({
     // Set default FoalTS headers to the response of limited requests
     res.removeHeader('X-Powered-By');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-DNS-Prefetch-Control', 'off');
-    res.setHeader('X-Download-Options', 'noopen');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');

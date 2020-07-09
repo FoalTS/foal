@@ -57,7 +57,6 @@ describe('[CSRF|spa and api|stateful] Users', () => {
   }
 
   before(async () => {
-    process.env.SETTINGS_SESSION_SECRET = 'session-secret';
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
@@ -70,7 +69,6 @@ describe('[CSRF|spa and api|stateful] Users', () => {
 
   after(async () => {
     await getConnection().close();
-    delete process.env.SETTINGS_SESSION_SECRET;
   });
 
   it('can log in and get a CSRF token.', () => {

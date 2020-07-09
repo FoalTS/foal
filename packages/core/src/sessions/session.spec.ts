@@ -1,9 +1,7 @@
 // std
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { createHmac } from 'crypto';
 
 // FoalTS
-import { ConfigNotFoundError } from '../core';
 import { Session } from './session';
 import { SessionOptions, SessionStore } from './session-store';
 
@@ -99,105 +97,15 @@ describe('Session', () => {
 
   describe('has a "getToken" method that', () => {
 
-    afterEach(() => delete process.env.SETTINGS_SESSION_SECRET);
-
-    it('should throw an Error is the configuration key `settings.session.secret` is not defined.', () => {
-      const session = new Session(new ConcreteSessionStore(), 'aaa', {}, 0);
-      try {
-        session.getToken();
-        throw new Error('Session.getToken should have thrown an Error.');
-      } catch (error) {
-        if (!(error instanceof ConfigNotFoundError)) {
-          throw new Error('A ConfigNotFoundError should have been thrown');
-        }
-        strictEqual(error.key, 'settings.session.secret');
-        strictEqual(error.msg, 'You must provide a secret when using sessions.');
-      }
-    });
-
-    it('should return the session ID along with its signature (encoded in base64url).', () => {
-      const secretBuffer = Buffer.from([
-        0xFB, 0xF0, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-      ]); // 32 bytes (256 bits)
-      const sessionIDBuffer = Buffer.from([
-        0xFB, 0xF0, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-        0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x66,
-      ]); // 16 bytes (128 bits)
-
-      // Base64 value: +/BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY=
-      const secret = secretBuffer.toString('base64').replace('+', '-').replace('/', '_').replace('=', '');
-      strictEqual(secret, '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY');
-
-      // Base64 value: +/BmZmZmZmZmZmZmZmZmZg==
-      const sessionID = sessionIDBuffer.toString('base64').replace('+', '-').replace('/', '_').replace('==', '');
-      strictEqual(sessionID, '-_BmZmZmZmZmZmZmZmZmZg');
-
-      // Base64 value: rD1LLZl5sr+IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk=
-      const signature = createHmac('sha256', secretBuffer)
-        .update(sessionIDBuffer)
-        .digest('base64')
-        .replace('+', '-')
-        .replace('=', '');
-      strictEqual(signature, 'rD1LLZl5sr-IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk');
-
-      process.env.SETTINGS_SESSION_SECRET = secret;
-
+    it('should return the session ID.', () => {
+      const sessionID = 'zMd0TkVoMlj7qrJ54+G3idn0plDwQGqS/n6VVwKC4qM=';
       const session = new Session(new ConcreteSessionStore(), sessionID, {}, 0);
       const token = session.getToken();
 
       strictEqual(
         token,
-        `${sessionID}.${signature}`
+        sessionID
       );
-    });
-
-  });
-
-  describe('has a static "verifyTokenAndGetId" method that', () => {
-
-    afterEach(() => delete process.env.SETTINGS_SESSION_SECRET);
-
-    it('should throw an Error is the configuration key `settings.session.secret` is not defined.', () => {
-      try {
-        Session.verifyTokenAndGetId('xxx.yyy');
-        throw new Error('Session.getToken should have thrown an Error.');
-      } catch (error) {
-        if (!(error instanceof ConfigNotFoundError)) {
-          throw new Error('A ConfigNotFoundError should have been thrown');
-        }
-        strictEqual(error.key, 'settings.session.secret');
-        strictEqual(error.msg, 'You must provide a secret when using sessions.');
-      }
-    });
-
-    it('should return false if the token is not a string.', () => {
-      process.env.SETTINGS_SESSION_SECRET = 'a';
-      strictEqual(Session.verifyTokenAndGetId(3 as any), false);
-    });
-
-    it('should return false if the token format is invalid.', () => {
-      process.env.SETTINGS_SESSION_SECRET = 'a';
-      strictEqual(Session.verifyTokenAndGetId('xxx'), false);
-      strictEqual(Session.verifyTokenAndGetId('.xxx'), false);
-      strictEqual(Session.verifyTokenAndGetId('xxx.'), false);
-      strictEqual(Session.verifyTokenAndGetId('.'), false);
-    });
-
-    it('should verify the token and return false if the signature is incorrect.', () => {
-      process.env.SETTINGS_SESSION_SECRET = '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY';
-      const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZOaaaHS9VepB5dyhJiUIPaa2wfk';
-
-      strictEqual(Session.verifyTokenAndGetId(token), false);
-    });
-
-    it('should verify the token and return the session ID if the signature is correct.', () => {
-      process.env.SETTINGS_SESSION_SECRET = '-_BmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmY';
-      const token = '-_BmZmZmZmZmZmZmZmZmZg.rD1LLZl5sr-IhjUJZONyXHS9VepB5dyhJiUIPaa2wfk';
-
-      strictEqual(Session.verifyTokenAndGetId(token), '-_BmZmZmZmZmZmZmZmZmZg');
     });
 
   });

@@ -60,18 +60,15 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   const hook = getHookFunction(Token({ store: Store }));
 
-  const secret = 'my_secret';
   let services: ServiceManager;
 
   before(() => services = new ServiceManager());
 
   afterEach(() => {
-    delete process.env.SETTINGS_SESSION_SECRET;
     delete process.env.SETTINGS_SESSION_COOKIE_NAME;
   });
 
   beforeEach(() => {
-    process.env.SETTINGS_SESSION_SECRET = secret;
     services.get(Store).clear();
   });
 
@@ -195,88 +192,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
 
       }
-
-    });
-
-  });
-
-  describe('should verify the token and', () => {
-
-    it('should return an HttpResponseUnauthorized object if the token is invalid.', async () => {
-      const token = 'xxx';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
-
-      const response = await hook(ctx, services);
-      if (!isHttpResponseUnauthorized(response)) {
-        throw new Error('response should be instance of HttpResponseUnauthorized');
-      }
-      deepStrictEqual(response.body, {
-        code: 'invalid_token',
-        description: 'invalid token'
-      });
-      strictEqual(
-        response.getHeader('WWW-Authenticate'),
-        'error="invalid_token", error_description="invalid token"'
-      );
-    });
-
-    it('should return an HttpResponseRedirect object if the token is invalid '
-        + '(options.redirectTo is defined).', async () => {
-      const token = 'xxx';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
-
-      const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
-
-      const response = await hook(ctx, services);
-      if (!isHttpResponseRedirect(response)) {
-        throw new Error('response should be instance of HttpResponseRedirect');
-      }
-      strictEqual(response.path, '/foo');
-    });
-
-    describe('given options.cookie is false or not defined', () => {
-
-      it('should not set a cookie in the response if the token is invalid.', async () => {
-        const token = 'xxx';
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-
-        const response = await hook(ctx, services);
-        if (!isHttpResponse(response)) {
-          throw new Error('response should be instance of HttpResponse');
-        }
-        deepStrictEqual(response.getCookies(), {});
-      });
-
-    });
-
-    describe('given options.cookie is true', () => {
-
-      it('should remove the cookie in the response if the token is invalid.', async () => {
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const token = 'xxx';
-        const ctx = new Context({
-          get(str: string) { return undefined; },
-          cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: token,
-          }
-        });
-
-        const response = await hook(ctx, services);
-        if (!isHttpResponse(response)) {
-          throw new Error('response should be instance of HttpResponse');
-        }
-
-        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(value, '');
-        strictEqual(options.maxAge, 0);
-      });
 
     });
 

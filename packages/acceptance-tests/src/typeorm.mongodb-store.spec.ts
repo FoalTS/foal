@@ -131,7 +131,6 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   let connection: Connection;
 
   before(async () => {
-    process.env.SETTINGS_SESSION_SECRET = 'session-secret';
     process.env.MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
     connection = await createConnection({
       database: 'e2e_db',
@@ -156,7 +155,6 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   });
 
   after(async () => {
-    delete process.env.SETTINGS_SESSION_SECRET;
     delete process.env.MONGODB_URI;
     return Promise.all([
       connection.close(),

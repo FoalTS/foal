@@ -52,12 +52,12 @@
     "@foal/core": "^1.9.0"
   },
   "devDependencies": {
-    "@types/mocha": "~2.2.43",
+    "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "class-transformer": "~0.2.3",
     "class-validator": "~0.10.0",
     "copy": "~0.3.2",
-    "mocha": "~5.2.0",
+    "mocha": "~8.0.1",
     "rimraf": "~2.6.2",
     "ts-node": "~3.3.0",
     "typedoc": "~0.14.2",
