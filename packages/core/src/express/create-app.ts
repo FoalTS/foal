@@ -107,10 +107,12 @@ export function createApp(
   app.use(protectionHeaders);
 
   // Serve static files.
-  app.use(
-    Config.get2('settings.staticPathPrefix', 'string', ''),
-    express.static(Config.get2('settings.staticPath', 'string', 'public'))
-  );
+  if (!Config.get2('settings.disableStatic', 'boolean', false)) {
+    app.use(
+        Config.get2('settings.staticPathPrefix', 'string', ''),
+        express.static(Config.get2('settings.staticPath', 'string', 'public'))
+    );
+  }
 
   // Parse request body.
   const limit = Config.get2('settings.bodyParser.limit', 'number|string');
