@@ -334,6 +334,33 @@ SETTINGS_STATIC_PATH=assets
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
+### Disable static files
+
+To disable static files, set `settings.disableStatic` to true
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  disableStatic: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "disableStatic": true
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title=".env or environment variables" %}
+```
+SETTINGS_DISABLE_STATIC=true
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
 ### Virtual prefix path
 
 In case you need to add a virtual prefix path to your static files, you can do so with the `staticPathPrefix` configuration key.
