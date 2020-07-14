@@ -70,7 +70,7 @@ jobs:
     - name: Install global dependencies (lerna, pm2, codecov)
       run: npm install -g lerna pm2 codecov
     - name: Install project dependencies
-      run: npm install
+      run: npm install --production
     - name: Install package dependencies and build packages
       run: lerna bootstrap
     - name: Create CLI symlink in the global folder
