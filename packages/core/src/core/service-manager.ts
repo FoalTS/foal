@@ -44,16 +44,16 @@ export function dependency(target: any, propertyKey: string) {
  *
  * @export
  * @template Service
- * @param {Class<Service>} serviceClass - The service class.
+ * @param {ClassOrAbstractClass<Service>} serviceClass - The service class.
  * @param {(object|ServiceManager)} [dependencies] - Either a ServiceManager or an
  * object which key/values are the service properties/instances.
  * @returns {Service} - The created service.
  */
-export function createService<Service>(serviceClass: Class<Service>, dependencies?: object|ServiceManager): Service {
+export function createService<Service>(serviceClass: ClassOrAbstractClass<Service>, dependencies?: object|ServiceManager): Service {
   return createControllerOrService(serviceClass, dependencies);
 }
 
-export function createControllerOrService<T>(serviceClass: Class<T>, dependencies?: object|ServiceManager): T {
+export function createControllerOrService<T>(serviceClass: ClassOrAbstractClass<T>, dependencies?: object|ServiceManager): T {
   const metadata: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
   let serviceManager = new ServiceManager();
