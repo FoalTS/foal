@@ -8,7 +8,7 @@ import {
 import * as Busboy from 'busboy';
 
 // FoalTS
-import { Disk } from './disk.service';
+import { Disk } from './abstract-disk.service';
 
 export interface MultipartFormDataSchema {
   fields?: {
@@ -47,7 +47,7 @@ const hook = (schema: MultipartFormDataSchema): HookDecorator => {
       files[name] = schema.files[name].multiple ? [] : null;
     }
 
-    const disk = services.get(Disk);
+    const disk = services.get(Disk as any) as Disk;
 
     const fileSizeLimit = Config.get2('settings.multipartRequests.fileSizeLimit', 'number');
     const fileNumberLimit = Config.get2('settings.multipartRequests.fileNumberLimit', 'number');
