@@ -10,7 +10,8 @@ describe('The session store', () => {
   let serviceManager: ServiceManager;
 
   beforeEach(() => {
-    process.env.SETTINGS_SESSION_STORE = '@foal/redis';
+    // Use ".." to remove the "build/" directory.
+    process.env.SETTINGS_SESSION_STORE = './../node_modules/@foal/redis';
     process.env.SETTINGS_SESSION_SECRET = 'secret';
     serviceManager = new ServiceManager();
   });
