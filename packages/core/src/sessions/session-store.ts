@@ -14,13 +14,16 @@ export interface SessionOptions {
  * A session store peforms CRUD operations on sessions and can store them in
  * a database, file system, memory, etc.
  *
- * Examples of SessionStore: TypeORMStore, RedisStore, MongoDBStore.
+ * Examples of Store: TypeORMStore, RedisStore, MongoDBStore.
  *
  * @export
  * @abstract
- * @class SessionStore
+ * @class Store
  */
-export abstract class SessionStore {
+export abstract class Store {
+
+  static concreteClassConfigPath = 'settings.session.store';
+  static concreteClassName = 'ConcreteSessionStore';
 
   /**
    * Read session expiration timeouts from the configuration.
@@ -38,7 +41,7 @@ export abstract class SessionStore {
    *
    * @static
    * @returns {{ inactivity: number , absolute: number }} The expiration timeouts
-   * @memberof SessionStore
+   * @memberof Store
    */
   static getExpirationTimeouts(): { inactivity: number , absolute: number } {
     const result = {
@@ -72,7 +75,7 @@ export abstract class SessionStore {
    * @param {SessionOptions} options - Session options.
    * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
    * @returns {Promise<Session>} The created session.
-   * @memberof SessionStore
+   * @memberof Store
    */
   createAndSaveSessionFromUser(user: { id: string|number }, options?: SessionOptions): Promise<Session> {
     return this.createAndSaveSession({ userId: user.id }, options);
@@ -89,7 +92,7 @@ export abstract class SessionStore {
    * @param {SessionOptions} options - Session options.
    * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
    * @returns {Promise<Session>} The created session.
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract createAndSaveSession(sessionContent: object, options?: SessionOptions): Promise<Session>;
   /**
@@ -100,7 +103,7 @@ export abstract class SessionStore {
    * @abstract
    * @param {Session} session - The session containaing the updated content.
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract update(session: Session): Promise<void>;
   /**
@@ -109,7 +112,7 @@ export abstract class SessionStore {
    * @abstract
    * @param {string} sessionID - The ID of the session.
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract destroy(sessionID: string): Promise<void>;
   /**
@@ -120,7 +123,7 @@ export abstract class SessionStore {
    * @abstract
    * @param {string} sessionID - The ID of the session.
    * @returns {(Promise<Session|undefined>)} The Session object.
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract read(sessionID: string): Promise<Session|undefined>;
   /**
@@ -132,7 +135,7 @@ export abstract class SessionStore {
    * @abstract
    * @param {string} sessionID - The ID of the session.
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract extendLifeTime(sessionID: string): Promise<void>;
   /**
@@ -140,7 +143,7 @@ export abstract class SessionStore {
    *
    * @abstract
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract clear(): Promise<void>;
   /**
@@ -150,7 +153,7 @@ export abstract class SessionStore {
    *
    * @abstract
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   abstract cleanUpExpiredSessions(): Promise<void>;
 
@@ -159,7 +162,7 @@ export abstract class SessionStore {
    *
    * @protected
    * @returns {Promise<string>} - The session ID.
-   * @memberof SessionStore
+   * @memberof Store
    */
   protected async generateSessionID(): Promise<string> {
     return generateToken();
@@ -173,7 +176,7 @@ export abstract class SessionStore {
    * @param {SessionOptions} options - Session options.
    * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
    * @returns {Promise<void>}
-   * @memberof SessionStore
+   * @memberof Store
    */
   protected async applySessionOptions(content: object, options: SessionOptions): Promise<void> {
     if (options.csrfToken) {
@@ -181,3 +184,5 @@ export abstract class SessionStore {
     }
   }
 }
+
+export { Store as SessionStore };

@@ -1,5 +1,5 @@
 export { removeSessionCookie } from './remove-session-cookie';
-export { SessionStore, SessionOptions } from './session-store';
+export { Store, SessionStore, SessionOptions } from './session-store';
 export { Session } from './session';
 export { setSessionCookie } from './set-session-cookie';
 export { TokenOptional } from './token-optional.hook';
