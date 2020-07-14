@@ -1,7 +1,13 @@
 // std
-import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
+
+// 3p
+import { ConcreteSessionStore } from '@foal/internal-test';
 
 // FoalTS
+import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import { ConfigNotFoundError } from './config';
 import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
@@ -498,6 +504,347 @@ describe('ServiceManager', () => {
         strictEqual((childService as any).foobar2, undefined);
         notStrictEqual(childService2.foobar, undefined);
         notStrictEqual(childService2.foobar2, undefined);
+      });
+
+      describe('and if it has a static property "concreteClassConfigPath"', () => {
+
+        beforeEach(() => delete process.env.SETTINGS_TOTO);
+
+        it('should throw an Error if Service.concreteClassConfigPath is not a string.', () => {
+          abstract class Foobar {
+            static concreteClassConfigPath = 3;
+            static concreteClassName = 'Foobar2';
+          }
+
+          throws(
+            () => serviceManager.get(Foobar as any),
+            {
+              message: '[CONFIG] Foobar.concreteClassConfigPath should be a string.'
+            } as any
+          );
+        });
+
+        it('should throw an Error if Service.concreteClassName is not defined.', () => {
+          process.env.SETTINGS_TOTO = '@foal/internal-test';
+
+          abstract class Foobar {
+            static concreteClassConfigPath = 'settings.toto';
+          }
+
+          throws(
+            () => serviceManager.get(Foobar as any),
+            {
+              message: '[CONFIG] Foobar.concreteClassName is missing.'
+            } as any
+          );
+        });
+
+        it('should throw an Error if Service.concreteClassName is not a string.', () => {
+          process.env.SETTINGS_TOTO = '@foal/internal-test';
+
+          abstract class Foobar {
+            static concreteClassConfigPath = 'settings.toto';
+            static concreteClassName = 3; // or undefined
+          }
+
+          throws(
+            () => serviceManager.get(Foobar as any),
+            {
+              message: '[CONFIG] Foobar.concreteClassName should be a string.'
+            } as any
+          );
+        });
+
+        it('should throw a ConfigNotFoundError if no configuration value is found matching the config path.', () => {
+          abstract class Foobar {
+            static concreteClassConfigPath = 'settings.toto';
+            static concreteClassName = 'Foobar2';
+          }
+
+          try {
+            serviceManager.get(Foobar as any);
+            throw new Error('An error should have been thrown');
+          } catch (error) {
+            if (!(error instanceof ConfigNotFoundError)) {
+              throw new Error('A ConfigNotFoundError should have been thrown.');
+            }
+            strictEqual(error.key, 'settings.toto');
+          }
+        });
+
+        describe('when the concrete class path is a package name (does not start by "./")', () => {
+
+          it('should throw an Error if the package is not installed.', () => {
+            process.env.SETTINGS_TOTO = 'uninstalledPackage';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] The package or file uninstalledPackage was not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is not found in the package.', () => {
+            process.env.SETTINGS_TOTO = '@foal/internal-test';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar:'
+                  + ' class Foobar2 not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is actually not a class.', () => {
+            process.env.SETTINGS_TOTO = '@foal/internal-test';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'aNum';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar: aNum is not a class.'
+              } as any
+            );
+          });
+
+          it('should return the concrete class instance.', () => {
+            process.env.SETTINGS_TOTO = '@foal/internal-test';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'ConcreteSessionStore';
+            }
+
+            const service = serviceManager.get(Foobar as any);
+            strictEqual(service instanceof ConcreteSessionStore, true);
+          });
+
+        });
+
+        describe('when the concrete class path is "local"', () => {
+
+          const filePath = join(__dirname, './service-manager.test.ts');
+
+          beforeEach(() => {
+            writeFileSync(
+              filePath,
+              'exports.ConcreteSessionStore2 = class ConcreteSessionStore2 {}; exports.aNum = 1;',
+              'utf8'
+            );
+          });
+
+          afterEach(() => {
+            if (existsSync(filePath)) {
+              unlinkSync(filePath);
+            }
+          });
+
+          it('should throw an error if Service.defaultConcreteClassPath is not defined.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] Foobar does not support the "local" option in settings.toto.'
+              } as any
+            );
+          });
+
+          it('should throw an error if Service.defaultConcreteClassPath is not a string.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+              static defaultConcreteClassPath = 3;
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] Foobar.defaultConcreteClassPath should be a string.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the file does not exist.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+              static defaultConcreteClassPath = './foo';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] The package or file ./foo was not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is not found in the file.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+              static defaultConcreteClassPath = './service-manager.test';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] ./service-manager.test is not a valid package or file for Foobar:'
+                  + ' class Foobar2 not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is actually not a class.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'aNum';
+              static defaultConcreteClassPath = './service-manager.test';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] ./service-manager.test is not a valid package or file for Foobar:'
+                  + ' aNum is not a class.'
+              } as any
+            );
+          });
+
+          it('should return the concrete class instance.', () => {
+            process.env.SETTINGS_TOTO = 'local';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'ConcreteSessionStore2';
+              static defaultConcreteClassPath = './service-manager.test';
+            }
+
+            const service: any = serviceManager.get(Foobar as any);
+            strictEqual(typeof service === 'object', true);
+            strictEqual(service.constructor.name, 'ConcreteSessionStore2');
+          });
+
+        });
+
+        describe('when the concrete class path is a relative path (starts with "./")', () => {
+
+          const buildDirPath = join(process.cwd(), 'build');
+          const concreteFilePath = join(process.cwd(), 'build/service-manager.test2.js');
+
+          beforeEach(() => {
+            mkdirSync(buildDirPath);
+            writeFileSync(
+              concreteFilePath,
+              'exports.ConcreteSessionStore3 = class ConcreteSessionStore3 {}; exports.aNum = 1;',
+              'utf8'
+            );
+          });
+
+          afterEach(() => {
+            if (existsSync(concreteFilePath)) {
+              unlinkSync(concreteFilePath);
+            }
+            if (existsSync(buildDirPath)) {
+              rmdirSync(buildDirPath);
+            }
+          });
+
+          it('should throw an Error if the file does not exist.', () => {
+            process.env.SETTINGS_TOTO = './foo';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] The package or file ./foo was not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is not found in the package.', () => {
+            process.env.SETTINGS_TOTO = './service-manager.test2';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] ./service-manager.test2 is not a valid package or file for Foobar:'
+                  + ' class Foobar2 not found.'
+              } as any
+            );
+          });
+
+          it('should throw an Error if the specified concrete class is actually not a class.', () => {
+            process.env.SETTINGS_TOTO = './service-manager.test2';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'aNum';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar as any),
+              {
+                message: '[CONFIG] ./service-manager.test2 is not a valid package or file for Foobar:'
+                  + ' aNum is not a class.'
+              } as any
+            );
+          });
+
+          it('should return the concrete class instance.', () => {
+            process.env.SETTINGS_TOTO = './service-manager.test2';
+
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'ConcreteSessionStore3';
+            }
+
+            const service: any = serviceManager.get(Foobar as any);
+            strictEqual(typeof service === 'object', true);
+            strictEqual(service.constructor.name, 'ConcreteSessionStore3');
+          });
+
+        });
+
       });
 
     });

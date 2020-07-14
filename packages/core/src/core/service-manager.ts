@@ -1,6 +1,12 @@
+// std
+import { join } from 'path';
+
+// 3p
 import 'reflect-metadata';
 
+// FoalTS
 import { Class } from './class.interface';
+import { Config } from './config';
 
 export interface IDependency {
   propertyKey: string;
@@ -148,6 +154,11 @@ export class ServiceManager {
       throw new Error(`No service was found with the identifier "${identifier}".`);
     }
 
+    if (identifier.hasOwnProperty('concreteClassConfigPath')) {
+      const concreteClass = this.getConcreteClassFromConfig(identifier);
+      return this.get(concreteClass);
+    }
+
     // If the service has not been instantiated yet then do it.
     const dependencies: IDependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
 
@@ -172,6 +183,73 @@ export class ServiceManager {
       value.boot = false;
       await value.service.boot();
     }
+  }
+
+  private getConcreteClassFromConfig(cls: Class<any>): any {
+    const concreteClassConfigPath: string = this.getProperty(
+      cls,
+      'concreteClassConfigPath',
+      'string',
+    );
+
+    const concreteClassName: string = this.getProperty(
+      cls,
+      'concreteClassName',
+      'string',
+    );
+
+    let concreteClassPath = Config.getOrThrow(concreteClassConfigPath, 'string');
+    let prettyConcreteClassPath: string | undefined;
+
+    if (concreteClassPath === 'local') {
+      concreteClassPath = this.getProperty(
+        cls,
+        'defaultConcreteClassPath',
+        'string',
+        `[CONFIG] ${cls.name} does not support the "local" option in ${concreteClassConfigPath}.`
+      );
+    } else if (concreteClassPath.startsWith('./')) {
+      prettyConcreteClassPath = concreteClassPath;
+      concreteClassPath = join(process.cwd(), 'build', concreteClassPath);
+    }
+
+    prettyConcreteClassPath = prettyConcreteClassPath || concreteClassPath;
+
+    let pkg: any;
+    try {
+      pkg = require(concreteClassPath);
+    } catch (err) {
+      // TODO: test this line.
+      if (err.code !== 'MODULE_NOT_FOUND') {
+        throw err;
+      }
+      throw new Error(`[CONFIG] The package or file ${prettyConcreteClassPath} was not found.`);
+    }
+
+    const concreteClass = this.getProperty(
+      pkg,
+      concreteClassName,
+      'function',
+      `[CONFIG] ${prettyConcreteClassPath} is not a valid package or file for ${cls.name}:`
+        + ` class ${concreteClassName} not found.`,
+      `[CONFIG] ${prettyConcreteClassPath} is not a valid package or file for ${cls.name}:`
+        + ` ${concreteClassName} is not a class.`
+    );
+
+    return concreteClass;
+  }
+
+  private getProperty(obj: any, propertyKey: string, type: string, notFoundMsg?: string, typeMsg?: string): any {
+    if (!obj.hasOwnProperty(propertyKey)) {
+      throw new Error(notFoundMsg || `[CONFIG] ${obj.name}.${propertyKey} is missing.`);
+    }
+
+    const property = (obj as any)[propertyKey];
+    if (typeof property !== type) {
+      throw new Error(typeMsg || `[CONFIG] ${obj.name}.${propertyKey} should be a ${type}.`);
+    }
+
+    return property;
   }
 
 }

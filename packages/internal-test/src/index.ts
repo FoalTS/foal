@@ -23,3 +23,5 @@ export class ConcreteDisk {
 export class ConcreteSessionStore {
 
 }
+
+export const aNum = 1;
