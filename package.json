@@ -20,6 +20,8 @@
   "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
     "@types/mocha": "^2.2.48",
+    "@foal/redis": "./packages/redis",
+    "redis": "~3.0.2",
     "lerna": "^2.11.0",
     "mocha": "^4.1.0",
     "tslint": "^5.11.0",
