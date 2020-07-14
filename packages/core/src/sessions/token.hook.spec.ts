@@ -81,7 +81,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       const hook = getHookFunction(Token({}));
 
       const ctx = new Context({});
-      
+
       try {
         await hook(ctx, services);
         throw new Error('The hook should have thrown an error.');

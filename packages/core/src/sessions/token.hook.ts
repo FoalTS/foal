@@ -1,10 +1,15 @@
 import {
-  Class, Config, Context, Hook, HookDecorator, HttpResponse,
+  Class,
+  ClassOrAbstractClass,
+  Config,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponse,
   HttpResponseBadRequest,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-  ServiceManager,
-  ClassOrAbstractClass
+  ServiceManager
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
@@ -47,7 +52,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
   return Hook(async (ctx: Context, services: ServiceManager) => {
     const ConcreteSessionStore: ClassOrAbstractClass<SessionStore> = options.store || SessionStore;
     const store = services.get(ConcreteSessionStore);
-    
+
     const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
