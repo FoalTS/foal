@@ -569,7 +569,7 @@ describe('ValidateMultipartFormDataBody', () => {
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
 
-      disk = createService(Disk as any);
+      disk = createService(Disk);
     });
 
     afterEach(() => {

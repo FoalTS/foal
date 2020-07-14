@@ -5,7 +5,7 @@ import { join } from 'path';
 import 'reflect-metadata';
 
 // FoalTS
-import { Class } from './class.interface';
+import { Class, ClassOrAbstractClass } from './class.interface';
 import { Config } from './config';
 
 export interface IDependency {
@@ -80,7 +80,7 @@ export function createControllerOrService<T>(serviceClass: Class<T>, dependencie
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|Class, { boot: boolean, service: any }>  = new Map();
+  private readonly map: Map<string|ClassOrAbstractClass, { boot: boolean, service: any }>  = new Map();
 
   /**
    * Boot all services : call the method "boot" of each service if it exists.
@@ -89,11 +89,11 @@ export class ServiceManager {
    *
    * Services are only booted once.
    *
-   * @param {(string|Class)} [identifier] - The service ID or the service class.
+   * @param {(string|ClassOrAbstractClass)} [identifier] - The service ID or the service class.
    * @returns {Promise<void>}
    * @memberof ServiceManager
    */
-  async boot(identifier?: string|Class): Promise<void> {
+  async boot(identifier?: string|ClassOrAbstractClass): Promise<void> {
     if (typeof identifier !== 'undefined') {
       const value = this.map.get(identifier);
       if (!value) {
@@ -112,14 +112,14 @@ export class ServiceManager {
   /**
    * Add manually a service to the identity mapper.
    *
-   * @param {string|Class} identifier - The service ID or the service class.
+   * @param {string|ClassOrAbstractClass} identifier - The service ID or the service class.
    * @param {*} service - The service object (or mock).
    * @param {{ boot: boolean }} [options={ boot: false }] If `boot` is true, the service method "boot"
    * will be executed when calling `ServiceManager.boot` is called.
    * @returns {this} The service manager.
    * @memberof ServiceManager
    */
-  set(identifier: string|Class, service: any, options: { boot: boolean } = { boot: false }): this {
+  set(identifier: string|ClassOrAbstractClass, service: any, options: { boot: boolean } = { boot: false }): this {
     this.map.set(identifier, {
       boot: options.boot,
       service,
@@ -130,13 +130,13 @@ export class ServiceManager {
   /**
    * Get (and create if necessary) the service singleton.
    *
-   * @param {string|Class} identifier - The service ID or the service class.
+   * @param {string|ClassOrAbstractClass} identifier - The service ID or the service class.
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(identifier: Class<T>): T;
+  get<T>(identifier: ClassOrAbstractClass<T>): T;
   get(identifier: string): any;
-  get(identifier: string|Class): any {
+  get(identifier: string|ClassOrAbstractClass): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
     if (identifier === ServiceManager || identifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
@@ -163,7 +163,7 @@ export class ServiceManager {
     const dependencies: IDependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
 
     // identifier is a class here.
-    const service = new identifier();
+    const service = new (identifier as Class)();
 
     for (const dependency of dependencies) {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
@@ -185,7 +185,7 @@ export class ServiceManager {
     }
   }
 
-  private getConcreteClassFromConfig(cls: Class<any>): any {
+  private getConcreteClassFromConfig(cls: ClassOrAbstractClass<any>): any {
     const concreteClassConfigPath: string = this.getProperty(
       cls,
       'concreteClassConfigPath',

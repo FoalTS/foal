@@ -517,7 +517,7 @@ describe('ServiceManager', () => {
           }
 
           throws(
-            () => serviceManager.get(Foobar as any),
+            () => serviceManager.get(Foobar),
             {
               message: '[CONFIG] Foobar.concreteClassConfigPath should be a string.'
             } as any
@@ -532,7 +532,7 @@ describe('ServiceManager', () => {
           }
 
           throws(
-            () => serviceManager.get(Foobar as any),
+            () => serviceManager.get(Foobar),
             {
               message: '[CONFIG] Foobar.concreteClassName is missing.'
             } as any
@@ -548,7 +548,7 @@ describe('ServiceManager', () => {
           }
 
           throws(
-            () => serviceManager.get(Foobar as any),
+            () => serviceManager.get(Foobar),
             {
               message: '[CONFIG] Foobar.concreteClassName should be a string.'
             } as any
@@ -562,7 +562,7 @@ describe('ServiceManager', () => {
           }
 
           try {
-            serviceManager.get(Foobar as any);
+            serviceManager.get(Foobar);
             throw new Error('An error should have been thrown');
           } catch (error) {
             if (!(error instanceof ConfigNotFoundError)) {
@@ -583,7 +583,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] The package or file uninstalledPackage was not found.'
               } as any
@@ -599,7 +599,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar:'
                   + ' class Foobar2 not found.'
@@ -616,7 +616,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar: aNum is not a class.'
               } as any
@@ -631,7 +631,7 @@ describe('ServiceManager', () => {
               static concreteClassName = 'ConcreteSessionStore';
             }
 
-            const service = serviceManager.get(Foobar as any);
+            const service = serviceManager.get(Foobar);
             strictEqual(service instanceof ConcreteSessionStore, true);
           });
 
@@ -664,7 +664,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] Foobar does not support the "local" option in settings.toto.'
               } as any
@@ -681,7 +681,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] Foobar.defaultConcreteClassPath should be a string.'
               } as any
@@ -698,7 +698,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] The package or file ./foo was not found.'
               } as any
@@ -715,7 +715,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] ./service-manager.test is not a valid package or file for Foobar:'
                   + ' class Foobar2 not found.'
@@ -733,7 +733,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] ./service-manager.test is not a valid package or file for Foobar:'
                   + ' aNum is not a class.'
@@ -750,7 +750,7 @@ describe('ServiceManager', () => {
               static defaultConcreteClassPath = './service-manager.test';
             }
 
-            const service: any = serviceManager.get(Foobar as any);
+            const service: any = serviceManager.get(Foobar);
             strictEqual(typeof service === 'object', true);
             strictEqual(service.constructor.name, 'ConcreteSessionStore2');
           });
@@ -789,7 +789,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] The package or file ./foo was not found.'
               } as any
@@ -805,7 +805,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] ./service-manager.test2 is not a valid package or file for Foobar:'
                   + ' class Foobar2 not found.'
@@ -822,7 +822,7 @@ describe('ServiceManager', () => {
             }
 
             throws(
-              () => serviceManager.get(Foobar as any),
+              () => serviceManager.get(Foobar),
               {
                 message: '[CONFIG] ./service-manager.test2 is not a valid package or file for Foobar:'
                   + ' aNum is not a class.'
@@ -838,7 +838,7 @@ describe('ServiceManager', () => {
               static concreteClassName = 'ConcreteSessionStore3';
             }
 
-            const service: any = serviceManager.get(Foobar as any);
+            const service = serviceManager.get(Foobar);
             strictEqual(typeof service === 'object', true);
             strictEqual(service.constructor.name, 'ConcreteSessionStore3');
           });
