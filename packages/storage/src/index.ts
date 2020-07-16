@@ -4,7 +4,6 @@
  * Released under the MIT License.
  */
 
-export { AbstractDisk, FileDoesNotExist, isFileDoesNotExist } from './abstract-disk.service';
-export { Disk } from './disk.service';
+export { AbstractDisk, Disk, FileDoesNotExist, isFileDoesNotExist } from './abstract-disk.service';
 export { LocalDisk } from './local-disk.service';
 export { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';

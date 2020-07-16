@@ -78,53 +78,20 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   describe('when no session store class is provided as option', () => {
 
     it('should throw an error if the configuration value settings.session.store is empty.', async () => {
+      const hook = getHookFunction(Token({}));
+
+      const ctx = new Context({});
+
       try {
-        getHookFunction(Token({}));
+        await hook(ctx, services);
         throw new Error('The hook should have thrown an error.');
       } catch (error) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown');
         }
         strictEqual(error.key, 'settings.session.store');
-        strictEqual(
-          error.msg,
-          'You must provide the package name of your session store when using @TokenRequired or @TokenOptional.'
-        );
       }
     });
-
-    it('should throw an error if the store package provided in settings.session.store is not installed.', async () => {
-      process.env.SETTINGS_SESSION_STORE = 'foobarxxx';
-
-      try {
-        getHookFunction(Token({}));
-      } catch (error) {
-        strictEqual(
-          error.message,
-          'The package "foobarxxx" provided with the configuration key settings.session.store was not found.'
-          + ' Did you install it?'
-        );
-      }
-    });
-
-    it(
-      'should throw an error if the store package provided in settings.session.store'
-      + ' does not export a ConcreteSessionStore.',
-      () => {
-        process.env.SETTINGS_SESSION_STORE = 'supertest';
-
-        try {
-          getHookFunction(Token({}));
-          throw new Error('The hook should have thrown an error.');
-        } catch (error) {
-          strictEqual(
-            error.message,
-            'The package "supertest" does not export a ConcreteSessionStore class.'
-            + ' Are you sure it is a session store package?'
-          );
-        }
-      }
-    );
 
     // TODO: improve this test. This code actually tests that no error is thrown but not that
     // the ConcreteSessionStore is assigned to options.store.

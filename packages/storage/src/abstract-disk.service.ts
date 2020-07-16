@@ -1,5 +1,5 @@
 // std
-import { basename } from 'path';
+import { basename, join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
@@ -49,9 +49,13 @@ export function isFileDoesNotExist(obj: any): obj is FileDoesNotExist {
  *
  * @export
  * @abstract
- * @class AbstractDisk
+ * @class Disk
  */
-export abstract class AbstractDisk {
+export abstract class Disk {
+
+  static concreteClassConfigPath = 'settings.disk.driver';
+  static concreteClassName = 'ConcreteDisk';
+  static defaultConcreteClassPath = join(__dirname, './local-disk.service');
 
   /**
    * Asynchronously write a file. If the file already exists, it is replaced.
@@ -66,7 +70,7 @@ export abstract class AbstractDisk {
    * or extension of the file. If no name is provided, the method generates one.
    * @returns {Promise<{ path: string }>} The path of the file containing the
    * directory name and the filename.
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   abstract write(
     dirname: string,
@@ -87,7 +91,7 @@ export abstract class AbstractDisk {
    *     file: Type<C>;
    *     size: number;
    *   }>} The file data (stream or buffer) and its size.
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   abstract read<C extends 'buffer'|'stream'>(path: string, content: C): Promise<{
     file: Type<C>;
@@ -101,7 +105,7 @@ export abstract class AbstractDisk {
    * @abstract
    * @param {string} path - The path of the file.
    * @returns {Promise<void>}
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   abstract delete(path: string): Promise<void>;
 
@@ -116,7 +120,7 @@ export abstract class AbstractDisk {
    * @param {filename} [options.string=options.file] - Default name used by the browser when
    * saving the file to the disk.
    * @returns {Promise<HttpResponse>}
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   async createHttpResponse(
     path: string,
@@ -145,7 +149,7 @@ export abstract class AbstractDisk {
    * @protected
    * @param {*} options - Write options.
    * @returns {options is { name: string }} True or false.
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   protected hasName(options: any): options is { name: string } {
     // options.name === '' returns false;
@@ -158,7 +162,7 @@ export abstract class AbstractDisk {
    * @protected
    * @param {*} options - Write options.
    * @returns {options is { extension: string }} True or false.
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   protected hasExtension(options: any): options is { extension: string } {
     // options.extension === '' returns false;
@@ -166,3 +170,5 @@ export abstract class AbstractDisk {
   }
 
 }
+
+export { Disk as AbstractDisk };
