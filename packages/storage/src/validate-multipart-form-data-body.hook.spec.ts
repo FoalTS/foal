@@ -585,7 +585,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not kill the process if Disk.write throws an error.', async () => {
-      delete process.env.SETTINGS_DISK_DRIVER;
+      process.env.SETTINGS_DISK_DRIVER = '@foal/internal-test';
 
       const actual: { body: any } = { body: null };
       const app = createAppWithHook({
