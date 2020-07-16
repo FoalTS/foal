@@ -4,7 +4,7 @@ This document shows how to serialize class instances into plain objects and, con
 
 Serialization is particularly interesting if you need to transform HTTP request bodies into model instances or, inversely, convert model instances into plain objects to be returned in HTTP responses.
 
-## The `class-tranformer` library
+## The `class-transformer` library
 
 ```
 npm install class-transformer

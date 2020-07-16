@@ -285,7 +285,7 @@ export interface ILogger {
 ```typescript
 import { ILogger } from './logger.interface';
 
-export class Logger implements ILogger {
+export class ConsoleLogger implements ILogger {
   log(message: any): void {
     console.log(message);
   }
@@ -307,7 +307,7 @@ async function main() {
 
   const serviceManager = new ServiceManager()
     .set('product', productRepository)
-    .set('logger', new Logger());
+    .set('logger', new ConsoleLogger());
 
   const app = createApp(AppController, {
     serviceManager

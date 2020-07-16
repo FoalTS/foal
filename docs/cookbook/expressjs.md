@@ -47,7 +47,7 @@ const app = createApp(AppController, {
 });
 ```
 
-Pre-middlewares are executed before Foal's controllers and hooks. Post-middlewares are executed after, but before the 500 or 404 handlers get called.
+Pre-middlewares are executed before Foal's controllers and hooks. Post-middlewares are executed only if there was no controller to handle the request, but before the 500 or 404 handlers get called.
 
 ## Migrating from Express to FoalTS
 
