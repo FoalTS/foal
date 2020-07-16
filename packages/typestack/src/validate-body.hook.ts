@@ -12,18 +12,22 @@ export interface ValidateBodyOptions {
  * the request body into an instance of the class.
  *
  * @export
- * @param {Class} cls - The validator class (see `class-validator` and `class-tranformer` packages).
+ * @param {Class} cls - The validator class (see `class-validator` and `class-transformer` packages).
  * @param {ValidateBodyOptions} [options={}] - Options to pass to the libraries`class-validator`
- * and `class-tranformer`.
+ * and `class-transformer`.
  * @returns {HookDecorator} - The hook.
  */
-export function ValidateBody(cls: Class, options: ValidateBodyOptions = {}): HookDecorator {
-  return Hook(async ctx => {
+export function ValidateBody(
+    cls: Class | ((controller: any) => Class),
+    options: ValidateBodyOptions = {}
+): HookDecorator {
+  return Hook(async function(this: any, ctx) {
     if (typeof ctx.request.body !== 'object' || ctx.request.body === null) {
       return new HttpResponseBadRequest({
         message: 'The request body should be a valid JSON object or array.'
       });
     }
+    cls = isArrowFunction(cls) ? cls(this) : cls;
     const instance = plainToClass(cls, ctx.request.body, options.transformer);
     const errors = await validate(instance, options.validator);
     if (errors.length > 0) {
@@ -31,4 +35,8 @@ export function ValidateBody(cls: Class, options: ValidateBodyOptions = {}): Hoo
     }
     ctx.request.body = instance;
   });
+}
+
+function isArrowFunction(value: any): value is ((controller: any) => Class) {
+  return !value.hasOwnProperty('prototype');
 }

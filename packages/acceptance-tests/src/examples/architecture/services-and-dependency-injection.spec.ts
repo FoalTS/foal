@@ -92,7 +92,7 @@ describe('[Docs] Architecture > Services', () => {
     }
 
     let msg: any = null;
-    class Logger implements ILogger {
+    class ConsoleLogger implements ILogger {
       log(message: any): void {
         msg = message;
       }
@@ -110,7 +110,7 @@ describe('[Docs] Architecture > Services', () => {
 
       const serviceManager = new ServiceManager()
         .set('product', productRepository)
-        .set('logger', new Logger());
+        .set('logger', new ConsoleLogger());
 
       const app = createApp(AppController, {
         serviceManager
