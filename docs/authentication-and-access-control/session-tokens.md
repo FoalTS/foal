@@ -234,6 +234,42 @@ export class PageController {
 }
 ```
 
+## Specify the Name of the Session Store in the Configuration
+
+In order to avoid duplicates, the name of the session package can also be provided in the configuration.
+
+```json
+{
+  "settings": {
+    "session": {
+      "store": "@foal/typeorm"
+    }
+  }
+}
+```
+
+```typescript
+export class Controller {
+
+  @dependency
+  store: SessionStore;
+
+  // ...
+  login() {
+    // this.store.createAndSaveSessionFromUser(...)
+  }
+
+  // ...
+  @TokenRequired()
+  protectedRoute() {
+
+  }
+
+}
+```
+
+> The configuration also supports relative paths. See [abstract services](../architecture/services-and-dependency-injection.md#abstract-services).
+
 ## Update the Session Content
 
 When receiving an HTTP request, the hooks `@TokenRequired` and `@TokenOptional` convert the session token (if it exists and is valid) into a `Session` instance retrieved from the session store. This object is assigned to the `Context.session` property and is accessible in the remaining hooks and in the controller method.
