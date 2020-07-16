@@ -555,23 +555,6 @@ describe('ServiceManager', () => {
           );
         });
 
-        it('should throw a ConfigNotFoundError if no configuration value is found matching the config path.', () => {
-          abstract class Foobar {
-            static concreteClassConfigPath = 'settings.toto';
-            static concreteClassName = 'Foobar2';
-          }
-
-          try {
-            serviceManager.get(Foobar);
-            throw new Error('An error should have been thrown');
-          } catch (error) {
-            if (!(error instanceof ConfigNotFoundError)) {
-              throw new Error('A ConfigNotFoundError should have been thrown.');
-            }
-            strictEqual(error.key, 'settings.toto');
-          }
-        });
-
         describe('when the concrete class path is a package name (does not start by "./")', () => {
 
           it('should throw an Error if the package is not installed.', () => {
@@ -637,7 +620,7 @@ describe('ServiceManager', () => {
 
         });
 
-        describe('when the concrete class path is "local"', () => {
+        function testLocal() {
 
           const filePath = join(__dirname, './service-manager.test.ts');
 
@@ -655,25 +638,7 @@ describe('ServiceManager', () => {
             }
           });
 
-          it('should throw an error if Service.defaultConcreteClassPath is not defined.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
-            abstract class Foobar {
-              static concreteClassConfigPath = 'settings.toto';
-              static concreteClassName = 'Foobar2';
-            }
-
-            throws(
-              () => serviceManager.get(Foobar),
-              {
-                message: '[CONFIG] Foobar does not support the "local" option in settings.toto.'
-              } as any
-            );
-          });
-
           it('should throw an error if Service.defaultConcreteClassPath is not a string.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
               static concreteClassName = 'Foobar2';
@@ -689,8 +654,6 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the file does not exist.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
               static concreteClassName = 'Foobar2';
@@ -706,8 +669,6 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the file.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
               static concreteClassName = 'Foobar2';
@@ -724,8 +685,6 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
               static concreteClassName = 'aNum';
@@ -742,8 +701,6 @@ describe('ServiceManager', () => {
           });
 
           it('should return the concrete class instance.', () => {
-            process.env.SETTINGS_TOTO = 'local';
-
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
               static concreteClassName = 'ConcreteSessionStore2';
@@ -754,6 +711,57 @@ describe('ServiceManager', () => {
             strictEqual(typeof service === 'object', true);
             strictEqual(service.constructor.name, 'ConcreteSessionStore2');
           });
+
+        }
+
+        describe('when the concrete class path is not defined', () => {
+
+          describe('if Service.defaultConcreteClassPath is not defined', () => {
+
+            it('should throw a ConfigNotFoundError.', () => {
+              abstract class Foobar {
+                static concreteClassConfigPath = 'settings.toto';
+                static concreteClassName = 'Foobar2';
+              }
+
+              try {
+                serviceManager.get(Foobar);
+                throw new Error('An error should have been thrown');
+              } catch (error) {
+                if (!(error instanceof ConfigNotFoundError)) {
+                  throw new Error('A ConfigNotFoundError should have been thrown.');
+                }
+                strictEqual(error.key, 'settings.toto');
+              }
+            });
+
+          });
+
+          describe('if Service.defaultConcreteClassPath is defined', () => {
+            testLocal();
+          });
+
+        });
+
+        describe('when the concrete class path is "local"', () => {
+
+          beforeEach(() => process.env.SETTINGS_TOTO = 'local');
+
+          it('should throw an error if Service.defaultConcreteClassPath is not defined.', () => {
+            abstract class Foobar {
+              static concreteClassConfigPath = 'settings.toto';
+              static concreteClassName = 'Foobar2';
+            }
+
+            throws(
+              () => serviceManager.get(Foobar),
+              {
+                message: '[CONFIG] Foobar does not support the "local" option in settings.toto.'
+              } as any
+            );
+          });
+
+          testLocal();
 
         });
 
