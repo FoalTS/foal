@@ -572,7 +572,7 @@ export class SocialPost {
 
 ```
 
-*social-post.controller.ts*
+*social-post.controller.ts (first example)*
 ```typescript
 import { Context, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
@@ -582,6 +582,26 @@ export class SocialPostController {
 
   @Post()
   @ValidateBody(SocialPost, { /* options if relevant */ })
+  createSocialPost(ctx: Context) {
+    // ctx.request.body is an instance of SocialPost.
+    // ...
+    return new HttpResponseCreated();
+  }
+
+}
+```
+
+*social-post.controller.ts (second example)*
+```typescript
+import { Context, HttpResponseCreated, Post } from '@foal/core';
+import { ValidateBody } from '@foal/typestack';
+import { SocialPost } from './social-post.validator';
+
+export class SocialPostController {
+  entityClass = SocialPost;
+
+  @Post()
+  @ValidateBody(controller => controller.entityClass, { /* options if relevant */ })
   createSocialPost(ctx: Context) {
     // ctx.request.body is an instance of SocialPost.
     // ...
