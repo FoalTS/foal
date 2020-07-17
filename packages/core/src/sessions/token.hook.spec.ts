@@ -3,7 +3,6 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import {
-  Class,
   ConfigNotFoundError,
   Context,
   getApiComponents,
