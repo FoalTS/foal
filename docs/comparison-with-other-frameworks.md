@@ -34,7 +34,7 @@ The two frameworks have also philosophical differences in their objectives. Nest
 
 Foal TS, while providing the architecture, aims also to offer a rich development environment and ready-to-use components to build from end to end a complete application.
 
-For example, in Foal, you have tools to [connect](./frontend-integration/angular-react-vue.md) your backend to your [VueJS](http://vuejs.org/) application, set up an [authentication system](./authentication-and-access-control/quick-start.md) (stateless or stateful) with passwords that suits your SPA+API architecture and configure access control based on [groups and permissions](./authentication-and-access-control/groups-and-permissions.md). You will not waste time on reinventhing the wheel or searching for external libraries (even if you can still use them and integrate them into Foal). Your only concern is to work on *business logic*.
+For example, in Foal, you have tools to [connect](./frontend-integration/angular-react-vue.md) your backend to your [VueJS](http://vuejs.org/) application, set up an [authentication system](./authentication-and-access-control/quick-start.md) (stateless or stateful) with passwords that suits your SPA+API architecture and configure access control based on [groups and permissions](./authentication-and-access-control/groups-and-permissions.md). You will not waste time on reinventing the wheel or searching for external libraries (even if you can still use them and integrate them into Foal). Your only concern is to work on *business logic*.
 
 ## Routing Controllers
 
