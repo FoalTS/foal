@@ -203,7 +203,7 @@ export class ServiceManager {
 
     let concreteClassPath: string;
     if (cls.hasOwnProperty('defaultConcreteClassPath')) {
-      concreteClassPath = Config.get2(concreteClassConfigPath, 'string', 'local');
+      concreteClassPath = Config.get(concreteClassConfigPath, 'string', 'local');
     } else {
       concreteClassPath = Config.getOrThrow(concreteClassConfigPath, 'string');
     }

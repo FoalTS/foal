@@ -42,7 +42,7 @@ describe('Config', () => {
     }
   });
 
-  describe('when get2 is called (static)', () => {
+  describe('when get is called (static)', () => {
 
     it('should return the value of the environment variable if it exists.', () => {
       process.env.TEST_FOO_FOO_BAR = 'value1';

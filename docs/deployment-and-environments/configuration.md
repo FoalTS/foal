@@ -92,7 +92,7 @@ database:
 
 ## Accessing Configuration Values
 
-The `Config` class provides two static methods for accessing configuration values: `get2` and `getOrThrow`. Use of `Config.get` is also possible, but is deprecated.
+The `Config` class provides two static methods for accessing configuration values: `get` and `getOrThrow`.
 
 ### The `Config.get` method
 

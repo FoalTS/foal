@@ -98,7 +98,7 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
       const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
 
       const token = await new Promise<string>((resolve, reject) => {
-        sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {
+        sign(payload, secret, { subject: user.id.toString() }, (err, value: string|undefined) => {
           if (err) {
             return reject(err);
           }
