@@ -18,3 +18,10 @@ export class ConcreteDisk {
     throw new Error('internal-test package: delete called');
   }
 }
+
+// Used in @foal/core:
+export class ConcreteSessionStore {
+
+}
+
+export const aNum = 1;

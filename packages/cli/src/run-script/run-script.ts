@@ -8,7 +8,7 @@ import * as Ajv from 'ajv';
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
-export function runScript({ name }: { name: string }, argv: string[], log = console.log) {
+export async function runScript({ name }: { name: string }, argv: string[], log = console.log) {
   if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
@@ -40,5 +40,9 @@ export function runScript({ name }: { name: string }, argv: string[], log = cons
     }
   }
 
-  main(args);
+  try {
+    await main(args);
+  } catch (error) {
+    log(error);
+  }
 }
