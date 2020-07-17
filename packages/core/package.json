@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "1.9.0",
+  "version": "1.11.0",
   "description": "A Node.js and TypeScript framework, all-inclusive.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -88,7 +88,8 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@foal/ejs": "^1.9.0",
+    "@foal/ejs": "^1.11.0",
+    "@foal/internal-test": "^1.10.0",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "@types/supertest": "~2.0.5",

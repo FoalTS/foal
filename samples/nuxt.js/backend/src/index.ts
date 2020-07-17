@@ -1,19 +1,21 @@
 import 'source-map-support/register';
 
+import { Builder, Nuxt } from 'nuxt';
+
 // std
 import * as http from 'http';
 
 // 3p
 import { Config, createApp } from '@foal/core';
-import { Builder, Nuxt } from 'nuxt';
 import { createConnection } from 'typeorm';
+
+ // Import and Set Nuxt.js options
+ const config = require('../../frontend/nuxt.config.js');
+ config.dev = Config.get('settings.debug', true);
+
 
 // App
 import { AppController } from './app/app.controller';
-
-// Import and Set Nuxt.js options
-const config = require('../../frontend/nuxt.config.js');
-config.dev = Config.get('settings.debug', true);
 
 async function main() {
   // Init Nuxt.js
@@ -36,10 +38,11 @@ async function main() {
   });
 
   const httpServer = http.createServer(app);
-  const port = Config.get('port', 3001);
+  const port = Config.get2('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });
 }
 
-main();
+main()
+  .catch(err => { console.error(err); process.exit(1); });

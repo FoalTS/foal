@@ -3,6 +3,7 @@ import {
   ApiResponse,
   ApiSecurityRequirement,
   Class,
+  ClassOrAbstractClass,
   Config,
   Context,
   Hook,
@@ -43,7 +44,7 @@ class InvalidTokenResponse extends HttpResponseUnauthorized {
 
 export interface TokenOptions {
   user?: (id: string|number) => Promise<any|undefined>;
-  store: Class<SessionStore>;
+  store?: Class<SessionStore>;
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
@@ -51,6 +52,9 @@ export interface TokenOptions {
 
 export function Token(required: boolean, options: TokenOptions): HookDecorator {
   async function hook(ctx: Context, services: ServiceManager) {
+    const ConcreteSessionStore: ClassOrAbstractClass<SessionStore> = options.store || SessionStore;
+    const store = services.get(ConcreteSessionStore);
+
     const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
     /* Validate the request */
@@ -96,7 +100,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session ID */
 
-    const store = services.get(options.store);
     const session = await store.read(sessionID);
 
     if (!session) {

@@ -194,29 +194,6 @@ it('DetectorService', () => {
 });
 ```
 
-## Accessing the `ServiceManager`
-
-In very rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
-
-```typescript
-import { dependency, ServiceManager } from '@foal/core';
-
-class MyService {
-  foo() {
-    return 'foo';
-  }
-}
-
-class MyController {
-  @dependency
-  services: ServiceManager;
-
-  bar() {
-    return this.services.get(MyService).foo();
-  }
-}
-```
-
 ## Injecting other Instances
 
 To manually inject instances into the identity mapper, you can also provide your own `ServiceManager` to the `createApp` function (usually located at `src/index.ts`).
@@ -268,6 +245,72 @@ class ApiController {
 
 ```
 
+## Abstract Services
+
+> Abstract services are available in Foal v1.11 onwards.
+
+If you want to use a different service implementation depending on your environment (production, development, etc.), you can use an abstract service for this.
+
+*logger.service.ts*
+```typescript
+export abstract class Logger {
+  static concreteClassConfigPath = 'logger.driver';
+  static concreteClassName = 'ConcreteLogger';
+
+  abstract log(str: string);
+}
+```
+
+> **Warning:** the two properties must be static.
+
+*console-logger.service.ts (concrete service)*
+```typescript
+export class ConsoleLogger extends Logger {
+  log(str: string) {
+    console.log(str);
+  }
+}
+
+export { ConsoleLogger as ConcreteLogger };
+```
+
+*config/development.json*
+```json
+{
+  "logger": {
+    "driver": "./app/services/console-logger.service"
+  }
+}
+```
+
+> The configuration value can be a package name or a path relative to the `src/` directory. If it is a path, it **must** start with `./` and **must not** have an extension (`.js`, `.ts`, etc).
+
+*a random service*
+```typescript
+export class Service {
+  @dependency
+  logger: Logger;
+
+  // ...
+}
+```
+
+### Default Concrete Services
+
+An abstract service can have a default concrete service that is used when no configuration value is specified or when the configuration value is `local`.
+
+```typescript
+import { join } from 'path';
+
+export abstract class Logger {
+  static concreteClassConfigPath = 'logger.driver';
+  static concreteClassName = 'ConcreteLogger';
+  static defaultConcreteClassPath = join(__dirname, './console-logger.service');
+
+  abstract log(str: string);
+}
+```
+
 ## Usage with Interfaces and Generic Classes
 
 > Interface and generic class injection is available in Foal v1.8 onwards.
@@ -285,7 +328,7 @@ export interface ILogger {
 ```typescript
 import { ILogger } from './logger.interface';
 
-export class Logger implements ILogger {
+export class ConsoleLogger implements ILogger {
   log(message: any): void {
     console.log(message);
   }
@@ -307,7 +350,7 @@ async function main() {
 
   const serviceManager = new ServiceManager()
     .set('product', productRepository)
-    .set('logger', new Logger());
+    .set('logger', new ConsoleLogger());
 
   const app = createApp(AppController, {
     serviceManager
@@ -344,4 +387,27 @@ export class ApiController {
 
 }
 
+```
+
+## Accessing the `ServiceManager`
+
+In very rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
+
+```typescript
+import { dependency, ServiceManager } from '@foal/core';
+
+class MyService {
+  foo() {
+    return 'foo';
+  }
+}
+
+class MyController {
+  @dependency
+  services: ServiceManager;
+
+  bar() {
+    return this.services.get(MyService).foo();
+  }
+}
 ```

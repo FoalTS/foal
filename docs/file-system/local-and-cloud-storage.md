@@ -272,16 +272,18 @@ class ApiController {
 
 ## Implementing a Disk
 
-If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending `AbstractDisk` class. 
+> Relative paths are available in Foal v1.11.0 onwards.
 
-If you want to use it through the `Disk` service, your service must be published in an npm package and exported as `ConcreteDisk`.
+If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `AbstractDisk` class. 
+
+If you want to use it through the `Disk` service, you need to specify its path in the configuration (or to publish it as an npm package and specify the package name). The name of the exported class should be `ConcreteDisk`.
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
 ```yaml
 settings:
   disk:
-    driver: 'package-name'
+    driver: './app/services/my-disk.service'
 ```
 {% endcode-tabs-item %}
 {% code-tabs-item title="JSON" %}
@@ -289,7 +291,7 @@ settings:
 {
   "settings": {
     "disk": {
-      "driver": "package-name",
+      "driver": "./app/services/my-disk.service",
     }
   }
 }
@@ -297,7 +299,7 @@ settings:
 {% endcode-tabs-item %}
 {% code-tabs-item title=".env or environment variables" %}
 ```
-SETTINGS_DISK_DRIVER=package-name
+SETTINGS_DISK_DRIVER=./app/services/my-disk.service
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

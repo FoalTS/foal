@@ -1,7 +1,9 @@
 {
   "name": "test-foo-bar",
   "version": "0.0.0",
-  "description": "",
+  "description": "description of the application",
+  "license": "MIT",
+  "repository": {},
   "scripts": {
     "build": "foal rmdir build && tsc -p tsconfig.app.json",
     "start": "node ./build/index.js",

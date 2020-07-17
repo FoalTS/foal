@@ -17,7 +17,7 @@ import {
 import * as Busboy from 'busboy';
 
 // FoalTS
-import { Disk } from './disk.service';
+import { Disk } from './abstract-disk.service';
 import { File } from './file';
 
 export interface MultipartFormDataSchema {

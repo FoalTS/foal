@@ -156,4 +156,50 @@ describe('runScript', () => {
     });
   });
 
+  it('should catch and log errors thrown in the "main" function.', () => {
+    mkdirIfDoesNotExist('build/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    module.exports.main = function main() {
+      throw new Error('Hello world');
+    }`;
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+
+    let msg: any;
+    const log = (message: any) => msg = message;
+
+    runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run-script',
+      'my-script',
+    ], log);
+
+    deepStrictEqual(msg, new Error('Hello world'));
+  });
+
+  it('should catch and log errors rejected in the "main" function.', async () => {
+    mkdirIfDoesNotExist('build/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    module.exports.main = async function main() {
+      throw new Error('Hello world');
+    }`;
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+
+    let msg: any;
+    const log = (message: any) => msg = message;
+
+    await runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run-script',
+      'my-script',
+    ], log);
+
+    deepStrictEqual(msg, new Error('Hello world'));
+  });
+
 });

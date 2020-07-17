@@ -6,6 +6,7 @@ import { Readable } from 'stream';
 import { HttpResponseOK } from '@foal/core';
 
 // FoalTS
+import { join } from 'path';
 import { AbstractDisk, FileDoesNotExist, isFileDoesNotExist } from './abstract-disk.service';
 
 describe('FileDoesNotExist', () => {
@@ -85,6 +86,15 @@ describe('AbstractDisk', () => {
   let disk: Disk;
 
   beforeEach(() => disk = new Disk());
+
+  it('should support concrete services.', () => {
+    strictEqual(AbstractDisk.concreteClassConfigPath, 'settings.disk.driver');
+    strictEqual(AbstractDisk.concreteClassName, 'ConcreteDisk');
+  });
+
+  it('should define LocalDisk as default concrete service.', () => {
+    strictEqual(AbstractDisk.defaultConcreteClassPath, join(__dirname, './local-disk.service'));
+  });
 
   describe('has a "createHttpResponse" method that', () => {
 

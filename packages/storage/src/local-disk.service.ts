@@ -120,3 +120,5 @@ export class LocalDisk extends AbstractDisk {
   }
 
 }
+
+export { LocalDisk as ConcreteDisk };

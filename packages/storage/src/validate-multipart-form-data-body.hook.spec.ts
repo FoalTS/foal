@@ -10,15 +10,21 @@ import {
 import * as request from 'supertest';
 
 // FoalTS
-import { Disk } from './disk.service';
+import { Disk } from './abstract-disk.service';
 import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {
 
-  beforeEach(() => process.env.SETTINGS_LOGGER_FORMAT = 'none');
+  beforeEach(() => {
+    process.env.SETTINGS_LOGGER_FORMAT = 'none';
+    process.env.SETTINGS_DISK_DRIVER = 'local';
+  });
 
-  afterEach(() => delete process.env.SETTINGS_LOGGER_FORMAT);
+  afterEach(() => {
+    delete process.env.SETTINGS_LOGGER_FORMAT;
+    delete process.env.SETTINGS_DISK_DRIVER;
+  });
 
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
@@ -94,7 +100,6 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when the fields are not validated against the given schema', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
@@ -102,7 +107,6 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
 
       const contents = readdirSync('uploaded/images');
@@ -200,7 +204,6 @@ describe('ValidateMultipartFormDataBody', () => {
     beforeEach(() => {
       process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT = '200000';
 
-      process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
@@ -210,7 +213,6 @@ describe('ValidateMultipartFormDataBody', () => {
     afterEach(() => {
       delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT;
 
-      delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
 
       const contents = readdirSync('uploaded/images');
@@ -266,7 +268,6 @@ describe('ValidateMultipartFormDataBody', () => {
     beforeEach(() => {
       process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT = '1';
 
-      process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
@@ -276,7 +277,6 @@ describe('ValidateMultipartFormDataBody', () => {
     afterEach(() => {
       delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT;
 
-      delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
 
       const contents = readdirSync('uploaded/images');
@@ -400,7 +400,6 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when a file is not uploaded but it is required', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
 
       mkdirSync('uploaded');
@@ -408,7 +407,6 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
 
       const contents = readdirSync('uploaded/images');
@@ -586,7 +584,6 @@ describe('ValidateMultipartFormDataBody', () => {
     let disk: Disk;
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_DRIVER = 'local';
       process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
       process.env.SETTINGS_LOG_ERRORS = 'false';
 
@@ -597,7 +594,6 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_DRIVER;
       delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
       delete process.env.SETTINGS_LOG_ERRORS;
 
@@ -610,7 +606,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not kill the process if Disk.write throws an error.', async () => {
-      delete process.env.SETTINGS_DISK_DRIVER;
+      process.env.SETTINGS_DISK_DRIVER = '@foal/internal-test';
 
       const actual: { body: any } = { body: null };
       const app = createAppWithHook({
