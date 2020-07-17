@@ -1,6 +1,6 @@
 {
   "name": "@foal/storage",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -45,7 +45,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.10.0",
+    "@foal/core": "^1.11.0",
     "@types/busboy": "~0.2.3",
     "busboy": "~0.3.1",
     "mime": "~2.4.4",

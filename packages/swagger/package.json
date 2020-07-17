@@ -1,6 +1,6 @@
 {
   "name": "@foal/swagger",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Swagger UI for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -44,7 +44,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^1.10.0",
+    "@foal/core": "^1.11.0",
     "swagger-ui-dist": "~3.28.0"
   },
   "devDependencies": {
