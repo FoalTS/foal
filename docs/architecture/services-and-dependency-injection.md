@@ -247,7 +247,7 @@ class ApiController {
 
 ## Abstract Services
 
-> Abstract services are available in Foal v1.10 onwards.
+> Abstract services are available in Foal v1.11 onwards.
 
 If you want to use a different service implementation depending on your environment (production, development, etc.), you can use an abstract service for this.
 

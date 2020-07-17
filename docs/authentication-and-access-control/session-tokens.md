@@ -409,7 +409,7 @@ foal run revoke-all-sessions
 
 ## Specifying Globally the Session Store
 
-> Available in Foal v1.10.0 onwards.
+> Available in Foal v1.11.0 onwards.
 
 In order to avoid passing the session store to the hooks each time, you can provide it via the configuration.
 
