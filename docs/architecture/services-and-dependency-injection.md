@@ -257,7 +257,7 @@ export abstract class Logger {
   static concreteClassConfigPath = 'logger.driver';
   static concreteClassName = 'ConcreteLogger';
 
-  abstract log(str: string): string;
+  abstract log(str: string);
 }
 ```
 
@@ -266,7 +266,7 @@ export abstract class Logger {
 *console-logger.service.ts (concrete service)*
 ```typescript
 export class ConsoleLogger extends Logger {
-  log(str: string): string {
+  log(str: string) {
     console.log(str);
   }
 }
@@ -307,7 +307,7 @@ export abstract class Logger {
   static concreteClassName = 'ConcreteLogger';
   static defaultConcreteClassPath = join(__dirname, './console-logger.service');
 
-  abstract log(str: string): string;
+  abstract log(str: string);
 }
 ```
 
