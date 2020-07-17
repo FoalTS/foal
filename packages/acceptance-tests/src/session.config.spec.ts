@@ -58,6 +58,7 @@ describe('The session store', () => {
     const app = createApp(AuthController, {
       serviceManager
     });
+    await app.foal.services.boot();
 
     await request(app)
       .get('/products')
