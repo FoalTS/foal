@@ -6,6 +6,9 @@ export class DatabaseSession {
   @PrimaryColumn()
   id: string;
 
+  @Column({ nullable: true })
+  userId: number;
+
   @Column({ type: 'text' })
   content: string;
 
@@ -25,6 +28,10 @@ export class DatabaseSession {
  */
 export class TypeORMStore extends SessionStore {
   async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+    if (typeof options.userId === 'string') {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    }
+
     const sessionID = await this.generateSessionID();
     await this.applySessionOptions(sessionContent, options);
 
@@ -39,10 +46,17 @@ export class TypeORMStore extends SessionStore {
         createdAt: date,
         id: sessionID,
         updatedAt: date,
+        userId: options.userId,
       })
       .execute();
 
-    return new Session({ store: this, id: sessionID, content: sessionContent, createdAt: date });
+    return new Session({
+      content: sessionContent,
+      createdAt: date,
+      id: sessionID,
+      store: this,
+      userId: options.userId,
+    });
   }
 
   async update(session: Session): Promise<void> {
@@ -51,7 +65,6 @@ export class TypeORMStore extends SessionStore {
       .update()
       .set({
         content: JSON.stringify(session.getContent()),
-        createdAt: session.createdAt,
         updatedAt: Date.now()
       })
       .where({ id: session.sessionID })
@@ -85,7 +98,13 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session({ store: this, id: session.id, content: sessionContent, createdAt });
+    return new Session({
+      content: sessionContent,
+      createdAt,
+      id: session.id,
+      store: this,
+      userId: session.userId,
+    });
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {

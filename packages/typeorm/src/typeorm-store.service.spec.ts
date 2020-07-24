@@ -129,9 +129,18 @@ function storeTestSuite(type: DBType) {
 
     describe('has a "createAndSaveSession" method that', () => {
 
+      it('should throw if the user ID is defined and is a number.', async () => {
+        await rejects(
+          () => store.createAndSaveSession({ foo: 'bar' }, { userId: 'e' }),
+          {
+            message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+          }
+        );
+      });
+
       it('should generate an ID and create a new session in the database.', async () => {
         const dateBefore = Date.now();
-        await store.createAndSaveSession({ foo: 'bar' });
+        await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
         const dateAfter = Date.now();
 
         const sessions = await getRepository(DatabaseSession).find();
@@ -139,6 +148,7 @@ function storeTestSuite(type: DBType) {
         const sessionA = sessions[0];
 
         notStrictEqual(sessionA.id, undefined);
+        strictEqual(sessionA.userId, 2);
         deepStrictEqual(sessionA.content, JSON.stringify({ foo: 'bar' }));
 
         const createdAt = parseInt(sessionA.createdAt.toString(), 10);
@@ -151,13 +161,14 @@ function storeTestSuite(type: DBType) {
       });
 
       it('should return a representation (Session object) of the created session.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' });
+        const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
 
         const sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
+        strictEqual(session.userId, sessionA.userId);
         strictEqual(session.sessionID, sessionA.id);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
         strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
@@ -170,7 +181,7 @@ function storeTestSuite(type: DBType) {
 
     });
 
-    describe('has a "update" method that', () => {
+    describe('has an "update" method that', () => {
 
       it('should update the content of the session if the session exists.', async () => {
         const session1 = getRepository(DatabaseSession).create({
@@ -385,6 +396,7 @@ function storeTestSuite(type: DBType) {
           createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
+          userId: 2,
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -394,6 +406,7 @@ function storeTestSuite(type: DBType) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
+        strictEqual(session.userId, 2);
         strictEqual(session.sessionID, session2.id);
         strictEqual(session.get('foo'), 'bar');
         strictEqual(session.createdAt, session2.createdAt);
