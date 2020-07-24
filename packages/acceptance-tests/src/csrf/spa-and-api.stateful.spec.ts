@@ -14,7 +14,7 @@ import {
   TokenRequired
 } from '@foal/core';
 import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
-import { TypeORMStore, DatabaseSession } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
 describe('[CSRF|spa and api|stateful] Users', () => {
 

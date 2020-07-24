@@ -1,5 +1,5 @@
 import { Session, SessionOptions, SessionStore } from '@foal/core';
-import {  Column, Entity, getRepository,  LessThan, PrimaryColumn } from 'typeorm';
+import {  Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class DatabaseSession {
@@ -47,8 +47,8 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .update()
       .set({
-        createdAt: session.createdAt,
         content: JSON.stringify(session.getContent()),
+        createdAt: session.createdAt,
         updatedAt: Date.now()
       })
       .where({ id: session.sessionID })

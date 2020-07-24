@@ -107,14 +107,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should update the content of the session if the session exists.', async () => {
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -134,14 +134,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should update the lifetime (inactiviy) if the session exists.', async () => {
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -167,14 +167,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should delete the session from its ID.', async () => {
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -207,8 +207,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now() - inactivity * 1000,
         });
@@ -222,14 +222,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should delete the session if it has expired (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now() - inactivity * 1000,
         });
@@ -253,8 +253,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now() - absolute * 1000,
           content: JSON.stringify({}),
+          createdAt: Date.now() - absolute * 1000,
           id: 'a',
           updatedAt: Date.now(),
         });
@@ -269,14 +269,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now() - absolute * 1000,
           content: JSON.stringify({}),
+          createdAt: Date.now() - absolute * 1000,
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -298,14 +298,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should return the session.', async () => {
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({ foo: 'bar' }),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -330,14 +330,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
@@ -367,14 +367,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
       it('should remove all sessions.', async () => {
         const session1 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({ foo: 'bar' }),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now(),
         });
@@ -395,15 +395,15 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should remove expired sessions due to inactivity.', async () => {
         const inactivityTimeout = SessionStore.getExpirationTimeouts().inactivity;
 
-        const currentSession =getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
+        const currentSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'a',
           updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
         });
         const expiredSession = getRepository(DatabaseSession).create({
-          createdAt: Date.now(),
           content: JSON.stringify({}),
+          createdAt: Date.now(),
           id: 'b',
           updatedAt: Date.now() - inactivityTimeout * 1000,
         });
@@ -427,14 +427,14 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         const absoluteTimeout = SessionStore.getExpirationTimeouts().absolute;
 
         const currentSession = getRepository(DatabaseSession).create({
-          createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
           content: JSON.stringify({}),
+          createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
           id: 'a',
           updatedAt: Date.now(),
         });
         const expiredSession = getRepository(DatabaseSession).create({
-          createdAt: Date.now() - absoluteTimeout * 1000,
           content: JSON.stringify({}),
+          createdAt: Date.now() - absoluteTimeout * 1000,
           id: 'b',
           updatedAt: Date.now(),
         });
