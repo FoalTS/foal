@@ -10,6 +10,7 @@ import { MongoDBStore } from './mongodb-store.service';
 
 interface PlainSession {
   _id: string;
+  userId?: string;
   sessionContent: object;
   createdAt: number;
   updatedAt: number;
@@ -62,7 +63,7 @@ describe('MongoDBStore', () => {
     before(async () => {
       process.env.MONGODB_URI = MONGODB_URI;
 
-      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
+      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
       store = createService(MongoDBStore);
       await store.boot();
     });
@@ -82,7 +83,7 @@ describe('MongoDBStore', () => {
 
       it('should generate an ID and create a new session in the database.', async () => {
         const dateBefore = Date.now();
-        await store.createAndSaveSession({ foo: 'bar' });
+        await store.createAndSaveSession({ foo: 'bar' }, { userId: 'xxx' });
         const dateAfter = Date.now();
 
         const sessions = await readSessionsFromDB();
@@ -90,6 +91,7 @@ describe('MongoDBStore', () => {
         const sessionA = sessions[0];
 
         notStrictEqual(sessionA._id, undefined);
+        strictEqual(sessionA.userId, 'xxx');
         deepStrictEqual(sessionA.sessionContent, { foo: 'bar' });
 
         const createdAt = sessionA.createdAt;
@@ -102,13 +104,14 @@ describe('MongoDBStore', () => {
       });
 
       it('should return a representation (Session object) of the created session.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' });
+        const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 'xxx' });
 
         const sessions = await readSessionsFromDB();
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
+        strictEqual(session.userId, sessionA.userId);
         strictEqual(session.sessionID, sessionA._id);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
         strictEqual(session.createdAt, sessionA.createdAt);
@@ -322,6 +325,7 @@ describe('MongoDBStore', () => {
           createdAt: Date.now(),
           sessionContent: { foo: 'bar' },
           updatedAt: Date.now(),
+          userId: 'xxx'
         });
 
         const session = await store.read(session2._id);
@@ -329,6 +333,7 @@ describe('MongoDBStore', () => {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
+        strictEqual(session.userId, 'xxx');
         strictEqual(session.sessionID, session2._id);
         strictEqual(session.get('foo'), 'bar');
         strictEqual(session.createdAt, session2.createdAt);

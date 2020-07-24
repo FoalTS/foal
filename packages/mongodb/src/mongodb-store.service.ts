@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
   _id: string;
+  userId?: string;
   sessionContent: object;
   createdAt: number;
   updatedAt: number;
@@ -26,7 +27,7 @@ export class MongoDBStore extends SessionStore {
       'string',
       'You must provide the URI of your database when using MongoDBStore.'
     );
-    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
+    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
     this.collection = this.mongoDBClient.db().collection('foalSessions');
   }
 
@@ -40,9 +41,16 @@ export class MongoDBStore extends SessionStore {
       createdAt: date,
       sessionContent,
       updatedAt: date,
+      userId: options.userId,
     });
 
-    return new Session({ store: this, id: sessionID, content: sessionContent, createdAt: date });
+    return new Session({
+      content: sessionContent,
+      createdAt: date,
+      id: sessionID,
+      store: this,
+      userId: options.userId,
+    });
   }
 
   async update(session: Session): Promise<void> {
@@ -52,7 +60,6 @@ export class MongoDBStore extends SessionStore {
       },
       {
         $set: {
-          // createdAt: session.createdAt,
           sessionContent: session.getContent(),
           updatedAt: Date.now()
         }
@@ -83,7 +90,13 @@ export class MongoDBStore extends SessionStore {
       return undefined;
     }
 
-    return new Session({ store: this, id: session._id, content: session.sessionContent, createdAt: session.createdAt });
+    return new Session({
+      content: session.sessionContent,
+      createdAt: session.createdAt,
+      id: session._id,
+      store: this,
+      userId: session.userId,
+    });
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
