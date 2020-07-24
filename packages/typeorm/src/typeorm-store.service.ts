@@ -1,19 +1,19 @@
 import { Session, SessionOptions, SessionStore } from '@foal/core';
-import {  Column, Entity, getRepository,  LessThan, PrimaryColumn} from 'typeorm';
+import {  Column, Entity, getRepository,  LessThan, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class FoalSession {
+export class DatabaseSession {
   @PrimaryColumn()
-  session_id: string;
+  id: string;
 
   @Column({ type: 'text' })
-  session_content: string;
+  content: string;
 
   @Column({ type: 'bigint' })
-  updated_at: number;
+  updatedAt: number;
 
   @Column({ type: 'bigint' })
-  created_at: number;
+  createdAt: number;
 }
 
 /**
@@ -30,47 +30,47 @@ export class TypeORMStore extends SessionStore {
 
     const date = Date.now();
 
-    const databaseSession = new FoalSession();
-    databaseSession.session_id = sessionID;
-    databaseSession.session_content = JSON.stringify(sessionContent),
-    databaseSession.updated_at = date;
-    databaseSession.created_at = date;
+    const databaseSession = new DatabaseSession();
+    databaseSession.id = sessionID;
+    databaseSession.content = JSON.stringify(sessionContent),
+    databaseSession.updatedAt = date;
+    databaseSession.createdAt = date;
 
-    await getRepository(FoalSession)
+    await getRepository(DatabaseSession)
       .save(databaseSession);
 
     return new Session(this, sessionID, sessionContent, date);
   }
 
   async update(session: Session): Promise<void> {
-    await getRepository(FoalSession)
+    await getRepository(DatabaseSession)
       .createQueryBuilder()
       .update()
       .set({
-        created_at: session.createdAt,
-        session_content: JSON.stringify(session.getContent()),
-        updated_at: Date.now()
+        createdAt: session.createdAt,
+        content: JSON.stringify(session.getContent()),
+        updatedAt: Date.now()
       })
-      .where({ session_id: session.sessionID })
+      .where({ id: session.sessionID })
       .execute();
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await getRepository(FoalSession)
-      .delete({ session_id: sessionID });
+    await getRepository(DatabaseSession)
+      .delete({ id: sessionID });
   }
 
   async read(sessionID: string): Promise<Session | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
-    const session = await getRepository(FoalSession).findOne({ session_id: sessionID });
+    const session = await getRepository(DatabaseSession).findOne({ id: sessionID });
     if (!session) {
       return undefined;
     }
 
-    const createdAt = parseInt(session.created_at.toString(), 10);
-    const updatedAt = parseInt(session.updated_at.toString(), 10);
-    const sessionContent = JSON.parse(session.session_content);
+    const createdAt = parseInt(session.createdAt.toString(), 10);
+    const updatedAt = parseInt(session.updatedAt.toString(), 10);
+    const sessionContent = JSON.parse(session.content);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
@@ -82,31 +82,31 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, session.session_id, sessionContent, createdAt);
+    return new Session(this, session.id, sessionContent, createdAt);
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
-    await getRepository(FoalSession)
+    await getRepository(DatabaseSession)
       .createQueryBuilder()
       .update()
-      .set({ updated_at: Date.now() })
-      .where({ session_id: sessionID })
+      .set({ updatedAt: Date.now() })
+      .where({ id: sessionID })
       .execute();
   }
 
   async clear(): Promise<void> {
-    await getRepository(FoalSession)
+    await getRepository(DatabaseSession)
       .clear();
   }
 
   async cleanUpExpiredSessions(): Promise<void> {
     const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await getRepository(FoalSession)
+    await getRepository(DatabaseSession)
       .createQueryBuilder()
       .delete()
       .where([
-        { created_at: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
-        { updated_at: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
+        { createdAt: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
+        { updatedAt: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
       ])
       .execute();
   }

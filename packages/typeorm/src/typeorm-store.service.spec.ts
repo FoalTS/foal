@@ -6,53 +6,7 @@ import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import { createService, Session, SessionStore } from '@foal/core';
-import { TypeORMStore, FoalSession } from './typeorm-store.service';
-
-interface DatabaseSession {
-  session_id: string;
-  session_content: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface PlainSession {
-  sessionID: string;
-  sessionContent: object;
-  createdAt: number;
-  updatedAt: number;
-}
-
-async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
-  await getConnection().query(`
-    INSERT INTO foal_session (session_id, session_content, created_at, updated_at)
-    VALUES ('${session.sessionID}', '${JSON.stringify(session.sessionContent)}',
-            ${session.createdAt.toString()}, ${session.updatedAt.toString()})
-  `);
-  return session;
-}
-
-async function readSessionsFromDB(): Promise<PlainSession[]> {
-  const sessions: DatabaseSession[] = await getConnection().query('SELECT * FROM foal_session');
-  return sessions.map(session => ({
-    createdAt: parseInt(session.created_at, 10),
-    sessionContent: JSON.parse(session.session_content),
-    sessionID: session.session_id,
-    updatedAt: parseInt(session.updated_at, 10),
-  }));
-}
-
-async function findByID(sessionID: string): Promise<PlainSession> {
-  const sessions: DatabaseSession[] = await getConnection().query(
-    `SELECT * FROM foal_session WHERE session_id='${sessionID}'`
-  );
-  strictEqual(sessions.length, 1);
-  return {
-    createdAt: parseInt(sessions[0].created_at, 10),
-    sessionContent: JSON.parse(sessions[0].session_content),
-    sessionID: sessions[0].session_id,
-    updatedAt: parseInt(sessions[0].updated_at, 10),
-  };
-}
+import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
@@ -66,7 +20,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ FoalSession ],
+            entities: [ DatabaseSession ],
             password: 'test',
             port: type === 'mysql' ? 3308 : 3307,
             synchronize: true,
@@ -78,7 +32,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
-            entities: [ FoalSession ],
+            entities: [ DatabaseSession ],
             password: 'test',
             synchronize: true,
             type,
@@ -89,7 +43,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
-            entities: [ FoalSession ],
+            entities: [ DatabaseSession ],
             synchronize: true,
             type,
           });
@@ -101,7 +55,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
     beforeEach(async () => {
       store = createService(TypeORMStore);
-      await getRepository(FoalSession).clear();
+      await getRepository(DatabaseSession).clear();
     });
 
     after(() => getConnection().close());
@@ -113,12 +67,12 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
         await store.createAndSaveSession({ foo: 'bar' });
         const dateAfter = Date.now();
 
-        const sessions = await readSessionsFromDB();
+        const sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
-        notStrictEqual(sessionA.sessionID, undefined);
-        deepStrictEqual(sessionA.sessionContent, { foo: 'bar' });
+        notStrictEqual(sessionA.id, undefined);
+        deepStrictEqual(sessionA.content, JSON.stringify({ foo: 'bar' }));
 
         const createdAt = parseInt(sessionA.createdAt.toString(), 10);
         strictEqual(dateBefore <= createdAt, true);
@@ -132,12 +86,12 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should return a representation (Session object) of the created session.', async () => {
         const session = await store.createAndSaveSession({ foo: 'bar' });
 
-        const sessions = await readSessionsFromDB();
+        const sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
-        strictEqual(session.sessionID, sessionA.sessionID);
+        strictEqual(session.sessionID, sessionA.id);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
         strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
       });
@@ -152,54 +106,58 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "update" method that', () => {
 
       it('should update the content of the session if the session exists.', async () => {
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        await store.update(new Session({} as any, session1.sessionID, { bar: 'foo' }, session1.createdAt));
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        const sessionA = await findByID(session1.sessionID);
-        deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
+        await store.update(new Session({} as any, session1.id, { bar: 'foo' }, session1.createdAt));
+
+        const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
+        deepStrictEqual(sessionA.content, JSON.stringify({ bar: 'foo' }));
         deepStrictEqual(parseInt(sessionA.createdAt.toString(), 10), session1.createdAt);
 
-        const sessionB = await findByID(session2.sessionID);
-        deepStrictEqual(sessionB.sessionContent, {});
+        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
+        deepStrictEqual(sessionB.content, JSON.stringify({}));
         deepStrictEqual(parseInt(sessionB.createdAt.toString(), 10), session2.createdAt);
       });
 
       it('should update the lifetime (inactiviy) if the session exists.', async () => {
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now(),
         });
+
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.update(new Session({} as any, session1.sessionID, session1.sessionContent, session1.createdAt));
+        await store.update(new Session({} as any, session1.id, session1.content, session1.createdAt));
         const dateAfter = Date.now();
 
-        const sessionA = await findByID(session1.sessionID);
+        const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
         const updatedAtA = parseInt(sessionA.updatedAt.toString(), 10);
         strictEqual(dateBefore <= updatedAtA, true);
         strictEqual(updatedAtA <= dateAfter, true);
 
-        const sessionB = await findByID(session2.sessionID);
+        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
         strictEqual(parseInt(sessionB.updatedAt.toString(), 10), session2.updatedAt);
       });
 
@@ -208,27 +166,29 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "destroy" method that', () => {
 
       it('should delete the session from its ID.', async () => {
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        strictEqual((await readSessionsFromDB()).length, 2);
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        await store.destroy(session1.sessionID);
+        strictEqual((await getRepository(DatabaseSession).find()).length, 2);
 
-        const sessions = await readSessionsFromDB();
+        await store.destroy(session1.id);
+
+        const sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
-        strictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
-        notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
+        strictEqual(sessions.find(session => session.id === session1.id), undefined);
+        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
       });
 
       it('should not throw if no session matches the given session ID.', async () => {
@@ -246,108 +206,118 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should return undefined if the session has expired (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now() - inactivity * 1000,
         });
 
-        const session = await store.read(session1.sessionID);
+        await getRepository(DatabaseSession).save(session1);
+
+        const session = await store.read(session1.id);
         strictEqual(session, undefined);
       });
 
       it('should delete the session if it has expired (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now() - inactivity * 1000,
         });
 
-        let sessions = await readSessionsFromDB();
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
+
+        let sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
-        notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
+        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
 
-        await store.read(session2.sessionID);
+        await store.read(session2.id);
 
-        sessions = await readSessionsFromDB();
+        sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
-        strictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
+        strictEqual(sessions.find(session => session.id === session2.id), undefined);
       });
 
       it('should return undefined if the session has expired (absolute).', async () => {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now() - absolute * 1000,
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
 
-        const session = await store.read(session1.sessionID);
+        await getRepository(DatabaseSession).save(session1);
+
+        const session = await store.read(session1.id);
         strictEqual(session, undefined);
       });
 
       it('should delete the session if it has expired (absolute).', async () => {
         const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now() - absolute * 1000,
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        let sessions = await readSessionsFromDB();
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
+
+        let sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
-        notStrictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
+        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
 
-        await store.read(session2.sessionID);
+        await store.read(session2.id);
 
-        sessions = await readSessionsFromDB();
+        sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.sessionID === session1.sessionID), undefined);
-        strictEqual(sessions.find(session => session.sessionID === session2.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
+        strictEqual(sessions.find(session => session.id === session2.id), undefined);
       });
 
       it('should return the session.', async () => {
-        await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: { foo: 'bar' },
-          sessionID: 'b',
+          content: JSON.stringify({ foo: 'bar' }),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        const session = await store.read(session2.sessionID);
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
+
+        const session = await store.read(session2.id);
         if (!session) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
-        strictEqual(session.sessionID, session2.sessionID);
+        strictEqual(session.sessionID, session2.id);
         strictEqual(session.get('foo'), 'bar');
         strictEqual(session.createdAt, session2.createdAt);
       });
@@ -359,29 +329,31 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should extend the lifetime of session (inactivity).', async () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-        const session1 = await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
-        const session2 = await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
+
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.extendLifeTime(session1.sessionID);
+        await store.extendLifeTime(session1.id);
         const dateAfter = Date.now();
 
-        const session = await findByID(session1.sessionID);
+        const session = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
         notStrictEqual(session1.updatedAt, session.updatedAt);
         strictEqual(dateBefore <= session.updatedAt, true);
         strictEqual(session.updatedAt <= dateAfter, true);
 
-        const sessionB = await findByID(session2.sessionID);
+        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
         strictEqual(session2.updatedAt.toString(), sessionB.updatedAt.toString());
       });
 
@@ -394,24 +366,26 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
     describe('has a "clear" method that', () => {
 
       it('should remove all sessions.', async () => {
-        await insertSessionIntoDB({
+        const session1 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        await insertSessionIntoDB({
+        const session2 = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: { foo: 'bar' },
-          sessionID: 'b',
+          content: JSON.stringify({ foo: 'bar' }),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        strictEqual((await readSessionsFromDB()).length, 2);
+        await getRepository(DatabaseSession).save([ session1, session2 ]);
+
+        strictEqual((await getRepository(DatabaseSession).find()).length, 2);
 
         await store.clear();
 
-        strictEqual((await readSessionsFromDB()).length, 0);
+        strictEqual((await getRepository(DatabaseSession).find()).length, 0);
       });
 
     });
@@ -421,59 +395,63 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
       it('should remove expired sessions due to inactivity.', async () => {
         const inactivityTimeout = SessionStore.getExpirationTimeouts().inactivity;
 
-        const currentSession = await insertSessionIntoDB({
+        const currentSession =getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
         });
-        const expiredSession = await insertSessionIntoDB({
+        const expiredSession = getRepository(DatabaseSession).create({
           createdAt: Date.now(),
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now() - inactivityTimeout * 1000,
         });
 
-        let sessions = await readSessionsFromDB();
+        await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
+
+        let sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
-        notStrictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
+        notStrictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
 
         await store.cleanUpExpiredSessions();
 
-        sessions = await readSessionsFromDB();
+        sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
-        strictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
+        strictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
       });
 
       it('should remove expired sessions due to absolute timeout.', async () => {
         const absoluteTimeout = SessionStore.getExpirationTimeouts().absolute;
 
-        const currentSession = await insertSessionIntoDB({
+        const currentSession = getRepository(DatabaseSession).create({
           createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
-          sessionContent: {},
-          sessionID: 'a',
+          content: JSON.stringify({}),
+          id: 'a',
           updatedAt: Date.now(),
         });
-        const expiredSession = await insertSessionIntoDB({
+        const expiredSession = getRepository(DatabaseSession).create({
           createdAt: Date.now() - absoluteTimeout * 1000,
-          sessionContent: {},
-          sessionID: 'b',
+          content: JSON.stringify({}),
+          id: 'b',
           updatedAt: Date.now(),
         });
 
-        let sessions = await readSessionsFromDB();
+        await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
+
+        let sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
-        notStrictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
+        notStrictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
 
         await store.cleanUpExpiredSessions();
 
-        sessions = await readSessionsFromDB();
+        sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.sessionID === currentSession.sessionID), undefined);
-        strictEqual(sessions.find(session => session.sessionID === expiredSession.sessionID), undefined);
+        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
+        strictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
       });
 
     });
