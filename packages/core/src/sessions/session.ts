@@ -34,21 +34,24 @@ export class Session {
   readonly store: SessionStore;
   readonly sessionID: string;
   readonly createdAt: number;
+  readonly userId: number|string|undefined;
 
   private modified = false;
   private destroyed = false;
   private sessionContent: any;
 
   constructor(options: {
-    store: SessionStore,
-    id: string,
     content: any,
-    createdAt: number
+    createdAt: number,
+    id: string,
+    store: SessionStore,
+    userId?: number|string,
   }) {
     this.store = options.store;
     this.sessionID = options.id;
     this.sessionContent = options.content;
     this.createdAt = options.createdAt;
+    this.userId = options.userId;
   }
 
   /**

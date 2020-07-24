@@ -36,9 +36,22 @@ describe('Session', () => {
     it('should set three readonly properties "store", "sessionID" and "createdAt" from the given arguments.', () => {
       const store = new ConcreteSessionStore();
       const session = new Session({ store, id: 'xxx', content: {}, createdAt: 3 });
-      strictEqual((session as any).store, store);
+      strictEqual(session.store, store);
       strictEqual(session.sessionID, 'xxx');
       strictEqual(session.createdAt, 3);
+    });
+
+    it('should set the readonly property "userId" if it is property in the constructor', () => {
+      const store = new ConcreteSessionStore();
+
+      const session1 = new Session({ store, id: 'xxx', content: {}, createdAt: 3 });
+      strictEqual((session1 as any).userId, undefined);
+
+      const session2 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 'e' });
+      strictEqual((session2 as any).userId, 'e');
+
+      const session3 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 22 });
+      strictEqual((session3 as any).userId, 22);
     });
 
     it('should not be "modified".', () => {
