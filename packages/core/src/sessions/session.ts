@@ -17,11 +17,7 @@ export class Session {
     readonly sessionID: string,
     private sessionContent: any,
     readonly createdAt: number
-  ) {
-    if (sessionID.includes('.')) {
-      throw new Error('A session ID cannot include dots.');
-    }
-  }
+  ) {}
 
   /**
    * Return true if an element was added/replaced in the session

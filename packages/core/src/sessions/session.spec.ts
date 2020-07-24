@@ -33,16 +33,6 @@ describe('Session', () => {
 
   describe('when it is instanciated', () => {
 
-    it('should throw an error if the sessionID includes a dot.', () => {
-      try {
-        // tslint:disable-next-line:no-unused-expression
-        new Session(new ConcreteSessionStore(), 'xxx.yyy', {}, 0);
-        throw new Error('An error should have been thrown during instanciation.');
-      } catch (error) {
-        strictEqual(error.message, 'A session ID cannot include dots.');
-      }
-    });
-
     it('should set three readonly properties "store", "sessionID" and "createdAt" from the given arguments.', () => {
       const store = new ConcreteSessionStore();
       const session = new Session(store, 'xxx', {}, 3);
