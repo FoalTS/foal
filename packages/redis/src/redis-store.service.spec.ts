@@ -100,21 +100,23 @@ describe('RedisStore', () => {
     });
 
     it('should support session options.', async () => {
-      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
+      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true, userId: 2 });
       strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+      strictEqual(session.userId, 2);
     });
 
     it('should generate an ID and create a new session in the database.', async () => {
       const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-      const session = await store.createAndSaveSession({ foo: 'bar' });
+      const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 3 });
 
       notStrictEqual(session.sessionID, undefined);
       strictEqual(await asyncTTL(`session:${session.sessionID}`), inactivity);
       const data = JSON.parse(await asyncGet(`session:${session.sessionID}`));
       deepStrictEqual(data, {
         content: { foo: 'bar' },
-        createdAt: session.createdAt
+        createdAt: session.createdAt,
+        userId: 3,
       });
     });
 
@@ -128,7 +130,13 @@ describe('RedisStore', () => {
       await asyncSet('session:a', JSON.stringify(data));
       strictEqual(await asyncGet('session:a'), JSON.stringify(data));
 
-      const session = new Session({ store: {} as any, id: 'a', content: data.content, createdAt: data.createdAt });
+      const session = new Session({
+        content: data.content,
+        createdAt: data.createdAt,
+        id: 'a',
+        store: {} as any,
+        userId: 2
+      });
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -136,7 +144,8 @@ describe('RedisStore', () => {
       const data2 = JSON.parse(await asyncGet('session:a'));
       deepStrictEqual(data2, {
         content: { foo: 'foobar' },
-        createdAt
+        createdAt,
+        userId: 2,
       });
     });
 
@@ -159,7 +168,13 @@ describe('RedisStore', () => {
     it('should create the session if it does not exist (with the proper lifetime).', async () => {
       strictEqual(await asyncGet('session:a'), null);
 
-      const session = new Session({ store: {} as any, id: 'a', content: { foo: 'bar' }, createdAt: Date.now() });
+      const session = new Session({
+        content: { foo: 'bar' },
+        createdAt: Date.now(),
+        id: 'a',
+        store: {} as any,
+        userId: 2
+      });
 
       await store.update(session);
 
@@ -168,7 +183,8 @@ describe('RedisStore', () => {
 
       deepStrictEqual(JSON.parse(sessionA), {
         content: session.getContent(),
-        createdAt: session.createdAt
+        createdAt: session.createdAt,
+        userId: 2,
       });
     });
 
@@ -232,7 +248,7 @@ describe('RedisStore', () => {
       const createdAt = Date.now();
       const sessionA = { content: {}, createdAt };
       await asyncSet('session:a', JSON.stringify(sessionA));
-      const sessionB = { content: { foo: 'bar' }, createdAt };
+      const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3 };
       await asyncSet('session:b', JSON.stringify(sessionB));
 
       const session = await store.read('b');
@@ -243,6 +259,7 @@ describe('RedisStore', () => {
       strictEqual(session.sessionID, 'b');
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, createdAt);
+      strictEqual(session.userId, 3);
     });
 
   });

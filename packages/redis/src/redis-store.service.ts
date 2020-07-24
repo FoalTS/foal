@@ -25,12 +25,18 @@ export class RedisStore extends SessionStore {
     await this.applySessionOptions(sessionContent, options);
 
     return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content: sessionContent, createdAt });
+      const data = JSON.stringify({ content: sessionContent, createdAt, userId: options.userId });
       this.redisClient.set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
-        const session = new Session({ store: this, id: sessionID, content: sessionContent, createdAt });
+        const session = new Session({
+          content: sessionContent,
+          createdAt,
+          id: sessionID,
+          store: this,
+          userId: options.userId
+        });
         resolve(session);
       });
     });
@@ -40,7 +46,11 @@ export class RedisStore extends SessionStore {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     return new Promise<void>((resolve, reject) => {
-      const data = JSON.stringify({ content: session.getContent(), createdAt: session.createdAt });
+      const data = JSON.stringify({
+        content: session.getContent(),
+        createdAt: session.createdAt,
+        userId: session.userId
+      });
       this.redisClient.set(`session:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
@@ -78,6 +88,7 @@ export class RedisStore extends SessionStore {
           createdAt: data.createdAt,
           id: sessionID,
           store: this,
+          userId: data.userId,
         });
 
         if (Date.now() - session.createdAt > absolute * 1000) {
