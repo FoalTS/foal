@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // 3p
 import { createConnection, getConnection, getRepository } from 'typeorm';
@@ -8,50 +8,117 @@ import { createConnection, getConnection, getRepository } from 'typeorm';
 import { createService, Session, SessionStore } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
-function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
+type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite';
+
+async function createTestConnection(type: DBType) {
+  switch (type) {
+    case 'mysql':
+    case 'mariadb':
+      await createConnection({
+        database: 'test',
+        dropSchema: true,
+        entities: [ DatabaseSession ],
+        password: 'test',
+        port: type === 'mysql' ? 3308 : 3307,
+        synchronize: true,
+        type,
+        username: 'test',
+      });
+      break;
+    case 'postgres':
+      await createConnection({
+        database: 'test',
+        dropSchema: true,
+        entities: [ DatabaseSession ],
+        password: 'test',
+        synchronize: true,
+        type,
+        username: 'test',
+      });
+      break;
+    case 'sqlite':
+      await createConnection({
+        database: 'test_db.sqlite',
+        dropSchema: true,
+        entities: [ DatabaseSession ],
+        synchronize: true,
+        type,
+      });
+      break;
+    default:
+      break;
+  }
+}
+
+function entityTestSuite(type: DBType) {
+
+  describe(`with ${type}`, () => {
+    before(() => createTestConnection(type));
+
+    beforeEach(async () => {
+      await getRepository(DatabaseSession).clear();
+    });
+
+    after(() => getConnection().close());
+
+    it('should has an id which is unique.', async () => {
+      const session1 = getRepository(DatabaseSession).create({
+        content: '',
+        createdAt: 0,
+        id: 'a',
+        updatedAt: 0,
+      });
+
+      await getRepository(DatabaseSession).save(session1);
+
+      await rejects(
+        () => getRepository(DatabaseSession)
+          .createQueryBuilder()
+          .insert()
+          .values({
+            content: '',
+            createdAt: 0,
+            id: 'a',
+            updatedAt: 0,
+          })
+          .execute()
+      );
+    });
+
+    it('should has a "content" which supports long strings.', async () => {
+      const session1 = getRepository(DatabaseSession).create({
+        content: JSON.stringify({
+          hello: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        }),
+        createdAt: 0,
+        id: 'a',
+        updatedAt: 0,
+      });
+      await getRepository(DatabaseSession).save(session1);
+    });
+
+  });
+}
+
+describe('DatabaseSession', () => {
+
+  entityTestSuite('mysql');
+  entityTestSuite('mariadb');
+  entityTestSuite('sqlite');
+  entityTestSuite('postgres');
+
+});
+
+function storeTestSuite(type: DBType) {
 
   describe(`with ${type}`, () => {
     let store: TypeORMStore;
 
-    before(async () => {
-      switch (type) {
-        case 'mysql':
-        case 'mariadb':
-          await createConnection({
-            database: 'test',
-            dropSchema: true,
-            entities: [ DatabaseSession ],
-            password: 'test',
-            port: type === 'mysql' ? 3308 : 3307,
-            synchronize: true,
-            type,
-            username: 'test',
-          });
-          break;
-        case 'postgres':
-          await createConnection({
-            database: 'test',
-            dropSchema: true,
-            entities: [ DatabaseSession ],
-            password: 'test',
-            synchronize: true,
-            type,
-            username: 'test',
-          });
-          break;
-        case 'sqlite':
-          await createConnection({
-            database: 'test_db.sqlite',
-            dropSchema: true,
-            entities: [ DatabaseSession ],
-            synchronize: true,
-            type,
-          });
-          break;
-        default:
-          break;
-      }
-    });
+    before(() => createTestConnection(type));
 
     beforeEach(async () => {
       store = createService(TypeORMStore);
@@ -462,9 +529,9 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
 describe('TypeORMStore', () => {
 
-  testSuite('mysql');
-  testSuite('mariadb');
-  testSuite('sqlite');
-  testSuite('postgres');
+  storeTestSuite('mysql');
+  storeTestSuite('mariadb');
+  storeTestSuite('sqlite');
+  storeTestSuite('postgres');
 
 });

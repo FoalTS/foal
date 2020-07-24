@@ -30,14 +30,17 @@ export class TypeORMStore extends SessionStore {
 
     const date = Date.now();
 
-    const databaseSession = new DatabaseSession();
-    databaseSession.id = sessionID;
-    databaseSession.content = JSON.stringify(sessionContent),
-    databaseSession.updatedAt = date;
-    databaseSession.createdAt = date;
-
+    // TODO: test that the method throws if the ID is already taken.
     await getRepository(DatabaseSession)
-      .save(databaseSession);
+      .createQueryBuilder()
+      .insert()
+      .values({
+        content: JSON.stringify(sessionContent),
+        createdAt: date,
+        id: sessionID,
+        updatedAt: date,
+      })
+      .execute();
 
     return new Session(this, sessionID, sessionContent, date);
   }
