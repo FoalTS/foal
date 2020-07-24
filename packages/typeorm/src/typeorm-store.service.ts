@@ -1,5 +1,5 @@
 import { Session, SessionOptions, SessionStore } from '@foal/core';
-import {  Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
+import {  Column, Entity, getRepository, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class DatabaseSession {
@@ -7,16 +7,22 @@ export class DatabaseSession {
   id: string;
 
   @Column({ nullable: true })
-  userId: number;
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  user_id: number;
 
   @Column({ type: 'text' })
   content: string;
 
   @Column({ type: 'bigint' })
-  updatedAt: number;
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  updated_at: number;
 
   @Column({ type: 'bigint' })
-  createdAt: number;
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  created_at: number;
 }
 
 /**
@@ -43,10 +49,10 @@ export class TypeORMStore extends SessionStore {
       .insert()
       .values({
         content: JSON.stringify(sessionContent),
-        createdAt: date,
+        created_at: date,
         id: sessionID,
-        updatedAt: date,
-        userId: options.userId,
+        updated_at: date,
+        user_id: options.userId,
       })
       .execute();
 
@@ -65,7 +71,7 @@ export class TypeORMStore extends SessionStore {
       .update()
       .set({
         content: JSON.stringify(session.getContent()),
-        updatedAt: Date.now()
+        updated_at: Date.now()
       })
       .where({ id: session.sessionID })
       .execute();
@@ -84,8 +90,8 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    const createdAt = parseInt(session.createdAt.toString(), 10);
-    const updatedAt = parseInt(session.updatedAt.toString(), 10);
+    const createdAt = parseInt(session.created_at.toString(), 10);
+    const updatedAt = parseInt(session.updated_at.toString(), 10);
     const sessionContent = JSON.parse(session.content);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
@@ -103,7 +109,7 @@ export class TypeORMStore extends SessionStore {
       createdAt,
       id: session.id,
       store: this,
-      userId: session.userId,
+      userId: session.user_id,
     });
   }
 
@@ -111,7 +117,7 @@ export class TypeORMStore extends SessionStore {
     await getRepository(DatabaseSession)
       .createQueryBuilder()
       .update()
-      .set({ updatedAt: Date.now() })
+      .set({ updated_at: Date.now() })
       .where({ id: sessionID })
       .execute();
   }
@@ -127,10 +133,21 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .delete()
       .where([
-        { createdAt: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
-        { updatedAt: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
+        { created_at: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
+        { updated_at: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
       ])
       .execute();
+  }
+
+  async getAuthenticatedUserIds(): Promise<number[]> {
+    const sessions = await getRepository(DatabaseSession)
+      .createQueryBuilder()
+      .select('DISTINCT user_id')
+      .where({
+        user_id: Not(IsNull())
+      })
+      .getRawMany();
+    return sessions.map(({ user_id }) => user_id);
   }
 
 }
