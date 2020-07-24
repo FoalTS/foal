@@ -10,6 +10,8 @@ A session usually begins when the user logs in and ends after a period of inacti
 
 ## Get Started
 
+> warning: version 2 -> add the migrations
+
 ### Choose a Session Store
 
 Then you have to choose where the temporary session state will be stored. FoalTS provides several *session stores* for this. For example, you can use the `TypeORMStore` to save the sessions in your SQL database or the `RedisStore` to save them in a redis cache.

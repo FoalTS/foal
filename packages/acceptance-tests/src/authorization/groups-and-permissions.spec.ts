@@ -11,6 +11,7 @@ import {
   TokenRequired,
 } from '@foal/core';
 import {
+  DatabaseSession,
   fetchUserWithPermissions,
   Group,
   Permission,
@@ -47,7 +48,7 @@ describe('[Authorization|permissions] Users', () => {
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
-      entities: [ User, Permission, Group ],
+      entities: [ User, Permission, Group, DatabaseSession ],
       synchronize: true,
       type: 'sqlite',
     });
