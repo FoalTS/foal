@@ -2,11 +2,18 @@
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import { createService, Session, SessionStore } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
+import { TypeORMStore, FoalSession } from './typeorm-store.service';
+
+interface DatabaseSession {
+  session_id: string;
+  session_content: string;
+  created_at: string;
+  updated_at: string;
+}
 
 interface PlainSession {
   sessionID: string;
@@ -59,8 +66,10 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
+            entities: [ FoalSession ],
             password: 'test',
             port: type === 'mysql' ? 3308 : 3307,
+            synchronize: true,
             type,
             username: 'test',
           });
@@ -69,7 +78,9 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test',
             dropSchema: true,
+            entities: [ FoalSession ],
             password: 'test',
+            synchronize: true,
             type,
             username: 'test',
           });
@@ -78,6 +89,8 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
+            entities: [ FoalSession ],
+            synchronize: true,
             type,
           });
           break;
@@ -88,11 +101,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
 
     beforeEach(async () => {
       store = createService(TypeORMStore);
-      const queryRunner = getConnection().createQueryRunner();
-      if (await queryRunner.hasTable('foal_session')) {
-        await queryRunner.clearTable('foal_session');
-      }
-      await queryRunner.release();
+      await getRepository(FoalSession).clear();
     });
 
     after(() => getConnection().close());
