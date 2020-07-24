@@ -54,6 +54,8 @@ You will find more information in the documentation pages dedicated to them.
 
 ## Code Examples
 
+> warning: version 2 -> add the migrations
+
 The four examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
 
 For these examples, we will use TypeORM as default ORM and emails and passwords as credentials. An API will allow authenticated users to list *products* with the request `GET /api/products`.
