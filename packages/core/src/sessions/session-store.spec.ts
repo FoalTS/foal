@@ -196,7 +196,13 @@ describe('SessionStore', () => {
       class Store extends SessionStore {
         async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
           await this.applySessionOptions(sessionContent, options);
-          return new Session({ store: this, id: 'xxx', content: sessionContent, createdAt: 36 });
+          return new Session({
+            content: sessionContent,
+            createdAt: 36,
+            id: 'xxx',
+            store: this,
+            userId: options.userId
+          });
         }
         update(session: Session): Promise<void> {
           throw new Error('Method not implemented.');
@@ -226,8 +232,8 @@ describe('SessionStore', () => {
 
       strictEqual(session.store, store);
       strictEqual(session.sessionID, 'xxx');
+      strictEqual(session.userId, 1);
       const content: any = session.getContent();
-      strictEqual(content.userId, 1);
       strictEqual(typeof content.csrfToken, 'string');
       strictEqual(session.createdAt, 36);
     });
