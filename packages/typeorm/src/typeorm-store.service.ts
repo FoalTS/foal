@@ -150,4 +150,8 @@ export class TypeORMStore extends SessionStore {
     return sessions.map(({ user_id }) => user_id);
   }
 
+  async destroyAllSessionsOf(user: { id: number }): Promise<void> {
+    await getRepository(DatabaseSession).delete({ user_id: user.id });
+  }
+
 }

@@ -590,6 +590,54 @@ function storeTestSuite(type: DBType) {
 
     });
 
+    describe('has a "getAuthenticatedUserIds" method that', () => {
+
+      beforeEach(async () => {
+        const sessions = getRepository(DatabaseSession).create([
+          {
+            content: '{}',
+            created_at: 1,
+            id: 'a',
+            updated_at: 2,
+          },
+          {
+            content: '{}',
+            created_at: 3,
+            id: 'b',
+            updated_at: 4,
+            user_id: 1,
+          },
+          {
+            content: '{}',
+            created_at: 5,
+            id: 'c',
+            updated_at: 6,
+            user_id: 2,
+          },
+          {
+            content: '{}',
+            created_at: 7,
+            id: 'd',
+            updated_at: 8,
+            user_id: 2
+          }
+        ]);
+
+        await getRepository(DatabaseSession).save(sessions);
+      });
+
+      it('destroy all the sessions of the given user.', async () => {
+        const user = { id: 2 };
+        await store.destroyAllSessionsOf(user);
+
+        const sessions = await getRepository(DatabaseSession).find();
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0].id, 'a');
+        strictEqual(sessions[1].id, 'b');
+      });
+
+    });
+
   });
 
 }
