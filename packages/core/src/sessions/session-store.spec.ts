@@ -196,7 +196,7 @@ describe('SessionStore', () => {
       class Store extends SessionStore {
         async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
           await this.applySessionOptions(sessionContent, options);
-          return new Session(this, 'xxx', sessionContent, 36);
+          return new Session({ store: this, id: 'xxx', content: sessionContent, createdAt: 36 });
         }
         update(session: Session): Promise<void> {
           throw new Error('Method not implemented.');

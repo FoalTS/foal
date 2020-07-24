@@ -9,16 +9,6 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  private modified = false;
-  private destroyed = false;
-
-  constructor(
-    readonly store: SessionStore,
-    readonly sessionID: string,
-    private sessionContent: any,
-    readonly createdAt: number
-  ) {}
-
   /**
    * Return true if an element was added/replaced in the session
    *
@@ -39,6 +29,26 @@ export class Session {
    */
   get isDestroyed(): boolean {
     return this.destroyed;
+  }
+
+  readonly store: SessionStore;
+  readonly sessionID: string;
+  readonly createdAt: number;
+
+  private modified = false;
+  private destroyed = false;
+  private sessionContent: any;
+
+  constructor(options: {
+    store: SessionStore,
+    id: string,
+    content: any,
+    createdAt: number
+  }) {
+    this.store = options.store;
+    this.sessionID = options.id;
+    this.sessionContent = options.content;
+    this.createdAt = options.createdAt;
   }
 
   /**

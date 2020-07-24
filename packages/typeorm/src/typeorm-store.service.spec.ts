@@ -188,7 +188,12 @@ function storeTestSuite(type: DBType) {
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        await store.update(new Session({} as any, session1.id, { bar: 'foo' }, session1.createdAt));
+        await store.update(new Session({
+          content: { bar: 'foo' },
+          createdAt: session1.createdAt,
+          id: session1.id,
+          store: {} as any,
+        }));
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
         deepStrictEqual(sessionA.content, JSON.stringify({ bar: 'foo' }));
@@ -216,7 +221,12 @@ function storeTestSuite(type: DBType) {
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.update(new Session({} as any, session1.id, session1.content, session1.createdAt));
+        await store.update(new Session({
+          content: session1.content,
+          createdAt: session1.createdAt,
+          id: session1.id,
+          store: {} as any,
+        }));
         const dateAfter = Date.now();
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });

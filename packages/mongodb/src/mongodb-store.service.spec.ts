@@ -137,7 +137,12 @@ describe('MongoDBStore', () => {
           updatedAt: Date.now(),
         });
 
-        await store.update(new Session({} as any, session1._id, { bar: 'foo' }, session1.createdAt));
+        await store.update(new Session({
+          content: { bar: 'foo' },
+          createdAt: session1.createdAt,
+          id: session1._id,
+          store: {} as any,
+        }));
 
         const sessionA = await findByID(session1._id);
         deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
@@ -163,7 +168,12 @@ describe('MongoDBStore', () => {
         });
 
         const dateBefore = Date.now();
-        await store.update(new Session({} as any, session1._id, session1.sessionContent, session1.createdAt));
+        await store.update(new Session({
+          content: session1.sessionContent,
+          createdAt: session1.createdAt,
+          id: session1._id,
+          store: {} as any,
+        }));
         const dateAfter = Date.now();
 
         const sessionA = await findByID(session1._id);

@@ -42,7 +42,7 @@ export class TypeORMStore extends SessionStore {
       })
       .execute();
 
-    return new Session(this, sessionID, sessionContent, date);
+    return new Session({ store: this, id: sessionID, content: sessionContent, createdAt: date });
   }
 
   async update(session: Session): Promise<void> {
@@ -85,7 +85,7 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, session.id, sessionContent, createdAt);
+    return new Session({ store: this, id: session.id, content: sessionContent, createdAt });
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
