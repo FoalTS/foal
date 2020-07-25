@@ -53,15 +53,16 @@ A new file appears in the `src/migrations/` directory. Open it.
 import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class addTodoEntity1562755564200 implements MigrationInterface {
+    name = 'addTodoEntity1562755564200'
 
-    public async up(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`CREATE TABLE "todo" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "text" varchar NOT NULL)`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL)`);
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "todo" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "text" varchar NOT NULL)`, undefined);
+        await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL)`, undefined);
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
-        await queryRunner.query(`DROP TABLE "user"`);
-        await queryRunner.query(`DROP TABLE "todo"`);
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`DROP TABLE "user"`, undefined);
+        await queryRunner.query(`DROP TABLE "todo"`, undefined);
     }
 
 }
@@ -87,7 +88,7 @@ Your database (`db.sqlite3`) now contains a new table named `todo`:
 |                             todo                             |
 +------------+-----------+-------------------------------------+
 | id         | integer   | PRIMARY KEY AUTO_INCREMENT NOT NULL |
-| text       | varchar   |                                     |
+| text       | varchar   | NOT NULL                            |
 +------------+-----------+-------------------------------------+
 ```
 
