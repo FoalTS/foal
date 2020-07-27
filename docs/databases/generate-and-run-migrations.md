@@ -53,7 +53,7 @@ npm run migration:revert
 
 ### A Complete Example
 
-1. Create a new `User` entity.
+&nbsp;1. Create a new `User` entity.
 
 ```typescript
 import { Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -67,13 +67,13 @@ export class User {
 }
 ```
 
-2. Build the application.
+&nbsp;2. Build the application.
 
 ```
 npm run build:app
 ```
 
-3. Generate a migration file.
+&nbsp;3. Generate a migration file.
 
 ```
 npm run migration:generate -- --name add-user
@@ -98,14 +98,14 @@ export class addUser1561976236112 implements MigrationInterface {
 
 ```
 
-4. Build and run the migration.
+&nbsp;4. Build and run the migration.
 
 ```
 npm run build:migrations
 npm run migration:run
 ```
 
-5. Add new columns to the entity.
+&nbsp;5. Add new columns to the entity.
 
 ```typescript
 import { hashPassword } from '@foal/core';
@@ -131,13 +131,13 @@ export class User {
 
 ```
 
-6. Build the application.
+&nbsp;6. Build the application.
 
 ```
 npm run build:app
 ```
 
-7. Generate another migration file.
+&nbsp;7. Generate another migration file.
 
 ```
 npm run migration:generate -- --name add-email-and-password
@@ -168,7 +168,7 @@ export class addEmailAndPassword1561981516514 implements MigrationInterface {
 
 ```
 
-8. Build and run the migration.
+&nbsp;8. Build and run the migration.
 
 ```
 npm run build:migrations
