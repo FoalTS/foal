@@ -289,10 +289,10 @@ settings:
 1. Generate the token and send it in a cookie on login.
 
 ```typescript
-
+// ...
+import { getCsrfToken, setCsrfCookie } from '@foal/csrf';
+// ...
 class AuthController {
-    // ...
-    import { getCsrfToken, setCsrfCookie } from '@foal/csrf';
     // ...
 
     @Post('/login')
