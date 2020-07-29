@@ -17,21 +17,21 @@ export class RedisStore extends SessionStore {
     this.redisClient = createClient(redisURI);
   }
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     const createdAt = Date.now();
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content: sessionContent, createdAt, userId: options.userId });
+      const data = JSON.stringify({ content, createdAt, userId: options.userId });
       this.redisClient.set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
         const session = new Session({
-          content: sessionContent,
+          content,
           createdAt,
           id: sessionID,
           store: this,

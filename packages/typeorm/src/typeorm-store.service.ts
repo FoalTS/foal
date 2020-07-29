@@ -33,13 +33,13 @@ export class DatabaseSession {
  * @extends {SessionStore}
  */
 export class TypeORMStore extends SessionStore {
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     if (typeof options.userId === 'string') {
       throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
     }
 
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     const date = Date.now();
 
@@ -48,7 +48,7 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .insert()
       .values({
-        content: JSON.stringify(sessionContent),
+        content: JSON.stringify(content),
         created_at: date,
         id: sessionID,
         updated_at: date,
@@ -57,7 +57,7 @@ export class TypeORMStore extends SessionStore {
       .execute();
 
     return new Session({
-      content: sessionContent,
+      content,
       createdAt: date,
       id: sessionID,
       store: this,
@@ -92,7 +92,7 @@ export class TypeORMStore extends SessionStore {
 
     const createdAt = parseInt(session.created_at.toString(), 10);
     const updatedAt = parseInt(session.updated_at.toString(), 10);
-    const sessionContent = JSON.parse(session.content);
+    const content = JSON.parse(session.content);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
@@ -105,7 +105,7 @@ export class TypeORMStore extends SessionStore {
     }
 
     return new Session({
-      content: sessionContent,
+      content,
       createdAt,
       id: session.id,
       store: this,

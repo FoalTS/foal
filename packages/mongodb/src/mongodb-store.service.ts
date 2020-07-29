@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 export interface DatabaseSession {
   _id: string;
   userId?: string;
-  sessionContent: object;
+  content: object;
   createdAt: number;
   updatedAt: number;
 }
@@ -31,21 +31,21 @@ export class MongoDBStore extends SessionStore {
     this.collection = this.mongoDBClient.db().collection('foalSessions');
   }
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     const date = Date.now();
     await this.collection.insertOne({
       _id: sessionID,
+      content,
       createdAt: date,
-      sessionContent,
       updatedAt: date,
       userId: options.userId,
     });
 
     return new Session({
-      content: sessionContent,
+      content,
       createdAt: date,
       id: sessionID,
       store: this,
@@ -60,7 +60,7 @@ export class MongoDBStore extends SessionStore {
       },
       {
         $set: {
-          sessionContent: session.getContent(),
+          content: session.getContent(),
           updatedAt: Date.now()
         }
       }
@@ -91,7 +91,7 @@ export class MongoDBStore extends SessionStore {
     }
 
     return new Session({
-      content: session.sessionContent,
+      content: session.content,
       createdAt: session.createdAt,
       id: session._id,
       store: this,

@@ -11,7 +11,7 @@ import { MongoDBStore } from './mongodb-store.service';
 interface PlainSession {
   _id: string;
   userId?: string;
-  sessionContent: object;
+  content: object;
   createdAt: number;
   updatedAt: number;
 }
@@ -92,7 +92,7 @@ describe('MongoDBStore', () => {
 
         notStrictEqual(sessionA._id, undefined);
         strictEqual(sessionA.userId, 'xxx');
-        deepStrictEqual(sessionA.sessionContent, { foo: 'bar' });
+        deepStrictEqual(sessionA.content, { foo: 'bar' });
 
         const createdAt = sessionA.createdAt;
         strictEqual(dateBefore <= createdAt, true);
@@ -129,14 +129,14 @@ describe('MongoDBStore', () => {
       it('should update the content of the session if the session exists.', async () => {
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
@@ -148,31 +148,31 @@ describe('MongoDBStore', () => {
         }));
 
         const sessionA = await findByID(session1._id);
-        deepStrictEqual(sessionA.sessionContent, { bar: 'foo' });
+        deepStrictEqual(sessionA.content, { bar: 'foo' });
         deepStrictEqual(sessionA.createdAt, session1.createdAt);
 
         const sessionB = await findByID(session2._id);
-        deepStrictEqual(sessionB.sessionContent, {});
+        deepStrictEqual(sessionB.content, {});
         deepStrictEqual(sessionB.createdAt, session2.createdAt);
       });
 
       it('should update the lifetime (inactiviy) if the session exists.', async () => {
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
         const dateBefore = Date.now();
         await store.update(new Session({
-          content: session1.sessionContent,
+          content: session1.content,
           createdAt: session1.createdAt,
           id: session1._id,
           store: {} as any,
@@ -195,14 +195,14 @@ describe('MongoDBStore', () => {
       it('should delete the session from its ID.', async () => {
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
@@ -233,8 +233,8 @@ describe('MongoDBStore', () => {
 
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - inactivity * 1000,
         });
 
@@ -246,14 +246,14 @@ describe('MongoDBStore', () => {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - inactivity * 1000,
         });
 
@@ -275,8 +275,8 @@ describe('MongoDBStore', () => {
 
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now() - absolute * 1000,
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
@@ -289,14 +289,14 @@ describe('MongoDBStore', () => {
 
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now() - absolute * 1000,
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
@@ -316,14 +316,14 @@ describe('MongoDBStore', () => {
       it('should return the session.', async () => {
         await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: { foo: 'bar' },
           createdAt: Date.now(),
-          sessionContent: { foo: 'bar' },
           updatedAt: Date.now(),
           userId: 'xxx'
         });
@@ -348,14 +348,14 @@ describe('MongoDBStore', () => {
 
         const session1 = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
 
@@ -383,14 +383,14 @@ describe('MongoDBStore', () => {
       it('should remove all sessions.', async () => {
         await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         await insertSessionIntoDB({
           _id: 'b',
+          content: { foo: 'bar' },
           createdAt: Date.now(),
-          sessionContent: { foo: 'bar' },
           updatedAt: Date.now(),
         });
 
@@ -410,14 +410,14 @@ describe('MongoDBStore', () => {
 
         const currentSession = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
         });
         const expiredSession = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now(),
-          sessionContent: {},
           updatedAt: Date.now() - inactivityTimeout * 1000,
         });
 
@@ -439,14 +439,14 @@ describe('MongoDBStore', () => {
 
         const currentSession = await insertSessionIntoDB({
           _id: 'a',
+          content: {},
           createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
-          sessionContent: {},
           updatedAt: Date.now(),
         });
         const expiredSession = await insertSessionIntoDB({
           _id: 'b',
+          content: {},
           createdAt: Date.now() - absoluteTimeout * 1000,
-          sessionContent: {},
           updatedAt: Date.now(),
         });
 
