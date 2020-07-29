@@ -45,13 +45,13 @@ describe('Session', () => {
       const store = new ConcreteSessionStore();
 
       const session1 = new Session({ store, id: 'xxx', content: {}, createdAt: 3 });
-      strictEqual((session1 as any).userId, undefined);
+      strictEqual(session1.userId, undefined);
 
       const session2 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 'e' });
-      strictEqual((session2 as any).userId, 'e');
+      strictEqual(session2.userId, 'e');
 
       const session3 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 22 });
-      strictEqual((session3 as any).userId, 22);
+      strictEqual(session3.userId, 22);
     });
 
     it('should not be "modified".', () => {
