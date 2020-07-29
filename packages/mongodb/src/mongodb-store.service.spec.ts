@@ -18,21 +18,22 @@ interface PlainSession {
 
 describe('MongoDBStore', () => {
   const MONGODB_URI = 'mongodb://localhost:27017/db';
+  const COLLECTION_NAME = 'sessions';
 
   let store: MongoDBStore;
   let mongoDBClient: any;
 
   async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
-    await mongoDBClient.db().collection('foalSessions').insertOne(session);
+    await mongoDBClient.db().collection(COLLECTION_NAME).insertOne(session);
     return session;
   }
 
   async function readSessionsFromDB(): Promise<PlainSession[]> {
-    return mongoDBClient.db().collection('foalSessions').find({}).toArray();
+    return mongoDBClient.db().collection(COLLECTION_NAME).find({}).toArray();
   }
 
   async function findByID(sessionID: string): Promise<PlainSession> {
-    const session = await mongoDBClient.db().collection('foalSessions').findOne({ _id: sessionID });
+    const session = await mongoDBClient.db().collection(COLLECTION_NAME).findOne({ _id: sessionID });
     if (!session) {
       throw new Error('Session not found');
     }
@@ -68,7 +69,7 @@ describe('MongoDBStore', () => {
       await store.boot();
     });
 
-    beforeEach(() => mongoDBClient.db().collection('foalSessions').deleteMany({}));
+    beforeEach(() => mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({}));
 
     after(async () => {
       delete process.env.MONGODB_URI;

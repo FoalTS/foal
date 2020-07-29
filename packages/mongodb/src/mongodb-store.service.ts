@@ -28,7 +28,7 @@ export class MongoDBStore extends SessionStore {
       'You must provide the URI of your database when using MongoDBStore.'
     );
     this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
-    this.collection = this.mongoDBClient.db().collection('foalSessions');
+    this.collection = this.mongoDBClient.db().collection('sessions');
   }
 
   async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
