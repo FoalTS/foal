@@ -1,19 +1,28 @@
 import { Session, SessionOptions, SessionStore } from '@foal/core';
-import {  Column, Entity, getRepository, LessThan, PrimaryColumn } from 'typeorm';
+import {  Column, Entity, getRepository, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class DatabaseSession {
   @PrimaryColumn()
   id: string;
 
+  @Column({ nullable: true })
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  user_id: number;
+
   @Column({ type: 'text' })
   content: string;
 
   @Column({ type: 'bigint' })
-  updatedAt: number;
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  updated_at: number;
 
   @Column({ type: 'bigint' })
-  createdAt: number;
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  created_at: number;
 }
 
 /**
@@ -24,9 +33,13 @@ export class DatabaseSession {
  * @extends {SessionStore}
  */
 export class TypeORMStore extends SessionStore {
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
+    if (typeof options.userId === 'string') {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    }
+
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     const date = Date.now();
 
@@ -35,14 +48,21 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .insert()
       .values({
-        content: JSON.stringify(sessionContent),
-        createdAt: date,
+        content: JSON.stringify(content),
+        created_at: date,
         id: sessionID,
-        updatedAt: date,
+        updated_at: date,
+        user_id: options.userId,
       })
       .execute();
 
-    return new Session(this, sessionID, sessionContent, date);
+    return new Session({
+      content,
+      createdAt: date,
+      id: sessionID,
+      store: this,
+      userId: options.userId,
+    });
   }
 
   async update(session: Session): Promise<void> {
@@ -51,8 +71,7 @@ export class TypeORMStore extends SessionStore {
       .update()
       .set({
         content: JSON.stringify(session.getContent()),
-        createdAt: session.createdAt,
-        updatedAt: Date.now()
+        updated_at: Date.now()
       })
       .where({ id: session.sessionID })
       .execute();
@@ -71,9 +90,9 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    const createdAt = parseInt(session.createdAt.toString(), 10);
-    const updatedAt = parseInt(session.updatedAt.toString(), 10);
-    const sessionContent = JSON.parse(session.content);
+    const createdAt = parseInt(session.created_at.toString(), 10);
+    const updatedAt = parseInt(session.updated_at.toString(), 10);
+    const content = JSON.parse(session.content);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
@@ -85,14 +104,20 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, session.id, sessionContent, createdAt);
+    return new Session({
+      content,
+      createdAt,
+      id: session.id,
+      store: this,
+      userId: session.user_id,
+    });
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {
     await getRepository(DatabaseSession)
       .createQueryBuilder()
       .update()
-      .set({ updatedAt: Date.now() })
+      .set({ updated_at: Date.now() })
       .where({ id: sessionID })
       .execute();
   }
@@ -108,10 +133,36 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .delete()
       .where([
-        { createdAt: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
-        { updatedAt: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
+        { created_at: LessThan(Date.now() - expiredTimeouts.absolute * 1000) },
+        { updated_at: LessThan(Date.now() - expiredTimeouts.inactivity * 1000) }
       ])
       .execute();
+  }
+
+  async getAuthenticatedUserIds(): Promise<number[]> {
+    const sessions = await getRepository(DatabaseSession)
+      .createQueryBuilder()
+      .select('DISTINCT user_id')
+      .where({
+        user_id: Not(IsNull())
+      })
+      .getRawMany();
+    return sessions.map(({ user_id }) => user_id);
+  }
+
+  async destroyAllSessionsOf(user: { id: number }): Promise<void> {
+    await getRepository(DatabaseSession).delete({ user_id: user.id });
+  }
+
+  async getSessionsOf(user: { id: number }): Promise<Session[]> {
+    const databaseSessions = await getRepository(DatabaseSession).find({ user_id: user.id });
+    return databaseSessions.map(databaseSession => new Session({
+      content: JSON.parse(databaseSession.content),
+      createdAt: parseInt(databaseSession.created_at.toString(), 10),
+      id: databaseSession.id,
+      store: this,
+      userId: user.id,
+    }));
   }
 
 }

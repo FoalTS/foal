@@ -10,6 +10,7 @@ describe('RedisStore', () => {
 
   let store: RedisStore;
   const REDIS_URI = 'redis://localhost:6379';
+  const COLLECTION_NAME =  'sessions';
   let redisClient: any;
 
   before(async () => {
@@ -100,21 +101,23 @@ describe('RedisStore', () => {
     });
 
     it('should support session options.', async () => {
-      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
+      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true, userId: 2 });
       strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+      strictEqual(session.userId, 2);
     });
 
     it('should generate an ID and create a new session in the database.', async () => {
       const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-      const session = await store.createAndSaveSession({ foo: 'bar' });
+      const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 3 });
 
       notStrictEqual(session.sessionID, undefined);
-      strictEqual(await asyncTTL(`session:${session.sessionID}`), inactivity);
-      const data = JSON.parse(await asyncGet(`session:${session.sessionID}`));
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:${session.sessionID}`), inactivity);
+      const data = JSON.parse(await asyncGet(`${COLLECTION_NAME}:${session.sessionID}`));
       deepStrictEqual(data, {
         content: { foo: 'bar' },
-        createdAt: session.createdAt
+        createdAt: session.createdAt,
+        userId: 3,
       });
     });
 
@@ -125,18 +128,25 @@ describe('RedisStore', () => {
     it('should update the content of the session if the session exists.', async () => {
       const createdAt = Date.now();
       const data = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:a', JSON.stringify(data));
-      strictEqual(await asyncGet('session:a'), JSON.stringify(data));
+      await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));
 
-      const session = new Session({} as any, 'a', data.content, data.createdAt);
+      const session = new Session({
+        content: data.content,
+        createdAt: data.createdAt,
+        id: 'a',
+        store: {} as any,
+        userId: 2
+      });
       session.set('foo', 'foobar');
 
       await store.update(session);
 
-      const data2 = JSON.parse(await asyncGet('session:a'));
+      const data2 = JSON.parse(await asyncGet(`${COLLECTION_NAME}:a`));
       deepStrictEqual(data2, {
         content: { foo: 'foobar' },
-        createdAt
+        createdAt,
+        userId: 2,
       });
     });
 
@@ -145,30 +155,37 @@ describe('RedisStore', () => {
 
       const createdAt = Date.now();
       const data = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:a', JSON.stringify(data));
-      strictEqual(await asyncGet('session:a'), JSON.stringify(data));
+      await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));
 
-      const session = new Session({} as any, 'a', data.content, data.createdAt);
+      const session = new Session({ store: {} as any, id: 'a', content: data.content, createdAt: data.createdAt });
       session.set('foo', 'foobar');
 
       await store.update(session);
 
-      strictEqual(await asyncTTL('session:a'), inactivity);
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:a`), inactivity);
     });
 
     it('should create the session if it does not exist (with the proper lifetime).', async () => {
-      strictEqual(await asyncGet('session:a'), null);
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), null);
 
-      const session = new Session({} as any, 'a', { foo: 'bar' }, Date.now());
+      const session = new Session({
+        content: { foo: 'bar' },
+        createdAt: Date.now(),
+        id: 'a',
+        store: {} as any,
+        userId: 2
+      });
 
       await store.update(session);
 
-      const sessionA = await asyncGet('session:a');
+      const sessionA = await asyncGet(`${COLLECTION_NAME}:a`);
       notStrictEqual(sessionA, null);
 
       deepStrictEqual(JSON.parse(sessionA), {
         content: session.getContent(),
-        createdAt: session.createdAt
+        createdAt: session.createdAt,
+        userId: 2,
       });
     });
 
@@ -177,12 +194,12 @@ describe('RedisStore', () => {
   describe('has a "destroy" method that', () => {
 
     it('should delete the session from its ID.', async () => {
-      await asyncSet('session:a', '{}');
-      strictEqual(await asyncGet('session:a'), '{}');
+      await asyncSet(`${COLLECTION_NAME}:a`, '{}');
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), '{}');
 
       await store.destroy('a');
 
-      strictEqual(await asyncGet('session:a'), null);
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), null);
     });
 
     it('should not throw if no session matches the given session ID.', async () => {
@@ -198,8 +215,8 @@ describe('RedisStore', () => {
     });
 
     it('should return undefined if the session has expired (inactivity).', async () => {
-      await asyncSet('session:aaa', '{}');
-      await asyncExpire('session:aaa', 0);
+      await asyncSet(`${COLLECTION_NAME}:aaa`, '{}');
+      await asyncExpire(`${COLLECTION_NAME}:aaa`, 0);
       strictEqual(await store.read('aaa'), undefined);
     });
 
@@ -207,7 +224,7 @@ describe('RedisStore', () => {
       const absolute = SessionStore.getExpirationTimeouts().absolute;
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
-      await asyncSet('session:a', JSON.stringify(sessionA));
+      await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
       // The line below fixes Travis test failures.
       await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -219,21 +236,21 @@ describe('RedisStore', () => {
       const absolute = SessionStore.getExpirationTimeouts().absolute;
 
       const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
-      await asyncSet('session:a', JSON.stringify(sessionA));
+      await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
       // The line below fixes Travis test failures.
       await new Promise(resolve => setTimeout(resolve, 200));
 
       await store.read('a');
 
-      strictEqual(await asyncGet('session:a'), null);
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), null);
     });
 
     it('should return the session.', async () => {
       const createdAt = Date.now();
       const sessionA = { content: {}, createdAt };
-      await asyncSet('session:a', JSON.stringify(sessionA));
-      const sessionB = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:b', JSON.stringify(sessionB));
+      await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
+      const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3 };
+      await asyncSet(`${COLLECTION_NAME}:b`, JSON.stringify(sessionB));
 
       const session = await store.read('b');
       if (!session) {
@@ -243,6 +260,7 @@ describe('RedisStore', () => {
       strictEqual(session.sessionID, 'b');
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.createdAt, createdAt);
+      strictEqual(session.userId, 3);
     });
 
   });
@@ -252,19 +270,19 @@ describe('RedisStore', () => {
     it('should extend the lifetime of session (inactivity).', async () => {
       const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-      await asyncSet('session:aaa', '{}');
-      await asyncExpire('session:aaa', 5);
-      strictEqual(await asyncTTL('session:aaa'), 5);
+      await asyncSet(`${COLLECTION_NAME}:aaa`, '{}');
+      await asyncExpire(`${COLLECTION_NAME}:aaa`, 5);
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:aaa`), 5);
 
       await store.extendLifeTime('aaa');
 
-      strictEqual(await asyncTTL('session:aaa'), inactivity);
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:aaa`), inactivity);
     });
 
     it('should not throw if no session matches the given session ID.', async () => {
       await store.extendLifeTime('c');
 
-      strictEqual(await asyncTTL('session:c'), -2);
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:c`), -2);
     });
 
   });
@@ -272,13 +290,13 @@ describe('RedisStore', () => {
   describe('has a "clear" method that', () => {
 
     it('should remove all sessions.', async () => {
-      await asyncSet('session:aaa', '{}');
-      const sessionA = await asyncGet('session:aaa');
+      await asyncSet(`${COLLECTION_NAME}:aaa`, '{}');
+      const sessionA = await asyncGet(`${COLLECTION_NAME}:aaa`);
       strictEqual(sessionA, '{}');
 
       await store.clear();
 
-      strictEqual(await asyncGet('session:aaa'), null);
+      strictEqual(await asyncGet(`${COLLECTION_NAME}:aaa`), null);
     });
 
   });

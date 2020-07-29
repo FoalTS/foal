@@ -405,6 +405,32 @@ export class ApiController {
 }
 ```
 
+## Query All Sessions of a Given User
+
+> *This feature is only available with the TypeORM store.*
+
+```typescript
+const user = { id: 1 };
+const sessions = await this.store.getSessionsOf(user);
+```
+
+## Query All Connected Users
+
+> *This feature is only available with the TypeORM store.*
+
+```typescript
+const ids = await this.store.getAuthenticatedUserIds();
+```
+
+## Force the Disconnection of a Given User
+
+> *This feature is only available with the TypeORM store.*
+
+```typescript
+const user = { id: 1 };
+await this.store.destroyAllSessionsOf(user);
+```
+
 ## Session Stores
 
 FoalTS currently offers three built-in session stores: `TypeORMStore`, `MongoDBStore` `RedisStore`. Others will come in the future. If you need a specific one, you can submit a Github issue or even create your own store (see section below).

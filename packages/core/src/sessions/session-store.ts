@@ -6,6 +6,7 @@ import { Session } from './session';
 
 export interface SessionOptions {
   csrfToken?: boolean;
+  userId?: number|string;
 }
 
 /**
@@ -78,7 +79,10 @@ export abstract class Store {
    * @memberof Store
    */
   createAndSaveSessionFromUser(user: { id: string|number }, options?: SessionOptions): Promise<Session> {
-    return this.createAndSaveSession({ userId: user.id }, options);
+    return this.createAndSaveSession({}, {
+      ...options,
+      userId: user.id
+    });
   }
 
   /**

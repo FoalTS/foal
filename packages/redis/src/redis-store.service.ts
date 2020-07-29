@@ -17,20 +17,26 @@ export class RedisStore extends SessionStore {
     this.redisClient = createClient(redisURI);
   }
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     const createdAt = Date.now();
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content: sessionContent, createdAt });
-      this.redisClient.set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
+      const data = JSON.stringify({ content, createdAt, userId: options.userId });
+      this.redisClient.set(`sessions:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
-        const session = new Session(this, sessionID, sessionContent, createdAt);
+        const session = new Session({
+          content,
+          createdAt,
+          id: sessionID,
+          store: this,
+          userId: options.userId
+        });
         resolve(session);
       });
     });
@@ -40,8 +46,12 @@ export class RedisStore extends SessionStore {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     return new Promise<void>((resolve, reject) => {
-      const data = JSON.stringify({ content: session.getContent(), createdAt: session.createdAt });
-      this.redisClient.set(`session:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
+      const data = JSON.stringify({
+        content: session.getContent(),
+        createdAt: session.createdAt,
+        userId: session.userId
+      });
+      this.redisClient.set(`sessions:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -52,7 +62,7 @@ export class RedisStore extends SessionStore {
 
   destroy(sessionID: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.redisClient.del(`session:${sessionID}`, (err: any) => {
+      this.redisClient.del(`sessions:${sessionID}`, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -65,7 +75,7 @@ export class RedisStore extends SessionStore {
     const absolute = SessionStore.getExpirationTimeouts().absolute;
 
     return new Promise<Session | undefined>((resolve, reject) => {
-      this.redisClient.get(`session:${sessionID}`, async (err: any, val: string|null) => {
+      this.redisClient.get(`sessions:${sessionID}`, async (err: any, val: string|null) => {
         if (err) {
           return reject(err);
         }
@@ -73,7 +83,13 @@ export class RedisStore extends SessionStore {
           return resolve(undefined);
         }
         const data = JSON.parse(val);
-        const session = new Session(this, sessionID, data.content, data.createdAt);
+        const session = new Session({
+          content: data.content,
+          createdAt: data.createdAt,
+          id: sessionID,
+          store: this,
+          userId: data.userId,
+        });
 
         if (Date.now() - session.createdAt > absolute * 1000) {
           await this.destroy(sessionID);
@@ -89,7 +105,7 @@ export class RedisStore extends SessionStore {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     return new Promise<void>((resolve, reject) => {
-      this.redisClient.expire(`session:${sessionID}`, inactivity, (err: any) => {
+      this.redisClient.expire(`sessions:${sessionID}`, inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }

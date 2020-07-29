@@ -64,9 +64,9 @@ function entityTestSuite(type: DBType) {
     it('should has an id which is unique.', async () => {
       const session1 = getRepository(DatabaseSession).create({
         content: '',
-        createdAt: 0,
+        created_at: 0,
         id: 'a',
-        updatedAt: 0,
+        updated_at: 0,
       });
 
       await getRepository(DatabaseSession).save(session1);
@@ -77,9 +77,9 @@ function entityTestSuite(type: DBType) {
           .insert()
           .values({
             content: '',
-            createdAt: 0,
+            created_at: 0,
             id: 'a',
-            updatedAt: 0,
+            updated_at: 0,
           })
           .execute()
       );
@@ -94,9 +94,9 @@ function entityTestSuite(type: DBType) {
             + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         }),
-        createdAt: 0,
+        created_at: 0,
         id: 'a',
-        updatedAt: 0,
+        updated_at: 0,
       });
       await getRepository(DatabaseSession).save(session1);
     });
@@ -129,9 +129,18 @@ function storeTestSuite(type: DBType) {
 
     describe('has a "createAndSaveSession" method that', () => {
 
+      it('should throw if the user ID is defined and is a number.', async () => {
+        await rejects(
+          () => store.createAndSaveSession({ foo: 'bar' }, { userId: 'e' }),
+          {
+            message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+          }
+        );
+      });
+
       it('should generate an ID and create a new session in the database.', async () => {
         const dateBefore = Date.now();
-        await store.createAndSaveSession({ foo: 'bar' });
+        await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
         const dateAfter = Date.now();
 
         const sessions = await getRepository(DatabaseSession).find();
@@ -139,28 +148,30 @@ function storeTestSuite(type: DBType) {
         const sessionA = sessions[0];
 
         notStrictEqual(sessionA.id, undefined);
+        strictEqual(sessionA.user_id, 2);
         deepStrictEqual(sessionA.content, JSON.stringify({ foo: 'bar' }));
 
-        const createdAt = parseInt(sessionA.createdAt.toString(), 10);
+        const createdAt = parseInt(sessionA.created_at.toString(), 10);
         strictEqual(dateBefore <= createdAt, true);
         strictEqual(createdAt <= dateAfter, true);
 
-        const updatedAt = parseInt(sessionA.updatedAt.toString(), 10);
+        const updatedAt = parseInt(sessionA.created_at.toString(), 10);
         strictEqual(dateBefore <= updatedAt, true);
         strictEqual(updatedAt <= dateAfter, true);
       });
 
       it('should return a representation (Session object) of the created session.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' });
+        const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
 
         const sessions = await getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 1);
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
+        strictEqual(session.userId, sessionA.user_id);
         strictEqual(session.sessionID, sessionA.id);
         deepStrictEqual(session.getContent(), { foo: 'bar' });
-        strictEqual(session.createdAt, parseInt(sessionA.createdAt.toString(), 10));
+        strictEqual(session.createdAt, parseInt(sessionA.created_at.toString(), 10));
       });
 
       it('should support session options.', async () => {
@@ -170,62 +181,72 @@ function storeTestSuite(type: DBType) {
 
     });
 
-    describe('has a "update" method that', () => {
+    describe('has an "update" method that', () => {
 
       it('should update the content of the session if the session exists.', async () => {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        await store.update(new Session({} as any, session1.id, { bar: 'foo' }, session1.createdAt));
+        await store.update(new Session({
+          content: { bar: 'foo' },
+          createdAt: session1.created_at,
+          id: session1.id,
+          store: {} as any,
+        }));
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
         deepStrictEqual(sessionA.content, JSON.stringify({ bar: 'foo' }));
-        deepStrictEqual(parseInt(sessionA.createdAt.toString(), 10), session1.createdAt);
+        deepStrictEqual(parseInt(sessionA.created_at.toString(), 10), session1.created_at);
 
         const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
         deepStrictEqual(sessionB.content, JSON.stringify({}));
-        deepStrictEqual(parseInt(sessionB.createdAt.toString(), 10), session2.createdAt);
+        deepStrictEqual(parseInt(sessionB.created_at.toString(), 10), session2.created_at);
       });
 
       it('should update the lifetime (inactiviy) if the session exists.', async () => {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.update(new Session({} as any, session1.id, session1.content, session1.createdAt));
+        await store.update(new Session({
+          content: session1.content,
+          createdAt: session1.created_at,
+          id: session1.id,
+          store: {} as any,
+        }));
         const dateAfter = Date.now();
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        const updatedAtA = parseInt(sessionA.updatedAt.toString(), 10);
+        const updatedAtA = parseInt(sessionA.updated_at.toString(), 10);
         strictEqual(dateBefore <= updatedAtA, true);
         strictEqual(updatedAtA <= dateAfter, true);
 
         const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
-        strictEqual(parseInt(sessionB.updatedAt.toString(), 10), session2.updatedAt);
+        strictEqual(parseInt(sessionB.updated_at.toString(), 10), session2.updated_at);
       });
 
     });
@@ -235,15 +256,15 @@ function storeTestSuite(type: DBType) {
       it('should delete the session from its ID.', async () => {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -275,9 +296,9 @@ function storeTestSuite(type: DBType) {
 
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now() - inactivity * 1000,
+          updated_at: Date.now() - inactivity * 1000,
         });
 
         await getRepository(DatabaseSession).save(session1);
@@ -290,15 +311,15 @@ function storeTestSuite(type: DBType) {
         const inactivity = SessionStore.getExpirationTimeouts().inactivity;
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now() - inactivity * 1000,
+          updated_at: Date.now() - inactivity * 1000,
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -321,9 +342,9 @@ function storeTestSuite(type: DBType) {
 
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now() - absolute * 1000,
+          created_at: Date.now() - absolute * 1000,
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save(session1);
@@ -337,15 +358,15 @@ function storeTestSuite(type: DBType) {
 
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now() - absolute * 1000,
+          created_at: Date.now() - absolute * 1000,
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -366,15 +387,16 @@ function storeTestSuite(type: DBType) {
       it('should return the session.', async () => {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({ foo: 'bar' }),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
+          user_id: 2,
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -384,9 +406,10 @@ function storeTestSuite(type: DBType) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
+        strictEqual(session.userId, 2);
         strictEqual(session.sessionID, session2.id);
         strictEqual(session.get('foo'), 'bar');
-        strictEqual(session.createdAt, session2.createdAt);
+        strictEqual(session.createdAt, session2.created_at);
       });
 
     });
@@ -398,15 +421,15 @@ function storeTestSuite(type: DBType) {
 
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
+          updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
+          updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -416,12 +439,12 @@ function storeTestSuite(type: DBType) {
         const dateAfter = Date.now();
 
         const session = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        notStrictEqual(session1.updatedAt, session.updatedAt);
-        strictEqual(dateBefore <= session.updatedAt, true);
-        strictEqual(session.updatedAt <= dateAfter, true);
+        notStrictEqual(session1.updated_at, session.updated_at);
+        strictEqual(dateBefore <= session.updated_at, true);
+        strictEqual(session.updated_at <= dateAfter, true);
 
         const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
-        strictEqual(session2.updatedAt.toString(), sessionB.updatedAt.toString());
+        strictEqual(session2.updated_at.toString(), sessionB.updated_at.toString());
       });
 
       it('should not throw if no session matches the given session ID.', () => {
@@ -435,15 +458,15 @@ function storeTestSuite(type: DBType) {
       it('should remove all sessions.', async () => {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({ foo: 'bar' }),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
@@ -464,15 +487,15 @@ function storeTestSuite(type: DBType) {
 
         const currentSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'a',
-          updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
+          updated_at: Date.now() - inactivityTimeout * 1000 + 5000,
         });
         const expiredSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now(),
+          created_at: Date.now(),
           id: 'b',
-          updatedAt: Date.now() - inactivityTimeout * 1000,
+          updated_at: Date.now() - inactivityTimeout * 1000,
         });
 
         await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
@@ -495,15 +518,15 @@ function storeTestSuite(type: DBType) {
 
         const currentSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
+          created_at: Date.now() - absoluteTimeout * 1000 + 5000,
           id: 'a',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
         const expiredSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
-          createdAt: Date.now() - absoluteTimeout * 1000,
+          created_at: Date.now() - absoluteTimeout * 1000,
           id: 'b',
-          updatedAt: Date.now(),
+          updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
@@ -519,6 +542,160 @@ function storeTestSuite(type: DBType) {
         strictEqual(sessions.length, 1);
         notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
         strictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
+      });
+
+    });
+
+    describe('has a "getAuthenticatedUsers" method that', () => {
+
+      beforeEach(async () => {
+        const sessions = getRepository(DatabaseSession).create([
+          {
+            content: '{}',
+            created_at: 1,
+            id: 'a',
+            updated_at: 2,
+          },
+          {
+            content: '{}',
+            created_at: 3,
+            id: 'b',
+            updated_at: 4,
+            user_id: 1,
+          },
+          {
+            content: '{}',
+            created_at: 5,
+            id: 'c',
+            updated_at: 6,
+            user_id: 2,
+          },
+          {
+            content: '{}',
+            created_at: 7,
+            id: 'd',
+            updated_at: 8,
+            user_id: 2
+          }
+        ]);
+
+        await getRepository(DatabaseSession).save(sessions);
+      });
+
+      it('should return the IDs of the authenticated users (distinct).', async () => {
+        const sessions = await store.getAuthenticatedUserIds();
+        // No null or dupplicated values.
+        deepStrictEqual(sessions, [ 1, 2 ]);
+      });
+
+    });
+
+    describe('has a "destroyAllSessionsOf" method that', () => {
+
+      beforeEach(async () => {
+        const sessions = getRepository(DatabaseSession).create([
+          {
+            content: '{}',
+            created_at: 1,
+            id: 'a',
+            updated_at: 2,
+          },
+          {
+            content: '{}',
+            created_at: 3,
+            id: 'b',
+            updated_at: 4,
+            user_id: 1,
+          },
+          {
+            content: '{}',
+            created_at: 5,
+            id: 'c',
+            updated_at: 6,
+            user_id: 2,
+          },
+          {
+            content: '{}',
+            created_at: 7,
+            id: 'd',
+            updated_at: 8,
+            user_id: 2
+          }
+        ]);
+
+        await getRepository(DatabaseSession).save(sessions);
+      });
+
+      it('destroy all the sessions of the given user.', async () => {
+        const user = { id: 2 };
+        await store.destroyAllSessionsOf(user);
+
+        const sessions = await getRepository(DatabaseSession).find();
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0].id, 'a');
+        strictEqual(sessions[1].id, 'b');
+      });
+
+    });
+
+    describe('has a "getSessionsOf" method that', () => {
+
+      beforeEach(async () => {
+        const sessions = getRepository(DatabaseSession).create([
+          {
+            content: '{}',
+            created_at: 1,
+            id: 'a',
+            updated_at: 2,
+          },
+          {
+            content: '{}',
+            created_at: 3,
+            id: 'b',
+            updated_at: 4,
+            user_id: 1,
+          },
+          {
+            content: '{ "foo": "bar" }',
+            created_at: 5,
+            id: 'c',
+            updated_at: 6,
+            user_id: 2,
+          },
+          {
+            content: '{ "bar": "foo" }',
+            created_at: 7,
+            id: 'd',
+            updated_at: 8,
+            user_id: 2
+          }
+        ]);
+
+        await getRepository(DatabaseSession).save(sessions);
+      });
+
+      it('should return an empty array if the user ID does not match any users.', async () => {
+        const user = { id: 0 };
+        const sessions = await store.getSessionsOf(user);
+        strictEqual(sessions.length, 0);
+      });
+
+      it('should return the sessions associated with the given user.', async () => {
+        const user = { id: 2 };
+        const sessions = await store.getSessionsOf(user);
+        strictEqual(sessions.length, 2);
+
+        deepStrictEqual(sessions[0].getContent(), { foo: 'bar' });
+        strictEqual(sessions[0].sessionID, 'c');
+        strictEqual(sessions[0].userId, 2);
+        strictEqual(sessions[0].createdAt, 5);
+        strictEqual(sessions[0].store, store);
+
+        deepStrictEqual(sessions[1].getContent(), { bar: 'foo' });
+        strictEqual(sessions[1].sessionID, 'd');
+        strictEqual(sessions[1].userId, 2);
+        strictEqual(sessions[1].createdAt, 7);
+        strictEqual(sessions[1].store, store);
       });
 
     });

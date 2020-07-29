@@ -3,7 +3,8 @@ import { MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
   _id: string;
-  sessionContent: object;
+  userId?: string;
+  content: object;
   createdAt: number;
   updatedAt: number;
 }
@@ -26,23 +27,30 @@ export class MongoDBStore extends SessionStore {
       'string',
       'You must provide the URI of your database when using MongoDBStore.'
     );
-    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
-    this.collection = this.mongoDBClient.db().collection('foalSessions');
+    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    this.collection = this.mongoDBClient.db().collection('sessions');
   }
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
+  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+    await this.applySessionOptions(content, options);
 
     const date = Date.now();
     await this.collection.insertOne({
       _id: sessionID,
+      content,
       createdAt: date,
-      sessionContent,
       updatedAt: date,
+      userId: options.userId,
     });
 
-    return new Session(this, sessionID, sessionContent, date);
+    return new Session({
+      content,
+      createdAt: date,
+      id: sessionID,
+      store: this,
+      userId: options.userId,
+    });
   }
 
   async update(session: Session): Promise<void> {
@@ -52,8 +60,7 @@ export class MongoDBStore extends SessionStore {
       },
       {
         $set: {
-          // createdAt: session.createdAt,
-          sessionContent: session.getContent(),
+          content: session.getContent(),
           updatedAt: Date.now()
         }
       }
@@ -83,7 +90,13 @@ export class MongoDBStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, session._id, session.sessionContent, session.createdAt);
+    return new Session({
+      content: session.content,
+      createdAt: session.createdAt,
+      id: session._id,
+      store: this,
+      userId: session.userId,
+    });
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {

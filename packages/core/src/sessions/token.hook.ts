@@ -117,14 +117,11 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session content */
 
-    let userId: any = session.get('userId');
+    const userId = session.userId;
 
     if (!options.user) {
       ctx.user = userId;
     } else {
-      if (typeof userId === 'object' && userId !== null) {
-        userId = userId.toString();
-      }
       if (typeof userId !== 'number' && typeof userId !== 'string') {
         throw new Error(
           `The "userId" value of the session ${sessionID} must be a string or a number. Got "${typeof userId}".`

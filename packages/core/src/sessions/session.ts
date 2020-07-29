@@ -9,20 +9,6 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  private modified = false;
-  private destroyed = false;
-
-  constructor(
-    readonly store: SessionStore,
-    readonly sessionID: string,
-    private sessionContent: any,
-    readonly createdAt: number
-  ) {
-    if (sessionID.includes('.')) {
-      throw new Error('A session ID cannot include dots.');
-    }
-  }
-
   /**
    * Return true if an element was added/replaced in the session
    *
@@ -43,6 +29,29 @@ export class Session {
    */
   get isDestroyed(): boolean {
     return this.destroyed;
+  }
+
+  readonly store: SessionStore;
+  readonly sessionID: string;
+  readonly createdAt: number;
+  readonly userId: number|string|undefined;
+
+  private modified = false;
+  private destroyed = false;
+  private sessionContent: any;
+
+  constructor(options: {
+    content: any,
+    createdAt: number,
+    id: string,
+    store: SessionStore,
+    userId?: number|string,
+  }) {
+    this.store = options.store;
+    this.sessionID = options.id;
+    this.sessionContent = options.content;
+    this.createdAt = options.createdAt;
+    this.userId = options.userId;
   }
 
   /**
