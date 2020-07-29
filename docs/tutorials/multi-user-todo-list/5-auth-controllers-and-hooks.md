@@ -158,9 +158,9 @@ Go back to your browser and try to log in with the email `john@foalts.org` and t
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if no user was logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if user is not logged in. 
 
-Update the controllers.
+Update `app.controller.ts`.
 
 ```typescript
 import { controller, Get, render, TokenRequired } from '@foal/core';
@@ -174,7 +174,7 @@ export class AppController {
   @TokenRequired({
     // The session token is expected to be in a cookie.
     cookie: true,
-    // Redirect the user to /signin if they are not logged in.
+    // Redirect the user to /signin if user is not logged in.
     redirectTo: '/signin',
     // Specify the "store" where the session was created.
     store: TypeORMStore
@@ -187,6 +187,8 @@ export class AppController {
 
 }
 ```
+
+Update `api.controller.ts`.
 
 ```typescript
 import {
