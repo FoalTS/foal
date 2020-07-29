@@ -47,11 +47,11 @@ export class RedisStore extends SessionStore {
 
     return new Promise<void>((resolve, reject) => {
       const data = JSON.stringify({
-        content: session.getContent(),
-        createdAt: session.createdAt,
-        userId: session.userId
+        content: session.getState().content,
+        createdAt: session.getState().createdAt,
+        userId: session.getState().userId
       });
-      this.redisClient.set(`sessions:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
+      this.redisClient.set(`sessions:${session.getState().id}`, data, 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -91,7 +91,7 @@ export class RedisStore extends SessionStore {
           userId: data.userId,
         });
 
-        if (Date.now() - session.createdAt > absolute * 1000) {
+        if (Date.now() - session.getState().createdAt > absolute * 1000) {
           await this.destroy(sessionID);
           return resolve();
         }

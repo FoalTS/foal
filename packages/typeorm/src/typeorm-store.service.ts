@@ -70,10 +70,10 @@ export class TypeORMStore extends SessionStore {
       .createQueryBuilder()
       .update()
       .set({
-        content: JSON.stringify(session.getContent()),
+        content: JSON.stringify(session.getState().content),
         updated_at: Date.now()
       })
-      .where({ id: session.sessionID })
+      .where({ id: session.getState().id })
       .execute();
   }
 

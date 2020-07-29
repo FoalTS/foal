@@ -112,15 +112,15 @@ describe('MongoDBStore', () => {
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
-        strictEqual(session.userId, sessionA.userId);
-        strictEqual(session.sessionID, sessionA._id);
-        deepStrictEqual(session.getContent(), { foo: 'bar' });
-        strictEqual(session.createdAt, sessionA.createdAt);
+        strictEqual(session.getState().userId, sessionA.userId);
+        strictEqual(session.getState().id, sessionA._id);
+        deepStrictEqual(session.getState().content, { foo: 'bar' });
+        strictEqual(session.getState().createdAt, sessionA.createdAt);
       });
 
       it('should support session options.', async () => {
         const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
-        strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+        strictEqual(typeof (session.getState().content as any).csrfToken, 'string');
       });
 
     });
@@ -334,10 +334,10 @@ describe('MongoDBStore', () => {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
-        strictEqual(session.userId, 'xxx');
-        strictEqual(session.sessionID, session2._id);
+        strictEqual(session.getState().userId, 'xxx');
+        strictEqual(session.getState().id, session2._id);
         strictEqual(session.get('foo'), 'bar');
-        strictEqual(session.createdAt, session2.createdAt);
+        strictEqual(session.getState().createdAt, session2.createdAt);
       });
 
     });

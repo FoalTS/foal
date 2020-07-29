@@ -117,7 +117,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session content */
 
-    const userId = session.userId;
+    const userId = session.getState().userId;
 
     if (!options.user) {
       ctx.user = userId;
@@ -148,7 +148,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       if (session.isModified) {
         await store.update(session);
       } else {
-        await store.extendLifeTime(session.sessionID);
+        await store.extendLifeTime(session.getState().id);
       }
       if (options.cookie) {
         setSessionCookie(response, session.getToken());

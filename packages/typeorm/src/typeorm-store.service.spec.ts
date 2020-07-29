@@ -168,15 +168,15 @@ function storeTestSuite(type: DBType) {
         const sessionA = sessions[0];
 
         strictEqual(session.store, store);
-        strictEqual(session.userId, sessionA.user_id);
-        strictEqual(session.sessionID, sessionA.id);
-        deepStrictEqual(session.getContent(), { foo: 'bar' });
-        strictEqual(session.createdAt, parseInt(sessionA.created_at.toString(), 10));
+        strictEqual(session.getState().userId, sessionA.user_id);
+        strictEqual(session.getState().id, sessionA.id);
+        deepStrictEqual(session.getState().content, { foo: 'bar' });
+        strictEqual(session.getState().createdAt, parseInt(sessionA.created_at.toString(), 10));
       });
 
       it('should support session options.', async () => {
         const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
-        strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
+        strictEqual(typeof (session.getState().content as any).csrfToken, 'string');
       });
 
     });
@@ -406,10 +406,10 @@ function storeTestSuite(type: DBType) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
         strictEqual(session.store, store);
-        strictEqual(session.userId, 2);
-        strictEqual(session.sessionID, session2.id);
+        strictEqual(session.getState().userId, 2);
+        strictEqual(session.getState().id, session2.id);
         strictEqual(session.get('foo'), 'bar');
-        strictEqual(session.createdAt, session2.created_at);
+        strictEqual(session.getState().createdAt, session2.created_at);
       });
 
     });
@@ -685,16 +685,16 @@ function storeTestSuite(type: DBType) {
         const sessions = await store.getSessionsOf(user);
         strictEqual(sessions.length, 2);
 
-        deepStrictEqual(sessions[0].getContent(), { foo: 'bar' });
-        strictEqual(sessions[0].sessionID, 'c');
-        strictEqual(sessions[0].userId, 2);
-        strictEqual(sessions[0].createdAt, 5);
+        deepStrictEqual(sessions[0].getState().content, { foo: 'bar' });
+        strictEqual(sessions[0].getState().id, 'c');
+        strictEqual(sessions[0].getState().userId, 2);
+        strictEqual(sessions[0].getState().createdAt, 5);
         strictEqual(sessions[0].store, store);
 
-        deepStrictEqual(sessions[1].getContent(), { bar: 'foo' });
-        strictEqual(sessions[1].sessionID, 'd');
-        strictEqual(sessions[1].userId, 2);
-        strictEqual(sessions[1].createdAt, 7);
+        deepStrictEqual(sessions[1].getState().content, { bar: 'foo' });
+        strictEqual(sessions[1].getState().id, 'd');
+        strictEqual(sessions[1].getState().userId, 2);
+        strictEqual(sessions[1].getState().createdAt, 7);
         strictEqual(sessions[1].store, store);
       });
 

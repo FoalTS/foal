@@ -31,14 +31,17 @@ export class Session {
     return this.destroyed;
   }
 
-  readonly store: SessionStore;
-  readonly sessionID: string;
-  readonly createdAt: number;
-  readonly userId: number|string|undefined;
+  private readonly store: SessionStore;
+  private readonly state: {
+    id: string;
+    userId: number|string|undefined;
+    content: { [key: string]: any };
+    // updatedAt: number;
+    createdAt: number;
+  };
 
   private modified = false;
   private destroyed = false;
-  private sessionContent: any;
 
   constructor(options: {
     content: any,
@@ -48,10 +51,12 @@ export class Session {
     userId?: number|string,
   }) {
     this.store = options.store;
-    this.sessionID = options.id;
-    this.sessionContent = options.content;
-    this.createdAt = options.createdAt;
-    this.userId = options.userId;
+    this.state = {
+      content: options.content,
+      createdAt: options.createdAt,
+      id: options.id,
+      userId: options.userId,
+    };
   }
 
   /**
@@ -63,7 +68,7 @@ export class Session {
    * @memberof Session
    */
   set(key: string, value: any): void {
-    this.sessionContent[key] = value;
+    this.state.content[key] = value;
     this.modified = true;
   }
 
@@ -78,10 +83,10 @@ export class Session {
   get<T>(key: string): T | undefined;
   get<T>(key: string, defaultValue: any): T;
   get(key: string, defaultValue?: any): any {
-    if (!this.sessionContent.hasOwnProperty(key)) {
+    if (!this.state.content.hasOwnProperty(key)) {
       return defaultValue;
     }
-    return this.sessionContent[key];
+    return this.state.content[key];
   }
 
   /**
@@ -92,17 +97,17 @@ export class Session {
    * @memberof Session
    */
   getToken(): string {
-    return this.sessionID;
+    return this.state.id;
   }
 
   /**
-   * Get a copy of the session content.
+   * Return the session state.
    *
    * @returns {object} - The session content copy.
    * @memberof Session
    */
-  getContent(): object {
-    return { ...this.sessionContent };
+  getState(): Session['state'] {
+    return this.state;
   }
 
   /**
@@ -112,7 +117,7 @@ export class Session {
    * @memberof Session
    */
   async destroy(): Promise<void> {
-    await this.store.destroy(this.sessionID);
+    await this.store.destroy(this.state.id);
     this.destroyed = true;
   }
 

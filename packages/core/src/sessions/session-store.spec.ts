@@ -231,11 +231,10 @@ describe('SessionStore', () => {
       const session = await store.createAndSaveSessionFromUser(user, { csrfToken: true });
 
       strictEqual(session.store, store);
-      strictEqual(session.sessionID, 'xxx');
-      strictEqual(session.userId, 1);
-      const content: any = session.getContent();
-      strictEqual(typeof content.csrfToken, 'string');
-      strictEqual(session.createdAt, 36);
+      strictEqual(session.getState().id, 'xxx');
+      strictEqual(session.getState().userId, 1);
+      strictEqual(typeof session.getState().content.csrfToken, 'string');
+      strictEqual(session.getState().createdAt, 36);
     });
 
   });

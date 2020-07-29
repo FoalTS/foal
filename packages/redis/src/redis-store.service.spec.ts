@@ -93,17 +93,17 @@ describe('RedisStore', () => {
       const dateAfter = Date.now();
 
       strictEqual(session.store, store);
-      notStrictEqual(session.sessionID, undefined);
-      deepStrictEqual(session.getContent(), { foo: 'bar' });
+      notStrictEqual(session.getState().id, undefined);
+      deepStrictEqual(session.getState().content, { foo: 'bar' });
 
-      strictEqual(dateBefore <= session.createdAt, true);
+      strictEqual(dateBefore <= session.getState().createdAt, true);
       strictEqual(session.createdAt <= dateAfter, true);
     });
 
     it('should support session options.', async () => {
       const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true, userId: 2 });
-      strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
-      strictEqual(session.userId, 2);
+      strictEqual(typeof (session.getState().content as any).csrfToken, 'string');
+      strictEqual(session.getState().userId, 2);
     });
 
     it('should generate an ID and create a new session in the database.', async () => {
@@ -111,12 +111,12 @@ describe('RedisStore', () => {
 
       const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 3 });
 
-      notStrictEqual(session.sessionID, undefined);
-      strictEqual(await asyncTTL(`${COLLECTION_NAME}:${session.sessionID}`), inactivity);
-      const data = JSON.parse(await asyncGet(`${COLLECTION_NAME}:${session.sessionID}`));
+      notStrictEqual(session.getState().id, undefined);
+      strictEqual(await asyncTTL(`${COLLECTION_NAME}:${session.getState().id}`), inactivity);
+      const data = JSON.parse(await asyncGet(`${COLLECTION_NAME}:${session.getState().id}`));
       deepStrictEqual(data, {
         content: { foo: 'bar' },
-        createdAt: session.createdAt,
+        createdAt: session.getState().createdAt,
         userId: 3,
       });
     });
@@ -183,8 +183,8 @@ describe('RedisStore', () => {
       notStrictEqual(sessionA, null);
 
       deepStrictEqual(JSON.parse(sessionA), {
-        content: session.getContent(),
-        createdAt: session.createdAt,
+        content: session.getState().content,
+        createdAt: session.getState().createdAt,
         userId: 2,
       });
     });
@@ -257,10 +257,10 @@ describe('RedisStore', () => {
         throw new Error('RedisStore.read should not return undefined.');
       }
       strictEqual(session.store, store);
-      strictEqual(session.sessionID, 'b');
+      strictEqual(session.getState().id, 'b');
       strictEqual(session.get('foo'), 'bar');
-      strictEqual(session.createdAt, createdAt);
-      strictEqual(session.userId, 3);
+      strictEqual(session.getState().createdAt, createdAt);
+      strictEqual(session.getState().userId, 3);
     });
 
   });

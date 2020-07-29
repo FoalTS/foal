@@ -61,7 +61,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       return session;
     }
     async read(sessionID: string): Promise<Session|undefined> {
-      return this.sessions.find(session => session.sessionID === sessionID);
+      return this.sessions.find(session => session.getState().id === sessionID);
     }
   }
 
@@ -440,7 +440,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
         const session = await services.get(Store).createAndSaveSessionFromUser({ id: null } as any);
-        const sessionID = session.sessionID;
+        const sessionID = session.getState().id;
         const token = session.getToken();
 
         const ctx = new Context({
@@ -553,7 +553,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       await postHookFunction(new HttpResponseOK());
 
       strictEqual(services.get(Store).updateCalledWith, undefined);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, session.sessionID);
+      strictEqual(services.get(Store).extendLifeTimeCalledWith, session.getState().id);
     });
 
     it('should not update the session or extend its lifetime if session.isDestroyed is true'

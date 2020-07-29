@@ -56,11 +56,11 @@ export class MongoDBStore extends SessionStore {
   async update(session: Session): Promise<void> {
     await this.collection.updateOne(
       {
-        _id: session.sessionID
+        _id: session.getState().id
       },
       {
         $set: {
-          content: session.getContent(),
+          content: session.getState().content,
           updatedAt: Date.now()
         }
       }
@@ -78,24 +78,24 @@ export class MongoDBStore extends SessionStore {
     if (sessions.length === 0) {
       return undefined;
     }
-    const session: DatabaseSession = sessions[0];
+    const databaseSession: DatabaseSession = sessions[0];
 
-    if (Date.now() - session.updatedAt > timeouts.inactivity * 1000) {
+    if (Date.now() - databaseSession.updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
       return undefined;
     }
 
-    if (Date.now() - session.createdAt > timeouts.absolute * 1000) {
+    if (Date.now() - databaseSession.createdAt > timeouts.absolute * 1000) {
       await this.destroy(sessionID);
       return undefined;
     }
 
     return new Session({
-      content: session.content,
-      createdAt: session.createdAt,
-      id: session._id,
+      content: databaseSession.content,
+      createdAt: databaseSession.createdAt,
+      id: databaseSession._id,
       store: this,
-      userId: session.userId,
+      userId: databaseSession.userId,
     });
   }
 

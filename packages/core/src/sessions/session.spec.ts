@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // FoalTS
 import { Session } from './session';
@@ -37,21 +37,21 @@ describe('Session', () => {
       const store = new ConcreteSessionStore();
       const session = new Session({ store, id: 'xxx', content: {}, createdAt: 3 });
       strictEqual(session.store, store);
-      strictEqual(session.sessionID, 'xxx');
-      strictEqual(session.createdAt, 3);
+      strictEqual(session.getState().id, 'xxx');
+      strictEqual(session.getState().createdAt, 3);
     });
 
     it('should set the readonly property "userId" if it is property in the constructor', () => {
       const store = new ConcreteSessionStore();
 
       const session1 = new Session({ store, id: 'xxx', content: {}, createdAt: 3 });
-      strictEqual(session1.userId, undefined);
+      strictEqual(session1.getState().userId, undefined);
 
       const session2 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 'e' });
-      strictEqual(session2.userId, 'e');
+      strictEqual(session2.getState().userId, 'e');
 
       const session3 = new Session({ store, id: 'xxx', content: {}, createdAt: 3, userId: 22 });
-      strictEqual(session3.userId, 22);
+      strictEqual(session3.getState().userId, 22);
     });
 
     it('should not be "modified".', () => {
@@ -113,14 +113,19 @@ describe('Session', () => {
 
   });
 
-  describe('has a "getContent" method that', () => {
+  describe('has a "getState" method that', () => {
 
-    it('should return a copy of the session content', () => {
+    it('should return the session state', () => {
       const content = { foo: 'bar' };
-      const session = new Session({ store: new ConcreteSessionStore(), id: 'a', content, createdAt: 0 });
+      const id = 'a';
+      const createdAt = 888888888;
+      const userId = 'xxx';
+      const session = new Session({ store: new ConcreteSessionStore(), id, content, createdAt, userId });
 
-      deepStrictEqual(session.getContent(), content);
-      notStrictEqual(session.getContent(), content);
+      strictEqual(session.getState().content, content);
+      strictEqual(session.getState().id, id);
+      strictEqual(session.getState().createdAt, createdAt);
+      strictEqual(session.getState().userId, userId);
     });
 
   });
