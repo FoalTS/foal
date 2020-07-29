@@ -5,7 +5,7 @@
   "description": "Acceptance tests of the framework",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.{ts,tsx}\"",
-    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts,tsx \"./src/**/*.spec.{ts,tsx}\""
+    "dev:test": "mocha --require ts-node/register --watch --extension ts,tsx \"./src/**/*.spec.{ts,tsx}\""
   },
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"
