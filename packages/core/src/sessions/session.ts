@@ -34,6 +34,7 @@ export class Session {
 
   private modified = false;
   private destroyed = false;
+  private readonly newFlash: SessionState['flash'] = {};
 
   constructor(
     readonly store: SessionStore,
@@ -48,8 +49,12 @@ export class Session {
    * @param {*} value
    * @memberof Session
    */
-  set(key: string, value: any): void {
-    this.state.content[key] = value;
+  set(key: string, value: any, options: { flash?: boolean } = {}): void {
+    if (options.flash) {
+      this.newFlash[key] = value;
+    } else {
+      this.state.content[key] = value;
+    }
     this.modified = true;
   }
 
@@ -64,10 +69,13 @@ export class Session {
   get<T>(key: string): T | undefined;
   get<T>(key: string, defaultValue: any): T;
   get(key: string, defaultValue?: any): any {
-    if (!this.state.content.hasOwnProperty(key)) {
-      return defaultValue;
+    if (this.state.flash.hasOwnProperty(key)) {
+      return this.state.flash[key];
     }
-    return this.state.content[key];
+    if (this.state.content.hasOwnProperty(key)) {
+      return this.state.content[key];
+    }
+    return defaultValue;
   }
 
   /**
@@ -88,7 +96,10 @@ export class Session {
    * @memberof Session
    */
   getState(): SessionState {
-    return this.state;
+    return {
+      ...this.state,
+      flash: this.newFlash,
+    };
   }
 
   /**

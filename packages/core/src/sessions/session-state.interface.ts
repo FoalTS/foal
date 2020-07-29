@@ -9,7 +9,7 @@ export interface SessionState {
   // userId: string|number|null;
   userId?: number|string;
   content: { [key: string]: any };
-  // flash: { [key: string]: any };
+  flash: { [key: string]: any };
   // updatedAt: number;
   createdAt: number;
 }
