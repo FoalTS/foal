@@ -97,7 +97,7 @@ describe('RedisStore', () => {
       deepStrictEqual(session.getState().content, { foo: 'bar' });
 
       strictEqual(dateBefore <= session.getState().createdAt, true);
-      strictEqual(session.createdAt <= dateAfter, true);
+      strictEqual(session.getState().createdAt <= dateAfter, true);
     });
 
     it('should support session options.', async () => {
@@ -117,6 +117,7 @@ describe('RedisStore', () => {
       deepStrictEqual(data, {
         content: { foo: 'bar' },
         createdAt: session.getState().createdAt,
+        flash: {},
         userId: 3,
       });
     });
@@ -127,17 +128,19 @@ describe('RedisStore', () => {
 
     it('should update the content of the session if the session exists.', async () => {
       const createdAt = Date.now();
-      const data = { content: { foo: 'bar' }, createdAt };
+      const data = { content: { foo: 'bar' }, createdAt, flash: { bar: 'foo' } };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
       strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));
 
       const session = new Session({} as any, {
         content: data.content,
         createdAt: data.createdAt,
+        flash: data.flash,
         id: 'a',
         userId: 2
       });
       session.set('foo', 'foobar');
+      session.set('bar', 'foo2', { flash: true });
 
       await store.update(session);
 
@@ -145,6 +148,7 @@ describe('RedisStore', () => {
       deepStrictEqual(data2, {
         content: { foo: 'foobar' },
         createdAt,
+        flash: { bar: 'foo2' },
         userId: 2,
       });
     });
@@ -157,7 +161,7 @@ describe('RedisStore', () => {
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
       strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));
 
-      const session = new Session({} as any, { id: 'a', content: data.content, createdAt: data.createdAt });
+      const session = new Session({} as any, { id: 'a', content: data.content, createdAt: data.createdAt, flash: {} });
       session.set('foo', 'foobar');
 
       await store.update(session);
@@ -171,6 +175,7 @@ describe('RedisStore', () => {
       const session = new Session({} as any, {
         content: { foo: 'bar' },
         createdAt: Date.now(),
+        flash: {},
         id: 'a',
         userId: 2
       });
@@ -183,6 +188,7 @@ describe('RedisStore', () => {
       deepStrictEqual(JSON.parse(sessionA), {
         content: session.getState().content,
         createdAt: session.getState().createdAt,
+        flash: {},
         userId: 2,
       });
     });
@@ -247,7 +253,7 @@ describe('RedisStore', () => {
       const createdAt = Date.now();
       const sessionA = { content: {}, createdAt };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
-      const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3 };
+      const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3, flash: { hello: 'world' } };
       await asyncSet(`${COLLECTION_NAME}:b`, JSON.stringify(sessionB));
 
       const session = await store.read('b');
@@ -256,6 +262,7 @@ describe('RedisStore', () => {
       }
       strictEqual(session.store, store);
       strictEqual(session.getState().id, 'b');
+      deepStrictEqual(session.get('hello'), 'world');
       strictEqual(session.get('foo'), 'bar');
       strictEqual(session.getState().createdAt, createdAt);
       strictEqual(session.getState().userId, 3);

@@ -25,7 +25,7 @@ export class RedisStore extends SessionStore {
     await this.applySessionOptions(content, options);
 
     return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content, createdAt, userId: options.userId });
+      const data = JSON.stringify({ content, createdAt, userId: options.userId, flash: {} });
       this.redisClient.set(`sessions:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
@@ -33,6 +33,7 @@ export class RedisStore extends SessionStore {
         const session = new Session(this, {
           content,
           createdAt,
+          flash: {},
           id: sessionID,
           userId: options.userId
         });
@@ -48,6 +49,7 @@ export class RedisStore extends SessionStore {
       const data = JSON.stringify({
         content: session.getState().content,
         createdAt: session.getState().createdAt,
+        flash: session.getState().flash,
         userId: session.getState().userId
       });
       this.redisClient.set(`sessions:${session.getState().id}`, data, 'EX', inactivity, (err: any) => {
@@ -85,8 +87,8 @@ export class RedisStore extends SessionStore {
         const session = new Session(this, {
           content: data.content,
           createdAt: data.createdAt,
+          flash: data.flash,
           id: sessionID,
-          store: this,
           userId: data.userId,
         });
 
