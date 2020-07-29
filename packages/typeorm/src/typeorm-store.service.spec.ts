@@ -590,7 +590,7 @@ function storeTestSuite(type: DBType) {
 
     });
 
-    describe('has a "getAuthenticatedUserIds" method that', () => {
+    describe('has a "destroyAllSessionsOf" method that', () => {
 
       beforeEach(async () => {
         const sessions = getRepository(DatabaseSession).create([
@@ -634,6 +634,68 @@ function storeTestSuite(type: DBType) {
         strictEqual(sessions.length, 2);
         strictEqual(sessions[0].id, 'a');
         strictEqual(sessions[1].id, 'b');
+      });
+
+    });
+
+    describe('has a "getSessionsOf" method that', () => {
+
+      beforeEach(async () => {
+        const sessions = getRepository(DatabaseSession).create([
+          {
+            content: '{}',
+            created_at: 1,
+            id: 'a',
+            updated_at: 2,
+          },
+          {
+            content: '{}',
+            created_at: 3,
+            id: 'b',
+            updated_at: 4,
+            user_id: 1,
+          },
+          {
+            content: '{ "foo": "bar" }',
+            created_at: 5,
+            id: 'c',
+            updated_at: 6,
+            user_id: 2,
+          },
+          {
+            content: '{ "bar": "foo" }',
+            created_at: 7,
+            id: 'd',
+            updated_at: 8,
+            user_id: 2
+          }
+        ]);
+
+        await getRepository(DatabaseSession).save(sessions);
+      });
+
+      it('should return an empty array if the user ID does not match any users.', async () => {
+        const user = { id: 0 };
+        const sessions = await store.getSessionsOf(user);
+        strictEqual(sessions.length, 0);
+      });
+
+      it('should return the sessions associated with the given user.', async () => {
+        const user = { id: 2 };
+        const sessions = await store.getSessionsOf(user);
+        strictEqual(sessions.length, 2);
+
+        deepStrictEqual(sessions[0].getContent(), { foo: 'bar' });
+        strictEqual(sessions[0].sessionID, 'c');
+        strictEqual(sessions[0].userId, 2);
+        strictEqual(sessions[0].createdAt, 5);
+        strictEqual(sessions[0].store, store);
+
+        deepStrictEqual(sessions[1].getContent(), { bar: 'foo' });
+        strictEqual(sessions[1].sessionID, 'd');
+        strictEqual(sessions[1].userId, 2);
+        strictEqual(sessions[1].createdAt, 7);
+        strictEqual(sessions[1].store, store);
       });
 
     });
