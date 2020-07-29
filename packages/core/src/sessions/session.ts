@@ -1,4 +1,5 @@
 // FoalTS
+import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
 /**
@@ -31,33 +32,13 @@ export class Session {
     return this.destroyed;
   }
 
-  private readonly store: SessionStore;
-  private readonly state: {
-    id: string;
-    userId: number|string|undefined;
-    content: { [key: string]: any };
-    // updatedAt: number;
-    createdAt: number;
-  };
-
   private modified = false;
   private destroyed = false;
 
-  constructor(options: {
-    content: any,
-    createdAt: number,
-    id: string,
-    store: SessionStore,
-    userId?: number|string,
-  }) {
-    this.store = options.store;
-    this.state = {
-      content: options.content,
-      createdAt: options.createdAt,
-      id: options.id,
-      userId: options.userId,
-    };
-  }
+  constructor(
+    readonly store: SessionStore,
+    private readonly state: SessionState
+  ) {}
 
   /**
    * Add/replace an element in the session. This operation is not saved
@@ -106,7 +87,7 @@ export class Session {
    * @returns {object} - The session content copy.
    * @memberof Session
    */
-  getState(): Session['state'] {
+  getState(): SessionState {
     return this.state;
   }
 

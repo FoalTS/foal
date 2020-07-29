@@ -141,11 +141,10 @@ describe('MongoDBStore', () => {
           updatedAt: Date.now(),
         });
 
-        await store.update(new Session({
+        await store.update(new Session({} as any, {
           content: { bar: 'foo' },
           createdAt: session1.createdAt,
           id: session1._id,
-          store: {} as any,
         }));
 
         const sessionA = await findByID(session1._id);
@@ -172,11 +171,10 @@ describe('MongoDBStore', () => {
         });
 
         const dateBefore = Date.now();
-        await store.update(new Session({
+        await store.update(new Session({} as any, {
           content: session1.content,
           createdAt: session1.createdAt,
           id: session1._id,
-          store: {} as any,
         }));
         const dateAfter = Date.now();
 

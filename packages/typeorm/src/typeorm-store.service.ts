@@ -56,11 +56,10 @@ export class TypeORMStore extends SessionStore {
       })
       .execute();
 
-    return new Session({
+    return this, {
       content,
       createdAt: date,
       id: sessionID,
-      store: this,
       userId: options.userId,
     });
   }
@@ -104,11 +103,10 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session({
+    return new Session(this, {
       content,
       createdAt,
       id: session.id,
-      store: this,
       userId: session.user_id,
     });
   }
@@ -156,11 +154,10 @@ export class TypeORMStore extends SessionStore {
 
   async getSessionsOf(user: { id: number }): Promise<Session[]> {
     const databaseSessions = await getRepository(DatabaseSession).find({ user_id: user.id });
-    return databaseSessions.map(databaseSession => new Session({
+    return databaseSessions.map(databaseSession => new Session(this, {
       content: JSON.parse(databaseSession.content),
       createdAt: parseInt(databaseSession.created_at.toString(), 10),
       id: databaseSession.id,
-      store: this,
       userId: user.id,
     }));
   }

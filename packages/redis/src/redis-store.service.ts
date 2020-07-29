@@ -30,11 +30,10 @@ export class RedisStore extends SessionStore {
         if (err) {
           return reject(err);
         }
-        const session = new Session({
+        const session = new Session(this, {
           content,
           createdAt,
           id: sessionID,
-          store: this,
           userId: options.userId
         });
         resolve(session);
@@ -83,7 +82,7 @@ export class RedisStore extends SessionStore {
           return resolve(undefined);
         }
         const data = JSON.parse(val);
-        const session = new Session({
+        const session = new Session(this, {
           content: data.content,
           createdAt: data.createdAt,
           id: sessionID,

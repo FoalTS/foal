@@ -44,11 +44,10 @@ export class MongoDBStore extends SessionStore {
       userId: options.userId,
     });
 
-    return new Session({
+    return new Session(this, {
       content,
       createdAt: date,
       id: sessionID,
-      store: this,
       userId: options.userId,
     });
   }
@@ -90,11 +89,10 @@ export class MongoDBStore extends SessionStore {
       return undefined;
     }
 
-    return new Session({
+    return new Session(this, {
       content: databaseSession.content,
       createdAt: databaseSession.createdAt,
       id: databaseSession._id,
-      store: this,
       userId: databaseSession.userId,
     });
   }

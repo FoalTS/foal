@@ -196,11 +196,10 @@ describe('SessionStore', () => {
       class Store extends SessionStore {
         async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
           await this.applySessionOptions(sessionContent, options);
-          return new Session({
+          return new Session(this, {
             content: sessionContent,
             createdAt: 36,
             id: 'xxx',
-            store: this,
             userId: options.userId
           });
         }

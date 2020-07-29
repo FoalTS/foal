@@ -199,11 +199,10 @@ function storeTestSuite(type: DBType) {
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        await store.update(new Session({
+        await store.update(new Session({} as any, {
           content: { bar: 'foo' },
           createdAt: session1.created_at,
           id: session1.id,
-          store: {} as any,
         }));
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
@@ -232,11 +231,10 @@ function storeTestSuite(type: DBType) {
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.update(new Session({
+        await store.update(new Session({} as any, {
           content: session1.content,
           createdAt: session1.created_at,
           id: session1.id,
-          store: {} as any,
         }));
         const dateAfter = Date.now();
 
