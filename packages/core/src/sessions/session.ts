@@ -10,36 +10,20 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  /**
-   * Return true if an element was added/replaced in the session
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof Session
-   */
-  get isModified(): boolean {
-    return this.modified;
-  }
-
-  /**
-   * Return true if the session has been destroyed.
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof Session
-   */
-  get isDestroyed(): boolean {
-    return this.destroyed;
-  }
-
-  private modified = false;
-  private destroyed = false;
+  private status: 'modified'|'destroyed'|false = false;
   private readonly newFlash: SessionState['flash'] = {};
 
   constructor(
     readonly store: SessionStore,
     private readonly state: SessionState
   ) {}
+
+  get isModified(): boolean {
+    return this.status === 'modified';
+  }
+  get isDestroyed(): boolean {
+    return this.status === 'destroyed';
+  }
 
   /**
    * Add/replace an element in the session. This operation is not saved
@@ -55,7 +39,7 @@ export class Session {
     } else {
       this.state.content[key] = value;
     }
-    this.modified = true;
+    this.status = 'modified';
   }
 
   /**
@@ -110,7 +94,7 @@ export class Session {
    */
   async destroy(): Promise<void> {
     await this.store.destroy(this.state.id);
-    this.destroyed = true;
+    this.status = 'destroyed';
   }
 
 }

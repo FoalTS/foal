@@ -56,7 +56,7 @@ export class TypeORMStore extends SessionStore {
       })
       .execute();
 
-    return this, {
+    return new Session(this, {
       content,
       createdAt: date,
       id: sessionID,
