@@ -11,7 +11,8 @@ import { MongoDBStore } from './mongodb-store.service';
 interface PlainSession {
   _id: string;
   userId?: string;
-  content: object;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
   createdAt: number;
   updatedAt: number;
 }
@@ -94,6 +95,7 @@ describe('MongoDBStore', () => {
         notStrictEqual(sessionA._id, undefined);
         strictEqual(sessionA.userId, 'xxx');
         deepStrictEqual(sessionA.content, { foo: 'bar' });
+        deepStrictEqual(sessionA.flash, {});
 
         const createdAt = sessionA.createdAt;
         strictEqual(dateBefore <= createdAt, true);
@@ -132,23 +134,29 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
 
-        await store.update(new Session({} as any, {
+        const session = new Session({} as any, {
           content: { bar: 'foo' },
           createdAt: session1.createdAt,
+          flash: {},
           id: session1._id,
-        }));
+        });
+        session.set('hello', 'world', { flash: true });
+        await store.update(session);
 
         const sessionA = await findByID(session1._id);
         deepStrictEqual(sessionA.content, { bar: 'foo' });
+        deepStrictEqual(sessionA.flash, { hello: 'world' });
         deepStrictEqual(sessionA.createdAt, session1.createdAt);
 
         const sessionB = await findByID(session2._id);
@@ -161,21 +169,27 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
 
-        const dateBefore = Date.now();
-        await store.update(new Session({} as any, {
+        const session = new Session({} as any, {
           content: session1.content,
           createdAt: session1.createdAt,
+          flash: {},
           id: session1._id,
-        }));
+        });
+        session.set('hello', 'world', { flash: true });
+
+        const dateBefore = Date.now();
+        await store.update(session);
         const dateAfter = Date.now();
 
         const sessionA = await findByID(session1._id);
@@ -196,12 +210,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
 
@@ -234,6 +250,7 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - inactivity * 1000,
         });
 
@@ -247,12 +264,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - inactivity * 1000,
         });
 
@@ -276,6 +295,7 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now() - absolute * 1000,
+          flash: {},
           updatedAt: Date.now(),
         });
 
@@ -290,12 +310,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now() - absolute * 1000,
+          flash: {},
           updatedAt: Date.now(),
         });
 
@@ -317,12 +339,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: { foo: 'bar' },
           createdAt: Date.now(),
+          flash: { hello: 'world' },
           updatedAt: Date.now(),
           userId: 'xxx'
         });
@@ -335,6 +359,7 @@ describe('MongoDBStore', () => {
         strictEqual(session.getState().userId, 'xxx');
         strictEqual(session.getState().id, session2._id);
         strictEqual(session.get('foo'), 'bar');
+        strictEqual(session.get('hello'), 'world');
         strictEqual(session.getState().createdAt, session2.createdAt);
       });
 
@@ -349,12 +374,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
         const session2 = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
         });
 
@@ -384,12 +411,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
         await insertSessionIntoDB({
           _id: 'b',
           content: { foo: 'bar' },
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now(),
         });
 
@@ -411,12 +440,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
         });
         const expiredSession = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now(),
+          flash: {},
           updatedAt: Date.now() - inactivityTimeout * 1000,
         });
 
@@ -440,12 +471,14 @@ describe('MongoDBStore', () => {
           _id: 'a',
           content: {},
           createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
+          flash: {},
           updatedAt: Date.now(),
         });
         const expiredSession = await insertSessionIntoDB({
           _id: 'b',
           content: {},
           createdAt: Date.now() - absoluteTimeout * 1000,
+          flash: {},
           updatedAt: Date.now(),
         });
 

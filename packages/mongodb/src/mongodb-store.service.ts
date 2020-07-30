@@ -4,7 +4,8 @@ import { MongoClient } from 'mongodb';
 export interface DatabaseSession {
   _id: string;
   userId?: string;
-  content: object;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
   createdAt: number;
   updatedAt: number;
 }
@@ -40,6 +41,7 @@ export class MongoDBStore extends SessionStore {
       _id: sessionID,
       content,
       createdAt: date,
+      flash: {},
       updatedAt: date,
       userId: options.userId,
     });
@@ -47,6 +49,8 @@ export class MongoDBStore extends SessionStore {
     return new Session(this, {
       content,
       createdAt: date,
+      // TODO: test this line.
+      flash: {},
       id: sessionID,
       userId: options.userId,
     });
@@ -60,6 +64,7 @@ export class MongoDBStore extends SessionStore {
       {
         $set: {
           content: session.getState().content,
+          flash: session.getState().flash,
           updatedAt: Date.now()
         }
       }
@@ -92,6 +97,7 @@ export class MongoDBStore extends SessionStore {
     return new Session(this, {
       content: databaseSession.content,
       createdAt: databaseSession.createdAt,
+      flash: databaseSession.flash,
       id: databaseSession._id,
       userId: databaseSession.userId,
     });
