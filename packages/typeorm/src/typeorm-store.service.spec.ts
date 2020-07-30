@@ -65,6 +65,7 @@ function entityTestSuite(type: DBType) {
       const session1 = getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
+        flash: '',
         id: 'a',
         updated_at: 0,
       });
@@ -78,6 +79,7 @@ function entityTestSuite(type: DBType) {
           .values({
             content: '',
             created_at: 0,
+            flash: '',
             id: 'a',
             updated_at: 0,
           })
@@ -95,6 +97,24 @@ function entityTestSuite(type: DBType) {
             + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         }),
         created_at: 0,
+        flash: '',
+        id: 'a',
+        updated_at: 0,
+      });
+      await getRepository(DatabaseSession).save(session1);
+    });
+
+    it('should has a "flash" which supports long strings.', async () => {
+      const session1 = getRepository(DatabaseSession).create({
+        content: '',
+        created_at: 0,
+        flash:  JSON.stringify({
+          hello: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        }),
         id: 'a',
         updated_at: 0,
       });
@@ -187,26 +207,32 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        await store.update(new Session({} as any, {
+        const session = new Session({} as any, {
           content: { bar: 'foo' },
           createdAt: session1.created_at,
+          flash: {},
           id: session1.id,
-        }));
+        });
+        session.set('hello', 'world', { flash: true });
+        await store.update(session);
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        deepStrictEqual(sessionA.content, JSON.stringify({ bar: 'foo' }));
+        deepStrictEqual(JSON.parse(sessionA.content), { bar: 'foo' });
+        deepStrictEqual(JSON.parse(sessionA.flash), { hello: 'world' });
         deepStrictEqual(parseInt(sessionA.created_at.toString(), 10), session1.created_at);
 
         const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
@@ -218,12 +244,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
@@ -232,8 +260,9 @@ function storeTestSuite(type: DBType) {
 
         const dateBefore = Date.now();
         await store.update(new Session({} as any, {
-          content: session1.content,
+          content: JSON.parse(session1.content),
           createdAt: session1.created_at,
+          flash: {},
           id: session1.id,
         }));
         const dateAfter = Date.now();
@@ -255,12 +284,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
@@ -295,6 +326,7 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now() - inactivity * 1000,
         });
@@ -310,12 +342,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now() - inactivity * 1000,
         });
@@ -341,6 +375,7 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now() - absolute * 1000,
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
@@ -357,12 +392,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now() - absolute * 1000,
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
@@ -386,12 +423,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({ foo: 'bar' }),
           created_at: Date.now(),
+          flash: JSON.stringify({ hello: 'world' }),
           id: 'b',
           updated_at: Date.now(),
           user_id: 2,
@@ -407,6 +446,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(session.getState().userId, 2);
         strictEqual(session.getState().id, session2.id);
         strictEqual(session.get('foo'), 'bar');
+        strictEqual(session.get('hello'), 'world');
         strictEqual(session.getState().createdAt, session2.created_at);
       });
 
@@ -420,12 +460,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
         });
@@ -457,12 +499,14 @@ function storeTestSuite(type: DBType) {
         const session1 = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const session2 = getRepository(DatabaseSession).create({
           content: JSON.stringify({ foo: 'bar' }),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
@@ -486,12 +530,14 @@ function storeTestSuite(type: DBType) {
         const currentSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now() - inactivityTimeout * 1000 + 5000,
         });
         const expiredSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now(),
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now() - inactivityTimeout * 1000,
         });
@@ -517,12 +563,14 @@ function storeTestSuite(type: DBType) {
         const currentSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now() - absoluteTimeout * 1000 + 5000,
+          flash: JSON.stringify({}),
           id: 'a',
           updated_at: Date.now(),
         });
         const expiredSession = getRepository(DatabaseSession).create({
           content: JSON.stringify({}),
           created_at: Date.now() - absoluteTimeout * 1000,
+          flash: JSON.stringify({}),
           id: 'b',
           updated_at: Date.now(),
         });
@@ -551,12 +599,14 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 1,
+            flash: JSON.stringify({}),
             id: 'a',
             updated_at: 2,
           },
           {
             content: '{}',
             created_at: 3,
+            flash: JSON.stringify({}),
             id: 'b',
             updated_at: 4,
             user_id: 1,
@@ -564,6 +614,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 5,
+            flash: JSON.stringify({}),
             id: 'c',
             updated_at: 6,
             user_id: 2,
@@ -571,6 +622,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 7,
+            flash: JSON.stringify({}),
             id: 'd',
             updated_at: 8,
             user_id: 2
@@ -595,12 +647,14 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 1,
+            flash: JSON.stringify({}),
             id: 'a',
             updated_at: 2,
           },
           {
             content: '{}',
             created_at: 3,
+            flash: JSON.stringify({}),
             id: 'b',
             updated_at: 4,
             user_id: 1,
@@ -608,6 +662,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 5,
+            flash: JSON.stringify({}),
             id: 'c',
             updated_at: 6,
             user_id: 2,
@@ -615,6 +670,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 7,
+            flash: JSON.stringify({}),
             id: 'd',
             updated_at: 8,
             user_id: 2
@@ -643,12 +699,14 @@ function storeTestSuite(type: DBType) {
           {
             content: '{}',
             created_at: 1,
+            flash: JSON.stringify({}),
             id: 'a',
             updated_at: 2,
           },
           {
             content: '{}',
             created_at: 3,
+            flash: JSON.stringify({}),
             id: 'b',
             updated_at: 4,
             user_id: 1,
@@ -656,6 +714,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{ "foo": "bar" }',
             created_at: 5,
+            flash: JSON.stringify({ hello: 'world' }),
             id: 'c',
             updated_at: 6,
             user_id: 2,
@@ -663,6 +722,7 @@ function storeTestSuite(type: DBType) {
           {
             content: '{ "bar": "foo" }',
             created_at: 7,
+            flash: JSON.stringify({}),
             id: 'd',
             updated_at: 8,
             user_id: 2
@@ -685,11 +745,13 @@ function storeTestSuite(type: DBType) {
 
         deepStrictEqual(sessions[0].getState().content, { foo: 'bar' });
         strictEqual(sessions[0].getState().id, 'c');
+        strictEqual(sessions[0].get('hello'), 'world');
         strictEqual(sessions[0].getState().userId, 2);
         strictEqual(sessions[0].getState().createdAt, 5);
         strictEqual(sessions[0].store, store);
 
         deepStrictEqual(sessions[1].getState().content, { bar: 'foo' });
+        strictEqual(sessions[1].get('hello'), undefined);
         strictEqual(sessions[1].getState().id, 'd');
         strictEqual(sessions[1].getState().userId, 2);
         strictEqual(sessions[1].getState().createdAt, 7);

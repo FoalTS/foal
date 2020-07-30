@@ -14,6 +14,9 @@ export class DatabaseSession {
   @Column({ type: 'text' })
   content: string;
 
+  @Column({ type: 'text' })
+  flash: string;
+
   @Column({ type: 'bigint' })
   // Use snake case because camelCase does not work well with PostgreSQL.
   // tslint:disable-next-line: variable-name
@@ -42,6 +45,7 @@ export class TypeORMStore extends SessionStore {
     await this.applySessionOptions(content, options);
 
     const date = Date.now();
+    const flash = {};
 
     // TODO: test that the method throws if the ID is already taken.
     await getRepository(DatabaseSession)
@@ -50,6 +54,8 @@ export class TypeORMStore extends SessionStore {
       .values({
         content: JSON.stringify(content),
         created_at: date,
+        // TODO: test this line
+        flash: JSON.stringify(flash),
         id: sessionID,
         updated_at: date,
         user_id: options.userId,
@@ -59,6 +65,8 @@ export class TypeORMStore extends SessionStore {
     return new Session(this, {
       content,
       createdAt: date,
+      // TODO: test this line
+      flash,
       id: sessionID,
       userId: options.userId,
     });
@@ -70,6 +78,7 @@ export class TypeORMStore extends SessionStore {
       .update()
       .set({
         content: JSON.stringify(session.getState().content),
+        flash: JSON.stringify(session.getState().flash),
         updated_at: Date.now()
       })
       .where({ id: session.getState().id })
@@ -92,6 +101,7 @@ export class TypeORMStore extends SessionStore {
     const createdAt = parseInt(session.created_at.toString(), 10);
     const updatedAt = parseInt(session.updated_at.toString(), 10);
     const content = JSON.parse(session.content);
+    const flash = JSON.parse(session.flash);
 
     if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
@@ -106,6 +116,7 @@ export class TypeORMStore extends SessionStore {
     return new Session(this, {
       content,
       createdAt,
+      flash,
       id: session.id,
       userId: session.user_id,
     });
@@ -157,6 +168,7 @@ export class TypeORMStore extends SessionStore {
     return databaseSessions.map(databaseSession => new Session(this, {
       content: JSON.parse(databaseSession.content),
       createdAt: parseInt(databaseSession.created_at.toString(), 10),
+      flash: JSON.parse(databaseSession.flash),
       id: databaseSession.id,
       userId: user.id,
     }));
