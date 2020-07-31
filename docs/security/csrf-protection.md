@@ -90,8 +90,8 @@ class AuthController {
   @Post('/login')
   async login() {
     // ...
-    const session = await this.store.createAndSaveSessionFromUser(
-      user,
+    const session = await this.store.createAndSaveSession(
+      { user: user.id }
       // Generate the CSRF token and keep it in the session
       { csrfToken: true }
     );
@@ -296,8 +296,8 @@ class AuthController {
     @Post('/login')
     async login() {
       // ...
-      const session = await this.store.createAndSaveSessionFromUser(
-        user,
+      const session = await this.store.createAndSaveSession(
+        { user: user.id },
         // Generate the CSRF token and keep it in the session
         { csrfToken: true }
       );

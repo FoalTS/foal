@@ -63,7 +63,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
       user.password = await hashPassword(ctx.request.body.password);
       await getRepository(User).save(user);
 
-      const session = await this.store.createAndSaveSessionFromUser(user);
+      const session = await this.store.createAndSaveSession({ user: user.id });
       const response = new HttpResponseRedirect('/home');
       const token = session.getToken();
       setSessionCookie(response, token);
@@ -83,7 +83,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
         return new HttpResponseRedirect('/login');
       }
 
-      const session = await this.store.createAndSaveSessionFromUser(user);
+      const session = await this.store.createAndSaveSession({ user: user.id });
       const response = new HttpResponseRedirect('/home');
       const token = session.getToken();
       setSessionCookie(response, token);

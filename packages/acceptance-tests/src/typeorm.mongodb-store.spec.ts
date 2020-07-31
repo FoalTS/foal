@@ -114,7 +114,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
-      const session = await this.store.createAndSaveSessionFromUser({ id: user.id.toString() });
+      const session = await this.store.createAndSaveSession({ userId: user.id.toString() });
       return new HttpResponseOK({
         token: session.getToken()
       });

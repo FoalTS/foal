@@ -72,10 +72,10 @@ describe('[Authorization|permissions] Users', () => {
 
     await getRepository(User).save([ user1, user2 ]);
 
-    const session1 = await createService(TypeORMStore).createAndSaveSessionFromUser(user1);
+    const session1 = await createService(TypeORMStore).createAndSaveSession({ user: user1.id });
     tokenUser1 = session1.getToken();
 
-    const session2 = await createService(TypeORMStore).createAndSaveSessionFromUser(user2);
+    const session2 = await createService(TypeORMStore).createAndSaveSession({ user: user2.id });
     tokenUser2 = session2.getToken();
 
     app = createApp(AppController);

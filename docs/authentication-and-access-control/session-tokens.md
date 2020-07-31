@@ -34,13 +34,13 @@ export class AuthController {
 
 ### Create the Session and Get the Token (Log In)
 
-Sessions are created using the method `createAndSaveSessionFromUser` of the session store. It takes one parameter: an object that must have an `id` attribute (the user id). At login time, the user is usually retrieved upstream when checking credentials.
+Sessions are created using the method `createAndSaveSession` of the session store.
 
 ```typescript
-const session = await store.createAndSaveSessionFromUser(user);
-// Alternatively, you can also call the `createAndSaveSession` method as follows:
 const session = await store.createAndSaveSession({ userId: user.id });
 ```
+
+At login time, the user is usually retrieved upstream when checking credentials.
 
 The session token then can be read with the method `getToken()` to send it back to the client. This token identifies the session.
 
@@ -237,7 +237,7 @@ export class Controller {
 
   // ...
   login() {
-    // this.store.createAndSaveSessionFromUser(...)
+    // this.store.createAndSaveSession(...)
   }
 
   // ...

@@ -63,7 +63,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
       user.password = await hashPassword(ctx.request.body.password);
       await getRepository(User).save(user);
 
-      const session = await this.store.createAndSaveSessionFromUser(user);
+      const session = await this.store.createAndSaveSession({ user: user.id });
       return new HttpResponseOK({
         token: session.getToken()
       });
@@ -82,7 +82,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
         return new HttpResponseUnauthorized();
       }
 
-      const session = await this.store.createAndSaveSessionFromUser(user);
+      const session = await this.store.createAndSaveSession({ user: user.id });
       return new HttpResponseOK({
         token: session.getToken()
       });

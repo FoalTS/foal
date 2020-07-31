@@ -129,7 +129,7 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     return new HttpResponseOK({
       token: session.getToken()
     });
@@ -148,7 +148,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     return new HttpResponseOK({
       token: session.getToken()
     });
@@ -302,7 +302,7 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     const response = new HttpResponseNoContent();
     const token = session.getToken();
     setSessionCookie(response, token);
@@ -322,7 +322,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     const response = new HttpResponseNoContent();
     const token = session.getToken();
     setSessionCookie(response, token);
@@ -400,7 +400,7 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     const response = new HttpResponseRedirect('/home');
     const token = session.getToken();
     setSessionCookie(response, token);
@@ -420,7 +420,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ userId: user.id });
     const response = new HttpResponseRedirect('/home');
     const token = session.getToken();
     setSessionCookie(response, token);

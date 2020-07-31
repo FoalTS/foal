@@ -30,7 +30,7 @@ describe('[CSRF|regular web app|stateful] Users', () => {
 
     @Post('/login')
     async login() {
-      const session = await this.store.createAndSaveSessionFromUser({ id: 1 }, { csrfToken: true });
+      const session = await this.store.createAndSaveSession({ userId: 1 }, { csrfToken: true });
 
       const response = new HttpResponseOK();
       setSessionCookie(response, session.getToken());

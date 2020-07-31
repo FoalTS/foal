@@ -106,7 +106,7 @@ export class AuthController {
     }
 
     // Create a session associated with the user.
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await this.store.createAndSaveSession({ user: user.id });
 
     // Redirect the user to the home page on success.
     const response = new HttpResponseRedirect('/');

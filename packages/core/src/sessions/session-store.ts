@@ -70,22 +70,6 @@ export abstract class Store {
   }
 
   /**
-   * Create and save an new session from a user.
-   *
-   * @param {({ id: string|number })} user - User id.
-   * @param {SessionOptions} options - Session options.
-   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
-   * @returns {Promise<Session>} The created session.
-   * @memberof Store
-   */
-  createAndSaveSessionFromUser(user: { id: string|number }, options?: SessionOptions): Promise<Session> {
-    return this.createAndSaveSession({}, {
-      ...options,
-      userId: user.id
-    });
-  }
-
-  /**
    * Create and save a new session.
    *
    * This method *MUST* call the `generateSessionID` method to generate the session ID.
