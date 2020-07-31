@@ -157,7 +157,7 @@ describe('RedisStore', () => {
       const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
       const createdAt = Date.now();
-      const data = { content: { foo: 'bar' }, createdAt };
+      const data = { content: { foo: 'bar' }, createdAt, flash: {} };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
       strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));
 
@@ -227,7 +227,7 @@ describe('RedisStore', () => {
     it('should return undefined if the session has expired (absolute).', async () => {
       const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
+      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000, flash: {} };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
       // The line below fixes Travis test failures.
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -239,7 +239,7 @@ describe('RedisStore', () => {
     it('should delete the session if it has expired (absolute).', async () => {
       const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
+      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000, flash: {} };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
       // The line below fixes Travis test failures.
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -251,7 +251,7 @@ describe('RedisStore', () => {
 
     it('should return the session.', async () => {
       const createdAt = Date.now();
-      const sessionA = { content: {}, createdAt };
+      const sessionA = { content: {}, createdAt, flash: {} };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(sessionA));
       const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3, flash: { hello: 'world' } };
       await asyncSet(`${COLLECTION_NAME}:b`, JSON.stringify(sessionB));
