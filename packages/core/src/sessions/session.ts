@@ -16,7 +16,11 @@ export class Session {
   constructor(
     readonly store: SessionStore,
     private readonly state: SessionState
-  ) {}
+  ) {
+    if (Object.keys(state.flash).length > 0) {
+      this.status = 'modified';
+    }
+  }
 
   get isModified(): boolean {
     return this.status === 'modified';

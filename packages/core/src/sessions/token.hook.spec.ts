@@ -53,6 +53,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       const session = new Session(this, {
         content: sessionContent,
         createdAt: Date.now(),
+        flash: {},
         id: sessionID,
         userId: options.userId
       });

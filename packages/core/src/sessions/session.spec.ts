@@ -59,9 +59,17 @@ describe('Session', () => {
       strictEqual(session3.getState().userId, 22);
     });
 
-    it('should not be "modified".', () => {
+    it('should not be "modified" if flash is empty.', () => {
       const session = new Session(new ConcreteSessionStore(), { id: 'xxx', content: {}, createdAt: 0, flash: {}, });
       strictEqual(session.isModified, false);
+    });
+
+    it('should not "modified" if flash is not empty.', () => {
+      const session = new Session(
+        new ConcreteSessionStore(),
+        { id: 'xxx', content: {}, createdAt: 0, flash: { bar: 'foo' }, })
+      ;
+      strictEqual(session.isModified, true);
     });
 
   });

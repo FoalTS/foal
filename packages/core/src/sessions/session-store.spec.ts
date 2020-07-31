@@ -199,6 +199,7 @@ describe('SessionStore', () => {
           return new Session(this, {
             content: sessionContent,
             createdAt: 36,
+            flash: {},
             id: 'xxx',
             userId: options.userId
           });
