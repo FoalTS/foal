@@ -1,4 +1,5 @@
 // FoalTS
+import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
 /**
@@ -9,49 +10,23 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  /**
-   * Return true if an element was added/replaced in the session
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof Session
-   */
+  private status: 'modified'|'destroyed'|false = false;
+  private readonly newFlash: SessionState['flash'] = {};
+
+  constructor(
+    readonly store: SessionStore,
+    private readonly state: SessionState
+  ) {
+    if (Object.keys(state.flash).length > 0) {
+      this.status = 'modified';
+    }
+  }
+
   get isModified(): boolean {
-    return this.modified;
+    return this.status === 'modified';
   }
-
-  /**
-   * Return true if the session has been destroyed.
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof Session
-   */
   get isDestroyed(): boolean {
-    return this.destroyed;
-  }
-
-  readonly store: SessionStore;
-  readonly sessionID: string;
-  readonly createdAt: number;
-  readonly userId: number|string|undefined;
-
-  private modified = false;
-  private destroyed = false;
-  private sessionContent: any;
-
-  constructor(options: {
-    content: any,
-    createdAt: number,
-    id: string,
-    store: SessionStore,
-    userId?: number|string,
-  }) {
-    this.store = options.store;
-    this.sessionID = options.id;
-    this.sessionContent = options.content;
-    this.createdAt = options.createdAt;
-    this.userId = options.userId;
+    return this.status === 'destroyed';
   }
 
   /**
@@ -62,9 +37,13 @@ export class Session {
    * @param {*} value
    * @memberof Session
    */
-  set(key: string, value: any): void {
-    this.sessionContent[key] = value;
-    this.modified = true;
+  set(key: string, value: any, options: { flash?: boolean } = {}): void {
+    if (options.flash) {
+      this.newFlash[key] = value;
+    } else {
+      this.state.content[key] = value;
+    }
+    this.status = 'modified';
   }
 
   /**
@@ -78,10 +57,13 @@ export class Session {
   get<T>(key: string): T | undefined;
   get<T>(key: string, defaultValue: any): T;
   get(key: string, defaultValue?: any): any {
-    if (!this.sessionContent.hasOwnProperty(key)) {
-      return defaultValue;
+    if (this.state.flash.hasOwnProperty(key)) {
+      return this.state.flash[key];
     }
-    return this.sessionContent[key];
+    if (this.state.content.hasOwnProperty(key)) {
+      return this.state.content[key];
+    }
+    return defaultValue;
   }
 
   /**
@@ -92,17 +74,20 @@ export class Session {
    * @memberof Session
    */
   getToken(): string {
-    return this.sessionID;
+    return this.state.id;
   }
 
   /**
-   * Get a copy of the session content.
+   * Return the session state.
    *
    * @returns {object} - The session content copy.
    * @memberof Session
    */
-  getContent(): object {
-    return { ...this.sessionContent };
+  getState(): SessionState {
+    return {
+      ...this.state,
+      flash: this.newFlash,
+    };
   }
 
   /**
@@ -112,8 +97,8 @@ export class Session {
    * @memberof Session
    */
   async destroy(): Promise<void> {
-    await this.store.destroy(this.sessionID);
-    this.destroyed = true;
+    await this.store.destroy(this.state.id);
+    this.status = 'destroyed';
   }
 
 }

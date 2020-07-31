@@ -196,11 +196,11 @@ describe('SessionStore', () => {
       class Store extends SessionStore {
         async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
           await this.applySessionOptions(sessionContent, options);
-          return new Session({
+          return new Session(this, {
             content: sessionContent,
             createdAt: 36,
+            flash: {},
             id: 'xxx',
-            store: this,
             userId: options.userId
           });
         }
@@ -231,11 +231,10 @@ describe('SessionStore', () => {
       const session = await store.createAndSaveSessionFromUser(user, { csrfToken: true });
 
       strictEqual(session.store, store);
-      strictEqual(session.sessionID, 'xxx');
-      strictEqual(session.userId, 1);
-      const content: any = session.getContent();
-      strictEqual(typeof content.csrfToken, 'string');
-      strictEqual(session.createdAt, 36);
+      strictEqual(session.getState().id, 'xxx');
+      strictEqual(session.getState().userId, 1);
+      strictEqual(typeof session.getState().content.csrfToken, 'string');
+      strictEqual(session.getState().createdAt, 36);
     });
 
   });

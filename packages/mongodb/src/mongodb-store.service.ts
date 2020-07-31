@@ -4,7 +4,8 @@ import { MongoClient } from 'mongodb';
 export interface DatabaseSession {
   _id: string;
   userId?: string;
-  content: object;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
   createdAt: number;
   updatedAt: number;
 }
@@ -40,15 +41,17 @@ export class MongoDBStore extends SessionStore {
       _id: sessionID,
       content,
       createdAt: date,
+      flash: {},
       updatedAt: date,
       userId: options.userId,
     });
 
-    return new Session({
+    return new Session(this, {
       content,
       createdAt: date,
+      // TODO: test this line.
+      flash: {},
       id: sessionID,
-      store: this,
       userId: options.userId,
     });
   }
@@ -56,11 +59,12 @@ export class MongoDBStore extends SessionStore {
   async update(session: Session): Promise<void> {
     await this.collection.updateOne(
       {
-        _id: session.sessionID
+        _id: session.getState().id
       },
       {
         $set: {
-          content: session.getContent(),
+          content: session.getState().content,
+          flash: session.getState().flash,
           updatedAt: Date.now()
         }
       }
@@ -78,24 +82,24 @@ export class MongoDBStore extends SessionStore {
     if (sessions.length === 0) {
       return undefined;
     }
-    const session: DatabaseSession = sessions[0];
+    const databaseSession: DatabaseSession = sessions[0];
 
-    if (Date.now() - session.updatedAt > timeouts.inactivity * 1000) {
+    if (Date.now() - databaseSession.updatedAt > timeouts.inactivity * 1000) {
       await this.destroy(sessionID);
       return undefined;
     }
 
-    if (Date.now() - session.createdAt > timeouts.absolute * 1000) {
+    if (Date.now() - databaseSession.createdAt > timeouts.absolute * 1000) {
       await this.destroy(sessionID);
       return undefined;
     }
 
-    return new Session({
-      content: session.content,
-      createdAt: session.createdAt,
-      id: session._id,
-      store: this,
-      userId: session.userId,
+    return new Session(this, {
+      content: databaseSession.content,
+      createdAt: databaseSession.createdAt,
+      flash: databaseSession.flash,
+      id: databaseSession._id,
+      userId: databaseSession.userId,
     });
   }
 

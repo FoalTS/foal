@@ -7,7 +7,7 @@
   "scripts": {
     "docs": "typedoc --out ../../docs/api/social src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "dev:test": "mocha --require ts-node/register --watch --watch-extensions ts \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
