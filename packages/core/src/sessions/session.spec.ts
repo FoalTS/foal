@@ -1,7 +1,8 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
+import { createService } from '../core';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import { SessionOptions, SessionStore } from './session-store';
@@ -9,20 +10,25 @@ import { SessionOptions, SessionStore } from './session-store';
 describe('Session', () => {
 
   class ConcreteSessionStore extends SessionStore {
+    // saveCalledWith: SessionState;
+    updateCalledWith: SessionState | undefined;
+    destroyCalledWith: string | undefined;
+    extendLifeTimeCalledWith: string | undefined;
+
     createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
       throw new Error('Method not implemented.');
     }
-    update(state: SessionState): Promise<void> {
+    async update(state: SessionState): Promise<void> {
+      this.updateCalledWith = state;
+    }
+    async destroy(id: string): Promise<void> {
+      this.destroyCalledWith = id;
+    }
+    read(id: string): Promise<SessionState | undefined> {
       throw new Error('Method not implemented.');
     }
-    destroy(sessionID: string): Promise<void> {
-      throw new Error('Method not implemented.');
-    }
-    read(sessionID: string): Promise<SessionState | undefined> {
-      throw new Error('Method not implemented.');
-    }
-    extendLifeTime(sessionID: string): Promise<void> {
-      throw new Error('Method not implemented.');
+    async extendLifeTime(id: string): Promise<void> {
+      this.extendLifeTimeCalledWith = id;
     }
     clear(): Promise<void> {
       throw new Error('Method not implemented.');
@@ -31,6 +37,10 @@ describe('Session', () => {
       throw new Error('Method not implemented.');
     }
   }
+
+  let store: ConcreteSessionStore;
+
+  beforeEach(() => store = createService(ConcreteSessionStore));
 
   describe('when it is instanciated', () => {
 
@@ -180,32 +190,196 @@ describe('Session', () => {
 
   });
 
-  describe('has a "destroy" method that', () => {
+  describe('has a "commit" method that', () => {
 
-    class ConcreteSessionStore2 extends ConcreteSessionStore {
-      calledWith: string|undefined;
+    // Warning: immutable objects must be used in these tests.
 
-      async destroy(sessionID: string): Promise<void> {
-        this.calledWith = sessionID;
-      }
+    let session: Session;
+
+    function shouldSaveTheSession(): void {
+      xit('should save the session.');
+    }
+    function shouldUpdateTheSession(state: SessionState): void {
+      it('should update the session.', async () => {
+        await session.commit();
+        deepStrictEqual(store.updateCalledWith, state);
+      });
+    }
+    function shouldExtendTheSessionLifeTime(id: string): void {
+      it('should extend the session life time.', async () => {
+        await session.commit();
+        strictEqual(store.extendLifeTimeCalledWith, id);
+      });
     }
 
+    function shouldNotSaveTheSession(): void {
+      xit('should NOT save the session.');
+    }
+    function shouldNotUpdateTheSession(): void {
+      it('should NOT update the session.', async () => {
+        await session.commit();
+        strictEqual(store.updateCalledWith, undefined);
+      });
+    }
+    function shouldNotExtendTheSessionLifeTime(): void {
+      it('should NOT extend the session life time.', async () => {
+        await session.commit();
+        strictEqual(store.extendLifeTimeCalledWith, undefined);
+      });
+    }
+
+    // context('given the session has NOT been saved yet', () => {
+    //   shouldSaveTheSession();
+    //   shouldNotUpdateTheSession();
+    //   shouldNotExtendTheSessionLifeTime();
+    // });
+
+    context('given the session has been modified', () => {
+
+      beforeEach(() => {
+        session = new Session(store, {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'xxx',
+        });
+        session.set('foo', 'bar');
+      });
+
+      shouldNotSaveTheSession();
+      shouldUpdateTheSession({
+        content: { foo: 'bar' },
+        createdAt: 0,
+        flash: {},
+        id: 'xxx',
+      });
+      shouldNotExtendTheSessionLifeTime();
+
+    });
+
+    context('given the session has NOT been modified but initial flash data was NOT empty', () => {
+
+      beforeEach(() => {
+        session = new Session(store, {
+          content: {},
+          createdAt: 0,
+          flash: { hello: 'world' },
+          id: 'xxx',
+        });
+      });
+
+      shouldNotSaveTheSession();
+      shouldUpdateTheSession({
+        content: {},
+        createdAt: 0,
+        flash: {},
+        id: 'xxx',
+      });
+      shouldNotExtendTheSessionLifeTime();
+
+    });
+
+    context('given the session has NOT been modified and initial flash data was empty', () => {
+
+      beforeEach(() => {
+        session = new Session(store, {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'xxx',
+        });
+      });
+
+      shouldNotSaveTheSession();
+      shouldNotUpdateTheSession();
+      shouldExtendTheSessionLifeTime('xxx');
+
+    });
+
+    // context('given the session ID has been re-generated', () => {
+    //   it('should destroy the previous session.');
+    //   it('should save the new session.');
+    // });
+
+    context('given the "destroy" method has been called', () => {
+
+      beforeEach(async () => {
+        session = new Session(store, {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'xxx',
+        });
+        await session.destroy();
+      });
+
+      it('should throw an error.', async () => {
+        await rejects(
+          () => session.commit(),
+          {
+            message: 'Impossible to commit the session. Session already destroyed.'
+          }
+        );
+      });
+
+    });
+
+    context('given the "commit" method has already been called', () => {
+
+      beforeEach(async () => {
+        session = new Session(store, {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'xxx',
+        });
+        session.set('foo', 'bar');
+        await session.commit();
+        store.updateCalledWith = undefined;
+      });
+
+      shouldNotSaveTheSession();
+      shouldNotUpdateTheSession();
+      shouldExtendTheSessionLifeTime('xxx');
+
+    });
+
+  });
+
+  describe('has a "destroy" method that', () => {
+
     it('should call the "destroy" method of the store to destroy itself.', async () => {
-      const store = new ConcreteSessionStore2();
       const session = new Session(store, { id: 'a', content: {}, createdAt: 0, flash: {}, });
 
       await session.destroy();
-      strictEqual(store.calledWith, 'a');
+      strictEqual(store.destroyCalledWith, 'a');
     });
 
-    it('should make this.isDestroyed return "true".', async () => {
-      const store = new ConcreteSessionStore2();
-      const session = new Session(store, { id: 'a', content: {}, createdAt: 0, flash: {}, });
+  });
 
+  describe('has a "isDestroyed" property that', () => {
+
+    it('should return false if the session has NOT been destroyed.', () => {
+      const session = new Session(store, {
+        content: {},
+        createdAt: 0,
+        flash: {},
+        id: 'xxx'
+      });
       strictEqual(session.isDestroyed, false);
+    });
+
+    it('should return true if the session has been destroyed.', async () => {
+      const session = new Session(store, {
+        content: {},
+        createdAt: 0,
+        flash: {},
+        id: 'xxx'
+      });
       await session.destroy();
       strictEqual(session.isDestroyed, true);
     });
+
   });
 
 });

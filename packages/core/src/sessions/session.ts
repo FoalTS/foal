@@ -10,7 +10,7 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  private status: 'modified'|'destroyed'|false = false;
+  private status: 'modified'|'destroyed'|'saved' = 'saved';
   private readonly newFlash: SessionState['flash'] = {};
 
   constructor(
@@ -88,6 +88,23 @@ export class Session {
       ...this.state,
       flash: this.newFlash,
     };
+  }
+
+  async commit(): Promise<void> {
+    // TODO: test getState() instead of state.
+    switch (this.status) {
+      case 'modified':
+        await this.store.update(this.getState());
+        break;
+      case 'saved':
+        await this.store.extendLifeTime(this.getState().id);
+        break;
+      case 'destroyed':
+        throw new Error('Impossible to commit the session. Session already destroyed.');
+      default:
+        break;
+    }
+    this.status = 'saved';
   }
 
   /**
