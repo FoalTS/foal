@@ -142,7 +142,7 @@ describe('RedisStore', () => {
       session.set('foo', 'foobar');
       session.set('bar', 'foo2', { flash: true });
 
-      await store.update(session);
+      await store.update(session.getState());
 
       const data2 = JSON.parse(await asyncGet(`${COLLECTION_NAME}:a`));
       deepStrictEqual(data2, {
@@ -164,7 +164,7 @@ describe('RedisStore', () => {
       const session = new Session({} as any, { id: 'a', content: data.content, createdAt: data.createdAt, flash: {} });
       session.set('foo', 'foobar');
 
-      await store.update(session);
+      await store.update(session.getState());
 
       strictEqual(await asyncTTL(`${COLLECTION_NAME}:a`), inactivity);
     });
@@ -180,7 +180,7 @@ describe('RedisStore', () => {
         userId: 2
       });
 
-      await store.update(session);
+      await store.update(session.getState());
 
       const sessionA = await asyncGet(`${COLLECTION_NAME}:a`);
       notStrictEqual(sessionA, null);
@@ -256,16 +256,16 @@ describe('RedisStore', () => {
       const sessionB = { content: { foo: 'bar' }, createdAt, userId: 3, flash: { hello: 'world' } };
       await asyncSet(`${COLLECTION_NAME}:b`, JSON.stringify(sessionB));
 
-      const session = await store.read('b');
-      if (!session) {
+      const state = await store.read('b');
+      if (!state) {
         throw new Error('RedisStore.read should not return undefined.');
       }
-      strictEqual(session.store, store);
-      strictEqual(session.getState().id, 'b');
-      deepStrictEqual(session.get('hello'), 'world');
-      strictEqual(session.get('foo'), 'bar');
-      strictEqual(session.getState().createdAt, createdAt);
-      strictEqual(session.getState().userId, 3);
+
+      strictEqual(state.id, 'b');
+      deepStrictEqual(state.flash.hello, 'world');
+      strictEqual(state.content.foo, 'bar');
+      strictEqual(state.createdAt, createdAt);
+      strictEqual(state.userId, 3);
     });
 
   });

@@ -1,4 +1,4 @@
-import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, Session, SessionOptions, SessionState, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
@@ -56,15 +56,15 @@ export class MongoDBStore extends SessionStore {
     });
   }
 
-  async update(session: Session): Promise<void> {
+  async update(state: SessionState): Promise<void> {
     await this.collection.updateOne(
       {
-        _id: session.getState().id
+        _id: state.id
       },
       {
         $set: {
-          content: session.getState().content,
-          flash: session.getState().flash,
+          content: state.content,
+          flash: state.flash,
           updatedAt: Date.now()
         }
       }
@@ -75,7 +75,7 @@ export class MongoDBStore extends SessionStore {
     await this.collection.deleteOne({ _id: sessionID });
   }
 
-  async read(sessionID: string): Promise<Session | undefined> {
+  async read(sessionID: string): Promise<SessionState | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
     const sessions = await this.collection.find({ _id: sessionID }).toArray();
@@ -94,13 +94,13 @@ export class MongoDBStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, {
+    return {
       content: databaseSession.content,
       createdAt: databaseSession.createdAt,
       flash: databaseSession.flash,
       id: databaseSession._id,
       userId: databaseSession.userId,
-    });
+    };
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {

@@ -152,7 +152,7 @@ describe('MongoDBStore', () => {
           id: session1._id,
         });
         session.set('hello', 'world', { flash: true });
-        await store.update(session);
+        await store.update(session.getState());
 
         const sessionA = await findByID(session1._id);
         deepStrictEqual(sessionA.content, { bar: 'foo' });
@@ -189,7 +189,7 @@ describe('MongoDBStore', () => {
         session.set('hello', 'world', { flash: true });
 
         const dateBefore = Date.now();
-        await store.update(session);
+        await store.update(session.getState());
         const dateAfter = Date.now();
 
         const sessionA = await findByID(session1._id);
@@ -351,16 +351,15 @@ describe('MongoDBStore', () => {
           userId: 'xxx'
         });
 
-        const session = await store.read(session2._id);
-        if (!session) {
+        const state = await store.read(session2._id);
+        if (!state) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
-        strictEqual(session.store, store);
-        strictEqual(session.getState().userId, 'xxx');
-        strictEqual(session.getState().id, session2._id);
-        strictEqual(session.get('foo'), 'bar');
-        strictEqual(session.get('hello'), 'world');
-        strictEqual(session.getState().createdAt, session2.createdAt);
+        strictEqual(state.userId, 'xxx');
+        strictEqual(state.id, session2._id);
+        strictEqual(state.content.foo, 'bar');
+        strictEqual(state.flash.hello, 'world');
+        strictEqual(state.createdAt, session2.createdAt);
       });
 
     });

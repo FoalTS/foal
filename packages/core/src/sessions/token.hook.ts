@@ -17,6 +17,7 @@ import {
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { removeSessionCookie } from './remove-session-cookie';
+import { Session } from './session';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
@@ -100,9 +101,9 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Verify the session ID */
 
-    const session = await store.read(sessionID);
+    const sessionState = await store.read(sessionID);
 
-    if (!session) {
+    if (!sessionState) {
       let response: HttpResponse = new InvalidTokenResponse('token invalid or expired');
       if (options.redirectTo) {
         response = new HttpResponseRedirect(options.redirectTo);
@@ -112,6 +113,10 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       }
       return response;
     }
+
+    // TODO: test the store argument.
+    // TODO: replace with Session.read(this.store)
+    const session = new Session(store, sessionState);
 
     ctx.session = session;
 
@@ -146,7 +151,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       }
 
       if (session.isModified) {
-        await store.update(session);
+        await store.update(session.getState());
       } else {
         await store.extendLifeTime(session.getState().id);
       }

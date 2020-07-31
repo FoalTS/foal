@@ -4,6 +4,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
+import { SessionState } from './session-state.interface';
 import { SessionOptions, SessionStore } from './session-store';
 
 describe('SessionStore', () => {
@@ -88,13 +89,13 @@ describe('SessionStore', () => {
         createAndSaveSession(sessionContent: object): Promise<Session> {
           throw new Error('Method not implemented.');
         }
-        update(session: Session): Promise<void> {
+        update(state: SessionState): Promise<void> {
           throw new Error('Method not implemented.');
         }
         destroy(sessionID: string): Promise<void> {
           throw new Error('Method not implemented.');
         }
-        read(sessionID: string): Promise<Session | undefined> {
+        read(sessionID: string): Promise<SessionState | undefined> {
           throw new Error('Method not implemented.');
         }
         extendLifeTime(sessionID: string): Promise<void> {
@@ -130,13 +131,13 @@ describe('SessionStore', () => {
       createAndSaveSession(sessionContent: object): Promise<Session> {
         throw new Error('Method not implemented.');
       }
-      update(session: Session): Promise<void> {
+      update(state: SessionState): Promise<void> {
         throw new Error('Method not implemented.');
       }
       destroy(sessionID: string): Promise<void> {
         throw new Error('Method not implemented.');
       }
-      read(sessionID: string): Promise<Session | undefined> {
+      read(sessionID: string): Promise<SessionState | undefined> {
         throw new Error('Method not implemented.');
       }
       extendLifeTime(sessionID: string): Promise<void> {

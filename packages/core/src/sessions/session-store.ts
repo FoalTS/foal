@@ -3,6 +3,7 @@ import { generateToken } from '../common';
 import { Config } from '../core';
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
+import { SessionState } from './session-state.interface';
 
 export interface SessionOptions {
   csrfToken?: boolean;
@@ -89,31 +90,31 @@ export abstract class Store {
    * Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
    *
    * @abstract
-   * @param {Session} session - The session containaing the updated content.
+   * @param {SessionState} state - The session state.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract update(session: Session): Promise<void>;
+  abstract update(state: SessionState): Promise<void>;
   /**
    * Delete a session, whether it exists or not.
    *
    * @abstract
-   * @param {string} sessionID - The ID of the session.
+   * @param {string} id - The ID of the session.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract destroy(sessionID: string): Promise<void>;
+  abstract destroy(id: string): Promise<void>;
   /**
    * Read a session from its ID.
    *
    * Returns `undefined` if the session does not exist or has expired.
    *
    * @abstract
-   * @param {string} sessionID - The ID of the session.
-   * @returns {(Promise<Session|undefined>)} The Session object.
+   * @param {string} id - The ID of the session.
+   * @returns {(Promise<SessionState|undefined>)} The state of the session.
    * @memberof Store
    */
-  abstract read(sessionID: string): Promise<Session|undefined>;
+  abstract read(id: string): Promise<SessionState|undefined>;
   /**
    * Extend the lifetime of a session from its ID. The duration is
    * the inactivity timeout.
@@ -121,11 +122,11 @@ export abstract class Store {
    * If the session does not exist, the method does not throw an error.
    *
    * @abstract
-   * @param {string} sessionID - The ID of the session.
+   * @param {string} id - The ID of the session.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract extendLifeTime(sessionID: string): Promise<void>;
+  abstract extendLifeTime(id: string): Promise<void>;
   /**
    * Clear all sessions.
    *

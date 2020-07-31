@@ -1,4 +1,4 @@
-import { Session, SessionOptions, SessionStore } from '@foal/core';
+import { Session, SessionOptions, SessionState, SessionStore } from '@foal/core';
 import {  Column, Entity, getRepository, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -72,16 +72,16 @@ export class TypeORMStore extends SessionStore {
     });
   }
 
-  async update(session: Session): Promise<void> {
+  async update(state: SessionState): Promise<void> {
     await getRepository(DatabaseSession)
       .createQueryBuilder()
       .update()
       .set({
-        content: JSON.stringify(session.getState().content),
-        flash: JSON.stringify(session.getState().flash),
+        content: JSON.stringify(state.content),
+        flash: JSON.stringify(state.flash),
         updated_at: Date.now()
       })
-      .where({ id: session.getState().id })
+      .where({ id: state.id })
       .execute();
   }
 
@@ -90,7 +90,7 @@ export class TypeORMStore extends SessionStore {
       .delete({ id: sessionID });
   }
 
-  async read(sessionID: string): Promise<Session | undefined> {
+  async read(sessionID: string): Promise<SessionState | undefined> {
     const timeouts = SessionStore.getExpirationTimeouts();
 
     const session = await getRepository(DatabaseSession).findOne({ id: sessionID });
@@ -113,13 +113,13 @@ export class TypeORMStore extends SessionStore {
       return undefined;
     }
 
-    return new Session(this, {
+    return {
       content,
       createdAt,
       flash,
       id: session.id,
       userId: session.user_id,
-    });
+    };
   }
 
   async extendLifeTime(sessionID: string): Promise<void> {

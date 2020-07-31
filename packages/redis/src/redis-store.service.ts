@@ -1,4 +1,4 @@
-import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, Session, SessionOptions, SessionState, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 /**
@@ -42,17 +42,17 @@ export class RedisStore extends SessionStore {
     });
   }
 
-  update(session: Session): Promise<void> {
+  update(state: SessionState): Promise<void> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
     return new Promise<void>((resolve, reject) => {
       const data = JSON.stringify({
-        content: session.getState().content,
-        createdAt: session.getState().createdAt,
-        flash: session.getState().flash,
-        userId: session.getState().userId
+        content: state.content,
+        createdAt: state.createdAt,
+        flash: state.flash,
+        userId: state.userId
       });
-      this.redisClient.set(`sessions:${session.getState().id}`, data, 'EX', inactivity, (err: any) => {
+      this.redisClient.set(`sessions:${state.id}`, data, 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
@@ -72,10 +72,10 @@ export class RedisStore extends SessionStore {
     });
   }
 
-  read(sessionID: string): Promise<Session | undefined> {
+  read(sessionID: string): Promise<SessionState | undefined> {
     const absolute = SessionStore.getExpirationTimeouts().absolute;
 
-    return new Promise<Session | undefined>((resolve, reject) => {
+    return new Promise<SessionState | undefined>((resolve, reject) => {
       this.redisClient.get(`sessions:${sessionID}`, async (err: any, val: string|null) => {
         if (err) {
           return reject(err);
@@ -84,20 +84,20 @@ export class RedisStore extends SessionStore {
           return resolve(undefined);
         }
         const data = JSON.parse(val);
-        const session = new Session(this, {
+        const state: SessionState = {
           content: data.content,
           createdAt: data.createdAt,
           flash: data.flash,
           id: sessionID,
           userId: data.userId,
-        });
+        };
 
-        if (Date.now() - session.getState().createdAt > absolute * 1000) {
+        if (Date.now() - state.createdAt > absolute * 1000) {
           await this.destroy(sessionID);
           return resolve();
         }
 
-        resolve(session);
+        resolve(state);
       });
     });
   }

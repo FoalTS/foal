@@ -228,7 +228,7 @@ function storeTestSuite(type: DBType) {
           id: session1.id,
         });
         session.set('hello', 'world', { flash: true });
-        await store.update(session);
+        await store.update(session.getState());
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
         deepStrictEqual(JSON.parse(sessionA.content), { bar: 'foo' });
@@ -259,12 +259,12 @@ function storeTestSuite(type: DBType) {
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
         const dateBefore = Date.now();
-        await store.update(new Session({} as any, {
+        await store.update({
           content: JSON.parse(session1.content),
           createdAt: session1.created_at,
           flash: {},
           id: session1.id,
-        }));
+        });
         const dateAfter = Date.now();
 
         const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
@@ -438,16 +438,15 @@ function storeTestSuite(type: DBType) {
 
         await getRepository(DatabaseSession).save([ session1, session2 ]);
 
-        const session = await store.read(session2.id);
-        if (!session) {
+        const state = await store.read(session2.id);
+        if (!state) {
           throw new Error('TypeORMStore.read should not return undefined.');
         }
-        strictEqual(session.store, store);
-        strictEqual(session.getState().userId, 2);
-        strictEqual(session.getState().id, session2.id);
-        strictEqual(session.get('foo'), 'bar');
-        strictEqual(session.get('hello'), 'world');
-        strictEqual(session.getState().createdAt, session2.created_at);
+        strictEqual(state.userId, 2);
+        strictEqual(state.id, session2.id);
+        strictEqual(state.content.foo, 'bar');
+        strictEqual(state.flash.hello, 'world');
+        strictEqual(state.createdAt, session2.created_at);
       });
 
     });

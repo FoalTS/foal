@@ -3,6 +3,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { Session } from './session';
+import { SessionState } from './session-state.interface';
 import { SessionOptions, SessionStore } from './session-store';
 
 describe('Session', () => {
@@ -11,13 +12,13 @@ describe('Session', () => {
     createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
       throw new Error('Method not implemented.');
     }
-    update(session: Session): Promise<void> {
+    update(state: SessionState): Promise<void> {
       throw new Error('Method not implemented.');
     }
     destroy(sessionID: string): Promise<void> {
       throw new Error('Method not implemented.');
     }
-    read(sessionID: string): Promise<Session | undefined> {
+    read(sessionID: string): Promise<SessionState | undefined> {
       throw new Error('Method not implemented.');
     }
     extendLifeTime(sessionID: string): Promise<void> {

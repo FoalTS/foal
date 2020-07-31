@@ -20,6 +20,7 @@ import {
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { Session } from './session';
+import { SessionState } from './session-state.interface';
 import { SessionOptions, SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
 import { TokenRequired } from './token-required.hook';
@@ -30,7 +31,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   const fetchUser = async (id: number|string) => id === 1 ? user : null;
 
   class Store extends SessionStore {
-    updateCalledWith: Session|undefined = undefined;
+    updateCalledWith: SessionState|undefined = undefined;
     extendLifeTimeCalledWith: string|undefined = undefined;
 
     private sessions: Session[] = [];
@@ -38,8 +39,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     async clear(): Promise<void> {
       this.sessions = [];
     }
-    async update(session: Session): Promise<void> {
-      this.updateCalledWith = session;
+    async update(state: SessionState): Promise<void> {
+      this.updateCalledWith = state;
     }
     async destroy(sessionID: string): Promise<void> {}
     async extendLifeTime(sessionID: string): Promise<void> {
@@ -60,8 +61,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       this.sessions.push(session);
       return session;
     }
-    async read(sessionID: string): Promise<Session|undefined> {
-      return this.sessions.find(session => session.getState().id === sessionID);
+    async read(sessionID: string): Promise<SessionState|undefined> {
+      return this.sessions.find(session => session.getState().id === sessionID)?.getState();
     }
   }
 
@@ -248,7 +249,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   describe('should verify the session ID and', () => {
 
     it('should return an HttpResponseUnauthorized object if no session matching the ID is found.', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 2 });
+      const session = await services.get(Store).createAndSaveSession({ userId: 2 }, { userId: 2 });
       const token = session.getToken();
 
       await services.get(Store).clear();
@@ -273,7 +274,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     it('should return an HttpResponseRedirect object if no session matching the ID is found'
         + ' (options.redirectTo is defined).', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 2 });
+      const session = await services.get(Store).createAndSaveSession({ userId: 2 }, { userId: 2 });
       const token = session.getToken();
 
       await services.get(Store).clear();
@@ -294,7 +295,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     describe('given options.cookie is false or not defined', () => {
 
       it('should not set a cookie in the response if no session matching the ID is found.', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 3 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 3 }, { userId: 3 });
         const token = session.getToken();
 
         await services.get(Store).clear();
@@ -317,7 +318,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('should remove the cookie in the response if no session matching the ID is found.', async () => {
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 4 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 4 }, { userId: 4 });
         const token = session.getToken();
 
         await services.get(Store).clear();
@@ -348,7 +349,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     describe('given options.user is not defined', () => {
 
       it('with the user id (header).', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 6 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 36 }, { userId: 36 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -364,7 +365,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('with the user id (cookie).', async () => {
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 5 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 35 }, { userId: 35 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -384,7 +385,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 4 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 34 }, { userId: 34 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -408,7 +409,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const fetchUser = async (id: number|string) => id === 1 ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 1 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 1 }, { userId: 1 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -424,7 +425,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const fetchUser = async (id: number|string) => id === '1' ? user : null;
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: '1' });
+        const session = await services.get(Store).createAndSaveSession({ userId: '1' }, { userId: '1' });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -439,7 +440,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('or throw an Error if the session userId is not of type "string" or "number".', async () => {
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: null });
+        const session = await services.get(Store).createAndSaveSession({ userId: null }, { userId: null } as any);
         const sessionID = session.getState().id;
         const token = session.getToken();
 
@@ -462,7 +463,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           + 'with the given user Id.', async () => {
         const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 2 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 2 }, { userId: 2 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -487,7 +488,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           + 'with the given user Id (options.redirectTo is defined).', async () => {
         const hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
 
-        const session = await services.get(Store).createAndSaveSession({ userId: 2 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 2 }, { userId: 2 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -513,7 +514,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('should update the session and extend its lifetime if it has been modified.', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 7 });
+      const session = await services.get(Store).createAndSaveSession({ userId: 7 }, { userId: 7 });
       const token = session.getToken();
 
       const ctx = new Context({
@@ -530,12 +531,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       ctx.session.set('something', 1); // set "isModified" to "true"
       await postHookFunction(new HttpResponseOK());
 
-      strictEqual(services.get(Store).updateCalledWith, ctx.session);
+      deepStrictEqual(services.get(Store).updateCalledWith, ctx.session.getState());
       strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
     });
 
     it('should extend the session lifetime if it has not been modified.', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 8 });
+      const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
       const token = session.getToken();
 
       const ctx = new Context({
@@ -558,7 +559,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     it('should not update the session or extend its lifetime if session.isDestroyed is true'
       + ' (isModified === true).', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 7 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 7 }, { userId: 7 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -582,7 +583,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     );
 
     it('should not extend the session lifetime if session.isDestroyed is true (isModified === false).', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 8 });
+      const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
       const token = session.getToken();
 
       const ctx = new Context({
@@ -607,7 +608,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     describe('given options.cookie is false or not defined', () => {
 
       it('should not set a cookie in the response.', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 8 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
         const token = session.getToken();
 
         const ctx = new Context({
@@ -632,7 +633,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     describe('given options.cookie is true', () => {
 
       it('should set a cookie in the response with the token to extend its lifetime on the client.', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 8 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
         const token = session.getToken();
 
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
@@ -660,7 +661,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('should remove the session cookie if session.isDestroyed is true.', async () => {
-        const session = await services.get(Store).createAndSaveSession({ userId: 8 });
+        const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
         const token = session.getToken();
 
         const hook = getHookFunction(Token({ store: Store, cookie: true }));
