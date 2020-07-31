@@ -431,6 +431,18 @@ const user = { id: 1 };
 await this.store.destroyAllSessionsOf(user);
 ```
 
+## Flash Sessions
+
+Sometimes we may wish to store items in the session only for the next request.
+
+For example, when users enter incorrect credentials, they are redirected to the login page, and this time we may want to render the page with a specific message that says "Incorrect email or password". If the user refreshes the page, the message then disappears.
+
+This can be done with flash content. The data will only be available on the next request.
+
+```typescript
+ctx.session.set('error', 'Incorrect email or password', { flash: true });
+```
+
 ## Session Stores
 
 FoalTS currently offers three built-in session stores: `TypeORMStore`, `MongoDBStore` `RedisStore`. Others will come in the future. If you need a specific one, you can submit a Github issue or even create your own store (see section below).
