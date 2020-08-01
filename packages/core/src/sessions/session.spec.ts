@@ -90,34 +90,6 @@ describe('Session', () => {
       strictEqual(session3.getState().userId, 22);
     });
 
-    it('should not be "modified" if flash is empty.', () => {
-      const session = new Session(new ConcreteSessionStore(), {
-        content: {},
-        createdAt: 0,
-        flash: {},
-        id: 'xxx',
-        updatedAt: 0,
-        userId: null,
-      });
-      strictEqual(session.isModified, false);
-    });
-
-    it('should not "modified" if flash is not empty.', () => {
-      const session = new Session(
-        new ConcreteSessionStore(),
-        {
-          content: {},
-          createdAt: 0,
-          flash: { bar: 'foo' },
-          id: 'xxx',
-          updatedAt: 0,
-          userId: null,
-        }
-      )
-      ;
-      strictEqual(session.isModified, true);
-    });
-
   });
 
   describe('has a "get" method that', () => {
@@ -185,21 +157,6 @@ describe('Session', () => {
       });
       session.set('foo', 'bar');
       strictEqual(session.get('foo'), 'bar');
-    });
-
-    it('...and mark it as modified.', () => {
-      const session = new Session(new ConcreteSessionStore(), {
-        content: {},
-        createdAt: 0,
-        flash: {},
-        id: '',
-        updatedAt: 0,
-        userId: null,
-      });
-      strictEqual(session.isModified, false);
-
-      session.set('foo', 'bar');
-      strictEqual(session.isModified, true);
     });
 
     it('should modifu the session flash content if the flash option is true.', () => {

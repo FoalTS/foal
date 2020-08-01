@@ -10,21 +10,14 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  private status: 'modified'|'destroyed'|'saved' = 'saved';
+  private status: 'destroyed'|'saved' = 'saved';
   private readonly newFlash: SessionState['flash'] = {};
 
   constructor(
     readonly store: SessionStore,
     private readonly state: SessionState
-  ) {
-    if (Object.keys(state.flash).length > 0) {
-      this.status = 'modified';
-    }
-  }
+  ) {}
 
-  get isModified(): boolean {
-    return this.status === 'modified';
-  }
   get isDestroyed(): boolean {
     return this.status === 'destroyed';
   }
@@ -43,7 +36,6 @@ export class Session {
     } else {
       this.state.content[key] = value;
     }
-    this.status = 'modified';
   }
 
   /**
@@ -93,7 +85,6 @@ export class Session {
   async commit(): Promise<void> {
     // TODO: test getState() instead of state.
     switch (this.status) {
-      case 'modified':
       case 'saved':
         await this.store.update(this.getState());
         break;

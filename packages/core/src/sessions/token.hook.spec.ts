@@ -524,7 +524,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       if (!ctx.session) {
         throw new Error('ctx.session should be defined');
       }
-      ctx.session.set('something', 1); // set "isModified" to "true"
       await postHookFunction(new HttpResponseOK());
 
       deepStrictEqual(services.get(Store).updateCalledWith, ctx.session.getState());
