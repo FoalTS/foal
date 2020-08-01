@@ -83,10 +83,14 @@ export class Session {
   }
 
   async commit(): Promise<void> {
-    // TODO: test getState() instead of state.
     switch (this.status) {
       case 'saved':
-        await this.store.update(this.getState());
+        await this.store.update({
+          ...this.state,
+          // TODO: test this line.
+          flash: this.newFlash,
+          updatedAt: Date.now(),
+        });
         break;
       case 'destroyed':
         throw new Error('Impossible to commit the session. Session already destroyed.');

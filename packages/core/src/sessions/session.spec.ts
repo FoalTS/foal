@@ -236,7 +236,19 @@ describe('Session', () => {
     }
     function shouldUpdateTheSession(state: SessionState): void {
       it('should update the session.', async () => {
+        const dateBefore = Date.now();
         await session.commit();
+        const dateAfter = Date.now();
+
+        if (!store.updateCalledWith) {
+          throw new Error('SessionStore.update should have been called.');
+        }
+
+        strictEqual(dateBefore <= store.updateCalledWith.updatedAt, true);
+        strictEqual(dateAfter >= store.updateCalledWith.updatedAt, true);
+
+        delete store.updateCalledWith.updatedAt;
+        delete state.updatedAt;
         deepStrictEqual(store.updateCalledWith, state);
       });
     }
@@ -254,7 +266,6 @@ describe('Session', () => {
     // context('given the session has NOT been saved yet', () => {
     //   shouldSaveTheSession();
     //   shouldNotUpdateTheSession();
-    //   shouldNotExtendTheSessionLifeTime();
     // });
 
     context('given the session has been modified', () => {
