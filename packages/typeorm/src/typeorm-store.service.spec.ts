@@ -176,8 +176,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(createdAt <= dateAfter, true);
 
         const updatedAt = parseInt(sessionA.created_at.toString(), 10);
-        strictEqual(dateBefore <= updatedAt, true);
-        strictEqual(updatedAt <= dateAfter, true);
+        strictEqual(createdAt, updatedAt);
       });
 
       it('should return a representation (Session object) of the created session.', async () => {
@@ -192,6 +191,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(session.getState().id, sessionA.id);
         deepStrictEqual(session.getState().content, { foo: 'bar' });
         strictEqual(session.getState().createdAt, parseInt(sessionA.created_at.toString(), 10));
+        strictEqual(session.getState().updatedAt, parseInt(sessionA.updated_at.toString(), 10));
       });
 
       it('should support session options.', async () => {
@@ -226,6 +226,7 @@ function storeTestSuite(type: DBType) {
           createdAt: session1.created_at,
           flash: {},
           id: session1.id,
+          updatedAt: session2.updated_at,
         });
         session.set('hello', 'world', { flash: true });
         await store.update(session.getState());
@@ -234,46 +235,12 @@ function storeTestSuite(type: DBType) {
         deepStrictEqual(JSON.parse(sessionA.content), { bar: 'foo' });
         deepStrictEqual(JSON.parse(sessionA.flash), { hello: 'world' });
         deepStrictEqual(parseInt(sessionA.created_at.toString(), 10), session1.created_at);
+        deepStrictEqual(parseInt(sessionA.updated_at.toString(), 10), session1.updated_at);
 
         const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
         deepStrictEqual(sessionB.content, JSON.stringify({}));
         deepStrictEqual(parseInt(sessionB.created_at.toString(), 10), session2.created_at);
-      });
-
-      it('should update the lifetime (inactiviy) if the session exists.', async () => {
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
-        });
-
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
-
-        const dateBefore = Date.now();
-        await store.update({
-          content: JSON.parse(session1.content),
-          createdAt: session1.created_at,
-          flash: {},
-          id: session1.id,
-        });
-        const dateAfter = Date.now();
-
-        const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        const updatedAtA = parseInt(sessionA.updated_at.toString(), 10);
-        strictEqual(dateBefore <= updatedAtA, true);
-        strictEqual(updatedAtA <= dateAfter, true);
-
-        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
-        strictEqual(parseInt(sessionB.updated_at.toString(), 10), session2.updated_at);
+        deepStrictEqual(parseInt(sessionB.updated_at.toString(), 10), session2.updated_at);
       });
 
     });
@@ -447,6 +414,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(state.content.foo, 'bar');
         strictEqual(state.flash.hello, 'world');
         strictEqual(state.createdAt, session2.created_at);
+        strictEqual(state.updatedAt, session2.updated_at);
       });
 
     });
@@ -706,6 +674,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(sessions[0].get('hello'), 'world');
         strictEqual(sessions[0].getState().userId, 2);
         strictEqual(sessions[0].getState().createdAt, 5);
+        strictEqual(sessions[0].getState().updatedAt, 6);
         strictEqual(sessions[0].store, store);
 
         deepStrictEqual(sessions[1].getState().content, { bar: 'foo' });
@@ -713,6 +682,7 @@ function storeTestSuite(type: DBType) {
         strictEqual(sessions[1].getState().id, 'd');
         strictEqual(sessions[1].getState().userId, 2);
         strictEqual(sessions[1].getState().createdAt, 7);
+        strictEqual(sessions[1].getState().updatedAt, 8);
         strictEqual(sessions[1].store, store);
       });
 

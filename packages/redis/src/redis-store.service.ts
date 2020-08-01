@@ -20,21 +20,28 @@ export class RedisStore extends SessionStore {
   async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
     const inactivity = SessionStore.getExpirationTimeouts().inactivity;
 
-    const createdAt = Date.now();
+    const date = Date.now();
     const sessionID = await this.generateSessionID();
     await this.applySessionOptions(content, options);
 
     return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content, createdAt, userId: options.userId, flash: {} });
+      const data = JSON.stringify({
+        content,
+        createdAt: date,
+        flash: {},
+        updatedAt: date,
+        userId: options.userId,
+      });
       this.redisClient.set(`sessions:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
         if (err) {
           return reject(err);
         }
         const session = new Session(this, {
           content,
-          createdAt,
+          createdAt: date,
           flash: {},
           id: sessionID,
+          updatedAt: date,
           userId: options.userId
         });
         resolve(session);
@@ -50,6 +57,7 @@ export class RedisStore extends SessionStore {
         content: state.content,
         createdAt: state.createdAt,
         flash: state.flash,
+        updatedAt: state.updatedAt,
         userId: state.userId
       });
       this.redisClient.set(`sessions:${state.id}`, data, 'EX', inactivity, (err: any) => {
@@ -89,6 +97,7 @@ export class RedisStore extends SessionStore {
           createdAt: data.createdAt,
           flash: data.flash,
           id: sessionID,
+          updatedAt: data.updatedAt,
           userId: data.userId,
         };
 

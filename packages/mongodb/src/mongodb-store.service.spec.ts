@@ -102,8 +102,7 @@ describe('MongoDBStore', () => {
         strictEqual(createdAt <= dateAfter, true);
 
         const updatedAt = sessionA.updatedAt;
-        strictEqual(dateBefore <= updatedAt, true);
-        strictEqual(updatedAt <= dateAfter, true);
+        strictEqual(createdAt, updatedAt);
       });
 
       it('should return a representation (Session object) of the created session.', async () => {
@@ -118,6 +117,7 @@ describe('MongoDBStore', () => {
         strictEqual(session.getState().id, sessionA._id);
         deepStrictEqual(session.getState().content, { foo: 'bar' });
         strictEqual(session.getState().createdAt, sessionA.createdAt);
+        strictEqual(session.getState().updatedAt, sessionA.updatedAt);
       });
 
       it('should support session options.', async () => {
@@ -150,6 +150,7 @@ describe('MongoDBStore', () => {
           createdAt: session1.createdAt,
           flash: {},
           id: session1._id,
+          updatedAt: session1.updatedAt,
         });
         session.set('hello', 'world', { flash: true });
         await store.update(session.getState());
@@ -158,47 +159,12 @@ describe('MongoDBStore', () => {
         deepStrictEqual(sessionA.content, { bar: 'foo' });
         deepStrictEqual(sessionA.flash, { hello: 'world' });
         deepStrictEqual(sessionA.createdAt, session1.createdAt);
+        deepStrictEqual(sessionA.updatedAt, session1.updatedAt);
 
         const sessionB = await findByID(session2._id);
         deepStrictEqual(sessionB.content, {});
         deepStrictEqual(sessionB.createdAt, session2.createdAt);
-      });
-
-      it('should update the lifetime (inactiviy) if the session exists.', async () => {
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-
-        const session = new Session({} as any, {
-          content: session1.content,
-          createdAt: session1.createdAt,
-          flash: {},
-          id: session1._id,
-        });
-        session.set('hello', 'world', { flash: true });
-
-        const dateBefore = Date.now();
-        await store.update(session.getState());
-        const dateAfter = Date.now();
-
-        const sessionA = await findByID(session1._id);
-        const updatedAtA = sessionA.updatedAt;
-        strictEqual(dateBefore <= sessionA.updatedAt, true);
-        strictEqual(updatedAtA <= dateAfter, true);
-
-        const sessionB = await findByID(session2._id);
-        strictEqual(sessionB.updatedAt, session2.updatedAt);
+        deepStrictEqual(sessionB.updatedAt, session2.updatedAt);
       });
 
     });
@@ -360,6 +326,7 @@ describe('MongoDBStore', () => {
         strictEqual(state.content.foo, 'bar');
         strictEqual(state.flash.hello, 'world');
         strictEqual(state.createdAt, session2.createdAt);
+        strictEqual(state.updatedAt, session2.updatedAt);
       });
 
     });

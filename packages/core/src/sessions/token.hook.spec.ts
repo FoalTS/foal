@@ -52,7 +52,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         createdAt: Date.now(),
         flash: {},
         id: sessionID,
-        userId: options.userId
+        updatedAt: Date.now(),
+        userId: options.userId,
       });
       this.sessions.push(session);
       return session;

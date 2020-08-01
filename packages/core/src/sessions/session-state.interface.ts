@@ -10,6 +10,6 @@ export interface SessionState {
   userId?: number|string;
   content: { [key: string]: any };
   flash: { [key: string]: any };
-  // updatedAt: number;
+  updatedAt: number;
   createdAt: number;
 }

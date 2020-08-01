@@ -52,6 +52,7 @@ export class MongoDBStore extends SessionStore {
       // TODO: test this line.
       flash: {},
       id: sessionID,
+      updatedAt: date,
       userId: options.userId,
     });
   }
@@ -65,7 +66,7 @@ export class MongoDBStore extends SessionStore {
         $set: {
           content: state.content,
           flash: state.flash,
-          updatedAt: Date.now()
+          updatedAt: state.updatedAt,
         }
       }
     );
@@ -99,6 +100,7 @@ export class MongoDBStore extends SessionStore {
       createdAt: databaseSession.createdAt,
       flash: databaseSession.flash,
       id: databaseSession._id,
+      updatedAt: databaseSession.updatedAt,
       userId: databaseSession.userId,
     };
   }

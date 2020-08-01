@@ -68,6 +68,7 @@ export class TypeORMStore extends SessionStore {
       // TODO: test this line
       flash,
       id: sessionID,
+      updatedAt: date,
       userId: options.userId,
     });
   }
@@ -79,7 +80,7 @@ export class TypeORMStore extends SessionStore {
       .set({
         content: JSON.stringify(state.content),
         flash: JSON.stringify(state.flash),
-        updated_at: Date.now()
+        updated_at: state.updatedAt
       })
       .where({ id: state.id })
       .execute();
@@ -118,6 +119,7 @@ export class TypeORMStore extends SessionStore {
       createdAt,
       flash,
       id: session.id,
+      updatedAt,
       userId: session.user_id,
     };
   }
@@ -161,6 +163,7 @@ export class TypeORMStore extends SessionStore {
       createdAt: parseInt(databaseSession.created_at.toString(), 10),
       flash: JSON.parse(databaseSession.flash),
       id: databaseSession.id,
+      updatedAt: parseInt(databaseSession.updated_at.toString(), 10),
       userId: user.id,
     }));
   }
