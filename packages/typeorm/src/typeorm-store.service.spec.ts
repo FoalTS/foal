@@ -451,47 +451,6 @@ function storeTestSuite(type: DBType) {
 
     });
 
-    describe('has a "extendLifeTime" method that', () => {
-
-      it('should extend the lifetime of session (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now() - Math.round(inactivity * 1000 / 2),
-        });
-
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
-
-        const dateBefore = Date.now();
-        await store.extendLifeTime(session1.id);
-        const dateAfter = Date.now();
-
-        const session = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        notStrictEqual(session1.updated_at, session.updated_at);
-        strictEqual(dateBefore <= session.updated_at, true);
-        strictEqual(session.updated_at <= dateAfter, true);
-
-        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
-        strictEqual(session2.updated_at.toString(), sessionB.updated_at.toString());
-      });
-
-      it('should not throw if no session matches the given session ID.', () => {
-        return store.extendLifeTime('c');
-      });
-
-    });
-
     describe('has a "clear" method that', () => {
 
       it('should remove all sessions.', async () => {

@@ -103,17 +103,6 @@ export class MongoDBStore extends SessionStore {
     };
   }
 
-  async extendLifeTime(sessionID: string): Promise<void> {
-    await this.collection.updateOne(
-      { _id: sessionID },
-      {
-        $set: {
-          updatedAt: Date.now()
-        }
-      }
-    );
-  }
-
   async clear(): Promise<void> {
     await this.collection.deleteMany({});
   }

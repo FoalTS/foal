@@ -102,19 +102,6 @@ export class RedisStore extends SessionStore {
     });
   }
 
-  extendLifeTime(sessionID: string): Promise<void> {
-    const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-    return new Promise<void>((resolve, reject) => {
-      this.redisClient.expire(`sessions:${sessionID}`, inactivity, (err: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      });
-    });
-  }
-
   clear(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.redisClient.flushdb((err: any) => {

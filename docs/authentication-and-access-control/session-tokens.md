@@ -570,9 +570,6 @@ class CustomSessionStore extends SessionStore {
   read(sessionID: string): Promise<Session | undefined> {
     throw new Error('Method not implemented.');
   }
-  extendLifeTime(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
   clear(): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -599,10 +596,6 @@ Here is the description of each method:
 - **read**: Read a session from its ID.
 
     Return `undefined` if the session does not exist or has expired. 
-
-- **extendLifeTime**: Extend the lifetime of a session from its ID. The duration is the inactivity timeout.
-
-    If the session does not exist, the method does not throw an error.
 
 - **clear**: Clear all sessions.
 

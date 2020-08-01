@@ -122,15 +122,6 @@ export class TypeORMStore extends SessionStore {
     };
   }
 
-  async extendLifeTime(sessionID: string): Promise<void> {
-    await getRepository(DatabaseSession)
-      .createQueryBuilder()
-      .update()
-      .set({ updated_at: Date.now() })
-      .where({ id: sessionID })
-      .execute();
-  }
-
   async clear(): Promise<void> {
     await getRepository(DatabaseSession)
       .clear();

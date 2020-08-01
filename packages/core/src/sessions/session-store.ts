@@ -116,18 +116,6 @@ export abstract class Store {
    */
   abstract read(id: string): Promise<SessionState|undefined>;
   /**
-   * Extend the lifetime of a session from its ID. The duration is
-   * the inactivity timeout.
-   *
-   * If the session does not exist, the method does not throw an error.
-   *
-   * @abstract
-   * @param {string} id - The ID of the session.
-   * @returns {Promise<void>}
-   * @memberof Store
-   */
-  abstract extendLifeTime(id: string): Promise<void>;
-  /**
    * Clear all sessions.
    *
    * @abstract

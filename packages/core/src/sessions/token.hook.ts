@@ -150,11 +150,8 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
         return;
       }
 
-      if (session.isModified) {
-        await store.update(session.getState());
-      } else {
-        await store.extendLifeTime(session.getState().id);
-      }
+      await store.update(session.getState());
+
       if (options.cookie) {
         setSessionCookie(response, session.getToken());
       }

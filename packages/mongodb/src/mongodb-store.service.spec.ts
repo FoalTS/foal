@@ -364,45 +364,6 @@ describe('MongoDBStore', () => {
 
     });
 
-    describe('has a "extendLifeTime" method that', () => {
-
-      it('should extend the lifetime of session (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - Math.round(inactivity * 1000 / 2),
-        });
-
-        const dateBefore = Date.now();
-        await store.extendLifeTime(session1._id);
-        const dateAfter = Date.now();
-
-        const session = await findByID(session1._id);
-        notStrictEqual(session1.updatedAt, session.updatedAt);
-        strictEqual(dateBefore <= session.updatedAt, true);
-        strictEqual(session.updatedAt <= dateAfter, true);
-
-        const sessionB = await findByID(session2._id);
-        strictEqual(session2.updatedAt, sessionB.updatedAt);
-      });
-
-      it('should not throw if no session matches the given session ID.', () => {
-        return store.extendLifeTime('c');
-      });
-
-    });
-
     describe('has a "clear" method that', () => {
 
       it('should remove all sessions.', async () => {

@@ -32,7 +32,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   class Store extends SessionStore {
     updateCalledWith: SessionState|undefined = undefined;
-    extendLifeTimeCalledWith: string|undefined = undefined;
 
     private sessions: Session[] = [];
 
@@ -43,9 +42,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       this.updateCalledWith = state;
     }
     async destroy(sessionID: string): Promise<void> {}
-    async extendLifeTime(sessionID: string): Promise<void> {
-      this.extendLifeTimeCalledWith = sessionID;
-    }
     cleanUpExpiredSessions(): Promise<void> {
       throw new Error('Method not implemented.');
     }
@@ -510,10 +506,9 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     beforeEach(() => {
       services.get(Store).updateCalledWith = undefined;
-      services.get(Store).extendLifeTimeCalledWith = undefined;
     });
 
-    it('should update the session and extend its lifetime if it has been modified.', async () => {
+    it('should update the session if it has not been destroyed.', async () => {
       const session = await services.get(Store).createAndSaveSession({ userId: 7 }, { userId: 7 });
       const token = session.getToken();
 
@@ -532,33 +527,9 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       await postHookFunction(new HttpResponseOK());
 
       deepStrictEqual(services.get(Store).updateCalledWith, ctx.session.getState());
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
     });
 
-    it('should extend the session lifetime if it has not been modified.', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
-      const token = session.getToken();
-
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
-
-      const postHookFunction = await hook(ctx, services);
-      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-        throw new Error('The hook should return a post hook function');
-      }
-      if (!ctx.session) {
-        throw new Error('ctx.session should be defined');
-      }
-      // Do not set "isModified" to "true"
-      await postHookFunction(new HttpResponseOK());
-
-      strictEqual(services.get(Store).updateCalledWith, undefined);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, session.getState().id);
-    });
-
-    it('should not update the session or extend its lifetime if session.isDestroyed is true'
-      + ' (isModified === true).', async () => {
+    it('should not update the session if session.isDestroyed is true', async () => {
         const session = await services.get(Store).createAndSaveSession({ userId: 7 }, { userId: 7 });
         const token = session.getToken();
 
@@ -573,37 +544,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         if (!ctx.session) {
           throw new Error('ctx.session should be defined');
         }
-        ctx.session.set('something', 1); // set "isModified" to "true"
         await ctx.session.destroy();
         await postHookFunction(new HttpResponseOK());
 
         strictEqual(services.get(Store).updateCalledWith, undefined);
-        strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
       }
     );
-
-    it('should not extend the session lifetime if session.isDestroyed is true (isModified === false).', async () => {
-      const session = await services.get(Store).createAndSaveSession({ userId: 8 }, { userId: 8 });
-      const token = session.getToken();
-
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
-
-      const postHookFunction = await hook(ctx, services);
-      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-        throw new Error('The hook should return a post hook function');
-      }
-      if (!ctx.session) {
-        throw new Error('ctx.session should be defined');
-      }
-      // Do not set "isModified" to "true"
-      await ctx.session.destroy();
-      await postHookFunction(new HttpResponseOK());
-
-      strictEqual(services.get(Store).updateCalledWith, undefined);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
-    });
 
     describe('given options.cookie is false or not defined', () => {
 

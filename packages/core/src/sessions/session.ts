@@ -94,10 +94,8 @@ export class Session {
     // TODO: test getState() instead of state.
     switch (this.status) {
       case 'modified':
-        await this.store.update(this.getState());
-        break;
       case 'saved':
-        await this.store.extendLifeTime(this.getState().id);
+        await this.store.update(this.getState());
         break;
       case 'destroyed':
         throw new Error('Impossible to commit the session. Session already destroyed.');

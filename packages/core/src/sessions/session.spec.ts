@@ -13,7 +13,6 @@ describe('Session', () => {
     // saveCalledWith: SessionState;
     updateCalledWith: SessionState | undefined;
     destroyCalledWith: string | undefined;
-    extendLifeTimeCalledWith: string | undefined;
 
     createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
       throw new Error('Method not implemented.');
@@ -26,9 +25,6 @@ describe('Session', () => {
     }
     read(id: string): Promise<SessionState | undefined> {
       throw new Error('Method not implemented.');
-    }
-    async extendLifeTime(id: string): Promise<void> {
-      this.extendLifeTimeCalledWith = id;
     }
     clear(): Promise<void> {
       throw new Error('Method not implemented.');
@@ -205,12 +201,6 @@ describe('Session', () => {
         deepStrictEqual(store.updateCalledWith, state);
       });
     }
-    function shouldExtendTheSessionLifeTime(id: string): void {
-      it('should extend the session life time.', async () => {
-        await session.commit();
-        strictEqual(store.extendLifeTimeCalledWith, id);
-      });
-    }
 
     function shouldNotSaveTheSession(): void {
       xit('should NOT save the session.');
@@ -219,12 +209,6 @@ describe('Session', () => {
       it('should NOT update the session.', async () => {
         await session.commit();
         strictEqual(store.updateCalledWith, undefined);
-      });
-    }
-    function shouldNotExtendTheSessionLifeTime(): void {
-      it('should NOT extend the session life time.', async () => {
-        await session.commit();
-        strictEqual(store.extendLifeTimeCalledWith, undefined);
       });
     }
 
@@ -253,7 +237,6 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
       });
-      shouldNotExtendTheSessionLifeTime();
 
     });
 
@@ -275,7 +258,6 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
       });
-      shouldNotExtendTheSessionLifeTime();
 
     });
 
@@ -291,8 +273,12 @@ describe('Session', () => {
       });
 
       shouldNotSaveTheSession();
-      shouldNotUpdateTheSession();
-      shouldExtendTheSessionLifeTime('xxx');
+      shouldUpdateTheSession({
+        content: {},
+        createdAt: 0,
+        flash: {},
+        id: 'xxx',
+      });
 
     });
 
@@ -339,8 +325,12 @@ describe('Session', () => {
       });
 
       shouldNotSaveTheSession();
-      shouldNotUpdateTheSession();
-      shouldExtendTheSessionLifeTime('xxx');
+      shouldUpdateTheSession({
+        content: { foo: 'bar' },
+        createdAt: 0,
+        flash: {},
+        id: 'xxx',
+      });
 
     });
 

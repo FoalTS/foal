@@ -270,28 +270,6 @@ describe('RedisStore', () => {
 
   });
 
-  describe('has a "extendLifeTime" method that', () => {
-
-    it('should extend the lifetime of session (inactivity).', async () => {
-      const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-      await asyncSet(`${COLLECTION_NAME}:aaa`, '{}');
-      await asyncExpire(`${COLLECTION_NAME}:aaa`, 5);
-      strictEqual(await asyncTTL(`${COLLECTION_NAME}:aaa`), 5);
-
-      await store.extendLifeTime('aaa');
-
-      strictEqual(await asyncTTL(`${COLLECTION_NAME}:aaa`), inactivity);
-    });
-
-    it('should not throw if no session matches the given session ID.', async () => {
-      await store.extendLifeTime('c');
-
-      strictEqual(await asyncTTL(`${COLLECTION_NAME}:c`), -2);
-    });
-
-  });
-
   describe('has a "clear" method that', () => {
 
     it('should remove all sessions.', async () => {

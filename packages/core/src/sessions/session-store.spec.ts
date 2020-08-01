@@ -98,9 +98,6 @@ describe('SessionStore', () => {
         read(sessionID: string): Promise<SessionState | undefined> {
           throw new Error('Method not implemented.');
         }
-        extendLifeTime(sessionID: string): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
         clear(): Promise<void> {
           throw new Error('Method not implemented.');
         }
@@ -138,9 +135,6 @@ describe('SessionStore', () => {
         throw new Error('Method not implemented.');
       }
       read(sessionID: string): Promise<SessionState | undefined> {
-        throw new Error('Method not implemented.');
-      }
-      extendLifeTime(sessionID: string): Promise<void> {
         throw new Error('Method not implemented.');
       }
       clear(): Promise<void> {
