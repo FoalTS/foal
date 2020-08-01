@@ -15,7 +15,8 @@ export class Session {
 
   constructor(
     readonly store: SessionStore,
-    private readonly state: SessionState
+    private readonly state: SessionState,
+    options: { exists?: boolean },
   ) {}
 
   get isDestroyed(): boolean {
@@ -90,7 +91,7 @@ export class Session {
           // TODO: test this line.
           flash: this.newFlash,
           updatedAt: Date.now(),
-        });
+        }, 0);
         break;
       case 'destroyed':
         throw new Error('Impossible to commit the session. Session already destroyed.');
