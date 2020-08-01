@@ -151,6 +151,7 @@ describe('MongoDBStore', () => {
           flash: {},
           id: session1._id,
           updatedAt: session1.updatedAt,
+          userId: null,
         });
         session.set('hello', 'world', { flash: true });
         await store.update(session.getState());

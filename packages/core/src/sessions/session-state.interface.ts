@@ -6,8 +6,7 @@
  */
 export interface SessionState {
   id: string;
-  // userId: string|number|null;
-  userId?: number|string;
+  userId: string|number|null;
   content: { [key: string]: any };
   flash: { [key: string]: any };
   updatedAt: number;

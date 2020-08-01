@@ -138,6 +138,7 @@ describe('RedisStore', () => {
         flash: { bar: 'foo' },
         id: 'a',
         updatedAt,
+        userId: null,
       };
       await asyncSet(`${COLLECTION_NAME}:a`, JSON.stringify(data));
       strictEqual(await asyncGet(`${COLLECTION_NAME}:a`), JSON.stringify(data));

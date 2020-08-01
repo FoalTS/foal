@@ -227,6 +227,7 @@ function storeTestSuite(type: DBType) {
           flash: {},
           id: session1.id,
           updatedAt: session2.updated_at,
+          userId: null,
         });
         session.set('hello', 'world', { flash: true });
         await store.update(session.getState());

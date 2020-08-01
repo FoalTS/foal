@@ -53,7 +53,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         flash: {},
         id: sessionID,
         updatedAt: Date.now(),
-        userId: options.userId,
+        userId: options.userId ?? null,
       });
       this.sessions.push(session);
       return session;

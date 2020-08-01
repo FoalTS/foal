@@ -42,7 +42,7 @@ export class RedisStore extends SessionStore {
           flash: {},
           id: sessionID,
           updatedAt: date,
-          userId: options.userId
+          userId: options.userId ?? null
         });
         resolve(session);
       });

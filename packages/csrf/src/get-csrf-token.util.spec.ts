@@ -44,7 +44,14 @@ describe('getCsrfToken', () => {
   describe('given session is defined.', () => {
 
     it('should throw an error if the session key "csrfToken" is empty.', async () => {
-      const session = new Session({} as any, { id: 'a', content: {}, createdAt: 0, flash: {} });
+      const session = new Session({} as any, {
+        id: 'a',
+        content: {},
+        createdAt: 0,
+        flash: {},
+        updatedAt: 0,
+        userId: null,
+      });
       try {
         await getCsrfToken(session);
         throw new Error('An error should have been thrown.');
@@ -57,7 +64,14 @@ describe('getCsrfToken', () => {
     });
 
     it('should return the value of the session key "csrfToken".', async () => {
-      const session = new Session({} as any, { id: 'a', content: { csrfToken: 'xxx' }, createdAt: 0, flash: {} });
+      const session = new Session({} as any, {
+        id: 'a',
+        content: { csrfToken: 'xxx' },
+        createdAt: 0,
+        flash: {},
+        updatedAt: 0,
+        userId: null,
+      });
       const csrfToken = await getCsrfToken(session);
       strictEqual(csrfToken, 'xxx');
     });

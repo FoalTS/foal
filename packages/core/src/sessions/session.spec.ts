@@ -48,6 +48,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 4,
+        userId: null,
       });
       strictEqual(session.store, store);
       strictEqual(session.getState().id, 'xxx');
@@ -64,8 +65,9 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
-      strictEqual(session1.getState().userId, undefined);
+      strictEqual(session1.getState().userId, null);
 
       const session2 = new Session(store, {
         content: {},
@@ -95,6 +97,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.isModified, false);
     });
@@ -102,7 +105,15 @@ describe('Session', () => {
     it('should not "modified" if flash is not empty.', () => {
       const session = new Session(
         new ConcreteSessionStore(),
-        { id: 'xxx', content: {}, createdAt: 0, flash: { bar: 'foo' }, updatedAt: 0 })
+        {
+          content: {},
+          createdAt: 0,
+          flash: { bar: 'foo' },
+          id: 'xxx',
+          updatedAt: 0,
+          userId: null,
+        }
+      )
       ;
       strictEqual(session.isModified, true);
     });
@@ -118,6 +129,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.get('foo'), 'bar');
     });
@@ -129,6 +141,7 @@ describe('Session', () => {
         flash: { foo: 'bar' },
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.get('foo'), 'bar');
     });
@@ -140,6 +153,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.get<string>('foobar', 'barfoo'), 'barfoo');
     });
@@ -151,6 +165,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.get('foobar'), undefined);
     });
@@ -166,6 +181,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       session.set('foo', 'bar');
       strictEqual(session.get('foo'), 'bar');
@@ -178,6 +194,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.isModified, false);
 
@@ -192,6 +209,7 @@ describe('Session', () => {
         flash: {},
         id: '',
         updatedAt: 0,
+        userId: null,
       });
       session.set('foo', 'bar', { flash: true });
       deepStrictEqual(session.getState().flash, { foo: 'bar' });
@@ -209,6 +227,7 @@ describe('Session', () => {
         flash: {},
         id: sessionID,
         updatedAt: 0,
+        userId: null,
       });
       const token = session.getToken();
 
@@ -290,6 +309,7 @@ describe('Session', () => {
           flash: {},
           id: 'xxx',
           updatedAt: 0,
+          userId: null,
         });
         session.set('foo', 'bar');
       });
@@ -301,6 +321,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
 
     });
@@ -314,6 +335,7 @@ describe('Session', () => {
           flash: { hello: 'world' },
           id: 'xxx',
           updatedAt: 0,
+          userId: null,
         });
       });
 
@@ -324,6 +346,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
 
     });
@@ -337,6 +360,7 @@ describe('Session', () => {
           flash: {},
           id: 'xxx',
           updatedAt: 0,
+          userId: null,
         });
       });
 
@@ -347,6 +371,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
 
     });
@@ -365,6 +390,7 @@ describe('Session', () => {
           flash: {},
           id: 'xxx',
           updatedAt: 0,
+          userId: null,
         });
         await session.destroy();
       });
@@ -389,6 +415,7 @@ describe('Session', () => {
           flash: {},
           id: 'xxx',
           updatedAt: 0,
+          userId: null,
         });
         session.set('foo', 'bar');
         await session.commit();
@@ -402,6 +429,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
 
     });
@@ -417,6 +445,7 @@ describe('Session', () => {
         flash: {},
         id: 'a',
         updatedAt: 0,
+        userId: null,
       });
 
       await session.destroy();
@@ -434,6 +463,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
       strictEqual(session.isDestroyed, false);
     });
@@ -445,6 +475,7 @@ describe('Session', () => {
         flash: {},
         id: 'xxx',
         updatedAt: 0,
+        userId: null,
       });
       await session.destroy();
       strictEqual(session.isDestroyed, true);
