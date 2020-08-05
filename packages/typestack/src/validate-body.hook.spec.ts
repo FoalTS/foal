@@ -22,6 +22,37 @@ describe('ValidateBody', () => {
         getHookFunction(ValidateBody((controller: any) => controller.entityClass, options))
             .bind({ entityClass: cls })
     );
+
+    it('hook should work many times', async () => {
+      class FirstProduct {
+        @Min(10)
+        foo: number;
+      }
+
+      class SecondProduct {
+        @Min(5)
+        foo: number;
+      }
+
+      const hookFunction = getHookFunction(ValidateBody((controller: any) => controller.entityClass));
+      const firstHook = hookFunction.bind({ entityClass: FirstProduct });
+      const secondHook = hookFunction.bind({ entityClass: SecondProduct });
+
+      const firstCtx = new Context({
+        body: {
+          foo: 11,
+        }
+      });
+
+      strictEqual(await firstHook(firstCtx, new ServiceManager()), undefined);
+
+      const secondCtx = new Context({
+        body: {
+          foo: 6,
+        }
+      });
+      strictEqual(await secondHook(secondCtx, new ServiceManager()), undefined);
+    });
   });
 
   function testSuite(getHook: (cls: Class, options?: ValidateBodyOptions) => HookFunction) {
