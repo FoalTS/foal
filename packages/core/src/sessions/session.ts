@@ -1,4 +1,5 @@
 // FoalTS
+import { generateToken } from '../common';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
@@ -10,48 +11,75 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  private status: 'destroyed'|'saved' = 'saved';
-  private readonly newFlash: SessionState['flash'] = {};
+  // static async create(store: SessionStore): Promise<Session> {
+  //   return null as any;
+  // }
+
+  // static async read(store: SessionStore, id: string): Promise<Session|null> {
+  //   return null;
+  // }
+
+  private readonly oldFlash: { [key: string]: any };
+  private oldId = '';
+  private status: 'new'|'exists'|'regenerated'|'destroyed';
 
   constructor(
-    readonly store: SessionStore,
+    private readonly store: SessionStore,
     private readonly state: SessionState,
-    options: { exists?: boolean },
-  ) {}
-
-  get isDestroyed(): boolean {
-    return this.status === 'destroyed';
+    options: { exists: boolean },
+  ) {
+    this.status = options.exists ? 'exists' : 'new';
+    this.oldFlash = state.flash;
+    state.flash = {};
   }
 
   /**
-   * Add/replace an element in the session. This operation is not saved
-   * in the saved unless you call SessionStore.update(session).
+   * Sets or replaces the userId associated with the session.
    *
-   * @param {string} key
-   * @param {*} value
+   * @param {({ id: number|string })} user - The user containing the ID.
+   * @memberof Session
+   */
+  setUser(user: { id: number|string|object } | { _id: number|string|object }): void {
+    const id: number|string|object = (user as any).id ?? (user as any)._id;
+    if (typeof id === 'object') {
+      this.state.userId = id.toString();
+      return;
+    }
+    this.state.userId = id;
+  }
+
+  /**
+   * Adds or replaces an element in the session. This operation is not saved
+   * in the saved unless you call the "commit" function.
+   *
+   * @param {string} key - The property key.
+   * @param {*} value - The property value.
+   * @param {{ flash?: boolean }} [options={}] If flash is true, the key/value
+   * will be erased at the end of the next request.
    * @memberof Session
    */
   set(key: string, value: any, options: { flash?: boolean } = {}): void {
     if (options.flash) {
-      this.newFlash[key] = value;
+      this.state.flash[key] = value;
+      // this.flash
     } else {
       this.state.content[key] = value;
     }
   }
 
   /**
-   * The value of an element in the session content.
+   * Gets the value of a key in the session content.
    *
    * @template T
-   * @param {string} key - The property key
-   * @returns {(T | undefined)} The property valye
+   * @param {string} key - The property key.
+   * @returns {(T | undefined)} The property value.
    * @memberof Session
    */
   get<T>(key: string): T | undefined;
   get<T>(key: string, defaultValue: any): T;
   get(key: string, defaultValue?: any): any {
-    if (this.state.flash.hasOwnProperty(key)) {
-      return this.state.flash[key];
+    if (this.oldFlash.hasOwnProperty(key)) {
+      return this.oldFlash[key];
     }
     if (this.state.content.hasOwnProperty(key)) {
       return this.state.content[key];
@@ -60,10 +88,9 @@ export class Session {
   }
 
   /**
-   * Get the session ID. This ID is used by `@TokenRequired` and `@TokenOptional` to retreive
-   * the session and the authenticated user if she/he exists.
+   * Gets the session ID.
    *
-   * @returns {string} - The session token.
+   * @returns {string} - The session ID.
    * @memberof Session
    */
   getToken(): string {
@@ -71,38 +98,23 @@ export class Session {
   }
 
   /**
-   * Return the session state.
+   * Regenerates the session with a new ID. It is recommended
+   * to regenerate the session ID after any privilege level change
+   * within the associated user session.
    *
-   * @returns {object} - The session content copy.
+   * Common scenario: an anonymous user is authenticated.
+   *
+   * @returns {Promise<void>}
    * @memberof Session
    */
-  getState(): SessionState {
-    return {
-      ...this.state,
-      flash: this.newFlash,
-    };
-  }
-
-  async commit(): Promise<void> {
-    switch (this.status) {
-      case 'saved':
-        await this.store.update({
-          ...this.state,
-          // TODO: test this line.
-          flash: this.newFlash,
-          updatedAt: Date.now(),
-        }, 0);
-        break;
-      case 'destroyed':
-        throw new Error('Impossible to commit the session. Session already destroyed.');
-      default:
-        break;
-    }
-    this.status = 'saved';
+  async regenerateID(): Promise<void> {
+    this.oldId = this.state.id;
+    this.state.id = await generateToken();
+    this.status = 'regenerated';
   }
 
   /**
-   * Destroy the session in the session store.
+   * Destroys the session.
    *
    * @returns {Promise<void>}
    * @memberof Session
@@ -110,6 +122,50 @@ export class Session {
   async destroy(): Promise<void> {
     await this.store.destroy(this.state.id);
     this.status = 'destroyed';
+  }
+
+  /**
+   * Returns true if the method `destroy` has previously been called.
+   *
+   * @readonly
+   * @type {boolean}
+   * @memberof Session
+   */
+  get isDestroyed(): boolean {
+    return this.status === 'destroyed';
+  }
+
+  /**
+   * Saves or updates the session and extends its lifetime.
+   *
+   * If the session has already been destroyed, an error is thrown.
+   *
+   * @returns {Promise<void>}
+   * @memberof Session
+   */
+  async commit(): Promise<void> {
+    const state = {
+      ...this.state,
+      updatedAt: Date.now(),
+    };
+    switch (this.status) {
+      case 'regenerated':
+        await this.store.destroy(this.oldId);
+        await this.store.save(state, -1);
+        this.status = 'exists';
+        break;
+      case 'new':
+        await this.store.save(state, -1);
+        this.status = 'exists';
+        break;
+      case 'exists':
+        await this.store.update(state, -1);
+        break;
+      case 'destroyed':
+        throw new Error('Impossible to commit the session. Session already destroyed.');
+      default:
+        break;
+    }
   }
 
 }

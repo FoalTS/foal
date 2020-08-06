@@ -1,215 +1,137 @@
 // std
-import { deepStrictEqual, rejects, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import { createService } from '../core';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
-import { SessionOptions, SessionStore } from './session-store';
+import {  SessionStore } from './session-store';
+
+function createState(): SessionState {
+  return {
+    content: {},
+    createdAt: 0,
+    flash: {
+      hello2: 'world'
+    },
+    id: '',
+    updatedAt: 0,
+    userId: null,
+  };
+}
 
 describe('Session', () => {
 
   class ConcreteSessionStore extends SessionStore {
-    // saveCalledWith: SessionState;
-    updateCalledWith: SessionState | undefined;
-    destroyCalledWith: string | undefined;
 
-    createAndSaveSession(sessionContent: object, options?: SessionOptions | undefined): Promise<Session> {
+    saveCalledWith: { state: SessionState, maxInactivity: number } | undefined;
+    // read
+    updateCalledWith: { state: SessionState, maxInactivity: number } | undefined;
+    destroyCalledWith: string | undefined;
+    // clear
+    cleanUpExpiredSessionsCalledWith: { maxInactivity: number, maxLifeTime: number } | undefined;
+
+    async save(state: SessionState, maxInactivity: number): Promise<void> {
+      // This line is required to test the use of "await".
+      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      this.saveCalledWith = { state, maxInactivity };
+    }
+    read(id: string): Promise<SessionState | null> {
       throw new Error('Method not implemented.');
     }
-    async update(state: SessionState): Promise<void> {
-      this.updateCalledWith = state;
+    async update(state: SessionState, maxInactivity: number): Promise<void> {
+      // This line is required to test the use of "await".
+      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      this.updateCalledWith = { state, maxInactivity };
     }
     async destroy(id: string): Promise<void> {
+      // This line is required to test the use of "await".
+      await new Promise(resolve => setTimeout(() => resolve(), 0));
       this.destroyCalledWith = id;
-    }
-    read(id: string): Promise<SessionState | undefined> {
-      throw new Error('Method not implemented.');
     }
     clear(): Promise<void> {
       throw new Error('Method not implemented.');
     }
-    cleanUpExpiredSessions(): Promise<void> {
-      throw new Error('Method not implemented.');
+    async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+      // This line is required to test the use of "await".
+      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      this.cleanUpExpiredSessionsCalledWith = { maxInactivity, maxLifeTime };
     }
   }
 
   let store: ConcreteSessionStore;
 
-  beforeEach(() => store = createService(ConcreteSessionStore));
-
-  describe('when it is instanciated', () => {
-
-    it('should set three readonly properties "store", "sessionID", "createdAt" and "updatedAt" from the given arguments.', () => {
-      const store = new ConcreteSessionStore();
-      const session = new Session(
-        store,
-        {
-          content: {},
-          createdAt: 3,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 4,
-          userId: null,
-        },
-        { exists: true }
-      );
-      strictEqual(session.store, store);
-      strictEqual(session.getState().id, 'xxx');
-      strictEqual(session.getState().createdAt, 3);
-      strictEqual(session.getState().updatedAt, 4);
-    });
-
-    it('should set the readonly property "userId" if it is property in the constructor', () => {
-      const store = new ConcreteSessionStore();
-
-      const session1 = new Session(
-        store,
-        {
-          content: {},
-          createdAt: 3,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 0,
-          userId: null,
-        },
-      { exists: true }
-    );
-      strictEqual(session1.getState().userId, null);
-
-      const session2 = new Session(
-        store,
-          {
-          content: {},
-          createdAt: 3,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 0,
-          userId: 'e',
-        },
-        { exists: true }
-      );
-      strictEqual(session2.getState().userId, 'e');
-
-      const session3 = new Session(
-        store,
-        {
-          content: {},
-          createdAt: 3,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 0,
-          userId: 22,
-        },
-        { exists: true }
-      );
-      strictEqual(session3.getState().userId, 22);
-    });
-
+  beforeEach(() => {
+    store = createService(ConcreteSessionStore);
   });
 
   describe('has a "get" method that', () => {
 
-    it('should return the value of the key given in the param "content" during instantiation.', () => {
+    it('should return the value of the key given in the param "state.content" during instantiation.', () => {
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
+          ...createState(),
           content: { foo: 'bar' },
-          createdAt: 0,
-          flash: {},
-          id: '',
-          updatedAt: 0,
-          userId: null,
         },
         { exists: true }
       );
       strictEqual(session.get('foo'), 'bar');
     });
 
-    it('should return the value of the key given in the param "flash" during instantiation.', () => {
+    it('should return the value of the key given in the param "state.flash" during instantiation.', () => {
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
-          content: {},
-          createdAt: 0,
-          flash: { foo: 'bar' },
-          id: '',
-          updatedAt: 0,
-          userId: null,
+          ...createState(),
+          flash: { hello: 'world' },
         },
         { exists: true }
       );
-      strictEqual(session.get('foo'), 'bar');
+      strictEqual(session.get('hello'), 'world');
     });
 
-    it('should return the default value if the key does not exist.', () => {
+    it('should return the default value if the key does not exist in neither "state.flash" or "state.content".', () => {
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
+          ...createState(),
           content: { foo: 'bar' },
-          createdAt: 0,
-          flash: {},
-          id: '',
-          updatedAt: 0,
-          userId: null,
+          flash: { hello: 'world' },
         },
         { exists: true }
       );
       strictEqual(session.get<string>('foobar', 'barfoo'), 'barfoo');
     });
 
-    it('should return undefined if there is no default value and if the key does not exist.', () => {
-      const session = new Session(
-        new ConcreteSessionStore(),
+    it(
+      'should return undefined if there is no default value and if the key does not exist'
+      + ' in neither "state.flash" or "state.content".',
+      () => {
+        const session = new Session(
+          store,
           {
-          content: { foo: 'bar' },
-          createdAt: 0,
-          flash: {},
-          id: '',
-          updatedAt: 0,
-          userId: null,
-        },
-        { exists: true }
-      );
-      strictEqual(session.get('foobar'), undefined);
-    });
+            ...createState(),
+            content: { foo: 'bar' },
+            flash: { hello: 'world' },
+          },
+          { exists: true }
+        );
+        strictEqual(session.get('foobar'), undefined);
+      }
+    );
 
-  });
-
-  describe('has a "set" method that', () => {
-
-    it('should modify the session content...', () => {
+    it('should return the value of the key provided with the "set" method.', () => {
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
-          content: {},
-          createdAt: 0,
-          flash: {},
-          id: '',
-          updatedAt: 0,
-          userId: null,
+          ...createState(),
         },
         { exists: true }
       );
+      strictEqual(session.get<string>('foo'), undefined);
       session.set('foo', 'bar');
-      strictEqual(session.get('foo'), 'bar');
-    });
-
-    it('should modifu the session flash content if the flash option is true.', () => {
-      const session = new Session(
-        new ConcreteSessionStore(),
-        {
-          content: {},
-          createdAt: 0,
-          flash: {},
-          id: '',
-          updatedAt: 0,
-          userId: null,
-        },
-        { exists: true }
-      );
-      session.set('foo', 'bar', { flash: true });
-      deepStrictEqual(session.getState().flash, { foo: 'bar' });
+      strictEqual(session.get<string>('foo'), 'bar');
     });
 
   });
@@ -219,14 +141,10 @@ describe('Session', () => {
     it('should return the session ID.', () => {
       const sessionID = 'zMd0TkVoMlj7qrJ54+G3idn0plDwQGqS/n6VVwKC4qM=';
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
-          content: {},
-          createdAt: 0,
-          flash: {},
+          ...createState(),
           id: sessionID,
-          updatedAt: 0,
-          userId: null,
         },
         { exists: true }
       );
@@ -240,71 +158,191 @@ describe('Session', () => {
 
   });
 
-  describe('has a "getState" method that', () => {
+  describe('has a "regenerateID" that', () => {
 
-    it('should return the session state', () => {
-      const content = { foo: 'bar' };
-      const id = 'a';
-      const createdAt = 888888888;
-      const userId = 'xxx';
+    it('should regenerate the session ID with a random string.', async () => {
+      const sessionID = 'a';
       const session = new Session(
-        new ConcreteSessionStore(),
+        store,
         {
-          content,
-          createdAt,
-          flash: { hello: 'world' },
-          id,
-          updatedAt: 0,
-          userId,
+          ...createState(),
+          id: sessionID,
         },
         { exists: true }
       );
-      session.set('foo', 'bar', { flash: true });
+      strictEqual(session.getToken(), sessionID);
+      await session.regenerateID();
+      notStrictEqual(session.getToken(), sessionID);
+      notStrictEqual(session.getToken(), '');
+      strictEqual(typeof session.getToken(), 'string');
+    });
 
-      deepStrictEqual(session.getState().content, { foo: 'bar' });
-      strictEqual(session.getState().id, id);
-      strictEqual(session.getState().createdAt, createdAt);
-      strictEqual(session.getState().userId, userId);
-      deepStrictEqual(session.getState().flash, { foo: 'bar' });
+  });
+
+  describe('has a "destroy" method that', () => {
+
+    it('should call the "destroy" method of the store to destroy itself.', async () => {
+      const sessionID = 'a';
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          id: sessionID,
+        },
+        { exists: true }
+      );
+
+      await session.destroy();
+      strictEqual(store.destroyCalledWith, sessionID);
+    });
+
+  });
+
+  describe('has a "isDestroyed" property that', () => {
+
+    it('should return false if the session has NOT been destroyed.', () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+        },
+        { exists: true }
+      );
+      strictEqual(session.isDestroyed, false);
+    });
+
+    it('should return true if the session has been destroyed.', async () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+        },
+        { exists: true }
+      );
+      await session.destroy();
+      strictEqual(session.isDestroyed, true);
     });
 
   });
 
   describe('has a "commit" method that', () => {
 
-    // Warning: immutable objects must be used in these tests.
+    // Warning: only immutable objects must be used in these tests.
 
     let session: Session;
 
-    function shouldSaveTheSession(): void {
-      xit('should save the session.');
-    }
-    function shouldUpdateTheSession(state: SessionState): void {
-      it('should update the session.', async () => {
-        // TODO: add the test on flash.
-        // C'est ici que l'on teste set(flash or not), setUser conjointement avec le test sur get
-        // with the proper createdAt, content, etc value.
-        // with an updated updatedAt field.
-        // with the proper flash session.
+    function shouldSaveOrUpdateTheSession(
+      calledWithPropertyName: 'saveCalledWith'|'updateCalledWith',
+      state: SessionState|(() => SessionState)
+    ) {
+
+      it('with the proper id, userId, content and createdAt values.', async () => {
+        await session.commit();
+
+        state = typeof state === 'function' ? state() : state;
+        strictEqual(store[calledWithPropertyName]?.state.id, state.id);
+        strictEqual(store[calledWithPropertyName]?.state.userId, state.userId);
+        deepStrictEqual(store[calledWithPropertyName]?.state.content, state.content);
+        strictEqual(store[calledWithPropertyName]?.state.createdAt, state.createdAt);
+      });
+
+      it('with the proper userId modified with the "setUser" method (number).', async () => {
+        // Use 0 here to detect errors on falsy values.
+        const user = { id: 0 };
+        session.setUser(user);
+        await session.commit();
+
+        strictEqual(store[calledWithPropertyName]?.state.userId, user.id);
+      });
+
+      it('with the proper userId modified with the "setUser" method (string).', async () => {
+        // Use empty string here to detect errors on falsy values.
+        const user = { id: '' };
+        session.setUser(user);
+        await session.commit();
+
+        strictEqual(store[calledWithPropertyName]?.state.userId, user.id);
+      });
+
+      it('with the proper userId modified with the "setUser" method (toString).', async () => {
+        const user = { id: { toString() { return 1; }} };
+        session.setUser(user);
+        await session.commit();
+
+        strictEqual(store[calledWithPropertyName]?.state.userId, 1);
+      });
+
+      it('with the proper userId modified with the "setUser" method (_id).', async () => {
+        const user = { _id: 'xxx' };
+        session.setUser(user as any);
+        await session.commit();
+
+        strictEqual(store[calledWithPropertyName]?.state.userId, user._id);
+      });
+
+      it('with the proper content modified with the "set" method.', async () => {
+        session.set('foo', 'bar');
+        await session.commit();
+
+        deepStrictEqual(store[calledWithPropertyName]?.state.content, {
+          foo: 'bar'
+        });
+        deepStrictEqual(store[calledWithPropertyName]?.state.flash, {});
+      });
+
+      it('with the proper flash content modified with the "set" method.', async () => {
+        session.set('hello', 'world', { flash: true });
+        await session.commit();
+
+        state = typeof state === 'function' ? state() : state;
+        deepStrictEqual(store[calledWithPropertyName]?.state.content, state.content);
+        deepStrictEqual(store[calledWithPropertyName]?.state.flash, {
+          hello: 'world'
+        });
+      });
+
+      it('with the proper updatedAt value.', async () => {
         const dateBefore = Date.now();
         await session.commit();
         const dateAfter = Date.now();
 
-        if (!store.updateCalledWith) {
+        const calledWith = store[calledWithPropertyName];
+        if (!calledWith) {
           throw new Error('SessionStore.update should have been called.');
         }
 
-        strictEqual(dateBefore <= store.updateCalledWith.updatedAt, true);
-        strictEqual(dateAfter >= store.updateCalledWith.updatedAt, true);
+        strictEqual(dateBefore <= calledWith.state.updatedAt, true);
+        strictEqual(dateAfter >= calledWith.state.updatedAt, true);
+      });
 
-        delete store.updateCalledWith.updatedAt;
-        delete state.updatedAt;
-        deepStrictEqual(store.updateCalledWith, state);
+    }
+
+    function shouldSaveTheSession(state: SessionState|(() => SessionState)): void {
+
+      describe('should save the session', () => {
+        shouldSaveOrUpdateTheSession('saveCalledWith', state);
+      });
+
+    }
+    function shouldUpdateTheSession(state: SessionState|(() => SessionState)): void {
+
+      describe('should update the session', () => {
+        shouldSaveOrUpdateTheSession('updateCalledWith', state);
+      });
+
+    }
+    function shouldDestroyTheSession(id: string): void {
+      it('should destroy the session.', async () => {
+        await session.commit();
+        deepStrictEqual(store.destroyCalledWith, id);
       });
     }
 
     function shouldNotSaveTheSession(): void {
-      xit('should NOT save the session.');
+      it('should NOT save the session.', async () => {
+        await session.commit();
+        strictEqual(store.saveCalledWith, undefined);
+      });
     }
     function shouldNotUpdateTheSession(): void {
       it('should NOT update the session.', async () => {
@@ -312,28 +350,139 @@ describe('Session', () => {
         strictEqual(store.updateCalledWith, undefined);
       });
     }
+    function shouldNotDestroyTheSession(): void {
+      it('should NOT destroy the session.', async () => {
+        await session.commit();
+        strictEqual(store.destroyCalledWith, undefined);
+      });
+    }
+
     context('given the session has been created with exists=true', () => {
+
+      beforeEach(async () => {
+        session = new Session(
+          store,
+          {
+            ...createState()
+          },
+          { exists: true }
+        );
+      });
+
       shouldNotSaveTheSession();
-      shouldUpdateTheSession();
+      shouldUpdateTheSession({
+        ...createState(),
+      });
+      shouldNotDestroyTheSession();
+
     });
 
     context('given the session has been created with exists=false', () => {
 
-      context('and the session has NOT been commited yet', () => {
-        shouldSaveTheSession();
+      context('and the session has not been commited yet', () => {
+
+        beforeEach(async () => {
+          session = new Session(
+            store,
+            {
+              ...createState()
+            },
+            { exists: false }
+          );
+        });
+
+        shouldSaveTheSession({
+          ...createState()
+        });
         shouldNotUpdateTheSession();
+        shouldNotDestroyTheSession();
+
       });
+
       context('and the session has already been commited', () => {
+
+        beforeEach(async () => {
+          session = new Session(
+            store,
+            {
+              ...createState()
+            },
+            { exists: false }
+          );
+          await session.commit();
+          store.saveCalledWith = undefined;
+        });
+
         shouldNotSaveTheSession();
-        shouldUpdateTheSession();
+        shouldUpdateTheSession({
+          ...createState()
+        });
+        shouldNotDestroyTheSession();
+
       });
 
     });
 
-    // context('given the session ID has been re-generated', () => {
-    //   it('should destroy the previous session.');
-    //   it('should save the new session.');
-    // });
+    context('given the session ID has been re-generated', () => {
+
+      context('and the session has not been commited yet', () => {
+
+        const firstID = 'xxx';
+        let secondID: string = '';
+
+        beforeEach(async () => {
+          session = new Session(
+            store,
+            {
+              ...createState(),
+              id: firstID
+            },
+            { exists: false }
+          );
+          await session.regenerateID();
+          secondID = session.getToken();
+        });
+
+        shouldDestroyTheSession(firstID);
+        shouldSaveTheSession(() => ({
+          ...createState(),
+          id: secondID,
+        }));
+        shouldNotUpdateTheSession();
+
+      });
+
+      context('and the session has already been commited', () => {
+
+        const firstID = 'xxx';
+        let secondID: string = '';
+
+        beforeEach(async () => {
+          session = new Session(
+            store,
+            {
+              ...createState(),
+              id: firstID
+            },
+            { exists: false }
+          );
+          await session.regenerateID();
+          secondID = session.getToken();
+          await session.commit();
+          store.saveCalledWith = undefined;
+          store.destroyCalledWith = undefined;
+        });
+
+        shouldNotDestroyTheSession();
+        shouldNotSaveTheSession();
+        shouldUpdateTheSession(() => ({
+          ...createState(),
+          id: secondID,
+        }));
+
+      });
+
+    });
 
     context('given the "destroy" method has been called', () => {
 
@@ -341,12 +490,7 @@ describe('Session', () => {
         session = new Session(
           store,
           {
-            content: {},
-            createdAt: 0,
-            flash: {},
-            id: 'xxx',
-            updatedAt: 0,
-            userId: null,
+            ...createState()
           },
           { exists: true }
         );
@@ -362,65 +506,6 @@ describe('Session', () => {
         );
       });
 
-    });
-
-  });
-
-  describe('has a "destroy" method that', () => {
-
-    it('should call the "destroy" method of the store to destroy itself.', async () => {
-      const session = new Session(
-        store,
-        {
-          content: {},
-          createdAt: 0,
-          flash: {},
-          id: 'a',
-          updatedAt: 0,
-          userId: null,
-        },
-        { exists: true }
-      );
-
-      await session.destroy();
-      strictEqual(store.destroyCalledWith, 'a');
-    });
-
-  });
-
-  describe('has a "isDestroyed" property that', () => {
-
-    it('should return false if the session has NOT been destroyed.', () => {
-      const session = new Session(
-        store,
-        {
-          content: {},
-          createdAt: 0,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 0,
-          userId: null,
-        },
-        { exists: true }
-      );
-      strictEqual(session.isDestroyed, false);
-    });
-
-    it('should return true if the session has been destroyed.', async () => {
-      const session = new Session(
-        store,
-          {
-          content: {},
-          createdAt: 0,
-          flash: {},
-          id: 'xxx',
-          updatedAt: 0,
-          userId: null,
-        },
-        { exists: true }
-      );
-      await session.destroy();
-      strictEqual(session.isDestroyed, true);
     });
 
   });

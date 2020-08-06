@@ -43,7 +43,7 @@ export abstract class Store {
    * @returns {(Promise<SessionState|null>)} The state of the session.
    * @memberof Store
    */
-  abstract read(id: string): Promise<SessionState|null>;
+  abstract read(id: string): Promise<SessionState | null>;
   /**
    * Update and extend the lifetime of a session.
    *
@@ -81,10 +81,12 @@ export abstract class Store {
    * This method deletes all expired sessions.
    *
    * @abstract
+   * @param {number} maxInactivity - The maximum idle activity of a session.
+   * @param {number} maxLifeTime - The maximum absolute life time of a session.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract cleanUpExpiredSessions(): Promise<void>;
+  abstract cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void>;
 }
 
 export { Store as SessionStore };
