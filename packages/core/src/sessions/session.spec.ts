@@ -301,18 +301,25 @@ describe('Session', () => {
         });
       });
 
-      it('with the proper updatedAt value.', async () => {
-        const dateBefore = Date.now();
+      it('with the proper updatedAt value (in seconds).', async () => {
+        const dateBefore = Math.floor(Date.now() / 1000);
         await session.commit();
-        const dateAfter = Date.now();
+        const dateAfter = Math.floor(Date.now() / 1000) + 1;
 
         const calledWith = store[calledWithPropertyName];
         if (!calledWith) {
           throw new Error('SessionStore.update should have been called.');
         }
 
-        strictEqual(dateBefore <= calledWith.state.updatedAt, true);
-        strictEqual(dateAfter >= calledWith.state.updatedAt, true);
+        const updatedAt = calledWith.state.updatedAt;
+        strictEqual(Number.isInteger(updatedAt), true, `${updatedAt} should be an integer`);
+        strictEqual(dateBefore <= updatedAt, true, `${updatedAt} should older than dateBefore`);
+        strictEqual(dateAfter >= updatedAt, true, `${updatedAt} should newer than dateBefore`);
+
+        const max = 2147483647;
+        const tenYears = 60 * 60 * 24 * 365 * 10;
+        strictEqual(updatedAt < max, true, `${updatedAt} should be less than 4 bytes.`);
+        strictEqual(updatedAt + tenYears < max, true, `${updatedAt} should be less than 4 bytes within 10 years.`);
       });
 
     }

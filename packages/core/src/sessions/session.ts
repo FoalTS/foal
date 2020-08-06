@@ -146,7 +146,7 @@ export class Session {
   async commit(): Promise<void> {
     const state = {
       ...this.state,
-      updatedAt: Date.now(),
+      updatedAt: Math.floor(Date.now() / 1000),
     };
     switch (this.status) {
       case 'regenerated':
