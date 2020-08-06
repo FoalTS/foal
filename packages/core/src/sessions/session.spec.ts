@@ -3,7 +3,7 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import { ConfigTypeError, createService } from '../core';
-import { SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
+import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import {  SessionStore } from './session-store';
@@ -54,7 +54,8 @@ describe('Session', () => {
       throw new Error('Method not implemented.');
     }
     async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
-      // This line is required to test the use of "await".
+      // These lines are required to test the use of "await".
+      await new Promise(resolve => setTimeout(() => resolve(), 0));
       await new Promise(resolve => setTimeout(() => resolve(), 0));
       this.cleanUpExpiredSessionsCalledWith = { maxInactivity, maxLifeTime };
     }
@@ -549,6 +550,124 @@ describe('Session', () => {
           }
         );
       });
+
+    });
+
+    describe('should periodically clean up the expired sessions', () => {
+
+      beforeEach(async () => {
+        session = new Session(
+          store,
+          {
+            ...createState()
+          },
+          { exists: true }
+        );
+      });
+
+      afterEach(() => {
+        delete process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY;
+        delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
+        delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+      });
+
+      it('with a frequency defined in the configuration (periodicity = 1).', async () => {
+        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1';
+        await session.commit();
+
+        deepStrictEqual(store.cleanUpExpiredSessionsCalledWith, {
+          maxInactivity: SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+          maxLifeTime: SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+        });
+      });
+
+      it('with a frequency defined in the configuration (periodicity = 1 000 000 000).', async () => {
+        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1000000000';
+        await session.commit();
+
+        strictEqual(store.cleanUpExpiredSessionsCalledWith, undefined);
+      });
+
+      it('and should throw an error if the periodicity provided in the configuration is not a number.', async () => {
+        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = 'a';
+
+        await rejects(
+          () => session.commit(),
+          new ConfigTypeError('settings.session.garbageCollector.periodicity', 'number', 'string')
+        );
+      });
+
+      it('with idle and absolute timeouts defined in the configuration.', async () => {
+        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1';
+
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '15';
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '30';
+
+        await session.commit();
+
+        deepStrictEqual(store.cleanUpExpiredSessionsCalledWith, {
+          maxInactivity: 15,
+          maxLifeTime: 30,
+        });
+      });
+
+      it(
+        'and should throw an error if the inactivity timeout provided in the configuration is not a number.',
+        async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = 'a';
+
+          await rejects(
+            () => session.commit(),
+            new ConfigTypeError('settings.session.expirationTimeouts.inactivity', 'number', 'string')
+          );
+        }
+      );
+
+      it('and should throw an error the inactivity timeout provided in the configuration is negative.', async () => {
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '-1';
+
+        await rejects(
+          () => session.commit(),
+          new Error('[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.')
+        );
+      });
+
+      it(
+        'and should throw an error if the absolute timeout provided in the configuration is not a number.',
+        async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = 'a';
+
+          await rejects(
+            () => session.commit(),
+            new ConfigTypeError('settings.session.expirationTimeouts.absolute', 'number', 'string')
+          );
+        }
+      );
+
+      it('and should throw an error the inactivity timeout provided in the configuration is negative.', async () => {
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '-1';
+
+        await rejects(
+          () => session.commit(),
+          new Error('[CONFIG] The value of settings.session.expirationTimeouts.absolute must be a positive number.')
+        );
+      });
+
+      it(
+        'and should throw an error if the absolute timeout provided in the configuration is lower '
+        + 'than the inactivity timeout.',
+        async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVTY = '2';
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '1';
+
+          await rejects(
+            () => session.commit(),
+            new Error(
+              '[CONFIG] The value of settings.session.expirationTimeouts.absolute must be greater than *.inactivity.'
+            )
+          );
+        }
+      );
 
     });
 

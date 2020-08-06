@@ -1,12 +1,16 @@
 // FoalTS
 import { generateToken } from '../common';
 import { Config } from '../core';
-import { SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
+import {
+  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+  SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+} from './constants';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
 /**
- * Representation of a server/database session.
+ * Representation of a server/database/file session.
  *
  * @export
  * @class Session
@@ -142,25 +146,25 @@ export class Session {
    *
    * If the session has already been destroyed, an error is thrown.
    *
+   * This function calls periodically the store method "cleanUpExpiredSessions".
+   *
    * @returns {Promise<void>}
    * @memberof Session
    */
   async commit(): Promise<void> {
+    const { absoluteTimeout, inactivityTimeout } = this.getTimeouts();
+
+    if (this.shouldCleanUpExpiredSessions()) {
+      await this.store.cleanUpExpiredSessions(
+        inactivityTimeout,
+        absoluteTimeout,
+      );
+    }
+
     const state = {
       ...this.state,
       updatedAt: Math.floor(Date.now() / 1000),
     };
-
-    const inactivityTimeout = Config.get(
-      'settings.session.expirationTimeouts.inactivity',
-      'number',
-      SESSION_DEFAULT_INACTIVITY_TIMEOUT
-    );
-    if (inactivityTimeout < 0) {
-      throw new Error(
-        '[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.'
-      );
-    }
 
     switch (this.status) {
       case 'regenerated':
@@ -180,6 +184,47 @@ export class Session {
       default:
         break;
     }
+  }
+
+  private shouldCleanUpExpiredSessions(): boolean {
+    const periodicity = Config.get(
+      'settings.session.garbageCollector.periodicity',
+      'number',
+      SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,
+    );
+    return Math.floor(Math.random() * periodicity) === 0;
+  }
+
+  private getTimeouts(): { absoluteTimeout: number, inactivityTimeout: number} {
+    const inactivityTimeout = Config.get(
+      'settings.session.expirationTimeouts.inactivity',
+      'number',
+      SESSION_DEFAULT_INACTIVITY_TIMEOUT
+    );
+    if (inactivityTimeout < 0) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.'
+      );
+    }
+
+    const absoluteTimeout = Config.get(
+      'settings.session.expirationTimeouts.absolute',
+      'number',
+      SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+    );
+    if (absoluteTimeout < 0) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.absolute must be a positive number.'
+      );
+    }
+
+    if (absoluteTimeout < inactivityTimeout) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.absolute must be greater than *.inactivity.'
+      );
+    }
+
+    return { absoluteTimeout, inactivityTimeout };
   }
 
 }
