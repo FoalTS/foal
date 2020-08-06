@@ -1,5 +1,7 @@
 // FoalTS
 import { generateToken } from '../common';
+import { Config } from '../core';
+import { SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
@@ -148,18 +150,30 @@ export class Session {
       ...this.state,
       updatedAt: Math.floor(Date.now() / 1000),
     };
+
+    const inactivityTimeout = Config.get(
+      'settings.session.expirationTimeouts.inactivity',
+      'number',
+      SESSION_DEFAULT_INACTIVITY_TIMEOUT
+    );
+    if (inactivityTimeout < 0) {
+      throw new Error(
+        '[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.'
+      );
+    }
+
     switch (this.status) {
       case 'regenerated':
         await this.store.destroy(this.oldId);
-        await this.store.save(state, -1);
+        await this.store.save(state, inactivityTimeout);
         this.status = 'exists';
         break;
       case 'new':
-        await this.store.save(state, -1);
+        await this.store.save(state, inactivityTimeout);
         this.status = 'exists';
         break;
       case 'exists':
-        await this.store.update(state, -1);
+        await this.store.update(state, inactivityTimeout);
         break;
       case 'destroyed':
         throw new Error('Impossible to commit the session. Session already destroyed.');

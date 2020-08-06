@@ -2,7 +2,8 @@
 import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
-import { createService } from '../core';
+import { ConfigTypeError, createService } from '../core';
+import { SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import {  SessionStore } from './session-store';
@@ -320,6 +321,42 @@ describe('Session', () => {
         const tenYears = 60 * 60 * 24 * 365 * 10;
         strictEqual(updatedAt < max, true, `${updatedAt} should be less than 4 bytes.`);
         strictEqual(updatedAt + tenYears < max, true, `${updatedAt} should be less than 4 bytes within 10 years.`);
+      });
+
+      describe('providing an idle timeout', () => {
+
+        afterEach(() => delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY);
+
+        it('from the framework default values.', async () => {
+          await session.commit();
+          strictEqual(store[calledWithPropertyName]?.maxInactivity, SESSION_DEFAULT_INACTIVITY_TIMEOUT);
+        });
+
+        it('from the configuration.', async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '1';
+
+          await session.commit();
+          strictEqual(store[calledWithPropertyName]?.maxInactivity, 1);
+        });
+
+        it('and should throw an error if the configuration value is not a number.', async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = 'a';
+
+          await rejects(
+            () => session.commit(),
+            new ConfigTypeError('settings.session.expirationTimeouts.inactivity', 'number', 'string')
+          );
+        });
+
+        it('and should throw an error if the configuration value is negative.', async () => {
+          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '-1';
+
+          await rejects(
+            () => session.commit(),
+            new Error('[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.')
+          );
+        });
+
       });
 
     }
