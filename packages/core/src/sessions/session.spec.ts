@@ -67,6 +67,22 @@ describe('Session', () => {
     store = createService(ConcreteSessionStore);
   });
 
+  describe('has a "userId" property that', () => {
+
+    it('should return the user ID.', () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          userId: 3
+        },
+        { exists: true }
+      );
+      strictEqual(session.userId, 3);
+    });
+
+  });
+
   describe('has a "get" method that', () => {
 
     it('should return the value of the key given in the param "state.content" during instantiation.', () => {

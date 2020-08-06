@@ -29,6 +29,10 @@ export class Session {
   private oldId = '';
   private status: 'new'|'exists'|'regenerated'|'destroyed';
 
+  get userId(): string|number|null {
+    return this.state.userId;
+  }
+
   constructor(
     private readonly store: SessionStore,
     private readonly state: SessionState,
