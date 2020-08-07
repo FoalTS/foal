@@ -81,7 +81,7 @@ describe('createSession', () => {
       notStrictEqual(id1, id2);
     });
 
-    it('that should be marked as non-existing.', async () => {
+    it('that should be marked as "non-existing".', async () => {
       await session.commit();
 
       strictEqual(store.updateCalledWith?.state, undefined);
