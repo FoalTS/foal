@@ -1,3 +1,4 @@
+export { createSession } from './create-session';
 export { removeSessionCookie } from './remove-session-cookie';
 export { Store, SessionStore, SessionAlreadyExists } from './session-store';
 export { Session } from './session';
