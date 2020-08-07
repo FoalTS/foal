@@ -17,20 +17,41 @@ import { SessionStore } from './session-store';
  */
 export class Session {
 
-  // static async create(store: SessionStore): Promise<Session> {
-  //   return null as any;
-  // }
-
-  // static async read(store: SessionStore, id: string): Promise<Session|null> {
-  //   return null;
-  // }
-
   private readonly oldFlash: { [key: string]: any };
   private oldId = '';
   private status: 'new'|'exists'|'regenerated'|'destroyed';
 
+  /**
+   * Retuns the user ID. If the session is anonymous, the value is null.
+   *
+   * @readonly
+   * @type {(string|number|null)}
+   * @memberof Session
+   */
   get userId(): string|number|null {
     return this.state.userId;
+  }
+
+  /**
+   * Returns true if the session has expired due to inactivity
+   * or because it reached the maximum lifetime allowed.
+   *
+   * @readonly
+   * @type {boolean}
+   * @memberof Session
+   */
+  get isExpired(): boolean {
+    const { absoluteTimeout, inactivityTimeout } = this.getTimeouts();
+    const now = this.getTime();
+
+    if (now - this.state.updatedAt >= inactivityTimeout) {
+      return true;
+    }
+    if (now - this.state.createdAt >= absoluteTimeout) {
+      return true;
+    }
+
+    return false;
   }
 
   constructor(
@@ -167,7 +188,7 @@ export class Session {
 
     const state = {
       ...this.state,
-      updatedAt: Math.floor(Date.now() / 1000),
+      updatedAt: this.getTime(),
     };
 
     switch (this.status) {
@@ -188,6 +209,17 @@ export class Session {
       default:
         break;
     }
+  }
+
+  /**
+   * Returns the current time in seconds.
+   *
+   * @private
+   * @returns {number} The current time.
+   * @memberof Session
+   */
+  private getTime(): number {
+    return Math.floor(Date.now() / 1000);
   }
 
   private shouldCleanUpExpiredSessions(): boolean {

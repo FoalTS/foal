@@ -83,6 +83,86 @@ describe('Session', () => {
 
   });
 
+  describe('has a "isExpired" property that', () => {
+
+    afterEach(() => {
+      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
+      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+    });
+
+    it('should return false is the session has not expired.', () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          createdAt: Math.floor(Date.now() / 1000),
+          updatedAt: Math.floor(Date.now() / 1000),
+        },
+        { exists: true }
+      );
+      strictEqual(session.isExpired, false);
+    });
+
+    it('should return true is the session has expired (inactivity, default timeout).', () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          createdAt: Math.floor(Date.now() / 1000),
+          updatedAt: Math.floor(Date.now() / 1000) - SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+        },
+        { exists: true }
+      );
+      strictEqual(session.isExpired, true);
+    });
+
+    it('should return true is the session has expired (absolute, default timeout).', () => {
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          createdAt: Math.floor(Date.now() / 1000) - SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+          updatedAt: Math.floor(Date.now() / 1000),
+        },
+        { exists: true }
+      );
+      strictEqual(session.isExpired, true);
+    });
+
+    it('should return true is the session has expired (inactivity, custom timeout).', () => {
+      const timeout = Math.floor(SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2);
+      process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = timeout.toString();
+
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          createdAt: Math.floor(Date.now() / 1000),
+          updatedAt: Math.floor(Date.now() / 1000) - timeout,
+        },
+        { exists: true }
+      );
+      strictEqual(session.isExpired, true);
+    });
+
+    it('should return true is the session has expired (absolute, custom timeout).', () => {
+      const timeout = Math.floor(SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2);
+      process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = timeout.toString();
+
+      const session = new Session(
+        store,
+        {
+          ...createState(),
+          createdAt: Math.floor(Date.now() / 1000) - timeout,
+          updatedAt: Math.floor(Date.now() / 1000),
+        },
+        { exists: true }
+      );
+      strictEqual(session.isExpired, true);
+    });
+
+  });
+
   describe('has a "get" method that', () => {
 
     it('should return the value of the key given in the param "state.content" during instantiation.', () => {
