@@ -17,7 +17,7 @@
     "test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "build:e2e": "foal rmdir build/e2e && copy-cli \"src/**/*.html\" build && tsc -p tsconfig.e2e.json",
     "build:e2e:w": "tsc -p tsconfig.e2e.json -w",
-    "start:e2e": "mocha --file \"./build/e2e.js\" \"./build/e2e/**/*.js\"",
+    "start:e2e": "mocha --timeout 4000 --file \"./build/e2e.js\" \"./build/e2e/**/*.js\"",
     "start:e2e:w": "mocha --file \"./build/e2e.js\" -w \"./build/e2e/**/*.js\"",
     "e2e": "npm run build:e2e && concurrently \"npm run build:e2e:w\" \"npm run start:e2e:w\"",
     "build:scripts": "foal rmdir build/scripts && tsc -p tsconfig.scripts.json",
