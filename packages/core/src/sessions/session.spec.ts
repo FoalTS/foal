@@ -163,6 +163,87 @@ describe('Session', () => {
 
   });
 
+  describe('has an "expirationTime" property that', () => {
+
+    afterEach(() => {
+      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
+      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+    });
+
+    describe('should return the session expiration time in seconds', () => {
+
+      // Note: SESSION_DEFAULT_INACTIVITY_TIMEOUT is always << SESSION_DEFAULT_ABSOLUTE_TIMEOUT.
+
+      it('when updatedAt + timeout < createdAt + timeout.', () => {
+        const state: SessionState = {
+          ...createState(),
+          createdAt: 1,
+          updatedAt: 1,
+        };
+        const session = new Session(
+          store,
+          state,
+          { exists: true },
+        );
+
+        strictEqual(session.expirationTime, state.updatedAt + SESSION_DEFAULT_INACTIVITY_TIMEOUT);
+      });
+
+      it('when updatedAt + timeout < createdAt + timeout (custom timeout).', () => {
+        const timeout = Math.floor(SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2);
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = timeout.toString();
+
+        const state: SessionState = {
+          ...createState(),
+          createdAt: 1,
+          updatedAt: 1,
+        };
+        const session = new Session(
+          store,
+          state,
+          { exists: true },
+        );
+
+        strictEqual(session.expirationTime, state.updatedAt + timeout);
+      });
+
+      it('when createdAt + timeout < updatedAt + timeout.', () => {
+        const state: SessionState = {
+          ...createState(),
+          createdAt: 1,
+          updatedAt: 1 + SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+        };
+        const session = new Session(
+          store,
+          state,
+          { exists: true },
+        );
+
+        strictEqual(session.expirationTime, state.createdAt + SESSION_DEFAULT_ABSOLUTE_TIMEOUT);
+      });
+
+      it('when createdAt + timeout < updatedAt + timeout (custom timeout).', () => {
+        const timeout = Math.floor(SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2);
+        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = timeout.toString();
+
+        const state: SessionState = {
+          ...createState(),
+          createdAt: 1,
+          updatedAt: 1 + timeout,
+        };
+        const session = new Session(
+          store,
+          state,
+          { exists: true },
+        );
+
+        strictEqual(session.expirationTime, state.createdAt + timeout);
+      });
+
+    });
+
+  });
+
   describe('has a "get" method that', () => {
 
     it('should return the value of the key given in the param "state.content" during instantiation.', () => {

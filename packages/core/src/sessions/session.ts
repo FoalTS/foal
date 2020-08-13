@@ -54,6 +54,21 @@ export class Session {
     return false;
   }
 
+  /**
+   * Returns the session expiration time in seconds.
+   *
+   * @readonly
+   * @type {number}
+   * @memberof Session
+   */
+  get expirationTime(): number {
+    const { absoluteTimeout, inactivityTimeout } = this.getTimeouts();
+    return Math.min(
+      this.state.updatedAt + inactivityTimeout,
+      this.state.createdAt + absoluteTimeout,
+    );
+  }
+
   constructor(
     private readonly store: SessionStore,
     private readonly state: SessionState,
