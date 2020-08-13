@@ -3,24 +3,24 @@ import { Config, CookieOptions, HttpResponse } from '../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH
 } from './constants';
-import { SessionStore } from './session-store';
+import { Session } from './session';
 
 /**
- * Send the session token in a cookie.
+ * Sends the session token in a cookie.
  *
  * @export
- * @param {HttpResponse} response - The HTTP response
- * @param {string} token - The session token
+ * @param {HttpResponse} response - The HTTP response.
+ * @param {Session} session - The session object.
  */
-export function setSessionCookie(response: HttpResponse, token: string): void {
+export function setSessionCookie(response: HttpResponse, session: Session): void {
   const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
   const options: CookieOptions = {
     domain: Config.get('settings.session.cookie.domain', 'string'),
+    expires: new Date(session.expirationTime * 1000),
     httpOnly: Config.get('settings.session.cookie.httpOnly', 'boolean', SESSION_DEFAULT_COOKIE_HTTP_ONLY),
-    maxAge: SessionStore.getExpirationTimeouts().inactivity,
     path: Config.get('settings.session.cookie.path', 'string', SESSION_DEFAULT_COOKIE_PATH),
     sameSite: Config.get('settings.session.cookie.sameSite', 'string') as 'strict'|'lax'|'none'|undefined,
     secure: Config.get('settings.session.cookie.secure', 'boolean')
   };
-  response.setCookie(cookieName, token, options);
+  response.setCookie(cookieName, session.getToken(), options);
 }
