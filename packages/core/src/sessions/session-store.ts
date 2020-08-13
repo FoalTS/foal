@@ -80,6 +80,8 @@ export abstract class Store {
    *
    * This method deletes all expired sessions.
    *
+   * If the store manages a cache database, then this method can remain empty but it must NOT throw an error.
+   *
    * @abstract
    * @param {number} maxInactivity - The maximum idle activity of a session.
    * @param {number} maxLifeTime - The maximum absolute life time of a session.
