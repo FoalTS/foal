@@ -411,7 +411,7 @@ export class ApiController {
 
 ```typescript
 const user = { id: 1 };
-const sessions = await this.store.getSessionsOf(user);
+const ids = await this.store.getSessionIDsOf(user);
 ```
 
 ## Query All Connected Users

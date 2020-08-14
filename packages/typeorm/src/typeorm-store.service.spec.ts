@@ -1,11 +1,11 @@
 // std
-import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
-import { createService, Session, SessionStore } from '@foal/core';
+import { createService, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite';
@@ -53,6 +53,8 @@ async function createTestConnection(type: DBType) {
 function entityTestSuite(type: DBType) {
 
   describe(`with ${type}`, () => {
+    const longNumber = 2147483647;
+
     before(() => createTestConnection(type));
 
     beforeEach(async () => {
@@ -61,15 +63,19 @@ function entityTestSuite(type: DBType) {
 
     after(() => getConnection().close());
 
-    it('should has an id which is unique.', async () => {
+    it('should be associated to table named "sessions".', () => {
+      strictEqual(getRepository(DatabaseSession).metadata.tableName, 'sessions');
+    });
+
+    it('should have an id which is unique.', async () => {
       const session1 = getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
         flash: '',
         id: 'a',
         updated_at: 0,
+        user_id: undefined,
       });
-
       await getRepository(DatabaseSession).save(session1);
 
       await rejects(
@@ -87,7 +93,7 @@ function entityTestSuite(type: DBType) {
       );
     });
 
-    it('should has a "content" which supports long strings.', async () => {
+    it('should have a "content" column which supports long strings.', async () => {
       const session1 = getRepository(DatabaseSession).create({
         content: JSON.stringify({
           hello: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -104,7 +110,7 @@ function entityTestSuite(type: DBType) {
       await getRepository(DatabaseSession).save(session1);
     });
 
-    it('should has a "flash" which supports long strings.', async () => {
+    it('should have a "flash" column which supports long strings.', async () => {
       const session1 = getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
@@ -118,6 +124,30 @@ function entityTestSuite(type: DBType) {
         id: 'a',
         updated_at: 0,
       });
+      await getRepository(DatabaseSession).save(session1);
+    });
+
+    it('should have an "updated_at" column which supports numbers of 4-bytes', async () => {
+      const session1 = getRepository(DatabaseSession).create({
+        content: '',
+        created_at: 0,
+        flash: '',
+        id: 'a',
+        updated_at: longNumber,
+      });
+
+      await getRepository(DatabaseSession).save(session1);
+    });
+
+    it('should have an "created_at" column which supports numbers of 4-bytes', async () => {
+      const session1 = getRepository(DatabaseSession).create({
+        content: '',
+        created_at: longNumber,
+        flash: '',
+        id: 'a',
+        updated_at: 0,
+      });
+
       await getRepository(DatabaseSession).save(session1);
     });
 
@@ -136,312 +166,234 @@ describe('DatabaseSession', () => {
 function storeTestSuite(type: DBType) {
 
   describe(`with ${type}`, () => {
-    let store: TypeORMStore;
 
-    before(() => createTestConnection(type));
+    let store: TypeORMStore;
+    let state: SessionState;
+    let maxInactivity: number;
+
+    function createState(): SessionState {
+      return {
+        content: {
+          foo: 'bar'
+        },
+        createdAt: 0,
+        flash: {
+          hello: 'world'
+        },
+        id: 'xxx',
+        updatedAt: 0,
+        // The null value is important in this test suite.
+        userId: null,
+      };
+    }
+
+    before(async () => {
+      store = createService(TypeORMStore);
+      await createTestConnection(type);
+    });
 
     beforeEach(async () => {
-      store = createService(TypeORMStore);
+      state = createState();
+      maxInactivity = 1000;
       await getRepository(DatabaseSession).clear();
     });
 
     after(() => getConnection().close());
 
-    describe('has a "createAndSaveSession" method that', () => {
+    function convertDbSessionToState(dbSession: DatabaseSession): SessionState {
+      return {
+        content: JSON.parse(dbSession.content),
+        createdAt: dbSession.created_at,
+        flash: JSON.parse(dbSession.flash),
+        id: dbSession.id,
+        updatedAt: dbSession.updated_at,
+        userId: dbSession.user_id ?? null,
+      };
+    }
 
-      it('should throw if the user ID is defined and is a number.', async () => {
+    function convertStateToDbSession(state: SessionState): DatabaseSession {
+      if (typeof state.userId === 'string') {
+        throw new Error('user ID cannot be a string.');
+      }
+      return getRepository(DatabaseSession).create({
+        content: JSON.stringify(state.content),
+        created_at: state.createdAt,
+        flash: JSON.stringify(state.flash),
+        id: state.id,
+        updated_at: state.updatedAt,
+        user_id: state.userId ?? undefined,
+      });
+    }
+
+    describe('has a "save" method that', () => {
+
+      it('should throw if the user ID is defined and is not a number.', async () => {
         await rejects(
-          () => store.createAndSaveSession({ foo: 'bar' }, { userId: 'e' }),
+          () => store.save(
+            {
+              ...createState(),
+              userId: 'xxx',
+            },
+            maxInactivity
+          ),
           {
             message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
           }
         );
       });
 
-      it('should generate an ID and create a new session in the database.', async () => {
-        const dateBefore = Date.now();
-        await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
-        const dateAfter = Date.now();
+      context('given no session exists in the database with the given ID', () => {
 
-        const sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        const sessionA = sessions[0];
+        it('should save the session state in the database.', async () => {
+          await store.save(state, maxInactivity);
 
-        notStrictEqual(sessionA.id, undefined);
-        strictEqual(sessionA.user_id, 2);
-        deepStrictEqual(sessionA.content, JSON.stringify({ foo: 'bar' }));
-
-        const createdAt = parseInt(sessionA.created_at.toString(), 10);
-        strictEqual(dateBefore <= createdAt, true);
-        strictEqual(createdAt <= dateAfter, true);
-
-        const updatedAt = parseInt(sessionA.created_at.toString(), 10);
-        strictEqual(createdAt, updatedAt);
-      });
-
-      it('should return a representation (Session object) of the created session.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 2 });
-
-        const sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        const sessionA = sessions[0];
-
-        strictEqual(session.store, store);
-        strictEqual(session.getState().userId, sessionA.user_id);
-        strictEqual(session.getState().id, sessionA.id);
-        deepStrictEqual(session.getState().content, { foo: 'bar' });
-        strictEqual(session.getState().createdAt, parseInt(sessionA.created_at.toString(), 10));
-        strictEqual(session.getState().updatedAt, parseInt(sessionA.updated_at.toString(), 10));
-      });
-
-      it('should support session options.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
-        strictEqual(typeof (session.getState().content as any).csrfToken, 'string');
-      });
-
-    });
-
-    describe('has an "update" method that', () => {
-
-      it('should update the content of the session if the session exists.', async () => {
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
+          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
-
-        const session = new Session({} as any, {
-          content: { bar: 'foo' },
-          createdAt: session1.created_at,
-          flash: {},
-          id: session1.id,
-          updatedAt: session2.updated_at,
-          userId: null,
-        });
-        session.set('hello', 'world', { flash: true });
-        await store.update(session.getState());
-
-        const sessionA = await getRepository(DatabaseSession).findOneOrFail({ id: session1.id });
-        deepStrictEqual(JSON.parse(sessionA.content), { bar: 'foo' });
-        deepStrictEqual(JSON.parse(sessionA.flash), { hello: 'world' });
-        deepStrictEqual(parseInt(sessionA.created_at.toString(), 10), session1.created_at);
-        deepStrictEqual(parseInt(sessionA.updated_at.toString(), 10), session1.updated_at);
-
-        const sessionB = await getRepository(DatabaseSession).findOneOrFail({ id: session2.id });
-        deepStrictEqual(sessionB.content, JSON.stringify({}));
-        deepStrictEqual(parseInt(sessionB.created_at.toString(), 10), session2.created_at);
-        deepStrictEqual(parseInt(sessionB.updated_at.toString(), 10), session2.updated_at);
       });
 
-    });
+      context('given a session already exists in the database with the given ID', () => {
 
-    describe('has a "destroy" method that', () => {
-
-      it('should delete the session from its ID.', async () => {
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
+        beforeEach(async () => {
+          const session = convertStateToDbSession(state);
+          await getRepository(DatabaseSession).save(session);
         });
 
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
+        it('should throw a SessionAlreadyExists error.', async () => {
+          return rejects(
+            () => store.save(state, maxInactivity),
+            new SessionAlreadyExists()
+          );
+        });
 
-        strictEqual((await getRepository(DatabaseSession).find()).length, 2);
-
-        await store.destroy(session1.id);
-
-        const sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        strictEqual(sessions.find(session => session.id === session1.id), undefined);
-        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
-      });
-
-      it('should not throw if no session matches the given session ID.', async () => {
-        await store.destroy('c');
       });
 
     });
 
     describe('has a "read" method that', () => {
 
-      it('should return undefined if no session matches the ID.', async () => {
-        strictEqual(await store.read('c'), undefined);
+      context('given no session exists in the database with the given ID', () => {
+
+        it('should return null.', async () => {
+          strictEqual(await store.read('c'), null);
+        });
+
       });
 
-      it('should return undefined if the session has expired (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
+      context('given a session exists in the database with the given ID', () => {
 
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now() - inactivity * 1000,
+        beforeEach(async () => {
+          const session = convertStateToDbSession(state);
+          await getRepository(DatabaseSession).save(session);
         });
 
-        await getRepository(DatabaseSession).save(session1);
+        it('should return the session state.', async () => {
+          const expected = createState();
+          const actual = await store.read(state.id);
 
-        const session = await store.read(session1.id);
-        strictEqual(session, undefined);
+          deepStrictEqual(actual, expected);
+        });
+
       });
 
-      it('should delete the session if it has expired (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now() - inactivity * 1000,
-        });
+    });
 
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
+    describe('has a "update" method that', () => {
 
-        let sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
-        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
-
-        await store.read(session2.id);
-
-        sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
-        strictEqual(sessions.find(session => session.id === session2.id), undefined);
+      it('should throw if the user ID is defined and is not a number.', async () => {
+        await rejects(
+          () => store.update(
+            {
+              ...createState(),
+              userId: 'xxx',
+            },
+            maxInactivity
+          ),
+          {
+            message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+          }
+        );
       });
 
-      it('should return undefined if the session has expired (absolute).', async () => {
-        const absolute = SessionStore.getExpirationTimeouts().absolute;
+      context('given no session exists in the database with the given ID', () => {
 
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now() - absolute * 1000,
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
+        it('should save the session state in the database.', async () => {
+          await store.update(state, maxInactivity);
+
+          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
-        await getRepository(DatabaseSession).save(session1);
-
-        const session = await store.read(session1.id);
-        strictEqual(session, undefined);
       });
 
-      it('should delete the session if it has expired (absolute).', async () => {
-        const absolute = SessionStore.getExpirationTimeouts().absolute;
+      context('given a session already exists in the database with the given ID', () => {
 
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now() - absolute * 1000,
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
+        beforeEach(async () => {
+          const session = convertStateToDbSession(state);
+          await getRepository(DatabaseSession).save(session);
         });
 
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
+        it('should update the session state in the database.', async () => {
+          const updatedState: SessionState = {
+            content: {
+              ...state.content,
+              foo2: 'bar2',
+            },
+            createdAt: state.createdAt + 1,
+            flash: {
+              ...state.flash,
+              hello2: 'world2',
+            },
+            id: state.id,
+            updatedAt: state.updatedAt + 2,
+            userId: 3,
+          };
+          await store.update(updatedState, maxInactivity);
 
-        let sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
-        notStrictEqual(sessions.find(session => session.id === session2.id), undefined);
+          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
+        });
 
-        await store.read(session2.id);
-
-        sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.id === session1.id), undefined);
-        strictEqual(sessions.find(session => session.id === session2.id), undefined);
       });
 
-      it('should return the session.', async () => {
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({ foo: 'bar' }),
-          created_at: Date.now(),
-          flash: JSON.stringify({ hello: 'world' }),
-          id: 'b',
-          updated_at: Date.now(),
-          user_id: 2,
+    });
+
+    describe('has a "destroy" method that', () => {
+
+      context('given no session exists in the database with the given ID', () => {
+
+        it('should not throw an error.', () => {
+          return doesNotReject(() => store.destroy('c'));
         });
 
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
+      });
 
-        const state = await store.read(session2.id);
-        if (!state) {
-          throw new Error('TypeORMStore.read should not return undefined.');
-        }
-        strictEqual(state.userId, 2);
-        strictEqual(state.id, session2.id);
-        strictEqual(state.content.foo, 'bar');
-        strictEqual(state.flash.hello, 'world');
-        strictEqual(state.createdAt, session2.created_at);
-        strictEqual(state.updatedAt, session2.updated_at);
+      context('given a session already exists in the database with the given ID', () => {
+
+        beforeEach(async () => {
+          const session = convertStateToDbSession(state);
+          await getRepository(DatabaseSession).save(session);
+        });
+
+        it('should delete the session in the database.', async () => {
+          await store.destroy(state.id);
+
+          strictEqual((await getRepository(DatabaseSession).find()).length, 0);
+        });
+
       });
 
     });
 
     describe('has a "clear" method that', () => {
 
+      beforeEach(async () => {
+        const session = convertStateToDbSession(state);
+        await getRepository(DatabaseSession).save(session);
+      });
+
       it('should remove all sessions.', async () => {
-        const session1 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const session2 = getRepository(DatabaseSession).create({
-          content: JSON.stringify({ foo: 'bar' }),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
-        });
-
-        await getRepository(DatabaseSession).save([ session1, session2 ]);
-
-        strictEqual((await getRepository(DatabaseSession).find()).length, 2);
-
         await store.clear();
 
         strictEqual((await getRepository(DatabaseSession).find()).length, 0);
@@ -451,70 +403,56 @@ function storeTestSuite(type: DBType) {
 
     describe('has a "cleanUpExpiredSessions" method that', () => {
 
-      it('should remove expired sessions due to inactivity.', async () => {
-        const inactivityTimeout = SessionStore.getExpirationTimeouts().inactivity;
+      let maxLifeTime: number;
 
-        const currentSession = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now() - inactivityTimeout * 1000 + 5000,
-        });
-        const expiredSession = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now(),
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now() - inactivityTimeout * 1000,
-        });
+      beforeEach(async () => {
+        maxInactivity = 10;
+        maxLifeTime = 20;
 
-        await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
+        const now = Math.trunc(Date.now() / 1000);
+        const states: SessionState[] = [
+          {
+            ...createState(),
+            createdAt: now - 1,
+            id: 'xxx',
+            updatedAt: now - 1,
+          },
+          {
+            ...createState(),
+            createdAt: now,
+            id: 'yyy',
+            updatedAt: now - maxInactivity - 1,
+          },
+          {
+            ...createState(),
+            createdAt: now - maxLifeTime - 1,
+            id: 'zzz',
+            updatedAt: now,
+          },
+        ];
 
-        let sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
-        notStrictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
-
-        await store.cleanUpExpiredSessions();
-
-        sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
-        strictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
+        for (const state of states) {
+          const session = convertStateToDbSession(state);
+          await getRepository(DatabaseSession).save(session);
+        }
       });
 
-      it('should remove expired sessions due to absolute timeout.', async () => {
-        const absoluteTimeout = SessionStore.getExpirationTimeouts().absolute;
+      it('should not remove unexpired sessions.', async () => {
+        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        const currentSession = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now() - absoluteTimeout * 1000 + 5000,
-          flash: JSON.stringify({}),
-          id: 'a',
-          updated_at: Date.now(),
-        });
-        const expiredSession = getRepository(DatabaseSession).create({
-          content: JSON.stringify({}),
-          created_at: Date.now() - absoluteTimeout * 1000,
-          flash: JSON.stringify({}),
-          id: 'b',
-          updated_at: Date.now(),
-        });
+        return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: 'xxx' }));
+      });
 
-        await getRepository(DatabaseSession).save([ currentSession, expiredSession ]);
+      it('should remove sessions expired due to inactivity.', async () => {
+        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        let sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
-        notStrictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
+        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'yyy' }));
+      });
 
-        await store.cleanUpExpiredSessions();
+      it('should remove sessions expired due to absolute end of life.', async () => {
+        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session.id === currentSession.id), undefined);
-        strictEqual(sessions.find(session => session.id === expiredSession.id), undefined);
+        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'zzz' }));
       });
 
     });
@@ -619,7 +557,7 @@ function storeTestSuite(type: DBType) {
 
     });
 
-    describe('has a "getSessionsOf" method that', () => {
+    describe('has a "getSessionIDsOf" method that', () => {
 
       beforeEach(async () => {
         const sessions = getRepository(DatabaseSession).create([
@@ -661,30 +599,17 @@ function storeTestSuite(type: DBType) {
 
       it('should return an empty array if the user ID does not match any users.', async () => {
         const user = { id: 0 };
-        const sessions = await store.getSessionsOf(user);
+        const sessions = await store.getSessionIDsOf(user);
         strictEqual(sessions.length, 0);
       });
 
-      it('should return the sessions associated with the given user.', async () => {
+      it('should return the IDs of the sessions associated with the given user.', async () => {
         const user = { id: 2 };
-        const sessions = await store.getSessionsOf(user);
+        const sessions = await store.getSessionIDsOf(user);
         strictEqual(sessions.length, 2);
 
-        deepStrictEqual(sessions[0].getState().content, { foo: 'bar' });
-        strictEqual(sessions[0].getState().id, 'c');
-        strictEqual(sessions[0].get('hello'), 'world');
-        strictEqual(sessions[0].getState().userId, 2);
-        strictEqual(sessions[0].getState().createdAt, 5);
-        strictEqual(sessions[0].getState().updatedAt, 6);
-        strictEqual(sessions[0].store, store);
-
-        deepStrictEqual(sessions[1].getState().content, { bar: 'foo' });
-        strictEqual(sessions[1].get('hello'), undefined);
-        strictEqual(sessions[1].getState().id, 'd');
-        strictEqual(sessions[1].getState().userId, 2);
-        strictEqual(sessions[1].getState().createdAt, 7);
-        strictEqual(sessions[1].getState().updatedAt, 8);
-        strictEqual(sessions[1].store, store);
+        strictEqual(sessions[0], 'c');
+        strictEqual(sessions[1], 'd');
       });
 
     });
