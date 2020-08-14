@@ -5,6 +5,7 @@ import { strictEqual } from 'assert';
 import {
   Context,
   createAndInitApp,
+  createSession,
   dependency,
   Get,
   hashPassword,
@@ -113,7 +114,10 @@ describe('[Sample] MongoDB & Redis Store', async () => {
         return new HttpResponseUnauthorized();
       }
 
-      const session = await this.store.createAndSaveSession({ userId: user.id.toString() });
+      const session = await createSession(this.store);
+      session.setUser(user);
+      await session.commit();
+
       return new HttpResponseOK({
         token: session.getToken()
       });
@@ -164,7 +168,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     delete process.env.MONGODB_URI;
     return Promise.all([
       connection.close(),
-      app.foal.services.get(RedisStore).getRedisInstance().end(true),
+      app.foal.services.get(RedisStore).close(),
       redisClient.end(true)
     ]);
   });

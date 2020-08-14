@@ -5,6 +5,7 @@ import { strictEqual } from 'assert';
 import {
   Context,
   createAndInitApp,
+  createSession,
   dependency,
   Get,
   hashPassword,
@@ -114,7 +115,11 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
-      const session = await this.store.createAndSaveSession({ userId: user.id.toString() });
+
+      const session = await createSession(this.store);
+      session.setUser(user);
+      await session.commit();
+
       return new HttpResponseOK({
         token: session.getToken()
       });
@@ -158,7 +163,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     delete process.env.MONGODB_URI;
     return Promise.all([
       connection.close(),
-      (await app.foal.services.get(MongoDBStore).getMongoDBInstance()).close(),
+      app.foal.services.get(MongoDBStore).close(),
       mongoClient.close()
     ]);
   });

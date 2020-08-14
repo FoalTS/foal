@@ -6,7 +6,9 @@ import * as request from 'supertest';
 import {
   controller,
   createApp,
+  createSession,
   dependency,
+  generateToken,
   HttpResponseCreated,
   HttpResponseOK,
   Post,
@@ -28,10 +30,13 @@ describe('[CSRF|spa and api|stateful] Users', () => {
 
     @Post('/login')
     async login() {
-      const session = await this.store.createAndSaveSession({ userId: 1 }, { csrfToken: true });
+      const session = await createSession(this.store);
+      session.set('csrfToken', await generateToken());
+      session.setUser({ id: 1 });
+      await session.commit();
 
       const response = new HttpResponseOK();
-      setSessionCookie(response, session.getToken());
+      setSessionCookie(response, session);
       setCsrfCookie(response, await getCsrfToken(session));
       return response;
     }

@@ -6,6 +6,8 @@ import * as request from 'supertest';
 import {
   createApp,
   createService,
+  createSession,
+  generateToken,
   Get,
   HttpResponseNoContent,
   TokenRequired,
@@ -72,10 +74,18 @@ describe('[Authorization|permissions] Users', () => {
 
     await getRepository(User).save([ user1, user2 ]);
 
-    const session1 = await createService(TypeORMStore).createAndSaveSession({ user: user1.id });
+    const store = createService(TypeORMStore);
+
+    const session1 = await createSession(store);
+    session1.set('csrfToken', await generateToken());
+    session1.setUser(user1);
+    await session1.commit();
     tokenUser1 = session1.getToken();
 
-    const session2 = await createService(TypeORMStore).createAndSaveSession({ user: user2.id });
+    const session2 = await createSession(store);
+    session2.set('csrfToken', await generateToken());
+    session2.setUser(user1);
+    await session2.commit();
     tokenUser2 = session2.getToken();
 
     app = createApp(AppController);

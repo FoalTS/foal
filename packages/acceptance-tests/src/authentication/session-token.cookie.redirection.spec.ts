@@ -10,9 +10,9 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context, controller, createApp, dependency, Get, hashPassword,
-  HttpResponseOK, HttpResponseRedirect, Post,
-  setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  Context, controller, createApp, createSession, dependency, Get,
+  hashPassword, HttpResponseOK, HttpResponseRedirect,
+  Post, setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -63,10 +63,12 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
       user.password = await hashPassword(ctx.request.body.password);
       await getRepository(User).save(user);
 
-      const session = await this.store.createAndSaveSession({ user: user.id });
+      const session = await createSession(this.store);
+      session.setUser(user);
+      await session.commit();
+
       const response = new HttpResponseRedirect('/home');
-      const token = session.getToken();
-      setSessionCookie(response, token);
+      setSessionCookie(response, session);
       return response;
     }
 
@@ -83,10 +85,12 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
         return new HttpResponseRedirect('/login');
       }
 
-      const session = await this.store.createAndSaveSession({ user: user.id });
+      const session = await createSession(this.store);
+      session.setUser(user);
+      await session.commit();
+
       const response = new HttpResponseRedirect('/home');
-      const token = session.getToken();
-      setSessionCookie(response, token);
+      setSessionCookie(response, session);
       return response;
     }
 

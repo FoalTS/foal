@@ -7,7 +7,9 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   dependency,
+  generateToken,
   Get,
   HttpResponseCreated,
   HttpResponseOK,
@@ -30,10 +32,13 @@ describe('[CSRF|regular web app|stateful] Users', () => {
 
     @Post('/login')
     async login() {
-      const session = await this.store.createAndSaveSession({ userId: 1 }, { csrfToken: true });
+      const session = await createSession(this.store);
+      session.set('csrfToken', await generateToken());
+      session.setUser({ id: 1 });
+      await session.commit();
 
       const response = new HttpResponseOK();
-      setSessionCookie(response, session.getToken());
+      setSessionCookie(response, session);
       return response;
     }
   }
