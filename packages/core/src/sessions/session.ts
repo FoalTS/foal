@@ -107,7 +107,6 @@ export class Session {
   set(key: string, value: any, options: { flash?: boolean } = {}): void {
     if (options.flash) {
       this.state.flash[key] = value;
-      // this.flash
     } else {
       this.state.content[key] = value;
     }

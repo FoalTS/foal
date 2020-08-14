@@ -1,5 +1,15 @@
 import {
-  Context, createApp, createSession, dependency, Get, HttpResponseOK, Post, ServiceManager, Session, SessionStore, TokenRequired
+  Context,
+  createApp,
+  createSession,
+  dependency,
+  Get,
+  HttpResponseOK,
+  Post,
+  ServiceManager,
+  Session,
+  SessionStore,
+  TokenRequired,
 } from '@foal/core';
 
 import { strictEqual } from 'assert';
