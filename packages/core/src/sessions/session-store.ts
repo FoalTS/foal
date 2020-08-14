@@ -1,7 +1,9 @@
 // FoalTS
 import { SessionState } from './session-state.interface';
 
-export class SessionAlreadyExists extends Error {}
+export class SessionAlreadyExists extends Error {
+  readonly name = 'SessionAlreadyExists';
+}
 
 /**
  * Store used to create, read, update and delete sessions.
