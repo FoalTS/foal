@@ -1,39 +1,76 @@
 // std
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { ConfigNotFoundError, createService, Session, SessionStore } from '@foal/core';
+import { ConfigNotFoundError, createService, SessionAlreadyExists, SessionState } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
 import { MongoDBStore } from './mongodb-store.service';
 
-interface PlainSession {
+interface DatabaseSession {
   _id: string;
-  userId?: string;
-  content: { [key: string]: any };
-  flash: { [key: string]: any };
-  createdAt: number;
-  updatedAt: number;
+  state: SessionState;
 }
 
 describe('MongoDBStore', () => {
+
   const MONGODB_URI = 'mongodb://localhost:27017/db';
   const COLLECTION_NAME = 'sessions';
 
   let store: MongoDBStore;
   let mongoDBClient: any;
+  let state: SessionState;
+  let maxInactivity: number;
 
-  async function insertSessionIntoDB(session: PlainSession): Promise<PlainSession> {
+  function createState(): SessionState {
+    return {
+      content: {
+        foo: 'bar'
+      },
+      createdAt: 0,
+      flash: {
+        hello: 'world'
+      },
+      id: 'xxx',
+      updatedAt: 0,
+      userId: null,
+    };
+  }
+
+  before(async () => {
+      process.env.MONGODB_URI = MONGODB_URI;
+
+      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+      store = createService(MongoDBStore);
+      await store.boot();
+    });
+
+  beforeEach(() => {
+    state = createState();
+    maxInactivity = 1000;
+    return mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({});
+  });
+
+  after(() => {
+    delete process.env.MONGODB_URI;
+
+    return Promise.all([
+      mongoDBClient.close(),
+      store.close(),
+    ]);
+  });
+
+  async function insertSessionIntoDB(session: DatabaseSession): Promise<DatabaseSession> {
     await mongoDBClient.db().collection(COLLECTION_NAME).insertOne(session);
     return session;
   }
 
-  async function readSessionsFromDB(): Promise<PlainSession[]> {
+  async function readSessionsFromDB(): Promise<DatabaseSession[]> {
     return mongoDBClient.db().collection(COLLECTION_NAME).find({}).toArray();
   }
 
-  async function findByID(sessionID: string): Promise<PlainSession> {
+  async function findByID(sessionID: string): Promise<DatabaseSession> {
     const session = await mongoDBClient.db().collection(COLLECTION_NAME).findOne({ _id: sessionID });
     if (!session) {
       throw new Error('Session not found');
@@ -43,386 +80,219 @@ describe('MongoDBStore', () => {
 
   describe('has a "boot" method that', () => {
 
-    it('should throw a ConfigNotFoundError if no MongoDB URI is provided.', async () => {
-      try {
-        await createService(MongoDBStore).boot();
-      } catch (error) {
-        if (!(error instanceof ConfigNotFoundError)) {
-          throw new Error('A ConfigNotFoundError should have been thrown');
-        }
-        strictEqual(error.key, 'mongodb.uri');
-        strictEqual(error.msg, 'You must provide the URI of your database when using MongoDBStore.');
-        return;
-      }
-
-      throw new Error('An error should have been thrown.');
+    it('should throw a ConfigNotFoundError if no MongoDB URI is provided.', () => {
+      delete process.env.MONGODB_URI;
+      return rejects(
+        () => createService(MongoDBStore).boot(),
+        new ConfigNotFoundError(
+          'mongodb.uri',
+          'You must provide the URI of your database when using MongoDBStore.',
+        )
+      );
     });
 
   });
 
-  describe('assuming the service has been initialized', () => {
+  describe('has a "save" method that', () => {
 
-    before(async () => {
-      process.env.MONGODB_URI = MONGODB_URI;
+    context('given no session exists in the database with the given ID', () => {
 
-      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-      store = createService(MongoDBStore);
-      await store.boot();
-    });
+      it('should save the session state in the database.', async () => {
+        await store.save(state, maxInactivity);
 
-    beforeEach(() => mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({}));
-
-    after(async () => {
-      delete process.env.MONGODB_URI;
-
-      return Promise.all([
-        mongoDBClient.close(),
-        store.getMongoDBInstance().close()
-      ]);
-    });
-
-    describe('has a "createAndSaveSession" method that', () => {
-
-      it('should generate an ID and create a new session in the database.', async () => {
-        const dateBefore = Date.now();
-        await store.createAndSaveSession({ foo: 'bar' }, { userId: 'xxx' });
-        const dateAfter = Date.now();
-
-        const sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        const sessionA = sessions[0];
-
-        notStrictEqual(sessionA._id, undefined);
-        strictEqual(sessionA.userId, 'xxx');
-        deepStrictEqual(sessionA.content, { foo: 'bar' });
-        deepStrictEqual(sessionA.flash, {});
-
-        const createdAt = sessionA.createdAt;
-        strictEqual(dateBefore <= createdAt, true);
-        strictEqual(createdAt <= dateAfter, true);
-
-        const updatedAt = sessionA.updatedAt;
-        strictEqual(createdAt, updatedAt);
-      });
-
-      it('should return a representation (Session object) of the created session.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' }, { userId: 'xxx' });
-
-        const sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        const sessionA = sessions[0];
-
-        strictEqual(session.store, store);
-        strictEqual(session.getState().userId, sessionA.userId);
-        strictEqual(session.getState().id, sessionA._id);
-        deepStrictEqual(session.getState().content, { foo: 'bar' });
-        strictEqual(session.getState().createdAt, sessionA.createdAt);
-        strictEqual(session.getState().updatedAt, sessionA.updatedAt);
-      });
-
-      it('should support session options.', async () => {
-        const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
-        strictEqual(typeof (session.getState().content as any).csrfToken, 'string');
+        const actual = (await findByID(state.id)).state;
+        deepStrictEqual(actual, state);
       });
 
     });
 
-    describe('has a "update" method that', () => {
+    context('given a session already exists in the database with the given ID', () => {
 
-      it('should update the content of the session if the session exists.', async () => {
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-
-        const session = new Session({} as any, {
-          content: { bar: 'foo' },
-          createdAt: session1.createdAt,
-          flash: {},
-          id: session1._id,
-          updatedAt: session1.updatedAt,
-          userId: null,
-        });
-        session.set('hello', 'world', { flash: true });
-        await store.update(session.getState());
-
-        const sessionA = await findByID(session1._id);
-        deepStrictEqual(sessionA.content, { bar: 'foo' });
-        deepStrictEqual(sessionA.flash, { hello: 'world' });
-        deepStrictEqual(sessionA.createdAt, session1.createdAt);
-        deepStrictEqual(sessionA.updatedAt, session1.updatedAt);
-
-        const sessionB = await findByID(session2._id);
-        deepStrictEqual(sessionB.content, {});
-        deepStrictEqual(sessionB.createdAt, session2.createdAt);
-        deepStrictEqual(sessionB.updatedAt, session2.updatedAt);
-      });
-
-    });
-
-    describe('has a "destroy" method that', () => {
-
-      it('should delete the session from its ID.', async () => {
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-
-        strictEqual((await readSessionsFromDB()).length, 2);
-
-        await store.destroy(session1._id);
-
-        const sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        strictEqual(sessions.find(session => session._id === session1._id), undefined);
-        notStrictEqual(sessions.find(session => session._id === session2._id), undefined);
-      });
-
-      it('should not throw if no session matches the given session ID.', async () => {
-        await store.destroy('c');
-      });
-
-    });
-
-    describe('has a "read" method that', () => {
-
-      it('should return undefined if no session matches the ID.', async () => {
-        strictEqual(await store.read('c'), undefined);
-      });
-
-      it('should return undefined if the session has expired (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - inactivity * 1000,
-        });
-
-        const session = await store.read(session1._id);
-        strictEqual(session, undefined);
-      });
-
-      it('should delete the session if it has expired (inactivity).', async () => {
-        const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - inactivity * 1000,
-        });
-
-        let sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session._id === session1._id), undefined);
-        notStrictEqual(sessions.find(session => session._id === session2._id), undefined);
-
-        await store.read(session2._id);
-
-        sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session._id === session1._id), undefined);
-        strictEqual(sessions.find(session => session._id === session2._id), undefined);
-      });
-
-      it('should return undefined if the session has expired (absolute).', async () => {
-        const absolute = SessionStore.getExpirationTimeouts().absolute;
-
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now() - absolute * 1000,
-          flash: {},
-          updatedAt: Date.now(),
-        });
-
-        const session = await store.read(session1._id);
-        strictEqual(session, undefined);
-      });
-
-      it('should delete the session if it has expired (absolute).', async () => {
-        const absolute = SessionStore.getExpirationTimeouts().absolute;
-
-        const session1 = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
-        });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now() - absolute * 1000,
-          flash: {},
-          updatedAt: Date.now(),
-        });
-
-        let sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session._id === session1._id), undefined);
-        notStrictEqual(sessions.find(session => session._id === session2._id), undefined);
-
-        await store.read(session2._id);
-
-        sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session._id === session1._id), undefined);
-        strictEqual(sessions.find(session => session._id === session2._id), undefined);
-      });
-
-      it('should return the session.', async () => {
+      beforeEach(async () => {
         await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
+          _id: state.id,
+          state,
         });
-        const session2 = await insertSessionIntoDB({
-          _id: 'b',
-          content: { foo: 'bar' },
-          createdAt: Date.now(),
-          flash: { hello: 'world' },
-          updatedAt: Date.now(),
-          userId: 'xxx'
-        });
+      });
 
-        const state = await store.read(session2._id);
-        if (!state) {
-          throw new Error('TypeORMStore.read should not return undefined.');
-        }
-        strictEqual(state.userId, 'xxx');
-        strictEqual(state.id, session2._id);
-        strictEqual(state.content.foo, 'bar');
-        strictEqual(state.flash.hello, 'world');
-        strictEqual(state.createdAt, session2.createdAt);
-        strictEqual(state.updatedAt, session2.updatedAt);
+      it('should throw a SessionAlreadyExists error.', async () => {
+        return rejects(
+          () => store.save(state, maxInactivity),
+          new SessionAlreadyExists()
+        );
       });
 
     });
 
-    describe('has a "clear" method that', () => {
+  });
 
-      it('should remove all sessions.', async () => {
+  describe('has a "read" method that', () => {
+
+    context('given no session exists in the database with the given ID', () => {
+
+      it('should return null.', async () => {
+        strictEqual(await store.read('c'), null);
+      });
+
+    });
+
+    context('given a session exists in the database with the given ID', () => {
+
+      beforeEach(async () => {
         await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
+          _id: state.id,
+          state,
         });
+      });
+
+      it('should return the session state.', async () => {
+        const expected = createState();
+        const actual = await store.read(state.id);
+
+        deepStrictEqual(actual, expected);
+      });
+
+    });
+
+  });
+
+  describe('has a "update" method that', () => {
+
+    context('given no session exists in the database with the given ID', () => {
+
+      it('should save the session state in the database.', async () => {
+        await store.update(state, maxInactivity);
+
+        const actual = (await findByID(state.id)).state;
+        deepStrictEqual(actual, state);
+      });
+
+    });
+
+    context('given a session already exists in the database with the given ID', () => {
+
+      beforeEach(async () => {
         await insertSessionIntoDB({
-          _id: 'b',
-          content: { foo: 'bar' },
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now(),
+          _id: state.id,
+          state,
         });
+      });
 
-        strictEqual((await readSessionsFromDB()).length, 2);
+      it('should update the session state in the database.', async () => {
+        const updatedState = {
+          ...state,
+          updatedAt: state.updatedAt + 1,
+        };
+        await store.update(updatedState, maxInactivity);
 
-        await store.clear();
+        const actual = (await findByID(state.id)).state;
+        deepStrictEqual(actual, updatedState);
+      });
+
+    });
+
+  });
+
+  describe('has a "destroy" method that', () => {
+
+    context('given no session exists in the database with the given ID', () => {
+
+      it('should not throw an error.', () => {
+        return doesNotReject(() => store.destroy('c'));
+      });
+
+    });
+
+    context('given a session already exists in the database with the given ID', () => {
+
+      beforeEach(async () => {
+        await insertSessionIntoDB({
+          _id: state.id,
+          state,
+        });
+      });
+
+      it('should delete the session in the database.', async () => {
+        await store.destroy(state.id);
 
         strictEqual((await readSessionsFromDB()).length, 0);
       });
 
     });
 
-    describe('has a "cleanUpExpiredSessions" method that', () => {
+  });
 
-      it('should remove expired sessions due to inactivity.', async () => {
-        const inactivityTimeout = SessionStore.getExpirationTimeouts().inactivity;
+  describe('has a "clear" method that', () => {
 
-        const currentSession = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - inactivityTimeout * 1000 + 5000,
-        });
-        const expiredSession = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now(),
-          flash: {},
-          updatedAt: Date.now() - inactivityTimeout * 1000,
-        });
-
-        let sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session._id === currentSession._id), undefined);
-        notStrictEqual(sessions.find(session => session._id === expiredSession._id), undefined);
-
-        await store.cleanUpExpiredSessions();
-
-        sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session._id === currentSession._id), undefined);
-        strictEqual(sessions.find(session => session._id === expiredSession._id), undefined);
+    beforeEach(async () => {
+      await insertSessionIntoDB({
+        _id: state.id,
+        state,
       });
+    });
 
-      it('should remove expired sessions due to absolute timeout.', async () => {
-        const absoluteTimeout = SessionStore.getExpirationTimeouts().absolute;
+    it('should remove all sessions.', async () => {
+      await store.clear();
 
-        const currentSession = await insertSessionIntoDB({
-          _id: 'a',
-          content: {},
-          createdAt: Date.now() - absoluteTimeout * 1000 + 5000,
-          flash: {},
-          updatedAt: Date.now(),
+      strictEqual((await readSessionsFromDB()).length, 0);
+    });
+
+  });
+
+  describe('has a "cleanUpExpiredSessions" method that', () => {
+
+    let maxLifeTime: number;
+
+    beforeEach(async () => {
+      maxInactivity = 10;
+      maxLifeTime = 20;
+
+      const now = Math.trunc(Date.now() / 1000);
+      const states: SessionState[] = [
+        {
+          ...createState(),
+          createdAt: now - 1,
+          id: 'xxx',
+          updatedAt: now - 1,
+        },
+        {
+          ...createState(),
+          createdAt: now,
+          id: 'yyy',
+          updatedAt: now - maxInactivity - 1,
+        },
+        {
+          ...createState(),
+          createdAt: now - maxLifeTime - 1,
+          id: 'zzz',
+          updatedAt: now,
+        },
+      ];
+
+      for (const state of states) {
+        await insertSessionIntoDB({
+          _id: state.id,
+          state,
         });
-        const expiredSession = await insertSessionIntoDB({
-          _id: 'b',
-          content: {},
-          createdAt: Date.now() - absoluteTimeout * 1000,
-          flash: {},
-          updatedAt: Date.now(),
-        });
+      }
+    });
 
-        let sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 2);
-        notStrictEqual(sessions.find(session => session._id === currentSession._id), undefined);
-        notStrictEqual(sessions.find(session => session._id === expiredSession._id), undefined);
+    it('should not remove unexpired sessions.', async () => {
+      await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        await store.cleanUpExpiredSessions();
+      return doesNotReject(() => findByID('xxx'));
+    });
 
-        sessions = await readSessionsFromDB();
-        strictEqual(sessions.length, 1);
-        notStrictEqual(sessions.find(session => session._id === currentSession._id), undefined);
-        strictEqual(sessions.find(session => session._id === expiredSession._id), undefined);
-      });
+    it('should remove sessions expired due to inactivity.', async () => {
+      await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
+      return rejects(() => findByID('yyy'));
+    });
+
+    it('should remove sessions expired due to absolute end of life.', async () => {
+      await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
+
+      return rejects(() => findByID('zzz'));
     });
 
   });

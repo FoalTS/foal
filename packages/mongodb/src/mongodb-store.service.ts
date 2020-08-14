@@ -1,13 +1,9 @@
-import { Config, Session, SessionOptions, SessionState, SessionStore } from '@foal/core';
+import { Config, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 export interface DatabaseSession {
   _id: string;
-  userId?: string;
-  content: { [key: string]: any };
-  flash: { [key: string]: any };
-  createdAt: number;
-  updatedAt: number;
+  state: SessionState;
 }
 
 /**
@@ -32,101 +28,69 @@ export class MongoDBStore extends SessionStore {
     this.collection = this.mongoDBClient.db().collection('sessions');
   }
 
-  async createAndSaveSession(content: object, options: SessionOptions = {}): Promise<Session> {
-    const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(content, options);
-
-    const date = Date.now();
-    await this.collection.insertOne({
-      _id: sessionID,
-      content,
-      createdAt: date,
-      flash: {},
-      updatedAt: date,
-      userId: options.userId,
-    });
-
-    return new Session(this, {
-      content,
-      createdAt: date,
+  async save(state: SessionState, maxInactivity: number): Promise<void> {
+    try {
+      await this.collection.insertOne({
+        _id: state.id,
+        // id: state.id,
+        state,
+      });
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new SessionAlreadyExists();
+      }
       // TODO: test this line.
-      flash: {},
-      id: sessionID,
-      updatedAt: date,
-      userId: options.userId ?? null,
-    });
+      throw error;
+    }
   }
 
-  async update(state: SessionState): Promise<void> {
+  async read(id: string): Promise<SessionState | null> {
+    const session: DatabaseSession|null = await this.collection.findOne({ _id: id });
+    if (session === null) {
+      return session;
+    }
+
+    return session.state;
+  }
+
+  async update(state: SessionState, maxInactivity: number): Promise<void> {
     await this.collection.updateOne(
       {
         _id: state.id
       },
       {
-        $set: {
-          content: state.content,
-          flash: state.flash,
-          updatedAt: state.updatedAt,
-        }
+        $set: { state }
+      },
+      {
+        upsert: true,
       }
     );
   }
 
-  async destroy(sessionID: string): Promise<void> {
-    await this.collection.deleteOne({ _id: sessionID });
-  }
-
-  async read(sessionID: string): Promise<SessionState | undefined> {
-    const timeouts = SessionStore.getExpirationTimeouts();
-
-    const sessions = await this.collection.find({ _id: sessionID }).toArray();
-    if (sessions.length === 0) {
-      return undefined;
-    }
-    const databaseSession: DatabaseSession = sessions[0];
-
-    if (Date.now() - databaseSession.updatedAt > timeouts.inactivity * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    if (Date.now() - databaseSession.createdAt > timeouts.absolute * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    return {
-      content: databaseSession.content,
-      createdAt: databaseSession.createdAt,
-      flash: databaseSession.flash,
-      id: databaseSession._id,
-      updatedAt: databaseSession.updatedAt,
-      userId: databaseSession.userId,
-    };
+  async destroy(id: string): Promise<void> {
+    await this.collection.deleteOne({ _id: id });
   }
 
   async clear(): Promise<void> {
     await this.collection.deleteMany({});
   }
 
-  async cleanUpExpiredSessions(): Promise<void> {
-    const expiredTimeouts = SessionStore.getExpirationTimeouts();
+  async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
     await this.collection.deleteMany({
       $or: [
-        { createdAt: { $lt: Date.now() - expiredTimeouts.absolute * 1000 } },
-        { updatedAt: { $lt: Date.now() - expiredTimeouts.inactivity * 1000 } }
+        { 'state.createdAt': { $lt: Math.trunc(Date.now() / 1000) - maxLifeTime } },
+        { 'state.updatedAt': { $lt: Math.trunc(Date.now() / 1000) - maxInactivity } }
       ]
     });
   }
 
   /**
-   * This method should only be used to close the MongoDB connection.
+   * Closes the connection to the database.
    *
-   * @returns {*} The MongoDB connection.
    * @memberof MongoDBStore
    */
-  getMongoDBInstance(): any {
-    return this.mongoDBClient;
+  async close(): Promise<void> {
+    await this.mongoDBClient.close();
   }
 
 }
