@@ -555,48 +555,51 @@ foal run clean-up-expired-sessions
 If necessary, you can also create your own session store. This one must inherit the abstract class `SessionStore`.
 
 ```typescript
-import { Session, SessionOptions } from '@foal/core';
+import { SessionState, SessionStore } from '@foal/core';
 
 class CustomSessionStore extends SessionStore {
-  createAndSaveSession(sessionContent: any, options?: SessionOptions | undefined): Promise<Session> {
-    throw new Error('Method not implemented.');
+  save(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  update(session: Session): Promise<void> {
-    throw new Error('Method not implemented.');
+  read(id: string): Promise<SessionState | null> {
+    // ...
   }
-  destroy(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  update(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  read(sessionID: string): Promise<Session | undefined> {
-    throw new Error('Method not implemented.');
+  destroy(id: string): Promise<void> {
+    // ...
   }
   clear(): Promise<void> {
-    throw new Error('Method not implemented.');
+    // ...
   }
-  cleanUpExpiredSessions(): Promise<void> {
-    throw new Error('Method not implemented.');
+  cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+    // ...
   }
 }
 ```
 
-Here is the description of each method:
+| Method | Description |
+| --- | --- |
+| `save` | Saves the session for the first time. If a session already exists with the given ID, a SessionAlreadyExists error MUST be thrown. |
+| `read` | Reads a session. If the session does not exist, the value `null` MUST be returned. |
+| `update` | Updates and extends the lifetime of a session. If the session no longer exists (i.e. has expired or been destroyed), the session MUST still be saved. |
+| `destroy` | Deletes a session. If the session does not exist, NO error MUST be thrown. |
+| `clear` | Clears all sessions. |
+| `cleanUpExpiredSessions` | Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions. If the store manages a cache database, then this method can remain empty but it must NOT throw an error. |
 
-- **createAndSaveSession**: Create and save a new session.
+Session stores do not manipulate `Session` instances directly. They use `SessionState` objects instead.
 
-    This method *MUST* call the `generateSessionID` method to generate the session ID.
-
-    This method *MUST* call the `applySessionOptions` method to extend the sessionContent.
-
-
-- **update**: Update and extend the lifetime of a session.
-
-  Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
-
-- **destroy**: Delete a session, whether it exists or not.
-- **read**: Read a session from its ID.
-
-    Return `undefined` if the session does not exist or has expired. 
-
-- **clear**: Clear all sessions.
-
-- **cleanUpExpiredSessions**: Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions.
+```typescript
+interface SessionState {
+  // 44-characters long
+  id: string;
+  userId: string|number|null;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
+  // 4-bytes long (min: 0, max: 2147483647)
+  updatedAt: number;
+  // 4-bytes long (min: 0, max: 2147483647)
+  createdAt: number;
+}
+```

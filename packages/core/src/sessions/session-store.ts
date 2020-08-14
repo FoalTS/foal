@@ -24,7 +24,7 @@ export abstract class Store {
   static concreteClassName = 'ConcreteSessionStore';
 
   /**
-   * Save the session for the first time.
+   * Saves the session for the first time.
    *
    * If a session already exists with the given ID, a SessionAlreadyExists error MUST be thrown.
    *
@@ -36,7 +36,7 @@ export abstract class Store {
    */
   abstract save(state: SessionState, maxInactivity: number): Promise<void>;
   /**
-   * Read a session.
+   * Reads a session.
    *
    * If the session does not exist, the value `null` MUST be returned.
    *
@@ -47,7 +47,7 @@ export abstract class Store {
    */
   abstract read(id: string): Promise<SessionState | null>;
   /**
-   * Update and extend the lifetime of a session.
+   * Updates and extends the lifetime of a session.
    *
    * If the session no longer exists (i.e. has expired or been destroyed), the session MUST still be saved.
    *
@@ -59,7 +59,7 @@ export abstract class Store {
    */
   abstract update(state: SessionState, maxInactivity: number): Promise<void>;
   /**
-   * Delete a session.
+   * Deletes a session.
    *
    * If the session does not exist, NO error MUST be thrown.
    *
@@ -70,7 +70,7 @@ export abstract class Store {
    */
   abstract destroy(id: string): Promise<void>;
   /**
-   * Clear all sessions.
+   * Clears all sessions.
    *
    * @abstract
    * @returns {Promise<void>}
