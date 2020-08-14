@@ -107,9 +107,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Set ctx.user */
 
-    // TODO: remove this.
-    ctx.user = null;
-
     // TODO: given userRequired, if userId === null OR options.user returns null, return response.
     // TODO: if the ID returns no user, destroy the session and remove the cookie.
 

@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotReject, notStrictEqual, rejects, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -19,7 +19,7 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
-import { SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
@@ -341,11 +341,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      it('with the null value.', async () => {
+      it('with the undefined value.', async () => {
         const response = await hook(ctx, services);
         strictEqual(isHttpResponse(response), false);
 
-        strictEqual(ctx.user, null);
+        strictEqual(ctx.user, undefined);
       });
 
       // ...
@@ -358,11 +358,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       context('given options.user is not defined', () => {
 
-        it('with the null value.', async () => {
+        it('with the undefined value.', async () => {
           const response = await hook(ctx, services);
           strictEqual(isHttpResponse(response), false);
 
-          strictEqual(ctx.user, null);
+          strictEqual(ctx.user, undefined);
         });
 
       });
@@ -372,7 +372,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const user = { id: userId };
 
         beforeEach(() => {
-          const fetchUser = async (id: number|string) => id === userId ? user : null;
+          const fetchUser = async (id: number|string) => id === userId ? user : undefined;
           hook = getHookFunction(Token({ store: Store, user: fetchUser }));
         });
 
@@ -386,15 +386,15 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         context('given options.redirectTo is not defined', () => {
 
           it(
-            'with the null value and should return an HttpResponseUnauthorized object'
+            'with the undefined value and should return an HttpResponseUnauthorized object'
             + ' if the function options.user returns null.',
             async () => {
-              const fetchUser = async (id: number|string) => null;
+              const fetchUser = async (id: number|string) => undefined;
               hook = getHookFunction(Token({ store: Store, user: fetchUser }));
 
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, null);
+              strictEqual(ctx.user, undefined);
 
               if (!isHttpResponseUnauthorized(response)) {
                 throw new Error('response should be instance of HttpResponseUnauthorized');
@@ -418,12 +418,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
             'with the null value and should return an HttpResponseRedirect object'
             + ' if the function options.user returns null.',
             async () => {
-              const fetchUser = async (id: number|string) => null;
+              const fetchUser = async (id: number|string) => undefined;
               hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
 
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, null);
+              strictEqual(ctx.user, undefined);
 
               if (!isHttpResponseRedirect(response)) {
                 throw new Error('response should be instance of HttpResponseRedirect');
