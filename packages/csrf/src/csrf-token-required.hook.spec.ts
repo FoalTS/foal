@@ -47,14 +47,18 @@ describe('CsrfTokenRequired', () => {
 
     it('should throw if the session content has no CSRF token.', async () => {
       const ctx = new Context({});
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       try {
         await hook(ctx, services);
         throw new Error('An error should have been thrown.');
@@ -70,14 +74,18 @@ describe('CsrfTokenRequired', () => {
 
       it('should return an HttpResponseForbidden object if the token is incorrect.', async () => {
         const ctx = new Context<any, Session>({ body: { _csrf: 'xxx' }, headers: {} });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'bbb' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'bbb' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
 
         const response = await hook(ctx, services);
         if (!isHttpResponseForbidden(response)) {
@@ -88,83 +96,107 @@ describe('CsrfTokenRequired', () => {
 
       it('should not return an HttpResponseForbidden object if the token is correct (body._csrf).', async () => {
         const ctx = new Context<any, Session>({ body: { _csrf: 'xxx' }, headers: {} });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct (query._csrf).', async () => {
         const ctx = new Context<any, Session>({ query: { _csrf: 'xxx' }, headers: {} });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["csrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'csrf-token': 'xxx' } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["xsrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'xsrf-token': 'xxx' } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["x-csrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'x-csrf-token': 'xxx' } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["x-xsrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'x-xsrf-token': 'xxx' } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: { csrfToken: 'xxx' },
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: { csrfToken: 'xxx' },
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
@@ -172,40 +204,52 @@ describe('CsrfTokenRequired', () => {
 
     it('should not return an HttpResponseForbidden object if the method is GET.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'GET' });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: { csrfToken: 'xxx' },
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: { csrfToken: 'xxx' },
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
     it('should not return an HttpResponseForbidden object if the method is HEAD.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'HEAD' });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: { csrfToken: 'xxx' },
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: { csrfToken: 'xxx' },
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
     it('should not return an HttpResponseForbidden object if the method is OPTIONS.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'OPTIONS' });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: { csrfToken: 'xxx' },
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: { csrfToken: 'xxx' },
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
@@ -243,14 +287,18 @@ describe('CsrfTokenRequired', () => {
 
     it('should return an HttpResponseForbidden object if the "csrfToken" cookie is not found.', async () => {
       const ctx = new Context<any, Session>({ cookies: {} });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
 
       const response = await hook(ctx, services);
       if (!isHttpResponseForbidden(response)) {
@@ -263,15 +311,18 @@ describe('CsrfTokenRequired', () => {
       process.env.SETTINGS_CSRF_COOKIE_NAME = 'csrf';
 
       const ctx = new Context<any, Session>({ cookies: { csrfToken: 'xxx' } });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
-
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       const response = await hook(ctx, services);
       if (!isHttpResponseForbidden(response)) {
         throw new Error('The hook should have returned an HttpResponseForbidden object.');
@@ -285,14 +336,18 @@ describe('CsrfTokenRequired', () => {
           + ' is incorrect.', async () => {
         const token = 'xxx';
         const ctx = new Context<any, Session>({ body: { _csrf: 'xxx' }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
 
         const response = await hook(ctx, services);
         if (!isHttpResponseForbidden(response)) {
@@ -303,14 +358,18 @@ describe('CsrfTokenRequired', () => {
 
       it('should return an HttpResponseForbidden object if the token is incorrect.', async () => {
         const ctx = new Context<any, Session>({ body: { _csrf: 'xxx' }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
 
         const response = await hook(ctx, services);
         if (!isHttpResponseForbidden(response)) {
@@ -321,83 +380,107 @@ describe('CsrfTokenRequired', () => {
 
       it('should not return an HttpResponseForbidden object if the token is correct (body._csrf).', async () => {
         const ctx = new Context<any, Session>({ body: { _csrf: token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct (query._csrf).', async () => {
         const ctx = new Context<any, Session>({ query: { _csrf: token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["csrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'csrf-token': token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["xsrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'xsrf-token': token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["x-csrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'x-csrf-token': token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
       it('should not return an HttpResponseForbidden object if the token is correct '
           + '(headers["x-xsrf-token"]).', async () => {
         const ctx = new Context<any, Session>({ headers: { 'x-xsrf-token': token }, cookies: { csrfToken: token } });
-        ctx.session = new Session({} as any, {
-          id: 'a',
-          content: {},
-          createdAt: 0,
-          flash: {},
-          updatedAt: 0,
-          userId: null,
-        });
+        ctx.session = new Session(
+          {} as any,
+          {
+            content: {},
+            createdAt: 0,
+            flash: {},
+            id: 'a',
+            updatedAt: 0,
+            userId: null,
+          },
+          { exists: true }
+        );
         strictEqual(isHttpResponse(await hook(ctx, services)), false);
       });
 
@@ -405,40 +488,52 @@ describe('CsrfTokenRequired', () => {
 
     it('should not return an HttpResponseForbidden object if the method is GET.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'GET', cookies: { csrfToken: token } });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
     it('should not return an HttpResponseForbidden object if the method is HEAD.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'HEAD', cookies: { csrfToken: token } });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
     it('should not return an HttpResponseForbidden object if the method is OPTIONS.', async () => {
       const ctx = new Context<any, Session>({ headers: {}, method: 'OPTIONS', cookies: { csrfToken: token } });
-      ctx.session = new Session({} as any, {
-        id: 'a',
-        content: {},
-        createdAt: 0,
-        flash: {},
-        updatedAt: 0,
-        userId: null,
-      });
+      ctx.session = new Session(
+        {} as any,
+        {
+          content: {},
+          createdAt: 0,
+          flash: {},
+          id: 'a',
+          updatedAt: 0,
+          userId: null,
+        },
+        { exists: true }
+      );
       strictEqual(await hook(ctx, services), undefined);
     });
 
