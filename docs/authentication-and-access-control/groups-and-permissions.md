@@ -200,7 +200,7 @@ Then you can create a group through the command line.
 ```sh
 npm run build:scripts
 foal run create-perm name="Permission to delete users" codeName="delete-users"
-foal run create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
+foal run create-group name="Administrators" codeName="admin" permissions="[ \"delete-users\" ]"
 ```
 
 ## Users
@@ -243,7 +243,7 @@ Uncomment the code in the file `src/scripts/create-user.ts`.
 Then you can create a user with their permissions and groups through the command line.
 ```sh
 npm run build:scripts
-foal run create-user userPermissions='[ "my-first-perm" ]' groups='[ "my-group" ]'
+foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-group\" ]"
 ```
 
 ## Fetching a User with their Permissions
