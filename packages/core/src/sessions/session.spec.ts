@@ -242,6 +242,29 @@ describe('Session', () => {
 
     });
 
+    context('given the "commit" has been called', () => {
+
+      it('should return an increased expiration timeout.', async () => {
+        const state: SessionState = {
+          ...createState(),
+          createdAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2),
+          updatedAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2),
+        };
+        const session = new Session(
+          store,
+          state,
+          { exists: true },
+        );
+
+        strictEqual(session.expirationTime, state.updatedAt + SESSION_DEFAULT_INACTIVITY_TIMEOUT);
+
+        await session.commit();
+
+        strictEqual(session.expirationTime, Math.trunc(Date.now() / 1000) + SESSION_DEFAULT_INACTIVITY_TIMEOUT);
+      });
+
+    });
+
   });
 
   describe('has a "get" method that', () => {

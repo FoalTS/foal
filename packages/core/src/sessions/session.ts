@@ -200,23 +200,20 @@ export class Session {
       );
     }
 
-    const state = {
-      ...this.state,
-      updatedAt: this.getTime(),
-    };
+    this.state.updatedAt = this.getTime();
 
     switch (this.status) {
       case 'regenerated':
         await this.store.destroy(this.oldId);
-        await this.store.save(state, inactivityTimeout);
+        await this.store.save(this.state, inactivityTimeout);
         this.status = 'exists';
         break;
       case 'new':
-        await this.store.save(state, inactivityTimeout);
+        await this.store.save(this.state, inactivityTimeout);
         this.status = 'exists';
         break;
       case 'exists':
-        await this.store.update(state, inactivityTimeout);
+        await this.store.update(this.state, inactivityTimeout);
         break;
       case 'destroyed':
         throw new Error('Impossible to commit the session. Session already destroyed.');
@@ -233,7 +230,7 @@ export class Session {
    * @memberof Session
    */
   private getTime(): number {
-    return Math.floor(Date.now() / 1000);
+    return Math.trunc(Date.now() / 1000);
   }
 
   private shouldCleanUpExpiredSessions(): boolean {
@@ -242,7 +239,7 @@ export class Session {
       'number',
       SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,
     );
-    return Math.floor(Math.random() * periodicity) === 0;
+    return Math.trunc(Math.random() * periodicity) === 0;
   }
 
   private getTimeouts(): { absoluteTimeout: number, inactivityTimeout: number} {
