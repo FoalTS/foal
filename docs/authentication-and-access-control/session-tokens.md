@@ -34,10 +34,12 @@ export class AuthController {
 
 ### Create the Session and Get the Token (Log In)
 
-Sessions are created using the method `createAndSaveSession` of the session store.
+Sessions are created using the method `createSession` of the session store.
 
 ```typescript
-const session = await store.createAndSaveSession({ userId: user.id });
+const session = await createSession(this.store);
+session.setUser(user);
+await session.commit();
 ```
 
 At login time, the user is usually retrieved upstream when checking credentials.
@@ -166,7 +168,7 @@ export class AuthController {
   login() {
     // ...
     const response = new HttpResponseOK();
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 
@@ -237,7 +239,7 @@ export class Controller {
 
   // ...
   login() {
-    // this.store.createAndSaveSession(...)
+    // createSession(this.store)
   }
 
   // ...

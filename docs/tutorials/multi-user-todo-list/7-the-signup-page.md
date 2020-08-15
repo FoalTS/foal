@@ -53,13 +53,15 @@ export class SignupController {
     await getRepository(User).save(user);
 
     // Create the user session.
-    const session = await this.store.createAndSaveSession({ user: user.id });
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
 
     // Redirect the user to her/his to-do list.
     const response = new HttpResponseRedirect('/');
     // Save the session token in a cookie in order to authenticate
     // the user in future requests.
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 

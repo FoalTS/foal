@@ -1,6 +1,7 @@
 // 3p
 import {
   Context,
+  createSession,
   dependency,
   Get,
   HttpResponse,
@@ -71,9 +72,12 @@ export class AuthController {
   }
 
   private async createSessionAndSaveUserInfo(userInfo: any): Promise<HttpResponse> {
-    const session = await this.store.createAndSaveSession({ userInfo });
+    const session = await createSession(this.store);
+    session.set('userInfo', userInfo);
+    await session.commit();
+
     const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 

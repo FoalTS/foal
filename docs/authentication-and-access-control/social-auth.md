@@ -281,9 +281,12 @@ export class AuthController {
       await getRepository(User).save(user);
     }
 
-    const session = await this.store.createAndSaveSession({ user: user.id });
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+
     const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 
