@@ -5,7 +5,7 @@ import { Column, Entity, getRepository, IsNull, LessThan, Not, PrimaryColumn } f
   name: 'sessions'
 })
 export class DatabaseSession {
-  @PrimaryColumn()
+  @PrimaryColumn({ length: 44 })
   id: string;
 
   @Column({ nullable: true })

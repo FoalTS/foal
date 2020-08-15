@@ -58,7 +58,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     let sessionID: string;
 
     if (options.cookie) {
-      // TODO: Test this line.
       const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
@@ -94,7 +93,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     if (!session) {
       const response = unauthorizedOrRedirect('token invalid or expired');
-      // TODO: move the line below to "unauthorizedOrRedirect"?
       if (options.cookie) {
         removeSessionCookie(response);
       }
@@ -127,7 +125,6 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       }
 
       await session.commit();
-      // Test that setSessionCookie is called after session is saved (correct expiration time)
 
       if (options.cookie) {
         setSessionCookie(response, session);

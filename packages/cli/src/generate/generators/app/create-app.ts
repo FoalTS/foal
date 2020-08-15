@@ -130,7 +130,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
           .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
           .copyOnlyIf(mongodb, 'app/src/app/entities/user.entity.mongodb.ts', 'user.entity.ts')
           .cd('..')
-          // TODO: MongoDB entities
           // Hooks
           .ensureDir('hooks')
           .cd('hooks')

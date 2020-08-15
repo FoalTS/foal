@@ -1,5 +1,5 @@
 // 3p
-import { createService, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
@@ -69,17 +69,6 @@ describe('RedisStore', () => {
     });
   }
 
-  function asyncExpire(key: string, value: number) {
-    return new Promise((resolve, reject) => {
-      redisClient.expire(key, value, (err: any, success: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(success);
-      });
-    });
-  }
-
   function asyncGet(key: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       redisClient.get(key, (err: any, val: string) => {
@@ -101,6 +90,24 @@ describe('RedisStore', () => {
       });
     });
   }
+
+  function asyncExists(key: string): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      redisClient.exists(key, (err: any, val: number) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(val);
+      });
+    });
+  }
+
+  it('should support sessions IDs of length 44.', async () => {
+    const session = await createSession({} as any);
+    const key = getKey(session.getToken());
+    await asyncSet(key, 'bar');
+    strictEqual(await asyncExists(key), 1);
+  });
 
   describe('has a "save" method that', () => {
 

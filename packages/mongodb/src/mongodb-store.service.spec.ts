@@ -2,7 +2,7 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { ConfigNotFoundError, createService, SessionAlreadyExists, SessionState } from '@foal/core';
+import { ConfigNotFoundError, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
@@ -77,6 +77,16 @@ describe('MongoDBStore', () => {
     }
     return session;
   }
+
+  it('should support sessions IDs of length 44.', async () => {
+    const session = await createSession({} as any);
+    const id = session.getToken();
+    await insertSessionIntoDB({
+      _id: id,
+      state: {} as any,
+    });
+    return doesNotReject(() => findByID(id));
+  });
 
   describe('has a "boot" method that', () => {
 

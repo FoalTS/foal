@@ -5,7 +5,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
-import { createService, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite';
@@ -91,6 +91,23 @@ function entityTestSuite(type: DBType) {
           })
           .execute()
       );
+    });
+
+    it('should support sessions IDs of length 44.', async () => {
+      const session = await createSession({} as any);
+      const id = session.getToken();
+
+      const dbSession = getRepository(DatabaseSession).create({
+        content: '',
+        created_at: 0,
+        flash: '',
+        id,
+        updated_at: 0,
+        user_id: undefined,
+      });
+      await getRepository(DatabaseSession).save(dbSession);
+
+      return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail(id));
     });
 
     it('should have a "content" column which supports long strings.', async () => {

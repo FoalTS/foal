@@ -19,7 +19,11 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
+import {
+  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+  SESSION_DEFAULT_COOKIE_NAME,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT
+} from './constants';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
@@ -41,10 +45,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       // Anonymous session
       {
         content: { foo: 'bar' },
-        createdAt: Math.trunc(Date.now() / 1000),
+        createdAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2),
         flash: {},
         id: anonymousSessionID,
-        updatedAt: Math.trunc(Date.now() / 1000),
+        // The differenece is required in order to test that the session and cookie lifetime are extended.
+        updatedAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2),
         userId: null,
       },
       // Sessions with a user ID
@@ -319,8 +324,28 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should set Context.session', () => {
 
+    afterEach(() => delete process.env.SETTINGS_SESSION_COOKIE_NAME);
+
     it('with the session.', async () => {
       ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`});
+
+      await hook(ctx, services);
+
+      const session = ctx.session;
+      if (!session) {
+        throw new Error('No session found at Context.session');
+      }
+
+      strictEqual(session.getToken(), anonymousSessionID);
+      strictEqual(session.get('foo'), 'bar');
+    });
+
+    // This test might be put in a better place.
+    it('with the session (custom cookie name).', async () => {
+      process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
+
+      ctx = createContext({}, { auth2: anonymousSessionID });
+      hook = getHookFunction(Token({ store: Store, cookie: true }));
 
       await hook(ctx, services);
 
