@@ -14,7 +14,7 @@ The `SameSite` attribute is a new cookie directive to mitigate the risk of CSRF 
 
 ### Authentication with Session Tokens
 
-If you use session tokens with the `setSessionCookie`, you can directly define the cookie directives in the configuration.
+If you use session tokens, you can directly define the cookie directives in the configuration.
 
 *Example with config/default.json*
 ```json
@@ -82,23 +82,21 @@ The `@CsrfTokenRequired` expects the CSRF token to be include in the request in 
 1. Generate the token on login
 
 ```typescript
-import { generateToken, HttpResponseOK, Post, setSessionCookie } from '@foal/core';
+import { generateToken, HttpResponseOK, Post, TokenOptional } from '@foal/core';
 
 class AuthController {
   // ...
 
   @Post('/login')
+  @TokenOptional({ cookie: true })
   async login() {
     // ...
 
-    const session = await createSession(this.store);
-    session.setUser(user);
-    session.set('csrfToken', await generateToken())
-    await session.commit();
+    ctx.session = await createSession(this.store);
+    ctx.session.setUser(user);
+    ctx.session.set('csrfToken', await generateToken())
 
-    const response = new HttpResponseOK();
-    setSessionCookie(response, session);
-    return response;
+    return new HttpResponseOK();
   }
 }
 ```
@@ -294,6 +292,7 @@ class AuthController {
     // ...
 
     @Post('/login')
+    @TokenOptional({ cookie: true })
     async login() {
       // ...
       const session = await createSession(this.store);
@@ -302,7 +301,6 @@ class AuthController {
       await session.commit();
 
       const response = new HttpResponseOK();
-      setSessionCookie(response, session);
       // Retreive the token from the session
       // and send it in a cookie
       setCsrfCookie(response, await getCsrfToken(session));

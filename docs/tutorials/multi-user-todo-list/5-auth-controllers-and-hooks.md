@@ -70,7 +70,7 @@ Open the new file `auth.controller.ts` and replace its content.
 // 3p
 import {
   Context, dependency, HttpResponseRedirect, Post,
-  setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -92,6 +92,11 @@ export class AuthController {
     required: ['email', 'password'],
     type: 'object',
   })
+  @TokenOptional({
+    cookie: true,
+    redirectTo: '/signin',
+    store: TypeORMStore,
+  })
   async login(ctx: Context) {
     const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
@@ -106,16 +111,11 @@ export class AuthController {
     }
 
     // Create a session associated with the user.
-    const session = await createSession(this.store);
-    session.setUser(user);
-    await session.commit();
+    ctx.session = await createSession(this.store);
+    ctx.session.setUser(user);
 
     // Redirect the user to the home page on success.
-    const response = new HttpResponseRedirect('/');
-    // Save the session token in a cookie in order to authenticate
-    // the user in future requests.
-    setSessionCookie(response, session);
-    return response;
+    return new HttpResponseRedirect('/');
   }
 
   @Post('/logout')

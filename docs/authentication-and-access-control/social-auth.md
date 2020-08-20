@@ -60,7 +60,6 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  setSessionCookie,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 
@@ -248,7 +247,7 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  setSessionCookie,
+  TokenOptional,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
@@ -269,6 +268,10 @@ export class AuthController {
   }
 
   @Get('/signin/google/callback')
+  @TokenOptional({
+    cookie: true,
+    store: TypeORMStore,
+  })
   async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
 
@@ -281,13 +284,10 @@ export class AuthController {
       await getRepository(User).save(user);
     }
 
-    const session = await createSession(this.store);
-    session.setUser(user);
-    await session.commit();
+    ctx.session = ctx.session || await createSession(this.store);
+    ctx.session.setUser(user);
 
-    const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session);
-    return response;
+    return new HttpResponseRedirect('/');
   }
 
 }

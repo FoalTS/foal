@@ -12,7 +12,7 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, dependency, HttpResponseRedirect, Post, setSessionCookie, ValidateBody } from '@foal/core';
+import { Context, dependency, HttpResponseRedirect, Post, TokenOptional, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -34,6 +34,11 @@ export class SignupController {
     required: [ 'email', 'password' ],
     type: 'object',
   })
+  @TokenOptional({
+    cookie: true,
+    redirectTo: '/signin',
+    store: TypeORMStore,
+  })
   async signup(ctx: Context) {
     // Check that the password is not too common.
     if (await isCommon(ctx.request.body.password)) {
@@ -53,16 +58,11 @@ export class SignupController {
     await getRepository(User).save(user);
 
     // Create the user session.
-    const session = await createSession(this.store);
-    session.setUser(user);
-    await session.commit();
+    ctx.session = await createSession(this.store);
+    ctx.session = session.setUser(user);
 
     // Redirect the user to her/his to-do list.
-    const response = new HttpResponseRedirect('/');
-    // Save the session token in a cookie in order to authenticate
-    // the user in future requests.
-    setSessionCookie(response, session);
-    return response;
+    return new HttpResponseRedirect('/');
   }
 
 }

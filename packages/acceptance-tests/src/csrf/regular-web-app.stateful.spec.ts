@@ -14,8 +14,8 @@ import {
   HttpResponseCreated,
   HttpResponseOK,
   Post,
-  setSessionCookie,
-  TokenRequired
+  TokenOptional,
+  TokenRequired,
 } from '@foal/core';
 import { CsrfTokenRequired, getCsrfToken } from '@foal/csrf';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
@@ -31,15 +31,16 @@ describe('[CSRF|regular web app|stateful] Users', () => {
     store: TypeORMStore;
 
     @Post('/login')
-    async login() {
-      const session = await createSession(this.store);
-      session.set('csrfToken', await generateToken());
-      session.setUser({ id: 1 });
-      await session.commit();
+    @TokenOptional({
+      cookie: true,
+      store: TypeORMStore,
+    })
+    async login(ctx: Context) {
+      ctx.session = await createSession(this.store);
+      ctx.session.set('csrfToken', await generateToken());
+      ctx.session.setUser({ id: 1 });
 
-      const response = new HttpResponseOK();
-      setSessionCookie(response, session);
-      return response;
+      return new HttpResponseOK();
     }
   }
 
