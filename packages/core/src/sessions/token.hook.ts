@@ -53,6 +53,25 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     const ConcreteSessionStore: ClassOrAbstractClass<SessionStore> = options.store || SessionStore;
     const store = services.get(ConcreteSessionStore);
 
+    async function postFunction(response: HttpResponse) {
+      if (!(ctx.session)) {
+        return;
+      }
+
+      if (ctx.session.isDestroyed) {
+        if (options.cookie) {
+          removeSessionCookie(response);
+        }
+        return;
+      }
+
+      await ctx.session.commit();
+
+      if (options.cookie) {
+        setSessionCookie(response, ctx.session);
+      }
+    }
+
     /* Validate the request */
 
     let sessionID: string;
@@ -63,7 +82,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
       if (!content) {
         if (!required) {
-          return;
+          return postFunction;
         }
         return badRequestOrRedirect('Session cookie not found.');
       }
@@ -74,7 +93,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
       if (!authorizationHeader) {
         if (!required) {
-          return;
+          return postFunction;
         }
         return badRequestOrRedirect('Authorization header not found.');
       }
@@ -115,21 +134,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       }
     }
 
-    return async (response: HttpResponse) => {
-      // TODO: session = ctx.session;
-      if (session.isDestroyed) {
-        if (options.cookie) {
-          removeSessionCookie(response);
-        }
-        return;
-      }
-
-      await session.commit();
-
-      if (options.cookie) {
-        setSessionCookie(response, session);
-      }
-    };
+    return postFunction;
   }
 
   const openapi = [

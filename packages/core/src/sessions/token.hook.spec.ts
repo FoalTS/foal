@@ -24,6 +24,8 @@ import {
   SESSION_DEFAULT_COOKIE_NAME,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT
 } from './constants';
+import { readSession } from './read-session';
+import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
@@ -55,10 +57,11 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       // Sessions with a user ID
       {
         content: { foo: 'bar' },
-        createdAt: Math.trunc(Date.now() / 1000),
+        createdAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 3),
         flash: {},
         id: authenticatedSessionID,
-        updatedAt: Math.trunc(Date.now() / 1000),
+        // The differenece is required in order to test that the session and cookie lifetime are extended.
+        updatedAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_INACTIVITY_TIMEOUT / 3),
         userId,
       }
     ];
@@ -124,7 +127,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
           const response = await hook(ctx, services);
 
-          strictEqual(response, undefined);
+          strictEqual(isHttpResponse(response), false);
           strictEqual(ctx.user, undefined);
         });
       }
@@ -201,7 +204,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
           const response = await hook(ctx, services);
 
-          strictEqual(response, undefined);
+          strictEqual(isHttpResponse(response), false);
           strictEqual(ctx.user, undefined);
         });
       }
@@ -467,143 +470,209 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should return a post-hook function that', () => {
 
-    beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
+    context('given the ctx.session has been set by the hook and has not been overridden in the controller', () => {
 
-    context('given the session has been destroyed', () => {
+      beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      it('should not throw an error trying to save the session', async () => {
-          const postHookFunction = await hook(ctx, services);
-          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-            throw new Error('The hook should return a post hook function');
-          }
-          if (!ctx.session) {
-            throw new Error('ctx.session should be defined');
-          }
-          await ctx.session.destroy();
-
-          return doesNotReject(() => postHookFunction(new HttpResponseOK()));
-        }
-      );
-
-      context('given options.cookie is false or not defined', () => {
-
-        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
-
-        it('should not remove a session cookie in the response (it can belongs to another application).', async () => {
-          const postHookFunction = await hook(ctx, services);
-          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-            throw new Error('The hook should return a post hook function');
-          }
-          if (!ctx.session) {
-            throw new Error('ctx.session should be defined');
-          }
-          const response = new HttpResponseOK();
-          await ctx.session.destroy();
-
-          await postHookFunction(response);
-
-          deepStrictEqual(response.getCookies(), {});
-        });
-
-      });
-
-      context('given options.cookie is true', () => {
-
-        beforeEach(() => {
-          hook = getHookFunction(Token({ store: Store, cookie: true }));
-          ctx = createContext(
-            {},
-            {
-              [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID
-            },
-          );
-        });
-
-        it('should remove the session cookie.', async () => {
-          const postHookFunction = await hook(ctx, services);
-          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-            throw new Error('The hook should return a post hook function');
-          }
-          if (!ctx.session) {
-            throw new Error('ctx.session should be defined');
-          }
-          const response = new HttpResponseOK();
-          await ctx.session.destroy();
-          await postHookFunction(response);
-
-          const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-          strictEqual(value, '');
-          deepStrictEqual(options.maxAge, 0);
-        });
-
-      });
+      postHookTestHook(async () => {});
 
     });
 
-    context('given the session has not been destroyed', () => {
+    context('given the ctx.session has been set by the hook and has been overridden in the controller', () => {
 
-      it('should commit the session.', async () => {
-        const postHookFunction = await hook(ctx, services);
-        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-          throw new Error('The hook should return a post hook function');
-        }
-        if (!ctx.session) {
-          throw new Error('ctx.session should be defined');
-        }
-        await postHookFunction(new HttpResponseOK());
+      beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-        strictEqual(services.get(Store).updateCalledWith?.state.id, ctx.session.getToken());
-      });
-
-      context('given options.cookie is false or not defined', () => {
-
-        it('should not set a cookie in the response.', async () => {
-          const postHookFunction = await hook(ctx, services);
-          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-            throw new Error('The hook should return a post hook function');
-          }
-          if (!ctx.session) {
-            throw new Error('ctx.session should be defined');
-          }
-          const response = new HttpResponseOK();
-          await postHookFunction(response);
-
-          deepStrictEqual(response.getCookies(), {});
-        });
-
-      });
-
-      context('given options.cookie is true', () => {
-
-        beforeEach(() => {
-          hook = getHookFunction(Token({ store: Store, cookie: true }));
-          ctx = createContext(
-            {},
-            {
-              [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID
-            },
-          );
-        });
-
-        it('should set a cookie in the response with the session to extend its lifetime on the client.', async () => {
-          const postHookFunction = await hook(ctx, services);
-          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-            throw new Error('The hook should return a post hook function');
-          }
-          if (!ctx.session) {
-            throw new Error('ctx.session should be defined');
-          }
-          const response = new HttpResponseOK();
-          await postHookFunction(response);
-
-          const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-          strictEqual(value, anonymousSessionID);
-          deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
-        });
-
-      });
+      postHookTestHook(async () => readSession(services.get(Store), authenticatedSessionID));
 
     });
+
+    if (!required) {
+      context('given the ctx.session has not been set by the hook and has been set in the controller', () => {
+
+        beforeEach(() => ctx = createContext());
+
+        postHookTestHook(async () => readSession(services.get(Store), authenticatedSessionID));
+
+      });
+    }
+
+    function postHookTestHook(getSession: () => Promise<Session|null|void>) {
+
+      context('given the session has been destroyed', () => {
+
+        it('should not throw an error trying to save the session', async () => {
+            const postHookFunction = await hook(ctx, services);
+            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+              throw new Error('The hook should return a post hook function');
+            }
+            const session = await getSession();
+            if (session) {
+              ctx.session = session;
+            }
+            if (!ctx.session) {
+              throw new Error('ctx.session should be defined');
+            }
+
+            await ctx.session.destroy();
+
+            return doesNotReject(() => postHookFunction(new HttpResponseOK()));
+          }
+        );
+
+        context('given options.cookie is false or not defined', () => {
+
+          it('should not remove a session cookie in the response (it can belongs to another application).', async () => {
+            const postHookFunction = await hook(ctx, services);
+            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+              throw new Error('The hook should return a post hook function');
+            }
+            const session = await getSession();
+            if (session) {
+              ctx.session = session;
+            }
+            if (!ctx.session) {
+              throw new Error('ctx.session should be defined');
+            }
+
+            const response = new HttpResponseOK();
+            await ctx.session.destroy();
+
+            await postHookFunction(response);
+
+            deepStrictEqual(response.getCookies(), {});
+          });
+
+        });
+
+        context('given options.cookie is true', () => {
+
+          beforeEach(() => {
+            hook = getHookFunction(Token({ store: Store, cookie: true }));
+            const token = ctx.request.get('Authorization');
+            if (token) {
+              ctx = createContext(
+                {},
+                {
+                  [SESSION_DEFAULT_COOKIE_NAME]: token.split('Bearer ')[1]
+                },
+              );
+            } else {
+              ctx = createContext();
+            }
+          });
+
+          it('should remove the session cookie.', async () => {
+            const postHookFunction = await hook(ctx, services);
+            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+              throw new Error('The hook should return a post hook function');
+            }
+            const session = await getSession();
+            if (session) {
+              ctx.session = session;
+            }
+            if (!ctx.session) {
+              throw new Error('ctx.session should be defined');
+            }
+
+            const response = new HttpResponseOK();
+            await ctx.session.destroy();
+            await postHookFunction(response);
+
+            const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+            strictEqual(value, '');
+            deepStrictEqual(options.maxAge, 0);
+          });
+
+        });
+
+      });
+
+      context('given the session has not been destroyed', () => {
+
+        it('should commit the session.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+          const session = await getSession();
+          if (session) {
+            ctx.session = session;
+          }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+
+          await postHookFunction(new HttpResponseOK());
+
+          strictEqual(services.get(Store).updateCalledWith?.state.id, ctx.session.getToken());
+        });
+
+        context('given options.cookie is false or not defined', () => {
+
+          it('should not set a cookie in the response.', async () => {
+            const postHookFunction = await hook(ctx, services);
+            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+              throw new Error('The hook should return a post hook function');
+            }
+            const session = await getSession();
+            if (session) {
+              ctx.session = session;
+            }
+            if (!ctx.session) {
+              throw new Error('ctx.session should be defined');
+            }
+
+            const response = new HttpResponseOK();
+            await postHookFunction(response);
+
+            deepStrictEqual(response.getCookies(), {});
+          });
+
+        });
+
+        context('given options.cookie is true', () => {
+
+          beforeEach(() => {
+            hook = getHookFunction(Token({ store: Store, cookie: true }));
+            const token = ctx.request.get('Authorization');
+            if (token) {
+              ctx = createContext(
+                {},
+                {
+                  [SESSION_DEFAULT_COOKIE_NAME]: token.split('Bearer ')[1]
+                },
+              );
+            } else {
+              ctx = createContext();
+            }
+          });
+
+          it('should set a cookie in the response with the session to extend its lifetime on the client.', async () => {
+            const postHookFunction = await hook(ctx, services);
+            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+              throw new Error('The hook should return a post hook function');
+            }
+            const session = await getSession();
+            if (session) {
+              ctx.session = session;
+            }
+            if (!ctx.session) {
+              throw new Error('ctx.session should be defined');
+            }
+
+            const response = new HttpResponseOK();
+            await postHookFunction(response);
+
+            const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+            strictEqual(value, ctx.session.getToken());
+            deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
+          });
+
+        });
+
+      });
+
+    }
 
   });
 

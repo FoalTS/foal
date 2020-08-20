@@ -403,7 +403,7 @@ function storeTestSuite(type: DBType) {
 
       });
 
-      context.only('given a session already exists in the database with the given ID', () => {
+      context('given a session already exists in the database with the given ID', () => {
 
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
