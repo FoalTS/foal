@@ -4,7 +4,7 @@
 
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
 
-In FoalTS, web sessions are temporary states associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
+In FoalTS, web sessions are temporary states that can be associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
 
 A session usually begins when the user logs in and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.
 
@@ -119,7 +119,7 @@ class ApiController {
 >
 > ```typescript
 > const token = // ...
-> const session = await store.read(token);
+> const session = await readSession(store, token);
 > if (!session) {
 >   throw new Error('Session does not exist or has expired.')
 > }
@@ -330,6 +330,7 @@ export async function main(args: { token: string }) {
   await createConnection();
 
   const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
+  // If store is MongoDBStore or RedisStore: await store.boot();
   await store.destroy(args.token);
 }
 ```
@@ -362,6 +363,7 @@ export async function main() {
   await createConnection();
 
   const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
+  // If store is MongoDBStore or RedisStore: await store.boot();
   await store.clear();
 }
 ```
@@ -443,6 +445,17 @@ This can be done with flash content. The data will only be available on the next
 
 ```typescript
 ctx.session.set('error', 'Incorrect email or password', { flash: true });
+```
+
+## Cleanup Regularly Expired Sessions
+
+By default, FoalTS removes expired sessions in `TypeORMStore` and `RedisStore` every 50 requests on average. This can be changed with this configuration key:
+
+```yaml
+settings:
+  session:
+    garbageCollector:
+      periodicity: 25
 ```
 
 ## Session Stores
