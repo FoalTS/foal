@@ -442,9 +442,13 @@ describe('Session', () => {
         await session.commit();
 
         state = typeof state === 'function' ? state() : state;
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.id, state.id);
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.userId, state.userId);
+        // tslint:disable-next-line
         deepStrictEqual(store[calledWithPropertyName]?.state.content, state.content);
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.createdAt, state.createdAt);
       });
 
@@ -454,6 +458,7 @@ describe('Session', () => {
         session.setUser(user);
         await session.commit();
 
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.userId, user.id);
       });
 
@@ -463,6 +468,7 @@ describe('Session', () => {
         session.setUser(user);
         await session.commit();
 
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.userId, user.id);
       });
 
@@ -471,6 +477,7 @@ describe('Session', () => {
         session.setUser(user);
         await session.commit();
 
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.userId, 1);
       });
 
@@ -479,6 +486,7 @@ describe('Session', () => {
         session.setUser(user as any);
         await session.commit();
 
+        // tslint:disable-next-line
         strictEqual(store[calledWithPropertyName]?.state.userId, user._id);
       });
 
@@ -486,9 +494,11 @@ describe('Session', () => {
         session.set('foo', 'bar');
         await session.commit();
 
+        // tslint:disable-next-line
         deepStrictEqual(store[calledWithPropertyName]?.state.content, {
           foo: 'bar'
         });
+        // tslint:disable-next-line
         deepStrictEqual(store[calledWithPropertyName]?.state.flash, {});
       });
 
@@ -497,7 +507,9 @@ describe('Session', () => {
         await session.commit();
 
         state = typeof state === 'function' ? state() : state;
+        // tslint:disable-next-line
         deepStrictEqual(store[calledWithPropertyName]?.state.content, state.content);
+        // tslint:disable-next-line
         deepStrictEqual(store[calledWithPropertyName]?.state.flash, {
           hello: 'world'
         });
@@ -530,6 +542,7 @@ describe('Session', () => {
 
         it('from the framework default values.', async () => {
           await session.commit();
+          // tslint:disable-next-line
           strictEqual(store[calledWithPropertyName]?.maxInactivity, SESSION_DEFAULT_INACTIVITY_TIMEOUT);
         });
 
@@ -537,6 +550,7 @@ describe('Session', () => {
           process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '1';
 
           await session.commit();
+          // tslint:disable-next-line
           strictEqual(store[calledWithPropertyName]?.maxInactivity, 1);
         });
 

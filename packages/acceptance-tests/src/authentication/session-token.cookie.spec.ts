@@ -13,7 +13,7 @@ import {
   Context, controller, createApp, createSession, dependency,
   Get, hashPassword, HttpResponseNoContent,
   HttpResponseOK, HttpResponseUnauthorized,
-  Post, setSessionCookie, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  Post, TokenOptional, TokenRequired, ValidateBody, verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -58,23 +58,28 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
+    @TokenOptional({
+      cookie: true,
+      store: TypeORMStore,
+    })
     async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
       await getRepository(User).save(user);
 
-      const session = await createSession(this.store);
-      session.setUser(user);
-      await session.commit();
+      ctx.session = await createSession(this.store);
+      ctx.session.setUser(user);
 
-      const response = new HttpResponseNoContent();
-      setSessionCookie(response, session);
-      return response;
+      return new HttpResponseNoContent();
     }
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
+    @TokenOptional({
+      cookie: true,
+      store: TypeORMStore,
+    })
     async login(ctx: Context) {
       const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
@@ -86,13 +91,10 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
         return new HttpResponseUnauthorized();
       }
 
-      const session = await createSession(this.store);
-      session.setUser(user);
-      await session.commit();
+      ctx.session = await createSession(this.store);
+      ctx.session.setUser(user);
 
-      const response = new HttpResponseNoContent();
-      setSessionCookie(response, session);
-      return response;
+      return new HttpResponseNoContent();
     }
 
     @Post('/logout')

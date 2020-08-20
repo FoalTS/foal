@@ -4,6 +4,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
+  Context,
   controller,
   createApp,
   createSession,
@@ -12,8 +13,8 @@ import {
   HttpResponseCreated,
   HttpResponseOK,
   Post,
-  setSessionCookie,
-  TokenRequired
+  TokenOptional,
+  TokenRequired,
 } from '@foal/core';
 import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
@@ -29,15 +30,17 @@ describe('[CSRF|spa and api|stateful] Users', () => {
     store: TypeORMStore;
 
     @Post('/login')
-    async login() {
-      const session = await createSession(this.store);
-      session.set('csrfToken', await generateToken());
-      session.setUser({ id: 1 });
-      await session.commit();
+    @TokenOptional({
+      cookie: true,
+      store: TypeORMStore,
+    })
+    async login(ctx: Context) {
+      ctx.session = await createSession(this.store);
+      ctx.session.set('csrfToken', await generateToken());
+      ctx.session.setUser({ id: 1 });
 
       const response = new HttpResponseOK();
-      setSessionCookie(response, session);
-      setCsrfCookie(response, await getCsrfToken(session));
+      setCsrfCookie(response, await getCsrfToken(ctx.session));
       return response;
     }
   }
@@ -83,8 +86,8 @@ describe('[CSRF|spa and api|stateful] Users', () => {
       .expect(200)
       .then(response => {
         const cookies = response.header['set-cookie'];
-        sessionToken = cookies[0].split('sessionID=')[1].split(';')[0];
-        csrfToken = cookies[1].split('csrfToken=')[1].split(';')[0];
+        csrfToken = cookies[0].split('csrfToken=')[1].split(';')[0];
+        sessionToken = cookies[1].split('sessionID=')[1].split(';')[0];
       });
   });
 

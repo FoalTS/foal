@@ -40,6 +40,7 @@ describe('readSession', () => {
       this.saveCalledWith = { state, maxInactivity };
     }
     async read(id: string): Promise<SessionState | null> {
+      // tslint:disable-next-line
       return this.sessionStates.get(id) ?? null;
     }
     async update(state: SessionState, maxInactivity: number): Promise<void> {
@@ -89,6 +90,7 @@ describe('readSession', () => {
 
           await session.commit();
 
+          // tslint:disable-next-line
           const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
           if (!state) {
             throw new Error('state should be defined.');
@@ -111,7 +113,9 @@ describe('readSession', () => {
 
           await session.commit();
 
+          // tslint:disable-next-line
           notStrictEqual(store.updateCalledWith?.state, undefined);
+          // tslint:disable-next-line
           strictEqual(store.saveCalledWith?.state, undefined);
         });
 

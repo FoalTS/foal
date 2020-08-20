@@ -86,6 +86,7 @@ export class Session {
    * @memberof Session
    */
   setUser(user: { id: number|string|object } | { _id: number|string|object }): void {
+    // tslint:disable-next-line
     const id: number|string|object = (user as any).id ?? (user as any)._id;
     if (typeof id === 'object') {
       this.state.userId = id.toString();
