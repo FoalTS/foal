@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import {
@@ -9,6 +9,7 @@ import {
   getApiResponses,
   getApiSecurity,
   getHookFunction,
+  HookFunction,
   HttpResponseOK,
   IApiComponents,
   IApiSecurityRequirement,
@@ -18,228 +19,227 @@ import {
   isHttpResponseUnauthorized,
   ServiceManager
 } from '../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { Session } from './session';
-import { SessionOptions, SessionStore } from './session-store';
+import {
+  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+  SESSION_DEFAULT_COOKIE_NAME,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT
+} from './constants';
+import { SessionState } from './session-state.interface';
+import { SessionStore } from './session-store';
 import { TokenOptional } from './token-optional.hook';
 import { TokenRequired } from './token-required.hook';
 
 export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, required: boolean) {
-  const user = { id: 1 };
 
-  const fetchUser = async (id: number|string) => id === 1 ? user : null;
+  const anonymousSessionID = 'sjqkfhehlkajazeincudbuqslnd';
+  const authenticatedSessionID = 'jdhzialoenfurhhfbghdfjh';
+  const userId = 1;
 
-  class Store extends SessionStore {
-    updateCalledWith: Session|undefined = undefined;
-    extendLifeTimeCalledWith: string|undefined = undefined;
-
-    private sessions: Session[] = [];
-
-    async clear(): Promise<void> {
-      this.sessions = [];
-    }
-    async update(session: Session): Promise<void> {
-      this.updateCalledWith = session;
-    }
-    async destroy(sessionID: string): Promise<void> {}
-    async extendLifeTime(sessionID: string): Promise<void> {
-      this.extendLifeTimeCalledWith = sessionID;
-    }
-    cleanUpExpiredSessions(): Promise<void> {
-      throw new Error('Method not implemented.');
-    }
-    async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
-      const sessionID = await this.generateSessionID();
-      const session = new Session(this, {
-        content: sessionContent,
-        createdAt: Date.now(),
-        flash: {},
-        id: sessionID,
-        userId: options.userId
-      });
-      this.sessions.push(session);
-      return session;
-    }
-    async read(sessionID: string): Promise<Session|undefined> {
-      return this.sessions.find(session => session.getState().id === sessionID);
-    }
-  }
-
-  const hook = getHookFunction(Token({ store: Store }));
-
+  let ctx: Context;
+  let hook: HookFunction;
   let services: ServiceManager;
 
-  before(() => services = new ServiceManager());
+  class Store extends SessionStore {
+    updateCalledWith: { state: SessionState, maxInactivity: number } | undefined;
+    sessions: SessionState[] = [
+      // Anonymous session
+      {
+        content: { foo: 'bar' },
+        createdAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2),
+        flash: {},
+        id: anonymousSessionID,
+        // The differenece is required in order to test that the session and cookie lifetime are extended.
+        updatedAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2),
+        userId: null,
+      },
+      // Sessions with a user ID
+      {
+        content: { foo: 'bar' },
+        createdAt: Math.trunc(Date.now() / 1000),
+        flash: {},
+        id: authenticatedSessionID,
+        updatedAt: Math.trunc(Date.now() / 1000),
+        userId,
+      }
+    ];
+
+    save(state: SessionState, maxInactivity: number): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    async read(id: string): Promise<SessionState | null> {
+      return this.sessions.find(state => state.id === id) || null;
+    }
+    async update(state: SessionState, maxInactivity: number): Promise<void> {
+      this.updateCalledWith = { state, maxInactivity };
+    }
+    async destroy(id: string): Promise<void> {}
+    clear(): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {}
+  }
+
+  function createContext(headers: { [key: string]: string } = {}, cookies: { [key: string]: string } = {}) {
+    return new Context({
+      get(key: string) { return headers[key]; },
+      cookies,
+    });
+  }
+
+  beforeEach(() => {
+    ctx = createContext();
+    hook = getHookFunction(Token({ store: Store }));
+    services = new ServiceManager();
+  });
 
   afterEach(() => {
     delete process.env.SETTINGS_SESSION_COOKIE_NAME;
     delete process.env.SETTINGS_SESSION_STORE;
   });
 
-  beforeEach(() => {
-    services.get(Store).clear();
-  });
+  context('given no session store class is provided as option', () => {
 
-  describe('when no session store class is provided as option', () => {
+    beforeEach(() => hook = getHookFunction(Token({})));
 
-    it('should throw an error if the configuration value settings.session.store is empty.', async () => {
-      const hook = getHookFunction(Token({}));
-
-      const ctx = new Context({});
-
-      try {
-        await hook(ctx, services);
-        throw new Error('The hook should have thrown an error.');
-      } catch (error) {
-        if (!(error instanceof ConfigNotFoundError)) {
-          throw new Error('A ConfigNotFoundError should have been thrown');
-        }
-        strictEqual(error.key, 'settings.session.store');
-      }
+    it('should throw an error if the configuration value settings.session.store is empty.', () => {
+      return rejects(
+        () => hook(ctx, services),
+        new ConfigNotFoundError('settings.session.store')
+      );
     });
 
-    // TODO: improve this test. This code actually tests that no error is thrown but not that
-    // the ConcreteSessionStore is assigned to options.store.
-    it('should use the session store package provided in settings.session.store.', async () => {
+    it('should use the session store package provided in settings.session.store.', () => {
       process.env.SETTINGS_SESSION_STORE = '@foal/internal-test';
 
-      const hook = getHookFunction(Token({}));
-
-      const ctx = new Context({});
-
-      try {
-        await hook(ctx, services);
-        throw new Error('The hook should have thrown an error.');
-      } catch (error) {
-        strictEqual(
-          error.message,
-          'ctx.request.get is not a function'
-        );
-      }
+      return doesNotReject(() => hook(ctx, services));
     });
 
   });
 
   describe('should validate the request and', () => {
 
-    describe('given options.cookie is false or not defined', () => {
+    context('given options.cookie is false or not defined', () => {
 
-      if (required) {
+      if (!required) {
+        it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
+          const response = await hook(ctx, services);
 
-        it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
-          const ctx = new Context({ get(str: string) { return undefined; } });
+          strictEqual(response, undefined);
+          strictEqual(ctx.user, undefined);
+        });
+      }
+
+      context('given options.redirectTo is not defined', () => {
+
+        if (required) {
+          it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
+            const response = await hook(ctx, services);
+            if (!isHttpResponseBadRequest(response)) {
+              throw new Error('Response should be an instance of HttpResponseBadRequest.');
+            }
+
+            deepStrictEqual(response.body, {
+              code: 'invalid_request',
+              description: 'Authorization header not found.'
+            });
+          });
+        }
+
+        it('should return an HttpResponseBadRequest object if the Authorization header does '
+            + 'not use the Bearer scheme.', async () => {
+          const ctx = createContext({ Authorization: 'Basic hello' });
 
           const response = await hook(ctx, services);
           if (!isHttpResponseBadRequest(response)) {
             throw new Error('Response should be an instance of HttpResponseBadRequest.');
           }
+
           deepStrictEqual(response.body, {
             code: 'invalid_request',
-            description: 'Authorization header not found.'
+            description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
           });
         });
 
-        it('should return an HttpResponseRedirect object if the Authorization header does not exist'
-          + ' (options.redirectTo is defined).', async () => {
-          const ctx = new Context({ get(str: string) { return undefined; } });
+      });
 
-          const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
+      context('given options.redirectTo is defined', () => {
+
+        beforeEach(() => hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' })));
+
+        if (required) {
+          it('should return an HttpResponseRedirect object if the Authorization header does not exist.', async () => {
+            const response = await hook(ctx, services);
+            if (!isHttpResponseRedirect(response)) {
+              throw new Error('Response should be an instance of HttpResponseRedirect.');
+            }
+
+            strictEqual(response.path, '/foo');
+          });
+        }
+
+        it('should return an HttpResponseBadRedirect object if the Authorization header does '
+            + 'not use the Bearer scheme.', async () => {
+          const ctx = createContext({ Authorization: 'Basic hello' });
 
           const response = await hook(ctx, services);
           if (!isHttpResponseRedirect(response)) {
             throw new Error('Response should be an instance of HttpResponseRedirect.');
           }
+
           strictEqual(response.path, '/foo');
         });
 
-      } else  {
-
-        it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
-          const ctx = new Context({ get(str: string) { return undefined; } });
-
-          const response = await hook(ctx, services);
-          strictEqual(response, undefined);
-          strictEqual(ctx.user, undefined);
-        });
-
-      }
-
-      it('should return an HttpResponseBadRequest object if the Authorization header does '
-          + 'not use the Bearer scheme.', async () => {
-        const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
-
-        const response = await hook(ctx, services);
-
-        if (!isHttpResponseBadRequest(response)) {
-          throw new Error('Response should be an instance of HttpResponseBadRequest.');
-        }
-        deepStrictEqual(response.body, {
-          code: 'invalid_request',
-          description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
-        });
-      });
-
-      it('should return an HttpResponseBadRedirect object if the Authorization header does '
-          + 'not use the Bearer scheme (options.redirectTo is defined).', async () => {
-        const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
-
-        const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
-
-        const response = await hook(ctx, services);
-
-        if (!isHttpResponseRedirect(response)) {
-          throw new Error('Response should be an instance of HttpResponseRedirect.');
-        }
-        strictEqual(response.path, '/foo');
       });
 
     });
 
-    describe('given options.cookie is true', () => {
+    context('given options.cookie is true', () => {
 
-      if (required) {
+      beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
 
-        it('should return an HttpResponseBadRequest object if the cookie does not exist.' , async () => {
-          const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
-
-          const response = await hook(ctx, services);
-          if (!isHttpResponseBadRequest(response)) {
-            throw new Error('Response should be an instance of HttpResponseBadRequest.');
-          }
-          deepStrictEqual(response.body, {
-            code: 'invalid_request',
-            description: 'Session cookie not found.'
-          });
-        });
-
-        it('should return an HttpResponseRedirect object if the cookie does not exist'
-            + ' (options.redirectTo is defined).' , async () => {
-          const hook = getHookFunction(Token({ store: Store, cookie: true, redirectTo: '/foo' }));
-
-          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
-
-          const response = await hook(ctx, services);
-          if (!isHttpResponseRedirect(response)) {
-            throw new Error('Response should be an instance of HttpResponseRedirect.');
-          }
-          strictEqual(response.path, '/foo');
-        });
-
-      } else {
-
+      if (!required) {
         it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
-          const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
-
           const response = await hook(ctx, services);
+
           strictEqual(response, undefined);
           strictEqual(ctx.user, undefined);
         });
-
       }
+
+      context('given options.redirectTo is not defined', () => {
+
+        if (required) {
+          it('should return an HttpResponseBadRequest object if the cookie does not exist.' , async () => {
+            const response = await hook(ctx, services);
+            if (!isHttpResponseBadRequest(response)) {
+              throw new Error('Response should be an instance of HttpResponseBadRequest.');
+            }
+
+            deepStrictEqual(response.body, {
+              code: 'invalid_request',
+              description: 'Session cookie not found.'
+            });
+          });
+        }
+
+      });
+
+      context('given options.redirectTo is defined', () => {
+
+        beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true, redirectTo: '/foo' })));
+
+        if (required) {
+          it('should return an HttpResponseRedirect object if the cookie does not exist.', async () => {
+            const response = await hook(ctx, services);
+            if (!isHttpResponseRedirect(response)) {
+              throw new Error('Response should be an instance of HttpResponseRedirect.');
+            }
+
+            strictEqual(response.path, '/foo');
+          });
+        }
+
+      });
 
     });
 
@@ -247,62 +247,46 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should verify the session ID and', () => {
 
-    it('should return an HttpResponseUnauthorized object if no session matching the ID is found.', async () => {
-      const session = await services.get(Store).createAndSaveSessionFromUser({ id: 2 });
-      const token = session.getToken();
+    beforeEach(() => ctx = createContext({ Authorization: 'Bearer xxx' }));
 
-      await services.get(Store).clear();
+    context('given options.redirectTo not defined', () => {
 
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      it('should return an HttpResponseUnauthorized object if no session matching the ID is found.', async () => {
+        const response = await hook(ctx, services);
+        if (!isHttpResponseUnauthorized(response)) {
+          throw new Error('response should be instance of HttpResponseUnauthorized');
+        }
+
+        deepStrictEqual(response.body, {
+          code: 'invalid_token',
+          description: 'token invalid or expired'
+        });
+        strictEqual(
+          response.getHeader('WWW-Authenticate'),
+          'error="invalid_token", error_description="token invalid or expired"'
+        );
       });
 
-      const response = await hook(ctx, services);
-      if (!isHttpResponseUnauthorized(response)) {
-        throw new Error('response should be instance of HttpResponseUnauthorized');
-      }
-      deepStrictEqual(response.body, {
-        code: 'invalid_token',
-        description: 'token invalid or expired'
-      });
-      strictEqual(
-        response.getHeader('WWW-Authenticate'),
-        'error="invalid_token", error_description="token invalid or expired"'
-      );
     });
 
-    it('should return an HttpResponseRedirect object if no session matching the ID is found'
-        + ' (options.redirectTo is defined).', async () => {
-      const session = await services.get(Store).createAndSaveSessionFromUser({ id: 2 });
-      const token = session.getToken();
+    context('given options.redirectTo is defined', () => {
 
-      await services.get(Store).clear();
+      beforeEach(() => hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' })));
 
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+      it('should return an HttpResponseRedirect object if no session matching the ID is found.', async () => {
+        const response = await hook(ctx, services);
+        if (!isHttpResponseRedirect(response)) {
+          throw new Error('response should be instance of HttpResponseRedirect');
+        }
+
+        strictEqual(response.path, '/foo');
       });
 
-      const hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' }));
-
-      const response = await hook(ctx, services);
-      if (!isHttpResponseRedirect(response)) {
-        throw new Error('response should be instance of HttpResponseRedirect');
-      }
-      strictEqual(response.path, '/foo');
     });
 
-    describe('given options.cookie is false or not defined', () => {
+    context('given options.cookie is false or not defined', () => {
 
       it('should not set a cookie in the response if no session matching the ID is found.', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 3 });
-        const token = session.getToken();
-
-        await services.get(Store).clear();
-
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-
         const response = await hook(ctx, services);
         if (!isHttpResponse(response)) {
           throw new Error('response should be instance of HttpResponse');
@@ -312,22 +296,17 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     });
 
-    describe('given options.cookie is true', () => {
+    context('given options.cookie is true', () => {
+
+      beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
 
       it('should remove the cookie in the response if no session matching the ID is found.', async () => {
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 4 });
-        const token = session.getToken();
-
-        await services.get(Store).clear();
-
-        const ctx = new Context({
-          get(str: string) { return undefined; },
-          cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: token,
-          }
-        });
+        ctx = createContext(
+          {},
+          {
+            [SESSION_DEFAULT_COOKIE_NAME]: 'xxx',
+          },
+        );
 
         const response = await hook(ctx, services);
         if (!isHttpResponse(response)) {
@@ -343,162 +322,143 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   });
 
+  describe('should set Context.session', () => {
+
+    afterEach(() => delete process.env.SETTINGS_SESSION_COOKIE_NAME);
+
+    it('with the session.', async () => {
+      ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`});
+
+      await hook(ctx, services);
+
+      const session = ctx.session;
+      if (!session) {
+        throw new Error('No session found at Context.session');
+      }
+
+      strictEqual(session.getToken(), anonymousSessionID);
+      strictEqual(session.get('foo'), 'bar');
+    });
+
+    // This test might be put in a better place.
+    it('with the session (custom cookie name).', async () => {
+      process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
+
+      ctx = createContext({}, { auth2: anonymousSessionID });
+      hook = getHookFunction(Token({ store: Store, cookie: true }));
+
+      await hook(ctx, services);
+
+      const session = ctx.session;
+      if (!session) {
+        throw new Error('No session found at Context.session');
+      }
+
+      strictEqual(session.getToken(), anonymousSessionID);
+      strictEqual(session.get('foo'), 'bar');
+    });
+
+  });
+
   describe('should set Context.user', () => {
 
-    describe('given options.user is not defined', () => {
+    context('given the session is anonymous (no user ID)', () => {
 
-      it('with the user id (header).', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 36 });
-        const token = session.getToken();
+      beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-
+      it('with the undefined value.', async () => {
         const response = await hook(ctx, services);
         strictEqual(isHttpResponse(response), false);
 
-        strictEqual(ctx.user, 36);
+        strictEqual(ctx.user, undefined);
       });
 
-      it('with the user id (cookie).', async () => {
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 35 });
-        const token = session.getToken();
-
-        const ctx = new Context({
-          cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: token
-          },
-          get(str: string) { return undefined; }
-        });
-
-        const response = await hook(ctx, services);
-        strictEqual(isHttpResponse(response), false);
-
-        strictEqual(ctx.user, 35);
-      });
-
-      it('with the user id (cookie with a custom name).', async () => {
-        process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 34 });
-        const token = session.getToken();
-
-        const ctx = new Context({
-          cookies: {
-            auth2: token
-          },
-          get(str: string) { return undefined; }
-        });
-
-        const response = await hook(ctx, services);
-        strictEqual(isHttpResponse(response), false);
-
-        strictEqual(ctx.user, 34);
-      });
+      // ...
 
     });
 
-    describe('given options.user is defined', () => {
+    context('given the session has a user ID', () => {
 
-      it('with the user retrieved from the database (userId is a number).', async () => {
-        const fetchUser = async (id: number|string) => id === 1 ? user : null;
-        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+      beforeEach(() => ctx = createContext({ Authorization: `Bearer ${authenticatedSessionID}`}));
 
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 1 });
-        const token = session.getToken();
+      context('given options.user is not defined', () => {
 
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        it('with the undefined value.', async () => {
+          const response = await hook(ctx, services);
+          strictEqual(isHttpResponse(response), false);
+
+          strictEqual(ctx.user, undefined);
         });
 
-        const response = await hook(ctx, services);
-        strictEqual(isHttpResponse(response), false);
-        strictEqual(ctx.user, user);
       });
 
-      it('with the user retrieved from the database (userId is a string).', async () => {
-        const fetchUser = async (id: number|string) => id === '1' ? user : null;
-        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+      context('given options.user is defined', () => {
 
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: '1' });
-        const token = session.getToken();
+        const user = { id: userId };
 
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        beforeEach(() => {
+          const fetchUser = async (id: number|string) => id === userId ? user : undefined;
+          hook = getHookFunction(Token({ store: Store, user: fetchUser }));
         });
 
-        const response = await hook(ctx, services);
-        strictEqual(isHttpResponse(response), false);
-        strictEqual(ctx.user, user);
-      });
+        it('with the user retrieved from the function options.user if it returns a user.', async () => {
+          const response = await hook(ctx, services);
 
-      it('or throw an Error if the session userId is not of type "string" or "number".', async () => {
-        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
-
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: null } as any);
-        const sessionID = session.getState().id;
-        const token = session.getToken();
-
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+          strictEqual(isHttpResponse(response), false);
+          strictEqual(ctx.user, user);
         });
 
-        try {
-          await hook(ctx, services);
-          throw new Error('The hook should have thrown an error.');
-        } catch (error) {
-          strictEqual(
-            error.message,
-            `The "userId" value of the session ${sessionID} must be a string or a number. Got "object".`
+        context('given options.redirectTo is not defined', () => {
+
+          it(
+            'with the undefined value and should return an HttpResponseUnauthorized object'
+            + ' if the function options.user returns null.',
+            async () => {
+              const fetchUser = async (id: number|string) => undefined;
+              hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+
+              const response = await hook(ctx, services);
+
+              strictEqual(ctx.user, undefined);
+
+              if (!isHttpResponseUnauthorized(response)) {
+                throw new Error('response should be instance of HttpResponseUnauthorized');
+              }
+              deepStrictEqual(response.body, {
+                code: 'invalid_token',
+                description: 'The token does not match any user.'
+              });
+              strictEqual(
+                response.getHeader('WWW-Authenticate'),
+                'error="invalid_token", error_description="The token does not match any user."'
+              );
+            }
           );
-        }
-      });
 
-      it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '
-          + 'with the given user Id.', async () => {
-        const hook = getHookFunction(Token({ store: Store, user: fetchUser }));
-
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 2 });
-        const token = session.getToken();
-
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
         });
 
-        const response = await hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('response should be instance of HttpResponseUnauthorized');
-        }
-        deepStrictEqual(response.body, {
-          code: 'invalid_token',
-          description: 'The token does not match any user.'
-        });
-        strictEqual(
-          response.getHeader('WWW-Authenticate'),
-          'error="invalid_token", error_description="The token does not match any user."'
-        );
-      });
+        context('given options.redirectTo is defined', () => {
 
-      it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '
-          + 'with the given user Id (options.redirectTo is defined).', async () => {
-        const hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+          it(
+            'with the null value and should return an HttpResponseRedirect object'
+            + ' if the function options.user returns null.',
+            async () => {
+              const fetchUser = async (id: number|string) => undefined;
+              hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
 
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 2 });
-        const token = session.getToken();
+              const response = await hook(ctx, services);
 
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+              strictEqual(ctx.user, undefined);
+
+              if (!isHttpResponseRedirect(response)) {
+                throw new Error('response should be instance of HttpResponseRedirect');
+              }
+              strictEqual(response.path, '/foo');
+            }
+          );
+
         });
 
-        const response = await hook(ctx, services);
-        if (!isHttpResponseRedirect(response)) {
-          throw new Error('response should be instance of HttpResponseRedirect');
-        }
-        strictEqual(response.path, '/foo');
       });
 
     });
@@ -507,64 +467,82 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should return a post-hook function that', () => {
 
-    beforeEach(() => {
-      services.get(Store).updateCalledWith = undefined;
-      services.get(Store).extendLifeTimeCalledWith = undefined;
-    });
+    beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-    it('should update the session and extend its lifetime if it has been modified.', async () => {
-      const session = await services.get(Store).createAndSaveSessionFromUser({ id: 7 });
-      const token = session.getToken();
+    context('given the session has been destroyed', () => {
 
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      it('should not throw an error trying to save the session', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+          await ctx.session.destroy();
 
-      const postHookFunction = await hook(ctx, services);
-      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-        throw new Error('The hook should return a post hook function');
-      }
-      if (!ctx.session) {
-        throw new Error('ctx.session should be defined');
-      }
-      ctx.session.set('something', 1); // set "isModified" to "true"
-      await postHookFunction(new HttpResponseOK());
+          return doesNotReject(() => postHookFunction(new HttpResponseOK()));
+        }
+      );
 
-      strictEqual(services.get(Store).updateCalledWith, ctx.session);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
-    });
+      context('given options.cookie is false or not defined', () => {
 
-    it('should extend the session lifetime if it has not been modified.', async () => {
-      const session = await services.get(Store).createAndSaveSessionFromUser({ id: 8 });
-      const token = session.getToken();
+        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+        it('should not remove a session cookie in the response (it can belongs to another application).', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+          const response = new HttpResponseOK();
+          await ctx.session.destroy();
 
-      const postHookFunction = await hook(ctx, services);
-      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-        throw new Error('The hook should return a post hook function');
-      }
-      if (!ctx.session) {
-        throw new Error('ctx.session should be defined');
-      }
-      // Do not set "isModified" to "true"
-      await postHookFunction(new HttpResponseOK());
+          await postHookFunction(response);
 
-      strictEqual(services.get(Store).updateCalledWith, undefined);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, session.getState().id);
-    });
-
-    it('should not update the session or extend its lifetime if session.isDestroyed is true'
-      + ' (isModified === true).', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 7 });
-        const token = session.getToken();
-
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+          deepStrictEqual(response.getCookies(), {});
         });
 
+      });
+
+      context('given options.cookie is true', () => {
+
+        beforeEach(() => {
+          hook = getHookFunction(Token({ store: Store, cookie: true }));
+          ctx = createContext(
+            {},
+            {
+              [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID
+            },
+          );
+        });
+
+        it('should remove the session cookie.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+          const response = new HttpResponseOK();
+          await ctx.session.destroy();
+          await postHookFunction(response);
+
+          const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+          strictEqual(value, '');
+          deepStrictEqual(options.maxAge, 0);
+        });
+
+      });
+
+    });
+
+    context('given the session has not been destroyed', () => {
+
+      it('should commit the session.', async () => {
         const postHookFunction = await hook(ctx, services);
         if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
           throw new Error('The hook should return a post hook function');
@@ -572,120 +550,57 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         if (!ctx.session) {
           throw new Error('ctx.session should be defined');
         }
-        ctx.session.set('something', 1); // set "isModified" to "true"
-        await ctx.session.destroy();
         await postHookFunction(new HttpResponseOK());
 
-        strictEqual(services.get(Store).updateCalledWith, undefined);
-        strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
-      }
-    );
-
-    it('should not extend the session lifetime if session.isDestroyed is true (isModified === false).', async () => {
-      const session = await services.get(Store).createAndSaveSessionFromUser({ id: 8 });
-      const token = session.getToken();
-
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
+        strictEqual(services.get(Store).updateCalledWith?.state.id, ctx.session.getToken());
       });
 
-      const postHookFunction = await hook(ctx, services);
-      if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-        throw new Error('The hook should return a post hook function');
-      }
-      if (!ctx.session) {
-        throw new Error('ctx.session should be defined');
-      }
-      // Do not set "isModified" to "true"
-      await ctx.session.destroy();
-      await postHookFunction(new HttpResponseOK());
+      context('given options.cookie is false or not defined', () => {
 
-      strictEqual(services.get(Store).updateCalledWith, undefined);
-      strictEqual(services.get(Store).extendLifeTimeCalledWith, undefined);
-    });
-
-    describe('given options.cookie is false or not defined', () => {
-
-      it('should not set a cookie in the response.', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 8 });
-        const token = session.getToken();
-
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
-
-        const postHookFunction = await hook(ctx, services);
-        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-          throw new Error('The hook should return a post hook function');
-        }
-        if (!ctx.session) {
-          throw new Error('ctx.session should be defined');
-        }
-        const response = new HttpResponseOK();
-        await postHookFunction(response);
-
-        deepStrictEqual(response.getCookies(), {});
-      });
-
-    });
-
-    describe('given options.cookie is true', () => {
-
-      it('should set a cookie in the response with the token to extend its lifetime on the client.', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 8 });
-        const token = session.getToken();
-
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const ctx = new Context({
-          get(str: string) { return undefined; },
-          cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: token
+        it('should not set a cookie in the response.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
           }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+          const response = new HttpResponseOK();
+          await postHookFunction(response);
+
+          deepStrictEqual(response.getCookies(), {});
         });
 
-        const postHookFunction = await hook(ctx, services);
-        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-          throw new Error('The hook should return a post hook function');
-        }
-        if (!ctx.session) {
-          throw new Error('ctx.session should be defined');
-        }
-        const response = new HttpResponseOK();
-        await postHookFunction(response);
-
-        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(value, session.getToken());
-        deepStrictEqual(options.maxAge, SessionStore.getExpirationTimeouts().inactivity);
       });
 
-      it('should remove the session cookie if session.isDestroyed is true.', async () => {
-        const session = await services.get(Store).createAndSaveSessionFromUser({ id: 8 });
-        const token = session.getToken();
+      context('given options.cookie is true', () => {
 
-        const hook = getHookFunction(Token({ store: Store, cookie: true }));
-
-        const ctx = new Context({
-          get(str: string) { return undefined; },
-          cookies: {
-            [SESSION_DEFAULT_COOKIE_NAME]: token
-          }
+        beforeEach(() => {
+          hook = getHookFunction(Token({ store: Store, cookie: true }));
+          ctx = createContext(
+            {},
+            {
+              [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID
+            },
+          );
         });
 
-        const postHookFunction = await hook(ctx, services);
-        if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-          throw new Error('The hook should return a post hook function');
-        }
-        if (!ctx.session) {
-          throw new Error('ctx.session should be defined');
-        }
-        const response = new HttpResponseOK();
-        await ctx.session.destroy();
-        await postHookFunction(response);
+        it('should set a cookie in the response with the session to extend its lifetime on the client.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+          if (!ctx.session) {
+            throw new Error('ctx.session should be defined');
+          }
+          const response = new HttpResponseOK();
+          await postHookFunction(response);
 
-        const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(value, '');
-        deepStrictEqual(options.maxAge, 0);
+          const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+          strictEqual(value, anonymousSessionID);
+          deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
+        });
+
       });
 
     });

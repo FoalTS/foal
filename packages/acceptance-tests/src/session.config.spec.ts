@@ -1,5 +1,15 @@
 import {
-  Context, createApp, dependency, Get, HttpResponseOK, Post, ServiceManager, Session, SessionStore, TokenRequired
+  Context,
+  createApp,
+  createSession,
+  dependency,
+  Get,
+  HttpResponseOK,
+  Post,
+  ServiceManager,
+  Session,
+  SessionStore,
+  TokenRequired,
 } from '@foal/core';
 
 import { strictEqual } from 'assert';
@@ -21,8 +31,8 @@ describe('The session store', () => {
     delete process.env.SETTINGS_SESSION_SECRET;
     // Hack to close the redis connection in this test.
     (serviceManager as any).map.forEach((value: any) => {
-      if (value.service.getRedisInstance) {
-        value.service.getRedisInstance().end(true);
+      if (value.service.close) {
+        value.service.close();
       }
     });
   });
@@ -36,11 +46,11 @@ describe('The session store', () => {
 
       @Post('/login')
       async login(ctx: Context) {
-        const session = await this.store.createAndSaveSession({
-          products: [
-            { name: 'product 1' }
-          ]
-        });
+        const session = await createSession(this.store);
+        session.set('products', [
+          { name: 'product 1' }
+        ]);
+        await session.commit();
 
         return new HttpResponseOK({
           token: session.getToken()

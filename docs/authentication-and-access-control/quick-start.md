@@ -129,7 +129,10 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+      
     return new HttpResponseOK({
       token: session.getToken()
     });
@@ -148,7 +151,10 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+    
     return new HttpResponseOK({
       token: session.getToken()
     });
@@ -302,10 +308,12 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+
     const response = new HttpResponseNoContent();
-    const token = session.getToken();
-    setSessionCookie(response, token);
+    setSessionCookie(response, session);
     return response;
   }
 
@@ -322,10 +330,12 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+
     const response = new HttpResponseNoContent();
-    const token = session.getToken();
-    setSessionCookie(response, token);
+    setSessionCookie(response, session);
     return response;
   }
 
@@ -400,10 +410,12 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+
     const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
+    setSessionCookie(response, session);
     return response;
   }
 
@@ -420,10 +432,12 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
+    const session = await createSession(this.store);
+    session.setUser(user);
+    await session.commit();
+
     const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
+    setSessionCookie(response, session);
     return response;
   }
 

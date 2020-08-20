@@ -4,7 +4,7 @@
 
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
 
-In FoalTS, web sessions are temporary states associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
+In FoalTS, web sessions are temporary states that can be associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
 
 A session usually begins when the user logs in and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.
 
@@ -34,13 +34,15 @@ export class AuthController {
 
 ### Create the Session and Get the Token (Log In)
 
-Sessions are created using the method `createAndSaveSessionFromUser` of the session store. It takes one parameter: an object that must have an `id` attribute (the user id). At login time, the user is usually retrieved upstream when checking credentials.
+Sessions are created using the method `createSession` of the session store.
 
 ```typescript
-const session = await store.createAndSaveSessionFromUser(user);
-// Alternatively, you can also call the `createAndSaveSession` method as follows:
-const session = await store.createAndSaveSession({ userId: user.id });
+const session = await createSession(this.store);
+session.setUser(user);
+await session.commit();
 ```
+
+At login time, the user is usually retrieved upstream when checking credentials.
 
 The session token then can be read with the method `getToken()` to send it back to the client. This token identifies the session.
 
@@ -117,7 +119,7 @@ class ApiController {
 >
 > ```typescript
 > const token = // ...
-> const session = await store.read(token);
+> const session = await readSession(store, token);
 > if (!session) {
 >   throw new Error('Session does not exist or has expired.')
 > }
@@ -166,7 +168,7 @@ export class AuthController {
   login() {
     // ...
     const response = new HttpResponseOK();
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 
@@ -237,7 +239,7 @@ export class Controller {
 
   // ...
   login() {
-    // this.store.createAndSaveSessionFromUser(...)
+    // createSession(this.store)
   }
 
   // ...
@@ -328,6 +330,7 @@ export async function main(args: { token: string }) {
   await createConnection();
 
   const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
+  // If store is MongoDBStore or RedisStore: await store.boot();
   await store.destroy(args.token);
 }
 ```
@@ -360,6 +363,7 @@ export async function main() {
   await createConnection();
 
   const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
+  // If store is MongoDBStore or RedisStore: await store.boot();
   await store.clear();
 }
 ```
@@ -411,7 +415,7 @@ export class ApiController {
 
 ```typescript
 const user = { id: 1 };
-const sessions = await this.store.getSessionsOf(user);
+const ids = await this.store.getSessionIDsOf(user);
 ```
 
 ## Query All Connected Users
@@ -441,6 +445,17 @@ This can be done with flash content. The data will only be available on the next
 
 ```typescript
 ctx.session.set('error', 'Incorrect email or password', { flash: true });
+```
+
+## Cleanup Regularly Expired Sessions
+
+By default, FoalTS removes expired sessions in `TypeORMStore` and `RedisStore` every 50 requests on average. This can be changed with this configuration key:
+
+```yaml
+settings:
+  session:
+    garbageCollector:
+      periodicity: 25
 ```
 
 ## Session Stores
@@ -555,55 +570,51 @@ foal run clean-up-expired-sessions
 If necessary, you can also create your own session store. This one must inherit the abstract class `SessionStore`.
 
 ```typescript
-import { Session, SessionOptions } from '@foal/core';
+import { SessionState, SessionStore } from '@foal/core';
 
 class CustomSessionStore extends SessionStore {
-  createAndSaveSession(sessionContent: any, options?: SessionOptions | undefined): Promise<Session> {
-    throw new Error('Method not implemented.');
+  save(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  update(session: Session): Promise<void> {
-    throw new Error('Method not implemented.');
+  read(id: string): Promise<SessionState | null> {
+    // ...
   }
-  destroy(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  update(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  read(sessionID: string): Promise<Session | undefined> {
-    throw new Error('Method not implemented.');
-  }
-  extendLifeTime(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  destroy(id: string): Promise<void> {
+    // ...
   }
   clear(): Promise<void> {
-    throw new Error('Method not implemented.');
+    // ...
   }
-  cleanUpExpiredSessions(): Promise<void> {
-    throw new Error('Method not implemented.');
+  cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+    // ...
   }
 }
 ```
 
-Here is the description of each method:
+| Method | Description |
+| --- | --- |
+| `save` | Saves the session for the first time. If a session already exists with the given ID, a SessionAlreadyExists error MUST be thrown. |
+| `read` | Reads a session. If the session does not exist, the value `null` MUST be returned. |
+| `update` | Updates and extends the lifetime of a session. If the session no longer exists (i.e. has expired or been destroyed), the session MUST still be saved. |
+| `destroy` | Deletes a session. If the session does not exist, NO error MUST be thrown. |
+| `clear` | Clears all sessions. |
+| `cleanUpExpiredSessions` | Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions. If the store manages a cache database, then this method can remain empty but it must NOT throw an error. |
 
-- **createAndSaveSession**: Create and save a new session.
+Session stores do not manipulate `Session` instances directly. They use `SessionState` objects instead.
 
-    This method *MUST* call the `generateSessionID` method to generate the session ID.
-
-    This method *MUST* call the `applySessionOptions` method to extend the sessionContent.
-
-
-- **update**: Update and extend the lifetime of a session.
-
-  Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
-
-- **destroy**: Delete a session, whether it exists or not.
-- **read**: Read a session from its ID.
-
-    Return `undefined` if the session does not exist or has expired. 
-
-- **extendLifeTime**: Extend the lifetime of a session from its ID. The duration is the inactivity timeout.
-
-    If the session does not exist, the method does not throw an error.
-
-- **clear**: Clear all sessions.
-
-- **cleanUpExpiredSessions**: Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions.
+```typescript
+interface SessionState {
+  // 44-characters long
+  id: string;
+  userId: string|number|null;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
+  // 4-bytes long (min: 0, max: 2147483647)
+  updatedAt: number;
+  // 4-bytes long (min: 0, max: 2147483647)
+  createdAt: number;
+}
+```

@@ -6,7 +6,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context, createApp, dependency, Get, HttpResponseOK, Session, TokenRequired
+  Context, createApp, createSession, dependency, Get, HttpResponseOK, Session, TokenRequired
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -20,9 +20,10 @@ describe('The framework', () => {
 
     @Get('/token')
     async generateToken() {
-      const session = await this.store.createAndSaveSession({});
+      const session = await createSession(this.store);
       session.set('error', 'error message', { flash: true });
-      await this.store.update(session);
+      await session.commit();
+
       const token = session.getToken();
       return new HttpResponseOK({ token });
     }

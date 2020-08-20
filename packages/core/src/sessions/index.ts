@@ -1,5 +1,7 @@
+export { createSession } from './create-session';
+export { readSession } from './read-session';
 export { removeSessionCookie } from './remove-session-cookie';
-export { Store, SessionStore, SessionOptions } from './session-store';
+export { Store, SessionStore, SessionAlreadyExists } from './session-store';
 export { Session } from './session';
 export { SessionState } from './session-state.interface';
 export { setSessionCookie } from './set-session-cookie';

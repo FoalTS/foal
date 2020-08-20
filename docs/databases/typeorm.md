@@ -223,9 +223,9 @@ describe('xxx', () => {
 
   beforeEach(() => connection = await createConnection())
 
-  afterEach(() => {
+  afterEach(async () => {
     if (connection) {
-      connection.close()
+      await connection.close()
     }
   });
 

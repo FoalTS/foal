@@ -82,7 +82,7 @@ The `@CsrfTokenRequired` expects the CSRF token to be include in the request in 
 1. Generate the token on login
 
 ```typescript
-import { HttpResponseOK, Post, setSessionCookie } from '@foal/core';
+import { generateToken, HttpResponseOK, Post, setSessionCookie } from '@foal/core';
 
 class AuthController {
   // ...
@@ -90,14 +90,14 @@ class AuthController {
   @Post('/login')
   async login() {
     // ...
-    const session = await this.store.createAndSaveSessionFromUser(
-      user,
-      // Generate the CSRF token and keep it in the session
-      { csrfToken: true }
-    );
+
+    const session = await createSession(this.store);
+    session.setUser(user);
+    session.set('csrfToken', await generateToken())
+    await session.commit();
 
     const response = new HttpResponseOK();
-    setSessionCookie(response, session.getToken());
+    setSessionCookie(response, session);
     return response;
   }
 }
@@ -296,14 +296,13 @@ class AuthController {
     @Post('/login')
     async login() {
       // ...
-      const session = await this.store.createAndSaveSessionFromUser(
-        user,
-        // Generate the CSRF token and keep it in the session
-        { csrfToken: true }
-      );
+      const session = await createSession(this.store);
+      session.setUser(user);
+      session.set('csrfToken', await generateToken())
+      await session.commit();
 
       const response = new HttpResponseOK();
-      setSessionCookie(response, session.getToken());
+      setSessionCookie(response, session);
       // Retreive the token from the session
       // and send it in a cookie
       setCsrfCookie(response, await getCsrfToken(session));
