@@ -229,6 +229,7 @@ function storeTestSuite(type: DBType) {
         flash: JSON.parse(dbSession.flash),
         id: dbSession.id,
         updatedAt: dbSession.updated_at,
+        // tslint:disable-next-line
         userId: dbSession.user_id ?? null,
       };
     }
@@ -243,6 +244,7 @@ function storeTestSuite(type: DBType) {
         flash: JSON.stringify(state.flash),
         id: state.id,
         updated_at: state.updatedAt,
+        // tslint:disable-next-line
         user_id: state.userId ?? undefined,
       });
     }

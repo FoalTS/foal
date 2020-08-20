@@ -49,9 +49,12 @@ describe('createSession', () => {
     it('with empty content and userId.', async () => {
       await session.commit();
 
+      // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
 
+      // tslint:disable-next-line
       deepStrictEqual(state?.content, {});
+      // tslint:disable-next-line
       strictEqual(state?.userId, null);
     });
 
@@ -61,6 +64,7 @@ describe('createSession', () => {
       await session.commit();
       const dateAfter = Math.trunc(Date.now() / 1000) + 1;
 
+      // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
 
       if (!state) {
@@ -84,7 +88,9 @@ describe('createSession', () => {
     it('that should be marked as "non-existing".', async () => {
       await session.commit();
 
+      // tslint:disable-next-line
       strictEqual(store.updateCalledWith?.state, undefined);
+      // tslint:disable-next-line
       notStrictEqual(store.saveCalledWith?.state, undefined);
     });
 

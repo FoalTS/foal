@@ -521,26 +521,29 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
         context('given options.cookie is false or not defined', () => {
 
-          it('should not remove a session cookie in the response (it can belongs to another application).', async () => {
-            const postHookFunction = await hook(ctx, services);
-            if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
-              throw new Error('The hook should return a post hook function');
-            }
-            const session = await getSession();
-            if (session) {
-              ctx.session = session;
-            }
-            if (!ctx.session) {
-              throw new Error('ctx.session should be defined');
-            }
+          it(
+            'should not remove a session cookie in the response (it can belongs to another application).',
+            async () => {
+              const postHookFunction = await hook(ctx, services);
+              if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+                throw new Error('The hook should return a post hook function');
+              }
+              const session = await getSession();
+              if (session) {
+                ctx.session = session;
+              }
+              if (!ctx.session) {
+                throw new Error('ctx.session should be defined');
+              }
 
-            const response = new HttpResponseOK();
-            await ctx.session.destroy();
+              const response = new HttpResponseOK();
+              await ctx.session.destroy();
 
-            await postHookFunction(response);
+              await postHookFunction(response);
 
-            deepStrictEqual(response.getCookies(), {});
-          });
+              deepStrictEqual(response.getCookies(), {});
+            }
+          );
 
         });
 
@@ -604,6 +607,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
           await postHookFunction(new HttpResponseOK());
 
+          // tslint:disable-next-line
           strictEqual(services.get(Store).updateCalledWith?.state.id, ctx.session.getToken());
         });
 

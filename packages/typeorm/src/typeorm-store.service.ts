@@ -54,6 +54,7 @@ export class TypeORMStore extends SessionStore {
           flash: JSON.stringify(state.flash),
           id: state.id,
           updated_at: state.updatedAt,
+          // tslint:disable-next-line
           user_id: state.userId ?? undefined,
         })
         .execute();
@@ -95,6 +96,7 @@ export class TypeORMStore extends SessionStore {
       flash: JSON.stringify(state.flash),
       id: state.id,
       updated_at: state.updatedAt,
+      // tslint:disable-next-line
       user_id: state.userId ?? undefined,
     });
 
