@@ -43,7 +43,13 @@ describe('MongoDBStore', () => {
       process.env.MONGODB_URI = MONGODB_URI;
 
       mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-      await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+      try {
+        await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+      } catch (error) {
+        if (!(error.message.includes('ns not found'))) {
+          throw error;
+        }
+      }
       store = createService(MongoDBStore);
       await store.boot();
     });
