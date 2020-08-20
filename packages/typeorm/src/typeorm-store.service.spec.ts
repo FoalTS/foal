@@ -186,6 +186,7 @@ function storeTestSuite(type: DBType) {
 
     let store: TypeORMStore;
     let state: SessionState;
+    let state2: SessionState;
     let maxInactivity: number;
 
     function createState(): SessionState {
@@ -211,6 +212,10 @@ function storeTestSuite(type: DBType) {
 
     beforeEach(async () => {
       state = createState();
+      state2 = {
+        ...createState(),
+        id: `${state.id}2`
+      };
       maxInactivity = 1000;
       await getRepository(DatabaseSession).clear();
     });
@@ -346,13 +351,15 @@ function storeTestSuite(type: DBType) {
 
       context('given a session already exists in the database with the given ID', () => {
 
+        let updatedState: SessionState;
+
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
-        });
+          const session2 = convertStateToDbSession(state2);
+          // The state2 must be saved before the state.
+          await getRepository(DatabaseSession).save([ session2, session ]);
 
-        it('should update the session state in the database.', async () => {
-          const updatedState: SessionState = {
+          updatedState = {
             content: {
               ...state.content,
               foo2: 'bar2',
@@ -366,10 +373,20 @@ function storeTestSuite(type: DBType) {
             updatedAt: state.updatedAt + 2,
             userId: 3,
           };
+        });
+
+        it('should update the session state in the database.', async () => {
           await store.update(updatedState, maxInactivity);
 
           const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
+        });
+
+        it('should not update the other session states in the database.', async () => {
+          await store.update(updatedState, maxInactivity);
+
+          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state2.id });
+          deepStrictEqual(convertDbSessionToState(dbSession), state2);
         });
 
       });
@@ -386,17 +403,25 @@ function storeTestSuite(type: DBType) {
 
       });
 
-      context('given a session already exists in the database with the given ID', () => {
+      context.only('given a session already exists in the database with the given ID', () => {
 
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
+          const session2 = convertStateToDbSession(state2);
+          // The state2 must be saved before the state.
+          await getRepository(DatabaseSession).save([ session2, session ]);
         });
 
         it('should delete the session in the database.', async () => {
           await store.destroy(state.id);
 
-          strictEqual((await getRepository(DatabaseSession).find()).length, 0);
+          strictEqual((await getRepository(DatabaseSession).findOne({ id: state.id })), undefined);
+        });
+
+        it('should not delete the other sessions in the database.', async () => {
+          await store.destroy(state.id);
+
+          return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: state2.id }));
         });
 
       });

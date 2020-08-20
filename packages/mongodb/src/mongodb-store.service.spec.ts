@@ -21,6 +21,7 @@ describe('MongoDBStore', () => {
   let store: MongoDBStore;
   let mongoDBClient: any;
   let state: SessionState;
+  let state2: SessionState;
   let maxInactivity: number;
 
   function createState(): SessionState {
@@ -48,6 +49,10 @@ describe('MongoDBStore', () => {
 
   beforeEach(() => {
     state = createState();
+    state2 = {
+      ...createState(),
+      id: `${state.id}2`
+    };
     maxInactivity = 1000;
     return mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({});
   });
@@ -181,22 +186,47 @@ describe('MongoDBStore', () => {
 
     context('given a session already exists in the database with the given ID', () => {
 
+      let updatedState: SessionState;
+
       beforeEach(async () => {
+        // The state2 must be saved before the state.
+        await insertSessionIntoDB({
+          _id: state2.id,
+          state: state2,
+        });
         await insertSessionIntoDB({
           _id: state.id,
           state,
         });
+
+        updatedState = {
+          content: {
+            ...state.content,
+            foo2: 'bar2',
+          },
+          createdAt: state.createdAt + 1,
+          flash: {
+            ...state.flash,
+            hello2: 'world2',
+          },
+          id: state.id,
+          updatedAt: state.updatedAt + 2,
+          userId: 3,
+        };
       });
 
       it('should update the session state in the database.', async () => {
-        const updatedState = {
-          ...state,
-          updatedAt: state.updatedAt + 1,
-        };
         await store.update(updatedState, maxInactivity);
 
         const actual = (await findByID(state.id)).state;
         deepStrictEqual(actual, updatedState);
+      });
+
+      it('should not update the other session states in the database.', async () => {
+        await store.update(updatedState, maxInactivity);
+
+        const actual = (await findByID(state2.id)).state;
+        deepStrictEqual(actual, state2);
       });
 
     });
@@ -216,6 +246,11 @@ describe('MongoDBStore', () => {
     context('given a session already exists in the database with the given ID', () => {
 
       beforeEach(async () => {
+        // The state2 must be saved before the state.
+        await insertSessionIntoDB({
+          _id: state2.id,
+          state: state2,
+        });
         await insertSessionIntoDB({
           _id: state.id,
           state,
@@ -225,7 +260,13 @@ describe('MongoDBStore', () => {
       it('should delete the session in the database.', async () => {
         await store.destroy(state.id);
 
-        strictEqual((await readSessionsFromDB()).length, 0);
+        return rejects(() => findByID(state.id));
+      });
+
+      it('should delete the session in the database.', async () => {
+        await store.destroy(state.id);
+
+        return doesNotReject(() => findByID(state2.id));
       });
 
     });
