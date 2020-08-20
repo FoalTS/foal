@@ -1,8 +1,8 @@
 import { Config, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
-export interface DatabaseSession {
-  _id: string;
+interface DatabaseSession {
+  sessionID: string;
   state: SessionState;
 }
 
@@ -26,13 +26,13 @@ export class MongoDBStore extends SessionStore {
     );
     this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
     this.collection = this.mongoDBClient.db().collection('sessions');
+    this.collection.createIndex({ sessionID: 1 }, { unique: true });
   }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
     try {
       await this.collection.insertOne({
-        _id: state.id,
-        // id: state.id,
+        sessionID: state.id,
         state,
       });
     } catch (error) {
@@ -45,7 +45,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session: DatabaseSession|null = await this.collection.findOne({ _id: id });
+    const session: DatabaseSession|null = await this.collection.findOne({ sessionID: id });
     if (session === null) {
       return session;
     }
@@ -56,7 +56,7 @@ export class MongoDBStore extends SessionStore {
   async update(state: SessionState, maxInactivity: number): Promise<void> {
     await this.collection.updateOne(
       {
-        _id: state.id
+        sessionID: state.id
       },
       {
         $set: { state }
@@ -68,7 +68,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async destroy(id: string): Promise<void> {
-    await this.collection.deleteOne({ _id: id });
+    await this.collection.deleteOne({ sessionID: id });
   }
 
   async clear(): Promise<void> {

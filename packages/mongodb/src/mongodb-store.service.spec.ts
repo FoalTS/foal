@@ -9,7 +9,7 @@ import { MongoClient } from 'mongodb';
 import { MongoDBStore } from './mongodb-store.service';
 
 interface DatabaseSession {
-  _id: string;
+  sessionID: string;
   state: SessionState;
 }
 
@@ -43,18 +43,25 @@ describe('MongoDBStore', () => {
       process.env.MONGODB_URI = MONGODB_URI;
 
       mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+      try {
+        await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+      } catch (error) {
+        if (!(error.message.includes('ns not found'))) {
+          throw error;
+        }
+      }
       store = createService(MongoDBStore);
       await store.boot();
     });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     state = createState();
     state2 = {
       ...createState(),
       id: `${state.id}2`
     };
     maxInactivity = 1000;
-    return mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({});
+    await mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({});
   });
 
   after(() => {
@@ -76,7 +83,7 @@ describe('MongoDBStore', () => {
   }
 
   async function findByID(sessionID: string): Promise<DatabaseSession> {
-    const session = await mongoDBClient.db().collection(COLLECTION_NAME).findOne({ _id: sessionID });
+    const session = await mongoDBClient.db().collection(COLLECTION_NAME).findOne({ sessionID });
     if (!session) {
       throw new Error('Session not found');
     }
@@ -87,7 +94,7 @@ describe('MongoDBStore', () => {
     const session = await createSession({} as any);
     const id = session.getToken();
     await insertSessionIntoDB({
-      _id: id,
+      sessionID: id,
       state: {} as any,
     });
     return doesNotReject(() => findByID(id));
@@ -125,7 +132,7 @@ describe('MongoDBStore', () => {
 
       beforeEach(async () => {
         await insertSessionIntoDB({
-          _id: state.id,
+          sessionID: state.id,
           state,
         });
       });
@@ -155,7 +162,7 @@ describe('MongoDBStore', () => {
 
       beforeEach(async () => {
         await insertSessionIntoDB({
-          _id: state.id,
+          sessionID: state.id,
           state,
         });
       });
@@ -191,11 +198,11 @@ describe('MongoDBStore', () => {
       beforeEach(async () => {
         // The state2 must be saved before the state.
         await insertSessionIntoDB({
-          _id: state2.id,
+          sessionID: state2.id,
           state: state2,
         });
         await insertSessionIntoDB({
-          _id: state.id,
+          sessionID: state.id,
           state,
         });
 
@@ -248,11 +255,11 @@ describe('MongoDBStore', () => {
       beforeEach(async () => {
         // The state2 must be saved before the state.
         await insertSessionIntoDB({
-          _id: state2.id,
+          sessionID: state2.id,
           state: state2,
         });
         await insertSessionIntoDB({
-          _id: state.id,
+          sessionID: state.id,
           state,
         });
       });
@@ -277,7 +284,7 @@ describe('MongoDBStore', () => {
 
     beforeEach(async () => {
       await insertSessionIntoDB({
-        _id: state.id,
+        sessionID: state.id,
         state,
       });
     });
@@ -322,7 +329,7 @@ describe('MongoDBStore', () => {
 
       for (const state of states) {
         await insertSessionIntoDB({
-          _id: state.id,
+          sessionID: state.id,
           state,
         });
       }
