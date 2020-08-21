@@ -10,6 +10,7 @@ import {
   HookDecorator,
   HttpResponse,
   HttpResponseBadRequest,
+  HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   IApiSecurityScheme,
@@ -118,6 +119,28 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       return response;
     }
 
+    /* Verify CSRF token */
+
+    if (
+      options.cookie &&
+      Config.get('settings.session.csrf.enabled', 'boolean', false) &&
+      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
+    ) {
+      const expectedCsrftoken = session.get<string|undefined>('csrfToken');
+      if (!expectedCsrftoken) {
+        throw new Error(
+          'Unexpected error: the session content does not have a "csrfToken" field. '
+          + 'Are you sure you created the session with "createSession"?'
+        );
+      }
+      const actualCsrfToken = ctx.request.body._csrf ||
+        ctx.request.get('X-CSRF-Token') ||
+        ctx.request.get('X-XSRF-Token');
+      if (actualCsrfToken !== expectedCsrftoken) {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+    }
+
     /* Set ctx.session */
 
     ctx.session = session;
@@ -131,6 +154,7 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
       ctx.user = await options.user(session.userId);
       if (!ctx.user) {
         return unauthorizedOrRedirect('The token does not match any user.');
+        // TODO: remove session cookie and destroy session
       }
     }
 
