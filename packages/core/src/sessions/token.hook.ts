@@ -177,6 +177,9 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
     if (required) {
       openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
     }
+    if (Config.get('settings.session.csrf.enabled', 'boolean', false)) {
+      openapi.push(ApiResponse(403, { description: 'CSRF token is missing or incorrect.' }));
+    }
   } else {
     const securityScheme: IApiSecurityScheme = {
       scheme: 'bearer',

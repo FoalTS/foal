@@ -859,8 +859,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should define an API specification', () => {
 
+    afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+
     it('unless options.openapi is false.', () => {
-      @Token({ store: Store, openapi: false })
+      @Token({ openapi: false })
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
@@ -869,7 +871,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (cookie).', () => {
-      @Token({ store: Store, cookie: true })
+      @Token({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -887,7 +889,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     it('with the proper security scheme (cookie) (cookie name different).', () => {
       process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
-      @Token({ store: Store, cookie: true })
+      @Token({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -904,7 +906,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (no cookie).', () => {
-      @Token({ store: Store })
+      @Token()
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -922,7 +924,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     if (required) {
 
       it('with the proper security requirement (cookie).', () => {
-        @Token({ store: Store, cookie: true })
+        @Token({ cookie: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -933,7 +935,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper security requirement (no cookie).', () => {
-        @Token({ store: Store })
+        @Token()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -943,19 +945,43 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
       });
 
-      it('with the proper API responses.', () => {
-        @Token({ store: Store })
+      function testResponses(options: { cookie: boolean }) {
+        @Token(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is missing or invalid.' }
+        });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        @Token({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is missing or invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
         });
       });
 
     } else {
 
       it('with no security requirement (cookie).', () => {
-        @Token({ store: Store, cookie: true })
+        @Token({ cookie: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -963,19 +989,43 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with no security requirement (no cookie).', () => {
-        @Token({ store: Store })
+        @Token()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
         strictEqual(actualSecurityRequirements, undefined);
       });
 
-      it('with the proper API responses.', () => {
-        @Token({ store: Store })
+      function testResponses(options: { cookie: boolean }) {
+        @Token(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is invalid.' }
+        });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        @Token({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
         });
       });
 
