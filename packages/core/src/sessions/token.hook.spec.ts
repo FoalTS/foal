@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotReject, ok, rejects, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import {
