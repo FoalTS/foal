@@ -18,7 +18,6 @@ import {
  */
 export function removeSessionCookie(response: HttpResponse): void {
   const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
-  const csrfCookieName = Config.get('settings.session.csrf.cookie.name', 'string', SESSION_DEFAULT_CSRF_COOKIE_NAME);
 
   const csrfEnabled = Config.get('settings.session.csrf.enabled', 'boolean', false);
   let sameSite = Config.get('settings.session.cookie.sameSite', 'string') as 'strict'|'lax'|'none'|undefined;
@@ -40,6 +39,7 @@ export function removeSessionCookie(response: HttpResponse): void {
   });
 
   if (csrfEnabled) {
+    const csrfCookieName = Config.get('settings.session.csrf.cookie.name', 'string', SESSION_DEFAULT_CSRF_COOKIE_NAME);
     response.setCookie(csrfCookieName, '', {
       ...options,
       httpOnly: false,
