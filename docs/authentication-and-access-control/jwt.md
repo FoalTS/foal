@@ -24,10 +24,10 @@ Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 
 Once the secret is in hand, there are several ways to provide it to the future hooks:
 
-- using the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
+- using the environment variable `SETTINGS_JWT_SECRET`,
 - in a file named `.env` in the root directory,
   ```
-  SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
+  SETTINGS_JWT_SECRET=Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
   ```
 - or in a YAML or JSON file in the `config/` directory.
 
@@ -35,14 +35,14 @@ Once the secret is in hand, there are several ways to provide it to the future h
   ```yaml
   settings:
     jwt:
-      secretOrPublicKey: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+      secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
   ```
   *development.json*
   ```json
   {
     "settings": {
       "jwt": {
-        "secretOrPublicKey": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+        "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
       }
     }
   }
@@ -57,7 +57,7 @@ JSON Web Tokens are generated from JavaScript objects that usually contain infor
 The below example shows how to generate a one-hour token using a secret.
 
 ```typescript
-import { Config } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
@@ -66,7 +66,7 @@ const token = sign(
     id: 90485234,
     email: 'mary@foalts.org'
   },
-  Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
+  getSecretOrPrivateKey(),
   { expiresIn: '1h' }
 );
 ```
@@ -84,6 +84,7 @@ import {
   Config, Context, HttpResponseOK, HttpResponseUnauthorized,
   Post, ValidateBody, verifyPassword
 } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 import { User } from '../entities';
@@ -113,7 +114,7 @@ export class LoginController {
 
     const token = sign(
       { email: user.email },
-      Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
+      getSecretOrPrivateKey(),
       { expiresIn: '1h' }
     );
 
@@ -220,7 +221,8 @@ The below code shows how to implement this technique with a hook. On each reques
 
 *refresh-jwt.hook.ts (example)*
 ```typescript
-import { Config, Hook, HookDecorator, HttpResponse } from '@foal/core';
+import { Hook, HookDecorator, HttpResponse } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 export function RefreshJWT(): HookDecorator {
@@ -238,7 +240,7 @@ export function RefreshJWT(): HookDecorator {
           // id: ctx.user.id,
           // sub: ctx.user.subject,
         },
-        Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
+        getSecretOrPrivateKey(),
         { expiresIn: '15m' }
       );
       response.setHeader('Authorization', newToken);
@@ -265,7 +267,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 - Each JSON Web Token must have a `subject` property (or `sub`) which is a string containing the user id. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
   ```typescript
-  import { Config } from '@foal/core';
+  import { getSecretOrPrivateKey } from '@foal/jwt';
   import { sign } from 'jsonwebtoken';
 
   const token = sign(
@@ -276,7 +278,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
       id: 90485234,
       email: 'mary@foalts.org'
     },
-    Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string'),
+    getSecretOrPrivateKey(),
     { expiresIn: '1h' }
   );
   ```
@@ -357,7 +359,7 @@ Available encodings are listed [here](https://nodejs.org/api/buffer.html#buffer_
 ```yaml
 settings:
   jwt:
-    secretOrPublicKey: HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
+    secret: HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
     secretEncoding: base64
 ```
 {% endcode-tabs-item %}
@@ -366,7 +368,7 @@ settings:
 {
   "settings": {
     "jwt": {
-      "secretOrPublicKey": "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
+      "secret": "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
       "secretEncoding": "base64",
     }
   }
@@ -375,7 +377,7 @@ settings:
 {% endcode-tabs-item %}
 {% code-tabs-item title=".env or environment variables" %}
 ```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
+SETTINGS_JWT_SECRET=HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
 SETTINGS_JWT_SECRET_ENCODING=base64
 ```
 {% endcode-tabs-item %}
@@ -432,8 +434,8 @@ The name of the private key is arbitrary.
 
 *Example with a `.env` file*
 ```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my_public_key
-JWT_PRIVATE_KEY=my_private_key
+SETTINGS_JWT_PUBLIC_KEY=my_public_key
+SETTINGS_JWT_PRIVATE_KEY=my_private_key
 ```
 
 ### Generate Temporary Tokens
@@ -441,13 +443,14 @@ JWT_PRIVATE_KEY=my_private_key
 *Example*
 ```typescript
 import { Config } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
   {
     email: 'john@foalts.org'
   },
-  Config.getOrThrow('jwt.privateKey', 'string'),
+  getSecretOrPrivateKey(),
   { expiresIn: '1h' }
 );
 ```
@@ -493,7 +496,7 @@ export class ApiController {
 
 ## Retreive a Dynamic Secret Or Public Key
 
-By default `JWTRequired` and `JWTOptional` use the value of the configuration key `settings.jwt.secretOrPublicKey` as a static secret (or public key).
+By default `JWTRequired` and `JWTOptional` use the value of the configuration keys `settings.jwt.secret` or `settings.jwt.publicKey` as a static secret (or public key).
 
 But it is also possible to dynamically retrieve a key to verify the token. To do so, you can specify a function with the below signature to the `secretOrPublicKey` option.
 

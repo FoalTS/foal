@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // 3p
 import {
@@ -93,10 +93,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   before(() => services = new ServiceManager());
 
-  beforeEach(() => process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = secret);
+  beforeEach(() => process.env.SETTINGS_JWT_SECRET = secret);
 
   afterEach(() => {
-    delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+    delete process.env.SETTINGS_JWT_SECRET;
+    delete process.env.SETTINGS_JWT_PUBLIC_KEY;
     delete process.env.SETTINGS_JWT_COOKIE_NAME;
   });
 
@@ -359,27 +360,20 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
-    it('should throw an error if no secretOrPublicKey is set in the Config and options.secretOrPublicKey is'
+    it('should throw an error if no secret or public key is set in the Config and options.secretOrPublicKey is'
         + ' not defined.', async () => {
       // Remove the secret.
-      delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+      delete process.env.SETTINGS_JWT_SECRET;
 
-      let err: Error|undefined;
-      try {
-        const token = sign({}, secret);
-        const ctx = new Context({ get(str: string) { return `Bearer ${token}`; } });
-        await hook(ctx, services);
-      } catch (error) {
-        err = error;
-      }
-      if (!err) {
-        throw new Error('An error should be thrown since there is not secret.');
-      }
-      if (!(err instanceof ConfigNotFoundError)) {
-        throw new Error('A ConfigNotFoundError should have been thrown');
-      }
-      strictEqual(err.key, 'settings.jwt.secretOrPublicKey');
-      strictEqual(err.msg, 'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.');
+      const token = sign({}, secret);
+      const ctx = new Context({ get(str: string) { return `Bearer ${token}`; } });
+      await rejects(
+        () => hook(ctx, services),
+        {
+          message: '[CONFIG] You must provide at least one of these configuration keys: '
+            + 'settings.jwt.secret or settings.jwt.publicKey.'
+        }
+      );
     });
 
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
@@ -506,7 +500,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & secret from options.secretOrPublicKey).', async () => {
-        delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+        delete process.env.SETTINGS_JWT_SECRET;
         const secretOrPublicKey = async (header: any, payload: any) => {
           deepStrictEqual(header, {
             alg: 'HS256',
@@ -529,7 +523,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & public key).', async () => {
-        process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = publicKey;
+        delete process.env.SETTINGS_JWT_SECRET;
+        process.env.SETTINGS_JWT_PUBLIC_KEY = publicKey;
 
         const hook = getHookFunction(JWT());
 

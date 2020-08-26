@@ -103,16 +103,16 @@ This function takes the configuration key as parameter.
 ```typescript
 import { Config } from '@foal/core';
 
-const secret = Config.get('settings.jwt.secretOrPublicKey');
+const secret = Config.get('settings.jwt.secret');
 ```
 
 In this example, FoalTS will try to retrieve the configuration value via:
-- the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
-- the `.env` file with the variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
-- the JSON file `config/development.json` with the path `settings.jwt.secretOrPublicKey`,
-- the YAML file `config/development.yml` with the path `settings.jwt.secretOrPublicKey`,
-- the JSON file `config/default.json` with the path `settings.jwt.secretOrPublicKey`,
-- or the YAML file `config/default.yml` with the path `settings.jwt.secretOrPublicKey`.
+- the environment variable `SETTINGS_JWT_SECRET`,
+- the `.env` file with the variable `SETTINGS_JWT_SECRET`,
+- the JSON file `config/development.json` with the path `settings.jwt.secret`,
+- the YAML file `config/development.yml` with the path `settings.jwt.secret`,
+- the JSON file `config/default.json` with the path `settings.jwt.secret`,
+- or the YAML file `config/default.yml` with the path `settings.jwt.secret`.
 
 If no value is found, the method returns `undefined`.
 

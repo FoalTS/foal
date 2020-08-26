@@ -36,7 +36,7 @@ Use different secrets for your production environment (JWT, csrf, etc). Specify 
 *.env (example)*
 ```
 SETTINGS_CSRF_SECRET=PZFo9stbQtGvQ2clYSrgn+FUjf55pjajHJslRaBRNo4
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
+SETTINGS_JWT_SECRET=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
 ```
 
 You can generate 256-bit secrets encoded in base64 with the following command:

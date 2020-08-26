@@ -14,7 +14,7 @@ import {
   Config, Context, controller, CookieOptions, createApp, Get, hashPassword,
   HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
 } from '@foal/core';
-import { JWTRequired } from '@foal/jwt';
+import { getSecretOrPrivateKey, JWTRequired } from '@foal/jwt';
 import { fetchUser } from '@foal/typeorm';
 
 describe('[Authentication|JWT|cookie|no redirection] Users', () => {
@@ -111,7 +111,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
         id: user.id,
       };
 
-      const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
+      const secret = getSecretOrPrivateKey();
 
       token = await new Promise<string>((resolve, reject) => {
         sign(payload, secret, { subject: user.id.toString(), expiresIn: '1h' }, (err, value: string|undefined) => {
@@ -138,7 +138,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
   }
 
   before(async () => {
-    process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY = 'session-secret';
+    process.env.SETTINGS_JWT_SECRET = 'session-secret';
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
@@ -154,7 +154,7 @@ describe('[Authentication|JWT|cookie|no redirection] Users', () => {
 
   after(async () => {
     await getConnection().close();
-    delete process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY;
+    delete process.env.SETTINGS_JWT_SECRET;
   });
 
   it('cannot access protected routes if they are not logged in.', () => {

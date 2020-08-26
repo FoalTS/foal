@@ -7,6 +7,7 @@ import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME } from './constants';
+import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
 import { isInvalidTokenError } from './invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
@@ -122,15 +123,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         throw error;
       }
     } else {
-      secretOrPublicKey = Config.getOrThrow(
-        'settings.jwt.secretOrPublicKey',
-        'string',
-        'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
-      );
-      const encoding = Config.get('settings.jwt.secretEncoding', 'string');
-      if (encoding) {
-        secretOrPublicKey = Buffer.from(secretOrPublicKey, encoding);
-      }
+      secretOrPublicKey = getSecretOrPublicKey();
     }
 
     let payload: any;

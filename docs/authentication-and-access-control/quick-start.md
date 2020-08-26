@@ -194,7 +194,7 @@ foal createsecret
 And save this secret in a `.env` file:
 
 ```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my-secret
+SETTINGS_JWT_SECRET=my-secret
 ```
 
 *src/app/controllers/auth.controller.ts*
@@ -243,7 +243,7 @@ export class AuthController {
       email: user.email,
       id: user.id,
     };
-    const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
+    const secret = getSecretOrPrivateKey();
 
     const token = await new Promise<string>((resolve, reject) => {
       sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {
