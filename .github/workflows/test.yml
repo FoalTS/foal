@@ -84,8 +84,6 @@ jobs:
       run: cd packages/aws-s3 && npm run test
     - name: Run unit tests of @foal/cli
       run: cd packages/cli && npm run test
-    - name: Run unit tests of @foal/csrf
-      run: cd packages/csrf && npm run test
     - name: Run unit tests of @foal/ejs
       run: cd packages/ejs && npm run test
     - name: Run unit tests of @foal/examples
