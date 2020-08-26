@@ -62,7 +62,7 @@ Here is the principle:
 
 1. The server generates a token (stateless or stateful) and sends it to the browser (in the HTML page or in a separate cookie). An attacker performing a CSRF attack is not able to guess or read this token.
 2. In each subsequent POST, PUT, PATH or DELETE request, the client must include this token in a specific header, in the body of the request or in the URL parameters to prove the "origin" of the request.
-3.  If the CSRF token is not present or is incorrect, the server returns an error 403 - FORBIDDEN with the message `Bad csrf token.`.
+3.  If the CSRF token is not present or is incorrect, the server returns an error 403 - FORBIDDEN with the message `CSRF token missing or incorrect.`.
 
 FoalTS token-based protection provides a hook and a function to set up the defense.
 - `getCsrfToken` generates or reads the CSRF token.

@@ -67,7 +67,7 @@ describe('[CSRF|regular web app|stateless] Users', () => {
       .post('/api/products')
       .set('Cookie', [`csrfToken=${csrfToken}`])
       .expect(403)
-      .expect('Bad csrf token.');
+      .expect('CSRF token missing or incorrect.');
   });
 
   it('can access POST routes with the CSRF token.', () => {
