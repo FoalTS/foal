@@ -25,7 +25,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../common';
+import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 

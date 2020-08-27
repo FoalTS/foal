@@ -19,7 +19,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../common';
+import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
