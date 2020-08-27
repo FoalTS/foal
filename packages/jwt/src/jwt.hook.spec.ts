@@ -6,19 +6,24 @@ import {
   ConfigNotFoundError,
   Context,
   getApiComponents,
+  getApiParameters,
   getApiResponses,
   getApiSecurity,
   getHookFunction,
+  HookFunction,
+  HttpMethod,
   IApiComponents,
+  IApiCookieParameter,
   IApiSecurityRequirement,
   isHttpResponseBadRequest,
+  isHttpResponseForbidden,
   isHttpResponseUnauthorized,
   ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
+import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
 import { InvalidTokenError } from './invalid-token.error';
 import { JWTOptional } from './jwt-optional.hook';
 import { JWTRequired } from './jwt-required.hook';
@@ -83,17 +88,36 @@ const header1 = {
 
 export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
+  const secret = 'my_secret';
 
   const fetchUser = async (id: string|number) => id === '1' ? user : null;
 
-  const hook = getHookFunction(JWT({ user: fetchUser }));
-
-  const secret = 'my_secret';
+  let ctx: Context;
+  let hook: HookFunction;
   let services: ServiceManager;
 
-  before(() => services = new ServiceManager());
+  function createContext(
+    headers: { [key: string]: string } = {},
+    cookies: { [key: string]: string } = {},
+    body: { [key: string]: string } = {},
+    // Do not use GET, HEAD or OPTIONS as default (CSRF tests).
+    method: HttpMethod = 'POST',
+  ) {
+    return new Context({
+      get(key: string) { return headers[key]; },
+      body,
+      cookies,
+      method,
+    });
+  }
 
-  beforeEach(() => process.env.SETTINGS_JWT_SECRET = secret);
+  beforeEach(() => {
+    ctx = createContext();
+    hook = getHookFunction(JWT({ user: fetchUser }));
+    services = new ServiceManager();
+
+    process.env.SETTINGS_JWT_SECRET = secret;
+  });
 
   afterEach(() => {
     delete process.env.SETTINGS_JWT_SECRET;
@@ -103,13 +127,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   describe('should validate the request and', () => {
 
-    describe('given options.cookie is false or not defined', () => {
+    context('given options.cookie is false or not defined', () => {
 
       if (required) {
 
         it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
-          const ctx = new Context({ get(str: string) { return undefined; } });
-
           const response = await hook(ctx, services);
           if (!isHttpResponseBadRequest(response)) {
             throw new Error('Response should be an instance of HttpResponseBadRequest.');
@@ -123,8 +145,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       } else {
 
         it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
-          const ctx = new Context({ get(str: string) { return undefined; } });
-
           const response = await hook(ctx, services);
           strictEqual(response, undefined);
           strictEqual(ctx.user, undefined);
@@ -134,7 +154,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       it('should return an HttpResponseBadRequest object if the Authorization header does '
           + 'not use the Bearer scheme.', async () => {
-        const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Basic hello' : undefined; } });
+        ctx = createContext({ Authorization: 'Basic hello' });
 
         const response = await hook(ctx, services);
 
@@ -149,14 +169,12 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     });
 
-    describe('given options.cookie is true', () => {
+    context('given options.cookie is true', () => {
 
       if (required) {
 
         it('should return an HttpResponseBadRequest object if the cookie does not exist.' , async () => {
           const hook = getHookFunction(JWT({ cookie: true }));
-
-          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
 
           const response = await hook(ctx, services);
           if (!isHttpResponseBadRequest(response)) {
@@ -172,8 +190,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
           const hook = getHookFunction(JWT({ cookie: true }));
-
-          const ctx = new Context({ get(str: string) { return undefined; }, cookies: {} });
 
           const response = await hook(ctx, services);
           strictEqual(response, undefined);
@@ -194,9 +210,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         user: fetchUser,
       }));
 
-      const ctx = new Context({
-        get(str: string) {return str === 'Authorization' ? 'Bearer revokedToken' : undefined; }
-      });
+      ctx = createContext({ Authorization: 'Bearer revokedToken' });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -214,7 +228,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   describe('should validate the format and encoding of the token and', () => {
 
     it('should return an HttpResponseUnauthorized object if the token is not a JWT.', async () => {
-      const ctx = new Context({ get(str: string) { return str === 'Authorization' ? 'Bearer foo' : undefined; } });
+      ctx = createContext({ Authorization: 'Bearer foo' });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -232,9 +246,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const token = '$$$'
         + '.' + toBase64(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -255,9 +267,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const token = toBase64('{')
         + '.' + toBase64(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -277,9 +287,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const token = toBase64(JSON.stringify(header1))
         + '.eyJz32IiOiIxMjM0NTY3ODkwIiwibmFtZSI6UkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -301,9 +309,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         secretOrPublicKey: async () => { throw new InvalidTokenError('invalid kid'); }
       }));
       const token = sign({}, secret);
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -324,9 +330,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         secretOrPublicKey: async () => { throw new Error('Connection error'); }
       }));
       const token = sign({}, secret);
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
+
       return (hook(ctx, services) as Promise<any>)
         .then(() => { throw new Error('An error should have been thrown.'); })
         .catch(err => strictEqual(err.message, 'Connection error'));
@@ -342,9 +347,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.' + toBase64(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moeGA08mogA';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -366,7 +369,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       delete process.env.SETTINGS_JWT_SECRET;
 
       const token = sign({}, secret);
-      const ctx = new Context({ get(str: string) { return `Bearer ${token}`; } });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
+
       await rejects(
         () => hook(ctx, services),
         {
@@ -380,9 +384,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
         + '.' + toBase64(JSON.stringify(payload1))
         + '.-I5sDyvGWSA8Qwk6OwM7VLV9Nz3pkINNHakp3S8kOn0';
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -404,9 +406,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         process.env.SETTINGS_JWT_SECRET_ENCODING = 'base64';
         const token = sign({}, Buffer.from(secret, 'base64'));
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${token}` });
 
         const response = await hook(ctx, services);
         console.log(response);
@@ -417,9 +417,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the token is expired.', async () => {
       const token = sign({}, secret, { expiresIn: '1' });
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -439,9 +437,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const hook = getHookFunction(JWT({ user: fetchUser }, { audience: 'bar' }));
 
       const token = sign({}, secret, { audience: 'foo' });
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -461,9 +457,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       const hook = getHookFunction(JWT({ user: fetchUser }, { issuer: 'bar' }));
 
       const token = sign({}, secret, { issuer: 'foo' });
-      const ctx = new Context({
-        get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-      });
+      ctx = createContext({ Authorization: `Bearer ${token}` });
 
       const response = await hook(ctx, services);
       if (!isHttpResponseUnauthorized(response)) {
@@ -481,17 +475,267 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   });
 
+  describe('should verify the CSRF token and', () => {
+
+    context('given settings.jwt.csrf.enabled is true', () => {
+
+      let token: string;
+      let sub: string;
+      let csrfToken: string;
+
+      beforeEach(() => {
+        sub = 'subX';
+        token = sign({ foo: 'bar' }, secret, { subject: sub });
+        csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub });
+        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      });
+
+      afterEach(() => delete process.env.SETTINGS_JWT_CSRF_ENABLED);
+
+      context('given options.cookie is false or not defined', () => {
+
+        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${token}` }));
+
+        it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+          const response = await hook(ctx, services);
+          if (isHttpResponseForbidden(response)) {
+            throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+          }
+        });
+
+      });
+
+      context('given options.cookie is true', () => {
+
+        beforeEach(() => hook = getHookFunction(JWT({ cookie: true })));
+
+        function testUnprotectedMethod(method: HttpMethod) {
+          it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+            ctx = createContext({}, { [JWT_DEFAULT_COOKIE_NAME]: token }, {}, method);
+            const response = await hook(ctx, services);
+            if (isHttpResponseForbidden(response)) {
+              throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+            }
+          });
+        }
+
+        context('given the request HTTP method is "GET"', () => {
+          testUnprotectedMethod('GET');
+        });
+
+        context('given the request HTTP method is "HEAD"', () => {
+          testUnprotectedMethod('HEAD');
+        });
+
+        context('given the request HTTP method is "OPTIONS"', () => {
+          testUnprotectedMethod('OPTIONS');
+        });
+
+        function testProtectedMethod(method: HttpMethod) {
+          it('should return an HttpResponseForbidden instance if the request has no CSRF cookie.', async () => {
+            ctx = createContext(
+              {},
+              {
+                [JWT_DEFAULT_COOKIE_NAME]: token,
+              },
+              {},
+              method
+            );
+
+            const response = await hook(ctx, services);
+            if (!isHttpResponseForbidden(response)) {
+              throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+            }
+
+            strictEqual(response.body, 'CSRF token missing or incorrect.');
+          });
+
+          it(
+            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong signature.',
+            async () => {
+              csrfToken = sign({ foo2: 'bar' }, `${secret}2`, {});
+              ctx = createContext(
+                {},
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                },
+                { _csrf: csrfToken },
+                method
+              );
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            }
+          );
+
+          it(
+            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong subject.',
+            async () => {
+              csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub + 'Y' });
+              ctx = createContext(
+                {},
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                },
+                { _csrf: csrfToken },
+                method
+              );
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            }
+          );
+          it(
+            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have expired.',
+            async () => {
+              csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub, expiresIn: 0 });
+              ctx = createContext(
+                {},
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                },
+                { _csrf: csrfToken },
+                method
+              );
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            }
+          );
+
+          function testCsrkToken(getContext: (requestCsrfToken: string, cookieCsrfToken: string) => Context) {
+            it('should return an HttpResponseForbidden instance if the CSRF tokens are not equal.', async () => {
+              ctx = getContext(csrfToken + '2', csrfToken);
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            });
+
+            it('should not return an HttpResponseForbidden instance if the CSRF tokens are equal.', async () => {
+              ctx = getContext(csrfToken, csrfToken);
+
+              const response = await hook(ctx, services);
+              if (isHttpResponseForbidden(response)) {
+                throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
+              }
+            });
+          }
+
+          context('given a CSRF token is sent in the request body field "_csrf"', () => {
+
+            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+              {},
+              {
+                [JWT_DEFAULT_COOKIE_NAME]: token,
+                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
+              },
+              { _csrf: requestCsrfToken },
+              method,
+            ));
+
+          });
+
+          context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
+
+            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+              { 'X-CSRF-Token': requestCsrfToken },
+              {
+                [JWT_DEFAULT_COOKIE_NAME]: token,
+                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
+              },
+              {},
+              method,
+            ));
+
+          });
+
+          context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
+
+            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+              { 'X-XSRF-Token': requestCsrfToken },
+              {
+                [JWT_DEFAULT_COOKIE_NAME]: token,
+                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
+              },
+              {},
+              method,
+            ));
+
+          });
+          context(
+            'given a CSRF token is sent in the request header "X-XSRF-Token" and the csrf cookie name is customized',
+            () => {
+
+              const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
+
+              beforeEach(() => process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName);
+
+              afterEach(() => delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME);
+
+              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+                { 'X-XSRF-Token': requestCsrfToken },
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [csrfCookieName]: cookieCsrfToken,
+                },
+                {},
+                method,
+              ));
+
+            }
+        );
+        }
+
+        context('given the request HTTP method is "POST"', () => {
+          testProtectedMethod('POST');
+        });
+
+        context('given the request HTTP method is "PUT"', () => {
+          testProtectedMethod('PUT');
+        });
+
+        context('given the request HTTP method is "PATCH"', () => {
+          testProtectedMethod('PATCH');
+        });
+
+        context('given the request HTTP method is "DELETE"', () => {
+          testProtectedMethod('DELETE');
+        });
+
+      });
+
+    });
+
+  });
+
   describe('should set Context.user', () => {
 
-    describe('given options.user is not defined', () => {
+    context('given options.user is not defined', () => {
 
       it('with the decoded payload (header & secret).', async () => {
         const hook = getHookFunction(JWT());
 
         const jwt = sign({ foo: 'bar' }, secret, {});
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         await hook(ctx, services);
 
@@ -512,9 +756,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ secretOrPublicKey }));
 
         const jwt = sign({ foo: 'bar' }, secret, { noTimestamp: true });
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         await hook(ctx, services);
 
@@ -529,9 +771,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT());
 
         const jwt = sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' });
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         await hook(ctx, services);
 
@@ -543,12 +783,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const jwt = sign({ foo: 'bar' }, secret, {});
-        const ctx = new Context({
-          cookies: {
-            [JWT_DEFAULT_COOKIE_NAME]: jwt
-          },
-          get: () => undefined,
-        });
+        ctx = createContext({}, { [JWT_DEFAULT_COOKIE_NAME]: jwt });
 
         await hook(ctx, services);
 
@@ -561,7 +796,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const jwt = sign({ foo: 'bar' }, secret, {});
-        const ctx = new Context({ get: () => undefined, cookies: { xxx: jwt } });
+        ctx = createContext({}, { xxx: jwt });
 
         await hook(ctx, services);
 
@@ -571,13 +806,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     });
 
-    describe('given options.user if defined', () => {
+    context('given options.user if defined', () => {
 
       it('OR return an HttpResponseUnauthorized object if payload.sub is not a string.', async () => {
         const token = sign({}, secret, {});
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${token}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${token}` });
 
         const response = await hook(ctx, services);
         if (!isHttpResponseUnauthorized(response)) {
@@ -595,9 +828,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       it('with the user retrieved from the database.', async () => {
         const jwt = sign({}, secret, { subject: user.id.toString() });
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         await hook(ctx, services);
 
@@ -607,9 +838,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       it('OR return an HttpResponseUnauthorized object if no user could be retrieved from the database '
           + 'with the given payload.sub.', async () => {
         const jwt = sign({}, secret, { subject: user.id.toString() + '1' });
-        const ctx = new Context({
-          get(str: string) { return str === 'Authorization' ? `Bearer ${jwt}` : undefined; }
-        });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         await hook(ctx, services);
 
@@ -632,6 +861,13 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   });
 
   describe('should define an API specification', () => {
+
+    const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
+
+    afterEach(() => {
+      delete process.env.SETTINGS_JWT_CSRF_ENABLED;
+      delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME;
+    });
 
     it('unless options.openapi is false.', () => {
       @JWT({ openapi: false })
@@ -718,12 +954,36 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
       });
 
-      it('with the proper API responses.', () => {
-        @JWT()
+      function testResponses(options: { cookie: boolean }) {
+        @JWT(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'JWT is missing or invalid.' }
+        });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        @JWT({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'JWT is missing or invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
         });
       });
 
@@ -745,16 +1005,88 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         strictEqual(actualSecurityRequirements, undefined);
       });
 
-      it('with the proper API responses.', () => {
-        @JWT()
+      function testResponses(options: { cookie: boolean }) {
+        @JWT(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'JWT is invalid.' }
         });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        @JWT({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'JWT is invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
+        });
       });
 
     }
+
+    function testParameters(options: { cookie: boolean }) {
+      @JWT(options)
+      class Foobar {}
+
+      strictEqual(getApiParameters(Foobar), undefined);
+    }
+
+    it('with the proper API parameters (no cookie & no csrf protection).', () => {
+      testParameters({ cookie: false });
+    });
+
+    it('with the proper API parameters (no cookie & csrf protection).', () => {
+      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      testParameters({ cookie: false });
+    });
+
+    it('with the proper API parameters (cookie & no csrf protection).', () => {
+      testParameters({ cookie: true });
+    });
+
+    it('with the proper API parameters (cookie & csrf protection).', () => {
+      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      @JWT({ cookie: true })
+      class Foobar {}
+
+      const csrfCookieParameter: IApiCookieParameter = {
+        description: 'CSRF token',
+        in: 'cookie',
+        name: JWT_DEFAULT_CSRF_COOKIE_NAME,
+      };
+      deepStrictEqual(getApiParameters(Foobar), [ csrfCookieParameter ]);
+    });
+
+    it('with the proper API parameters (cookie & csrf protection & custom name).', () => {
+      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName;
+
+      @JWT({ cookie: true })
+      class Foobar {}
+
+      const csrfCookieParameter: IApiCookieParameter = {
+        description: 'CSRF token',
+        in: 'cookie',
+        name: csrfCookieName,
+      };
+      deepStrictEqual(getApiParameters(Foobar), [ csrfCookieParameter ]);
+    });
 
   });
 

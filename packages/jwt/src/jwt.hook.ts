@@ -1,12 +1,12 @@
 // 3p
 import {
-  ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
-  Config, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseUnauthorized, IApiSecurityScheme
+  ApiDefineSecurityScheme, ApiParameter, ApiResponse,
+  ApiSecurityRequirement, Config, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseUnauthorized, IApiSecurityScheme
 } from '@foal/core';
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
+import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
 import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
 import { isInvalidTokenError } from './invalid-token.error';
 
@@ -137,6 +137,43 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse(error.message);
     }
 
+    /* Verify CSRF token */
+
+    if (
+      options.cookie &&
+      Config.get('settings.jwt.csrf.enabled', 'boolean', false) &&
+      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
+    ) {
+      const csrfCookieName = Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME);
+      const expectedCsrftoken: string|undefined = ctx.request.cookies[csrfCookieName];
+      if (!expectedCsrftoken) {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+
+      try {
+        const csrfPayload: any = await new Promise((resolve, reject) => {
+          verify(expectedCsrftoken, secretOrPublicKey, (err, value) => {
+            if (err) { reject(err); } else { resolve(value); }
+          });
+        });
+        if (csrfPayload.sub !== payload.sub) {
+          return new HttpResponseForbidden('CSRF token missing or incorrect.');
+        }
+      } catch {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+
+      const actualCsrfToken =
+        ctx.request.body._csrf ||
+        ctx.request.get('X-CSRF-Token') ||
+        ctx.request.get('X-XSRF-Token');
+      if (actualCsrfToken !== expectedCsrftoken) {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+    }
+
+    /* Set ctx.user */
+
     if (!options.user) {
       ctx.user = payload;
       return;
@@ -169,6 +206,14 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
     if (required) {
       openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
+    }
+    if (Config.get('settings.jwt.csrf.enabled', 'boolean', false)) {
+      openapi.push(ApiParameter({
+        description: 'CSRF token',
+        in: 'cookie',
+        name: Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME),
+      }));
+      openapi.push(ApiResponse(403, { description: 'CSRF token is missing or incorrect.' }));
     }
   } else {
     const securityScheme: IApiSecurityScheme = {

@@ -100,7 +100,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     headers: { [key: string]: string } = {},
     cookies: { [key: string]: string } = {},
     body: { [key: string]: string } = {},
-    method: HttpMethod = 'GET',
+    // Do not use GET, HEAD or OPTIONS as default (CSRF tests).
+    method: HttpMethod = 'POST',
   ) {
     return new Context({
       get(key: string) { return headers[key]; },
@@ -358,7 +359,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       context('given options.cookie is false or not defined', () => {
 
-        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${csrfSessionID}`}));
+        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${csrfSessionID}`}, {}, {}, 'POST'));
 
         it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
           const response = await hook(ctx, services);
@@ -492,13 +493,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
     });
-
-    // Set
-    // ONLY remove both cookies in all other places where session cookie is removed
-    // sameSite: use 'lax' by default if csrf is true
-    // cookie
-    // cookie with a different name
-    // cookie and its properties
 
   });
 
