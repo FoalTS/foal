@@ -35,29 +35,6 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 }
 ```
 
-### The `validate` util
-
-The `validate` util throws a `ValidationError` if the given data does not fit the shema.
-
-*Example*
-```typescript
-import { validate } from '@foal/core';
-
-const schema = {
-  properties: {
-    a: { type: 'number' }
-  },
-  type: 'object'
-};
-const data = {
-  a: 'foo'
-};
-
-validate(schema, data);
-// => Throws an error (ValidationError)
-// => error.content contains the details of the validation error.
-```
-
 ### Validation & Sanitization of HTTP Requests
 
 FoalTS provides many hooks to validate and sanitize HTTP requests. When validation fails, they return an `HttpResponseBadRequest` object whose body contains the validation errors.
