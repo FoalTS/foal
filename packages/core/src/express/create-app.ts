@@ -50,42 +50,28 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
   next();
 }
 
-function getOptions(expressInstanceOrOptions?: any|CreateAppOptions): CreateAppOptions {
-  if (!expressInstanceOrOptions) {
-    return {};
-  }
-
-  if (typeof expressInstanceOrOptions === 'function') {
-    return { expressInstance: expressInstanceOrOptions };
-  }
-
-  return expressInstanceOrOptions;
-}
-
 /**
  * Create an Express application from the root controller.
  *
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(any|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
- * Express middlewares or other settings.
- * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * @param {CreateAppOptions} [options] - Options containaining Express middlewares or other settings.
+ * @param {any} [options.expressInstance] - Express instance to be used as base for the
  * returned application.
- * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
+ * @param {boolean} [options.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
- * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
+ * @param {ServiceManager} [options.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [options.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [options.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns {any} The express application.
  */
 export function createApp(
   AppController: Class,
-  expressInstanceOrOptions?: any | CreateAppOptions,
+  options: CreateAppOptions = {},
 ): any {
-  const options = getOptions(expressInstanceOrOptions);
   const app = options.expressInstance || express();
 
   // Add optional pre-middlewares.
@@ -153,24 +139,23 @@ export function createApp(
  *
  * @export
  * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
- * @param {(any|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
- * Express middlewares or other settings.
- * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
+ * @param {CreateAppOptions} [options] - Options containaining Express middlewares or other settings.
+ * @param {any} [options.expressInstance] - Express instance to be used as base for the
  * returned application.
- * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
+ * @param {boolean} [options.methods.handleError] - Specifies if AppController.handleError should be
  * used to handle errors.
- * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
+ * @param {ServiceManager} [options.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
- * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [options.preMiddlewares] Express
  * middlewares to be executed before the controllers and hooks.
- * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.postMiddlewares] Express
+ * @param {(RequestHandler | ErrorRequestHandler)[]} [options.postMiddlewares] Express
  * middlewares to be executed after the controllers and hooks, but before the 500 or 404 handler get called.
  * @returns {Promise<any>} The express application.
  */
 export async function createAndInitApp(
-  AppController: Class, expressInstanceOrOptions?: any | CreateAppOptions
+  AppController: Class, options: CreateAppOptions = {}
 ): Promise<any> {
-  const app = createApp(AppController, expressInstanceOrOptions);
+  const app = createApp(AppController, options);
 
   await app.foal.services.boot();
 

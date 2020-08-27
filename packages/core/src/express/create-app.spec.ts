@@ -274,13 +274,6 @@ describe('createApp', () => {
     ]);
   });
 
-  it('should use the optional express instance if one is given.', () => {
-    const expected = express();
-    const actual = createApp(class { }, expected);
-
-    strictEqual(actual, expected);
-  });
-
   it('should use the optional options.expressInstance if one is given.', () => {
     const expected = express();
     const actual = createApp(class { }, {
