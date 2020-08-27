@@ -69,9 +69,6 @@
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
-* Cloud
-  * [AWS Beanstalk](./cloud/aws-beanstalk.md)
-  * [Firebase](./cloud/firebase.md)
 * Security
   * [HTTP Headers Protection](./security/http-headers-protection.md)
   * [CSRF Protection](./security/csrf-protection.md)
