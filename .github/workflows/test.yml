@@ -90,8 +90,6 @@ jobs:
       run: cd packages/ejs && npm run test
     - name: Run unit tests of @foal/examples
       run: cd packages/examples && npm run test
-    - name: Run unit tests of @foal/formidable
-      run: cd packages/formidable && npm run test
     - name: Run unit tests of @foal/graphql
       run: cd packages/graphql && npm run test
     - name: Run unit tests of @foal/jwks-rsa
