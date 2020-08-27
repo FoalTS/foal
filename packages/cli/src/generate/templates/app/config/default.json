@@ -1,7 +1,6 @@
 {
   "port": 3001,
   "settings": {
-    "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
     "session": {
