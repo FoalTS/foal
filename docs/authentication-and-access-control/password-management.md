@@ -13,7 +13,6 @@ The `hashPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF
 | Name | Type | Default value |
 | --- | --- | --- |
 | plainTextPassword | string | |
-| options | `{ legacy?: boolean }` | `{}` |
 
 **Return type**
 
@@ -25,8 +24,7 @@ Promise<string>
 
 The `verifyPassword` takes three arguments:
 - the password to check in plain text,
-- the password hash (usually fetched from the database),
-- and an optional `options` object (see below).
+- and the password hash (usually fetched from the database).
 
 **Parameters**
 
@@ -34,12 +32,9 @@ The `verifyPassword` takes three arguments:
 | --- | --- | --- |
 | plainTextPassword | string | |
 | passwordHash | string | |
-| options | `{ legacy?: boolean }` | `{}` |
 
 **Return type**
 
 ```typescript
 Promise<boolean>
 ```
-
-> If you used the `parsePassword` function in previous versions of Foal (<0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `hashPassword`.

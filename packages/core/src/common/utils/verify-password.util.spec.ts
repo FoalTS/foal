@@ -51,13 +51,4 @@ describe('verifyPassword', () => {
     strictEqual(await verifyPassword('wrong password', passwordHash), false);
   });
 
-  it('should verify password hashes created from hashPassword with the legacy'
-      + ' option (old parsePassword).', async () => {
-    const plainPassword = 'hello world';
-    const passwordHash = await hashPassword(plainPassword, { legacy: true });
-
-    ok(await verifyPassword(plainPassword, passwordHash, { legacy: true }));
-    strictEqual(await verifyPassword('wrong password', passwordHash, { legacy: true }), false);
-  });
-
 });
