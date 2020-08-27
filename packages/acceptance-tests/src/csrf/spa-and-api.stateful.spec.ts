@@ -1,5 +1,8 @@
+// std
+import { strictEqual } from 'assert';
+
 // 3p
-import { createConnection, getConnection } from '@foal/typeorm/node_modules/typeorm';
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -9,47 +12,59 @@ import {
   createApp,
   createSession,
   dependency,
-  generateToken,
   HttpResponseCreated,
-  HttpResponseOK,
+  HttpResponseNoContent,
+  HttpResponseUnauthorized,
   Post,
   TokenOptional,
   TokenRequired,
+  ValidateBody,
+  verifyPassword
 } from '@foal/core';
-import { CsrfTokenRequired, getCsrfToken, setCsrfCookie } from '@foal/csrf';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../common';
 
-describe('[CSRF|spa and api|stateful] Users', () => {
+describe('Feature: Stateful CSRF protection in a Single-Page Application', () => {
 
-  let app: any;
-  let sessionToken: string;
-  let csrfToken: string;
+  /* ======================= DOCUMENTATION BEGIN ======================= */
 
+  // auth.controller.ts
   class AuthController {
     @dependency
+    // "Store" documentation
     store: TypeORMStore;
 
     @Post('/login')
+    @ValidateBody(credentialsSchema)
     @TokenOptional({
       cookie: true,
+      // Nothing in documentation
       store: TypeORMStore,
     })
     async login(ctx: Context) {
-      ctx.session = await createSession(this.store);
-      ctx.session.set('csrfToken', await generateToken());
-      ctx.session.setUser({ id: 1 });
+      const user = await User.findOne({ email: ctx.request.body.email });
 
-      const response = new HttpResponseOK();
-      setCsrfCookie(response, await getCsrfToken(ctx.session));
-      return response;
+      if (!user) {
+        return new HttpResponseUnauthorized();
+      }
+
+      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+        return new HttpResponseUnauthorized();
+      }
+
+      ctx.session = ctx.session || await createSession(this.store);
+      ctx.session.setUser(user);
+
+      return new HttpResponseNoContent();
     }
   }
 
+  // api.controller.ts
   @TokenRequired({
     cookie: true,
+    // Nothing in documentation
     store: TypeORMStore,
   })
-  @CsrfTokenRequired()
   class ApiController {
     @Post('/products')
     createProduct() {
@@ -57,53 +72,79 @@ describe('[CSRF|spa and api|stateful] Users', () => {
     }
   }
 
+  /* ======================= DOCUMENTATION END ========================= */
+
   class AppController {
     subControllers = [
-      AuthController,
+      controller('', AuthController),
       controller('/api', ApiController),
     ];
   }
 
+  const csrfCookieName = 'Custom-XSRF-Token';
+
+  let connection: Connection;
+  let user: User;
+
+  let app: any;
+  let sessionToken: string;
+  let csrfToken: string;
+
   before(async () => {
-    await createConnection({
-      database: 'e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ DatabaseSession ],
-      synchronize: true,
-      type: 'sqlite',
-    });
+    process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+    process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME = csrfCookieName;
+
+    connection = await createTestConnection([ User, DatabaseSession ]);
+
+    user = await createFixtureUser(1);
+    await user.save();
 
     app = createApp(AppController);
   });
 
   after(async () => {
-    await getConnection().close();
+    delete process.env.SETTINGS_SESSION_CSRF_ENABLED;
+    delete process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME;
+
+    await connection.close();
   });
 
-  it('can log in and get a CSRF token.', () => {
+  it('Step 1: User logs in and gets a CSRF token.', () => {
     return request(app)
       .post('/login')
-      .expect(200)
+      .send({
+        email: user.email,
+        password: 'password1',
+      })
+      .expect(204)
       .then(response => {
-        const cookies = response.header['set-cookie'];
-        csrfToken = cookies[0].split('csrfToken=')[1].split(';')[0];
-        sessionToken = cookies[1].split('sessionID=')[1].split(';')[0];
+        const cookies: string[] = response.header['set-cookie'];
+        strictEqual(cookies.length, 2, 'Expected two cookies in the response.');
+
+        sessionToken = readCookie(cookies, 'sessionID').value;
+        csrfToken = readCookie(cookies, csrfCookieName).value;
       });
   });
 
-  it('cannot access POST routes with no CSRF token.', () => {
+  it('Step 2: User cannot access POST routes with no CSRF token.', () => {
     return request(app)
       .post('/api/products')
-      .set('Cookie', [`sessionID=${sessionToken}`])
+      .set('Cookie', [
+        `sessionID=${sessionToken}`,
+        // The CSRF cookie is not required.
+      ])
       .expect(403)
       .expect('CSRF token missing or incorrect.');
   });
 
-  it('can access POST routes with the CSRF token.', () => {
+  it('Step 3: User can access POST routes with the CSRF token.', () => {
     return request(app)
       .post('/api/products')
-      .set('Cookie', [`sessionID=${sessionToken}`])
-      .set('X-CSRF-TOKEN', csrfToken)
+      .set('Cookie', [
+        `sessionID=${sessionToken}`,
+        // The CSRF cookie is not required.
+      ])
+      .set('X-XSRF-TOKEN', csrfToken)
       .expect(201);
   });
 

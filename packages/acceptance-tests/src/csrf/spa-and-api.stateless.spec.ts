@@ -2,6 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -18,7 +19,6 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { Connection } from 'typeorm';
 import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
