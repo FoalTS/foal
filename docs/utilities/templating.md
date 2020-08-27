@@ -181,7 +181,3 @@ But the path can also be relative to the controller file. The `render` function 
 //       '- login.controller.ts
 render('./templates/login.html', { /* ... */ }, __dirname)
 ```
-
-## The Legacy Package `@foal/ejs`
-
-Previous versions of FoalTS (<v1.0.0) only accepted a certain format for template engines. The package `@foal/ejs` was an adapter of EJS for the framework. Since FoalTS now supports Express-compatible template engines, prefer using the `ejs` library directly in the future.
