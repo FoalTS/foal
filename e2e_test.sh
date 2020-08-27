@@ -20,7 +20,6 @@ foal g hook foo-bar
 foal g service foo
 foal g controller bar --register
 foal g rest-api product --register
-foal g sub-app bar-foo
 foal g script bar-script
 
 # Test linting
