@@ -10,11 +10,13 @@ import {
   getApiSecurity,
   getHookFunction,
   HookFunction,
+  HttpMethod,
   HttpResponseOK,
   IApiComponents,
   IApiSecurityRequirement,
   isHttpResponse,
   isHttpResponseBadRequest,
+  isHttpResponseForbidden,
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
@@ -33,8 +35,11 @@ import { TokenRequired } from './token-required.hook';
 
 export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, required: boolean) {
 
-  const anonymousSessionID = 'sjqkfhehlkajazeincudbuqslnd';
-  const authenticatedSessionID = 'jdhzialoenfurhhfbghdfjh';
+  const anonymousSessionID = 'anonymousSessionIDxxxxxx';
+  const authenticatedSessionID = 'authenticatedSessionIDxxxxxx';
+  const csrfSessionID = 'csrfSessionIDxxxxxx';
+  const csrfToken = 'csrfxxx';
+  const incorrectCsrfToken = 'csrfyyy';
   const userId = 1;
 
   let ctx: Context;
@@ -63,7 +68,16 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         // The differenece is required in order to test that the session and cookie lifetime are extended.
         updatedAt: Math.trunc(Date.now() / 1000 - SESSION_DEFAULT_INACTIVITY_TIMEOUT / 3),
         userId,
-      }
+      },
+      // Session with CSRF
+      {
+        content: { csrfToken },
+        createdAt: Math.trunc(Date.now() / 1000),
+        flash: {},
+        id: csrfSessionID,
+        updatedAt: Math.trunc(Date.now() / 1000),
+        userId: null,
+      },
     ];
 
     save(state: SessionState, maxInactivity: number): Promise<void> {
@@ -82,10 +96,18 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {}
   }
 
-  function createContext(headers: { [key: string]: string } = {}, cookies: { [key: string]: string } = {}) {
+  function createContext(
+    headers: { [key: string]: string } = {},
+    cookies: { [key: string]: string } = {},
+    body: { [key: string]: string } = {},
+    // Do not use GET, HEAD or OPTIONS as default (CSRF tests).
+    method: HttpMethod = 'POST',
+  ) {
     return new Context({
       get(key: string) { return headers[key]; },
+      body,
       cookies,
+      method,
     });
   }
 
@@ -319,6 +341,155 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(value, '');
         strictEqual(options.maxAge, 0);
+      });
+
+    });
+
+  });
+
+  describe('should verify the CSRF token and', () => {
+
+    context('given settings.session.csrf.enabled is true', () => {
+
+      beforeEach(() => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+      });
+
+      afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+
+      context('given options.cookie is false or not defined', () => {
+
+        beforeEach(() => ctx = createContext({ Authorization: `Bearer ${csrfSessionID}`}, {}, {}, 'POST'));
+
+        it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+          const response = await hook(ctx, services);
+          if (isHttpResponseForbidden(response)) {
+            throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+          }
+        });
+
+      });
+
+      context('given options.cookie is true', () => {
+
+        beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
+
+        function testUnprotectedMethod(method: HttpMethod) {
+          it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
+            const response = await hook(ctx, services);
+            if (isHttpResponseForbidden(response)) {
+              throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+            }
+          });
+        }
+
+        context('given the request HTTP method is "GET"', () => {
+          testUnprotectedMethod('GET');
+        });
+
+        context('given the request HTTP method is "HEAD"', () => {
+          testUnprotectedMethod('HEAD');
+        });
+
+        context('given the request HTTP method is "OPTIONS"', () => {
+          testUnprotectedMethod('OPTIONS');
+        });
+
+        function testProtectedMethod(method: HttpMethod) {
+          it('should return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
+            const response = await hook(ctx, services);
+            if (!isHttpResponseForbidden(response)) {
+              throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+            }
+
+            strictEqual(response.body, 'CSRF token missing or incorrect.');
+          });
+
+          it('should throw an error if the session state has no CSRF token.', async () => {
+            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID }, {}, method);
+            return rejects(
+              () => hook(ctx, services),
+              {
+                message: 'Unexpected error: the session content does not have a "csrfToken" field. '
+                  + 'Are you sure you created the session with "createSession"?'
+              }
+            );
+          });
+
+          function testCsrkToken(getContext: (token: string) => Context) {
+            it('should return an HttpResponseForbidden instance if the CSRF token is incorrect.', async () => {
+              ctx = getContext(incorrectCsrfToken);
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            });
+
+            it('should not return an HttpResponseForbidden instance if the CSRF token is correct.', async () => {
+              ctx = getContext(csrfToken);
+
+              const response = await hook(ctx, services);
+              if (isHttpResponseForbidden(response)) {
+                throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
+              }
+            });
+          }
+
+          context('given a CSRF token is sent in the request body field "_csrf"', () => {
+
+            testCsrkToken(token => createContext(
+              {},
+              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+              { _csrf: token },
+              method,
+            ));
+
+          });
+
+          context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
+
+            testCsrkToken(token => createContext(
+              { 'X-CSRF-Token': token },
+              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+              {},
+              method,
+            ));
+
+          });
+
+          context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
+
+            testCsrkToken(token => createContext(
+              { 'X-XSRF-Token': token },
+              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+              {},
+              method,
+            ));
+
+          });
+        }
+
+        context('given the request HTTP method is "POST"', () => {
+          testProtectedMethod('POST');
+        });
+
+        context('given the request HTTP method is "PUT"', () => {
+          testProtectedMethod('PUT');
+        });
+
+        context('given the request HTTP method is "PATCH"', () => {
+          testProtectedMethod('PATCH');
+        });
+
+        context('given the request HTTP method is "DELETE"', () => {
+          testProtectedMethod('DELETE');
+        });
+
       });
 
     });
@@ -682,8 +853,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should define an API specification', () => {
 
+    afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+
     it('unless options.openapi is false.', () => {
-      @Token({ store: Store, openapi: false })
+      @Token({ openapi: false })
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
@@ -692,7 +865,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (cookie).', () => {
-      @Token({ store: Store, cookie: true })
+      @Token({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -710,7 +883,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     it('with the proper security scheme (cookie) (cookie name different).', () => {
       process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
-      @Token({ store: Store, cookie: true })
+      @Token({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -727,7 +900,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (no cookie).', () => {
-      @Token({ store: Store })
+      @Token()
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -745,7 +918,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     if (required) {
 
       it('with the proper security requirement (cookie).', () => {
-        @Token({ store: Store, cookie: true })
+        @Token({ cookie: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -756,7 +929,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper security requirement (no cookie).', () => {
-        @Token({ store: Store })
+        @Token()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -766,19 +939,43 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         deepStrictEqual(actualSecurityRequirements, expectedSecurityRequirements);
       });
 
-      it('with the proper API responses.', () => {
-        @Token({ store: Store })
+      function testResponses(options: { cookie: boolean }) {
+        @Token(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is missing or invalid.' }
+        });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        @Token({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is missing or invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
         });
       });
 
     } else {
 
       it('with no security requirement (cookie).', () => {
-        @Token({ store: Store, cookie: true })
+        @Token({ cookie: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -786,19 +983,43 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with no security requirement (no cookie).', () => {
-        @Token({ store: Store })
+        @Token()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
         strictEqual(actualSecurityRequirements, undefined);
       });
 
-      it('with the proper API responses.', () => {
-        @Token({ store: Store })
+      function testResponses(options: { cookie: boolean }) {
+        @Token(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
           401: { description: 'Auth token is invalid.' }
+        });
+      }
+
+      it('with the proper API responses (no cookie & no csrf protection).', () => {
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (no cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        testResponses({ cookie: false });
+      });
+
+      it('with the proper API responses (cookie & no csrf protection).', () => {
+        testResponses({ cookie: true });
+      });
+
+      it('with the proper API responses (cookie & csrf protection).', () => {
+        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        @Token({ cookie: true })
+        class Foobar {}
+
+        deepStrictEqual(getApiResponses(Foobar), {
+          401: { description: 'Auth token is invalid.' },
+          403: { description: 'CSRF token is missing or incorrect.'}
         });
       });
 

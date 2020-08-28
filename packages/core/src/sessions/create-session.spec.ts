@@ -1,4 +1,4 @@
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { notStrictEqual, ok, strictEqual } from 'assert';
 import { createService } from '../core';
 import { createSession } from './create-session';
 import { Session } from './session';
@@ -46,19 +46,32 @@ describe('createSession', () => {
 
   describe('should create the session', () => {
 
-    it('with empty content and userId.', async () => {
+    it('with an empty userId.', async () => {
       await session.commit();
 
       // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
 
       // tslint:disable-next-line
-      deepStrictEqual(state?.content, {});
-      // tslint:disable-next-line
       strictEqual(state?.userId, null);
     });
 
-    it('with proper a createdAt date.', async () => {
+    it('with a csrfToken generated randomly (256-bit base64url-encoded string).', async () => {
+      await session.commit();
+
+      // tslint:disable-next-line
+      const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
+      if (!state) {
+        throw new Error('Unexpected error.');
+      }
+
+      strictEqual(Object.keys(state.content).length, 1);
+      ok(typeof state.content.csrfToken === 'string');
+      strictEqual(state.content.csrfToken.length >= 43, true);
+      strictEqual(state.content.csrfToken.length <= 44, true);
+    });
+
+    it('with a proper createdAt date.', async () => {
       // updatedAt is managed by Session.commit().
       const dateBefore = Math.trunc(Date.now() / 1000);
       await session.commit();

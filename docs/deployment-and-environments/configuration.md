@@ -24,7 +24,6 @@ The framework encourages a **strict separation between configuration and code** 
 ```
 DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=password
-SETTINGS_CSRF_SECRET=YKvV281Z8nbkPowDLkMTTIrg
 ```
 
 *Example of a file in the `config/` directory*
@@ -37,7 +36,6 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
 {
   "port": 3001,
   "settings": {
-    "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
     "staticPath": "public/",
@@ -59,7 +57,6 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
 port: 3001
 
 settings:
-  csrf: false
   debug: false
   loggerFormat: tiny
   staticPath: public/
@@ -103,16 +100,16 @@ This function takes the configuration key as parameter.
 ```typescript
 import { Config } from '@foal/core';
 
-const secret = Config.get('settings.jwt.secretOrPublicKey');
+const secret = Config.get('settings.jwt.secret');
 ```
 
 In this example, FoalTS will try to retrieve the configuration value via:
-- the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
-- the `.env` file with the variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
-- the JSON file `config/development.json` with the path `settings.jwt.secretOrPublicKey`,
-- the YAML file `config/development.yml` with the path `settings.jwt.secretOrPublicKey`,
-- the JSON file `config/default.json` with the path `settings.jwt.secretOrPublicKey`,
-- or the YAML file `config/default.yml` with the path `settings.jwt.secretOrPublicKey`.
+- the environment variable `SETTINGS_JWT_SECRET`,
+- the `.env` file with the variable `SETTINGS_JWT_SECRET`,
+- the JSON file `config/development.json` with the path `settings.jwt.secret`,
+- the YAML file `config/development.yml` with the path `settings.jwt.secret`,
+- the JSON file `config/default.json` with the path `settings.jwt.secret`,
+- or the YAML file `config/default.yml` with the path `settings.jwt.secret`.
 
 If no value is found, the method returns `undefined`.
 

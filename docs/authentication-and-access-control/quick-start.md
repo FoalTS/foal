@@ -87,6 +87,8 @@ export class User {
 }
 ```
 
+TODO: add an example with JWT and cookies.
+
 ## SPA + API / Mobile + API (no cookies)
 
 With these implementations, the user logs in with the route `POST /login` and receives a token in exchange in the response body. Then, when the user makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.
@@ -194,7 +196,7 @@ foal createsecret
 And save this secret in a `.env` file:
 
 ```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my-secret
+SETTINGS_JWT_SECRET=my-secret
 ```
 
 *src/app/controllers/auth.controller.ts*
@@ -243,7 +245,7 @@ export class AuthController {
       email: user.email,
       id: user.id,
     };
-    const secret = Config.getOrThrow('settings.jwt.secretOrPublicKey', 'string');
+    const secret = getSecretOrPrivateKey();
 
     const token = await new Promise<string>((resolve, reject) => {
       sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {

@@ -7,7 +7,9 @@ export async function createSession(store: SessionStore): Promise<Session> {
   const date = Math.floor(Date.now() / 1000);
 
   const state: SessionState = {
-    content: {},
+    content: {
+      csrfToken: await generateToken(),
+    },
     createdAt: date,
     // The below line cannot be tested because of the encapsulation of Session.
     flash: {},

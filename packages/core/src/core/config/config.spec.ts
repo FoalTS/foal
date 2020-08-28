@@ -107,12 +107,12 @@ describe('Config', () => {
 
     it('should return the value of the config/default.json file if it exists.', () => {
       const fileContent = JSON.stringify({
-        jwt: { subSection: { secretOrPublicKey: 'xxx' } }
+        jwt: { subSection: { secret: 'xxx' } }
       });
       mkdirSync('config');
       writeFileSync('config/default.json', fileContent, 'utf8');
 
-      strictEqual(Config.get('jwt.subSection.secretOrPublicKey'), 'xxx');
+      strictEqual(Config.get('jwt.subSection.secret'), 'xxx');
     });
 
     it('should return the value of the config/default.yml file if it exists.', () => {
