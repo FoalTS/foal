@@ -1,9 +1,8 @@
 // std
 import { strictEqual } from 'assert';
-import { pbkdf2, pbkdf2Sync } from 'crypto';
+import { pbkdf2Sync } from 'crypto';
 
 // FoalTS
-import { promisify } from 'util';
 import { hashPassword } from './hash-password.util';
 
 describe('hashPassword', () => {
