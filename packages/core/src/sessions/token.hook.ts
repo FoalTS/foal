@@ -147,14 +147,15 @@ export function Token(required: boolean, options: TokenOptions): HookDecorator {
 
     /* Set ctx.user */
 
-    // TODO: given userRequired, if userId === null OR options.user returns null, return response.
-    // TODO: if the ID returns no user, destroy the session and remove the cookie.
-
     if (session.userId !== null && options.user) {
       ctx.user = await options.user(session.userId);
       if (!ctx.user) {
-        return unauthorizedOrRedirect('The token does not match any user.');
-        // TODO: remove session cookie and destroy session
+        await session.destroy();
+        const response = unauthorizedOrRedirect('The token does not match any user.');
+        if (options.cookie) {
+          removeSessionCookie(response);
+        }
+        return response;
       }
     }
 

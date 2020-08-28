@@ -547,8 +547,6 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         strictEqual(ctx.user, undefined);
       });
 
-      // ...
-
     });
 
     context('given the session has a user ID', () => {
@@ -582,15 +580,73 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           strictEqual(ctx.user, user);
         });
 
-        context('given options.redirectTo is not defined', () => {
+        context('given the function options.user returns null (session invalid)', () => {
 
-          it(
-            'with the undefined value and should return an HttpResponseUnauthorized object'
-            + ' if the function options.user returns null.',
-            async () => {
-              const fetchUser = async (id: number|string) => undefined;
-              hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+          const fetchUser = async (id: number|string) => undefined;
 
+          beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser })));
+
+          it('with the undefined value and should destroy the session.', async () => {
+            const response = await hook(ctx, services);
+
+            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.session?.isDestroyed, true);
+          });
+
+          context('given options.cookie is false or not defined', () => {
+
+            it(
+              'with the undefined value and should not remove a session cookie in the response '
+              + '(it can belongs to another application).',
+              async () => {
+                const response = await hook(ctx, services);
+                if (!isHttpResponse(response)) {
+                  throw new Error('The hook should have returned an HttpResponse instance.');
+                }
+
+                strictEqual(ctx.user, undefined);
+
+                deepStrictEqual(response.getCookies(), {});
+              }
+            );
+
+          });
+
+          context('given options.cookie is true', () => {
+
+            beforeEach(() => {
+              hook = getHookFunction(Token({ store: Store, user: fetchUser, cookie: true }));
+              const token = ctx.request.get('Authorization');
+              if (token) {
+                ctx = createContext(
+                  {},
+                  {
+                    [SESSION_DEFAULT_COOKIE_NAME]: token.split('Bearer ')[1]
+                  },
+                );
+              } else {
+                ctx = createContext();
+              }
+            });
+
+            it('with the undefined value and should remove the session cookie.', async () => {
+              const response = await hook(ctx, services);
+              if (!isHttpResponse(response)) {
+                throw new Error('The hook should have returned an HttpResponse instance.');
+              }
+
+              strictEqual(ctx.user, undefined);
+
+              const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+              strictEqual(value, '');
+              deepStrictEqual(options.maxAge, 0);
+            });
+
+          });
+
+          context('given options.redirectTo is not defined', () => {
+
+            it('with the undefined value and should return an HttpResponseUnauthorized object.', async () => {
               const response = await hook(ctx, services);
 
               strictEqual(ctx.user, undefined);
@@ -606,20 +662,15 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
                 response.getHeader('WWW-Authenticate'),
                 'error="invalid_token", error_description="The token does not match any user."'
               );
-            }
-          );
+            });
 
-        });
+          });
 
-        context('given options.redirectTo is defined', () => {
+          context('given options.redirectTo is defined', () => {
 
-          it(
-            'with the null value and should return an HttpResponseRedirect object'
-            + ' if the function options.user returns null.',
-            async () => {
-              const fetchUser = async (id: number|string) => undefined;
-              hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+            beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' })));
 
+            it('with the null value and should return an HttpResponseRedirect object.', async () => {
               const response = await hook(ctx, services);
 
               strictEqual(ctx.user, undefined);
@@ -628,8 +679,9 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
                 throw new Error('response should be instance of HttpResponseRedirect');
               }
               strictEqual(response.path, '/foo');
-            }
-          );
+            });
+
+          });
 
         });
 

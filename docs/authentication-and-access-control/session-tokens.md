@@ -8,6 +8,8 @@ In FoalTS, web sessions are temporary states that can be associated with a speci
 
 A session usually begins when the user logs in and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.
 
+TODO: mention the need of a "@UserRequired" if we support anonymous sessions in the application.
+
 ## Get Started
 
 > warning: version 2 -> add the migrations
