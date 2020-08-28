@@ -42,7 +42,7 @@ async function main() {
     }
   }));
     
-  const app = createApp(AppController, expressApp);
+  const app = await createApp(AppController, expressApp);
     
   const httpServer = http.createServer(app);
   const port = Config.get('port', 'number', 3001);

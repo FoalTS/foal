@@ -211,7 +211,7 @@ async function main() {
   const serviceManager = new ServiceManager();
   serviceManager.set(Connection, connection);
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     serviceManager
   });
 
@@ -352,7 +352,7 @@ async function main() {
     .set('product', productRepository)
     .set('logger', new ConsoleLogger());
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     serviceManager
   });
 

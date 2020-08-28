@@ -13,7 +13,7 @@ import { AppController } from './app/app.controller';
 async function main() {
   await createConnection();
 
-  const app = createApp(AppController);
+  const app = await createApp(AppController);
 
   const httpServer = http.createServer(app);
   const port = Config.get('port', 'number', 3001);

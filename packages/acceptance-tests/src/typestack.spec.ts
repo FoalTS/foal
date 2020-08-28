@@ -44,7 +44,7 @@ describe('ValidateBody hook', () => {
       }
     }
 
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     await request(app)
       .post('/products')

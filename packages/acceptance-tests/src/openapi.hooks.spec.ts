@@ -91,7 +91,7 @@ describe('Foal', () => {
       createProduct() {}
     }
 
-    const app = createApp(ApiController);
+    const app = await createApp(ApiController);
     return request(app)
       .post('/products')
       .send({})

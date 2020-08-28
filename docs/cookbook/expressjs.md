@@ -5,7 +5,7 @@ FoalTS applications are created with the `createApp` function in the `src/index.
 ```typescript
 import { createApp } from '@foal/core';
 
-const app = createApp(AppController);
+const app = await createApp(AppController);
 ```
 
 The returned value is an ExpressJS application that can be used as is to create an HTTP server. **FoalTS is not designed to integrate Express middlewares in its controllers or hooks**. However, if for any reason you need to apply globally a middleware to the application, you have two ways to do it.
@@ -21,9 +21,7 @@ import * as express from 'express';
 const expressApp = express();
 expressApp.use(/* an Express middleware */)
 
-const app = createApp(AppController, expressApp);
-// OR
-const app = createApp(AppController, {
+const app = await createApp(AppController, {
   expressInstance: expressApp
 });
 
@@ -37,7 +35,7 @@ You can also pass global Express middlewares as options to the `createApp` funct
 import { createApp } from '@foal/core';
 import * as rateLimit from 'express-rate-limit';
 
-const app = createApp(AppController, {
+const app = await createApp(AppController, {
   preMiddlewares: [
     /* Express middlewares */
   ],
@@ -56,6 +54,6 @@ In case your are migrating your ExpressJS application to FoalTS, you can access 
 ```typescript
 import { createApp } from '@foal/core';
 
-const app = createApp(AppController);
+const app = await createApp(AppController);
 app.foal.services.get(MyServiceClass).doSomething();
 ```

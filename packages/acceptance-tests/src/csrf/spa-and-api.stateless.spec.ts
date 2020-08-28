@@ -44,7 +44,7 @@ describe('[CSRF|spa and api|stateless] Users', () => {
     process.env.SETTINGS_CSRF_SECRET = 'csrf-secret';
     // Custom CSRF cookie name
     process.env.SETTINGS_CSRF_COOKIE_NAME = '_csrf';
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

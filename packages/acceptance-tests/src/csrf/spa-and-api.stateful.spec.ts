@@ -73,7 +73,7 @@ describe('[CSRF|spa and api|stateful] Users', () => {
       type: 'sqlite',
     });
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

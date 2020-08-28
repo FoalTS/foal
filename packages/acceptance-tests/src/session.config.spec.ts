@@ -65,7 +65,7 @@ describe('The session store', () => {
 
     }
 
-    const app = createApp(AuthController, {
+    const app = await createApp(AuthController, {
       serviceManager
     });
     await app.foal.services.boot();

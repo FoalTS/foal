@@ -86,7 +86,7 @@ describe('[CSRF|regular web app|stateful] Users', () => {
       type: 'sqlite',
     });
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

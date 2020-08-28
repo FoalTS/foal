@@ -20,7 +20,7 @@ it('Nuxt.js', async () => {
     }
   }
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     postMiddlewares: [
       nuxt.render
     ]

@@ -45,7 +45,7 @@ describe('[CSRF|regular web app|stateless] Users', () => {
 
   before(async () => {
     process.env.SETTINGS_CSRF_SECRET = 'csrf-secret';
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

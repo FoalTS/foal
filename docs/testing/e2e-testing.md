@@ -45,7 +45,7 @@ describe('The server', () => {
 
   before(async () => {
     await createConnection();
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(() => getConnection().close());

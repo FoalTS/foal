@@ -16,7 +16,7 @@ async function main() {
   await createConnection();
 
   // Creation of the application
-  const app = createApp(AppController);
+  const app = await createApp(AppController);
 
   // ...
 }
@@ -58,20 +58,6 @@ export class AppController {
   }
 
 }
-```
-
-For this to work, you need to update your `src/index.ts` file and create the application with the asynchronous function `createAndInitApp`.
-
-```typescript
-import { createAndInitApp } from '@foal/core';
-
-async function main() {
-  const app = await createAndInitApp(AppController);
-
-  // ...
-}
-
-main();
 ```
 
 ## The services `boot` method

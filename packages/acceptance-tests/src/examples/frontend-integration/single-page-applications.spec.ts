@@ -28,7 +28,7 @@ describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
       }
     }
 
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     return Promise.all([
       request(app)
