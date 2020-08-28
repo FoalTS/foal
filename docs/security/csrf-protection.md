@@ -4,429 +4,418 @@
 >
 > *Source: [OWASP](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md)*
 
-There are several ways to defend yourself against a CSRF attack. The better approach is to use both the `SameSite` cookie directive and a token-based technique to have an in-depth protection.
+## Defense Principle
 
-*Note: CSRF protection only makes sense if your authentication system is based on cookies. This is why there is no example for *Mobile+API* applications.*
+FoalTS combines two defenses to protect your application against a CSRF attack. It uses the `SameSite` cookie directive and a token-based technique to have in-depth protection.
 
-## SameSite Cookie Attribute
+When enabled, authentication cookies have their `SameSite` attribute set to `lax` in order to prevent third-party websites from sending authenticated requests to your server. When they make a POST, PUT, PATCH or DELETE request to your application, the authentication cookie is not sent. As of August 2020, this protection is supported by 92% of modern browsers.
 
-The `SameSite` attribute is a new cookie directive to mitigate the risk of CSRF attacks. As of July 2019, SameSite attribute is on browsers used by 86,57% of Internet users.
+In addition, the framework provides token-based mitigation that works with either state (session tokens) or stateless (JWT). The client can read the *CSRF token* either from the HTML page (using a template) or from the `XSRF-Token` cookie. Then, the token must be included in the `X-XSRF-Token` header, the `X-CSRF-Token` header or in the body with the `_csrf` field in any POST, PUT, PATCH or DELETE request sent to the server (see examples).
 
 ### Authentication with Session Tokens
 
-If you use session tokens, you can directly define the cookie directives in the configuration.
-
-*Example with config/default.json*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    csrf:
+      enabled: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
     "session": {
-      "cookie": {
-        "sameSite": "lax"
+      "csrf": {
+        "enabled": true
       }
     }
   }
 }
 ```
-
-*Example with config/default.yml*
-```yaml
-settings:
-  session:
-    cookie:
-      sameSite: lax
-```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ### Authentication with JSON Web Tokens
 
-If you use JSON Web Tokens, then you have to specify the directive manually when sending the token to the browser.
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    csrf:
+      enabled: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "csrf": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
-*Example*
+## Examples
+
+### Single-Page Applications (session tokens)
+
+#### Server
+
+*auth.controller.ts*
 ```typescript
-return new HttpResponseOK()
-  .setCookie('auth', token, {
-    // ...
-    sameSite: 'lax'
-  })
-```
+import {
+  Context,
+  createSession,
+  dependency,
+  HttpResponseNoContent,
+  HttpResponseUnauthorized,
+  Post,
+  Store,
+  TokenOptional,
+  ValidateBody,
+  verifyPassword
+} from '@foal/core';
 
-## Using CSRF Tokens
+import { User } from '../entities';
 
-```
-npm install @foal/csrf
-```
+const credentialsSchema = { /* ... */ };
 
-In addition to the `SameSite` directive it is strongly recommended to use a token-based mitigation technique to provide a robust defense.
-
-Here is the principle:
-
-1. The server generates a token (stateless or stateful) and sends it to the browser (in the HTML page or in a separate cookie). An attacker performing a CSRF attack is not able to guess or read this token.
-2. In each subsequent POST, PUT, PATH or DELETE request, the client must include this token in a specific header, in the body of the request or in the URL parameters to prove the "origin" of the request.
-3.  If the CSRF token is not present or is incorrect, the server returns an error 403 - FORBIDDEN with the message `CSRF token missing or incorrect.`.
-
-FoalTS token-based protection provides a hook and a function to set up the defense.
-- `getCsrfToken` generates or reads the CSRF token.
-- `@CsrfTokenRequired` verifies the CSRF token when receiving requests and returns a 403 error if it is missing or incorrect.
-
-The `@CsrfTokenRequired` expects the CSRF token to be include in the request in either:
-- the request body with the name `_csrf`,
-- the request query with the name `_csrf`,
-- or in one of these headers: `CSRF-Token`, `XSRF-Token`, `X-CSRF-Token` or `X-XSRF-Token`.
-
-### Regular Web Applications
-
-*Regular Web Applications* use *Server-Side Rendering* to generate their HTML pages. 
-
-#### Stateful CSRF token (Session-based)
-
-1. Generate the token on login
-
-```typescript
-import { generateToken, HttpResponseOK, Post, TokenOptional } from '@foal/core';
-
-class AuthController {
-  // ...
+export class AuthController {
+  @dependency
+  store: Store;
 
   @Post('/login')
-  @TokenOptional({ cookie: true })
-  async login() {
-    // ...
+  @ValidateBody(credentialsSchema)
+  @TokenOptional({
+    cookie: true
+  })
+  async login(ctx: Context) {
+    const user = await User.findOne({ email: ctx.request.body.email });
 
-    ctx.session = await createSession(this.store);
+    if (!user) {
+      return new HttpResponseUnauthorized();
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseUnauthorized();
+    }
+
+    ctx.session = ctx.session || await createSession(this.store);
     ctx.session.setUser(user);
-    ctx.session.set('csrfToken', await generateToken())
 
-    return new HttpResponseOK();
+    return new HttpResponseNoContent();
   }
 }
 ```
 
-2. Include the token in each rendered page.
-
+*api.controller.ts*
 ```typescript
-import { Context, Get, TokenRequired, render } from '@foal/core';
-import { TypoORMStore } from '@foal/typeorm';
-import { getCsrfToken } from '@foal/csrf';
- 
+import { HttpResponseCreated, TokenRequired } from '@foal/core';
+
 @TokenRequired({
   cookie: true,
-  redirectTo: '/login',
-  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
 })
-class PageController {
-  @Get('/home')
-  async home(ctx: Context) {
+export class ApiController {
+  @Post('/products')
+  createProduct() {
+    return new HttpResponseCreated();
+  }
+}
+```
+
+#### Client
+
+The client must retrieve the *CSRF token* from the `XSRF-Token` cookie and then send it in the `X-XSRF-Token` header, the `X-CSRF-Token` header or in the request body with the `_csrf` field.
+
+Most modern request libraries already handle it automatically for you using the `X-XSRF-Token` header.
+
+{% code-tabs %}
+{% code-tabs-item title="Angular HttpClient" %}
+No additional configuration required.
+{% endcode-tabs-item %}
+{% code-tabs-item title="Axios" %}
+No additional configuration required.
+{% endcode-tabs-item %}
+{% code-tabs-item title="Native JavaScript" %}
+```typescript
+async function postData(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      // Assuming you use this library: https://www.npmjs.com/package/js-cookie.
+      'X-XSRF-TOKEN': Cookies.get('XSRF-Token')
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+### Single-Page Applications (JWTs)
+
+#### Server
+
+*auth.controller.ts*
+```typescript
+import {
+  Context,
+  HttpResponseNoContent,
+  HttpResponseUnauthorized,
+  Post,
+  ValidateBody,
+  verifyPassword
+} from '@foal/core';
+import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
+import { sign } from 'jsonwebtoken';
+
+import { User } from '../entities';
+
+const credentialsSchema = { /* ... */ };
+
+export class AuthController {
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+    async login(ctx: Context) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      return new HttpResponseUnauthorized();
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseUnauthorized();
+    }
+
+    const token: string = await new Promise((resolve, reject) => {
+      sign(
+        { email: user.email },
+        getSecretOrPrivateKey(),
+        { subject: user.id.toString() },
+        (err, encoded) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(encoded);
+        }
+      );
+    });
+
+    const response = new HttpResponseNoContent();
+    // Do not forget the "await" keyword.
+    await setAuthCookie(response, token);
+    return response;
+  }
+}
+```
+
+*api.controller.ts*
+```typescript
+import { HttpResponseCreated } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
+@JWTRequired({
+  cookie: true,
+})
+export class ApiController {
+  @Post('/products')
+  createProduct() {
+    return new HttpResponseCreated();
+  }
+}
+```
+
+#### Client
+
+Same as session tokens.
+
+### Regular Web Applications (session tokens)
+
+*Regular Web Applications* use *Server-Side Rendering* to generate their HTML pages. 
+
+#### Server
+
+*auth.controller.ts*
+```typescript
+import {
+  Context,
+  createSession,
+  dependency,
+  HttpResponseRedirect,
+  Post,
+  Store,
+  TokenOptional,
+  ValidateBody,
+  verifyPassword
+} from '@foal/core';
+
+import { User } from '../entities';
+
+const credentialsSchema = { /* ... */ };
+
+export class AuthController {
+  @dependency
+  store: Store;
+
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+  @TokenOptional({
+    cookie: true
+  })
+  async login(ctx: Context) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      return new HttpResponseRedirect('/login');
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseRedirect('/login');
+    }
+
+    ctx.session = ctx.session || await createSession(this.store);
+    ctx.session.setUser(user);
+
+    return new HttpResponseRedirect('/products');
+  }
+}
+```
+
+*view.controller.ts*
+```typescript
+import {
+  Context,
+  dependency,
+  Get,
+  render,
+  Session,
+  Store,
+  TokenRequired,
+} from '@foal/core';
+
+import { User } from '../entities';
+
+export class ViewController {
+  @dependency
+  store: Store;
+
+  @Get('/login')
+  async login(ctx: Context) {
+    return render('./templates/login.html');
+  }
+
+  @Get('/products')
+  @TokenRequired({
+    cookie: true,
+    redirectTo: '/login'
+  })
+  async index(ctx: Context<User, Session>) {
     return render(
-      './templates/home.html',
-      // Retreive the token from the session
-      // and include it in the rendered page
-      { csrfToken: await getCsrfToken(ctx.session) }
+      './templates/products.html',
+      { csrfToken: ctx.session.get('csrfToken') },
     );
   }
 }
 ```
 
-*Home.html (example with a form)*
+
+*api.controller.ts*
+```typescript
+import { HttpResponseRedirect, TokenRequired } from '@foal/core';
+
+@TokenRequired({
+  cookie: true,
+  redirectTo: '/login'
+})
+export class ApiController {
+  @Post('/products')
+  createProduct() {
+    return new HttpResponseRedirect('/products');
+  }
+}
+```
+
+#### Client
+
+*login.html*
 ```html
 <html>
-  <head></head>
+  <head>
+    <title>Log in</title>
+  </head>
   <body>
-    <form action="POST">
-      <input style="display: none" name="_csrf" value="{{ csrfToken }}">
-      <!--
-        OR if you use EJS:
-        <input style="display: none" name="_csrf" value="<%= csrfToken %>">
-      -->
-      <input name="foobar">
-      <button type="submit">Submit</button>
+    <form method="POST" action="/login">
+      <input name="email" type="email" >
+      <input name="password" type="password" >
+      <button type="submit">Log in</button>
     </form>
   </body>
 </html>
 ```
 
-*home.html (example with JavaScript)*
+*products.html*
 ```html
 <html>
   <head>
-    <meta name="csrf-token" content="{{ csrfToken }}">
-    <!--
-      OR if you use EJS:
-      <meta name="csrf-token" content="<%= csrfToken %>">
-    -->
+    <title>Add a product</title>
   </head>
   <body>
-    ...
-    <script type="text/javascript">
-      var csrf_token = document
-        .querySelector("meta[name='csrf-token']")
-        .getAttribute("content");
-      // Add the token in a header (ex: CSRF-TOKEN) when making request
-    </script>
+    <form method="POST" action="/api/products">
+      <input style="display: none" name="_csrf" value="{{ csrfToken }}">
+      <input name="name" type="text">
+      <button type="submit">Add product</button>
+    </form>
   </body>
 </html>
 ```
 
-3. Check the CSRF token on each subsequent POST, PUT, PATCH and DELETE request.
+## Advanced
 
-```typescript
-import { Post, TokenRequired } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-import { CsrfTokenRequired } from '@foal/csrf';
+### Increase stateless protection (JWT)
 
-@TokenRequired({
-  cookie: true,
-  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
-})
-@CsrfTokenRequired()
-class ApiController {
-  @Post('/products')
-  createProduct() {
-    return new HttpResponseCreated();
-  }
-}
+In FoalTS, stateless CSRF protection is based on the double submit technique. CSRF tokens are generated randomly and signed with the JWT secret or RSA private key.
+
+To increase the effectiveness of protection against sub-domain attacks, your auth JWT must include a unique `subject` per user (usually the user ID) and an expiration date. The framework will then use these to create and sign the *CSRF token*.
+
+### Custom CSRF cookie name
+
+The name of the CSRF cookie can be changed in the configuration.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    csrf:
+      enabled: true
+      cookie:
+        name: CSRF-Token # Default: XSRF-TOKEN
 ```
-
-#### Stateless CSRF token (Double Submit Cookie Technique)
-
-If you want to use stateless CSRF tokens, you need to provide a base64-encoded secret in either:
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    settings:
-      csrf:
-        secret: xxx
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    SETTINGS_CSRF_SECRET=xxx
-    ```
-
-You can generate such a secret with the CLI command:
-```
-foal createsecret
-```
-
-1. Generate a token and send it in a cookie when rendering a page.
-
-```typescript
-import { Context, Get, HttpResponseOK, setCsrfCookie } from '@foal/core';
-import { getCsrfToken } from '@foal/csrf';
-
-class PageController {
-  @Get('/home')
-  async home(ctx: Context) {
-    // Normally in an HTML template
-    const response = new HttpResponseOK();
-    // Include a random CSRF token in the cookie
-    setCsrfCookie(response, await getCsrfToken());
-    return response;
-  }
-}
-```
-
-*home.html (example with JavaScript)*
-```html
-<html>
-  <head>
-  </head>
-  <body>
-    ...
-    <script type="text/javascript">
-      var csrf_token = // use a library to get the cookie value from document.cookie
-      // Add the token in a header (ex: CSRF-TOKEN) when making request
-    </script>
-  </body>
-</html>
-```
-
-2. Check the CSRF token on each subsequent POST, PUT, PATCH and DELETE request.
-
-```typescript
-import { HttpResponseCreated, Post } from '@foal/core';
-import { CsrfTokenRequired } from '@foal/csrf';
-
-@CsrfTokenRequired({ doubleSubmitCookie: true })
-class ApiController {
-  @Post('/products')
-  createProduct() {
-    return new HttpResponseCreated();
-  }
-}
-```
-
-### SPA + API
-
-In *Single-Page Application + API* architecture, the frontend application is static and the pages are rendered in the browser.
-
-First set the configuration key `settings.csrf.cookie.maxAge` to a very large number (for example one year).
-
-*Example with config/default.json*
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
-    "csrf": {
-      "cookie": {
-        "maxAge": 31536000
+    "jwt": {
+      "csrf": {
+        "enabled": true,
+        "cookie": {
+          "name": "CSRF-Token"
+        }
       }
     }
   }
 }
 ```
-
-*Example with config/default.yml*
-```yaml
-settings:
-  csrf:
-    cookie:
-      maxAge: 31536000 # One year
-```
-
-#### Stateful CSRF token (Session-based)
-
-1. Generate the token and send it in a cookie on login.
-
-```typescript
-
-class AuthController {
-    // ...
-
-    @Post('/login')
-    @TokenOptional({ cookie: true })
-    async login() {
-      // ...
-      const session = await createSession(this.store);
-      session.setUser(user);
-      session.set('csrfToken', await generateToken())
-      await session.commit();
-
-      const response = new HttpResponseOK();
-      // Retreive the token from the session
-      // and send it in a cookie
-      setCsrfCookie(response, await getCsrfToken(session));
-      return response;
-    }
-  }
-```
-
-Your frontend application then must retreive the token from the cookie named `csrfToken` and send it on each subsequent POST, PUT, PATCH or DELETE request (for example using the header `CSRF-Token`).
-
-2. Check the CSRF token on each subsequent POST, PUT, PATCH and DELETE request.
-
-```typescript
-import { HttpResponseCreated, Post, TokenRequired } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-import { CsrfTokenRequired } from '@foal/csrf';
-
-@TokenRequired({
-  cookie: true,
-  store: TypeORMStore, // Or another store: RedisStore, MongoDBStore, etc.
-})
-@CsrfTokenRequired()
-class ApiController {
-  @Post('/products')
-  createProduct() {
-    return new HttpResponseCreated();
-  }
-}
-```
-
-#### Stateless CSRF token (Double Submit Cookie Technique)
-
-If you want to use stateless CSRF tokens, you need to provide a base64-encoded secret in either:
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    settings:
-      csrf:
-        secret: xxx
-        cookie:
-          maxAge: 31536000 # One year
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    SETTINGS_CSRF_SECRET=xxx
-    ```
-
-You can generate such a secret with the CLI command:
-```
-foal createsecret
-```
-
-1. Generate a token and send it in a cookie on login.
-
-```typescript
-import { HttpResponseOK, Post } from '@foal/core';
-import { getCsrfToken } from '@foal/csrf';
-
-class AuthController {
-  @Post('/login')
-  async login() {
-    const response = new HttpResponseOK();
-    setCsrfCookie(response, await getCsrfToken());
-    return response;
-  }
-}
-```
-
-Your frontend application then must retreive the token from the cookie named `csrfToken` and send it on each subsequent POST, PUT, PATCH or DELETE request (for example using the header `CSRF-Token`).
-
-2. Check the CSRF token on each subsequent POST, PUT, PATCH and DELETE request.
-
-```typescript
-import { HttpResponseCreated, Post } from '@foal/core';
-import { CsrfTokenRequired } from '@foal/csrf';
-
-@CsrfTokenRequired({ doubleSubmitCookie: true })
-class ApiController {
-  @Post('/products')
-  createProduct() {
-    return new HttpResponseCreated();
-  }
-}
-```
-
-### Disable the CSRF protection
-
-The CSRF hook `@CsrfTokenRequired` can be disabled on a specific environment using the configuration key `settings.csrf.enabled`.
-
-*Example with `config/test.json`*
-```json
-{
-  "settings": {
-    "csrf": {
-      "enabled": false
-    }
-  }
-}
-```
-
-*Example with `config/test.yml`*
-```yaml
-settings:
-  csrf:
-    enabled: false
-```
-
-*Example with environment variable*
-```
-SETTINGS_CSRF_ENABLED=false
-```
-
-### Advanced
-
-The directives of the cookie written by `setCsrfCookie` can be override in the configuration.
-
-*Example with config/default.yml*
-```yaml
-settings:
-  csrf:
-    cookie:
-      name: my-custom-name
-      domain: example.com
-      path: /foo # default: /
-      sameSite: lax
-      secure: true
-      maxAge: 10000
-```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
