@@ -87,6 +87,8 @@ export class User {
 }
 ```
 
+TODO: add an example with JWT and cookies.
+
 ## SPA + API / Mobile + API (no cookies)
 
 With these implementations, the user logs in with the route `POST /login` and receives a token in exchange in the response body. Then, when the user makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.

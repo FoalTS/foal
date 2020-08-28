@@ -22,8 +22,8 @@ settings:
   session:
     cookie:
       secure: true
-  // If you use CSRF protection with cookies
-  csrf:
+  // If you use JWT
+  jwt:
     cookie:
       secure: true
 ```
@@ -31,11 +31,10 @@ settings:
 
 ## 3. Generate Different Secrets
 
-Use different secrets for your production environment (JWT, csrf, etc). Specify them using environment variables or a `.env` file.
+Use different secrets for your production environment (JWT, etc). Specify them using environment variables or a `.env` file.
 
 *.env (example)*
 ```
-SETTINGS_CSRF_SECRET=PZFo9stbQtGvQ2clYSrgn+FUjf55pjajHJslRaBRNo4
 SETTINGS_JWT_SECRET=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
 ```
 

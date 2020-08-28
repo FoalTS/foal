@@ -24,7 +24,6 @@ The framework encourages a **strict separation between configuration and code** 
 ```
 DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=password
-SETTINGS_CSRF_SECRET=YKvV281Z8nbkPowDLkMTTIrg
 ```
 
 *Example of a file in the `config/` directory*
@@ -37,7 +36,6 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
 {
   "port": 3001,
   "settings": {
-    "csrf": false,
     "debug": false,
     "loggerFormat": "tiny",
     "staticPath": "public/",
@@ -59,7 +57,6 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
 port: 3001
 
 settings:
-  csrf: false
   debug: false
   loggerFormat: tiny
   staticPath: public/
