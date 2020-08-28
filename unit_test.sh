@@ -8,7 +8,6 @@ cd ../cli && npm run test
 cd ../csrf && npm run test
 cd ../ejs && npm run test
 cd ../examples && npm run test
-cd ../formidable && npm run test
 cd ../graphql && npm run test
 cd ../jwks-rsa && npm run test
 cd ../jwt && npm run test

@@ -110,7 +110,7 @@ All of major releases are supported for 18 months.
 - 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
-| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min  version |
+| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min version |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x | 3.9 |
 | 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x | 3.5 |
