@@ -3,7 +3,6 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // 3p
 import {
-  ConfigNotFoundError,
   Context,
   getApiComponents,
   getApiParameters,

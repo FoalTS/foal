@@ -1,7 +1,17 @@
 // 3p
 import {
-  ApiDefineSecurityScheme, ApiParameter, ApiResponse,
-  ApiSecurityRequirement, Config, Context, Hook, HookDecorator, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseUnauthorized, IApiSecurityScheme
+  ApiDefineSecurityScheme,
+  ApiParameter,
+  ApiResponse,
+  ApiSecurityRequirement,
+  Config,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponseBadRequest,
+  HttpResponseForbidden,
+  HttpResponseUnauthorized,
+  IApiSecurityScheme
 } from '@foal/core';
 import { decode, verify, VerifyOptions } from 'jsonwebtoken';
 

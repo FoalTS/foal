@@ -11,7 +11,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, Context, controller, createApp,
+  Context, controller, createApp,
   Get, hashPassword, HttpResponseOK,
   HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
 } from '@foal/core';

@@ -7,7 +7,6 @@ import {
   createApp,
   createService,
   createSession,
-  generateToken,
   Get,
   HttpResponseNoContent,
   TokenRequired,
