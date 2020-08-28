@@ -28,6 +28,7 @@ Once the secret is in hand, there are several ways to provide it to the future h
 - in a file named `.env` in the root directory,
   ```
   SETTINGS_JWT_SECRET=Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
+  SETTINGS_JWT_SECRET_ENCODING=base64
   ```
 - or in a YAML or JSON file in the `config/` directory.
 
@@ -36,13 +37,15 @@ Once the secret is in hand, there are several ways to provide it to the future h
   settings:
     jwt:
       secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+      secretEncoding: base64
   ```
   *development.json*
   ```json
   {
     "settings": {
       "jwt": {
-        "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+        "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
+        "secretEncoding": "base64"
       }
     }
   }
@@ -383,12 +386,13 @@ SETTINGS_JWT_SECRET_ENCODING=base64
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-## Store JWTs in a cookie
+## Usage with Cookies
 
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
 By default, the hooks expect the token to be sent in the **Authorization** header using the **Bearer** schema. But it is also possible to send the token in a cookie with the `cookie` option.
 
+*api.controller.ts*
 ```typescript
 import { JWTRequired } from '@foal/jwt';
 
@@ -398,39 +402,75 @@ export class ApiController {
 }
 ```
 
-In this case, the token must be sent in a cookie named `auth` by default. This name can be changed with the configuration key `settings.jwt.cookieName`:
-- using the environment variable `SETTINGS_JWT_COOKIE_NAME`,
-- in a file named `.env` in the root directory,
-  ```
-  SETTINGS_JWT_COOKIE_NAME=custom_name
-  ```
-- or in a YAML or JSON file in the `config/` directory.
+*auth.controller.ts*
+```typescript
+export class AuthController {
 
-  *development.yml*
-  ```yaml
-  settings:
-    jwt:
-      cookieName: "custom_name"
-  ```
-  *development.json*
-  ```json
-  {
-    "settings": {
-      "jwt": {
-        "cookieName": "custom_name"
+  @Post('/login')
+  async login(ctx: Context) {
+    // ...
+
+    const response = new HttpResponseNoContent();
+    // Do not forget the "await" keyword.
+    await setAuthCookie(response, token);
+    return response;
+  }
+
+  @Post('/logout')
+  logout(ctx: Context) {
+    // ...
+
+    const response = new HttpResponseNoContent();
+    removeAuthCookie(response);
+    return response;
+  }
+
+}
+```
+
+> *Note: the cookie expire date is equal to the JWT expire date.*
+
+### Cookie options
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    cookie:
+      name: mycookiename # Default: auth
+      domain: example.com
+      httpOnly: true # Warning: unlike session tokens, the httpOnly directive has no default value.
+      path: /foo # Default: /
+      sameSite: strict # Default: lax if settings.jwt.csrf.enabled is true.
+      secure: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "ccokie": {
+        "name": "mycookiename",
+        "domain": "example.com",
+        "httpOnly": true,
+        "path": "/foo",
+        "sameSite": "strict",
+        "secure": true
       }
     }
   }
-  ```
-
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Use RSA or ECDSA public/private keys
 
 JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
 ### Provide the Public/Private Key
-
-The name of the private key is arbitrary.
 
 *Example with a `.env` file*
 ```
@@ -451,7 +491,7 @@ const token = sign(
     email: 'john@foalts.org'
   },
   getSecretOrPrivateKey(),
-  { expiresIn: '1h' }
+  { expiresIn: '1h', algorithm: 'RS256' }
 );
 ```
 
@@ -461,7 +501,7 @@ const token = sign(
 ```typescript
 import { JWTRequired } from '@foal/jwt';
 
-@JWTRequired({}, { algorithm: 'RSA' })
+@JWTRequired({}, { algorithm: 'RS256' })
 export class ApiController {
   // ...
 }
