@@ -169,7 +169,7 @@ describe('setSessionCookie', () => {
         });
 
         afterEach(() => {
-          Config.remove('settings.session.cookie.sameSite')
+          Config.remove('settings.session.cookie.sameSite');
         });
 
         it('with the proper default "sameSite" directive.', () => {

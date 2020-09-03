@@ -588,9 +588,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser })));
 
           it('with the undefined value and should destroy the session.', async () => {
-            const response = await hook(ctx, services);
+            await hook(ctx, services);
 
             strictEqual(ctx.user, undefined);
+            // tslint:disable-next-line
             strictEqual(ctx.session?.isDestroyed, true);
           });
 

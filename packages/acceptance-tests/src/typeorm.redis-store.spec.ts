@@ -22,7 +22,6 @@ import {
   verifyPassword
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
-import { Config as RedisConfig } from '@foal/redis/node_modules/@foal/core';
 import * as redis from 'redis';
 import * as request from 'supertest';
 

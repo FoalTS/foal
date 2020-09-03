@@ -2,7 +2,14 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { Config, ConfigNotFoundError, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import {
+  Config,
+  ConfigNotFoundError,
+  createService,
+  createSession,
+  SessionAlreadyExists,
+  SessionState
+} from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
