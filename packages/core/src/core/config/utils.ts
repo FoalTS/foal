@@ -1,10 +1,3 @@
-export function dotToUnderscore(str: string): string {
-  return str
-    .replace(/([A-Z])/g, letter => `_${letter}`)
-    .replace(/\./g, '_')
-    .toUpperCase();
-}
-
 function makeLine(str: string): string {
   const length = 58;
   const spacesAfter = length - str.length;
