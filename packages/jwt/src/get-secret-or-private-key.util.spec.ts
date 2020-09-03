@@ -1,4 +1,4 @@
-import { ConfigTypeError } from '@foal/core';
+import { Config, ConfigTypeError } from '@foal/core';
 import { deepStrictEqual, strictEqual, throws } from 'assert';
 import { getSecretOrPrivateKey } from './get-secret-or-private-key.util';
 
@@ -8,12 +8,13 @@ describe('getSecretOrPrivateKey', () => {
 
     const secret = 'secretX';
 
-    beforeEach(() => process.env.SETTINGS_JWT_SECRET = secret);
+    beforeEach(() => Config.set('settings.jwt.secret', secret));
 
-    afterEach(() => delete process.env.SETTINGS_JWT_SECRET);
+    afterEach(() => Config.remove('settings.jwt.secret'));
 
-    xit('should throw a ConfigTypeError if the value is not a string.', () => {
-      process.env.SETTINGS_JWT_SECRET = 2 as any;
+    it('should throw a ConfigTypeError if the value is not a string.', () => {
+      Config.set('settings.jwt.secret', 2);
+
       return throws(
         () => getSecretOrPrivateKey(),
         new ConfigTypeError('settings.jwt.secret', 'string', 'number'),
@@ -33,12 +34,13 @@ describe('getSecretOrPrivateKey', () => {
 
       const encoding = 'base64';
 
-      beforeEach(() => process.env.SETTINGS_JWT_SECRET_ENCODING = 'base64');
+      beforeEach(() => Config.set('settings.jwt.secretEncoding', 'base64'));
 
-      afterEach(() => delete process.env.SETTINGS_JWT_SECRET_ENCODING);
+      afterEach(() => Config.remove('settings.jwt.secretEncoding'));
 
-      xit('should throw a ConfigTypeError if the value is not a string.', () => {
-        process.env.SETTINGS_JWT_SECRET_ENCODING = 2 as any;
+      it('should throw a ConfigTypeError if the value is not a string.', () => {
+        Config.set('settings.jwt.secretEncoding', 2);
+
         return throws(
           () => getSecretOrPrivateKey(),
           new ConfigTypeError('settings.jwt.secretEncoding', 'string', 'number'),
@@ -62,12 +64,13 @@ describe('getSecretOrPrivateKey', () => {
 
     const privateKey = 'privateKeyX';
 
-    beforeEach(() => process.env.SETTINGS_JWT_PRIVATE_KEY = privateKey);
+    beforeEach(() => Config.set('settings.jwt.privateKey', privateKey));
 
-    afterEach(() => delete process.env.SETTINGS_JWT_PRIVATE_KEY);
+    afterEach(() => Config.remove('settings.jwt.privateKey'));
 
-    xit('should throw a ConfigTypeError if the value is not a string.', () => {
-      process.env.SETTINGS_JWT_PRIVATE_KEY = 2 as any;
+    it('should throw a ConfigTypeError if the value is not a string.', () => {
+      Config.set('settings.jwt.privateKey', 2);
+
       return throws(
         () => getSecretOrPrivateKey(),
         new ConfigTypeError('settings.jwt.privateKey', 'string', 'number'),

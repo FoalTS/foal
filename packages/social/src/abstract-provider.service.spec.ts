@@ -5,6 +5,7 @@ import { URLSearchParams } from 'url';
 
 // 3p
 import {
+  Config,
   Context,
   createApp,
   createService,
@@ -138,18 +139,19 @@ describe('AbstractProvider', () => {
   const redirectUri = 'https://example.com/callback';
 
   beforeEach(() => {
-    process.env.SETTINGS_SOCIAL_EXAMPLE_CLIENT_ID = clientId;
-    process.env.SETTINGS_SOCIAL_EXAMPLE_CLIENT_SECRET = clientSecret;
-    process.env.SETTINGS_SOCIAL_EXAMPLE_REDIRECT_URI = redirectUri;
+    Config.set('settings.social.example.clientId', clientId);
+    Config.set('settings.social.example.clientSecret', clientSecret);
+    Config.set('settings.social.example.redirectUri', redirectUri);
+    Config.set('settings.loggerFormat', 'none');
 
     provider = createService(ConcreteProvider);
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_SOCIAL_EXAMPLE_CLIENT_ID;
-    delete process.env.SETTINGS_SOCIAL_EXAMPLE_CLIENT_SECRET;
-    delete process.env.SETTINGS_SOCIAL_EXAMPLE_REDIRECT_URI;
-    delete process.env.SETTINGS_SOCIAL_COOKIE_SECURE;
+    Config.remove('settings.social.example.clientId');
+    Config.remove('settings.social.example.clientSecret');
+    Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.social.cookie.secure');
   });
 
   describe('has a "redirect" method that', () => {
@@ -245,7 +247,7 @@ describe('AbstractProvider', () => {
       });
 
       it('with a generated state in a cookie whose secure option is defined with the config.', async () => {
-        process.env.SETTINGS_SOCIAL_COOKIE_SECURE = 'true';
+        Config.set('settings.social.cookie.secure', true);
 
         const response = await provider.redirect();
         const { options } = response.getCookie(STATE_COOKIE_NAME);

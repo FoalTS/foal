@@ -67,20 +67,21 @@ describe('S3Disk', () => {
   }));
 
   beforeEach(() => {
-    process.env.SETTINGS_DISK_S3_BUCKET = bucketName;
+    Config.set('settings.disk.s3.bucket', bucketName);
 
     disk = createService(S3Disk);
   });
 
   afterEach(async () => {
-    delete process.env.SETTINGS_DISK_S3_BUCKET;
-    delete process.env.SETTINGS_AWS_ENDPOINT;
+    Config.remove('settings.disk.s3.bucket');
+    Config.remove('settings.aws.endpoint');
     await rmObjectsIfExist(s3);
   });
 
   it('should accept a S3 custom endpoint in the config.', async () => {
     // This test assumes that the "delete" method tries at least to connect to AWS.
-    process.env.SETTINGS_AWS_ENDPOINT = 'foobar';
+    Config.set('settings.aws.endpoint', 'foobar');
+
     try {
       await disk.delete('foo/test.txt');
       throw new Error('An error should have been thrown.');
@@ -95,7 +96,8 @@ describe('S3Disk', () => {
   describe('has a "write" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
@@ -160,7 +162,8 @@ describe('S3Disk', () => {
   describe('has a "read" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
@@ -247,7 +250,8 @@ describe('S3Disk', () => {
   describe('has a "readSize" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.readSize('foo');
         throw new Error('An error should have been thrown.');
@@ -288,7 +292,8 @@ describe('S3Disk', () => {
   describe('has a "delete" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');

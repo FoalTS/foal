@@ -478,18 +478,15 @@ This store uses the default TypeORM connection which is usually specified in `or
 npm install @foal/redis
 ```
 
-In order to use this store, you must provide the redis URI in either:
-- a configuration file
+In order to use this store, you must provide the redis URI in either a configuration file
 
-    *Example with config/default.yml*
-    ```yaml
-    redis:
-      uri: 'redis://localhost:6379'
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    REDIS_URI=redis://localhost:6379
-    ```
+*Example with config/default.yml*
+```yaml
+settings:
+  redis:
+    uri: 'redis://localhost:6379'
+```
+
 
 ### MongoDBStore
 
@@ -497,21 +494,14 @@ In order to use this store, you must provide the redis URI in either:
 npm install @foal/mongodb
 ```
 
-This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI in either:
+This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI a configuration file:
 
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    mongodb:
-      uri: 'mongodb://localhost:27017'
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    MONGODB_URI=mongodb://localhost:27017
-    ```
-
-
+*Example with config/default.yml*
+```yaml
+settings:
+  mongodb:
+    uri: 'mongodb://localhost:27017'
+```
 
 ### Custom Store
 

@@ -134,6 +134,10 @@ export class Config {
     this.testConfig.set(key, value);
   }
 
+  static remove(key: string): void {
+    this.testConfig.delete(key);
+  }
+
   private static yaml: any;
   private static config: { [key: string ]: any } | null = null;
   private static testConfig: Map<string, string|number|boolean> = new Map();

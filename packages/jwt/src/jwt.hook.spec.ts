@@ -3,6 +3,7 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // 3p
 import {
+  Config,
   Context,
   getApiComponents,
   getApiParameters,
@@ -115,13 +116,13 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     hook = getHookFunction(JWT({ user: fetchUser }));
     services = new ServiceManager();
 
-    process.env.SETTINGS_JWT_SECRET = secret;
+    Config.set('settings.jwt.secret', secret);
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_JWT_SECRET;
-    delete process.env.SETTINGS_JWT_PUBLIC_KEY;
-    delete process.env.SETTINGS_JWT_COOKIE_NAME;
+    Config.remove('settings.jwt.secret');
+    Config.remove('settings.jwt.publicKey');
+    Config.remove('settings.jwt.cookie.name');
   });
 
   describe('should validate the request and', () => {
@@ -340,7 +341,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   describe('should verify the token and', () => {
 
-    afterEach(() => delete process.env.SETTINGS_JWT_SECRET_ENCODING);
+    afterEach(() => Config.remove('settings.jwt.secretEncoding'));
 
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
@@ -365,7 +366,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should throw an error if no secret or public key is set in the Config and options.secretOrPublicKey is'
         + ' not defined.', async () => {
       // Remove the secret.
-      delete process.env.SETTINGS_JWT_SECRET;
+      Config.remove('settings.jwt.secret');
 
       const token = sign({}, secret);
       ctx = createContext({ Authorization: `Bearer ${token}` });
@@ -403,7 +404,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       + ' (different secret encoding).', async () => {
         const hook = getHookFunction(JWT());
 
-        process.env.SETTINGS_JWT_SECRET_ENCODING = 'base64';
+        Config.set('settings.jwt.secretEncoding', 'base64');
         const token = sign({}, Buffer.from(secret, 'base64'));
         ctx = createContext({ Authorization: `Bearer ${token}` });
 
@@ -486,10 +487,11 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         sub = 'subX';
         token = sign({ foo: 'bar' }, secret, { subject: sub });
         csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub });
-        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+
+        Config.set('settings.jwt.csrf.enabled', true);
       });
 
-      afterEach(() => delete process.env.SETTINGS_JWT_CSRF_ENABLED);
+      afterEach(() => Config.remove('settings.jwt.csrf.enabled'));
 
       context('given options.cookie is false or not defined', () => {
 
@@ -686,9 +688,9 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
               const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
 
-              beforeEach(() => process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName);
+              beforeEach(() => Config.set('settings.jwt.csrf.cookie.name', csrfCookieName));
 
-              afterEach(() => delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME);
+              afterEach(() => Config.remove('settings.jwt.csrf.cookie.name'));
 
               testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
                 { 'X-XSRF-Token': requestCsrfToken },
@@ -743,7 +745,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & secret from options.secretOrPublicKey).', async () => {
-        delete process.env.SETTINGS_JWT_SECRET;
+        Config.remove('settings.jwt.secret');
+
         const secretOrPublicKey = async (header: any, payload: any) => {
           deepStrictEqual(header, {
             alg: 'HS256',
@@ -764,8 +767,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (header & public key).', async () => {
-        delete process.env.SETTINGS_JWT_SECRET;
-        process.env.SETTINGS_JWT_PUBLIC_KEY = publicKey;
+        Config.remove('settings.jwt.secret');
+        Config.set('settings.jwt.publicKey', publicKey);
 
         const hook = getHookFunction(JWT());
 
@@ -791,7 +794,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the decoded payload (cookie with a custom name & secret).', async () => {
-        process.env.SETTINGS_JWT_COOKIE_NAME = 'xxx';
+        Config.set('settings.jwt.cookie.name', 'xxx');
+
         const hook = getHookFunction(JWT({ cookie: true }));
 
         const jwt = sign({ foo: 'bar' }, secret, {});
@@ -864,8 +868,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
 
     afterEach(() => {
-      delete process.env.SETTINGS_JWT_CSRF_ENABLED;
-      delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME;
+      Config.remove('settings.jwt.csrf.enabled');
+      Config.remove('settings.jwt.csrf.cookie.name');
     });
 
     it('unless options.openapi is false.', () => {
@@ -895,7 +899,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('with the proper security scheme (cookie name different).', () => {
-      process.env.SETTINGS_JWT_COOKIE_NAME = 'auth2';
+      Config.set('settings.jwt.cookie.name', 'auth2');
+
       @JWT({ cookie: true })
       class Foobar {}
 
@@ -967,7 +972,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the proper API responses (no cookie & csrf protection).', () => {
-        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        Config.set('settings.jwt.csrf.enabled', true);
+
         testResponses({ cookie: false });
       });
 
@@ -976,7 +982,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the proper API responses (cookie & csrf protection).', () => {
-        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        Config.set('settings.jwt.csrf.enabled', true);
+
         @JWT({ cookie: true })
         class Foobar {}
 
@@ -1018,7 +1025,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the proper API responses (no cookie & csrf protection).', () => {
-        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        Config.set('settings.jwt.csrf.enabled', true);
+
         testResponses({ cookie: false });
       });
 
@@ -1027,7 +1035,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       });
 
       it('with the proper API responses (cookie & csrf protection).', () => {
-        process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+        Config.set('settings.jwt.csrf.enabled', true);
+
         @JWT({ cookie: true })
         class Foobar {}
 
@@ -1051,7 +1060,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('with the proper API parameters (no cookie & csrf protection).', () => {
-      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      Config.set('settings.jwt.csrf.enabled', true);
+
       testParameters({ cookie: false });
     });
 
@@ -1060,7 +1070,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('with the proper API parameters (cookie & csrf protection).', () => {
-      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
+      Config.set('settings.jwt.csrf.enabled', true);
+
       @JWT({ cookie: true })
       class Foobar {}
 
@@ -1073,8 +1084,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('with the proper API parameters (cookie & csrf protection & custom name).', () => {
-      process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
-      process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName;
+      Config.set('settings.jwt.csrf.enabled', true);
+      Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
       @JWT({ cookie: true })
       class Foobar {}

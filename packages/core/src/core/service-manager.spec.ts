@@ -7,7 +7,7 @@ import { ConcreteSessionStore } from '@foal/internal-test';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { ConfigNotFoundError } from './config';
+import { Config, ConfigNotFoundError } from './config';
 import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
@@ -508,7 +508,7 @@ describe('ServiceManager', () => {
 
       describe('and if it has a static property "concreteClassConfigPath"', () => {
 
-        beforeEach(() => delete process.env.SETTINGS_TOTO);
+        beforeEach(() => Config.remove('settings.toto'));
 
         it('should throw an Error if Service.concreteClassConfigPath is not a string.', () => {
           abstract class Foobar {
@@ -525,7 +525,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not defined.', () => {
-          process.env.SETTINGS_TOTO = '@foal/internal-test';
+          Config.set('settings.toto', '@foal/internal-test');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -540,7 +540,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not a string.', () => {
-          process.env.SETTINGS_TOTO = '@foal/internal-test';
+          Config.set('settings.toto', '@foal/internal-test');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -558,7 +558,7 @@ describe('ServiceManager', () => {
         describe('when the concrete class path is a package name (does not start by "./")', () => {
 
           it('should throw an Error if the package is not installed.', () => {
-            process.env.SETTINGS_TOTO = 'uninstalledPackage';
+            Config.set('settings.toto', 'uninstalledPackage');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -574,7 +574,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the package.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -591,7 +591,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -607,7 +607,7 @@ describe('ServiceManager', () => {
           });
 
           it('should return the concrete class instance.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -745,7 +745,7 @@ describe('ServiceManager', () => {
 
         describe('when the concrete class path is "local"', () => {
 
-          beforeEach(() => process.env.SETTINGS_TOTO = 'local');
+          beforeEach(() => Config.set('settings.toto', 'local'));
 
           it('should throw an error if Service.defaultConcreteClassPath is not defined.', () => {
             abstract class Foobar {
@@ -789,7 +789,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the file does not exist.', () => {
-            process.env.SETTINGS_TOTO = './foo';
+            Config.set('settings.toto', './foo');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -805,7 +805,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the package.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -822,7 +822,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -839,7 +839,7 @@ describe('ServiceManager', () => {
           });
 
           it('should return the concrete class instance.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';

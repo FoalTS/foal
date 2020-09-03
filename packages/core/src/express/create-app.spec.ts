@@ -9,7 +9,7 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import {
-  Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
+  Config, Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
 } from '../core';
 import { createAndInitApp, createApp, OPENAPI_SERVICE_ID } from './create-app';
 
@@ -20,12 +20,12 @@ describe('createApp', () => {
       mkdirSync('test-public');
     }
     writeFileSync('test-public/hello-world.html', '<h1>Hello world!</h1>', 'utf8');
-    process.env.SETTINGS_STATIC_PATH = 'test-public';
+    Config.set('settings.staticPath', 'test-public');
   });
 
   after(() => {
-    delete process.env.SETTINGS_STATIC_PATH;
-    delete process.env.SETTINGS_DEBUG;
+    Config.remove('settings.staticPath');
+    Config.remove('settings.debug');
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
@@ -35,9 +35,9 @@ describe('createApp', () => {
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_STATIC_PATH_PREFIX;
-    delete process.env.SETTING_DEBUG;
-    delete process.env.SETTINGS_BODY_PARSER_LIMIT;
+    Config.remove('settings.staticPathPrefix');
+    Config.remove('settings.debug');
+    Config.remove('settings.bodyParser.limit');
   });
 
   it('should include security headers in HTTP responses.', async () => {
@@ -87,7 +87,7 @@ describe('createApp', () => {
   });
 
   it('should support custom path prefix when serving static files.', async () => {
-    process.env.SETTINGS_STATIC_PATH_PREFIX = '/prefix';
+    Config.set('settings.staticPathPrefix', '/prefix');
 
     const app = createApp(class { });
     await request(app)
@@ -231,7 +231,7 @@ describe('createApp', () => {
   });
 
   it('should accept higher or lower request body size if this is specified in the configuration.', async () => {
-    process.env.SETTINGS_BODY_PARSER_LIMIT = '10';
+    Config.set('settings.bodyParser.limit', 10);
 
     class MyController {
       @Post('/foo')
@@ -315,7 +315,7 @@ describe('createApp', () => {
   });
 
   it('should use the optional postMiddlewares if they are given (in good time).', () => {
-    process.env.SETTINGS_DEBUG = 'true';
+    Config.set('settings.debug', true);
 
     class AppController {
       @Get('/a')

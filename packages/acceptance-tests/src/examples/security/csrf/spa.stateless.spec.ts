@@ -8,6 +8,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
+  Config,
   Context,
   controller,
   createApp,
@@ -91,9 +92,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
   let csrfToken: string;
 
   before(async () => {
-    process.env.SETTINGS_JWT_SECRET = 'jwtSecret';
-    process.env.SETTINGS_JWT_CSRF_ENABLED = 'true';
-    process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName;
+    Config.set('settings.jwt.secret', 'jwtSecret');
+    Config.set('settings.jwt.csrf.enabled', true);
+    Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
     connection = await createTestConnection([ User ]);
 
@@ -104,9 +105,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
   });
 
   after(async () => {
-    delete process.env.SETTINGS_JWT_SECRET;
-    delete process.env.SETTINGS_JWT_CSRF_ENABLED;
-    delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME;
+    Config.remove('settings.jwt.secret');
+    Config.remove('settings.jwt.csrf.enabled');
+    Config.remove('settings.jwt.csrf.cookie.name');
 
     await connection.close();
   });

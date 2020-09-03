@@ -1,4 +1,5 @@
 import {
+  Config,
   Context,
   createApp,
   createSession,
@@ -21,14 +22,14 @@ describe('The session store', () => {
 
   beforeEach(() => {
     // Use ".." to remove the "build/" directory.
-    process.env.SETTINGS_SESSION_STORE = './../node_modules/@foal/redis';
-    process.env.SETTINGS_SESSION_SECRET = 'secret';
+    Config.set('settings.session.store', './../node_modules/@foal/redis');
+    Config.set('settings.session.secret', 'secret');
     serviceManager = new ServiceManager();
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_SESSION_STORE;
-    delete process.env.SETTINGS_SESSION_SECRET;
+    Config.remove('settings.session.store');
+    Config.remove('settings.session.secret');
     // Hack to close the redis connection in this test.
     (serviceManager as any).map.forEach((value: any) => {
       if (value.service.close) {

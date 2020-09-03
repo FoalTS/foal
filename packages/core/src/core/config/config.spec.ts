@@ -95,6 +95,16 @@ describe('Config', () => {
         strictEqual(Config.get('a.b.c'), 2);
       });
 
+      context('given the static method "remove" has been called after', () => {
+
+        beforeEach(() => Config.remove('a.b.c'));
+
+        it('should not return the configuration value.', () => {
+          strictEqual(Config.get('a.b.c'), undefined);
+        });
+
+      });
+
     });
 
     function testConfigFile(path: string, fileContent: string, nodeEnv?: string): void {
