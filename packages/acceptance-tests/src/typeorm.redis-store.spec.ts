@@ -22,6 +22,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
+import { Config as RedisConfig } from '@foal/redis/node_modules/@foal/core';
 import * as redis from 'redis';
 import * as request from 'supertest';
 
@@ -135,7 +136,11 @@ describe('[Sample] MongoDB & Redis Store', async () => {
   let connection: Connection;
 
   before(async () => {
-    Config.set('settings.mongodb.uri', 'mongodb://localhost:27017/e2e_db');
+    const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
+    const REDIS_URI = 'redis://localhost:6380';
+
+    Config.set('settings.mongodb.uri', MONGODB_URI);
+    Config.set('settings.redis.uri', REDIS_URI);
 
     connection = await createConnection({
       database: 'e2e_db',
@@ -146,7 +151,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'mongodb',
     });
 
-    redisClient = redis.createClient();
+    redisClient = redis.createClient(REDIS_URI);
 
     await new Promise((resolve, reject) => {
       redisClient.flushdb((err, success) => {
@@ -168,6 +173,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
   after(() => {
     Config.remove('settings.mongodb.uri');
+    Config.remove('settings.redis.uri');
 
     return Promise.all([
       connection.close(),

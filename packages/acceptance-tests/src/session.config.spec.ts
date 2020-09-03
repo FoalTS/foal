@@ -24,12 +24,14 @@ describe('The session store', () => {
     // Use ".." to remove the "build/" directory.
     Config.set('settings.session.store', './../node_modules/@foal/redis');
     Config.set('settings.session.secret', 'secret');
+    Config.set('settings.redis.uri', 'redis://localhost:6380');
     serviceManager = new ServiceManager();
   });
 
   afterEach(() => {
     Config.remove('settings.session.store');
     Config.remove('settings.session.secret');
+    Config.remove('settings.redis.uri');
     // Hack to close the redis connection in this test.
     (serviceManager as any).map.forEach((value: any) => {
       if (value.service.close) {

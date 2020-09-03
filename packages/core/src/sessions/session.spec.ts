@@ -166,8 +166,8 @@ describe('Session', () => {
   describe('has an "expirationTime" property that', () => {
 
     afterEach(() => {
-      Config.get('settings.session.expirationTimeouts.inactivity');
-      Config.get('settings.session.expirationTimeouts.absolute');
+      Config.remove('settings.session.expirationTimeouts.inactivity');
+      Config.remove('settings.session.expirationTimeouts.absolute');
     });
 
     describe('should return the session expiration time in seconds', () => {
@@ -780,7 +780,7 @@ describe('Session', () => {
       });
 
       afterEach(() => {
-        Config.remove('settings.session.garbageCollection.periodicity');
+        Config.remove('settings.session.garbageCollector.periodicity');
         Config.remove('settings.session.expirationTimeouts.inactivity');
         Config.remove('settings.session.expirationTimeouts.absolute');
       });
