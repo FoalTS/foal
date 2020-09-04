@@ -274,7 +274,14 @@ export class ConsoleLogger extends Logger {
 export { ConsoleLogger as ConcreteLogger };
 ```
 
-*config/development.json*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+logger:
+  driver: ./app/services/console-logger.service
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "logger": {
@@ -282,6 +289,17 @@ export { ConsoleLogger as ConcreteLogger };
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  logger: {
+    driver: "./app/services/console-logger.service"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 > The configuration value can be a package name or a path relative to the `src/` directory. If it is a path, it **must** start with `./` and **must not** have an extension (`.js`, `.ts`, etc).
 

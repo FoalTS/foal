@@ -3,7 +3,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Server } from 'http';
 
 // 3p
-import { Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+import { Config, Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { SocialTokens } from './abstract-provider.service';
@@ -23,9 +23,11 @@ describe('FacebookProvider', () => {
 
     beforeEach(() => {
       provider = createService(FacebookProvider2);
+      Config.set('settings.loggerFormat', 'none');
     });
 
     afterEach(() => {
+      Config.remove('settings.loggerFormat');
       if (server) {
         server.close();
       }

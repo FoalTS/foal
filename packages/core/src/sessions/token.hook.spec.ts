@@ -3,6 +3,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import {
+  Config,
   ConfigNotFoundError,
   Context,
   getApiComponents,
@@ -118,8 +119,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_SESSION_COOKIE_NAME;
-    delete process.env.SETTINGS_SESSION_STORE;
+    Config.remove('settings.session.cookie.name');
+    Config.remove('settings.session.store');
   });
 
   context('given no session store class is provided as option', () => {
@@ -134,7 +135,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('should use the session store package provided in settings.session.store.', () => {
-      process.env.SETTINGS_SESSION_STORE = '@foal/internal-test';
+      Config.set('settings.session.store', '@foal/internal-test');
 
       return doesNotReject(() => hook(ctx, services));
     });
@@ -352,10 +353,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     context('given settings.session.csrf.enabled is true', () => {
 
       beforeEach(() => {
-        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        Config.set('settings.session.csrf.enabled', true);
       });
 
-      afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+      afterEach(() => Config.remove('settings.session.csrf.enabled'));
 
       context('given options.cookie is false or not defined', () => {
 
@@ -498,7 +499,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should set Context.session', () => {
 
-    afterEach(() => delete process.env.SETTINGS_SESSION_COOKIE_NAME);
+    afterEach(() => Config.remove('settings.session.cookie.name'));
 
     it('with the session.', async () => {
       ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`});
@@ -516,7 +517,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     // This test might be put in a better place.
     it('with the session (custom cookie name).', async () => {
-      process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
+      Config.set('settings.session.cookie.name', 'auth2');
 
       ctx = createContext({}, { auth2: anonymousSessionID });
       hook = getHookFunction(Token({ store: Store, cookie: true }));
@@ -587,9 +588,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser })));
 
           it('with the undefined value and should destroy the session.', async () => {
-            const response = await hook(ctx, services);
+            await hook(ctx, services);
 
             strictEqual(ctx.user, undefined);
+            // tslint:disable-next-line
             strictEqual(ctx.session?.isDestroyed, true);
           });
 
@@ -905,7 +907,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+    afterEach(() => Config.remove('settings.session.csrf.enabled'));
 
     it('unless options.openapi is false.', () => {
       @Token({ openapi: false })
@@ -934,7 +936,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (cookie) (cookie name different).', () => {
-      process.env.SETTINGS_SESSION_COOKIE_NAME = 'auth2';
+      Config.set('settings.session.cookie.name', 'auth2');
+
       @Token({ cookie: true })
       class Foobar {}
 
@@ -1005,7 +1008,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper API responses (no cookie & csrf protection).', () => {
-        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        Config.set('settings.session.csrf.enabled', true);
+
         testResponses({ cookie: false });
       });
 
@@ -1014,7 +1018,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper API responses (cookie & csrf protection).', () => {
-        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        Config.set('settings.session.csrf.enabled', true);
+
         @Token({ cookie: true })
         class Foobar {}
 
@@ -1056,7 +1061,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper API responses (no cookie & csrf protection).', () => {
-        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        Config.set('settings.session.csrf.enabled', true);
+
         testResponses({ cookie: false });
       });
 
@@ -1065,7 +1071,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper API responses (cookie & csrf protection).', () => {
-        process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
+        Config.set('settings.session.csrf.enabled', true);
+
         @Token({ cookie: true })
         class Foobar {}
 

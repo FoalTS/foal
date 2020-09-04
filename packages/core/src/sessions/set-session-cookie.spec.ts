@@ -1,5 +1,5 @@
 import { deepStrictEqual, strictEqual } from 'assert';
-import { HttpResponse, HttpResponseOK } from '../core';
+import { Config, HttpResponse, HttpResponseOK } from '../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY,
   SESSION_DEFAULT_COOKIE_NAME,
@@ -85,22 +85,22 @@ describe('setSessionCookie', () => {
       const cookieName = SESSION_DEFAULT_COOKIE_NAME + '2';
 
       beforeEach(() => {
-        process.env.SETTINGS_SESSION_COOKIE_NAME = cookieName;
-        process.env.SETTINGS_SESSION_COOKIE_DOMAIN = 'example.com';
-        process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY = 'false';
-        process.env.SETTINGS_SESSION_COOKIE_PATH = '/foo';
-        process.env.SETTINGS_SESSION_COOKIE_SAME_SITE = 'strict';
-        process.env.SETTINGS_SESSION_COOKIE_SECURE = 'true';
+        Config.set('settings.session.cookie.name', cookieName);
+        Config.set('settings.session.cookie.domain', 'example.com');
+        Config.set('settings.session.cookie.httpOnly', false);
+        Config.set('settings.session.cookie.path', '/foo');
+        Config.set('settings.session.cookie.sameSite', 'strict');
+        Config.set('settings.session.cookie.secure', true);
         setSessionCookie(response, session);
       });
 
       afterEach(() => {
-        delete process.env.SETTINGS_SESSION_COOKIE_NAME;
-        delete process.env.SETTINGS_SESSION_COOKIE_DOMAIN;
-        delete process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY;
-        delete process.env.SETTINGS_SESSION_COOKIE_PATH;
-        delete process.env.SETTINGS_SESSION_COOKIE_SAME_SITE;
-        delete process.env.SETTINGS_SESSION_COOKIE_SECURE;
+        Config.remove('settings.session.cookie.name');
+        Config.remove('settings.session.cookie.domain');
+        Config.remove('settings.session.cookie.httpOnly');
+        Config.remove('settings.session.cookie.path');
+        Config.remove('settings.session.cookie.sameSite');
+        Config.remove('settings.session.cookie.secure');
       });
 
       it('with the proper default name and value.', () => {
@@ -144,9 +144,9 @@ describe('setSessionCookie', () => {
 
   context('given the CSRF protection is enabled in the config', () => {
 
-    beforeEach(() => process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true');
+    beforeEach(() => Config.set('settings.session.csrf.enabled', true));
 
-    afterEach(() => delete process.env.SETTINGS_SESSION_CSRF_ENABLED);
+    afterEach(() => Config.remove('settings.session.csrf.enabled'));
 
     describe('should set a session cookie in the response', () => {
 
@@ -164,12 +164,12 @@ describe('setSessionCookie', () => {
       context('given configuration options are provided', () => {
 
         beforeEach(() => {
-          process.env.SETTINGS_SESSION_COOKIE_SAME_SITE = 'strict';
+          Config.set('settings.session.cookie.sameSite', 'strict');
           setSessionCookie(response, session);
         });
 
         afterEach(() => {
-          delete process.env.SETTINGS_SESSION_COOKIE_SAME_SITE;
+          Config.remove('settings.session.cookie.sameSite');
         });
 
         it('with the proper default "sameSite" directive.', () => {
@@ -229,22 +229,22 @@ describe('setSessionCookie', () => {
         const csrfCookieName = SESSION_DEFAULT_CSRF_COOKIE_NAME + '2';
 
         beforeEach(() => {
-          process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME = csrfCookieName;
-          process.env.SETTINGS_SESSION_COOKIE_DOMAIN = 'example.com';
-          process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY = 'true';
-          process.env.SETTINGS_SESSION_COOKIE_PATH = '/foo';
-          process.env.SETTINGS_SESSION_COOKIE_SAME_SITE = 'strict';
-          process.env.SETTINGS_SESSION_COOKIE_SECURE = 'true';
+          Config.set('settings.session.csrf.cookie.name', csrfCookieName);
+          Config.set('settings.session.cookie.domain', 'example.com');
+          Config.set('settings.session.cookie.httpOnly', true);
+          Config.set('settings.session.cookie.path', '/foo');
+          Config.set('settings.session.cookie.sameSite', 'strict');
+          Config.set('settings.session.cookie.secure', true);
           setSessionCookie(response, session);
         });
 
         afterEach(() => {
-          delete process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME;
-          delete process.env.SETTINGS_SESSION_COOKIE_DOMAIN;
-          delete process.env.SETTINGS_SESSION_COOKIE_HTTP_ONLY;
-          delete process.env.SETTINGS_SESSION_COOKIE_PATH;
-          delete process.env.SETTINGS_SESSION_COOKIE_SAME_SITE;
-          delete process.env.SETTINGS_SESSION_COOKIE_SECURE;
+          Config.remove('settings.session.csrf.cookie.name');
+          Config.remove('settings.session.cookie.domain');
+          Config.remove('settings.session.cookie.httpOnly');
+          Config.remove('settings.session.cookie.path');
+          Config.remove('settings.session.cookie.sameSite');
+          Config.remove('settings.session.cookie.secure');
         });
 
         it('with the proper default name and value.', () => {

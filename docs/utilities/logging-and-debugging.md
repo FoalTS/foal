@@ -4,6 +4,14 @@
 
 FoalTS uses [morgan](https://www.npmjs.com/package/morgan) to log the HTTP requests. You can specify the output format using the environment variable `SETTINGS_LOGGER_FORMAT` or the `config/default.json` file:
 
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  loggerFormat: tiny
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -11,30 +19,79 @@ FoalTS uses [morgan](https://www.npmjs.com/package/morgan) to log the HTTP reque
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    loggerFormat: "tiny"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Disabling HTTP Request Logging
 
 In some scenarios and environments, you might want to disable http request logging. You can achieve this by setting the `loggerFormat` configuration option to `none`. 
 
-```json
-  {
-    "settings": {
-      "loggerFormat": "none",
-    }
-  }
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  loggerFormat: none
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "loggerFormat": "none"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    loggerFormat: "none"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Disabling Error Logging
 
 In some scenarios, you might want to disable error logging (error stack traces that are displayed when an error is thrown in a controller or hook). You can achieve this by setting the `allErrors` configuration option to false. 
 
-```json
-  {
-    "settings": {
-      "allErrors": false
-    }
-  }
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  allErrors: false
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "allErrors": false
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    allErrors: false
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Logging Hook
 

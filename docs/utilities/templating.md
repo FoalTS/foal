@@ -82,22 +82,32 @@ Here is an example showing how to configure `config/default.json` (or `config/de
 npm install twig
 ```
 
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  templateEngine: twig
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
     "templateEngine": "twig"
-    ...
   }
-  ...
 }
 ```
-
-```yaml
-settings:
-  templateEngine: twig
-  ...
-...
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    templateEngine: "twig"
+  }
+}
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 Then the `render` function uses this engine under the hood to render the templates.
 

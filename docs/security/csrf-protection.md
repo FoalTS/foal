@@ -36,6 +36,19 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      csrf: {
+        enabled: true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
 {% endcode-tabs %}
 
 ### Authentication with JSON Web Tokens
@@ -56,6 +69,19 @@ settings:
     "jwt": {
       "csrf": {
         "enabled": true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      csrf: {
+        enabled: true
       }
     }
   }
@@ -411,6 +437,22 @@ settings:
         "enabled": true,
         "cookie": {
           "name": "CSRF-Token"
+        }
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      csrf: {
+        enabled: true,
+        cookie: {
+          name: "CSRF-Token"
         }
       }
     }

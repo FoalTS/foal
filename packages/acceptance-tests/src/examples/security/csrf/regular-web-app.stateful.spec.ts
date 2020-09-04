@@ -7,6 +7,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
+  Config,
   Context,
   controller,
   createApp,
@@ -123,8 +124,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
   let csrfToken: string;
 
   before(async () => {
-    process.env.SETTINGS_SESSION_CSRF_ENABLED = 'true';
-    process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME = csrfCookieName;
+    Config.set('settings.session.csrf.enabled', true);
+    Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
     connection = await createTestConnection([ User, DatabaseSession ]);
 
@@ -135,8 +136,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
   });
 
   after(async () => {
-    delete process.env.SETTINGS_SESSION_CSRF_ENABLED;
-    delete process.env.SETTINGS_SESSION_CSRF_COOKIE_NAME;
+    Config.remove('settings.session.csrf.enabled');
+    Config.remove('settings.session.csrf.cookie.name');
 
     await connection.close();
   });

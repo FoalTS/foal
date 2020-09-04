@@ -11,9 +11,9 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context, controller, createApp,
-  Get, hashPassword, HttpResponseOK,
-  HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
+  Config, Context, controller,
+  createApp, Get, hashPassword,
+  HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired } from '@foal/jwt';
 import { fetchUser } from '@foal/typeorm';
@@ -120,7 +120,8 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
   }
 
   before(async () => {
-    process.env.SETTINGS_JWT_SECRET = 'session-secret';
+    Config.set('settings.jwt.secret', 'session-secret');
+
     await createConnection({
       database: 'e2e_db.sqlite',
       dropSchema: true,
@@ -136,7 +137,8 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
   after(async () => {
     await getConnection().close();
-    delete process.env.SETTINGS_JWT_SECRET;
+
+    Config.remove('settings.jwt.secret');
   });
 
   it('cannot access protected routes if they are not logged in.', () => {

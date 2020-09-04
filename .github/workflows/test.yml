@@ -59,7 +59,7 @@ jobs:
       redis:
         image: redis:4.0.14
         ports:
-          - 6379:6379
+          - 6380:6379
 
     steps:
     - uses: actions/checkout@v1

@@ -20,7 +20,7 @@ export class MongoDBStore extends SessionStore {
 
   async boot() {
     const mongoDBURI = Config.getOrThrow(
-      'mongodb.uri',
+      'settings.mongodb.uri',
       'string',
       'You must provide the URI of your database when using MongoDBStore.'
     );

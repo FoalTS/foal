@@ -1,5 +1,5 @@
 // 3p
-import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import { Config, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
@@ -8,7 +8,7 @@ import { RedisStore } from './redis-store.service';
 
 describe('RedisStore', () => {
 
-  const REDIS_URI = 'redis://localhost:6379';
+  const REDIS_URI = 'redis://localhost:6380';
   const COLLECTION_NAME =  'sessions';
 
   let store: RedisStore;
@@ -36,7 +36,7 @@ describe('RedisStore', () => {
   }
 
   before(async () => {
-    process.env.REDIS_URI = REDIS_URI;
+    Config.set('settings.redis.uri', REDIS_URI);
 
     redisClient = createClient(REDIS_URI);
     store = createService(RedisStore);
@@ -50,7 +50,7 @@ describe('RedisStore', () => {
   });
 
   after(() => {
-    delete process.env.REDIS_URI;
+    Config.remove('settings.redis.uri');
 
     return Promise.all([
       redisClient.end(true),

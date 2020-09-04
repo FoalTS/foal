@@ -3,6 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import {
+  Config,
   Context,
   createAndInitApp,
   createSession,
@@ -134,7 +135,12 @@ describe('[Sample] MongoDB & Redis Store', async () => {
   let connection: Connection;
 
   before(async () => {
-    process.env.MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
+    const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
+    const REDIS_URI = 'redis://localhost:6380';
+
+    Config.set('settings.mongodb.uri', MONGODB_URI);
+    Config.set('settings.redis.uri', REDIS_URI);
+
     connection = await createConnection({
       database: 'e2e_db',
       dropSchema: true,
@@ -144,7 +150,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'mongodb',
     });
 
-    redisClient = redis.createClient();
+    redisClient = redis.createClient(REDIS_URI);
 
     await new Promise((resolve, reject) => {
       redisClient.flushdb((err, success) => {
@@ -165,7 +171,9 @@ describe('[Sample] MongoDB & Redis Store', async () => {
   });
 
   after(() => {
-    delete process.env.MONGODB_URI;
+    Config.remove('settings.mongodb.uri');
+    Config.remove('settings.redis.uri');
+
     return Promise.all([
       connection.close(),
       app.foal.services.get(RedisStore).close(),

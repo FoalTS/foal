@@ -2,7 +2,14 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { ConfigNotFoundError, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import {
+  Config,
+  ConfigNotFoundError,
+  createService,
+  createSession,
+  SessionAlreadyExists,
+  SessionState
+} from '@foal/core';
 import { MongoClient } from 'mongodb';
 
 // FoalTS
@@ -40,19 +47,19 @@ describe('MongoDBStore', () => {
   }
 
   before(async () => {
-      process.env.MONGODB_URI = MONGODB_URI;
+    Config.set('settings.mongodb.uri', MONGODB_URI);
 
-      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-      try {
-        await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
-      } catch (error) {
-        if (!(error.message.includes('ns not found'))) {
-          throw error;
-        }
+    mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    try {
+      await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+    } catch (error) {
+      if (!(error.message.includes('ns not found'))) {
+        throw error;
       }
-      store = createService(MongoDBStore);
-      await store.boot();
-    });
+    }
+    store = createService(MongoDBStore);
+    await store.boot();
+  });
 
   beforeEach(async () => {
     state = createState();
@@ -65,7 +72,7 @@ describe('MongoDBStore', () => {
   });
 
   after(() => {
-    delete process.env.MONGODB_URI;
+    Config.remove('settings.mongodb.uri');
 
     return Promise.all([
       mongoDBClient.close(),
@@ -103,11 +110,12 @@ describe('MongoDBStore', () => {
   describe('has a "boot" method that', () => {
 
     it('should throw a ConfigNotFoundError if no MongoDB URI is provided.', () => {
-      delete process.env.MONGODB_URI;
+      Config.remove('settings.mongodb.uri');
+
       return rejects(
         () => createService(MongoDBStore).boot(),
         new ConfigNotFoundError(
-          'mongodb.uri',
+          'settings.mongodb.uri',
           'You must provide the URI of your database when using MongoDBStore.',
         )
       );

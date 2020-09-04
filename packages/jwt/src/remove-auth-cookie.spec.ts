@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { HttpResponse, HttpResponseOK } from '@foal/core';
+import { Config, HttpResponse, HttpResponseOK } from '@foal/core';
 
 // FoalTS
 import {
@@ -67,22 +67,22 @@ describe('removeAuthCookie', () => {
       const cookieName = JWT_DEFAULT_COOKIE_NAME + '2';
 
       beforeEach(() => {
-        process.env.SETTINGS_JWT_COOKIE_NAME = cookieName;
-        process.env.SETTINGS_JWT_COOKIE_DOMAIN = 'example.com';
-        process.env.SETTINGS_JWT_COOKIE_HTTP_ONLY = 'false';
-        process.env.SETTINGS_JWT_COOKIE_PATH = '/foo';
-        process.env.SETTINGS_JWT_COOKIE_SAME_SITE = 'strict';
-        process.env.SETTINGS_JWT_COOKIE_SECURE = 'true';
+        Config.set('settings.jwt.cookie.name', cookieName);
+        Config.set('settings.jwt.cookie.domain', 'example.com');
+        Config.set('settings.jwt.cookie.httpOnly', false);
+        Config.set('settings.jwt.cookie.path', '/foo');
+        Config.set('settings.jwt.cookie.sameSite', 'strict');
+        Config.set('settings.jwt.cookie.secure', true);
         removeAuthCookie(response);
       });
 
       afterEach(() => {
-        delete process.env.SETTINGS_JWT_COOKIE_NAME;
-        delete process.env.SETTINGS_JWT_COOKIE_DOMAIN;
-        delete process.env.SETTINGS_JWT_COOKIE_HTTP_ONLY;
-        delete process.env.SETTINGS_JWT_COOKIE_PATH;
-        delete process.env.SETTINGS_JWT_COOKIE_SAME_SITE;
-        delete process.env.SETTINGS_JWT_COOKIE_SECURE;
+        Config.remove('settings.jwt.cookie.name');
+        Config.remove('settings.jwt.cookie.domain');
+        Config.remove('settings.jwt.cookie.httpOnly');
+        Config.remove('settings.jwt.cookie.path');
+        Config.remove('settings.jwt.cookie.sameSite');
+        Config.remove('settings.jwt.cookie.secure');
       });
 
       it('with the proper default name and value.', () => {
@@ -126,9 +126,9 @@ describe('removeAuthCookie', () => {
 
   context('given the CSRF protection is enabled in the config', () => {
 
-    beforeEach(() => process.env.SETTINGS_JWT_CSRF_ENABLED = 'true');
+    beforeEach(() => Config.set('settings.jwt.csrf.enabled', true));
 
-    afterEach(() => delete process.env.SETTINGS_JWT_CSRF_ENABLED);
+    afterEach(() => Config.remove('settings.jwt.csrf.enabled'));
 
     describe('should set an auth cookie in the response', () => {
 
@@ -146,12 +146,12 @@ describe('removeAuthCookie', () => {
       context('given configuration options are provided', () => {
 
         beforeEach(() => {
-          process.env.SETTINGS_JWT_COOKIE_SAME_SITE = 'strict';
+          Config.set('settings.jwt.cookie.sameSite', 'strict');
           removeAuthCookie(response);
         });
 
         afterEach(() => {
-          delete process.env.SETTINGS_JWT_COOKIE_SAME_SITE;
+          Config.remove('settings.jwt.cookie.sameSite');
         });
 
         it('with the proper default "sameSite" directive.', () => {
@@ -211,22 +211,22 @@ describe('removeAuthCookie', () => {
         const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
 
         beforeEach(() => {
-          process.env.SETTINGS_JWT_CSRF_COOKIE_NAME = csrfCookieName;
-          process.env.SETTINGS_JWT_COOKIE_DOMAIN = 'example.com';
-          process.env.SETTINGS_JWT_COOKIE_HTTP_ONLY = 'true';
-          process.env.SETTINGS_JWT_COOKIE_PATH = '/foo';
-          process.env.SETTINGS_JWT_COOKIE_SAME_SITE = 'strict';
-          process.env.SETTINGS_JWT_COOKIE_SECURE = 'true';
+          Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
+          Config.set('settings.jwt.cookie.domain', 'example.com');
+          Config.set('settings.jwt.cookie.httpOnly', true);
+          Config.set('settings.jwt.cookie.path', '/foo');
+          Config.set('settings.jwt.cookie.sameSite', 'strict');
+          Config.set('settings.jwt.cookie.secure', true);
           removeAuthCookie(response);
         });
 
         afterEach(() => {
-          delete process.env.SETTINGS_JWT_CSRF_COOKIE_NAME;
-          delete process.env.SETTINGS_JWT_COOKIE_DOMAIN;
-          delete process.env.SETTINGS_JWT_COOKIE_HTTP_ONLY;
-          delete process.env.SETTINGS_JWT_COOKIE_PATH;
-          delete process.env.SETTINGS_JWT_COOKIE_SAME_SITE;
-          delete process.env.SETTINGS_JWT_COOKIE_SECURE;
+          Config.remove('settings.jwt.csrf.cookie.name');
+          Config.remove('settings.jwt.cookie.domain');
+          Config.remove('settings.jwt.cookie.httpOnly');
+          Config.remove('settings.jwt.cookie.path');
+          Config.remove('settings.jwt.cookie.sameSite');
+          Config.remove('settings.jwt.cookie.secure');
         });
 
         it('with the proper default name and value.', () => {

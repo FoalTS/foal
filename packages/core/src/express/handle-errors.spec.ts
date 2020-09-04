@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as request from 'supertest';
 
 // FoalTS
-import { Context, HttpResponseOK } from '../core';
+import { Config, Context, HttpResponseOK } from '../core';
 import { CreateAppOptions } from './create-app';
 import { handleErrors } from './handle-errors';
 
@@ -14,7 +14,7 @@ describe('handleErrors', () => {
 
   describe('should return an error-handling middleware which', () => {
 
-    afterEach(() => delete process.env.SETTINGS_LOG_ERRORS);
+    afterEach(() => Config.remove('settings.logErrors'));
 
     it('should ignore Express client errors and forward them to the new error-handling middleware.', () => {
       const app = express()
@@ -49,7 +49,8 @@ describe('handleErrors', () => {
     });
 
     it('should not log the error if the value of the configuration key settings.logErrors is false.', async () => {
-      process.env.SETTINGS_LOG_ERRORS = 'false';
+      Config.set('settings.logErrors', false);
+
       let str = null;
       const logFn = (msg: string) => str = msg;
       const err = new Error();

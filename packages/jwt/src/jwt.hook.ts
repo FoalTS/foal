@@ -73,7 +73,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
   async function hook(ctx: Context) {
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -210,7 +210,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
   if (options.cookie) {
     const securityScheme: IApiSecurityScheme = {
       in: 'cookie',
-      name: Config.get('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
+      name: Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME),
       type: 'apiKey',
     };
     openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
