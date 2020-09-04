@@ -2,7 +2,7 @@
 
 In FoalTS, _configuration_ refers to any parameter that may vary between deploy environments (production, development, test, etc). It includes sensitive information, such as your database credentials, or simple settings, such as the server port.
 
-The framework encourages a **strict separation between configuration and code** and allows you to define your configuration in environment variables, in an `.env` file or in files in the `config/` directory. You can choose one of these techniques or use them all simultaneously.
+The framework encourages a **strict separation between configuration and code** and allows you to define your configuration in environment variables, in `.env` files and in files in the `config/` directory.
 
 *Config directory structure*
 ```
@@ -17,56 +17,40 @@ The framework encourages a **strict separation between configuration and code** 
 '- .env
 ```
 
-## Architecture of a Configuration File
+## Configuration Files
 
-*Example of `.env` file*
+Configuration values are provided using configuration files in the `config/` directory. Several formats are supported: YAML, JSON and JS files.
 
-```
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=password
-```
-
-*Example of a file in the `config/` directory*
-
-Both formats, JSON and YAML, are supported. Choose the one that suits you the best.
+*config/default.{yml|json|js}*
 
 {% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/typeorm"
+```
+{% endcode-tabs-item %}
 {% code-tabs-item title="JSON" %}
 ```json
 {
-  "port": 3001,
   "settings": {
-    "debug": false,
-    "loggerFormat": "tiny",
-    "staticPath": "public/",
     "session": {
-      "cookie": {
-        "path": "/"
-      },
-      "secret": "my-secret"
+      "store": "@foal/typeorm"
     }
-  },
-  "database": {
-    "database": "./db.sqlite3"
   }
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title="YAML" %}
-```yaml
-port: 3001
-
-settings:
-  debug: false
-  loggerFormat: tiny
-  staticPath: public/
-  session:
-    cookie:
-      path: /
-    secret: my-secret
-
-database:
-  database: './db.sqlite3'
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      store: "@foal/typeorm"
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -87,15 +71,64 @@ database:
 >
 > The extension of the YAML files must be `.yml`.
 
+### Deployment Environments
+
+The *default* configuration files are used regardless of the environment, i.e. regardless of the value assigned to the `NODE_ENV` environment variable.
+
+Configuration values can also be set or overridden for a specific environment using the filename syntax: `config/<environment-name>.{json|yml|js}`. If no value is assigned to `NODE_ENV`, the environment considered is *development*.
+
+### Reserved Parameters
+
+All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/typeorm"
+
+customConfiguration:
+  message: hello world
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "store": "@foal/typeorm"
+    }
+  },
+  "customConfiguration": {
+    "message": "hello world"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      store: "@foal/typeorm"
+    }
+  },
+  customConfiguration: {
+    message: "hello world"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
 ## Accessing Configuration Values
 
-The `Config` class provides two static methods for accessing configuration values: `get` and `getOrThrow`.
+The `Config` class provides two static methods `get` and `getOrThrow` for reading configuration values.
 
 ### The `Config.get` method
 
-> warning: version 2
-
-This function takes the configuration key as parameter.
+This function takes the configuration key as first parameter.
 
 ```typescript
 import { Config } from '@foal/core';
@@ -103,19 +136,14 @@ import { Config } from '@foal/core';
 const secret = Config.get('settings.jwt.secret');
 ```
 
-In this example, FoalTS will try to retrieve the configuration value via:
-- the environment variable `SETTINGS_JWT_SECRET`,
-- the `.env` file with the variable `SETTINGS_JWT_SECRET`,
-- the JSON file `config/development.json` with the path `settings.jwt.secret`,
-- the YAML file `config/development.yml` with the path `settings.jwt.secret`,
-- the JSON file `config/default.json` with the path `settings.jwt.secret`,
-- or the YAML file `config/default.yml` with the path `settings.jwt.secret`.
-
-If no value is found, the method returns `undefined`.
-
-If the `NODE_ENV` environment variable is set, Foal will look at `${NODE_ENV}.json` (resp. `${NODE_ENV}.yml`) instead of `development.json` (resp. `development.yml`).
+The algorithm below is used to retrieve the configuration value:
+1. Return the value specified in the environment config file if it exists.
+2. Return the value specified in the *default* config file it is exists.
+3. Return `undefined` otherwise.
 
 #### Specifying a type
+
+The method also accepts a second optional parameter to define the type of the returned value.
 
 ```typescript
 import { Config } from '@foal/core';
@@ -124,7 +152,7 @@ const foobar = Config.get('settings.foobar', 'boolean|string');
 // foobar is of type boolean|string|undefined
 ```
 
-The method also accepts a second optional parameter to define the type of the returned value. When it is set, Foal checks that the configuration value has the correct type and if it does not, it throws a `ConfigTypeError`. In case the value is provided via an environment variable or the `.env` file, the method will try to convert it to the desired type (e.g. `"true"` becomes `true`). If it does not succeed, a `ConfigTypeError` is also thrown.
+When it is set, Foal checks that the configuration value has the correct type and if it does not, it will try to convert it to the desired type (e.g. `"true"` becomes `true`). If it does not succeed, a `ConfigTypeError` is thrown.
 
 | Allowed types |
 | --- |
@@ -146,93 +174,63 @@ const foobar = Config.get('settings.foobar', 'boolean', false);
 
 ### The `Config.getOrThrow` method
 
-> Available since v1.7
-
 ```typescript
 const foobar = Config.getOrThrow('settings.foobar', 'boolean');
 // foobar is of type boolean
 ```
 
-This method has the same behavior as `Config.get` except that it does not accept a default value. If no value is found in the configuration files or in an environment variable, the method will throw a `ConfigNotFoundError`.
+This method has the same behavior as `Config.get` except that it does not accept a default value. If no value is found, the method will throw a `ConfigNotFoundError`.
 
-## Configuration & FoalTS Components
+## Environment Variables and `.env` Files
 
-As mentioned before, FoalTS encourages a strict separation between configuration and code. This is why most FoalTS components (services, controller, hooks) retreive their configuration directly from the config files or environment variables. They use the namespace `settings` for this purpose.
+Configuration files in the `config/` directory are usually committed and therefore should not contain sensitive information (such as database credentials).
 
-For example, FoalTS uses the configuration key `settings.debug` to determine if error tracebacks should be returned in the *INTERNAL SERVER ERROR* responses.
+The recommended approach to provide sensitive information to the application is to use environment variables and `.env` files which are not committed. Then, in the configuration files, the values are retrieved.
 
-You should not create new configuration keys in the `settings` namespace as this may conflict with future versions of the framework.
-
-*default.yml (default)*
-```yaml
-port: 3001
-
-settings:
-  // You should not define your own configuration keys in this section.
-  // Use only those specified in the documentation.
-  debug: true
-
-// Custom configuration
-my_custom_config:
-  config1: 'foobar'
-
-// Custom configuration
-my_custom_config2:
-  age: 32
-
+*.env*
+```
+JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 ```
 
-## Precedence of the Configuration
-
-Configuration specified in the `.env` file overrides the one defined in the `config/` directory files. And configuration specified in environment variables overrides the one defined in the `.env` file.
-
-> **Use case**
->
-> PaaS providers often require that web applications be served on a specific port (`8080`, `80`, etc.) that may be different from the one you use locally. Usually, the value of this port is specified in an environment variable named `PORT`. With FoalTS configuration system, the port is automatically replaced when your project is deployed and the application works as expected.
-
-The `config/` directory files also have a precedence system inside the directory. If your node environment is `production` (defined with the environment variable `NODE_ENV`), then the `production.json` file (if it exists) overrides the file `default.json`.
-
-## Database Configuration (TypeORM)
-
-TypeORM uses a [different system](http://typeorm.io/#/using-ormconfig) for its configuration based on the file `ormconfig.js` located at the root of the project directory.
-
-You can however customize the `ormconfig.js` file to make it work with FoalTS configuration system.
-
-> warning: version 2
-
-*ormconfig.js (example)*
-```js
-const { Config } = require('@foal/core');
-
-module.exports = {
-  type: 'sqlite',
-  database: Config.get('database.database', 'string'),
-  dropSchema: Config.get('database.dropSchema', 'boolean' false),
-  entities: ["build/app/**/*.entity.js"],
-  migrations: ["build/migrations/*.js"],
-  cli: {
-    migrationsDir: "src/migrations"
-  },
-  synchronize: Config.get('database.synchronize', 'boolean', false)
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secret: env(JWT_SECRET)
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secret": "env(JWT_SECRET)",
+      "secretEncoding": "base64"
+    }
+  }
 }
-
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+const { Env } = require('@foal/core');
 
-*default.yml (example)*
-```yaml
-port: 3001
-
-settings:
-  ...
-
-database:
-  database: './db.sqlite3'
+module.exports =   {
+  settings: {
+    jwt: {
+      secret: Env.get('JWT_SECRET'),
+      secretEncoding: 'base64'
+    }
+  }
+}
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
-*test.yml (example)*
-```yaml
-database:
-  database: './test_db.sqlite3'
-  dropSchema: true
-  synchronize: true
-```
+If the same variable is provided both as environment variable and in the `.env` file, then the value of the environment variable is used.
+
+### Deployment Environments
+
+Just like the configuration files in the `config/` directory, the `.env` files can be used for several environments: `.env.production`, `.env.test`, etc.

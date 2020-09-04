@@ -32,10 +32,14 @@ database:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-DATABASE_TYPE=mongodb
-DATABASE_URL=mongodb://localhost:27017/test-foo-bar
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports =   {
+  database: {
+    type: "mongodb",
+    url: "mongodb://localhost:27017/test-foo-bar"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

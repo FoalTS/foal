@@ -59,10 +59,18 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "local",
+      local: {
+        directory: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -110,10 +118,22 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=@foal/aws-s3
-SETTINGS_DISK_S3_BUCKET=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    aws: {
+      accessKeyId: "xxx",
+      secretAccessKey: "yyy"
+    },
+    disk: {
+      driver: "@foal/aws-s3",
+      s3: {
+        bucket: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -297,9 +317,15 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=./app/services/my-disk.service
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "./app/services/my-disk.service",
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

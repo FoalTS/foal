@@ -24,34 +24,40 @@ Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 
 Once the secret is in hand, there are several ways to provide it to the future hooks:
 
-- using the environment variable `SETTINGS_JWT_SECRET`,
-- in a file named `.env` in the root directory,
-  ```
-  SETTINGS_JWT_SECRET=Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
-  SETTINGS_JWT_SECRET_ENCODING=base64
-  ```
-- or in a YAML or JSON file in the `config/` directory.
-
-  *development.yml*
-  ```yaml
-  settings:
-    jwt:
-      secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
-      secretEncoding: base64
-  ```
-  *development.json*
-  ```json
-  {
-    "settings": {
-      "jwt": {
-        "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
-        "secretEncoding": "base64"
-      }
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
+      "secretEncoding": "base64"
     }
   }
-  ```
-
-> Note that if the production secret is stored in a file, this file should not be committed.
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports =   {
+  settings: {
+    jwt: {
+      secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
+      secretEncoding: "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 # Generate & Send Temporary Tokens
 
@@ -380,10 +386,16 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_JWT_SECRET=HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
-SETTINGS_JWT_SECRET_ENCODING=base64
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      secret: "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
+      secretEncoding: "base64",
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -453,13 +465,31 @@ settings:
 {
   "settings": {
     "jwt": {
-      "ccokie": {
+      "cookie": {
         "name": "mycookiename",
         "domain": "example.com",
         "httpOnly": true,
         "path": "/foo",
         "sameSite": "strict",
         "secure": true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      cookie: {
+        name: "mycookiename",
+        domain: "example.com",
+        httpOnly: true,
+        path: "/foo",
+        sameSite: "strict",
+        secure: true
       }
     }
   }

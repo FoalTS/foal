@@ -36,10 +36,18 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "local",
+      local: {
+        directory: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -187,10 +195,16 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT=1024
-SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    multipartRequests: {
+      fileSizeLimit: 1024,
+      fileNumberLimit: 4,
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -349,9 +363,13 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH=assets
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    staticPath: "assets"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -376,9 +394,13 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH_PREFIX=/static
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    staticPathPrefix: "/static"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

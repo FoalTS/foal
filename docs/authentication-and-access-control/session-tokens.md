@@ -223,15 +223,37 @@ export class PageController {
 
 In order to avoid duplicates, the name of the session package can also be provided in the configuration.
 
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/typeorm"
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
     "session": {
-      "store": "@foal/typeorm"
+      "store": "@foal/typeorm",
     }
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports =   {
+  settings: {
+    session: {
+      store: "@foal/typeorm",
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ```typescript
 export class Controller {
