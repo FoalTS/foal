@@ -68,7 +68,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install global dependencies (lerna, pm2, codecov)
-      run: npm install -g lerna pm2 codecov
+      run: npm install -g lerna@3.20 pm2 codecov
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages

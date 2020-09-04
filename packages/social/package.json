@@ -62,11 +62,11 @@
     "@types/node": "10.17.24",
     "copy": "^0.3.2",
     "jsonwebtoken": "~8.5.1",
-    "mocha": "~8.0.1",
+    "mocha": "~8.1.3",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "typedoc": "^0.14.2",
     "typedoc-plugin-markdown": "^1.2.0",
-    "typescript": "~3.9.3"
+    "typescript": "~4.0.2"
   }
 }
