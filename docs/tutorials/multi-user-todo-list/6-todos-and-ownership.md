@@ -51,7 +51,7 @@ Update the api controller.
   @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
     const todo = await getRepository(Todo).findOne({
-      id: +ctx.request.params.id,
+      id: ctx.request.params.id,
       // Do not return the todo if it does not belong to the current user.
       owner: ctx.user
     });
