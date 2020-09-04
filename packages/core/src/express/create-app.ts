@@ -11,6 +11,7 @@ import {
   OpenApi,
   ServiceManager
 } from '../core';
+import { IAppController } from './app.controller.interface';
 import { createMiddleware } from './create-middleware';
 import { handleErrors } from './handle-errors';
 import { notFound } from './not-found';
@@ -66,7 +67,8 @@ function getOptions(expressInstanceOrOptions?: any|CreateAppOptions): CreateAppO
  * Create an Express application from the root controller.
  *
  * @export
- * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
+ * @param {Class<IAppController>} AppController - The root controller, usually called `AppController`
+ * and located in `src/app`.
  * @param {(any|CreateAppOptions)} [expressInstanceOrOptions] - Express instance or options containaining
  * Express middlewares or other settings.
  * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
@@ -82,7 +84,7 @@ function getOptions(expressInstanceOrOptions?: any|CreateAppOptions): CreateAppO
  * @returns {any} The express application.
  */
 export function createApp(
-  AppController: Class,
+  AppController: Class<IAppController>,
   expressInstanceOrOptions?: any | CreateAppOptions,
 ): any {
   const options = getOptions(expressInstanceOrOptions);
@@ -142,7 +144,7 @@ export function createApp(
 
   // Handle errors.
   app.use(notFound());
-  const controller = app.foal.services.get(AppController);
+  const controller = services.get<IAppController>(AppController);
   app.use(handleErrors(options, controller));
 
   return app;
