@@ -12,7 +12,8 @@ export interface ValidateBodyOptions {
  * the request body into an instance of the class.
  *
  * @export
- * @param {Class} cls - The validator class (see `class-validator` and `class-transformer` packages).
+ * @param {(Class|((controller: any) => Class))} cls - The validator class (see `class-validator`
+ * and `class-transformer` packages).
  * @param {ValidateBodyOptions} [options={}] - Options to pass to the libraries`class-validator`
  * and `class-transformer`.
  * @returns {HookDecorator} - The hook.
@@ -27,8 +28,8 @@ export function ValidateBody(
         message: 'The request body should be a valid JSON object or array.'
       });
     }
-    cls = isArrowFunction(cls) ? cls(this) : cls;
-    const instance = plainToClass(cls, ctx.request.body, options.transformer);
+    const localCls = isArrowFunction(cls) ? cls(this) : cls;
+    const instance = plainToClass(localCls, ctx.request.body, options.transformer);
     const errors = await validate(instance, options.validator);
     if (errors.length > 0) {
       return new HttpResponseBadRequest(errors);
@@ -38,5 +39,5 @@ export function ValidateBody(
 }
 
 function isArrowFunction(value: any): value is ((controller: any) => Class) {
-  return !value.hasOwnProperty('prototype');
+  return !Object.prototype.hasOwnProperty.call(value, 'prototype');
 }
