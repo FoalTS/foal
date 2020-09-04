@@ -23,6 +23,7 @@ FOO_BAR_WITH_WHITESPACES=  with whitespaces
 FOO_BAR_WITH_QUOTES_AND_WHITESPACES="  with whitespaces  "
 
 `;
+const dotEnvContent2 = 'FOO_BAR=hello2';
 
 describe('Env', () => {
 
@@ -44,11 +45,18 @@ describe('Env', () => {
 
     });
 
-    context('given a .env file exists', () => {
+    function testConfigFile(filename: string, nodeEnv?: string): void {
+      beforeEach(() => {
+        writeFileSync(filename, dotEnvContent, 'utf8');
+        if (nodeEnv) {
+          process.env.NODE_ENV = nodeEnv;
+        }
+      });
 
-      beforeEach(() => writeFileSync('.env', dotEnvContent, 'utf8'));
-
-      afterEach(() => removeFile('.env'));
+      afterEach(() => {
+        removeFile(filename);
+        delete process.env.NODE_ENV;
+      });
 
       context('and given a variable exists with the given name', () => {
 
@@ -84,6 +92,44 @@ describe('Env', () => {
           strictEqual(Env.get('FOO_BAR_WITH_QUOTES_AND_WHITESPACES'), '  with whitespaces  ');
         });
 
+      });
+    }
+
+    context('given NODE_ENV is defined and .env.${NODE_ENV} exists', () => {
+      testConfigFile('.env.test', 'test');
+    });
+
+    context('given NODE_ENV is not defined and .env.development exists', () => {
+      testConfigFile('.env.development');
+    });
+
+    context('given a .env file exists', () => {
+      testConfigFile('.env');
+    });
+
+    context('given multiple config files exist', () => {
+
+      afterEach(() => {
+        removeFile('.env');
+        removeFile('.env.development');
+      });
+
+      describe('should return the configuration value', () => {
+
+        it('with default.yml overriding default.js', () => {
+          writeFileSync('.env.development', dotEnvContent2);
+          writeFileSync('.env', dotEnvContent);
+
+          strictEqual(Env.get('FOO_BAR'), 'hello2');
+        });
+
+      });
+
+      it('should not delete configuration values (deep merge).', () => {
+        writeFileSync('.env.development', dotEnvContent2);
+        writeFileSync('.env', dotEnvContent);
+
+        strictEqual(Env.get('HELLO'), 'world');
       });
 
     });

@@ -14,28 +14,8 @@ export class Env {
   static get(key: string): string|undefined {
     if (this.dotEnv === null) {
       this.dotEnv = {};
-
-      if (existsSync('.env')) {
-        const envFileContent = readFileSync('.env', 'utf8');
-        for (const line of envFileContent.split('\n')) {
-          if (line.startsWith('#')) {
-            continue;
-          }
-
-          const [ key, ...values ] = line.split('=');
-          const value = values.join('=').trim();
-
-          if (
-            (value.startsWith('"') && value.endsWith('"')) ||
-            (value.startsWith('\'') && value.endsWith('\''))
-          ) {
-            this.dotEnv[key] = value.substr(1, value.length - 2);
-            continue;
-          }
-
-          this.dotEnv[key] = value;
-        }
-      }
+      this.loadEnv('.env');
+      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}`);
     }
 
     if (this.dotEnv[key] !== undefined) {
@@ -46,4 +26,35 @@ export class Env {
   }
 
   private static dotEnv: { [key: string]: any }|null = null;
+
+  private static loadEnv(filename: string): void {
+    if (!existsSync(filename)) {
+      return;
+    }
+
+    if (this.dotEnv === null) {
+      this.dotEnv = {};
+    }
+
+    const envFileContent = readFileSync(filename, 'utf8');
+
+    for (const line of envFileContent.split('\n')) {
+      if (line.startsWith('#')) {
+        continue;
+      }
+
+      const [ key, ...values ] = line.split('=');
+      const value = values.join('=').trim();
+
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith('\'') && value.endsWith('\''))
+      ) {
+        this.dotEnv[key] = value.substr(1, value.length - 2);
+        continue;
+      }
+
+      this.dotEnv[key] = value;
+    }
+  }
 }
