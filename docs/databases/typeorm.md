@@ -73,18 +73,33 @@ module.exports = {
 }
 ```
 
-*default.json (example)*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+database:
+  database: ./db.sqlite3
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
-  "port": 3001,
-  "settings": {
-    ...
-  },
   "database": {
     "database": "./db.sqlite3"
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports =   {
+  database: {
+    database: "./db.sqlite3",
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
 
 ### Packages
 
@@ -155,13 +170,18 @@ database:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```json
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=password
-DATABASE_DATABASE=my-db
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  // ...
+  database: {
+    host: "localhost",
+    port: 3306,
+    username: "root",
+    password: "password",
+    database: "my-db"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

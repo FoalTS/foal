@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // 3p
 import {
-  Context, createApp, createService, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+  Config, Context, createApp, createService, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
 } from '@foal/core';
 import * as request from 'supertest';
 
@@ -17,13 +17,13 @@ import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './valida
 describe('ValidateMultipartFormDataBody', () => {
 
   beforeEach(() => {
-    process.env.SETTINGS_LOGGER_FORMAT = 'none';
-    process.env.SETTINGS_DISK_DRIVER = 'local';
+    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.disk.driver', 'local');
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_LOGGER_FORMAT;
-    delete process.env.SETTINGS_DISK_DRIVER;
+    Config.remove('settings.loggerFormat');
+    Config.remove('settings.disk.driver');
   });
 
   // Note: Unfortunatly, in order to have a multipart request object,
@@ -100,14 +100,14 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when the fields are not validated against the given schema', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+      Config.set('settings.disk.local.directory', 'uploaded');
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -202,18 +202,16 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when the max file size has been reached', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT = '200000';
-
-      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+      Config.set('settings.multipartRequests.fileSizeLimit', 200000);
+      Config.set('settings.disk.local.directory', 'uploaded');
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT;
-
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.multipartRequests.fileSizeLimit');
+      Config.remove('settings.disk.local.directory');
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -266,18 +264,16 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when the max number of files has been reached', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT = '1';
-
-      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+      Config.set('settings.multipartRequests.fileNumberLimit', 1);
+      Config.set('settings.disk.local.directory', 'uploaded');
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT;
-
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.multipartRequests.fileNumberLimit');
+      Config.remove('settings.disk.local.directory');
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -400,14 +396,14 @@ describe('ValidateMultipartFormDataBody', () => {
   describe('when a file is not uploaded but it is required', () => {
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+      Config.set('settings.disk.local.directory', 'uploaded');
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -584,8 +580,8 @@ describe('ValidateMultipartFormDataBody', () => {
     let disk: Disk;
 
     beforeEach(() => {
-      process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
-      process.env.SETTINGS_LOG_ERRORS = 'false';
+      Config.set('settings.disk.local.directory', 'uploaded');
+      Config.set('settings.logErrors', false);
 
       mkdirSync('uploaded');
       mkdirSync('uploaded/images');
@@ -594,8 +590,8 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     afterEach(() => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
-      delete process.env.SETTINGS_LOG_ERRORS;
+      Config.remove('settings.disk.local.directory');
+      Config.remove('settings.logErrors');
 
       const contents = readdirSync('uploaded/images');
       for (const content of contents) {
@@ -606,7 +602,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not kill the process if Disk.write throws an error.', async () => {
-      process.env.SETTINGS_DISK_DRIVER = '@foal/internal-test';
+      Config.set('settings.disk.driver', '@foal/internal-test');
 
       const actual: { body: any } = { body: null };
       const app = await createAppWithHook({
@@ -623,7 +619,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not kill the process if Disk.write rejects an error.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
 
       const actual: { body: any } = { body: null };
       const app = await createAppWithHook({

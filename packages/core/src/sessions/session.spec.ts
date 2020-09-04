@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
-import { ConfigTypeError, createService } from '../core';
+import { Config, ConfigTypeError, createService } from '../core';
 import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
@@ -86,8 +86,8 @@ describe('Session', () => {
   describe('has a "isExpired" property that', () => {
 
     afterEach(() => {
-      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
-      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+      Config.remove('settings.session.expirationTimeouts.inactivity');
+      Config.remove('settings.session.expirationTimeouts.absolute');
     });
 
     it('should return false is the session has not expired.', () => {
@@ -131,7 +131,7 @@ describe('Session', () => {
 
     it('should return true is the session has expired (inactivity, custom timeout).', () => {
       const timeout = Math.floor(SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2);
-      process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = timeout.toString();
+      Config.set('settings.session.expirationTimeouts.inactivity', timeout);
 
       const session = new Session(
         store,
@@ -147,7 +147,7 @@ describe('Session', () => {
 
     it('should return true is the session has expired (absolute, custom timeout).', () => {
       const timeout = Math.floor(SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2);
-      process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = timeout.toString();
+      Config.set('settings.session.expirationTimeouts.absolute', timeout);
 
       const session = new Session(
         store,
@@ -166,8 +166,8 @@ describe('Session', () => {
   describe('has an "expirationTime" property that', () => {
 
     afterEach(() => {
-      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
-      delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+      Config.remove('settings.session.expirationTimeouts.inactivity');
+      Config.remove('settings.session.expirationTimeouts.absolute');
     });
 
     describe('should return the session expiration time in seconds', () => {
@@ -191,7 +191,7 @@ describe('Session', () => {
 
       it('when updatedAt + timeout < createdAt + timeout (custom timeout).', () => {
         const timeout = Math.floor(SESSION_DEFAULT_INACTIVITY_TIMEOUT / 2);
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = timeout.toString();
+        Config.set('settings.session.expirationTimeouts.inactivity', timeout);
 
         const state: SessionState = {
           ...createState(),
@@ -224,7 +224,7 @@ describe('Session', () => {
 
       it('when createdAt + timeout < updatedAt + timeout (custom timeout).', () => {
         const timeout = Math.floor(SESSION_DEFAULT_ABSOLUTE_TIMEOUT / 2);
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = timeout.toString();
+        Config.set('settings.session.expirationTimeouts.absolute', timeout);
 
         const state: SessionState = {
           ...createState(),
@@ -538,7 +538,7 @@ describe('Session', () => {
 
       describe('providing an idle timeout', () => {
 
-        afterEach(() => delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY);
+        afterEach(() => Config.remove('settings.session.expirationTimeouts.inactivity'));
 
         it('from the framework default values.', async () => {
           await session.commit();
@@ -547,7 +547,7 @@ describe('Session', () => {
         });
 
         it('from the configuration.', async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '1';
+          Config.set('settings.session.expirationTimeouts.inactivity', 1);
 
           await session.commit();
           // tslint:disable-next-line
@@ -555,7 +555,7 @@ describe('Session', () => {
         });
 
         it('and should throw an error if the configuration value is not a number.', async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = 'a';
+          Config.set('settings.session.expirationTimeouts.inactivity', 'a');
 
           await rejects(
             () => session.commit(),
@@ -564,7 +564,7 @@ describe('Session', () => {
         });
 
         it('and should throw an error if the configuration value is negative.', async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '-1';
+          Config.set('settings.session.expirationTimeouts.inactivity', -1);
 
           await rejects(
             () => session.commit(),
@@ -780,13 +780,14 @@ describe('Session', () => {
       });
 
       afterEach(() => {
-        delete process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY;
-        delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY;
-        delete process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE;
+        Config.remove('settings.session.garbageCollector.periodicity');
+        Config.remove('settings.session.expirationTimeouts.inactivity');
+        Config.remove('settings.session.expirationTimeouts.absolute');
       });
 
       it('with a frequency defined in the configuration (periodicity = 1).', async () => {
-        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1';
+        Config.set('settings.session.garbageCollector.periodicity', 1);
+
         await session.commit();
 
         deepStrictEqual(store.cleanUpExpiredSessionsCalledWith, {
@@ -796,14 +797,15 @@ describe('Session', () => {
       });
 
       it('with a frequency defined in the configuration (periodicity = 1 000 000 000).', async () => {
-        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1000000000';
+        Config.set('settings.session.garbageCollector.periodicity', 1000000000);
+
         await session.commit();
 
         strictEqual(store.cleanUpExpiredSessionsCalledWith, undefined);
       });
 
       it('and should throw an error if the periodicity provided in the configuration is not a number.', async () => {
-        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = 'a';
+        Config.set('settings.session.garbageCollector.periodicity', 'a');
 
         await rejects(
           () => session.commit(),
@@ -812,10 +814,10 @@ describe('Session', () => {
       });
 
       it('with idle and absolute timeouts defined in the configuration.', async () => {
-        process.env.SETTINGS_SESSION_GARBAGE_COLLECTOR_PERIODICITY = '1';
+        Config.set('settings.session.garbageCollector.periodicity', 1);
 
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '15';
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '30';
+        Config.set('settings.session.expirationTimeouts.inactivity', 15);
+        Config.set('settings.session.expirationTimeouts.absolute', 30);
 
         await session.commit();
 
@@ -828,7 +830,7 @@ describe('Session', () => {
       it(
         'and should throw an error if the inactivity timeout provided in the configuration is not a number.',
         async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = 'a';
+          Config.set('settings.session.expirationTimeouts.inactivity', 'a');
 
           await rejects(
             () => session.commit(),
@@ -838,7 +840,7 @@ describe('Session', () => {
       );
 
       it('and should throw an error the inactivity timeout provided in the configuration is negative.', async () => {
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY = '-1';
+        Config.set('settings.session.expirationTimeouts.inactivity', -1);
 
         await rejects(
           () => session.commit(),
@@ -849,7 +851,7 @@ describe('Session', () => {
       it(
         'and should throw an error if the absolute timeout provided in the configuration is not a number.',
         async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = 'a';
+          Config.set('settings.session.expirationTimeouts.absolute', 'a');
 
           await rejects(
             () => session.commit(),
@@ -859,7 +861,7 @@ describe('Session', () => {
       );
 
       it('and should throw an error the inactivity timeout provided in the configuration is negative.', async () => {
-        process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '-1';
+        Config.set('settings.session.expirationTimeouts.absolute', -1);
 
         await rejects(
           () => session.commit(),
@@ -871,8 +873,8 @@ describe('Session', () => {
         'and should throw an error if the absolute timeout provided in the configuration is lower '
         + 'than the inactivity timeout.',
         async () => {
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVTY = '2';
-          process.env.SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE = '1';
+          Config.set('settings.session.expirationTimeouts.inactivity', 2);
+          Config.set('settings.session.expirationTimeouts.absolute', 1);
 
           await rejects(
             () => session.commit(),

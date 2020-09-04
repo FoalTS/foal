@@ -13,7 +13,7 @@ export class RedisStore extends SessionStore {
   private redisClient: any;
 
   boot() {
-    const redisURI = Config.get('redis.uri', 'string');
+    const redisURI = Config.get('settings.redis.uri', 'string');
     this.redisClient = createClient(redisURI);
   }
 

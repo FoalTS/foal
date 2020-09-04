@@ -23,7 +23,7 @@ import { JWT, JWTOptions } from './jwt.hook';
  * @param {(token: string) => boolean|Promise<boolean>} [options.blacklist] - A function that takes a token
  * and returns true or false. If the returned value is true, then the hook returns a 401 error.
  * @param {boolean} [options.cookie] - If true, the hook expects the token to be sent in a cookie
- * named `auth`. You can change the cookie name with the key `settings.jwt.cookieName` in the configuration.
+ * named `auth`. You can change the cookie name with the key `settings.jwt.cookie.name` in the configuration.
  * @param {VerifyOptions} [verifyOptions={}] - Options of the `jsonwebtoken` package.
  * @returns {HookDecorator} The hook.
  */

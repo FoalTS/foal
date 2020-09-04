@@ -2,6 +2,7 @@
 import { deepStrictEqual, strictEqual, throws } from 'assert';
 
 // FoalTS
+import { Config } from '../config';
 import { createService } from '../service-manager';
 import { IApiComponents, IOpenAPI } from './interfaces';
 import { OpenApi } from './openapi.service';
@@ -11,11 +12,11 @@ describe('OpenApi', () => {
   let service: OpenApi;
 
   beforeEach(() => {
-    process.env.SETTINGS_OPENAPI_ENABLED = 'true';
+    Config.set('settings.openapi.enabled', true);
     service = createService(OpenApi);
   });
 
-  afterEach(() => delete process.env.SETTINGS_OPENAPI_ENABLED);
+  afterEach(() => Config.remove('settings.openapi.enabled'));
 
   describe('has a "addDocument" method that', () => {
 

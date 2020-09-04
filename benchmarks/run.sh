@@ -7,7 +7,7 @@ set -e
 echo '========================================================================' >> benchmark.txt
 echo 'Framework: ExpressJS' >> benchmark.txt
 echo '========================================================================' >> benchmark.txt
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=secret node express.js &
+SETTINGS_JWT_SECRET=secret node express.js &
 pid=$!
 
 sleep 3
@@ -21,7 +21,7 @@ kill $pid
 echo '========================================================================' >> benchmark.txt
 echo 'Framework: FoalTS' >> benchmark.txt
 echo '========================================================================' >> benchmark.txt
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=secret node foal.js &
+SETTINGS_JWT_SECRET=secret node foal.js &
 pid=$!
 
 sleep 3

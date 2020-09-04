@@ -5,6 +5,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
+import { Config } from './config';
 import { getHookFunction, getHookFunctions, Hook, HookFunction, MergeHooks } from './hooks';
 import { ApiUseTag, getApiUsedTags } from './openapi';
 
@@ -13,7 +14,7 @@ describe('Hook', () => {
   const hook1: HookFunction = () => { return; };
   const hook2: HookFunction = () => undefined;
 
-  afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
+  afterEach(() => Config.remove('settings.openapi.useHooks'));
 
   it('should add the hook to the metadata hooks on the method class.', () => {
     class Foobar {
@@ -54,7 +55,8 @@ describe('Hook', () => {
   it(
     'should apply the OpenAPI decorators if options.openapi is undefined and settings.openapi.useHooks is true.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      Config.set('settings.openapi.useHooks', true);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),
@@ -71,7 +73,8 @@ describe('Hook', () => {
   it(
     'should NOT apply the OpenAPI decorators if options.openapi is undefined and settings.openapi.useHooks is false.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      Config.set('settings.openapi.useHooks', false);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),
@@ -104,7 +107,8 @@ describe('Hook', () => {
   it(
     'should apply the OpenAPI decorators if options.openapi is true and settings.openapi.useHooks is true.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      Config.set('settings.openapi.useHooks', true);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),
@@ -121,7 +125,8 @@ describe('Hook', () => {
   it(
     'should apply the OpenAPI decorators if options.openapi is true and settings.openapi.useHooks is false.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      Config.set('settings.openapi.useHooks', false);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),
@@ -154,7 +159,8 @@ describe('Hook', () => {
   it(
     'should NOT apply the OpenAPI decorators if options.openapi is false and settings.openapi.useHooks is true.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+      Config.set('settings.openapi.useHooks', true);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),
@@ -171,7 +177,8 @@ describe('Hook', () => {
   it(
     'should NOT apply the OpenAPI decorators if options.openapi is false and settings.openapi.useHooks is false.',
     () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
+      Config.set('settings.openapi.useHooks', false);
+
       class Foobar {
         @Hook(hook1, [
           ApiUseTag('tag1'),

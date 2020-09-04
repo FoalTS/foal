@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@foal/core": "^1.11.0",
-    "@foal/csrf": "^1.11.0",
     "@foal/jwks-rsa": "^1.11.0",
     "@foal/jwt": "^1.11.0",
     "@foal/mongodb": "^1.11.0",

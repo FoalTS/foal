@@ -4,9 +4,66 @@ import { strictEqual } from 'assert';
 // FoalTS
 import { ConfigNotFoundError } from './config-not-found.error';
 
-describe('ConfigNotFoundError', () => {
+const errMessage = (msg: string) => `
 
-  afterEach(() => delete process.env.NODE_ENV);
+  --------------------------------------------------------
+|                                                          |
+|  JSON file (config/default.json, config/test.json, ...)  |
+|                                                          |
+| -------------------------------------------------------- |
+|                                                          |
+|  {                                                       |
+|    "settings": {                                         |
+|      "session": {                                        |
+|        "store": <your_value>                             |
+|        // OR with an environment variable:               |
+|        "store": "env(<YOUR_ENVIRONMENT_VARIABLE>)"       |
+|      }                                                   |
+|    }                                                     |
+|  }                                                       |
+|                                                          |
+  --------------------------------------------------------
+
+  --------------------------------------------------------
+|                                                          |
+|  YAML file (config/default.yml, config/test.yml, ...)    |
+|                                                          |
+| -------------------------------------------------------- |
+|                                                          |
+|  settings:                                               |
+|    session:                                              |
+|      store: <your_value>                                 |
+|      # OR with an environment variable:                  |
+|      store: env(<YOUR_ENVIRONMENT_VARIABLE>)             |
+|                                                          |
+  --------------------------------------------------------
+
+  --------------------------------------------------------
+|                                                          |
+|  JS file (config/default.js, config/test.js, ...)        |
+|                                                          |
+| -------------------------------------------------------- |
+|                                                          |
+|  const { Env } = require('@foal/core');                  |
+|                                                          |
+|  {                                                       |
+|    settings: {                                           |
+|      session: {                                          |
+|        store: <your_value>                               |
+|        // OR with an environment variable:               |
+|        store: Env.get('<YOUR_ENVIRONMENT_VARIABLE>')     |
+|      }                                                   |
+|    }                                                     |
+|  }                                                       |
+|                                                          |
+  --------------------------------------------------------
+
+No value found for the configuration key "settings.session.store".${msg}
+
+To pass a value, use one of the examples above.
+`;
+
+describe('ConfigNotFoundError', () => {
 
   it('should set the property "key" and "msg" from the constructor.', () => {
     const err = new ConfigNotFoundError('settings.xxx');
@@ -17,55 +74,14 @@ describe('ConfigNotFoundError', () => {
     strictEqual(err2.msg, 'You must provide a secret.');
   });
 
-  it('should have the proper message (no NODE_ENV, no msg).', () => {
-    const err = new ConfigNotFoundError('settings.xxx');
-    strictEqual(
-      err.message,
-      'No value found for the configuration key "settings.xxx".\n'
-      + '\n'
-      + 'To pass a value, you can use:\n'
-      + '- the environment variable SETTINGS_XXX,\n'
-      + '- the ".env" file with the variable SETTINGS_XXX,\n'
-      + '- the JSON file "config/development.json" with the path "settings.xxx",\n'
-      + '- the YAML file "config/development.yml" with the path "settings.xxx",\n'
-      + '- the JSON file "config/default.json" with the path "settings.xxx", or\n'
-      + '- the YAML file "config/default.yml" with the path "settings.xxx".'
-    );
+  it('should have the proper message.', () => {
+    const err = new ConfigNotFoundError('settings.session.store');
+    strictEqual(err.message, errMessage(''));
   });
 
-  it('should have the proper message (custom msg).', () => {
-    const err = new ConfigNotFoundError('settings.xxx', 'You must provide a secret.');
-    strictEqual(
-      err.message,
-      'No value found for the configuration key "settings.xxx".\n'
-      + '\n'
-      + 'You must provide a secret.\n'
-      + '\n'
-      + 'To pass a value, you can use:\n'
-      + '- the environment variable SETTINGS_XXX,\n'
-      + '- the ".env" file with the variable SETTINGS_XXX,\n'
-      + '- the JSON file "config/development.json" with the path "settings.xxx",\n'
-      + '- the YAML file "config/development.yml" with the path "settings.xxx",\n'
-      + '- the JSON file "config/default.json" with the path "settings.xxx", or\n'
-      + '- the YAML file "config/default.yml" with the path "settings.xxx".'
-    );
-  });
-
-  it('should have the proper message (custom NODE_ENV).', () => {
-    process.env.NODE_ENV = 'production';
-    const err = new ConfigNotFoundError('settings.xxx');
-    strictEqual(
-      err.message,
-      'No value found for the configuration key "settings.xxx".\n'
-      + '\n'
-      + 'To pass a value, you can use:\n'
-      + '- the environment variable SETTINGS_XXX,\n'
-      + '- the ".env" file with the variable SETTINGS_XXX,\n'
-      + '- the JSON file "config/production.json" with the path "settings.xxx",\n'
-      + '- the YAML file "config/production.yml" with the path "settings.xxx",\n'
-      + '- the JSON file "config/default.json" with the path "settings.xxx", or\n'
-      + '- the YAML file "config/default.yml" with the path "settings.xxx".'
-    );
+  it('should have the proper message (custom message).', () => {
+    const err = new ConfigNotFoundError('settings.session.store', 'Custom message');
+    strictEqual(err.message, errMessage('\n\nCustom message'));
   });
 
 });

@@ -5,7 +5,7 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { ConfigNotFoundError, createService } from '@foal/core';
+import { Config, ConfigNotFoundError, createService } from '@foal/core';
 
 // FoalTS
 import { FileDoesNotExist } from './abstract-disk.service';
@@ -44,7 +44,7 @@ describe('LocalDisk', () => {
   let disk: LocalDisk;
 
   beforeEach(() => {
-    process.env.SETTINGS_DISK_LOCAL_DIRECTORY = 'uploaded';
+    Config.set('settings.disk.local.directory', 'uploaded');
     if (!existsSync('uploaded')) {
       mkdirSync('uploaded');
     }
@@ -56,14 +56,15 @@ describe('LocalDisk', () => {
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+    Config.remove('settings.disk.local.directory');
     rmDirAndFilesIfExist('uploaded');
   });
 
   describe('has a "write" method that', () => {
 
     it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
+
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
@@ -118,7 +119,8 @@ describe('LocalDisk', () => {
   describe('has a "read" method that', () => {
 
     it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
+
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
@@ -193,7 +195,8 @@ describe('LocalDisk', () => {
   describe('has a "readSize" method that', () => {
 
     it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
+
       try {
         await disk.readSize('foo');
         throw new Error('An error should have been thrown.');
@@ -231,7 +234,8 @@ describe('LocalDisk', () => {
   describe('has a "delete" method that', () => {
 
     it('should throw an ConfigNotFoundError if no directory is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_LOCAL_DIRECTORY;
+      Config.remove('settings.disk.local.directory');
+
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');

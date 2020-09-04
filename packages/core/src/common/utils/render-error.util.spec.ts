@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { Context, isHttpResponseInternalServerError } from '../../core';
+import { Config, Context, isHttpResponseInternalServerError } from '../../core';
 import { renderError } from './render-error.util';
 
 describe('renderError', () => {
@@ -11,7 +11,7 @@ describe('renderError', () => {
 
   before(() => ctx = new Context({}));
 
-  afterEach(() => delete process.env.SETTINGS_DEBUG);
+  afterEach(() => Config.remove('settings.debug'));
 
   const default500page = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
   + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
@@ -29,7 +29,7 @@ describe('renderError', () => {
 
   it('should return a response which body is the default html 500 page with no stack'
       + ' if debug is false.', async () => {
-    process.env.SETTINGS_DEBUG = 'false';
+    Config.set('settings.debug', false);
 
     const response = await renderError(new Error(), ctx);
     strictEqual(response.body, default500page);
@@ -37,7 +37,8 @@ describe('renderError', () => {
 
   it('should return a response which body is the debug html 500 page with a stack'
       + ' if debug is true.', async () => {
-    process.env.SETTINGS_DEBUG = 'true';
+    Config.set('settings.debug', true);
+
     const err = new Error('This is an error');
     const response = await renderError(err, ctx);
 

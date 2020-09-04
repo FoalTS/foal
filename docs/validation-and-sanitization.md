@@ -24,7 +24,16 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 | nullable | `settings.ajv.nullable` | / |
 | allErrors | `settings.ajv.allErrors` | / |
 
-*Example: config/default.json*
+*Example*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  ajv:
+    coerceTypes: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -34,6 +43,19 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    ajv: {
+      coerceTypes: true
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ### Validation & Sanitization of HTTP Requests
 

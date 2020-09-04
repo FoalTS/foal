@@ -11,7 +11,7 @@
     "dev:test:auth": "mocha --require ts-node/register --watch --extension ts \"./src/auth/**/*.spec.ts\"",
     "dev:test:common": "mocha --require ts-node/register --watch --extension ts \"./src/common/**/*.spec.ts\"",
     "test:common": "mocha --require ts-node/register \"./src/common/**/*.spec.ts\"",
-    "dev:test:core": "mocha --require ts-node/register --watch --watch-f ts \"./src/core/**/*.spec.ts\"",
+    "dev:test:core": "mocha --require ts-node/register --watch --extension ts \"./src/core/**/*.spec.ts\"",
     "dev:test:express": "mocha --require ts-node/register --watch --extension ts \"./src/express/**/*.spec.ts\"",
     "dev:test:openapi": "mocha --require ts-node/register --watch --extension ts \"./src/openapi/**/*.spec.ts\"",
     "dev:test:sessions": "mocha --require ts-node/register --watch --extension ts \"./src/sessions/**/*.spec.ts\"",

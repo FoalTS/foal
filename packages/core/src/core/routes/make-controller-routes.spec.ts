@@ -3,6 +3,7 @@ import { deepStrictEqual, notDeepStrictEqual, notStrictEqual, ok, strictEqual, t
 
 // FoalTS
 import { controller } from '../../common/utils/controller.util';
+import { Config } from '../config';
 import { Hook, HookFunction } from '../hooks';
 import { Context, Get, HttpResponseOK, Post } from '../http';
 import {
@@ -337,9 +338,9 @@ describe('makeControllerRoutes', () => {
     };
     const openApi = services.get(OpenApi);
 
-    beforeEach(() => process.env.SETTINGS_OPENAPI_ENABLED = 'true');
+    beforeEach(() => Config.set('settings.openapi.enabled', true));
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_ENABLED);
+    afterEach(() => Config.remove('settings.openapi.enabled'));
 
     it('but not the other controllers.', () => {
       @ApiInfo(infoMetadata)

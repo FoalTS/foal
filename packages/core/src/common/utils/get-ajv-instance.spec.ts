@@ -1,5 +1,5 @@
 import { deepStrictEqual, strictEqual } from 'assert';
-import { ConfigTypeError } from '../../core';
+import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
 describe('getAjvInstance', () => {
@@ -45,11 +45,11 @@ describe('getAjvInstance', () => {
 
     beforeEach(() => {
       delete _instanceWrapper.instance;
-      process.env.SETTINGS_AJV_COERCE_TYPES = 'false';
-      process.env.SETTINGS_AJV_REMOVE_ADDITIONAL = 'false';
-      process.env.SETTINGS_AJV_USE_DEFAULTS = 'false';
-      process.env.SETTINGS_AJV_NULLABLE = 'true';
-      process.env.SETTINGS_AJV_ALL_ERRORS = 'true';
+      Config.set('settings.ajv.coerceTypes', false);
+      Config.set('settings.ajv.removeAdditional', false);
+      Config.set('settings.ajv.useDefaults', false);
+      Config.set('settings.ajv.nullable', true);
+      Config.set('settings.ajv.allErrors', true);
     });
 
     it('should accept custom configuration from the Config.', () => {
@@ -119,7 +119,7 @@ describe('getAjvInstance', () => {
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
-      process.env.SETTINGS_AJV_COERCE_TYPES = 'hello';
+      Config.set('settings.ajv.coerceTypes', 'hello');
 
       try {
         getAjvInstance().validate({}, {});
@@ -137,7 +137,7 @@ describe('getAjvInstance', () => {
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.nullable` has an invalid type.', () => {
-      process.env.SETTINGS_AJV_NULLABLE = 'hello';
+      Config.set('settings.ajv.nullable', 'hello');
 
       try {
         getAjvInstance().validate({}, {});
@@ -155,7 +155,7 @@ describe('getAjvInstance', () => {
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.allErrors` has an invalid type.', () => {
-      process.env.SETTINGS_AJV_ALL_ERRORS = 'hello';
+      Config.set('settings.ajv.allErrors', 'hello');
 
       try {
         getAjvInstance().validate({}, {});
@@ -174,11 +174,11 @@ describe('getAjvInstance', () => {
 
     after(() => {
       delete _instanceWrapper.instance;
-      delete process.env.SETTINGS_AJV_COERCE_TYPES;
-      delete process.env.SETTINGS_AJV_REMOVE_ADDITIONAL;
-      delete process.env.SETTINGS_AJV_USE_DEFAULTS;
-      delete process.env.SETTINGS_AJV_NULLABLE;
-      delete process.env.SETTINGS_AJV_ALL_ERRORS;
+      Config.remove('settings.ajv.coerceTypes');
+      Config.remove('settings.ajv.removeAdditional');
+      Config.remove('settings.ajv.useDefaults');
+      Config.remove('settings.ajv.nullable');
+      Config.remove('settings.ajv.allErrors');
     });
 
   });

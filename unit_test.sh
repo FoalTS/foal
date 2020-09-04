@@ -5,7 +5,6 @@ cd packages
 cd acceptance-tests && npm run test
 cd ../aws-s3 && npm run test
 cd ../cli && npm run test
-cd ../csrf && npm run test
 cd ../ejs && npm run test
 cd ../examples && npm run test
 cd ../graphql && npm run test

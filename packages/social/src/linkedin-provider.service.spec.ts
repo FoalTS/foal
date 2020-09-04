@@ -3,7 +3,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Server } from 'http';
 
 // 3p
-import { Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+import { Config, Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
 import { SocialTokens } from './abstract-provider.service';
 import { LinkedInProvider } from './linkedin-provider.service';
 import { UserInfoError } from './user-info.error';
@@ -21,9 +21,11 @@ describe('LinkedInProvider', () => {
 
     beforeEach(() => {
       provider = createService(LinkedInProvider2);
+      Config.set('settings.loggerFormat', 'none');
     });
 
     afterEach(() => {
+      Config.remove('settings.loggerFormat');
       if (server) {
         server.close();
       }

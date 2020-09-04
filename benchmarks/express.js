@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 const apiRouter = express.Router();
 apiRouter.get(
   '/users',
-  jwt({ secret: process.env.SETTINGS_JWT_SECRET_OR_PUBLIC_KEY }),
+  jwt({ secret: process.env.SETTINGS_JWT_SECRET }),
   (_, res) => res.send([ { name: 'someone' } ])
 );
 
