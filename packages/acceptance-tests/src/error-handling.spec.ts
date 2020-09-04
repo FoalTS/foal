@@ -21,11 +21,7 @@ describe('FoalTS should support custom error-handling', () => {
       }
     }
 
-    const app = createApp(AppController, {
-      methods: {
-        handleError: true
-      }
-    });
+    const app = createApp(AppController);
 
     return request(app)
       .get('/')
@@ -54,9 +50,6 @@ describe('FoalTS should support custom error-handling', () => {
     }
 
     const app = createApp(AppController, {
-      methods: {
-        handleError: true
-      },
       postMiddlewares: [
         (err: any, req: any, res: any, next: (err?: any) => any) => {
           next(new Error('Hi!'));

@@ -4,24 +4,7 @@ When creating a new project with Foal, error handling is already configured for 
 
 In some situations, we may want to override this behavior. This can be the case when we want, for example, to send the error to an external service, treat some errors in a particular way, customize the error page or return a JSON object to describe the error.
 
-To do this, you can pass an additional option to the `createApp` function and add an `handleError` method to the `AppController` class.
-
-*src/index.ts*
-```typescript
-// ...
-
-export async function main() {
-  // ...
-
-  const app = createApp(AppController, {
-    methods: {
-      handleError: true
-    }
-  });
-
-  // ...
-}
-```
+To do this, you can add an `handleError` method to the `AppController` class.
 
 *src/app/app.controller.ts (example)*
 ```typescript

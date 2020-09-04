@@ -27,7 +27,7 @@ export function handleErrors(options: CreateAppOptions, appController: any, logF
     const ctx = req.foal ? req.foal.ctx : new Context(req);
 
     let response: HttpResponse;
-    if (options.methods && options.methods.handleError && appController.handleError) {
+    if (appController.handleError) {
       try {
         response = await appController.handleError(err, ctx);
       } catch (error) {

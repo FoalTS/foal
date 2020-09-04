@@ -23,9 +23,6 @@ type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) 
 
 export interface CreateAppOptions {
   expressInstance?: any;
-  methods?: {
-    handleError?: boolean;
-  };
   serviceManager?: ServiceManager;
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
@@ -73,8 +70,6 @@ function getOptions(expressInstanceOrOptions?: any|CreateAppOptions): CreateAppO
  * Express middlewares or other settings.
  * @param {any} [expressInstanceOrOptions.expressInstance] - Express instance to be used as base for the
  * returned application.
- * @param {boolean} [expressInstanceOrOptions.methods.handleError] - Specifies if AppController.handleError should be
- * used to handle errors.
  * @param {ServiceManager} [expressInstanceOrOptions.serviceManager] - Prebuilt and configured Service Manager for
  * optionally overriding the mapped identities.
  * @param {(RequestHandler | ErrorRequestHandler)[]} [expressInstanceOrOptions.preMiddlewares] Express

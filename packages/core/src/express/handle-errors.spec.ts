@@ -67,46 +67,26 @@ describe('handleErrors', () => {
       strictEqual(str, null);
     });
 
-    describe('should render the default 500 template', () => {
+    context('given AppController.handleError is not defined', () => {
 
-      function test(options: CreateAppOptions, appController: any) {
+      it('should render the default 500 template.', () => {
         const default500page = '<html><head><title>INTERNAL SERVER ERROR</title></head><body>'
         + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
 
         const app = express()
           .use((req: any, res: any, next: any) => { throw new Error(); })
-          .use(handleErrors(options, appController, () => {}));
+          .use(handleErrors({}, {}, () => {}));
         return request(app)
           .get('/')
           .expect(500)
           .expect(default500page);
-      }
-
-      it('when options.methods is not defined.', () => test(
-        {}, { handleError: () => new HttpResponseOK() }
-      ));
-
-      it('when options.methods.handleErrors is not defined.', () => test(
-        { methods: {} }, { handleError: () => new HttpResponseOK() }
-      ));
-
-      it('when options.methods.handleErrors is false.', () => test(
-        { methods: { handleError: false } }, { handleError: () => new HttpResponseOK() }
-      ));
-
-      it('when options.methods.handleErrors is true and AppController.handleError is undefined.', () => test(
-        { methods: { handleError: true } }, {}
-      ));
+      });
 
     });
 
-    describe('if options.methods.handleErrors is true and AppController.handleError is defined', () => {
+    context('given AppController.handleError is defined', () => {
 
-      const options: CreateAppOptions = {
-        methods: {
-          handleError: true
-        }
-      };
+      const options: CreateAppOptions = {};
 
       it('should return the response of the method (sync).', () => {
         const appController = {
