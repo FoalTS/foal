@@ -50,7 +50,7 @@ npm run revertmigration
 
 ### A Complete Example
 
-1. Create a new `User` entity.
+&nbsp;1. Create a new `User` entity.
 
 ```typescript
 import { Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -64,7 +64,7 @@ export class User {
 }
 ```
 
-2. Make the migration file.
+&nbsp;2. Make the migration file.
 
 ```
 npm run makemigrations
@@ -89,13 +89,13 @@ export class migration1561976236112 implements MigrationInterface {
 
 ```
 
-3. Run the migration.
+&nbsp;3. Run the migration.
 
 ```
 npm run migrations
 ```
 
-4. Add new columns to the entity.
+&nbsp;4. Add new columns to the entity.
 
 ```typescript
 import { hashPassword } from '@foal/core';
@@ -121,7 +121,7 @@ export class User {
 
 ```
 
-5. Generate another migration file.
+&nbsp;5. Generate another migration file.
 
 ```
 npm run makemigrations
@@ -152,7 +152,7 @@ export class migration1561981516514 implements MigrationInterface {
 
 ```
 
-6. Run the migration.
+&nbsp;6. Run the migration.
 
 ```
 npm run migrations

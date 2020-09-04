@@ -20,7 +20,7 @@ Go back to the `ApiController` and update the `getTodos` route.
 
 Refresh the todo-list page. You should only see the todos of the user with whom you logged in.
 
-Yet, if you try to create a new to-do, you get an error 500. This is perfectly normal since we do not specify its owner upon creation.
+Yet, if you try to create a new to-do, it will disappear upon page refresh. This is perfectly normal since we do not specify its owner upon creation.
 
 As for the delete feature, you also need to restrict its access. Users should only be able to delete their todos.
 

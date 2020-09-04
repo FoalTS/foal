@@ -75,7 +75,7 @@ In the database the `todo` table will look like this:
 +------------+-----------+-------------------------------------+
 | id         | integer   | PRIMARY KEY AUTO_INCREMENT NOT NULL |
 | text       | varchar   | NOT NULL                            |
-| ownerId    | integer   | NOT NULL                            |
+| ownerId    | integer   |                                     |
 +------------+-----------+-------------------------------------+
 ```
 
@@ -96,11 +96,11 @@ import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class migration1562765487944 implements MigrationInterface {
 
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(queryRunner: QueryRunner): Promise<void> {
         // SQL queries...
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(queryRunner: QueryRunner): Promise<void> {
         // SQL queries...
     }
 
