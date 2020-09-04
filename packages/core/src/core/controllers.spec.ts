@@ -38,35 +38,7 @@ describe('createController', () => {
 
   });
 
-  describe('when dependencies is a ServiceManager', () => {
-
-    it('should create the controller with all its dependencies from the ServiceManager.', () => {
-      class MyService1 {}
-      class MyService2 {}
-      class MyController {
-        @dependency
-        myService1: MyService1;
-
-        @dependency
-        myService2: MyService2;
-      }
-
-      const myService1 = new MyService1();
-      const myService2 = new MyService2();
-
-      const services = new ServiceManager();
-      services.set(MyService1, myService1);
-      services.set(MyService2, myService2);
-
-      const controller = createController(MyController, services);
-
-      strictEqual(controller.myService1, myService1);
-      strictEqual(controller.myService2, myService2);
-    });
-
-  });
-
-  describe('when dependencies is a mere object', () => {
+  describe('when dependencies is defined', () => {
 
     it('should create the controller with ALL its dependencies from the object.', () => {
       class MyService1 {}
