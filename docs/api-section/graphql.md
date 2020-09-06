@@ -343,7 +343,7 @@ export class ApiController extends GraphQLController {
 
 ## Using TypeGraphQL
 
-> *[TypeGraphQL](https://typegraphql.ml/) is a library that allows you to create GraphQL schemas and resolvers with TypeScript classes and decorators.*
+> *[TypeGraphQL](https://typegraphql.com/) is a library that allows you to create GraphQL schemas and resolvers with TypeScript classes and decorators.*
 
 You can use TypeGraphQL by simply calling its `buildSchema` function.
 
