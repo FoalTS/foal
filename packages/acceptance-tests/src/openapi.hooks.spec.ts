@@ -69,7 +69,7 @@ describe('Foal', () => {
 
   });
 
-  it('should support OpenAPI references in validation hooks.', () => {
+  it('should support OpenAPI references in validation hooks.', async () => {
     @ApiInfo({
       title: 'My API',
       version: '1.0.0'
