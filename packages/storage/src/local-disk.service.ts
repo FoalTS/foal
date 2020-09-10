@@ -1,7 +1,7 @@
 // std
 import { createReadStream, createWriteStream, readFile, stat, unlink, writeFile } from 'fs';
 import { join } from 'path';
-import { Readable, pipeline } from 'stream';
+import { pipeline, Readable } from 'stream';
 import { promisify } from 'util';
 
 // 3p
