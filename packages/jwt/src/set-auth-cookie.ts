@@ -1,6 +1,6 @@
 // 3p
 import { Config, CookieOptions, generateToken, HttpResponse } from '@foal/core';
-import { decode, sign, SignOptions } from 'jsonwebtoken';
+import { decode, sign } from 'jsonwebtoken';
 
 // FoalTS
 import {
@@ -46,7 +46,7 @@ export async function setAuthCookie(response: HttpResponse, token: string): Prom
     return;
   }
 
-  const jwtOptions: SignOptions = {
+  const jwtOptions = {
     algorithm: header.alg
   };
 

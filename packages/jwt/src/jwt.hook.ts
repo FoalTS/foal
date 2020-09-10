@@ -13,7 +13,7 @@ import {
   HttpResponseUnauthorized,
   IApiSecurityScheme
 } from '@foal/core';
-import { decode, verify, VerifyOptions } from 'jsonwebtoken';
+import { decode, verify } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
@@ -58,6 +58,20 @@ export interface JWTOptions {
    * @memberof JWTOptions
    */
   openapi?: boolean;
+}
+
+export interface VerifyOptions {
+  algorithms?: string[];
+  audience?: string | RegExp | (string | RegExp)[];
+  complete?: boolean;
+  issuer?: string | string[];
+  ignoreExpiration?: boolean;
+  ignoreNotBefore?: boolean;
+  subject?: string;
+  clockTolerance?: number;
+  maxAge?: string|number;
+  clockTimestamp?: number;
+  nonce?: string;
 }
 
 /**
@@ -139,7 +153,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     let payload: any;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey, verifyOptions, (err: any, value: object | undefined) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
@@ -162,7 +176,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
       try {
         const csrfPayload: any = await new Promise((resolve, reject) => {
-          verify(expectedCsrftoken, secretOrPublicKey, (err, value) => {
+          verify(expectedCsrftoken, secretOrPublicKey, (err: any, value: object | undefined) => {
             if (err) { reject(err); } else { resolve(value); }
           });
         });

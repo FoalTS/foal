@@ -89,7 +89,7 @@
     "@foal/internal-test": "^1.11.1",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
-    "@types/supertest": "~2.0.5",
+    "@types/supertest": "2.0.10",
     "copy": "~0.3.2",
     "ejs": "~2.6.2",
     "mocha": "~8.1.3",

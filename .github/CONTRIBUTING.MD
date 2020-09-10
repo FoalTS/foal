@@ -77,7 +77,7 @@ Some packages, however, can override this policy and be installed if they meet o
 - The code requires very specific knowledge. Examples: `jsonwebtoken`, `TypeORM`.
 - The packages are base packages of the Express.Js framework and can therefore be considered stable, safe and mature. Examples: `cookie-parser`, `morgan`.
 
-> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).
+> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`). `@types` packages should point to *patch* versions.
 
 ## Testing and Documentation Policy
 

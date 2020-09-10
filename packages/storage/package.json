@@ -46,7 +46,6 @@
   ],
   "dependencies": {
     "@foal/core": "^1.11.1",
-    "@types/busboy": "~0.2.3",
     "busboy": "~0.3.1",
     "mime": "~2.4.4"
   },
@@ -54,7 +53,7 @@
     "@foal/internal-test": "^1.11.1",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
-    "@types/supertest": "~2.0.8",
+    "@types/supertest": "2.0.10",
     "copy": "~0.3.2",
     "mocha": "~8.1.3",
     "rimraf": "~2.6.2",
