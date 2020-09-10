@@ -8,7 +8,7 @@ import { Readable } from 'stream';
 import { Config, ConfigNotFoundError, createService } from '@foal/core';
 
 // FoalTS
-import { FileDoesNotExist } from './abstract-disk.service';
+import { FileDoesNotExist } from './disk.service';
 import { LocalDisk } from './local-disk.service';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {

@@ -8,16 +8,16 @@ import { promisify } from 'util';
 import { Config, generateToken } from '@foal/core';
 
 // FoalTS
-import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
+import { Disk, FileDoesNotExist } from './disk.service';
 
 /**
  * File storage to write, read and delete files in the local file system.
  *
  * @export
  * @class LocalDisk
- * @extends {AbstractDisk}
+ * @extends {Disk}
  */
-export class LocalDisk extends AbstractDisk {
+export class LocalDisk extends Disk {
 
   async write(
     dirname: string,

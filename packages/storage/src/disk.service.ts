@@ -105,7 +105,7 @@ export abstract class Disk {
    * @abstract
    * @param {string} path - Path of the file.
    * @returns {Promise<number>} The size of the file.
-   * @memberof AbstractDisk
+   * @memberof Disk
    */
   abstract readSize(path: string): Promise<number>;
 
@@ -181,5 +181,3 @@ export abstract class Disk {
   }
 
 }
-
-export { Disk as AbstractDisk };

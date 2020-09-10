@@ -10,7 +10,7 @@ import {
 import * as request from 'supertest';
 
 // FoalTS
-import { Disk } from './abstract-disk.service';
+import { Disk } from './disk.service';
 import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 

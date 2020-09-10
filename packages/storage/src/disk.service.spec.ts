@@ -7,7 +7,7 @@ import { HttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { join } from 'path';
-import { AbstractDisk, FileDoesNotExist, isFileDoesNotExist } from './abstract-disk.service';
+import { Disk as AbstractDisk, FileDoesNotExist, isFileDoesNotExist } from './disk.service';
 
 describe('FileDoesNotExist', () => {
 
