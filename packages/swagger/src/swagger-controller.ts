@@ -1,5 +1,5 @@
 // std
-import { readFile } from 'fs';
+import { createReadStream, readFile, stat } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
@@ -7,7 +7,6 @@ import { promisify } from 'util';
 import {
   Class,
   Context,
-  createHttpResponseFile,
   Dependency,
   Get,
   HttpResponseBadRequest,
@@ -133,26 +132,28 @@ export abstract class SwaggerController {
 
   @Get('/swagger-ui.css')
   swaggerUi() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui.css'
-    });
+    return this.createHttpResponseFile('swagger-ui.css', 'text/css');
   }
 
   @Get('/swagger-ui-bundle.js')
   swaggerUiBundle() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui-bundle.js'
-    });
+    return this.createHttpResponseFile('swagger-ui-bundle.js', 'application/javascript');
   }
 
   @Get('/swagger-ui-standalone-preset.js')
   swaggerUiStandalonePreset() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui-standalone-preset.js'
-    });
+    return this.createHttpResponseFile('swagger-ui-standalone-preset.js', 'application/javascript');
+  }
+
+  private async createHttpResponseFile(filename: string, contentType: string): Promise<HttpResponseOK> {
+    const filePath = join(getAbsoluteFSPath(), filename);
+
+    const stream = createReadStream(filePath);
+    const stats = await promisify(stat)(filePath);
+
+    return new HttpResponseOK(stream, { stream: true })
+      .setHeader('Content-Type', contentType)
+      .setHeader('Content-Length', stats.size.toString());
   }
 
 }
