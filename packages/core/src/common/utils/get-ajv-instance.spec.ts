@@ -44,7 +44,7 @@ describe('getAjvInstance', () => {
   describe('', () => {
 
     beforeEach(() => {
-      delete _instanceWrapper.instance;
+      delete (_instanceWrapper as any).instance;
       Config.set('settings.ajv.coerceTypes', false);
       Config.set('settings.ajv.removeAdditional', false);
       Config.set('settings.ajv.useDefaults', false);
@@ -173,7 +173,7 @@ describe('getAjvInstance', () => {
     });
 
     after(() => {
-      delete _instanceWrapper.instance;
+      delete (_instanceWrapper as any).instance;
       Config.remove('settings.ajv.coerceTypes');
       Config.remove('settings.ajv.removeAdditional');
       Config.remove('settings.ajv.useDefaults');
