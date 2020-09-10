@@ -22,7 +22,6 @@ import {
   createRestApi,
   createScript,
   createService,
-  createSubApp,
   createVSCodeConfig,
 } from './generate';
 import { ClientError } from './generate/file-system';
@@ -97,9 +96,9 @@ program
     }
   });
 
-type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'sub-app'|'script'|'service'|'vscode-config';
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'script'|'service'|'vscode-config';
 const generateTypes: GenerateType[] = [
-  'controller', 'entity', 'rest-api', 'hook', 'sub-app', 'script', 'service', 'vscode-config'
+  'controller', 'entity', 'rest-api', 'hook', 'script', 'service', 'vscode-config'
 ];
 
 program
@@ -141,9 +140,6 @@ program
           break;
         case 'hook':
           createHook({ name });
-          break;
-        case 'sub-app':
-          createSubApp({ name });
           break;
         case 'script':
           createScript({ name });

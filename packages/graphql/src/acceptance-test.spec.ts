@@ -83,7 +83,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    beforeEach(() => server = createApp(AppController).listen(3000));
+    beforeEach(async () => server = (await createApp(AppController)).listen(3000));
 
     it('graphql-request.', async () => {
       const data = await request(
@@ -142,7 +142,7 @@ describe('[Acceptance test] GraphQLController', () => {
     mkdirSync('./test-dir');
     writeFileSync('./test-dir/my-defs.graphql', typeDefs, 'utf8');
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={user{name}}', resp => {
@@ -188,7 +188,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={user{name}}', resp => {
@@ -256,7 +256,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={recipe{title}}', resp => {

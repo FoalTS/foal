@@ -1,8 +1,9 @@
 // std
 import { deepStrictEqual, ok, strictEqual } from 'assert';
-import { readFileSync } from 'fs';
+import { readFileSync, stat } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';
+import { promisify } from 'util';
 
 // 3p
 import {
@@ -327,79 +328,43 @@ describe('SwaggerController', () => {
 
   });
 
-  describe('has a "swaggerUi" method that', () => {
+  function testAsset(
+    methodName: 'swaggerUi'|'swaggerUiBundle'|'swaggerUiStandalonePreset',
+    filename: string,
+    contentType: string
+  ): void {
+    describe(`has a "${methodName}" method that`, () => {
 
-    it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(ConcreteClass, 'swaggerUi'), 'GET');
-      strictEqual(getPath(ConcreteClass, 'swaggerUi'), '/swagger-ui.css');
+      it('should handle requests at GET /.', () => {
+        strictEqual(getHttpMethod(ConcreteClass, methodName), 'GET');
+        strictEqual(getPath(ConcreteClass, methodName), `/${filename}`);
+      });
+
+      it(`should return an HttpResponseOK whose content is the ${filename} asset.`, async () => {
+        const controller = new ConcreteClass();
+        const response = await controller[methodName]();
+
+        if (!isHttpResponseOK(response)) {
+          throw new Error(`SwaggerController.${methodName} should return an HttpResponseOK instance.`);
+        }
+
+        strictEqual(response.getHeader('Content-Type'), contentType);
+        strictEqual(response.stream, true);
+
+        const filePath = `./node_modules/swagger-ui-dist/${filename}`;
+        const stats = await promisify(stat)(filePath);
+        strictEqual(response.getHeader('Content-Length'), stats.size.toString());
+
+        const content = await streamToBuffer(response.body);
+        const expected = readFileSync(filePath);
+        ok(expected.equals(content));
+      });
+
     });
+  }
 
-    it('should return an HttpResponseOK whose content is the swagger-ui.css asset.', async () => {
-      const controller = new ConcreteClass();
-      const response = await controller.swaggerUi();
-
-      if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.swaggerUi should return an HttpResponseOK instance.');
-      }
-
-      strictEqual(response.getHeader('Content-Type'), 'text/css');
-      strictEqual(response.stream, true);
-
-      const content = await streamToBuffer(response.body);
-      const expected = readFileSync('./node_modules/swagger-ui-dist/swagger-ui.css');
-      ok(expected.equals(content));
-    });
-
-  });
-
-  describe('has a "swaggerUiBundle" method that', () => {
-
-    it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(ConcreteClass, 'swaggerUiBundle'), 'GET');
-      strictEqual(getPath(ConcreteClass, 'swaggerUiBundle'), '/swagger-ui-bundle.js');
-    });
-
-    it('should return an HttpResponseOK whose content is the swagger-ui-bundle.js asset.', async () => {
-      const controller = new ConcreteClass();
-      const response = await controller.swaggerUiBundle();
-
-      if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.swaggerUiBundle should return an HttpResponseOK instance.');
-      }
-
-      strictEqual(response.getHeader('Content-Type'), 'application/javascript');
-      strictEqual(response.stream, true);
-
-      const content = await streamToBuffer(response.body);
-      const expected = readFileSync('./node_modules/swagger-ui-dist/swagger-ui-bundle.js');
-      ok(expected.equals(content));
-    });
-
-  });
-
-  describe('has a "swaggerUiStandalonePreset" method that', () => {
-
-    it('should handle requests at GET /.', () => {
-      strictEqual(getHttpMethod(ConcreteClass, 'swaggerUiStandalonePreset'), 'GET');
-      strictEqual(getPath(ConcreteClass, 'swaggerUiStandalonePreset'), '/swagger-ui-standalone-preset.js');
-    });
-
-    it('should return an HttpResponseOK whose content is the swagger-ui-standalone-preset.js asset.', async () => {
-      const controller = new ConcreteClass();
-      const response = await controller.swaggerUiStandalonePreset();
-
-      if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.swaggerUiStandalonePreset should return an HttpResponseOK instance.');
-      }
-
-      strictEqual(response.getHeader('Content-Type'), 'application/javascript');
-      strictEqual(response.stream, true);
-
-      const content = await streamToBuffer(response.body);
-      const expected = readFileSync('./node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js');
-      ok(expected.equals(content));
-    });
-
-  });
+  testAsset('swaggerUi', 'swagger-ui.css', 'text/css');
+  testAsset('swaggerUiBundle', 'swagger-ui-bundle.js', 'application/javascript');
+  testAsset('swaggerUiStandalonePreset', 'swagger-ui-standalone-preset.js', 'application/javascript');
 
 });

@@ -18,7 +18,9 @@ it('[Docs] Cookbook > ExpressJS', async () => {
     called = true;
     next();
   });
-  const app = createApp(AppController, expressApp);
+  const app = await createApp(AppController, {
+    expressInstance: expressApp
+  });
   /* Code - end */
 
   await request(app)
@@ -36,7 +38,7 @@ it('[Docs] Cookbook > ExpressJS', async () => {
   }
 
   /* Code - begin */
-  const app2 = createApp(AppController);
+  const app2 = await createApp(AppController);
   app2.foal.services.get(MyServiceClass).doSomething();
   /* Code - end */
 

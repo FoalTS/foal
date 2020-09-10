@@ -15,6 +15,4 @@ class ApiController {
   }
 }
 
-const app = createApp(AppController);
-
-app.listen(3000);
+createApp(AppController).then(app => app.listen(3000));

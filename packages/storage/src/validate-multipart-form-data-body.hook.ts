@@ -17,7 +17,7 @@ import {
 import * as Busboy from 'busboy';
 
 // FoalTS
-import { Disk } from './abstract-disk.service';
+import { Disk } from './disk.service';
 import { File } from './file';
 
 export interface MultipartFormDataSchema {
@@ -65,7 +65,7 @@ export function ValidateMultipartFormDataBody(
 
       const fileSizeLimit = Config.get('settings.multipartRequests.fileSizeLimit', 'number');
       const fileNumberLimit = Config.get('settings.multipartRequests.fileNumberLimit', 'number');
-      let busboy: busboy.Busboy;
+      let busboy: any;
       try {
         busboy = new Busboy({
           headers: ctx.request.headers,
@@ -87,8 +87,9 @@ export function ValidateMultipartFormDataBody(
       let numberLimitReached = false;
       let latestFileHasBeenUploaded: Promise<{ error?: any }> = Promise.resolve({});
 
-      busboy.on('field', (name, value) => fields[name] = value);
-      busboy.on('file', (name, stream, filename, encoding, mimeType) => {
+      busboy.on('field', (name: string, value: string) => fields[name] = value);
+      // tslint:disable-next-line: max-line-length
+      busboy.on('file', (name: string, stream: NodeJS.ReadableStream, filename: string, encoding: string, mimeType: string) => {
         latestFileHasBeenUploaded = convertRejectedPromise(async () => {
           stream.on('limit', () => sizeLimitReached = name);
 

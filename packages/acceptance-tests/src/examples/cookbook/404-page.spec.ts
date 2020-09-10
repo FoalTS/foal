@@ -22,7 +22,7 @@ it('[Docs] Cookbook > 404 Page', async () => {
     }
   }
 
-  const app = createApp(AppController);
+  const app = await createApp(AppController);
 
   await Promise.all([
     request(app).get('/home').expect(200),

@@ -123,15 +123,6 @@ foal g script <name>
 
 Create a new shell script in `src/scripts` regardless of where you run the command.
 
-
-## Create a sub-app
-
-```shell
-foal g sub-app <name>
-```
-
-Create a new sub-app with all its files in `./src/app/sub-apps`, in `./sub-apps` or in the current directory depending on which folders are found.
-
 ## Create a service
 
 ```shell

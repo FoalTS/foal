@@ -230,7 +230,7 @@ describe('FoalTS', () => {
     };
     deepStrictEqual(document, expectedDocument);
 
-    const app = createApp(SomeController);
+    const app = await createApp(SomeController);
 
     // Test the hook
     await request(app)

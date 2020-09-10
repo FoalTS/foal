@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 
 // 3p
 import { Config, generateToken } from '@foal/core';
-import { AbstractDisk, FileDoesNotExist } from '@foal/storage';
+import { Disk, FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
 /**
@@ -11,9 +11,9 @@ import * as S3 from 'aws-sdk/clients/s3';
  *
  * @export
  * @class S3Disk
- * @extends {AbstractDisk}
+ * @extends {Disk}
  */
-export class S3Disk extends AbstractDisk {
+export class S3Disk extends Disk {
 
   private s3: S3;
 

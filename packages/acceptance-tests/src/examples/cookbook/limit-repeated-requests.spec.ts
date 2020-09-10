@@ -20,7 +20,7 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
       windowMs: 15 * 60 * 1000, // 15 minutes
     }));
 
-    const app = createApp(AppController, expressApp);
+    const app = await createApp(AppController, { expressInstance: expressApp });
 
     const httpServer = http.createServer(app);
     const port = Config.get('port', 'number', 3001);

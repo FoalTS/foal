@@ -5,7 +5,7 @@ import { Context, createApp, Get, HttpResponseInternalServerError } from '@foal/
 
 describe('FoalTS should support custom error-handling', () => {
 
-  it('to custom the error response (error thrown in a controller).', () => {
+  it('to custom the error response (error thrown in a controller).', async () => {
     class AppController {
       @Get('/')
       index() {
@@ -21,7 +21,7 @@ describe('FoalTS should support custom error-handling', () => {
       }
     }
 
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     return request(app)
       .get('/')
@@ -33,7 +33,7 @@ describe('FoalTS should support custom error-handling', () => {
       });
   });
 
-  it('to custom the error response (error thrown in a post middleware).', () => {
+  it('to custom the error response (error thrown in a post middleware).', async () => {
     class AppController {
       @Get('/')
       index() {
@@ -49,7 +49,7 @@ describe('FoalTS should support custom error-handling', () => {
       }
     }
 
-    const app = createApp(AppController, {
+    const app = await createApp(AppController, {
       postMiddlewares: [
         (err: any, req: any, res: any, next: (err?: any) => any) => {
           next(new Error('Hi!'));

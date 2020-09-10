@@ -45,7 +45,7 @@ describe('GithubProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const tokens: SocialTokens = {
         access_token: 'an_access_token',
@@ -66,7 +66,7 @@ describe('GithubProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const tokens: SocialTokens = {
         access_token: 'an_access_token',

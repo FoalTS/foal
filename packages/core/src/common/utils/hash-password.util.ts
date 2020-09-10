@@ -2,23 +2,10 @@ import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
 /**
- * Legacy function to hash passwords. Only kept for backward compatibility.
- * @param password
- */
-async function parsePassword(password: string): Promise<string> {
-  const salt = (await promisify(randomBytes)(16)).toString('hex');
-  const iterations = 100000;
-  const keylen = 64;
-  const digest = 'sha256';
-  const derivedKey = await promisify(pbkdf2)(password, salt, iterations, keylen, digest);
-  return `pbkdf2_${digest}$${iterations}$${salt}$${derivedKey.toString('hex')}`;
-}
-
-/**
  * Hash a password using the PBKDF2 algorithm.
  *
  * Configured to use PBKDF2 + HMAC + SHA256.
- * The result is a 64 byte binary string (or hex if the legacy option is true).
+ * The result is a 64 byte binary string.
  *
  * The random salt is 16 bytes long.
  * The number of iterations is 150000.
@@ -26,14 +13,9 @@ async function parsePassword(password: string): Promise<string> {
  *
  * @export
  * @param {string} plainTextPassword - The password to hash.
- * @param {{ legacy?: boolean }} [options={}]
  * @returns {Promise<string>} The derived key with the algorithm name, the number of iterations and the salt.
  */
-export async function hashPassword(plainTextPassword: string,
-                                   options: { legacy?: boolean } = {}): Promise<string> {
-  if (options.legacy) {
-    return parsePassword(plainTextPassword);
-  }
+export async function hashPassword(plainTextPassword: string): Promise<string> {
   const saltBuffer = await promisify(randomBytes)(16);
   const iterations = 150000;
   const keylen = 32;

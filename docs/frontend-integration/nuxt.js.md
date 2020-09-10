@@ -49,7 +49,7 @@ When the CLI asks which server framework to choose, select *None*.
     
       // ...
 
-      const app = createApp(AppController, {
+      const app = await createApp(AppController, {
         postMiddlewares: [
           nuxt.render
         ]

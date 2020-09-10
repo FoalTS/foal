@@ -74,10 +74,10 @@ FoalTS is based on very few dependencies for all these reasons:
 
 Some packages, however, can override this policy and be installed if they meet one of the following criteria:
 - Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Example: `TypeORM`.
-- The code requires very specific knowledge. Examples: `pump`, `jsonwebtoken`, `TypeORM`.
+- The code requires very specific knowledge. Examples: `jsonwebtoken`, `TypeORM`.
 - The packages are base packages of the Express.Js framework and can therefore be considered stable, safe and mature. Examples: `cookie-parser`, `morgan`.
 
-> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).
+> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`). `@types` packages should point to *patch* versions.
 
 ## Testing and Documentation Policy
 
@@ -110,9 +110,9 @@ All of major releases are supported for 18 months.
 - 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
-| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min  version |
+| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min version |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x | 3.9 |
+| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x | 4.0 |
 | 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x | 3.5 |
 | 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x | 2.9 |
 

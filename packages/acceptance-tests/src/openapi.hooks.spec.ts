@@ -69,7 +69,7 @@ describe('Foal', () => {
 
   });
 
-  it('should support OpenAPI references in validation hooks.', () => {
+  it('should support OpenAPI references in validation hooks.', async () => {
     @ApiInfo({
       title: 'My API',
       version: '1.0.0'
@@ -91,7 +91,7 @@ describe('Foal', () => {
       createProduct() {}
     }
 
-    const app = createApp(ApiController);
+    const app = await createApp(ApiController);
     return request(app)
       .post('/products')
       .send({})

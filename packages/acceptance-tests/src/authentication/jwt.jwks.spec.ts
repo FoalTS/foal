@@ -66,7 +66,7 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
 
     }
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     try {
       const response = await superagent

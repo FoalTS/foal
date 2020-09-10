@@ -1,11 +1,3 @@
-// std
-import { createReadStream, exists, stat } from 'fs';
-import { basename, join } from 'path';
-import { promisify } from 'util';
-
-// 3p
-import { getType } from 'mime';
-
 /**
  * Cookie options of the HttpResponse.setCookie method.
  *
@@ -267,53 +259,6 @@ export class HttpResponseOK extends HttpResponseSuccess {
 export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
   return obj instanceof HttpResponseOK ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseOK === true);
-}
-
-/**
- * Create an HttpResponseOK whose content is the specified file. If returned in a controller,
- * the server sends the file in streaming.
- *
- * @param {Object} options - The options used to create the HttpResponseOK.
- * @param {string} options.directory - Directory where the file is located.
- * @param {string} options.file - Name of the file with its extension. If a path is given,
- * only the basename is kept.
- * @param {boolean} [options.forceDownload=false] - Indicate if the browser should download
- * the file directly without trying to display it in the window.
- * @param {filename} [options.string=options.file] - Default name used by the browser when
- * saving the file to the disk.
- * @deprecated
- * @returns {Promise<HttpResponseOK>}
- */
-export async function createHttpResponseFile(options:
-  { directory: string, file: string, forceDownload?: boolean, filename?: string }
-): Promise<HttpResponseOK> {
-  const file = basename(options.file);
-  const filePath = join(options.directory, file);
-  if (!await new Promise(resolve => exists(filePath, resolve))) {
-    throw new Error(`The file "${filePath}" does not exist.`);
-  }
-
-  const stats = await promisify(stat)(filePath);
-  if (stats.isDirectory()) {
-    throw new Error(`The directory "${filePath}" is not a file.`);
-  }
-
-  const stream = createReadStream(filePath);
-  const response = new HttpResponseOK(stream, { stream: true });
-
-  const mimeType = getType(options.file);
-  if (mimeType) {
-    response.setHeader('Content-Type', mimeType);
-  }
-  response
-    .setHeader('Content-Length', stats.size.toString())
-    .setHeader(
-      'Content-Disposition',
-      (options.forceDownload ? 'attachment' : 'inline')
-      + `; filename="${options.filename || file}"`
-    );
-
-  return response;
 }
 
 /**

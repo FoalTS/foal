@@ -10,6 +10,8 @@ Here is the architecture that we want:
 
 When the user presses the `Log in` button in the login page, the page requests `POST /auth/login` with the credentials as body.
 
+TODO: use POST.
+
 When the user presses the `Log out` button in the todo-list page, the page requests `GET /auth/logout`.
 
 > In this scenario, the authentication process is handled with sessions and http redirections. You will not use [JWT tokens](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) which are sometimes used in *Single Page Applications* (SPA).

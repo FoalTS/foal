@@ -100,7 +100,7 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
     user = await createFixtureUser(1);
     await user.save();
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {
