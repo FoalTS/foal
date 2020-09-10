@@ -84,7 +84,6 @@
     "express": "~4.17.1",
     "mime": "~2.4.4",
     "morgan": "~1.10.0",
-    "pump": "~3.0.0",
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {

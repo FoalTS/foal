@@ -1,12 +1,11 @@
 // std
 import { createReadStream, createWriteStream, readFile, stat, unlink, writeFile } from 'fs';
 import { join } from 'path';
-import { Readable } from 'stream';
+import { Readable, pipeline } from 'stream';
 import { promisify } from 'util';
 
 // 3p
 import { Config, generateToken } from '@foal/core';
-import * as pump from 'pump';
 
 // FoalTS
 import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
@@ -37,7 +36,7 @@ export class LocalDisk extends AbstractDisk {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
       await new Promise((resolve, reject) => {
-        pump(content, createWriteStream(this.getPath(path)), err => {
+        pipeline(content, createWriteStream(this.getPath(path)), err => {
           // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
           // TODO: test the error case.
           if (err) {

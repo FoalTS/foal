@@ -1,8 +1,6 @@
-// 3p
-import * as pump from 'pump';
-
 // FoalTS
 import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } from '../core';
+import { pipeline } from 'stream';
 
 /**
  * Convert a FoalTS response to an Express response.
@@ -35,7 +33,9 @@ export function sendResponse(response: HttpResponse, res: any): void {
   }
 
   if (response.stream === true) {
-    pump(response.body, res);
+    pipeline(response.body, res, err => {
+      if (err) { console.log(err) }
+    });
     return;
   }
 
