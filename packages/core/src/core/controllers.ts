@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 // FoalTS
 import { Class } from './class.interface';
-import { createControllerOrService, ServiceManager } from './service-manager';
+import { createControllerOrService } from './service-manager';
 
 /**
  * Create a new controller with its dependencies.

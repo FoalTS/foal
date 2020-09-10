@@ -6,7 +6,7 @@ import 'reflect-metadata';
 
 // FoalTS
 import { createController } from './controllers';
-import { dependency, ServiceManager } from './service-manager';
+import { dependency } from './service-manager';
 
 describe('createController', () => {
 
