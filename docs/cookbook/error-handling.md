@@ -13,7 +13,7 @@ To do this, you can pass an additional option to the `createApp` function and ad
 export async function main() {
   // ...
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     methods: {
       handleError: true
     }

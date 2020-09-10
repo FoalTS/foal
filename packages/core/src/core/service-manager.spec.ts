@@ -119,35 +119,7 @@ describe('createService', () => {
 
   });
 
-  describe('when dependencies is a ServiceManager', () => {
-
-    it('should create the service with all its dependencies from the ServiceManager.', () => {
-      class MyService1 {}
-      class MyService2 {}
-      class MyService3 {
-        @dependency
-        myService1: MyService1;
-
-        @dependency
-        myService2: MyService2;
-      }
-
-      const myService1 = new MyService1();
-      const myService2 = new MyService2();
-
-      const services = new ServiceManager();
-      services.set(MyService1, myService1);
-      services.set(MyService2, myService2);
-
-      const service = createService(MyService3, services);
-
-      strictEqual(service.myService1, myService1);
-      strictEqual(service.myService2, myService2);
-    });
-
-  });
-
-  describe('when dependencies is a mere object', () => {
+  describe('when dependencies is a defined', () => {
 
     it('should create the service with ALL its dependencies from the object.', () => {
       class MyService1 {}

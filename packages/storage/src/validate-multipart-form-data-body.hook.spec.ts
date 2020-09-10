@@ -10,7 +10,7 @@ import {
 import * as request from 'supertest';
 
 // FoalTS
-import { Disk } from './abstract-disk.service';
+import { Disk } from './disk.service';
 import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
@@ -28,7 +28,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
-  function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): any {
+  function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): Promise<any> {
     @ValidateMultipartFormDataBody(schema)
     class AppController {
       @Post('/')
@@ -41,7 +41,7 @@ describe('ValidateMultipartFormDataBody', () => {
   }
 
   it('should return an HttpResponseBadRequest if the request is not of type multipart/form-data.', async () => {
-    const app = createAppWithHook({
+    const app = await createAppWithHook({
       files: {}
     }, { body: null });
 
@@ -61,7 +61,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('when the fields are validated against the given schema.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         fields: {
           name: { type: 'string' }
         },
@@ -81,7 +81,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('when no schema is given in the hook.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {}
       }, actual);
 
@@ -118,7 +118,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should return an HttpResponseBadRequest (invalid values).', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         fields: {
           name: { type: 'boolean' }
         },
@@ -145,7 +145,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should return an HttpResponseBadRequest (missing values).', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         fields: {
           name: { type: 'string' },
           name2: { type: 'string' }
@@ -173,7 +173,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not have uploaded the files.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         fields: {
           name: { type: 'boolean' }
         },
@@ -222,7 +222,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should return an HttpResponseBadRequest.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false },
           foobar2: { required: false },
@@ -243,7 +243,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not have uploaded the files.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, saveTo: 'images' },
           foobar2: { required: false, saveTo: 'images' },
@@ -284,7 +284,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should return an HttpResponseBadRequest.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, multiple: true },
         }
@@ -304,7 +304,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not have uploaded the files.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, multiple: true, saveTo: 'images' },
         }
@@ -323,7 +323,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   it('should ignore the upload of unexpected files.', async () => {
     const actual: { body: any } = { body: null };
-    const app = createAppWithHook({
+    const app = await createAppWithHook({
       files: {}
     }, actual);
 
@@ -339,7 +339,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should set ctx.request.body.files with a "null" value if the option "multiple" is not defined.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false }
         }
@@ -357,7 +357,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should set ctx.request.body.files with a "null" value if the option "multiple" is "false".', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, multiple: false }
         }
@@ -375,7 +375,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should set ctx.request.body.files with an empty array if the option "multiple" is "true".', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, multiple: true }
         }
@@ -413,9 +413,9 @@ describe('ValidateMultipartFormDataBody', () => {
       rmdirSync('uploaded');
     });
 
-    it('should return an HttpResponseBadRequest (multiple === undefined).', () => {
+    it('should return an HttpResponseBadRequest (multiple === undefined).', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: true }
         }
@@ -433,9 +433,9 @@ describe('ValidateMultipartFormDataBody', () => {
         });
     });
 
-    it('should return an HttpResponseBadRequest (multiple === false).', () => {
+    it('should return an HttpResponseBadRequest (multiple === false).', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: true, multiple: false }
         }
@@ -453,9 +453,9 @@ describe('ValidateMultipartFormDataBody', () => {
         });
     });
 
-    it('should return an HttpResponseBadRequest (multiple === true).', () => {
+    it('should return an HttpResponseBadRequest (multiple === true).', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: true, multiple: true }
         }
@@ -474,7 +474,7 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
     it('should not have uploaded the other files.', async () => {
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, multiple: true, saveTo: 'images' },
           foobar2: { required: false, multiple: false, saveTo: 'images' },
@@ -502,7 +502,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should set ctx.request.files with the buffered file if the option "multiple" is not defined.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: true }
         }
@@ -523,7 +523,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should set ctx.request.files with the buffered file if the option "multiple" is "false".', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: true, multiple: false }
         }
@@ -545,7 +545,7 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should set ctx.request.files with an array of the buffered fileS if the option "multiple" is "true".',
       async () => {
         const actual: { body: any } = { body: null };
-        const app = createAppWithHook({
+        const app = await createAppWithHook({
           files: {
             foobar: { required: true, multiple: true }
           }
@@ -605,7 +605,7 @@ describe('ValidateMultipartFormDataBody', () => {
       Config.set('settings.disk.driver', '@foal/internal-test');
 
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, saveTo: 'images' },
           foobar2: { required: false },
@@ -622,7 +622,7 @@ describe('ValidateMultipartFormDataBody', () => {
       Config.remove('settings.disk.local.directory');
 
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, saveTo: 'images' },
           foobar2: { required: false }
@@ -638,7 +638,7 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should save the file to the disk and set ctx.request.files with its path'
       + ' if the option "multiple" is not defined.', async () => {
         const actual: { body: any } = { body: null };
-        const app = createAppWithHook({
+        const app = await createAppWithHook({
           files: {
             foobar: { required: false, saveTo: 'images' }
           }
@@ -670,7 +670,7 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should save the file to the disk and set ctx.request.files with its path'
       + ' if the option "multiple" is "false".', async () => {
         const actual: { body: any } = { body: null };
-        const app = createAppWithHook({
+        const app = await createAppWithHook({
           files: {
             foobar: { required: false, multiple: false, saveTo: 'images' }
           }
@@ -701,7 +701,7 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should save the file to the disk and set ctx.request.files with an array'
       + ' of the pathS  if the option "multiple" is "true".', async () => {
         const actual: { body: any } = { body: null };
-        const app = createAppWithHook({
+        const app = await createAppWithHook({
           files: {
             foobar: { required: false, multiple: true, saveTo: 'images' }
           }
@@ -747,7 +747,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should keep the extension of the file if it has one.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, saveTo: 'images' }
         }
@@ -771,7 +771,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     it('should not keep the extension of the file if it has none.', async () => {
       const actual: { body: any } = { body: null };
-      const app = createAppWithHook({
+      const app = await createAppWithHook({
         files: {
           foobar: { required: false, saveTo: 'images' }
         }

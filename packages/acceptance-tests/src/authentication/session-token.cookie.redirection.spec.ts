@@ -135,7 +135,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
       type: 'sqlite',
     });
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

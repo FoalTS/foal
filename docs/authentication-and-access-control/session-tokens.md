@@ -4,6 +4,8 @@
 
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
 
+TODO: add an example on anonymous sessions.
+
 In FoalTS, web sessions are temporary states that can be associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
 
 A session usually begins when the user logs in and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.

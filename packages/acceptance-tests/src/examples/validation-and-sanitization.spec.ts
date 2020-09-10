@@ -66,7 +66,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           ]
         };
 
-        it('(first example)', () => {
+        it('(first example)', async () => {
           class AppController {
             @Post('/products')
             @ValidateBody({
@@ -82,7 +82,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .post('/products')
@@ -93,7 +93,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(second example)', () => {
+        it('(second example)', async () => {
           class AppController {
             schema = {
               additionalProperties: false,
@@ -111,7 +111,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .post('/products')
@@ -140,7 +140,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           ]
         };
 
-        it('(first example)', () => {
+        it('(first example)', async () => {
           class AppController {
             @Get('/products')
             @ValidateHeader('Authorization')
@@ -150,7 +150,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products')
@@ -160,7 +160,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(second example)', () => {
+        it('(second example)', async () => {
           class AppController {
             schema = { type: 'integer' };
 
@@ -172,7 +172,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products')
@@ -200,7 +200,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           ]
         };
 
-        it('(first example)', () => {
+        it('(first example)', async () => {
           class AppController {
             @Get('/products')
             @ValidateCookie('Authorization')
@@ -210,7 +210,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products')
@@ -219,7 +219,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(second example)', () => {
+        it('(second example)', async () => {
           class AppController {
             schema = { type: 'integer' };
 
@@ -231,7 +231,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products')
@@ -258,7 +258,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           ]
         };
 
-        it('(first example)', () => {
+        it('(first example)', async () => {
           class AppController {
             @Get('/products/:productId')
             @ValidatePathParam('productId', { type: 'integer' })
@@ -267,7 +267,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products/xxx')
@@ -275,7 +275,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(second example)', () => {
+        it('(second example)', async () => {
           class AppController {
             schema = { type: 'integer' };
 
@@ -286,7 +286,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products/xxx')
@@ -312,7 +312,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
           ]
         };
 
-        it('(first example)', () => {
+        it('(first example)', async () => {
           class AppController {
             @Get('/products')
             @ValidateQueryParam('authorization')
@@ -322,7 +322,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products?authorization=xxx&a-number=hello')
@@ -330,7 +330,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             .expect(errors);
         });
 
-        it('(second example)', () => {
+        it('(second example)', async () => {
           class AppController {
             @Get('/products')
             @ValidateQueryParam('authorization')
@@ -340,7 +340,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
             }
           }
 
-          const app = createApp(AppController);
+          const app = await createApp(AppController);
 
           return request(app)
             .get('/products?authorization=xxx&a-number=hello')
@@ -352,7 +352,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
     });
 
-    it('Sanitization Example', () => {
+    it('Sanitization Example', async () => {
       class AppController {
 
         @Post('/no-sanitization')
@@ -376,7 +376,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
       }
 
-      const app = createApp(AppController);
+      const app = await createApp(AppController);
 
       return Promise.all([
         request(app)
@@ -394,9 +394,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
   });
 
-  describe('With a Validation Class (class-validator)', () => {
+  describe('With a Validation Class (class-validator)', async () => {
 
-    it('Usage with a Hook', () => {
+    it('Usage with a Hook', async () => {
       class SocialPost {
 
         @Length(10, 20)
@@ -418,7 +418,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
       }
 
-      const app = createApp(SocialPostController);
+      const app = await createApp(SocialPostController);
 
       return request(app)
         .post('/')

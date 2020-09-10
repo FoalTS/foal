@@ -294,7 +294,7 @@ class ApiController {
 
 > Relative paths are available in Foal v1.11.0 onwards.
 
-If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `AbstractDisk` class. 
+If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `Disk` class. 
 
 If you want to use it through the `Disk` service, you need to specify its path in the configuration (or to publish it as an npm package and specify the package name). The name of the exported class should be `ConcreteDisk`.
 

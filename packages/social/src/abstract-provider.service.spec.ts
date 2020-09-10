@@ -340,7 +340,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -370,7 +370,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -422,7 +422,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -465,7 +465,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -503,7 +503,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {

@@ -1,9 +1,8 @@
 // 3p
 import { HookDecorator } from '@foal/core';
-import { VerifyOptions } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT, JWTOptions } from './jwt.hook';
+import { JWT, JWTOptions, VerifyOptions } from './jwt.hook';
 
 /**
  * Hook factory to authenticate users using JSON Web Tokens.

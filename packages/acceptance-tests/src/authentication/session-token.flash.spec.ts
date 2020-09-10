@@ -47,7 +47,7 @@ describe('The framework', () => {
       type: 'sqlite',
     });
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

@@ -50,7 +50,7 @@ describe('[Docs] Architecture > Services', () => {
       const serviceManager = new ServiceManager();
       serviceManager.set(Connection, connection);
 
-      const app = createApp(AppController, {
+      const app = await createApp(AppController, {
         serviceManager
       });
 
@@ -112,7 +112,7 @@ describe('[Docs] Architecture > Services', () => {
         .set('product', productRepository)
         .set('logger', new ConsoleLogger());
 
-      const app = createApp(AppController, {
+      const app = await createApp(AppController, {
         serviceManager
       });
 

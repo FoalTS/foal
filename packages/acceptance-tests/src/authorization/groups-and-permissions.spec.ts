@@ -85,7 +85,7 @@ describe('[Authorization|permissions] Users', () => {
     await session2.commit();
     tokenUser2 = session2.getToken();
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

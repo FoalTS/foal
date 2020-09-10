@@ -132,7 +132,7 @@ describe('[Authentication|JWT|no cookie|no redirection] Users', () => {
 
     blackList = [];
 
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(async () => {

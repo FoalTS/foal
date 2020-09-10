@@ -19,7 +19,7 @@ it('Foal should support JSX Server-Side Rendering with React.', async () => {
 
   }
 
-  const app = createApp(ViewController);
+  const app = await createApp(ViewController);
 
   const expectedBody = `<!DOCTYPE html>
 <html lang="en">

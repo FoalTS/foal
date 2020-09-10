@@ -33,7 +33,7 @@ describe('The server', () => {
     // "synchronize": true ->  Auto create the database schema when the connection is established.
     // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
     await createConnection();
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
