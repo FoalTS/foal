@@ -18,7 +18,9 @@ it('[Docs] Cookbook > ExpressJS', async () => {
     called = true;
     next();
   });
-  const app = await createApp(AppController, expressApp);
+  const app = await createApp(AppController, {
+    expressInstance: expressApp
+  });
   /* Code - end */
 
   await request(app)
