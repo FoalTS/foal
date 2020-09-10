@@ -276,7 +276,7 @@ export class User extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
+import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
 import { User } from './entities';
@@ -411,36 +411,3 @@ module.exports = {
 | index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
 | styles.css | `/styles.css` | `/static/styles.css` |
 | app.js | `/app.js` | `/static/app.js` |
-
-## Deprecated components
-
-### The `createHttpResponseFile` function
-
-> *Deprecated since v1.6. Use the method `createHttpResponseFile` of the `Disk` service instead.*
-
-> **Warning:** This package only allows you to download files from your local file system. It does not work with Cloud storage.
-
-FoalTS provides the function `createHttpResponseFile` to download files in the browser from the server's local file system.
-
-```typescript
-import { createHttpResponseFile, Get } from '@foal/core';
-
-class AppController {
-
-  @Get('/download')
-  download() {
-    return createHttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my-pdf.pdf'
-    });
-  }
-
-}
-```
-
-| Option | Type | Description |
-| --- | --- | --- |
-| directory | string | Path of the directory where the file is located (e.g. `uploaded/`). |
-| file | string | Name of the file with its extension (e.g. `report.pdf`). If the string provided is a path (e.g. `downloaded/report.pdf`), then Foal will automatically extract the filename (i.e. `report.pdf`).  |
-| forceDownload (optional) | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
-| filename (optional) | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the `file` option.

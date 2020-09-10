@@ -82,7 +82,6 @@
     "ajv": "~6.12.0",
     "cookie-parser": "~1.4.4",
     "express": "~4.17.1",
-    "mime": "~2.4.4",
     "morgan": "~1.10.0",
     "reflect-metadata": "~0.1.13"
   },

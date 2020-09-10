@@ -2,11 +2,11 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Context, controller, createApp, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
+import { Context, controller, createApp, Get, HttpResponseNotFound, render } from '@foal/core';
 
 describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
 
-  it('Using Frontend Routers', () => {
+  it('Using Frontend Routers', async () => {
     class ApiController {}
 
     class AppController {
@@ -21,10 +21,7 @@ describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
           return new HttpResponseNotFound();
         }
 
-        return createHttpResponseFile({
-          directory: './src/examples/frontend-integration/public',
-          file: 'index.html'
-        });
+        return render('./src/examples/frontend-integration/public/index.html');
       }
     }
 

@@ -23,7 +23,7 @@ This works fine until the user presses the refresh button, shares the link or sa
 One technique to solve this problem is to add a handler responsible for processing uncaught requests. It returns the `index.html` page in all cases. This way, the browser loads the application which then looks at the address bar and displays the appropriate page.
 
 ```typescript
-import { Context, controller, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
+import { Context, controller, Get, HttpResponseNotFound, render } from '@foal/core';
 
 import { ApiController } from './controllers';
 
@@ -39,11 +39,7 @@ export class AppController {
       return new HttpResponseNotFound();
     }
 
-    return createHttpResponseFile({
-      directory: './public',
-      file: 'index.html'
-    });
-    // OR render('./templates/index.html');
+    return render('./templates/index.html');
   }
 }
 ```
