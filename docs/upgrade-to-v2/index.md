@@ -2,9 +2,9 @@
 
 This guide will take you step by step through the upgrade to version 2. If something is missing or incorrect, feel free to submit an issue or a PR on Github.
 
-| Node min version | TS min version |
+| Node versions | TS min version |
 | --- | --- |
-| 10.x | 4.0 |
+| 10.x, 12.x, 14.x | 4.0 |
 
 ## For all
 
