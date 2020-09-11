@@ -22,7 +22,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [JWT hooks and CSRF protection]()
 - [Support of MongoDB]()
 - [Error-handling and hook post functions]()
-- [Template engines]()
+- [Template engine](./template-engine.md)
 - [Custom Express instance]()
 
 ## Rare cases
