@@ -21,8 +21,8 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 | coerceTypes | `settings.ajv.coerceType` | true |
 | removeAdditional | `settings.ajv.removeAdditional` | true |
 | useDefaults | `settings.ajv.useDefaults` | true |
-| nullable | `settings.ajv.nullable` | / |
-| allErrors | `settings.ajv.allErrors` | / |
+| nullable | `settings.ajv.nullable` | - |
+| allErrors | `settings.ajv.allErrors` | - |
 
 *Example*
 {% code-tabs %}
