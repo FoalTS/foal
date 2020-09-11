@@ -9,7 +9,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 ## For all
 
 - [New CLI commands](./cli-commands.md)
-- [New configuration system]()
+- [New configuration system](./config-system.md)
 - [Application creation](./application-creation.md)
 
 ## By topic
