@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_title.png" height="160px" alt="Logo" />
+    <img src="./docs/images/logo_title.png" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
@@ -68,7 +68,7 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 :point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/) :seedling:
 
-![Screenshot](./docs/screenshot.png)
+![Screenshot](./docs/images/screenshot.png)
 
 ## :dart: Motivation
 
