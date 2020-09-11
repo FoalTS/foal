@@ -2,16 +2,16 @@
 
 FoalTS allows to provide a custom Express instance to the `createApp` function. In version 1, there were two ways to do it. In version 2, there is only one.
 
-*Before*
+*Version 1*
 ```typescript
-const app = await createApp(AppController, expressApp);
+const app = createApp(AppController, expressApp);
 // OR
-const app = await createApp(AppController, {
+const app = createApp(AppController, {
   expressInstance: expressApp
 });
 ```
 
-*After*
+*Version 2*
 ```typescript
 const app = await createApp(AppController, {
   expressInstance: expressApp

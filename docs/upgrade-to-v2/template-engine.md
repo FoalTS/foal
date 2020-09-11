@@ -11,7 +11,7 @@ npm uninstall @foal/ejs
 npm install ejs
 ```
 
-*Before*
+*Version 1*
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
@@ -40,7 +40,7 @@ module.exports = {
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-*After*
+*Version 2*
 
 {% code-tabs %}
 {% code-tabs-item title="YAML" %}
