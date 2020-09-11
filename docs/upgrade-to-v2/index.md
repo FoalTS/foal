@@ -20,7 +20,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [Service and application initialization]()
 - [File upload and download]()
 - [JWT hooks and CSRF protection]()
-- [Support of MongoDB]()
+- [Support of MongoDB](./mongodb.md)
 - [Error-handling and hook post functions]()
 - [Template engine](./template-engine.md)
 - [Custom Express instance]()
