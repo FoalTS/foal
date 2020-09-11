@@ -23,7 +23,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [Support of MongoDB](./mongodb.md)
 - [Error-handling and hook post functions]()
 - [Template engine](./template-engine.md)
-- [Custom Express instance]()
+- [Custom Express instance](./custom-express-instance.md)
 
 ## Rare cases
 
