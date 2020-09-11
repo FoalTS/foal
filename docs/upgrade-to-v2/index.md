@@ -10,7 +10,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 
 - [New CLI commands]()
 - [New configuration system]()
-- [Application creation]()
+- [Application creation](./application-creation.md)
 
 ## By topic
 
