@@ -18,7 +18,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [Authentication with sessions (session tokens) and CSRF protection]()
 - [OpenAPI](./openapi.md)
 - [Service and application initialization](./service-and-app-initialization.md)
-- [File upload and download]()
+- [File upload and download](./file-upload-and-download.md)
 - [JWT hooks and CSRF protection]()
 - [Support of MongoDB](./mongodb.md)
 - [Error-handling and hook post functions]()
