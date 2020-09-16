@@ -19,7 +19,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [OpenAPI](./openapi.md)
 - [Service and application initialization](./service-and-app-initialization.md)
 - [File upload and download](./file-upload-and-download.md)
-- [JWT hooks and CSRF protection]()
+- [JWT hooks and CSRF protection](./jwt-and-csrf.md)
 - [Support of MongoDB](./mongodb.md)
 - [Error-handling and hook post functions]()
 - [Template engine](./template-engine.md)
