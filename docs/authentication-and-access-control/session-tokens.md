@@ -2,6 +2,8 @@
 
 ## Introduction
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
 
 TODO: add an example on anonymous sessions.
@@ -14,7 +16,7 @@ TODO: mention the need of a "@UserRequired" if we support anonymous sessions in 
 
 ## Get Started
 
-> warning: version 2 -> add the migrations
+TODO: add the migrations
 
 ### Choose a Session Store
 
@@ -131,8 +133,6 @@ class ApiController {
 > ```
 
 ### Destroy the Session (Log Out)
-
-> warning: version 2
 
 Sessions are can be destroyed (i.e users can be logged out) using their `destroy` method.
 
@@ -363,8 +363,6 @@ export async function main(args: { token: string }) {
 
 Build the script.
 
-> warning: version 2
-
 ```
 npm run build
 ```
@@ -396,8 +394,6 @@ export async function main() {
 
 Build the script.
 
-> warning: version 2
-
 ```
 npm run build
 ```
@@ -409,8 +405,6 @@ foal run revoke-all-sessions
 ```
 
 ## Specifying Globally the Session Store
-
-> Available in Foal v1.11.0 onwards.
 
 In order to avoid passing the session store to the hooks each time, you can provide it via the configuration.
 

@@ -1,5 +1,7 @@
 # The Shell Script create-todo
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 Now it is time to populate the database with some tasks.
 
 You could run the command line interface of your database (in that case *SQLite*) and enter some SQL queries. But this is risky and not very handy. It becomes especially true when the complexity of your models increases (relations many-to-many, etc).
@@ -55,8 +57,6 @@ export async function main(args: { text: string }) {
 ```
 
 Build the script.
-
-> warning: version 2
 
 ```sh
 npm run build

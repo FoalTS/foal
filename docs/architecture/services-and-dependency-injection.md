@@ -1,5 +1,7 @@
 # Services
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 ```sh
 foal generate service my-service
 ```
@@ -247,8 +249,6 @@ class ApiController {
 
 ## Abstract Services
 
-> Abstract services are available in Foal v1.11 onwards.
-
 If you want to use a different service implementation depending on your environment (production, development, etc.), you can use an abstract service for this.
 
 *logger.service.ts*
@@ -330,8 +330,6 @@ export abstract class Logger {
 ```
 
 ## Usage with Interfaces and Generic Classes
-
-> Interface and generic class injection is available in Foal v1.8 onwards.
 
 Interfaces and generic classes can be injected using strings as IDs. To do this, you will need the `@Dependency` decorator.
 

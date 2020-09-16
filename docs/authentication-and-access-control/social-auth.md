@@ -1,6 +1,6 @@
 # Social Authentication
 
-> Social authentication is available in Foal v1.3.0 onwards.
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
 
 FoalTS social authentication is based on OAuth2 protocol. To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
 
@@ -161,8 +161,6 @@ const { userInfo } = await this.facebook.getUserInfo(ctx, {
 
 ### Github
 
-> Github provider is available in Foal v1.4.0 onwards.
-
 |Service name| Default scopes | Available scopes |
 |---|---|---|
 | `GithubProvider` | none | [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
@@ -192,8 +190,6 @@ this.github.redirect({ /* ... */ }, {
 > *Source: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters*
 
 ### LinkedIn
-
-> LinkedIn provider is available in Foal v1.4.0 onwards.
 
 |Service name| Default scopes | Available scopes |
 |---|---|---|

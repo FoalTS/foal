@@ -1,5 +1,7 @@
 # Upload & Download Files
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 
 ## Configuration
@@ -53,8 +55,6 @@ module.exports = {
 {% endcode-tabs %}
 
 ## File Uploads
-
-> warning: version 2
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
@@ -124,8 +124,6 @@ export class UserController {
 ```
 
 ### Accessing File Metadata
-
-> warning: version 2
 
 When uploading files, the browser sends additional metadata. This can be accessed in the controller method.
 
@@ -215,8 +213,6 @@ module.exports = {
 | fileNumberLimit | number | The maximum number of files (useful for `multiple` file fields). |
 
 ## File Downloads
-
-> This technique is available in Foal v1.6 onwards.
 
 Files can be downloaded using the method `createHttpResponse` of the `Disk` service. The returned object is optimized for downloading a (large) file in streaming.
 

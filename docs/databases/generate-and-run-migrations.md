@@ -1,5 +1,7 @@
 # Generate and Run Migrations
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 Database migrations are a way of propagating changes you make to your entities into your database schema. The changes you make to your models (adding a field, deleting an entity, etc.) do not automatically modify your database. You have to do it yourself.
 
 You have two options: update the database schema manually (using database software, for example) or run migrations.
@@ -25,8 +27,6 @@ export class PostRefactoringTIMESTAMP implements MigrationInterface {
 ```
 
 ## The Commands
-
-> warning: version 2
 
 ### Generating Migrations Automatically
 

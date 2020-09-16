@@ -1,5 +1,7 @@
 # Create and Run Scripts
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is when shell scripts come into play.
 
 # Create Scripts
@@ -41,8 +43,6 @@ Encapsulating your code in a `main` function without calling it directly in the 
 - Using a function lets you easily use async/await keywords when dealing with asynchronous code.
 
 # Build and Run Scripts
-
-> warning: version 2
 
 To run a script you first need to build it.
 
