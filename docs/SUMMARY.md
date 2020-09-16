@@ -29,6 +29,7 @@
   * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
   * [Hooks](./architecture/hooks.md)
   * [Initialization](./architecture/initialization.md)
+  * [Error handling](./architecture/error-handling.md)
 * Databases
   * [SQL Databases](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
@@ -77,7 +78,6 @@
   * [Templates (SSR)](./utilities/templating.md)
   * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
-  * [Error Handling](./cookbook/error-handling.md)
   * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
