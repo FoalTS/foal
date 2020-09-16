@@ -1,5 +1,7 @@
 # Ship to Production
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 ## 1. Set the Node.JS environment to `production`
 
 Set the `NODE_ENV` environment variable to `production`.
@@ -45,8 +47,6 @@ foal createsecret
 ```
 
 ## 4. Database Credentials & Migrations
-
-> warning: version 2
 
 Use different credentials for your production database. Specify them using environment variables or a `.env` file.
 

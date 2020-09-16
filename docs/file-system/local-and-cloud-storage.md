@@ -1,6 +1,6 @@
 # Local and Cloud Storage
 
-> File storage is available in Foal v1.6 onwards.
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
 
 FoalTS provides its own file system for reading, writing and deleting files locally or in the Cloud. Thanks to its unified interface, you can easily choose different storage for each of your environments. This is especially useful when you're moving from development to production.
 
@@ -184,8 +184,6 @@ class FileService {
 
 --
 
-> warning: version 2
->
 > If you only need to read the file size and not its content, you can use the `readSize` method.
 >
 > ```typescript
@@ -291,8 +289,6 @@ class ApiController {
 ```
 
 ## Implementing a Disk
-
-> Relative paths are available in Foal v1.11.0 onwards.
 
 If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `Disk` class. 
 

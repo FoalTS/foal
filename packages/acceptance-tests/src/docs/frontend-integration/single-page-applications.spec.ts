@@ -1,3 +1,6 @@
+// std
+import { join } from 'path';
+
 // 3p
 import * as request from 'supertest';
 
@@ -21,7 +24,7 @@ describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
           return new HttpResponseNotFound();
         }
 
-        return render('./src/examples/frontend-integration/public/index.html');
+        return render(join(__dirname, 'public/index.html'));
       }
     }
 

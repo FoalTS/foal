@@ -1,5 +1,7 @@
 # Groups and Permissions
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 In advanced applications, access control can be managed through permissions and groups.
 
 A *permission* gives a user the right to perform a given action (such as accessing a route).
@@ -86,8 +88,6 @@ export async function main(args: { codeName: string, name: string }) {
   }
 }
 ```
-
-> warning: version 2
 
 Then you can create a permission through the command line.
 ```sh
@@ -198,8 +198,6 @@ export async function main(args: { codeName: string, name: string, permissions: 
 
 ```
 
-> warning: version 2
-
 Then you can create a group through the command line.
 ```sh
 npm run build
@@ -243,8 +241,6 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 ### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 Uncomment the code in the file `src/scripts/create-user.ts`.
-
-> warning: version 2
 
 Then you can create a user with their permissions and groups through the command line.
 ```sh
@@ -336,8 +332,6 @@ export class ProductController {
 
 ## BaseEntity Inheritance
 
-> Available in Foal v1.8.0 onwards.
-
 The classes `Permission`, `Group` and `UserWithPermissions` all extends the `BaseEntity` class so you can access its static and instance methods.
 
 *Example*
@@ -348,8 +342,6 @@ await perm.save();
 ```
 
 ## Get All Users with a Given Permission
-
-> Available in Foal v1.8.0 onwards.
 
 The class `UserWithPermissions` provides a static method `withPerm` to get all users with a given permission. It returns all users that have this permission on their own or through the groups they belong to.
 

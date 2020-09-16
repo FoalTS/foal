@@ -1,5 +1,7 @@
 # Nuxt.js
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 [Nuxt.js](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
 
 This document explains how to use it in conjunction with FoalTS. A sample source code can be found on [Github](https://github.com/FoalTS/foal/tree/master/samples/nuxt.js).
@@ -24,8 +26,6 @@ When the CLI asks which server framework to choose, select *None*.
     ```
 
 2. Then update your `src/index.ts` file as follows:
-
-  > warning: version 2
 
     ```typescript
     import { Builder, Nuxt } from 'nuxt';
