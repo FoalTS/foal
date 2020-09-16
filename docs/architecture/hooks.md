@@ -19,8 +19,8 @@ They improve code readability and make unit testing easier.
 
 Foal provides a number of hooks to handle the most common scenarios.
 
-- `ValidateBody`, `ValidateHeader`, `ValidatePathParam`, `ValidateCookie` and `ValidateQueryParam` validate the format of the incoming HTTP requests (see [Validation](../validation-and-sanitization.md)).
-- `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
+- `ValidateBody`, `ValidateHeader`, `ValidatePathParam`, `ValidateCookie` and `ValidateQueryParam` validate the format of the incoming HTTP requests (see [Validation](../common/validation-and-sanitization.md)).
+- `Log` displays information on the request (see [Logging & Debugging](../common/logging-and-debugging.md)).
 - `JWTRequired`, `JWTOptional`, `TokenRequired`, `TokenOptional` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
 
