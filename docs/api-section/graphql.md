@@ -1,5 +1,7 @@
 # GraphQL
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 [GraphQL](https://graphql.org/) is a query language for APIs. Unlike traditional REST APIs, GraphQL APIs have only one endpoint to which requests are sent. The content of the request describes all the operations to be performed and the data to be returned in the response. Many resources can be retrieved in a single request and the client gets exactly the properties it asks for.
 
 *Example of request*
@@ -159,8 +161,6 @@ export class ApiController extends GraphQLController {
 
 Note that for this to work, you must copy the graphql files during the build. To do this, you need to install the `copy` package and update some commands of your `package.json`.
 
-> warning: version 2
-
 ```
 npm install copy
 ```
@@ -276,8 +276,6 @@ class ResolverService {
 
 `formatError` and `@FormatError` also accept an optional parameter to override its default behavior. It is a function that takes the error thrown or rejected in the resolver and return the error that must be sent to the client. It may be asynchronous or synchronous.
 
-> warning: version 2
-
 By default, this function is:
 ```typescript
 function maskAndLogError(err: any): any {
@@ -290,8 +288,6 @@ function maskAndLogError(err: any): any {
   return new Error('Internal Server Error');
 }
 ```
-
-> warning: version 2
 
 But we can also imagine other implementations such as:
 ```typescript

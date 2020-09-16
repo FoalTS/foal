@@ -1,5 +1,7 @@
 # TypeORM
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 *A simple model:*
 ```typescript
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -53,8 +55,6 @@ TypeORM is integrated by default in each new FoalTS project. This allows you to 
 ### Initial Configuration
 
 When creating a new project, an `SQLite` database is used by default as it does not require any additional installation (the data is saved in a file). The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
-
-> warning: version 2
 
 *ormconfig.js*
 ```js
@@ -114,8 +114,6 @@ Two packages are required to use TypeORM with FoalTS:
 ## Database Configuration Examples
 
 This section shows how to configure **MySQL** or **PostgreSQL** with Foal.
-
-> warning: version 2
 
 *ormconfig.js*
 ```js
