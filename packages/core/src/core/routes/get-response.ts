@@ -1,6 +1,6 @@
 import { IAppController } from '../app.controller.interface';
 import { HookPostFunction } from '../hooks';
-import { Context, HttpResponse, HttpResponseInternalServerError, isHttpResponse } from '../http';
+import { Context, HttpResponse, isHttpResponse } from '../http';
 import { ServiceManager } from '../service-manager';
 import { convertErrorToResponse } from './convert-error-to-response';
 import { Route } from './route.interface';
