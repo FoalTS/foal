@@ -13,7 +13,6 @@ import {
 } from '../core';
 import { IAppController } from './app.controller.interface';
 import { createMiddleware } from './create-middleware';
-import { notFound } from './not-found';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
@@ -124,12 +123,9 @@ export async function createApp(
     app.use(middleware);
   }
 
-  // Handle errors.
-  app.use(notFound());
-  const controller = services.get<IAppController>(AppController);
-
   await services.boot();
 
+  const controller = services.get<IAppController>(AppController);
   if (controller.init) {
     await controller.init();
   }
