@@ -7,11 +7,11 @@ import * as logger from 'morgan';
 import {
   Class,
   Config,
+  IAppController,
   makeControllerRoutes,
   OpenApi,
-  ServiceManager
+  ServiceManager,
 } from '../core';
-import { IAppController } from './app.controller.interface';
 import { createMiddleware } from './create-middleware';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';

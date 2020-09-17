@@ -1,6 +1,7 @@
-import { renderError } from '../common';
-import { Config, Context, HttpResponse } from '../core';
-import { IAppController } from './app.controller.interface';
+import { renderError } from '../../common';
+import { IAppController } from '../app.controller.interface';
+import { Config } from '../config';
+import { Context, HttpResponse } from '../http';
 
 export async function convertErrorToResponse(
   error: Error, ctx: Context, appController: IAppController, log = console.error

@@ -1,4 +1,5 @@
-import { Class, Context, HttpResponse } from '../core';
+import { Class } from './class.interface';
+import { Context, HttpResponse } from './http';
 
 export interface IController {
   subControllers?: Class<IController>[];

@@ -2,8 +2,9 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Config, Context, HttpResponse, HttpResponseInternalServerError, isHttpResponseInternalServerError } from '../core';
-import { IAppController } from './app.controller.interface';
+import { IAppController } from '../app.controller.interface';
+import { Config } from '../config';
+import { Context, HttpResponse, HttpResponseInternalServerError, isHttpResponseInternalServerError } from '../http';
 import { convertErrorToResponse } from './convert-error-to-response';
 
 describe('convertErrorToResponse', () => {

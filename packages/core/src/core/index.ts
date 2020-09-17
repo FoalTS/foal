@@ -1,3 +1,4 @@
+export * from './app.controller.interface';
 export * from './class.interface';
 export { createController } from './controllers';
 export * from './http';
