@@ -56,7 +56,7 @@ You will find more information in the documentation pages dedicated to them.
 
 ## Code Examples
 
-TODO: add the migrations
+TODO: add the migrations (with `DatabaseSession`)
 
 The four examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
 

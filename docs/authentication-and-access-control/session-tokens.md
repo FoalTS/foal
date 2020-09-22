@@ -16,7 +16,7 @@ TODO: mention the need of a "@UserRequired" if we support anonymous sessions in 
 
 ## Get Started
 
-TODO: add the migrations
+TODO: add the migrations (with `DatabaseSession`)
 
 ### Choose a Session Store
 
