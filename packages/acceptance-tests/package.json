@@ -4,8 +4,8 @@
   "version": "1.11.1",
   "description": "Acceptance tests of the framework",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.{ts,tsx}\"",
-    "dev:test": "mocha --require ts-node/register --watch --extension ts,tsx \"./src/**/*.spec.{ts,tsx}\""
+    "test": "mocha --require ts-node/register \"./src/**/*.{spec,feature}.{ts,tsx}\"",
+    "dev:test": "mocha --require ts-node/register --watch --extension ts,tsx \"./src/**/*.{spec,feature}.{ts,tsx}\""
   },
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"

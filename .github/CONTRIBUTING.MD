@@ -94,6 +94,21 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
+### Structure of the `acceptance-tests` directory
+
+| Directory | Description |
+| --- | --- |
+| additional | Additional tests which code does not appear in the documentation. |
+| common | Utilities used in the tests. |
+| docs | Tests using the code given of the documentation. |
+
+The `docs/` directory is organized as follows:
+- The directory structure is the same as in the documentation.
+- The last sub-directory represents a page of the documentation.
+- Each file must test a feature. A feature can contain several examples/scenarios.
+- Each file must be named as follows: `{verb}ing-{description}.feature.ts` (ex: `protecting-a-stateful-spa-against-csrf-attacks.feature.ts`).
+- The first `describe` block of a file is named with the `Feature: {verb}ing {description}` pattern. Its direct children are named as follows: `Example: {description}` or `Scenario: {description}`.
+
 ## Semantic Versioning
 
 The framework follows the semantic versioning specification.

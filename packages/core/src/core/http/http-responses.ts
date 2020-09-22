@@ -1,3 +1,5 @@
+import { Context } from './contexts';
+
 /**
  * Cookie options of the HttpResponse.setCookie method.
  *
@@ -911,6 +913,8 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
    * @memberof HttpResponseInternalServerError
    */
   readonly isHttpResponseInternalServerError = true;
+  readonly error?: Error;
+  readonly ctx?: Context;
   statusCode = 500;
   statusMessage = 'INTERNAL SERVER ERROR';
 
@@ -919,8 +923,10 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseInternalServerError
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: any, options: { stream?: boolean, error?: Error, ctx?: Context } = {}) {
     super(body, options);
+    this.error = options.error;
+    this.ctx = options.ctx;
   }
 }
 

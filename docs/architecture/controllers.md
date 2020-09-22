@@ -264,6 +264,13 @@ In case the body parameter is a stream, you must specify it using the `stream` o
 new HttpResponseOK(myStream, { stream: true })
 ```
 
+> The `HttpResponseServerError` constructor also accepts two other options: a `Context` object and an error.
+>
+> *Example*
+> ```typescript
+> new HttpResponseServerError({}, { error, ctx });
+> ```
+
 ### Adding Headers
 
 *Example*
