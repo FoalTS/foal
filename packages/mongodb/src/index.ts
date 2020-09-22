@@ -4,4 +4,7 @@
  * Released under the MIT License.
  */
 
-export { MongoDBStore, MongoDBStore as ConcreteSessionStore } from './mongodb-store.service';
+export {
+  MongoDBStore,
+  MongoDBStore as ConcreteSessionStore,
+} from './mongodb-store.service';
