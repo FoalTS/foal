@@ -1,5 +1,7 @@
 # The Shell Scripts
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 Like in the previous tutorial, you are going to use shell scripts to populate the database.
 
 ## The `create-user` script
@@ -63,8 +65,6 @@ npm install @foal/password
 ```
 
 Now build the script.
-
-> warning: version 2
 
 ```
 npm run build
@@ -133,8 +133,6 @@ We added an `owner` parameter to know which user the todo belongs to. It expects
 The `main` function then tries to get the user who has this email. If he or she does not exist, then the script terminates with a message displayed in the console. If not, the user is added to the todo as her/his owner.
 
 Build the script.
-
-> warning: version 2
 
 ```
 npm run build

@@ -1,5 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
+import { Context } from './contexts';
 
 // FoalTS
 import {
@@ -888,6 +889,24 @@ describe('HttpResponseInternalServerError', () => {
 
     httpResponse = new HttpResponseInternalServerError({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should accept an optional "error" option.', () => {
+    let httpResponse = new HttpResponseInternalServerError();
+    strictEqual(httpResponse.error, undefined);
+
+    const error = new Error('A random error.');
+    httpResponse = new HttpResponseInternalServerError({}, { error });
+    strictEqual(httpResponse.error, error);
+  });
+
+  it('should accept an optional "ctx" option.', () => {
+    let httpResponse = new HttpResponseInternalServerError();
+    strictEqual(httpResponse.ctx, undefined);
+
+    const ctx = new Context({});
+    httpResponse = new HttpResponseInternalServerError({}, { ctx });
+    strictEqual(httpResponse.ctx, ctx);
   });
 
 });

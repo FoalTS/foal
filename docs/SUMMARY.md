@@ -29,6 +29,13 @@
   * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
   * [Hooks](./architecture/hooks.md)
   * [Initialization](./architecture/initialization.md)
+  * [Error handling](./architecture/error-handling.md)
+* Common
+  * [Validation & Sanitization](./common/validation-and-sanitization.md)
+  * [Serializing & Deserializing](./common/serializing-and-deserializing.md)
+  * [Templates (SSR)](./common/templating.md)
+  * [Logging & Debugging](./common/logging-and-debugging.md)
+  * [Generate Tokens](./common/generate-tokens.md)
 * Databases
   * [SQL Databases](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
@@ -44,8 +51,6 @@
   * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
-* [Validation & Sanitization](./validation-and-sanitization.md)
-* [Serializing & Deserializing](./serializing-and-deserializing.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
   * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)
@@ -73,12 +78,7 @@
   * [HTTP Headers Protection](./security/http-headers-protection.md)
   * [CSRF Protection](./security/csrf-protection.md)
   * [XSS Protection](./security/xss-protection.md)
-* Utilities
-  * [Templates (SSR)](./utilities/templating.md)
-  * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
-  * [Error Handling](./cookbook/error-handling.md)
-  * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [Request Body Size](./cookbook/request-body-size.md)

@@ -1,5 +1,7 @@
 # Quick Start
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 *Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 
 > *Example: a user enters their login credentials to connect to the application*.
@@ -54,7 +56,7 @@ You will find more information in the documentation pages dedicated to them.
 
 ## Code Examples
 
-> warning: version 2 -> add the migrations
+TODO: add the migrations
 
 The four examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
 
@@ -100,8 +102,6 @@ Authorization: Bearer my-token
 You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or use [Frontend Integration](../frontend-integration/angular-react-vue.md) to get this example  work with an SPA.
 
 ### Sessions Tokens
-
-> warning: version 2
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
@@ -284,8 +284,6 @@ You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or
 
 ### Session Tokens
 
-> warning: version 2
-
 *src/app/controllers/auth.controller.ts*
 ```typescript
 const credentialsSchema = {
@@ -370,8 +368,6 @@ export class ApiController {
 ```
 
 ## Regular Web Applications (with cookies and redirections)
-
-> warning: version 2
 
 > As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
 

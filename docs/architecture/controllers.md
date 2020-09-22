@@ -1,5 +1,7 @@
 # Controllers
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 ```sh
 foal generate controller my-controller
 ```
@@ -204,8 +206,6 @@ class AppController {
 
 #### The Controller Method Arguments
 
-> Available in Foal v1.9.0 onwards.
-
 The path paramaters and request body are also passed as second and third arguments to the controller method.
 
 ```typescript
@@ -263,6 +263,13 @@ In case the body parameter is a stream, you must specify it using the `stream` o
 ```typescript
 new HttpResponseOK(myStream, { stream: true })
 ```
+
+> The `HttpResponseServerError` constructor also accepts two other options: a `Context` object and an error.
+>
+> *Example*
+> ```typescript
+> new HttpResponseServerError({}, { error, ctx });
+> ```
 
 ### Adding Headers
 

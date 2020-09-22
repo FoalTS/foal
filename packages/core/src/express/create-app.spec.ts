@@ -307,7 +307,7 @@ describe('createApp', () => {
       .expect('Hello world!');
   });
 
-  it('should use the optional postMiddlewares if they are given (in good time).', async () => {
+  it('should use the optional postMiddlewares if they are given.', async () => {
     Config.set('settings.debug', true);
 
     class AppController {
@@ -315,20 +315,12 @@ describe('createApp', () => {
       getA(ctx: Context) {
         return new HttpResponseOK('a');
       }
-      @Get('/c')
-      getC(ctx: Context) {
-        throw new Error('This is an error');
-      }
     }
 
     const app = await createApp(AppController, {
       postMiddlewares: [
         express.Router().get('/a', (req: any, res: any) => res.send('a2')),
         express.Router().get('/b', (req: any, res: any) => res.send('b2')),
-        (err: any, req: any, res: any, next: any) => {
-          err.message += '!!!';
-          next(err);
-        }
       ]
     });
 
@@ -341,15 +333,6 @@ describe('createApp', () => {
         .get('/b')
         .expect(200)
         .expect('b2'),
-      request(app)
-        .get('/c')
-        .expect(500)
-        .then(response => {
-          strictEqual(
-            response.text.includes('This is an error!!!'),
-            true
-          );
-        })
     ]);
   });
 

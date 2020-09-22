@@ -232,7 +232,7 @@ The below code shows how to implement this technique with a hook. On each reques
 
 *refresh-jwt.hook.ts (example)*
 ```typescript
-import { Hook, HookDecorator, HttpResponse } from '@foal/core';
+import { Hook, HookDecorator, HttpResponse, isHttpResponseServerError } from '@foal/core';
 import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
@@ -243,6 +243,10 @@ export function RefreshJWT(): HookDecorator {
     }
 
     return (response: HttpResponse) => {
+      if (isHttpResponseServerError(response)) {
+        return;
+      }
+
       const newToken = sign(
         // The below object assumes that ctx.user is
         // the decoded payload (default behavior).

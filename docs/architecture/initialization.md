@@ -1,5 +1,7 @@
 # Initialization
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 In many situations, we need to initialize the application (i.e perform certain actions) before listening to incoming HTTP requests. This is the case, for example, if you need to establish a connection to the database.
 
 There are three ways to achieve this in FoalTS.
@@ -61,8 +63,6 @@ export class AppController {
 ```
 
 ## The services `boot` method
-
-> warning: version 2
 
 Alternatively you can add a `boot` method in your services. This method can be synchronous or asynchronous.
 

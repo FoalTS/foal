@@ -7,13 +7,14 @@ import * as logger from 'morgan';
 import {
   Class,
   Config,
+  Context,
+  getResponse,
+  IAppController,
   makeControllerRoutes,
   OpenApi,
-  ServiceManager
+  ServiceManager,
 } from '../core';
-import { createMiddleware } from './create-middleware';
-import { handleErrors } from './handle-errors';
-import { notFound } from './not-found';
+import { sendResponse } from './send-response';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
@@ -22,9 +23,6 @@ type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) 
 
 export interface CreateAppOptions {
   expressInstance?: any;
-  methods?: {
-    handleError?: boolean;
-  };
   serviceManager?: ServiceManager;
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
@@ -54,7 +52,8 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
  * Create an Express application from the root controller.
  *
  * @export
- * @param {Class} AppController - The root controller, usually called `AppController` and located in `src/app`.
+ * @param {Class<IAppController>} AppController - The root controller, usually called `AppController`
+ * and located in `src/app`.
  * @param {CreateAppOptions} [options] - Options containaining Express middlewares or other settings.
  * @param {any} [options.expressInstance] - Express instance to be used as base for the
  * returned application.
@@ -69,7 +68,7 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
  * @returns {Promise<any>} The express application.
  */
 export async function createApp(
-  AppController: Class,
+  AppController: Class<IAppController>,
   options: CreateAppOptions = {},
 ): Promise<any> {
   const app = options.expressInstance || express();
@@ -115,10 +114,26 @@ export async function createApp(
   // across several npm packages.
   services.set(OPENAPI_SERVICE_ID, services.get(OpenApi));
 
+  // Retrieve the AppController instance.
+  const appController = services.get<IAppController>(AppController);
+
   // Resolve the controllers and hooks and add them to the express instance.
   const routes = makeControllerRoutes(AppController, services);
   for (const { route } of routes) {
-    app[route.httpMethod.toLowerCase()](route.path, createMiddleware(route, services));
+    app[route.httpMethod.toLowerCase()](route.path, async (req: any, res: any, next: (err?: any) => any) => {
+      try {
+        const ctx = new Context(req);
+        // TODO: better test this line.
+        const response = await getResponse(route, ctx, services, appController);
+        sendResponse(response, res);
+      } catch (error) {
+        // This try/catch will never be called: the `getResponse` function catches any errors
+        // thrown or rejected in the application and converts it into a response.
+        // However, for more security, this line has been added to avoid crashing the server
+        // in case the function is badly implemented.
+        next(error);
+      }
+    });
   }
 
   // Add optional post-middlewares.
@@ -126,15 +141,10 @@ export async function createApp(
     app.use(middleware);
   }
 
-  // Handle errors.
-  app.use(notFound());
-  const controller = app.foal.services.get(AppController);
-  app.use(handleErrors(options, controller));
-
   await services.boot();
 
-  if (controller.init) {
-    await controller.init();
+  if (appController.init) {
+    await appController.init();
   }
 
   return app;

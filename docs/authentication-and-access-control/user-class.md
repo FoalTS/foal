@@ -1,5 +1,7 @@
 # User Class and `create-user` Script
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 ## The User Entity
 
 ```typescript
@@ -52,8 +54,6 @@ async function main() {
 
 You can use the `create-user` shell script (located in `src/scripts`) to create a new user through the command line.
 
-> warning: version 2
-
 ```sh
 npm run build
 foal run create-user
@@ -105,8 +105,6 @@ Go to `src/scripts/create-user.ts` and uncomment the lines mentionning the email
 > To get it work, you will also need to install the `password` package: `npm install --save @foal/password`. The `isCommon` util helps you to detect if a password is too common (ex: 12345) and thus prevents the script from creating a new user with an unsecured password.
 
 You can now create a new user with these commands:
-
-> warning: version 2
 
 ```sh
 npm run build

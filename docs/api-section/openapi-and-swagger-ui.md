@@ -1,5 +1,7 @@
 # OpenAPI & Swagger UI
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
 ## Introduction
 
 **OpenAPI Specification** (formerly known as Swagger Specification) is an API description format for REST APIs. An OpenAPI *document* allows developers to describe entirely an API.
@@ -750,8 +752,6 @@ export async function main() {
 }
 
 ```
-
-> warning: version 2
 
 ```
 npm run build

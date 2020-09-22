@@ -94,6 +94,21 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
+### Structure of the `acceptance-tests` directory
+
+| Directory | Description |
+| --- | --- |
+| additional | Additional tests which code does not appear in the documentation. |
+| common | Utilities used in the tests. |
+| docs | Tests using the code given of the documentation. |
+
+The `docs/` directory is organized as follows:
+- The directory structure is the same as in the documentation.
+- The last sub-directory represents a page of the documentation.
+- Each file must test a feature. A feature can contain several examples/scenarios.
+- Each file must be named as follows: `{verb}ing-{description}.feature.ts` (ex: `protecting-a-stateful-spa-against-csrf-attacks.feature.ts`).
+- The first `describe` block of a file is named with the `Feature: {verb}ing {description}` pattern. Its direct children are named as follows: `Example: {description}` or `Scenario: {description}`.
+
 ## Semantic Versioning
 
 The framework follows the semantic versioning specification.
@@ -110,11 +125,11 @@ All of major releases are supported for 18 months.
 - 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
-| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min version |
+| Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x | 4.0 |
-| 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x | 3.5 |
-| 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x | 2.9 |
+| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x, 12.x, 14.x | 4.0 |
+| 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x, 10.x | 3.5 |
+| 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x, 10.x | 2.9 |
 
 ## Project Architecture
 
