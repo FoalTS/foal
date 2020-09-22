@@ -91,3 +91,5 @@ Thus, when using *hook post functions*, you might want to check whether or not a
   // Else execute some logic.
 })
 ```
+
+> If you use the default error handler, then the generated `HttpResponseInternalServerError` has two additional properties: `error` and `ctx`.
