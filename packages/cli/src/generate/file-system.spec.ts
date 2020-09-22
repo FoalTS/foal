@@ -636,6 +636,27 @@ describe('FileSystem', () => {
       );
     });
 
+    it('should add the class property if it does not exist (empty class implementing an interface).', () => {
+      writeFileSync(
+        'test-generators/foo.txt',
+        'class FooBar implements IFooBarInterface {}',
+        'utf8'
+      );
+      fs.addOrExtendClassArrayPropertyIn(
+        'foo.txt',
+        'subControllers',
+        'controller(\'/api\', ApiController)'
+      );
+      strictEqual(
+        readFileSync('test-generators/foo.txt', 'utf8'),
+        'class FooBar implements IFooBarInterface {\n'
+        + '  subControllers = [\n'
+        + '    controller(\'/api\', ApiController)\n'
+        + '  ];\n'
+        + '}',
+      );
+    });
+
     it('should add the class property if it does not exist (empty class with line returns).', () => {
       writeFileSync(
         'test-generators/foo.txt',

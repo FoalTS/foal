@@ -396,7 +396,7 @@ export class FileSystem {
     }
 
     this.modify(path, content => content.replace(
-      new RegExp(`class (\\w*) {(.*)}`, 's'),
+      new RegExp(`class (\\w*|\\w* implements \\w*) {(.*)}`, 's'),
       (match, className: string, p2: string) => {
         if (/^(\s)*$/.test(p2)) {
           return `class ${className} {\n  ${propertyName} = [\n    ${element}\n  ];\n}`;
