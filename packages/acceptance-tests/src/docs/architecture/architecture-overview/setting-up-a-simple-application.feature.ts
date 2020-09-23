@@ -20,12 +20,10 @@ describe('Feature: Setting up a simple application', () => {
   const secret = 'secretXXX';
 
   beforeEach(() => {
-    Config.set('settings.logErrors', false);
     Config.set('settings.jwt.secret', secret);
   });
 
   afterEach(() => {
-    Config.remove('settings.logErrors');
     Config.remove('settings.jwt.secret');
   });
 

@@ -3,7 +3,6 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config,
   Context,
   createApp,
   Get,
@@ -15,10 +14,6 @@ import {
 } from '@foal/core';
 
 describe('Feature: Building custom hooks', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: A simple hook', async () => {
 
@@ -60,6 +55,7 @@ describe('Feature: Building custom hooks', () => {
 
       @Get('/')
       @Hook((ctx, services) => {
+        // tslint:disable-next-line
         const logger = services.get(Logger);
         // logger.log('IP: ' + ctx.request.ip);
       })

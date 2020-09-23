@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK, MergeHooks,  ValidateCookie, ValidateHeader} from '@foal/core';
+import { createApp, Get, HttpResponseOK, MergeHooks,  ValidateCookie, ValidateHeader} from '@foal/core';
 
 describe('Feature: Grouping several hooks into one.', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Creating a validation hook.', async () => {
 
@@ -16,6 +12,7 @@ describe('Feature: Grouping several hooks into one.', () => {
 
     // Before
 
+    // tslint:disable-next-line
     class MyController {
       @Get('/products')
       @ValidateHeader('Authorization')

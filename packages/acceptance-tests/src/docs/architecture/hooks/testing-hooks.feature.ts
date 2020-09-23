@@ -3,7 +3,6 @@ import { strictEqual } from 'assert';
 
 // FoalTS
 import {
-  Config,
   Context,
   getHookFunction,
   Hook,
@@ -15,10 +14,6 @@ import {
 } from '@foal/core';
 
 describe('Feature: Testing hooks', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   describe('Example: A simple test.', () => {
 

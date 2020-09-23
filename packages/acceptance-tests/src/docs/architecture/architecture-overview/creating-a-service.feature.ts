@@ -2,14 +2,10 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, dependency, Get, HttpResponseOK } from '@foal/core';
+import { createApp, dependency, Get, HttpResponseOK } from '@foal/core';
 import { strictEqual } from 'assert';
 
 describe('Feature: Creating a service', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Returning "Hello world!" with a date', async () => {
 

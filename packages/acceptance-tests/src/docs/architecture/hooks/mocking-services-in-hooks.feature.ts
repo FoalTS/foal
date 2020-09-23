@@ -2,13 +2,9 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { Config, Context, getHookFunction, Hook, ServiceManager } from '@foal/core';
+import { Context, getHookFunction, Hook, ServiceManager } from '@foal/core';
 
 describe('Feature: Mocking services in hooks', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   describe('Example: Returning "Hello world!"', () => {
 

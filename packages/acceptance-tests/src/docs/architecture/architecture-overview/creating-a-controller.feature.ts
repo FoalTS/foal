@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK } from '@foal/core';
+import { createApp, Get, HttpResponseOK } from '@foal/core';
 
 describe('Feature: Creating a controller', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Returning "Hello world!"', async () => {
 

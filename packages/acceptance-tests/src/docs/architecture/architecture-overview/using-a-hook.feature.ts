@@ -11,12 +11,10 @@ describe('Feature: Using a hook', () => {
   const secret = 'secretXXX';
 
   beforeEach(() => {
-    Config.set('settings.logErrors', false);
     Config.set('settings.jwt.secret', secret);
   });
 
   afterEach(() => {
-    Config.remove('settings.logErrors');
     Config.remove('settings.jwt.secret');
   });
 

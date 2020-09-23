@@ -5,13 +5,9 @@ import { strictEqual } from 'assert';
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK } from '@foal/core';
+import { createApp, Get, HttpResponseOK } from '@foal/core';
 
 describe('Feature: Returning a response', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Adding Headers', async () => {
 

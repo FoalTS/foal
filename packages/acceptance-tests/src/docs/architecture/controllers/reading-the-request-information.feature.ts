@@ -3,7 +3,6 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config,
   Context,
   createApp,
   Get,
@@ -14,10 +13,6 @@ import {
 } from '@foal/core';
 
 describe('Feature: Reading the request information', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Read the Body', async () => {
 

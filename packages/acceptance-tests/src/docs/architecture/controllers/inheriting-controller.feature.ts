@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, HttpResponseOK, Post } from '@foal/core';
+import { createApp, Get, HttpResponseOK, Post } from '@foal/core';
 
 describe('Feature: Inheriting controllers', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: A simple inheritance', async () => {
 

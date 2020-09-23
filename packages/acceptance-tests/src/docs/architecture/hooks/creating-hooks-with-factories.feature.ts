@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, Hook, HttpResponseOK } from '@foal/core';
+import { createApp, Get, Hook, HttpResponseOK } from '@foal/core';
 
 describe('Feature: Creating hooks with factories', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: A simple hook factory.', async () => {
 

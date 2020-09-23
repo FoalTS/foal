@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, createApp, Get, Hook, HttpResponseOK } from '@foal/core';
+import { createApp, Get, Hook, HttpResponseOK } from '@foal/core';
 
 describe('Feature: Executing logic after the controller method.', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: Adding a CSRF cookie', async () => {
 
@@ -48,6 +44,7 @@ describe('Feature: Executing logic after the controller method.', () => {
         const time = process.hrtime();
 
         return () => {
+          // tslint:disable-next-line
           const seconds = process.hrtime(time)[0];
           // console.log(`Executed in ${seconds} seconds`);
         };

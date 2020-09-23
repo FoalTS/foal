@@ -2,13 +2,9 @@
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, Context, controller, createApp, Get, HttpResponseOK, Post } from '@foal/core';
+import { Context, controller, createApp, Get, HttpResponseOK, Post } from '@foal/core';
 
 describe('Feature: Creating a controller', () => {
-
-  beforeEach(() => Config.set('settings.logErrors', false));
-
-  afterEach(() => Config.remove('settings.logErrors'));
 
   it('Example: A simple controller.', async () => {
 
