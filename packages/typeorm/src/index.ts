@@ -4,7 +4,21 @@
  * Released under the MIT License.
  */
 
-export * from './entities';
-export * from './hooks';
-export * from './utils';
-export { DatabaseSession, TypeORMStore, TypeORMStore as ConcreteSessionStore } from './typeorm-store.service';
+export {
+  Group,
+  Permission,
+  UserWithPermissions,
+} from './entities';
+export {
+  PermissionRequired,
+} from './hooks';
+export {
+  fetchMongoDBUser,
+  fetchUser,
+  fetchUserWithPermissions,
+} from './utils';
+export {
+  DatabaseSession,
+  TypeORMStore,
+  TypeORMStore as ConcreteSessionStore,
+} from './typeorm-store.service';

@@ -4,4 +4,7 @@
  * Released under the MIT License.
  */
 
-export { S3Disk, S3Disk as ConcreteDisk } from './s3-disk.service';
+export {
+  S3Disk,
+  S3Disk as ConcreteDisk,
+} from './s3-disk.service';

@@ -4,4 +4,7 @@
  * Released under the MIT License.
  */
 
-export { RedisStore, RedisStore as ConcreteSessionStore } from './redis-store.service';
+export {
+  RedisStore,
+  RedisStore as ConcreteSessionStore,
+} from './redis-store.service';

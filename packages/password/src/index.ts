@@ -4,4 +4,6 @@
  * Released under the MIT License.
  */
 
-export { isCommon } from './is-common.util';
+export {
+  isCommon,
+} from './is-common.util';
