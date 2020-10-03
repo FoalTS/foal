@@ -206,3 +206,22 @@ const { buffer } = ctx.request.body.files.foobar;
 If you extend the abstract class `AbstractDisk`, you must add a `readSize` method which returns the size of the file.
 
 `AbstractDisk` has been renamed to `Disk`.
+
+## New features
+
+###  Accessing File Metadata 
+
+When uploading files, the browser sends additional metadata. This can be accessed in version 2 in the controller method.
+
+```typescript
+const file = ctx.request.body.files.profile;
+// file.mimeType, ...
+```
+
+| Property name | Type | Description |
+| --- | --- | --- |
+| `encoding` | `string` | Encoding type of the file |
+| `filename` | `string|undefined` | Name of the file on the user's computer |
+| `mimeType` | `string` | Mime type of the file |
+| `path` | `string` | Path where the file has been saved. If the `saveTo` option was not provided, the value is an empty string. |
+| `buffer` | `Buffer` | Buffer containing the entire file. If the `saveTo` option was provided, the value is an empty buffer. |
