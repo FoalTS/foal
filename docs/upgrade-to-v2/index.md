@@ -21,7 +21,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [File upload and download](./file-upload-and-download.md)
 - [JWT hooks and CSRF protection](./jwt-and-csrf.md)
 - [Support of MongoDB](./mongodb.md)
-- [Error-handling and hook post functions]()
+- [Error-handling and hook post functions](./error-handling.md)
 - [Template engine](./template-engine.md)
 - [Custom Express instance](./custom-express-instance.md)
 
@@ -32,3 +32,5 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - The command `foal g sub-app` has been removed.
 - The functions `createService` and `createController` do not accept a `ServiceManager` as second argument.
 - The `@Hook` decorator only accepts one function.
+- The type `ExpressApplication = any` has been removed.
+- The property `req.foal.ctx` does not exist anymore in post middlewares.
