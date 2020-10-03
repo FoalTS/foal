@@ -59,3 +59,72 @@ module.exports =   {
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
+
+## The `Config` and `ConfigMock` services
+
+The `Config` class can no longer be used as a service. You must use its static methods instead. Therefore, the `ConfigMock` class has also been removed.
+
+```typescript
+// Before
+export class Controller {
+  @dependency
+  config: Config;
+
+  foo() {
+    const foobar = this.config.get('foobar');
+  }
+}
+
+// After
+export class Controller {
+  foo() {
+    const foobar = Config.get('foobar');
+  }
+}
+
+```
+
+## New features
+
+### Multiple `.env` files for each environment
+
+Just like the JSON and YAML configuration files, it is now possible to have a separate `.env` file for each environment: `.env.test`, `.env.production`, etc.
+
+The values provided in a `.env.{environment}` file override those defined in the default `.env` file.
+
+### Read an environment variable from `.env`
+
+Environment variables defined in the `.env` file can be accessed through the `Env.get` method.
+
+### Comments and quotes in `.env` files
+
+The `.env` files now support the use of comments and quotes.
+
+```bash
+# This a comment
+HELLO="hello world"
+HELLO='hello world'
+```
+
+### JS configuration files
+
+In addition to the JSON and YAML formats, configuration files can now also be written in JS.
+
+```javascript
+const { Env } = require('@foal/core');
+
+module.exports =   {
+  settings: {
+    debug: false,
+    jwt: {
+      secret: Env.get('SETTINGS_JWT_SECRET')
+    }
+  }
+}
+```
+
+### Cloud PaaS providers
+
+Since the configuration keys are no longer linked to a specific environment variable, deployment with PaaS providers is facilitated.
+
+For example, in version 1, the URI of MongoDB had to be passed with the environment variable `MONGODB_URI`. If the cloud provider were giving the URI using the name `MONGO_URI`, things were becoming more difficult. This problem is now solved with the `env(*)` and `Env.get` features.
