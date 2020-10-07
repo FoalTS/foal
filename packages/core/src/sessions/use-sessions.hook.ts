@@ -17,6 +17,7 @@ import {
   ServiceManager
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
+import { createSession } from './create-session';
 import { readSession } from './read-session';
 import { removeSessionCookie } from './remove-session-cookie';
 import { SessionStore } from './session-store';
@@ -29,6 +30,7 @@ export interface UseSessionOptions {
   redirectTo?: string;
   openapi?: boolean;
   required?: boolean;
+  create?: boolean;
 }
 
 export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
@@ -84,6 +86,9 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (!content) {
         if (!options.required) {
+          // if (options.create ?? true) {
+          //   ctx.session = await createSession(store);
+          // }
           return postFunction;
         }
         return badRequestOrRedirect('Session cookie not found.');
@@ -95,6 +100,9 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (!authorizationHeader) {
         if (!options.required) {
+          // if (options.create) {
+          //   ctx.session = await createSession(store);
+          // }
           return postFunction;
         }
         return badRequestOrRedirect('Authorization header not found.');

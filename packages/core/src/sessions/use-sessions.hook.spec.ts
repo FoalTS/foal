@@ -145,24 +145,70 @@ describe('UseSessions', () => {
 
     context('given options.cookie is false or not defined', () => {
 
-      context('given options.required is false or not defined', () => {
+      context('given the Authorization header does not exist', () => {
 
-        it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
-          const response = await hook(ctx, services);
+        context('given options.required is false or not defined', () => {
 
-          strictEqual(isHttpResponse(response), false);
-          strictEqual(ctx.user, undefined);
+          it('should not return an HttpResponse.', async () => {
+            const response = await hook(ctx, services);
+
+            strictEqual(isHttpResponse(response), false);
+          });
+
+          it('should let ctx.user equal undefined.', async () => {
+            await hook(ctx, services);
+
+            strictEqual(ctx.user, undefined);
+          });
+
         });
-
-      });
-
-      context('given options.redirectTo is not defined', () => {
 
         context('given options.required is true', () => {
 
           beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, required: true })));
 
-          it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
+          context('given options.redirectTo is not defined', () => {
+
+            it('should return an HttpResponseBadRequest object.', async () => {
+              const response = await hook(ctx, services);
+              if (!isHttpResponseBadRequest(response)) {
+                throw new Error('Response should be an instance of HttpResponseBadRequest.');
+              }
+
+              deepStrictEqual(response.body, {
+                code: 'invalid_request',
+                description: 'Authorization header not found.'
+              });
+            });
+
+          });
+
+          context('given options.redirectTo is defined', () => {
+
+            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, required: true, redirectTo: '/foo' })));
+
+            it('should return an HttpResponseRedirect object.', async () => {
+              const response = await hook(ctx, services);
+              if (!isHttpResponseRedirect(response)) {
+                throw new Error('Response should be an instance of HttpResponseRedirect.');
+              }
+
+              strictEqual(response.path, '/foo');
+            });
+
+          });
+
+        });
+
+      });
+
+      context('given the Authorization exists but does not use the Bearer scheme', () => {
+
+        context('given options.redirectTo is not defined', () => {
+
+          it('should return an HttpResponseBadRequest object.', async () => {
+            const ctx = createContext({ Authorization: 'Basic hello' });
+
             const response = await hook(ctx, services);
             if (!isHttpResponseBadRequest(response)) {
               throw new Error('Response should be an instance of HttpResponseBadRequest.');
@@ -170,38 +216,19 @@ describe('UseSessions', () => {
 
             deepStrictEqual(response.body, {
               code: 'invalid_request',
-              description: 'Authorization header not found.'
+              description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
             });
           });
 
         });
 
-        it('should return an HttpResponseBadRequest object if the Authorization header does '
-            + 'not use the Bearer scheme.', async () => {
-          const ctx = createContext({ Authorization: 'Basic hello' });
+        context('given options.redirectTo is defined', () => {
 
-          const response = await hook(ctx, services);
-          if (!isHttpResponseBadRequest(response)) {
-            throw new Error('Response should be an instance of HttpResponseBadRequest.');
-          }
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, redirectTo: '/foo' })));
 
-          deepStrictEqual(response.body, {
-            code: 'invalid_request',
-            description: 'Expected a bearer token. Scheme is Authorization: Bearer <token>.'
-          });
-        });
+          it('should return an HttpResponseBadRedirect object.', async () => {
+            const ctx = createContext({ Authorization: 'Basic hello' });
 
-      });
-
-      context('given options.redirectTo is defined', () => {
-
-        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, redirectTo: '/foo' })));
-
-        context('given options.required is true', () => {
-
-          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, required: true, redirectTo: '/foo' })));
-
-          it('should return an HttpResponseRedirect object if the Authorization header does not exist.', async () => {
             const response = await hook(ctx, services);
             if (!isHttpResponseRedirect(response)) {
               throw new Error('Response should be an instance of HttpResponseRedirect.');
@@ -210,18 +237,6 @@ describe('UseSessions', () => {
             strictEqual(response.path, '/foo');
           });
 
-        });
-
-        it('should return an HttpResponseBadRedirect object if the Authorization header does '
-            + 'not use the Bearer scheme.', async () => {
-          const ctx = createContext({ Authorization: 'Basic hello' });
-
-          const response = await hook(ctx, services);
-          if (!isHttpResponseRedirect(response)) {
-            throw new Error('Response should be an instance of HttpResponseRedirect.');
-          }
-
-          strictEqual(response.path, '/foo');
         });
 
       });
@@ -232,58 +247,62 @@ describe('UseSessions', () => {
 
       beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
 
-      context('given options.required is false or not defined', () => {
+      context('given the cookie does not exist', () => {
 
-        it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
-          const response = await hook(ctx, services);
+        context('given options.required is false or not defined', () => {
 
-          strictEqual(isHttpResponse(response), false);
-          strictEqual(ctx.user, undefined);
+          it('should not return an HttpResponse.', async () => {
+            const response = await hook(ctx, services);
+
+            strictEqual(isHttpResponse(response), false);
+          });
+
+          it('should let ctx.user equal undefined.', async () => {
+            await hook(ctx, services);
+
+            strictEqual(ctx.user, undefined);
+          });
+
         });
-
-      });
-
-      context('given options.redirectTo is not defined', () => {
 
         context('given options.required is true', () => {
 
           beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, required: true })));
 
-          it('should return an HttpResponseBadRequest object if the cookie does not exist.' , async () => {
-            const response = await hook(ctx, services);
-            if (!isHttpResponseBadRequest(response)) {
-              throw new Error('Response should be an instance of HttpResponseBadRequest.');
-            }
+          context('given options.redirectTo is not defined', () => {
 
-            deepStrictEqual(response.body, {
-              code: 'invalid_request',
-              description: 'Session cookie not found.'
+            it('should return an HttpResponseBadRequest object.' , async () => {
+              const response = await hook(ctx, services);
+              if (!isHttpResponseBadRequest(response)) {
+                throw new Error('Response should be an instance of HttpResponseBadRequest.');
+              }
+
+              deepStrictEqual(response.body, {
+                code: 'invalid_request',
+                description: 'Session cookie not found.'
+              });
             });
+
           });
-        });
 
-      });
+          context('given options.redirectTo is defined', () => {
 
-      context('given options.redirectTo is defined', () => {
+            beforeEach(() => hook = getHookFunction(UseSessions({
+              cookie: true,
+              redirectTo: '/foo',
+              required: true,
+              store: Store,
+            })));
 
-        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, redirectTo: '/foo' })));
+            it('should return an HttpResponseRedirect object.', async () => {
+              const response = await hook(ctx, services);
+              if (!isHttpResponseRedirect(response)) {
+                throw new Error('Response should be an instance of HttpResponseRedirect.');
+              }
 
-        context('given options.required is true', () => {
+              strictEqual(response.path, '/foo');
+            });
 
-          beforeEach(() => hook = getHookFunction(UseSessions({
-            cookie: true,
-            redirectTo: '/foo',
-            required: true,
-            store: Store,
-          })));
-
-          it('should return an HttpResponseRedirect object if the cookie does not exist.', async () => {
-            const response = await hook(ctx, services);
-            if (!isHttpResponseRedirect(response)) {
-              throw new Error('Response should be an instance of HttpResponseRedirect.');
-            }
-
-            strictEqual(response.path, '/foo');
           });
 
         });
