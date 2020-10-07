@@ -22,7 +22,7 @@ import { removeSessionCookie } from './remove-session-cookie';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
-export interface TokenOptions {
+export interface UseSessionOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   store?: Class<SessionStore>;
   cookie?: boolean;
@@ -30,7 +30,7 @@ export interface TokenOptions {
   openapi?: boolean;
 }
 
-export function Token(required: boolean, options: TokenOptions): HookDecorator {
+export function UseSessions(required: boolean, options: UseSessionOptions): HookDecorator {
 
   function badRequestOrRedirect(description: string): HttpResponse {
     if (options.redirectTo) {

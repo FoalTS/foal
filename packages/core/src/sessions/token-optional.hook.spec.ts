@@ -1,5 +1,5 @@
 // FoalTS
 import { TokenOptional } from './token-optional.hook';
-import { testSuite } from './token.hook.spec';
+import { testSuite } from './use-sessions.hook.spec';
 
 describe('TokenOptional', () => testSuite(TokenOptional, false));

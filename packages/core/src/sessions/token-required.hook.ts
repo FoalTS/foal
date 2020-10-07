@@ -1,9 +1,7 @@
 // FoalTS
 import { HookDecorator } from '../core';
-import { Token, TokenOptions } from './token.hook';
+import { UseSessionOptions, UseSessions } from './use-sessions.hook';
 
-// TODO: Add missing documentation.
-
-export function TokenRequired(options: TokenOptions = {}): HookDecorator {
-  return Token(true, options);
+export function TokenRequired(options: UseSessionOptions = {}): HookDecorator {
+  return UseSessions(true, options);
 }

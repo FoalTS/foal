@@ -1,5 +1,5 @@
 // FoalTS
 import { TokenRequired } from './token-required.hook';
-import { testSuite } from './token.hook.spec';
+import { testSuite } from './use-sessions.hook.spec';
 
 describe('TokenRequired', () => testSuite(TokenRequired, true));
