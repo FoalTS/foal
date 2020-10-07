@@ -243,7 +243,7 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  TokenOptional,
+  UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
@@ -264,8 +264,9 @@ export class AuthController {
   }
 
   @Get('/signin/google/callback')
-  @TokenOptional({
+  @UseSessions({
     cookie: true,
+    required: false,
     store: TypeORMStore,
   })
   async handleGoogleRedirection(ctx: Context) {

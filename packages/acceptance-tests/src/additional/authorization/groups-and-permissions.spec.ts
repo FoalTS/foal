@@ -9,7 +9,7 @@ import {
   createSession,
   Get,
   HttpResponseNoContent,
-  TokenRequired,
+  UseSessions,
 } from '@foal/core';
 import {
   DatabaseSession,
@@ -30,7 +30,7 @@ describe('[Authorization|permissions] Users', () => {
   @Entity()
   class User extends UserWithPermissions {}
 
-  @TokenRequired({ user: fetchUserWithPermissions(User), store: TypeORMStore })
+  @UseSessions({ user: fetchUserWithPermissions(User), store: TypeORMStore, required: true })
   class AppController {
     @Get('/bar')
     @PermissionRequired('access-bar')

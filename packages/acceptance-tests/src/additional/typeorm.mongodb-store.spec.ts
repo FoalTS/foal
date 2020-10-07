@@ -16,8 +16,7 @@ import {
   HttpResponseOK,
   HttpResponseUnauthorized,
   Post,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -68,7 +67,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     });
   }
 
-  @TokenRequired({ user: fetchMongoDBUser(User), store: MongoDBStore })
+  @UseSessions({ user: fetchMongoDBUser(User), store: MongoDBStore, required: true })
   class MyController {
     @Get('/foo')
     foo() {
@@ -87,7 +86,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     store: MongoDBStore;
 
     @Post('/logout')
-    @TokenOptional({ store: MongoDBStore })
+    @UseSessions({ store: MongoDBStore, required: false, })
     async logout(ctx: Context) {
       if (ctx.session) {
         await ctx.session.destroy();

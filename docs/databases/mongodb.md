@@ -110,7 +110,7 @@ class MyController {}
 npm install @foal/mongodb
 ```
 
-If you use sessions with `@TokenRequired` or `@TokenOptional`, you must use the `MongoDBStore` from `@foal/mongodb`. **The `TypeORMStore` does not work with noSQL databases.**
+If you use sessions with `@UseSessions`, you must use the `MongoDBStore` from `@foal/mongodb`. **The `TypeORMStore` does not work with noSQL databases.**
 
 ## Limitations
 

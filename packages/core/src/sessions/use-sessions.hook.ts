@@ -28,9 +28,10 @@ export interface UseSessionOptions {
   cookie?: boolean;
   redirectTo?: string;
   openapi?: boolean;
+  required?: boolean;
 }
 
-export function UseSessions(required: boolean, options: UseSessionOptions): HookDecorator {
+export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
   function badRequestOrRedirect(description: string): HttpResponse {
     if (options.redirectTo) {
@@ -82,7 +83,7 @@ export function UseSessions(required: boolean, options: UseSessionOptions): Hook
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
-        if (!required) {
+        if (!options.required) {
           return postFunction;
         }
         return badRequestOrRedirect('Session cookie not found.');
@@ -93,7 +94,7 @@ export function UseSessions(required: boolean, options: UseSessionOptions): Hook
       const authorizationHeader = ctx.request.get('Authorization') || '';
 
       if (!authorizationHeader) {
-        if (!required) {
+        if (!options.required) {
           return postFunction;
         }
         return badRequestOrRedirect('Authorization header not found.');
@@ -163,7 +164,7 @@ export function UseSessions(required: boolean, options: UseSessionOptions): Hook
   }
 
   const openapi = [
-    required ?
+    options.required ?
       ApiResponse(401, { description: 'Auth token is missing or invalid.' }) :
       ApiResponse(401, { description: 'Auth token is invalid.' })
   ];
@@ -175,7 +176,7 @@ export function UseSessions(required: boolean, options: UseSessionOptions): Hook
       type: 'apiKey',
     };
     openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
-    if (required) {
+    if (options.required) {
       openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
     }
     if (Config.get('settings.session.csrf.enabled', 'boolean', false)) {
@@ -187,7 +188,7 @@ export function UseSessions(required: boolean, options: UseSessionOptions): Hook
       type: 'http',
     };
     openapi.push(ApiDefineSecurityScheme('bearerAuth', securityScheme));
-    if (required) {
+    if (options.required) {
       openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
     }
   }

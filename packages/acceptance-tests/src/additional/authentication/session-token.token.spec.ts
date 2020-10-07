@@ -12,7 +12,7 @@ import * as request from 'supertest';
 import {
   Context, controller, createApp, createSession, dependency,
   Get, hashPassword, HttpResponseNoContent,
-  HttpResponseOK, HttpResponseUnauthorized, Post, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  HttpResponseOK, HttpResponseUnauthorized, Post, UseSessions, ValidateBody, verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -33,7 +33,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
     password: string;
   }
 
-  @TokenRequired({ store: TypeORMStore })
+  @UseSessions({ store: TypeORMStore, required: true })
   class ApiController {
     @Get('/products')
     readProducts() {
@@ -95,7 +95,7 @@ describe('[Authentication|session token|no cookie|no redirection] Users', () => 
     }
 
     @Post('/logout')
-    @TokenOptional({ store: TypeORMStore })
+    @UseSessions({ store: TypeORMStore, required: false })
     async logout(ctx: Context) {
       if (ctx.session) {
         await ctx.session.destroy();

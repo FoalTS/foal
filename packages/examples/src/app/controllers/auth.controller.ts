@@ -6,12 +6,12 @@ import {
   Get,
   HttpResponse,
   HttpResponseRedirect,
-  TokenOptional,
+  UseSessions,
 } from '@foal/core';
 import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
-@TokenOptional({ cookie: true })
+@UseSessions({ cookie: true, required: false })
 export class AuthController {
   @dependency
   google: GoogleProvider;

@@ -214,8 +214,7 @@ export {
   SessionState,
   SessionStore,
   Store,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   createSession,
   readSession,
 } from './sessions';

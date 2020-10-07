@@ -12,7 +12,7 @@ import * as request from 'supertest';
 import {
   Context, controller, createApp, createSession, dependency, Get,
   hashPassword, HttpResponseOK, HttpResponseRedirect,
-  Post, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  Post, UseSessions, ValidateBody, verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -33,7 +33,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     password: string;
   }
 
-  @TokenRequired({ store: TypeORMStore, cookie: true })
+  @UseSessions({ store: TypeORMStore, cookie: true, required: true })
   class ApiController {
     @Get('/products')
     readProducts() {
@@ -57,8 +57,9 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       redirectTo: '/login',
       store: TypeORMStore,
     })
@@ -76,8 +77,9 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       redirectTo: '/login',
       store: TypeORMStore,
     })
@@ -99,8 +101,9 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     }
 
     @Post('/logout')
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       redirectTo: '/login',
       store: TypeORMStore,
     })
@@ -113,7 +116,7 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     }
 
     @Get('/home')
-    @TokenRequired({ store: TypeORMStore, cookie: true, redirectTo: '/login' })
+    @UseSessions({ store: TypeORMStore, cookie: true, redirectTo: '/login', required: true })
     home() {
       return new HttpResponseOK('Home page');
     }

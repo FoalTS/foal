@@ -16,8 +16,7 @@ import {
   HttpResponseOK,
   HttpResponseUnauthorized,
   Post,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -66,7 +65,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     });
   }
 
-  @TokenRequired({ user: fetchMongoDBUser(User), store: RedisStore })
+  @UseSessions({ user: fetchMongoDBUser(User), store: RedisStore, required: true, })
   class MyController {
     @Get('/foo')
     foo() {
@@ -85,7 +84,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     store: RedisStore;
 
     @Post('/logout')
-    @TokenOptional({ store: RedisStore })
+    @UseSessions({ store: RedisStore, required: false, })
     async logout(ctx: Context) {
       if (ctx.session) {
         await ctx.session.destroy();

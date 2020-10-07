@@ -6,7 +6,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Context, createApp, createSession, dependency, Get, HttpResponseOK, Session, TokenRequired
+  Context, createApp, createSession, dependency, Get, HttpResponseOK, Session, UseSessions
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -29,7 +29,7 @@ describe('The framework', () => {
     }
 
     @Get('/flash')
-    @TokenRequired({ store: TypeORMStore })
+    @UseSessions({ store: TypeORMStore, required: true, })
     async readFlash(ctx: Context<any, Session>) {
       return new HttpResponseOK({
         a: 'b',

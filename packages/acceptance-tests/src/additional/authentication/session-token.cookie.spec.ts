@@ -13,7 +13,7 @@ import {
   Context, controller, createApp, createSession, dependency,
   Get, hashPassword, HttpResponseNoContent,
   HttpResponseOK, HttpResponseUnauthorized,
-  Post, TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  Post, UseSessions, ValidateBody, verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 
@@ -34,7 +34,7 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
     password: string;
   }
 
-  @TokenRequired({ store: TypeORMStore, cookie: true })
+  @UseSessions({ store: TypeORMStore, cookie: true, required: true })
   class ApiController {
     @Get('/products')
     readProducts() {
@@ -58,8 +58,9 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       store: TypeORMStore,
     })
     async signup(ctx: Context) {
@@ -76,8 +77,9 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       store: TypeORMStore,
     })
     async login(ctx: Context) {
@@ -98,8 +100,9 @@ describe('[Authentication|session token|cookie|no redirection] Users', () => {
     }
 
     @Post('/logout')
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       store: TypeORMStore,
     })
     async logout(ctx: Context) {

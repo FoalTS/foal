@@ -31,10 +31,9 @@ import { readSession } from './read-session';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
-import { TokenOptional } from './token-optional.hook';
-import { TokenRequired } from './token-required.hook';
+import { UseSessions } from './use-sessions.hook';
 
-export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, required: boolean) {
+describe('UseSessions', () => {
 
   const anonymousSessionID = 'anonymousSessionIDxxxxxx';
   const authenticatedSessionID = 'authenticatedSessionIDxxxxxx';
@@ -114,7 +113,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   beforeEach(() => {
     ctx = createContext();
-    hook = getHookFunction(Token({ store: Store }));
+    hook = getHookFunction(UseSessions({ store: Store }));
     services = new ServiceManager();
   });
 
@@ -125,7 +124,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
   context('given no session store class is provided as option', () => {
 
-    beforeEach(() => hook = getHookFunction(Token({})));
+    beforeEach(() => hook = getHookFunction(UseSessions({})));
 
     it('should throw an error if the configuration value settings.session.store is empty.', () => {
       return rejects(
@@ -146,18 +145,23 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     context('given options.cookie is false or not defined', () => {
 
-      if (!required) {
+      context('given options.required is false or not defined', () => {
+
         it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
           const response = await hook(ctx, services);
 
           strictEqual(isHttpResponse(response), false);
           strictEqual(ctx.user, undefined);
         });
-      }
+
+      });
 
       context('given options.redirectTo is not defined', () => {
 
-        if (required) {
+        context('given options.required is true', () => {
+
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, required: true })));
+
           it('should return an HttpResponseBadRequest object if the Authorization header does not exist.', async () => {
             const response = await hook(ctx, services);
             if (!isHttpResponseBadRequest(response)) {
@@ -169,7 +173,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
               description: 'Authorization header not found.'
             });
           });
-        }
+
+        });
 
         it('should return an HttpResponseBadRequest object if the Authorization header does '
             + 'not use the Bearer scheme.', async () => {
@@ -190,9 +195,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       context('given options.redirectTo is defined', () => {
 
-        beforeEach(() => hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' })));
+        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, redirectTo: '/foo' })));
 
-        if (required) {
+        context('given options.required is true', () => {
+
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, required: true, redirectTo: '/foo' })));
+
           it('should return an HttpResponseRedirect object if the Authorization header does not exist.', async () => {
             const response = await hook(ctx, services);
             if (!isHttpResponseRedirect(response)) {
@@ -201,7 +209,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
             strictEqual(response.path, '/foo');
           });
-        }
+
+        });
 
         it('should return an HttpResponseBadRedirect object if the Authorization header does '
             + 'not use the Bearer scheme.', async () => {
@@ -221,20 +230,25 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     context('given options.cookie is true', () => {
 
-      beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
+      beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
 
-      if (!required) {
+      context('given options.required is false or not defined', () => {
+
         it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
           const response = await hook(ctx, services);
 
           strictEqual(isHttpResponse(response), false);
           strictEqual(ctx.user, undefined);
         });
-      }
+
+      });
 
       context('given options.redirectTo is not defined', () => {
 
-        if (required) {
+        context('given options.required is true', () => {
+
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, required: true })));
+
           it('should return an HttpResponseBadRequest object if the cookie does not exist.' , async () => {
             const response = await hook(ctx, services);
             if (!isHttpResponseBadRequest(response)) {
@@ -246,15 +260,23 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
               description: 'Session cookie not found.'
             });
           });
-        }
+        });
 
       });
 
       context('given options.redirectTo is defined', () => {
 
-        beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true, redirectTo: '/foo' })));
+        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, redirectTo: '/foo' })));
 
-        if (required) {
+        context('given options.required is true', () => {
+
+          beforeEach(() => hook = getHookFunction(UseSessions({
+            cookie: true,
+            redirectTo: '/foo',
+            required: true,
+            store: Store,
+          })));
+
           it('should return an HttpResponseRedirect object if the cookie does not exist.', async () => {
             const response = await hook(ctx, services);
             if (!isHttpResponseRedirect(response)) {
@@ -263,7 +285,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
             strictEqual(response.path, '/foo');
           });
-        }
+
+        });
 
       });
 
@@ -297,7 +320,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     context('given options.redirectTo is defined', () => {
 
-      beforeEach(() => hook = getHookFunction(Token({ store: Store, redirectTo: '/foo' })));
+      beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, redirectTo: '/foo' })));
 
       it('should return an HttpResponseRedirect object if no session matching the ID is found.', async () => {
         const response = await hook(ctx, services);
@@ -324,7 +347,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     context('given options.cookie is true', () => {
 
-      beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
+      beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
 
       it('should remove the cookie in the response if no session matching the ID is found.', async () => {
         ctx = createContext(
@@ -373,7 +396,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
       context('given options.cookie is true', () => {
 
-        beforeEach(() => hook = getHookFunction(Token({ store: Store, cookie: true })));
+        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
 
         function testUnprotectedMethod(method: HttpMethod) {
           it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
@@ -520,7 +543,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       Config.set('settings.session.cookie.name', 'auth2');
 
       ctx = createContext({}, { auth2: anonymousSessionID });
-      hook = getHookFunction(Token({ store: Store, cookie: true }));
+      hook = getHookFunction(UseSessions({ store: Store, cookie: true }));
 
       await hook(ctx, services);
 
@@ -571,7 +594,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
         beforeEach(() => {
           const fetchUser = async (id: number|string) => id === userId ? user : undefined;
-          hook = getHookFunction(Token({ store: Store, user: fetchUser }));
+          hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
         });
 
         it('with the user retrieved from the function options.user if it returns a user.', async () => {
@@ -585,7 +608,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
           const fetchUser = async (id: number|string) => undefined;
 
-          beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser })));
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
 
           it('with the undefined value and should destroy the session.', async () => {
             await hook(ctx, services);
@@ -617,7 +640,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
           context('given options.cookie is true', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(Token({ store: Store, user: fetchUser, cookie: true }));
+              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, cookie: true }));
               const token = ctx.request.get('Authorization');
               if (token) {
                 ctx = createContext(
@@ -670,7 +693,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
           context('given options.redirectTo is defined', () => {
 
-            beforeEach(() => hook = getHookFunction(Token({ store: Store, user: fetchUser, redirectTo: '/foo' })));
+            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, redirectTo: '/foo' })));
 
             it('with the null value and should return an HttpResponseRedirect object.', async () => {
               const response = await hook(ctx, services);
@@ -711,7 +734,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
 
     });
 
-    if (!required) {
+    context('given options.required is false or undefined', () => {
+
       context('given the ctx.session has not been set by the hook and has been set in the controller', () => {
 
         beforeEach(() => ctx = createContext());
@@ -719,7 +743,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         postHookTestHook(async () => readSession(services.get(Store), authenticatedSessionID));
 
       });
-    }
+
+    });
 
     function postHookTestHook(getSession: () => Promise<Session|null|void>) {
 
@@ -775,7 +800,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         context('given options.cookie is true', () => {
 
           beforeEach(() => {
-            hook = getHookFunction(Token({ store: Store, cookie: true }));
+            hook = getHookFunction(UseSessions({ store: Store, cookie: true }));
             const token = ctx.request.get('Authorization');
             if (token) {
               ctx = createContext(
@@ -862,7 +887,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         context('given options.cookie is true', () => {
 
           beforeEach(() => {
-            hook = getHookFunction(Token({ store: Store, cookie: true }));
+            hook = getHookFunction(UseSessions({ store: Store, cookie: true }));
             const token = ctx.request.get('Authorization');
             if (token) {
               ctx = createContext(
@@ -910,7 +935,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     afterEach(() => Config.remove('settings.session.csrf.enabled'));
 
     it('unless options.openapi is false.', () => {
-      @Token({ openapi: false })
+      @UseSessions({ openapi: false })
       class Foobar {}
 
       strictEqual(getApiSecurity(Foobar), undefined);
@@ -919,7 +944,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (cookie).', () => {
-      @Token({ cookie: true })
+      @UseSessions({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -938,7 +963,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     it('with the proper security scheme (cookie) (cookie name different).', () => {
       Config.set('settings.session.cookie.name', 'auth2');
 
-      @Token({ cookie: true })
+      @UseSessions({ cookie: true })
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -955,7 +980,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
     });
 
     it('with the proper security scheme (no cookie).', () => {
-      @Token()
+      @UseSessions()
       class Foobar {}
 
       const actualComponents = getApiComponents(Foobar, new Foobar());
@@ -970,10 +995,10 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       deepStrictEqual(actualComponents, expectedComponents);
     });
 
-    if (required) {
+    context('given options.required is true', () => {
 
       it('with the proper security requirement (cookie).', () => {
-        @Token({ cookie: true })
+        @UseSessions({ cookie: true, required: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -984,7 +1009,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with the proper security requirement (no cookie).', () => {
-        @Token()
+        @UseSessions({ required: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -995,7 +1020,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       function testResponses(options: { cookie: boolean }) {
-        @Token(options)
+        @UseSessions({ ...options, required: true })
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
@@ -1020,7 +1045,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('with the proper API responses (cookie & csrf protection).', () => {
         Config.set('settings.session.csrf.enabled', true);
 
-        @Token({ cookie: true })
+        @UseSessions({ cookie: true, required: true })
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
@@ -1029,10 +1054,12 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
       });
 
-    } else {
+    });
+
+    context('given options.required is false or undefined', () => {
 
       it('with no security requirement (cookie).', () => {
-        @Token({ cookie: true })
+        @UseSessions({ cookie: true })
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -1040,7 +1067,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       it('with no security requirement (no cookie).', () => {
-        @Token()
+        @UseSessions()
         class Foobar {}
 
         const actualSecurityRequirements = getApiSecurity(Foobar);
@@ -1048,7 +1075,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       });
 
       function testResponses(options: { cookie: boolean }) {
-        @Token(options)
+        @UseSessions(options)
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
@@ -1073,7 +1100,7 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
       it('with the proper API responses (cookie & csrf protection).', () => {
         Config.set('settings.session.csrf.enabled', true);
 
-        @Token({ cookie: true })
+        @UseSessions({ cookie: true })
         class Foobar {}
 
         deepStrictEqual(getApiResponses(Foobar), {
@@ -1082,8 +1109,8 @@ export function testSuite(Token: typeof TokenRequired|typeof TokenOptional, requ
         });
       });
 
-    }
+    });
 
   });
 
-}
+});
