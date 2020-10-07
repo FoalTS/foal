@@ -15,6 +15,7 @@ try {
 export {
   Log,
   LogOptions,
+  UserRequired,
   ValidateBody,
   ValidateCookie,
   ValidateHeader,
