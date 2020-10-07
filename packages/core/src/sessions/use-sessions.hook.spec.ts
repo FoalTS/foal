@@ -161,6 +161,30 @@ describe('UseSessions', () => {
             strictEqual(ctx.user, undefined);
           });
 
+          context('given options.create is false or undefined', async () => {
+
+            it('should let ctx.session equal undefined.', async () => {
+              await hook(ctx, services);
+
+              strictEqual(ctx.session, undefined);
+            });
+
+          });
+
+          context('given options.create is true', async () => {
+
+            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, create: true })));
+
+            it('should create a new session and assign it to ctx.session.', async () => {
+              await hook(ctx, services);
+
+              if (!(ctx.session instanceof Session)) {
+                throw new Error('A new session should have been assigned to ctx.session.');
+              }
+            });
+
+          });
+
         });
 
         context('given options.required is true', () => {
@@ -261,6 +285,44 @@ describe('UseSessions', () => {
             await hook(ctx, services);
 
             strictEqual(ctx.user, undefined);
+          });
+
+          context('given options.create is not defined', async () => {
+
+            it('should create a new session and assign it to ctx.session.', async () => {
+              await hook(ctx, services);
+
+              if (!(ctx.session instanceof Session)) {
+                throw new Error('A new session should have been assigned to ctx.session.');
+              }
+            });
+
+          });
+
+          context('given options.create is false', async () => {
+
+            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, create: false })));
+
+            it('should let ctx.session equal undefined.', async () => {
+              await hook(ctx, services);
+
+              strictEqual(ctx.session, undefined);
+            });
+
+          });
+
+          context('given options.create is true', async () => {
+
+            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, create: true })));
+
+            it('should create a new session and assign it to ctx.session.', async () => {
+              await hook(ctx, services);
+
+              if (!(ctx.session instanceof Session)) {
+                throw new Error('A new session should have been assigned to ctx.session.');
+              }
+            });
+
           });
 
         });

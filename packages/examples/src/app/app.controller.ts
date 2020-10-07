@@ -14,7 +14,7 @@ export class AppController {
   ];
 
   @Get('/')
-  @UseSessions({ cookie: true, store: TypeORMStore, redirectTo: '/signin', required: true, })
+  @UseSessions({ cookie: true, store: TypeORMStore, redirectTo: '/signin' })
   index(ctx: Context<any, Session>) {
     return render('./templates/index.html', {
       userInfo: JSON.stringify(ctx.session.get('userInfo'))

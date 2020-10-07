@@ -86,9 +86,9 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (!content) {
         if (!options.required) {
-          // if (options.create ?? true) {
-          //   ctx.session = await createSession(store);
-          // }
+          if (options.create ?? true) {
+            ctx.session = await createSession(store);
+          }
           return postFunction;
         }
         return badRequestOrRedirect('Session cookie not found.');
@@ -100,9 +100,9 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (!authorizationHeader) {
         if (!options.required) {
-          // if (options.create) {
-          //   ctx.session = await createSession(store);
-          // }
+          if (options.create) {
+            ctx.session = await createSession(store);
+          }
           return postFunction;
         }
         return badRequestOrRedirect('Authorization header not found.');
