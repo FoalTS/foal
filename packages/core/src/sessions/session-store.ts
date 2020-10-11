@@ -91,6 +91,8 @@ export abstract class Store {
    * @memberof Store
    */
   abstract cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void>;
+
+  boot(): void|Promise<void> {}
 }
 
 export { Store as SessionStore };
