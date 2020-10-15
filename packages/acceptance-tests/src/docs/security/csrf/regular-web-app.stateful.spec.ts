@@ -76,8 +76,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     @Get('/products')
     @UseSessions({
       cookie: true,
-      required: true,
       redirectTo: '/login',
+      required: true,
       // Nothing in documentation
       store: TypeORMStore,
     })
@@ -94,8 +94,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
   // api.controller.ts
   @UseSessions({
     cookie: true,
-    required: true,
     redirectTo: '/login',
+    required: true,
     // Nothing in documentation
     store: TypeORMStore,
   })

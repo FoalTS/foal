@@ -59,8 +59,8 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     @ValidateBody(credentialsSchema)
     @UseSessions({
       cookie: true,
-      required: false,
       redirectTo: '/login',
+      required: false,
       store: TypeORMStore,
     })
     async signup(ctx: Context) {
@@ -79,8 +79,8 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     @ValidateBody(credentialsSchema)
     @UseSessions({
       cookie: true,
-      required: false,
       redirectTo: '/login',
+      required: false,
       store: TypeORMStore,
     })
     async login(ctx: Context) {
@@ -103,8 +103,8 @@ describe('[Authentication|session token|cookie|redirection] Users', () => {
     @Post('/logout')
     @UseSessions({
       cookie: true,
-      required: false,
       redirectTo: '/login',
+      required: false,
       store: TypeORMStore,
     })
     async logout(ctx: Context) {

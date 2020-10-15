@@ -774,7 +774,9 @@ describe('UseSessions', () => {
 
           context('given options.redirectTo is defined', () => {
 
-            beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, redirectTo: '/foo' })));
+            beforeEach(() => {
+              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+            });
 
             it('with the null value and should return an HttpResponseRedirect object.', async () => {
               const response = await hook(ctx, services);
