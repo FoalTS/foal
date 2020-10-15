@@ -195,7 +195,7 @@ export class ApiController {
   store: Store;
 
   @Post('/login')
-  login(ctx: Context) {
+  async login(ctx: Context) {
     // Check the user credentials...
 
     ctx.session = await createSession(this.store);
@@ -204,8 +204,8 @@ export class ApiController {
     // to see how to associate a user to the session.
 
     return new HttpResponseOK({
-      token: ctx.session.getToken();
-    })
+      token: ctx.session.getToken()
+    });
   }
 
   @Get('/products')
@@ -232,7 +232,7 @@ export class ApiController {
 
   @Post('/login')
   @UseSessions()
-  login(ctx: Context) {
+  async login(ctx: Context) {
     // Check the user credentials...
 
     ctx.session = await createSession(this.store);
@@ -241,8 +241,8 @@ export class ApiController {
     // to see how to associate a user to the session.
 
     return new HttpResponseOK({
-      token: ctx.session.getToken();
-    })
+      token: ctx.session.getToken()
+    });
   }
 
   @Get('/products')
@@ -266,7 +266,7 @@ export class ApiController {
 When using the `@UseSessions` hook with the `cookie` option, FoalTS makes sure that `ctx.session` is always set and takes care of managing the session token on the client (using a cookie).
 
 ```typescript
-import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { Context, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
 @UseSessions({ cookie: true })
 export class ApiController {
@@ -297,7 +297,7 @@ If the session has expired, the hook returns a 401 error. If you want to redirec
 
 ```typescript
 @UseSessions({
-  cookie: true;
+  cookie: true,
   redirectTo: '/login'
 })
 export class ApiController {
@@ -335,7 +335,7 @@ export class ApiController {
   store: Store;
 
   @Post('/login')
-  login(ctx: Context) {
+  async login(ctx: Context) {
     // Check the user credentials...
     // const user = ...
 
@@ -345,8 +345,8 @@ export class ApiController {
     ctx.session.setUser(user);
 
     return new HttpResponseOK({
-      token: ctx.session.getToken();
-    })
+      token: ctx.session.getToken()
+    });
   }
 
   @Get('/products')
@@ -413,7 +413,7 @@ export class ApiController {
 Sessions can be destroyed (i.e users can be logged out) using their `destroy` method.
 
 ```typescript
-import { Context, dependency, HttpResponseNoContent, Session } from '@foal/core';
+import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
 
 export class AuthController {
 
@@ -440,19 +440,18 @@ import { Context, HttpResponseNoContent, Post, Session, UseSessions } from '@foa
 export class ApiController {
 
   @Post('/subscribe')
-  purchase(ctx: Context<any, Session>) {
+  suscribe(ctx: Context<any, Session>) {
     const plan = ctx.session.get<string>('plan', 'free');
     // ...
   }
 
   @Post('/choose-premium-plan')
-  addToCart(ctx: Context<any, Session>) {
+  choosePremimumPlan(ctx: Context<any, Session>) {
     ctx.session.set('plan', 'premium');
     return new HttpResponseNoContent();
   }
 }
 ```
-
 
 ### Flash Content
 
@@ -531,7 +530,7 @@ foal g script revoke-session
 Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
-import { createService, Session, Store } from '@foal/core';
+import { createService, readSession, Store } from '@foal/core';
 import { createConnection } from 'typeorm';
 
 export const schema = {
@@ -651,14 +650,14 @@ export class ApiController {
   store: RedisStore;
 
   @Post('/login')
-  login(ctx: Context) {
+  async login(ctx: Context) {
     // Check the user credentials...
 
     ctx.session = await createSession(this.store);
 
     return new HttpResponseOK({
-      token: ctx.session.getToken();
-    })
+      token: ctx.session.getToken()
+    });
   }
 
   @Get('/products')
@@ -873,7 +872,7 @@ import { Get, HttpResponseOK, UseSessions } from '@foal/core';
 export class ApiController {
 
   @Get('/products')
-  @UseSessions({ cookie: true })
+  @UseSessions({ cookie: true, required: true })
   readProducts() {
     return new HttpResponseOK([]);
   }
@@ -886,12 +885,13 @@ export class ApiController {
 The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` function.
 
 ```typescript
-const token = // ...
+import { readSession } from '@foal/core';
+
 const session = await readSession(store, token);
 if (!session) {
   throw new Error('Session does not exist or has expired.')
 }
-const userId = session.get('userId');
+const foo = session.get('foo');
 ```
 
 ### Save Manually a Session
@@ -899,5 +899,5 @@ const userId = session.get('userId');
 The `@UseSessions` hook automatically saves the session state on each request. If you need to manually save a session (for example in a shell script), you can do it with the `commit` method.
 
 ```typescript
-session.commit()
+await session.commit();
 ```
