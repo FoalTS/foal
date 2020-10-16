@@ -47,7 +47,7 @@ settings:
 {% endcode-tabs-item %}
 {% code-tabs-item title="JS" %}
 ```javascript
-module.exports =   {
+module.exports = {
   settings: {
     jwt: {
       secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
