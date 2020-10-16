@@ -348,7 +348,7 @@ export class AuthController {
       id: user.id,
     };
     
-    return promisify(sign)(
+    return promisify(sign as any)(
       payload,
       getSecretOrPrivateKey(),
       { subject: user.id.toString() }
@@ -378,7 +378,7 @@ export class ApiController {
 }
 ```
 
-### SPA, 3rd party APIs, Mobile (bearer tokens)
+### SPA, 3rd party APIs, Mobile (Authorization header)
 
 In these implementations, the user logs in with the route `POST /auth/login` and receives a token in exchange in the response body. Then, when the client makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.
 
@@ -420,7 +420,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, createSession, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Session, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, createSession, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -441,7 +441,7 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<any, Session>) {
+  async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
@@ -451,13 +451,13 @@ export class AuthController {
     ctx.session.setUser(user);
 
     return new HttpResponseOK({
-      token: session.getToken()
+      token: ctx.session.getToken()
     });
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<any, Session>) {
+  async login(ctx: Context) {
     const user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user) {
@@ -472,7 +472,7 @@ export class AuthController {
     ctx.session.setUser(user);
 
     return new HttpResponseOK({
-      token: session.getToken()
+      token: ctx.session.getToken()
     });
   }
 
@@ -490,9 +490,15 @@ export class AuthController {
 *src/app/controllers/api.controller.ts*
 ```typescript
 import { Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+
+import { User } from '../entities';
 
 // The `request` option returns a pretty message if the Authorization header is not here.
-@UseSessions({ required: true })
+@UseSessions({
+  required: true,
+  user: fetchUser(User)
+})
 @UserRequired()
 export class ApiController {
   @Get('/products')
@@ -637,7 +643,7 @@ export class AuthController {
       id: user.id,
     };
     
-    return promisify(sign)(
+    return promisify(sign as any)(
       payload,
       getSecretOrPrivateKey(),
       { subject: user.id.toString() }
@@ -684,11 +690,16 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { Context, controller, dependency, Get, IAppController, render, Session, Store, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
 import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
+import { User } from './entities';
 
-@UseSessions({ cookie: true })
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User)
+})
 export class AppController implements IAppController {
   // This line is required.
   @dependency
@@ -712,7 +723,7 @@ export class AppController implements IAppController {
   @Get('/login')
   login(ctx: Context<any, Session>) {
     return render('./templates/login.html', {
-      errorMessage: ctx.session.get<string|undefined>('errorMessage');
+      errorMessage: ctx.session.get<string>('errorMessage', '')
     });
   }
 
@@ -792,4 +803,24 @@ export class ApiController {
     return new HttpResponseOK([]);
   }
 }
+```
+
+*templates/login.html*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+  {{ errorMessage }}
+  <form action="/auth/login" method="post">
+    <input type="email" name="email" id="email">
+    <input type="password" name="password" id="password">
+    <input type="submit" value="Log In">
+  </form>
+</body>
+</html>
 ```
