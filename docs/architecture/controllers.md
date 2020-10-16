@@ -303,12 +303,12 @@ class AppController {
   index() {
     return new HttpResponseOK()
       .setCookie('sessionID', 'xxxx', {
-        domain: 'example.com'
+        domain: 'example.com',
         // expires: new Date(2020, 12, 12),
         httpOnly: true,
         maxAge: 3600,
         path: '/',
-        secure: true
+        secure: true,
         sameSite: 'lax',
       });
   }
