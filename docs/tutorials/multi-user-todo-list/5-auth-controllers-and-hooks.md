@@ -72,7 +72,7 @@ Open the new file `auth.controller.ts` and replace its content.
 // 3p
 import {
   Context, dependency, HttpResponseRedirect, Post,
-  TokenOptional, TokenRequired, ValidateBody, verifyPassword
+  UseSessions, ValidateBody, verifyPassword
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -94,8 +94,9 @@ export class AuthController {
     required: ['email', 'password'],
     type: 'object',
   })
-  @TokenOptional({
+  @UseSessions({
     cookie: true,
+    required: false,
     redirectTo: '/signin',
     store: TypeORMStore,
   })
@@ -121,8 +122,9 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @TokenOptional({
+  @UseSessions({
     cookie: true,
+    required: false,
     redirectTo: '/signin',
     store: TypeORMStore,
   })
@@ -143,16 +145,16 @@ export class AuthController {
 
 Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
 
-## The TokenRequired Hook
+## The UseSessions Hook
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `TokenRequired` which returns a 401 error or redirects the user if user is not logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `UseSessions` which returns a 401 error or redirects the user if user is not logged in. 
 
 Update `app.controller.ts`.
 
 ```typescript
-import { controller, Get, render, TokenRequired } from '@foal/core';
+import { controller, Get, render, UseSessions } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
@@ -160,9 +162,10 @@ import { ApiController, AuthController } from './controllers';
 export class AppController {
 
   @Get('/')
-  @TokenRequired({
+  @UseSessions({
     // The session token is expected to be in a cookie.
     cookie: true,
+    required: true,
     // Redirect the user to /signin if user is not logged in.
     redirectTo: '/signin',
     // Specify the "store" where the session was created.
@@ -183,7 +186,7 @@ Update `api.controller.ts`.
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  TokenRequired, ValidateBody, ValidatePathParam
+  UseSessions, ValidateBody, ValidatePathParam
 } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -191,8 +194,9 @@ import { getRepository } from 'typeorm';
 import { Todo, User } from '../entities';
 
 
-@TokenRequired({
+@UseSessions({
   cookie: true,
+  required: true,
   store: TypeORMStore,
   // Make ctx.user be an instance of User.
   user: fetchUser(User),

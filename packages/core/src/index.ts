@@ -15,6 +15,7 @@ try {
 export {
   Log,
   LogOptions,
+  UserRequired,
   ValidateBody,
   ValidateCookie,
   ValidateHeader,
@@ -213,8 +214,7 @@ export {
   SessionState,
   SessionStore,
   Store,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   createSession,
   readSession,
 } from './sessions';

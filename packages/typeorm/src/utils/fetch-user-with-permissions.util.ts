@@ -9,8 +9,7 @@ import { getRepository } from 'typeorm';
  * It returns undefined if no entity can be found.
  *
  * This function is usually used by:
- * - TokenRequired (@foal/core)
- * - TokenOptional (@foal/core)
+ * - UseSessions (@foal/core)
  * - JWTRequired (@foal/jwt)
  * - JWTOptional (@foal/jwt)
  *

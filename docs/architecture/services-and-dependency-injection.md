@@ -28,6 +28,12 @@ You can access a service from a controller using the `@dependency` decorator.
 ```typescript
 import { dependency, Get, HttpResponseOK } from '@foal/core';
 
+class Logger {
+  log(message: string) {
+    console.log(`${new Date()} - ${message}`);
+  }
+}
+
 class AppController {
   @dependency
   logger: Logger
@@ -38,12 +44,6 @@ class AppController {
     return new HttpResponseOK('Hello world!');
   }
 
-}
-
-class Logger {
-  log(message: string) {
-    console.log(`${new Date()} - ${message}`);
-  }
 }
 ```
 
@@ -109,7 +109,7 @@ import { dependency } from '@foal/core';
 
 class ConversionService {
   celsiusToFahrenheit(temperature: number): number {
-    return temperature * 9/5 + 32;
+    return temperature * 9 / 5 + 32;
   }
 }
 
@@ -152,8 +152,9 @@ In many situations, it is necessary to mock the dependencies to truly write *uni
 import { dependency } from '@foal/core';
 
 class TwitterService {
-  fetchLastTweets() {
+  fetchLastTweets(): { msg: string }[] {
     // Make a call to the Twitter API to get the last tweets.
+    return [];
   }
 }
 
@@ -181,8 +182,8 @@ it('DetectorService', () => {
   const twitterMock = {
     fetchLastTweets() {
       return [
-        { message: 'Hello world!' },
-        { message: 'I LOVE FoalTS' },
+        { msg: 'Hello world!' },
+        { msg: 'I LOVE FoalTS' },
       ]
     }
   }
@@ -257,7 +258,7 @@ export abstract class Logger {
   static concreteClassConfigPath = 'logger.driver';
   static concreteClassName = 'ConcreteLogger';
 
-  abstract log(str: string);
+  abstract log(str: string): void;
 }
 ```
 
@@ -410,7 +411,7 @@ export class ApiController {
 In very rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
 
 ```typescript
-import { dependency, ServiceManager } from '@foal/core';
+import { dependency, Get, HttpResponseOK, ServiceManager } from '@foal/core';
 
 class MyService {
   foo() {
@@ -422,8 +423,10 @@ class MyController {
   @dependency
   services: ServiceManager;
 
+  @Get('/bar')
   bar() {
-    return this.services.get(MyService).foo();
+    const msg = this.services.get(MyService).foo();
+    return new HttpResponseOK(msg);
   }
 }
 ```

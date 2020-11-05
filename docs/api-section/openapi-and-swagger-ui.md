@@ -291,11 +291,37 @@ export class ApiController {
 
 You can disable this behavior globally with the [configuration key](../deployment-and-environments/configuration.md) `setting.openapi.useHooks`.
 
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
 ```yaml
 settings:
   openapi:
     useHooks: false
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "openapi": {
+      "useHooks": false
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    openapi: {
+      useHooks: false
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 You can also disable it on a specific hook with the `openapi` option.
 

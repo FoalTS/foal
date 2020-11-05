@@ -14,7 +14,6 @@ export {
 } from './file';
 export {
   LocalDisk,
-  LocalDisk as ConcreteDisk,
 } from './local-disk.service';
 export {
   MultipartFormDataSchema,

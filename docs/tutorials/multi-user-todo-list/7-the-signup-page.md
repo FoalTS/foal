@@ -12,7 +12,7 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, dependency, HttpResponseRedirect, Post, TokenOptional, ValidateBody } from '@foal/core';
+import { Context, dependency, HttpResponseRedirect, Post, UseSessions, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
 import { TypeORMStore } from '@foal/typeorm';
 import { getRepository } from 'typeorm';
@@ -34,8 +34,9 @@ export class SignupController {
     required: [ 'email', 'password' ],
     type: 'object',
   })
-  @TokenOptional({
+  @UseSessions({
     cookie: true,
+    required: false,
     redirectTo: '/signin',
     store: TypeORMStore,
   })

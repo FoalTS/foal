@@ -17,10 +17,9 @@ import {
   HttpResponseNoContent,
   HttpResponseUnauthorized,
   Post,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   ValidateBody,
-  verifyPassword
+  verifyPassword,
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
@@ -37,8 +36,9 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       // Nothing in documentation
       store: TypeORMStore,
     })
@@ -61,8 +61,9 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
   }
 
   // api.controller.ts
-  @TokenRequired({
+  @UseSessions({
     cookie: true,
+    required: true,
     // Nothing in documentation
     store: TypeORMStore,
   })

@@ -10,7 +10,7 @@ import {
   ServiceManager,
   Session,
   SessionStore,
-  TokenRequired,
+  UseSessions,
 } from '@foal/core';
 
 import { strictEqual } from 'assert';
@@ -61,7 +61,7 @@ describe('The session store', () => {
       }
 
       @Get('/products')
-      @TokenRequired()
+      @UseSessions({ required: true })
       readProducts(ctx: Context<any, Session>) {
         return new HttpResponseOK(ctx.session.get('products'));
       }

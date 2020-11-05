@@ -1,16 +1,17 @@
 // 3p
 import {
   Context,
-  createSession,
   dependency,
   Get,
   HttpResponse,
   HttpResponseRedirect,
-  setSessionCookie,
+  Session,
+  UseSessions,
 } from '@foal/core';
 import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
+@UseSessions({ cookie: true })
 export class AuthController {
   @dependency
   google: GoogleProvider;
@@ -33,9 +34,9 @@ export class AuthController {
   }
 
   @Get('/signin/google/cb')
-  async handleGoogleRedirection(ctx: Context) {
+  async handleGoogleRedirection(ctx: Context<any, Session>) {
     const { userInfo } = await this.google.getUserInfo(ctx);
-    return this.createSessionAndSaveUserInfo(userInfo);
+    return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
   @Get('/signin/facebook')
@@ -44,9 +45,9 @@ export class AuthController {
   }
 
   @Get('/signin/facebook/cb')
-  async handleFacebookRedirection(ctx: Context) {
+  async handleFacebookRedirection(ctx: Context<any, Session>) {
     const { userInfo } = await this.facebook.getUserInfo(ctx);
-    return this.createSessionAndSaveUserInfo(userInfo);
+    return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
   @Get('/signin/github')
@@ -55,9 +56,9 @@ export class AuthController {
   }
 
   @Get('/signin/github/cb')
-  async handleGithubRedirection(ctx: Context) {
+  async handleGithubRedirection(ctx: Context<any, Session>) {
     const { userInfo } = await this.github.getUserInfo(ctx);
-    return this.createSessionAndSaveUserInfo(userInfo);
+    return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
   @Get('/signin/linkedin')
@@ -66,19 +67,16 @@ export class AuthController {
   }
 
   @Get('/signin/linkedin/cb')
-  async handleLinkedInRedirection(ctx: Context) {
+  async handleLinkedInRedirection(ctx: Context<any, Session>) {
     const { userInfo } = await this.linkedin.getUserInfo(ctx);
-    return this.createSessionAndSaveUserInfo(userInfo);
+    return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
-  private async createSessionAndSaveUserInfo(userInfo: any): Promise<HttpResponse> {
-    const session = await createSession(this.store);
-    session.set('userInfo', userInfo);
-    await session.commit();
+  private async createSessionAndSaveUserInfo(userInfo: any, ctx: Context<any, Session>): Promise<HttpResponse> {
+    ctx.session.set('userInfo', userInfo);
+    ctx.session.regenerateID();
 
-    const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session);
-    return response;
+    return new HttpResponseRedirect('/');
   }
 
 }

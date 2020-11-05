@@ -106,7 +106,7 @@ import {
   HttpResponseUnauthorized,
   Post,
   Store,
-  TokenOptional,
+  UseSessions,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -121,8 +121,9 @@ export class AuthController {
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  @TokenOptional({
-    cookie: true
+  @UseSessions({
+    cookie: true,
+    required: false,
   })
   async login(ctx: Context) {
     const user = await User.findOne({ email: ctx.request.body.email });
@@ -145,10 +146,11 @@ export class AuthController {
 
 *api.controller.ts*
 ```typescript
-import { HttpResponseCreated, TokenRequired } from '@foal/core';
+import { HttpResponseCreated, UseSessions } from '@foal/core';
 
-@TokenRequired({
+@UseSessions({
   cookie: true,
+  required: true,
 })
 export class ApiController {
   @Post('/products')
@@ -280,7 +282,7 @@ import {
   HttpResponseRedirect,
   Post,
   Store,
-  TokenOptional,
+  UseSessions,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -295,8 +297,9 @@ export class AuthController {
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  @TokenOptional({
-    cookie: true
+  @UseSessions({
+    cookie: true,
+    required: false,
   })
   async login(ctx: Context) {
     const user = await User.findOne({ email: ctx.request.body.email });
@@ -326,7 +329,7 @@ import {
   render,
   Session,
   Store,
-  TokenRequired,
+  UseSessions,
 } from '@foal/core';
 
 import { User } from '../entities';
@@ -341,8 +344,9 @@ export class ViewController {
   }
 
   @Get('/products')
-  @TokenRequired({
+  @UseSessions({
     cookie: true,
+    required: true,
     redirectTo: '/login'
   })
   async index(ctx: Context<User, Session>) {
@@ -357,10 +361,11 @@ export class ViewController {
 
 *api.controller.ts*
 ```typescript
-import { HttpResponseRedirect, TokenRequired } from '@foal/core';
+import { HttpResponseRedirect, UseSessions } from '@foal/core';
 
-@TokenRequired({
+@UseSessions({
   cookie: true,
+  required: true,
   redirectTo: '/login'
 })
 export class ApiController {

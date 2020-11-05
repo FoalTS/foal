@@ -217,7 +217,7 @@ settings:
 ```javascript
 const { Env } = require('@foal/core');
 
-module.exports =   {
+module.exports = {
   settings: {
     jwt: {
       secret: Env.get('JWT_SECRET'),

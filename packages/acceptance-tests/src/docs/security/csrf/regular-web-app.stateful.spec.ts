@@ -19,8 +19,7 @@ import {
   Post,
   render,
   Session,
-  TokenOptional,
-  TokenRequired,
+  UseSessions,
   ValidateBody,
   verifyPassword
 } from '@foal/core';
@@ -39,8 +38,9 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    @TokenOptional({
+    @UseSessions({
       cookie: true,
+      required: false,
       // Nothing in documentation
       store: TypeORMStore,
     })
@@ -74,9 +74,10 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     }
 
     @Get('/products')
-    @TokenRequired({
+    @UseSessions({
       cookie: true,
       redirectTo: '/login',
+      required: true,
       // Nothing in documentation
       store: TypeORMStore,
     })
@@ -91,9 +92,10 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
   }
 
   // api.controller.ts
-  @TokenRequired({
+  @UseSessions({
     cookie: true,
     redirectTo: '/login',
+    required: true,
     // Nothing in documentation
     store: TypeORMStore,
   })
