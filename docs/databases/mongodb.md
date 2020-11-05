@@ -34,7 +34,7 @@ database:
 {% endcode-tabs-item %}
 {% code-tabs-item title="JS" %}
 ```javascript
-module.exports =   {
+module.exports = {
   database: {
     type: "mongodb",
     url: "mongodb://localhost:27017/test-foo-bar"

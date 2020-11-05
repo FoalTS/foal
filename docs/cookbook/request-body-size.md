@@ -23,7 +23,7 @@ settings:
 {% endcode-tabs-item %}
 {% code-tabs-item title="JS" %}
 ```javascript
-module.exports =   {
+module.exports = {
   settings: {
     bodyParser: {
       limit: "50mb"

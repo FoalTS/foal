@@ -49,7 +49,7 @@ settings:
 ```javascript
 const { Env } = require('@foal/core');
 
-module.exports =   {
+module.exports = {
   settings: {
     jwt: {
       secret: Env.get('SETTINGS_JWT_SECRET')
@@ -113,7 +113,7 @@ In addition to the JSON and YAML formats, configuration files can now also be wr
 ```javascript
 const { Env } = require('@foal/core');
 
-module.exports =   {
+module.exports = {
   settings: {
     debug: false,
     jwt: {

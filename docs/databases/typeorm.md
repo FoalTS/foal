@@ -91,7 +91,7 @@ database:
 {% endcode-tabs-item %}
 {% code-tabs-item title="JS" %}
 ```javascript
-module.exports =   {
+module.exports = {
   database: {
     database: "./db.sqlite3",
   }
