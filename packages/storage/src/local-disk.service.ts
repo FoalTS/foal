@@ -119,3 +119,5 @@ export class LocalDisk extends Disk {
   }
 
 }
+
+export { LocalDisk as ConcreteDisk };
