@@ -1,5 +1,8 @@
 # Todos & Ownership
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
+
 Currently the API returns everyone's todos to each user. This is not the expected behavior. We would like that each user has access to only his or her tasks.
 
 Go back to the `ApiController` and update the `getTodos` route.
@@ -7,7 +10,7 @@ Go back to the `ApiController` and update the `getTodos` route.
 ```typescript
   @Get('/todos')
   async getTodos(ctx: Context) {
-    const todos = await getRepository(Todo).find({ owner: ctx.user });
+    const todos = await Todo.find({ owner: ctx.user });
     return new HttpResponseOK(todos);
   }
 ```
@@ -42,7 +45,7 @@ Update the api controller.
     // Make the current user the owner of the todo.
     todo.owner = ctx.user;
 
-    await getRepository(Todo).save(todo);
+    await todo.save()
 
     return new HttpResponseCreated(todo);
   }
@@ -50,7 +53,7 @@ Update the api controller.
   @Delete('/todos/:id')
   @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
-    const todo = await getRepository(Todo).findOne({
+    const todo = await Todo.findOne({
       id: ctx.request.params.id,
       // Do not return the todo if it does not belong to the current user.
       owner: ctx.user
@@ -58,7 +61,7 @@ Update the api controller.
     if (!todo) {
       return new HttpResponseNotFound();
     }
-    await getRepository(Todo).remove(todo);
+    await todo.remove()
     return new HttpResponseNoContent();
   }
 ```

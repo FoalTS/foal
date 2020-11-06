@@ -1,5 +1,8 @@
 # The Sign Up Page
 
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
+
 The sign up page, that is served in the app controller, makes a request `POST /signup` when the button `Create an account` is pressed.
 
 Create a new controller to handle this route.
@@ -12,17 +15,13 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, dependency, HttpResponseRedirect, Post, UseSessions, ValidateBody } from '@foal/core';
+import { Context, HttpResponseRedirect, Post, Store, UseSessions, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
-import { TypeORMStore } from '@foal/typeorm';
-import { getRepository } from 'typeorm';
 
 // App
 import { User } from '../entities';
 
 export class SignupController {
-  @dependency
-  store: TypeORMStore;
 
   @Post()
   @ValidateBody({
@@ -35,32 +34,30 @@ export class SignupController {
     type: 'object',
   })
   @UseSessions({
-    cookie: true,
-    required: false,
-    redirectTo: '/signin',
-    store: TypeORMStore,
+    cookie: true
   })
   async signup(ctx: Context) {
     // Check that the password is not too common.
     if (await isCommon(ctx.request.body.password)) {
-      return new HttpResponseRedirect('/signup?password_too_common=true');
+      ctx.session.set('error', 'Password too password.', { flash: true });
+      return new HttpResponseRedirect('/signup');
     }
 
     // Check that no user has already signed up with this email.
     let user = await getRepository(User).findOne({ email: ctx.request.body.email });
     if (user) {
-      return new HttpResponseRedirect('/signup?email_already_taken=true');
+      ctx.session.set('error', 'Email already taken.', { flash: true });
+      return new HttpResponseRedirect('/signup');
     }
 
     // Create the user.
     user = new User();
     user.email = ctx.request.body.email;
     await user.setPassword(ctx.request.body.password);
-    await getRepository(User).save(user);
+    await user.save();
 
-    // Create the user session.
-    ctx.session = await createSession(this.store);
-    ctx.session = session.setUser(user);
+    // Log the user in.
+    ctx.session.setUser(user);
 
     // Redirect the user to her/his to-do list.
     return new HttpResponseRedirect('/');

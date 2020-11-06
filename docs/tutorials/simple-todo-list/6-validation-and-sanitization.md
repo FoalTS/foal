@@ -1,5 +1,9 @@
 # Validation and Sanitization
 
+
+> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
+
+
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
 
 You will use the `ValidateBody` and `ValidatePathParam` hooks to validate and sanitize incoming data.
@@ -24,7 +28,6 @@ export class ApiController {
 
   @Post('/todos')
   @ValidateBody({
-    // The body request should be an object once parsed by the framework.
     // Every additional properties that are not defined in the "properties"
     // object should be removed.
     additionalProperties: false,
@@ -34,13 +37,14 @@ export class ApiController {
     },
     // The property "text" is required.
     required: [ 'text' ],
+    // The body request should be an object once parsed by the framework.
     type: 'object',
   })
   async postTodo(ctx: Context) {
     const todo = new Todo();
     todo.text = ctx.request.body.text;
 
-    await getRepository(Todo).save(todo);
+    await todo.save();
 
     return new HttpResponseCreated(todo);
   }
@@ -53,7 +57,7 @@ export class ApiController {
     if (!todo) {
       return new HttpResponseNotFound();
     }
-    await getRepository(Todo).remove(todo);
+    await todo.remove();
     return new HttpResponseNoContent();
   }
 

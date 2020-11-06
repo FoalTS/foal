@@ -40,9 +40,7 @@ export async function main(args: { email: string; password: string }) {
     }
     await user.setPassword(args.password);
 
-    console.log(
-      await connection.manager.save(user)
-    );
+    console.log(await user.save());
   } catch (error) {
     console.log(error.message);
   } finally {
@@ -105,7 +103,7 @@ export const schema = {
 export async function main(args: { owner: string; text: string }) {
   const connection = await createConnection();
   try {
-    const user = await connection.getRepository(User).findOne({ email: args.owner });
+    const user = await User.findOne({ email: args.owner });
 
     if (!user) {
       console.log('No user was found with the email ' + args.owner);
@@ -116,9 +114,7 @@ export async function main(args: { owner: string; text: string }) {
     todo.text = args.text;
     todo.owner = user;
 
-    console.log(
-      await connection.manager.save(todo)
-    );
+    console.log(await todo.save());
   } catch (error) {
     console.log(error.message);
   } finally {

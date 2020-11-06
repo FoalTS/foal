@@ -15,7 +15,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 ## By topic
 
 - [Validation hooks](./validation-hooks.md)
-- [Authentication with sessions (session tokens) and CSRF protection]()
+- [Authentication with sessions (session tokens) and CSRF protection](./session-tokens.md)
 - [OpenAPI](./openapi.md)
 - [Service and application initialization](./service-and-app-initialization.md)
 - [File upload and download](./file-upload-and-download.md)

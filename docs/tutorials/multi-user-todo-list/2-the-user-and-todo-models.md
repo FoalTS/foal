@@ -17,10 +17,10 @@ Add the `email` and `password` properties and the `setPassword` method.
 
 ```typescript
 import { hashPassword } from '@foal/core';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -48,11 +48,11 @@ The Todo model defined in the previous tutorial now needs a `owner` property to 
 Replace the content of `todo.entity.ts`.
 
 ```typescript
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
-export class Todo {
+export class Todo extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
