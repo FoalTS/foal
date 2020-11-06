@@ -16,10 +16,10 @@ foal generate entity todo
 Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
 
 ```typescript
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Todo {
+export class Todo extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
