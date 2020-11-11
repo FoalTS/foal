@@ -6,12 +6,16 @@ import { IApiComponents, IApiOperation, IApiPaths, IApiTag, IOpenAPI } from './i
 import { getApiCompleteOperation, getApiComponents, getApiInfo, getApiTags } from './metadata-getters';
 import { mergeComponents, mergeOperations, mergeTags } from './utils';
 
-function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
+export function canonicalisePath(path: string): string {
+  return path.replace(/{.*?}/g, () => '#');
+}
+
+export function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   const originalPaths: string[] = [];
   const convertedPaths: string[] = [];
   // tslint:disable-next-line:forin
   for (const path in paths) {
-    const convertedPath = path.replace(/{.*}/g, () => '#');
+    const convertedPath = canonicalisePath(path);
     const index = convertedPaths.indexOf(convertedPath);
     if (index !== -1) {
       throw new Error(
