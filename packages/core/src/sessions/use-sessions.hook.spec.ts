@@ -12,6 +12,7 @@ import {
   getHookFunction,
   HookFunction,
   HttpMethod,
+  HttpResponseInternalServerError,
   HttpResponseOK,
   IApiComponents,
   IApiSecurityRequirement,
@@ -800,6 +801,48 @@ describe('UseSessions', () => {
   });
 
   describe('should return a post-hook function that', () => {
+
+    context(
+      'given an error was thrown in the controller (i.e the response is an HttpResponseInternalServerError)',
+      () => {
+
+        beforeEach(() => {
+          hook = getHookFunction(UseSessions({ store: Store, cookie: true }));
+          ctx = createContext(
+            {},
+            {
+              [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID
+            },
+          );
+        });
+
+        it('should not commit the session if it exists.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+
+          await postHookFunction(new HttpResponseInternalServerError());
+
+          // tslint:disable-next-line
+          strictEqual(services.get(Store).updateCalledWith?.state.id, undefined);
+        });
+
+        it('should not add a session cookie if the cookie option is enabled.', async () => {
+          const postHookFunction = await hook(ctx, services);
+          if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+            throw new Error('The hook should return a post hook function');
+          }
+
+          const response = new HttpResponseInternalServerError();
+          await postHookFunction(response);
+
+          const { value } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
+          strictEqual(value, undefined);
+        });
+
+      }
+    );
 
     context('given the ctx.session has been set by the hook and has not been overridden in the controller', () => {
 
