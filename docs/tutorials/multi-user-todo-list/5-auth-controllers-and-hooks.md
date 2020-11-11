@@ -28,12 +28,12 @@ Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin
 Open the `app.controller.ts` file and add three new routes to serve the pages.
 
 ```typescript
-import { controller, Get, render } from '@foal/core';
+import { controller, Get, IAppController, render } from '@foal/core';
 import { createConnection } from 'typeorm';
 
 import { ApiController } from './controllers';
 
-export class AppController {
+export class AppController implements IAppController {
   subControllers = [
     controller('/api', ApiController)
   ];
@@ -77,7 +77,7 @@ Open the new file `auth.controller.ts` and replace its content.
 ```typescript
 // 3p
 import {
-  Context, dependency, HttpResponseRedirect, Post,
+  Context, dependency, HttpResponseRedirect, Post, Session,
   Store, UseSessions, ValidateBody, verifyPassword
 } from '@foal/core';
 
@@ -102,7 +102,7 @@ export class AuthController {
     required: ['email', 'password'],
     type: 'object',
   })
-  async login(ctx: Context) {
+  async login(ctx: Context<User, Session>) {
     const user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user) {

@@ -97,14 +97,14 @@ The last thing to know is how the `ApiController` is bound to the request handle
 Open the file `app.controller.ts` in `src/app`.
 
 ```typescript
-import { controller } from '@foal/core';
+import { controller, IAppController } from '@foal/core';
 import { createConnection } from 'typeorm';
 
 import { ApiController } from './controllers';
 
-export class AppController {
+export class AppController implements IAppController {
   subControllers = [
-    controller('/api', ApiController)
+    controller('/api', ApiController),
   ];
 
   async init() {

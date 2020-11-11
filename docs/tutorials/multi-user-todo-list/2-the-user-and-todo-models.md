@@ -37,6 +37,8 @@ export class User extends BaseEntity {
 
 }
 
+// This line is required. It will be used to create the SQL session table.
+export { DatabaseSession } from '@foal/typeorm';
 ```
 
 The `setPassword` method uses `hashPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
