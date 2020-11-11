@@ -28,6 +28,7 @@ describe('Feature: Modifying session timeouts', () => {
 
   afterEach(() => {
     Config.remove('settings.session.store');
+    Config.remove('settings.session.expirationTimeouts.inactivity');
     return closeTestConnection();
   });
 
