@@ -86,7 +86,7 @@ export class AppController {
   @Post('/upload')
   @ValidateMultipartFormDataBody({
     files: {
-      file1: { required: true, saveTo: '' },
+      file1: { required: true, saveTo: '.' },
     }
   })
   async upload(ctx: Context) {
