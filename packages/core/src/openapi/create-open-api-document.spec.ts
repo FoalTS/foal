@@ -1,10 +1,10 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { controller } from '../common';
 import { Get, Post, ServiceManager } from '../core';
-import { createOpenApiDocument } from './create-open-api-document';
+import { canonicalisePath, createOpenApiDocument, throwErrorIfDuplicatePaths } from './create-open-api-document';
 import {
   ApiDefineCallback, ApiDefineTag, ApiDeprecated, ApiExternalDoc, ApiInfo,
   ApiOperation, ApiParameter, ApiRequestBody, ApiResponse, ApiSecurityRequirement, ApiServer, ApiUseTag
@@ -27,6 +27,32 @@ describe('createOpenApiDocument', () => {
 
     const document = createOpenApiDocument(Controller);
     strictEqual(document.openapi, '3.0.0');
+  });
+
+  describe('path validation', () => {
+    it('consistient canonicalisation', () => {
+      strictEqual(canonicalisePath('/test/path/{parameter}'), '/test/path/#');
+      strictEqual(canonicalisePath('/test/path/{parameter}/sub/{sub_parameter}'), '/test/path/#/sub/#');
+    });
+
+    it('duplicate paths throws error', () => {
+      try {
+        throwErrorIfDuplicatePaths({
+          '/test/path/{parameter_1}': {},
+          '/test/path/{parameter_2}': {}
+        });
+        throw new Error('Expected an exception here');
+      } catch (err) {
+        notStrictEqual(err.message, 'Expected an exception here');
+      }
+    });
+
+    it('hierarchical paths dont throw error', () => {
+        throwErrorIfDuplicatePaths({
+          '/test/path/{parameter}': {},
+          '/test/path/{parameter}/sub/{sub_parameter}': {}
+        });
+    });
   });
 
   describe('should return from the root controller', () => {
