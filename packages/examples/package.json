@@ -1,5 +1,6 @@
 {
   "name": "@foal/examples",
+  "private": true,
   "version": "2.0.0-beta.0",
   "description": "FoalTs examples",
   "scripts": {
