@@ -1,5 +1,7 @@
 # MongoDB (noSQL)
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ## Creating a new project
 
 To generate a new project that uses MongoDB, run the command `createapp` with the flag `--mongodb`.

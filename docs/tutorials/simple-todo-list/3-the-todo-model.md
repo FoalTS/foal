@@ -1,7 +1,5 @@
 # The Todo Model
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
 Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
 
 ```sh

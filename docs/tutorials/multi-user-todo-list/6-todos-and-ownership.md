@@ -1,8 +1,5 @@
 # Todos & Ownership
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
-
 Currently the API returns everyone's todos to each user. This is not the expected behavior. We would like that each user has access to only his or her tasks.
 
 Go back to the `ApiController` and update the `getTodos` route.

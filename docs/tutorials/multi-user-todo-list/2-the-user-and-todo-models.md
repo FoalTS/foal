@@ -1,7 +1,5 @@
 # The User & Todo Models
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
 First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
 
 ```

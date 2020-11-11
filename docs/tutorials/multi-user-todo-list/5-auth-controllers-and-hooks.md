@@ -1,8 +1,5 @@
 # Auth Controllers and Hooks
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
-
 So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
 
 Here is the architecture that we want:

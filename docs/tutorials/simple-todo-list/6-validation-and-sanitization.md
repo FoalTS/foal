@@ -1,9 +1,5 @@
 # Validation and Sanitization
 
-
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
-
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
 
 You will use the `ValidateBody` and `ValidatePathParam` hooks to validate and sanitize incoming data.

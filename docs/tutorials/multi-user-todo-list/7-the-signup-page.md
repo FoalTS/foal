@@ -1,8 +1,5 @@
 # The Sign Up Page
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
-
 The sign up page, that is served in the app controller, makes a request `POST /signup` when the button `Create an account` is pressed.
 
 Create a new controller to handle this route.

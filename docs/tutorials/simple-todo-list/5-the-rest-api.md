@@ -1,7 +1,5 @@
 # The REST API
 
-> You are reading the documentation for version 2 of FoalTS. The documentation for version 1 can be found [here](#). To migrate to version 2, follow [this guide](../upgrade-to-v2/index.md).
-
 Good, so far you have a frontend working properly and some todos in your database. Now it is time to code a REST API to link them both.
 
 To do so, you are going to use a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help them do this. We will not study the services in this tutorial.
