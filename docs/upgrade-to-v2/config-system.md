@@ -11,11 +11,13 @@ If you were still using the old method, update your code as follows:
 const foobar = Config.get('hello.world');
 const debug = Config.get<boolean>('settings.debug');
 const port = Config.get('port', 3001);
+const port = Config.get<number>('port', 3001);
 
 // Version 2
 const foobar = Config.get('hello.world');
 const debug = Config.get('settings.debug', 'boolean');
-const port = Config.get('port', 'number' 3001);
+const port = Config.get('port', 'number', 3001);
+const port = Config.get('port', 'number', 3001);
 ```
 
 More details can be found [here](../deployment-and-environments/configuration.md).
