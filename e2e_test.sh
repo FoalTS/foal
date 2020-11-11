@@ -63,9 +63,9 @@ function test_rest_api () {
             --output /dev/null \
     )
     if [ $STATUS -eq $3 ]; then
-        echo "SUCCESS: Got $STATUS! Expected $3."
+        echo "SUCCESS: Got $STATUS as expected."
     else
-        echo "ERROR: Got $STATUS. Expected $3..."
+        echo "ERROR: Got $STATUS! Expected $3..."
         exit 1
     fi
 }
