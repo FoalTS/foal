@@ -40,7 +40,7 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
   const originalPaths: string[] = [];
   const convertedPaths: string[] = [];
   for (const path in paths) {
-    const convertedPath = path.replace(/{.*}/g, () => '#');
+    const convertedPath = path.replace(/{.*?}/g, () => '#');
     const index = convertedPaths.indexOf(convertedPath);
     if (index !== -1) {
       throw new Error(

@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notDeepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
+import { deepStrictEqual, doesNotThrow, notDeepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
 
 // FoalTS
 import { controller } from '../../common/utils/controller.util';
@@ -1074,6 +1074,25 @@ describe('makeControllerRoutes', () => {
         );
         done();
       }
+    });
+
+    it('and should not throw a "duplicate path" error on similar but different paths.', () => {
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        @Get('/api/users/:userId')
+        something() {}
+
+        @Get('/api/users/:userId/products/:productId2')
+        something2() {}
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      doesNotThrow(() => Array.from(makeControllerRoutes(AppController, services)));
     });
 
     it('and should use the controller instances to retreive the dynamic metadata.', () => {
