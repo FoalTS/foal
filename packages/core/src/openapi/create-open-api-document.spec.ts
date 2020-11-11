@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { controller } from '../common';
@@ -42,7 +42,9 @@ describe('createOpenApiDocument', () => {
           '/test/path/{parameter_2}': {}
         });
         throw new Error('Expected an exception here');
-      } catch { }
+      } catch (err) {
+        notStrictEqual(err.message, 'Expected an exception here');
+      }
     });
 
     it('hierarchical paths dont throw error', () => {
