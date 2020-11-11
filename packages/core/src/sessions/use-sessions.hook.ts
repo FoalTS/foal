@@ -14,6 +14,7 @@ import {
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   IApiSecurityScheme,
+  isHttpResponseInternalServerError,
   ServiceManager
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
@@ -58,7 +59,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     const store = services.get(ConcreteSessionStore);
 
     async function postFunction(response: HttpResponse) {
-      if (!(ctx.session)) {
+      if (!(ctx.session) || isHttpResponseInternalServerError(response)) {
         return;
       }
 
