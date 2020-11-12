@@ -15,7 +15,7 @@ const port = Config.get<number>('port', 3001);
 
 // Version 2
 const foobar = Config.get('hello.world');
-const debug = Config.get('settings.debug', 'boolean');
+const debug = Config.getOrThrow('settings.debug', 'boolean');
 const port = Config.get('port', 'number', 3001);
 const port = Config.get('port', 'number', 3001);
 ```
