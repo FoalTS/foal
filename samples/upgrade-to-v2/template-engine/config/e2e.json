@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "loggerFormat": "none"
+  },
+  "database": {
+    "database": "./e2e_db.sqlite3",
+    "dropSchema": true,
+    "synchronize": true
+  }
+}
