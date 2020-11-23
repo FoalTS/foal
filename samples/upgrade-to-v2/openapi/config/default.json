@@ -1,0 +1,20 @@
+{
+  "port": 3001,
+  "settings": {
+    "csrf": false,
+    "debug": false,
+    "loggerFormat": "tiny",
+    "session": {
+      "cookie": {
+        "sameSite": "lax"
+      }
+    },
+    "openapi": {
+      "useHooks": true
+    }
+  },
+  "database": {
+    "database": "./db.sqlite3",
+    "synchronize": false
+  }
+}

@@ -24,5 +24,10 @@
     "mocha": "^4.1.0",
     "tslint": "^5.11.0",
     "typescript": "~3.5.3"
+  },
+  "dependencies": {
+    "@foal/formidable": "^1.11.2",
+    "@types/formidable": "^1.0.31",
+    "formidable": "^1.2.2"
   }
 }
