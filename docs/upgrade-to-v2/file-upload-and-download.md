@@ -221,7 +221,7 @@ const file = ctx.request.body.files.profile;
 | Property name | Type | Description |
 | --- | --- | --- |
 | `encoding` | `string` | Encoding type of the file |
-| `filename` | `string|undefined` | Name of the file on the user's computer |
+| `filename` | `string\|undefined` | Name of the file on the user's computer |
 | `mimeType` | `string` | Mime type of the file |
 | `path` | `string` | Path where the file has been saved. If the `saveTo` option was not provided, the value is an empty string. |
 | `buffer` | `Buffer` | Buffer containing the entire file. If the `saveTo` option was provided, the value is an empty buffer. |

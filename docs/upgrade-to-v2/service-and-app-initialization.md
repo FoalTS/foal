@@ -4,6 +4,8 @@ FoalTS offers two ways to initialize the application: by the `boot` methods of t
 
 Previously we had to call `ServicesManager.boot` and use the `createAndInitApp` function. This is no longer necessary. FoalTS will call the `boot` and `init` methods if they exist when the application is launched. Therefore, the `createAndInitApp` function no longer exists (use `createApp` instead).
 
+> Note that the `boot` methods are called before `AppController.init`.
+
 ## New features
 
 ### The `IAppController` interface
