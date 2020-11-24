@@ -1,5 +1,5 @@
 // 3p
-import { createAndInitApp, createApp, ServiceManager } from '@foal/core';
+import { createApp } from '@foal/core';
 import * as request from 'supertest';
 
 // App
@@ -10,16 +10,14 @@ describe('The server', () => {
   let app;
 
   before(async () => {
-    const serviceManager = new ServiceManager();
-    app = await createAndInitApp(AppController, { serviceManager });
-    await serviceManager.boot();
+    app = await createApp(AppController);
   });
 
   it('should return a 200 status on GET / requests.', () => {
     return request(app)
       .get('/')
       .expect(200)
-      .expect('!hello world');
+      .expect('hello world!');
   });
 
 });
