@@ -1,14 +1,11 @@
 import {
-  Context, dependency, hashPassword, HttpResponseRedirect, Post,
-  removeSessionCookie, Session, setSessionCookie, TokenRequired,
-  ValidateBody, verifyPassword
+  Context, dependency, hashPassword, HttpResponseRedirect, Post, Session,
+  ValidateBody, verifyPassword, Store, UseSessions
 } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 import { getRepository } from 'typeorm';
-import { CsrfTokenRequired } from '@foal/csrf';
 
 const credentialsSchema = {
   additionalProperties: false,
@@ -20,32 +17,29 @@ const credentialsSchema = {
   type: 'object',
 };
 
+@UseSessions({
+  cookie: true,
+})
 export class AuthController {
   @dependency
-  store: TypeORMStore;
+  store: Store;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context) {
+  async signup(ctx: Context<any, Session>) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
     await getRepository(User).save(user);
 
-    const session = await this.store.createAndSaveSessionFromUser(
-      user,
-      // Generate the CSRF token and keep it in the session
-      { csrfToken: true }
-    );
-    const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
+    ctx.session.setUser(user);
+
+    return new HttpResponseRedirect('/home');
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
+  async login(ctx: Context<any, Session>) {
     const user = await getRepository(User).findOne({ email: ctx.request.body.email });
 
     if (!user) {
@@ -56,29 +50,17 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(
-      user,
-      // Generate the CSRF token and keep it in the session
-      { csrfToken: true }
-    );
-    const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
+    ctx.session.setUser(user);
+
+    return new HttpResponseRedirect('/home');
   }
 
   @Post('/logout')
-  @TokenRequired({
-    cookie: true,
-    extendLifeTimeOrUpdate: false,
-    redirectTo: '/login',
-    store: TypeORMStore,
-  })
-  @CsrfTokenRequired()
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    const response = new HttpResponseRedirect('/login');
-    removeSessionCookie(response);
-    return response;
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
+
+    return new HttpResponseRedirect('/login');
   }
 }

@@ -117,11 +117,15 @@ npm run migrations
 
 The configuration key `redis.uri` has been renamed to `settings.redis.uri`.
 
+See also [this](./config-system.md#environment-variables).
+
 > *Note: In the Redis database, session keys now start with `sessions:` instead of `session:`*.
 
 #### MongoDB Store
 
 The configuration key `mongodb.uri` has been renamed to `settings.mongodb.uri`.
+
+See also [this](./config-system.md#environment-variables).
 
 > Once you application is migrated to version 2 and works as expected, you will be able to manually delete the old `foalSessions` collection. The new collection used by the framework is named `sessions`.
 
@@ -409,6 +413,16 @@ export class ApiController {
     return new HttpResponseOK([]);
   }
 }
+```
+
+### Send the CSRF token in a template
+
+```typescript
+// Before
+return render('templates/home.html', { csrfToken: await getCsrfToken(ctx.session) });
+
+// After
+return render('templates/home.html', { csrfToken: ctx.session.get('csrfToken') });
 ```
 
 ### Read or create a session

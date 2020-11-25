@@ -1,7 +1,5 @@
 # JWT hooks and CSRF protection
 
-
-
 ## Configuration
 
 The configuration `settings.jwt.secretOrPublicKey` has been removed. Use `settings.jwt.secret` or `settings.jwt.publicKey` instead.

@@ -26,6 +26,12 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [Template engine](./template-engine.md)
 - [Custom Express instance](./custom-express-instance.md)
 
+## Common issue
+
+If you get unexpected errors when building the application, please check the following points:
+- You have updated all your `@foal/x` packages.
+- You have updated your `typescript` dependency to version 4.
+
 ## Rare cases
 
 - The following objects and functions have been removed: `ObjectDoesNotExist`, `isObjectDoesNotExist`, `PermissionDenied`, `isPermissionDenied`, `ValidationError`, `isValidationError`, `validate`.

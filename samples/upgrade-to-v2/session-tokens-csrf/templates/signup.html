@@ -9,6 +9,7 @@
   <form action="/signup" method="post">
     <input type="email" name="email" id="email">
     <input type="password" name="password" id="password">
+    <input style="display: none" name="_csrf" value="{{ csrfToken }}">
     <input type="submit" value="Sign Up">
   </form>
 </body>

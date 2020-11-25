@@ -12,3 +12,5 @@ export class User {
   password: string;
 
 }
+
+export { DatabaseSession } from '@foal/typeorm';
