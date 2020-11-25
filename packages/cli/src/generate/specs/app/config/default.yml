@@ -1,11 +1,5 @@
-port: 3001
-
 settings:
-  debug: false
   loggerFormat: tiny
-  session:
-    cookie:
-      sameSite: lax
 
 database:
   type: sqlite

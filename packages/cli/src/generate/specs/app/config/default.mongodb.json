@@ -1,13 +1,6 @@
 {
-  "port": 3001,
   "settings": {
-    "debug": false,
-    "loggerFormat": "tiny",
-    "session": {
-      "cookie": {
-        "sameSite": "lax"
-      }
-    }
+    "loggerFormat": "tiny"
   },
   "database": {
     "type": "mongodb",
