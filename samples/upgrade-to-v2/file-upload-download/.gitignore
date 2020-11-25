@@ -6,3 +6,5 @@ build/
 *.sqlite3
 .vscode/
 .idea/
+
+uploaded/
