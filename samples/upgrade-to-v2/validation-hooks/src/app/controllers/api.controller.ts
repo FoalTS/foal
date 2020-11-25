@@ -1,54 +1,30 @@
-import { Context, Get, HttpResponseOK, ValidateCookies, ValidateHeaders, ValidateParams, ValidateQuery } from '@foal/core';
+import { Context, Get, HttpResponseOK, ValidateCookie, ValidateHeader, ValidatePathParam, ValidateQueryParam } from '@foal/core';
 
 export class ApiController {
 
   @Get('/headers')
-  @ValidateHeaders({
-    properties: {
-      // All properties should be in lower case.
-      'a-number': { type: 'integer' },
-      'authorization': { type: 'string' },
-    },
-    required: [ 'authorization' ],
-    type: 'object'
-  })
+  @ValidateHeader('Authorization')
+  @ValidateHeader('A-Number', { type: 'integer' }, { required: false })
   headers(ctx: Context) {
     return new HttpResponseOK('Hello world!');
   }
 
   @Get('/query')
-  @ValidateQuery({
-    properties: {
-      'a-number': { type: 'integer' },
-      'authorization': { type: 'string' },
-    },
-    required: [ 'authorization' ],
-    type: 'object'
-  })
+  @ValidateQueryParam('authorization')
+  @ValidateQueryParam('a-number', { type: 'integer' }, { required: false })
   query(ctx: Context) {
     return new HttpResponseOK('Hello world!');
   }
 
   @Get('/params/:productId')
-  @ValidateParams({
-    properties: {
-      productId: { type: 'integer' }
-    },
-    type: 'object'
-  })
+  @ValidatePathParam('productId', { type: 'integer' })
   params(ctx: Context) {
     return new HttpResponseOK('Hello world!');
   }
 
   @Get('/cookies')
-  @ValidateCookies({
-    properties: {
-      'A-Number': { type: 'integer' },
-      'Authorization': { type: 'string' },
-    },
-    required: [ 'Authorization' ],
-    type: 'object'
-  })
+  @ValidateCookie('Authorization')
+  @ValidateCookie('A-Number', { type: 'integer' }, { required: false })
   cookies(ctx: Context) {
     return new HttpResponseOK('Hello world!');
   }
