@@ -24,6 +24,8 @@ To specify the store globally, replace all references to `TypeORMStore` (or redi
 
 *Example*
 ```typescript
+import { Store } from '@foal/core';
+
 class AppController {
   // Before
   @dependency
@@ -171,6 +173,8 @@ export class AuthController {
 
 *After*
 ```typescript
+import { UseSessions, Store } from '@foal/core';
+
 @UseSessions()
 export class AuthController {
   @dependency
@@ -231,6 +235,8 @@ export class AuthController {
 
 *After*
 ```typescript
+import { UseSessions, Store } from '@foal/core';
+
 @UseSessions({
   cookie: true,
   // user: fetchUser(User)
