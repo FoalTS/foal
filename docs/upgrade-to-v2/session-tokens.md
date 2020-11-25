@@ -441,6 +441,8 @@ You do not need to take care of generating a CSRF token in the session. The fram
 
 The best way to use the new CSRF protection is to go directly to the [CSRF page](./../security/csrf-protection.md).
 
+**Warning:** In order to _work better_ with some popular frontend frameworks, the default name of the CSRF cookie has been changed from `csrfToken` to `XSRF-TOKEN`.
+
 ## New Features
 
 ### Session Tokens

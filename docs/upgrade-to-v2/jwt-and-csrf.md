@@ -1,10 +1,14 @@
 # JWT hooks and CSRF protection
 
+
+
 ## Configuration
 
 The configuration `settings.jwt.secretOrPublicKey` has been removed. Use `settings.jwt.secret` or `settings.jwt.publicKey` instead.
 
 The configuration `settings.jwt.cookieName` has been renamed to `settings.jwt.cookie.name`.
+
+See also [this](./config-system.md#environment-variables).
 
 ## CSRF protection
 
@@ -24,7 +28,13 @@ All of this is now managed by the framework.
 
 The best way to use the new CSRF protection is to go directly to the [CSRF page](./../security/csrf-protection.md).
 
+**Warning:** Using the below functions `setAuthCookie` and `removeAuthCookie` is required in order to provide CSRF protection.
+
+**Warning:** In order to _work better_ with some popular frontend frameworks, the default name of the CSRF cookie has been changed from `csrfToken` to `XSRF-TOKEN`.
+
 ## New features
+
+New features have been added to reduce the amount of code needed to use JWT as well as to make it easier to use. You can consult the [Quick start page](../authentication-and-access-control/quick-start.md) to see how to use these features.
 
 ### JWT cookies
 
