@@ -9,7 +9,7 @@
         "sameSite": "lax"
       }
     },
-    "templateEngine": "@foal/ejs"
+    "templateEngine": "ejs"
   },
   "database": {
     "database": "./db.sqlite3",
