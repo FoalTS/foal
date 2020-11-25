@@ -5,8 +5,9 @@
     "debug": false,
     "loggerFormat": "tiny",
     "session": {
-      "cookie": {
-        "sameSite": "lax"
+      "store": "@foal/typeorm",
+      "csrf": {
+        "enabled": true
       }
     }
   },

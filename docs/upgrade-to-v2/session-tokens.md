@@ -24,6 +24,8 @@ To specify the store globally, replace all references to `TypeORMStore` (or redi
 
 *Example*
 ```typescript
+import { Store } from '@foal/core';
+
 class AppController {
   // Before
   @dependency
@@ -117,11 +119,15 @@ npm run migrations
 
 The configuration key `redis.uri` has been renamed to `settings.redis.uri`.
 
+See also [this](./config-system.md#environment-variables).
+
 > *Note: In the Redis database, session keys now start with `sessions:` instead of `session:`*.
 
 #### MongoDB Store
 
 The configuration key `mongodb.uri` has been renamed to `settings.mongodb.uri`.
+
+See also [this](./config-system.md#environment-variables).
 
 > Once you application is migrated to version 2 and works as expected, you will be able to manually delete the old `foalSessions` collection. The new collection used by the framework is named `sessions`.
 
@@ -167,6 +173,8 @@ export class AuthController {
 
 *After*
 ```typescript
+import { UseSessions, Store } from '@foal/core';
+
 @UseSessions()
 export class AuthController {
   @dependency
@@ -227,6 +235,8 @@ export class AuthController {
 
 *After*
 ```typescript
+import { UseSessions, Store } from '@foal/core';
+
 @UseSessions({
   cookie: true,
   // user: fetchUser(User)
@@ -411,6 +421,16 @@ export class ApiController {
 }
 ```
 
+### Send the CSRF token in a template
+
+```typescript
+// Before
+return render('templates/home.html', { csrfToken: await getCsrfToken(ctx.session) });
+
+// After
+return render('templates/home.html', { csrfToken: ctx.session.get('csrfToken') });
+```
+
 ### Read or create a session
 
 To read or create a session manually, use the function `createSession` and `readSession` instead of the store directly.
@@ -440,6 +460,8 @@ The package `@foal/csrf` has been removed. In version 2, the CSRF protection is 
 You do not need to take care of generating a CSRF token in the session. The framework handles it for you.
 
 The best way to use the new CSRF protection is to go directly to the [CSRF page](./../security/csrf-protection.md).
+
+**Warning:** In order to _work better_ with some popular frontend frameworks, the default name of the CSRF cookie has been changed from `csrfToken` to `XSRF-TOKEN`.
 
 ## New Features
 

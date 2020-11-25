@@ -1,8 +1,8 @@
 import {
-  Config, Context, HttpResponseOK,
+  Context, HttpResponseOK,
   Post, ValidateBody
 } from '@foal/core';
-import { getCsrfToken, setCsrfCookie } from '@foal/csrf';
+import { getSecretOrPrivateKey, removeAuthCookie, setAuthCookie } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 export class LoginController {
@@ -19,23 +19,20 @@ export class LoginController {
   async login(ctx: Context, params, { email }) {
     const token = sign(
       { email },
-      Config.get<string>('settings.jwt.secretOrPublicKey'),
+      getSecretOrPrivateKey(),
       { expiresIn: '1h' }
     );
 
-    const response = new HttpResponseOK()
-      .setCookie('auth', token, {
-        maxAge: 3600,
-        sameSite: 'lax'
-      });
-    setCsrfCookie(response, await getCsrfToken());
+    const response = new HttpResponseOK();
+    await setAuthCookie(response, token);
     return response;
   }
 
   @Post('/logout')
   logout() {
-    return new HttpResponseOK()
-      .setCookie('auth', '', { maxAge: 0 });
+    const response = new HttpResponseOK();
+    removeAuthCookie(response);
+    return response;
   }
 
 }

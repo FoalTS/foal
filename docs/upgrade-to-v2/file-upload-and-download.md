@@ -81,6 +81,8 @@ export class AppController {
 
 *After*
 ```typescript
+import { ValidateMultipartFormDataBody } from '@foal/storage';
+
 export class AppController {
 
   @Post('/upload')

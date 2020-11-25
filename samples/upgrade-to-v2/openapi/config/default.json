@@ -8,9 +8,6 @@
       "cookie": {
         "sameSite": "lax"
       }
-    },
-    "openapi": {
-      "useHooks": true
     }
   },
   "database": {

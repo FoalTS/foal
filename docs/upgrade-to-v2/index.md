@@ -8,6 +8,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 
 ## For all
 
+- Upgrade your versions of TypeScript and Node.JS if necessary.
 - [New CLI commands](./cli-commands.md)
 - [New configuration system](./config-system.md)
 - [Application creation](./application-creation.md)
@@ -24,6 +25,12 @@ This guide will take you step by step through the upgrade to version 2. If somet
 - [Error-handling and hook post functions](./error-handling.md)
 - [Template engine](./template-engine.md)
 - [Custom Express instance](./custom-express-instance.md)
+
+## Common issue
+
+If you get unexpected errors when building the application, please check the following points:
+- You have updated all your `@foal/x` packages.
+- You have updated your `typescript` dependency to version 4.
 
 ## Rare cases
 

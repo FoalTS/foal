@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": false
-  },
-  "include": [
-    "src/migrations/*.ts"
-  ]
-}

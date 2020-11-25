@@ -1,26 +1,28 @@
-import { Context, Get, HttpResponseOK, render, Session, TokenRequired } from '@foal/core';
-import { CsrfTokenRequired, getCsrfToken } from '@foal/csrf';
-import { fetchUser, TypeORMStore } from '@foal/typeorm';
+import { Context, Get, render, Session, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
 import { User } from '../entities';
 
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User)
+})
 export class ViewController {
   @Get('/home')
-  @TokenRequired({ store: TypeORMStore, cookie: true, redirectTo: '/login', user: fetchUser(User) })
-  @CsrfTokenRequired()
-  async home(ctx: Context<User>) {
+  @UserRequired({ redirectTo: '/login' })
+  async home(ctx: Context<User, Session>) {
     return render('templates/home.html', {
       email: ctx.user.email,
-      csrfToken: await getCsrfToken(ctx.session)
+      csrfToken: ctx.session.get('csrfToken')
     });
   }
 
   @Get('/login')
-  async login(ctx: Context<User>) {
-    return render('templates/login.html', { csrfToken: await getCsrfToken(ctx.session) });
+  async login(ctx) {
+    return render('templates/login.html', { csrfToken: ctx.session.get('csrfToken') });
   }
 
   @Get('/signup')
-  async signup(ctx: Context<User>) {
-    return render('templates/signup.html', { csrfToken: await getCsrfToken(ctx.session) });
+  async signup(ctx) {
+    return render('templates/signup.html', { csrfToken: ctx.session.get('csrfToken') });
   }
 }

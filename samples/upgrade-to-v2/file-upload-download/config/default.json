@@ -8,6 +8,12 @@
       "cookie": {
         "sameSite": "lax"
       }
+    },
+    "disk": {
+      "driver": "local",
+      "local": {
+        "directory": "uploaded"
+      }
     }
   },
   "database": {
