@@ -2,6 +2,7 @@
  * Represent an object that was expected to be found but that does not exist.
  *
  * @export
+ * @deprecated
  * @class ObjectDoesNotExist
  * @extends {Error}
  */
@@ -24,6 +25,7 @@ export class ObjectDoesNotExist extends Error {
  * problem.
  *
  * @export
+ * @deprecated
  * @param {object} err - The error to check.
  * @returns {err is ObjectDoesNotExist} True if the error is an instance of ObjectDoesNotExist. False otherwise.
  */

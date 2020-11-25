@@ -211,6 +211,7 @@ import { Post, ValidateHeaders } from '@foal/core';
 
 export class AppController {
   @Get('/products')
+  // Deprecated since v1.12. Use @ValidateHeader instead.
   @ValidateHeaders({
     properties: {
       // All properties should be in lower case.
@@ -291,6 +292,7 @@ import { Post, ValidateCookies } from '@foal/core';
 export class AppController {
   @Get('/products')
   @Hook(ctx => console.log(ctx.request.cookies))
+  // Deprecated since v1.12. Use @ValidateCookie instead.
   @ValidateCookies({
     properties: {
       'A-Number': { type: 'integer' },
@@ -366,6 +368,7 @@ import { Post, ValidateParams } from '@foal/core';
 
 export class AppController {
   @Get('/products/:productId')
+  // Deprecated since v1.12. Use @ValidatePathParam instead.
   @ValidateParams({
     properties: {
       productId: { type: 'integer' }
@@ -442,6 +445,7 @@ import { Post, ValidateQuery } from '@foal/core';
 
 export class AppController {
   @Get('/products')
+  // Deprecated since v1.12. Use @ValidateQueryParam instead.
   @ValidateQuery({
     properties: {
       'a-number': { type: 'integer' },

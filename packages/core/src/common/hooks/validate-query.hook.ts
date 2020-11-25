@@ -7,6 +7,7 @@ import { extractProperties } from './extract-properties.util';
  * Hook factory validating the query of the request against a AJV schema.
  *
  * @export
+ * @deprecated
  * @param {object} schema - Schema used to validate the query request.
  * @param {{ openapi?: boolean }} [options={}] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.

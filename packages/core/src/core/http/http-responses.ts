@@ -273,6 +273,7 @@ export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
  * Create an HttpResponseOK whose content is the specified file. If returned in a controller,
  * the server sends the file in streaming.
  *
+ * @deprecated
  * @param {Object} options - The options used to create the HttpResponseOK.
  * @param {string} options.directory - Directory where the file is located.
  * @param {string} options.file - Name of the file with its extension. If a path is given,
