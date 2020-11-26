@@ -24,6 +24,7 @@ interface Files {
  * Promisify IncomingForm.parse.
  *
  * @export
+ * @deprecated
  * @param {IncomingForm} form - The IncomingForm instance.
  * @param {Context} ctx - The Context instance.
  * @returns {Promise<{ fields: Fields, files: Files }>} The fields and files inside an object.

@@ -10,6 +10,7 @@
  * - JWTOptional (@foal/jwt)
  *
  * @export
+ * @deprecated
  * @param {any} userModel - The Mongoose Model
  * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
  */

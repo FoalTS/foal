@@ -2,6 +2,7 @@
  * Represent an incorrect data format.
  *
  * @export
+ * @deprecated
  * @class ValidationError
  * @extends {Error}
  */
@@ -24,6 +25,7 @@ export class ValidationError extends Error {
  * problem.
  *
  * @export
+ * @deprecated
  * @param {object} err - The error to check
  * @returns {err is ValidationError} True if the error is an instance of ValidationError. False otherwise.
  */

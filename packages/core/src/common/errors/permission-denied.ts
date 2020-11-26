@@ -2,6 +2,7 @@
  * Represent the prohibition to perform an action that was expected to be accessible.
  *
  * @export
+ * @deprecated
  * @class PermissionDenied
  * @extends {Error}
  */
@@ -24,6 +25,7 @@ export class PermissionDenied extends Error {
  * problem.
  *
  * @export
+ * @deprecated
  * @param {object} err - The error to check.
  * @returns {err is PermissionDenied} True if the error is an instance of PermissionDenied. False otherwise.
  */

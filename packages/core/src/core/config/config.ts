@@ -45,6 +45,7 @@ export class Config {
    * to the function. If none was given, it returns undefined.
    *
    * @static
+   * @deprecated
    * @template T - TypeScript type of the returned value. Default is `any`.
    * @param {string} key - Name of the config key using dots and camel case.
    * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
