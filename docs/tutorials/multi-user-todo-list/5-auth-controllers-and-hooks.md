@@ -25,11 +25,17 @@ Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin
 Open the `app.controller.ts` file and add three new routes to serve the pages.
 
 ```typescript
-import { controller, Get, IAppController, render } from '@foal/core';
+import { Context, controller, Get, IAppController, render, Session, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
 import { createConnection } from 'typeorm';
 
 import { ApiController } from './controllers';
+import { User } from './entities';
 
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User)
+})
 export class AppController implements IAppController {
   subControllers = [
     controller('/api', ApiController)
@@ -45,8 +51,8 @@ export class AppController implements IAppController {
   }
 
   @Get('/signin')
-  signin() {
-    return render('templates/signin.html');
+  signin(ctx: Context<any, Session>) {
+    return render('templates/signin.html', { error: ctx.session.get('error', '') });
   }
 
   @Get('/signup')
@@ -54,7 +60,6 @@ export class AppController implements IAppController {
     return render('templates/signup.html');
   }
 }
-
 ```
 
 Open your browser and go to `http://localhost:3001/signin`. The login page should show up.
@@ -75,14 +80,11 @@ Open the new file `auth.controller.ts` and replace its content.
 // 3p
 import {
   Context, dependency, HttpResponseRedirect, Post, Session,
-  Store, UseSessions, ValidateBody, verifyPassword
+  Store, ValidateBody, verifyPassword
 } from '@foal/core';
 
 import { User } from '../entities';
 
-@UseSessions({
-  cookie: true
-})
 export class AuthController {
   // This line is required.
   @dependency
@@ -143,33 +145,31 @@ Go back to your browser and try to log in with the email `john@foalts.org` and t
 
 Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `UseSessions` which returns a 401 error or redirects the user if user is not logged in. 
+The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `UserRequired` which returns a 401 error or redirects the user if user is not logged in. 
 
 Update `app.controller.ts`.
 
 ```typescript
-import { controller, Get, render, UserRequired, UseSessions } from '@foal/core';
+import { Context, controller, Get, IAppController, render, Session, UserRequired, UseSessions } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
-export class AppController {
+// ...
+export class AppController extends IAppController {
+
+  // ...
 
   @Get('/')
-  @UseSessions({
-    cookie: true,
-    // Make ctx.user be an instance of User.
-    user: fetchUser(User),
-  })
   @UserRequired({
     // Redirect to /signin if the user is not authenticated.
     redirectTo: '/signin'
   })
   index() {
-    ...
+    // ...
   }
 
-  ...
+  // ...
 
 }
 ```
@@ -180,17 +180,12 @@ Update `api.controller.ts`.
 import {
   Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent,
   HttpResponseNotFound, HttpResponseOK, Post,
-  UserRequired, UseSessions, ValidateBody, ValidatePathParam
+  UserRequired, ValidateBody, ValidatePathParam
 } from '@foal/core';
 import { fetchUser, TypeORMStore } from '@foal/typeorm';
 
 import { Todo, User } from '../entities';
 
-@UseSessions({
-  cookie: true,
-  // Make ctx.user be an instance of User.
-  user: fetchUser(User),
-})
 @UserRequired()
 export class ApiController {
 
