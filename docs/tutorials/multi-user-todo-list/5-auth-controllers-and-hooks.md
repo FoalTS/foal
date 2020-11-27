@@ -16,7 +16,7 @@ When the user presses the `Log out` button in the todo-list page, the page reque
 
 ## The Login and Main Pages
 
-Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v1.zip).
+Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v2.zip).
 
 Empty the `public/` directory.
 
