@@ -151,7 +151,6 @@ Update `app.controller.ts`.
 
 ```typescript
 import { Context, controller, Get, IAppController, render, Session, UserRequired, UseSessions } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -182,7 +181,6 @@ import {
   HttpResponseNotFound, HttpResponseOK, Post,
   UserRequired, ValidateBody, ValidatePathParam
 } from '@foal/core';
-import { fetchUser, TypeORMStore } from '@foal/typeorm';
 
 import { Todo, User } from '../entities';
 
