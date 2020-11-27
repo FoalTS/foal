@@ -48,7 +48,7 @@
     "jwks-rsa": "~1.10.0"
   },
   "peerDependencies": {
-    "@foal/jwt": "^1.2.0"
+    "@foal/jwt": "^2.0.0"
   },
   "devDependencies": {
     "@foal/core": "^2.0.0-beta.3",
