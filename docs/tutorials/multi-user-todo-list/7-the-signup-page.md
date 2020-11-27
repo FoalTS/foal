@@ -12,7 +12,7 @@ Open the new file and replace its content.
 
 ```typescript
 // 3p
-import { Context, HttpResponseRedirect, Post, Store, UseSessions, ValidateBody } from '@foal/core';
+import { Context, HttpResponseRedirect, Post, Session, ValidateBody } from '@foal/core';
 import { isCommon } from '@foal/password';
 
 // App
@@ -30,10 +30,7 @@ export class SignupController {
     required: [ 'email', 'password' ],
     type: 'object',
   })
-  @UseSessions({
-    cookie: true
-  })
-  async signup(ctx: Context) {
+  async signup(ctx: Context<User, Session>) {
     // Check that the password is not too common.
     if (await isCommon(ctx.request.body.password)) {
       ctx.session.set('error', 'Password too password.', { flash: true });
@@ -41,7 +38,7 @@ export class SignupController {
     }
 
     // Check that no user has already signed up with this email.
-    let user = await getRepository(User).findOne({ email: ctx.request.body.email });
+    let user = await User.findOne({ email: ctx.request.body.email });
     if (user) {
       ctx.session.set('error', 'Email already taken.', { flash: true });
       return new HttpResponseRedirect('/signup');
