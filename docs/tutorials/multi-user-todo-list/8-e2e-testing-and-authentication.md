@@ -36,10 +36,10 @@ describe('The server', () => {
   // Define a nested group of tests.
   describe('on GET /api/todos requests', () => {
 
-    it('should return a 400 status if the user did not signed in.', () => {
+    it('should return a 401 status if the user did not signed in.', () => {
       return request(app)
         .get('/api/todos')
-        .expect(400);
+        .expect(401);
     });
 
     it('should return a 200 status if the user did signed in.', async () => {

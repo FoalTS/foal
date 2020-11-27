@@ -42,7 +42,7 @@ Update the api controller.
     // Make the current user the owner of the todo.
     todo.owner = ctx.user;
 
-    await todo.save()
+    await todo.save();
 
     return new HttpResponseCreated(todo);
   }
@@ -58,7 +58,7 @@ Update the api controller.
     if (!todo) {
       return new HttpResponseNotFound();
     }
-    await todo.remove()
+    await todo.remove();
     return new HttpResponseNoContent();
   }
 ```
