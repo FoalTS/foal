@@ -127,8 +127,8 @@ All of major releases are supported for 18 months.
 
 | Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x, 12.x, 14.x | 4.0 |
-| 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x, 10.x | 3.5 |
+| 2.x | *Pending* | December 2020 | December 2021 | 2022-06-31 | 10.x, 12.x, 14.x | 4.0 |
+| 1.x | *Active* | 2019-07-11 | December 2020 | 2021-06-31 | 8.x, 10.x | 3.5 |
 | 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x, 10.x | 2.9 |
 
 ## Project Architecture
