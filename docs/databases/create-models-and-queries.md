@@ -12,10 +12,10 @@ Simple models are called *entities* in TypeORM. You can generate one with the ab
 
 *Example:*
 ```typescript
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -37,29 +37,23 @@ The class `Product` represents the database table and its instances represent th
 ## Using Entities
 
 ```typescript
-import { getRepository } from 'typeorm';
-
-const repository = getRepository(Product);
-
 const product = new Product();
 product.name = 'chair';
 product.price = 60;
-await repository.save(product);
+await product.save();
 
-const products = await repository.find();
+const products = await Product.find();
 // find by id:
-const firstProduct = await repository.findOne(1);
-const chair = await repository.findOne({ name: 'chair' });
+const firstProduct = await Product.findOne(1);
+const chair = await Product.findOne({ name: 'chair' });
 
-await repository.remove(chair);
+await chair.remove();
 ```
 
 ## Queries
 
 ```typescript
-import { getRepository } from 'typeorm';
-
-const firstProduct = await getRepository(Product)
+const firstProduct = await Product
   .createQueryBuilder('product')
   .where('product.id = :id', { id: 1 })
   .getOne();

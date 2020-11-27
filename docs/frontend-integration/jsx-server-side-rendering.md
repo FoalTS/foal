@@ -32,12 +32,14 @@ Then, add the file extension `tsx` in every `tsconfig.*.json`.
 {
   "extends": "./tsconfig.json",
   "include": [
-    "src/app/**/*.ts",
-    "src/app/**/*.tsx",
-    "src/index.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
-    "src/app/**/*.spec.ts"
+    "src/e2e/*.ts",
+    "src/**/*.spec.ts",
+    "src/e2e.ts",
+    "src/test.ts"
   ]
 }
 ```

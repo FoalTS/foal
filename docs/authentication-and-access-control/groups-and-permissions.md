@@ -25,25 +25,13 @@ Permissions can be attached to a user or a group. Attaching a permission to a gr
 ### Creating Permissions Programmatically
 
 ```typescript
-import { getManager, getRepository } from 'typeorm';
-
 import { Permission } from './src/app/entities';
 
 async function main() {
   const perm = new Permission();
   perm.codeName = 'secret-perm';
   perm.name = 'Permission to access the secret';
-  await getManager().save(perm);
-  // OR
-  await getManager().save(Permission, {
-    codeName: 'secret-perm',
-    name: 'Permission to access the secret'
-  });
-  // OR
-  await getRepository(Permission).save({
-    codeName: 'secret-perm',
-    name: 'Permission to access the secret'
-  });
+  await perm.save();
 }
 ```
 
@@ -58,7 +46,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -79,7 +67,7 @@ export async function main(args: { codeName: string, name: string }) {
 
   try {
     console.log(
-      await getManager().save(permission)
+      await permission.save();
     );
   } catch (error) {
     console.log(error.message);
@@ -113,33 +101,19 @@ A group can have permissions. They then apply to all its users.
 ### Creating Groups Programmatically
 
 ```typescript
-import { getManager, getRepository } from 'typeorm';
-
 import { Group, Permission } from './src/app/entities';
 
 async function main() {
   const perm = new Permission();
   perm.codeName = 'delete-users';
   perm.name = 'Permission to delete users';
-  await getManager().save(perm);
+  await perm.save();
 
   const group = new Group();
   group.codeName = 'admin';
   group.name = 'Administrators';
   group.permissions = [ perm ];
-  await getManager().save(group);
-  // OR
-  await getManager().save(Group, {
-    codeName: 'admin',
-    name: 'Administrators',
-    permissions: [ perm ],
-  });
-  // OR
-  await getRepository(Group).save({
-    codeName: 'admin',
-    name: 'Administrators',
-    permissions: [ perm ],
-  });
+  await group.save();
 }
 ```
 
@@ -154,7 +128,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getManager, getRepository } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -176,7 +150,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   const connection = await createConnection();
   try {
     for (const codeName of args.permissions) {
-      const permission = await getRepository(Permission).findOne({ codeName });
+      const permission = await Permission.findOne({ codeName });
       if (!permission) {
         console.log(
           `No permission with the code name "${codeName}" was found.`
@@ -187,7 +161,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
     }
 
     console.log(
-      await getManager().save(group)
+      await group.save()
     );
   } catch (error) {
     console.log(error.message);

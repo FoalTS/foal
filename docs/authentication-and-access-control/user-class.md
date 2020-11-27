@@ -5,10 +5,10 @@
 ## The User Entity
 
 ```typescript
-import { Entity, PrimaryGenerateColumn } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGenerateColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number
@@ -38,14 +38,7 @@ import { User } from './src/app/entities';
 async function main() {
   const user = new User();
   user.foo = 1;
-  await getManager().save(user);
-  // OR
-  await getManager().save(User, {
-    foo: 1
-  });
-  // OR
-  await getRepository(User).save({
-    foo: 1
+  await user.save(); 1
   });
 }
 ```

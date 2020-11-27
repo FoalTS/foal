@@ -243,11 +243,10 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
+  Store,
   UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-import { TypeORMStore } from '@foal/typeorm';
-import { getRepository } from 'typeorm';
 
 import { User } from '../entities';
 
@@ -256,7 +255,7 @@ export class AuthController {
   google: GoogleProvider;
 
   @dependency
-  store: TypeORMStore;
+  store: Store;
 
   @Get('/signin/google')
   redirectToGoogle() {
@@ -266,22 +265,19 @@ export class AuthController {
   @Get('/signin/google/callback')
   @UseSessions({
     cookie: true,
-    required: false,
-    store: TypeORMStore,
   })
   async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
 
-    let user = await getRepository(User).findOne({ email: userInfo.email });
+    let user = await User.findOne({ email: userInfo.email });
 
     if (!user) {
       // If the user has not already signed up, then add them to the database.
       user = new User();
       user.email = userInfo.email;
-      await getRepository(User).save(user);
+      await user.save();
     }
 
-    ctx.session = ctx.session || await createSession(this.store);
     ctx.session.setUser(user);
 
     return new HttpResponseRedirect('/');

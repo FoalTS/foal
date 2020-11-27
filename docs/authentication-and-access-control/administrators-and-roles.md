@@ -10,10 +10,10 @@ If there are only two categories of users, administrators and non-administrators
 
 *entities/user.entity.ts*
 ```typescript
-import { Column, Entity } from 'typeorm';
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @Column()
   isAdmin: boolean;
@@ -62,10 +62,10 @@ If it exists more than two categories and/or a user can belong to several catego
 
 *entities/user.entity.ts*
 ```typescript
-import { Column, Entity } from 'typeorm';
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @Column('simple-array')
   roles: string[];
