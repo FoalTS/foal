@@ -54,10 +54,10 @@ export class AppController implements IAppController {
   signin(ctx: Context<any, Session>) {
     return render('templates/signin.html', { error: ctx.session.get('error', '') });
   }
-
+  
   @Get('/signup')
-  signup() {
-    return render('templates/signup.html');
+  signup(ctx: Context<any, Session>) {
+    return render('templates/signup.html', { error: ctx.session.get('error', '') });
   }
 }
 ```
