@@ -33,7 +33,7 @@ export class SignupController {
   async signup(ctx: Context<User, Session>) {
     // Check that the password is not too common.
     if (await isCommon(ctx.request.body.password)) {
-      ctx.session.set('error', 'Password too password.', { flash: true });
+      ctx.session.set('error', 'Password too common.', { flash: true });
       return new HttpResponseRedirect('/signup');
     }
 
