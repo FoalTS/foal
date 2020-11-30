@@ -10,10 +10,13 @@ If there are only two categories of users, administrators and non-administrators
 
 *entities/user.entity.ts*
 ```typescript
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
+
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   isAdmin: boolean;
@@ -23,7 +26,7 @@ export class User extends BaseEntity {
 
 *hooks/admin-required.hook.ts*
 ```typescript
-import { Context, Hook } from '@foal/core';
+import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -39,13 +42,13 @@ export function AdminRequired() {
 }
 ```
 
-*app.controller.ts*
+*controllers/api.controller.ts*
 ```typescript
 import { Get, HttpResponseOK } from '@foal/core';
 
 import { AdminRequired } from '../hooks';
 
-export class AppController {
+export class ApiController {
   private products = [ { id: 1, name: 'chair' } ];
 
   @Get('/products')
@@ -62,10 +65,13 @@ If it exists more than two categories and/or a user can belong to several catego
 
 *entities/user.entity.ts*
 ```typescript
-import { BaseEntity, Column, Entity } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
+
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column('simple-array')
   roles: string[];
@@ -75,7 +81,9 @@ export class User extends BaseEntity {
 
 *hooks/role-required.hook.ts*
 ```typescript
-import { Context, Hook } from '@foal/core';
+import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '@foal/core';
+
+import { User } from '../entities';
 
 export function RoleRequired(role: string) {
   return Hook((ctx: Context<User>) => {
@@ -89,13 +97,13 @@ export function RoleRequired(role: string) {
 }
 ```
 
-*app.controller.ts*
+*controllers/api.controller.ts*
 ```typescript
 import { Get, HttpResponseOK } from '@foal/core';
 
 import { RoleRequired } from '../hooks';
 
-export class AppController {
+export class ApiController {
   private products = [ { id: 1, name: 'chair' } ];
 
   @Get('/products')
