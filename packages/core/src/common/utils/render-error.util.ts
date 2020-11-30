@@ -1,6 +1,6 @@
 // std
 import { readFile } from 'fs';
-import { join } from 'path';
+import { basename, join } from 'path';
 import { promisify } from 'util';
 
 // FoalTS
@@ -24,10 +24,17 @@ export async function renderError(error: Error, ctx: Context): Promise<HttpRespo
 
   if (Config.get('settings.debug', 'boolean')) {
     const template = await promisify(readFile)(join(__dirname, '500.debug.html'), 'utf8');
+
+    const rex = /at (.*) \((.*):(\d+):(\d+)\)/;
+    const [ , , path, row, column ] = Array.from(rex.exec(error.stack || '') || []);
+
     body = renderToString(template, {
+      column,
+      filename: basename(path),
       message: error.message,
       name: error.name,
-      stack: error.stack
+      row,
+      stack: error.stack,
     });
   }
 
