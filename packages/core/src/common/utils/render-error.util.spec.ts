@@ -73,11 +73,14 @@ describe('renderError', () => {
         strictEqual(text.includes('<span>render-error.util.spec.ts</span>'), true);
       });
 
-      it('should contain the row and the column where the error was thrown.', async () => {
+      it('should contain the line and the column where the error was thrown.', async () => {
         const response = await renderError(error, ctx);
 
         const text: string = response.body;
-        strictEqual(text.includes('<span class="location">row 19, column 13</span>'), true);
+        const rex = /<span class="location">line (\d+), column (\d+)<\/span>/;
+        if (!rex.exec(text)) {
+          throw new Error('Line and/or column not found.');
+        }
       });
 
       it('should contain the message of the error.', async () => {

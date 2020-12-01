@@ -26,14 +26,14 @@ export async function renderError(error: Error, ctx: Context): Promise<HttpRespo
     const template = await promisify(readFile)(join(__dirname, '500.debug.html'), 'utf8');
 
     const rex = /at (.*) \((.*):(\d+):(\d+)\)/;
-    const [ , , path, row, column ] = Array.from(rex.exec(error.stack || '') || []);
+    const [ , , path, line, column ] = Array.from(rex.exec(error.stack || '') || []);
 
     body = renderToString(template, {
       column,
       filename: basename(path),
+      line,
       message: error.message,
       name: error.name,
-      row,
       stack: error.stack,
     });
   }
