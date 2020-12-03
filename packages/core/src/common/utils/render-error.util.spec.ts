@@ -10,9 +10,13 @@ describe('renderError', () => {
   let ctx: Context;
   let error: Error;
 
+  class PermissionError extends Error {
+    readonly name = 'PermissionError';
+  }
+
   beforeEach(() => {
     ctx = new Context({});
-    error = new Error('Error used in renderError');
+    error = new PermissionError('Error used in renderError');
   });
 
   function testErrorObject() {
@@ -53,19 +57,53 @@ describe('renderError', () => {
 
     testErrorObject();
 
-    it('should return a response with the proper body.', async () => {
-      const response = await renderError(error, ctx);
+    describe('returns a response whose body', () => {
 
-      const text: string = response.body;
-      strictEqual(text.includes(`Error: ${error.message}`), true, '"Error: This is an error" not found');
-      strictEqual(text.includes('at Context.'), true, '"at Context." not found');
-      strictEqual(
-        text.includes(
-          'You are seeing this error because you have settings.debug set to true in your configuration file.'
-        ),
-        true,
-        '"You are seeing this error because" not found.'
-      );
+      it('should contain the name of the error.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        strictEqual(text.includes(`<h2>${error.name}</h2>`), true);
+      });
+
+      it('should contain the filename where the error was thrown.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        strictEqual(text.includes('<span>render-error.util.spec.ts</span>'), true);
+      });
+
+      it('should contain the line and the column where the error was thrown.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        const rex = /<span class="location">line (\d+), column (\d+)<\/span>/;
+        if (!rex.exec(text)) {
+          throw new Error('Line and/or column not found.');
+        }
+      });
+
+      it('should contain the message of the error.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        strictEqual(text.includes(`<pre class="message">${error.message}</pre>`), true);
+      });
+
+      it('should contain the call stack of the error.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        strictEqual(text.includes(`<pre>${error.stack}</pre>`), true);
+      });
+
+      it('should contain an information regarding the configuration.', async () => {
+        const response = await renderError(error, ctx);
+
+        const text: string = response.body;
+        strictEqual(text.includes('You are seeing this error because you have settings.debug set to true in your configuration file.'), true);
+      });
+
     });
 
   });
