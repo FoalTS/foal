@@ -18,7 +18,7 @@ PRs that correct grammatical errors or small bugs can be submitted directly.
 
 ## Development Environment
 
-The framework development environment uses [lerna](https://lernajs.io/) for managing packages and [docker](https://www.docker.com/) for database provisioning.
+The framework development environment uses [lerna](https://lerna.js.org/) for managing packages and [docker](https://www.docker.com/) for database provisioning.
 
 **Steps:**
 1. Install docker.
