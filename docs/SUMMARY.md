@@ -92,9 +92,9 @@
 
 ## Upgrading
 
-* [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
+* [To v2](./upgrade-to-v2/README.md)
 * [To v1](https://github.com/FoalTS/foal/releases/tag/v1.0.0)
-* [To v2](./upgrade-to-v2/index.md)
+* [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
 
 ## Community
 
