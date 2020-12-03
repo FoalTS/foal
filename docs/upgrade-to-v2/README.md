@@ -10,7 +10,7 @@ This guide will take you step by step through the upgrade to version 2. If somet
 
 Upgrade your versions of TypeScript and Node.JS if necessary.
 
-[New CLI commands](./cli-commands)
+[New CLI commands](./cli-commands.md)
 
 [New configuration system](./config-system.md)
 
@@ -18,16 +18,25 @@ Upgrade your versions of TypeScript and Node.JS if necessary.
 
 ## By topic
 
-* [Validation hooks](./validation-hooks.md)
-* [Authentication with sessions (session tokens) and CSRF protection](./session-tokens.md)
-* [OpenAPI](./openapi.md)
-* [Service and application initialization](./service-and-app-initialization.md)
-* [File upload and download](./file-upload-and-download.md)
-* [JWT hooks and CSRF protection](./jwt-and-csrf.md)
-* [Support of MongoDB](./mongodb.md)
-* [Error-handling and hook post functions](./error-handling.md)
-* [Template engine](./template-engine.md)
-* [Custom Express instance](./custom-express-instance.md)
+[Validation hooks](./validation-hooks.md)
+
+[Authentication with sessions (session tokens) and CSRF protection](./session-tokens.md)
+
+[OpenAPI](./openapi.md)
+
+[Service and application initialization](./service-and-app-initialization.md)
+
+[File upload and download](./file-upload-and-download.md)
+
+[JWT hooks and CSRF protection](./jwt-and-csrf.md)
+
+[Support of MongoDB](./mongodb.md)
+
+[Error-handling and hook post functions](./error-handling.md)
+
+[Template engine](./template-engine.md)
+
+[Custom Express instance](./custom-express-instance.md)
 
 ## Common issue
 
