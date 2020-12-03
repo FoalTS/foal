@@ -1,6 +1,6 @@
 # Architecture Overview
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
 
 FoalTS is a framework for creating server-side [Node.js](https://nodejs.org) applications. It is written in [TypeScript](https://www.typescriptlang.org/), a typed superset of JavaScript that provides advanced development tools and the latest language features.
 
