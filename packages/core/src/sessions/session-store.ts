@@ -1,20 +1,18 @@
 // FoalTS
-import { generateToken } from '../common';
-import { Config } from '../core';
-import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
-import { Session } from './session';
+import { SessionState } from './session-state.interface';
 
-export interface SessionOptions {
-  csrfToken?: boolean;
+export class SessionAlreadyExists extends Error {
+  readonly name = 'SessionAlreadyExists';
 }
 
 /**
- * Abstract class to be override when creating a session storage service.
+ * Store used to create, read, update and delete sessions.
  *
- * A session store peforms CRUD operations on sessions and can store them in
- * a database, file system, memory, etc.
+ * All session stores must inherit this abstract class.
  *
- * Examples of Store: TypeORMStore, RedisStore, MongoDBStore.
+ * When this class is used with the `@dependency` decorator,
+ * it returns the `ConcreteSessionStore` class from the file or the package specified
+ * with the configuration key "settings.session.store".
  *
  * @export
  * @abstract
@@ -26,120 +24,53 @@ export abstract class Store {
   static concreteClassName = 'ConcreteSessionStore';
 
   /**
-   * Read session expiration timeouts from the configuration.
+   * Saves the session for the first time.
    *
-   * The values are in seconds.
-   *
-   * Default values are:
-   * - 15 min for inactivity timeout
-   * - 1 week for absolute timeout
-   *
-   * This method throws an error if one of the following is true:
-   * - The given inactivity timeout is negative.
-   * - The given absolute timeout is negative.
-   * - The given inactivity timeout is greater than the absolute timeout.
-   *
-   * @static
-   * @returns {{ inactivity: number , absolute: number }} The expiration timeouts
-   * @memberof Store
-   */
-  static getExpirationTimeouts(): { inactivity: number , absolute: number } {
-    const result = {
-      absolute: Config.get2('settings.session.expirationTimeouts.absolute', 'number', SESSION_DEFAULT_ABSOLUTE_TIMEOUT),
-      inactivity: Config.get2(
-        'settings.session.expirationTimeouts.inactivity',
-        'number',
-        SESSION_DEFAULT_INACTIVITY_TIMEOUT
-      ),
-    };
-    if (result.absolute < 0) {
-      throw new Error('[CONFIG] The value of settings.session.expirationTimeouts.absolute must be a positive number.');
-    }
-    if (result.inactivity < 0) {
-      throw new Error(
-        '[CONFIG] The value of settings.session.expirationTimeouts.inactivity must be a positive number.'
-      );
-    }
-    if (result.absolute < result.inactivity) {
-      throw new Error(
-        '[CONFIG] The value of settings.session.expirationTimeouts.absolute must be greater than *.inactivity.'
-      );
-    }
-    return result;
-  }
-
-  /**
-   * Create and save an new session from a user.
-   *
-   * @param {({ id: string|number })} user - User id.
-   * @param {SessionOptions} options - Session options.
-   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
-   * @returns {Promise<Session>} The created session.
-   * @memberof Store
-   */
-  createAndSaveSessionFromUser(user: { id: string|number }, options?: SessionOptions): Promise<Session> {
-    return this.createAndSaveSession({ userId: user.id }, options);
-  }
-
-  /**
-   * Create and save a new session.
-   *
-   * This method *MUST* call the `generateSessionID` method to generate the session ID.
-   * This method *MUST* call the `applySessionOptions` method to extend the sessionContent.
+   * If a session already exists with the given ID, a SessionAlreadyExists error MUST be thrown.
    *
    * @abstract
-   * @param {object} sessionContent - The content of the session (often includes the user ID).
-   * @param {SessionOptions} options - Session options.
-   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
-   * @returns {Promise<Session>} The created session.
-   * @memberof Store
-   */
-  abstract createAndSaveSession(sessionContent: object, options?: SessionOptions): Promise<Session>;
-  /**
-   * Update and extend the lifetime of a session.
-   *
-   * Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
-   *
-   * @abstract
-   * @param {Session} session - The session containaing the updated content.
+   * @param {SessionState} state - The state of the session.
+   * @param {number} maxInactivity - The maximum idle activity of the session (useful for cache stores).
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract update(session: Session): Promise<void>;
+  abstract save(state: SessionState, maxInactivity: number): Promise<void>;
   /**
-   * Delete a session, whether it exists or not.
+   * Reads a session.
+   *
+   * If the session does not exist, the value `null` MUST be returned.
    *
    * @abstract
-   * @param {string} sessionID - The ID of the session.
+   * @param {string} id - The ID of the session.
+   * @returns {(Promise<SessionState|null>)} The state of the session.
+   * @memberof Store
+   */
+  abstract read(id: string): Promise<SessionState | null>;
+  /**
+   * Updates and extends the lifetime of a session.
+   *
+   * If the session no longer exists (i.e. has expired or been destroyed), the session MUST still be saved.
+   *
+   * @abstract
+   * @param {SessionState} state - The state of the session.
+   * @param {number} maxInactivity - The maximum idle activity of the session (useful for cache stores).
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract destroy(sessionID: string): Promise<void>;
+  abstract update(state: SessionState, maxInactivity: number): Promise<void>;
   /**
-   * Read a session from its ID.
+   * Deletes a session.
    *
-   * Returns `undefined` if the session does not exist or has expired.
+   * If the session does not exist, NO error MUST be thrown.
    *
    * @abstract
-   * @param {string} sessionID - The ID of the session.
-   * @returns {(Promise<Session|undefined>)} The Session object.
-   * @memberof Store
-   */
-  abstract read(sessionID: string): Promise<Session|undefined>;
-  /**
-   * Extend the lifetime of a session from its ID. The duration is
-   * the inactivity timeout.
-   *
-   * If the session does not exist, the method does not throw an error.
-   *
-   * @abstract
-   * @param {string} sessionID - The ID of the session.
+   * @param {string} id - The ID of the session.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract extendLifeTime(sessionID: string): Promise<void>;
+  abstract destroy(id: string): Promise<void>;
   /**
-   * Clear all sessions.
+   * Clears all sessions.
    *
    * @abstract
    * @returns {Promise<void>}
@@ -151,38 +82,17 @@ export abstract class Store {
    *
    * This method deletes all expired sessions.
    *
+   * If the store manages a cache database, then this method can remain empty but it must NOT throw an error.
+   *
    * @abstract
+   * @param {number} maxInactivity - The maximum idle activity of a session.
+   * @param {number} maxLifeTime - The maximum absolute life time of a session.
    * @returns {Promise<void>}
    * @memberof Store
    */
-  abstract cleanUpExpiredSessions(): Promise<void>;
+  abstract cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void>;
 
-  /**
-   * Generate a 128-bit base64url-encoded session ID.
-   *
-   * @protected
-   * @returns {Promise<string>} - The session ID.
-   * @memberof Store
-   */
-  protected async generateSessionID(): Promise<string> {
-    return generateToken();
-  }
-
-  /**
-   * Apply session options to the given session content.
-   *
-   * @protected
-   * @param {object} content - Session content.
-   * @param {SessionOptions} options - Session options.
-   * @param {boolean} [options.csrfToken] - Generate and add a `csrfToken` to the sessionContent.
-   * @returns {Promise<void>}
-   * @memberof Store
-   */
-  protected async applySessionOptions(content: object, options: SessionOptions): Promise<void> {
-    if (options.csrfToken) {
-      (content as any).csrfToken = await generateToken();
-    }
-  }
+  boot(): void|Promise<void> {}
 }
 
 export { Store as SessionStore };

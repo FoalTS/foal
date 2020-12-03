@@ -1,5 +1,7 @@
 # Nuxt.js
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 [Nuxt.js](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
 
 This document explains how to use it in conjunction with FoalTS. A sample source code can be found on [Github](https://github.com/FoalTS/foal/tree/master/samples/nuxt.js).
@@ -31,7 +33,7 @@ When the CLI asks which server framework to choose, select *None*.
 
     // Import and Set Nuxt.js options
     const config = require('../../frontend/nuxt.config.js');
-    config.dev = Config.get('settings.debug', true);
+    config.dev = Config.get('settings.debug', 'boolean', true);
 
     async function main() {
       // Init Nuxt.js
@@ -47,7 +49,7 @@ When the CLI asks which server framework to choose, select *None*.
     
       // ...
 
-      const app = createApp(AppController, {
+      const app = await createApp(AppController, {
         postMiddlewares: [
           nuxt.render
         ]

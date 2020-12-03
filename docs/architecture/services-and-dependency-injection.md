@@ -1,5 +1,7 @@
 # Services
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ```sh
 foal generate service my-service
 ```
@@ -26,6 +28,12 @@ You can access a service from a controller using the `@dependency` decorator.
 ```typescript
 import { dependency, Get, HttpResponseOK } from '@foal/core';
 
+class Logger {
+  log(message: string) {
+    console.log(`${new Date()} - ${message}`);
+  }
+}
+
 class AppController {
   @dependency
   logger: Logger
@@ -36,12 +44,6 @@ class AppController {
     return new HttpResponseOK('Hello world!');
   }
 
-}
-
-class Logger {
-  log(message: string) {
-    console.log(`${new Date()} - ${message}`);
-  }
 }
 ```
 
@@ -107,7 +109,7 @@ import { dependency } from '@foal/core';
 
 class ConversionService {
   celsiusToFahrenheit(temperature: number): number {
-    return temperature * 9/5 + 32;
+    return temperature * 9 / 5 + 32;
   }
 }
 
@@ -150,8 +152,9 @@ In many situations, it is necessary to mock the dependencies to truly write *uni
 import { dependency } from '@foal/core';
 
 class TwitterService {
-  fetchLastTweets() {
+  fetchLastTweets(): { msg: string }[] {
     // Make a call to the Twitter API to get the last tweets.
+    return [];
   }
 }
 
@@ -179,8 +182,8 @@ it('DetectorService', () => {
   const twitterMock = {
     fetchLastTweets() {
       return [
-        { message: 'Hello world!' },
-        { message: 'I LOVE FoalTS' },
+        { msg: 'Hello world!' },
+        { msg: 'I LOVE FoalTS' },
       ]
     }
   }
@@ -211,7 +214,7 @@ async function main() {
   const serviceManager = new ServiceManager();
   serviceManager.set(Connection, connection);
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     serviceManager
   });
 
@@ -247,8 +250,6 @@ class ApiController {
 
 ## Abstract Services
 
-> Abstract services are available in Foal v1.11 onwards.
-
 If you want to use a different service implementation depending on your environment (production, development, etc.), you can use an abstract service for this.
 
 *logger.service.ts*
@@ -257,7 +258,7 @@ export abstract class Logger {
   static concreteClassConfigPath = 'logger.driver';
   static concreteClassName = 'ConcreteLogger';
 
-  abstract log(str: string);
+  abstract log(str: string): void;
 }
 ```
 
@@ -274,7 +275,14 @@ export class ConsoleLogger extends Logger {
 export { ConsoleLogger as ConcreteLogger };
 ```
 
-*config/development.json*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+logger:
+  driver: ./app/services/console-logger.service
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "logger": {
@@ -282,6 +290,17 @@ export { ConsoleLogger as ConcreteLogger };
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  logger: {
+    driver: "./app/services/console-logger.service"
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 > The configuration value can be a package name or a path relative to the `src/` directory. If it is a path, it **must** start with `./` and **must not** have an extension (`.js`, `.ts`, etc).
 
@@ -312,8 +331,6 @@ export abstract class Logger {
 ```
 
 ## Usage with Interfaces and Generic Classes
-
-> Interface and generic class injection is available in Foal v1.8 onwards.
 
 Interfaces and generic classes can be injected using strings as IDs. To do this, you will need the `@Dependency` decorator.
 
@@ -352,7 +369,7 @@ async function main() {
     .set('product', productRepository)
     .set('logger', new ConsoleLogger());
 
-  const app = createApp(AppController, {
+  const app = await createApp(AppController, {
     serviceManager
   });
 
@@ -394,7 +411,7 @@ export class ApiController {
 In very rare situations, you may want to access the `ServiceManager` which is the identity mapper that contains all the service instances.
 
 ```typescript
-import { dependency, ServiceManager } from '@foal/core';
+import { dependency, Get, HttpResponseOK, ServiceManager } from '@foal/core';
 
 class MyService {
   foo() {
@@ -406,8 +423,10 @@ class MyController {
   @dependency
   services: ServiceManager;
 
+  @Get('/bar')
   bar() {
-    return this.services.get(MyService).foo();
+    const msg = this.services.get(MyService).foo();
+    return new HttpResponseOK(msg);
   }
 }
 ```

@@ -2,7 +2,7 @@ version: '3'
 services:
 
   mysql:
-    image: "mysql:5.7.10"
+    image: "mysql:5.7.30"
     ports:
       # Another version of MySQL is installed on the vm and already uses the port 3306.
       - "3308:3306"
@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: "test"
 
   mariadb:
-    image: "mariadb:10.3.22"
+    image: "mariadb:10.2.32"
     ports:
       - "3307:3306"
     environment:
@@ -23,7 +23,7 @@ services:
       MYSQL_DATABASE: "test"
 
   postgres:
-    image: "postgres:9.6.1"
+    image: "postgres:9.6.18"
     ports:
       - "5432:5432"
     environment:
@@ -31,25 +31,12 @@ services:
       POSTGRES_PASSWORD: "test"
       POSTGRES_DB: "test"
 
-  # mssql:
-  #   image: "microsoft/mssql-server-linux:2017-GA"
-  #   ports:
-  #     - "1433:1433"
-  #   environment:
-  #     SA_PASSWORD: "Admin12345"
-  #     ACCEPT_EULA: "Y"
-
   mongodb:
-    image: "mongo:3.4.1"
+    image: "mongo:4.0.18"
     ports:
       - "27017:27017"
   
   redis:
     image: "redis:4.0.14"
     ports:
-      - "6379:6379"
-
-  adminer:
-    image: adminer
-    ports:
-      - 8080:8080
+      - "6380:6379"

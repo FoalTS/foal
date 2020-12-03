@@ -9,11 +9,12 @@ import { Class } from '../../core';
  * when adding the controller as a sub-controller.
  *
  * @export
+ * @template T
  * @param {string} path - The HTTP path.
- * @param {Class} controllerClass - The controller class.
- * @returns {Class} The controller class.
+ * @param {Class<T>} controllerClass - The controller class.
+ * @returns {Class<T>} The controller class.
  */
-export function controller(path: string, controllerClass: Class): Class {
+export function controller<T>(path: string, controllerClass: Class<T>): Class<T> {
   Reflect.defineMetadata('path', path, controllerClass);
   return controllerClass;
 }

@@ -1,5 +1,7 @@
 # Hooks
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ```sh
 foal generate hook my-hook
 ```
@@ -19,9 +21,9 @@ They improve code readability and make unit testing easier.
 
 Foal provides a number of hooks to handle the most common scenarios.
 
-- `ValidateBody`, `ValidateHeader`, `ValidateHeaders`, `ValidatePathParam`, `ValidateParams`, `ValidateCookie`, `ValidateCookies`, `ValidateQueryParam` and `ValidateQuery` validate the format of the incoming HTTP requests (see [Validation](../validation-and-sanitization.md)).
-- `Log` displays information on the request (see [Logging & Debugging](../utilities/logging-and-debugging.md)).
-- `JWTRequired`, `JWTOptional`, `TokenRequired`, `TokenOptional` authenticate the user by filling the `ctx.user` property.
+- `ValidateBody`, `ValidateHeader`, `ValidatePathParam`, `ValidateCookie` and `ValidateQueryParam` validate the format of the incoming HTTP requests (see [Validation](../common/validation-and-sanitization.md)).
+- `Log` displays information on the request (see [Logging & Debugging](../common/logging-and-debugging.md)).
+- `JWTRequired`, `JWTOptional`, `UseSessions` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
 
 ## Use
@@ -50,12 +52,12 @@ class AppController {
 
   @Post('/products')
   @ValidateBody({
-    type: 'object',
+    additionalProperties: false,
     properties: {
       name: { type: 'string' }
     },
-    additionalProperties: false,
-    required: [ 'name' ]
+    required: [ 'name' ],
+    type: 'object',
   })
   addProduct(ctx: Context) {
     this.products.push(ctx.request.body);
@@ -65,7 +67,7 @@ class AppController {
 }
 ```
 
-If the user makes a POST request to `/products` whereas she/he is not authenticated, then the server will respond with a 401 error and the `ValidateBody` hook and `addProduct` method won't be executed.
+If the user makes a POST request to `/products` whereas she/he is not authenticated, then the server will respond with a 400 error and the `ValidateBody` hook and `addProduct` method won't be executed.
 
 > If you need to apply a hook globally, you just have to make it decorate the root controller: `AppController`.
 >
@@ -132,11 +134,11 @@ A hook function can return an `HttpResponse` object. If so, the remaining hooks 
 
 *Example:*
 ```typescript
-import { Context, Get, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+import { Context, Hook, HttpResponseBadRequest, HttpResponseOK, Post } from '@foal/core';
 
 class MyController {
 
-  @Get('/')
+  @Post('/')
   @Hook((ctx: Context) => {
     if (typeof ctx.request.body.name !== 'string') {
       return new HttpResponseBadRequest();
@@ -153,15 +155,19 @@ You can also have access to the controller instance through the `this` keyword.
 
 *Example*
 ```typescript
-import { Get, getAjvInstance, Hook, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
-
+import { getAjvInstance, Hook, HttpResponseBadRequest, HttpResponseOK, Post } from '@foal/core';
 
 class MyController {
 
-  schema = { /* ... */ };
+  schema = {
+    properties: {
+      price: { type: 'number' }
+    },
+    type: 'object',
+  };
 
-  @Get('/')
-  @Hook((this: MyController, ctx, services) => {
+  @Post('/')
+  @Hook(function (this: MyController, ctx, services) {
     const ajv = getAjvInstance();
     const requestBody = ctx.request.body;
     if (!ajv.validate(this.schema, requestBody)) {
@@ -206,7 +212,7 @@ class MyController {
 
   @Get('/')
   @Hook(() => {
-    const time = process.hrtime(); 
+    const time = process.hrtime();
 
     return () => {
       const seconds = process.hrtime(time)[0];
@@ -225,15 +231,16 @@ class MyController {
 In case you need to group several hooks together, the `MergeHooks` function can be used to do this.
 
 ```typescript
+import { Get, HttpResponseOK, MergeHooks, ValidateCookie, ValidateHeader } from '@foal/core';
+
 // Before
 
 class MyController {
-  @Post('/products')
-  @ValidateBody({...})
-  @ValidateHeaders({...})
-  @ValidateCookie({...})
-  addProduct() {
-    // ...
+  @Get('/products')
+  @ValidateHeader('Authorization')
+  @ValidateCookie('foo')
+  readProducts() {
+    return new HttpResponseOK();
   }
 }
 
@@ -241,17 +248,16 @@ class MyController {
 
 function ValidateAll() {
   return MergeHooks(
-    ValidateBody({...}),
-    ValidateHeaders({...}),
-    ValidateCookie({...})
-  )
+    ValidateHeader('Authorization'),
+    ValidateCookie('foo')
+  );
 }
 
 class MyController {
-  @Post('/products')
+  @Get('/products')
   @ValidateAll()
-  addProduct() {
-    // ...
+  readProducts() {
+    return new HttpResponseOK();
   }
 }
 ```
@@ -318,7 +324,7 @@ import {
 } from '@foal/core';
 import { AddXXXHeader } from './add-xxx-header.hook';
 
-it('AddXXXHeader', () => {
+it('AddXXXHeader', async () => {
   const ctx = new Context({});
   const hook = getHookFunction(AddXXXHeader());
   
@@ -351,23 +357,25 @@ export function ValidateParamType() {
 
 ```typescript
 // validate-param-type.hook.spec.ts
-import { Context, getHookFunction , HttpResponseBadRequest } from '@foal/core';
+import { Context, getHookFunction, HttpResponseBadRequest } from '@foal/core';
 import { ValidateParamType } from './validate-param-type';
 
-const ctx = new Context({
-  // fake request object
-  params: { id: 'xxx' }
+it('ValidateParamType', () => {
+  const ctx = new Context({
+    // fake request object
+    params: { id: 'xxx' }
+  });
+  const controller = {
+    paramType: 'number'
+  };
+  const hook = getHookFunction(ValidateParamType()).bind(controller);
+
+  const response = hook(ctx, new ServiceManager());
+
+  if (!isHttpResponseBadRequest(response)) {
+    throw new Error('The hook should return an HttpResponseBadRequest object.');
+  }
 });
-const controller = {
-  paramType: 'number'
-};
-const hook = getHookFunction(ValidateParamType()).bind(controller);
-
-const response = hook(ctx, new ServiceManager());
-
-if (!isHttpResponseBadRequest(response)) {
-  throw new Error('The hook should return an HttpResponseBadRequest object.');
-}
 ```
 
 ### Mocking services
@@ -377,10 +385,10 @@ You can mock services by using the `set` method of the service manager.
 *Example:*
 ```typescript
 // authenticate.hook.ts
-import { Get, Hook, HttpResponseOK } from '@foal/core';
+import { Hook } from '@foal/core';
 
 export class UserService {
-  private users = {
+  private users: any = {
     eh4sb: { id: 1, name: 'John' },
     kadu5: { id: 2, name: 'Mary' }
   };
@@ -392,14 +400,14 @@ export class UserService {
 
 export const authenticate = Hook((ctx, services) => {
   const users = services.get(UserService);
-  ctx.user = users.getUser(ctx.params.query.key);
+  ctx.user = users.getUser(ctx.request.params.key);
 });
 ```
 
 ```typescript
 // authenticate.hook.spec.ts
 import { strictEqual } from 'assert';
-import { Context, getHookFunction } from '@foal/core';
+import { Context, getHookFunction, ServiceManager } from '@foal/core';
 import { authenticate, UserService } from './authenticate.hook';
 
 it('authenticate', () => {
@@ -407,7 +415,7 @@ it('authenticate', () => {
 
   const user = { id: 3, name: 'Bob' };
 
-  const ctx = Context();
+  new Context({ params: { key: 'xxx' }});
   const services = new ServiceManager();
   services.set(UserService, {
     getUser() {
@@ -423,11 +431,11 @@ it('authenticate', () => {
 
 ## Hook factories
 
-Usually, we don't create hooks directly by hook factories. Thus it is easier to customize the hook behavior on each route.
+Usually, we don't create hooks directly but with hook factories. Thus it is easier to customize the hook behavior on each route.
 
 *Example:*
 ```typescript
-import { Get, Hook } from '@foal/core';
+import { Get, Hook, HttpResponseOK } from '@foal/core';
 
 function Log(msg: string) {
   return Hook(() => { console.log(msg); });
@@ -437,13 +445,13 @@ class MyController {
   @Get('/route1')
   @Log('Receiving a GET /route1 request...')
   route1() {
-    // ...
+    return new HttpResponseOK('Hello world!');
   }
 
   @Get('/route2')
   @Log('Receiving a GET /route2 request...')
   route2() {
-    // ...
+    return new HttpResponseOK('Hello world!');
   }
 }
 ```

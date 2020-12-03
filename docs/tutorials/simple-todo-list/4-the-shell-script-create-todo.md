@@ -35,15 +35,14 @@ export const schema = {
 export async function main(args: { text: string }) {
   // Create a new connection to the database.
   const connection = await createConnection();
+
   try {
     // Create a new task with the text given in the command line.
     const todo = new Todo();
     todo.text = args.text;
 
     // Save the task in the database and then display it in the console.
-    console.log(
-      await connection.manager.save(todo)
-    );
+    console.log(await todo.save());
   } catch (error) {
     console.log(error.message);
   } finally {
@@ -57,7 +56,7 @@ export async function main(args: { text: string }) {
 Build the script.
 
 ```sh
-npm run build:scripts
+npm run build
 ```
 
 Then run the script to create tasks in the database.

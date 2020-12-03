@@ -1,6 +1,6 @@
 # TypeORM
 
-> *FoalTS components using TypeORM officially support the following databases: PostgreSQL, MySQL, MariaDB and SQLite*.
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
 
 *A simple model:*
 ```typescript
@@ -34,10 +34,19 @@ Here is a non-exhaustive list of its features:
 - transactions
 - etc
 
-TypeORM supports many SQL databases (MySQL / MariaDB / Postgres / SQLite / Microsoft SQL Server / Oracle / sql.js) as well as the MongoDB NoSQL database.
-
 > Although this documentation presents the basic features of TypeORM, you may be interested in reading the [official documentation](https://typeorm.io/) to learn more advanced features.
 
+## Supported Databases
+
+FoalTS supports officially the following databases:
+
+| Database | Versions |
+| --- | --- |
+| PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) |
+| MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) |
+| MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) |
+| SQLite | 3 |
+| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) |
 
 ## Use with FoalTS
 
@@ -53,29 +62,44 @@ const { Config } = require('@foal/core');
 
 module.exports = {
   type: 'sqlite',
-  database: Config.get('database.database'),
-  dropSchema: Config.get('database.dropSchema', false),
+  database: Config.get('database.database', 'string'),
+  dropSchema: Config.get('database.dropSchema', 'boolean', false),
   entities: ['build/app/**/*.entity.js'],
   migrations: ['build/migrations/*.js'],
   cli: {
     migrationsDir: 'src/migrations'
   },
-  synchronize: Config.get('database.synchronize', false)
+  synchronize: Config.get('database.synchronize', 'boolean', false)
 }
 ```
 
-*default.json (example)*
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+database:
+  database: ./db.sqlite3
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
-  "port": 3001,
-  "settings": {
-    ...
-  },
   "database": {
     "database": "./db.sqlite3"
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  database: {
+    database: "./db.sqlite3",
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
 
 ### Packages
 
@@ -98,14 +122,14 @@ const { Config } = require('@foal/core');
 module.exports = {
   type: 'mysql', // or 'postgres'
 
-  host: Config.get('database.host'),
-  port: Config.get('database.port'),
-  username: Config.get('database.username'),
-  password: Config.get('database.password'),
-  database: Config.get('database.database'),
+  host: Config.get('database.host', 'string'),
+  port: Config.get('database.port', 'number'),
+  username: Config.get('database.username', 'string'),
+  password: Config.get('database.password', 'string'),
+  database: Config.get('database.database', 'string'),
 
-  dropSchema: Config.get('database.dropSchema', false),
-  synchronize: Config.get('database.synchronize', false),
+  dropSchema: Config.get('database.dropSchema', 'boolean', false),
+  synchronize: Config.get('database.synchronize', 'boolean', false),
   
   entities: ["build/app/**/*.entity.js"],
   migrations: ["build/migrations/*.js"],
@@ -144,13 +168,18 @@ database:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```json
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=password
-DATABASE_DATABASE=my-db
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  // ...
+  database: {
+    host: "localhost",
+    port: 3306,
+    username: "root",
+    password: "password",
+    database: "my-db"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -212,9 +241,9 @@ describe('xxx', () => {
 
   beforeEach(() => connection = await createConnection())
 
-  afterEach(() => {
+  afterEach(async () => {
     if (connection) {
-      connection.close()
+      await connection.close()
     }
   });
 

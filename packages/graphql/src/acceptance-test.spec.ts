@@ -20,7 +20,7 @@ import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs'
 import { get, Server } from 'http';
 
 // 3p
-import { controller, createApp, dependency } from '@foal/core';
+import { Config, controller, createApp, dependency } from '@foal/core';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
@@ -57,7 +57,7 @@ describe('[Acceptance test] GraphQLController', () => {
     if (server) {
       server.close();
     }
-    delete process.env.SETTINGS_DEBUG;
+    Config.remove('settings.debug');
   });
 
   describe('should support common GraphQL clients such as', () => {
@@ -83,7 +83,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    beforeEach(() => server = createApp(AppController).listen(3000));
+    beforeEach(async () => server = (await createApp(AppController)).listen(3000));
 
     it('graphql-request.', async () => {
       const data = await request(
@@ -142,7 +142,7 @@ describe('[Acceptance test] GraphQLController', () => {
     mkdirSync('./test-dir');
     writeFileSync('./test-dir/my-defs.graphql', typeDefs, 'utf8');
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={user{name}}', resp => {
@@ -166,7 +166,7 @@ describe('[Acceptance test] GraphQLController', () => {
   });
 
   it('should include in the documentation an example on how to handle errors in resolvers.', async () => {
-    process.env.SETTINGS_DEBUG = 'false';
+    Config.set('settings.debug', false);
 
     class Resolvers {
       @FormatError()
@@ -188,7 +188,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={user{name}}', resp => {
@@ -256,7 +256,7 @@ describe('[Acceptance test] GraphQLController', () => {
       ];
     }
 
-    server = createApp(AppController).listen(3000);
+    server = (await createApp(AppController)).listen(3000);
 
     const response = await new Promise((resolve, reject) => {
       get('http://localhost:3000/graphql?query={recipe{title}}', resp => {

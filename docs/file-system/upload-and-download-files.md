@@ -1,5 +1,7 @@
 # Upload & Download Files
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 
 ## Configuration
@@ -36,17 +38,23 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "local",
+      local: {
+        directory: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
 ## File Uploads
-
-> This technique is available in Foal v1.7 onwards.
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
@@ -66,8 +74,11 @@ export class UserController {
     }
   })
   uploadProfilePhoto(ctx: Context) {
-    const buffer = ctx.request.body.files.profile;
-    const buffers = ctx.request.body.files.images;
+    const { buffer } = ctx.request.body.files.profile;
+    const files = ctx.request.body.files.images;
+    for (const file of files) {
+      // Do something with file.buffer
+    }
   }
 
 }
@@ -111,6 +122,23 @@ export class UserController {
 
 }
 ```
+
+### Accessing File Metadata
+
+When uploading files, the browser sends additional metadata. This can be accessed in the controller method.
+
+```typescript
+const file = ctx.request.body.files.profile;
+// file.mimeType, ...
+```
+
+| Property name | Type | Description |
+| --- | --- | --- |
+| `encoding` | `string` | Encoding type of the file |
+| `filename` | `string\|undefined` | Name of the file on the user's computer |
+| `mimeType` | `string` | Mime type of the file |
+| `path` | `string` | Path where the file has been saved. If the `saveTo` option was not provided, the value is an empty string. |
+| `buffer` | `Buffer` | Buffer containing the entire file. If the `saveTo` option was provided, the value is an empty buffer. |
 
 ### Adding Fields
 
@@ -165,10 +193,16 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT=1024
-SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    multipartRequests: {
+      fileSizeLimit: 1024,
+      fileNumberLimit: 4,
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -179,8 +213,6 @@ SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
 | fileNumberLimit | number | The maximum number of files (useful for `multiple` file fields). |
 
 ## File Downloads
-
-> This technique is available in Foal v1.6 onwards.
 
 Files can be downloaded using the method `createHttpResponse` of the `Disk` service. The returned object is optimized for downloading a (large) file in streaming.
 
@@ -240,12 +272,12 @@ export class User extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { Context, createHttpResponseFile, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
+import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
 import { User } from './entities';
 
-// @JWTRequired OR @TokenRequired
+// @JWTRequired OR @UseSessions
 // OR a custom hook that sets Context.user.
 export class AppController {
 
@@ -327,9 +359,13 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH=assets
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    staticPath: "assets"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -354,9 +390,13 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH_PREFIX=/static
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    staticPathPrefix: "/static"
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -367,86 +407,3 @@ SETTINGS_STATIC_PATH_PREFIX=/static
 | index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
 | styles.css | `/styles.css` | `/static/styles.css` |
 | app.js | `/app.js` | `/static/app.js` |
-
-## Deprecated components
-
-### The `createHttpResponseFile` function
-
-> *Deprecated since v1.6. Use the method `createHttpResponseFile` of the `Disk` service instead.*
-
-> **Warning:** This package only allows you to download files from your local file system. It does not work with Cloud storage.
-
-FoalTS provides the function `createHttpResponseFile` to download files in the browser from the server's local file system.
-
-```typescript
-import { createHttpResponseFile, Get } from '@foal/core';
-
-class AppController {
-
-  @Get('/download')
-  download() {
-    return createHttpResponseFile({
-      directory: 'uploaded/',
-      file: 'my-pdf.pdf'
-    });
-  }
-
-}
-```
-
-| Option | Type | Description |
-| --- | --- | --- |
-| directory | string | Path of the directory where the file is located (e.g. `uploaded/`). |
-| file | string | Name of the file with its extension (e.g. `report.pdf`). If the string provided is a path (e.g. `downloaded/report.pdf`), then Foal will automatically extract the filename (i.e. `report.pdf`).  |
-| forceDownload (optional) | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
-| filename (optional) | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the `file` option.
-
-### The `@foal/formidable` package
-
-> *Deprecated since v1.7. Use the `@ValidateMultipartFormDataBody` hook instead.*
-
-> **Warning:** This package only allows you to upload files to your local file system. It does not work with Cloud storage.
-
-You can upload files to your local file system using the library [formidable](https://www.npmjs.com/package/formidable). It will automatically parse the incoming form and save the submitted file(s) in the directory of your choice. A random id is generated for each saved file.
-
-```sh
-npm install formidable @types/formidable
-npm install @foal/formidable
-```
-
-> The package `@foal/formidable` is a small package that allows you to use `formidable` with promises. It only has one function: `parseForm`.
-
-Assuming that the client submits a form with a field named `file1` containing a file, you can save this file using `IncomingForm` and `parseForm`.
-
-```typescript
-import { Context, HttpResponseOK, Post } from '@foal/core';
-import { parseForm } from '@foal/formidable';
-import { IncomingForm } from 'formidable';
-
-export class AppController {
-
-  @Post('/upload')
-  async upload(ctx: Context) {
-    const form = new IncomingForm();
-    form.uploadDir = 'uploaded';
-    form.keepExtensions = true;
-    const { fields, files } = await parseForm(form, ctx);
-
-    console.log(files.file1);
-    // {
-    //   "size": 14911887,
-    //   "path": "uploaded/upload_de9cb95c.pdf",
-    //   "name": "example.pdf",
-    //   "type": "application/pdf",
-    //   "mtime": "2019-03-25T13:58:27.988Z"
-    // }
-
-    return new HttpResponseOK(
-      'The file has correctly been uploaded. '
-      + 'You can find it on the server at '
-      + files.file1.path
-    );
-  }
-
-}
-```

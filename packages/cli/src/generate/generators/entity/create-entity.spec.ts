@@ -14,14 +14,13 @@ describe('createEntity', () => {
 
     describe(`when the directory ${root}/ exists`, () => {
 
-      beforeEach(() => {
+      it('should render the templates in the proper directory.', () => {
         fs
+          .copyFixture('entity/package.json', 'package.json')
           .ensureDir(root)
           .cd(root)
           .copyFixture('entity/index.ts', 'index.ts');
-      });
 
-      it('should render the templates in the proper directory.', () => {
         createEntity({ name: 'test-fooBar' });
 
         fs
@@ -29,8 +28,25 @@ describe('createEntity', () => {
           .assertEqual('index.ts', 'entity/index.ts');
       });
 
+      it('should render the templates in the proper directory (MongoDB).', () => {
+        fs
+          .copyFixture('entity/package.mongodb.json', 'package.json')
+          .ensureDir(root)
+          .cd(root)
+          .copyFixture('entity/index.ts', 'index.ts');
+
+        createEntity({ name: 'test-fooBar' });
+
+        fs
+          .assertEqual('test-foo-bar.entity.ts', 'entity/test-foo-bar.entity.mongodb.ts')
+          .assertEqual('index.ts', 'entity/index.ts');
+      });
+
       it('create index.ts if it does not exist.', () => {
-        fs.rmfile('index.ts');
+        fs
+          .copyFixture('entity/package.json', 'package.json')
+          .ensureDir(root)
+          .cd(root);
 
         createEntity({ name: 'test-fooBar' });
 

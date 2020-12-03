@@ -6,5 +6,4 @@ export { hashPassword } from './hash-password.util';
 export { isInFile } from './is-in-file.util';
 export { renderError } from './render-error.util';
 export { render } from './render.util';
-export { validate } from './validate.util';
 export { verifyPassword } from './verify-password.util';

@@ -1,5 +1,7 @@
 # Password Management
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
 
 ## The `hashPassword` function
@@ -8,38 +10,16 @@ The `hashPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF
 
 > The function generates a unique cryptographically-strong random salt for each password. This salt is returned by the function beside the password hash.
 
-**Parameters**
-
-| Name | Type | Default value |
-| --- | --- | --- |
-| plainTextPassword | string | |
-| options | `{ legacy?: boolean }` | `{}` |
-
-**Return type**
-
 ```typescript
-Promise<string>
+const passwordHash = await hashPassword(plainTextPassword);
 ```
 
 ## The `verifyPassword` function
 
 The `verifyPassword` takes three arguments:
 - the password to check in plain text,
-- the password hash (usually fetched from the database),
-- and an optional `options` object (see below).
-
-**Parameters**
-
-| Name | Type | Default value |
-| --- | --- | --- |
-| plainTextPassword | string | |
-| passwordHash | string | |
-| options | `{ legacy?: boolean }` | `{}` |
-
-**Return type**
+- and the password hash (usually fetched from the database).
 
 ```typescript
-Promise<boolean>
+const isEqual = await verifyPassword(plainTextPassword, passwordHash);
 ```
-
-> If you used the `parsePassword` function in previous versions of Foal (<0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `hashPassword`.

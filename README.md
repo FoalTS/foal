@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="./docs/logo_title.png" height="160px" alt="Logo" />
+    <img src="./docs/images/logo_title.png" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
@@ -12,7 +12,7 @@
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
-  <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
+  <img src="https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg" alt="node version">
   <a href="https://badge.fury.io/js/%40foal%2Fcore">
     <img src="https://badge.fury.io/js/%40foal%2Fcore.svg" alt="npm version">
   </a>
@@ -68,7 +68,7 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 :point_right: [Continue with the tutorial](https://foalts.gitbook.io/docs/) :seedling:
 
-![Screenshot](./docs/screenshot.png)
+![Screenshot](./docs/images/screenshot.png)
 
 ## :dart: Motivation
 

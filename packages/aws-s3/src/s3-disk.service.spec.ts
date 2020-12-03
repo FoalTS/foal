@@ -11,7 +11,7 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { S3Disk } from './s3-disk.service';
 
 // Isolate each job with a different S3 bucket.
-const bucketName = `foal-test-${process.env.NODE_VERSION || 8}`;
+const bucketName = `foal-test-${process.env.NODE_VERSION || 10}`;
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
   const chunks: Buffer[] = [];
@@ -52,8 +52,8 @@ describe('S3Disk', () => {
   let disk: S3Disk;
   let s3: S3;
 
-  const accessKeyId = Config.get2('settings.aws.accessKeyId', 'string');
-  const secretAccessKey = Config.get2('settings.aws.secretAccessKey', 'string');
+  const accessKeyId = Config.get('settings.aws.accessKeyId', 'string');
+  const secretAccessKey = Config.get('settings.aws.secretAccessKey', 'string');
 
   if (!accessKeyId) {
     console.warn('SETTINGS_AWS_ACCESS_KEY_ID not defined. Skipping S3Disk tests...');
@@ -67,20 +67,21 @@ describe('S3Disk', () => {
   }));
 
   beforeEach(() => {
-    process.env.SETTINGS_DISK_S3_BUCKET = bucketName;
+    Config.set('settings.disk.s3.bucket', bucketName);
 
     disk = createService(S3Disk);
   });
 
   afterEach(async () => {
-    delete process.env.SETTINGS_DISK_S3_BUCKET;
-    delete process.env.SETTINGS_AWS_ENDPOINT;
+    Config.remove('settings.disk.s3.bucket');
+    Config.remove('settings.aws.endpoint');
     await rmObjectsIfExist(s3);
   });
 
   it('should accept a S3 custom endpoint in the config.', async () => {
     // This test assumes that the "delete" method tries at least to connect to AWS.
-    process.env.SETTINGS_AWS_ENDPOINT = 'foobar';
+    Config.set('settings.aws.endpoint', 'foobar');
+
     try {
       await disk.delete('foo/test.txt');
       throw new Error('An error should have been thrown.');
@@ -95,7 +96,8 @@ describe('S3Disk', () => {
   describe('has a "write" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
@@ -160,7 +162,8 @@ describe('S3Disk', () => {
   describe('has a "read" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
@@ -244,10 +247,53 @@ describe('S3Disk', () => {
 
   });
 
+  describe('has a "readSize" method that', () => {
+
+    it('should throw an Error if no bucket is specified in the config.', async () => {
+      Config.remove('settings.disk.s3.bucket');
+
+      try {
+        await disk.readSize('foo');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof ConfigNotFoundError)) {
+          throw new Error('A ConfigNotFoundError should have been thrown.');
+        }
+        strictEqual(error.key, 'settings.disk.s3.bucket');
+        strictEqual(error.msg, 'You must provide a bucket name when using AWS S3 file storage (S3Disk).');
+      }
+    });
+
+    it('should throw a FileDoesNotExist if there is no file at the given path.', async () => {
+      try {
+        await disk.readSize('foo/test.txt');
+        throw new Error('An error should have been thrown.');
+      } catch (error) {
+        if (!(error instanceof FileDoesNotExist)) {
+          throw new Error('The method should have thrown a FileDoesNotExist error.');
+        }
+        strictEqual(error.filename, 'foo/test.txt');
+      }
+    });
+
+    it('should return the file size.', async () => {
+      await s3.putObject({
+        Body: Buffer.from('hello', 'utf8'),
+        Bucket: bucketName,
+        Key: 'foo/test.txt',
+      }).promise();
+
+      const size = await disk.readSize('foo/test.txt');
+      strictEqual(size, 5);
+    });
+
+  });
+
   describe('has a "delete" method that', () => {
 
     it('should throw an Error if no bucket is specified in the config.', async () => {
-      delete process.env.SETTINGS_DISK_S3_BUCKET;
+      Config.remove('settings.disk.s3.bucket');
+
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');

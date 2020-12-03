@@ -12,11 +12,7 @@ describe('The server', () => {
 
   before(async () => {
     await createConnection();
-    app = createApp(AppController, {
-      methods: {
-        handleError: true
-      }
-    });
+    app = await createApp(AppController);
   });
 
   after(() => getConnection().close());
@@ -25,7 +21,7 @@ describe('The server', () => {
     return request(app)
       .get('/products')
       .expect(403)
-      .expect('Access forbidden');
+      .expect('Access forbidden!');
   });
 
 });

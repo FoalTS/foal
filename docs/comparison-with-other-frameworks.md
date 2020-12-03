@@ -70,5 +70,5 @@ To do. Feel free to open an issue to share your experience!
 
 - Foal is written in TypeScript and Adonis in JavaScript.
 - The architecture is pretty different: Adonis defines its routes with functions whereas Foal uses classes and decorators.
-- Adonis has its own ORM: [Lucid](https://adonisjs.com/docs/4.0/lucid). Foal uses [TypeORM](http://typeorm.io) or [Mongoose](https://mongoosejs.com/).
+- Adonis has its own ORM: [Lucid](https://adonisjs.com/docs/4.0/lucid). Foal uses [TypeORM](http://typeorm.io).
 - Foal supports OpenAPI, Swagger UI and GraphQL.

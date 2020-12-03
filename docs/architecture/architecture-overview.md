@@ -1,5 +1,7 @@
 # Architecture Overview
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 FoalTS is a framework for creating server-side [Node.js](https://nodejs.org) applications. It is written in [TypeScript](https://www.typescriptlang.org/), a typed superset of JavaScript that provides advanced development tools and the latest language features.
 
 FoalTS architecture is organized around three main components: controllers, services and hooks.
@@ -28,22 +30,22 @@ Services are also classes instantiated as singletons. They are used by the contr
 ```typescript
 import { dependency, Get, HttpResponseOK } from '@foal/core';
 
+class FormatService {
+  withDate(message: string): string {
+    return `${new Date()} - ${message}`;
+  }
+}
+
 class AppController {
   @dependency
-  logger: Logger;
+  format: FormatService;
 
   @Get('/')
   index() {
-    this.logger.log('index has been called!');
-    return new HttpResponseOK('Hello world!');
+    const message = this.format.withDate('Hello world!');
+    return new HttpResponseOK(message);
   }
 
-}
-
-class Logger {
-  log(message: string) {
-    console.log(`${new Date()} - ${message}`);
-  }
 }
 ```
 
@@ -73,7 +75,7 @@ Controllers may have sub-controllers. Hooks can be attached to the controllers o
 Here's an example of what a FoalTS application may look like.
 
 ```typescript
-import { Context, Get, HttpResponseNotFound, HttpResponseOK, Log } from '@foal/core';
+import { Context, controller, Get, HttpResponseNotFound, HttpResponseOK, Log } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 
 @JWTRequired()
@@ -90,8 +92,8 @@ class ApiController {
 
   @Get('/products/:id')
   getProduct(ctx: Context) {
-    const product = this.products.findOne(
-      p => p.id === ctx.request.params.id
+    const product = this.products.find(
+      p => p.id === parseInt(ctx.request.params.id, 10)
     );
 
     if (!product) {

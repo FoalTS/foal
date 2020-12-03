@@ -1,55 +1,66 @@
 // 3p
-import { createService, Session, SessionStore } from '@foal/core';
+import { Config, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { RedisStore } from './redis-store.service';
 
 describe('RedisStore', () => {
 
-  let store: RedisStore;
-  const REDIS_URI = 'redis://localhost:6379';
-  let redisClient: any;
+  const REDIS_URI = 'redis://localhost:6380';
+  const COLLECTION_NAME =  'sessions';
 
-  before(() => {
+  let store: RedisStore;
+  let redisClient: any;
+  let state: SessionState;
+  let maxInactivity: number;
+
+  function createState(): SessionState {
+    return {
+      content: {
+        foo: 'bar'
+      },
+      createdAt: 0,
+      flash: {
+        hello: 'world'
+      },
+      id: 'xxx',
+      updatedAt: 0,
+      userId: null,
+    };
+  }
+
+  function getKey(id: string): string {
+    return `${COLLECTION_NAME}:${id}`;
+  }
+
+  before(async () => {
+    Config.set('settings.redis.uri', REDIS_URI);
+
     redisClient = createClient(REDIS_URI);
     store = createService(RedisStore);
+    await store.boot();
   });
 
-  beforeEach(async () => {
-    process.env.REDIS_URI = REDIS_URI;
-    await new Promise((resolve, reject) => {
-      redisClient.flushdb((err: any, success: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(success);
-      });
-    });
+  beforeEach(done => {
+    state = createState();
+    maxInactivity = 1000;
+    redisClient.flushdb(done);
   });
 
-  afterEach(() => delete process.env.REDIS_URI);
+  after(() => {
+    Config.remove('settings.redis.uri');
 
-  after(() => Promise.all([
-    redisClient.end(true),
-    store.getRedisInstance().end(true)
-  ]));
+    return Promise.all([
+      redisClient.end(true),
+      store.close(),
+    ]);
+  });
 
   function asyncSet(key: string, value: string) {
     return new Promise((resolve, reject) => {
       redisClient.set(key, value, (err: any, success: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(success);
-      });
-    });
-  }
-
-  function asyncExpire(key: string, value: number) {
-    return new Promise((resolve, reject) => {
-      redisClient.expire(key, value, (err: any, success: any) => {
         if (err) {
           return reject(err);
         }
@@ -80,207 +91,182 @@ describe('RedisStore', () => {
     });
   }
 
-  describe('has a "createAndSaveSession" method that', () => {
-
-    it('should return a representation (Session object) of the created session.', async () => {
-      const dateBefore = Date.now();
-      const session = await store.createAndSaveSession({ foo: 'bar' });
-      const dateAfter = Date.now();
-
-      notStrictEqual(session.sessionID, undefined);
-      deepStrictEqual(session.getContent(), { foo: 'bar' });
-
-      strictEqual(dateBefore <= session.createdAt, true);
-      strictEqual(session.createdAt <= dateAfter, true);
-    });
-
-    it('should support session options.', async () => {
-      const session = await store.createAndSaveSession({ foo: 'bar' }, { csrfToken: true });
-      strictEqual(typeof (session.getContent() as any).csrfToken, 'string');
-    });
-
-    it('should generate an ID and create a new session in the database.', async () => {
-      const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-      const session = await store.createAndSaveSession({ foo: 'bar' });
-
-      notStrictEqual(session.sessionID, undefined);
-      strictEqual(await asyncTTL(`session:${session.sessionID}`), inactivity);
-      const data = JSON.parse(await asyncGet(`session:${session.sessionID}`));
-      deepStrictEqual(data, {
-        content: { foo: 'bar' },
-        createdAt: session.createdAt
+  function asyncExists(key: string): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      redisClient.exists(key, (err: any, val: number) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(val);
       });
     });
+  }
 
+  it('should support sessions IDs of length 44.', async () => {
+    const session = await createSession({} as any);
+    const key = getKey(session.getToken());
+    await asyncSet(key, 'bar');
+    strictEqual(await asyncExists(key), 1);
   });
 
-  describe('has a "update" method that', () => {
+  describe('has a "save" method that', () => {
 
-    it('should update the content of the session if the session exists.', async () => {
-      const createdAt = Date.now();
-      const data = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:a', JSON.stringify(data));
-      strictEqual(await asyncGet('session:a'), JSON.stringify(data));
+    context('given no session exists in the database with the given ID', () => {
 
-      const session = new Session('a', data.content, data.createdAt);
-      session.set('foo', 'foobar');
+      it('should save the session state in the database.', async () => {
+        await store.save(state, maxInactivity);
 
-      await store.update(session);
-
-      const data2 = JSON.parse(await asyncGet('session:a'));
-      deepStrictEqual(data2, {
-        content: { foo: 'foobar' },
-        createdAt
+        const actual = JSON.parse(await asyncGet(getKey(state.id)));
+        deepStrictEqual(actual, state);
       });
-    });
 
-    it('should update the lifetime (inactiviy) if the session exists.', async () => {
-      const inactivity = SessionStore.getExpirationTimeouts().inactivity;
+      it('should set the proper key lifetime in the database.', async () => {
+        await store.save(state, maxInactivity);
 
-      const createdAt = Date.now();
-      const data = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:a', JSON.stringify(data));
-      strictEqual(await asyncGet('session:a'), JSON.stringify(data));
-
-      const session = new Session('a', data.content, data.createdAt);
-      session.set('foo', 'foobar');
-
-      await store.update(session);
-
-      strictEqual(await asyncTTL('session:a'), inactivity);
-    });
-
-    it('should create the session if it does not exist (with the proper lifetime).', async () => {
-      strictEqual(await asyncGet('session:a'), null);
-
-      const session = new Session('a', { foo: 'bar' }, Date.now());
-
-      await store.update(session);
-
-      const sessionA = await asyncGet('session:a');
-      notStrictEqual(sessionA, null);
-
-      deepStrictEqual(JSON.parse(sessionA), {
-        content: session.getContent(),
-        createdAt: session.createdAt
+        const actual = await asyncTTL(getKey(state.id));
+        deepStrictEqual(actual, maxInactivity);
       });
+
     });
 
-  });
+    context('given a session already exists in the database with the given ID', () => {
 
-  describe('has a "destroy" method that', () => {
+      beforeEach(async () => {
+        await asyncSet(getKey(state.id), JSON.stringify(state));
+      });
 
-    it('should delete the session from its ID.', async () => {
-      await asyncSet('session:a', '{}');
-      strictEqual(await asyncGet('session:a'), '{}');
+      it('should throw a SessionAlreadyExists error.', async () => {
+        return rejects(
+          () => store.save(state, maxInactivity),
+          new SessionAlreadyExists()
+        );
+      });
 
-      await store.destroy('a');
-
-      strictEqual(await asyncGet('session:a'), null);
-    });
-
-    it('should not throw if no session matches the given session ID.', async () => {
-      await store.destroy('c');
     });
 
   });
 
   describe('has a "read" method that', () => {
 
-    it('should return undefined if no session matches the ID.', async () => {
-      strictEqual(await store.read('c'), undefined);
+    context('given no session exists in the database with the given ID', () => {
+
+      it('should return null.', async () => {
+        strictEqual(await store.read('c'), null);
+      });
+
     });
 
-    it('should return undefined if the session has expired (inactivity).', async () => {
-      await asyncSet('session:aaa', '{}');
-      await asyncExpire('session:aaa', 0);
-      strictEqual(await store.read('aaa'), undefined);
-    });
+    context('given a session exists in the database with the given ID', () => {
 
-    it('should return undefined if the session has expired (absolute).', async () => {
-      const absolute = SessionStore.getExpirationTimeouts().absolute;
+      beforeEach(async () => {
+        await asyncSet(getKey(state.id), JSON.stringify(state));
+      });
 
-      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
-      await asyncSet('session:a', JSON.stringify(sessionA));
-      // The line below fixes Travis test failures.
-      await new Promise(resolve => setTimeout(resolve, 200));
+      it('should return the session state.', async () => {
+        const expected = createState();
+        const actual = await store.read(state.id);
 
-      const session = await store.read('a');
-      strictEqual(session, undefined);
-    });
+        deepStrictEqual(actual, expected);
+      });
 
-    it('should delete the session if it has expired (absolute).', async () => {
-      const absolute = SessionStore.getExpirationTimeouts().absolute;
-
-      const sessionA = { content: {}, createdAt: Date.now() - absolute * 1000 };
-      await asyncSet('session:a', JSON.stringify(sessionA));
-      // The line below fixes Travis test failures.
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      await store.read('a');
-
-      strictEqual(await asyncGet('session:a'), null);
-    });
-
-    it('should return the session.', async () => {
-      const createdAt = Date.now();
-      const sessionA = { content: {}, createdAt };
-      await asyncSet('session:a', JSON.stringify(sessionA));
-      const sessionB = { content: { foo: 'bar' }, createdAt };
-      await asyncSet('session:b', JSON.stringify(sessionB));
-
-      const session = await store.read('b');
-      if (!session) {
-        throw new Error('RedisStore.read should not return undefined.');
-      }
-      strictEqual(session.sessionID, 'b');
-      strictEqual(session.get('foo'), 'bar');
-      strictEqual(session.createdAt, createdAt);
     });
 
   });
 
-  describe('has a "extendLifeTime" method that', () => {
+  describe('has a "update" method that', () => {
 
-    it('should extend the lifetime of session (inactivity).', async () => {
-      const inactivity = SessionStore.getExpirationTimeouts().inactivity;
+    context('given no session exists in the database with the given ID', () => {
 
-      await asyncSet('session:aaa', '{}');
-      await asyncExpire('session:aaa', 5);
-      strictEqual(await asyncTTL('session:aaa'), 5);
+      it('should save the session state in the database.', async () => {
+        await store.update(state, maxInactivity);
 
-      await store.extendLifeTime('aaa');
+        const actual = JSON.parse(await asyncGet(getKey(state.id)));
+        deepStrictEqual(actual, state);
+      });
 
-      strictEqual(await asyncTTL('session:aaa'), inactivity);
+      it('should set the proper key lifetime in the database.', async () => {
+        await store.update(state, maxInactivity);
+
+        const actual = await asyncTTL(getKey(state.id));
+        deepStrictEqual(actual, maxInactivity);
+      });
+
     });
 
-    it('should not throw if no session matches the given session ID.', async () => {
-      await store.extendLifeTime('c');
+    context('given a session already exists in the database with the given ID', () => {
 
-      strictEqual(await asyncTTL('session:c'), -2);
+      beforeEach(async () => {
+        await asyncSet(getKey(state.id), JSON.stringify(state));
+      });
+
+      it('should update the session state in the database.', async () => {
+        const updatedState = {
+          ...state,
+          updatedAt: state.updatedAt + 1,
+        };
+        await store.update(updatedState, maxInactivity);
+
+        const actual = JSON.parse(await asyncGet(getKey(state.id)));
+        deepStrictEqual(actual, updatedState);
+      });
+
+      it('should set the proper key lifetime in the database.', async () => {
+        strictEqual(await asyncTTL(getKey(state.id)), -1);
+
+        await store.update(state, maxInactivity);
+
+        const actual = await asyncTTL(getKey(state.id));
+        deepStrictEqual(actual, maxInactivity);
+      });
+
+    });
+
+  });
+
+  describe('has a "destroy" method that', () => {
+
+    context('given no session exists in the database with the given ID', () => {
+
+      it('should not throw an error.', () => {
+        return doesNotReject(() => store.destroy('c'));
+      });
+
+    });
+
+    context('given a session already exists in the database with the given ID', () => {
+
+      beforeEach(async () => {
+        await asyncSet(getKey(state.id), JSON.stringify(state));
+      });
+
+      it('should delete the session in the database.', async () => {
+        await store.destroy(state.id);
+
+        strictEqual(await asyncGet(getKey(state.id)), null);
+      });
+
     });
 
   });
 
   describe('has a "clear" method that', () => {
 
-    it('should remove all sessions.', async () => {
-      await asyncSet('session:aaa', '{}');
-      const sessionA = await asyncGet('session:aaa');
-      strictEqual(sessionA, '{}');
+    beforeEach(async () => {
+      await asyncSet(getKey(state.id), JSON.stringify(state));
+    });
 
+    it('should remove all sessions.', async () => {
       await store.clear();
 
-      strictEqual(await asyncGet('session:aaa'), null);
+      strictEqual(await asyncGet(getKey(state.id)), null);
     });
 
   });
 
   describe('has a "cleanUpExpiredSessions" method that', () => {
 
-    it('should do nothing.', async () => {
-      await store.cleanUpExpiredSessions();
+    it('should not throw.', () => {
+      return doesNotReject(() => store.cleanUpExpiredSessions());
     });
 
   });

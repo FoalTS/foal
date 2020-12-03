@@ -1,5 +1,7 @@
 # Generate and Run Migrations
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 Database migrations are a way of propagating changes you make to your entities into your database schema. The changes you make to your models (adding a field, deleting an entity, etc.) do not automatically modify your database. You have to do it yourself.
 
 You have two options: update the database schema manually (using database software, for example) or run migrations.
@@ -31,24 +33,19 @@ export class PostRefactoringTIMESTAMP implements MigrationInterface {
 Usually, you do not need to write migrations manually. TypeORM offers a powerful feature to generate your migration files based on the changes you make to your entities.
 
 ```sh
-# Build the entities
-npm run build:app
-# Generate the migration file based on the entities changes
-npm run migration:generate -- -n name-of-this-migration
-# Build the migration files
-npm run build:migrations
+npm run makemigrations
 ```
 
 ### Run the migrations
 
 ```sh
-npm run migration:run
+npm run migrations
 ```
 
 ### Revert the last migration
 
 ```sh
-npm run migration:revert
+npm run revertmigration
 ```
 
 ### A Complete Example
@@ -67,24 +64,18 @@ export class User {
 }
 ```
 
-&nbsp;2. Build the application.
+&nbsp;2. Make the migration file.
 
 ```
-npm run build:app
+npm run makemigrations
 ```
 
-&nbsp;3. Generate a migration file.
-
-```
-npm run migration:generate -- --name add-user
-```
-
-A new file `xxx-add-user.ts` appears in `src/directory`.
+A new file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addUser1561976236112 implements MigrationInterface {
+export class migration1561976236112 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL)`);
@@ -98,14 +89,13 @@ export class addUser1561976236112 implements MigrationInterface {
 
 ```
 
-&nbsp;4. Build and run the migration.
+&nbsp;3. Run the migration.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```
 
-&nbsp;5. Add new columns to the entity.
+&nbsp;4. Add new columns to the entity.
 
 ```typescript
 import { hashPassword } from '@foal/core';
@@ -131,24 +121,18 @@ export class User {
 
 ```
 
-&nbsp;6. Build the application.
+&nbsp;5. Generate another migration file.
 
 ```
-npm run build:app
+npm run makemigrations
 ```
 
-&nbsp;7. Generate another migration file.
-
-```
-npm run migration:generate -- --name add-email-and-password
-```
-
-Another file `xxx-add-email-and-password.ts` appears in `src/directory`.
+Another file `xxx-migration.ts` appears in `src/directory`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addEmailAndPassword1561981516514 implements MigrationInterface {
+export class migration1561981516514 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`CREATE TABLE "temporary_user" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password" varchar NOT NULL, CONSTRAINT "UQ_ed766a9782779b8390a2a81f444" UNIQUE ("email"))`);
@@ -168,11 +152,10 @@ export class addEmailAndPassword1561981516514 implements MigrationInterface {
 
 ```
 
-&nbsp;8. Build and run the migration.
+&nbsp;6. Run the migration.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```
 
 ## The `synchronize` and `dropSchema` options

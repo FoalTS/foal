@@ -1,7 +1,7 @@
 {
   "name": "@foal/internal-test",
   "private": true,
-  "version": "1.12.0",
+  "version": "2.0.0",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "publishConfig": {
     "access": "public"
@@ -38,11 +38,8 @@
     "lib/"
   ],
   "devDependencies": {
-    "@types/mocha": "~2.2.43",
-    "@types/node": "~10.5.6",
-    "mocha": "~5.2.0",
     "rimraf": "~2.6.2",
-    "ts-node": "~3.3.0",
-    "typescript": "~3.5.3"
+    "ts-node": "~9.0.0",
+    "typescript": "~4.0.2"
   }
 }

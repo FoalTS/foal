@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs'
 import { join } from 'path';
 
 // FoalTS
-import { HttpResponseOK } from '../../core';
+import { Config, HttpResponseOK } from '../../core';
 import { render, renderToString } from './render.util';
 
 const ejsTemplate = 'Hello <%= name %>! How are you?';
@@ -94,10 +94,11 @@ describe('render', () => {
 
   describe('given the configuration key "settings.templateEngine" is defined', () => {
 
-    afterEach(() => delete process.env.SETTINGS_TEMPLATE_ENGINE);
+    afterEach(() => Config.remove('settings.templateEngine'));
 
     it('should throw an Error if the given template engine is not compatible with Foal.', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = 'rimraf'; // A random package
+      Config.set('settings.templateEngine', 'rimraf'); // A random package
+
       try {
         await render('./templates/template.default.html', {}, __dirname);
         throw new Error('An error should have been thrown');
@@ -109,17 +110,9 @@ describe('render', () => {
       }
     });
 
-    it('should render the template with the given template engine (renderToString).', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = '@foal/ejs';
-      const name = 'Foobar';
-      const expected = `Hello ${name}! How are you?`;
-      const actual = await render('./templates/template.ejs.html', { name }, __dirname);
-      ok(actual instanceof HttpResponseOK);
-      strictEqual(actual.body, expected);
-    });
-
     it('should render the template with the given template engine (Express).', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = 'ejs';
+      Config.set('settings.templateEngine', 'ejs');
+
       const name = 'Foobar';
       const expected = `Hello ${name}! How are you?`;
       const actual = await render('./templates/template.ejs.html', { name }, __dirname);
@@ -128,7 +121,8 @@ describe('render', () => {
     });
 
     it('should render the template with the given template engine (Express: twig).', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = 'twig';
+      Config.set('settings.templateEngine', 'twig');
+
       const users = [ { name: 'John' }, { name: 'Mary'} ];
       const expected = ' John  Mary ';
       const actual = await render('./templates/template.twig.html', { users }, __dirname);
@@ -136,18 +130,9 @@ describe('render', () => {
       strictEqual(actual.body, expected);
     });
 
-    it('should throw errors returned by the given template engine (renderToString).', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = '@foal/ejs';
-      try {
-        await render('./templates/template.ejs.html', {}, __dirname);
-        throw new Error('An error should have been thrown');
-      } catch (error) {
-        strictEqual(error.message.includes('name is not defined'), true);
-      }
-    });
-
     it('should throw errors returned by the given template engine (Express).', async () => {
-      process.env.SETTINGS_TEMPLATE_ENGINE = 'ejs';
+      Config.set('settings.templateEngine', 'ejs');
+
       try {
         await render('./templates/template.ejs.html', {}, __dirname);
         throw new Error('An error should have been thrown');

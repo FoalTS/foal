@@ -1,5 +1,7 @@
 # Quick Start
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 *Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 
 > *Example: a user enters their login credentials to connect to the application*.
@@ -48,32 +50,24 @@ FoalTS provides two ways to generate tokens:
 
 ### The Authentication Hooks (step 2)
 
-In step 2, the hooks `TokenRequired`  and `TokenOptional` take care of checking the session tokens and retrieve their associated user. The same applies to `JWTRequired` and `JWTOptional` with JSON Web Tokens.
+In step 2, the hook `@UseSessions` takes care of checking the session tokens and retrieve their associated user. The same applies to `JWTRequired` and `JWTOptional` with JSON Web Tokens.
 
 You will find more information in the documentation pages dedicated to them.
 
-## Code Examples
+## Examples
 
-The four examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
+The examples below can be used directly in your application to configure login, logout and signup routes. You can use them as they are or customize them to meet your specific needs.
 
 For these examples, we will use TypeORM as default ORM and emails and passwords as credentials. An API will allow authenticated users to list *products* with the request `GET /api/products`.
 
-*src/app/app.controller.ts*
-```typescript
-import { controller } from '@foal/core';
-
-export class AppController {
-  subControllers = [
-    AuthController,
-    controller('/api', ApiController),
-  ];
-}
-```
+The definition of the `User` entity is common to all the examples and is as follows:
 
 *src/app/entities/user.entity.ts*
 ```typescript
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -83,327 +77,523 @@ export class User {
   @Column()
   password: string;
 }
+
+// Exporting this line is required
+// when using session tokens with TypeORM.
+// It will be used by `npm run makemigrations`
+// to generate the SQL session table.
+export { DatabaseSession } from '@foal/typeorm';
 ```
 
-## SPA + API / Mobile + API (no cookies)
+### SPA, 3rd party APIs, Mobile (cookies)
 
-With these implementations, the user logs in with the route `POST /login` and receives a token in exchange in the response body. Then, when the user makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.
+> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
+
+In these implementations, the client does not have to handle the receipt, sending and expiration of the tokens itself. All is handled transparently by the server using cookies.
+
+> *Note: If you develop a native Mobile application, you may need to enable a *cookie* plugin in your code.*
+
+> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../api-section/public-api-and-cors-requests.md).*
+
+#### Using Session Tokens
+
+First, make sure that the `DatabaseSession` entity is exported in `user.entity.ts`. Then build and run the migrations.
+
+```bash
+npm run makemigrations
+npm run migrations
+```
+
+*src/app/app.controller.ts*
+```typescript
+import { controller, dependency, IAppController, Store, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
+import { User } from './entities';
+import { ApiController, AuthController } from './controllers';
+
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User)
+})
+export class AppController implements IAppController {
+  // This line is required.
+  @dependency
+  store: Store;
+
+  subControllers = [
+    controller('/auth', AuthController),
+    controller('/api', ApiController),
+  ];
+
+  async init() {
+    await createConnection();
+  }
+
+}
+```
+
+*src/app/controllers/auth.controller.ts*
+```typescript
+import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+
+import { User } from '../entities';
+
+const credentialsSchema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' }
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
+
+export class AuthController {
+
+  @Post('/signup')
+  @ValidateBody(credentialsSchema)
+  async signup(ctx: Context<any, Session>) {
+    const user = new User();
+    user.email = ctx.request.body.email;
+    user.password = await hashPassword(ctx.request.body.password);
+    await user.save();
+
+    ctx.session.setUser(user);
+    await ctx.session.regenerateID();
+
+    return new HttpResponseOK();
+  }
+
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+  async login(ctx: Context<any, Session>) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      return new HttpResponseUnauthorized();
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseUnauthorized();
+    }
+
+    ctx.session.setUser(user);
+    await ctx.session.regenerateID();
+
+    return new HttpResponseOK();
+  }
+
+  @Post('/logout')
+  async logout(ctx: Context<any, Session>) {
+    await ctx.session.destroy();
+
+    return new HttpResponseOK();
+  }
+}
+```
+
+*src/app/controllers/api.controller.ts*
+```typescript
+import { Get, HttpResponseOK, UserRequired } from '@foal/core';
+
+@UserRequired()
+export class ApiController {
+  @Get('/products')
+  readProducts() {
+    return new HttpResponseOK([]);
+  }
+}
+```
+
+#### Using JSON Web Tokens
+
+> When using stateless authentication with JWT, you must manage the renewal of tokens after their expiration yourself. You also cannot list all users logged into your application.
+
+First, generate a base64-encoded secret.
+
+```bash
+foal createsecret
+```
+
+Save this secret in a `.env` file.
+
+```bash
+JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+```
+
+Update your configuration to retrieve the secret.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secret: env(JWT_SECRET)
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secret": "env(JWT_SECRET)",
+      "secretEncoding": "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+const { Env } = require('@foal/core');
+
+module.exports = {
+  settings: {
+    jwt: {
+      secret: Env.get("JWT_SECRET"),
+      secretEncoding: "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+*src/app/app.controller.ts*
+```typescript
+import { controller, IAppController } from '@foal/core';
+import { createConnection } from 'typeorm';
+
+import { ApiController, AuthController } from './controllers';
+
+export class AppController implements IAppController {
+
+  subControllers = [
+    controller('/auth', AuthController),
+    controller('/api', ApiController),
+  ];
+
+  async init() {
+    await createConnection();
+  }
+
+}
+```
+
+*src/app/controllers/auth.controller.ts*
+```typescript
+import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { getSecretOrPrivateKey, removeAuthCookie, setAuthCookie } from '@foal/jwt';
+import { sign } from 'jsonwebtoken';
+import { promisify } from 'util';
+
+import { User } from '../entities';
+
+const credentialsSchema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' }
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
+
+export class AuthController {
+
+  @Post('/signup')
+  @ValidateBody(credentialsSchema)
+  async signup(ctx: Context) {
+    const user = new User();
+    user.email = ctx.request.body.email;
+    user.password = await hashPassword(ctx.request.body.password);
+    await user.save();
+
+    const response = new HttpResponseOK();
+    await setAuthCookie(response, await this.createJWT(user));
+    return response;
+  }
+
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+  async login(ctx: Context) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      return new HttpResponseUnauthorized();
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseUnauthorized();
+    }
+
+    const response = new HttpResponseOK();
+    await setAuthCookie(response, await this.createJWT(user));
+    return response;
+  }
+
+  @Post('/logout')
+  async logout(ctx: Context) {
+    const response = new HttpResponseOK();
+    removeAuthCookie(response);
+    return response;
+  }
+
+  private async createJWT(user: User): Promise<string> {
+    const payload = {
+      email: user.email,
+      id: user.id,
+    };
+    
+    return promisify(sign as any)(
+      payload,
+      getSecretOrPrivateKey(),
+      { subject: user.id.toString() }
+    );
+  }
+}
+```
+
+*src/app/controllers/api.controller.ts*
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
+import { User } from './entities';
+
+@JWTRequired({
+  cookie: true,
+  // Add the line below if you prefer ctx.user
+  // to be an instance of User instead of the JWT payload.
+  // user: fetchUser(User)
+})
+export class ApiController {
+  @Get('/products')
+  readProducts() {
+    return new HttpResponseOK([]);
+  }
+}
+```
+
+### SPA, 3rd party APIs, Mobile (Authorization header)
+
+In these implementations, the user logs in with the route `POST /auth/login` and receives a token in exchange in the response body. Then, when the client makes a request to the API, the token must be included in the `Authorization` header using the bearer sheme.
 
 ```
 Authorization: Bearer my-token
 ```
 
-You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or use [Frontend Integration](../frontend-integration/angular-react-vue.md) to get this example  work with an SPA.
+> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../api-section/public-api-and-cors-requests.md).*
 
-### Sessions Tokens
+#### Using Session Tokens
 
-First generate a secret:
+First, make sure that the `DatabaseSession` entity is exported in `user.entity.ts`. Then build and run the migrations.
 
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
-```
-
-*src/app/controllers/auth.controller.ts*
-```typescript
-import { dependency, Get, Post, Session, TokenRequired, ValidateBody } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-// ... to complete
-
-const credentialsSchema = {
-  additionalProperties: false,
-  properties: {
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string' }
-  },
-  required: [ 'email', 'password' ],
-  type: 'object',
-};
-
-export class AuthController {
-  @dependency
-  store: TypeORMStore;
-
-  @Post('/signup')
-  @ValidateBody(credentialsSchema)
-  async signup(ctx: Context) {
-    const user = new User();
-    user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
-    await getRepository(User).save(user);
-
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    return new HttpResponseOK({
-      token: session.getToken()
-    });
-  }
-
-  @Post('/login')
-  @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
-    const user = await getRepository(User).findOne({ email: ctx.request.body.email });
-
-    if (!user) {
-      return new HttpResponseUnauthorized();
-    }
-
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      return new HttpResponseUnauthorized();
-    }
-
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    return new HttpResponseOK({
-      token: session.getToken()
-    });
-  }
-
-  @Post('/logout')
-  @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    return new HttpResponseNoContent();
-  }
-}
-```
-
-*src/app/controllers/api.controller.ts*
-```typescript
-@TokenRequired({ store: TypeORMStore })
-export class ApiController {
-  @Get('/products')
-  readProducts() {
-    return new HttpResponseOK([]);
-  }
-}
-```
-
-### JSON Web Tokens
-
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my-secret
-```
-
-*src/app/controllers/auth.controller.ts*
-```typescript
-const credentialsSchema = {
-  additionalProperties: false,
-  properties: {
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string' }
-  },
-  required: [ 'email', 'password' ],
-  type: 'object',
-};
-
-export class AuthController {
-
-  @Post('/signup')
-  @ValidateBody(credentialsSchema)
-  async signup(ctx: Context) {
-    const user = new User();
-    user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
-    await getRepository(User).save(user);
-
-    return this.generateLoginResponse(user);
-  }
-
-  @Post('/login')
-  @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
-    const user = await getRepository(User).findOne({ email: ctx.request.body.email });
-
-    if (!user) {
-      return new HttpResponseUnauthorized();
-    }
-
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      return new HttpResponseUnauthorized();
-    }
-
-    return this.generateLoginResponse(user);
-  }
-
-  private async generateLoginResponse(user: User): Promise<HttpResponseOK> {
-    const payload = {
-      email: user.email,
-      id: user.id,
-    };
-    const secret = Config.get<string>('settings.jwt.secretOrPublicKey');
-
-    const token = await new Promise<string>((resolve, reject) => {
-      sign(payload, secret, { subject: user.id.toString() }, (err, value: string) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(value);
-      });
-    });
-
-    return new HttpResponseOK({
-      token
-    });
-  }
-}
-```
-
-*src/app/controllers/api.controller.ts*
-```typescript
-@JWTRequired()
-export class ApiController {
-  @Get('/products')
-  readProducts() {
-    return new HttpResponseOK([]);
-  }
-}
-```
-
-## SPA + API (with cookies)
-
-> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
-
-In this implementation, the authentication is managed with cookies.
-
-You may need to enable [CORS](../api-section/public-api-and-cors-requests.md) or use [Frontend Integration](../frontend-integration/angular-react-vue.md) to get this example  work with an SPA.
-
-### Session Tokens
-
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
-```
-
-*src/app/controllers/auth.controller.ts*
-```typescript
-const credentialsSchema = {
-  additionalProperties: false,
-  properties: {
-    email: { type: 'string', format: 'email' },
-    password: { type: 'string' }
-  },
-  required: [ 'email', 'password' ],
-  type: 'object',
-};
-
-export class AuthController {
-  @dependency
-  store: TypeORMStore;
-
-  @Post('/signup')
-  @ValidateBody(credentialsSchema)
-  async signup(ctx: Context) {
-    const user = new User();
-    user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
-    await getRepository(User).save(user);
-
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    const response = new HttpResponseNoContent();
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
-  }
-
-  @Post('/login')
-  @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
-    const user = await getRepository(User).findOne({ email: ctx.request.body.email });
-
-    if (!user) {
-      return new HttpResponseUnauthorized();
-    }
-
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      return new HttpResponseUnauthorized();
-    }
-
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    const response = new HttpResponseNoContent();
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
-  }
-
-  @Post('/logout')
-  @TokenRequired({
-    cookie: true,
-    extendLifeTimeOrUpdate: false,
-    store: TypeORMStore,
-  })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    const response = new HttpResponseNoContent();
-    removeSessionCookie(response);
-    return response;
-  }
-}
-```
-
-*src/app/controllers/api.controller.ts*
-```typescript
-@TokenRequired({ store: TypeORMStore, cookie: true })
-export class ApiController {
-  @Get('/products')
-  readProducts() {
-    return new HttpResponseOK([]);
-  }
-}
-```
-
-## Regular Web Applications (with cookies and redirections)
-
-> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
-
-In this implementation, the authentication is managed with cookies and redirections.
-
-
-First generate a secret:
-
-```
-foal createsecret
-```
-
-And save this secret in a `.env` file:
-
-```
-SETTINGS_SESSION_SECRET=my-secret
+```bash
+npm run makemigrations
+npm run migrations
 ```
 
 *src/app/app.controller.ts*
 ```typescript
-import { controller } from '@foal/core';
+import { controller, IAppController } from '@foal/core';
+import { createConnection } from 'typeorm';
 
-export class AppController {
+import { ApiController, AuthController } from './controllers';
+
+export class AppController implements IAppController {
+
   subControllers = [
-    AuthController,
-    ViewController,
+    controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
+
+  async init() {
+    await createConnection();
+  }
+
 }
 ```
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
+import { Context, createSession, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
+
+import { User } from '../entities';
+
+const credentialsSchema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' }
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
+
+@UseSessions()
+export class AuthController {
+  @dependency
+  store: Store;
+
+  @Post('/signup')
+  @ValidateBody(credentialsSchema)
+  async signup(ctx: Context) {
+    const user = new User();
+    user.email = ctx.request.body.email;
+    user.password = await hashPassword(ctx.request.body.password);
+    await user.save();
+
+    ctx.session = await createSession(this.store);
+    ctx.session.setUser(user);
+
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
+
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+  async login(ctx: Context) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      return new HttpResponseUnauthorized();
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      return new HttpResponseUnauthorized();
+    }
+
+    ctx.session = await createSession(this.store);
+    ctx.session.setUser(user);
+
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
+
+  @Post('/logout')
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
+
+    return new HttpResponseOK();
+  }
+}
+```
+
+*src/app/controllers/api.controller.ts*
+```typescript
+import { Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+
+import { User } from '../entities';
+
+// The `request` option returns a pretty message if the Authorization header is not here.
+@UseSessions({
+  required: true,
+  user: fetchUser(User)
+})
+@UserRequired()
+export class ApiController {
+  @Get('/products')
+  readProducts() {
+    return new HttpResponseOK([]);
+  }
+}
+```
+
+
+#### Using JSON Web Tokens
+
+> When using stateless authentication with JWT, you must manage the renewal of tokens after their expiration yourself. You also cannot list all users logged into your application.
+
+First, generate a base64-encoded secret.
+
+```bash
+foal createsecret
+```
+
+Save this secret in a `.env` file.
+
+```bash
+JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+```
+
+Update your configuration to retrieve the secret.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secret: env(JWT_SECRET)
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secret": "env(JWT_SECRET)",
+      "secretEncoding": "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+const { Env } = require('@foal/core');
+
+module.exports = {
+  settings: {
+    jwt: {
+      secret: Env.get("JWT_SECRET"),
+      secretEncoding: "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+*src/app/app.controller.ts*
+```typescript
+import { controller, IAppController } from '@foal/core';
+import { createConnection } from 'typeorm';
+
+import { ApiController, AuthController } from './controllers';
+
+export class AppController implements IAppController {
+
+  subControllers = [
+    controller('/auth', AuthController),
+    controller('/api', ApiController),
+  ];
+
+  async init() {
+    await createConnection();
+  }
+
+}
+```
+
+*src/app/controllers/auth.controller.ts*
+```typescript
+import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
+import { sign } from 'jsonwebtoken';
+import { promisify } from 'util';
+
+import { User } from '../entities';
+
 const credentialsSchema = {
   additionalProperties: false,
   properties: {
@@ -415,8 +605,6 @@ const credentialsSchema = {
 };
 
 export class AuthController {
-  @dependency
-  store: TypeORMStore;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
@@ -424,69 +612,215 @@ export class AuthController {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
-    await getRepository(User).save(user);
+    await user.save();
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
+    return new HttpResponseOK({
+      token: await this.createJWT(user)
+    });
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
   async login(ctx: Context) {
-    const user = await getRepository(User).findOne({ email: ctx.request.body.email });
+    const user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user) {
-      return new HttpResponseRedirect('/login');
+      return new HttpResponseUnauthorized();
     }
 
     if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      return new HttpResponseRedirect('/login');
+      return new HttpResponseUnauthorized();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    const response = new HttpResponseRedirect('/home');
-    const token = session.getToken();
-    setSessionCookie(response, token);
-    return response;
+    return new HttpResponseOK({
+      token: await this.createJWT(user)
+    });
   }
 
-  @Post('/logout')
-  @TokenRequired({
-    cookie: true,
-    extendLifeTimeOrUpdate: false,
-    redirectTo: '/login',
-    store: TypeORMStore,
-  })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
-    const response = new HttpResponseRedirect('/login');
-    removeSessionCookie(response);
-    return response;
-  }
-}
-```
-
-*src/app/controllers/view.controller.ts*
-```typescript
-export class ViewController {
-  @Get('/home')
-  @TokenRequired({ store: TypeORMStore, cookie: true, redirectTo: '/login' })
-  home() {
-    return new HttpResponseOK('Home page');
+  private async createJWT(user: User): Promise<string> {
+    const payload = {
+      email: user.email,
+      id: user.id,
+    };
+    
+    return promisify(sign as any)(
+      payload,
+      getSecretOrPrivateKey(),
+      { subject: user.id.toString() }
+    );
   }
 }
 ```
 
 *src/app/controllers/api.controller.ts*
 ```typescript
-@TokenRequired({ store: TypeORMStore, cookie: true })
+import { Get, HttpResponseOK } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
+import { User } from '../entities';
+
+@JWTRequired({
+  // Add the line below if you prefer ctx.user
+  // to be an instance of User instead of the JWT payload.
+  // user: fetchUser(User)
+})
 export class ApiController {
   @Get('/products')
   readProducts() {
     return new HttpResponseOK([]);
   }
 }
+```
+
+### SSR Applications (cookies)
+
+> As you use cookies, you must add a [CSRF protection](../security/csrf-protection.md) to your application.
+
+In this implementation, the client does not have to handle the receipt, sending and expiration of the tokens itself. All is handled transparently by the server using cookies and redirections.
+
+#### Using Session Tokens
+
+First, make sure that the `DatabaseSession` entity is exported in `user.entity.ts`. Then build and run the migrations.
+
+```bash
+npm run makemigrations
+npm run migrations
+```
+
+*src/app/app.controller.ts*
+```typescript
+import { Context, controller, dependency, Get, IAppController, render, Session, Store, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
+import { ApiController, AuthController } from './controllers';
+import { User } from './entities';
+
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User)
+})
+export class AppController implements IAppController {
+  // This line is required.
+  @dependency
+  store: Store;
+
+  subControllers = [
+    controller('/auth', AuthController),
+    controller('/api', ApiController),
+  ];
+  
+  async init() {
+    await createConnection();
+  }
+
+  @Get('/')
+  @UserRequired({ redirectTo: '/login' })
+  index() {
+    return render('./templates/index.html');
+  }
+
+  @Get('/login')
+  login(ctx: Context<any, Session>) {
+    return render('./templates/login.html', {
+      errorMessage: ctx.session.get<string>('errorMessage', '')
+    });
+  }
+
+}
+```
+
+*src/app/controllers/auth.controller.ts*
+```typescript
+import { Context, hashPassword, HttpResponseRedirect, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+
+import { User } from '../entities';
+
+const credentialsSchema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' }
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
+
+export class AuthController {
+
+  @Post('/signup')
+  @ValidateBody(credentialsSchema)
+  async signup(ctx: Context<any, Session>) {
+    const user = new User();
+    user.email = ctx.request.body.email;
+    user.password = await hashPassword(ctx.request.body.password);
+    await user.save();
+
+    ctx.session.setUser(user);
+    await ctx.session.regenerateID();
+
+    return new HttpResponseRedirect('/');
+  }
+
+  @Post('/login')
+  @ValidateBody(credentialsSchema)
+  async login(ctx: Context<any, Session>) {
+    const user = await User.findOne({ email: ctx.request.body.email });
+
+    if (!user) {
+      ctx.session.set('errorMessage', 'Unknown email.', { flash: true });
+      return new HttpResponseRedirect('/login');
+    }
+
+    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      ctx.session.set('errorMessage', 'Invalid password.', { flash: true });
+      return new HttpResponseRedirect('/login');
+    }
+
+    ctx.session.setUser(user);
+    await ctx.session.regenerateID();
+
+    return new HttpResponseRedirect('/');
+  }
+
+  @Post('/logout')
+  async logout(ctx: Context<any, Session>) {
+    await ctx.session.destroy();
+
+    return new HttpResponseRedirect('/login');
+  }
+}
+```
+
+*src/app/controllers/api.controller.ts*
+```typescript
+import { Get, HttpResponseOK, UserRequired } from '@foal/core';
+
+@UserRequired()
+export class ApiController {
+  @Get('/products')
+  readProducts() {
+    return new HttpResponseOK([]);
+  }
+}
+```
+
+*templates/login.html*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+</head>
+<body>
+  {{ errorMessage }}
+  <form action="/auth/login" method="post">
+    <input type="email" name="email" id="email">
+    <input type="password" name="password" id="password">
+    <input type="submit" value="Log In">
+  </form>
+</body>
+</html>
 ```

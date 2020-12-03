@@ -5,7 +5,7 @@ import { URLSearchParams } from 'url';
 
 // 3p
 import {
-  ConfigMock,
+  Config,
   Context,
   createApp,
   createService,
@@ -134,18 +134,24 @@ describe('AbstractProvider', () => {
   }
 
   let provider: ConcreteProvider;
-  let configInstance: ConfigMock;
   const clientId = 'clientIdXXX';
   const clientSecret = 'clientSecretYYY';
   const redirectUri = 'https://example.com/callback';
 
   beforeEach(() => {
-    configInstance = new ConfigMock();
-    configInstance.set('settings.social.example.clientId', clientId);
-    configInstance.set('settings.social.example.clientSecret', clientSecret);
-    configInstance.set('settings.social.example.redirectUri', redirectUri);
+    Config.set('settings.social.example.clientId', clientId);
+    Config.set('settings.social.example.clientSecret', clientSecret);
+    Config.set('settings.social.example.redirectUri', redirectUri);
+    Config.set('settings.loggerFormat', 'none');
 
-    provider = createService(ConcreteProvider, { configInstance });
+    provider = createService(ConcreteProvider);
+  });
+
+  afterEach(() => {
+    Config.remove('settings.social.example.clientId');
+    Config.remove('settings.social.example.clientSecret');
+    Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.social.cookie.secure');
   });
 
   describe('has a "redirect" method that', () => {
@@ -178,7 +184,7 @@ describe('AbstractProvider', () => {
         class ConcreteProvider2 extends ConcreteProvider {
           defaultScopes = [ 'scope1', 'scope2' ];
         }
-        provider = createService(ConcreteProvider2, { configInstance });
+        provider = createService(ConcreteProvider2);
 
         const response = await provider.redirect();
         const searchParams = new URLSearchParams(response.path);
@@ -192,7 +198,7 @@ describe('AbstractProvider', () => {
           defaultScopes = [ 'scope1', 'scope2' ];
           scopeSeparator = ',';
         }
-        provider = createService(ConcreteProvider2, { configInstance });
+        provider = createService(ConcreteProvider2);
 
         const response = await provider.redirect();
         const searchParams = new URLSearchParams(response.path);
@@ -205,7 +211,7 @@ describe('AbstractProvider', () => {
           // This checks that the default scopes will be override.
           defaultScopes = [ 'scope1', 'scope2' ];
         }
-        provider = createService(ConcreteProvider2, { configInstance });
+        provider = createService(ConcreteProvider2);
 
         const response = await provider.redirect({
           scopes: [ 'scope3', 'scope4' ]
@@ -241,7 +247,7 @@ describe('AbstractProvider', () => {
       });
 
       it('with a generated state in a cookie whose secure option is defined with the config.', async () => {
-        configInstance.set('settings.social.cookie.secure', true);
+        Config.set('settings.social.cookie.secure', true);
 
         const response = await provider.redirect();
         const { options } = response.getCookie(STATE_COOKIE_NAME);
@@ -250,7 +256,7 @@ describe('AbstractProvider', () => {
       });
 
       it('with a redirect path which contains extra parameters if any are provided to the method.', async () => {
-        provider = createService(ConcreteProvider, { configInstance });
+        provider = createService(ConcreteProvider);
 
         const response = await provider.redirect({}, { foo: 'bar2' });
         const searchParams = new URLSearchParams(response.path);
@@ -334,7 +340,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -364,7 +370,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -396,7 +402,7 @@ describe('AbstractProvider', () => {
     let server: Server;
 
     beforeEach(() => {
-      provider = createService(ConcreteProvider, { configInstance });
+      provider = createService(ConcreteProvider);
     });
 
     afterEach(() => {
@@ -416,7 +422,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -433,7 +439,7 @@ describe('AbstractProvider', () => {
           // Do not throw an error.
         }
       }
-      provider = createService(ConcreteProvider2, { configInstance });
+      provider = createService(ConcreteProvider2);
 
       const { tokens } = await provider.getUserInfo(ctx);
       const expectedTokens: SocialTokens = {
@@ -459,7 +465,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -479,7 +485,7 @@ describe('AbstractProvider', () => {
           calledWithParams = params || null;
         }
       }
-      provider = createService(ConcreteProvider2, { configInstance });
+      provider = createService(ConcreteProvider2);
 
       await provider.getUserInfo(ctx, params);
       deepStrictEqual(calledWithTokens, tokens);
@@ -497,7 +503,7 @@ describe('AbstractProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const ctx = new Context({
         cookies: {
@@ -515,7 +521,7 @@ describe('AbstractProvider', () => {
           return expectedUserInfo;
         }
       }
-      provider = createService(ConcreteProvider2, { configInstance });
+      provider = createService(ConcreteProvider2);
 
       const { userInfo } = await provider.getUserInfo(ctx);
       strictEqual(userInfo, expectedUserInfo);

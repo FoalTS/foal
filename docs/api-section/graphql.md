@@ -1,5 +1,7 @@
 # GraphQL
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 [GraphQL](https://graphql.org/) is a query language for APIs. Unlike traditional REST APIs, GraphQL APIs have only one endpoint to which requests are sent. The content of the request describes all the operations to be performed and the data to be returned in the response. Many resources can be retrieved in a single request and the client gets exactly the properties it asks for.
 
 *Example of request*
@@ -157,18 +159,22 @@ export class ApiController extends GraphQLController {
 }
 ```
 
-Note that for this to work, you must copy the graphql files during the build. To do this, you can update some lines of your `package.json` as follows:
+Note that for this to work, you must copy the graphql files during the build. To do this, you need to install the `copy` package and update some commands of your `package.json`.
+
+```
+npm install copy
+```
 
 ```json
 {
   ...
   "scripts": {
     ...
-    "build:app": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
+    "build": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
     ...
-    "build:test": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" && tsc -p tsconfig.test.json",
+    "build:test": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
     ...
-    "build:e2e": "copy-cli \"src/**/*.html\" build && copy-cli \"src/**/*.graphql\" && tsc -p tsconfig.e2e.json"
+    "build:e2e": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json"
     ...
   }
 }
@@ -275,7 +281,7 @@ By default, this function is:
 function maskAndLogError(err: any): any {
   console.log(err);
 
-  if (Config.get('settings.debug')) {
+  if (Config.get('settings.debug', 'boolean')) {
     return err;
   }
 
@@ -298,7 +304,7 @@ async function maskAndLogError(err: any): Promise<any> {
     return err;
   }
 
-  if (Config.get('settings.debug')) {
+  if (Config.get('settings.debug', 'boolean')) {
     return err;
   }
 

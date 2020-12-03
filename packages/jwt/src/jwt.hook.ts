@@ -1,12 +1,23 @@
 // 3p
 import {
-  Config, Hook, HookDecorator,
-  HttpResponseBadRequest, HttpResponseUnauthorized
+  ApiDefineSecurityScheme,
+  ApiParameter,
+  ApiResponse,
+  ApiSecurityRequirement,
+  Config,
+  Context,
+  Hook,
+  HookDecorator,
+  HttpResponseBadRequest,
+  HttpResponseForbidden,
+  HttpResponseUnauthorized,
+  IApiSecurityScheme
 } from '@foal/core';
-import { decode, verify, VerifyOptions } from 'jsonwebtoken';
+import { decode, verify } from 'jsonwebtoken';
 
 // FoalTS
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
+import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
+import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
 import { isInvalidTokenError } from './invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
@@ -49,6 +60,20 @@ export interface JWTOptions {
   openapi?: boolean;
 }
 
+export interface VerifyOptions {
+  algorithms?: string[];
+  audience?: string | RegExp | (string | RegExp)[];
+  complete?: boolean;
+  issuer?: string | string[];
+  ignoreExpiration?: boolean;
+  ignoreNotBefore?: boolean;
+  subject?: string;
+  clockTolerance?: number;
+  maxAge?: string|number;
+  clockTimestamp?: number;
+  nonce?: string;
+}
+
 /**
  * Sub-function used by JWTRequired and JWTOptional to avoid code duplication.
  *
@@ -59,10 +84,10 @@ export interface JWTOptions {
  * @returns {HookDecorator}
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
-  return Hook(async ctx => {
+  async function hook(ctx: Context) {
     let token: string;
     if (options.cookie) {
-      const cookieName = Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME);
+      const cookieName = Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME);
       const content = ctx.request.cookies[cookieName] as string|undefined;
 
       if (!content) {
@@ -122,27 +147,56 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         throw error;
       }
     } else {
-      secretOrPublicKey = Config.getOrThrow(
-        'settings.jwt.secretOrPublicKey',
-        'string',
-        'You must provide a secret or a RSA public key when using @JWTRequired or @JWTOptional.'
-      );
-      const encoding = Config.get2('settings.jwt.secretEncoding', 'string');
-      if (encoding) {
-        secretOrPublicKey = Buffer.from(secretOrPublicKey, encoding);
-      }
+      secretOrPublicKey = getSecretOrPublicKey();
     }
 
     let payload: any;
     try {
       payload = await new Promise((resolve, reject) => {
-        verify(token, secretOrPublicKey, verifyOptions, (err, value) => {
+        verify(token, secretOrPublicKey, verifyOptions, (err: any, value: object | undefined) => {
           if (err) { reject(err); } else { resolve(value); }
         });
       });
     } catch (error) {
       return new InvalidTokenResponse(error.message);
     }
+
+    /* Verify CSRF token */
+
+    if (
+      options.cookie &&
+      Config.get('settings.jwt.csrf.enabled', 'boolean', false) &&
+      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
+    ) {
+      const csrfCookieName = Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME);
+      const expectedCsrftoken: string|undefined = ctx.request.cookies[csrfCookieName];
+      if (!expectedCsrftoken) {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+
+      try {
+        const csrfPayload: any = await new Promise((resolve, reject) => {
+          verify(expectedCsrftoken, secretOrPublicKey, (err: any, value: object | undefined) => {
+            if (err) { reject(err); } else { resolve(value); }
+          });
+        });
+        if (csrfPayload.sub !== payload.sub) {
+          return new HttpResponseForbidden('CSRF token missing or incorrect.');
+        }
+      } catch {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+
+      const actualCsrfToken =
+        ctx.request.body._csrf ||
+        ctx.request.get('X-CSRF-Token') ||
+        ctx.request.get('X-XSRF-Token');
+      if (actualCsrfToken !== expectedCsrftoken) {
+        return new HttpResponseForbidden('CSRF token missing or incorrect.');
+      }
+    }
+
+    /* Set ctx.user */
 
     if (!options.user) {
       ctx.user = payload;
@@ -159,5 +213,43 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     ctx.user = user;
-  });
+  }
+
+  const openapi = [
+    required ?
+      ApiResponse(401, { description: 'JWT is missing or invalid.' }) :
+      ApiResponse(401, { description: 'JWT is invalid.' })
+  ];
+
+  if (options.cookie) {
+    const securityScheme: IApiSecurityScheme = {
+      in: 'cookie',
+      name: Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME),
+      type: 'apiKey',
+    };
+    openapi.push(ApiDefineSecurityScheme('cookieAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ cookieAuth: [] }));
+    }
+    if (Config.get('settings.jwt.csrf.enabled', 'boolean', false)) {
+      openapi.push(ApiParameter({
+        description: 'CSRF token',
+        in: 'cookie',
+        name: Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME),
+      }));
+      openapi.push(ApiResponse(403, { description: 'CSRF token is missing or incorrect.' }));
+    }
+  } else {
+    const securityScheme: IApiSecurityScheme = {
+      bearerFormat: 'JWT',
+      scheme: 'bearer',
+      type: 'http',
+    };
+    openapi.push(ApiDefineSecurityScheme('bearerAuth', securityScheme));
+    if (required) {
+      openapi.push(ApiSecurityRequirement({ bearerAuth: [] }));
+    }
+  }
+
+  return Hook(hook, openapi, { openapi: options.openapi });
 }

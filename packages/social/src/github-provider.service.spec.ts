@@ -3,7 +3,7 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Server } from 'http';
 
 // 3p
-import { Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
+import { Config, Context, createApp, createService, Get, HttpResponseBadRequest, HttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { SocialTokens } from './abstract-provider.service';
@@ -23,9 +23,11 @@ describe('GithubProvider', () => {
 
     beforeEach(() => {
       provider = createService(GithubProvider2);
+      Config.set('settings.loggerFormat', 'none');
     });
 
     afterEach(() => {
+      Config.remove('settings.loggerFormat');
       if (server) {
         server.close();
       }
@@ -43,7 +45,7 @@ describe('GithubProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const tokens: SocialTokens = {
         access_token: 'an_access_token',
@@ -64,7 +66,7 @@ describe('GithubProvider', () => {
         }
       }
 
-      server = createApp(AppController).listen(3000);
+      server = (await createApp(AppController)).listen(3000);
 
       const tokens: SocialTokens = {
         access_token: 'an_access_token',

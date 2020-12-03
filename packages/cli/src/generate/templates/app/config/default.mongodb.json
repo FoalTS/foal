@@ -1,16 +1,9 @@
 {
-  "port": 3001,
   "settings": {
-    "csrf": false,
-    "debug": false,
-    "loggerFormat": "tiny",
-    "session": {
-      "cookie": {
-        "sameSite": "lax"
-      }
-    }
+    "loggerFormat": "tiny"
   },
-  "mongodb": {
-    "uri": "mongodb://localhost:27017//* kebabName */"
+  "database": {
+    "type": "mongodb",
+    "url": "mongodb://localhost:27017//* kebabName */"
   }
 }

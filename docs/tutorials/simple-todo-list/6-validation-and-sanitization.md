@@ -24,7 +24,6 @@ export class ApiController {
 
   @Post('/todos')
   @ValidateBody({
-    // The body request should be an object once parsed by the framework.
     // Every additional properties that are not defined in the "properties"
     // object should be removed.
     additionalProperties: false,
@@ -34,13 +33,14 @@ export class ApiController {
     },
     // The property "text" is required.
     required: [ 'text' ],
+    // The body request should be an object once parsed by the framework.
     type: 'object',
   })
   async postTodo(ctx: Context) {
     const todo = new Todo();
     todo.text = ctx.request.body.text;
 
-    await getRepository(Todo).save(todo);
+    await todo.save();
 
     return new HttpResponseCreated(todo);
   }
@@ -49,11 +49,11 @@ export class ApiController {
   // The id should be a number. If it is not, the hook returns a "400 - Bad Request" error.
   @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
-    const todo = await getRepository(Todo).findOne({ id: +ctx.request.params.id });
+    const todo = await Todo.findOne({ id: ctx.request.params.id });
     if (!todo) {
       return new HttpResponseNotFound();
     }
-    await getRepository(Todo).remove(todo);
+    await todo.remove();
     return new HttpResponseNoContent();
   }
 

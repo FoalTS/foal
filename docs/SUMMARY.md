@@ -20,14 +20,6 @@
   * [Todos & Ownership](./tutorials/multi-user-todo-list/6-todos-and-ownership.md)
   * [The Sign Up Page](./tutorials/multi-user-todo-list/7-the-signup-page.md)
   * [E2E Testing & Auth](./tutorials/multi-user-todo-list/8-e2e-testing-and-authentication.md)
-* MongoDB To-Do List
-  * [Installation](./tutorials/mongodb-todo-list/1-installation.md)
-  * [Introduction](./tutorials/mongodb-todo-list/2-introduction.md)
-  * [The Todo Model](./tutorials/mongodb-todo-list/3-the-todo-model.md)
-  * [The Shell Script create-todo](./tutorials/mongodb-todo-list/4-the-shell-script-create-todo.md)
-  * [The REST API](./tutorials/mongodb-todo-list/5-the-rest-api.md)
-  * [Validation & Sanitization](./tutorials/mongodb-todo-list/6-validation-and-sanitization.md)
-  * [Unit Testing](./tutorials/mongodb-todo-list/7-unit-testing.md)
 
 ## Topic Guides
 
@@ -37,11 +29,18 @@
   * [Services & Dependency Injection](./architecture/services-and-dependency-injection.md)
   * [Hooks](./architecture/hooks.md)
   * [Initialization](./architecture/initialization.md)
+  * [Error handling](./architecture/error-handling.md)
+* Common
+  * [Validation & Sanitization](./common/validation-and-sanitization.md)
+  * [Serializing & Deserializing](./common/serializing-and-deserializing.md)
+  * [Templates (SSR)](./common/templating.md)
+  * [Logging & Debugging](./common/logging-and-debugging.md)
+  * [Generate Tokens](./common/generate-tokens.md)
 * Databases
-  * [SQL Databases (TypeORM)](./databases/typeorm.md)
+  * [SQL Databases](./databases/typeorm.md)
   * [Create Models & Queries](./databases/create-models-and-queries.md)
   * [Generate & Run Migrations](./databases/generate-and-run-migrations.md)
-  * [MongoDB (TypeORM or Mongoose)](./databases/mongodb.md)
+  * [NoSQL](./databases/mongodb.md)
   * [Use Another ORM](./databases/using-another-orm.md)
 * Authentication & Access Control
   * [Quick Start](./authentication-and-access-control/quick-start.md)
@@ -52,8 +51,6 @@
   * [Social Auth](./authentication-and-access-control/social-auth.md)
   * [Administrators & Roles](./authentication-and-access-control/administrators-and-roles.md)
   * [Groups & Permissions](./authentication-and-access-control/groups-and-permissions.md)
-* [Validation & Sanitization](./validation-and-sanitization.md)
-* [Serializing & Deserializing](./serializing-and-deserializing.md)
 * API
   * [REST API](./api-section/rest-blueprints.md)
   * [OpenAPI & Swagger UI](./api-section/openapi-and-swagger-ui.md)
@@ -77,19 +74,11 @@
   * [Introduction](./testing/introduction.md)
   * [Unit Testing](./testing/unit-testing.md)
   * [E2E Testing](./testing/e2e-testing.md)
-* Cloud
-  * [AWS Beanstalk](./cloud/aws-beanstalk.md)
-  * [Firebase](./cloud/firebase.md)
 * Security
   * [HTTP Headers Protection](./security/http-headers-protection.md)
   * [CSRF Protection](./security/csrf-protection.md)
   * [XSS Protection](./security/xss-protection.md)
-* Utilities
-  * [Templates (SSR)](./utilities/templating.md)
-  * [Logging & Debugging](./utilities/logging-and-debugging.md)
 * Cookbook
-  * [Error Handling](./cookbook/error-handling.md)
-  * [Generate Tokens](./cookbook/generate-tokens.md)
   * [Scheduling Jobs](./cookbook/scheduling-jobs.md)
   * [404 Page](./cookbook/404-page.md)
   * [Request Body Size](./cookbook/request-body-size.md)
@@ -105,6 +94,7 @@
 
 * [To v0.8](https://github.com/FoalTS/foal/releases/tag/v0.8.0)
 * [To v1](https://github.com/FoalTS/foal/releases/tag/v1.0.0)
+* [To v2](./upgrade-to-v2/index.md)
 
 ## Community
 

@@ -1,25 +1,26 @@
-import { Context, createHttpResponseFile, Get, HttpResponseOK, Post } from '@foal/core';
-import { parseForm } from '@foal/formidable/lib/parse-form';
-import { IncomingForm } from 'formidable';
+import { Context, dependency, Get, HttpResponseOK, Post } from '@foal/core';
+import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
 export class AppController {
 
+  @dependency
+  disk: Disk;
+
   @Post('/upload')
+  @ValidateMultipartFormDataBody({
+    files: {
+      file1: { required: true, saveTo: '.' },
+    }
+  })
   async upload(ctx: Context) {
-    const form = new IncomingForm();
-    form.uploadDir = 'uploaded';
-    form.keepExtensions = true;
-    const { fields, files } = await parseForm(form, ctx);
+    const { fields, files } = ctx.request.body;
 
     return new HttpResponseOK(files.file1);
   }
 
   @Get('/download')
   download() {
-    return createHttpResponseFile({
-      directory: 'uploaded/',
-      file: 'upload_2f5a6ea0c0c16e477ef5a474ddf91f1a.png'
-    });
+    return this.disk.createHttpResponse('Bkzi9dvrnb0vEM4dNDq74n38yvJu_tydY45KHIaPI48.png');
   }
 
 }

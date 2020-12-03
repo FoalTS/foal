@@ -1,13 +1,8 @@
 // 3p
-import {
-  ApiDefineSecurityScheme, ApiResponse, ApiSecurityRequirement,
-  Config, HookDecorator, IApiSecurityScheme
-} from '@foal/core';
-import { VerifyOptions } from 'jsonwebtoken';
+import { HookDecorator } from '@foal/core';
 
 // FoalTS
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
-import { JWT, JWTOptions } from './jwt.hook';
+import { JWT, JWTOptions, VerifyOptions } from './jwt.hook';
 
 /**
  * Hook factory to authenticate users using JSON Web Tokens.
@@ -27,38 +22,10 @@ import { JWT, JWTOptions } from './jwt.hook';
  * @param {(token: string) => boolean|Promise<boolean>} [options.blacklist] - A function that takes a token
  * and returns true or false. If the returned value is true, then the hook returns a 401 error.
  * @param {boolean} [options.cookie] - If true, the hook expects the token to be sent in a cookie
- * named `auth`. You can change the cookie name with the key `settings.jwt.cookieName` in the configuration.
+ * named `auth`. You can change the cookie name with the key `settings.jwt.cookie.name` in the configuration.
  * @param {VerifyOptions} [verifyOptions={}] - Options of the `jsonwebtoken` package.
  * @returns {HookDecorator} The hook.
  */
 export function JWTRequired(options: JWTOptions = {}, verifyOptions: VerifyOptions = {}): HookDecorator {
-  return (target: any, propertyKey?: string) => {
-    JWT(true, options, verifyOptions)(target, propertyKey);
-
-    if (options.openapi === false ||
-      (options.openapi === undefined && !Config.get2('settings.openapi.useHooks', 'boolean'))
-    ) {
-      return;
-    }
-
-    if (options.cookie) {
-      const securityScheme: IApiSecurityScheme = {
-        in: 'cookie',
-        name: Config.get2('settings.jwt.cookieName', 'string', JWT_DEFAULT_COOKIE_NAME),
-        type: 'apiKey',
-      };
-      ApiDefineSecurityScheme('cookieAuth', securityScheme)(target, propertyKey);
-      ApiSecurityRequirement({ cookieAuth: [] })(target, propertyKey);
-    } else {
-      const securityScheme: IApiSecurityScheme = {
-        bearerFormat: 'JWT',
-        scheme: 'bearer',
-        type: 'http',
-      };
-      ApiDefineSecurityScheme('bearerAuth', securityScheme)(target, propertyKey);
-      ApiSecurityRequirement({ bearerAuth: [] })(target, propertyKey);
-    }
-
-    ApiResponse(401, { description: 'JWT is missing or invalid.' })(target, propertyKey);
-  };
+  return JWT(true, options, verifyOptions);
 }

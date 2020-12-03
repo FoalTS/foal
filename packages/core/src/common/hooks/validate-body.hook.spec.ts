@@ -2,8 +2,16 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 
 // FoalTS
-import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiRequestBody, getApiResponses, IApiRequestBody, IApiResponses } from '../../openapi';
+import {
+  Context,
+  getApiRequestBody,
+  getApiResponses,
+  getHookFunction,
+  HttpResponseBadRequest,
+  IApiSchema,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { ValidateBody } from './validate-body.hook';
 
 describe('ValidateBody', () => {
@@ -71,6 +79,53 @@ describe('ValidateBody', () => {
         });
       });
 
+      it('should use the OpenAPI components to validate the request body.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {}
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              user: schema as IApiSchema
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateBody({
+          $ref: '#/components/schemas/user'
+        })).bind(controller);
+        const ctx = new Context({
+          body: {
+            foo: 'hello'
+          }
+        });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          body: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/user/properties/foo/type',
+            }
+          ]
+        });
+      });
+
     });
 
     describe('given schema is a function', () => {
@@ -115,30 +170,60 @@ describe('ValidateBody', () => {
         notStrictEqual((actual as HttpResponseBadRequest).body, undefined);
       });
 
+      it('should use the OpenAPI components to validate the request body.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {
+          schema = {
+            $ref: '#/components/schemas/user'
+          };
+        }
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              user: schema as IApiSchema
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateBody(controller => controller.schema)).bind(controller);
+        const ctx = new Context({
+          body: {
+            foo: 'hello'
+          }
+        });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          body: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/user/properties/foo/type',
+            }
+          ]
+        });
+      });
+
     });
 
   });
 
   describe('should define an API specification', () => {
-
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateBody(schema)
-      class Foobar {}
-
-      strictEqual(getApiRequestBody(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateBody(schema)
-      class Foobar {}
-
-      strictEqual(getApiRequestBody(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
 
     it('unless options.openapi is false.', () => {
       @ValidateBody(schema, { openapi: false })
@@ -148,92 +233,49 @@ describe('ValidateBody', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    function testClass(Foobar: Class) {
-      const actualRequestBody = getApiRequestBody(Foobar);
-      const expectedRequestBody: IApiRequestBody = {
-        content: {
-          'application/json': { schema: schema as object }
-        },
-        required: true
-      };
-      deepStrictEqual(actualRequestBody, expectedRequestBody);
-
-      const actualResponses = getApiResponses(Foobar);
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateBody(schema, { openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+    it('with the proper request body (object).', () => {
       @ValidateBody(schema)
       class Foobar {}
 
-      testClass(Foobar);
-    });
-
-    function testMethod(Foobar: Class) {
-      const actualRequestBody = getApiRequestBody(Foobar, 'foo');
-      const expectedRequestBody: IApiRequestBody = {
-        content: {
-          'application/json': { schema: schema as object }
-        },
-        required: true
-      };
-      deepStrictEqual(actualRequestBody, expectedRequestBody);
-
-      const actualResponses = getApiResponses(Foobar, 'foo');
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateBody(schema, { openapi: true })
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @ValidateBody(schema)
-        foo() {}
-      }
-
-      testMethod(Foobar);
-    });
-
-    it('given schema is a function.', () => {
-      class Foobar {
-        schema = schema;
-        @ValidateBody((controller: Foobar) => controller.schema, { openapi: true })
-        foo() {}
-      }
-
-      const actualDynamicRequestBody = getApiRequestBody(Foobar, 'foo');
-      const expectedRequestBody: IApiRequestBody = {
-        content: {
-          'application/json': { schema: schema as object }
-        },
-        required: true
-      };
-      if (typeof actualDynamicRequestBody !== 'function') {
+      const actual = getApiRequestBody(Foobar);
+      if (typeof actual !== 'function') {
         throw new Error('The ApiRequestBody metadata should be a function.');
       }
-      deepStrictEqual(actualDynamicRequestBody(new Foobar()), expectedRequestBody);
+
+      deepStrictEqual(actual(new Foobar()), {
+        content: {
+          'application/json': { schema: schema as object }
+        },
+        required: true
+      });
+    });
+
+    it('with the proper request body (function).', () => {
+      @ValidateBody((controller: Foobar) => controller.schema)
+      class Foobar {
+        schema = schema;
+      }
+
+      const actual = getApiRequestBody(Foobar);
+      if (typeof actual !== 'function') {
+        throw new Error('The ApiRequestBody metadata should be a function.');
+      }
+
+      deepStrictEqual(actual(new Foobar()), {
+        content: {
+          'application/json': { schema: schema as object }
+        },
+        required: true
+      });
+    });
+
+    it('with the proper API responses.', () => {
+      @ValidateBody(schema)
+      class Foobar {}
+
+      deepStrictEqual(getApiResponses(Foobar), {
+        400: { description: 'Bad request.' }
+      });
     });
 
   });

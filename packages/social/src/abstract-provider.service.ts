@@ -4,7 +4,7 @@ import { URL, URLSearchParams } from 'url';
 import { promisify } from 'util';
 
 // 3p
-import { Config, Context, dependency, HttpResponseRedirect } from '@foal/core';
+import { Config, Context, HttpResponseRedirect } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 /**
@@ -102,8 +102,6 @@ export interface ObjectType {
  * @template UserInfoParameters - Additional parameters to pass when retrieving user information.
  */
 export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType> {
-  @dependency
-  configInstance: Config;
 
   /**
    * Configuration paths from which the client ID, client secret and redirect URI must be retrieved.
@@ -161,9 +159,9 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
   private get config() {
     return {
-      clientId: this.configInstance.get<string>(this.configPaths.clientId),
-      clientSecret: this.configInstance.get<string>(this.configPaths.clientSecret),
-      redirectUri: this.configInstance.get<string>(this.configPaths.redirectUri),
+      clientId: Config.getOrThrow(this.configPaths.clientId, 'string'),
+      clientSecret: Config.getOrThrow(this.configPaths.clientSecret, 'string'),
+      redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string'),
     };
   }
 
@@ -218,7 +216,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
         httpOnly: true,
         maxAge: 300,
         path: '/',
-        secure: this.configInstance.get('settings.social.cookie.secure', false)
+        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
       });
   }
 

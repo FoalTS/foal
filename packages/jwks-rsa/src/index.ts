@@ -4,4 +4,8 @@
  * Released under the MIT License.
  */
 
-export { getRSAPublicKeyFromJWKS } from './get-rsa-public-key-from-jwks';
+export {
+  getRSAPublicKeyFromJWKS,
+  Headers,
+  Options,
+} from './get-rsa-public-key-from-jwks';

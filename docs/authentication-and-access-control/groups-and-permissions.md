@@ -1,5 +1,7 @@
 # Groups and Permissions
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 In advanced applications, access control can be managed through permissions and groups.
 
 A *permission* gives a user the right to perform a given action (such as accessing a route).
@@ -23,25 +25,13 @@ Permissions can be attached to a user or a group. Attaching a permission to a gr
 ### Creating Permissions Programmatically
 
 ```typescript
-import { getManager, getRepository } from 'typeorm';
-
 import { Permission } from './src/app/entities';
 
 async function main() {
   const perm = new Permission();
   perm.codeName = 'secret-perm';
   perm.name = 'Permission to access the secret';
-  await getManager().save(perm);
-  // OR
-  await getManager().save(Permission, {
-    codeName: 'secret-perm',
-    name: 'Permission to access the secret'
-  });
-  // OR
-  await getRepository(Permission).save({
-    codeName: 'secret-perm',
-    name: 'Permission to access the secret'
-  });
+  await perm.save();
 }
 ```
 
@@ -56,7 +46,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -77,7 +67,7 @@ export async function main(args: { codeName: string, name: string }) {
 
   try {
     console.log(
-      await getManager().save(permission)
+      await permission.save();
     );
   } catch (error) {
     console.log(error.message);
@@ -89,7 +79,7 @@ export async function main(args: { codeName: string, name: string }) {
 
 Then you can create a permission through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-perm name="Permission to access the secret" codeName="access-secret"
 ```
 
@@ -111,33 +101,19 @@ A group can have permissions. They then apply to all its users.
 ### Creating Groups Programmatically
 
 ```typescript
-import { getManager, getRepository } from 'typeorm';
-
 import { Group, Permission } from './src/app/entities';
 
 async function main() {
   const perm = new Permission();
   perm.codeName = 'delete-users';
   perm.name = 'Permission to delete users';
-  await getManager().save(perm);
+  await perm.save();
 
   const group = new Group();
   group.codeName = 'admin';
   group.name = 'Administrators';
   group.permissions = [ perm ];
-  await getManager().save(group);
-  // OR
-  await getManager().save(Group, {
-    codeName: 'admin',
-    name: 'Administrators',
-    permissions: [ perm ],
-  });
-  // OR
-  await getRepository(Group).save({
-    codeName: 'admin',
-    name: 'Administrators',
-    permissions: [ perm ],
-  });
+  await group.save();
 }
 ```
 
@@ -152,7 +128,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getManager, getRepository } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -174,7 +150,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   const connection = await createConnection();
   try {
     for (const codeName of args.permissions) {
-      const permission = await getRepository(Permission).findOne({ codeName });
+      const permission = await Permission.findOne({ codeName });
       if (!permission) {
         console.log(
           `No permission with the code name "${codeName}" was found.`
@@ -185,7 +161,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
     }
 
     console.log(
-      await getManager().save(group)
+      await group.save()
     );
   } catch (error) {
     console.log(error.message);
@@ -198,7 +174,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
 
 Then you can create a group through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-perm name="Permission to delete users" codeName="delete-users"
 foal run create-group name="Administrators" codeName="admin" permissions="[ \"delete-users\" ]"
 ```
@@ -242,7 +218,7 @@ Uncomment the code in the file `src/scripts/create-user.ts`.
 
 Then you can create a user with their permissions and groups through the command line.
 ```sh
-npm run build:scripts
+npm run build
 foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-group\" ]"
 ```
 
@@ -272,11 +248,12 @@ export class ProductController {
 
 *Example with Sessions Tokens*
 ```typescript
-import { Context, Get, TokenRequired } from '@foal/core';
+import { Context, Get, UseSessions } from '@foal/core';
 import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 
-@TokenRequired({
+@UseSessions({
   store: TypeORMStore,
+  required: true,
   user: fetchUserWithPermissions(User)
 })
 export class ProductController {
@@ -330,8 +307,6 @@ export class ProductController {
 
 ## BaseEntity Inheritance
 
-> Available in Foal v1.8.0 onwards.
-
 The classes `Permission`, `Group` and `UserWithPermissions` all extends the `BaseEntity` class so you can access its static and instance methods.
 
 *Example*
@@ -342,8 +317,6 @@ await perm.save();
 ```
 
 ## Get All Users with a Given Permission
-
-> Available in Foal v1.8.0 onwards.
 
 The class `UserWithPermissions` provides a static method `withPerm` to get all users with a given permission. It returns all users that have this permission on their own or through the groups they belong to.
 

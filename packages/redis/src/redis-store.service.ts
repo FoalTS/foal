@@ -1,4 +1,4 @@
-import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
 import { createClient } from 'redis';
 
 /**
@@ -12,79 +12,60 @@ export class RedisStore extends SessionStore {
 
   private redisClient: any;
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
-    const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
-    const createdAt = Date.now();
-    const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
-
-    return new Promise<Session>((resolve, reject) => {
-      const data = JSON.stringify({ content: sessionContent, createdAt });
-      this.getRedisInstance().set(`session:${sessionID}`, data, 'NX', 'EX', inactivity, (err: any) => {
-        if (err) {
-          return reject(err);
-        }
-        const session = new Session(sessionID, sessionContent, createdAt);
-        resolve(session);
-      });
-    });
+  boot() {
+    const redisURI = Config.get('settings.redis.uri', 'string');
+    this.redisClient = createClient(redisURI);
   }
 
-  update(session: Session): Promise<void> {
-    const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
+  save(state: SessionState, maxInactivity: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const data = JSON.stringify({ content: session.getContent(), createdAt: session.createdAt });
-      this.getRedisInstance().set(`session:${session.sessionID}`, data, 'EX', inactivity, (err: any) => {
+      const payload = JSON.stringify(state);
+      this.redisClient.set(`sessions:${state.id}`, payload, 'NX', 'EX', maxInactivity, (err: any, val: string|null) => {
+        // TODO: test this line.
         if (err) {
           return reject(err);
+        }
+        if (val !== 'OK') {
+          return reject(new SessionAlreadyExists());
         }
         resolve();
       });
     });
   }
 
-  destroy(sessionID: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.getRedisInstance().del(`session:${sessionID}`, (err: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      });
-    });
-  }
-
-  read(sessionID: string): Promise<Session | undefined> {
-    const absolute = SessionStore.getExpirationTimeouts().absolute;
-
-    return new Promise<Session | undefined>((resolve, reject) => {
-      this.getRedisInstance().get(`session:${sessionID}`, async (err: any, val: string|null) => {
+  read(id: string): Promise<SessionState | null> {
+    return new Promise<SessionState | null>((resolve, reject) => {
+      this.redisClient.get(`sessions:${id}`, async (err: any, val: string|null) => {
+        // TODO: test this line.
         if (err) {
           return reject(err);
         }
         if (val === null) {
-          return resolve(undefined);
+          return resolve(null);
         }
-        const data = JSON.parse(val);
-        const session = new Session(sessionID, data.content, data.createdAt);
-
-        if (Date.now() - session.createdAt > absolute * 1000) {
-          await this.destroy(sessionID);
-          return resolve();
-        }
-
-        resolve(session);
+        const state = JSON.parse(val);
+        resolve(state);
       });
     });
   }
 
-  extendLifeTime(sessionID: string): Promise<void> {
-    const inactivity = SessionStore.getExpirationTimeouts().inactivity;
-
+  update(state: SessionState, maxInactivity: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.getRedisInstance().expire(`session:${sessionID}`, inactivity, (err: any) => {
+      const payload = JSON.stringify(state);
+      this.redisClient.set(`sessions:${state.id}`, payload, 'EX', maxInactivity, (err: any) => {
+        // TODO: test this line.
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
+  destroy(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.redisClient.del(`sessions:${id}`, (err: any) => {
+        // TODO: test this line.
         if (err) {
           return reject(err);
         }
@@ -95,7 +76,8 @@ export class RedisStore extends SessionStore {
 
   clear(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.getRedisInstance().flushdb((err: any) => {
+      this.redisClient.flushdb((err: any) => {
+        // TODO: test this line.
         if (err) {
           return reject(err);
         }
@@ -106,12 +88,12 @@ export class RedisStore extends SessionStore {
 
   async cleanUpExpiredSessions(): Promise<void> {}
 
-  getRedisInstance() {
-    if (!this.redisClient) {
-      const redisURI = Config.get2('redis.uri', 'string');
-      this.redisClient = createClient(redisURI);
-    }
-    return this.redisClient ;
+  /**
+   * Closes the connection to the database.
+   *
+   * @memberof RedisStore
+   */
+  async close(): Promise<void> {
+    await this.redisClient.end(true);
   }
-
 }

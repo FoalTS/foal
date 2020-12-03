@@ -1,5 +1,7 @@
 # Authentication with JWT
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ```
 npm install jsonwebtoken @foal/jwt
 ```
@@ -24,31 +26,40 @@ Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 
 Once the secret is in hand, there are several ways to provide it to the future hooks:
 
-- using the environment variable `SETTINGS_JWT_SECRET_OR_PUBLIC_KEY`,
-- in a file named `.env` in the root directory,
-  ```
-  SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
-  ```
-- or in a YAML or JSON file in the `config/` directory.
-
-  *development.yml*
-  ```yaml
-  settings:
-    jwt:
-      secretOrPublicKey: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
-  ```
-  *development.json*
-  ```json
-  {
-    "settings": {
-      "jwt": {
-        "secretOrPublicKey": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
-      }
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
+    secretEncoding: base64
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "secret": "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
+      "secretEncoding": "base64"
     }
   }
-  ```
-
-> Note that if the production secret is stored in a file, this file should not be committed.
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      secret: "Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=",
+      secretEncoding: "base64"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 # Generate & Send Temporary Tokens
 
@@ -57,7 +68,7 @@ JSON Web Tokens are generated from JavaScript objects that usually contain infor
 The below example shows how to generate a one-hour token using a secret.
 
 ```typescript
-import { Config } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
@@ -66,10 +77,12 @@ const token = sign(
     id: 90485234,
     email: 'mary@foalts.org'
   },
-  Config.get<string>('settings.jwt.secretOrPublicKey'),
+  getSecretOrPrivateKey(),
   { expiresIn: '1h' }
 );
 ```
+
+> The `getSecretOrPrivateKey` function tries to read the configurations `settings.jwt.secret` and `settings.jwt.privateKey`. It throws an error if not value is provided. The function `getSecretOrPublicKey` works similarly.
 
 - The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-User-Properties).
 - Each token should have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
@@ -84,6 +97,7 @@ import {
   Config, Context, HttpResponseOK, HttpResponseUnauthorized,
   Post, ValidateBody, verifyPassword
 } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 import { User } from '../entities';
@@ -113,7 +127,7 @@ export class LoginController {
 
     const token = sign(
       { email: user.email },
-      Config.get<string>('settings.jwt.secretOrPublicKey'),
+      getSecretOrPrivateKey(),
       { expiresIn: '1h' }
     );
 
@@ -220,7 +234,8 @@ The below code shows how to implement this technique with a hook. On each reques
 
 *refresh-jwt.hook.ts (example)*
 ```typescript
-import { Config, Hook, HookDecorator, HttpResponse } from '@foal/core';
+import { Hook, HookDecorator, HttpResponse, isHttpResponseServerError } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 export function RefreshJWT(): HookDecorator {
@@ -230,6 +245,10 @@ export function RefreshJWT(): HookDecorator {
     }
 
     return (response: HttpResponse) => {
+      if (isHttpResponseServerError(response)) {
+        return;
+      }
+
       const newToken = sign(
         // The below object assumes that ctx.user is
         // the decoded payload (default behavior).
@@ -238,7 +257,7 @@ export function RefreshJWT(): HookDecorator {
           // id: ctx.user.id,
           // sub: ctx.user.subject,
         },
-        Config.get<string>('settings.jwt.secretOrPublicKey'),
+        getSecretOrPrivateKey(),
         { expiresIn: '15m' }
       );
       response.setHeader('Authorization', newToken);
@@ -265,7 +284,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
 - Each JSON Web Token must have a `subject` property (or `sub`) which is a string containing the user id. If the id is a number, it must be converted to a string using, for example, the `toString()` method.
   ```typescript
-  import { Config } from '@foal/core';
+  import { getSecretOrPrivateKey } from '@foal/jwt';
   import { sign } from 'jsonwebtoken';
 
   const token = sign(
@@ -276,14 +295,14 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
       id: 90485234,
       email: 'mary@foalts.org'
     },
-    Config.get<string>('settings.jwt.secretOrPublicKey'),
+    getSecretOrPrivateKey(),
     { expiresIn: '1h' }
   );
   ```
 
 - The hook must be provided a function that takes a string id (the `subject`) as parameter and returns the value of the `Context.user`. If the function returns `undefined`, the hooks returns an error *401 - UNAUTHORIZED*.
 
-  *Example with TypeORM*
+  *Example with TypeORM (SQL database)*
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
@@ -302,20 +321,20 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   }
   ```
 
-  *Example with Mongoose*
+  *Example with TypeORM (MongoDB)*
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
-  import { fetchUser } from '@foal/mongoose';
+  import { fetchMongoDBUser } from '@foal/typeorm';
 
-  import { User } from '../models';
+  import { User } from '../entities';
 
-  // fetchUser fetches the user from the database using the model User. It returns an instance of User.
-  @JWTRequired({ user: fetchUser(User) })
+  // fetchMongoDBUser fetches the user from the database using the entity User. It returns an instance of User.
+  @JWTRequired({ user: fetchMongoDBUser(User) })
   export class ApiController {
     @Get('/do-something')
     get(ctx: Context) {
-      // ctx.user is the instance returned by fetchUser.
+      // ctx.user is the instance returned by fetchMongoDBUser.
       // ...
     }
   }
@@ -357,7 +376,7 @@ Available encodings are listed [here](https://nodejs.org/api/buffer.html#buffer_
 ```yaml
 settings:
   jwt:
-    secretOrPublicKey: HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
+    secret: HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
     secretEncoding: base64
 ```
 {% endcode-tabs-item %}
@@ -366,27 +385,34 @@ settings:
 {
   "settings": {
     "jwt": {
-      "secretOrPublicKey": "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
+      "secret": "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
       "secretEncoding": "base64",
     }
   }
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=
-SETTINGS_JWT_SECRET_ENCODING=base64
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      secret: "HEwh0TW7w6a5yUwIrpHilUqetAqTFAVSHx2rg6DWNtg=",
+      secretEncoding: "base64",
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
 
-## Store JWTs in a cookie
+## Usage with Cookies
 
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
 By default, the hooks expect the token to be sent in the **Authorization** header using the **Bearer** schema. But it is also possible to send the token in a cookie with the `cookie` option.
 
+*api.controller.ts*
 ```typescript
 import { JWTRequired } from '@foal/jwt';
 
@@ -396,31 +422,87 @@ export class ApiController {
 }
 ```
 
-In this case, the token must be sent in a cookie named `auth` by default. This name can be changed with the configuration key `settings.jwt.cookieName`:
-- using the environment variable `SETTINGS_JWT_COOKIE_NAME`,
-- in a file named `.env` in the root directory,
-  ```
-  SETTINGS_JWT_COOKIE_NAME=custom_name
-  ```
-- or in a YAML or JSON file in the `config/` directory.
+*auth.controller.ts*
+```typescript
+export class AuthController {
 
-  *development.yml*
-  ```yaml
-  settings:
-    jwt:
-      cookieName: "custom_name"
-  ```
-  *development.json*
-  ```json
-  {
-    "settings": {
-      "jwt": {
-        "cookieName": "custom_name"
+  @Post('/login')
+  async login(ctx: Context) {
+    // ...
+
+    const response = new HttpResponseNoContent();
+    // Do not forget the "await" keyword.
+    await setAuthCookie(response, token);
+    return response;
+  }
+
+  @Post('/logout')
+  logout(ctx: Context) {
+    // ...
+
+    const response = new HttpResponseNoContent();
+    removeAuthCookie(response);
+    return response;
+  }
+
+}
+```
+
+> *Note: the cookie expire date is equal to the JWT expire date.*
+
+### Cookie options
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  jwt:
+    cookie:
+      name: mycookiename # Default: auth
+      domain: example.com
+      httpOnly: true # Warning: unlike session tokens, the httpOnly directive has no default value.
+      path: /foo # Default: /
+      sameSite: strict # Default: lax if settings.jwt.csrf.enabled is true.
+      secure: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "jwt": {
+      "cookie": {
+        "name": "mycookiename",
+        "domain": "example.com",
+        "httpOnly": true,
+        "path": "/foo",
+        "sameSite": "strict",
+        "secure": true
       }
     }
   }
-  ```
-
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    jwt: {
+      cookie: {
+        name: "mycookiename",
+        domain: "example.com",
+        httpOnly: true,
+        path: "/foo",
+        sameSite: "strict",
+        secure: true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
 ## Use RSA or ECDSA public/private keys
 
@@ -428,12 +510,10 @@ JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
 ### Provide the Public/Private Key
 
-The name of the private key is arbitrary.
-
 *Example with a `.env` file*
 ```
-SETTINGS_JWT_SECRET_OR_PUBLIC_KEY=my_public_key
-JWT_PRIVATE_KEY=my_private_key
+SETTINGS_JWT_PUBLIC_KEY=my_public_key
+SETTINGS_JWT_PRIVATE_KEY=my_private_key
 ```
 
 ### Generate Temporary Tokens
@@ -441,14 +521,15 @@ JWT_PRIVATE_KEY=my_private_key
 *Example*
 ```typescript
 import { Config } from '@foal/core';
+import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 
 const token = sign(
   {
     email: 'john@foalts.org'
   },
-  Config.get<string>('jwt.privateKey'),
-  { expiresIn: '1h' }
+  getSecretOrPrivateKey(),
+  { expiresIn: '1h', algorithm: 'RS256' }
 );
 ```
 
@@ -458,7 +539,7 @@ const token = sign(
 ```typescript
 import { JWTRequired } from '@foal/jwt';
 
-@JWTRequired({}, { algorithm: 'RSA' })
+@JWTRequired({}, { algorithm: 'RS256' })
 export class ApiController {
   // ...
 }
@@ -493,7 +574,7 @@ export class ApiController {
 
 ## Retreive a Dynamic Secret Or Public Key
 
-By default `JWTRequired` and `JWTOptional` use the value of the configuration key `settings.jwt.secretOrPublicKey` as a static secret (or public key).
+By default `JWTRequired` and `JWTOptional` use the value of the configuration keys `settings.jwt.secret` or `settings.jwt.publicKey` as a static secret (or public key).
 
 But it is also possible to dynamically retrieve a key to verify the token. To do so, you can specify a function with the below signature to the `secretOrPublicKey` option.
 
@@ -588,8 +669,8 @@ import { JWTRequired } from '@foal/jwt';
 // These lines assume that you provided your DOMAIN and AUDIENCE in either
 // an .env file, in environment variables or in one the configuration file 
 // in `config/`.
-const domain = Config.get('auth0.domain');
-const audience = Config.get('auth0.audience');
+const domain = Config.getOrThrow('auth0.domain', 'string');
+const audience = Config.getOrThrow('auth0.audience', 'string');
 
 @JWTRequired({
   secretOrPublicKey: getRSAPublicKeyFromJWKS({
@@ -616,9 +697,9 @@ import { JWTRequired } from '@foal/jwt';
 // These lines assume that you provided your CLIENT_ID, DOMAIN and USER_POOL_ID
 // in either an .env file, in environment variables or in one the configuration 
 // file in `config/`.
-const clientId = Config.get('cognito.clientId');
-const domain = Config.get('cognito.domain');
-const userPoolId = Config.get('cognito.userPoolId');
+const clientId = Config.getOrThrow('cognito.clientId', 'string');
+const domain = Config.getOrThrow('cognito.domain', 'string');
+const userPoolId = Config.getOrThrow('cognito.userPoolId', 'string');
 
 @JWTRequired({
   secretOrPublicKey: getRSAPublicKeyFromJWKS({

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/logo_title.png" height="160px" alt="Logo" />
+    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/images/logo_title.png" height="160px" alt="Logo" />
   </a>
   <br>
 </p>
@@ -12,7 +12,7 @@
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
-  <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version">
+  <img src="https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg" alt="node version">
   <a href="https://badge.fury.io/js/%40foal%2Fmongodb">
     <img src="https://badge.fury.io/js/%40foal%2Fmongodb.svg" alt="npm version">
   </a>

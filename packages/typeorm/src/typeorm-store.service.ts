@@ -1,11 +1,33 @@
-import { Session, SessionOptions, SessionStore } from '@foal/core';
-import { Connection, getConnection, ObjectLiteral, Table } from 'typeorm';
+import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
+import { Column, Entity, getRepository, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
 
-export interface DatabaseSession {
-  session_id: string;
-  session_content: string;
-  created_at: string;
-  updated_at: string;
+@Entity({
+  name: 'sessions'
+})
+export class DatabaseSession {
+  @PrimaryColumn({ length: 44 })
+  id: string;
+
+  @Column({ nullable: true })
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  user_id: number;
+
+  @Column({ type: 'text' })
+  content: string;
+
+  @Column({ type: 'text' })
+  flash: string;
+
+  @Column()
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  updated_at: number;
+
+  @Column()
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  created_at: number;
 }
 
 /**
@@ -16,147 +38,115 @@ export interface DatabaseSession {
  * @extends {SessionStore}
  */
 export class TypeORMStore extends SessionStore {
-  private tableCreated = false;
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
-    const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
+  async save(state: SessionState, maxInactivity: number): Promise<void> {
+    if (typeof state.userId === 'string') {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    }
 
-    const date = Date.now();
-
-    await this.execQuery(
-      `INSERT INTO foal_session (session_id, session_content, updated_at, created_at)
-      VALUES (:sessionID, :sessionContent, :date, :date)`,
-      {
-        date,
-        sessionContent: JSON.stringify(sessionContent),
-        sessionID,
+    try {
+      await getRepository(DatabaseSession)
+        .createQueryBuilder()
+        .insert()
+        .values({
+          content: JSON.stringify(state.content),
+          created_at: state.createdAt,
+          flash: JSON.stringify(state.flash),
+          id: state.id,
+          updated_at: state.updatedAt,
+          // tslint:disable-next-line
+          user_id: state.userId ?? undefined,
+        })
+        .execute();
+    } catch (error) {
+      // SQLite, MariaDB & MySQL, PostgreSQL
+      if (['SQLITE_CONSTRAINT', 'ER_DUP_ENTRY', '23505'].includes(error.code)) {
+        throw new SessionAlreadyExists();
       }
-    );
-
-    return new Session(sessionID, sessionContent, date);
+      // TODO: test this line.
+      throw error;
+    }
   }
 
-  async update(session: Session): Promise<void> {
-    await this.execQuery(
-      `UPDATE foal_session
-      SET updated_at=:updatedAt, created_at=:createdAt, session_content=:sessionContent
-      WHERE session_id=:sessionID`,
-      {
-        createdAt: session.createdAt,
-        sessionContent: JSON.stringify(session.getContent()),
-        sessionID: session.sessionID,
-        updatedAt: Date.now()
-      }
-    );
+  async read(id: string): Promise<SessionState | null> {
+    const session = await getRepository(DatabaseSession).findOne({ id });
+    if (!session) {
+      return null;
+    }
+
+    return {
+      content: JSON.parse(session.content),
+      createdAt: session.created_at,
+      flash: JSON.parse(session.flash),
+      id: session.id,
+      updatedAt: session.updated_at,
+      // Note: session.user_id is actually a number or null (not undefined).
+      userId: session.user_id,
+    };
+  }
+
+  async update(state: SessionState, maxInactivity: number): Promise<void> {
+    if (typeof state.userId === 'string') {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    }
+
+    const dbSession = getRepository(DatabaseSession).create({
+      content: JSON.stringify(state.content),
+      created_at: state.createdAt,
+      flash: JSON.stringify(state.flash),
+      id: state.id,
+      updated_at: state.updatedAt,
+      // tslint:disable-next-line
+      user_id: state.userId ?? undefined,
+    });
+
+    // The "save" method performs an UPSERT.
+    await getRepository(DatabaseSession).save(dbSession);
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await this.execQuery(
-      `DELETE FROM foal_session WHERE session_id=:sessionID`,
-      { sessionID }
-    );
-  }
-
-  async read(sessionID: string): Promise<Session | undefined> {
-    const timeouts = SessionStore.getExpirationTimeouts();
-
-    const sessions = await this.execQuery(
-      `SELECT * FROM foal_session WHERE session_id=:sessionID`,
-      { sessionID }
-    );
-    if (sessions.length === 0) {
-      return undefined;
-    }
-    const session: DatabaseSession = sessions[0];
-
-    const createdAt = parseInt(session.created_at.toString(), 10);
-    const updatedAt = parseInt(session.updated_at.toString(), 10);
-    const sessionContent = JSON.parse(session.session_content);
-
-    if (Date.now() - updatedAt > timeouts.inactivity * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    if (Date.now() - createdAt > timeouts.absolute * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    return new Session(session.session_id, sessionContent, createdAt);
-  }
-
-  async extendLifeTime(sessionID: string): Promise<void> {
-    await this.execQuery(
-      'UPDATE foal_session SET updated_at=:updatedAt WHERE session_id=:sessionID',
-      { sessionID, updatedAt: Date.now() }
-    );
+    await getRepository(DatabaseSession)
+      .delete({ id: sessionID });
   }
 
   async clear(): Promise<void> {
-    await this.execQuery(`DELETE FROM foal_session`, {});
+    await getRepository(DatabaseSession)
+      .clear();
   }
 
-  async cleanUpExpiredSessions(): Promise<void> {
-    const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await this.execQuery(
-      `DELETE FROM foal_session
-      WHERE updated_at < :updatedAtMax OR created_at < :createdAtMax`,
-      {
-        createdAtMax: Date.now() - expiredTimeouts.absolute * 1000,
-        updatedAtMax: Date.now() - expiredTimeouts.inactivity * 1000,
-      }
-    );
+  async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+    await getRepository(DatabaseSession)
+      .createQueryBuilder()
+      .delete()
+      .where([
+        { created_at: LessThan(Math.trunc(Date.now() / 1000) - maxLifeTime) },
+        { updated_at: LessThan(Math.trunc(Date.now() / 1000) - maxInactivity) },
+      ])
+      .execute();
   }
 
-  private async execQuery(query: string, parameters: ObjectLiteral): Promise<any> {
-    const connection = await this.getConnection();
-    const [ escapedQuery, escapedParams ] = connection.driver.escapeQueryWithParameters(
-      query, parameters, {}
-    );
-    return connection.query(escapedQuery, escapedParams);
+  async getAuthenticatedUserIds(): Promise<number[]> {
+    const sessions = await getRepository(DatabaseSession)
+      .createQueryBuilder()
+      .select('DISTINCT user_id')
+      .where({
+        user_id: Not(IsNull())
+      })
+      .getRawMany();
+    return sessions.map(({ user_id }) => user_id);
   }
 
-  private async getConnection(): Promise<Connection> {
-    const connection = getConnection();
-    if (!this.tableCreated) {
-      const table = new Table({
-        columns: [
-          {
-            isPrimary: true, // TODO: test isPrimary
-            name: 'session_id',
-            type: 'varchar',
-          },
-          {
-            isNullable: false,
-            name: 'session_content',
-            type: 'text',
-          },
-          {
-            isNullable: false,
-            name: 'created_at',
-            type: 'bigint',
-          },
-          {
-            isNullable: false,
-            name: 'updated_at',
-            type: 'bigint',
-          },
-        ],
-        name: 'foal_session',
-      });
-      const queryRunner = connection.createQueryRunner();
-      try {
-        await queryRunner.createTable(table, true);
-      } catch (error) {
-        throw error;
-      } finally {
-        await queryRunner.release();
-      }
-      this.tableCreated = true;
-    }
-    return connection;
+  async destroyAllSessionsOf(user: { id: number }): Promise<void> {
+    await getRepository(DatabaseSession).delete({ user_id: user.id });
+  }
+
+  async getSessionIDsOf(user: { id: number }): Promise<string[]> {
+    const databaseSessions = await getRepository(DatabaseSession).find({
+      // Do not select unused fields.
+      select: ['id'],
+      where: { user_id: user.id },
+    });
+    return databaseSessions.map(dbSession => dbSession.id);
   }
 
 }

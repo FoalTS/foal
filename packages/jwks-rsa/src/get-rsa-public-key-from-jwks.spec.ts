@@ -43,7 +43,7 @@ describe('getRSAPublicKeyFromJWKS', () => {
       }
     });
 
-    beforeEach(() => server = createApp(AppController).listen(3000));
+    beforeEach(async () => server = (await createApp(AppController)).listen(3000));
 
     // TODO: Remove this before merging the PR.
     const defaultOptions: Options = { jwksUri: '' };

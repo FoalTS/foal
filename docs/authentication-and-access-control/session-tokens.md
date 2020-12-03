@@ -1,396 +1,588 @@
 # Session Tokens
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ## Introduction
 
 > This document assumes that you have alread read the [Quick Start](./quick-start.md) page.
 
-In FoalTS, web sessions are temporary states associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
+In FoalTS, web sessions are temporary states that can be associated with a specific user. They are identified by a token and are mainly used to keep users authenticated between several HTTP requests (the client sends the token on each request to authenticate the user).
 
-A session usually begins when the user logs in and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.
+A session usually begins when the user logs in (or starts visiting the website) and ends after a period of inactivity or when the user logs out. By inactivity, we mean that the server no longer receives requests from the authenticated user for a certain period of time.
 
-## Get Started
+## The Basics
 
-### Provide a Secret
+### Choosing a session store
 
-In order to use sessions, you must provide a base64-encoded secret in either:
-- a configuration file
+To begin, you must first specify where the session states will be stored. FoalTS provides several *session stores* for this. For example, you can use the `TypeORMStore` to save the sessions in your SQL database or the `RedisStore` to save them in a redis cache.
 
-    *Example with config/default.yml*
-    ```yaml
-    settings:
-      session:
-        secret: xxx
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    SETTINGS_SESSION_SECRET=xxx
-    ```
+To do so, the package name of the store must be provided with the configuration key `settings.session.store`.
 
-You can generate such a secret with the CLI command:
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/typeorm"
 ```
-foal createsecret
-```
-
-### Choose a Session Store
-
-Then you have to choose where the temporary session state will be stored. FoalTS provides several *session stores* for this. For example, you can use the `TypeORMStore` to save the sessions in your SQL database or the `RedisStore` to save them in a redis cache.
-
-These session stores are services and can therefore be injected into your controllers and services as such:
-
-```typescript
-export class AuthController {
-  @dependency
-  store: TypeORMStore;
-
-  @Post('/login')
-  // ...
-  login() {
-    // ...
-    const store = this.store;
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "store": "@foal/typeorm",
+    }
   }
 }
 ```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      store: "@foal/typeorm",
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
-### Create the Session and Get the Token (Log In)
+#### TypeORMStore
 
-Sessions are created using the method `createAndSaveSessionFromUser` of the session store. It takes one parameter: an object that must have an `id` attribute (the user id). At login time, the user is usually retrieved upstream when checking credentials.
+```
+npm install typeorm @foal/typeorm
+```
+
+This store uses the default TypeORM connection whose configuration is usually specified in `ormconfig.{json|yml|js}`.
+
+Session states are saved in the `databasesession` table of your SQL database. In order to create it, you need to add and run migrations. For this purpose, you can export the `DatabaseSession` entity in your user file and execute the following commands.
+
+*entities/user.entity.ts*
+```typescript
+import { DatabaseSession } from '@foal/typeorm';
+import { BaseEntity, Entity } from 'typeorm';
+
+@Entity()
+export class User extends BaseEntity {
+  /* ... */
+}
+
+export { DatabaseSession }
+```
+
+```
+npm run makemigrations
+npm run migrations
+```
+
+> **Warning**: If you use TypeORM store, then your entity IDs must be numbers (not strings).
+
+#### RedisStore
+
+```
+npm install @foal/redis
+```
+
+In order to use this store, you must provide the redis URI in the configuration.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/redis"
+  redis:
+    uri: 'redis://localhost:6379'
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "store": "@foal/redis",
+    },
+    "redis": {
+      "uri": "redis://localhost:6379"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      store: "@foal/redis",
+    },
+    redis: {
+      uri: "redis://localhost:6379"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+#### MongoDBStore
+
+```
+npm install @foal/mongodb
+```
+
+This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI in the configuration.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    store: "@foal/mongodb"
+  mongodb:
+    uri: 'mongodb://localhost:27017'
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "store": "@foal/mongodb",
+    },
+    "mongodb": {
+      "uri": "mongodb://localhost:27017"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      store: "@foal/mongodb",
+    },
+    mongodb: {
+      uri: "mongodb://localhost:27017"
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+### Usage with the `Authorization` header
+
+> This section explains how to use sessions with a `bearer` token and the `Authorization` header. See the section below to see how to use them with cookies.
+
+The mechanism is as follows:
+
+1. Upon login, create the session and assign it to `ctx.session`. Then return the session token in the response.
+2. On subsequent requests, send the token in the `Authorization` header with this scheme: `Authorization: Bearer <token>`.
 
 ```typescript
-const session = await store.createAndSaveSessionFromUser(user);
-// Alternatively, you can also call the `createAndSaveSession` method as follows:
-const session = await store.createAndSaveSession({ userId: user.id });
-```
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
-The session token then can be read with the method `getToken()` to send it back to the client. This token identifies the session.
+@UseSessions()
+export class ApiController {
 
-```typescript
-const token = session.getToken();
-```
+  @dependency
+  store: Store;
 
-### Use the Session Token to Retrieve the Session
+  @Post('/login')
+  async login(ctx: Context) {
+    // Check the user credentials...
 
-On each subsequent request, the client must send this token in order to retrieve the session and authenticate the user. It must be included in the `Authorization` header using the bearer scheme (unless you use cookies, see section below).
+    ctx.session = await createSession(this.store);
 
-```
-Authorization: Bearer my-session-token
-```
+    // See the "authentication" section below
+    // to see how to associate a user to the session.
 
-The hooks `@TokenRequired` and `@TokenOptional` will then check the token and retrieve the associated session and user.
-
-```typescript
-import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-
-@TokenRequired({ store: TypeORMStore })
-class ApiController {
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
 
   @Get('/products')
   readProducts(ctx: Context) {
-    // ctx.user and ctx.session are defined.
-    return new HttpResponseOK();
+    // If the request has an Authorization header with a valid token
+    // then ctx.session is defined.
+    return new HttpResponseOK([]);
   }
 
 }
 ```
 
-If the header `Authorization` is not found or does not use the `bearer` scheme, the hook `@TokenRequired` returns an error *400 - BAD REQUEST*. The `@TokenOptional` hook does nothing.
+> If the `Authorization` header does not use the `bearer` scheme or if the token is invalid or expired, then the hook returns a 400 or 401 error.
 
-If the token is present and not valid or if the associated session has expired, both hooks return an error *401 - UNAUTHORIZED*.
-
-In other cases, the hooks retrieve the session from the store and assign it to the `Context.session` property. As for the session user ID, it is assigned to `Context.user`.
-
-If you want the `ctx.user` to be an object or an instance of the `User` class, you must pass to the hook `user` option a function whose signature is:
+If you want to make sure that `ctx.session` is set and get a 400 error if no `Authorization` header is provided, you can use the `required` option for this.
 
 ```typescript
-(id: string|number) => Promise<any|undefined>
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+
+export class ApiController {
+
+  @dependency
+  store: Store;
+
+  @Post('/login')
+  @UseSessions()
+  async login(ctx: Context) {
+    // Check the user credentials...
+
+    ctx.session = await createSession(this.store);
+
+    // See the "authentication" section below
+    // to see how to associate a user to the session.
+
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
+
+  @Get('/products')
+  @UseSessions({ required: true })
+  readProducts(ctx: Context) {
+    // ctx.session is defined.
+    return new HttpResponseOK([]);
+  }
+
+}
 ```
 
-The hooks will assign the value it returns to `ctx.user`.
+### Usage with cookies
 
-For example, you can use the `fetchUser` function to retrieve the user from the database:
+> This section explains how to use sessions with cookies. See the section above to see how to use them with a `bearer` token and the `Authorization` header.
+
+--
+
+> Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
+
+When using the `@UseSessions` hook with the `cookie` option, FoalTS makes sure that `ctx.session` is always set and takes care of managing the session token on the client (using a cookie).
 
 ```typescript
-import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
-import { fetchUser, TypeORMStore } from '@foal/typeorm';
+import { Context, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+
+@UseSessions({ cookie: true })
+export class ApiController {
+
+  @dependency
+  store: Store;
+
+  @Post('/login')
+  login(ctx: Context) {
+    // Check the user credentials...
+
+    // See the "authentication" section below
+    // to see how to associate a user to the session.
+
+    return new HttpResponseOK();
+  }
+
+  @Get('/products')
+  readProducts(ctx: Context) {
+    // ctx.session is defined.
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+If the session has expired, the hook returns a 401 error. If you want to redirect the user to the login page, you can use the `redirectTo` option to do so.
+
+```typescript
+@UseSessions({
+  cookie: true,
+  redirectTo: '/login'
+})
+export class ApiController {
+
+  @Get('/products')
+  readProducts(ctx: Context) {
+    // ctx.session is defined.
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+### Adding authentication and access control
+
+> This section explains how to associate a specific user to a session and how to use `ctx.user`.
+
+Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `fetchUser` function.
+
+```typescript
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
-@TokenRequired({
-  store: TypeORMStore,
+@UseSessions({
+  // If the session is attached to a user,
+  // then use "fetchUser" to retrieve the user from the database
+  // and assign it to ctx.user
   user: fetchUser(User)
 })
-class ApiController {
+export class ApiController {
+
+  @dependency
+  store: Store;
+
+  @Post('/login')
+  async login(ctx: Context) {
+    // Check the user credentials...
+    // const user = ...
+
+    ctx.session = await createSession(this.store);
+
+    // Attach the user to the session.
+    ctx.session.setUser(user);
+
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
 
   @Get('/products')
   readProducts(ctx: Context) {
-    // ctx.user is an instance of User
-    return new HttpResponseOK();
+    // If the ctx.session is defined and the session is attached to a user
+    // then ctx.user is an instance of User. Otherwise it is undefined.
+    return new HttpResponseOK([]);
   }
 
 }
 ```
 
-*Note: The hooks `@TokenRequired` and `@TokenOptional` are responsible for extending the session life each time a request is received.*
-
->Alternatively, you can also manually verify a session token and read its associated session. The code below shows how to do so.
->
-> ```typescript
-> const token = // ...
-> const sessionID = Session.verifyTokenAndGetId(token);
-> if (!sessionID) {
->   throw new Error('Invalid session token.');
-> }
-> const session = await store.read(sessionID);
-> if (!session) {
->   throw new Error('Session does not exist or has expired.')
-> }
-> const userId = session.get('userId');
-> ```
-
-### Destroy the Session (Log Out)
-
-Sessions are can be destroyed (i.e users can be logged out) using the `destroy` method of the session store.
+If you want to restrict certain routes to authenticated users, you can use the `@UserRequired` hook for this.
 
 ```typescript
-import { Context, dependency, HttpResponseNoContent, TokenRequired, Session } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
+import { Context, Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+
+import { User } from '../entities';
+
+@UseSessions({
+  user: fetchUser(User)
+})
+export class ApiController {
+
+  @Get('/products')
+  @UserRequired()
+  readProducts(ctx: Context) {
+    // ctx.user is defined.
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+If the user is not authenticated, the hook returns a 401 error. If you want to redirect the user to the login page, you can use the `redirectTo` option to do so.
+
+```typescript
+import { Context, Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+
+import { User } from '../entities';
+
+@UseSessions({
+  redirectTo: '/login',
+  user: fetchUser(User)
+})
+export class ApiController {
+
+  @Get('/products')
+  @UserRequired({
+    redirectTo: '/login'
+  })
+  readProducts(ctx: Context) {
+    // ctx.user is defined.
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+### Destroying the session
+
+Sessions can be destroyed (i.e users can be logged out) using their `destroy` method.
+
+```typescript
+import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
 
 export class AuthController {
-  @dependency
-  store: TypeORMStore;
 
   @Post('/logout')
-  @TokenRequired({ store: TypeORMStore, extendLifeTimeOrUpdate: false })
-  async logout(ctx: Context<any, Session>) {
-    await this.store.destroy(ctx.session.sessionID);
+  @UseSessions()
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
     return new HttpResponseNoContent();
   }
 
 }
 ```
 
-## Usage with Cookies
-
-> Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
-
-FoalTS sessions can also be used with cookies. The hook `cookie` option and the `setSessionCookie` and `removeSessionCookie` funtions are dedicated to this use.
-
-```typescript
-import { HttpResponseOK, Post, removeSessionCookie, setSessionCookie, TokenRequired } from '@foal/core';
-
-export class AuthController {
-
-  @Post('/login')
-  // ...
-  login() {
-    // ...
-    const response = new HttpResponseOK();
-    setSessionCookie(response, session.getToken());
-    return response;
-  }
-
-  @Post('/logout')
-  // ...
-  logout() {
-    // ...
-    const response = new HttpResponseOK();
-    removeSessionCookie(response);
-    return response;
-  }
-
-}
-
-@TokenRequired({ store: MyStore, cookie: true })
-export class ApiController {
-
-}
-```
-
-The cookie default directives can be override in the configuration.
-
-*Example with config/default.yml*
-```yaml
-settings:
-  session:
-    cookie:
-      name: xxx
-      domain: example.com
-      httpOnly: false # default: true
-      path: /foo # default: /
-      sameSite: lax
-      secure: true
-```
-
-Instead of having 400 and 401 HTTP errors, you can also define redirections.
-
-```typescript
-@TokenRequired({
-  store: TypeORMStore,
-  cookie: true;
-  redirectTo: '/login'
-})
-export class PageController {
-  // ...
-}
-```
-
-## Specify the Name of the Session Store in the Configuration
-
-In order to avoid duplicates, the name of the session package can also be provided in the configuration.
-
-```json
-{
-  "settings": {
-    "session": {
-      "store": "@foal/typeorm"
-    }
-  }
-}
-```
-
-```typescript
-export class Controller {
-
-  @dependency
-  store: SessionStore;
-
-  // ...
-  login() {
-    // this.store.createAndSaveSessionFromUser(...)
-  }
-
-  // ...
-  @TokenRequired()
-  protectedRoute() {
-
-  }
-
-}
-```
-
-> The configuration also supports relative paths. See [abstract services](../architecture/services-and-dependency-injection.md#abstract-services).
-
-## Update the Session Content
-
-When receiving an HTTP request, the hooks `@TokenRequired` and `@TokenOptional` convert the session token (if it exists and is valid) into a `Session` instance retrieved from the session store. This object is assigned to the `Context.session` property and is accessible in the remaining hooks and in the controller method.
+## Save and Read Content
 
 You can access and modify the session content with the `set` and `get` methods.
 
 ```typescript
-import { Context, HttpResponseNoContent, Post, Session, TokenRequired } from '@foal/core';
+import { Context, HttpResponseNoContent, Post, Session, UseSessions } from '@foal/core';
 
-@TokenRequired(/* ... */)
+@UseSessions(/* ... */)
 export class ApiController {
 
   @Post('/subscribe')
-  purchase(ctx: Context<any, Session>) {
+  suscribe(ctx: Context<any, Session>) {
     const plan = ctx.session.get<string>('plan', 'free');
     // ...
   }
 
   @Post('/choose-premium-plan')
-  addToCart(ctx: Context<any, Session>) {
+  choosePremimumPlan(ctx: Context<any, Session>) {
     ctx.session.set('plan', 'premium');
     return new HttpResponseNoContent();
   }
 }
 ```
 
-## Session Expiration Timeouts
+### Flash Content
 
-Session states are by definition temporary. They have two expiration timeouts.
+Sometimes we may wish to store items in the session only for the next request.
 
-The first one is the inactivity (or idle) timeout. If the session is not updated or its lifetime is not extended, the session is destroyed. The `@TokenRequired` and `@TokenOptional` take care of extending the session lifetime on each request. Its default value is 15 minutes.
+For example, when users enter incorrect credentials, they are redirected to the login page, and this time we may want to render the page with a specific message that says "Incorrect email or password". If the user refreshes the page, the message then disappears.
 
-The second is the absolute timeout. Whatever the activity is, the session will expire after a fixed period of time. The default value is one week.
+This can be done with flash content. The data will only be available on the next request.
 
-These values can be override with the [configuration keys](../deployment-and-environments/configuration.md) `settings.session.expirationTimeouts.inactivity` and `settings.session.expirationTimeouts.absolute`. The time periods must be specified in seconds.
+```typescript
+ctx.session.set('error', 'Incorrect email or password', { flash: true });
+```
 
-*Example with config/default.yml*
+## Security
+
+### Session Expiration Timeouts
+
+Session states has two expiration timeouts.
+
+| Timeout | Description | Default value |
+| --- | --- | --- |
+| Inactivity (or idle) timeout | Period of inactivity after which the session expires. | 15 minutes |
+| Absolute timeout | Period after which the session expires, regardless of its activity. | 1 week |
+
+If needed, the default values can be override in the configuration. The timeouts must be provided in seconds.
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
 ```yaml
 settings:
   session:
-    secret: xxx
     expirationTimeouts:
       absolute: 2592000 # 30 days
       inactivity: 1800 # 30 min
 ```
-
-*Example with .env*
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "expirationTimeouts": {
+        "absolute": 2592000,
+        "inactivity": 1800
+      }
+    }
+  }
+}
 ```
-SETTINGS_SESSION_EXPIRATION_TIMEOUTS_ABSOLUTE=2592000
-SETTINGS_SESSION_EXPIRATION_TIMEOUTS_INACTIVITY=1800
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      expirationTimeouts: {
+        absolute: 2592000, // 30 days
+        inactivity: 1800 // 30 min
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+
+### Revoking Sessions
+
+#### Revoking One Session
+
+```
+foal g script revoke-session
 ```
 
-## Revoking Sessions
-
-Sessions can be revoked (i.e. destroyed) using the methods `destroy` and `clear` of the session stores. The examples below show how to use these methods in *shell scripts*.
-
-### Revoking One Session
-
-Create a new file named `src/scripts/revoke-session.ts`.
+Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
-import { createService, Session } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
+import { createService, readSession, Store } from '@foal/core';
 import { createConnection } from 'typeorm';
 
 export const schema = {
   type: 'object',
   properties: {
-    sessionID: { type: 'string' },
     token: { type: 'string' },
-  }
+  },
+  required: [ 'token' ]
 }
 
-export async function main(args: { sessionID?: string, token?: string }) {
-  if (!args.sessionID && !args.token) {
-    console.error('You must provide the session token or session ID.');
-    return;
-  }
-  
+export async function main({ token }: { token: string }) {
   await createConnection();
 
-  if (!args.sessionID) {
-    const sessionID = Session.verifyTokenAndGetId(args.token);
-    if (!sessionID) {
-      console.error('Invalid session token');
-      return;
-    }
-    args.sessionID = sessionID;
-  }
+  const store = createService(Store);
+  await store.boot();
 
-  const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
-  await store.destroy(args.sessionID);
+  const session = await readSession(store, token);
+  if (session) {
+    await session.destroy();
+  }
 }
 ```
 
 Build the script.
 
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.
 
 ```
-foal run revoke-session token="xxx.yyy"
-foal run revoke-session sessionID="xxx"
+foal run revoke-session token="lfdkszjanjiznr"
 ```
 
-### Revoking All Sessions
+#### Revoking All Sessions
 
-Create a new file named `src/scripts/revoke-all-sessions.ts`.
+```
+foal g script revoke-all-sessions
+```
+
+Open `scripts/revoke-all-sessions.ts` and update its content.
 
 ```typescript
-import { createService } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
+import { createService, Store } from '@foal/core';
 import { createConnection } from 'typeorm';
 
 export async function main() {
   await createConnection();
 
-  const store = createService(TypeORMStore); // OR MongoDBStore, RedisStore, etc
+  const store = createService(Store);
+  await store.boot();
   await store.clear();
 }
 ```
@@ -398,7 +590,7 @@ export async function main() {
 Build the script.
 
 ```
-npm run build:scripts
+npm run build
 ```
 
 Run the script.
@@ -407,190 +599,305 @@ Run the script.
 foal run revoke-all-sessions
 ```
 
-## Specifying Globally the Session Store
+### Query All Sessions of a User
 
-> Available in Foal v1.11.0 onwards.
+> *This feature is only available with the TypeORM store.*
 
-In order to avoid passing the session store to the hooks each time, you can provide it via the configuration.
+```typescript
+const user = { id: 1 };
+const ids = await store.getSessionIDsOf(user);
+```
 
-*default.yml*
+### Query All Connected Users
+
+> *This feature is only available with the TypeORM store.*
+
+```typescript
+const ids = await store.getAuthenticatedUserIds();
+```
+
+### Force the Disconnection of a User
+
+> *This feature is only available with the TypeORM store.*
+
+```typescript
+const user = { id: 1 };
+await store.destroyAllSessionsOf(user);
+```
+
+### Re-generate the Session ID
+
+When a user logs in or change their password, it is a [good practice](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change) to regenerate the session ID. This can be done with the `regenerateID` method.
+
+```typescript
+ctx.session.regenerateID();
+```
+
+## Advanced
+
+### Specify the Store Locally
+
+By default, the `@UseSessions` hook and the `Store` service retrieve the store to use from the configuration. This behavior can be override by importing the store directly into the code.
+
+```typescript
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
+import { RedisStore } from '@foal/redis';
+
+@UseSessions({ store: RedisStore })
+export class ApiController {
+
+  @dependency
+  store: RedisStore;
+
+  @Post('/login')
+  async login(ctx: Context) {
+    // Check the user credentials...
+
+    ctx.session = await createSession(this.store);
+
+    return new HttpResponseOK({
+      token: ctx.session.getToken()
+    });
+  }
+
+  @Get('/products')
+  readProducts(ctx: Context) {
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+### Cleanup Expired Sessions
+
+By default, FoalTS removes expired sessions in `TypeORMStore` and `MongoDBStore` every 50 requests on average. This can be changed with this configuration key:
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
 ```yaml
 settings:
   session:
-    store: '@foal/typeorm' # or '@foal/mongodb' or '@foal/redis'
+    garbageCollector:
+      periodicity: 25
 ```
-
-```typescript
-// Before
-@TokenRequired({ store: TypeORMStore })
-export class ApiController {
-  // ...
-}
-
-// After
-@TokenRequired()
-export class ApiController {
-  // ...
-}
-```
-
-## Session Stores
-
-FoalTS currently offers three built-in session stores: `TypeORMStore`, `MongoDBStore` `RedisStore`. Others will come in the future. If you need a specific one, you can submit a Github issue or even create your own store (see section below).
-
-### TypeORMStore (SQL Databases: Postgres, MySQL, SQLite, etc)
-
-```
-npm install typeorm @foal/typeorm
-```
-
-This store uses the default TypeORM connection which is usually specified in `ormconfig.{json|yml|js}`. This means that session states are saved in your SQL database (using the table `foal_session`).
-
-Due to the nature of SQL databases, not all expired sessions are deleted by default (we cannot define a time period after which a SQL row must be deleted). However, the session store provides us with a `cleanUpExpiredSessions` function to manually delete all expired sessions. It is recommended to periodically call this method using, for example, a shell script.
-
-*src/scripts/clean-up-expired-sessions.ts*
-```typescript
-import { createService } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
-
-export async function main() {
-  await createConnection();
-
-  const store = createService(TypeORMStore);
-  await store.cleanUpExpiredSessions();
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "garbageCollector": {
+        "periodicity": 25
+      }
+    }
+  }
 }
 ```
-
-Build the script.
-
-```
-npm run build:scripts
-```
-
-Run the script.
-
-```
-foal run clean-up-expired-sessions
-```
-
-### RedisStore
-
-```
-npm install @foal/redis
-```
-
-In order to use this store, you must provide the redis URI in either:
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    redis:
-      uri: 'redis://localhost:6379'
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    REDIS_URI=redis://localhost:6379
-    ```
-
-### MongoDBStore
-
-```
-npm install @foal/mongodb
-```
-
-This store saves your session states in a MongoDB database (using the collection `foalSessions`). In order to use it, you must provide the MongoDB URI in either:
-- a configuration file
-
-    *Example with config/default.yml*
-    ```yaml
-    mongodb:
-      uri: 'mongodb://localhost:27017'
-    ```
-- or in a `.env` file or in an environment variable:
-    ```
-    MONGODB_URI=mongodb://localhost:27017
-    ```
-
-Due to the nature of MongoDB databases, not all expired sessions are deleted by default (we cannot define a time period after which a document must be deleted). However, the session store provides us with a `cleanUpExpiredSessions` function to manually delete all expired sessions. It is recommended to periodically call this method using, for example, a shell script.
-
-*src/scripts/clean-up-expired-sessions.ts*
-```typescript
-import { createService } from '@foal/core';
-import { MongoDBStore } from '@foal/mongodb';
-
-export async function main() {
-  const store = createService(MongoDBStore);
-  await store.cleanUpExpiredSessions();
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      garbageCollector: {
+        periodicity: 25
+      }
+    }
+  }
 }
 ```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
 
-Build the script.
+### Implement a Custom Store
 
-```
-npm run build:scripts
-```
+If necessary, you can implement your own session store. This one must inherit the abstract class `SessionStore`.
 
-Run the script.
-
-```
-foal run clean-up-expired-sessions
-```
-
-### Custom Store
-
-If necessary, you can also create your own session store. This one must inherit the abstract class `SessionStore`.
+To use it, your can import it directly in your code (see the section *Specify the Store Locally*) or use a [relative path](../architecture/services-and-dependency-injection.md#abstract-services) in the configuration. In this case, the class must be exported with the name `ConcreteSessionStore`.
 
 ```typescript
-import { Session, SessionOptions } from '@foal/core';
+import { SessionState, SessionStore } from '@foal/core';
 
 class CustomSessionStore extends SessionStore {
-  createAndSaveSession(sessionContent: any, options?: SessionOptions | undefined): Promise<Session> {
-    throw new Error('Method not implemented.');
+  save(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  update(session: Session): Promise<void> {
-    throw new Error('Method not implemented.');
+  read(id: string): Promise<SessionState | null> {
+    // ...
   }
-  destroy(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  update(state: SessionState, maxInactivity: number): Promise<void> {
+    // ...
   }
-  read(sessionID: string): Promise<Session | undefined> {
-    throw new Error('Method not implemented.');
-  }
-  extendLifeTime(sessionID: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  destroy(id: string): Promise<void> {
+    // ...
   }
   clear(): Promise<void> {
-    throw new Error('Method not implemented.');
+    // ...
   }
-  cleanUpExpiredSessions(): Promise<void> {
-    throw new Error('Method not implemented.');
+  cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+    // ...
   }
 }
 ```
 
-Here is the description of each method:
+| Method | Description |
+| --- | --- |
+| `save` | Saves the session for the first time. If a session already exists with the given ID, a SessionAlreadyExists error MUST be thrown. |
+| `read` | Reads a session. If the session does not exist, the value `null` MUST be returned. |
+| `update` | Updates and extends the lifetime of a session. If the session no longer exists (i.e. has expired or been destroyed), the session MUST still be saved. |
+| `destroy` | Deletes a session. If the session does not exist, NO error MUST be thrown. |
+| `clear` | Clears all sessions. |
+| `cleanUpExpiredSessions` | Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions. If the store manages a cache database, then this method can remain empty but it must NOT throw an error. |
 
-- **createAndSaveSession**: Create and save a new session.
+Session stores do not manipulate `Session` instances directly. Instead, they use `SessionState` objects.
 
-    This method *MUST* call the `generateSessionID` method to generate the session ID.
+```typescript
+interface SessionState {
+  // 44-characters long
+  id: string;
+  userId: string|number|null;
+  content: { [key: string]: any };
+  flash: { [key: string]: any };
+  // 4-bytes long (min: 0, max: 2147483647)
+  updatedAt: number;
+  // 4-bytes long (min: 0, max: 2147483647)
+  createdAt: number;
+}
+```
 
-    This method *MUST* call the `applySessionOptions` method to extend the sessionContent.
+### Create a `fetchUser` function
 
+The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
-- **update**: Update and extend the lifetime of a session.
+```typescript
+(id: string|number) => Promise<any|undefined>
+```
 
-  Depending on the implementation, the internal behavior can be similar to "update" or "upsert".
+If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.
 
-- **destroy**: Delete a session, whether it exists or not.
-- **read**: Read a session from its ID.
+If needed you can implement your own `fetchUser` function with this exact signature.
 
-    Return `undefined` if the session does not exist or has expired. 
+### Usage with Cookies
 
-- **extendLifeTime**: Extend the lifetime of a session from its ID. The duration is the inactivity timeout.
+#### Do not Auto-Create the Session
 
-    If the session does not exist, the method does not throw an error.
+By default, when the `cookie` option is set to true, the `@UseSessions` hook automatically creates a session if it does not already exist. This can be disabled with the `create` option.
 
-- **clear**: Clear all sessions.
+```typescript
+import { Context, createSession, dependency, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
-- **cleanUpExpiredSessions**: Some session stores may need to run periodically background jobs to cleanup expired sessions. This method deletes all expired sessions.
+export class ApiController {
+  @dependency
+  store: Store;
+
+  @Post('/login')
+  @UseSessions({ cookie: true, create: false })
+  async login(ctx: Context) {
+    // Check the credentials...
+
+    // ctx.session is potentially undefined
+    if (!ctx.session) {
+      ctx.session = await createSession(this.store);
+    }
+
+    return new HttpResponseOK();
+  }
+
+}
+```
+
+#### Override the Cookie Options
+
+The default session cookie directives can be overridden in the configuration as follows:
+
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+settings:
+  session:
+    cookie:
+      name: xxx # default: sessionID
+      domain: example.com
+      httpOnly: false # default: true
+      path: /foo # default: /
+      sameSite: lax
+      secure: true
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
+```json
+{
+  "settings": {
+    "session": {
+      "cookie": {
+        "name": "xxx",
+        "domain": "example.com",
+        "httpOnly": false,
+        "path": "/foo",
+        "sameSite": "lax",
+        "secure": true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    session: {
+      cookie: {
+        name: "xxx", // default: sessionID
+        domain: "example.com",
+        httpOnly: false, // default: true
+        path: "/foo", // default: /
+        sameSite: "lax",
+        secure: true
+      }
+    }
+  }
+}
+```
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+#### Require the Cookie
+
+In rare situations, you may want to return a 400 error or redirect the user if no session cookie already exists on the client. If so, you can use the `required` option to do so.
+
+```typescript
+import { Get, HttpResponseOK, UseSessions } from '@foal/core';
+
+export class ApiController {
+
+  @Get('/products')
+  @UseSessions({ cookie: true, required: true })
+  readProducts() {
+    return new HttpResponseOK([]);
+  }
+
+}
+```
+
+### Read a Session From a Token
+
+The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` function.
+
+```typescript
+import { readSession } from '@foal/core';
+
+const session = await readSession(store, token);
+if (!session) {
+  throw new Error('Session does not exist or has expired.')
+}
+const foo = session.get('foo');
+```
+
+### Save Manually a Session
+
+The `@UseSessions` hook automatically saves the session state on each request. If you need to manually save a session (for example in a shell script), you can do it with the `commit` method.
+
+```typescript
+await session.commit();
+```

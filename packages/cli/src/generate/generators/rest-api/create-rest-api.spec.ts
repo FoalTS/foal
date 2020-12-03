@@ -146,10 +146,9 @@ describe('createRestApi', () => {
 
   });
 
-  it('should throw a ClientError if the project has the dependency "mongoose".', () => {
+  it('should throw a ClientError if the project has the dependency "mongodb".', () => {
     fs
-      .copyFixture('model/index.ts', 'index.ts')
-      .copyFixture('model/package.mongoose.json', 'package.json');
+      .copyFixture('rest-api/package.mongodb.json', 'package.json');
 
     try {
       createRestApi({ name: 'test-fooBar', register: false });
@@ -160,7 +159,7 @@ describe('createRestApi', () => {
       }
       strictEqual(
         error.message,
-        `"foal generate|g rest-api <name>" cannot be used in a Mongoose project.`
+        `"foal generate|g rest-api <name>" cannot be used in a MongoDB project.`
       );
     }
   });

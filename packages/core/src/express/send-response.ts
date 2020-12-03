@@ -1,5 +1,5 @@
-// 3p
-import * as pump from 'pump';
+// std
+import { pipeline } from 'stream';
 
 // FoalTS
 import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } from '../core';
@@ -35,7 +35,9 @@ export function sendResponse(response: HttpResponse, res: any): void {
   }
 
   if (response.stream === true) {
-    pump(response.body, res);
+    pipeline(response.body, res, err => {
+      if (err) { console.log(err); }
+    });
     return;
   }
 

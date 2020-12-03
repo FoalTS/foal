@@ -1,13 +1,20 @@
 // std
-import { readFile } from 'fs';
+import { createReadStream, readFile, stat } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
 // 3p
 import {
-  Class, Context, createHttpResponseFile, createOpenApiDocument,
-  dependency, Get, HttpResponseBadRequest,
-  HttpResponseMovedPermanently, HttpResponseNotFound, HttpResponseOK, ServiceManager
+  Class,
+  Context,
+  Dependency,
+  Get,
+  HttpResponseBadRequest,
+  HttpResponseMovedPermanently,
+  HttpResponseNotFound,
+  HttpResponseOK,
+  OpenApi,
+  OPENAPI_SERVICE_ID,
 } from '@foal/core';
 import { getAbsoluteFSPath } from 'swagger-ui-dist';
 
@@ -23,8 +30,8 @@ function isUrlOption(option: SwaggerController['options']): option is { url: str
  * @class SwaggerController
  */
 export abstract class SwaggerController {
-  @dependency
-  controllers: ServiceManager;
+  @Dependency(OPENAPI_SERVICE_ID)
+  openApi: OpenApi;
 
   /**
    * Specify the OpenAPI Specification(s) and their location(s).
@@ -69,7 +76,7 @@ export abstract class SwaggerController {
     }
 
     if (!Array.isArray(this.options)) {
-      const document = createOpenApiDocument(this.options.controllerClass, this.controllers);
+      const document = this.openApi.getDocument(this.options.controllerClass);
       return new HttpResponseOK(document);
     }
 
@@ -83,7 +90,7 @@ export abstract class SwaggerController {
       return new HttpResponseNotFound();
     }
 
-    return new HttpResponseOK(createOpenApiDocument(option.controllerClass, this.controllers));
+    return new HttpResponseOK(this.openApi.getDocument(option.controllerClass));
   }
 
   /* UI */
@@ -125,26 +132,28 @@ export abstract class SwaggerController {
 
   @Get('/swagger-ui.css')
   swaggerUi() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui.css'
-    });
+    return this.createHttpResponseFile('swagger-ui.css', 'text/css');
   }
 
   @Get('/swagger-ui-bundle.js')
   swaggerUiBundle() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui-bundle.js'
-    });
+    return this.createHttpResponseFile('swagger-ui-bundle.js', 'application/javascript');
   }
 
   @Get('/swagger-ui-standalone-preset.js')
   swaggerUiStandalonePreset() {
-    return createHttpResponseFile({
-      directory: getAbsoluteFSPath(),
-      file: 'swagger-ui-standalone-preset.js'
-    });
+    return this.createHttpResponseFile('swagger-ui-standalone-preset.js', 'application/javascript');
+  }
+
+  private async createHttpResponseFile(filename: string, contentType: string): Promise<HttpResponseOK> {
+    const filePath = join(getAbsoluteFSPath(), filename);
+
+    const stream = createReadStream(filePath);
+    const stats = await promisify(stat)(filePath);
+
+    return new HttpResponseOK(stream, { stream: true })
+      .setHeader('Content-Type', contentType)
+      .setHeader('Content-Length', stats.size.toString());
   }
 
 }

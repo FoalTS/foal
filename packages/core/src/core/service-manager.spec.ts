@@ -7,7 +7,7 @@ import { ConcreteSessionStore } from '@foal/internal-test';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { ConfigNotFoundError } from './config';
+import { Config, ConfigNotFoundError } from './config';
 import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
 
 describe('dependency', () => {
@@ -33,16 +33,16 @@ describe('dependency', () => {
     }
 
     const expectedDependenciesA: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: MyService1 },
-      { propertyKey: 'myService2', serviceClass: MyService2 },
+      { propertyKey: 'myService1', serviceClassOrID: MyService1 },
+      { propertyKey: 'myService2', serviceClassOrID: MyService2 },
     ];
     const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
     const expectedDependenciesB: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: MyService1 },
-      { propertyKey: 'myService3', serviceClass: MyService3 },
+      { propertyKey: 'myService1', serviceClassOrID: MyService1 },
+      { propertyKey: 'myService3', serviceClassOrID: MyService3 },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
@@ -74,16 +74,16 @@ describe('Dependency', () => {
     }
 
     const expectedDependenciesA: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: 'service 1' },
-      { propertyKey: 'myService2', serviceClass: 'service 2' },
+      { propertyKey: 'myService1', serviceClassOrID: 'service 1' },
+      { propertyKey: 'myService2', serviceClassOrID: 'service 2' },
     ];
     const actualDependenciesA = Reflect.getMetadata('dependencies', MyChildServiceOrControllerA.prototype);
 
     deepStrictEqual(actualDependenciesA, expectedDependenciesA);
 
     const expectedDependenciesB: IDependency[] = [
-      { propertyKey: 'myService1', serviceClass: 'service 1' },
-      { propertyKey: 'myService3', serviceClass: 'service 3' },
+      { propertyKey: 'myService1', serviceClassOrID: 'service 1' },
+      { propertyKey: 'myService3', serviceClassOrID: 'service 3' },
     ];
     const actualDependenciesB = Reflect.getMetadata('dependencies', MyChildServiceOrControllerB.prototype);
 
@@ -119,35 +119,7 @@ describe('createService', () => {
 
   });
 
-  describe('when dependencies is a ServiceManager', () => {
-
-    it('should create the service with all its dependencies from the ServiceManager.', () => {
-      class MyService1 {}
-      class MyService2 {}
-      class MyService3 {
-        @dependency
-        myService1: MyService1;
-
-        @dependency
-        myService2: MyService2;
-      }
-
-      const myService1 = new MyService1();
-      const myService2 = new MyService2();
-
-      const services = new ServiceManager();
-      services.set(MyService1, myService1);
-      services.set(MyService2, myService2);
-
-      const service = createService(MyService3, services);
-
-      strictEqual(service.myService1, myService1);
-      strictEqual(service.myService2, myService2);
-    });
-
-  });
-
-  describe('when dependencies is a mere object', () => {
+  describe('when dependencies is a defined', () => {
 
     it('should create the service with ALL its dependencies from the object.', () => {
       class MyService1 {}
@@ -508,7 +480,7 @@ describe('ServiceManager', () => {
 
       describe('and if it has a static property "concreteClassConfigPath"', () => {
 
-        beforeEach(() => delete process.env.SETTINGS_TOTO);
+        beforeEach(() => Config.remove('settings.toto'));
 
         it('should throw an Error if Service.concreteClassConfigPath is not a string.', () => {
           abstract class Foobar {
@@ -525,7 +497,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not defined.', () => {
-          process.env.SETTINGS_TOTO = '@foal/internal-test';
+          Config.set('settings.toto', '@foal/internal-test');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -540,7 +512,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not a string.', () => {
-          process.env.SETTINGS_TOTO = '@foal/internal-test';
+          Config.set('settings.toto', '@foal/internal-test');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -558,7 +530,7 @@ describe('ServiceManager', () => {
         describe('when the concrete class path is a package name (does not start by "./")', () => {
 
           it('should throw an Error if the package is not installed.', () => {
-            process.env.SETTINGS_TOTO = 'uninstalledPackage';
+            Config.set('settings.toto', 'uninstalledPackage');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -574,7 +546,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the package.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -591,7 +563,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -607,7 +579,7 @@ describe('ServiceManager', () => {
           });
 
           it('should return the concrete class instance.', () => {
-            process.env.SETTINGS_TOTO = '@foal/internal-test';
+            Config.set('settings.toto', '@foal/internal-test');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -745,7 +717,7 @@ describe('ServiceManager', () => {
 
         describe('when the concrete class path is "local"', () => {
 
-          beforeEach(() => process.env.SETTINGS_TOTO = 'local');
+          beforeEach(() => Config.set('settings.toto', 'local'));
 
           it('should throw an error if Service.defaultConcreteClassPath is not defined.', () => {
             abstract class Foobar {
@@ -789,7 +761,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the file does not exist.', () => {
-            process.env.SETTINGS_TOTO = './foo';
+            Config.set('settings.toto', './foo');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -805,7 +777,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the package.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -822,7 +794,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -839,7 +811,7 @@ describe('ServiceManager', () => {
           });
 
           it('should return the concrete class instance.', () => {
-            process.env.SETTINGS_TOTO = './service-manager.test2';
+            Config.set('settings.toto', './service-manager.test2');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';

@@ -1,12 +1,14 @@
 # User Class and `create-user` Script
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ## The User Entity
 
 ```typescript
-import { Entity, PrimaryGenerateColumn } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGenerateColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number
@@ -36,14 +38,7 @@ import { User } from './src/app/entities';
 async function main() {
   const user = new User();
   user.foo = 1;
-  await getManager().save(user);
-  // OR
-  await getManager().save(User, {
-    foo: 1
-  });
-  // OR
-  await getRepository(User).save({
-    foo: 1
+  await user.save(); 1
   });
 }
 ```
@@ -53,7 +48,7 @@ async function main() {
 You can use the `create-user` shell script (located in `src/scripts`) to create a new user through the command line.
 
 ```sh
-npm run build:scripts
+npm run build
 foal run create-user
 ```
 
@@ -105,7 +100,7 @@ Go to `src/scripts/create-user.ts` and uncomment the lines mentionning the email
 You can now create a new user with these commands:
 
 ```sh
-npm run build:scripts
+npm run build
 foal run create-user email=mary@foalts.org password=mary_password
 ```
 

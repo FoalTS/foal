@@ -1,5 +1,7 @@
 # Limit Repeated Requests
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 To prevent brute force attacks or overloads on your application, you need to implement a rate limiter to limit the number of requests a user is able to send to your application.
 
 In FoalTS you can implement a rate limiter like the [express-rate-limit](https://github.com/nfriedly/express-rate-limit) package by creating a customized `express` object and passing it as a parameter to the FoalTS `createApp` function.
@@ -31,8 +33,6 @@ async function main() {
       // Set default FoalTS headers to the response of limited requests
       res.removeHeader('X-Powered-By');
       res.setHeader('X-Content-Type-Options', 'nosniff');
-      res.setHeader('X-DNS-Prefetch-Control', 'off');
-      res.setHeader('X-Download-Options', 'noopen');
       res.setHeader('X-Frame-Options', 'SAMEORIGIN');
       res.setHeader('X-XSS-Protection', '1; mode=block');
       res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
@@ -42,10 +42,10 @@ async function main() {
     }
   }));
     
-  const app = createApp(AppController, expressApp);
+  const app = await createApp(AppController, { expressInstance: expressApp });
     
   const httpServer = http.createServer(app);
-  const port = Config.get('port', 3001);
+  const port = Config.get('port', 'number', 3001);
   httpServer.listen(port, () => {
     console.log(`Listening on port ${port}...`);
   });
@@ -67,8 +67,6 @@ expressApp.use(rateLimit({
     // Set default FoalTS headers to the response of limited requests
     res.removeHeader('X-Powered-By');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-DNS-Prefetch-Control', 'off');
-    res.setHeader('X-Download-Options', 'noopen');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');

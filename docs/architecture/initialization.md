@@ -1,35 +1,21 @@
 # Initialization
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 In many situations, we need to initialize the application (i.e perform certain actions) before listening to incoming HTTP requests. This is the case, for example, if you need to establish a connection to the database.
 
-There are three ways to achieve this in FoalTS.
+There are two ways to achieve this in FoalTS.
 
-## The `main` function
+## Initializing the Application
 
-The most straightforward way to do it, which is used by default, is to add the initialization commands in the `main` function before `createApp` is called.
-
-If your application uses TypeORM, your project should have a file `src/index.ts` that looks like this:
-
-```typescript
-async function main() {
-  // Initialization
-  await createConnection();
-
-  // Creation of the application
-  const app = createApp(AppController);
-
-  // ...
-}
-
-main();
-```
-
-## The `AppController.init` method
-
-Sometimes, however, this approach is not sufficient because we need to call the methods of some services. In this case, you can add an `init` method to the root controller class which will be called before the application is fully created. This method can be synchronous or asynchronous.
+The first approach is to add an `init` method to the root controller class which will be called before the application is fully created. This method can be synchronous or asynchronous.
 
 *Example 1*
 ```typescript
+import { dependency } from '@foal/core';
+
+import { ServiceA } from '../services';
+
 export class AppController {
 
   @dependency
@@ -42,43 +28,9 @@ export class AppController {
 }
 ```
 
-*Example 2*
-```typescript
-export class AppController {
+## Initializing a Service
 
-  @dependency
-  serviceA: ServiceA;
-
-  @dependency
-  serviceB: ServiceB;
-
-  async init() {
-    this.serviceA.init();
-    this.serviceB.init();
-  }
-
-}
-```
-
-For this to work, you need to update your `src/index.ts` file and create the application with the asynchronous function `createAndInitApp`.
-
-```typescript
-import { createAndInitApp } from '@foal/core';
-
-async function main() {
-  const app = await createAndInitApp(AppController);
-
-  // ...
-}
-
-main();
-```
-
-## The services `boot` method
-
-> `boot` methods are available in v1.8.0 onwards.
-
-Alternatively you can add a `boot` method in your services. This method can be synchronous or asynchronous.
+The second approach is to add a `boot` method in your services. This method can be synchronous or asynchronous.
 
 *Example*
 ```typescript
@@ -91,31 +43,14 @@ export class ServiceA {
 }
 ```
 
-Then, you have to call the `boot` method of your service manager (it will be automatically called starting from version 2).
+Boot methods are executed before `AppController.init` gets called.
 
-```typescript
-import { createAndInitApp } from '@foal/core';
-
-async function main() {
-  const serviceManager = new ServiceManager();
-  const app = createApp(AppController, {
-    serviceManager
-  });
-  // This line calls the `boot` method of all your services that have one.
-  await serviceManager.boot();
-
-  // ...
-}
-
-main();
-```
-
-If you manually inject services to your service manager and you want their `boot` methods to be called, you must specify this in the `set` method options.
-
-```typescript
-const serviceManager = new ServiceManager();
-serviceManager.set(ServiceA, myServiceInstance, { boot: true })
-```
+> If you manually inject services to your service manager and you want their `boot` methods to be called, you must specify this in the `set` method options.
+> 
+> ```typescript
+> const serviceManager = new ServiceManager();
+> serviceManager.set(ServiceA, myServiceInstance, { boot: true });
+> ```
 
 ## Best Practices
 

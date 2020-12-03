@@ -1,10 +1,11 @@
 // 3p
 import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 // FoalTS
 import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
-import { dotToUnderscore } from './utils';
+import { Env } from './env';
 
 type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'number|string'|'any';
 
@@ -27,43 +28,6 @@ type ValueType<T extends ValueStringType> =
 export class Config {
 
   /**
-   * Access environment variables and configuration files.
-   *
-   * For example, if it is called with the string `settings.session.secret`,
-   * the method will go through these steps:
-   *
-   * 1. If the environment variable `SETTINGS_SESSION_SECRET` exists, then return its value.
-   * 2. If `.env` exists and has a line `SETTINGS_SESSION_SECRET=`, then return its value.
-   * 3. If `config/${NODE_ENV}.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 4. Same with `config/${NODE_ENV}.yml`.
-   * 5. If `config/default.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 6. Same with `config/default.yml`.
-   *
-   * If none value is found, then the method returns the default value provided as second argument
-   * to the function. If none was given, it returns undefined.
-   *
-   * @static
-   * @deprecated
-   * @template T - TypeScript type of the returned value. Default is `any`.
-   * @param {string} key - Name of the config key using dots and camel case.
-   * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
-   * @returns {T} The configuration value.
-   * @memberof Config
-   */
-  static get<T = any>(key: string, defaultValue?: T): T {
-    let value = this.readConfigValue(key);
-    if (typeof value === 'string') {
-      value = this.convertType(value);
-    }
-    if (value !== undefined) {
-      return value;
-    }
-    return defaultValue as T;
-  }
-
-  /**
    * Read the configuration value associated with the given key. Optionaly check its type.
    *
    * @static
@@ -74,13 +38,37 @@ export class Config {
    * @returns {ValueType<T>|undefined} The configuration value
    * @memberof Config
    */
-  static get2<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
-  static get2<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
-  static get2<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
+  static get<T extends ValueStringType>(key: string, type: T, defaultValue: ValueType<T>): ValueType<T>;
+  static get<T extends ValueStringType>(key: string, type?: T): ValueType<T>|undefined;
+  static get<T extends ValueStringType>(key: string, type?: T, defaultValue?: ValueType<T>): ValueType<T>|undefined {
     const value = this.readConfigValue(key);
 
     if (value === undefined) {
       return defaultValue;
+    }
+
+    if (type === 'string' && typeof value !== 'string') {
+      throw new ConfigTypeError(key, 'string', typeof value);
+    }
+
+    if (type === 'boolean' && typeof value !== 'boolean') {
+      if (value === 'true') {
+        return true as any;
+      }
+      if (value === 'false') {
+        return false as any;
+      }
+      throw new ConfigTypeError(key, 'boolean', typeof value);
+    }
+
+    if (type === 'number' && typeof value !== 'number') {
+      if (typeof value === 'string' && value.replace(/ /g, '') !== '') {
+        const n = Number(value);
+        if (!isNaN(n)) {
+          return n as any;
+        }
+      }
+      throw new ConfigTypeError(key, 'number', typeof value);
     }
 
     if (type === 'boolean|string' && typeof value !== 'boolean') {
@@ -94,6 +82,7 @@ export class Config {
         throw new ConfigTypeError(key, 'boolean|string', typeof value);
       }
     }
+
     if (type === 'number|string' && typeof value !== 'number') {
       if (typeof value !== 'string') {
         throw new ConfigTypeError(key, 'number|string', typeof value);
@@ -101,30 +90,9 @@ export class Config {
       if (value.replace(/ /g, '') !== '') {
         const n = Number(value);
         if (!isNaN(n)) {
-            return n as any;
-          }
-      }
-    }
-    if (type === 'string' && typeof value !== 'string') {
-      throw new ConfigTypeError(key, 'string', typeof value);
-    }
-    if (type === 'number' && typeof value !== 'number') {
-      if (typeof value === 'string' && value.replace(/ /g, '') !== '') {
-        const n = Number(value);
-        if (!isNaN(n)) {
           return n as any;
         }
       }
-      throw new ConfigTypeError(key, 'number', typeof value);
-    }
-    if (type === 'boolean' && typeof value !== 'boolean') {
-      if (value === 'true') {
-        return true as any;
-      }
-      if (value === 'false') {
-        return false as any;
-      }
-      throw new ConfigTypeError(key, 'boolean', typeof value);
     }
 
     return value;
@@ -144,7 +112,7 @@ export class Config {
    * @memberof Config
    */
   static getOrThrow<T extends ValueStringType>(key: string, type?: T, msg?: string): ValueType<T> {
-    const value = this.get2(key, type);
+    const value = this.get(key, type);
     if (value === undefined) {
       throw new ConfigNotFoundError(key, msg);
     }
@@ -158,112 +126,110 @@ export class Config {
    * @memberof Config
    */
   static clearCache() {
-    this.cache = {
-      dotEnv: undefined,
-      json: {},
-      yaml: {},
-    };
+    this.config = null;
+    this.testConfig.clear();
+  }
+
+  static set(key: string, value: string|number|boolean): void {
+    this.testConfig.set(key, value);
+  }
+
+  static remove(key: string): void {
+    this.testConfig.delete(key);
   }
 
   private static yaml: any;
-  private static cache: { dotEnv: any, json: any, yaml: any } = {
-    dotEnv: undefined,
-    json: {},
-    yaml: {},
-  };
+  private static config: { [key: string ]: any } | null = null;
+  private static testConfig: Map<string, string|number|boolean> = new Map();
+
+  private static readJSON(path: string): { [key: string ]: any } {
+    if (!existsSync(path)) {
+      return {};
+    }
+
+    const fileContent = readFileSync(path, 'utf8');
+    return JSON.parse(fileContent);
+  }
+
+  private static readYAML(path: string): { [key: string ]: any } {
+    if (!existsSync(path)) {
+      return {};
+    }
+
+    const yaml = this.getYAMLInstance();
+    if (!yaml) {
+      console.log(`Impossible to read ${path}. The package "yamljs" is not installed.`);
+      return {};
+    }
+
+    const fileContent = readFileSync(path, 'utf8');
+    return yaml.parse(fileContent);
+  }
+
+  private static readJS(path: string): { [key: string ]: any } {
+    if (!existsSync(path)) {
+      return {};
+    }
+
+    return require(join(process.cwd(), path));
+  }
 
   private static readConfigValue(key: string): any {
-    const underscoreName = dotToUnderscore(key);
-
-    const envValue = process.env[underscoreName];
-    if (envValue !== undefined) {
-      return envValue;
+    if (this.testConfig.has(key)) {
+      return this.testConfig.get(key);
     }
 
-    const dotEnvValue = this.readDotEnvValue(underscoreName);
-    if (dotEnvValue !== undefined) {
-      return dotEnvValue;
+    if (this.config === null) {
+      this.config = [
+        this.readJS('config/default.js'),
+        this.readYAML('config/default.yml'),
+        this.readJSON('config/default.json'),
+        this.readJS(`config/${process.env.NODE_ENV || 'development'}.js`),
+        this.readYAML(`config/${process.env.NODE_ENV || 'development'}.yml`),
+        this.readJSON(`config/${process.env.NODE_ENV || 'development'}.json`),
+      ].reduce((config1, config2) => this.mergeDeep(config1, config2));
     }
 
-    const envJSONFilePath = `config/${process.env.NODE_ENV || 'development'}.json`;
-    const envJSONValue = this.readJSONValue(envJSONFilePath, key);
-    if (envJSONValue !== undefined) {
-      return envJSONValue;
+    const properties = key.split('.');
+    let result: any = this.config;
+    for (const property of properties) {
+      result = result[property];
+      if (result === undefined) {
+        break;
+      }
     }
 
-    const envYamlFilePath = `config/${process.env.NODE_ENV || 'development'}.yml`;
-    const envYAMLValue = this.readYAMLValue(envYamlFilePath, key);
-    if (envYAMLValue !== undefined) {
-      return envYAMLValue;
+    if (typeof result === 'string' && result.startsWith('env(') && result.endsWith(')')) {
+      const envVarName = result.substr(4, result.length - 5);
+      return Env.get(envVarName);
     }
 
-    const defaultJSONValue = this.readJSONValue('config/default.json', key);
-    if (defaultJSONValue !== undefined) {
-      return defaultJSONValue;
-    }
-
-    const defaultYAMLValue = this.readYAMLValue('config/default.yml', key);
-    if (defaultYAMLValue !== undefined) {
-      return defaultYAMLValue;
-    }
+    return result;
   }
 
-  private static readDotEnvValue(name: string): string | undefined {
-    if (!this.cache.dotEnv) {
-      if (!existsSync('.env')) {
-        return;
-      }
-
-      const envFileContent = readFileSync('.env', 'utf8');
-      this.cache.dotEnv = {};
-      envFileContent.replace(/\r\n/g, '\n').split('\n').forEach(line => {
-        const [ key, ...values ] = line.split('=');
-        const value = values.join('=');
-        this.cache.dotEnv[key] = value;
-      });
+  private static mergeDeep(target: { [key: string]: any }, source: { [key: string]: any } ): { [key: string]: any } {
+    // TODO: improve the tests of this function.
+    function isObject(o: any): o is { [key: string]: any } {
+      return typeof o === 'object' && o !== null;
     }
 
-    if (this.cache.dotEnv[name] !== undefined) {
-      return this.cache.dotEnv[name];
-    }
-  }
-
-  private static readJSONValue(path: string, key: string): any {
-    if (!this.cache.json[path]) {
-      if (!existsSync(path)) {
-        return;
+    for (const key in source) {
+      if (isObject(target[key]) && isObject(source[key])) {
+        this.mergeDeep(target[key], source[key]);
+      } else {
+        target[key] = source[key];
       }
-
-      const fileContent = readFileSync(path, 'utf8');
-      this.cache.json[path] = JSON.parse(fileContent);
     }
 
-    return this.getValue(this.cache.json[path], key);
-  }
-
-  private static readYAMLValue(path: string, key: string): any {
-    if (!this.cache.yaml[path]) {
-      if (!existsSync(path)) {
-        return;
-      }
-
-      const yaml = this.getYAMLInstance();
-      if (!yaml) {
-        console.log(`Impossible to read ${path}. The package "yamljs" is not installed.`);
-        return;
-      }
-
-      const fileContent = readFileSync(path, 'utf8');
-      this.cache.yaml[path] = yaml.parse(fileContent);
-    }
-
-    return this.getValue(this.cache.yaml[path], key);
+    return target;
   }
 
   private static getYAMLInstance(): false | any {
+    // TODO: test this method (hard).
     if (this.yaml === false) {
       return false;
     }
+
     try {
       this.yaml = require('yamljs');
     } catch (err) {
@@ -273,63 +239,6 @@ export class Config {
       this.yaml = false;
     }
     return this.yaml;
-  }
-
-  private static convertType(value: string): boolean | number | string {
-    if (value === 'true') {
-      return true;
-    }
-    if (value === 'false') {
-      return false;
-    }
-    if (value.replace(/ /g, '') === '') {
-      return value;
-    }
-    const n = Number(value);
-    if (!isNaN(n)) {
-      return n;
-    }
-    return value;
-  }
-
-  private static getValue(config: any, propertyPath: string): any {
-    const properties = propertyPath.split('.');
-    let result = config;
-    for (const property of properties) {
-      result = result[property];
-      if (result === undefined) {
-        break;
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Access environment variables and configuration files.
-   *
-   * For example, if it is called with the string `settings.session.secret`,
-   * the method will go through these steps:
-   *
-   * 1. If the environment variable `SETTINGS_SESSION_SECRET` exists, then return its value.
-   * 2. If `.env` exists and has a line `SETTINGS_SESSION_SECRET=`, then return its value.
-   * 3. If `config/${NODE_ENV}.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 4. Same with `config/${NODE_ENV}.yml`.
-   * 5. If `config/default.json` exists and the property `config['settings']['session']['secret']`
-   * does too, then return its value.
-   * 6. Same with `config/default.yml`.
-   *
-   * If none value is found, then the method returns the default value provided as second argument
-   * to the function. If none was given, it returns undefined.
-   *
-   * @template T - TypeScript type of the returned value. Default is `any`.
-   * @param {string} key - Name of the config key using dots and camel case.
-   * @param {T} [defaultValue] - Default value to return if no configuration is found with that key.
-   * @returns {T} The configuration value.
-   * @memberof Config
-   */
-  get<T = any>(key: string, defaultValue?: T): T {
-    return Config.get<T>(key, defaultValue);
   }
 
 }

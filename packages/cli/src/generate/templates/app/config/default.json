@@ -1,17 +1,12 @@
 {
-  "port": 3001,
   "settings": {
-    "csrf": false,
-    "debug": false,
     "loggerFormat": "tiny",
     "session": {
-      "cookie": {
-        "sameSite": "lax"
-      }
+      "store": "@foal/typeorm"
     }
   },
   "database": {
-    "database": "./db.sqlite3",
-    "synchronize": false
+    "type": "sqlite",
+    "database": "./db.sqlite3"
   }
 }

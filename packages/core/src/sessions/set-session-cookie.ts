@@ -1,26 +1,50 @@
 // FoalTS
 import { Config, CookieOptions, HttpResponse } from '../core';
 import {
-  SESSION_DEFAULT_COOKIE_HTTP_ONLY, SESSION_DEFAULT_COOKIE_NAME, SESSION_DEFAULT_COOKIE_PATH
+  SESSION_DEFAULT_COOKIE_HTTP_ONLY,
+  SESSION_DEFAULT_COOKIE_NAME,
+  SESSION_DEFAULT_COOKIE_PATH,
+  SESSION_DEFAULT_CSRF_COOKIE_NAME,
+  SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
 } from './constants';
-import { SessionStore } from './session-store';
+import { Session } from './session';
 
 /**
- * Send the session token in a cookie.
+ * Sends the session token in a cookie.
+ *
+ * If the CSRF protection is enabled, it also sends the CSRF token in a CSRF cookie.
  *
  * @export
- * @param {HttpResponse} response - The HTTP response
- * @param {string} token - The session token
+ * @param {HttpResponse} response - The HTTP response.
+ * @param {Session} session - The session object.
  */
-export function setSessionCookie(response: HttpResponse, token: string): void {
-  const cookieName = Config.get2('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
+export function setSessionCookie(response: HttpResponse, session: Session): void {
+  const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
+
+  const csrfEnabled = Config.get('settings.session.csrf.enabled', 'boolean', false);
+  let sameSite = Config.get('settings.session.cookie.sameSite', 'string') as 'strict'|'lax'|'none'|undefined;
+  if (csrfEnabled && sameSite === undefined) {
+    sameSite = SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED;
+  }
+
   const options: CookieOptions = {
-    domain: Config.get2('settings.session.cookie.domain', 'string'),
-    httpOnly: Config.get2('settings.session.cookie.httpOnly', 'boolean', SESSION_DEFAULT_COOKIE_HTTP_ONLY),
-    maxAge: SessionStore.getExpirationTimeouts().inactivity,
-    path: Config.get2('settings.session.cookie.path', 'string', SESSION_DEFAULT_COOKIE_PATH),
-    sameSite: Config.get2('settings.session.cookie.sameSite', 'string') as 'strict'|'lax'|'none'|undefined,
-    secure: Config.get2('settings.session.cookie.secure', 'boolean')
+    domain: Config.get('settings.session.cookie.domain', 'string'),
+    expires: new Date(session.expirationTime * 1000),
+    path: Config.get('settings.session.cookie.path', 'string', SESSION_DEFAULT_COOKIE_PATH),
+    sameSite,
+    secure: Config.get('settings.session.cookie.secure', 'boolean')
   };
-  response.setCookie(cookieName, token, options);
+
+  response.setCookie(cookieName, session.getToken(), {
+    ...options,
+    httpOnly: Config.get('settings.session.cookie.httpOnly', 'boolean', SESSION_DEFAULT_COOKIE_HTTP_ONLY),
+  });
+
+  if (csrfEnabled) {
+    const csrfCookieName = Config.get('settings.session.csrf.cookie.name', 'string', SESSION_DEFAULT_CSRF_COOKIE_NAME);
+    response.setCookie(csrfCookieName, session.get<string|undefined>('csrfToken') || '', {
+      ...options,
+      httpOnly: false,
+    });
+  }
 }

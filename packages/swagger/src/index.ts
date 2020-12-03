@@ -4,4 +4,6 @@
  * Released under the MIT License.
  */
 
-export { SwaggerController } from './swagger-controller';
+export {
+  SwaggerController,
+} from './swagger-controller';

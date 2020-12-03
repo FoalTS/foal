@@ -1,7 +1,12 @@
-import { Context, Get, HttpResponseOK, TokenRequired } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
+import { Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
+import { fetchUser } from '@foal/typeorm';
+import { User } from '../entities';
 
-@TokenRequired({ store: TypeORMStore, cookie: true })
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User),
+})
+@UserRequired()
 export class ApiController {
   @Get('/products')
   readProducts() {

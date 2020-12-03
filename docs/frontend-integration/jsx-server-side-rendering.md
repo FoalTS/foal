@@ -1,6 +1,10 @@
 # JSX Server-Side Rendering
 
-> If you are interested in SSR without JSX, then you might take a look at [the "templating" page](../utilities/templating.md).
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
+--
+
+> If you are interested in SSR without JSX, then you might take a look at [the "templating" page](../common/templating.md).
 
 ## Compile JSX Files
 
@@ -28,12 +32,14 @@ Then, add the file extension `tsx` in every `tsconfig.*.json`.
 {
   "extends": "./tsconfig.json",
   "include": [
-    "src/app/**/*.ts",
-    "src/app/**/*.tsx",
-    "src/index.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
-    "src/app/**/*.spec.ts"
+    "src/e2e/*.ts",
+    "src/**/*.spec.ts",
+    "src/e2e.ts",
+    "src/test.ts"
   ]
 }
 ```

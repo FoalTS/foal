@@ -7,7 +7,7 @@ export class AppController {
   @Get('/products')
   @Hook(() => response => {
     // This line is not executed in version 1 but it is executed in version 2.
-    (response as any).error.message += '!';
+    (response as any).body += '!';
   })
   readProducts() {
     throw new PermissionDenied('Access forbidden');

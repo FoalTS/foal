@@ -14,6 +14,10 @@ export class ConcreteDisk {
     throw new Error('internal-test package: read called');
   }
 
+  readSize() {
+    return Promise.resolve(22);
+  }
+
   delete() {
     throw new Error('internal-test package: delete called');
   }

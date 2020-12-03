@@ -7,7 +7,7 @@ Go back to the `ApiController` and update the `getTodos` route.
 ```typescript
   @Get('/todos')
   async getTodos(ctx: Context) {
-    const todos = await getRepository(Todo).find({ owner: ctx.user });
+    const todos = await Todo.find({ owner: ctx.user });
     return new HttpResponseOK(todos);
   }
 ```
@@ -42,7 +42,7 @@ Update the api controller.
     // Make the current user the owner of the todo.
     todo.owner = ctx.user;
 
-    await getRepository(Todo).save(todo);
+    await todo.save();
 
     return new HttpResponseCreated(todo);
   }
@@ -50,15 +50,15 @@ Update the api controller.
   @Delete('/todos/:id')
   @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
-    const todo = await getRepository(Todo).findOne({
-      id: +ctx.request.params.id,
+    const todo = await Todo.findOne({
+      id: ctx.request.params.id,
       // Do not return the todo if it does not belong to the current user.
       owner: ctx.user
     });
     if (!todo) {
       return new HttpResponseNotFound();
     }
-    await getRepository(Todo).remove(todo);
+    await todo.remove();
     return new HttpResponseNoContent();
   }
 ```

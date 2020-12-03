@@ -2,8 +2,15 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Class, Context, getHookFunction, HttpResponseBadRequest, ServiceManager } from '../../core';
-import { getApiParameters, getApiResponses, IApiCookieParameter, IApiResponses } from '../../openapi';
+import {
+  Context,
+  getApiParameters,
+  getApiResponses,
+  getHookFunction,
+  HttpResponseBadRequest,
+  OpenApi,
+  ServiceManager
+} from '../../core';
 import { ValidateCookie } from './validate-cookie.hook';
 
 describe('ValidateCookie', () => {
@@ -105,6 +112,49 @@ describe('ValidateCookie', () => {
         strictEqual(response, undefined);
       });
 
+      it('should use the OpenAPI components to validate the cookie.', () => {
+        const services = new ServiceManager();
+        const openApi = services.get(OpenApi);
+
+        class ApiController {}
+        const controller = new ApiController();
+
+        openApi.addDocument(ApiController, {
+          components: {
+            schemas: {
+              cookie: { type: 'integer' }
+            }
+          },
+          info: {
+            title: 'Api',
+            version: '1.0.0',
+          },
+          openapi: '3.0.2',
+          paths: {},
+        }, [ controller ]);
+
+        const hook = getHookFunction(ValidateCookie('foo', {
+          $ref: '#/components/schemas/cookie'
+        })).bind(controller);
+        const ctx = new Context({ cookies: { foo: 'a' } });
+
+        const actual = hook(ctx, services);
+        if (!(actual instanceof HttpResponseBadRequest)) {
+          throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+        }
+        deepStrictEqual(actual.body, {
+          cookies: [
+            {
+              dataPath: '.foo',
+              keyword: 'type',
+              message: 'should be integer',
+              params: { type: 'integer' },
+              schemaPath: '#/components/schemas/cookie/type',
+            }
+          ]
+        });
+      });
+
     });
 
     describe('given schema is a function', () => {
@@ -151,33 +201,58 @@ describe('ValidateCookie', () => {
       strictEqual(response, undefined);
     });
 
+    it('should use the OpenAPI components to validate the cookie.', () => {
+      const services = new ServiceManager();
+      const openApi = services.get(OpenApi);
+
+      class ApiController {
+        schema = {
+          $ref: '#/components/schemas/cookie'
+        };
+      }
+      const controller = new ApiController();
+
+      openApi.addDocument(ApiController, {
+        components: {
+          schemas: {
+            cookie: { type: 'integer' }
+          }
+        },
+        info: {
+          title: 'Api',
+          version: '1.0.0',
+        },
+        openapi: '3.0.2',
+        paths: {},
+      }, [ controller ]);
+
+      const hook = getHookFunction(ValidateCookie('foo', controller => controller.schema))
+        .bind(controller);
+      const ctx = new Context({ cookies: { foo: 'a' } });
+
+      const actual = hook(ctx, services);
+      if (!(actual instanceof HttpResponseBadRequest)) {
+        throw new Error('The hook should have returned an HttpResponseBadRequest object.');
+      }
+      deepStrictEqual(actual.body, {
+        cookies: [
+          {
+            dataPath: '.foo',
+            keyword: 'type',
+            message: 'should be integer',
+            params: { type: 'integer' },
+            schemaPath: '#/components/schemas/cookie/type',
+          }
+        ]
+      });
+    });
+
   });
 
   describe('should define an API specification', () => {
 
-    afterEach(() => delete process.env.SETTINGS_OPENAPI_USE_HOOKS);
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is undefined.', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { required: false })
-      @ValidateCookie('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
-    it('unless options.openapi is undefined and settings.openapi.useHooks is false.', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'false';
-      @ValidateCookie('foobar', { type: 'string' }, { required: false })
-      @ValidateCookie('barfoo', { type: 'string' })
-      class Foobar {}
-
-      strictEqual(getApiParameters(Foobar), undefined);
-      strictEqual(getApiResponses(Foobar), undefined);
-    });
-
     it('unless options.openapi is false.', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { openapi: false, required: false })
+      @ValidateCookie('foobar', { type: 'string' }, { required: false, openapi: false })
       @ValidateCookie('barfoo', { type: 'string' }, { openapi: false })
       class Foobar {}
 
@@ -185,114 +260,70 @@ describe('ValidateCookie', () => {
       strictEqual(getApiResponses(Foobar), undefined);
     });
 
-    function testClass(Foobar: Class) {
-      const actual = getApiParameters(Foobar);
-      const expected: IApiCookieParameter[] = [
-        {
-          in: 'cookie',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'cookie',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
-
-      const actualResponses = getApiResponses(Foobar);
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (class decorator).', () => {
-      @ValidateCookie('foobar', { type: 'string' }, { openapi: true, required: false })
-      @ValidateCookie('barfoo', { type: 'string' }, { openapi: true })
-      class Foobar {}
-
-      testClass(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (class decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
+    it('with the proper api parameters (object).', () => {
       @ValidateCookie('foobar', { type: 'string' }, { required: false })
       @ValidateCookie('barfoo', { type: 'string' })
       class Foobar {}
 
-      testClass(Foobar);
-    });
+      const actual = getApiParameters(Foobar) || [];
 
-    function testMethod(Foobar: Class) {
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiCookieParameter[] = [
-        {
-          in: 'cookie',
-          name: 'foobar',
-          schema: { type: 'string' }
-        },
-        {
-          in: 'cookie',
-          name: 'barfoo',
-          required: true,
-          schema: { type: 'string' }
-        },
-      ];
-      deepStrictEqual(actual, expected);
-
-      const actualResponses = getApiResponses(Foobar, 'foo');
-      const expectedResponses: IApiResponses = {
-        400: { description: 'Bad request.' }
-      };
-      deepStrictEqual(actualResponses, expectedResponses);
-    }
-
-    it('if options.openapi is true (method decorator).', () => {
-      class Foobar {
-        @ValidateCookie('foobar', { type: 'string' }, { openapi: true, required: false })
-        @ValidateCookie('barfoo', { type: 'string' }, { openapi: true })
-        foo() {}
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'cookie',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
 
-      testMethod(Foobar);
-    });
-
-    it('if options.openapi is undefined and settings.openapi.useHooks is true (method decorator).', () => {
-      process.env.SETTINGS_OPENAPI_USE_HOOKS = 'true';
-      class Foobar {
-        @ValidateCookie('foobar', { type: 'string' }, { required: false })
-        @ValidateCookie('barfoo', { type: 'string' })
-        foo() {}
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
       }
-
-      testMethod(Foobar);
-    });
-
-    it('given schema is a function.', () => {
-      class Foobar {
-        schema = { type: 'string' };
-        @ValidateCookie('barfoo', c => c.schema, { openapi: true })
-        foo() {}
-      }
-
-      const actual = getApiParameters(Foobar, 'foo');
-      const expected: IApiCookieParameter = {
+      deepStrictEqual(actual[1](new Foobar()), {
         in: 'cookie',
         name: 'barfoo',
         required: true,
         schema: { type: 'string' }
-      };
-      if (actual === undefined) {
-        throw new Error('The Api parameters metadata should be defined.');
+      });
+    });
+
+    it('with the proper api parameters (function).', () => {
+      @ValidateCookie('foobar', (controller: Foobar) => controller.schema, { required: false })
+      @ValidateCookie('barfoo', (controller: Foobar) => controller.schema)
+      class Foobar {
+        schema = { type: 'string' };
       }
-      const schemaFn = actual[0];
-      if (typeof schemaFn !== 'function') {
-        throw new Error('The Api parameter metadata should be a function.');
+
+      const actual = getApiParameters(Foobar) || [];
+
+      if (typeof actual[0] !== 'function') {
+        throw new Error('The ApiParameter metadata (0) should be a function.');
       }
-      deepStrictEqual(schemaFn(new Foobar()), expected);
+      deepStrictEqual(actual[0](new Foobar()), {
+        in: 'cookie',
+        name: 'foobar',
+        schema: { type: 'string' }
+      });
+
+      if (typeof actual[1] !== 'function') {
+        throw new Error('The ApiParameter metadata (1) should be a function.');
+      }
+      deepStrictEqual(actual[1](new Foobar()), {
+        in: 'cookie',
+        name: 'barfoo',
+        required: true,
+        schema: { type: 'string' }
+      });
+    });
+
+    it('with the proper API responses.', () => {
+      @ValidateCookie('foobar', { type: 'string' }, { required: false })
+      @ValidateCookie('barfoo', { type: 'string' })
+      class Foobar {}
+
+      deepStrictEqual(getApiResponses(Foobar), {
+        400: { description: 'Bad request.' }
+      });
     });
 
   });

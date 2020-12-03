@@ -38,9 +38,7 @@ export async function main(args: { email: string; password: string }) {
     }
     await user.setPassword(args.password);
 
-    console.log(
-      await connection.manager.save(user)
-    );
+    console.log(await user.save());
   } catch (error) {
     console.log(error.message);
   } finally {
@@ -65,7 +63,7 @@ npm install @foal/password
 Now build the script.
 
 ```
-npm run build:scripts
+npm run build
 ```
 
 Create two new users.
@@ -103,7 +101,7 @@ export const schema = {
 export async function main(args: { owner: string; text: string }) {
   const connection = await createConnection();
   try {
-    const user = await connection.getRepository(User).findOne({ email: args.owner });
+    const user = await User.findOne({ email: args.owner });
 
     if (!user) {
       console.log('No user was found with the email ' + args.owner);
@@ -114,9 +112,7 @@ export async function main(args: { owner: string; text: string }) {
     todo.text = args.text;
     todo.owner = user;
 
-    console.log(
-      await connection.manager.save(todo)
-    );
+    console.log(await todo.save());
   } catch (error) {
     console.log(error.message);
   } finally {
@@ -133,7 +129,7 @@ The `main` function then tries to get the user who has this email. If he or she 
 Build the script.
 
 ```
-npm run build:scripts
+npm run build
 ```
 
 Create new todos for each user.

@@ -3,7 +3,7 @@ import { Readable } from 'stream';
 
 // 3p
 import { Config, generateToken } from '@foal/core';
-import { AbstractDisk, FileDoesNotExist } from '@foal/storage';
+import { Disk, FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
 /**
@@ -11,9 +11,9 @@ import * as S3 from 'aws-sdk/clients/s3';
  *
  * @export
  * @class S3Disk
- * @extends {AbstractDisk}
+ * @extends {Disk}
  */
-export class S3Disk extends AbstractDisk {
+export class S3Disk extends Disk {
 
   private s3: S3;
 
@@ -84,6 +84,22 @@ export class S3Disk extends AbstractDisk {
     }
   }
 
+  async readSize(path: string): Promise<number> {
+    try {
+      const { ContentLength }  = await this.getS3().headObject({
+        Bucket: this.getBucket(),
+        Key: path,
+      }).promise();
+      return ContentLength as number;
+    } catch (error) {
+      if (error.code === 'NotFound') {
+        throw new FileDoesNotExist(path);
+      }
+      // TODO: test this line.
+      throw error;
+    }
+  }
+
   async delete(path: string): Promise<void> {
     await this.getS3().deleteObject({
       Bucket: this.getBucket(),
@@ -102,10 +118,10 @@ export class S3Disk extends AbstractDisk {
   private getS3(): S3 {
     if (!this.s3) {
       this.s3 = new S3({
-        accessKeyId: Config.get2('settings.aws.accessKeyId', 'string'),
+        accessKeyId: Config.get('settings.aws.accessKeyId', 'string'),
         apiVersion: '2006-03-01',
-        endpoint: Config.get2('settings.aws.endpoint', 'string'),
-        secretAccessKey: Config.get2('settings.aws.secretAccessKey', 'string'),
+        endpoint: Config.get('settings.aws.endpoint', 'string'),
+        secretAccessKey: Config.get('settings.aws.secretAccessKey', 'string'),
       });
     }
     return this.s3;

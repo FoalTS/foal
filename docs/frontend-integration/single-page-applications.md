@@ -1,5 +1,7 @@
 # Single Page Applications (SPA)
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 Single-Page Applications are Web Applications that are loaded once upon the first request(s) to the backend. After retreiving all the necessary code from the server, the current page is rendered and updated directly in the browser without asking the server to render new pages. During its lifecycle, the application usually communicates with the server by making API calls to fetch, create, update or delete data. This is a common pattern used when creating a new application with Angular, React or Vue.
 
 Building a SPA, however, introduces a certain complexity. This document presents some techniques and tools for solving common scenarios.
@@ -23,7 +25,7 @@ This works fine until the user presses the refresh button, shares the link or sa
 One technique to solve this problem is to add a handler responsible for processing uncaught requests. It returns the `index.html` page in all cases. This way, the browser loads the application which then looks at the address bar and displays the appropriate page.
 
 ```typescript
-import { Context, controller, createHttpResponseFile, Get, HttpResponseNotFound } from '@foal/core';
+import { Context, controller, Get, HttpResponseNotFound, render } from '@foal/core';
 
 import { ApiController } from './controllers';
 
@@ -39,11 +41,7 @@ export class AppController {
       return new HttpResponseNotFound();
     }
 
-    return createHttpResponseFile({
-      directory: './public',
-      file: 'index.html'
-    });
-    // OR render('./templates/index.html');
+    return render('./templates/index.html');
   }
 }
 ```

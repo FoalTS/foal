@@ -1,5 +1,7 @@
 # Controllers
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ```sh
 foal generate controller my-controller
 ```
@@ -7,10 +9,10 @@ foal generate controller my-controller
 ```typescript
 import { Context, Get, HttpResponseOK } from '@foal/core';
 
-export class MyController {
+export class ProductController {
 
-  @Get('/flights')
-  listFlights(ctx: Context) {
+  @Get('/products')
+  listProducts(ctx: Context) {
     return new HttpResponseOK([]);
   }
 
@@ -48,7 +50,7 @@ Controllers may have sub-controllers declared in the `subControllers` property.
 
 *Example:*
 ```typescript
-import { Get, HttpResponseOK, Post } from '@foal/core';
+import { controller, Get, HttpResponseOK, Post } from '@foal/core';
 
 class MySubController {
   @Get('/foo')
@@ -75,11 +77,11 @@ The `AppController` is the main controller of your application. It is directly b
 
 *Example:*
 ```typescript
-import { controller } from '@foal/core';
+import { controller, IAppController } from '@foal/core';
 
 import { ApiController } from './controllers/api.controller';
 
-export class AppController {
+export class AppController implements IAppController {
   subControllers = [
     controller('/api', ApiController)
   ];
@@ -93,10 +95,14 @@ export class AppController {
 On every request, the controller method is called with a `Context` object. This context is unique and specific to the request.
 
 It has four properties:
-- a `request` (type: `Request`) giving information about the HTTP request received,
-- a `state` (type: `object`) which can be used to share data between hooks (see [Hooks](./hooks.md)),
-- a `user` (type: `any` or `undefined`) giving information on the current user (see [Authentication](../authentication-and-access-control/quick-start.md)),
-- and a `session` (type: `Session` or `undefined`) containing the session data if you use sessions.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `request` | `Request` | Gives information about the HTTP request. |
+| `state` | object | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
+| `user` | `any|undefined` | The current user (see [Authentication](../authentication-and-access-control/quick-start.md)). | 
+| `session`| `Session|undefined` | The session object if you use sessions. |
+
 
 ### HTTP Requests
 
@@ -136,14 +142,14 @@ GET /products/3
 ```
 
 ```typescript
-import { Context, HttpResponseOK, Post } from '@foal/core';
+import { Context, HttpResponseOK, Get } from '@foal/core';
 
 class AppController {
   @Get('/products/:id')
   readProduct(ctx: Context) {
     const productId = ctx.request.params.id;
     // Do something.
-    return new HttpResponseOK(/* something */);
+    return new HttpResponseOK();
   }
 }
 ```
@@ -157,14 +163,14 @@ GET /products?limit=3
 ```
 
 ```typescript
-import { Context, HttpResponseOK, Post } from '@foal/core';
+import { Context, HttpResponseOK, Get } from '@foal/core';
 
 class AppController {
   @Get('/products')
   readProducts(ctx: Context) {
     const limit = ctx.request.query.limit;
     // Do something.
-    return new HttpResponseOK(/* something */);
+    return new HttpResponseOK();
   }
 }
 ```
@@ -174,13 +180,14 @@ class AppController {
 Headers are accessible with the `get` method.
 
 ```typescript
-import { Context, Get } from '@foal/core';
+import { Context, HttpResponseOK, Get } from '@foal/core';
 
 class AppController {
   @Get('/')
   index(ctx: Context) {
-    const token: string|undefined = ctx.request.get('Authorization');
-    // ...
+    const token = ctx.request.get('Authorization');
+    // Do something.
+    return new HttpResponseOK();
   }
 }
 ```
@@ -190,21 +197,20 @@ class AppController {
 Cookies are accessible with the `cookies` attribute.
 
 ```typescript
-import { Context, Get } from '@foal/core';
+import { Context, HttpResponseOK, Get } from '@foal/core';
 
 class AppController {
   @Get('/')
   index(ctx: Context) {
     const sessionID: string|undefined = ctx.request.cookies.sessionID;
-    // ...
+    // Do something.
+    return new HttpResponseOK();
   }
 }
 ```
 
 
 #### The Controller Method Arguments
-
-> Available in Foal v1.9.0 onwards.
 
 The path paramaters and request body are also passed as second and third arguments to the controller method.
 
@@ -243,6 +249,7 @@ Here are subclasses that you can use:
 | 404 | `HttpResponseNotFound` | no |
 | 405 | `HttpResponseMethodNotAllowed` | no |
 | 409 | `HttpResponseConflict` | no |
+| 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |
 | 500 | `HttpResponseInternalServerError` | no |
@@ -264,6 +271,13 @@ In case the body parameter is a stream, you must specify it using the `stream` o
 new HttpResponseOK(myStream, { stream: true })
 ```
 
+> The `HttpResponseServerError` constructor also accepts two other options: a `Context` object and an error.
+>
+> *Example*
+> ```typescript
+> new HttpResponseServerError({}, { error, ctx });
+> ```
+
 ### Adding Headers
 
 *Example*
@@ -279,7 +293,7 @@ class AppController {
 }
 ```
 
-### Adding cookies
+### Adding Cookies
 
 *Example with no cookie directives*
 ```typescript
@@ -304,12 +318,12 @@ class AppController {
     return new HttpResponseOK()
       .setCookie('sessionID', 'xxxx', {
         domain: 'example.com',
-        // expires: new Date(2020, 12, 12),
         httpOnly: true,
+        // expires: new Date(2022, 12, 12),
         maxAge: 3600,
         path: '/',
-        secure: true,
         sameSite: 'lax',
+        secure: true,
       });
   }
 }
@@ -323,11 +337,14 @@ A controller is a simple class and so can be tested as is. Note that [hooks](./h
 
 *api.controller.ts (example)*
 ```typescript
+import { Context, Get, HttpResponseOK } from '@foal/core';
+import { JWTRequired } from '@foal/jwt';
+
 class ApiController {
   @Get('/users/me')
   @JWTRequired()
   getCurrentUser(ctx: Context) {
-    return new HttpResponseOK(ctx.user):
+    return new HttpResponseOK(ctx.user);
   }
 }
 ```
@@ -372,6 +389,8 @@ describe('ApiController', () => {
 
 *Example:*
 ```typescript
+import { Get, HttpResponseOK, Post } from '@foal/core';
+
 abstract class ParentController {
   @Get('/foo')
   foo() {

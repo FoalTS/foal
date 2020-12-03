@@ -1,5 +1,7 @@
 # Linting and Code Style
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 A linter is a tool that analizes source code to flag programming errors, bugs, stylistic errors, and suspicious constructs. In particular, it helps teams to keep the code consistent between their members.
 
 For example, with ESLint, the rule `@typescript-eslint/quotes: single` enforces the use of single quotes throughout the code.

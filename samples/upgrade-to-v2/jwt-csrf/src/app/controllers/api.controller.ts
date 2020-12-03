@@ -1,9 +1,7 @@
 import { Context, Get, HttpResponseOK, Post } from '@foal/core';
-import { CsrfTokenRequired } from '@foal/csrf';
 import { JWTRequired } from '@foal/jwt';
 
 @JWTRequired({ cookie: true })
-@CsrfTokenRequired({ doubleSubmitCookie: true })
 export class ApiController {
 
   @Get('/')

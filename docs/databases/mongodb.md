@@ -1,112 +1,85 @@
-# MongoDB
+# MongoDB (noSQL)
 
-FoalTS provides two ways to interact with a MongoDB database in your application: [Mongoose](https://mongoosejs.com/) and [TypeORM](https://typeorm.io/#/).
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
 
-## Usage with Mongoose
+## Creating a new project
 
-### Generating a new project with Mongoose
-
-When creating an application with the `--mongodb` flag, the CLI generates a new project with `mongoose` and `@foal/mongoose` installed. The `User` model is defined using this ODM as well as the `create-user` script.
+To generate a new project that uses MongoDB, run the command `createapp` with the flag `--mongodb`.
 
 ```
 foal createapp my-app --mongodb
 ```
 
-### Generating a model
-
-You cannot create *entities* in a Mongoose project, as it is specific to TypeORM. Instead, you can use this command to generate a new model:
+## Configuration
 
 ```
-foal g model <name>
-```
-
-### Configuration
-
-The URI of the MongoDB database can be passed through:
-- the config file `config/default.json` with the `mongodb.uri` key,
-- or with the environment variable `MONGODB_URI`.
-
-*Example (`config/default.json`)*:
-```json
-{
-  ...
-  "mongodb": {
-    "uri": "mongodb://localhost:27017/db"
-  }
-}
-```
-
-### Authentication
-
-#### The `MongoDBStore`
-
-```
-npm install @foal/mongodb
-```
-
-If you use sessions with `@TokenRequired` or `@TokenOptional`, you must use the `MongoDBStore` from `@foal/mongodb`.
-
-#### The `fetchUser` function
-
-*Example with JSON Web Tokens*:
-```typescript
-import { JWTRequired } from '@foal/jwt';
-import { fetchUser } from '@foal/mongoose';
-
-import { User } from '../models';
-
-@JWTRequired({ user: fetchUser(User) })
-class MyController {}
-```
-
-## Usage with TypeORM
-
-```
-npm uninstall sqlite3
 npm install mongodb
 ```
 
-### Configuration
-
-*ormconfig.js*
-```js
-const { Config } = require('@foal/core');
-
-module.exports = {
-  type: "mongodb",
-  database: Config.get2('database.database', 'string'),
-  dropSchema: Config.get2('database.dropSchema', 'boolean', false),
-  entities: ["build/app/**/*.entity.js"],
-  host: Config.get2('database.host', 'string'),
-  port: Config.get2('database.port', 'number'),
-  synchronize: Config.get2('database.synchronize', 'boolean', false)
-}
-
+{% code-tabs %}
+{% code-tabs-item title="YAML" %}
+```yaml
+database:
+  type: mongodb
+  url: mongodb://localhost:27017/test-foo-bar
 ```
-
-
-*config/default.json*
+{% endcode-tabs-item %}
+{% code-tabs-item title="JSON" %}
 ```json
 {
   "database": {
-    "database": "mydb",
-    "host": "localhost",
-    "port": 27017
+    "type": "mongodb",
+    "url": "mongodb://localhost:27017/test-foo-bar"
   }
 }
 ```
-
-### Authentication
-
-#### The `MongoDBStore`
-
+{% endcode-tabs-item %}
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  database: {
+    type: "mongodb",
+    url: "mongodb://localhost:27017/test-foo-bar"
+  }
+}
 ```
-npm install @foal/mongodb
+{% endcode-tabs-item %}
+{% endcode-tabs %}
+
+## Defining Entities and Columns
+
+> More documentation here: https://github.com/typeorm/typeorm/blob/master/docs/mongodb.md.
+
+The definition of entities and columns is the same as in relational databases, except that the ID type must be an `ObjectID` and the column decorator must be `@ObjectIdColumn`.
+
+```typescript
+import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+
+@Entity()
+export class User {
+    
+    @ObjectIdColumn()
+    id: ObjectID;
+    
+    @Column()
+    firstName: string;
+    
+    @Column()
+    lastName: string;
+    
+}
 ```
 
-If you use sessions with `@TokenRequired` or `@TokenOptional`, you must use the `MongoDBStore` from `@foal/mongodb`. **The TypeORMStore does not work with noSQL databases.**
+*Example*
+```typescript
+import { getMongoRepository } from 'typeorm';
 
-#### The `fetchMongoDBUser` function
+const user = await getMongoRepository(User).findOne('xxxx');
+```
+
+## Authentication
+
+### The `fetchMongoDBUser` function
 
 *user.entity.ts*
 ```typescript
@@ -132,8 +105,18 @@ import { User } from '../entities';
 class MyController {}
 ```
 
+
+### The `MongoDBStore`
+
+```
+npm install @foal/mongodb
+```
+
+If you use sessions with `@UseSessions`, you must use the `MongoDBStore` from `@foal/mongodb`. **The `TypeORMStore` does not work with noSQL databases.**
+
 ## Limitations
 
 When using MongoDB, there are some features that are not available:
 - the `foal g rest-api <name>` command,
 - and the *Groups & Permissions* system.
+

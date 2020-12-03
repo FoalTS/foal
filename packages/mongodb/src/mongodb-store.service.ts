@@ -1,11 +1,9 @@
-import { Config, Session, SessionOptions, SessionStore } from '@foal/core';
+import { Config, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
 import { MongoClient } from 'mongodb';
 
-export interface DatabaseSession {
-  _id: string;
-  sessionContent: object;
-  createdAt: number;
-  updatedAt: number;
+interface DatabaseSession {
+  sessionID: string;
+  state: SessionState;
 }
 
 /**
@@ -18,103 +16,81 @@ export interface DatabaseSession {
 export class MongoDBStore extends SessionStore {
 
   private mongoDBClient: any;
+  private collection: any;
 
-  async createAndSaveSession(sessionContent: object, options: SessionOptions = {}): Promise<Session> {
-    const sessionID = await this.generateSessionID();
-    await this.applySessionOptions(sessionContent, options);
-
-    const date = Date.now();
-    await (await this.getSessionCollection()).insertOne({
-      _id: sessionID,
-      createdAt: date,
-      sessionContent,
-      updatedAt: date,
-    });
-
-    return new Session(sessionID, sessionContent, date);
+  async boot() {
+    const mongoDBURI = Config.getOrThrow(
+      'settings.mongodb.uri',
+      'string',
+      'You must provide the URI of your database when using MongoDBStore.'
+    );
+    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    this.collection = this.mongoDBClient.db().collection('sessions');
+    this.collection.createIndex({ sessionID: 1 }, { unique: true });
   }
 
-  async update(session: Session): Promise<void> {
-    await (await this.getSessionCollection()).updateOne(
+  async save(state: SessionState, maxInactivity: number): Promise<void> {
+    try {
+      await this.collection.insertOne({
+        sessionID: state.id,
+        state,
+      });
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new SessionAlreadyExists();
+      }
+      // TODO: test this line.
+      throw error;
+    }
+  }
+
+  async read(id: string): Promise<SessionState | null> {
+    const session: DatabaseSession|null = await this.collection.findOne({ sessionID: id });
+    if (session === null) {
+      return session;
+    }
+
+    return session.state;
+  }
+
+  async update(state: SessionState, maxInactivity: number): Promise<void> {
+    await this.collection.updateOne(
       {
-        _id: session.sessionID
+        sessionID: state.id
       },
       {
-        $set: {
-          // createdAt: session.createdAt,
-          sessionContent: session.getContent(),
-          updatedAt: Date.now()
-        }
-      }
-    );
-  }
-
-  async destroy(sessionID: string): Promise<void> {
-    await (await this.getSessionCollection()).deleteOne({ _id: sessionID });
-  }
-
-  async read(sessionID: string): Promise<Session | undefined> {
-    const timeouts = SessionStore.getExpirationTimeouts();
-
-    const sessions = await (await this.getSessionCollection()).find({ _id: sessionID }).toArray();
-    if (sessions.length === 0) {
-      return undefined;
-    }
-    const session: DatabaseSession = sessions[0];
-
-    if (Date.now() - session.updatedAt > timeouts.inactivity * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    if (Date.now() - session.createdAt > timeouts.absolute * 1000) {
-      await this.destroy(sessionID);
-      return undefined;
-    }
-
-    return new Session(session._id, session.sessionContent, session.createdAt);
-  }
-
-  async extendLifeTime(sessionID: string): Promise<void> {
-    await (await this.getSessionCollection()).updateOne(
-      { _id: sessionID },
+        $set: { state }
+      },
       {
-        $set: {
-          updatedAt: Date.now()
-        }
+        upsert: true,
       }
     );
+  }
+
+  async destroy(id: string): Promise<void> {
+    await this.collection.deleteOne({ sessionID: id });
   }
 
   async clear(): Promise<void> {
-    await (await this.getSessionCollection()).deleteMany({});
+    await this.collection.deleteMany({});
   }
 
-  async cleanUpExpiredSessions(): Promise<void> {
-    const expiredTimeouts = SessionStore.getExpirationTimeouts();
-    await (await this.getSessionCollection()).deleteMany({
+  async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+    await this.collection.deleteMany({
       $or: [
-        { createdAt: { $lt: Date.now() - expiredTimeouts.absolute * 1000 } },
-        { updatedAt: { $lt: Date.now() - expiredTimeouts.inactivity * 1000 } }
+        { 'state.createdAt': { $lt: Math.trunc(Date.now() / 1000) - maxLifeTime } },
+        { 'state.updatedAt': { $lt: Math.trunc(Date.now() / 1000) - maxInactivity } }
       ]
     });
   }
 
-  async getMongoDBInstance(): Promise<any> {
-    if (!this.mongoDBClient) {
-      const mongoDBURI = Config.getOrThrow(
-        'mongodb.uri',
-        'string',
-        'You must provide the URI of your database when using MongoDBStore.'
-      );
-      this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true });
-    }
-    return this.mongoDBClient;
-  }
-
-  private async getSessionCollection(): Promise<any> {
-    const mongoClient = await this.getMongoDBInstance();
-    return mongoClient.db().collection('foalSessions');
+  /**
+   * Closes the connection to the database.
+   *
+   * @memberof MongoDBStore
+   */
+  async close(): Promise<void> {
+    await this.mongoDBClient.close();
   }
 
 }

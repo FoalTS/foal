@@ -1,5 +1,7 @@
 # Code Generation
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 ## Create a project
 
 ```shell
@@ -8,7 +10,7 @@ foal createapp my-app
 
 Create a new directory with all the required files to get started.
 
-If you specify the flag `--mongodb`, the new project will use `mongoose` and `@foal/mongoose` in place of `typeorm` and `@foal/typeorm`. You can find more information [here](../databases/using-mongoose.md).
+If you specify the flag `--mongodb`, the CLI will generate a new project using MongoDB instead of SQLite.
 
 If you specify the flag `--yaml`, the new project will use YAML format for its configuration files. You can find more information [here](../deployment-and-environments/configuration.md).
 
@@ -91,14 +93,6 @@ foal g entity <name>
 
 Create a new entity in `./src/app/entities`, in `./entities` or in the current directory depending on which folders are found.
 
-## Create a model (only for Mongoose)
-
-```shell
-foal g model <name>
-```
-
-Create a new model in `./src/app/models`, in `./models` or in the current directory depending on which folders are found.
-
 ## Create REST API
 
 ```shell
@@ -130,15 +124,6 @@ foal g script <name>
 ```
 
 Create a new shell script in `src/scripts` regardless of where you run the command.
-
-
-## Create a sub-app
-
-```shell
-foal g sub-app <name>
-```
-
-Create a new sub-app with all its files in `./src/app/sub-apps`, in `./sub-apps` or in the current directory depending on which folders are found.
 
 ## Create a service
 

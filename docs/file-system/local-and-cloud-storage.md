@@ -1,6 +1,6 @@
 # Local and Cloud Storage
 
-> File storage is available in Foal v1.6 onwards.
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
 
 FoalTS provides its own file system for reading, writing and deleting files locally or in the Cloud. Thanks to its unified interface, you can easily choose different storage for each of your environments. This is especially useful when you're moving from development to production.
 
@@ -59,10 +59,18 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "local",
+      local: {
+        directory: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -110,10 +118,22 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=@foal/aws-s3
-SETTINGS_DISK_S3_BUCKET=uploaded
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    aws: {
+      accessKeyId: "xxx",
+      secretAccessKey: "yyy"
+    },
+    disk: {
+      driver: "@foal/aws-s3",
+      s3: {
+        bucket: "uploaded"
+      }
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}
@@ -161,6 +181,14 @@ class FileService {
 ```
 
 > To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
+
+--
+
+> If you only need to read the file size and not its content, you can use the `readSize` method.
+>
+> ```typescript
+> const size = await this.disk.readSize('avatars/xxx.jpg');
+> ```
 
 ### Write files
 
@@ -262,9 +290,7 @@ class ApiController {
 
 ## Implementing a Disk
 
-> Relative paths are available in Foal v1.11.0 onwards.
-
-If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `AbstractDisk` class. 
+If FoalTS does not support your favorite Cloud provider, you can also implement your own *disk* by extending the `Disk` class. 
 
 If you want to use it through the `Disk` service, you need to specify its path in the configuration (or to publish it as an npm package and specify the package name). The name of the exported class should be `ConcreteDisk`.
 
@@ -287,9 +313,15 @@ settings:
 }
 ```
 {% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=./app/services/my-disk.service
+{% code-tabs-item title="JS" %}
+```javascript
+module.exports = {
+  settings: {
+    disk: {
+      driver: "./app/services/my-disk.service",
+    }
+  }
+}
 ```
 {% endcode-tabs-item %}
 {% endcode-tabs %}

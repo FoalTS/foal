@@ -9,9 +9,9 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import {
-  Context, Delete, dependency, Get, Head, HttpResponseOK, Options, Patch, Post, Put, ServiceManager
+  Config, Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
 } from '../core';
-import { createAndInitApp, createApp } from './create-app';
+import { createApp, OPENAPI_SERVICE_ID } from './create-app';
 
 describe('createApp', () => {
 
@@ -20,12 +20,12 @@ describe('createApp', () => {
       mkdirSync('test-public');
     }
     writeFileSync('test-public/hello-world.html', '<h1>Hello world!</h1>', 'utf8');
-    process.env.SETTINGS_STATIC_PATH = 'test-public';
+    Config.set('settings.staticPath', 'test-public');
   });
 
   after(() => {
-    delete process.env.SETTINGS_STATIC_PATH;
-    delete process.env.SETTINGS_DEBUG;
+    Config.remove('settings.staticPath');
+    Config.remove('settings.debug');
     if (existsSync('test-public/hello-world.html')) {
       unlinkSync('test-public/hello-world.html');
     }
@@ -35,9 +35,9 @@ describe('createApp', () => {
   });
 
   afterEach(() => {
-    delete process.env.SETTINGS_STATIC_PATH_PREFIX;
-    delete process.env.SETTING_DEBUG;
-    delete process.env.SETTINGS_BODY_PARSER_LIMIT;
+    Config.remove('settings.staticPathPrefix');
+    Config.remove('settings.debug');
+    Config.remove('settings.bodyParser.limit');
   });
 
   it('should include security headers in HTTP responses.', async () => {
@@ -48,13 +48,11 @@ describe('createApp', () => {
           .setHeader('X-Custom-Header', 'foobar');
       }
     }
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     await request(app)
       .get('/')
       .expect('X-Content-Type-Options', 'nosniff')
-      .expect('X-DNS-Prefetch-Control', 'off')
-      .expect('X-Download-Options', 'noopen')
       .expect('X-Frame-Options', 'SAMEORIGIN')
       .expect('X-XSS-Protection', '1; mode=block')
       .expect('Strict-Transport-Security', 'max-age=15552000; includeSubDomains')
@@ -68,7 +66,7 @@ describe('createApp', () => {
         return new HttpResponseOK();
       }
     }
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     await request(app)
       .get('/')
@@ -80,7 +78,7 @@ describe('createApp', () => {
   });
 
   it('should serve static files (with the proper headers).', async () => {
-    const app = createApp(class { });
+    const app = await createApp(class { });
     await request(app)
       .get('/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
@@ -89,23 +87,23 @@ describe('createApp', () => {
   });
 
   it('should support custom path prefix when serving static files.', async () => {
-    process.env.SETTINGS_STATIC_PATH_PREFIX = '/prefix';
+    Config.set('settings.staticPathPrefix', '/prefix');
 
-    const app = createApp(class { });
+    const app = await createApp(class { });
     await request(app)
       .get('/prefix/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
       .expect('Content-type', 'text/html; charset=UTF-8');
   });
 
-  it('should parse the cookies.', () => {
+  it('should parse the cookies.', async () => {
     class AppController {
       @Get('/')
       index(ctx: Context) {
         return new HttpResponseOK(ctx.request.cookies);
       }
     }
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
     return request(app).get('/')
       // The type of the second parameter of `set` is incorrect.
       .set('Cookie', ['nameOne=valueOne;nameTwo=valueTwo'] as any)
@@ -116,8 +114,8 @@ describe('createApp', () => {
       });
   });
 
-  it('should return 404 "Not Found" on requests that have no handlers.', () => {
-    const app = createApp(class { });
+  it('should return 404 "Not Found" on requests that have no handlers.', async () => {
+    const app = await createApp(class { });
     return Promise.all([
       request(app).get('/foo').expect(404),
       request(app).post('/foo').expect(404),
@@ -129,7 +127,7 @@ describe('createApp', () => {
     ]);
   });
 
-  it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', () => {
+  it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', async () => {
     class MyController {
       @Head('/foo')
       head() {
@@ -162,7 +160,7 @@ describe('createApp', () => {
         return new HttpResponseOK('options');
       }
     }
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     return Promise.all([
       request(app).get('/foo').expect('get'),
       request(app).post('/foo').expect('post'),
@@ -174,42 +172,42 @@ describe('createApp', () => {
     ]);
   });
 
-  it('should parse incoming request bodies (json)', () => {
+  it('should parse incoming request bodies (json)', async () => {
     class MyController {
       @Post('/foo')
       post(ctx: Context) {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     return request(app)
       .post('/foo')
       .send({ foo: 'bar' })
       .expect({ body: { foo: 'bar' } });
   });
 
-  it('should parse incoming request bodies (urlencoded)', () => {
+  it('should parse incoming request bodies (urlencoded)', async () => {
     class MyController {
       @Post('/foo')
       post(ctx: Context) {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     return request(app)
       .post('/foo')
       .send('foo=bar')
       .expect({ body: { foo: 'bar' } });
   });
 
-  it('should parse incoming request bodies (text/*)', () => {
+  it('should parse incoming request bodies (text/*)', async () => {
     class MyController {
       @Post('/foo')
       post(ctx: Context) {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     return request(app)
       .post('/foo')
       .type('text/plain')
@@ -217,14 +215,14 @@ describe('createApp', () => {
       .expect({ body: 'Hello world!' });
   });
 
-  it('should parse incoming request bodies (application/graphql)', () => {
+  it('should parse incoming request bodies (application/graphql)', async () => {
     class MyController {
       @Post('/foo')
       post(ctx: Context) {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     return request(app)
       .post('/foo')
       .type('application/graphql')
@@ -233,7 +231,7 @@ describe('createApp', () => {
   });
 
   it('should accept higher or lower request body size if this is specified in the configuration.', async () => {
-    process.env.SETTINGS_BODY_PARSER_LIMIT = '10';
+    Config.set('settings.bodyParser.limit', 10);
 
     class MyController {
       @Post('/foo')
@@ -242,7 +240,7 @@ describe('createApp', () => {
       }
     }
 
-    const app = createApp(MyController);
+    const app = await createApp(MyController);
     await Promise.all([
       // Text
       request(app)
@@ -276,23 +274,16 @@ describe('createApp', () => {
     ]);
   });
 
-  it('should use the optional express instance if one is given.', () => {
+  it('should use the optional options.expressInstance if one is given.', async () => {
     const expected = express();
-    const actual = createApp(class { }, expected);
-
-    strictEqual(actual, expected);
-  });
-
-  it('should use the optional options.expressInstance if one is given.', () => {
-    const expected = express();
-    const actual = createApp(class { }, {
+    const actual = await createApp(class { }, {
       expressInstance: expected
     });
 
     strictEqual(actual, expected);
   });
 
-  it('should use the optional preMiddlewares if they are given.', () => {
+  it('should use the optional preMiddlewares if they are given.', async () => {
     class AppController {
       @Get('/')
       get(ctx: Context) {
@@ -302,7 +293,7 @@ describe('createApp', () => {
       }
     }
 
-    const app = createApp(AppController, {
+    const app = await createApp(AppController, {
       preMiddlewares: [
         (req: any, res: any, next: (err?: any) => any) => {
           req.foalMessage = 'Hello world!'; next();
@@ -316,28 +307,20 @@ describe('createApp', () => {
       .expect('Hello world!');
   });
 
-  it('should use the optional postMiddlewares if they are given (in good time).', () => {
-    process.env.SETTINGS_DEBUG = 'true';
+  it('should use the optional postMiddlewares if they are given.', async () => {
+    Config.set('settings.debug', true);
 
     class AppController {
       @Get('/a')
       getA(ctx: Context) {
         return new HttpResponseOK('a');
       }
-      @Get('/c')
-      getC(ctx: Context) {
-        throw new Error('This is an error');
-      }
     }
 
-    const app = createApp(AppController, {
+    const app = await createApp(AppController, {
       postMiddlewares: [
         express.Router().get('/a', (req: any, res: any) => res.send('a2')),
         express.Router().get('/b', (req: any, res: any) => res.send('b2')),
-        (err: any, req: any, res: any, next: any) => {
-          err.message += '!!!';
-          next(err);
-        }
       ]
     });
 
@@ -350,33 +333,24 @@ describe('createApp', () => {
         .get('/b')
         .expect(200)
         .expect('b2'),
-      request(app)
-        .get('/c')
-        .expect(500)
-        .then(response => {
-          strictEqual(
-            response.text.includes('This is an error!!!'),
-            true
-          );
-        })
     ]);
   });
 
-  it('should make the serviceManager available from the express instance.', () => {
-    const app = createApp(class { });
+  it('should make the serviceManager available from the express instance.', async () => {
+    const app = await createApp(class { });
 
     strictEqual(typeof app.foal, 'object');
     strictEqual(app.foal.services instanceof ServiceManager, true);
   });
 
-  it('should send a pretty error if the JSON in the request body is invalid.', () => {
+  it('should send a pretty error if the JSON in the request body is invalid.', async () => {
     class AppController {
       @Post('/foo')
       post(ctx: Context) {
         return new HttpResponseOK({ body: ctx.request.body });
       }
     }
-    const app = createApp(AppController);
+    const app = await createApp(AppController);
 
     return request(app)
       .post('/foo')
@@ -389,7 +363,7 @@ describe('createApp', () => {
       });
   });
 
-  it('should use serviceManager if provided.', async () => {
+  it('should use the serviceManager if given.', async () => {
     class SomeService {
       test() { throw new Error('should not get called'); }
     }
@@ -408,7 +382,7 @@ describe('createApp', () => {
     const serviceManager = new ServiceManager();
     serviceManager.set(SomeService, new MockService());
 
-    const app = createApp(AppController, {
+    const app = await createApp(AppController, {
       serviceManager
     });
 
@@ -417,34 +391,39 @@ describe('createApp', () => {
       .expect(200)
       .expect('bar');
   });
-});
 
-describe('createAndInitApp', () => {
+  it('should manually inject the OpenAPI service with a special ID string.', async () => {
+    class AppController {}
 
-  it('should call createApp and return asynchronously its express instance.', async () => {
-    class AppController {
-      @Get('/ping')
-      ping() {
-        return new HttpResponseOK('pong');
+    const serviceManager = new ServiceManager();
+
+    await createApp(AppController, {
+      serviceManager
+    });
+
+    strictEqual(serviceManager.get(OPENAPI_SERVICE_ID), serviceManager.get(OpenApi));
+  });
+
+  it('should call ServiceManager.boot.', async () => {
+    let called = false;
+
+    class Service {
+      boot() {
+        called = true;
       }
     }
 
-    const app = await createAndInitApp(AppController, {
-      postMiddlewares: [
-        express.Router().get('/ping2', (req: any, res: any) => res.send('pong'))
-      ]
-    });
+    class AppController {
+      @dependency
+      service: Service;
+    }
 
-    await request(app)
-      .get('/ping')
-      .expect('pong');
+    await createApp(AppController);
 
-    await request(app)
-      .get('/ping2')
-      .expect('pong');
+    strictEqual(called, true);
   });
 
-  it('should call AppController.init if it exists.', () => {
+  it('should call AppController.init if it exists.', async () => {
     let called = false;
 
     class AppController {
@@ -453,7 +432,51 @@ describe('createAndInitApp', () => {
       }
     }
 
-    createAndInitApp(AppController);
+    await createApp(AppController);
+
+    strictEqual(called, true);
+  });
+
+  it('should call AppController.init after ServiceManager.boot.', async () => {
+    let str = '';
+
+    class Service {
+      boot() {
+        str += 'a';
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+
+      init() {
+        str += 'b';
+      }
+    }
+
+    await createApp(AppController);
+
+    strictEqual(str, 'ab');
+  });
+
+  it('should wait until the end of ServiceManager.boot execution before returning the express instance.', async () => {
+    let called = false;
+
+    class Service {
+      async boot() {
+        await 1;
+        await 1;
+        called = true;
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+    }
+
+    await createApp(AppController);
 
     strictEqual(called, true);
   });
@@ -465,13 +488,34 @@ describe('createAndInitApp', () => {
       async init() {
         await 1;
         await 1;
+        await 1;
         called = true;
       }
     }
 
-    await createAndInitApp(AppController);
+    await createApp(AppController);
 
     strictEqual(called, true);
+  });
+
+  it('should throw any errors rejected in ServiceManager.boot.', async () => {
+    class Service {
+      boot() {
+        return Promise.reject(new Error('Service initialization failed.'));
+      }
+    }
+
+    class AppController {
+      @dependency
+      service: Service;
+    }
+
+    try {
+      await createApp(AppController);
+      throw new Error('An error should have been thrown');
+    } catch (error) {
+      strictEqual(error.message, 'Service initialization failed.');
+    }
   });
 
   it('should throw any errors rejected in AppController.init.', async () => {
@@ -482,7 +526,7 @@ describe('createAndInitApp', () => {
     }
 
     try {
-      await createAndInitApp(AppController);
+      await createApp(AppController);
       throw new Error('An error should have been thrown');
     } catch (error) {
       strictEqual(error.message, 'Initialization failed.');

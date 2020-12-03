@@ -54,7 +54,8 @@ describe('sendResponse', () => {
   });
 
   it('should prevent the process from being killed if the response body (stream) emits an error.', () => {
-    // Note: The "pump" module actually does more than that and takes care of closing each stream if one is closed.
+    // Note: The "pipeline" function actually does more than that
+    // and takes care of closing each stream if one is closed.
     const stream = new Readable({
       read() {
         this.push('Stream ');

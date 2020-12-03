@@ -1,21 +1,21 @@
 {
   "name": "@foal/cli",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir && npm run test:fs",
     "test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/file-system.spec.ts\"",
-    "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/file-system.spec.ts\"",
+    "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/file-system.spec.ts\"",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
-    "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/generate/generators/**/*.spec.ts\"",
+    "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/generators/**/*.spec.ts\"",
     "test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/rmdir/**/*.spec.ts\"",
-    "dev:test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/rmdir/**/*.spec.ts\"",
+    "dev:test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/rmdir/**/*.spec.ts\"",
     "test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run-script/**/*.spec.ts\"",
-    "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/run-script/**/*.spec.ts\"",
+    "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/run-script/**/*.spec.ts\"",
     "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
-    "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --watch-extensions ts \"./src/create-secret/**/*.spec.ts\"",
+    "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/create-secret/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -a -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },
@@ -23,7 +23,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "bin": {
     "foal": "./lib/index.js"
@@ -59,15 +59,15 @@
   "dependencies": {
     "ajv": "~6.12.0",
     "colors": "~1.4.0",
-    "commander": "~5.0.0"
+    "commander": "~6.2.0"
   },
   "devDependencies": {
-    "@types/mocha": "~5.2.0",
-    "@types/node": "~10.1.2",
-    "copyfiles": "~2.0.0",
-    "mocha": "~5.2.0",
+    "@types/mocha": "7.0.2",
+    "@types/node": "10.17.24",
+    "copyfiles": "~2.4.0",
+    "mocha": "~8.2.0",
     "rimraf": "~2.6.2",
-    "ts-node": "~3.3.0",
-    "typescript": "~3.5.3"
+    "ts-node": "~9.0.0",
+    "typescript": "~4.0.2"
   }
 }

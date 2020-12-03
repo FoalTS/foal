@@ -1,5 +1,7 @@
 # E2E Testing
 
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
+
 End-to-end tests are located in the `src/e2e` directory.
 
 ## Build and Run E2E Tests
@@ -34,7 +36,7 @@ You can use [the SuperTest library](https://github.com/visionmedia/supertest) to
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { createConnection, getConnection } from 'typeorm';
+import { getConnection } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
@@ -44,8 +46,7 @@ describe('The server', () => {
   let app;
 
   before(async () => {
-    await createConnection();
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   after(() => getConnection().close());

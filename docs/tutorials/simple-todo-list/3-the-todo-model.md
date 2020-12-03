@@ -14,10 +14,10 @@ foal generate entity todo
 Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
 
 ```typescript
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Todo {
+export class Todo extends BaseEntity {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,16 +35,10 @@ You can do this manually, using a database software for example, or use migratio
 
 Let&#8217;s see how to use them.
 
-First compile the application.
+First run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
 
 ```
-npm run build:app
-```
-
-Then run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
-
-```
-npm run migration:generate -- --name=add-todo-entity
+npm run makemigrations
 ```
 
 A new file appears in the `src/migrations/` directory. Open it.
@@ -52,8 +46,7 @@ A new file appears in the `src/migrations/` directory. Open it.
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class addTodoEntity1562755564200 implements MigrationInterface {
-    name = 'addTodoEntity1562755564200'
+export class migration1562755564200 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "todo" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "text" varchar NOT NULL)`, undefined);
@@ -71,11 +64,10 @@ export class addTodoEntity1562755564200 implements MigrationInterface {
 
 The `up` method contains all the SQL queries that will be executed during the migration.
 
-Let's compile and run the migration.
+Then run the migration.
 
 ```
-npm run build:migrations
-npm run migration:run
+npm run migrations
 ```
 
 TypeORM examines all the migrations that have been run previously (none in this case) and executes the new ones.

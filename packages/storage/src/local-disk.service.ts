@@ -1,24 +1,23 @@
 // std
 import { createReadStream, createWriteStream, readFile, stat, unlink, writeFile } from 'fs';
 import { join } from 'path';
-import { Readable } from 'stream';
+import { pipeline, Readable } from 'stream';
 import { promisify } from 'util';
 
 // 3p
 import { Config, generateToken } from '@foal/core';
-import * as pump from 'pump';
 
 // FoalTS
-import { AbstractDisk, FileDoesNotExist } from './abstract-disk.service';
+import { Disk, FileDoesNotExist } from './disk.service';
 
 /**
  * File storage to write, read and delete files in the local file system.
  *
  * @export
  * @class LocalDisk
- * @extends {AbstractDisk}
+ * @extends {Disk}
  */
-export class LocalDisk extends AbstractDisk {
+export class LocalDisk extends Disk {
 
   async write(
     dirname: string,
@@ -37,7 +36,7 @@ export class LocalDisk extends AbstractDisk {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
       await new Promise((resolve, reject) => {
-        pump(content, createWriteStream(this.getPath(path)), err => {
+        pipeline(content, createWriteStream(this.getPath(path)), err => {
           // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
           // TODO: test the error case.
           if (err) {
@@ -74,6 +73,20 @@ export class LocalDisk extends AbstractDisk {
           .on('error', () => {}) as any,
         size
       };
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new FileDoesNotExist(path);
+      }
+      // TODO: test this line.
+      throw error;
+    }
+
+  }
+
+  async readSize(path: string): Promise<number> {
+    try {
+      const { size } = await promisify(stat)(this.getPath(path));
+      return size;
     } catch (error) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);

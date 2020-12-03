@@ -1,5 +1,5 @@
 import {
-  Context, controller, Get, render, Session, TokenRequired
+  Context, controller, Get, render, Session, UseSessions
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
@@ -14,7 +14,7 @@ export class AppController {
   ];
 
   @Get('/')
-  @TokenRequired({ cookie: true, store: TypeORMStore, redirectTo: '/signin' })
+  @UseSessions({ cookie: true, store: TypeORMStore, redirectTo: '/signin' })
   index(ctx: Context<any, Session>) {
     return render('./templates/index.html', {
       userInfo: JSON.stringify(ctx.session.get('userInfo'))

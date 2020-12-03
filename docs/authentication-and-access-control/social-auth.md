@@ -1,6 +1,6 @@
 # Social Authentication
 
-> Social authentication is available in Foal v1.3.0 onwards.
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/index.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1/docs).
 
 FoalTS social authentication is based on OAuth2 protocol. To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
 
@@ -60,7 +60,6 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  setSessionCookie,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 
@@ -162,8 +161,6 @@ const { userInfo } = await this.facebook.getUserInfo(ctx, {
 
 ### Github
 
-> Github provider is available in Foal v1.4.0 onwards.
-
 |Service name| Default scopes | Available scopes |
 |---|---|---|
 | `GithubProvider` | none | [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/#available-scopes) |
@@ -193,8 +190,6 @@ this.github.redirect({ /* ... */ }, {
 > *Source: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#parameters*
 
 ### LinkedIn
-
-> LinkedIn provider is available in Foal v1.4.0 onwards.
 
 |Service name| Default scopes | Available scopes |
 |---|---|---|
@@ -248,11 +243,10 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  setSessionCookie,
+  Store,
+  UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-import { TypeORMStore } from '@foal/typeorm';
-import { getRepository } from 'typeorm';
 
 import { User } from '../entities';
 
@@ -261,7 +255,7 @@ export class AuthController {
   google: GoogleProvider;
 
   @dependency
-  store: TypeORMStore;
+  store: Store;
 
   @Get('/signin/google')
   redirectToGoogle() {
@@ -269,22 +263,24 @@ export class AuthController {
   }
 
   @Get('/signin/google/callback')
+  @UseSessions({
+    cookie: true,
+  })
   async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
 
-    let user = await getRepository(User).findOne({ email: userInfo.email });
+    let user = await User.findOne({ email: userInfo.email });
 
     if (!user) {
       // If the user has not already signed up, then add them to the database.
       user = new User();
       user.email = userInfo.email;
-      await getRepository(User).save(user);
+      await user.save();
     }
 
-    const session = await this.store.createAndSaveSessionFromUser(user);
-    const response = new HttpResponseRedirect('/');
-    setSessionCookie(response, session.getToken());
-    return response;
+    ctx.session.setUser(user);
+
+    return new HttpResponseRedirect('/');
   }
 
 }

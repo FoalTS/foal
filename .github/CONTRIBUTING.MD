@@ -73,11 +73,11 @@ FoalTS is based on very few dependencies for all these reasons:
 - The installation is often polluted by messages of indirect dependencies in search of funds.
 
 Some packages, however, can override this policy and be installed if they meet one of the following criteria:
-- Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Examples: `TypeORM`, `Mongoose`.
-- The code requires very specific knowledge. Examples: `pump`, `jsonwebtoken`, `TypeORM`, `Mongoose`.
+- Rewriting the entire package would require too much work and would be difficult to maintain in the long term. Example: `TypeORM`.
+- The code requires very specific knowledge. Examples: `jsonwebtoken`, `TypeORM`.
 - The packages are base packages of the Express.Js framework and can therefore be considered stable, safe and mature. Examples: `cookie-parser`, `morgan`.
 
-> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`).
+> Dependencies (except peer ones) should point to *minor* versions (`~1.2.0` instead of `^1.2.0`). `@types` packages should point to *patch* versions.
 
 ## Testing and Documentation Policy
 
@@ -93,6 +93,21 @@ If you wish to submit a PR, please use the *Test-Driven Developpement (TDD)* app
 This method may seem cumbersome at first glance, but it ensures that every line of code in the framework is tested. Reviewers must pull the branch and verify that the tests are actually testing something. If they change even one line of code, they must see that at least one of the tests fails.
 
 A PR without robust tests is automatically rejected.
+
+### Structure of the `acceptance-tests` directory
+
+| Directory | Description |
+| --- | --- |
+| additional | Additional tests which code does not appear in the documentation. |
+| common | Utilities used in the tests. |
+| docs | Tests using the code given of the documentation. |
+
+The `docs/` directory is organized as follows:
+- The directory structure is the same as in the documentation.
+- The last sub-directory represents a page of the documentation.
+- Each file must test a feature. A feature can contain several examples/scenarios.
+- Each file must be named as follows: `{verb}ing-{description}.feature.ts` (ex: `protecting-a-stateful-spa-against-csrf-attacks.feature.ts`).
+- The first `describe` block of a file is named with the `Feature: {verb}ing {description}` pattern. Its direct children are named as follows: `Example: {description}` or `Scenario: {description}`.
 
 ## Semantic Versioning
 
@@ -110,11 +125,11 @@ All of major releases are supported for 18 months.
 - 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
-| Release | Status | Active Start | Maintenance Start | End-of-life | Node min version | TS min  version |
+| Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2.x | *Pending* | Summer 2020 | Summer 2021 | 2021-12-31 | 10.x | 3.5 |
-| 1.x | *Active* | 2019-07-11 | Summer 2020 | 2020-12-31 | 8.x | 3.5 |
-| 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x | 2.9 |
+| 2.x | *Pending* | December 2020 | December 2021 | 2022-06-31 | 10.x, 12.x, 14.x | 4.0 |
+| 1.x | *Active* | 2019-07-11 | December 2020 | 2021-06-31 | 8.x, 10.x | 3.5 |
+| 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x, 10.x | 2.9 |
 
 ## Project Architecture
 

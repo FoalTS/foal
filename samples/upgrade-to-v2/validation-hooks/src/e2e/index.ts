@@ -10,7 +10,7 @@ describe('The server', () => {
   let app;
 
   before(async () => {
-    app = createApp(AppController);
+    app = await createApp(AppController);
   });
 
   it('should validate headers on GET /headers requests.', async () => {
@@ -83,7 +83,7 @@ describe('The server', () => {
 
     await request(app)
       .get('/api/query')
-      .query('Authorization', 'foo')
+      .query('authorization', 'foo')
       .query('a-number', 'foo')
       .expect(400)
       .expect({

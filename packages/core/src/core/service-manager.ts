@@ -10,8 +10,7 @@ import { Config } from './config';
 
 export interface IDependency {
   propertyKey: string;
-  // Service class or service ID.
-  serviceClass: string|Class;
+  serviceClassOrID: string|Class;
 }
 
 /**
@@ -22,7 +21,7 @@ export interface IDependency {
 export function Dependency(id: string) {
   return (target: any, propertyKey: string) => {
     const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
-    dependencies.push({ propertyKey, serviceClass: id });
+    dependencies.push({ propertyKey, serviceClassOrID: id });
     Reflect.defineMetadata('dependencies', dependencies, target);
   };
 }
@@ -35,7 +34,7 @@ export function Dependency(id: string) {
 export function dependency(target: any, propertyKey: string) {
   const serviceClass = Reflect.getMetadata('design:type', target, propertyKey);
   const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
-  dependencies.push({ propertyKey, serviceClass });
+  dependencies.push({ propertyKey, serviceClassOrID: serviceClass });
   Reflect.defineMetadata('dependencies', dependencies, target);
 }
 
@@ -45,30 +44,27 @@ export function dependency(target: any, propertyKey: string) {
  * @export
  * @template Service
  * @param {ClassOrAbstractClass<Service>} serviceClass - The service class.
- * @param {(object|ServiceManager)} [dependencies] - Either a ServiceManager or an
- * object which key/values are the service properties/instances.
+ * @param {object} [dependencies] - An object which key/values are the service properties/instances.
  * @returns {Service} - The created service.
  */
 export function createService<Service>(
-  serviceClass: ClassOrAbstractClass<Service>, dependencies?: object|ServiceManager
+  serviceClass: ClassOrAbstractClass<Service>, dependencies?: object
 ): Service {
   return createControllerOrService(serviceClass, dependencies);
 }
 
 export function createControllerOrService<T>(
-  serviceClass: ClassOrAbstractClass<T>, dependencies?: object|ServiceManager
+  serviceClass: ClassOrAbstractClass<T>, dependencies?: object
 ): T {
   const metadata: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
 
-  let serviceManager = new ServiceManager();
+  const serviceManager = new ServiceManager();
 
-  if (dependencies instanceof ServiceManager) {
-    serviceManager = dependencies;
-  } else if (typeof dependencies === 'object') {
+  if (dependencies) {
     metadata.forEach(dep => {
       const serviceMock = (dependencies as any)[dep.propertyKey];
       if (serviceMock) {
-        serviceManager.set(dep.serviceClass, serviceMock);
+        serviceManager.set(dep.serviceClassOrID, serviceMock);
       }
     });
   }
@@ -170,7 +166,7 @@ export class ServiceManager {
     const service = new (identifier as Class)();
 
     for (const dependency of dependencies) {
-      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClass as any);
+      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
     }
 
     // Save the service.
@@ -204,7 +200,7 @@ export class ServiceManager {
 
     let concreteClassPath: string;
     if (cls.hasOwnProperty('defaultConcreteClassPath')) {
-      concreteClassPath = Config.get2(concreteClassConfigPath, 'string', 'local');
+      concreteClassPath = Config.get(concreteClassConfigPath, 'string', 'local');
     } else {
       concreteClassPath = Config.getOrThrow(concreteClassConfigPath, 'string');
     }
