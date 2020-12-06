@@ -92,7 +92,7 @@ function getGuideSidebar(guideTitle) {
       title: guideTitle,
       collapsable: false,
       children: [
-        '',
+        ['', 'Why FoalTS?']
       ]
     }
   ]
