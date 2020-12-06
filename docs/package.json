@@ -1,0 +1,24 @@
+{
+  "name": "foal-docs",
+  "version": "0.0.1",
+  "description": "A Node.js and TypeScript framework, all-inclusive.",
+  "main": "index.js",
+  "authors": {
+    "name": "",
+    "email": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FoalTS/foal.git"
+  },
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.7.1",
+    "@vuepress/plugin-medium-zoom": "^1.7.1",
+    "vuepress": "^1.5.3"
+  }
+}
