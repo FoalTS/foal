@@ -3,7 +3,7 @@ home: true
 heroImage: https://gblobscdn.gitbook.com/spaces%2F-LFX-Zsw04jIUqgTVJfe%2Favatar.png?alt=media
 tagline:
 actionText: Get started →
-actionLink: /tutorials/
+actionLink: /tutorials/1s-installation
 features:
   - title: Feature 1 Title
     details: Feature 1 Description

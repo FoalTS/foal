@@ -53,7 +53,8 @@ module.exports = {
         nav: require('./nav/en'),
         sidebar: {
           '/guide/': getGuideSidebar('Guide'),
-          '/tutorials/': getTutorialsSidebar("Simple To-Do List", "Multi-User To-Do List")
+          '/tutorials/': getTutorialsSidebar('Simple To-Do List', 'Multi-User To-Do List'),
+          '/upgrade-to-v2/': getUpgradeToV2Sidebar('Menu')
         }
       },
       '/es/': {
@@ -65,7 +66,8 @@ module.exports = {
         nav: require('./nav/es'),
         sidebar: {
           '/es/guide/': getGuideSidebar('Guia'),
-          '/es/tutorials/': getTutorialsSidebar('Lista de tareas', 'Lista de tareas con usuarios')
+          '/es/tutorials/': getTutorialsSidebar('Lista de tareas', 'Lista de tareas con usuarios'),
+          '/es/upgrade-to-v2/': getUpgradeToV2Sidebar('Menú')
         }
       }
     },
@@ -96,7 +98,6 @@ function getGuideSidebar(guideTitle) {
   ]
 }
 
-// the letter after the number means s = single and m = multi
 function getTutorialsSidebar(simpleTitle, multiTitle) {
   return [
     {
@@ -123,6 +124,30 @@ function getTutorialsSidebar(simpleTitle, multiTitle) {
         '6m-todos-and-ownership',
         '7m-the-signup-page',
         '8m-e2e-testing-and-authentication',
+      ]
+    }
+  ]
+}
+
+function getUpgradeToV2Sidebar(upgradeTitle) {
+  return [
+    {
+      title: upgradeTitle,
+      collapsable: false,
+      children: [
+        'application-creation',
+        'cli-commands',
+        'config-system',
+        'custom-express-instance',
+        'error-handling',
+        'file-upload-and-download',
+        'jwt-and-csrf',
+        'mongodb',
+        'openapi',
+        'service-and-app-initialization',
+        'session-tokens',
+        'template-engine',
+        'validation-hooks',
       ]
     }
   ]
