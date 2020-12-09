@@ -1,3 +1,7 @@
+---
+slug: /
+---
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![node version](https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg)
 ![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)
