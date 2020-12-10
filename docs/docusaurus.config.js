@@ -1,8 +1,8 @@
 module.exports = {
   title: 'Foal TS',
   tagline: 'Node.JS and TypeScript framework for building web applications',
-  url: 'https://foalts.org',
-  baseUrl: '/',
+  url: 'https://foalts.github.io',
+  baseUrl: '/foal/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/logo_400.png',
