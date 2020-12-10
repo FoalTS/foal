@@ -126,14 +126,11 @@ module.exports = {
       ]),
       'comparison-with-other-frameworks'
     ]),
-    expandedCategory('Upgrading', [
+    category('Upgrading', [
       'upgrade-to-v2/README',
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
     ]),
-    expandedCategory('Community', [
-      link('Twitter', 'https://twitter.com/foalts'),
-      link('YouTube', 'https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ'),
-      link('Discord', 'https://discord.gg/QUrJv98'),
+    category('Community', [
       link('Awesome Foal', 'https://github.com/FoalTS/awesome-foalts'),
     ])
   ]

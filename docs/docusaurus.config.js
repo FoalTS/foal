@@ -9,6 +9,9 @@ module.exports = {
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
   themeConfig: {
+    colorMode: {
+      disableSwitch: true
+    },
     navbar: {
       title: 'Foal TS',
       logo: {
@@ -20,17 +23,34 @@ module.exports = {
           to: 'docs/',
           activeBasePath: 'docs',
           label: 'Docs',
-          position: 'right',
+          position: 'left',
         },
         {
           to: 'blog',
           label: 'Blog',
-          position: 'right'
+          position: 'left'
         },
         {
           href: 'https://github.com/FoalTS/foal',
-          label: 'GitHub',
           position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
+        {
+          href: 'https://twitter.com/FoalTs',
+          position: 'right',
+          className: 'header-twitter-link',
+          'aria-label': 'Twitter profile',
+        },
+        {
+          href: 'https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ',
+          position: 'right',
+          label: 'YouTube'
+        },
+        {
+          href: 'https://discord.gg/QUrJv98',
+          position: 'right',
+          label: 'Discord'
         },
       ],
     },
