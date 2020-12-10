@@ -6,90 +6,180 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 
-const features = [
-  {
-    title: 'Easy to Use',
-    imageUrl: 'img/undraw_docusaurus_mountain.svg',
-    description: (
-      <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
-      </>
-    ),
-  },
-  {
-    title: 'Focus on What Matters',
-    imageUrl: 'img/undraw_docusaurus_tree.svg',
-    description: (
-      <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
-      </>
-    ),
-  },
-  {
-    title: 'Powered by React',
-    imageUrl: 'img/undraw_docusaurus_react.svg',
-    description: (
-      <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
-      </>
-    ),
-  },
-];
-
-function Feature({imageUrl, title, description}) {
-  const imgUrl = useBaseUrl(imageUrl);
-  return (
-    <div className={clsx('col col--4', styles.feature)}>
-      {imgUrl && (
-        <div className="text--center">
-          <img className={styles.featureImage} src={imgUrl} alt={title} />
-        </div>
-      )}
-      <h3>{title}</h3>
-      <p>{description}</p>
-    </div>
-  );
-}
 
 function Home() {
   const context = useDocusaurusContext();
   const {siteConfig = {}} = context;
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <header className={clsx('hero hero--primary', styles.heroBanner)}>
-        <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
-          <div className={styles.buttons}>
-            <Link
-              className={clsx(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted,
-              )}
-              to={useBaseUrl('docs/')}>
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
-      <main>
-        {features && features.length > 0 && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
+      description={siteConfig.description}>
+        <header className="masthead">
+          <div className="container content">
+            <div className="row">
+              <div className="col-lg-12 d-flex flex-column justify-content-center px-4">
+                <h1 className="text-center">{siteConfig.title}</h1>
+                <h3 className="text-center">{siteConfig.tagline}</h3>
+                <h4 className="text-center">Simple, intuitive and feature-complete.</h4>
+                <div className="terminal-wrapper">
+                  <div className="terminal m-auto">
+                    <span className="text-muted">{'>'}</span> npm install -g @foal/cli<br />
+                      <span className="text-muted">{'>'}</span> foal createapp my-app<br />
+                      <span className="text-muted">{'>'}</span> cd my-app<br />
+                      <span className="text-muted">{'>'}</span> npm run develop
+                  </div>
+                </div>
+                <div className="text-center">
+                  <a href="https://foalts.gitbook.io/docs/tutorials/simple-to-do-list/1-installation" className="btn mt-3 btn-white" id="get-started">
+                    Get started
+                  </a>
+                </div>
               </div>
             </div>
-          </section>
-        )}
-      </main>
+          </div>
+        </header>
+
+        <section className="screenshot-container">
+          <img src={useBaseUrl('img/home/screenshot.png')} alt="" />
+        </section>
+
+        <section className="feature-section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 d-flex">
+                <div className="flex-fill p-md-4">
+                  <h4>TypeScript</h4>
+                  <h5>JavaScript that scales.</h5>
+                  <p className="text-justify mb-0">
+                    TypeScript brings you optional static type-checking along with the latest ECMAScript
+                    features. Writing FoalTS with TypeScript has been and will always be fundamental. Code
+                    is more elegant and concise. Most of the silly mistakes are caught at compilation. And
+                    autocompletion is well-handled and the API is better documented.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6 d-flex align-items-center justify-content-center">
+                <img src={useBaseUrl('img/home/typescript3.png')} className="mt-3 mt-md-0" />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="feature-section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 d-flex order-md-last">
+                <div className="flex-fill p-md-4">
+                  <h4>Simple and Intuitive</h4>
+                  <h5>No magic. No overengineering.</h5>
+                  <p className="text-justify mb-0">
+                    Keeping things simple is a challenge when creating an application.
+                    Simple code is easier to handle and understand, and therefore easier
+                    to maintain, debug and extend. Many frameworks, in trying to provide
+                    a large number of features and tools, tend to become complex, cumbersome
+                    and sometimes incomprehensible. In Foal, the architecture and components
+                    are designed to keep the code as simple as possible. Complexity is only
+                    used when there is no other option.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6 d-flex align-items-center justify-content-center">
+                <img src={useBaseUrl('img/home/simple-and-intuitive4.png')} className="mt-3 mt-md-0" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="feature-section pb-4">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6 d-flex">
+                <div className="flex-fill p-md-4">
+                  <h4>Batteries Included</h4>
+                  <h5>Auth, ORM, CLI, Scripts, OpenAPI, GraphQL, ...</h5>
+                  <p className="text-justify mb-0">
+                    Validation, authentication, sanitiziation, error handling, compilation,
+                    CLI, job scheduling, password hashing, permission management, token
+                    generation, ..., most web applications need these features and developers
+                    should not spend their time re-inventing the wheel. FoalTS allows you to
+                    be productive and focus on business logic rather than wasting your time
+                    building everything from scratch.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6 d-flex align-items-center justify-content-center order-last">
+                <img src={useBaseUrl('img/home/batteries-included4.png')} className="mt-3 mt-md-0" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="get-started-container">
+          <a href="https://foalts.gitbook.io/docs/tutorials/simple-to-do-list/1-installation" className="btn btn-white" id="get-started2">
+            Get started
+          </a>
+        </section>
+
+        <section className="badges-container">
+          <div className="container">
+            <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
+              <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
+            </a>
+            <img src="https://img.shields.io/badge/node-%3E%3D8-brightgreen.svg" alt="node version" />
+            <a href="https://badge.fury.io/js/%40foal%2Fcore">
+              <img src="https://badge.fury.io/js/%40foal%2Fcore.svg" alt="npm version" />
+            </a>
+            <a href="https://travis-ci.org/FoalTS/foal">
+              <img src="https://travis-ci.org/FoalTS/foal.svg?branch=add-travis" alt="Build Status" />
+            </a>
+            <a href="https://codecov.io/github/FoalTS/foal">
+              <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage" />
+            </a>
+            <a href="https://snyk.io/test/npm/@foal/core">
+              <img src="https://snyk.io/test/npm/@foal/core/badge.svg" alt="Known Vulnerabilities" />
+            </a>
+            <a href="https://github.com/FoalTS/foal/commits/master">
+              <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity" />
+            </a>
+            <a href="https://github.com/FoalTS/foal/commits/master">
+              <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit" />
+            </a>
+            <a href="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg">
+              <img src="https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg" alt="2FA" />
+            </a>
+          </div>
+        </section>
+        <footer className="mastfoot">
+        Code licensed under MIT License.
+      </footer>
+      <script dangerouslySetInnerHTML={{__html: `
+    function createFunctionWithTimeout(callback, opt_timeout) {
+      var called = false;
+      function fn() {
+        if (!called) {
+          called = true;
+          callback();
+        }
+      }
+      setTimeout(fn, opt_timeout || 1000);
+      return fn;
+    }
+
+    function attachMetricToLink(id, label) {
+      var getStarted = document.getElementById(id);
+      getStarted.addEventListener('click', function (event) {
+        event.preventDefault();
+        ga('send', 'event', label, 'click', {
+          hitCallback: createFunctionWithTimeout(function () {
+            window.location = event.target.href || event.target.parentElement.href;
+          })
+        });
+      });
+    }
+    attachMetricToLink('get-started', 'Get Started Button');
+    attachMetricToLink('get-started2', 'Get Started 2 Button');
+    attachMetricToLink('github', 'Github Button');
+    attachMetricToLink('twitter', 'Twitter Button');
+    attachMetricToLink('documentation', 'Documentation Button');
+      `}}/>
     </Layout>
   );
 }

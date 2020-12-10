@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Foal TS',
-  tagline: 'The tagline of my site',
+  tagline: 'Node.JS and TypeScript framework for building web applications',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -84,6 +84,7 @@ module.exports = {
     //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     // },
   },
+  plugins: ['docusaurus-plugin-sass'],
   presets: [
     [
       '@docusaurus/preset-classic',
@@ -99,7 +100,7 @@ module.exports = {
             'https://github.com/FoalTS/foal/edit/master/docs',
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/custom.scss'),
         },
       },
     ],

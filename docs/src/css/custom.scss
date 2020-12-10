@@ -1,0 +1,248 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+@import './bootstrap.min.css';
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #176edb;
+  --ifm-color-primary-dark: #1563c5;
+  --ifm-color-primary-darker: #145dba;
+  --ifm-color-primary-darkest: #104d99;
+  --ifm-color-primary-light: #227ae8;
+  --ifm-color-primary-lighter: #2d81e9;
+  --ifm-color-primary-lightest: #4e94ec;
+  --ifm-code-font-size: 95%;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgb(72, 77, 91);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+
+$lightwhite: hsl(213, 100%, 92%);
+$bg-white: #fafafa;
+$text-white: rgb(232, 237, 255);
+
+body {
+  background-color: $bg-white;
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+}
+
+.btn {
+  background-color: #126cda;
+  border: #126cda;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 30px;
+  padding: 0.5rem 4rem;
+}
+
+.btn-white {
+  background-color: #fff;
+  border: none;
+  color: #116bd9;
+}
+
+.btn-white:hover {
+  background-color: $lightwhite;
+  color: #116bd9;
+}
+
+.terminal {
+  color: white;
+  font-family: Menlo, Monaco, "Consolas", "Courier New", "Courier";
+  font-size: 11pt;
+  background: #1b1e21;
+  padding: 15px;
+  border-radius: 5px;
+  height: 115px;
+  max-width: 500px;
+}
+
+.mastfoot {
+  background-color: hsla(212, 51%, 54%, 1);
+}
+
+.navbar {
+  font-size: 18px;
+  text-transform: uppercase;
+
+  a:hover {
+    color: $lightwhite!important;
+  }
+}
+
+.masthead {
+  min-height: 640px;
+
+  background-color: #1b7cf2;
+  background-image: url('/img/home/background8.png');
+  background-attachment: fixed;
+  background-position: center; 
+
+  @media (max-width: 576px)  {
+    margin-bottom: 3rem;
+  }
+
+  .terminal-wrapper {
+    padding: 20px 0;
+  }
+
+  .content  {
+    @media (min-width: 576px) {
+      padding: 40px 0px;
+    }
+    @media (max-width: 576px)  {
+      padding-bottom: 20px;
+    }
+  }
+
+  h1 {
+    color: $text-white;
+    font-weight: 600;
+    font-family: Palatino, monospace;
+    margin-bottom: 0;
+    margin-top: 64px;
+    font-size: 100px;
+  }
+
+  h3 {
+    font-weight: 400;
+    color: $text-white;
+  }
+
+  h4 {
+    font-weight: 300;
+    color: $text-white;
+    font-style: oblique;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  img {
+    max-width: 300px;
+  }
+
+  .btn {
+    box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.screenshot-container {
+  text-align: center;
+  margin-bottom: 130px;
+  background: linear-gradient(rgb(171, 203, 243), 5%, $bg-white);
+
+  @media (max-width: 576px)  {
+    display: none;
+  }
+
+  img {
+    margin-top: -70px;
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+}
+
+.testimony-container {
+  margin-bottom: 50px;
+  font-size: 1.4rem;
+
+  color: hsl(209, 62%, 49%);
+
+  @media (min-width: 576px)  {
+    background-color: hsla(213, 40%, 95%, 1);
+  }
+
+  text-align: center;
+  font-style: italic;
+
+  hr {
+    max-width: 260px;
+
+    @media (max-width: 576px)  {
+      display: none;
+    }
+  }
+
+  .text {
+    padding: 30px 0;
+  }
+}
+
+.feature-section {
+
+  margin-bottom: 3rem;
+
+  h4 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  padding-left: 0px;
+  padding-right: 0px;
+
+  .container>.row {
+    padding-bottom: 1.1rem;
+  }
+
+  img {
+    border-radius: 6px;
+    max-width: 90%;
+
+    @media (max-width: 992px)  {
+      max-width: 100%;
+    }
+  }
+
+  h5 {
+    color: hsl(209, 62%, 49%);
+    font-size: 1.4rem;
+  }
+
+  p {
+    margin-top: 1rem;
+  }
+}
+
+.get-started-container {
+  padding: 40px 0px;
+
+  background: #126cda;
+  box-shadow: inset 0 30px 30px -30px rgba(0, 0, 0, 0.35), inset 0 -20px 30px -30px rgba(0, 0, 0, 0.35);
+  
+  text-align: center;
+}
+
+.badges-container {
+  padding-top: 30px;
+  padding-right: 0px;
+  padding-bottom: 35px;
+  padding-left: 0px;
+
+  background-color: $bg-white;
+
+  text-align: center;
+}
+
+.mastfoot {
+  padding: 10px 0px;
+
+  color: $text-white;
+
+  text-align: center;
+}
