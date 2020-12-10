@@ -1,7 +1,9 @@
+---
+title: Session Tokens & CSRF Protection
+---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
-# Session Tokens & CSRF Protection
 
 The main feature of FoalTS version 2 is the new session management. The new authentication system is intended to be more intuitive and to require less code and configuration. It also offers new functionalities.
 

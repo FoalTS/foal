@@ -1,7 +1,9 @@
+---
+title: File Upload and Download
+---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
-# File Upload and Download
 
 In version 2, file uploads and download are managed by a single package: `@foal/storage`.
 

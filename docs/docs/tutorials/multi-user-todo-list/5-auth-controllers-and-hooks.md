@@ -1,4 +1,6 @@
-# Auth Controllers and Hooks
+---
+title: Auth Controllers & Hooks
+---
 
 So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
 

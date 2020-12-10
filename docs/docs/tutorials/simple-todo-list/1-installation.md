@@ -1,4 +1,6 @@
-# Installation
+---
+title: Installation
+---
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
 
@@ -8,7 +10,7 @@ In this tutorial you will learn how to create a basic web application with FoalT
 >
 > [Node.js](https://nodejs.org/en/) 10 or greater
 
-# Create a New Project
+## Create a New Project
 
 First you need to install globaly the *Command Line Interface (CLI)* of FoalTS. It will help you create a new project and generate files all along your development.
 
@@ -56,7 +58,7 @@ The outer `my-app` root directory is just a container for your project.
 >
 > The language used to develop a FoalTS application is [TypeScript](https://www.typescriptlang.org/). It is a typed superset of JavaScript that compiles to plain JavaScript. The benefits of using TypeScript are many, but in summary, the language provides great tools and the future features of JavaScript.
 
-# Start The Server
+## Start The Server
 
 Let's verify that the FoalTS project works. Run the following commands:
 

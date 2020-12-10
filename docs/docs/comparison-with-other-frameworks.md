@@ -1,4 +1,6 @@
-# Comparison with Other Frameworks
+---
+title: Comparison with Other Frameworks
+---
 
 This page is definitely the most difficult one in the guide to write. If you are here, it is probably because you want to know if you should choose Foal over another framework. There are many in Node's ecosystem and picking one is not always an easy task. This page aims to help you on this path.
 

@@ -1,7 +1,9 @@
+---
+title: Template Engine
+---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
-# Template Engine
 
 Starting from version 2, only Express-compatible template engines are supported ([EJS](https://www.npmjs.com/package/ejs), [pug](https://www.npmjs.com/package/pug), [Jade](https://www.npmjs.com/package/jade), [Twig](https://www.npmjs.com/package/twig), etc).
 

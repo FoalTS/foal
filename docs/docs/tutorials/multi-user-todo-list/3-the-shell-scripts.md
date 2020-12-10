@@ -1,4 +1,6 @@
-# The Shell Scripts
+---
+title: The Shell Scripts
+---
 
 Like in the previous tutorial, you are going to use shell scripts to populate the database.
 

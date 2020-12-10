@@ -1,7 +1,9 @@
+---
+title: New Configuration System
+---
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-
-# New Configuration System
 
 ## The `Config.get` Method
 

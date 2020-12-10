@@ -1,4 +1,6 @@
-# JWT hooks and CSRF protection
+---
+title: JWT hooks and CSRF protection
+---
 
 ## Configuration
 

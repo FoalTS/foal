@@ -1,4 +1,6 @@
-# The User & Todo Models
+---
+title: The User & Todo Models
+---
 
 First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
 
