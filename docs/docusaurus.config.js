@@ -31,6 +31,11 @@ module.exports = {
           position: 'left'
         },
         {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownActiveClassDisabled: true,
+        },
+        {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
           className: 'header-github-link',
@@ -113,6 +118,15 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
             'https://github.com/FoalTS/foal/edit/master/docs/',
+          lastVersion: "current",
+          versions: {
+            current: {
+              "label": require('../lerna.json').version + ' (latest)',
+            },
+            '1.x': {
+              'label': '1.x'
+            }
+          }
         },
         blog: {
           showReadingTime: true,
