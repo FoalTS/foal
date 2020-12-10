@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Configuration
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
@@ -25,15 +28,26 @@ Configuration values are provided using configuration files in the `config/` dir
 
 *config/default.{yml|json|js}*
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   session:
     store: "@foal/typeorm"
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -43,8 +57,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -54,8 +70,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 > **YAML support**
 >
@@ -83,8 +100,17 @@ Configuration values can also be set or overridden for a specific environment us
 
 All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   session:
@@ -93,8 +119,10 @@ settings:
 customConfiguration:
   message: hello world
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -107,8 +135,10 @@ customConfiguration:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -121,8 +151,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Accessing Configuration Values
 
@@ -194,16 +225,27 @@ The recommended approach to provide sensitive information to the application is 
 JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 ```
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   jwt:
     secret: env(JWT_SECRET)
     secretEncoding: base64
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -214,8 +256,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 const { Env } = require('@foal/core');
 
@@ -228,8 +272,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 If the same variable is provided both as environment variable and in the `.env` file, then the value of the environment variable is used.
 

@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # MongoDB (noSQL)
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
@@ -16,15 +19,26 @@ foal createapp my-app --mongodb
 npm install mongodb
 ```
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 database:
   type: mongodb
   url: mongodb://localhost:27017/test-foo-bar
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "database": {
@@ -33,8 +47,10 @@ database:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   database: {
@@ -43,8 +59,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Defining Entities and Columns
 

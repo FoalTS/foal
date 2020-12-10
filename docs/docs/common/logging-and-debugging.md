@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Logging & Debugging
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
@@ -6,14 +9,25 @@
 
 FoalTS uses [morgan](https://www.npmjs.com/package/morgan) to log the HTTP requests. You can specify the output format using the environment variable `SETTINGS_LOGGER_FORMAT` or the `config/default.json` file:
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   loggerFormat: tiny
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -21,8 +35,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -30,21 +46,33 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Disabling HTTP Request Logging
 
 In some scenarios and environments, you might want to disable http request logging. You can achieve this by setting the `loggerFormat` configuration option to `none`. 
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   loggerFormat: none
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -52,8 +80,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -61,21 +91,33 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Disabling Error Logging
 
 In some scenarios, you might want to disable error logging (error stack traces that are displayed when an error is thrown in a controller or hook). You can achieve this by setting the `allErrors` configuration option to false. 
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   allErrors: false
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -83,8 +125,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -92,8 +136,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Logging Hook
 

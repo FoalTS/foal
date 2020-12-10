@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Templates - Server-Side Rendering
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
@@ -84,14 +87,25 @@ Here is an example showing how to configure `config/default.json` (or `config/de
 npm install twig
 ```
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   templateEngine: twig
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -99,8 +113,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -108,8 +124,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 Then the `render` function uses this engine under the hood to render the templates.
 

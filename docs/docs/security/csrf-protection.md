@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # CSRF protection
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
@@ -18,16 +21,27 @@ In addition, the framework provides token-based mitigation that works with eithe
 
 ### Authentication with Session Tokens
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   session:
     csrf:
       enabled: true
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -39,8 +53,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -52,21 +68,33 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ### Authentication with JSON Web Tokens
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   jwt:
     csrf:
       enabled: true
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -78,8 +106,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -91,8 +121,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## Examples
 
@@ -170,14 +201,27 @@ The client must retrieve the *CSRF token* from the `XSRF-Token` cookie and then 
 
 Most modern request libraries already handle it automatically for you using the `X-XSRF-Token` header.
 
-{% code-tabs %}
-{% code-tabs-item title="Angular HttpClient" %}
+<Tabs
+  defaultValue="angular"
+  values={[
+    {label: 'Angular HttpClient', value: 'angular'},
+    {label: 'Axios', value: 'axios'},
+    {label: 'Native JavaScript', value: 'native'},
+  ]}
+>
+
+<TabItem value="angular">
+
 No additional configuration required.
-{% endcode-tabs-item %}
-{% code-tabs-item title="Axios" %}
+
+</TabItem>
+<TabItem value="axios">
+
 No additional configuration required.
-{% endcode-tabs-item %}
-{% code-tabs-item title="Native JavaScript" %}
+
+</TabItem>
+<TabItem value="native">
+
 ```typescript
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
@@ -191,8 +235,9 @@ async function postData(url = '', data = {}) {
   return response.json();
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ### Single-Page Applications (JWTs)
 
@@ -426,8 +471,17 @@ To increase the effectiveness of protection against sub-domain attacks, your aut
 
 The name of the CSRF cookie can be changed in the configuration.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   jwt:
@@ -436,8 +490,10 @@ settings:
       cookie:
         name: CSRF-Token # Default: XSRF-TOKEN
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -452,8 +508,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 module.exports = {
   settings: {
@@ -468,5 +526,6 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
