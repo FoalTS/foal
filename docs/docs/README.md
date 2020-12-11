@@ -13,6 +13,11 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
+| Version | Status | End-of-life |
+| --- | --- | --- |
+| 2.x | Current | - |
+| 1.x | Maintenance | 2021-05-31 |
+
 ## Motivation
 
 In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
