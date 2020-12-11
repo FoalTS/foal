@@ -28,9 +28,9 @@ function Home() {
                     </div>
                   </div>
                   <div className="text-center">
-                    <a href="https://foalts.gitbook.io/docs/tutorials/simple-to-do-list/1-installation" className={`${styles.btn} mt-3 ${styles.btnWhite}`} id="get-started">
+                    <Link to="/docs/tutorials/simple-todo-list/1-installation" className={`${styles.btn} mt-3 ${styles.btnWhite}`}>
                       Get started
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -112,9 +112,9 @@ function Home() {
           </section>
 
           <section className={styles.getStartedContainer}>
-            <a href="https://foalts.gitbook.io/docs/tutorials/simple-to-do-list/1-installation" className={`${styles.btn} ${styles.btnWhite}`} id="get-started2">
+            <Link to="/docs/tutorials/simple-todo-list/1-installation" className={`${styles.btn} mt-3 ${styles.btnWhite}`}>
               Get started
-            </a>
+            </Link>
           </section>
 
           <section className={styles.badgesContainer}>
