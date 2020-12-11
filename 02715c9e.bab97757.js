@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{69:function(e){e.exports=JSON.parse('{"pluginId":"default","version":"1.x","label":"1.x","isLast":false,"docsSidebars":{"someSidebar":[{"type":"link","label":"Introduction","href":"/foal/docs/1.x/"}]},"permalinkToSidebar":{"/foal/docs/1.x/":"someSidebar"}}')}}]);
