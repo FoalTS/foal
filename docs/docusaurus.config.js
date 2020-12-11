@@ -9,6 +9,12 @@ module.exports = {
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
   themeConfig: {
+    hideableSidebar: true,
+    announcementBar: {
+      id: 'supportus',
+      content:
+        '⭐ Foal TS version 2 has been released! 🎉',
+    },
     colorMode: {
       disableSwitch: true
     },
