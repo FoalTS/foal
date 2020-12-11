@@ -31,11 +31,6 @@ module.exports = {
           position: 'left'
         },
         {
-          type: 'docsVersionDropdown',
-          position: 'right',
-          dropdownActiveClassDisabled: true,
-        },
-        {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
           className: 'header-github-link',
@@ -50,12 +45,19 @@ module.exports = {
         {
           href: 'https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ',
           position: 'right',
-          label: 'YouTube'
+          className: 'header-youtube-link',
+          'aria-label': 'Youtube channel',
         },
         {
           href: 'https://discord.gg/QUrJv98',
           position: 'right',
-          label: 'Discord'
+          className: 'header-chat-link',
+          'aria-label': 'Discord chat server',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          dropdownActiveClassDisabled: true,
         },
       ],
     },
