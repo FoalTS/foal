@@ -9,6 +9,10 @@ module.exports = {
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
   themeConfig: {
+    googleAnalytics: {
+      trackingID: 'UA-112613053-1',
+      anonymizeIP: true,
+    },
     hideableSidebar: true,
     announcementBar: {
       id: 'supportus',
@@ -117,7 +121,10 @@ module.exports = {
     //   copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     // },
   },
-  plugins: ['docusaurus-plugin-sass'],
+  plugins: [
+    'docusaurus-plugin-sass',
+    '@docusaurus/plugin-google-analytics'
+  ],
   presets: [
     [
       '@docusaurus/preset-classic',
