@@ -123,7 +123,6 @@ module.exports = {
   },
   plugins: [
     'docusaurus-plugin-sass',
-    '@docusaurus/plugin-google-analytics'
   ],
   presets: [
     [
