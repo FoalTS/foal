@@ -17,6 +17,7 @@ jobs:
           node-version: '12.x'
       - name: Test Build
         run: |
+          cd docs
           if [ -e yarn.lock ]; then
           yarn install --frozen-lockfile
           elif [ -e package-lock.json ]; then
@@ -37,6 +38,7 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
+          cd docs
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           echo "${{ secrets.GH_PAGES_DEPLOY }}" > ~/.ssh/id_rsa
@@ -51,6 +53,7 @@ jobs:
           USE_SSH: true
           GIT_USER: git
         run: |
+          cd docs
           git config --global user.email "actions@gihub.com"
           git config --global user.name "gh-actions"
           if [ -e yarn.lock ]; then
