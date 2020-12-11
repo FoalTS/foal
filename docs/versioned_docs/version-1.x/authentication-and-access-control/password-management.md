@@ -1,4 +1,7 @@
-# Password Management
+---
+title: Password Management
+sidebar_label: Passwords
+---
 
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
 

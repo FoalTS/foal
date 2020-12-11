@@ -1,4 +1,6 @@
-# Administrators and Roles
+---
+title: Administrators & Roles
+---
 
 In simple applications, access control can be managed with static roles or even with an `isAdmin` column in the simplest cases.
 

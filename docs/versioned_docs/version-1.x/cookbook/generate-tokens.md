@@ -1,4 +1,6 @@
-# Generate (and Verify) Tokens
+---
+title: Generate Tokens
+---
 
 In many situations, we need to generate tokens and then verify them (for example in the flow of a password reset). This document shows how to do so with FoalTS.
 

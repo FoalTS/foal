@@ -1,4 +1,6 @@
-# The Todo Model
+---
+title: The Todo Model
+---
 
 Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
 

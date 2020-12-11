@@ -1,4 +1,6 @@
-# Groups and Permissions
+---
+title: Groups & Permissions
+---
 
 In advanced applications, access control can be managed through permissions and groups.
 

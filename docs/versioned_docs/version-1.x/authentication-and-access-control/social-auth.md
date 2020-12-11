@@ -1,4 +1,7 @@
-# Social Authentication
+---
+title: Social Authentication
+sidebar_label: Social Auth
+---
 
 > Social authentication is available in Foal v1.3.0 onwards.
 

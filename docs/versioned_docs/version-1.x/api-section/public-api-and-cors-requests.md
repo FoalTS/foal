@@ -1,4 +1,6 @@
-# Public API & CORS Requests
+---
+title: Public API & CORS Requests
+---
 
 Building an Open API requires to allow Cross-Origin Request Sharing.
 

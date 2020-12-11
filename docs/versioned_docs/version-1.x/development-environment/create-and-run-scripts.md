@@ -1,4 +1,6 @@
-# Create and Run Scripts
+---
+title: Create & Run Scripts
+---
 
 Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is when shell scripts come into play.
 

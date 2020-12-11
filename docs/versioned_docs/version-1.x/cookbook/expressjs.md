@@ -1,4 +1,6 @@
-# ExpressJS
+---
+title: ExpressJS
+---
 
 FoalTS applications are created with the `createApp` function in the `src/index.ts` file. This function takes the root controller class (known as `AppController`) as parameter.
 

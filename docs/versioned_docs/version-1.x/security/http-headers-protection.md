@@ -1,4 +1,6 @@
-# HTTP Headers Protection
+---
+title: HTTP Headers Protection
+---
 
 To protect the application against some (!) common attacks, FoalTS sets by default various HTTP headers. These can be overrided in the `HttpResponse` objects.
 

@@ -1,4 +1,6 @@
-# Upload & Download Files
+---
+title: Upload & Download Files
+---
 
 Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 

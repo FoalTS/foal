@@ -1,4 +1,6 @@
-# Logging & Debugging
+---
+title: Logging & Debugging
+---
 
 ## HTTP Request Logging
 

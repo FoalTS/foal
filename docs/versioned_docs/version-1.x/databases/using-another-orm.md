@@ -1,4 +1,7 @@
-# Using Another ORM or Query Builder
+---
+title: Using Another ORM or Query Builder
+sidebar_label: Using Another ORM
+---
 
 If you want to use another ORM/ODM (Sequelize, Objection.js, etc) or just do not want to use one at all, you can uninstall the `typeorm` and `@foal/typeorm` packages. The framework core is TypeORM-independent.
 

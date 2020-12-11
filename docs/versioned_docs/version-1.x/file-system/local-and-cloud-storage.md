@@ -1,4 +1,6 @@
-# Local and Cloud Storage
+---
+title: Local & Cloud Storage
+---
 
 > File storage is available in Foal v1.6 onwards.
 

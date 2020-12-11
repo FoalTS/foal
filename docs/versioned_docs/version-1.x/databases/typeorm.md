@@ -1,4 +1,7 @@
-# TypeORM
+---
+title: TypeORM
+sidebar_label: SQL Databases (TypeORM)
+---
 
 > *FoalTS components using TypeORM officially support the following databases: PostgreSQL, MySQL, MariaDB and SQLite*.
 

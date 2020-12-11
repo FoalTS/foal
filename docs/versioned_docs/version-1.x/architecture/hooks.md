@@ -1,4 +1,6 @@
-# Hooks
+---
+title: Hooks
+---
 
 ```sh
 foal generate hook my-hook

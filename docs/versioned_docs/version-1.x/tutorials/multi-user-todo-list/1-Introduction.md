@@ -1,4 +1,6 @@
-# Introduction
+---
+title: Introduction
+---
 
 In this tutorial you will learn how to manage users, authentication and authorization in FoalTS. You will also have a quick overview of end-to-end testing.
 

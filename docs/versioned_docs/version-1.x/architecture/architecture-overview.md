@@ -1,4 +1,6 @@
-# Architecture Overview
+---
+title: Architecture Overview
+---
 
 FoalTS is a framework for creating server-side [Node.js](https://nodejs.org) applications. It is written in [TypeScript](https://www.typescriptlang.org/), a typed superset of JavaScript that provides advanced development tools and the latest language features.
 

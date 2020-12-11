@@ -1,4 +1,6 @@
-# Linting and Code Style
+---
+title: Linting & Code Style
+---
 
 A linter is a tool that analizes source code to flag programming errors, bugs, stylistic errors, and suspicious constructs. In particular, it helps teams to keep the code consistent between their members.
 

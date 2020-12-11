@@ -1,4 +1,6 @@
-# Generate and Run Migrations
+---
+title: Generate & Run Migrations
+---
 
 Database migrations are a way of propagating changes you make to your entities into your database schema. The changes you make to your models (adding a field, deleting an entity, etc.) do not automatically modify your database. You have to do it yourself.
 
@@ -31,11 +33,17 @@ export class PostRefactoringTIMESTAMP implements MigrationInterface {
 Usually, you do not need to write migrations manually. TypeORM offers a powerful feature to generate your migration files based on the changes you make to your entities.
 
 ```sh
-# Build the entities
+---
+title: Build the entities
+---
 npm run build:app
-# Generate the migration file based on the entities changes
+---
+title: Generate the migration file based on the entities changes
+---
 npm run migration:generate -- -n name-of-this-migration
-# Build the migration files
+---
+title: Build the migration files
+---
 npm run build:migrations
 ```
 

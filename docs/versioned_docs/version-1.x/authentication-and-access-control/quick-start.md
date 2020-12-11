@@ -1,4 +1,6 @@
-# Quick Start
+---
+title: Quick Start
+---
 
 *Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 

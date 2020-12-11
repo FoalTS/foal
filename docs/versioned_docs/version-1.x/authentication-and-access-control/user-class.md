@@ -1,4 +1,6 @@
-# User Class and `create-user` Script
+---
+title: User Class and create-user Script
+---
 
 ## The User Entity
 

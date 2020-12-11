@@ -1,4 +1,6 @@
-# Code Generation
+---
+title: Code Generation
+---
 
 ## Create a project
 

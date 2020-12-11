@@ -1,4 +1,6 @@
-# Create Models and Queries
+---
+title: Create Models & Queries
+---
 
 ```shell
 foal generate entity my-entity

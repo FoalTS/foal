@@ -1,4 +1,6 @@
-# E2E Testing
+---
+title: E2E Testing
+---
 
 End-to-end tests are located in the `src/e2e` directory.
 

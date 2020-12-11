@@ -1,4 +1,6 @@
-# GraphQL
+---
+title: GraphQL
+---
 
 [GraphQL](https://graphql.org/) is a query language for APIs. Unlike traditional REST APIs, GraphQL APIs have only one endpoint to which requests are sent. The content of the request describes all the operations to be performed and the data to be returned in the response. Many resources can be retrieved in a single request and the client gets exactly the properties it asks for.
 

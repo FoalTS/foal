@@ -1,4 +1,6 @@
-# AWS Beanstalk
+---
+title: AWS Beanstalk
+---
 
 > This tutorial shows how to deploy an application with an SQL database to [AWS Beanstalk](https://console.aws.amazon.com/elasticbeanstalk/home). It assumes that you already have an AWS account and have access to your console.
 

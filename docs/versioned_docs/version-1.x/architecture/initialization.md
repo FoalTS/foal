@@ -1,4 +1,6 @@
-# Initialization
+---
+title: Initialization
+---
 
 In many situations, we need to initialize the application (i.e perform certain actions) before listening to incoming HTTP requests. This is the case, for example, if you need to establish a connection to the database.
 

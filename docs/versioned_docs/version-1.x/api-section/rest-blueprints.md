@@ -1,4 +1,6 @@
-# REST API
+---
+title: REST API
+---
 
 *Example:*
 ```

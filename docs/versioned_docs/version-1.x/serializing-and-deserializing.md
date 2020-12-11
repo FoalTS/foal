@@ -1,4 +1,6 @@
-# Serializing and Deserializing
+---
+title: Serializing & Deserializing
+---
 
 This document shows how to serialize class instances into plain objects and, conversely, how to deserialize plain objects into class instances. It is based on the [class-transformer](https://github.com/typestack/class-transformer) library.
 

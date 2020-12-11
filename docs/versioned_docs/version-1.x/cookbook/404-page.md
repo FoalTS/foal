@@ -1,4 +1,6 @@
-# 404 Page
+---
+title: 404 Page
+---
 
 Here's a way to implement custom 404 pages.
 

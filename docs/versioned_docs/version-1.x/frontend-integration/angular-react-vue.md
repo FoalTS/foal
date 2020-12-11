@@ -1,4 +1,6 @@
-# Angular, React & Vue
+---
+title: Angular, React & Vue
+---
 
 ```
 foal connect angular ../frontend

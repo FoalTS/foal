@@ -1,4 +1,6 @@
-# Error handling
+---
+title: Error Handling
+---
 
 When creating a new project with Foal, error handling is already configured for you. When an error is thrown or rejected in a controller or a hook, the application returns an html page `Internal Server Error` with the status code `500`. If the configuration key `settings.debug` is set to `true` (which is the case during development or testing), the page includes some details about the error (name, message, stack trace, etc).
 

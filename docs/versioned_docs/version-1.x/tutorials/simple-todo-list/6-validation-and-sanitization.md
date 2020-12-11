@@ -1,4 +1,6 @@
-# Validation and Sanitization
+---
+title: Validation & Sanitization
+---
 
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
 

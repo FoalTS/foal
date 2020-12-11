@@ -1,4 +1,7 @@
-# Authentication with JWT
+---
+title: Authentication with JWT
+sidebar_label: JSON Web Tokens (authentication)
+---
 
 ```
 npm install jsonwebtoken @foal/jwt

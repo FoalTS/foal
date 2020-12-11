@@ -1,4 +1,6 @@
-# JSX Server-Side Rendering
+---
+title: JSX Server-Side Rendering
+---
 
 > If you are interested in SSR without JSX, then you might take a look at [the "templating" page](../utilities/templating.md).
 

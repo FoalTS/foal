@@ -1,4 +1,6 @@
-# Configuration
+---
+title: Configuration
+---
 
 In FoalTS, _configuration_ refers to any parameter that may vary between deploy environments (production, development, test, etc). It includes sensitive information, such as your database credentials, or simple settings, such as the server port.
 

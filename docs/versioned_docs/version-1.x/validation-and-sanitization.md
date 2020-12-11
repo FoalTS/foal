@@ -1,4 +1,6 @@
-# Input Validation & Sanitization
+---
+title: Validation & Sanitization
+---
 
 **Validation** checks if an input meets a set of criteria (such as the value of a property is a string).
 

@@ -1,4 +1,6 @@
-# OpenAPI & Swagger UI
+---
+title: OpenAPI & Swagger UI
+---
 
 ## Introduction
 

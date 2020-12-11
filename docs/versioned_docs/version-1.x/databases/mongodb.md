@@ -1,4 +1,7 @@
-# MongoDB
+---
+title: MongoDB
+sidebar_label: MongoDB (TypeORM or Mongoose)
+---
 
 FoalTS provides two ways to interact with a MongoDB database in your application: [Mongoose](https://mongoosejs.com/) and [TypeORM](https://typeorm.io/#/).
 

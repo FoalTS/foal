@@ -1,4 +1,6 @@
-## Build and Start the App
+---
+title: Build & Start the App
+---
 
 FoalTS provides several commands to help you build and develop your app.
 

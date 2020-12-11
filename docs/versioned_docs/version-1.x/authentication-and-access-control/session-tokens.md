@@ -1,4 +1,7 @@
-# Session Tokens
+---
+title: Session Tokens
+sidebar_label: Session Tokens (authentication)
+---
 
 ## Introduction
 

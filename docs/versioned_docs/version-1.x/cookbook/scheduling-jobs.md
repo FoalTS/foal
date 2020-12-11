@@ -1,4 +1,6 @@
-# Scheduling Jobs
+---
+title: Scheduling Jobs
+---
 
 You can schedule jobs using [shell scripts](../development-environment/create-and-run-scripts.md) and the [node-schedule](https://www.npmjs.com/package/node-schedule) library.
 

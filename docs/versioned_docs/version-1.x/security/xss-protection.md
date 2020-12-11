@@ -1,4 +1,6 @@
-# XSS protection
+---
+title: XSS Protection
+---
 
 FoalTS provides some utils to protect you against XSS attacks.
 

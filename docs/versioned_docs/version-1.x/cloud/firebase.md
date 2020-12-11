@@ -1,4 +1,6 @@
-# Deploy to Firebase
+---
+title: Firebase
+---
 
 This document explains how to create and deploy an application with Firebase. It assumes that you do not use TypeORM since Firebase does not provide SQL databases.
 

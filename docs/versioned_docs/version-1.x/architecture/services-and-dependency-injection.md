@@ -1,4 +1,6 @@
-# Services
+---
+title: Services & Dependency Injection
+---
 
 ```sh
 foal generate service my-service

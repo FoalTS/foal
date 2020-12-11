@@ -1,4 +1,6 @@
-# Controllers
+---
+title: Controllers
+---
 
 ```sh
 foal generate controller my-controller
