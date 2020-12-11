@@ -131,7 +131,7 @@ module.exports = {
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
     ]),
     category('Community', [
-      link('Awesome Foal', 'https://github.com/FoalTS/awesome-foalts'),
+      "community/awesome-foal"
     ])
   ]
 };
