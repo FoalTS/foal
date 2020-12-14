@@ -136,9 +136,6 @@ if grep -Ril "../../Users/loicp" .; then
     exit 1
 fi
 
-# Test the generators
-foal g model flight
-
 # Test linting
 npm run lint
 
