@@ -20,6 +20,11 @@ module.exports = {
       content:
         '⭐ Foal TS version 2 has been released! 🎉',
     },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     navbar: {
       title: 'Foal TS',
       style: 'dark',
