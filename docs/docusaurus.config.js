@@ -9,6 +9,7 @@ module.exports = {
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
   themeConfig: {
+    image: 'img/logo_400.png',
     googleAnalytics: {
       trackingID: 'UA-112613053-1',
       anonymizeIP: true,
@@ -19,11 +20,10 @@ module.exports = {
       content:
         '⭐ Foal TS version 2 has been released! 🎉',
     },
-    colorMode: {
-      disableSwitch: true
-    },
     navbar: {
       title: 'Foal TS',
+      style: 'dark',
+      hideOnScroll: true,
       logo: {
         alt: 'Foal TS Logo',
         src: 'img/logo_400.png',
