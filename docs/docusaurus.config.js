@@ -14,7 +14,6 @@ module.exports = {
       trackingID: 'UA-112613053-1',
       anonymizeIP: true,
     },
-    hideableSidebar: true,
     announcementBar: {
       id: 'supportus',
       content:
