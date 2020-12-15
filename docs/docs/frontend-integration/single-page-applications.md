@@ -20,6 +20,7 @@ Most single-page applications simulate routing on the frontend side. This is usu
 This works fine until the user presses the refresh button, shares the link or saves the page in their bookmarks. In that case, the browser makes a request to the server to retreive the desired page and thus gets a 404 error.
 
 *Example*
+
 | Request | Response |
 | --- | --- |
 | `/` | 200 - Returns the `index.html` file in the `public/` directory. |
