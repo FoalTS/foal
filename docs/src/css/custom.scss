@@ -77,3 +77,53 @@
 .alert.alert--warning.margin-bottom--md {
   display: none;
 }
+
+/*
+ * Docs sidebar
+ */
+
+:root {
+  --doc-sidebar-width: 280px;
+}
+
+.menu > ul.menu__list > li.menu__list-item > a.menu__link--sublist:first-child {
+  cursor: text;
+  line-height: calc(var(--ifm-spacing-vertical) * 1.25);
+  margin-top: calc(var(--ifm-spacing-vertical) * 1.5);
+  padding: var(--ifm-menu-link-padding-vertical) 6px;
+  font-weight: bold;
+  color: var(--custom-content-color-lightest);
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+.menu > ul.menu__list > li.menu__list-item > a:not(.menu__link--sublist):first-child {
+  font-size: 0.85rem;
+  margin-top: calc(var(--ifm-spacing-vertical) * 1);
+  padding: var(--ifm-menu-link-padding-vertical) 6px;
+}
+
+.menu > ul.menu__list ul.menu__list .menu__link {
+  font-size: 0.85rem;
+  margin-left: calc(var(--ifm-menu-link-padding-horizontal) * -1);
+}
+
+.menu .menu__link {
+  background: none;
+  line-height: calc(var(--ifm-spacing-vertical) * 1);
+}
+
+.menu .menu__link.menu__link--sublist::after {
+  background: none;
+}
+
+.menu .menu__link:hover {
+  color: var(--ifm-menu-color-active);
+}
+
+@media (min-width: 997px) {
+  .collapseSidebarButton_node_modules-\@docusaurus-theme-classic-lib-theme-DocSidebar- {
+    background-size: auto 70%;
+    height: 25px;
+  }
+}

@@ -114,11 +114,11 @@
       ]},
       "version-1.x/comparison-with-other-frameworks"
     ]},
-    { "type": "category", "label": "Upgrading", "items": [
+    { "type": "category", "label": "Upgrading", "collapsed": false, "items": [
       { "type": "link", "label": "To v1", "href": "https://github.com/FoalTS/foal/releases/tag/v1.0.0" },
       { "type": "link", "label": "To v0.8", "href": "https://github.com/FoalTS/foal/releases/tag/v0.8.0" }
     ]},
-    { "type": "category", "label": "Community", "items": [
+    { "type": "category", "label": "Community", "collapsed": false, "items": [
       { "type": "link", "label": "Awesome Foal", "href": "https://github.com/FoalTS/awesome-foalts" }
     ]}
   ]
