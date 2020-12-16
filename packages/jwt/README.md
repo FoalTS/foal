@@ -36,7 +36,7 @@
   </a>
 </p>
 
-[Github](https://github.com/FoalTS/foal) - [Twitter](https://twitter.com/FoalTs) - [Website](https://foalts.org/) - [Documentation](https://foalts.gitbook.io/docs/) - [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
+[Github](https://github.com/FoalTS/foal) - [Twitter](https://twitter.com/FoalTs) - [Website](https://foalts.org/) - [Documentation](https://foalts.org/docs) - [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
 
 FoalTS is a Node.js framework for building HTTP APIs and Web applications with a rich interface (Angular / React / Vue). It is written in TypeScript and offers many built-in dev tools and components to handle extremely common scenarios. Simple, testable and progressive, Foal accelerates development while leaving you in control of your code.
 
@@ -55,7 +55,7 @@ $ npm run develop
 
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!
 
-[=> Continue with the tutorial](https://foalts.gitbook.io/docs/)
+[=> Continue with the tutorial](https://foalts.org/docs)
 
 
 ## Why?
