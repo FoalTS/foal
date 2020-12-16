@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 import { Readable } from 'stream';
 
 // 3p
-import { Config, ConfigNotFoundError, createService } from '@foal/core';
+import { Config, ConfigNotFoundError, createService, Env } from '@foal/core';
 import { FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
@@ -52,8 +52,8 @@ describe('S3Disk', () => {
   let disk: S3Disk;
   let s3: S3;
 
-  const accessKeyId = Config.get('settings.aws.accessKeyId', 'string');
-  const secretAccessKey = Config.get('settings.aws.secretAccessKey', 'string');
+  const accessKeyId = Env.get('SETTINGS_AWS_ACCESS_KEY_ID');
+  const secretAccessKey = Env.get('SETTINGS_AWS_SECRET_ACCESS_KEY');
 
   if (!accessKeyId) {
     console.warn('SETTINGS_AWS_ACCESS_KEY_ID not defined. Skipping S3Disk tests...');
