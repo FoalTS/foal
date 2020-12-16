@@ -66,7 +66,7 @@ function Home() {
       description="Elegant and all-inclusive Node.Js web framework based on TypeScript.">
         <header className={styles.masthead}>
           <div className={styles.content}>
-            <h1>{siteConfig.title}</h1>
+            <h1>Foal</h1>
             <h3>{siteConfig.tagline}</h3>
             <div>
               <Link

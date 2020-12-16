@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Foal',
+  title: 'FoalTS',
   tagline: 'Node.JS framework for building web applications',
   url: 'https://foalts.org',
   baseUrl: '/',
@@ -25,11 +25,11 @@ module.exports = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: 'Foal TS',
+      title: 'FoalTS',
       style: 'dark',
       hideOnScroll: true,
       logo: {
-        alt: 'Foal TS Logo',
+        alt: 'FoalTS Logo',
         src: 'img/logo_400.png',
       },
       items: [
