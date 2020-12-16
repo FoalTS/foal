@@ -1,4 +1,6 @@
-# Removal of Mongoose Support
+---
+title: Removal of Mongoose Support
+---
 
 Due to the amount of work needed to maintain Mongoose in the framework and the large number of problems we had to face in the past, FoalTS no longer provides tools for Mongoose starting from version 2. The recommended approach to use MongoDB is now via TypeORM.
 

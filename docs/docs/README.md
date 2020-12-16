@@ -1,3 +1,8 @@
+---
+title: Introduction
+slug: /
+---
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![node version](https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg)
 ![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)
@@ -7,6 +12,11 @@
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
+
+| Version | Status | End-of-life |
+| --- | --- | --- |
+| 2.x | Current | - |
+| 1.x | Maintenance | 2021-05-31 |
 
 ## Motivation
 

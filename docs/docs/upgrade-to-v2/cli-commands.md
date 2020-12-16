@@ -1,5 +1,6 @@
-
-# Simplified CLI Commands
+---
+title: Simplified CLI Commands
+---
 
 Script and migration commands were tedious to use in version 1 of Foal. They were many different commands to use in a special order to make things work. In version 2, commands have been reduced, simplified and are now more intuitive.
 

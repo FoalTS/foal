@@ -1,4 +1,7 @@
-# Update Guide to Version 2
+---
+title: Update Guide to Version 2
+sidebar_label: To v2
+---
 
 This guide will take you step by step through the upgrade to version 2. If something is missing or incorrect, feel free to submit an issue or a PR on Github.
 

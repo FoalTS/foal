@@ -1,4 +1,6 @@
-# Custom Express Instance
+---
+title: Custom Express Instance
+---
 
 FoalTS allows to provide a custom Express instance to the `createApp` function. In version 1, there were two ways to do it. In version 2, there is only one.
 

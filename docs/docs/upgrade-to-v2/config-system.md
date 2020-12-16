@@ -1,4 +1,9 @@
-# New Configuration System
+---
+title: New Configuration System
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## The `Config.get` Method
 
@@ -28,15 +33,26 @@ Environment variables are no longer loaded by default. You must specify them exp
 
 For example, `Config.get('settings.jwt.secret')` will not return the environment variable `SETTINGS_JWT_SECRET` by default. To do this, you must specify it explicitly in a configuration file:
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   jwt:
     secret: env(SETTINGS_JWT_SECRET)
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
+
+</TabItem>
+<TabItem value="json">
+
 ```json
 {
   "settings": {
@@ -46,8 +62,10 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JS" %}
+
+</TabItem>
+<TabItem value="js">
+
 ```javascript
 const { Env } = require('@foal/core');
 
@@ -59,8 +77,9 @@ module.exports = {
   }
 }
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
+
+</TabItem>
+</Tabs>
 
 ## The `Config` and `ConfigMock` services
 

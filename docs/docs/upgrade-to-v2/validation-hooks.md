@@ -1,4 +1,6 @@
-# Validation Hooks
+---
+title: Validation Hooks
+---
 
 Due to incompatibility with the OpenAPI specification, the following hooks have been removed:
 

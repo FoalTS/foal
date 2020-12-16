@@ -1,4 +1,6 @@
-# Error-handling
+---
+title: Error-handling
+---
 
 ## Customizing the Error Handler
 

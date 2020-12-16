@@ -1,4 +1,6 @@
-# Service and Application Initialization
+---
+title: Service and Application Initialization
+---
 
 FoalTS offers two ways to initialize the application: by the `boot` methods of the services or with the `AppController.init` method.
 

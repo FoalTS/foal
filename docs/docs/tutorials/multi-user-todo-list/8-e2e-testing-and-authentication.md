@@ -1,4 +1,7 @@
-# E2E Testing and Authentication
+---
+title: E2E Testing & Authentication
+sidebar_label: E2E Testing & Auth
+---
 
 The last part of this tutorial explains how to write and run *end-to-end* tests. The purpose of these tests is not to verify that each feature of each component works, but to check that these components work properly together.
 
