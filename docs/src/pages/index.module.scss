@@ -6,7 +6,7 @@ $text-white: rgb(232, 237, 255);
 
 .btn {
   font-size: 1.2rem;
-  font-weight: 500;
+  font-family: Arial;
   border-radius: 30px;
   padding: 0.5rem 4rem;
 
@@ -36,9 +36,9 @@ $text-white: rgb(232, 237, 255);
 
   h1 {
     color: $text-white;
-    font-weight: 500;
+    font-weight: bold;
 
-    font-family: Helvetica neue;
+    font-family: Arial;
     font-style: italic;
     font-size: 120px;
 
@@ -46,8 +46,9 @@ $text-white: rgb(232, 237, 255);
   }
 
   h3 {
-    font-weight: 400;
-    font-size: 30px;
+    font-weight: normal;
+    font-size: 28px;
+    font-family: Arial;
     color: $text-white;
 
     margin-bottom: 50px;
