@@ -4,13 +4,6 @@ $lightwhite: hsl(213, 100%, 92%);
 $bg-white: #fafafa;
 $text-white: rgb(232, 237, 255);
 
-.features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
-  width: 100%;
-}
-
 .btn {
   font-size: 1.2rem;
   font-weight: 500;
@@ -83,7 +76,37 @@ $text-white: rgb(232, 237, 255);
     border-radius: 4px;
   }
 
-  h3 {
-    font-size: 1.5rem;
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 85%;
+    justify-content: space-between;
+
+    margin: auto;
+
+    margin-top: 60px;
+    margin-bottom: 50px;
+
+    @media (max-width: 1280px) {
+      margin-top: 40px;
+      margin-bottom: 30px;
+    } 
+
+    @media (max-width: 768px) {
+      margin-bottom: 10px;
+    } 
+
+    .col {
+      width: 30%;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+      }
+    }
   }
 }

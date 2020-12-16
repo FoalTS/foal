@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -52,7 +51,7 @@ const features = [
 
 function Feature({ title, description }) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className={styles.col}>
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
@@ -84,13 +83,9 @@ function Home() {
           </div>
           {features && features.length > 0 && (
             <section className={styles.features}>
-              <div className="container">
-                <div className="row">
-                  {features.map((props, idx) => (
-                    <Feature key={idx} {...props} />
-                  ))}
-                </div>
-              </div>
+              {features.map((props, idx) => (
+                <Feature key={idx} {...props} />
+              ))}
             </section>
           )}
           <div>
