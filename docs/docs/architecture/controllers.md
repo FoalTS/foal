@@ -233,6 +233,7 @@ class AppController {
 HTTP responses are defined using `HttpResponse` objects. Each controller method must return an instance of this class (or a *promise* of this instance).
 
 Here are subclasses that you can use:
+
 | HTTP method | Response class | Is abstract? |
 |---|---|---|
 |  | **2XX Success** | |
