@@ -1,14 +1,11 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/images/logo_title.png" height="160px" alt="Logo" />
+    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/static/img/logo_title.png" alt="Logo" />
   </a>
   <br>
 </p>
 
 <p align="center">
-  <i>A Node.js and TypeScript framework, all-inclusive.</i>
-  <br>
-  <br>
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
@@ -39,32 +36,16 @@
   </a>
 </p>
 
-[Github](https://github.com/FoalTS/foal) - [Twitter](https://twitter.com/FoalTs) - [Website](https://foalts.org/) - [Documentation](https://foalts.org/docs) - [YouTube](https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ)
+## What is Foal?
 
-FoalTS is a Node.js framework for building HTTP APIs and Web applications with a rich interface (Angular / React / Vue). It is written in TypeScript and offers many built-in dev tools and components to handle extremely common scenarios. Simple, testable and progressive, Foal accelerates development while leaving you in control of your code.
+*Foal* (or *FoalTS*) is a Node.JS framework for creating web applications.
 
-## Get started
+It provides a set of ready-to-use components so you don't have to reinvent the wheel every time. In one single place, you have a complete environment to build web applications. This includes a CLI, testing tools, frontend utilities, scripts, advanced authentication, ORM, deployment environments, GraphQL and Swagger API, AWS utilities, and more. You no longer need to get lost on npm searching for packages and making them work together. It's all in the box.
 
-First install [Node.Js and npm](https://nodejs.org/en/download/).
+But while offering all these incredible features, the framework remains simple. Complexity and unnecessary abstractions are put aside to provide the most intuitive and expressive syntax. We believe that concise and elegant code is the best way to develop an application and maintain it in the future. It also allows you to spend more time coding rather than trying to understand how the framework works.
 
-### Create a new app
+And last but not least, the framework is entirely written in TypeScript. The language brings you optional static type-checking along with the latest ECMAScript features. This allows you to detect most silly errors during compilation and improve the quality of your code. It also offers you autocompletion and a well documented API.
 
-```
-$ npm install -g @foal/cli
-$ foal createapp my-app
-$ cd my-app
-$ npm run develop
-```
-
-The development server is started! Go to `http://localhost:3001` and find our welcoming page!
-
-[=> Continue with the tutorial](https://foalts.org/docs)
-
-
-## Why?
-
-In recent years Node.js has become one of the most popular servers on the web. And for good reason, it is fast, simple while being powerful and flexible. Creating a server with only a few lines of code has never been easier. 
-
-But when it comes to setting up a complete and scalable project, things get harder. You have to put everything in place. The authorization system, database migrations, development tools or even hashing of passwords are just the tip of the iceberg. Working on this is time consuming and may slow down the release frequency or even lead to undesired bugs. As the codebase grows up and the complexity increases, it becomes harder and harder to develop new features and maintain the app.
-
-This is where FoalTS comes in. Based on express, this lightweight framework provides everything needed to create enterprise-grade applications. From the support of TypeScript to the integration of security tools, it offers the basic bricks to build robust webapps. But FoalTS does not pretend to be a closed framework. You can still import and use your favorite librairies from the rich ecosystem of Node.js.
+<p align="center">
+  <a href="https://foalts.org">https://foalts.org</a>
+</p>
