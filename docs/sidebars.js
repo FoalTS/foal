@@ -123,8 +123,7 @@ module.exports = {
       category('Deployment & Environments', [
         'deployment-and-environments/configuration',
         'deployment-and-environments/ship-to-production',
-      ]),
-      'comparison-with-other-frameworks'
+      ])
     ]),
     expandedCategory('Upgrading', [
       'upgrade-to-v2/README',
