@@ -17,7 +17,7 @@ Foal offers several utils and hooks to handle both validation and sanitization. 
 
 ### Ajv, the JSON Schema Validator
 
-FoalTS default validation and sanitization system is based on [Ajv](https://github.com/ajv-validator/ajv) (version 6), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
+FoalTS default validation and sanitization system is based on [AJV version 6](https://github.com/ajv-validator/ajv/tree/v6), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
 
 ### Options
 
@@ -451,10 +451,96 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 | POST `/no-sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }`| `{ name: 'Alex', age: '34', city: 'Paris' }`
 | POST `/sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }` | `{ name: 'Alex', age: 34 }`
 
+### Custom Error Messages
+
+```
+npm install ajv-errors@1
+```
+
+You can customize the errors returned by the validation hooks by using the [ajv-errors](https://github.com/ajv-validator/ajv-errors/tree/v1) plugin (version 1).
+
+*Configuration*
+
+<Tabs
+  groupId="config"
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+settings:
+  ajv:
+    allErrors: true
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "ajv": {
+      "allErrors": true
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    ajv: {
+      allErrors: true
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+*Example*
+```typescript
+import { Context, getAjvInstance, HttpResponseOK, Post, ValidateBody } from '@foal/core';
+import * as ajvErrors from 'ajv-errors';
+
+export class AppController {
+
+  init() {
+    ajvErrors(getAjvInstance());
+  }
+
+  @Post('/products')
+  @ValidateBody({
+    additionalProperties: false,
+    errorMessage: 'The submitted product is incorrect.',
+    properties: {
+      name: { type: 'string' }
+    },
+    required: [ 'name' ],
+    type: 'object',
+  })
+  createProduct(ctx: Context) {
+    // ...
+    return new HttpResponseOK(ctx.request.body);
+  }
+
+}
+```
+
 ### Referencing Schemas
 
 The example below shows how a schema can be defined and reused in several hooks.
 
+*Example*
 ```typescript
 import { Context, getAjvInstance, HttpResponseOK, Post, ValidateBody } from '@foal/core';
 
@@ -471,7 +557,7 @@ export class ProductController {
 
   boot() {
     getAjvInstance()
-      .addSchema(productSchema, 'Product')
+      .addSchema(productSchema, 'Product');
   }
 
   @Post('/products')
@@ -480,7 +566,7 @@ export class ProductController {
   })
   createProduct(ctx: Context) {
     // ...
-    return new HttpResponseOK(ctx.request.body)
+    return new HttpResponseOK(ctx.request.body);
   }
 
 }
