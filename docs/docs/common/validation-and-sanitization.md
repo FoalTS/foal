@@ -17,7 +17,7 @@ Foal offers several utils and hooks to handle both validation and sanitization. 
 
 ### Ajv, the JSON Schema Validator
 
-FoalTS default validation and sanitization system is based on [Ajv](https://github.com/ajv-validator/ajv), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
+FoalTS default validation and sanitization system is based on [Ajv](https://github.com/ajv-validator/ajv) (version 6), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
 
 ### Options
 
@@ -450,6 +450,41 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 | --- | --- |
 | POST `/no-sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }`| `{ name: 'Alex', age: '34', city: 'Paris' }`
 | POST `/sanitization` `{ name: 'Alex', age: '34', city: 'Paris' }` | `{ name: 'Alex', age: 34 }`
+
+### Referencing Schemas
+
+The example below shows how a schema can be defined and reused in several hooks.
+
+```typescript
+import { Context, getAjvInstance, HttpResponseOK, Post, ValidateBody } from '@foal/core';
+
+const productSchema = {
+  additionalProperties: false,
+  properties: {
+    name: { type: 'string' }
+  },
+  required: [ 'name' ],
+  type: 'object',
+};
+
+export class ProductController {
+
+  boot() {
+    getAjvInstance()
+      .addSchema(productSchema, 'Product')
+  }
+
+  @Post('/products')
+  @ValidateBody({
+    $ref: 'Product'
+  })
+  createProduct(ctx: Context) {
+    // ...
+    return new HttpResponseOK(ctx.request.body)
+  }
+
+}
+```
 
 ## With a Validation Class (class-validator)
 
