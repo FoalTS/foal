@@ -5,7 +5,6 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "docs": "typedoc --out ../../docs/api/core src/index.ts --readme none --theme markdown",
     "test": "nyc --reporter=json --reporter=text mocha --parallel --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "dev:test:common": "mocha --require ts-node/register --watch --extension ts \"./src/common/**/*.spec.ts\"",
@@ -96,8 +95,6 @@
     "supertest": "~6.0.0",
     "ts-node": "~9.0.0",
     "twig": "~1.13.3",
-    "typedoc": "~0.19.0",
-    "typedoc-plugin-markdown": "~3.0.0",
     "typescript": "~4.0.2",
     "yamljs": "~0.3.0"
   }
