@@ -76,7 +76,7 @@ class MyServiceA {
 }
 ```
 
-> Dependencies are injected after the instantiation of the controller/service. So they will appear as `undefined` if you try to read them inside a constructor. If you want to access the dependencies when initializing a controller/service, refer to the [`boot` method](./initialization).
+> Dependencies are injected after the instantiation of the controller/service. So they will appear as `undefined` if you try to read them inside a constructor. If you want to access the dependencies when initializing a controller/service, refer to the [`boot` method](./initialization.md).
 
 > Circular dependencies are not supported. In most cases, when two services are dependent on each other, the creation of a third service containing the functionalities required by both services solves the dependency problem.
 
