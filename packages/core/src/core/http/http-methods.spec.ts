@@ -5,7 +5,31 @@ import { strictEqual } from 'assert';
 import 'reflect-metadata';
 
 // FoalTS
-import { Delete, Get, Head, Options, Patch, Post, Put } from './http-methods';
+import { All, Delete, Get, Head, Options, Patch, Post, Put } from './http-methods';
+
+describe('All', () => {
+
+  it('should define the metadata httpMethod="ALL" on the method class.', () => {
+    class Foobar {
+      @All()
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('httpMethod', Foobar.prototype, 'barfoo');
+    strictEqual(actual, 'ALL');
+  });
+
+  it('should define the metadata path=${path} on the method class.', () => {
+    class Foobar {
+      @All('/foo')
+      barfoo() {}
+    }
+
+    const actual = Reflect.getOwnMetadata('path', Foobar.prototype, 'barfoo');
+    strictEqual(actual, '/foo');
+  });
+
+});
 
 describe('Head', () => {
 
