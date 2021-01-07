@@ -62,6 +62,7 @@ export {
   ApiServer,
   ApiUseTag,
 
+  All,
   Class,
   ClassOrAbstractClass,
   Config,
