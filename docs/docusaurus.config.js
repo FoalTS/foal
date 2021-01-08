@@ -15,9 +15,9 @@ module.exports = {
       anonymizeIP: true,
     },
     announcementBar: {
-      id: 'supportus',
+      id: 'survey',
       content:
-        '⭐ Foal TS version 2 has been released! 🎉',
+        '✨ FoalTS survey is open! Don\'t forget to 👉 <a href="https://forms.gle/wZQHuBwomsEXKoSv6">participate</a>!',
     },
     colorMode: {
       defaultMode: 'light',
