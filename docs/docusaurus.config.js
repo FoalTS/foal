@@ -8,6 +8,12 @@ module.exports = {
   favicon: 'img/logo_400.png',
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
+  scripts: [
+    {
+      src: 'https://media.ethicalads.io/media/client/ethicalads.min.js',
+      async: true,
+    },
+  ],
   themeConfig: {
     image: 'img/logo_400.png',
     googleAnalytics: {
