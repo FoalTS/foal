@@ -13,6 +13,9 @@ module.exports = {
       src: 'https://media.ethicalads.io/media/client/ethicalads.min.js',
       async: true,
     },
+    {
+      src: 'https://app.mailjet.com/statics/js/iframeResizer.min.js',
+    },
   ],
   themeConfig: {
     image: 'img/logo_400.png',
@@ -61,6 +64,11 @@ module.exports = {
           to: 'blog',
           label: 'Blog',
           position: 'left'
+        },
+        {
+          to: 'newsletter',
+          label: 'Newsletter',
+          position: 'right'
         },
         {
           href: 'https://github.com/FoalTS/foal',
