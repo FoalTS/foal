@@ -6,7 +6,7 @@ There are several ways to contribute. **Reporting bugs are greatly appreciated**
 
 ## Security Vulnerabilities
 
-If you think you have found a security hole, please do NOT submit an issue but send an email directly to loic.poullain@centraliens.net.
+If you think you have found a security hole, please do NOT submit an issue but send an email directly to security@foalts.org.
 
 ## Pull Requests
 
