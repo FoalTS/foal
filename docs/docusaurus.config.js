@@ -23,7 +23,7 @@ module.exports = {
     announcementBar: {
       id: 'survey',
       content:
-        '✨ FoalTS survey is open! Don\'t forget to 👉 <a href="https://forms.gle/wZQHuBwomsEXKoSv6">participate</a>!',
+        '👉 Don\'t forget to participate to <a href="https://forms.gle/wZQHuBwomsEXKoSv6">FoalTS survey</a>! Deadline is January 31. ✨',
     },
     colorMode: {
       defaultMode: 'light',
