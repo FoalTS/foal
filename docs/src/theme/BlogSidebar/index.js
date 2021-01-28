@@ -25,7 +25,7 @@ export default function BlogSidebar({
   // FoalTS
   useEffect(() => {
     if (isNotMobile() && !doNotLoad && window.location.href.includes('blog')) {
-      console.log('Loading blog');
+      console.log('Loading ad blog');
 
       // This line prevents the ad from being loaded twice. I don't why but useEffect
       // is called twice even if window.location.href has not changed.
