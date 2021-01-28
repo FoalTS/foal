@@ -20,6 +20,18 @@ module.exports = {
       trackingID: 'UA-112613053-1',
       anonymizeIP: true,
     },
+    algolia: {
+      apiKey: '888cc664f8cdf532950f93fdd481eac1',
+      indexName: 'foalts',
+
+      // Optional: see doc section bellow
+      contextualSearch: true,
+
+      // Optional: Algolia search parameters
+      searchParameters: {},
+
+      //... other Algolia params
+    },
     announcementBar: {
       id: 'survey',
       content:
