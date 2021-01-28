@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://foalts.org" target="blank">
-    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/static/img/logo_title.png" alt="Logo" />
+    <img src="https://raw.githubusercontent.com/FoalTS/foal/master/docs/static/img/logo.png" alt="Logo" />
   </a>
 </p>
 
