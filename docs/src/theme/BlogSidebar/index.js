@@ -8,6 +8,10 @@ import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
+
+// FoalTS
+let doNotLoad = false;
+
 export default function BlogSidebar({
   sidebar
 }) {
@@ -20,10 +24,29 @@ export default function BlogSidebar({
 
   // FoalTS
   useEffect(() => {
-    if (isNotMobile() && window.ethicalads) {
-      window.ethicalads.load();
+    if (isNotMobile() && !doNotLoad && window.location.href.includes('blog')) {
+      console.log('Loading blog');
+
+      // This line prevents the ad from being loaded twice. I don't why but useEffect
+      // is called twice even if window.location.href has not changed.
+      doNotLoad = true;
+      setTimeout(() => doNotLoad = false, 1000);
+
+      const script = document.createElement('script');
+    
+      script.src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
+      script.async = true;
+    
+      document.body.appendChild(script);
+    
+      return () => {
+        document.body.removeChild(script);
+      }
     }
-  });
+  }, [
+    // Only execute this effect when the user navigates to a new page.
+    typeof window !== 'undefined' ? window.location.href : ''
+  ]);
 
   return <div className={clsx(styles.sidebar, 'thin-scrollbar')}>
       <h3 className={styles.sidebarItemTitle}>{sidebar.title}</h3>
@@ -37,6 +60,6 @@ export default function BlogSidebar({
       })}
       </ul>
       {/* FoalTS */}
-      {isNotMobile() && <div className="bordered" data-ea-publisher="foalts-org" data-ea-type="image" data-ea-manual="true" id="blog-sidebar"></div>}
+      {isNotMobile() && <div className="bordered" data-ea-publisher="foalts-org" data-ea-type="image" id="blog-sidebar"></div>}
     </div>;
 }

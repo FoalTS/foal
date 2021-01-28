@@ -33,6 +33,9 @@ function Headings({
     </ul>;
 }
 
+// FoalTS
+let doNotLoad = false;
+
 function TOC({
   toc
 }) {
@@ -41,16 +44,35 @@ function TOC({
 
   // FoalTS
   useEffect(() => {
-    if (isNotMobile() && window.ethicalads) {
-      window.ethicalads.load();
+    if (isNotMobile() && !doNotLoad && window.location.href.includes('docs')) {
+      console.log('Loading ad docs');
+
+      // This line prevents the ad from being loaded twice. I don't why but useEffect
+      // is called twice even if window.location.href has not changed.
+      doNotLoad = true;
+      setTimeout(() => doNotLoad = false, 1000);
+
+      const script = document.createElement('script');
+    
+      script.src = "https://media.ethicalads.io/media/client/ethicalads.min.js";
+      script.async = true;
+    
+      document.body.appendChild(script);
+    
+      return () => {
+        document.body.removeChild(script);
+      }
     }
-  });
+  }, [
+    // Only execute this effect when the user navigates to a new page.
+    typeof window !== 'undefined' ? window.location.href : ''
+  ]);
 
   useTOCHighlight(LINK_CLASS_NAME, ACTIVE_LINK_CLASS_NAME, TOP_OFFSET);
   return <div className={clsx(styles.tableOfContents, 'thin-scrollbar')}>
       <Headings toc={toc} />
       {/* FoalTS */}
-      {isNotMobile() && <div className="bordered" data-ea-publisher="foalts-org" data-ea-type="image" data-ea-manual="true" id="docs-sidebar"></div>}
+      {isNotMobile() && <div className="bordered" data-ea-publisher="foalts-org" data-ea-type="image" id="docs-sidebar"></div>}
     </div>;
 }
 
