@@ -5,7 +5,9 @@ export default function Newsletter() {
   return (
     <Layout
       description='Suscribe to FoalTS newsletter'>
-        <iframe className="mj-w-res-iframe" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src="https://app.mailjet.com/widget/iframe/6owE/Hce" width="100%" height="100%"></iframe>
+        <div style={{ textAlign: 'center' }}>
+          <iframe className="mj-w-res-iframe" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src="https://app.mailjet.com/widget/iframe/6owE/Hce" width="633" height="436"></iframe>
+        </div>
     </Layout>
   );
 }
