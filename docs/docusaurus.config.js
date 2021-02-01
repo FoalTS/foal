@@ -59,7 +59,7 @@ module.exports = {
         {
           to: 'newsletter',
           label: 'Newsletter',
-          position: 'right'
+          position: 'left'
         },
         {
           href: 'https://github.com/FoalTS/foal',
