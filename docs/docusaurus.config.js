@@ -26,11 +26,6 @@ module.exports = {
 
       //... other Algolia params
     },
-    announcementBar: {
-      id: 'survey',
-      content:
-        '👉 Don\'t forget to participate to <a href="https://forms.gle/wZQHuBwomsEXKoSv6">FoalTS survey</a>! Deadline is January 31. ✨',
-    },
     colorMode: {
       defaultMode: 'light',
       disableSwitch: true,
