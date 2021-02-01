@@ -74,13 +74,12 @@ program
 program
   .command('connect <framework> <path>')
   .description('Configure your frontend to interact with your application.')
-  .on('--help', () => {
-    console.log('');
-    console.log('Available frameworks:');
-    console.log('  angular');
-    console.log('  react');
-    console.log('  vue');
-  })
+  .addHelpText('after', `
+Available frameworks:
+  - angular
+  - react
+  - vue
+  `)
   .action(async (framework: string, path: string) => {
     switch (framework) {
       case 'angular':
@@ -96,9 +95,9 @@ program
         displayError(
           `Unknown framework ${yellow(framework)}. Please provide a valid one:`,
           '',
-          ' - angular',
-          ' - react',
-          ' - vue',
+          '  - angular',
+          '  - react',
+          '  - vue',
         );
     }
   });
@@ -122,11 +121,10 @@ program
     false
   )
   .alias('g')
-  .on('--help', () => {
-    console.log();
-    console.log('Available types:');
-    generateTypes.forEach(t => console.log(`  ${t}`));
-  })
+  .addHelpText('after', `
+Available types:
+${generateTypes.map(t => `  - ${t}`).join('\n')}
+  `)
   .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
     if (!name && type !== 'vscode-config') {
       displayError(`Argument "name" is required when creating a ${type}. Please provide one.`);
@@ -159,7 +157,7 @@ program
           displayError(
             `Unknown type ${yellow(type)}. Please provide a valid one:`,
             '',
-            ...generateTypes.map(t => `  ${t}`)
+            ...generateTypes.map(t => `  - ${t}`)
           );
       }
     } catch (error) {
