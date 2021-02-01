@@ -9,8 +9,7 @@ import {
   Config, createApp, Get, HttpResponseOK, UseSessions,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Overriding the cookie options', async () => {
 

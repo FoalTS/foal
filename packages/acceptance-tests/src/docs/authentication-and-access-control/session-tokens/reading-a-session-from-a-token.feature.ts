@@ -10,8 +10,7 @@ import {
   Store,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Reading a session from a token', () => {
 

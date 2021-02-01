@@ -4,8 +4,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Revoking sessions', () => {
 

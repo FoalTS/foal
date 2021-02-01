@@ -23,8 +23,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 

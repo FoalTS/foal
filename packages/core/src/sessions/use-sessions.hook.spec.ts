@@ -478,56 +478,49 @@ describe('UseSessions', () => {
 
       context('given options.cookie is true', () => {
 
-        beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
+        context('given options.csrf is false', () => {
 
-        function testUnprotectedMethod(method: HttpMethod) {
-          it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
-            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, csrf: false })));
+
+          it('should NOT return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, 'POST');
             const response = await hook(ctx, services);
             if (isHttpResponseForbidden(response)) {
-              throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+              throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
             }
           });
-        }
 
-        context('given the request HTTP method is "GET"', () => {
-          testUnprotectedMethod('GET');
         });
 
-        context('given the request HTTP method is "HEAD"', () => {
-          testUnprotectedMethod('HEAD');
-        });
+        context('given options.csrf is undefined', () => {
 
-        context('given the request HTTP method is "OPTIONS"', () => {
-          testUnprotectedMethod('OPTIONS');
-        });
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
 
-        function testProtectedMethod(method: HttpMethod) {
-          it('should return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
-            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
-            const response = await hook(ctx, services);
-            if (!isHttpResponseForbidden(response)) {
-              throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-            }
-
-            strictEqual(response.body, 'CSRF token missing or incorrect.');
-          });
-
-          it('should throw an error if the session state has no CSRF token.', async () => {
-            ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID }, {}, method);
-            return rejects(
-              () => hook(ctx, services),
-              {
-                message: 'Unexpected error: the session content does not have a "csrfToken" field. '
-                  + 'Are you sure you created the session with "createSession"?'
+          function testUnprotectedMethod(method: HttpMethod) {
+            it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+              ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
+              const response = await hook(ctx, services);
+              if (isHttpResponseForbidden(response)) {
+                throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
               }
-            );
+            });
+          }
+
+          context('given the request HTTP method is "GET"', () => {
+            testUnprotectedMethod('GET');
           });
 
-          function testCsrkToken(getContext: (token: string) => Context) {
-            it('should return an HttpResponseForbidden instance if the CSRF token is incorrect.', async () => {
-              ctx = getContext(incorrectCsrfToken);
+          context('given the request HTTP method is "HEAD"', () => {
+            testUnprotectedMethod('HEAD');
+          });
 
+          context('given the request HTTP method is "OPTIONS"', () => {
+            testUnprotectedMethod('OPTIONS');
+          });
+
+          function testProtectedMethod(method: HttpMethod) {
+            it('should return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+              ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID }, {}, method);
               const response = await hook(ctx, services);
               if (!isHttpResponseForbidden(response)) {
                 throw new Error('The hook should have returned a HttpResponseForbidden instance.');
@@ -536,64 +529,89 @@ describe('UseSessions', () => {
               strictEqual(response.body, 'CSRF token missing or incorrect.');
             });
 
-            it('should not return an HttpResponseForbidden instance if the CSRF token is correct.', async () => {
-              ctx = getContext(csrfToken);
+            it('should throw an error if the session state has no CSRF token.', async () => {
+              ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID }, {}, method);
+              return rejects(
+                () => hook(ctx, services),
+                {
+                  message: 'Unexpected error: the session content does not have a "csrfToken" field. '
+                    + 'Are you sure you created the session with "createSession"?'
+                }
+              );
+            });
 
-              const response = await hook(ctx, services);
-              if (isHttpResponseForbidden(response)) {
-                throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
-              }
+            function testCsrkToken(getContext: (token: string) => Context) {
+              it('should return an HttpResponseForbidden instance if the CSRF token is incorrect.', async () => {
+                ctx = getContext(incorrectCsrfToken);
+
+                const response = await hook(ctx, services);
+                if (!isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+                }
+
+                strictEqual(response.body, 'CSRF token missing or incorrect.');
+              });
+
+              it('should not return an HttpResponseForbidden instance if the CSRF token is correct.', async () => {
+                ctx = getContext(csrfToken);
+
+                const response = await hook(ctx, services);
+                if (isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
+                }
+              });
+            }
+
+            context('given a CSRF token is sent in the request body field "_csrf"', () => {
+
+              testCsrkToken(token => createContext(
+                {},
+                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+                { _csrf: token },
+                method,
+              ));
+
+            });
+
+            context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
+
+              testCsrkToken(token => createContext(
+                { 'X-CSRF-Token': token },
+                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+                {},
+                method,
+              ));
+
+            });
+
+            context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
+
+              testCsrkToken(token => createContext(
+                { 'X-XSRF-Token': token },
+                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+                {},
+                method,
+              ));
+
             });
           }
 
-          context('given a CSRF token is sent in the request body field "_csrf"', () => {
-
-            testCsrkToken(token => createContext(
-              {},
-              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-              { _csrf: token },
-              method,
-            ));
-
+          context('given the request HTTP method is "POST"', () => {
+            testProtectedMethod('POST');
           });
 
-          context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
-
-            testCsrkToken(token => createContext(
-              { 'X-CSRF-Token': token },
-              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-              {},
-              method,
-            ));
-
+          context('given the request HTTP method is "PUT"', () => {
+            testProtectedMethod('PUT');
           });
 
-          context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
-
-            testCsrkToken(token => createContext(
-              { 'X-XSRF-Token': token },
-              { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-              {},
-              method,
-            ));
-
+          context('given the request HTTP method is "PATCH"', () => {
+            testProtectedMethod('PATCH');
           });
-        }
 
-        context('given the request HTTP method is "POST"', () => {
-          testProtectedMethod('POST');
-        });
+          context('given the request HTTP method is "DELETE"', () => {
+            testProtectedMethod('DELETE');
+          });
 
-        context('given the request HTTP method is "PUT"', () => {
-          testProtectedMethod('PUT');
-        });
-
-        context('given the request HTTP method is "PATCH"', () => {
-          testProtectedMethod('PATCH');
-        });
-
-        context('given the request HTTP method is "DELETE"', () => {
-          testProtectedMethod('DELETE');
         });
 
       });
