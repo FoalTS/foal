@@ -508,218 +508,236 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       context('given options.cookie is true', () => {
 
-        beforeEach(() => hook = getHookFunction(JWT({ cookie: true })));
+        context('given options.csrf is false', () => {
 
-        function testUnprotectedMethod(method: HttpMethod) {
-          it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
-            ctx = createContext({}, { [JWT_DEFAULT_COOKIE_NAME]: token }, {}, method);
+          beforeEach(() => hook = getHookFunction(JWT({ cookie: true, csrf: false })));
+
+          it('should NOT return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+            ctx = createContext({}, { [JWT_DEFAULT_COOKIE_NAME]: token }, {}, 'POST');
             const response = await hook(ctx, services);
             if (isHttpResponseForbidden(response)) {
-              throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
+              throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
             }
           });
-        }
 
-        context('given the request HTTP method is "GET"', () => {
-          testUnprotectedMethod('GET');
         });
 
-        context('given the request HTTP method is "HEAD"', () => {
-          testUnprotectedMethod('HEAD');
-        });
+        context('given options.csrf is undefined', () => {
 
-        context('given the request HTTP method is "OPTIONS"', () => {
-          testUnprotectedMethod('OPTIONS');
-        });
+          beforeEach(() => hook = getHookFunction(JWT({ cookie: true })));
 
-        function testProtectedMethod(method: HttpMethod) {
-          it('should return an HttpResponseForbidden instance if the request has no CSRF cookie.', async () => {
-            ctx = createContext(
-              {},
-              {
-                [JWT_DEFAULT_COOKIE_NAME]: token,
-              },
-              {},
-              method
-            );
-
-            const response = await hook(ctx, services);
-            if (!isHttpResponseForbidden(response)) {
-              throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-            }
-
-            strictEqual(response.body, 'CSRF token missing or incorrect.');
-          });
-
-          it(
-            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong signature.',
-            async () => {
-              csrfToken = sign({ foo2: 'bar' }, `${secret}2`, {});
-              ctx = createContext(
-                {},
-                {
-                  [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
-                },
-                { _csrf: csrfToken },
-                method
-              );
-
-              const response = await hook(ctx, services);
-              if (!isHttpResponseForbidden(response)) {
-                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-              }
-
-              strictEqual(response.body, 'CSRF token missing or incorrect.');
-            }
-          );
-
-          it(
-            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong subject.',
-            async () => {
-              csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub + 'Y' });
-              ctx = createContext(
-                {},
-                {
-                  [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
-                },
-                { _csrf: csrfToken },
-                method
-              );
-
-              const response = await hook(ctx, services);
-              if (!isHttpResponseForbidden(response)) {
-                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-              }
-
-              strictEqual(response.body, 'CSRF token missing or incorrect.');
-            }
-          );
-          it(
-            'should return an HttpResponseForbidden instance if the csrf tokens are equal but have expired.',
-            async () => {
-              csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub, expiresIn: 0 });
-              ctx = createContext(
-                {},
-                {
-                  [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
-                },
-                { _csrf: csrfToken },
-                method
-              );
-
-              const response = await hook(ctx, services);
-              if (!isHttpResponseForbidden(response)) {
-                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-              }
-
-              strictEqual(response.body, 'CSRF token missing or incorrect.');
-            }
-          );
-
-          function testCsrkToken(getContext: (requestCsrfToken: string, cookieCsrfToken: string) => Context) {
-            it('should return an HttpResponseForbidden instance if the CSRF tokens are not equal.', async () => {
-              ctx = getContext(csrfToken + '2', csrfToken);
-
-              const response = await hook(ctx, services);
-              if (!isHttpResponseForbidden(response)) {
-                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
-              }
-
-              strictEqual(response.body, 'CSRF token missing or incorrect.');
-            });
-
-            it('should not return an HttpResponseForbidden instance if the CSRF tokens are equal.', async () => {
-              ctx = getContext(csrfToken, csrfToken);
-
+          function testUnprotectedMethod(method: HttpMethod) {
+            it('should not return an HttpResponseForbidden instance if the request has no CSRF token.', async () => {
+              ctx = createContext({}, { [JWT_DEFAULT_COOKIE_NAME]: token }, {}, method);
               const response = await hook(ctx, services);
               if (isHttpResponseForbidden(response)) {
-                throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
+                throw new Error('The hook should not have returned a HttpResponseForbidden instance.');
               }
             });
           }
 
-          context('given a CSRF token is sent in the request body field "_csrf"', () => {
-
-            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-              {},
-              {
-                [JWT_DEFAULT_COOKIE_NAME]: token,
-                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
-              },
-              { _csrf: requestCsrfToken },
-              method,
-            ));
-
+          context('given the request HTTP method is "GET"', () => {
+            testUnprotectedMethod('GET');
           });
 
-          context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
-
-            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-              { 'X-CSRF-Token': requestCsrfToken },
-              {
-                [JWT_DEFAULT_COOKIE_NAME]: token,
-                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
-              },
-              {},
-              method,
-            ));
-
+          context('given the request HTTP method is "HEAD"', () => {
+            testUnprotectedMethod('HEAD');
           });
 
-          context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
-
-            testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-              { 'X-XSRF-Token': requestCsrfToken },
-              {
-                [JWT_DEFAULT_COOKIE_NAME]: token,
-                [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
-              },
-              {},
-              method,
-            ));
-
+          context('given the request HTTP method is "OPTIONS"', () => {
+            testUnprotectedMethod('OPTIONS');
           });
-          context(
-            'given a CSRF token is sent in the request header "X-XSRF-Token" and the csrf cookie name is customized',
-            () => {
 
-              const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
-
-              beforeEach(() => Config.set('settings.jwt.csrf.cookie.name', csrfCookieName));
-
-              afterEach(() => Config.remove('settings.jwt.csrf.cookie.name'));
-
-              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-                { 'X-XSRF-Token': requestCsrfToken },
+          function testProtectedMethod(method: HttpMethod) {
+            it('should return an HttpResponseForbidden instance if the request has no CSRF cookie.', async () => {
+              ctx = createContext(
+                {},
                 {
                   [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [csrfCookieName]: cookieCsrfToken,
+                },
+                {},
+                method
+              );
+
+              const response = await hook(ctx, services);
+              if (!isHttpResponseForbidden(response)) {
+                throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+              }
+
+              strictEqual(response.body, 'CSRF token missing or incorrect.');
+            });
+
+            it(
+              'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong signature.',
+              async () => {
+                csrfToken = sign({ foo2: 'bar' }, `${secret}2`, {});
+                ctx = createContext(
+                  {},
+                  {
+                    [JWT_DEFAULT_COOKIE_NAME]: token,
+                    [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                  },
+                  { _csrf: csrfToken },
+                  method
+                );
+
+                const response = await hook(ctx, services);
+                if (!isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+                }
+
+                strictEqual(response.body, 'CSRF token missing or incorrect.');
+              }
+            );
+
+            it(
+              'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong subject.',
+              async () => {
+                csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub + 'Y' });
+                ctx = createContext(
+                  {},
+                  {
+                    [JWT_DEFAULT_COOKIE_NAME]: token,
+                    [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                  },
+                  { _csrf: csrfToken },
+                  method
+                );
+
+                const response = await hook(ctx, services);
+                if (!isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+                }
+
+                strictEqual(response.body, 'CSRF token missing or incorrect.');
+              }
+            );
+            it(
+              'should return an HttpResponseForbidden instance if the csrf tokens are equal but have expired.',
+              async () => {
+                csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub, expiresIn: 0 });
+                ctx = createContext(
+                  {},
+                  {
+                    [JWT_DEFAULT_COOKIE_NAME]: token,
+                    [JWT_DEFAULT_CSRF_COOKIE_NAME]: csrfToken,
+                  },
+                  { _csrf: csrfToken },
+                  method
+                );
+
+                const response = await hook(ctx, services);
+                if (!isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+                }
+
+                strictEqual(response.body, 'CSRF token missing or incorrect.');
+              }
+            );
+
+            function testCsrkToken(getContext: (requestCsrfToken: string, cookieCsrfToken: string) => Context) {
+              it('should return an HttpResponseForbidden instance if the CSRF tokens are not equal.', async () => {
+                ctx = getContext(csrfToken + '2', csrfToken);
+
+                const response = await hook(ctx, services);
+                if (!isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should have returned a HttpResponseForbidden instance.');
+                }
+
+                strictEqual(response.body, 'CSRF token missing or incorrect.');
+              });
+
+              it('should not return an HttpResponseForbidden instance if the CSRF tokens are equal.', async () => {
+                ctx = getContext(csrfToken, csrfToken);
+
+                const response = await hook(ctx, services);
+                if (isHttpResponseForbidden(response)) {
+                  throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
+                }
+              });
+            }
+
+            context('given a CSRF token is sent in the request body field "_csrf"', () => {
+
+              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+                {},
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
+                },
+                { _csrf: requestCsrfToken },
+                method,
+              ));
+
+            });
+
+            context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
+
+              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+                { 'X-CSRF-Token': requestCsrfToken },
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
                 },
                 {},
                 method,
               ));
 
-            }
-        );
-        }
+            });
 
-        context('given the request HTTP method is "POST"', () => {
-          testProtectedMethod('POST');
-        });
+            context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
 
-        context('given the request HTTP method is "PUT"', () => {
-          testProtectedMethod('PUT');
-        });
+              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+                { 'X-XSRF-Token': requestCsrfToken },
+                {
+                  [JWT_DEFAULT_COOKIE_NAME]: token,
+                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
+                },
+                {},
+                method,
+              ));
 
-        context('given the request HTTP method is "PATCH"', () => {
-          testProtectedMethod('PATCH');
-        });
+            });
+            context(
+              'given a CSRF token is sent in the request header "X-XSRF-Token" and the csrf cookie name is customized',
+              () => {
 
-        context('given the request HTTP method is "DELETE"', () => {
-          testProtectedMethod('DELETE');
+                const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
+
+                beforeEach(() => Config.set('settings.jwt.csrf.cookie.name', csrfCookieName));
+
+                afterEach(() => Config.remove('settings.jwt.csrf.cookie.name'));
+
+                testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
+                  { 'X-XSRF-Token': requestCsrfToken },
+                  {
+                    [JWT_DEFAULT_COOKIE_NAME]: token,
+                    [csrfCookieName]: cookieCsrfToken,
+                  },
+                  {},
+                  method,
+                ));
+
+              }
+          );
+          }
+
+          context('given the request HTTP method is "POST"', () => {
+            testProtectedMethod('POST');
+          });
+
+          context('given the request HTTP method is "PUT"', () => {
+            testProtectedMethod('PUT');
+          });
+
+          context('given the request HTTP method is "PATCH"', () => {
+            testProtectedMethod('PATCH');
+          });
+
+          context('given the request HTTP method is "DELETE"', () => {
+            testProtectedMethod('DELETE');
+          });
+
         });
 
       });
