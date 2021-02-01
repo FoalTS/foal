@@ -57,6 +57,11 @@ module.exports = {
           position: 'left'
         },
         {
+          to: 'newsletter',
+          label: 'Newsletter',
+          position: 'right'
+        },
+        {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
           className: 'header-github-link',
