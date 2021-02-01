@@ -537,19 +537,21 @@ module.exports = {
 In case the CSRF protection is enabled globally and you want to disable it for a specific route, you can use the `csrf` option for that.
 
 ```typescript
+import { HttpResponseOK, Post, UseSessions } from '@foal/core';
+
 export class ApiController {
   @Post('/foo')
   @UseSessions({ cookie: true })
   foo() {
     // This method has the CSRF protection enabled.
-    // ...
+    return new HttpResponseOK();
   }
 
   @Post('/bar')
   @UseSessions({ cookie: true, csrf: false })
   bar() {
     // This method does not have the CSRF protection enabled.
-    // ...
+    return new HttpResponseOK();
   }
 }
 

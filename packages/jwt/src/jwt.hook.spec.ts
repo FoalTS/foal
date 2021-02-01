@@ -568,7 +568,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
             });
 
             it(
-              'should return an HttpResponseForbidden instance if the csrf tokens are equal but have a wrong signature.',
+              'should return an HttpResponseForbidden instance '
+              + 'if the csrf tokens are equal but have a wrong signature.',
               async () => {
                 csrfToken = sign({ foo2: 'bar' }, `${secret}2`, {});
                 ctx = createContext(

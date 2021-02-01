@@ -19,8 +19,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
 
