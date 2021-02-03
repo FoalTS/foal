@@ -156,7 +156,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     log('');
     log('  📦 Installing the dependencies...');
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-    const args = isYarnInstalled() ? [ 'install' ] : [ '--loglevel=error', 'install' ];
+    const args = [ 'install' ];
     const options: SpawnOptions = {
       cwd: names.kebabName,
       shell: true,
