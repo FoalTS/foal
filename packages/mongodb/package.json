@@ -1,11 +1,10 @@
 {
   "name": "@foal/mongodb",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "MongoDB package for FoalTS session",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "docs": "typedoc --out ../../docs/api/mongodb src/index.ts --readme none --theme markdown",
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --watch-files \"./src/**/*.ts\" \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && copy-cli \"./src/**.txt.gz\" lib && tsc -p tsconfig-build.json",
@@ -46,7 +45,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^2.0.0",
+    "@foal/core": "^2.1.0",
     "mongodb": "~3.5.0"
   },
   "devDependencies": {
@@ -56,8 +55,6 @@
     "mocha": "~8.2.0",
     "rimraf": "~2.6.2",
     "ts-node": "~9.0.0",
-    "typedoc": "~0.19.0",
-    "typedoc-plugin-markdown": "~3.0.0",
     "typescript": "~4.0.2"
   }
 }

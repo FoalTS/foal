@@ -86,10 +86,9 @@ describe('S3Disk', () => {
       await disk.delete('foo/test.txt');
       throw new Error('An error should have been thrown.');
     } catch (error) {
-      strictEqual(
-        error.code,
-        'UnknownEndpoint'
-      );
+      if (error.code !== 'NetworkingError' && error.code !== 'UnknownEndpoint') {
+        throw new Error(`Invalid error code: ${error.code}`);
+      }
     }
   });
 

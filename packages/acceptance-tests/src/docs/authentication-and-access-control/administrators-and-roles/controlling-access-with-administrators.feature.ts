@@ -12,8 +12,7 @@ import {
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
 

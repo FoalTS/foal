@@ -28,6 +28,7 @@ export interface UseSessionOptions {
   user?: (id: string|number) => Promise<any|undefined>;
   store?: Class<SessionStore>;
   cookie?: boolean;
+  csrf?: boolean;
   redirectTo?: string;
   openapi?: boolean;
   required?: boolean;
@@ -133,7 +134,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     if (
       options.cookie &&
-      Config.get('settings.session.csrf.enabled', 'boolean', false) &&
+      (options.csrf ?? Config.get('settings.session.csrf.enabled', 'boolean', false)) &&
       ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
     ) {
       const expectedCsrftoken = session.get<string|undefined>('csrfToken');

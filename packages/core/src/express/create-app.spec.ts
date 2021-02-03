@@ -9,7 +9,20 @@ import * as request from 'supertest';
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import {
-  Config, Context, Delete, dependency, Get, Head, HttpResponseOK, OpenApi, Options, Patch, Post, Put, ServiceManager
+  All,
+  Config,
+  Context,
+  Delete,
+  dependency,
+  Get,
+  Head,
+  HttpResponseOK,
+  OpenApi,
+  Options,
+  Patch,
+  Post,
+  Put,
+  ServiceManager
 } from '../core';
 import { createApp, OPENAPI_SERVICE_ID } from './create-app';
 
@@ -127,50 +140,60 @@ describe('createApp', () => {
     ]);
   });
 
-  it('should respond on DELETE, GET, PATCH, POST, PUT, HEAD and OPTIONS requests if a handler exists.', async () => {
-    class MyController {
-      @Head('/foo')
-      head() {
-        // A HEAD response does not have a body.
-        return new HttpResponseOK()
-          .setHeader('foo', 'bar');
+  it(
+    'should respond on DELETE, GET, PATCH, POST, PUT, HEAD, OPTIONS and "ALL" requests if a handler exists.',
+    async () => {
+      class MyController {
+        @Head('/foo')
+        head() {
+          // A HEAD response does not have a body.
+          return new HttpResponseOK()
+            .setHeader('foo', 'bar');
+        }
+        @Get('/foo')
+        get() {
+          return new HttpResponseOK('get');
+        }
+        @Post('/foo')
+        post() {
+          return new HttpResponseOK('post');
+        }
+        @Patch('/foo')
+        patch() {
+          return new HttpResponseOK('patch');
+        }
+        @Put('/foo')
+        put() {
+          return new HttpResponseOK('put');
+        }
+        @Delete('/foo')
+        delete() {
+          return new HttpResponseOK('delete');
+        }
+        @Options('/foo')
+        options() {
+          return new HttpResponseOK('options');
+        }
+        @All('/bar')
+        all() {
+          return new HttpResponseOK('all');
+        }
       }
-      @Get('/foo')
-      get() {
-        return new HttpResponseOK('get');
-      }
-      @Post('/foo')
-      post() {
-        return new HttpResponseOK('post');
-      }
-      @Patch('/foo')
-      patch() {
-        return new HttpResponseOK('patch');
-      }
-      @Put('/foo')
-      put() {
-        return new HttpResponseOK('put');
-      }
-      @Delete('/foo')
-      delete() {
-        return new HttpResponseOK('delete');
-      }
-      @Options('/foo')
-      options() {
-        return new HttpResponseOK('options');
-      }
+      const app = await createApp(MyController);
+      return Promise.all([
+        request(app).get('/foo').expect('get'),
+        request(app).post('/foo').expect('post'),
+        request(app).patch('/foo').expect('patch'),
+        request(app).put('/foo').expect('put'),
+        request(app).delete('/foo').expect('delete'),
+        request(app).head('/foo').expect(200).expect('foo', 'bar'),
+        request(app).options('/foo').expect('options'),
+        // All
+        request(app).get('/bar').expect('all'),
+        request(app).post('/bar').expect('all'),
+      ]);
     }
-    const app = await createApp(MyController);
-    return Promise.all([
-      request(app).get('/foo').expect('get'),
-      request(app).post('/foo').expect('post'),
-      request(app).patch('/foo').expect('patch'),
-      request(app).put('/foo').expect('put'),
-      request(app).delete('/foo').expect('delete'),
-      request(app).head('/foo').expect(200).expect('foo', 'bar'),
-      request(app).options('/foo').expect('options'),
-    ]);
-  });
+  );
 
   it('should parse incoming request bodies (json)', async () => {
     class MyController {

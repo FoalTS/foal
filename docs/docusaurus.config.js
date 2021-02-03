@@ -5,11 +5,11 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/logo_400.png',
+  favicon: 'img/logo.png',
   organizationName: 'FoalTS', // Usually your GitHub org/user name.
   projectName: 'foal', // Usually your repo name.
   themeConfig: {
-    image: 'img/logo_400.png',
+    image: 'img/logo.png',
     googleAnalytics: {
       trackingID: 'UA-112613053-1',
       anonymizeIP: true,
@@ -37,7 +37,7 @@ module.exports = {
       hideOnScroll: true,
       logo: {
         alt: 'FoalTS Logo',
-        src: 'img/logo_400.png',
+        src: 'img/logo.png',
       },
       items: [
         {

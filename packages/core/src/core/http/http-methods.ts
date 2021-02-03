@@ -4,7 +4,21 @@ import 'reflect-metadata';
 /**
  * HTTP methods available.
  */
-export type HttpMethod = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
+export type HttpMethod = 'ALL' | 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
+
+/**
+ * Decorator specifying that a controller method handles requests matching all HTTP verbs.
+ *
+ * @export
+ * @param {string} [path] - The path of the request.
+ * @returns The decorator.
+ */
+export function All(path?: string) {
+  return (target: any, propertyKey: string) => {
+    Reflect.defineMetadata('httpMethod', 'ALL', target, propertyKey);
+    Reflect.defineMetadata('path', path, target, propertyKey);
+  };
+}
 
 /**
  * Decorator specifying that a controller method handles HEAD requests.

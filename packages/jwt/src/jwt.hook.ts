@@ -51,6 +51,7 @@ export interface JWTOptions {
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
+  csrf?: boolean;
   /**
    * Add openapi metadata to the class or class method.
    *
@@ -165,7 +166,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
     if (
       options.cookie &&
-      Config.get('settings.jwt.csrf.enabled', 'boolean', false) &&
+      (options.csrf ?? Config.get('settings.jwt.csrf.enabled', 'boolean', false)) &&
       ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
     ) {
       const csrfCookieName = Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME);

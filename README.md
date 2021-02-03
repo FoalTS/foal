@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/static/img/logo_title.png">
+  <img src="./docs/static/img/logo.png">
   <br>
   <a href="https://foalts.org">https://foalts.org</a>
 </p>

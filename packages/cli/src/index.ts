@@ -28,6 +28,13 @@ import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run-script';
 
+function displayError(...lines: string[]): void {
+  console.error();
+  lines.forEach(line => console.error(red(line)));
+  console.error();
+  process.exitCode = 1;
+}
+
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../package.json');
 
@@ -67,13 +74,12 @@ program
 program
   .command('connect <framework> <path>')
   .description('Configure your frontend to interact with your application.')
-  .on('--help', () => {
-    console.log('');
-    console.log('Available frameworks:');
-    console.log('  angular');
-    console.log('  react');
-    console.log('  vue');
-  })
+  .addHelpText('after', `
+Available frameworks:
+  - angular
+  - react
+  - vue
+  `)
   .action(async (framework: string, path: string) => {
     switch (framework) {
       case 'angular':
@@ -86,13 +92,13 @@ program
         connectVue(path);
         break;
       default:
-        console.error();
-        console.error(red(`Unknown framework ${yellow(framework)}. Please provide a valid one:`));
-        console.error();
-        console.error(red('  angular'));
-        console.error(red('  react'));
-        console.error(red('  vue'));
-        console.error();
+        displayError(
+          `Unknown framework ${yellow(framework)}. Please provide a valid one:`,
+          '',
+          '  - angular',
+          '  - react',
+          '  - vue',
+        );
     }
   });
 
@@ -115,16 +121,13 @@ program
     false
   )
   .alias('g')
-  .on('--help', () => {
-    console.log();
-    console.log('Available types:');
-    generateTypes.forEach(t => console.log(`  ${t}`));
-  })
+  .addHelpText('after', `
+Available types:
+${generateTypes.map(t => `  - ${t}`).join('\n')}
+  `)
   .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
     if (!name && type !== 'vscode-config') {
-      console.error();
-      console.error(red(`Argument "name" is required when creating a ${type}. Please provide one.`));
-      console.error();
+      displayError(`Argument "name" is required when creating a ${type}. Please provide one.`);
       return;
     }
     try {
@@ -151,17 +154,15 @@ program
           createVSCodeConfig();
           break;
         default:
-          console.error();
-          console.error(red(`Unknown type ${yellow(type)}. Please provide a valid one:`));
-          console.error();
-          generateTypes.forEach(t => console.error(red(`  ${t}`)));
-          console.error();
+          displayError(
+            `Unknown type ${yellow(type)}. Please provide a valid one:`,
+            '',
+            ...generateTypes.map(t => `  - ${t}`)
+          );
       }
     } catch (error) {
       if (error instanceof ClientError) {
-        console.error();
-        console.error(red(error.message));
-        console.error();
+        displayError(error.message);
         return;
       }
       throw error;
@@ -177,7 +178,7 @@ program
       await rmdir(name);
     } catch (error) {
       if (error.code === 'ENOTDIR') {
-        console.error(red(error.message));
+        displayError(error.message);
         return;
       }
       throw error;
@@ -187,9 +188,7 @@ program
 program
   .on('command:*', (commands: string[]) => {
     program.outputHelp();
-    console.error();
-    console.error(red(`  Unknown command ${yellow(commands[0])}.`));
-    console.error();
+    displayError(`Unknown command ${yellow(commands[0])}.`);
   });
 
 program.parse(process.argv);

@@ -23,8 +23,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, readCookie, writeCookie } from '../../../common';
-import { getTypeORMStorePath } from '../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using cookies', () => {
 
