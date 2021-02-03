@@ -46,13 +46,13 @@ Here is a non-exhaustive list of its features:
 
 FoalTS supports officially the following databases:
 
-| Database | Versions |
-| --- | --- |
-| PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) |
-| MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) |
-| MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) |
-| SQLite | 3 |
-| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) |
+| Database | Versions | Driver |
+| --- | --- | --- | --- |
+| PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) | `pg@8` |
+| MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) | `mysql@2` |
+| MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) | `mysql@2` |
+| SQLite | 3 | `sqlite3@5` and `better-sqlite3@7` (since v2.2) |
+| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) | `mongodb@3` |
 
 ## Use with FoalTS
 
