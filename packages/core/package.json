@@ -5,13 +5,13 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "nyc --reporter=json --reporter=text mocha --parallel --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
+    "test": "nyc mocha --parallel --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "dev:test:common": "mocha --require ts-node/register --watch --extension ts \"./src/common/**/*.spec.ts\"",
     "dev:test:core": "mocha --require ts-node/register --watch --extension ts \"./src/core/**/*.spec.ts\"",
     "dev:test:express": "mocha --require ts-node/register --watch --extension ts \"./src/express/**/*.spec.ts\"",
     "dev:test:sessions": "mocha --require ts-node/register --watch --extension ts \"./src/sessions/**/*.spec.ts\"",
-    "build": "rimraf lib && copy-cli \"./src/**/500.debug.html\" lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && node copy-debug-page && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -67,9 +67,12 @@
       "coverage/",
       "lib/",
       "**/*.spec.ts",
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "copy-debug-page.js"
     ],
     "reporter": [
+      "json",
+      "text",
       "html"
     ],
     "all": true
@@ -86,10 +89,9 @@
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "@types/supertest": "2.0.10",
-    "copy": "~0.3.2",
     "ejs": "~2.6.2",
     "mocha": "~8.2.0",
-    "nyc": "~12.0.2",
+    "nyc": "~15.1.0",
     "rimraf": "~2.6.2",
     "source-map-support": "~0.5.19",
     "supertest": "~6.0.0",
