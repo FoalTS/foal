@@ -10,6 +10,6 @@ export function createTestConnection(entities: Class[]): Promise<Connection> {
     dropSchema: true,
     entities,
     synchronize: true,
-    type: 'sqlite',
+    type: 'better-sqlite3',
   });
 }

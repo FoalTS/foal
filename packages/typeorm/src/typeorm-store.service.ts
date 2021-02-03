@@ -60,7 +60,10 @@ export class TypeORMStore extends SessionStore {
         .execute();
     } catch (error) {
       // SQLite, MariaDB & MySQL, PostgreSQL
-      if (['SQLITE_CONSTRAINT', 'ER_DUP_ENTRY', '23505'].includes(error.code)) {
+      if (
+        ['SQLITE_CONSTRAINT', 'ER_DUP_ENTRY', '23505'].includes(error.code)
+        || error.message === 'SqliteError: UNIQUE constraint failed: sessions.id'
+      ) {
         throw new SessionAlreadyExists();
       }
       // TODO: test this line.

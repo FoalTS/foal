@@ -67,7 +67,7 @@ When creating a new project, an `SQLite` database is used by default as it does 
 const { Config } = require('@foal/core');
 
 module.exports = {
-  type: 'sqlite',
+  type: 'better-sqlite3',
   database: Config.get('database.database', 'string'),
   dropSchema: Config.get('database.dropSchema', 'boolean', false),
   entities: ['build/app/**/*.entity.js'],

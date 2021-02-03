@@ -8,7 +8,7 @@ import { createConnection, Entity, getConnection, getManager } from 'typeorm';
 import { Group, Permission, UserWithPermissions } from '../entities';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
+function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-sqlite3') {
 
   describe(`with ${type}`, () => {
 
@@ -46,6 +46,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
           });
           break;
         case 'sqlite':
+        case 'better-sqlite3':
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
@@ -122,6 +123,7 @@ describe('fetchUserWithPermissions', () => {
   testSuite('mysql');
   testSuite('mariadb');
   testSuite('sqlite');
+  testSuite('better-sqlite3');
   testSuite('postgres');
 
 });

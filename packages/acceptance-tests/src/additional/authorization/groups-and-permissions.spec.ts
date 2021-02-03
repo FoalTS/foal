@@ -51,7 +51,7 @@ describe('[Authorization|permissions] Users', () => {
       dropSchema: true,
       entities: [ User, Permission, Group, DatabaseSession ],
       synchronize: true,
-      type: 'sqlite',
+      type: 'better-sqlite3',
     });
 
     const user1 = new User();
