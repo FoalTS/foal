@@ -28,7 +28,7 @@ describe('ValidateBody hook', () => {
     dropSchema: true,
     entities: [Product],
     synchronize: true,
-    type: 'sqlite',
+    type: 'better-sqlite3',
   }));
 
   after(() => getConnection().close());

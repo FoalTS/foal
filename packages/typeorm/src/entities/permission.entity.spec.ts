@@ -7,7 +7,7 @@ import { BaseEntity, createConnection, getConnection, getManager, QueryFailedErr
 // FoalTS
 import { Permission } from './permission.entity';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
+function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-sqlite3') {
 
   describe(`with ${type}`, () => {
 
@@ -38,6 +38,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
           });
           break;
         case 'sqlite':
+        case 'better-sqlite3':
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
@@ -77,6 +78,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
           ok(err instanceof QueryFailedError);
           ok([
             'SQLITE_CONSTRAINT: NOT NULL constraint failed: permission.name',
+            'SqliteError: NOT NULL constraint failed: permission.name',
             'null value in column "name" violates not-null constraint',
             'ER_NO_DEFAULT_FOR_FIELD: Field \'name\' doesn\'t have a default value'
           ].includes(err.message));
@@ -93,13 +95,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
           ok(err instanceof QueryFailedError);
           ok([
             'SQLITE_CONSTRAINT: NOT NULL constraint failed: permission.codeName',
+            'SqliteError: NOT NULL constraint failed: permission.codeName',
             'null value in column "codeName" violates not-null constraint',
             'ER_NO_DEFAULT_FOR_FIELD: Field \'codeName\' doesn\'t have a default value'
           ].includes(err.message));
         });
 
       // SQLite does not impose any length restrictions on the length of strings.
-      if (type !== 'sqlite') {
+      if (type !== 'sqlite' && type !== 'better-sqlite3') {
         permission.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
@@ -126,6 +129,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
           ok(err instanceof QueryFailedError);
           strictEqual(
             err.message === 'SQLITE_CONSTRAINT: UNIQUE constraint failed: permission.codeName' ||
+            err.message === 'SqliteError: UNIQUE constraint failed: permission.codeName' ||
             err.message.startsWith('ER_DUP_ENTRY: Duplicate entry \'foo\' for key ') ||
             err.message.startsWith('duplicate key value violates unique constraint')
             , true);
@@ -141,6 +145,7 @@ describe('UserWithPermissions', () => {
   testSuite('mysql');
   testSuite('mariadb');
   testSuite('sqlite');
+  testSuite('better-sqlite3');
   testSuite('postgres');
 
 });

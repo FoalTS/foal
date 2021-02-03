@@ -22,7 +22,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   await createConnection({
     database: './e2e_db.sqlite',
     entities: [ Permission, Group ],
-    type: 'sqlite',
+    type: 'better-sqlite3',
   });
 
   for (const codeName of args.permissions) {

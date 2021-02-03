@@ -17,7 +17,7 @@ describe('[Shell scripts] create-perm', () => {
       dropSchema: true,
       entities: [ Permission, Group ],
       synchronize: true,
-      type: 'sqlite',
+      type: 'better-sqlite3',
     });
     await getRepository(Permission).save({
       codeName: 'delete-users',
@@ -46,7 +46,7 @@ describe('[Shell scripts] create-perm', () => {
     await createConnection({
       database: './e2e_db.sqlite',
       entities: [ Permission, Group ],
-      type: 'sqlite',
+      type: 'better-sqlite3',
     });
 
     try {

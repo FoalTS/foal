@@ -14,7 +14,7 @@ describe('[Shell scripts] create-perm', () => {
       dropSchema: true,
       entities: [ Permission ],
       synchronize: true,
-      type: 'sqlite',
+      type: 'better-sqlite3',
     });
     await connection.close();
   });
@@ -38,7 +38,7 @@ describe('[Shell scripts] create-perm', () => {
     await createConnection({
       database: './e2e_db.sqlite',
       entities: [ Permission ],
-      type: 'sqlite',
+      type: 'better-sqlite3',
     });
 
     try {
