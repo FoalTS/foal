@@ -1,7 +1,7 @@
 {
   "name": "@foal/examples",
   "private": true,
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" build",
@@ -44,19 +44,19 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/aws-s3": "^2.1.1",
-    "@foal/core": "^2.1.1",
-    "@foal/social": "^2.1.1",
-    "@foal/storage": "^2.1.1",
-    "@foal/swagger": "^2.1.1",
-    "@foal/typeorm": "^2.1.1",
+    "@foal/aws-s3": "^2.1.2",
+    "@foal/core": "^2.1.2",
+    "@foal/social": "^2.1.2",
+    "@foal/storage": "^2.1.2",
+    "@foal/swagger": "^2.1.2",
+    "@foal/typeorm": "^2.1.2",
     "better-sqlite3": "~7.1.2",
     "source-map-support": "~0.5.19",
     "typeorm": "~0.2.26",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^2.1.1",
+    "@foal/cli": "^2.1.2",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "concurrently": "~5.3.0",
