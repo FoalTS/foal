@@ -27,7 +27,7 @@
     "@foal/core": "^2.0.0",
     "mongodb": "~3.6.1",
     "source-map-support": "~0.5.19",
-    "typeorm": "0.2.24"
+    "typeorm": "0.2.30"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
