@@ -75,7 +75,7 @@ function BlogPostItem(props) {
       </header>;
   };
 
-  const location = typeof document === 'undefined' ? '' : document.location.href;
+  const articleUrl = 'https://foalts.org' + permalink;
 
   return <>
       <Head>
@@ -97,15 +97,15 @@ function BlogPostItem(props) {
           <div className={styles.shareBtnsContainer}>
             <a
               className={styles.twitterShareBtn}
-              href={`http://twitter.com/share?text=${title} @FoalTs&url=${location}&hashtags=NodeJS,TypeScript,JavaScript`}
+              href={`http://twitter.com/share?text=${title} @FoalTs&url=${articleUrl}&hashtags=NodeJS,TypeScript,JavaScript`}
               target="_blank" />
             <a
               className={styles.linkedinShareBtn}
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${location}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${articleUrl}`}
               target="_blank" />
             <a
               className={styles.facebookShareBtn}
-              href={`https://www.facebook.com/sharer/sharer.php?u=${location}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${articleUrl}`}
               target="_blank" />
           </div>
           <div className={styles.center}>
