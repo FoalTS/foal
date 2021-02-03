@@ -8,7 +8,7 @@ import { createConnection, getConnection, getRepository } from 'typeorm';
 import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
-type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite';
+type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
 async function createTestConnection(type: DBType) {
   switch (type) {
@@ -37,6 +37,7 @@ async function createTestConnection(type: DBType) {
       });
       break;
     case 'sqlite':
+    case 'better-sqlite3':
       await createConnection({
         database: 'test_db.sqlite',
         dropSchema: true,
@@ -176,6 +177,7 @@ describe('DatabaseSession', () => {
   entityTestSuite('mysql');
   entityTestSuite('mariadb');
   entityTestSuite('sqlite');
+  entityTestSuite('better-sqlite3');
   entityTestSuite('postgres');
 
 });
@@ -667,6 +669,7 @@ describe('TypeORMStore', () => {
   storeTestSuite('mysql');
   storeTestSuite('mariadb');
   storeTestSuite('sqlite');
+  storeTestSuite('better-sqlite3');
   storeTestSuite('postgres');
 
 });

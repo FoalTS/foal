@@ -34,7 +34,8 @@ export class /* upperFirstCamelName */Controller {
   async find/* upperFirstCamelName */s(ctx: Context) {
     const /* camelName */s = await getRepository(/* upperFirstCamelName */).find({
       skip: ctx.request.query.skip,
-      take: ctx.request.query.take
+      take: ctx.request.query.take,
+      where: {},
     });
     return new HttpResponseOK(/* camelName */s);
   }

@@ -20,7 +20,7 @@ export async function main(args: { codeName: string, name: string }) {
   await createConnection({
     database: './e2e_db.sqlite',
     entities: [ Permission ],
-    type: 'sqlite',
+    type: 'better-sqlite3',
   });
 
   try {

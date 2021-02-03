@@ -7,7 +7,7 @@ import { Column, createConnection, Entity, getConnection, getManager, PrimaryGen
 // FoalTS
 import { fetchUser } from './fetch-user.util';
 
-function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
+function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3') {
 
   describe(`with ${type}`, () => {
 
@@ -49,6 +49,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite') {
           });
           break;
         case 'sqlite':
+        case 'better-sqlite3':
           await createConnection({
             database: 'test_db.sqlite',
             dropSchema: true,
@@ -93,6 +94,7 @@ describe('fetchUser', () => {
   testSuite('mysql');
   testSuite('mariadb');
   testSuite('sqlite');
+  testSuite('better-sqlite3');
   testSuite('postgres');
 
 });
