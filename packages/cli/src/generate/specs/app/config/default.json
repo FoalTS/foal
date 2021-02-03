@@ -6,7 +6,7 @@
     }
   },
   "database": {
-    "type": "sqlite",
+    "type": "better-sqlite3",
     "database": "./db.sqlite3"
   }
 }
