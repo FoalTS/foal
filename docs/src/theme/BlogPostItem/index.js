@@ -75,6 +75,8 @@ function BlogPostItem(props) {
       </header>;
   };
 
+  const location = typeof document === 'undefined' ? '' : document.location.href;
+
   return <>
       <Head>
         {keywords && keywords.length && <meta name="keywords" content={keywords.join(',')} />}
@@ -95,15 +97,15 @@ function BlogPostItem(props) {
           <div className={styles.shareBtnsContainer}>
             <a
               className={styles.twitterShareBtn}
-              href={`http://twitter.com/share?text=${title} @FoalTs&url=${document.location.href}&hashtags=NodeJS,TypeScript,JavaScript`}
+              href={`http://twitter.com/share?text=${title} @FoalTs&url=${location}&hashtags=NodeJS,TypeScript,JavaScript`}
               target="_blank" />
             <a
               className={styles.linkedinShareBtn}
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${document.location.href}`}
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${location}`}
               target="_blank" />
             <a
               className={styles.facebookShareBtn}
-              href={`https://www.facebook.com/sharer/sharer.php?u=${document.location.href}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${location}`}
               target="_blank" />
           </div>
           <div className={styles.center}>
