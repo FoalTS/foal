@@ -1,4 +1,5 @@
 {
+  "port": "env(PORT)",
   "settings": {
     "loggerFormat": "tiny"
   },
