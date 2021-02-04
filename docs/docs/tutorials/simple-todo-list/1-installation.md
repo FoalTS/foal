@@ -24,6 +24,12 @@ Then create a new application.
 foal createapp my-app
 ```
 
+:::note
+
+Having trouble installing Foal? 👉 Checkout our [troubleshooting page](./installation-troubleshooting).
+
+:::note
+
 This command generates a new directory with the basic structure of the new application. It also installs all the dependencies. Let's look at what `createapp` created:
 
 ```shell
