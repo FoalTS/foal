@@ -19,7 +19,7 @@ npm install jsonwebtoken @foal/jwt
 
 Foal offers a package, named `@foal/jwt`, to manage authentication / authorization with JSON Web Tokens. When the user logs in, a token is generated and sent to the client. Then, each subsequent request must include this JWT, allowing the user to access routes, services, and resources that are permitted with that token. 
 
-# Generate & Provide a Secret
+## Generate & Provide a Secret
 
 In order to use JWTs, you must provide a secret to *sign* your tokens. If you do not already have your own, you can generate one with the `foal createsecret` command.
 
@@ -81,7 +81,7 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-# Generate & Send Temporary Tokens
+## Generate & Send Temporary Tokens
 
 JSON Web Tokens are generated from JavaScript objects that usually contain information about the user.
 
@@ -107,7 +107,7 @@ const token = sign(
 - The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-User-Properties).
 - Each token should have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
 
-## Example of a `LoginController`
+### Example of a `LoginController`
 
 The below example shows how to implement a login controller with an email and a password.
 
@@ -183,7 +183,7 @@ export class User extends BaseEntity {
 
 ```
 
-# Receive & Verify Tokens
+## Receive & Verify Tokens
 
 Foal provides two hooks to authenticate users upon subsequent requests: `JWTOptional` and `JWTRequired`. They both expect the client to send the JWT in the **Authorization** header using the **Bearer** schema. 
 
@@ -214,9 +214,9 @@ export class ApiController {
 }
 ```
 
-# Advanced
+## Advanced
 
-## Blacklist Tokens
+### Blacklist Tokens
 
 In the event that a jwt has been stolen by an attacker, the application must be able to revoke the compromised token. This can be done by establishing a *black list*. Revoked tokens are no longer considered valid and the hooks return a 401 error - UNAUTHORIZED when they receive one.
 
@@ -238,7 +238,7 @@ You can provide your own function (in the case you want to use a cache database 
 (token: string) => boolean|Promise<boolean>;
 ```
 
-## Refresh the tokens
+### Refresh the tokens
 
 Having a too-long expiration date for JSON Web Tokens is not recommend as it increases exposure to attacks based on token hijacking. If an attacker succeeds in stealing a token with an insufficient expiration date, he/she will have plenty of time to make other attacks and harm your application.
 
@@ -296,7 +296,7 @@ export class ApiController {
 }
 ```
 
-## Make a Database Call to Get More User Properties
+### Make a Database Call to Get More User Properties
 
 In several cases, the decoded payload is not sufficient. We may need to fetch extra properties from the database, such as the user permissions for example, or simply want the `Context.user` to a be a model instance instead of a plain object.
 
@@ -385,7 +385,7 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   }
   ```
 
-## Specifying a Different Encoding for Secrets
+### Specifying a Different Encoding for Secrets
 
 By default, UTF-8 is used to encode the secret string into bytes when verifying the token. However, you can use another character encoding with the `settings.jwt.secretEncoding` configuration key.
 
@@ -440,7 +440,7 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-## Usage with Cookies
+### Usage with Cookies
 
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
@@ -484,7 +484,7 @@ export class AuthController {
 
 > *Note: the cookie expire date is equal to the JWT expire date.*
 
-### Cookie options
+#### Cookie options
 
 <Tabs
   groupId="config"
@@ -552,11 +552,11 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-## Use RSA or ECDSA public/private keys
+### Use RSA or ECDSA public/private keys
 
 JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
-### Provide the Public/Private Key
+#### Provide the Public/Private Key
 
 *Example with a `.env` file*
 ```
@@ -581,7 +581,7 @@ const token = sign(
 );
 ```
 
-### Receive & Verify Tokens
+#### Receive & Verify Tokens
 
 *Example with RSA*
 ```typescript
@@ -594,7 +594,7 @@ export class ApiController {
 
 ```
 
-## Audience, Issuer and Other Options
+### Audience, Issuer and Other Options
 
 The second parameter of `JWTOptional` and `JWTRequired` allows to specify the required audience or issuer as well as other properties. It is passed as options to the `verify` function of the [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) library.
 
@@ -620,7 +620,7 @@ export class ApiController {
 
 ```
 
-## Retreive a Dynamic Secret Or Public Key
+### Retreive a Dynamic Secret Or Public Key
 
 By default `JWTRequired` and `JWTOptional` use the value of the configuration keys `settings.jwt.secret` or `settings.jwt.publicKey` as a static secret (or public key).
 
@@ -673,7 +673,7 @@ In the above example, if the algorithm specified in the token is not `RS256`, th
 }
 ```
 
-### Retreive a Public Key from a JWKS endpoint
+#### Retreive a Public Key from a JWKS endpoint
 
 ```
 npm install @foal/jwks-rsa
@@ -700,7 +700,7 @@ export class ApiController {
 ```
 
 
-## Auth0 and AWS Cognito (examples)
+### Auth0 and AWS Cognito (examples)
 
 ```
 npm install @foal/jwks-rsa
@@ -769,7 +769,7 @@ export class ApiController {
 
 > *Note: The above example does not use a secret for simplicity.*
 
-# Hook Errors
+## Hook Errors
 
 | Error | Response Status | Response Body |  `WWW-Authenticate` Response Header
 | --- | --- | --- | --- |

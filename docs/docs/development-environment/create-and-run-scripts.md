@@ -7,13 +7,13 @@ sidebar_label: Create & Run Scripts
 
 Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is when shell scripts come into play.
 
-# Create Scripts
+## Create Scripts
 
 A shell script is just a TypeScript file located in the `src/scripts`. It must export a `main` function that is then called when running the script.
 
 Let's create a new one with the command line: `foal g script display-users`. A new file with a default template should appear in you `src/scripts` directory.
 
-# Write Scripts
+## Write Scripts
 
 Remove the content of `src/scripts/display-users.ts` and replace it with the below code.
 
@@ -45,7 +45,7 @@ Encapsulating your code in a `main` function without calling it directly in the 
 - You can import and test your `main` function in a separate file.
 - Using a function lets you easily use async/await keywords when dealing with asynchronous code.
 
-# Build and Run Scripts
+## Build and Run Scripts
 
 To run a script you first need to build it.
 
