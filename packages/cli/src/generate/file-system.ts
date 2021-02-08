@@ -52,7 +52,7 @@ export class FileSystem {
 
   currentDir = '';
 
-  private readonly testDir = 'test-generators';
+  private readonly testDir = 'test-generators/subdir';
   private logs = true;
 
   /**
@@ -463,6 +463,8 @@ export class FileSystem {
    * @memberof FileSystem
    */
   setUp(): void {
+    const [ firstDir ] = this.testDir.split('/');
+    mkdirSync(firstDir);
     mkdirSync(this.testDir);
     this.currentDir = '';
   }
@@ -473,7 +475,9 @@ export class FileSystem {
    * @memberof FileSystem
    */
   tearDown(): void {
-    rmDirAndFiles(this.testDir);
+    const [ firstDir ] = this.testDir.split('/');
+    rmDirAndFiles(firstDir);
+
     this.currentDir = '';
   }
 
