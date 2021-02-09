@@ -24,6 +24,18 @@ function mkdir(path: string) {
   }
 }
 
+describe('ClientError', () => {
+
+  it('should inherit from Error', () => {
+    strictEqual(new ClientError() instanceof Error, true);
+  });
+
+  it('should have a "name" property equal to ClientError', () => {
+    strictEqual(new ClientError().name, 'ClientError');
+  });
+
+});
+
 describe('FileSystem', () => {
 
   let fs: FileSystem;
@@ -62,20 +74,22 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir('test-generators/foo');
-      mkdir('test-generators/foo/bar');
+      mkdir('test-generators/subdir');
+      mkdir('test-generators/subdir/foo');
+      mkdir('test-generators/subdir/foo/bar');
     });
 
     afterEach(() => {
-      rmfile('test-generators/package.json');
-      rmdir('test-generators/foo/bar');
-      rmdir('test-generators/foo');
+      rmfile('test-generators/subdir/package.json');
+      rmdir('test-generators/subdir/foo/bar');
+      rmdir('test-generators/subdir/foo');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should root the current working directory to the project root directory.', () => {
       writeFileSync(
-        'test-generators/package.json',
+        'test-generators/subdir/package.json',
         JSON.stringify({
           dependencies: {
             '@foal/core': 'versionNumber'
@@ -90,7 +104,7 @@ describe('FileSystem', () => {
 
     it('should throw a ClienError if the package.json is not a valid JSON.', () => {
       writeFileSync(
-        'test-generators/package.json',
+        'test-generators/subdir/package.json',
         'hello',
         'utf8'
       );
@@ -112,7 +126,7 @@ describe('FileSystem', () => {
 
     it('should throw a ClienError if the package.json found does not have @foal/core as dependency (no deps).', () => {
       writeFileSync(
-        'test-generators/package.json',
+        'test-generators/subdir/package.json',
         JSON.stringify({}),
         'utf8'
       );
@@ -134,7 +148,7 @@ describe('FileSystem', () => {
 
     it('should throw a ClienError if the package.json found does not have @foal/core as dependency (>=1 dep).', () => {
       writeFileSync(
-        'test-generators/package.json',
+        'test-generators/subdir/package.json',
         JSON.stringify({
           dependencies: {}
         }),
@@ -178,11 +192,13 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/foo.txt', Buffer.alloc(3));
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/foo.txt', Buffer.alloc(3));
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo.txt');
+      rmfile('test-generators/subdir/foo.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -200,20 +216,22 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir('test-generators/foo');
+      mkdir('test-generators/subdir');
+      mkdir('test-generators/subdir/foo');
     });
 
     afterEach(() => {
-      rmdir('test-generators/foo');
-      rmdir('test-generators/bar/foo/foobar');
-      rmdir('test-generators/bar/foo');
-      rmdir('test-generators/bar');
+      rmdir('test-generators/subdir/foo');
+      rmdir('test-generators/subdir/bar/foo/foobar');
+      rmdir('test-generators/subdir/bar/foo');
+      rmdir('test-generators/subdir/bar');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should create the directory if it does not exist.', () => {
       fs.ensureDir('bar');
-      if (!existsSync('test-generators/bar')) {
+      if (!existsSync('test-generators/subdir/bar')) {
         throw new Error('The directory "bar" does not exist.');
       }
     });
@@ -224,7 +242,7 @@ describe('FileSystem', () => {
 
     it('should create all intermediate directories.', () => {
       fs.ensureDir('bar/foo/foobar');
-      if (!existsSync('test-generators/bar/foo/foobar')) {
+      if (!existsSync('test-generators/subdir/bar/foo/foobar')) {
         throw new Error('The directory "bar/foo/foobar" does not exist.');
       }
     });
@@ -235,23 +253,25 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
     });
 
     afterEach(() => {
-      rmdir('test-generators/foo');
+      rmdir('test-generators/subdir/foo');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should create the directory if the condition is true.', () => {
       fs.ensureDirOnlyIf(true, 'foo');
-      if (!existsSync('test-generators/foo')) {
+      if (!existsSync('test-generators/subdir/foo')) {
         throw new Error('The directory "foo" does not exist.');
       }
     });
 
     it('should not create the directory if the condition is false.', () => {
       fs.ensureDirOnlyIf(false, 'foo');
-      if (existsSync('test-generators/foo')) {
+      if (existsSync('test-generators/subdir/foo')) {
         throw new Error('The directory "foo" should not exist.');
       }
     });
@@ -262,18 +282,20 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/foo.txt', 'hello', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/foo.txt', 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile('test-generators/bar.txt');
-      rmfile('test-generators/foo.txt');
+      rmfile('test-generators/subdir/bar.txt');
+      rmfile('test-generators/subdir/foo.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should create the file if it does not exist.', () => {
       fs.ensureFile('bar.txt');
-      if (!existsSync('test-generators/bar.txt')) {
+      if (!existsSync('test-generators/subdir/bar.txt')) {
         throw new Error('The file "bar.txt" does not exist.');
       }
     });
@@ -281,7 +303,7 @@ describe('FileSystem', () => {
     it('should not erase the file if it exists.', () => {
       fs.ensureFile('foo.txt');
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'hello'
       );
     });
@@ -295,6 +317,7 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       mkdir(templateDir);
       writeFileSync(templatePath, 'hello', 'utf8');
     });
@@ -303,17 +326,18 @@ describe('FileSystem', () => {
       rmfile(templatePath);
       rmdir(templateDir);
 
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should copy the file from the `templates` directory.', () => {
       fs.copy('test-file-system/tpl.txt', 'hello.txt');
-      if (!existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" does not exist.');
+      if (!existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello'
       );
     });
@@ -336,6 +360,7 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       mkdir(templateDir);
       writeFileSync(templatePath, 'hello', 'utf8');
     });
@@ -344,21 +369,22 @@ describe('FileSystem', () => {
       rmfile(templatePath);
       rmdir(templateDir);
 
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should copy the file if the condition is true.', () => {
       fs.copyOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt');
-      if (!existsSync('test-generators/hello.txt')) {
+      if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/hello.txt" does not exist.');
       }
     });
 
     it('should not copy the file if the condition is false.', () => {
       fs.copyOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt');
-      if (existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" should not exist.');
+      if (existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" should not exist.');
       }
     });
 
@@ -371,6 +397,7 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       mkdir(templateDir);
       writeFileSync(templatePath, '/* foobar */ /* foobar */ /* barfoo */!', 'utf8');
     });
@@ -379,7 +406,8 @@ describe('FileSystem', () => {
       rmfile(templatePath);
       rmdir(templateDir);
 
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -388,11 +416,11 @@ describe('FileSystem', () => {
         barfoo: 'world',
         foobar: 'hello',
       });
-      if (!existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" does not exist.');
+      if (!existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello hello world!'
       );
     });
@@ -415,6 +443,7 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       mkdir(templateDir);
       writeFileSync(templatePath, 'hello', 'utf8');
     });
@@ -423,21 +452,22 @@ describe('FileSystem', () => {
       rmfile(templatePath);
       rmdir(templateDir);
 
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should copy the file if the condition is true.', () => {
       fs.renderOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt', {});
-      if (!existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" does not exist.');
+      if (!existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
     });
 
     it('should not copy the file if the condition is false.', () => {
       fs.renderOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt', {});
-      if (existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" should not exist.');
+      if (existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" should not exist.');
       }
     });
 
@@ -447,18 +477,19 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/hello.txt', 'hello', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/hello.txt', 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile('test-generators/hello.txt');
-      rmdir('test-generators');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
     });
 
     it('should modify the file with the given callback.', () => {
       fs.modify('hello.txt', content => content + ' world!');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello world!'
       );
     });
@@ -481,18 +512,20 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/hello.txt', 'hello', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/hello.txt', 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should modify the file with the given callback if the condition is true.', () => {
       fs.modifyOnlyfIf(true, 'hello.txt', content => content + ' world!');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello world!'
       );
     });
@@ -500,7 +533,7 @@ describe('FileSystem', () => {
     it('should not modify the file with the given callback if the condition is false.', () => {
       fs.modifyOnlyfIf(false, 'hello.txt', content => content + ' world!');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello'
       );
     });
@@ -511,18 +544,20 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/hello.txt', 'export { foo } from \'foo.txt\';\n', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/hello.txt', 'export { foo } from \'foo.txt\';\n', 'utf8');
     });
 
     afterEach(() => {
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should add a named import at the bottom of the file.', () => {
       fs.addNamedExportIn('hello.txt', 'bar', 'bar.txt');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'export { foo } from \'foo.txt\';\nexport { bar } from \'bar.txt\';\n'
       );
     });
@@ -533,13 +568,14 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       writeFileSync(
-        'test-generators/empty.txt',
+        'test-generators/subdir/empty.txt',
         'class FooBar {}',
         'utf8'
       );
       writeFileSync(
-        'test-generators/hello.txt',
+        'test-generators/subdir/hello.txt',
         '// 3p\n'
         + 'import { Hello } from \'./foo.txt\';\n'
         + 'import { World } from \'./bar.txt\';\n'
@@ -550,15 +586,16 @@ describe('FileSystem', () => {
     });
 
     afterEach(() => {
-      rmfile('test-generators/empty.txt');
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/empty.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should add a named import at the beginning of the file if none exists.', () => {
       fs.addOrExtendNamedImportIn('empty.txt', 'FooController', './controllers/foo.controller.txt');
       strictEqual(
-        readFileSync('test-generators/empty.txt', 'utf8'),
+        readFileSync('test-generators/subdir/empty.txt', 'utf8'),
         'import { FooController } from \'./controllers/foo.controller.txt\';\n'
         + '\n'
         + 'class FooBar {}',
@@ -568,7 +605,7 @@ describe('FileSystem', () => {
     it('should add a named import after all the imports if it does not already exist.', () => {
       fs.addOrExtendNamedImportIn('hello.txt', 'FooController', './controllers/foo.controller.txt');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
         + 'import { Hello } from \'./foo.txt\';\n'
         + 'import { World } from \'./bar.txt\';\n'
@@ -581,7 +618,7 @@ describe('FileSystem', () => {
     it('should extend the named import if it already exists and it does not have the specifier.', () => {
       fs.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
         + 'import { Hello } from \'./foo.txt\';\n'
         + 'import { MyController, World } from \'./bar.txt\';\n'
@@ -593,7 +630,7 @@ describe('FileSystem', () => {
     it('should not extend the named import if it already exists but it has already the specifier.', () => {
       fs.addOrExtendNamedImportIn('hello.txt', 'World', './bar.txt');
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
         + 'import { Hello } from \'./foo.txt\';\n'
         + 'import { World } from \'./bar.txt\';\n'
@@ -608,16 +645,18 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo.txt');
+      rmfile('test-generators/subdir/foo.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should add the class property if it does not exist (empty class).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {}',
         'utf8'
       );
@@ -627,7 +666,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '  subControllers = [\n'
         + '    controller(\'/api\', ApiController)\n'
@@ -638,7 +677,7 @@ describe('FileSystem', () => {
 
     it('should add the class property if it does not exist (empty class implementing an interface).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar implements IFooBarInterface {}',
         'utf8'
       );
@@ -648,7 +687,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar implements IFooBarInterface {\n'
         + '  subControllers = [\n'
         + '    controller(\'/api\', ApiController)\n'
@@ -659,7 +698,7 @@ describe('FileSystem', () => {
 
     it('should add the class property if it does not exist (empty class with line returns).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {\n\n}',
         'utf8'
       );
@@ -669,7 +708,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '  subControllers = [\n'
         + '    controller(\'/api\', ApiController)\n'
@@ -680,7 +719,7 @@ describe('FileSystem', () => {
 
     it('should add the class property if it does not exist (class with existing properties).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {\n'
         + '  foo = 3;\n'
         + '  bar() {};\n'
@@ -693,7 +732,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '  subControllers = [\n'
         + '    controller(\'/api\', ApiController)\n'
@@ -707,7 +746,7 @@ describe('FileSystem', () => {
 
     it('should extend the class property if it already exists (empty array).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {\n'
         + '    subControllers = [];\n'
         + '}',
@@ -719,7 +758,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '    subControllers = [\n'
         + '        controller(\'/api\', ApiController)\n'
@@ -730,7 +769,7 @@ describe('FileSystem', () => {
 
     it('should extend the class property if it already exists (empty array with line returns).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {\n'
         + '    subControllers = [\n'
         + '\n'
@@ -744,7 +783,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '    subControllers = [\n'
         + '        controller(\'/api\', ApiController)\n'
@@ -755,7 +794,7 @@ describe('FileSystem', () => {
 
     it('should extend the class property if it already exists (empty array with existing items).', () => {
       writeFileSync(
-        'test-generators/foo.txt',
+        'test-generators/subdir/foo.txt',
         'class FooBar {\n'
         + '    subControllers = [\n'
         + '        controller(\'\/foo\', FooController),\n'
@@ -770,7 +809,7 @@ describe('FileSystem', () => {
         'controller(\'/api\', ApiController)'
       );
       strictEqual(
-        readFileSync('test-generators/foo.txt', 'utf8'),
+        readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'class FooBar {\n'
         + '    subControllers = [\n'
         + '        controller(\'\/foo\', FooController),\n'
@@ -786,13 +825,14 @@ describe('FileSystem', () => {
   describe('has a "setUp" method that', () => {
 
     afterEach(() => {
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should create the test client directory.', () => {
       fs.setUp();
-      if (!existsSync('test-generators')) {
-        throw new Error('The directory "test-generators" does not exist.');
+      if (!existsSync('test-generators/subdir')) {
+        throw new Error('The directory "test-generators/subdir" does not exist.');
       }
     });
 
@@ -810,6 +850,7 @@ describe('FileSystem', () => {
 
     before(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       initialPkg = readFileSync('package.json');
       writeFileSync('package.json', JSON.stringify({
         dependencies: {
@@ -821,6 +862,7 @@ describe('FileSystem', () => {
 
     after(() => {
       writeFileSync('package.json', initialPkg);
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -843,20 +885,22 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir('test-generators/foo');
-      writeFileSync('test-generators/foo/bar', Buffer.alloc(2));
+      mkdir('test-generators/subdir');
+      mkdir('test-generators/subdir/foo');
+      writeFileSync('test-generators/subdir/foo/bar', Buffer.alloc(2));
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo/bar');
-      rmdir('test-generators/foo');
+      rmfile('test-generators/subdir/foo/bar');
+      rmdir('test-generators/subdir/foo');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should remove the test client directory and all its contents.', () => {
       fs.tearDown();
-      if (existsSync('test-generators')) {
-        throw new Error('The directory "test-generators" should not exist.');
+      if (existsSync('test-generators/subdir')) {
+        throw new Error('The directory "test-generators/subdir" should not exist.');
       }
     });
 
@@ -872,11 +916,13 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/foo', Buffer.alloc(2));
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/foo', Buffer.alloc(2));
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo');
+      rmfile('test-generators/subdir/foo');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -899,11 +945,13 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/foo', Buffer.alloc(2));
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/foo', Buffer.alloc(2));
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo');
+      rmfile('test-generators/subdir/foo');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -926,15 +974,17 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      mkdir('test-generators/foo');
-      mkdir('test-generators/bar');
-      writeFileSync('test-generators/foo/foobar', Buffer.alloc(2));
+      mkdir('test-generators/subdir');
+      mkdir('test-generators/subdir/foo');
+      mkdir('test-generators/subdir/bar');
+      writeFileSync('test-generators/subdir/foo/foobar', Buffer.alloc(2));
     });
 
     afterEach(() => {
-      rmfile('test-generators/foo/foobar');
-      rmdir('test-generators/foo');
-      rmdir('test-generators/bar');
+      rmfile('test-generators/subdir/foo/foobar');
+      rmdir('test-generators/subdir/foo');
+      rmdir('test-generators/subdir/bar');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -965,10 +1015,11 @@ describe('FileSystem', () => {
       writeFileSync(stringSpecPath, 'hello\nmy\nworld', 'utf8');
 
       mkdir('test-generators');
-      writeFileSync('test-generators/foo', Buffer.alloc(3));
-      writeFileSync('test-generators/bar', Buffer.alloc(2));
-      writeFileSync('test-generators/foo.txt', 'hello\nmy\nworld', 'utf8');
-      writeFileSync('test-generators/bar.txt', 'hi\nmy\nearth\n!', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/foo', Buffer.alloc(3));
+      writeFileSync('test-generators/subdir/bar', Buffer.alloc(2));
+      writeFileSync('test-generators/subdir/foo.txt', 'hello\nmy\nworld', 'utf8');
+      writeFileSync('test-generators/subdir/bar.txt', 'hi\nmy\nearth\n!', 'utf8');
     });
 
     afterEach(() => {
@@ -976,10 +1027,11 @@ describe('FileSystem', () => {
       rmfile(specPath);
       rmdir(specDir);
 
-      rmfile('test-generators/foo.txt');
-      rmfile('test-generators/bar.txt');
-      rmfile('test-generators/foo');
-      rmfile('test-generators/bar');
+      rmfile('test-generators/subdir/foo.txt');
+      rmfile('test-generators/subdir/bar.txt');
+      rmfile('test-generators/subdir/foo');
+      rmfile('test-generators/subdir/bar');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
@@ -1029,6 +1081,7 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
+      mkdir('test-generators/subdir');
       mkdir(fixtureDir);
       writeFileSync(fixturePath, 'hello', 'utf8');
     });
@@ -1037,17 +1090,18 @@ describe('FileSystem', () => {
       rmfile(fixturePath);
       rmdir(fixtureDir);
 
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should copy the file from the `fixtures` directory.', () => {
       fs.copyFixture('test-file-system/tpl.txt', 'hello.txt');
-      if (!existsSync('test-generators/hello.txt')) {
-        throw new Error('The file "test-generators/hello.txt" does not exist.');
+      if (!existsSync('test-generators/subdir/hello.txt')) {
+        throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
       strictEqual(
-        readFileSync('test-generators/hello.txt', 'utf8'),
+        readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello'
       );
     });
@@ -1067,17 +1121,19 @@ describe('FileSystem', () => {
 
     beforeEach(() => {
       mkdir('test-generators');
-      writeFileSync('test-generators/hello.txt', 'hello', 'utf8');
+      mkdir('test-generators/subdir');
+      writeFileSync('test-generators/subdir/hello.txt', 'hello', 'utf8');
     });
 
     afterEach(() => {
-      rmfile('test-generators/hello.txt');
+      rmfile('test-generators/subdir/hello.txt');
+      rmdir('test-generators/subdir');
       rmdir('test-generators');
     });
 
     it('should remove the file.', () => {
       fs.rmfile('hello.txt');
-      if (existsSync('test-generators/hello.txt')) {
+      if (existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "hello.txt" should have been removed.');
       }
     });

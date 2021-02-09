@@ -10,7 +10,7 @@ import {
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // App
-import { /* upperFirstCamelName */, User } from '../entities';
+import { /* upperFirstCamelName */, User } from '/* entitiesPath */';
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
 
 describe('/* upperFirstCamelName */Controller', () => {

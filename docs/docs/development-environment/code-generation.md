@@ -101,12 +101,38 @@ Create a new entity in `./src/app/entities`, in `./entities` or in the current d
 foal g rest-api <name>
 ```
 
-Create a new controller and a new entity to build a basic REST API. Depending on which directories are found, they will be generated in `src/app/{entities}|{controllers}/`, `{entities}|{controllers}/` or in the current directory.
+Create a new controller and a new entity to build a basic REST API. Depending on which directories are found, they will be generated in `src/app/{entities}|{controllers}/` or in `{entities}|{controllers}/`.
 
-If you are in the root directory and you want to automatically register the controller within the app controller you can add the `--register` flag.
-
+*Example*
 ```shell
-foal g rest-api <name> --register
+foal g rest-api order
+foal g rest-api api/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  |- controllers/
+  | |- api/
+  | | |- product.controller.ts
+  | | '- index.ts
+  | |- order.controller.ts
+  | '- index.ts
+  '- entities/
+    |- index.entity.ts
+    |- order.entity.ts
+    '- index.ts
+```
+
+### The `--register` flag
+
+If you wish to automatically create a new route attached to this controller, you can use the `--register` flag to do so (see [create-a-controller](#create-a-controller)).
+
+*Example*
+```shell
+foal g controller api --register
+foal g controller api/product --register
 ```
 
 See the page [REST Blueprints](../api-section/rest-blueprints.md) for more details.

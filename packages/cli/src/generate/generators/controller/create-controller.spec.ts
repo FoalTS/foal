@@ -1,5 +1,8 @@
+// std
+import { throws } from 'assert';
+
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { ClientError, FileSystem } from '../../file-system';
 import { createController } from './create-controller';
 
 describe('createController', () => {
@@ -12,78 +15,185 @@ describe('createController', () => {
 
   function test(root: string) {
 
-    describe(`when the directory ${root}/ exists`, () => {
+    beforeEach(() => {
+      fs
+        .ensureDir(root)
+        .cd(root);
+    });
 
-      beforeEach(() => {
-        fs
-          .ensureDir(root)
-          .cd(root)
-          .copyFixture('controller/index.ts', 'index.ts');
-      });
+    context('given the provided name is a not a path', () => {
 
-      it('should render the empty templates in the proper directory.', () => {
+      it('should create in the current directory the controller and its test.', () => {
         createController({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
-          .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts')
-          .assertEqual('index.ts', 'controller/index.ts');
+          .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts');
       });
 
-      it('should create the directory if it does not exist.', () => {
-        createController({ name: 'barfoo/hello/test-fooBar', register: false });
+      it(
+        'should create in the current directory an index.ts file if it does not exist '
+        + 'and export the controller.',
+        () => {
+          createController({ name: 'test-fooBar', register: false });
 
+          fs
+            .assertEqual('index.ts', 'controller/index.empty.ts');
+        }
+      );
+
+      it('should update in the current directory the index.ts file if it exists and export the controller.', () => {
         fs
-          .assertExists('barfoo/hello/test-foo-bar.controller.ts');
-      });
-
-      it('should create index.ts if it does not exist.', () => {
-        fs.rmfile('index.ts');
+          .copyFixture('controller/index.ts', 'index.ts');
 
         createController({ name: 'test-fooBar', register: false });
 
-        fs.assertExists('index.ts');
+        fs
+          .assertEqual('index.ts', 'controller/index.ts');
+      });
+
+      context('given the register option is false', () => {
+
+        it('should not try to update in the file app.controller.ts if it exists the parent directory.', () => {
+          fs
+            .cd('..')
+            .copyFixture('controller/app.controller.ts', 'app.controller.ts');
+
+          createController({ name: 'test-fooBar', register: false });
+
+          fs
+            .assertEqual('app.controller.ts', 'controller/app.controller.not-modified.ts');
+        });
+
+      });
+
+      context('given the register option is true', () => {
+
+        it('should throw a ClientError if the file app.controller.ts does not exist in the parent directory.', () => {
+          throws(
+            () => createController({ name: 'test-fooBar', register: true }),
+            new ClientError('Impossible to modify "app.controller.ts": the file does not exist.')
+          );
+        });
+
+        it('should register the controller in the file app.controller.ts if it exists in the parent directory.', () => {
+          fs
+            .cd('..')
+            .copyFixture('controller/app.controller.ts', 'app.controller.ts');
+
+          createController({ name: 'test-fooBar', register: true });
+
+          fs
+            .assertEqual('app.controller.ts', 'controller/app.controller.ts');
+        });
+
+      });
+
+    });
+
+    context('given the provided name is a path', () => {
+
+      it('should create the sub-directories if they do not exist.', () => {
+        createController({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .assertExists('barfoo/api');
+      });
+
+      it('should create in the sub-directories the controller and its test.', () => {
+        createController({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .cd('barfoo/api')
+          .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts');
+      });
+
+      it(
+        'should create in the sub-directories an index.ts file if it does not exist '
+        + 'and export the controller.',
+        () => {
+          createController({ name: 'barfoo/api/test-fooBar', register: false });
+
+          fs
+            .cd('barfoo/api')
+            .assertEqual('index.ts', 'controller/index.empty.ts');
+        }
+      );
+
+      it('should update in the sub-directories the index.ts file if it exists and export the controller.', () => {
+        fs
+          .ensureDir('barfoo/api')
+          .cd('barfoo/api')
+          .copyFixture('controller/index.ts', 'index.ts');
+
+        createController({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .assertEqual('index.ts', 'controller/index.ts');
+      });
+
+      context('given the register option is false', () => {
+
+        it('should not try to update the file xxx.controller.ts if it exists in the last sub-directory xxx.', () => {
+          fs
+            .ensureDir('barfoo')
+            .cd('barfoo')
+            .copyFixture('controller/api.controller.ts', 'api.controller.ts');
+
+          createController({ name: 'barfoo/api/test-fooBar', register: false });
+
+          fs
+            .assertEqual('api.controller.ts', 'controller/api.controller.not-modified.ts');
+        });
+
+      });
+
+      context('given the register option is true', () => {
+
+        it(
+          'should throw a ClientError if the file xxx.controller.ts does not exist '
+          + 'in the last sub-directory xxx.',
+          () => {
+            throws(
+              () => createController({ name: 'barfoo/api/test-fooBar', register: true }),
+              new ClientError('Impossible to modify "api.controller.ts": the file does not exist.')
+            );
+          }
+        );
+
+        it(
+          'should register the controller in the file xxx.controller.ts if it exists '
+          + 'in the last sub-directory xxx.',
+          () => {
+            fs
+              .ensureDir('barfoo')
+              .cd('barfoo')
+              .copyFixture('controller/api.controller.ts', 'api.controller.ts');
+
+            createController({ name: 'barfoo/api/test-fooBar', register: true });
+
+            fs
+              .assertEqual('api.controller.ts', 'controller/api.controller.ts');
+          }
+        );
+
       });
 
     });
 
   }
 
-  test('src/app/controllers');
-  test('controllers');
-  test('');
+  describe('when the directories src/app/controllers and controllers/ do not exist', () => {
+    test('');
+  });
 
-  describe('when the directory src/app/controllers exists and if register is true', () => {
+  describe('when the directory controllers/ exists.', () => {
+    test('controllers');
+  });
 
-    beforeEach(() => {
-      fs
-        .ensureDir('src/app/controllers')
-        .cd('src/app/controllers')
-        .copyFixture('controller/index.ts', 'index.ts')
-        .cd('..');
-    });
-
-    it('should register the controller in app.controller.ts.', () => {
-      fs
-        .copyFixture('controller/app.controller.ts', 'app.controller.ts');
-
-      createController({ name: 'test-fooBar', register: true });
-
-      fs
-        .assertEqual('app.controller.ts', 'controller/app.controller.ts');
-    });
-
-    it('should register the controller in a parent controller (subdir).', () => {
-      fs
-        .ensureDir('controllers/hello')
-        .copyFixture('controller/api.controller.ts', 'controllers/hello/api.controller.ts');
-
-      createController({ name: 'hello/api/test-fooBar', register: true });
-
-      fs
-        .assertEqual('controllers/hello/api.controller.ts', 'controller/api.controller.ts');
-    });
-
+  describe('when the directory src/app/controllers exists.', () => {
+    test('src/app/controllers');
   });
 
 });
