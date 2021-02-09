@@ -1,1 +1,0 @@
-export { Something } from 'somewhere';

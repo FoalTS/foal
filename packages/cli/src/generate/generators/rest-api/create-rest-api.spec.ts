@@ -1,13 +1,11 @@
 // std
-import { strictEqual } from 'assert';
+import { strictEqual, throws } from 'assert';
 
 // FoalTS
 import { ClientError, FileSystem } from '../../file-system';
 import { createRestApi } from './create-rest-api';
 
-// TODO: add tests like "should create index.ts if it does not exist."
-
-describe('createRestApi', () => {
+describe.only('createRestApi', () => {
 
   const fs = new FileSystem();
 
@@ -15,153 +13,294 @@ describe('createRestApi', () => {
 
   afterEach(() => fs.tearDown());
 
+  it('should throw a ClientError if the project has the dependency "mongodb".', () => {
+    fs
+      .copyFixture('rest-api/package.mongodb.json', 'package.json');
+
+    throws(
+      () => createRestApi({ name: 'test-fooBar', register: false }),
+      new ClientError('"foal generate|g rest-api <name>" cannot be used in a MongoDB project.')
+    );
+  });
+
+  it('should throw a ClientError the directories entities (or src/app/entities) and controllers (or src/app/controllers) do not exist.', () => {
+    fs
+      .copyFixture('rest-api/package.json', 'package.json');
+
+    throws(
+      () => createRestApi({ name: 'test-fooBar', register: false }),
+      new ClientError(
+        'Impossible to generate a REST API endpoint. '
+        + 'The directories controllers/ and entities/ (or src/app/controllers and src/app/entities) were not found.')
+    );
+  });
+
   function test(root: string) {
 
-    describe(`when the directories ${root}entities/ and ${root}controllers/ exist`, () => {
+    beforeEach(() => {
+      fs
+        .copyFixture('rest-api/package.json', 'package.json')
+        .ensureDir(root)
+        .cd(root)
+        .ensureDir('entities')
+        .ensureDir('controllers');
+    });
 
-      beforeEach(() => {
-        fs
-          .copyFixture('rest-api/package.json', 'package.json')
-          .ensureDir(root)
-          .cd(root)
-          .ensureDir('entities')
-          .cd('entities')
-          .copyFixture('rest-api/index.entities.ts', 'index.ts')
-          .cd('..')
-          .ensureDir('controllers')
-          .cd('controllers')
-          .copyFixture('rest-api/index.controllers.ts', 'index.ts')
-          .cd('..');
-      });
+    context('given the provided name is a not a path', () => {
 
-      it('should render the templates in the proper directory.', () => {
+      it('should create in the controllers/ directory the controller and its test.', () => {
         createRestApi({ name: 'test-fooBar', register: false });
 
         fs
-          .cd('entities')
-          .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.ts')
-          .assertEqual('index.ts', 'rest-api/index.entities.ts')
-          .cd('..')
-          .cd('controllers')
-          .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.ts')
-          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.ts')
-          .assertEqual('index.ts', 'rest-api/index.controllers.ts');
+          .assertEqual('controllers/test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.ts')
+          .assertEqual('controllers/test-foo-bar.controller.spec.ts', 'rest-api/controllers/test-foo-bar.controller.spec.ts');
       });
 
-      it('should render the templates in the proper directory (--auth flag).', () => {
+      it('should create in the controllers/ directory the controller and its test (auth flag).', () => {
         createRestApi({ name: 'test-fooBar', register: false, auth: true });
 
         fs
-          .cd('entities')
-          .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.auth.ts')
-          .assertEqual('index.ts', 'rest-api/index.entities.ts')
-          .cd('..')
-          .cd('controllers')
-          .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.auth.ts')
-          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.auth.ts')
-          .assertEqual('index.ts', 'rest-api/index.controllers.ts');
+          .assertEqual('controllers/test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.auth.ts')
+          .assertEqual('controllers/test-foo-bar.controller.spec.ts', 'rest-api/controllers/test-foo-bar.controller.spec.auth.ts');
       });
 
-      it('should create the index.ts if they do not exist.', () => {
-        fs.rmfile('entities/index.ts');
-        fs.rmfile('controllers/index.ts');
+      it('should create in the entitites/ directory the entity.', () => {
+        createRestApi({ name: 'test-fooBar', register: false });
+
+        fs
+          .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.ts');
+      });
+
+      it('should create in the entitites/ directory the entity (auth flag).', () => {
+        createRestApi({ name: 'test-fooBar', register: false, auth: true });
+
+        fs
+          .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.auth.ts');
+      });
+
+      it(
+        'should create in the controllers/ directory an index.ts file if it does not exist '
+        + 'and export the controller.',
+        () => {
+          createRestApi({ name: 'test-fooBar', register: false });
+
+          fs
+            .assertEqual('controllers/index.ts', 'rest-api/controllers/index.empty.ts');
+        }
+      );
+
+      it(
+        'should create in the entities/ directory an index.ts file if it does not exist '
+        + 'and export the entity.',
+        () => {
+          createRestApi({ name: 'test-fooBar', register: false });
+
+          fs
+            .assertEqual('entities/index.ts', 'rest-api/entities/index.empty.ts');
+        }
+      );
+
+      it('should update in the controllers/ directory the index.ts file if it exists and export the controller.', () => {
+        fs
+          .copyFixture('rest-api/index.controllers.ts', 'controllers/index.ts');
 
         createRestApi({ name: 'test-fooBar', register: false });
 
-        fs.assertExists('entities/index.ts');
-        fs.assertExists('controllers/index.ts');
+        fs
+          .assertEqual('controllers/index.ts', 'rest-api/controllers/index.ts');
+      });
+
+      it('should update in the entities/ directory the index.ts file if it exists and export the entity.', () => {
+        fs
+          .copyFixture('rest-api/index.entities.ts', 'entities/index.ts');
+
+        createRestApi({ name: 'test-fooBar', register: false });
+
+        fs
+          .assertEqual('entities/index.ts', 'rest-api/entities/index.ts');
+      });
+
+      context('given the register option is false', () => {
+
+        it('should not try to update in the file app.controller.ts if it exists the current directory.', () => {
+          fs
+            .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
+
+          createRestApi({ name: 'test-fooBar', register: false });
+
+          fs
+            .assertEqual('app.controller.ts', 'rest-api/app.controller.not-modified.ts');
+        });
+
+      });
+
+      context('given the register option is true', () => {
+
+        it('should throw a ClientError if the file app.controller.ts does not exist in the current directory.', () => {
+          throws(
+            () => createRestApi({ name: 'test-fooBar', register: true }),
+            new ClientError('Impossible to modify "app.controller.ts": the file does not exist.')
+          );
+        });
+
+        it('should register the controller in the file app.controller.ts if it exists in the current directory.', () => {
+          fs
+            .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
+
+          createRestApi({ name: 'test-fooBar', register: true });
+
+          fs
+            .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
+        });
+
       });
 
     });
 
-    describe(`when the directories ${root}entities/ and ${root}controllers/ exist and "register" is true.`, () => {
+    context('given the provided name is a path', () => {
 
-      beforeEach(() => {
+      it('should create the sub-directories if they do not exist in the controllers/ directory.', () => {
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
         fs
-          .copyFixture('rest-api/package.json', 'package.json')
-          .ensureDir(root)
-          .cd(root)
-          .ensureDir('entities')
-          .cd('entities')
-          .copyFixture('rest-api/index.entities.ts', 'index.ts')
-          .cd('..')
-          .ensureDir('controllers')
-          .cd('controllers')
-          .copyFixture('rest-api/index.controllers.ts', 'index.ts')
-          .cd('..');
+          .assertExists('controllers/barfoo/api');
       });
 
-      it('should register the controller in app.controller.ts.', () => {
-        fs
-          .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
-
-        createRestApi({ name: 'test-fooBar', register: true });
+      it('should create in the sub-directories the controller and its test.', () => {
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
-          .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
+          .cd('controllers/barfoo/api')
+          .assertEqual('test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.subdir.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/controllers/test-foo-bar.controller.spec.subdir.ts');
+      });
+
+      it('should create in the sub-directories the controller and its test (auth flag).', () => {
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
+
+        fs
+          .cd('controllers/barfoo/api')
+          .assertEqual('test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.auth.subdir.ts')
+          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/controllers/test-foo-bar.controller.spec.auth.subdir.ts');
+      });
+
+      it('should create in the entitites/ directory the entity.', () => {
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.ts');
+      });
+
+      it('should create in the entitites/ directory the entity (auth flag).', () => {
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
+
+        fs
+          .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.auth.ts');
+      });
+
+      it(
+        'should create in the controllers/ sub-directories an index.ts file if it does not exist '
+        + 'and export the controller.',
+        () => {
+          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+          fs
+            .cd('controllers/barfoo/api')
+            .assertEqual('index.ts', 'rest-api/controllers/index.empty.ts');
+        }
+      );
+
+      it(
+        'should create in the entities/ directory an index.ts file if it does not exist '
+        + 'and export the entity.',
+        () => {
+          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+          fs
+            .assertEqual('entities/index.ts', 'rest-api/entities/index.empty.ts');
+        }
+      );
+
+      it('should update in controllers/ the sub-directories the index.ts file if it exists and export the controller.', () => {
+        fs
+          .ensureDir('controllers/barfoo/api')
+          .cd('controllers/barfoo/api')
+          .copyFixture('rest-api/index.controllers.ts', 'index.ts');
+
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .assertEqual('index.ts', 'rest-api/controllers/index.ts');
+      });
+
+
+      it('should update in the entities/ directory the index.ts file if it exists and export the entity.', () => {
+        fs
+          .copyFixture('rest-api/index.entities.ts', 'entities/index.ts');
+
+        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+        fs
+          .assertEqual('entities/index.ts', 'rest-api/entities/index.ts');
+      });
+
+      context('given the register option is false', () => {
+
+        it('should not try to update the file xxx.controller.ts if it exists in the last sub-directory xxx.', () => {
+          fs
+            .ensureDir('controllers/barfoo')
+            .cd('controllers/barfoo')
+            .copyFixture('rest-api/api.controller.ts', 'api.controller.ts');
+
+          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+
+          fs
+            .assertEqual('api.controller.ts', 'rest-api/controllers/api.controller.not-modified.ts');
+        });
+
+      });
+
+      context('given the register option is true', () => {
+
+        it(
+          'should throw a ClientError if the file xxx.controller.ts does not exist '
+          + 'in the last sub-directory xxx.',
+          () => {
+            throws(
+              () => createRestApi({ name: 'barfoo/api/test-fooBar', register: true }),
+              new ClientError('Impossible to modify "api.controller.ts": the file does not exist.')
+            );
+          }
+        );
+
+        it(
+          'should register the controller in the file xxx.controller.ts if it exists '
+          + 'in the last sub-directory xxx.',
+          () => {
+            fs
+              .ensureDir('controllers/barfoo')
+              .cd('controllers/barfoo')
+              .copyFixture('rest-api/api.controller.ts', 'api.controller.ts');
+
+            createRestApi({ name: 'barfoo/api/test-fooBar', register: true });
+
+            fs
+              .assertEqual('api.controller.ts', 'rest-api/controllers/api.controller.ts');
+          }
+        );
+
       });
 
     });
 
   }
 
-  test('src/app/');
-  test('');
-
-  describe('when the directory entities/ or the directory controllers/ does not exist.', () => {
-
-    beforeEach(() => {
-      fs
-        .copyFixture('rest-api/package.json', 'package.json')
-        .copyFixture('rest-api/index.current-dir.ts', 'index.ts');
-    });
-
-    it('should render the templates in the current directory.', () => {
-      createRestApi({ name: 'test-fooBar', register: false });
-
-      fs
-        .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.ts')
-        .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.ts')
-        .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.ts')
-        .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
-    });
-
-    it('should render the templates in the current directory (--auth flag).', () => {
-      createRestApi({ name: 'test-fooBar', register: false, auth: true });
-
-      fs
-        .assertEqual('test-foo-bar.entity.ts', 'rest-api/test-foo-bar.entity.auth.ts')
-        .assertEqual('test-foo-bar.controller.ts', 'rest-api/test-foo-bar.controller.current-dir.auth.ts')
-        .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/test-foo-bar.controller.spec.current-dir.auth.ts')
-        .assertEqual('index.ts', 'rest-api/index.current-dir.ts');
-    });
-
-    it('should create index.ts if it does not exist.', () => {
-      fs.rmfile('index.ts');
-
-      createRestApi({ name: 'test-fooBar', register: false });
-
-      fs.assertExists('index.ts');
-    });
-
+  describe('when the directories controllers/ and entities/ exist', () => {
+    test('');
   });
 
-  it('should throw a ClientError if the project has the dependency "mongodb".', () => {
-    fs
-      .copyFixture('rest-api/package.mongodb.json', 'package.json');
-
-    try {
-      createRestApi({ name: 'test-fooBar', register: false });
-      throw new Error('An error should have been thrown');
-    } catch (error) {
-      if (!(error instanceof ClientError)) {
-        throw new Error('The error thrown should be an instance of ClientError.');
-      }
-      strictEqual(
-        error.message,
-        `"foal generate|g rest-api <name>" cannot be used in a MongoDB project.`
-      );
-    }
+  describe('when the directories src/app/controllers/ and src/app/entities/ exist', () => {
+    test('src/app');
   });
 
 });

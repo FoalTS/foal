@@ -6,7 +6,7 @@ import {
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
-import { /* upperFirstCamelName */ } from '../entities';
+import { /* upperFirstCamelName */ } from '/* entitiesPath */';
 
 const /* camelName */Schema = {
   additionalProperties: false,
