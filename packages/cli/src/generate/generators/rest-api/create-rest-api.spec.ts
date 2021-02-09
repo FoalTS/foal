@@ -1,5 +1,5 @@
 // std
-import { strictEqual, throws } from 'assert';
+import { throws } from 'assert';
 
 // FoalTS
 import { ClientError, FileSystem } from '../../file-system';
@@ -100,15 +100,19 @@ describe.only('createRestApi', () => {
         }
       );
 
-      it('should update in the controllers/ directory the index.ts file if it exists and export the controller.', () => {
-        fs
-          .copyFixture('rest-api/index.controllers.ts', 'controllers/index.ts');
+      it(
+        'should update in the controllers/ directory the index.ts file '
+        + 'if it exists and export the controller.',
+        () => {
+          fs
+            .copyFixture('rest-api/index.controllers.ts', 'controllers/index.ts');
 
-        createRestApi({ name: 'test-fooBar', register: false });
+          createRestApi({ name: 'test-fooBar', register: false });
 
-        fs
-          .assertEqual('controllers/index.ts', 'rest-api/controllers/index.ts');
-      });
+          fs
+            .assertEqual('controllers/index.ts', 'rest-api/controllers/index.ts');
+        }
+        );
 
       it('should update in the entities/ directory the index.ts file if it exists and export the entity.', () => {
         fs
@@ -143,15 +147,19 @@ describe.only('createRestApi', () => {
           );
         });
 
-        it('should register the controller in the file app.controller.ts if it exists in the current directory.', () => {
-          fs
-            .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
+        it(
+          'should register the controller in the file app.controller.ts '
+          + 'if it exists in the current directory.',
+          () => {
+            fs
+              .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
 
-          createRestApi({ name: 'test-fooBar', register: true });
+            createRestApi({ name: 'test-fooBar', register: true });
 
-          fs
-            .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
-        });
+            fs
+              .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
+          }
+        );
 
       });
 
@@ -172,7 +180,10 @@ describe.only('createRestApi', () => {
         fs
           .cd('controllers/barfoo/api')
           .assertEqual('test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.subdir.ts')
-          .assertEqual('test-foo-bar.controller.spec.ts', 'rest-api/controllers/test-foo-bar.controller.spec.subdir.ts');
+          .assertEqual(
+            'test-foo-bar.controller.spec.ts',
+            'rest-api/controllers/test-foo-bar.controller.spec.subdir.ts'
+          );
       });
 
       it('should create in the sub-directories the controller and its test (auth flag).', () => {
@@ -221,18 +232,21 @@ describe.only('createRestApi', () => {
         }
       );
 
-      it('should update in controllers/ the sub-directories the index.ts file if it exists and export the controller.', () => {
-        fs
-          .ensureDir('controllers/barfoo/api')
-          .cd('controllers/barfoo/api')
-          .copyFixture('rest-api/index.controllers.ts', 'index.ts');
+      it(
+        'should update in controllers/ the sub-directories the index.ts file '
+        + 'if it exists and export the controller.',
+        () => {
+          fs
+            .ensureDir('controllers/barfoo/api')
+            .cd('controllers/barfoo/api')
+            .copyFixture('rest-api/index.controllers.ts', 'index.ts');
 
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
 
-        fs
-          .assertEqual('index.ts', 'rest-api/controllers/index.ts');
-      });
-
+          fs
+            .assertEqual('index.ts', 'rest-api/controllers/index.ts');
+        }
+      );
 
       it('should update in the entities/ directory the index.ts file if it exists and export the entity.', () => {
         fs

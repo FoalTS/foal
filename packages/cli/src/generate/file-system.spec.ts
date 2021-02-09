@@ -32,9 +32,9 @@ describe('ClientError', () => {
 
   it('should have a "name" property equal to ClientError', () => {
     strictEqual(new ClientError().name, 'ClientError');
-  })
+  });
 
-})
+});
 
 describe('FileSystem', () => {
 
