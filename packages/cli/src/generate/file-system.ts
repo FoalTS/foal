@@ -39,7 +39,9 @@ function rmDirAndFiles(path: string) {
  * @class ClientError
  * @extends {Error}
  */
-export class ClientError extends Error {}
+export class ClientError extends Error {
+  readonly name = 'ClientError';
+}
 
 /**
  * This class provides more methods that Node std "fs".

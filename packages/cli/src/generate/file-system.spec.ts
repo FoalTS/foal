@@ -24,6 +24,18 @@ function mkdir(path: string) {
   }
 }
 
+describe('ClientError', () => {
+
+  it('should inherit from Error', () => {
+    strictEqual(new ClientError() instanceof Error, true);
+  });
+
+  it('should have a "name" property equal to ClientError', () => {
+    strictEqual(new ClientError().name, 'ClientError');
+  })
+
+})
+
 describe('FileSystem', () => {
 
   let fs: FileSystem;
