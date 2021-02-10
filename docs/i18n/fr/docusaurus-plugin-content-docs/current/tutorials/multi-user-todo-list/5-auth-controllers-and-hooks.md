@@ -1,30 +1,30 @@
 ---
-title: Auth Controllers & Hooks
+title: Contrôleurs & Hooks d'Authentification
 ---
 
-So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
+Jusqu'à présent, vous avez défini le modèle `User` et écrit un script pour créer de nouveaux utilisateurs avec leur mot de passe et leur adresse email. L'étape suivante consiste à créer un contrôleur pour connecter ou déconnecter les utilisateurs.
 
-Here is the architecture that we want:
+Voici l'architecture que nous voulons :
 
-1. Users open the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, the page is refreshed with an error message.
-1. Users can view, create and delete their todos in the page `/`.
-1. When they click the button `Log out`, they are deconnected and redirected to the page `/signin`.
+1. Les utilisateurs ouvrent la page `/signin`, entrent leurs identifiants et sont ensuite redirigés vers la page `/` si les identifiants sont corrects. S'ils ne le sont pas, la page est rafraîchie avec un message d'erreur.
+1. Les utilisateurs peuvent voir, créer et supprimer leurs todos sur la page `/`.
+1. Lorsqu'ils cliquent sur le bouton `Log out`, ils sont déconnectés et redirigés vers la page `/signin`.
 
-When the user presses the `Log in` button in the login page, the page requests `POST /auth/login` with the credentials as body.
+Lorsque l'utilisateur appuie sur le bouton `Log in` dans la page de connexion, la page envoie une requête `POST /auth/login` avec les informations d'identification dans le corps.
 
-When the user presses the `Log out` button in the todo-list page, the page requests `POST /auth/logout`.
+Lorsque l'utilisateur appuie sur le bouton `Log out` dans la page de la liste de tâches, la page envoie une requête `POST /auth/logout`.
 
-> In this scenario, the authentication process is handled with sessions and http redirections. You will not use [JWT tokens](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) which are sometimes used in *Single Page Applications* (SPA).
+> Dans ce scénario, le processus d'authentification est géré avec des sessions et des redirections HTTP. Vous n'utiliserez pas les [jetons JWT](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) qui sont parfois utilisés dans les *Single Page Applications* (SPA).
 
-## The Login and Main Pages
+## Les Pages Principale et de Connexion
 
-Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v2.zip).
+Téléchargez les fichiers html, css et js en cliquant [ici](https://foalts.org/multi-user-todo-list-v2.zip).
 
-Empty the `public/` directory.
+Videz le répertoire `public/`.
 
-Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` files to a new directory `templates/` at the root of your project.
+Déplacez ensuite les fichiers `script.js` et `style.css` vers `public/` et les fichiers `index.html`, `signin.html` et `signup.html` vers un nouveau répertoire `templates/` à la racine de votre projet.
 
-Open the `app.controller.ts` file and add three new routes to serve the pages.
+Ouvrez le fichier `app.controller.ts` et ajoutez trois nouvelles routes pour servir les pages.
 
 ```typescript
 import { Context, controller, Get, IAppController, render, Session, UseSessions } from '@foal/core';
@@ -64,19 +64,19 @@ export class AppController implements IAppController {
 }
 ```
 
-Open your browser and go to `http://localhost:3001/signin`. The login page should show up.
+Ouvrez votre navigateur et allez sur http://localhost:3001/signin. La page de connexion devrait s'afficher.
 
-## Login Controllers
+## Contrôleurs de Connexion
 
-The next step is to create a controller that logs the users in or out and redirects them after the operation succeeds or fails. It needs two routes `/login` and `/logout`.
+L'étape suivante consiste à créer un contrôleur qui connecte ou déconnecte les utilisateurs et les redirige après la réussite ou l'échec de l'opération. Il a besoin de deux routes `/login` et `/logout`.
 
 ```
 foal generate controller auth --register
 ```
 
-> The `--register` flag directly adds a new line in `app.controller.ts` to declare the `AuthController` as a sub-controller of `AppController`.
+> Le drapeau `--register` ajoute directement une nouvelle ligne dans `app.controller.ts` pour déclarer l'`AuthController` comme un sous-contrôleur de `AppController`.
 
-Open the new file `auth.controller.ts` and replace its content.
+Ouvrez le nouveau fichier `auth.controller.ts` et remplacez son contenu.
 
 ```typescript
 // 3p
@@ -139,17 +139,17 @@ export class AuthController {
 
 ```
 
-> Writting `User.findOne({ email: email, password: password })` cannot work since the password needs to be hashed.
+> Ecrire `User.findOne({ email: email, password: password })` ne peut pas fonctionner car le mot de passe doit être haché.
 
-Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
+Retournez à votre navigateur et essayez de vous connecter avec l'e-mail `john@foalts.org` et le mot de passe `mary_password`. Vous êtes redirigé vers la même page et le message `Invalid email or password.` apparaît. Utilisez maintenant le mot de passe `john_password` et essayez de vous connecter. Vous êtes redirigé vers la page todo-list où tous les todos sont répertoriés. Si vous cliquez sur le bouton `Log out`, vous êtes alors redirigé vers la page de connexion !
 
-## Access control
+## Contrôle d'accès
 
-Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
+Super, jusqu'à présent vous pouvez authentifier les utilisateurs. Mais comme vous n'avez pas encore ajouté le contrôle d'accès à la page "todo-list" et à l'API, les utilisateurs non authentifiés peuvent toujours y accéder.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `UserRequired` which returns a 401 error or redirects the user if user is not logged in. 
+La façon habituelle de gérer les autorisations est d'utiliser un *hook*. Dans ce cas, vous allez utiliser le hook intégré `UserRequired` qui renvoie une erreur 401 ou redirige l'utilisateur si celui-ci n'est pas connecté. 
 
-Update `app.controller.ts`.
+Mettez à jour `app.controller.ts`.
 
 ```typescript
 import { Context, controller, Get, IAppController, render, Session, UserRequired, UseSessions } from '@foal/core';
@@ -175,7 +175,7 @@ export class AppController extends IAppController {
 }
 ```
 
-Update `api.controller.ts`.
+Mettez à jour `api.controller.ts`.
 
 ```typescript
 import {
@@ -194,6 +194,6 @@ export class ApiController {
 }
 ```
 
-> When a hook decorates a controller class, it applies to all the routes of the controller and its sub-controllers.
+> Lorsqu'un hook décore une classe de contrôleur, il s'applique à toutes les routes du contrôleur et de ses sous-contrôleurs.
 
-Go to `http://localhost:3001`. If you are not logged in you should be redirected to the login page.
+Allez sur `http://localhost:3001`. Si vous n'êtes pas connecté, vous devriez être redirigé vers la page de connexion.

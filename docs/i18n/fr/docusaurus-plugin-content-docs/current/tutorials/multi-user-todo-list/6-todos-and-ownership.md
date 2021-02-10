@@ -1,10 +1,10 @@
 ---
-title: Todos & Ownership
+title: Todos & Possession
 ---
 
-Currently the API returns everyone's todos to each user. This is not the expected behavior. We would like that each user has access to only his or her tasks.
+Actuellement, l'API renvoie les todos de chacun à chaque utilisateur. Ce n'est pas le comportement attendu. Nous aimerions que chaque utilisateur n'ait accès qu'à ses tâches.
 
-Go back to the `ApiController` and update the `getTodos` route.
+Retournez à l'`ApiController` et mettez à jour la route `getTodos`.
 
 ```typescript
   @Get('/todos')
@@ -14,19 +14,19 @@ Go back to the `ApiController` and update the `getTodos` route.
   }
 ```
 
-> The `Context` object contains four properties:
-> - the express [request object](https://expressjs.com/en/4x/api.html#req),
-> - an empty object called `state` which can be used to share data between hooks, 
-> - a `session` object,
-> - and the `user` object that is defined if a user logged in.
+> L'objet `Context` contient quatre propriétés :
+> - l'objet [requête d'Express](https://expressjs.com/en/4x/api.html#req),
+> - un objet vide appelé `state` qui peut être utilisé pour partager des données entre les hooks, 
+> - un objet `session`,
+> - et l'objet `user` qui est défini si un utilisateur se connecte.
 
-Refresh the todo-list page. You should only see the todos of the user with whom you logged in.
+Rafraîchissez la page todo-list. Vous ne devriez voir que les todos de l'utilisateur avec lequel vous vous êtes connecté.
 
-Yet, if you try to create a new to-do, it will disappear upon page refresh. This is perfectly normal since we do not specify its owner upon creation.
+Cependant, si vous essayez de créer une nouvelle tâche, elle disparaîtra lors du rafraîchissement de la page. Ceci est parfaitement normal puisque nous ne spécifions pas son propriétaire lors de la création.
 
-As for the delete feature, you also need to restrict its access. Users should only be able to delete their todos.
+Quant à la fonction de suppression, vous devez également en restreindre l'accès. Les utilisateurs ne devraient pouvoir supprimer que leurs tâches.
 
-Update the api controller.
+Mettez à jour le contrôleur de l'API.
 
 ```typescript
   @Post('/todos')
@@ -65,4 +65,4 @@ Update the api controller.
   }
 ```
 
-The application is now working properly.
+L'application fonctionne maintenant correctement.

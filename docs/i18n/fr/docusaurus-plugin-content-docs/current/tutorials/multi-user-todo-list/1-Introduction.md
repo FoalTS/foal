@@ -2,25 +2,25 @@
 title: Introduction
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> Vous lisez la documentation de la version 2 de FoalTS. Les instructions pour la mise à jour vers cette version sont disponibles [ici](../../upgrade-to-v2/README.md). L'ancienne documentation se trouve [ici](https://github.com/FoalTS/foal/tree/v1.x/docs).
 
-In this tutorial you will learn how to manage users, authentication and authorization in FoalTS. You will also have a quick overview of end-to-end testing.
+Dans ce tutoriel, vous apprendrez comment gérer les utilisateurs, l'authentification et l'autorisation dans FoalTS. Vous aurez également un aperçu rapide des tests de bout en bout.
 
-For that, you are going to create a multi-user to-do list. It will extend the application created in the previous tutorial [Simple To-Do List](../simple-todo-list/1-installation.md) that you must follow before going through this one.
+Pour cela, vous allez créer une liste de tâches multi-utilisateurs. Elle prolongera l'application créée dans le tutoriel précédent [To-Do Liste Simple](../simple-todo-list/1-installation.md) que vous devez suivre avant de passer à celui-ci.
 
-> The source code of the first tutorial is available [here](https://foalts.org/simple-todo-list-source-code-v2.zip).
+> Le code source du premier tutoriel est disponible [ici](https://foalts.org/simple-todo-list-source-code-v2.zip).
 
-The application will have three pages:
-- a sign up page where users can create a new account with an email and a password,
-- a login page that expects an email and a password to sign in,
-- and the todo-list page where the tasks are listed, created and deleted.
+L'application aura trois pages :
+- une page d'inscription où les utilisateurs peuvent créer un nouveau compte avec une adresse email et un mot de passe,
+- une page de connexion qui attend une adresse email et un mot de passe pour s'identifier,
+- et la page todo-list où les tâches sont listées, créées et supprimées.
 
-Each user will have her/his own todos and will not be able to view, create or delete other people's todos.
+Chaque utilisateur aura ses propres todos et ne pourra pas visualiser, créer ou supprimer les todos d'autres personnes.
 
-The pages look like this:
+Les pages ressemblent à ceci :
 
 ![Sign up page](./signup.png)
 ![Login page](./signin.png)
 ![To-do list page](./todo-list.png)
 
-Let's get started!
+Commençons !

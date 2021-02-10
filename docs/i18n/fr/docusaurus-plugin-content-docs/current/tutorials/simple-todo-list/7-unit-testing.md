@@ -1,12 +1,12 @@
 ---
-title: Unit Testing
+title: Tests Unitaires
 ---
 
-The last step of this tutorial is to add some unit tests to the `ApiController`.
+La dernière étape de ce tutoriel consiste à ajouter des tests unitaires à l'`ApiController`.
 
-A unit test file ends with the `spec.ts` extension and is usually placed next to the file it is testing.
+Un fichier de test unitaire se termine par l'extension `spec.ts` et est généralement placé à côté du fichier qu'il teste.
 
-Open the file `api.controller.spec.ts` and replace its content.
+Ouvrez le fichier `api.controller.spec.ts` et remplacez son contenu.
 
 ```typescript
 // std
@@ -82,25 +82,25 @@ describe('ApiController', () => {
 
 ```
 
-> As a controller method returns an `HttpResponse` object, it is really easy to test the status and body of the response.
+> Comme une méthode de contrôle renvoie un objet `HttpResponse`, il est très facile de tester le statut et le corps de la réponse.
 
 
-> If the controller method takes a `Context` object as argument, you can instantiate one like this: `new Context({ /* content of the express request object */})`.
+> Si la méthode du contrôleur prend un objet `Context` comme argument, vous pouvez en instancier un comme ceci : `new Context({ /* content of the express request object */})`.
 
-Run the tests.
+Exécutez les tests.
 
 ```
 npm run test
 ```
 
-> This command watches at your tests and tested files in the `app/` and `scripts/` directories. When a file is modified, it automatically recompiles and re-runs your tests.
+> Cette commande surveille vos tests et vos fichiers testés dans les répertoires `app/` et `scripts/`. Lorsqu'un fichier est modifié, elle recompile et relance automatiquement vos tests.
 
-You should now end up with this output:
+Vous devriez maintenant vous retrouver avec cette sortie :
 
-![Unit tests output](./unit-tests-output.png)
+![Sortie des tests unitaires](./unit-tests-output.png)
 
-Congratulations! You have reached the end of this tutorial!
+Félicitations ! Vous avez atteint la fin de ce tutoriel !
 
-If you have any questions, feel free to open an issue on Github!
+Si vous avez des questions, n'hésitez pas à ouvrir une issue sur Github !
 
-> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code-v1.zip).
+> Le code source complet est disponible [ici](https://foalts.org/simple-todo-list-source-code-v1.zip).

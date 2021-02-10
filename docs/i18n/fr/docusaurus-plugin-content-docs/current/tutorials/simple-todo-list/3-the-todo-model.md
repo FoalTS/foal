@@ -1,19 +1,19 @@
 ---
-title: The Todo Model
+title: Le Modèle Todo
 ---
 
-Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
+Créons votre premier modèle. La CLI fournit une commande utile pour générer un nouveau fichier avec un modèle vide.
 
 ```sh
 foal generate entity todo
 ```
 
-> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapper*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
+> FoalTS utilise [TypeORM](http://typeorm.io), un *Object-Relational Mapper* complet, pour communiquer avec la (les) base(s) de données. Dans TypeORM, les modèles simples sont appelés *entités* et sont des classes décorées avec le décorateur `Entity`.
 
 
-> Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.
+> Chaque nouveau projet dans FoalTS utilise une base de données `SQLite` car elle ne nécessite aucune installation supplémentaire. Mais TypeORM prend en charge de nombreuses autres bases de données. Nous garderons celle-ci dans ce tutoriel pour plus de simplicité.
 
-Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
+Ouvrez le fichier `todo.entity.ts` dans le répertoire `src/app/entities` et ajoutez une colonne `text`.
 
 ```typescript
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -31,19 +31,19 @@ export class Todo extends BaseEntity {
 
 ```
 
-This class is the representation of the SQL table `todo`. Currently, this table does not exist in the database. You will have to create it.
+Cette classe est la représentation de la table SQL `todo`. Actuellement, cette table n'existe pas dans la base de données. Vous allez devoir la créer.
 
-You can do this manually, using a database software for example, or use migrations, a programmatic way to update a database schema. The advantage of using migrations is that you can create, update and delete your tables directly from the definition of your entities. They also ensure that all your environments (prod, dev) and co-developers have the same table definitions.
+Vous pouvez le faire manuellement, en utilisant un logiciel de base de données par exemple, ou utiliser les migrations, une façon programmatique de mettre à jour un schéma de base de données. L'avantage de l'utilisation des migrations est que vous pouvez créer, mettre à jour et supprimer vos tables directement à partir de la définition de vos entités. Elles permettent également de s'assurer que tous vos environnements (prod, dev) et vos co-développeurs ont les mêmes définitions de tables.
 
-Let&#8217;s see how to use them.
+Voyons comment les utiliser.
 
-First run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
+Exécutez d&#8217;abord la commande suivante pour générer votre fichier de migration. TypeORM va comparer votre schéma de base de données actuel avec la définition de vos entités et générer les requêtes SQL appropriées.
 
 ```
 npm run makemigrations
 ```
 
-A new file appears in the `src/migrations/` directory. Open it.
+Un nouveau fichier apparaît dans le répertoire `src/migrations/`. Ouvrez-le.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
@@ -64,17 +64,17 @@ export class migration1562755564200 implements MigrationInterface {
 
 ```
 
-The `up` method contains all the SQL queries that will be executed during the migration.
+La méthode `up` contient toutes les requêtes SQL qui seront exécutées pendant la migration.
 
-Then run the migration.
+Exécutez ensuite la migration.
 
 ```
 npm run migrations
 ```
 
-TypeORM examines all the migrations that have been run previously (none in this case) and executes the new ones.
+TypeORM examine toutes les migrations qui ont été exécutées précédemment (aucune dans ce cas) et exécute les nouvelles.
 
-Your database (`db.sqlite3`) now contains a new table named `todo`:
+Votre base de données (`db.sqlite3`) contient maintenant une nouvelle table nommée `todo` :
 
 
 ```
@@ -86,4 +86,4 @@ Your database (`db.sqlite3`) now contains a new table named `todo`:
 +------------+-----------+-------------------------------------+
 ```
 
-> Alternatively, you can also use the `synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, although this behavior may be useful during debug and development, it is not suitable for a production environment (you could lose production data).
+> Vous pouvez également utiliser l'option `synchronize` dans votre fichier de configuration `config/default.json`. Lorsque cette option est définie sur `true`, le schéma de la base de données est automatiquement créé à partir de la définition des entités à chaque lancement de l'application. Vous n'avez pas besoin de migrations dans ce cas. Cependant, bien que ce comportement puisse être utile pendant le débogage et le développement, il n'est pas adapté à un environnement de production (vous pourriez perdre des données de production).

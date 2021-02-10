@@ -2,29 +2,29 @@
 title: Introduction
 ---
 
-The application that you will create is a simple to-do list. It consists of a frontend part that has already been written for you and a backend part that will be the topic of this tutorial.
+L'application que vous allez créer est une simple liste de tâches. Elle se compose d'une partie frontend qui a déjà été écrite pour vous et d'une partie backend qui sera le sujet de ce tutoriel.
 
-First download the html, css and js files by clicking [here](https://foalts.org/simple-todo-list.zip).
+Téléchargez d'abord les fichiers html, css et js en cliquant [ici](https://foalts.org/simple-todo-list.zip).
 
-Put the downloaded, unzipped files in the static directory `public/`.
+Placez les fichiers téléchargés et décompressés dans le répertoire statique `public/`.
 
-The code executed in the browser will make API calls to the server to view, create and delete the tasks.
+Le code exécuté dans le navigateur fera des appels API au serveur pour visualiser, créer et supprimer les tâches.
 
-Refresh the page. You should now see this:
+Rafraîchissez la page. Vous devriez maintenant voir ceci :
 
 ![Browser view](./app.png)
 
-> As you haven&#8217;t yet implemented the server API, the frontend gets an error when fetching the to-dos. It is displayed at the bottom of the page. If you try to type something in the text input and press Enter to create a new task, you&#8217;ll get an error as well.
+> Comme vous n'avez pas encore implémenté l'API du serveur, le frontend obtient une erreur lors de la récupération des tâches. Elle est affichée en bas de la page. Si vous essayez de taper quelque chose dans le champs de texte et que vous appuyez sur la touche Entrée pour créer une nouvelle tâche, vous obtiendrez également une erreur.
 
-Let&#8217;s see the details of the API we want to build.
+Voyons les détails de l'API que nous voulons construire.
 
-**List the tasks**
-- Request:
-  - method: `GET`
-  - path: `/api/todos`
-- Response:
+**Lister les tâches**
+- Requête:
+  - méthode: `GET`
+  - chemin: `/api/todos`
+- Réponse:
   - status: 200 (OK)
-  - body: 
+  - corps: 
     ```json
     [
       { "id": 1, "text": "Task 1" },
@@ -32,19 +32,19 @@ Let&#8217;s see the details of the API we want to build.
     ]
     ```
 
-**Create a task**
-- Request:
-  - method: `POST`
-  - path: `/api/todos`
-  - body:
+**Créer une tâche**
+- Requête:
+  - méthode: `POST`
+  - chemin: `/api/todos`
+  - corps:
     ```json
     {
       "text": "Task 3"
     }
     ```
-- Response:
+- Réponse:
   - status: 201 (Created)
-  - body: 
+  - corps: 
     ```json
     {
       "id": 3,
@@ -52,9 +52,9 @@ Let&#8217;s see the details of the API we want to build.
     }
     ```
 
-**Delete a task**
-- Request:
-  - method: `DELETE`
-  - path: `/api/todos/3`
-- Response:
+**Supprimer une tâche**
+- Requête:
+  - méthode: `DELETE`
+  - chemin: `/api/todos/3`
+- Réponse:
   - status: 204 (No Content)

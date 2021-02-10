@@ -1,12 +1,12 @@
 ---
-title: The REST API
+title: L'API REST
 ---
 
-Good, so far you have a frontend working properly and some todos in your database. Now it is time to code a REST API to link them both.
+Bien, pour l'instant, vous avez un frontend qui fonctionne correctement et quelques todos dans votre base de données. Il est maintenant temps de coder une API REST pour relier les deux.
 
-To do so, you are going to use a *controller*. Controllers receive the HTTP requests and process them. They may call *services* in the background to help them do this. We will not study the services in this tutorial.
+Pour ce faire, vous allez utiliser un *contrôleur*. Les contrôleurs reçoivent les requêtes HTTP et les traitent. Ils peuvent appeler des *services* en arrière-plan pour les aider à le faire. Nous n'étudierons pas les services dans ce tutoriel.
 
-Open the file `api.controller.ts` in the `src/app/controllers/` directory and replace its content.
+Ouvrez le fichier `api.controller.ts` dans le répertoire `src/app/controllers/` et remplacez son contenu.
 
 ```typescript
 import { Get, HttpResponseOK } from '@foal/core';
@@ -24,14 +24,13 @@ export class ApiController {
 
 }
 ```
+Les contrôleurs disposent de méthodes spéciales qui définissent les routes et leurs gestionnaires respectifs. Ces fonctions sont décorées par l'un des décorateurs `Get`, `Post`, `Patch`, `Put` ou `Delete` qui définissent la méthode HTTP et le chemin de la route.
 
-Controllers have special methods that define the routes and their respective handlers. These functions are decorated by one of the decorators `Get`, `Post`, `Patch`, `Put` or `Delete` which define the http method and the path of the route.
+Dans ce cas, le contrôleur répond avec un statut 200 et une donnée *mock* (les deux faux todos).
 
-In this case the controller responds with a 200 status and a mock data (the two fake todos).
+Rafraîchissez votre navigateur, vous devriez voir les deux todos affichés.
 
-Refresh your browser, you should see the two todos printed.
-
-Now, we would like to return the todos stored in the database. Update the code as follows:
+Maintenant, nous aimerions retourner les todos stockés dans la base de données. Mettez à jour le code comme suit :
 
 ```typescript
 import {
@@ -52,9 +51,9 @@ export class ApiController {
 }
 ```
 
-If you refresh your browser, you should now see the tasks that we created through the command line.
+Si vous rafraîchissez votre navigateur, vous devriez maintenant voir les tâches que nous avons créées avec la ligne de commande.
 
-Add the create and delete features.
+Ajoutez les fonctionnalités de création et de suppression.
 
 ```typescript
   @Post('/todos')
@@ -88,13 +87,13 @@ Add the create and delete features.
   }
 ```
 
-The `Context` object, which is passed to each route handler, contains the express [request object](https://expressjs.com/en/4x/api.html#req). This represents the HTTP request and has properties for the request query string, parameters, body, HTTP headers, and so on.
+L'objet `Context`, qui est transmis à chaque gestionnaire de route, contient l'[objet requête d'Express](https://expressjs.com/en/4x/api.html#req). Celui-ci représente la requête HTTP et possède des propriétés pour les paramètres d'URL de la requête, son corps, ses en-têtes HTTP, etc.
 
-Now type a new todo in the input text and press Enter. The task appears in the todo list. Refresh the page, it should still be there. If you click on the checkbox, the todo is successfully deleted.
+Tapez maintenant un nouveau todo dans le champs de texte et appuyez sur Entrée. La tâche apparaît dans la liste des tâches. Rafraîchissez la page, elle devrait toujours y être. Si vous cliquez sur la case à cocher, le todo est supprimé avec succès.
 
-The last thing to know is how the `ApiController` is bound to the request handler. You defined so far routes in this controller but never registered the controller anywhere. This is done in the `app.controller.ts` file, the entry point of your application.
+La dernière chose à savoir est la manière dont l'`ApiController` est lié au gestionnaire de requêtes. Vous avez défini jusqu'à présent des routes dans ce contrôleur mais vous n'avez jamais lié le contrôleur nulle part. Cela se fait dans le fichier `app.controller.ts`, le point d'entrée de votre application.
 
-Open the file `app.controller.ts` in `src/app`.
+Ouvrez le fichier `app.controller.ts` dans `src/app`.
 
 ```typescript
 import { controller, IAppController } from '@foal/core';
@@ -113,4 +112,4 @@ export class AppController implements IAppController {
 }
 ```
 
-This controller is the main controller of the application. It is directly called when a request comes in. It may have sub-controllers that go in the `controllers/` directory.
+Ce contrôleur est le contrôleur principal de l'application. Il est directement appelé lorsqu'une requête est reçue. Il peut avoir des sous-contrôleurs qui vont dans le répertoire `controllers/`.
