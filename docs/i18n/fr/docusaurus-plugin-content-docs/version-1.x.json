@@ -1,0 +1,98 @@
+{
+  "version.label": {
+    "message": "1.x",
+    "description": "The label for version 1.x"
+  },
+  "sidebar.someSidebar.category.TUTORIALS": {
+    "message": "TUTORIAUX",
+    "description": "The label for category TUTORIALS in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Simple To-Do List": {
+    "message": "To-Do Liste Simple",
+    "description": "The label for category Simple To-Do List in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Multi-User To-Do List": {
+    "message": "To-Do Liste Multi Utilisateurs",
+    "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.MongoDB To-Do List": {
+    "message": "To-Do Liste MongoDB",
+    "description": "The label for category MongoDB To-Do List in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.TOPIC GUIDES": {
+    "message": "GUIDES THEMATIQUES",
+    "description": "The label for category TOPIC GUIDES in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Architecture": {
+    "message": "Architecture",
+    "description": "The label for category Architecture in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Databases": {
+    "message": "Bases de données",
+    "description": "The label for category Databases in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Authentication & Access Control": {
+    "message": "Authentification & Contrôle d'Accès",
+    "description": "The label for category Authentication & Access Control in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.API": {
+    "message": "API",
+    "description": "The label for category API in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Frontend Integration": {
+    "message": "Intégration du Frontend",
+    "description": "The label for category Frontend Integration in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.File System": {
+    "message": "Système de Fichiers",
+    "description": "The label for category File System in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.CLI & Development Environment": {
+    "message": "CLI & Environnement de Développement",
+    "description": "The label for category CLI & Development Environment in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Testing": {
+    "message": "Test",
+    "description": "The label for category Testing in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Cloud": {
+    "message": "Cloud",
+    "description": "The label for category Cloud in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Security": {
+    "message": "Sécurité",
+    "description": "The label for category Security in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Utilities": {
+    "message": "Utilitaires",
+    "description": "The label for category Utilities in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Cookbook": {
+    "message": "Recettes",
+    "description": "The label for category Cookbook in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Deployment & Environments": {
+    "message": "Déploiement & Envionnements",
+    "description": "The label for category Deployment & Environments in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Upgrading": {
+    "message": "Mettre à jour",
+    "description": "The label for category Upgrading in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Community": {
+    "message": "Communauté",
+    "description": "The label for category Community in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.link.To v1": {
+    "message": "Vers v1",
+    "description": "The label for link To v1 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v1.0.0"
+  },
+  "sidebar.someSidebar.link.To v0.8": {
+    "message": "Vers v0.8",
+    "description": "The label for link To v0.8 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v0.8.0"
+  },
+  "sidebar.someSidebar.link.Awesome Foal": {
+    "message": "Awesome Foal",
+    "description": "The label for link Awesome Foal in sidebar someSidebar, linking to https://github.com/FoalTS/awesome-foalts"
+  }
+}

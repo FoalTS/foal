@@ -76,6 +76,7 @@ foal run create-user email="mary@foalts.org" password="mary_password"
 ```
 
 > If you try to re-run one of these commands, you'll get the error below as the email key is unique.
+>
 > `SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email`
 
 ## The `create-todo` script

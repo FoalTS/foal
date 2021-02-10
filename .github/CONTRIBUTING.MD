@@ -1,8 +1,21 @@
 # CONTRIBUTING
 
-Thanks for your interest in FoalTS!
+Thanks for your interest in Foal!
 
 There are several ways to contribute. **Reporting bugs are greatly appreciated**, so do not hesitate to open an issue/PR for that!
+
+**Table of Contents**
+
+- Security Vulnerabilities
+- Pull Requests
+- Development Environment
+- Dependency Policy
+- Testing and Documentation Policy
+- Semantic Versioning
+- Long-Term Support Policy and Schedule
+- Project Architecture
+- Conventions
+- Translations
 
 ## Security Vulnerabilities
 
@@ -164,3 +177,47 @@ import { Column } from 'typeorm';
 // FoalTS
 import { something } from '../somewhere';
 ```
+
+## Translations
+
+If you wish to translate the website into another language, please submit an issue so that we can assign the task to to you.
+
+At the moment, the parts of the documentation that need to be translated are the following. These are the most stable parts:
+- Navigation bar
+- Docs sidebar
+- Page titles
+- Tutorials
+
+Here are the steps to translate the website:
+1. Pull the repository.
+1. Make sure you have the latest version of `master`.
+1. Update `docs/docusaurus.config.js` to add your language.
+1. Run the following commands (example with fr=French, use your own language):
+    ```
+    git checkout -b website-french-translation
+    cd docs
+    npm install
+    npm run write-translations -- --locale fr
+    mkdir -p i18n/fr/docusaurus-plugin-content-docs/current
+    cp -r docs/** i18n/fr/docusaurus-plugin-content-docs/current
+    ```
+1. Test that the operations worked properly by running `npm run start -- --locale fr`.
+1. Then commit the changes
+    ```
+    git add .
+    git commit -m "[Website] Copy English docs for translation (FR)"
+    ```
+1. Then you can translate the following parts:
+  - `i18n/fr/docusaurus-theme-classic/navbar.json`
+  - `i18n/fr/docusaurus-plugin-content-docs/current.json`
+  - `i18n/fr/docusaurus-plugin-content-docs/version-1.x.json`
+  - `i18n/fr/docusaurus-plugin-content-docs/current/tutorials/**.md`
+  - the titles of the other pages in `i18n/fr/docusaurus-plugin-content-docs/current/` (the titles are given in the files).
+
+Here are some guidelines to maintain consistency between translations (and to make it easier to update them):
+- English docs are the only source of truth. No new content or explanations are added in translated files. They are just translations.
+- The framework name should not be translated (Foal and FoalTS).
+- The names of the files must be the same as those in English.
+- The code examples (variable names, etc) are left as is. They are not translated.
+- Use the same number of paragraphs and line breaks.
+- Try to be consistent throughout the translation (names, etc.).
