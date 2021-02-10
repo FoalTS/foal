@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[165],{238:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Version 2.1 release notes","permalink":"/fr/blog/2021/02/03/version-2.1-release-notes"}]}')}}]);
