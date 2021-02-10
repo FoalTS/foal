@@ -1,5 +1,5 @@
 ---
-title: Templates - Server-Side Rendering
+title: Templates - Rendu côté serveur (SSR)
 sidebar_label: Templates (SSR)
 ---
 

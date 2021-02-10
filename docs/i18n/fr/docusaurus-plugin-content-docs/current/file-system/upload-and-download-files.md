@@ -1,6 +1,6 @@
 ---
-title: Upload and Download Files
-sidebar_label: Upload & Download Files
+title: Télécharger des Fichiers
+sidebar_label: Télécharger des Fichiers
 ---
 
 import Tabs from '@theme/Tabs';

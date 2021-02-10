@@ -1,6 +1,6 @@
 ---
-title: Session Tokens
-sidebar_label: Session Tokens (authentication)
+title: Jetons de Session
+sidebar_label: Jetons de Session (authentification)
 ---
 
 import Tabs from '@theme/Tabs';

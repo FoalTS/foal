@@ -1,5 +1,5 @@
 ---
-title: Validation & Sanitization
+title: Validation & Assainissement
 ---
 
 import Tabs from '@theme/Tabs';

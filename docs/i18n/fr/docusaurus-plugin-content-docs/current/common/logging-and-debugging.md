@@ -1,5 +1,5 @@
 ---
-title: Logging & Debugging
+title: Journalisation & Débogage
 ---
 
 import Tabs from '@theme/Tabs';

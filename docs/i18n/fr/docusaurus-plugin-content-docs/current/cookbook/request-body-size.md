@@ -1,5 +1,5 @@
 ---
-title: Request Body Size
+title: Taille du Corps de Requête
 ---
 
 import Tabs from '@theme/Tabs';

@@ -1,6 +1,6 @@
 ---
 title: TypeORM
-sidebar_label: SQL Databases
+sidebar_label: Bases de Données SQL
 ---
 
 import Tabs from '@theme/Tabs';

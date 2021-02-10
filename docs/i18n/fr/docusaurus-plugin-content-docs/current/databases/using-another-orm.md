@@ -1,6 +1,6 @@
 ---
-title: Using Another ORM or Query Builder
-sidebar_label: Using Another ORM
+title: Utiliser un Autre ORM ou Constructeur de Requêtes
+sidebar_label: Utiliser un Autre ORM
 ---
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
