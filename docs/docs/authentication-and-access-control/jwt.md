@@ -556,13 +556,26 @@ module.exports = {
 
 JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
-#### Provide the Public/Private Key
+#### Provide the Public and Private Keys
 
-*Example with a `.env` file*
+First of all, specify in the configuration where the keys are stored.
+
+*config/default.js*
+```javascript
+const { Env } = require('@foal/core');
+const { readFileSync } = require('fs');
+
+module.exports = {
+  settings: {
+    jwt: {
+      privateKey: Env.get('RSA_PRIVATE_KEY') || readFileSync('./id_rsa', 'utf8'),
+      publicKey: Env.get('RSA_PUBLIC_KEY') || readFileSync('./id_rsa.pub', 'utf8'),
+    }
+  }
+}
 ```
-SETTINGS_JWT_PUBLIC_KEY=my_public_key
-SETTINGS_JWT_PRIVATE_KEY=my_private_key
-```
+
+Then you can provide the keys in RSA files (`id_rsa` and `.id_rsa/pub`) or in environment variables.
 
 ### Generate Temporary Tokens
 
