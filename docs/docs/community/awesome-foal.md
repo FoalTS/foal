@@ -1,5 +1,5 @@
 ---
-title: Awesome Foal TS
+title: Awesome Foal
 ---
 
 A collection of awesome libraries and ressources from the community.

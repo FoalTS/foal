@@ -1,7 +1,7 @@
 // std
 import { strictEqual } from 'assert';
 
-// Foal TS
+// FoalTS
 import { UserInfoError } from './user-info.error';
 
 describe('UserInfoError', () => {
