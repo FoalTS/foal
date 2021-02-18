@@ -104,7 +104,7 @@ const token = sign(
 
 > The `getSecretOrPrivateKey` function tries to read the configurations `settings.jwt.secret` and `settings.jwt.privateKey`. It throws an error if not value is provided. The function `getSecretOrPublicKey` works similarly.
 
-- The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-User-Properties).
+- The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#make-a-database-call-to-get-more-user-properties).
 - Each token should have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
 
 ### Example of a `LoginController`
