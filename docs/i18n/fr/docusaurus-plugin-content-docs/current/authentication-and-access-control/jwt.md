@@ -104,7 +104,7 @@ const token = sign(
 
 > The `getSecretOrPrivateKey` function tries to read the configurations `settings.jwt.secret` and `settings.jwt.privateKey`. It throws an error if not value is provided. The function `getSecretOrPublicKey` works similarly.
 
-- The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#Make-a-Database-Call-to-Get-More-User-Properties).
+- The `subject` property (or `sub`) is only required when [making a database call to get more user properties](#make-a-database-call-to-get-more-user-properties).
 - Each token should have an expiration time. Otherwise, the JWT will be valid indefinitely, which will raise security issues.
 
 ### Example of a `LoginController`
@@ -556,13 +556,26 @@ module.exports = {
 
 JWTs can also be signed using a public/private key pair using RSA or ECDSA.
 
-#### Provide the Public/Private Key
+#### Provide the Public and Private Keys
 
-*Example with a `.env` file*
+First of all, specify in the configuration where the keys are stored.
+
+*config/default.js*
+```javascript
+const { Env } = require('@foal/core');
+const { readFileSync } = require('fs');
+
+module.exports = {
+  settings: {
+    jwt: {
+      privateKey: Env.get('RSA_PRIVATE_KEY') || readFileSync('./id_rsa', 'utf8'),
+      publicKey: Env.get('RSA_PUBLIC_KEY') || readFileSync('./id_rsa.pub', 'utf8'),
+    }
+  }
+}
 ```
-SETTINGS_JWT_PUBLIC_KEY=my_public_key
-SETTINGS_JWT_PRIVATE_KEY=my_private_key
-```
+
+Then you can provide the keys in RSA files (`id_rsa` and `.id_rsa/pub`) or in environment variables.
 
 ### Generate Temporary Tokens
 

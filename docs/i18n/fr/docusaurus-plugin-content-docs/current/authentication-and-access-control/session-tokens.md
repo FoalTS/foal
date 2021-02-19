@@ -692,7 +692,7 @@ await store.destroyAllSessionsOf(user);
 When a user logs in or change their password, it is a [good practice](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change) to regenerate the session ID. This can be done with the `regenerateID` method.
 
 ```typescript
-ctx.session.regenerateID();
+await ctx.session.regenerateID();
 ```
 
 ## Advanced
