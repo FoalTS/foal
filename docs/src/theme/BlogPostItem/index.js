@@ -97,7 +97,7 @@ function BlogPostItem(props) {
           <div className={styles.shareBtnsContainer}>
             <a
               className={styles.twitterShareBtn}
-              href={`http://twitter.com/share?text=${title} @FoalTs&url=${articleUrl}&hashtags=NodeJS,TypeScript,JavaScript`}
+              href={`http://twitter.com/share?text=${title} @FoalTs&url=${articleUrl}&hashtags=NodeJS,TypeScript,JavaScript,webdev,webdevelopment`}
               target="_blank" />
             <a
               className={styles.linkedinShareBtn}
