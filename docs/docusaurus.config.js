@@ -20,6 +20,9 @@ module.exports = {
       },
     },
   },
+  scripts: [
+    'https://m.servedby-buysellads.com/monetization.custom.js'
+  ],
   themeConfig: {
     image: 'img/logo.png',
     googleAnalytics: {
