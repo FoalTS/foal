@@ -4,6 +4,7 @@ author: Loïc Poullain
 author_title: Fullstack developper and creator of FoalTS
 author_url: https://github.com/LoicPoullain
 author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+image: static/blog/twitter-banners/whats-new-in-version-2-part-1.png
 tags: [release]
 ---
 
