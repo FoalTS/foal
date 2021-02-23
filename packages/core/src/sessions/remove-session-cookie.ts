@@ -6,6 +6,7 @@ import {
   SESSION_DEFAULT_COOKIE_PATH,
   SESSION_DEFAULT_CSRF_COOKIE_NAME,
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
+  SESSION_USER_COOKIE_NAME,
 } from './constants';
 
 /**
@@ -13,10 +14,13 @@ import {
  *
  * If the CSRF protection is enabled, it also deletes the CSRF cookie containing the CSRF token.
  *
+ * If the `user` argument is true, it also deletes the "user" cookie.
+ *
  * @export
  * @param {HttpResponse} response - The HTTP response
+ * @param {boolean} [user] - Specify if the "user" cookie should be deleted.
  */
-export function removeSessionCookie(response: HttpResponse): void {
+export function removeSessionCookie(response: HttpResponse, user?: boolean): void {
   const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
 
   const csrfEnabled = Config.get('settings.session.csrf.enabled', 'boolean', false);
@@ -41,6 +45,13 @@ export function removeSessionCookie(response: HttpResponse): void {
   if (csrfEnabled) {
     const csrfCookieName = Config.get('settings.session.csrf.cookie.name', 'string', SESSION_DEFAULT_CSRF_COOKIE_NAME);
     response.setCookie(csrfCookieName, '', {
+      ...options,
+      httpOnly: false,
+    });
+  }
+
+  if (user) {
+    response.setCookie(SESSION_USER_COOKIE_NAME, '', {
       ...options,
       httpOnly: false,
     });
