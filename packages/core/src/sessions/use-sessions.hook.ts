@@ -33,6 +33,7 @@ export interface UseSessionOptions {
   openapi?: boolean;
   required?: boolean;
   create?: boolean;
+  clientUser?: (ctx: Context, services: ServiceManager) => string|Promise<string>;
 }
 
 export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
@@ -66,7 +67,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (ctx.session.isDestroyed) {
         if (options.cookie) {
-          removeSessionCookie(response);
+          removeSessionCookie(response, !!options.clientUser);
         }
         return;
       }
@@ -125,7 +126,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     if (!session) {
       const response = unauthorizedOrRedirect('token invalid or expired');
       if (options.cookie) {
-        removeSessionCookie(response);
+        removeSessionCookie(response, !!options.clientUser);
       }
       return response;
     }
@@ -164,7 +165,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
         await session.destroy();
         const response = unauthorizedOrRedirect('The token does not match any user.');
         if (options.cookie) {
-          removeSessionCookie(response);
+          removeSessionCookie(response, !!options.clientUser);
         }
         return response;
       }

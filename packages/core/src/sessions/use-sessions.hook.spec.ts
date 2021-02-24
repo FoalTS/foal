@@ -26,7 +26,8 @@ import {
 import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_COOKIE_NAME,
-  SESSION_DEFAULT_INACTIVITY_TIMEOUT
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+  SESSION_USER_COOKIE_NAME
 } from './constants';
 import { readSession } from './read-session';
 import { Session } from './session';
@@ -427,18 +428,19 @@ describe('UseSessions', () => {
 
     });
 
-    context('given options.cookie is true', () => {
+    context('given options.cookie is true and no session matching the ID is found', () => {
 
-      beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true })));
-
-      it('should remove the cookie in the response if no session matching the ID is found.', async () => {
+      beforeEach(() => {
+        hook = getHookFunction(UseSessions({ store: Store, cookie: true }));
         ctx = createContext(
           {},
           {
             [SESSION_DEFAULT_COOKIE_NAME]: 'xxx',
           },
         );
+      });
 
+      it('should remove the session cookie.', async () => {
         const response = await hook(ctx, services);
         if (!isHttpResponse(response)) {
           throw new Error('response should be instance of HttpResponse');
@@ -447,6 +449,39 @@ describe('UseSessions', () => {
         const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
         strictEqual(value, '');
         strictEqual(options.maxAge, 0);
+      });
+
+      context('given clientUser is defined', () => {
+
+        beforeEach(() => {
+          hook = getHookFunction(UseSessions({ store: Store, cookie: true, clientUser: () => '' }));
+        });
+
+        it('should remove the "user" cookie', async () => {
+          const response = await hook(ctx, services);
+          if (!isHttpResponse(response)) {
+            throw new Error('response should be instance of HttpResponse');
+          }
+
+          const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(value, '');
+          strictEqual(options.maxAge, 0);
+        });
+
+      });
+
+      context('given clientUser is not defined', () => {
+
+        it('should not remove the "user" cookie', async () => {
+          const response = await hook(ctx, services);
+          if (!isHttpResponse(response)) {
+            throw new Error('response should be instance of HttpResponse');
+          }
+
+          const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(value, undefined);
+        });
+
       });
 
     });
@@ -767,6 +802,48 @@ describe('UseSessions', () => {
               deepStrictEqual(options.maxAge, 0);
             });
 
+            context('given clientUser is defined', () => {
+
+              beforeEach(() => {
+                hook = getHookFunction(UseSessions({
+                  clientUser: () => '',
+                  cookie: true,
+                  store: Store,
+                  user: fetchUser,
+                }));
+              });
+
+              it('should remove the "user" cookie.', async () => {
+                const response = await hook(ctx, services);
+                if (!isHttpResponse(response)) {
+                  throw new Error('The hook should have returned an HttpResponse instance.');
+                }
+
+                strictEqual(ctx.user, undefined);
+
+                const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+                strictEqual(value, '');
+                deepStrictEqual(options.maxAge, 0);
+              });
+
+            });
+
+            context('given clientUser is not defined', () => {
+
+              it('should not remove the "user" cookie.', async () => {
+                const response = await hook(ctx, services);
+                if (!isHttpResponse(response)) {
+                  throw new Error('The hook should have returned an HttpResponse instance.');
+                }
+
+                strictEqual(ctx.user, undefined);
+
+                const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+                strictEqual(value, undefined);
+              });
+
+            });
+
           });
 
           context('given options.redirectTo is not defined', () => {
@@ -978,6 +1055,61 @@ describe('UseSessions', () => {
             const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
             strictEqual(value, '');
             deepStrictEqual(options.maxAge, 0);
+          });
+
+          context('given clientUser is defined', () => {
+
+            beforeEach(() => {
+              hook = getHookFunction(UseSessions({ store: Store, cookie: true, clientUser: () => '' }));
+            });
+
+            it('should remove the "user" cookie', async () => {
+              const postHookFunction = await hook(ctx, services);
+              if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+                throw new Error('The hook should return a post hook function');
+              }
+              const session = await getSession();
+              if (session) {
+                ctx.session = session;
+              }
+              if (!ctx.session) {
+                throw new Error('ctx.session should be defined');
+              }
+
+              const response = new HttpResponseOK();
+              await ctx.session.destroy();
+              await postHookFunction(response);
+
+              const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+              strictEqual(value, '');
+              deepStrictEqual(options.maxAge, 0);
+            });
+
+          });
+
+          context('given clientUser is not defined', () => {
+
+            it('should not remove the "user" cookie', async () => {
+              const postHookFunction = await hook(ctx, services);
+              if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+                throw new Error('The hook should return a post hook function');
+              }
+              const session = await getSession();
+              if (session) {
+                ctx.session = session;
+              }
+              if (!ctx.session) {
+                throw new Error('ctx.session should be defined');
+              }
+
+              const response = new HttpResponseOK();
+              await ctx.session.destroy();
+              await postHookFunction(response);
+
+              const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+              strictEqual(value, undefined);
+            });
+
           });
 
         });
