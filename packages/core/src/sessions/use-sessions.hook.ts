@@ -75,7 +75,8 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
       await ctx.session.commit();
 
       if (options.cookie) {
-        setSessionCookie(response, ctx.session);
+        const clientUser = options.clientUser ? await options.clientUser(ctx, services) : undefined;
+        setSessionCookie(response, ctx.session, clientUser);
       }
     }
 

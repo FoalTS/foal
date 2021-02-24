@@ -1177,7 +1177,7 @@ describe('UseSessions', () => {
             }
           });
 
-          it('should set a cookie in the response with the session to extend its lifetime on the client.', async () => {
+          it('should set a cookie in the response with the session ID as value.', async () => {
             const postHookFunction = await hook(ctx, services);
             if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
               throw new Error('The hook should return a post hook function');
@@ -1196,6 +1196,71 @@ describe('UseSessions', () => {
             const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
             strictEqual(value, ctx.session.getToken());
             deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
+          });
+
+          context('given clientUser is defined', () => {
+
+            let clientUserParameters: { ctx?: Context, services?: ServiceManager } = {};
+
+            beforeEach(() => {
+              hook = getHookFunction(UseSessions({
+                clientUser: (ctx, services) => {
+                  clientUserParameters = { ctx, services };
+                  return 'foo';
+                },
+                cookie: true,
+                store: Store,
+              }));
+            });
+
+            it('should call clientUser and set a "user" cookie in the response.', async () => {
+              const postHookFunction = await hook(ctx, services);
+              if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+                throw new Error('The hook should return a post hook function');
+              }
+              const session = await getSession();
+              if (session) {
+                ctx.session = session;
+              }
+              if (!ctx.session) {
+                throw new Error('ctx.session should be defined');
+              }
+
+              const response = new HttpResponseOK();
+              await postHookFunction(response);
+
+              strictEqual(clientUserParameters.ctx, ctx);
+              strictEqual(clientUserParameters.services, services);
+
+              const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+              strictEqual(value, 'foo');
+              deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
+            });
+
+          });
+
+          context('given clientUser is not defined', () => {
+
+            it('should not set a "user" cookie in the response.', async () => {
+              const postHookFunction = await hook(ctx, services);
+              if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
+                throw new Error('The hook should return a post hook function');
+              }
+              const session = await getSession();
+              if (session) {
+                ctx.session = session;
+              }
+              if (!ctx.session) {
+                throw new Error('ctx.session should be defined');
+              }
+
+              const response = new HttpResponseOK();
+              await postHookFunction(response);
+
+              const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+              strictEqual(value, undefined);
+            });
+
           });
 
         });
