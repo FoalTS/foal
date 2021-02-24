@@ -451,10 +451,10 @@ describe('UseSessions', () => {
         strictEqual(options.maxAge, 0);
       });
 
-      context('given clientUser is defined', () => {
+      context('given userCookie is defined', () => {
 
         beforeEach(() => {
-          hook = getHookFunction(UseSessions({ store: Store, cookie: true, clientUser: () => '' }));
+          hook = getHookFunction(UseSessions({ store: Store, cookie: true, userCookie: () => '' }));
         });
 
         it('should remove the "user" cookie', async () => {
@@ -470,7 +470,7 @@ describe('UseSessions', () => {
 
       });
 
-      context('given clientUser is not defined', () => {
+      context('given userCookie is not defined', () => {
 
         it('should not remove the "user" cookie', async () => {
           const response = await hook(ctx, services);
@@ -802,11 +802,11 @@ describe('UseSessions', () => {
               deepStrictEqual(options.maxAge, 0);
             });
 
-            context('given clientUser is defined', () => {
+            context('given userCookie is defined', () => {
 
               beforeEach(() => {
                 hook = getHookFunction(UseSessions({
-                  clientUser: () => '',
+                  userCookie: () => '',
                   cookie: true,
                   store: Store,
                   user: fetchUser,
@@ -828,7 +828,7 @@ describe('UseSessions', () => {
 
             });
 
-            context('given clientUser is not defined', () => {
+            context('given userCookie is not defined', () => {
 
               it('should not remove the "user" cookie.', async () => {
                 const response = await hook(ctx, services);
@@ -1057,10 +1057,10 @@ describe('UseSessions', () => {
             deepStrictEqual(options.maxAge, 0);
           });
 
-          context('given clientUser is defined', () => {
+          context('given userCookie is defined', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(UseSessions({ store: Store, cookie: true, clientUser: () => '' }));
+              hook = getHookFunction(UseSessions({ store: Store, cookie: true, userCookie: () => '' }));
             });
 
             it('should remove the "user" cookie', async () => {
@@ -1087,7 +1087,7 @@ describe('UseSessions', () => {
 
           });
 
-          context('given clientUser is not defined', () => {
+          context('given userCookie is not defined', () => {
 
             it('should not remove the "user" cookie', async () => {
               const postHookFunction = await hook(ctx, services);
@@ -1198,14 +1198,14 @@ describe('UseSessions', () => {
             deepStrictEqual(options.expires, new Date(ctx.session.expirationTime * 1000));
           });
 
-          context('given clientUser is defined', () => {
+          context('given userCookie is defined', () => {
 
-            let clientUserParameters: { ctx?: Context, services?: ServiceManager } = {};
+            let userCookieParameters: { ctx?: Context, services?: ServiceManager } = {};
 
             beforeEach(() => {
               hook = getHookFunction(UseSessions({
-                clientUser: (ctx, services) => {
-                  clientUserParameters = { ctx, services };
+                userCookie: (ctx, services) => {
+                  userCookieParameters = { ctx, services };
                   return 'foo';
                 },
                 cookie: true,
@@ -1213,7 +1213,7 @@ describe('UseSessions', () => {
               }));
             });
 
-            it('should call clientUser and set a "user" cookie in the response.', async () => {
+            it('should call userCookie and set a "user" cookie in the response.', async () => {
               const postHookFunction = await hook(ctx, services);
               if (postHookFunction === undefined || isHttpResponse(postHookFunction)) {
                 throw new Error('The hook should return a post hook function');
@@ -1229,8 +1229,8 @@ describe('UseSessions', () => {
               const response = new HttpResponseOK();
               await postHookFunction(response);
 
-              strictEqual(clientUserParameters.ctx, ctx);
-              strictEqual(clientUserParameters.services, services);
+              strictEqual(userCookieParameters.ctx, ctx);
+              strictEqual(userCookieParameters.services, services);
 
               const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
               strictEqual(value, 'foo');
@@ -1239,7 +1239,7 @@ describe('UseSessions', () => {
 
           });
 
-          context('given clientUser is not defined', () => {
+          context('given userCookie is not defined', () => {
 
             it('should not set a "user" cookie in the response.', async () => {
               const postHookFunction = await hook(ctx, services);
