@@ -9,7 +9,7 @@ tags: [release]
 
 ![Banner](./assets/version-2.2-is-here/banner.png)
 
-Version 2.2 has been released! Here are the improvements that it brings.
+Version 2.2 of Foal has been released! Here are the improvements that it brings.
 
 <!--truncate-->
 
@@ -19,7 +19,58 @@ The output of the `createapp` command has been prettified to be more "welcoming"
 
 ![New createapp look](./assets/version-2.2-is-here/new-create-app.png)
 
-## Support of nested routes in `foal generate|g rest-api <name>`
+## Authentication Improvement for Single-Page Applications (SPA)
+
+When building a SPA with cookie-based authentication, it can sometimes be difficult to know if the user is logged in or to obtain certain information about the user (`isAdmin`, etc).
+
+Since the authentication token is stored in a cookie with the `httpOnly` directive set to `true` (to mitigate XSS attacks), the front-end application has no way of knowing if a user is logged in, except by making an additional request to the server.
+
+To solve this problem, version 2.2 adds a new option called `userCookie` that allows you to set an additional cookie that the frontend can read with the content you choose. This cookie is synchronized with the session and is refreshed at each request and destroyed when the session expires or when the user logs out.
+
+In the following example, the `user` cookie is empty if no user is logged in or contains certain information about him/her otherwise. This is particularly useful if you need to display UI elements based on user characteristics.
+
+*Server-side code*
+
+```typescript
+function userToJSON(user: User|undefined) {
+  if (!user) {
+    return 'null';
+  }
+
+  return JSON.stringify({
+    email: user.email,
+    isAdmin: user.isAdmin
+  });
+}
+
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User),
+  userCookie: (ctx, services) => userToJSON(ctx.user)
+})
+export class ApiController {
+
+  @Get('/products')
+  @UserRequired()
+  async readProducts(ctx: Context) {
+    const products = await Product.find({ owner: ctx.user });
+    return new HttpResponseOK(products);
+  }
+
+}
+```
+
+*Cookies*
+
+![User cookie](./assets/version-2.2-is-here/user-cookie.png)
+
+*Client-side code*
+
+```javascript
+const user = JSON.parse(decodeURIComponent(/* cookie value */));
+```
+
+## Support of Nested Routes in `foal generate|g rest-api <name>`
 
 Like the command `g controller`, `g rest-api` now supports nested routes.
 

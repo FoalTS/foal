@@ -33,6 +33,7 @@ export interface UseSessionOptions {
   openapi?: boolean;
   required?: boolean;
   create?: boolean;
+  userCookie?: (ctx: Context, services: ServiceManager) => string|Promise<string>;
 }
 
 export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
@@ -66,7 +67,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
       if (ctx.session.isDestroyed) {
         if (options.cookie) {
-          removeSessionCookie(response);
+          removeSessionCookie(response, !!options.userCookie);
         }
         return;
       }
@@ -74,7 +75,8 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
       await ctx.session.commit();
 
       if (options.cookie) {
-        setSessionCookie(response, ctx.session);
+        const userCookie = options.userCookie ? await options.userCookie(ctx, services) : undefined;
+        setSessionCookie(response, ctx.session, userCookie);
       }
     }
 
@@ -125,7 +127,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     if (!session) {
       const response = unauthorizedOrRedirect('token invalid or expired');
       if (options.cookie) {
-        removeSessionCookie(response);
+        removeSessionCookie(response, !!options.userCookie);
       }
       return response;
     }
@@ -164,7 +166,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
         await session.destroy();
         const response = unauthorizedOrRedirect('The token does not match any user.');
         if (options.cookie) {
-          removeSessionCookie(response);
+          removeSessionCookie(response, !!options.userCookie);
         }
         return response;
       }

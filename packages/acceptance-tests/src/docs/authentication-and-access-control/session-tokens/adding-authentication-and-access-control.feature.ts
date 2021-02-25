@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Entity, PrimaryGeneratedColumn  } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -23,7 +23,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 
@@ -261,6 +261,120 @@ describe('Feature: Adding authentication and access control', () => {
       .expect(200)
       .expect([]);
 
+  });
+
+  it('Example: Reading user information on the client', async () => {
+
+    @Entity()
+    class User extends BaseEntity {
+      @PrimaryGeneratedColumn()
+      id: number;
+
+      @Column()
+      email: string;
+
+      @Column()
+      isAdmin: boolean;
+    }
+
+    @Entity()
+    class Product extends BaseEntity {
+      @PrimaryGeneratedColumn()
+      id: number;
+
+      @ManyToOne(() => User)
+      owner: User;
+    }
+
+    /* ======================= DOCUMENTATION BEGIN ======================= */
+
+    function userToJSON(user: User|undefined) {
+      if (!user) {
+        return 'null';
+      }
+
+      return JSON.stringify({
+        email: user.email,
+        isAdmin: user.isAdmin
+      });
+    }
+
+    @UseSessions({
+      cookie: true,
+      user: fetchUser(User),
+      userCookie: (ctx, services) => userToJSON(ctx.user)
+    })
+    class ApiController {
+
+      @Get('/products')
+      @UserRequired()
+      async readProducts(ctx: Context) {
+        const products = await Product.find({ owner: ctx.user });
+        return new HttpResponseOK(products);
+      }
+
+    }
+
+    /* ======================= DOCUMENTATION END ========================= */
+
+    class AppController implements IAppController {
+      subControllers = [
+        controller('/api', ApiController),
+      ];
+
+      async init() {
+        await createTestConnection([ DatabaseSession, User, Product ]);
+      }
+    }
+
+    const services = new ServiceManager();
+    const app = await createApp(AppController, { serviceManager: services });
+
+    const user = new User();
+    user.email = 'foo@foalts.org';
+    user.isAdmin = true;
+    await user.save();
+
+    const product1 = new Product();
+    await product1.save();
+
+    const product2 = new Product();
+    product2.owner = user;
+    await product2.save();
+
+    const session = await createSession(services.get(Store));
+    await session.commit();
+
+    const session2 = await createSession(services.get(Store));
+    session2.setUser(user);
+    await session2.commit();
+
+    await request(app)
+      .get('/api/products')
+      .set('Cookie', writeCookie('sessionID', session.getToken()))
+      .expect(401)
+      .then(response => {
+        const { value } = readCookie(response.get('Set-Cookie'), 'user');
+        strictEqual(value, 'null');
+      });
+
+    await request(app)
+      .get('/api/products')
+      .set('Cookie', writeCookie('sessionID', session2.getToken()))
+      .expect(200)
+      .expect([
+        { id: product2.id }
+      ])
+      .then(response => {
+        const { value } = readCookie(response.get('Set-Cookie'), 'user');
+        strictEqual(
+          value,
+          encodeURIComponent(JSON.stringify({
+            email: 'foo@foalts.org',
+            isAdmin: true
+          }))
+        );
+      });
   });
 
 });
