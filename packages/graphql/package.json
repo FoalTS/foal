@@ -53,7 +53,7 @@
     "graphql": "~14.6.0",
     "graphql-request": "~1.8.2",
     "graphql-tag": "~2.10.1",
-    "mocha": "~8.2.0",
+    "mocha": "~8.3.0",
     "rimraf": "~2.6.2",
     "ts-node": "~9.0.0",
     "type-graphql": "~0.17.5",
