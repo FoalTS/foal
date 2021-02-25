@@ -806,10 +806,10 @@ describe('UseSessions', () => {
 
               beforeEach(() => {
                 hook = getHookFunction(UseSessions({
-                  userCookie: () => '',
                   cookie: true,
                   store: Store,
                   user: fetchUser,
+                  userCookie: () => '',
                 }));
               });
 
@@ -1204,12 +1204,12 @@ describe('UseSessions', () => {
 
             beforeEach(() => {
               hook = getHookFunction(UseSessions({
+                cookie: true,
+                store: Store,
                 userCookie: (ctx, services) => {
                   userCookieParameters = { ctx, services };
                   return 'foo';
                 },
-                cookie: true,
-                store: Store,
               }));
             });
 
