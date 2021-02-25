@@ -1,3 +1,6 @@
+// std
+import { basename, dirname } from 'path';
+
 // 3p
 import { underline } from 'colors/safe';
 
@@ -14,86 +17,74 @@ export function createRestApi({ name, register, auth }: { name: string, register
     throw new ClientError('"foal generate|g rest-api <name>" cannot be used in a MongoDB project.');
   }
 
-  let entityRoot = '';
-  let controllerRoot = '';
   if (fs.exists('src/app/entities') && fs.exists('src/app/controllers')) {
-    entityRoot = 'src/app/entities';
-    controllerRoot = 'src/app/controllers';
-  } else if (fs.exists('entities') && fs.exists('controllers')) {
-    entityRoot = 'entities';
-    controllerRoot = 'controllers';
+    fs.cd('src/app');
+  } else if (!fs.exists('entities') || !fs.exists('controllers')) {
+    throw new ClientError(
+      'Impossible to generate a REST API endpoint. '
+      + 'The directories controllers/ and entities/ (or src/app/controllers and src/app/entities) were not found.'
+    );
   }
 
-  const names = getNames(name);
+  const locals = {
+    ...getNames(basename(name)),
+    entitiesPath: `${name.split('/').map(() => '../').join('')}entities`,
+  };
+  const subdir = dirname(name);
+  const parentControllerPath = `${subdir === '.' ? 'app' : basename(subdir)}.controller.ts`;
 
-  const className = `${names.upperFirstCamelName}Controller`;
-
-  fs
-    .cd(entityRoot)
-    .renderOnlyIf(!auth, 'rest-api/entity.ts', `${names.kebabName}.entity.ts`, names)
-    .renderOnlyIf(auth, 'rest-api/entity.auth.ts', `${names.kebabName}.entity.ts`, names)
-    .ensureFile('index.ts')
-    .addNamedExportIn('index.ts', names.upperFirstCamelName, `./${names.kebabName}.entity`);
-
-  fs.currentDir = '';
-
-  const isCurrentDir = !controllerRoot;
+  const entityFileName = `${locals.kebabName}.entity.ts`;
 
   fs
-    .cd(controllerRoot)
-
-    .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.ts', `${names.kebabName}.controller.ts`, names)
-    .renderOnlyIf(!isCurrentDir && auth, 'rest-api/controller.auth.ts', `${names.kebabName}.controller.ts`, names)
-    .renderOnlyIf(
-      isCurrentDir && !auth, 'rest-api/controller.current-dir.ts', `${names.kebabName}.controller.ts`, names
-    )
-    .renderOnlyIf(
-      isCurrentDir && auth, 'rest-api/controller.current-dir.auth.ts', `${names.kebabName}.controller.ts`, names
-    )
-
-    .renderOnlyIf(!isCurrentDir && !auth, 'rest-api/controller.spec.ts', `${names.kebabName}.controller.spec.ts`, names)
-    .renderOnlyIf(
-      !isCurrentDir && auth, 'rest-api/controller.spec.auth.ts', `${names.kebabName}.controller.spec.ts`, names
-    )
-    .renderOnlyIf(
-      isCurrentDir && !auth, 'rest-api/controller.spec.current-dir.ts', `${names.kebabName}.controller.spec.ts`, names
-    )
-    .renderOnlyIf(
-      isCurrentDir && auth,
-      'rest-api/controller.spec.current-dir.auth.ts',
-      `${names.kebabName}.controller.spec.ts`,
-      names
-    )
-
+    .cd('entities')
+    .renderOnlyIf(!auth, 'rest-api/entities/entity.ts', entityFileName, locals)
+    .renderOnlyIf(auth, 'rest-api/entities/entity.auth.ts', entityFileName, locals)
     .ensureFile('index.ts')
-    .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`);
+    .addNamedExportIn('index.ts', locals.upperFirstCamelName, `./${locals.kebabName}.entity`)
+    .cd('..');
+
+  const controllerClassName = `${locals.upperFirstCamelName}Controller`;
+
+  const controllerFileName = `${locals.kebabName}.controller.ts`;
+  const controllerSpecFileName = `${locals.kebabName}.controller.spec.ts`;
+
+  fs
+    .cd('controllers')
+    .ensureDir(subdir)
+    .cd(subdir)
+    .renderOnlyIf(!auth, 'rest-api/controllers/controller.ts', controllerFileName, locals)
+    .renderOnlyIf(auth, 'rest-api/controllers/controller.auth.ts', controllerFileName, locals)
+    .renderOnlyIf(!auth, 'rest-api/controllers/controller.spec.ts', controllerSpecFileName, locals)
+    .renderOnlyIf(auth, 'rest-api/controllers/controller.spec.auth.ts', controllerSpecFileName, locals)
+    .ensureFile('index.ts')
+    .addNamedExportIn('index.ts', controllerClassName, `./${locals.kebabName}.controller`)
+    .cd('..');
 
   if (register) {
     fs
-      .cd('..')
       .addOrExtendNamedImportIn(
-        'app.controller.ts',
+        parentControllerPath,
         'controller',
         '@foal/core',
         { logs: false }
       )
       .addOrExtendNamedImportIn(
-        'app.controller.ts',
-        className,
-        './controllers',
+        parentControllerPath,
+        controllerClassName,
+        `./${subdir === '.' ? 'controllers' : basename(subdir)}`,
         { logs: false }
       )
       .addOrExtendClassArrayPropertyIn(
-        'app.controller.ts',
+        parentControllerPath,
         'subControllers',
-        `controller('/${names.kebabName}s', ${className})`
+        `controller('/${locals.kebabName}s', ${controllerClassName})`
       );
     }
 
   if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
     console.log(
-      `\n${underline('Next steps:')} Complete ${names.upperFirstCamelName} (${names.kebabName}.entity)`
-      + ` and ${names.camelName}Schema (${names.kebabName}.controller).`
+      `\n${underline('Next steps:')} Complete ${locals.upperFirstCamelName} (${locals.kebabName}.entity)`
+      + ` and ${locals.camelName}Schema (${locals.kebabName}.controller).`
     );
   }
 }

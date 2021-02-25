@@ -10,14 +10,17 @@ import {
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // App
+import { TestFooBar, User } from '../../../entities';
 import { TestFooBarController } from './test-foo-bar.controller';
-import { TestFooBar } from './test-foo-bar.entity';
 
 describe('TestFooBarController', () => {
 
   let controller: TestFooBarController;
+  let testFooBar0: TestFooBar;
   let testFooBar1: TestFooBar;
   let testFooBar2: TestFooBar;
+  let user1: User;
+  let user2: User;
 
   before(() => createConnection());
 
@@ -26,14 +29,29 @@ describe('TestFooBarController', () => {
   beforeEach(async () => {
     controller = createController(TestFooBarController);
 
-    const repository = getRepository(TestFooBar);
-    await repository.clear();
-    [ testFooBar1, testFooBar2 ] = await repository.save([
+    const testFooBarRepository = getRepository(TestFooBar);
+    const userRepository = getRepository(User);
+
+    await testFooBarRepository.clear();
+    await userRepository.clear();
+
+    [ user1, user2 ] = await userRepository.save([
+      {},
+      {},
+    ]);
+
+    [ testFooBar0, testFooBar1, testFooBar2 ] = await testFooBarRepository.save([
       {
-        text: 'TestFooBar 1'
+        owner: user1,
+        text: 'TestFooBar 0',
       },
       {
-        text: 'TestFooBar 2'
+        owner: user2,
+        text: 'TestFooBar 1',
+      },
+      {
+        owner: user2,
+        text: 'TestFooBar 2',
       },
     ]);
   });
@@ -47,6 +65,7 @@ describe('TestFooBarController', () => {
 
     it('should return an HttpResponseOK object with the testFooBar list.', async () => {
       const ctx = new Context({ query: {} });
+      ctx.user = user2;
       const response = await controller.findTestFooBars(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -64,6 +83,7 @@ describe('TestFooBarController', () => {
 
     it('should support pagination', async () => {
       const testFooBar3 = await getRepository(TestFooBar).save({
+        owner: user2,
         text: 'TestFooBar 3',
       });
 
@@ -72,6 +92,7 @@ describe('TestFooBarController', () => {
           take: 2
         }
       });
+      ctx.user = user2;
       let response = await controller.findTestFooBars(ctx);
 
       strictEqual(response.body.length, 2);
@@ -84,6 +105,7 @@ describe('TestFooBarController', () => {
           skip: 1
         }
       });
+      ctx.user = user2;
       response = await controller.findTestFooBars(ctx);
 
       strictEqual(response.body.length, 2);
@@ -107,6 +129,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.findTestFooBarById(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -123,6 +146,21 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.findTestFooBarById(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound object if the testFooBar belongs to another user.', async () => {
+      const ctx = new Context({
+        params: {
+          testFooBarId: testFooBar0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.findTestFooBarById(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -146,19 +184,24 @@ describe('TestFooBarController', () => {
           text: 'TestFooBar 3',
         }
       });
+      ctx.user = user2;
       const response = await controller.createTestFooBar(ctx);
 
       if (!isHttpResponseCreated(response)) {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne({ text: 'TestFooBar 3' });
+      const testFooBar = await getRepository(TestFooBar).findOne({
+        relations: [ 'owner' ],
+        where: { text: 'TestFooBar 3' },
+      });
 
       if (!testFooBar) {
         throw new Error('No testFooBar 3 was found in the database.');
       }
 
       strictEqual(testFooBar.text, 'TestFooBar 3');
+      strictEqual(testFooBar.owner.id, user2.id);
 
       strictEqual(response.body.id, testFooBar.id);
       strictEqual(response.body.text, testFooBar.text);
@@ -182,6 +225,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.modifyTestFooBar(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -209,6 +253,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       await controller.modifyTestFooBar(ctx);
 
       const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
@@ -229,6 +274,24 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.modifyTestFooBar(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the object belongs to another user.', async () => {
+      const ctx = new Context({
+        body: {
+          text: '',
+        },
+        params: {
+          testFooBarId: testFooBar0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.modifyTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -254,6 +317,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.replaceTestFooBar(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -281,6 +345,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       await controller.replaceTestFooBar(ctx);
 
       const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
@@ -301,6 +366,24 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.replaceTestFooBar(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the object belongs to another user.', async () => {
+      const ctx = new Context({
+        body: {
+          text: '',
+        },
+        params: {
+          testFooBarId: testFooBar0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.replaceTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {
@@ -323,6 +406,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNoContent(response)) {
@@ -340,6 +424,7 @@ describe('TestFooBarController', () => {
           testFooBarId: testFooBar2.id
         }
       });
+      ctx.user = user2;
       const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNoContent(response)) {
@@ -357,6 +442,21 @@ describe('TestFooBarController', () => {
           testFooBarId: -1
         }
       });
+      ctx.user = user2;
+      const response = await controller.deleteTestFooBar(ctx);
+
+      if (!isHttpResponseNotFound(response)) {
+        throw new Error('The returned value should be an HttpResponseNotFound object.');
+      }
+    });
+
+    it('should return an HttpResponseNotFound if the testFooBar belongs to another user.', async () => {
+      const ctx = new Context({
+        params: {
+          testFooBarId: testFooBar0.id
+        }
+      });
+      ctx.user = user2;
       const response = await controller.deleteTestFooBar(ctx);
 
       if (!isHttpResponseNotFound(response)) {

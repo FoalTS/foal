@@ -6,8 +6,7 @@ import {
 } from '@foal/core';
 import { getRepository } from 'typeorm';
 
-import { TestFooBar } from './test-foo-bar.entity';
-import { User } from './user.entity';
+import { TestFooBar } from '../../../entities';
 
 const testFooBarSchema = {
   additionalProperties: false,
@@ -32,13 +31,11 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'Returns a list of testFooBars.' })
   @ValidateQueryParam('skip', { type: 'number' }, { required: false })
   @ValidateQueryParam('take', { type: 'number' }, { required: false })
-  async findTestFooBars(ctx: Context<User>) {
+  async findTestFooBars(ctx: Context) {
     const testFooBars = await getRepository(TestFooBar).find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take,
-      where: {
-        owner: ctx.user
-      }
+      where: {},
     });
     return new HttpResponseOK(testFooBars);
   }
@@ -49,11 +46,8 @@ export class TestFooBarController {
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
-  async findTestFooBarById(ctx: Context<User>) {
-    const testFooBar = await getRepository(TestFooBar).findOne({
-      id: ctx.request.params.testFooBarId,
-      owner: ctx.user
-    });
+  async findTestFooBarById(ctx: Context) {
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -68,11 +62,8 @@ export class TestFooBarController {
   @ApiResponse(400, { description: 'Invalid testFooBar.' })
   @ApiResponse(201, { description: 'TestFooBar successfully created. Returns the testFooBar.' })
   @ValidateBody(testFooBarSchema)
-  async createTestFooBar(ctx: Context<User>) {
-    const testFooBar = await getRepository(TestFooBar).save({
-      ...ctx.request.body,
-      owner: ctx.user
-    });
+  async createTestFooBar(ctx: Context) {
+    const testFooBar = await getRepository(TestFooBar).save(ctx.request.body);
     return new HttpResponseCreated(testFooBar);
   }
 
@@ -84,11 +75,8 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
-  async modifyTestFooBar(ctx: Context<User>) {
-    const testFooBar = await getRepository(TestFooBar).findOne({
-      id: ctx.request.params.testFooBarId,
-      owner: ctx.user
-    });
+  async modifyTestFooBar(ctx: Context) {
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -109,11 +97,8 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'TestFooBar successfully updated. Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody(testFooBarSchema)
-  async replaceTestFooBar(ctx: Context<User>) {
-    const testFooBar = await getRepository(TestFooBar).findOne({
-      id: ctx.request.params.testFooBarId,
-      owner: ctx.user
-    });
+  async replaceTestFooBar(ctx: Context) {
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -132,11 +117,8 @@ export class TestFooBarController {
   @ApiResponse(404, { description: 'TestFooBar not found.' })
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
-  async deleteTestFooBar(ctx: Context<User>) {
-    const testFooBar = await getRepository(TestFooBar).findOne({
-      id: ctx.request.params.testFooBarId,
-      owner: ctx.user
-    });
+  async deleteTestFooBar(ctx: Context) {
+    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();

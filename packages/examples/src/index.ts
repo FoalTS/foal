@@ -10,7 +10,7 @@ import 'source-map-support/register';
 import * as http from 'http';
 
 // 3p
-import { Config, createApp } from '@foal/core';
+import { Config, createApp, displayServerURL } from '@foal/core';
 import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
@@ -23,9 +23,7 @@ async function main() {
 
   const httpServer = http.createServer(app);
   const port = Config.get('port', 'number', 3001);
-  httpServer.listen(port, () => {
-    console.log(`Listening on port ${port}...`);
-  });
+  httpServer.listen(port, () => displayServerURL(port));
 }
 
 main()

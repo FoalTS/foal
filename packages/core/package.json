@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "A Node.js and TypeScript framework, all-inclusive.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -90,7 +90,7 @@
     "@types/node": "10.17.24",
     "@types/supertest": "2.0.10",
     "ejs": "~2.6.2",
-    "mocha": "~8.2.0",
+    "mocha": "~8.3.0",
     "nyc": "~15.1.0",
     "rimraf": "~2.6.2",
     "source-map-support": "~0.5.19",

@@ -6,6 +6,7 @@ import {
   SESSION_DEFAULT_COOKIE_PATH,
   SESSION_DEFAULT_CSRF_COOKIE_NAME,
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
+  SESSION_USER_COOKIE_NAME,
 } from './constants';
 import { Session } from './session';
 import { setSessionCookie } from './set-session-cookie';
@@ -294,6 +295,126 @@ describe('setSessionCookie', () => {
 
     it('should not set a CSRF cookie in the response.', () => {
       const { value } = response.getCookie(SESSION_DEFAULT_CSRF_COOKIE_NAME);
+      strictEqual(value, undefined);
+    });
+
+  });
+
+  context('given the "user" argument is defined', () => {
+
+    describe('should set a "user" cookie in the response', () => {
+
+      const user = 'foo';
+
+      context('given no configuration option is provided', () => {
+
+        beforeEach(() => setSessionCookie(response, session, user));
+
+        it('with the proper default name and value.', () => {
+          const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(value, user);
+        });
+
+        it('with the proper default "domain" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.domain, undefined);
+        });
+
+        it('with the proper default "httpOnly" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.httpOnly, false);
+        });
+
+        it('with the proper default "path" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.path, SESSION_DEFAULT_COOKIE_PATH);
+        });
+
+        // Adding the sameSite directive is useless. We keep it for consistency.
+        it('with the proper default "sameSite" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.sameSite, undefined);
+        });
+
+        it('with the proper default "secure" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.secure, undefined);
+        });
+
+        it('with the proper "expires" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
+        });
+
+      });
+
+      context('given configuration options are provided', () => {
+
+        beforeEach(() => {
+          Config.set('settings.session.cookie.domain', 'example.com');
+          Config.set('settings.session.cookie.httpOnly', true);
+          Config.set('settings.session.cookie.path', '/foo');
+          Config.set('settings.session.cookie.sameSite', 'strict');
+          Config.set('settings.session.cookie.secure', true);
+          setSessionCookie(response, session, user);
+        });
+
+        afterEach(() => {
+          Config.remove('settings.session.cookie.domain');
+          Config.remove('settings.session.cookie.httpOnly');
+          Config.remove('settings.session.cookie.path');
+          Config.remove('settings.session.cookie.sameSite');
+          Config.remove('settings.session.cookie.secure');
+        });
+
+        it('with the proper default name and value.', () => {
+          const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(value, user);
+        });
+
+        it('with the proper default "domain" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.domain, 'example.com');
+        });
+
+        it('with the proper default "httpOnly" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.httpOnly, false);
+        });
+
+        it('with the proper default "path" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.path, '/foo');
+        });
+
+        // Adding the sameSite directive is useless. We keep it for consistency.
+        it('with the proper default "sameSite" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.sameSite, 'strict');
+        });
+
+        it('with the proper default "secure" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          strictEqual(options.secure, true);
+        });
+
+        it('with the proper "expires" directive.', () => {
+          const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
+        });
+
+      });
+
+    });
+
+  });
+
+  context('given the "user" argument is empty or not defined', () => {
+
+    beforeEach(() => setSessionCookie(response, session));
+
+    it('should not set a CSRF cookie in the response.', () => {
+      const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
       strictEqual(value, undefined);
     });
 
