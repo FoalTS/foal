@@ -12,16 +12,16 @@
 <link rel="search" type="application/opensearchdescription+xml" title="FoalTS" href="/fr/opensearch.xml">
 <script src="https://m.servedby-buysellads.com/monetization.custom.js"></script><title data-react-helmet="true">Nuxt.js | FoalTS</title><meta data-react-helmet="true" property="og:image" content="https://foalts.org/fr/img/logo.png"><meta data-react-helmet="true" name="twitter:image" content="https://foalts.org/fr/img/logo.png"><meta data-react-helmet="true" name="twitter:image:alt" content="Image for FoalTS"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" name="docsearch:language" content="fr"><meta data-react-helmet="true" name="docsearch:version" content="current"><meta data-react-helmet="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-react-helmet="true" property="og:title" content="Nuxt.js | FoalTS"><meta data-react-helmet="true" name="description" content="You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available here. The old documentation can be found here."><meta data-react-helmet="true" property="og:description" content="You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available here. The old documentation can be found here."><meta data-react-helmet="true" property="og:url" content="https://foalts.org/fr/docs/frontend-integration/nuxt.js"><link data-react-helmet="true" rel="shortcut icon" href="/fr/img/logo.png"><link data-react-helmet="true" rel="preconnect" href="https://BH4D9OD16A-dsn.algolia.net" crossorigin="anonymous"><link data-react-helmet="true" rel="canonical" href="https://foalts.org/fr/docs/frontend-integration/nuxt.js"><link rel="stylesheet" href="/fr/styles.34651e9b.css">
 <link rel="stylesheet" href="/fr/main.f494992c.css">
-<link rel="preload" href="/fr/styles.b0847133.js" as="script">
-<link rel="preload" href="/fr/runtime~main.f0377a77.js" as="script">
-<link rel="preload" href="/fr/main.f45feb29.js" as="script">
-<link rel="preload" href="/fr/1.a0f15499.js" as="script">
-<link rel="preload" href="/fr/2.aa564632.js" as="script">
-<link rel="preload" href="/fr/185.b5075249.js" as="script">
-<link rel="preload" href="/fr/188.5a8d3cba.js" as="script">
-<link rel="preload" href="/fr/935f2afb.9e9c116d.js" as="script">
-<link rel="preload" href="/fr/17896441.dab2889a.js" as="script">
-<link rel="preload" href="/fr/761c7cbc.fc7fb079.js" as="script">
+<link rel="preload" href="/fr/styles.b7a9c68d.js" as="script">
+<link rel="preload" href="/fr/runtime~main.e138100f.js" as="script">
+<link rel="preload" href="/fr/main.309bd9be.js" as="script">
+<link rel="preload" href="/fr/1.5dce3ec3.js" as="script">
+<link rel="preload" href="/fr/2.70217a6a.js" as="script">
+<link rel="preload" href="/fr/187.9c20bc72.js" as="script">
+<link rel="preload" href="/fr/190.5b199604.js" as="script">
+<link rel="preload" href="/fr/935f2afb.47d19d7f.js" as="script">
+<link rel="preload" href="/fr/17896441.878b6dbb.js" as="script">
+<link rel="preload" href="/fr/761c7cbc.7d31978a.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script><div id="__docusaurus">
@@ -34,15 +34,15 @@
 </span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">  </span><span class="token comment" style="color:rgb(105, 112, 152);font-style:italic">// ...</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token punctuation" style="color:rgb(199, 146, 234)">}</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block">
 </span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token function" style="color:rgb(130, 170, 255)">main</span><span class="token punctuation" style="color:rgb(199, 146, 234)">(</span><span class="token punctuation" style="color:rgb(199, 146, 234)">)</span><span class="token punctuation" style="color:rgb(199, 146, 234)">;</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain" style="display:inline-block">
 </span></div></div></div><button type="button" aria-label="Copy code to clipboard" class="copyButton_2GIj">Copy</button></div></div></li><li><p>Delete the file <code>index.html</code> in <code>backend/public</code>.</p></li><li><p>Open the file <code>nuxt.config.js</code> in the <code>frontend/</code> directory and update its first lines as follows:</p><div class="mdxCodeBlock_1zKU"><div class="codeBlockContent_actS"><div tabindex="0" class="prism-code language-typescript codeBlock_tuNs thin-scrollbar"><div class="codeBlockLines_3uvA" style="color:#bfc7d5;background-color:#292d3e"><div class="token-line" style="color:#bfc7d5"><span class="token keyword" style="font-style:italic">module</span><span class="token punctuation" style="color:rgb(199, 146, 234)">.</span><span class="token property-access">exports</span><span class="token plain"> </span><span class="token operator" style="color:rgb(137, 221, 255)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(199, 146, 234)">{</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">  srcDir</span><span class="token punctuation" style="color:rgb(199, 146, 234)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(195, 232, 141)">&#x27;../frontend&#x27;</span><span class="token punctuation" style="color:rgb(199, 146, 234)">,</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain">  </span><span class="token comment" style="color:rgb(105, 112, 152);font-style:italic">// ...</span><span class="token plain"></span></div><div class="token-line" style="color:#bfc7d5"><span class="token plain"></span><span class="token punctuation" style="color:rgb(199, 146, 234)">}</span></div></div></div><button type="button" aria-label="Copy code to clipboard" class="copyButton_2GIj">Copy</button></div></div></li></ol></div></article><div class="margin-vert--xl"><div class="row"><div class="col"><a href="https://github.com/FoalTS/foal/edit/master/docs/i18n/fr/docusaurus-plugin-content-docs/current/frontend-integration/nuxt.js.md" target="_blank" rel="noreferrer noopener"><svg fill="currentColor" height="1.2em" width="1.2em" preserveAspectRatio="xMidYMid meet" role="img" viewBox="0 0 40 40" class="iconEdit_2LL7"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div></div></div><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/fr/docs/frontend-integration/jsx-server-side-rendering"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Rendu côté serveur (SSR) JSX</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/fr/docs/file-system/local-and-cloud-storage"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Stockage en Local et dans le Cloud »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_1R02 thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#installation" class="table-of-contents__link">Installation</a></li><li><a href="#set-up" class="table-of-contents__link">Set Up</a></li></ul></div></div></div></div></main></div></div><footer class="footer"><div class="container"><div class="footer__bottom text--center"></div></div></footer></div>
-<script src="/fr/styles.b0847133.js"></script>
-<script src="/fr/runtime~main.f0377a77.js"></script>
-<script src="/fr/main.f45feb29.js"></script>
-<script src="/fr/1.a0f15499.js"></script>
-<script src="/fr/2.aa564632.js"></script>
-<script src="/fr/185.b5075249.js"></script>
-<script src="/fr/188.5a8d3cba.js"></script>
-<script src="/fr/935f2afb.9e9c116d.js"></script>
-<script src="/fr/17896441.dab2889a.js"></script>
-<script src="/fr/761c7cbc.fc7fb079.js"></script>
+<script src="/fr/styles.b7a9c68d.js"></script>
+<script src="/fr/runtime~main.e138100f.js"></script>
+<script src="/fr/main.309bd9be.js"></script>
+<script src="/fr/1.5dce3ec3.js"></script>
+<script src="/fr/2.70217a6a.js"></script>
+<script src="/fr/187.9c20bc72.js"></script>
+<script src="/fr/190.5b199604.js"></script>
+<script src="/fr/935f2afb.47d19d7f.js"></script>
+<script src="/fr/17896441.878b6dbb.js"></script>
+<script src="/fr/761c7cbc.7d31978a.js"></script>
 </body>
 </html>
