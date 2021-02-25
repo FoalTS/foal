@@ -470,20 +470,32 @@ In the following example, the `user` cookie is empty if no user is logged in or 
 *Server-side code*
 
 ```typescript
+function userToJSON(user: User|undefined) {
+  if (!user) {
+    return 'null';
+  }
+
+  return JSON.stringify({
+    email: user.email,
+    isAdmin: user.isAdmin
+  });
+}
+
 @UseSessions({
   cookie: true,
   user: fetchUser(User),
-  userCookie: (ctx, services) => {
-    if (!ctx.user) {
-      return '';
-    }
-
-    return JSON.stringify({
-      email: ctx.user.email,
-      isAdmin: ctx.user.isAdmin
-    });
-  }
+  userCookie: (ctx, services) => userToJSON(ctx.user)
 })
+export class ApiController {
+
+  @Get('/products')
+  @UserRequired()
+  async readProducts(ctx: Context) {
+    const products = await Product.find({ owner: ctx.user });
+    return new HttpResponseOK(products);
+  }
+
+}
 ```
 
 *Cookies*
