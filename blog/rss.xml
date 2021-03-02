@@ -4,9 +4,16 @@
         <title>FoalTS Blog</title>
         <link>https://foalts.org/blog</link>
         <description>FoalTS Blog</description>
-        <lastBuildDate>Thu, 25 Feb 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 02 Mar 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[What's new in version 2 (part 2/4)]]></title>
+            <link>https://foalts.org/blog/2021/03/02/whats-new-in-version-2-part-2</link>
+            <guid>What's new in version 2 (part 2/4)</guid>
+            <pubDate>Tue, 02 Mar 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[Banner]]></description>
+        </item>
         <item>
             <title><![CDATA[Version 2.2 release notes]]></title>
             <link>https://foalts.org/blog/2021/02/25/version-2.2-release-notes</link>
