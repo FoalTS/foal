@@ -13,11 +13,16 @@ import TabItem from '@theme/TabItem';
 
 ![Banner](./assets/whats-new-in-version-2-part-1/banner.png)
 
-Version 2 of Foal has been released in December 2020 🎉. This series of four articles presents the major new features.
-
-Let's get started!
+This article presents some improvements introduced in version 2 of FoalTS:
+- the new CLI commands
+- the service and application initialization
+- the `AppController` interface
+- custom error-handling & hook post functions
+- accessing file metadata during uploads
 
 <!--truncate-->
+
+> This article is the part 1 of the series of articles *What's new in version 2.0*. Part 2 can be found [here](./2021-03-02-whats-new-in-version-2-part-2.md).
 
 ## New CLI commands
 

@@ -8,13 +8,20 @@ image: blog/twitter-banners/whats-new-in-version-2-part-2.png
 tags: [release]
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ![Banner](./assets/whats-new-in-version-2-part-2/banner.png)
 
-Version 2 of Foal has been released in December 2020 🎉. This series of four articles presents the major new features.
-
-Here is the part 2.
+This article presents some improvements introduced in version 2 of FoalTS:
+- Configuration and type safety
+- Configuration and `.env` files (`.env`, `.env.test`, etc)
+- Available configuration file formats (JSON, YAML and JS)
+- OpenAPI schemas and validation
 
 <!--truncate-->
+
+> This article is the part 2 of the series of articles *What's new in version 2.0*. Part 1 can be found [here](./2021-02-17-whats-new-in-version-2-part-1.md).
 
 ## New Config System
 
@@ -49,7 +56,6 @@ Version 2 allows you to use different `.env` files depending on your environment
 If you configuration is as follows and `NODE_ENV` equals `production`, then the framework will look at `.env.production` to retrieve the value and if it does not exist (the file or the value), Foal will look at `.env`.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -102,7 +108,6 @@ module.exports = {
 JSON and YAML were already supported in version 1. Starting from version 2, JS is also allowed.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -154,7 +159,6 @@ In version 1, the names of the environment variables were depending on the names
 Starting from version 2, it is your responsability to choose the environement variable that you want to use (if you use one). This gives more flexibility especially when a Cloud provider defines its own variable names.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
