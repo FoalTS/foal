@@ -1,5 +1,5 @@
 ---
-title: Inicio Rápido
+title: Comenzar
 ---
 
 import Tabs from '@theme/Tabs';

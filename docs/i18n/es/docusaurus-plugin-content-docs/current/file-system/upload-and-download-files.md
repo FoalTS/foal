@@ -1,5 +1,5 @@
 ---
-title: Carga y Descarga de archivos
+title: Carga y Descarga de Archivos
 ---
 
 import Tabs from '@theme/Tabs';

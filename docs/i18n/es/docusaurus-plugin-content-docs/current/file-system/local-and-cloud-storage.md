@@ -1,5 +1,5 @@
 ---
-title: Almacenamiento local y en el Cloud
+title: Almacenamiento Local y en el Cloud
 ---
 
 import Tabs from '@theme/Tabs';
