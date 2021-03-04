@@ -212,6 +212,7 @@ Here are the steps to translate the website:
   - `i18n/fr/docusaurus-plugin-content-docs/current.json`
   - `i18n/fr/docusaurus-plugin-content-docs/version-1.x.json`
   - `i18n/fr/docusaurus-plugin-content-docs/current/tutorials/**.md`
+  - `i18n/fr/docusaurus-plugin-content-docs/current/README.md`
   - the titles of the other pages in `i18n/fr/docusaurus-plugin-content-docs/current/` (the titles are given in the files).
 
 Here are some guidelines to maintain consistency between translations (and to make it easier to update them):
@@ -221,3 +222,4 @@ Here are some guidelines to maintain consistency between translations (and to ma
 - The code examples (variable names, etc) are left as is. They are not translated.
 - Use the same number of paragraphs and line breaks.
 - Try to be consistent throughout the translation (names, etc.).
+- Use Anglicisms if it makes sense in your language.
