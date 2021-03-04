@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Introducción
 slug: /
 ---
 
@@ -13,38 +13,38 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
-| Version | Status | End-of-life |
+| Versión | Estado | Fin de vida |
 | --- | --- | --- |
-| 2.x | Current | - |
-| 1.x | Maintenance | 2021-05-31 |
+| 2.x | Actual | - |
+| 1.x | Mantenimiento | 2021-05-31 |
 
-## What is Foal?
+## ¿Qué es Foal?
 
-*Foal* (or *FoalTS*) is a Node.JS framework for creating web applications.
+*Foal* (o *FoalTS*) es un framework Node.JS para crear aplicaciones web.
 
-It provides a set of ready-to-use components so you don't have to reinvent the wheel every time. In one single place, you have a complete environment to build web applications. This includes a CLI, testing tools, frontend utilities, scripts, advanced authentication, ORM, deployment environments, GraphQL and Swagger API, AWS utilities, and more. You no longer need to get lost on npm searching for packages and making them work together. All is provided.
+Proporciona un conjunto de componentes listos para usar, de modo que no tenga que reinventar la rueda cada vez. En un solo lugar, tiene un entorno completo para construir aplicaciones web. Esto incluye una CLI, herramientas de prueba, utilidades frontales, scripts, autenticación avanzada, ORM, entornos de despliegue, API GraphQL y Swagger, utilidades AWS, y mucho más. Ya no necesita perderse en npm buscando paquetes y haciendo que funcionen juntos. Todo está previsto.
 
-But while offering all these features, the framework remains simple. Complexity and unnecessary abstractions are put aside to provide the most intuitive and expressive syntax. We believe that concise and elegant code is the best way to develop an application and maintain it in the future. It also allows you to spend more time coding rather than trying to understand how the framework works.
+Pero a la vez que ofrece todas estas características, el framework sigue siendo sencillo. La complejidad y las abstracciones innecesarias se dejan de lado para proporcionar la sintaxis más intuitiva y expresiva. Creemos que un código conciso y elegante es la mejor manera de desarrollar una aplicación y mantenerla en el futuro. También le permite dedicar más tiempo a la codificación en lugar de intentar comprender cómo funciona el framework.
 
-And last but not least, the framework is entirely written in TypeScript. The language brings you optional static type-checking along with the latest ECMAScript features. This allows you to detect most silly errors during compilation and improve the quality of your code. It also offers you autocompletion and a well documented API.
+Y por último, pero no por ello menos importante, el marco de trabajo está enteramente escrito en TypeScript. Este lenguaje le aporta una comprobación de tipos estática opcional junto con las últimas características de ECMAScript. Esto le permite detectar la mayoría de los errores tontos durante la compilación y mejorar la calidad de su código. También le ofrece autocompletado y una API bien documentada.
 
-## Development Policy
+## Política de Desarrollo
 
-> *For contributors only.*
+> *Sólo para contribuyentes.*
 
-### Thousands of Tests
+### Miles de Pruebas
 
-Testing FoalTS is put on a very high priority. Providing a reliable product is really important to us. As of December 2020, the framework is covered by more than 2100 tests.
+Las pruebas de FoalTS tienen una prioridad muy alta. Proporcionar un producto fiable es realmente importante para nosotros. En diciembre de 2020, el framework está cubierto por más de 2100 pruebas.
 
-### Quality Documentation
+### Documentación de Calidad
 
-New features, no matter what they offer, are useless if they are not well documented. Maintaining complete and quality documentation is key to the framework. If you think something is missing or unclear, feel free to open an issue on Github!
+Las nuevas características, independientemente de lo que ofrezcan, no sirven de nada si no están bien documentadas. Mantener una documentación completa y de calidad es clave para el framework. Si cree que falta algo o no está claro, ¡no dude en abrir una issue en Github!
 
-### Product Stability
+### Estabilidad del Producto
 
-Great attention is paid to the stability of the product. You can find out more by consulting our [dependency policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [semantic versioning rules](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) and [long-term support policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
+Se presta gran atención a la estabilidad del producto. Puede obtener más información consultando nuestras [política de dependencia](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [reglas de versionado semántico](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) y [política de soporte a largo plazo](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
 
-## Get Started
+## Empezar
 
 ```
 > npm install -g @foal/cli
@@ -53,6 +53,6 @@ Great attention is paid to the stability of the product. You can find out more b
 > npm run develop
 ```
 
-The development server is started! Go to `http://localhost:3001` and find our welcoming page!
+¡El servidor de desarrollo ha comenzado! ¡Vaya a `http://localhost:3001` y encuentre nuestra página de bienvenida!
 
-👉 [Continue with the tutorial](./tutorials/simple-todo-list/1-installation) 🌱
+👉 [Continuar con el tutorial](./tutorials/simple-todo-list/1-installation) 🌱
