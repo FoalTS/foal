@@ -1,30 +1,30 @@
 ---
-title: Auth Controllers & Hooks
+title: Controladores y Hooks de Autentificación
 ---
 
-So far, you have defined the `User` model and written a script to create new users with their password and email address. The next step is to create a controller to log users in or out.
+Hasta ahora, ha definido el modelo `Usuario` y ha escrito un script para crear nuevos usuarios con su contraseña y dirección de correo electrónico. El siguiente paso es crear un controlador para que los usuarios puedan connectarse.
 
-Here is the architecture that we want:
+Esta es la arquitectura que queremos:
 
-1. Users open the page `/signin`, enter their credentials and then are redirected to the page `/` if the credentials are correct. If they are not, the page is refreshed with an error message.
-1. Users can view, create and delete their todos in the page `/`.
-1. When they click the button `Log out`, they are deconnected and redirected to the page `/signin`.
+1. Los usuarios abren la página `/signin`, introducen sus credenciales y luego son redirigidos a la página `/` si las credenciales son correctas. Si no lo son, la página se actualiza con un mensaje de error.
+1. Los usuarios pueden ver, crear y eliminar sus temas en la página `/`.
+1. Cuando pulsan el botón `Log out`, se desconectan y son redirigidos a la página `/signin`.
 
-When the user presses the `Log in` button in the login page, the page requests `POST /auth/login` with the credentials as body.
+Cuando el usuario pulsa el botón `Log in` en la página de inicio de sesión, la página solicita `POST /auth/login` con las credenciales como cuerpo.
 
-When the user presses the `Log out` button in the todo-list page, the page requests `POST /auth/logout`.
+Cuando el usuario pulsa el botón `Log out` en la página de lista de tareas, la página solicita `POST /auth/logout`.
 
-> In this scenario, the authentication process is handled with sessions and http redirections. You will not use [JWT tokens](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) which are sometimes used in *Single Page Applications* (SPA).
+> En este escenario, el proceso de autenticación se maneja con sesiones y redirecciones http. No se utilizarán [tokens JWT](https://en.wikipedia.org/wiki/JSON_Web_Token#Use) que a veces se utilizan en las aplicaciones de una sola página (*Single Page Applications* o *SPA*).
 
-## The Login and Main Pages
+## Las Páginas de Inicio de Sesión y Principal
 
-Download the html, css and js files by clicking [here](https://foalts.org/multi-user-todo-list-v2.zip).
+Descargue los archivos html, css y js pulsando [aquí](https://foalts.org/multi-user-todo-list-v2.zip).
 
-Empty the `public/` directory.
+Vacíe el directorio `public/`.
 
-Then move `script.js` and `style.css` to `public/` and the `index.html`, `signin.html` and `signup.html` files to a new directory `templates/` at the root of your project.
+Luego mueva `script.js` y `style.css` a `public/` y los archivos `index.html`, `signin.html` y `signup.html` a un nuevo directorio `templates/` en la raíz de su proyecto.
 
-Open the `app.controller.ts` file and add three new routes to serve the pages.
+Abra el archivo `app.controller.ts` y añada tres nuevas rutas para servir las páginas.
 
 ```typescript
 import { Context, controller, Get, IAppController, render, Session, UseSessions } from '@foal/core';
@@ -64,19 +64,19 @@ export class AppController implements IAppController {
 }
 ```
 
-Open your browser and go to `http://localhost:3001/signin`. The login page should show up.
+Abra su navegador y vaya a `http://localhost:3001/signin`. Debería aparecer la página de inicio de sesión.
 
-## Login Controllers
+## Controladores de Conexión
 
-The next step is to create a controller that logs the users in or out and redirects them after the operation succeeds or fails. It needs two routes `/login` and `/logout`.
+El siguiente paso es crear un controlador que conecte a los usuarios y los redirija después de que la operación tenga éxito o falle. Necesita dos rutas `/login` y `/logout`.
 
 ```
 foal generate controller auth --register
 ```
 
-> The `--register` flag directly adds a new line in `app.controller.ts` to declare the `AuthController` as a sub-controller of `AppController`.
+> La bandera `--register` añade directamente una nueva línea en `app.controller.ts` para declarar el `AuthController` como un subcontrolador de `AppController`.
 
-Open the new file `auth.controller.ts` and replace its content.
+Abra el nuevo archivo `auth.controller.ts` y reemplace su contenido.
 
 ```typescript
 // 3p
@@ -139,17 +139,17 @@ export class AuthController {
 
 ```
 
-> Writting `User.findOne({ email: email, password: password })` cannot work since the password needs to be hashed.
+> Escribir `User.findOne({ email: email, password: password })` no puede funcionar ya que la contraseña necesita ser hash.
 
-Go back to your browser and try to log in with the email `john@foalts.org` and the password `mary_password`. You are redirected to the same page and the message `Invalid email or password.` shows up. Now use the password `john_password` and try to log in. You are redirected to the todo-list page where all todos are listed. If you click on the button `Log out` you are then redirected to the login page!
+Vuelva a su navegador e intente conectarse con el correo electrónico `john@foalts.org` y la contraseña `mary_password`. Se le redirige a la misma página y aparece el mensaje `Invalid email or password.`. Ahora utilice la contraseña `john_password` e intente conectarse. Se le redirige a la página de tareas. Si hace clic en el botón `Log out` será redirigido a la página de inicio de sesión.
 
-## Access control
+## Control de Acceso
 
-Great, so far you can authenticate users. But as you have not yet added access control to the todo-list page and the API, unauthenticated users can still access it.
+Genial, hasta ahora puede autenticar a los usuarios. Pero como todavía no ha añadido el control de acceso a la página de la lista de tareas y a la API, los usuarios no autentificados pueden seguir accediendo a ella.
 
-The usual way to handle authorization is to use a *hook*. In this case, you are going to use the built-in hook `UserRequired` which returns a 401 error or redirects the user if user is not logged in. 
+La forma habitual de gestionar la autorización es utilizar un *hook*. En este caso, va a utilizar el hook incorporado `UserRequired` que devuelve un error 401 o redirige al usuario si éste no está conectado. 
 
-Update `app.controller.ts`.
+Actualice `app.controller.ts`.
 
 ```typescript
 import { Context, controller, Get, IAppController, render, Session, UserRequired, UseSessions } from '@foal/core';
@@ -175,7 +175,7 @@ export class AppController extends IAppController {
 }
 ```
 
-Update `api.controller.ts`.
+Actualice `api.controller.ts`.
 
 ```typescript
 import {
@@ -194,6 +194,6 @@ export class ApiController {
 }
 ```
 
-> When a hook decorates a controller class, it applies to all the routes of the controller and its sub-controllers.
+> Cuando un hook decora una clase de controlador, se aplica a todas las rutas del controlador y sus subcontroladores.
 
-Go to `http://localhost:3001`. If you are not logged in you should be redirected to the login page.
+Vaya a `http://localhost:3001`. Si no está conectado, debería ser redirigido a la página de acceso.

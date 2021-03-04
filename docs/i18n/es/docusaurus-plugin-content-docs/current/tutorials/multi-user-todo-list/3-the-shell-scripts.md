@@ -1,14 +1,14 @@
 ---
-title: The Shell Scripts
+title: Los Scripts Shell
 ---
 
-Like in the previous tutorial, you are going to use shell scripts to populate the database.
+Al igual que en el tutorial anterior, va a utilizar scripts shell para rellenar la base de datos.
 
-## The `create-user` script
+## El script `create-user`
 
-A script called `create-user` already exists in the `scripts/` directory. It has a lot of commented lines that let you create users with *permissions* and *groups*.
+Ya existe un script llamado `create-user` en el directorio `scripts/`. Tiene un montón de líneas comentadas que le permiten crear usuarios con *permisos* y *grupos*.
 
-Open the file and replace its content with the following:
+Abra el archivo y sustituya su contenido por el siguiente:
 
 ```typescript
 // 3p
@@ -50,40 +50,40 @@ export async function main(args: { email: string; password: string }) {
 
 ```
 
-Some parts of this code should look familiar.
+Algunas partes de este código deberían resultarle familiares.
 
-The `schema` object is used to validate the arguments typed in the command line. In that case, the script defines two required parameters: an email and a password. The `format` property checks that the `email` string is really an email (presence of the `@` character, etc). 
+El objeto `schema` se utiliza para validar los argumentos indicados en la línea de comandos. En ese caso, el script define dos parámetros obligatorios: un correo electrónico y una contraseña. La propiedad `format` comprueba que la cadena `email` es realmente un correo electrónico (presencia del carácter `@`, etc). 
 
-The `main` function is divided in several parts. First it instanciates a connection to the database. Then, it creates a new user with the arguments specified in the command line. The `isCommon` function compares the given password with a list of ten thousands common passwords (ex: `123456`, `password`, etc). It returns true if it is found in the list. Finally the user is saved in the database and, if an error is thrown, the error message is pretty printed.
+La función `main` se divide en varias partes. Primero instaura una conexión con la base de datos. Luego, crea un nuevo usuario con los argumentos especificados en la línea de comandos. La función `isCommon` compara la contraseña dada con una lista de diez mil contraseñas comunes (ej: `123456`, `password`, etc). Devuelve `true` si se encuentra en la lista. Finalmente, el usuario se graba en la base de datos y, si se produce un error, se imprime el mensaje de error.
 
-As you may have noticed, the `isCommon` utility comes from the `@foal/password` package. You have to install it.
+Como habrá notado, la utilidad `isCommon` proviene del paquete `@foal/password`. Tiene que instalarla.
 
 ```
 npm install @foal/password
 ```
 
-Now build the script.
+Ahora construya el script.
 
 ```
 npm run build
 ```
 
-Create two new users.
+Cree dos nuevos usuarios.
 
 ```
 foal run create-user email="john@foalts.org" password="john_password"
 foal run create-user email="mary@foalts.org" password="mary_password"
 ```
 
-> If you try to re-run one of these commands, you'll get the error below as the email key is unique.
+> Si intenta volver a ejecutar uno de estos comandos, obtendrá el siguiente error, ya que la clave de correo electrónico es única.
 >
 > `SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email`
 
-## The `create-todo` script
+## El script `create-todo`
 
-The `create-todo` script is a bit more complex as `Todo` has a many-to-one relation with `User`.
+El script `create-todo` es un poco más complejo ya que `Todo` tiene una relación many-to-one con `User`.
 
-Open the `create-todo.ts` file and replace its content.
+Abra el archivo `create-todo.ts` y sustituya su contenido.
 
 ```typescript
 // 3p
@@ -125,17 +125,17 @@ export async function main(args: { owner: string; text: string }) {
 
 ```
 
-We added an `owner` parameter to know which user the todo belongs to. It expects the email of the user.
+Hemos añadido un parámetro `propietario` para saber a qué usuario pertenece la tarea. Espera el correo electrónico del usuario.
 
-The `main` function then tries to get the user who has this email. If he or she does not exist, then the script terminates with a message displayed in the console. If not, the user is added to the todo as her/his owner.
+La función `main` intenta entonces obtener el usuario que tiene este correo electrónico. Si no existe, el script termina con un mensaje mostrado en la consola. Si no, el usuario se añade a la tarea como su propietario.
 
-Build the script.
+Construya el script.
 
 ```
 npm run build
 ```
 
-Create new todos for each user.
+Cree nuevas tareas para cada usuario.
 
 ```
 foal run create-todo owner="john@foalts.org" text="John task 1"

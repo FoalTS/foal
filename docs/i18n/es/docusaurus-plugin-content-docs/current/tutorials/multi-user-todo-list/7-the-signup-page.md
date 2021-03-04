@@ -1,16 +1,16 @@
 ---
-title: The Sign Up Page
+title: La Página de Inscripción
 ---
 
-The sign up page, that is served in the app controller, makes a request `POST /signup` when the button `Create an account` is pressed.
+La página de registro, que se sirve en el `AppController`, realiza una petición `POST /signup` cuando se pulsa el botón `Create an account`.
 
-Create a new controller to handle this route.
+Cree un nuevo controlador para manejar esta ruta.
 
 ```
 foal generate controller signup --register
 ```
 
-Open the new file and replace its content.
+Abra el nuevo archivo y sustituya su contenido.
 
 ```typescript
 // 3p
@@ -63,4 +63,4 @@ export class SignupController {
 
 ```
 
-You can now create new users with the signup page.
+Ahora puede crear nuevos usuarios con la página de registro.

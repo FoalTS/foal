@@ -1,13 +1,12 @@
 ---
-title: E2E Testing & Authentication
-sidebar_label: E2E Testing & Auth
+title: Pruebas E2E & Autenticación
 ---
 
-The last part of this tutorial explains how to write and run *end-to-end* tests. The purpose of these tests is not to verify that each feature of each component works, but to check that these components work properly together.
+La última parte de este tutorial explica cómo escribir y ejecutar pruebas de lado a lado (*end-to-end* o *e2e*). El propósito de estas pruebas no es verificar que cada característica de cada componente funciona, sino comprobar que estos componentes funcionan correctamente juntos.
 
-The tests are located in the `src/e2e/` directory. The command to run them in development is `npm run e2e`. E2E tests generally use the `supertest` library which provides a high-level abstraction for testing HTTP.
+Las pruebas se encuentran en el directorio `src/e2e/`. El comando para ejecutarlas en desarrollo es `npm run e2e`. Las pruebas E2E generalmente utilizan la biblioteca `supertest` que proporciona una abstracción de alto nivel para probar HTTP.
 
-Open `index.ts` in `src/e2e` and replace its content.
+Abra `index.ts` en `src/e2e` y sustituya su contenido.
 
 ```typescript
 // std
@@ -81,14 +80,14 @@ describe('The server', () => {
 
 ```
 
-Now run the tests.
+Ahora ejecute las pruebas.
 
 ```
 npm run e2e
 ```
 
-The output should look like this:
+La salida debería tener este aspecto:
 
-![E2E tests output](./e2e_output.png)
+![Salida de las pruebas E2E](./e2e_output.png)
 
-Congratulations, you have reached the end of this tutorial!
+Enhorabuena, ¡ha llegado al final de este tutorial!

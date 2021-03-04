@@ -1,19 +1,19 @@
 ---
-title: The User & Todo Models
+title: The Modelos User & Todo
 ---
 
-First of all, if you have downloaded the source code of the previous tutorial, compile and run the existing migrations.
+En primer lugar, si ha descargado el código fuente del tutorial anterior, compile y ejecute las migraciones existentes.
 
 ```
 npm run build
 npm run migrations
 ```
 
-## The User Model
+## El Modelo User
 
-Then open the `user.entity.ts` file from the `src/app/entities` directory. The `User` entity is the main class used by the framework's authentication system.
+Luego abra el archivo `user.entity.ts` del directorio `src/app/entities`. La entidad `User` es la clase principal utilizada por el sistema de autenticación del framework.
 
-Add the `email` and `password` properties and the `setPassword` method.
+Añada las propiedades `email` y `password` y el método `setPassword`.
 
 ```typescript
 import { hashPassword } from '@foal/core';
@@ -41,13 +41,13 @@ export class User extends BaseEntity {
 export { DatabaseSession } from '@foal/typeorm';
 ```
 
-The `setPassword` method uses `hashPassword` to hash passwords before storing them in the database. You must use this method to set a password instead of directly assigning a value to the `password` attribute.
+El método `setPassword` utiliza `hashPassword` para hacer un hash de las contraseñas antes de almacenarlas en la base de datos. Debe utilizar este método para establecer una contraseña en lugar de asignar directamente un valor al atributo `password`.
 
-## The Todo Model
+## El Modelo Todo
 
-The Todo model defined in the previous tutorial now needs a `owner` property to know which user it belongs to.
+El modelo Todo definido en el tutorial anterior necesita ahora una propiedad `owner` para saber a qué usuario pertenece.
 
-Replace the content of `todo.entity.ts`.
+Reemplace el contenido de `todo.entity.ts`.
 
 ```typescript
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -69,7 +69,7 @@ export class Todo extends BaseEntity {
 
 ```
 
-In the database the `todo` table will look like this:
+En la base de datos la tabla `todo` tendrá el siguiente aspecto:
 
 ```
 +------------+-----------+-------------------------------------+
@@ -81,17 +81,17 @@ In the database the `todo` table will look like this:
 +------------+-----------+-------------------------------------+
 ```
 
-## The Migrations
+## Las Migraciones
 
-The last step is to create/update the tables in the database. As in the first tutorial, you will use migrations for this.
+El último paso es crear/actualizar las tablas en la base de datos. Como en el primer tutorial, utilizará las migraciones para ello.
 
-Generate the migrations from the entities.
+Genere las migraciones a partir de las entidades.
 
 ```
 npm run makemigrations
 ```
 
-A new file is added in `src/migrations`.
+Se añade un nuevo archivo en `src/migrations`.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
@@ -109,7 +109,7 @@ export class migration1562765487944 implements MigrationInterface {
 }
 ```
 
-Then run the new migration file.
+A continuación, ejecute el nuevo archivo de migración.
 
 ```
 npm run migrations

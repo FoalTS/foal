@@ -1,10 +1,10 @@
 ---
-title: Todos & Ownership
+title: Tareas & Propriedad
 ---
 
-Currently the API returns everyone's todos to each user. This is not the expected behavior. We would like that each user has access to only his or her tasks.
+Actualmente la API devuelve las tareas de cada usuario. Este no es el comportamiento esperado. Nos gustaría que cada usuario tuviera acceso sólo a sus tareas.
 
-Go back to the `ApiController` and update the `getTodos` route.
+Vuelva al `ApiController` y actualice la ruta `getTodos`.
 
 ```typescript
   @Get('/todos')
@@ -14,19 +14,19 @@ Go back to the `ApiController` and update the `getTodos` route.
   }
 ```
 
-> The `Context` object contains four properties:
-> - the express [request object](https://expressjs.com/en/4x/api.html#req),
-> - an empty object called `state` which can be used to share data between hooks, 
-> - a `session` object,
-> - and the `user` object that is defined if a user logged in.
+> El objeto `Contexto` contiene cuatro propiedades:
+> - el [objeto de solicitud](https://expressjs.com/es/4x/api.html#req) Express,
+> - un objeto vacío llamado `state` que puede utilizarse para compartir datos entre hooks, 
+> - un objeto `session`,
+> - y el objeto `user` que se define si un usuario se ha conectado.
 
-Refresh the todo-list page. You should only see the todos of the user with whom you logged in.
+Actualice la página de la lista de tareas. Sólo debería ver las tareas del usuario con el que ha iniciado la sesión.
 
-Yet, if you try to create a new to-do, it will disappear upon page refresh. This is perfectly normal since we do not specify its owner upon creation.
+Sin embargo, si intenta crear una nueva tarea pendiente, ésta desaparecerá al actualizar la página. Esto es perfectamente normal, ya que no se especifica su propietario en el momento de la creación.
 
-As for the delete feature, you also need to restrict its access. Users should only be able to delete their todos.
+En cuanto a la función de borrado, también hay que restringir su acceso. Los usuarios sólo deberían poder borrar sus tareas.
 
-Update the api controller.
+Actualice el controlador api.
 
 ```typescript
   @Post('/todos')
@@ -65,4 +65,4 @@ Update the api controller.
   }
 ```
 
-The application is now working properly.
+Ahora la aplicación funciona correctamente.

@@ -1,26 +1,26 @@
 ---
-title: Introduction
+title: Introducción
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> Está leyendo la documentación de la versión 2 de FoalTS. Las instrucciones para actualizar a esta versión están disponibles [aquí](../../upgrade-to-v2/README.md). La documentación antigua se puede encontrar [aquí](https://foalts.org/docs/1.x/).
 
-In this tutorial you will learn how to manage users, authentication and authorization in FoalTS. You will also have a quick overview of end-to-end testing.
+En este tutorial aprenderá a gestionar usuarios, autenticación y autorización en FoalTS. También tendrá una rápida visión de las pruebas de lado a lado.
 
-For that, you are going to create a multi-user to-do list. It will extend the application created in the previous tutorial [Simple To-Do List](../simple-todo-list/1-installation.md) that you must follow before going through this one.
+Para ello, va a crear una lista de tareas multiusuario. Ampliará la aplicación creada en el tutorial anterior [Lista de Tareas Simple](../simple-todo-list/1-installation.md) que debe seguir antes de pasar por éste.
 
-> The source code of the first tutorial is available [here](https://foalts.org/simple-todo-list-source-code-v2.zip).
+> El código fuente del primer tutorial está disponible [aquí](https://foalts.org/simple-todo-list-source-code-v2.zip).
 
-The application will have three pages:
-- a sign up page where users can create a new account with an email and a password,
-- a login page that expects an email and a password to sign in,
-- and the todo-list page where the tasks are listed, created and deleted.
+La aplicación tendrá tres páginas
+- una página de registro en la que los usuarios podrán crear una nueva cuenta con un correo electrónico y una contraseña,
+- una página de conexión que espera un correo electrónico y una contraseña para iniciar la sesión,
+- y la página de la lista de tareas donde se enumeran, crean y eliminan las tareas.
 
-Each user will have her/his own todos and will not be able to view, create or delete other people's todos.
+Cada usuario tendrá sus propias tareas y no podrá ver, crear o eliminar las de otras personas.
 
-The pages look like this:
+Las páginas tienen el siguiente aspecto:
 
 ![Sign up page](./signup.png)
 ![Login page](./signin.png)
 ![To-do list page](./todo-list.png)
 
-Let's get started!
+¡Empecemos!
