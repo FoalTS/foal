@@ -1,6 +1,5 @@
 ---
-title: Upload and Download Files
-sidebar_label: Upload & Download Files
+title: Carga y Descarga de archivos
 ---
 
 import Tabs from '@theme/Tabs';

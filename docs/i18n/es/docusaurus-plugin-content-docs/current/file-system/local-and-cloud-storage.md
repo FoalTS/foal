@@ -1,6 +1,5 @@
 ---
-title: Local and Cloud Storage
-sidebar_label: Local & Cloud Storage
+title: Almacenamiento local y en el Cloud
 ---
 
 import Tabs from '@theme/Tabs';

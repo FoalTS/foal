@@ -1,6 +1,6 @@
 ---
-title: Build and Start the App
-sidebar_label: Build & Start the App
+title: Construir e Iniciar la Aplicación
+sidebar_label: Construir & Iniciar la Aplicación
 ---
 
 > You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).

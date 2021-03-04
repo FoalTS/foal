@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Configuración
 ---
 
 import Tabs from '@theme/Tabs';

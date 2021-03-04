@@ -1,5 +1,5 @@
 ---
-title: CSRF Protection
+title: Protección CSRF
 ---
 
 import Tabs from '@theme/Tabs';

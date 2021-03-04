@@ -1,5 +1,5 @@
 ---
-title: Services & Dependency Injection
+title: Servicios e Inyección de Dependencias
 ---
 
 import Tabs from '@theme/Tabs';
