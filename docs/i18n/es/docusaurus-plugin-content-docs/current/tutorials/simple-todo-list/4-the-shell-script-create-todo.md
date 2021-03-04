@@ -1,23 +1,23 @@
 ---
-title: The Shell Script create-todo
+title: El Script Shell create-todo
 ---
 
-Now it is time to populate the database with some tasks.
+Ahora es el momento de poblar la base de datos con algunas tareas.
 
-You could run the command line interface of your database (in that case *SQLite*) and enter some SQL queries. But this is risky and not very handy. It becomes especially true when the complexity of your models increases (relations many-to-many, etc).
+Podría ejecutar la interfaz de línea de comandos de su base de datos (en este caso *SQLite*) e introducir algunas consultas SQL. Pero esto es arriesgado y poco práctico. Se vuelve especialmente cierto cuando la complejidad de sus modelos aumenta (relaciones many-to-many, etc).
 
-That's why you are going to create and use a *shell script* instead.
+Por eso va a crear y utilizar en su lugar un *script shell*.
 
 ```sh
 foal generate script create-todo
 ```
 
-A *shell script* is a piece of code intended to be called from the command line. It has access to all the components of your application, including your models. A shell script is divided in two parts:
+Un *script shell* es una pieza de código destinada a ser llamada desde la línea de comandos. Tiene acceso a todos los componentes de su aplicación, incluyendo sus modelos. Un script shell se divide en dos partes:
 
-- a `schema` object which defines the specification of the command line arguments,
-- and a `main` function which gets these arguments as an object and executes some code.
+- un objeto `schema` que define la especificación de los argumentos de la línea de comandos,
+- y una función `main` que obtiene estos argumentos como un objeto y ejecuta algún código.
 
-Open the new generated file in the `src/scripts` directory and update its content.
+Abra el nuevo archivo generado en el directorio `src/scripts` y actualice su contenido.
 
 ```typescript
 // 3p
@@ -55,13 +55,13 @@ export async function main(args: { text: string }) {
 
 ```
 
-Build the script.
+Construya el script.
 
 ```sh
 npm run build
 ```
 
-Then run the script to create tasks in the database.
+A continuación, ejecute el script para crear tareas en la base de datos.
 
 ```sh
 foal run create-todo text="Read the docs"
@@ -69,6 +69,6 @@ foal run create-todo text="Create my first application"
 foal run create-todo text="Write tests"
 ```
 
-> Note that if you try to create a new to-do without specifying the text argument, you'll get the error below.
+> Observe que si intenta crear una nueva tarea sin especificar el argumento del texto, obtendrá el siguiente error.
 >
 > `Error: The command line arguments should have required property 'text'.`

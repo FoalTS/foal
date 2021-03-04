@@ -1,24 +1,24 @@
 ---
-title: Installation
+title: Instalación
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> Está leyendo la documentación de la versión 2 de FoalTS. Las instrucciones para actualizar a esta versión están disponibles [aquí](../../upgrade-to-v2/README.md). La documentación antigua se puede encontrar [aquí](https://github.com/FoalTS/foal/tree/v1.x/docs).
 
-In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which users can view, create and delete their tasks.
+En este tutorial aprenderá a crear una aplicación web básica con FoalTS. La aplicación de demostración es una simple lista de tareas con la que los usuarios pueden ver, crear y eliminar sus tareas.
 
-> **Requirements:**
+> **Requisitos:**
 >
-> [Node.js](https://nodejs.org/en/) 10 or greater
+> [Node.js](https://nodejs.org/en/) 10 o superior
 
-## Create a New Project
+## Crear un Nuevo Proyecto
 
-First you need to install globaly the *Command Line Interface (CLI)* of FoalTS. It will help you create a new project and generate files all along your development.
+Primero necesita instalar globalmente la Interfaz de Línea de Comando (*Command Line Interface* o *CLI*) de FoalTS. Le ayudará a crear un nuevo proyecto y a generar archivos a lo largo de su desarrollo.
 
 ```sh
 npm install -g @foal/cli
 ```
 
-Then create a new application.
+A continuación, cree una nueva aplicación.
 
 ```sh
 foal createapp my-app
@@ -26,11 +26,11 @@ foal createapp my-app
 
 :::note
 
-Having trouble installing Foal? 👉 Checkout our [troubleshooting page](./installation-troubleshooting).
+¿Tiene problemas para instalar Foal? 👉 Revise nuestra [página de solución de problemas](./installation-troubleshooting).
 
 :::note
 
-This command generates a new directory with the basic structure of the new application. It also installs all the dependencies. Let's look at what `createapp` created:
+Este comando genera un nuevo directorio con la estructura básica de la nueva aplicación. También instala todas las dependencias. Veamos lo que ha creado `createapp`:
 
 ```shell
 my-app/
@@ -47,41 +47,41 @@ my-app/
   .eslintrc.js
 ```
 
-The outer `my-app` root directory is just a container for your project.
-- The `config/` directory contains configuration files for your different environments (production, test, development, e2e, etc).
-- The `node_modules/` directory contains all the prod and dev dependencies of your project.
-- The static files are located in the `public/` directory. They are usually images, CSS and client JavaScript files and are served directly when the server is running.
-- The `src/` directory contains all the source code of the application.
-  - The inner `app/` directory includes the components of your server (controllers, services and hooks).
-  - End-to-end tests are located in the `e2e/` directory.
-  - The inner `scripts/` folder contains scripts intended to be called from the command line (ex: create-user).
-- The `ormconfig.js` file defines the configuration and credentials of the database(s) connection(s). They can also be passed through environment variables.
-- The `package.json` lists the dependencies and commands of the project.
-- The `tsconfig.*.json` files list the TypeScript compiler configuration for each `npm` command.
-- Finally the linting configuration can be found in the `.eslintrc.js` file.
+El directorio raíz externo `my-app` es sólo un contenedor para su proyecto.
+- El directorio `config/` contiene los archivos de configuración para sus diferentes entornos (producción, prueba, desarrollo, e2e, etc).
+- El directorio `node_modules/` contiene todas las dependencias prod y dev de su proyecto.
+- Los archivos estáticos se encuentran en el directorio `public/`. Suelen ser imágenes, CSS y archivos JavaScript del cliente y se sirven directamente cuando el servidor está en funcionamiento.
+- El directorio `src/` contiene todo el código fuente de la aplicación.
+  - El directorio interno `app/` incluye los componentes de su servidor (controladores, servicios y hooks).
+  - Las pruebas de lado a lado se encuentran en el directorio `e2e/`.
+  - La carpeta interior `scripts/` contiene los scripts destinados a ser llamados desde la línea de comandos (por ejemplo: create-user).
+- El archivo `ormconfig.js` define la configuración y las credenciales de conexión de la(s) base(s) de datos. También se pueden pasar a través de variables de entorno.
+- El `package.json` enumera las dependencias y comandos del proyecto.
+- Los archivos `tsconfig.*.json` listan la configuración del compilador de TypeScript para cada comando `npm`.
+- Finalmente, la configuración de linting se encuentra en el archivo `.eslintrc.js`.
 
 > **TypeScript**
 >
-> The language used to develop a FoalTS application is [TypeScript](https://www.typescriptlang.org/). It is a typed superset of JavaScript that compiles to plain JavaScript. The benefits of using TypeScript are many, but in summary, the language provides great tools and the future features of JavaScript.
+> El lenguaje utilizado para desarrollar una aplicación FoalTS es [TypeScript](https://www.typescriptlang.org/). Se trata de un superconjunto tipado de JavaScript que se compila en JavaScript simple. Las ventajas de utilizar TypeScript son muchas, pero en resumen, el lenguaje proporciona grandes herramientas y las características futuras de JavaScript.
 
-## Start The Server
+## Iniciar el Servidor
 
-Let's verify that the FoalTS project works. Run the following commands:
+Verifiquemos que el proyecto FoalTS funciona. Ejecute los siguientes comandos:
 
 ```
 cd my-app
 npm run develop
 ```
 
-You've started the development server.
+Ha iniciado el servidor de desarrollo.
 
-> The **development server** watches at your files and automatically compiles and reloads your code. You don’t need to restart the server each time you make code changes. Note that it is only intended to be used in development, do not use it on production.
+> El **servidor de desarrollo** vigila sus archivos y compila y recarga automáticamente su código. No necesita reiniciar el servidor cada vez que realice cambios en el código. Tenga en cuenta que sólo está pensado para ser utilizado en desarrollo, no lo utilice en producción.
 
 
-> **Port 3001 already in use?**
+> **¿El puerto 3001 ya está en uso?**
 >
-> You can define in `config/default.json` which port the application is using.
+> Puede definir en `config/default.json` qué puerto utiliza la aplicación.
 
-Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the text *Welcome on board*.
+Vaya a [http://localhost:3001](http://localhost:3001) en su navegador. Debería ver el texto *Welcome on board*.
 
-Congratulations, you now have a server running!
+Enhorabuena, ¡ya tiene un servidor en funcionamiento!

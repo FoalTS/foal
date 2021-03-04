@@ -1,18 +1,18 @@
 ---
-title: Validation & Sanitization
+title: Validación & Sanitización
 ---
 
-Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.
+Actualmente las entradas recibidas por el servidor no se comprueban. Todo el mundo puede enviar cualquier cosa al solicitar `POST /api/todos`. Por eso no se puede confiar en las entradas del cliente.
 
-You will use the `ValidateBody` and `ValidatePathParam` hooks to validate and sanitize incoming data.
+Utilizará los hooks `ValidateBody` y `ValidatePathParam` para validar y sanear los datos entrantes.
 
-A *hook* is a decorator that is attached to a route handler (a controller method). It is executed before the method and is therefore particularly suitable for validation or access control.
+Un *hook* es un decorador que se adjunta a un gestor de rutas (un método del controlador). Se ejecuta antes del método y, por tanto, es especialmente adecuado para la validación o el control de acceso.
 
-The `ValidateBody` and `ValidatePathParam` check respectively the `body` and `params` properties of the request object. They take a schema as unique argument.
+El `ValidateBody` y el `ValidatePathParam` comprueban respectivamente las propiedades `body` y `params` del objeto de petición. Toman un esquema como único argumento.
 
-> FoalTS uses [Ajv](https://github.com/epoberezkin/ajv), a fast JSON Schema validator, to define its schemas.
+> FoalTS utiliza [Ajv](https://github.com/epoberezkin/ajv), un rápido validador de esquemas JSON, para definir sus esquemas.
 
-Let's add validation and sanitization to your application. In fact, you have already defined the todo schema in the `create-todo` script earlier.
+Vamos a añadir validación y sanitización a su aplicación. De hecho, ya ha definido el esquema de tarea en el script `crear-todo` anterior.
 
 ```typescript
 import {

@@ -1,19 +1,18 @@
 ---
-title: The Todo Model
+title: The Modelo Todo
 ---
 
-Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
+Vamos a crear su primer modelo. El CLI proporciona un comando útil para generar un nuevo archivo con un modelo vacío.
 
 ```sh
 foal generate entity todo
 ```
 
-> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapper*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
+> FoalTS utiliza [TypeORM](http://typeorm.io), un completo *Object-Relational Mapper*, para comunicarse con la(s) base(s) de datos. En TypeORM, los modelos simples se llaman *entidades* y son clases decoradas con el decorador `Entity`.
 
+> Cada nuevo proyecto en FoalTS utiliza una base de datos `SQLite` ya que no requiere ninguna instalación adicional. Pero TypeORM soporta muchas otras bases de datos. Mantendremos esta en este tutorial por simplicidad.
 
-> Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.
-
-Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
+Abra el archivo `todo.entity.ts` en el directorio `src/app/entities` y añada una columna `text`.
 
 ```typescript
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -31,19 +30,19 @@ export class Todo extends BaseEntity {
 
 ```
 
-This class is the representation of the SQL table `todo`. Currently, this table does not exist in the database. You will have to create it.
+Esta clase es la representación de la tabla SQL `todo`. Actualmente, esta tabla no existe en la base de datos. Tendrá que crearla.
 
-You can do this manually, using a database software for example, or use migrations, a programmatic way to update a database schema. The advantage of using migrations is that you can create, update and delete your tables directly from the definition of your entities. They also ensure that all your environments (prod, dev) and co-developers have the same table definitions.
+Puede hacerlo manualmente, utilizando un software de base de datos, por ejemplo, o utilizar migraciones, una forma programática de actualizar un esquema de base de datos. La ventaja de utilizar migraciones es que puede crear, actualizar y eliminar sus tablas directamente desde la definición de sus entidades. También garantizan que todos sus entornos (prod, dev) y codesarrolladores tengan las mismas definiciones de tablas.
 
-Let&#8217;s see how to use them.
+Veamos cómo utilizarlos.
 
-First run the following command to generate your migration file. TypeORM will compare your current database schema with the definition of your entities and generate the appropriate SQL queries.
+Primero ejecute el siguiente comando para generar su archivo de migración. TypeORM comparará el esquema actual de su base de datos con la definición de sus entidades y generará las consultas SQL adecuadas.
 
 ```
 npm run makemigrations
 ```
 
-A new file appears in the `src/migrations/` directory. Open it.
+Aparece un nuevo archivo en el directorio `src/migrations/`. Ábralo.
 
 ```typescript
 import {MigrationInterface, QueryRunner} from "typeorm";
@@ -64,17 +63,17 @@ export class migration1562755564200 implements MigrationInterface {
 
 ```
 
-The `up` method contains all the SQL queries that will be executed during the migration.
+El método `up` contiene todas las consultas SQL que se ejecutarán durante la migración.
 
-Then run the migration.
+A continuación, ejecute la migración.
 
 ```
 npm run migrations
 ```
 
-TypeORM examines all the migrations that have been run previously (none in this case) and executes the new ones.
+TypeORM examina todas las migraciones que se han ejecutado previamente (ninguna en este caso) y ejecuta las nuevas.
 
-Your database (`db.sqlite3`) now contains a new table named `todo`:
+Su base de datos (`db.sqlite3`) contiene ahora una nueva tabla llamada `todo`:
 
 
 ```
@@ -86,4 +85,4 @@ Your database (`db.sqlite3`) now contains a new table named `todo`:
 +------------+-----------+-------------------------------------+
 ```
 
-> Alternatively, you can also use the `synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, although this behavior may be useful during debug and development, it is not suitable for a production environment (you could lose production data).
+> También puede utilizar la opción `synchronize` en su archivo de configuración `config/default.json`. Cuando se establece en `true`, el esquema de la base de datos se crea automáticamente a partir de la definición de entidades en cada lanzamiento de la aplicación. En este caso, no es necesario realizar migraciones. Sin embargo, aunque este comportamiento puede ser útil durante la depuración y el desarrollo, no es adecuado para un entorno de producción (podría perder datos de producción).

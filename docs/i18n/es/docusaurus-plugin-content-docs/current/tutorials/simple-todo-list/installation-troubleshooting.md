@@ -1,15 +1,15 @@
 ---
-title: Installation Troubleshooting
+title: Solución de Problemas de Instalación
 ---
 
-## Errors with `node-gyp`
+## Errores con `node-gyp`
 
-If you're on Windows and you get errors mentioning `gyp` or `node_gyp`, it's probably because this [library](https://github.com/nodejs/node-gyp) doesn't have all the dependencies it needs.
+Si está en Windows y obtiene errores que mencionan `gyp` o `node_gyp`, probablemente sea porque esta [biblioteca](https://github.com/nodejs/node-gyp) no tiene todas las dependencias que necesita.
 
-Try to run `npm install --global windows-build-tools` from an elevated PowerShell or CMD.exe (run as Administrator).
+Intente ejecutar `npm install --global windows-build-tools` desde un PowerShell elevado o CMD.exe (ejecutado como administrador).
 
-If this does not solve your problem, please [submit an issue](https://github.com/FoalTS/foal/issues/new) on Github with your terminal output so that we can help you!
+¡Si esto no resuelve su problema, por favor [envíe una issue](https://github.com/FoalTS/foal/issues/new) en Github con la salida de su terminal para que podamos ayudarle!
 
-## Another problem?
+## ¿Otro problema?
 
-Please [submit an issue](https://github.com/FoalTS/foal/issues/new) on Github.
+Por favor, [envíe una issue](https://github.com/FoalTS/foal/issues/new) en Github.
