@@ -2,7 +2,7 @@
 title: Serializing & Deserializing
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 This document shows how to serialize class instances into plain objects and, conversely, how to deserialize plain objects into class instances. It is based on the [class-transformer](https://github.com/typestack/class-transformer) library.
 
