@@ -4,35 +4,35 @@
     "description": "The label for version 1.x"
   },
   "sidebar.someSidebar.category.TUTORIALS": {
-    "message": "TUTORIALS",
+    "message": "TUTORIALES",
     "description": "The label for category TUTORIALS in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Simple To-Do List": {
-    "message": "Simple To-Do List",
+    "message": "Lista de Tareas Simple",
     "description": "The label for category Simple To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Multi-User To-Do List": {
-    "message": "Multi-User To-Do List",
+    "message": "Lista de Tareas Multiusuario",
     "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.MongoDB To-Do List": {
-    "message": "MongoDB To-Do List",
+    "message": "Lista de Tareas con MongoDB",
     "description": "The label for category MongoDB To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.TOPIC GUIDES": {
-    "message": "TOPIC GUIDES",
+    "message": "GUÍAS DE TEMAS",
     "description": "The label for category TOPIC GUIDES in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Architecture": {
-    "message": "Architecture",
+    "message": "Arquitectura",
     "description": "The label for category Architecture in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Databases": {
-    "message": "Databases",
+    "message": "Bases de Datos",
     "description": "The label for category Databases in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Authentication & Access Control": {
-    "message": "Authentication & Access Control",
+    "message": "Autenticación & Control de Acceso",
     "description": "The label for category Authentication & Access Control in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.API": {
@@ -40,19 +40,19 @@
     "description": "The label for category API in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Frontend Integration": {
-    "message": "Frontend Integration",
+    "message": "Integración del Frontend",
     "description": "The label for category Frontend Integration in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.File System": {
-    "message": "File System",
+    "message": "Sistema de Archivos",
     "description": "The label for category File System in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.CLI & Development Environment": {
-    "message": "CLI & Development Environment",
+    "message": "CLI & Entorno de Desarrollo",
     "description": "The label for category CLI & Development Environment in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Testing": {
-    "message": "Testing",
+    "message": "Prueba",
     "description": "The label for category Testing in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Cloud": {
@@ -60,27 +60,27 @@
     "description": "The label for category Cloud in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Security": {
-    "message": "Security",
+    "message": "Seguridad",
     "description": "The label for category Security in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Utilities": {
-    "message": "Utilities",
+    "message": "Utilidades",
     "description": "The label for category Utilities in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Cookbook": {
-    "message": "Cookbook",
+    "message": "Recetas",
     "description": "The label for category Cookbook in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Deployment & Environments": {
-    "message": "Deployment & Environments",
+    "message": "Despliegue & Entornos",
     "description": "The label for category Deployment & Environments in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Upgrading": {
-    "message": "Upgrading",
+    "message": "Actualización",
     "description": "The label for category Upgrading in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Community": {
-    "message": "Community",
+    "message": "Comunidad",
     "description": "The label for category Community in sidebar someSidebar"
   },
   "sidebar.someSidebar.link.To v1": {
@@ -88,7 +88,7 @@
     "description": "The label for link To v1 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v1.0.0"
   },
   "sidebar.someSidebar.link.To v0.8": {
-    "message": "To v0.8",
+    "message": "A v0.8",
     "description": "The label for link To v0.8 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v0.8.0"
   },
   "sidebar.someSidebar.link.Awesome Foal": {
