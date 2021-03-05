@@ -10,13 +10,16 @@ module.exports = {
   projectName: 'foal', // Usually your repo name.
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'fr'],
+    locales: ['en', 'fr', 'es'],
     localeConfigs: {
       en: {
         label: 'English',
       },
       fr: {
         label: 'Français',
+      },
+      es: {
+        label: 'Español',
       },
     },
   },

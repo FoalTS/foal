@@ -2,7 +2,7 @@
 title: Introduction
 ---
 
-> Vous lisez la documentation de la version 2 de FoalTS. Les instructions pour la mise à jour vers cette version sont disponibles [ici](../../upgrade-to-v2/README.md). L'ancienne documentation se trouve [ici](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> Vous lisez la documentation de la version 2 de FoalTS. Les instructions pour la mise à jour vers cette version sont disponibles [ici](../../upgrade-to-v2/README.md). L'ancienne documentation se trouve [ici](https://foalts.org/docs/1.x/).
 
 Dans ce tutoriel, vous apprendrez comment gérer les utilisateurs, l'authentification et l'autorisation dans FoalTS. Vous aurez également un aperçu rapide des tests de bout en bout.
 
