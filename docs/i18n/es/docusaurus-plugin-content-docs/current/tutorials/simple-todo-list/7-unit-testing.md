@@ -85,7 +85,7 @@ describe('ApiController', () => {
 > Como un método del controlador devuelve un objeto `HttpResponse`, es realmente fácil probar el estado y el cuerpo de la respuesta.
 
 
-> Si el método del controlador toma un objeto `Context` como argumento, puede instanciar uno así `nuevo Contexto({ /* contenido del objeto de solicitud Express */})`.
+> Si el método del controlador toma un objeto `Context` como argumento, puede instanciar uno así `nuevo Contexto({ /* contenido del objeto "request" de Express */})`.
 
 Ejecute las pruebas.
 

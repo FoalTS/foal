@@ -15,7 +15,7 @@ Vuelva al `ApiController` y actualice la ruta `getTodos`.
 ```
 
 > El objeto `Contexto` contiene cuatro propiedades:
-> - el [objeto de solicitud](https://expressjs.com/es/4x/api.html#req) Express,
+> - el objeto [request](https://expressjs.com/es/4x/api.html#req) de Express,
 > - un objeto vacío llamado `state` que puede utilizarse para compartir datos entre hooks, 
 > - un objeto `session`,
 > - y el objeto `user` que se define si un usuario se ha conectado.

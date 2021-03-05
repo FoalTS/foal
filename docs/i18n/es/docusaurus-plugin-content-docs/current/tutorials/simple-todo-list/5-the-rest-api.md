@@ -88,7 +88,7 @@ Añada las funciones de creación y eliminación.
   }
 ```
 
-El objeto `Context`, que se pasa a cada gestor de rutas, contiene el [objeto de solicitud](https://expressjs.com/es/4x/api.html#req) Express. Éste representa la petición HTTP y tiene propiedades para leer los parámetros, el cuerpo, las cabeceras HTTP de la petición, etc.
+El objeto `Context`, que se pasa a cada gestor de rutas, contiene el objeto [request](https://expressjs.com/es/4x/api.html#req) de Express. Éste representa la petición HTTP y tiene propiedades para leer los parámetros, el cuerpo, las cabeceras HTTP de la petición, etc.
 
 Ahora escriba una nueva tarea en el texto de entrada y pulse Enter. La tarea aparece en la lista de tareas. Actualice la página, debería seguir ahí. Si hace clic en la casilla de verificación, la tarea se ha eliminado con éxito.
 
