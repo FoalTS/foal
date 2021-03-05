@@ -26,7 +26,7 @@ Proporciona un conjunto de componentes listos para usar, de modo que no tenga qu
 
 Pero a la vez que ofrece todas estas características, el framework sigue siendo sencillo. La complejidad y las abstracciones innecesarias se dejan de lado para proporcionar la sintaxis más intuitiva y expresiva. Creemos que un código conciso y elegante es la mejor manera de desarrollar una aplicación y mantenerla en el futuro. También le permite dedicar más tiempo a la codificación en lugar de intentar comprender cómo funciona el framework.
 
-Y por último, pero no por ello menos importante, el marco de trabajo está enteramente escrito en TypeScript. Este lenguaje le aporta una comprobación de tipos estática opcional junto con las últimas características de ECMAScript. Esto le permite detectar la mayoría de los errores tontos durante la compilación y mejorar la calidad de su código. También le ofrece autocompletado y una API bien documentada.
+Y por último, el framework está enteramente escrito en TypeScript. Este lenguaje le aporta una comprobación de tipos estática opcional junto con las últimas características de ECMAScript. Esto le permite detectar la mayoría de los errores tontos durante la compilación y mejorar la calidad de su código. También le ofrece autocompletado y una API bien documentada.
 
 ## Política de Desarrollo
 
@@ -36,7 +36,7 @@ Y por último, pero no por ello menos importante, el marco de trabajo está ente
 
 Las pruebas de FoalTS tienen una prioridad muy alta. Proporcionar un producto fiable es realmente importante para nosotros. En diciembre de 2020, el framework está cubierto por más de 2100 pruebas.
 
-### Documentación de Calidad
+### Documentación
 
 Las nuevas características, independientemente de lo que ofrezcan, no sirven de nada si no están bien documentadas. Mantener una documentación completa y de calidad es clave para el framework. Si cree que falta algo o no está claro, ¡no dude en abrir una issue en Github!
 
