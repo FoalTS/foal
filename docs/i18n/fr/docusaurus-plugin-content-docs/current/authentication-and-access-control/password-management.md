@@ -3,7 +3,7 @@ title: Gestion des Mots de Passe
 sidebar_label: Mots de Passe
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://github.com/FoalTS/foal/tree/v1.x/docs).
+> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
 
