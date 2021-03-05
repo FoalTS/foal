@@ -103,4 +103,4 @@ Félicitations ! Vous avez atteint la fin de ce tutoriel !
 
 Si vous avez des questions, n'hésitez pas à ouvrir une issue sur Github !
 
-> Le code source complet est disponible [ici](https://foalts.org/simple-todo-list-source-code-v1.zip).
+> Le code source complet est disponible [ici](https://foalts.org/simple-todo-list-source-code-v2.zip).
