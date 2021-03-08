@@ -36,9 +36,9 @@ Running this file with mocha gives you the below report:
 
 ![Test report](./introduction-report.png)
 
-## The `assert` Node.js module
+## Asserting Libraries
 
-In addition to the Mocha framework, you can use the Node.js built-in [assert](https://nodejs.org/api/assert.html) module. It provides some useful functions such as [ok](https://nodejs.org/api/assert.html#assert_assert_ok_value_message), [strictEqual](https://nodejs.org/api/assert.html#assert_assert_strictequal_actual_expected_message) or [deepStrictEqual](https://nodejs.org/api/assert.html#assert_assert_deepstrictequal_actual_expected_message) to make your tests more readable and concise.
+In addition to the Mocha framework, you can use the Node.js built-in [assert](https://nodejs.org/api/assert.html) module. It provides some useful functions such as [ok](https://nodejs.org/api/assert.html#assert_assert_ok_value_message), [strictEqual](https://nodejs.org/api/assert.html#assert_assert_strictequal_actual_expected_message) or [deepStrictEqual](https://nodejs.org/api/assert.html#assert_assert_deepstrictequal_actual_expected_message) to make your tests more readable and concise. You can also use third party libraries such as [chai](https://www.npmjs.com/package/chai) or [expect](https://www.npmjs.com/package/expect).
 
 The previous code can be refactored as follows:
 
@@ -57,4 +57,3 @@ describe('The number 1', () => {
 
 })
 ```
-
