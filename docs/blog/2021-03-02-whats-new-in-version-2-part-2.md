@@ -38,7 +38,7 @@ In this example, when calling the `get` method, the framework will look at the c
 - If the value is not defined, the function returns `undefined`.
 - If the value is a number, the function returns it.
 - If the value is a string that can be converted to a number (ex: `"1"`), the function converts and returns it.
-- If the value is not a number and cannot be converted, then the function throws a `ConfigTypeError` with the details. Note that the config value is not logged to avoir leaking sensitive information.
+- If the value is not a number and cannot be converted, then the function throws a `ConfigTypeError` with the details. Note that the config value is not logged to avoid leaking sensitive information.
 
 If you wish to make the config parameter mandatory, you can do it by using the `getOrThrow` method. If no value is found, then a `ConfigNotFound` error is thrown.
 
@@ -47,7 +47,7 @@ const timeout = Config.getOrThrow('custom.timeout', 'number');
 // The TypeScript type returned by `get` is number.
 ```
 
-Supported types are `string`, `number`, `boolean`, `boolean,string`, `number,string` and `any`.
+Supported types are `string`, `number`, `boolean`, `boolean|string`, `number|string` and `any`.
 
 ### Multiple `.env` files support
 
