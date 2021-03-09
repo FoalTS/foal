@@ -72,7 +72,7 @@ src/
 tsconfig.app.json
 ```
 
-Then you will need to execute `run npm install` and `npm run build`.
+Then you will need to run `npm install` and `npm run build`.
 
 If you install dependencies and build the app on your local host directly, then you should upload these files:
 
