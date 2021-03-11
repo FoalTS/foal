@@ -12,7 +12,6 @@ import TabItem from '@theme/TabItem';
 FoalTS uses [morgan](https://www.npmjs.com/package/morgan) to log the HTTP requests. You can specify the output format using the environment variable `SETTINGS_LOGGER_FORMAT` or the `config/default.json` file:
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -57,7 +56,6 @@ module.exports = {
 In some scenarios and environments, you might want to disable http request logging. You can achieve this by setting the `loggerFormat` configuration option to `none`. 
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -102,7 +100,6 @@ module.exports = {
 In some scenarios, you might want to disable error logging (error stack traces that are displayed when an error is thrown in a controller or hook). You can achieve this by setting the `allErrors` configuration option to false. 
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

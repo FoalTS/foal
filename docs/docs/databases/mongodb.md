@@ -23,7 +23,6 @@ npm install mongodb
 ```
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

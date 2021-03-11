@@ -231,7 +231,6 @@ JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 Update your configuration to retrieve the secret.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -547,7 +546,6 @@ JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 Update your configuration to retrieve the secret.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

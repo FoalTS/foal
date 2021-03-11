@@ -297,7 +297,6 @@ export class ApiController {
 You can disable this behavior globally with the [configuration key](../deployment-and-environments/configuration.md) `setting.openapi.useHooks`.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

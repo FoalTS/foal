@@ -31,7 +31,6 @@ Configuration values are provided using configuration files in the `config/` dir
 *config/default.{yml|json|js}*
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -103,7 +102,6 @@ Configuration values can also be set or overridden for a specific environment us
 All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -228,7 +226,6 @@ JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 ```
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

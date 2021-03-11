@@ -34,7 +34,6 @@ Environment variables are no longer loaded by default. You must specify them exp
 For example, `Config.get('settings.jwt.secret')` will not return the environment variable `SETTINGS_JWT_SECRET` by default. To do this, you must specify it explicitly in a configuration file:
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

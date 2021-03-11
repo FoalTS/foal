@@ -33,7 +33,6 @@ Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 Once the secret is in hand, there are several ways to provide it to the future hooks:
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -392,7 +391,6 @@ By default, UTF-8 is used to encode the secret string into bytes when verifying 
 Available encodings are listed [here](https://nodejs.org/api/buffer.html#buffer_buffers_and_character_encodings).
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -487,7 +485,6 @@ export class AuthController {
 #### Cookie options
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

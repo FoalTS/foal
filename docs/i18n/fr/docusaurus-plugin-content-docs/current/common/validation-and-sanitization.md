@@ -33,7 +33,6 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 
 *Example*
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -462,7 +461,6 @@ You can customize the errors returned by the validation hooks by using the [ajv-
 *Configuration*
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

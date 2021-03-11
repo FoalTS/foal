@@ -24,7 +24,6 @@ In addition, the framework provides token-based mitigation that works with eithe
 ### Authentication with Session Tokens
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -77,7 +76,6 @@ module.exports = {
 ### Authentication with JSON Web Tokens
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -474,7 +472,6 @@ To increase the effectiveness of protection against sub-domain attacks, your aut
 The name of the CSRF cookie can be changed in the configuration.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

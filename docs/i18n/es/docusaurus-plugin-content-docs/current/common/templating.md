@@ -91,7 +91,6 @@ npm install twig
 ```
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

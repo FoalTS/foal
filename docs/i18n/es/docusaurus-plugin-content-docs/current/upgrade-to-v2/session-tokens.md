@@ -56,7 +56,6 @@ class AppController {
 Then, in the configuration, specify the package name of your session store (`@foal/typeorm`, `@foal/redis`, etc).
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

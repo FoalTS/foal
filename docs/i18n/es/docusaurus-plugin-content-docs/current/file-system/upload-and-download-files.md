@@ -20,7 +20,6 @@ npm install @foal/storage
 Then specify in your configuration the file storage to be used and its settings. In this example, we will use the local file system with the `uploaded` directory (you must create it at the root of your project).
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -192,7 +191,6 @@ export class UserController {
 Optional settings can be provided in the configuration to limit the size or number of files uploaded.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -377,7 +375,6 @@ Static files, such as HTML, CSS, images, and JavaScript, are served by default f
 If necessary, this directory can be modified using the configuration key `settings.staticPath`.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -422,7 +419,6 @@ module.exports = {
 In case you need to add a virtual prefix path to your static files, you can do so with the `staticPathPrefix` configuration key.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

@@ -18,7 +18,6 @@ npm install @foal/storage
 
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -139,7 +138,6 @@ npm install @foal/storage
 
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

@@ -19,7 +19,6 @@ npm install ejs
 *Version 1*
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -62,7 +61,6 @@ module.exports = {
 *Version 2*
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

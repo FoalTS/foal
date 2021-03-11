@@ -80,7 +80,6 @@ module.exports = {
 ```
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -162,7 +161,6 @@ module.exports = {
 With this configuration, database credentials can be provided in a YAML, a JSON or a `.env `configuration file or in environment variables.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},

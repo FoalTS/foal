@@ -25,7 +25,6 @@ To begin, you must first specify where the session states will be stored. FoalTS
 To do so, the package name of the store must be provided with the configuration key `settings.session.store`.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -109,7 +108,6 @@ npm install @foal/redis
 In order to use this store, you must provide the redis URI in the configuration.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -171,7 +169,6 @@ npm install @foal/mongodb
 This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI in the configuration.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -527,7 +524,6 @@ Session states has two expiration timeouts.
 If needed, the default values can be override in the configuration. The timeouts must be provided in seconds.
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -735,7 +731,6 @@ export class ApiController {
 By default, FoalTS removes expired sessions in `TypeORMStore` and `MongoDBStore` every 50 requests on average. This can be changed with this configuration key:
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
@@ -887,7 +882,6 @@ export class ApiController {
 The default session cookie directives can be overridden in the configuration as follows:
 
 <Tabs
-  groupId="config"
   defaultValue="yaml"
   values={[
     {label: 'YAML', value: 'yaml'},
