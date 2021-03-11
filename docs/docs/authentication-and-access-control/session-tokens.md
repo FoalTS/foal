@@ -451,8 +451,29 @@ export class ApiController {
 }
 ```
 
+### Destroying the session
 
-#### Reading user information on the client
+Sessions can be destroyed (i.e users can be logged out) using their `destroy` method.
+
+```typescript
+import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
+
+export class AuthController {
+
+  @Post('/logout')
+  @UseSessions()
+  async logout(ctx: Context) {
+    if (ctx.session) {
+      await ctx.session.destroy();
+    }
+    return new HttpResponseNoContent();
+  }
+
+}
+```
+
+
+## Reading User Information on the Client (cookies)
 
 > *This feature is available from version 2.2 onwards.*
 
@@ -505,26 +526,6 @@ export class ApiController {
 const user = JSON.parse(decodeURIComponent(/* cookie value */));
 ```
 
-### Destroying the session
-
-Sessions can be destroyed (i.e users can be logged out) using their `destroy` method.
-
-```typescript
-import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
-
-export class AuthController {
-
-  @Post('/logout')
-  @UseSessions()
-  async logout(ctx: Context) {
-    if (ctx.session) {
-      await ctx.session.destroy();
-    }
-    return new HttpResponseNoContent();
-  }
-
-}
-```
 
 ## Save and Read Content
 

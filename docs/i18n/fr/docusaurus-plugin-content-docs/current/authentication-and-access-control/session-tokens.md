@@ -474,6 +474,61 @@ export class AuthController {
 }
 ```
 
+
+## Reading User Information on the Client (cookies)
+
+> *This feature is available from version 2.2 onwards.*
+
+When building a SPA with cookie-based authentication, it can sometimes be difficult to know if the user is logged in or to obtain certain information about the user (`isAdmin`, etc).
+
+Since the authentication token is stored in a cookie with the `httpOnly` directive set to `true` (to mitigate XSS attacks), the front-end application has no way of knowing if a user is logged in, except by making an additional request to the server.
+
+To solve this problem, Foal provides an option called `userCookie` that allows you to set an additional cookie that the frontend can read with the content you choose. This cookie is synchronized with the session and is refreshed at each request and destroyed when the session expires or when the user logs out.
+
+In the following example, the `user` cookie is empty if no user is logged in or contains certain information about him/her otherwise. This is particularly useful if you need to display UI elements based on user characteristics.
+
+*Server-side code*
+
+```typescript
+function userToJSON(user: User|undefined) {
+  if (!user) {
+    return 'null';
+  }
+
+  return JSON.stringify({
+    email: user.email,
+    isAdmin: user.isAdmin
+  });
+}
+
+@UseSessions({
+  cookie: true,
+  user: fetchUser(User),
+  userCookie: (ctx, services) => userToJSON(ctx.user)
+})
+export class ApiController {
+
+  @Get('/products')
+  @UserRequired()
+  async readProducts(ctx: Context) {
+    const products = await Product.find({ owner: ctx.user });
+    return new HttpResponseOK(products);
+  }
+
+}
+```
+
+*Cookies*
+
+![User cookie](./user-cookie.png)
+
+*Client-side code*
+
+```javascript
+const user = JSON.parse(decodeURIComponent(/* cookie value */));
+```
+
+
 ## Save and Read Content
 
 You can access and modify the session content with the `set` and `get` methods.
