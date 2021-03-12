@@ -21,7 +21,7 @@ import {
 import { DatabaseSession } from '@foal/typeorm';
 import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
 
-describe.only('Feature: Regenerating the session ID', () => {
+describe('Feature: Regenerating the session ID', () => {
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
