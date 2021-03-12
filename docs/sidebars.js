@@ -119,6 +119,7 @@ module.exports = {
         'cookbook/expressjs',
         'cookbook/root-imports',
         'cookbook/limit-repeated-requests',
+        'cookbook/base64url',
       ]),
       category('Deployment & Environments', [
         'deployment-and-environments/configuration',
