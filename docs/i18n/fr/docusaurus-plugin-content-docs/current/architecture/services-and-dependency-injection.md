@@ -346,7 +346,7 @@ export abstract class Logger {
   static concreteClassName = 'ConcreteLogger';
   static defaultConcreteClassPath = join(__dirname, './console-logger.service');
 
-  abstract log(str: string);
+  abstract log(str: string): void;
 }
 ```
 
