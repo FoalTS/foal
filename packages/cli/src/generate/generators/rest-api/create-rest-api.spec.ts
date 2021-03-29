@@ -5,7 +5,7 @@ import { throws } from 'assert';
 import { ClientError, FileSystem } from '../../file-system';
 import { createRestApi } from './create-rest-api';
 
-describe.only('createRestApi', () => {
+describe('createRestApi', () => {
 
   const fs = new FileSystem();
 

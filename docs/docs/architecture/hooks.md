@@ -457,3 +457,46 @@ class MyController {
   }
 }
 ```
+
+## Forward Data Between Hooks
+
+If you need to transfer data from one hook to another or to the controller method, you can use the `state` property of the `Context` object to do so.
+
+```typescript
+import { Context, Get, Hook, HttpResponseOK, UserRequired } from '@foal/core';
+import { Org } from '../entities';
+
+function AddOrgToContext() {
+  return Hook(async ctx => {
+    if (ctx.user) {
+      ctx.state.org = await Org.findOneOrFail(ctx.user.orgId);
+    }
+  })
+}
+
+export class ApiController {
+
+  @Get('/org-name')
+  @UserRequired()
+  @AddOrgToContext()
+  readOrgName(ctx: Context) {
+    return new HttpResponseOK(ctx.state.org.name);
+  }
+
+}
+```
+
+If needed, you can also define an interface for your state and pass it as type argument to the context.
+
+```typescript
+interface State {
+  org: Org;
+}
+
+export class ApiController {
+  // ...
+  readOrgName(ctx: Context<any, any, State>) {
+    // ...
+  }
+}
+```
