@@ -77,6 +77,8 @@ module.exports = {
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
+> The `enctype` of your requests must be of type `multipart/form-data`. If needed, you can use a [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object for this.
+
 ### Using Buffers
 
 ```typescript
@@ -359,6 +361,7 @@ export class AppController {
 <html>
 <body>
   <img src="/profile">
+  <!-- The enctype "multipart/form-data" is required. -->
   <form action="/profile" method="post" enctype="multipart/form-data">
       <input type="file" name="profile">
       <input type="submit" value="Upload image" name="submit">
