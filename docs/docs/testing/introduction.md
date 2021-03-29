@@ -2,7 +2,6 @@
 title: Introduction
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Every shipped app should come with a **minimum set of tests**. Writing tests lets you find problems early, facilitate changes and document your code. FoalTS is designed to be easily testable and provides the tools you need to write tests right away.
 

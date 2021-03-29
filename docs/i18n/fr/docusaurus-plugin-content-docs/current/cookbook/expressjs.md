@@ -2,7 +2,6 @@
 title: ExpressJS
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 FoalTS applications are created with the `createApp` function in the `src/index.ts` file. This function takes the root controller class (known as `AppController`) as parameter.
 

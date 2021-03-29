@@ -6,7 +6,6 @@ sidebar_label: Upload & Download Files
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 
