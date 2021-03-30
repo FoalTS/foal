@@ -27,7 +27,7 @@ module.exports = {
     'https://m.servedby-buysellads.com/monetization.custom.js'
   ],
   themeConfig: {
-    image: 'img/logo.png',
+    image: 'img/meta-image.png',
     googleAnalytics: {
       trackingID: 'UA-112613053-1',
       anonymizeIP: true,
