@@ -210,15 +210,26 @@ class FileService {
 } 
 ```
 
-> To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
-
---
-
-> If you only need to read the file size and not its content, you can use the `readSize` method.
+> **Warning**: When using the `read` method with streams, you may want to add an error listener to prevent the application from crashing if an unexpected error is emitted. Stream errors do not work as thrown or rejected errors and are automatically not caught by the framework.
 >
 > ```typescript
-> const size = await this.disk.readSize('avatars/xxx.jpg');
+> const { file } = await this.disk.read('avatars/xxx.jpg', 'stream');
+> file.on('error', (err: Error) => {
+>   // ...
+> });
 > ```
+
+#### File not found
+
+To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
+
+#### File size
+
+If you only need to read the file size and not its content, you can use the `readSize` method.
+
+```typescript
+const size = await this.disk.readSize('avatars/xxx.jpg');
+```
 
 ### Write files
 
