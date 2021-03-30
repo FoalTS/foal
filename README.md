@@ -83,9 +83,7 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 :point_right: [Continue with the tutorial](https://foalts.org/docs) :seedling:
 
-
-
-## Backers
+## Backers & Sponsors
 
 [![backers](./backers.png)](https://github.com/sponsors/LoicPoullain)
 
