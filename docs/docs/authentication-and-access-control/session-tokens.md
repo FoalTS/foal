@@ -159,6 +159,8 @@ module.exports = {
 </TabItem>
 </Tabs>
 
+> If you are using the redis store, please ensure that you have a `@dependency store: Store` property in at least one of your controllers or services. Otherwise, the connection to the redis database will not be established when the application starts.
+
 #### MongoDBStore
 
 ```
@@ -219,6 +221,8 @@ module.exports = {
 
 </TabItem>
 </Tabs>
+
+> If you are using the MongoDB store, please ensure that you have a `@dependency store: Store` property in at least one of your controllers or services. Otherwise, the connection to the MondoDB database will not be established when the application starts.
 
 ### Usage with the `Authorization` header
 
