@@ -24,6 +24,13 @@ FOO_BAR_WITH_QUOTES_AND_WHITESPACES="  with whitespaces  "
 
 `;
 const dotEnvContent2 = 'FOO_BAR=hello2';
+const dotEnvContent3 = `FOO_BAR=hello3
+FOO_BAR_THREE=three
+FOO_BAR_TRUE="true"
+`;
+const dotEnvContent4 = `FOO_BAR=hello4
+FOO_BAR_FOUR=four
+HELLO=space`;
 
 describe('Env', () => {
 
@@ -99,37 +106,106 @@ describe('Env', () => {
       testConfigFile('.env.test', 'test');
     });
 
+    context('given NODE_ENV is defined and .env.${NODE_ENV}.local exists', () => {
+      testConfigFile('.env.test.local', 'test');
+    });
+
     context('given NODE_ENV is not defined and .env.development exists', () => {
       testConfigFile('.env.development');
+    });
+
+    context('given NODE_ENV is not defined and .env.development.local exists', () => {
+      testConfigFile('.env.development.local');
     });
 
     context('given a .env file exists', () => {
       testConfigFile('.env');
     });
 
+    context('given a .env.local file exists', () => {
+      testConfigFile('.env.local');
+    });
+
     context('given multiple config files exist', () => {
 
       afterEach(() => {
         removeFile('.env');
+        removeFile('.env.local');
         removeFile('.env.development');
+        removeFile('.env.development.local');
       });
 
       describe('should return the configuration value', () => {
 
-        it('with default.yml overriding default.js', () => {
+        it('and determine the variable values, based on configuration file importance', () => {
           writeFileSync('.env.development', dotEnvContent2);
           writeFileSync('.env', dotEnvContent);
 
           strictEqual(Env.get('FOO_BAR'), 'hello2');
         });
 
+        it('and determine the variable values, based on configuration file importance #2', () => {
+          writeFileSync('.env.local', dotEnvContent4);
+          writeFileSync('.env', dotEnvContent3);
+          writeFileSync('.env.development.local', dotEnvContent2);
+          writeFileSync('.env.development', dotEnvContent);
+
+          strictEqual(Env.get('FOO_BAR'), 'hello2');
+        });
+
+        it('and should not delete configuration values (deep merge).', () => {
+          writeFileSync('.env.development.local', dotEnvContent4);
+          writeFileSync('.env.development', dotEnvContent3);
+          writeFileSync('.env.local', dotEnvContent2);
+          writeFileSync('.env', dotEnvContent);
+
+          strictEqual(Env.get('HELLO'), 'space');
+          strictEqual(Env.get('FOO_BAR_WITH_QUOTES_AND_WHITESPACES'), '  with whitespaces  ');
+        });
+
+        it('and not override the already defined configuration variable values', () => {
+          writeFileSync('.env.development', dotEnvContent2);
+          strictEqual(Env.get('FOO_BAR'), 'hello2');
+
+          writeFileSync('.env', dotEnvContent);
+          strictEqual(Env.get('FOO_BAR'), 'hello2');
+        });
+
+        it('and not override the already defined configuration variable values, no matter the file importance', () => {
+          writeFileSync('.env', dotEnvContent);
+          strictEqual(Env.get('FOO_BAR'), 'hello');
+
+          writeFileSync('.env.development.local', dotEnvContent2);
+          strictEqual(Env.get('FOO_BAR'), 'hello');
+        });
+
+      });
+    });
+
+    context('given only .local files exists', () => {
+
+      afterEach(() => {
+        removeFile('.env.local');
+        removeFile('.env.development.local');
       });
 
-      it('should not delete configuration values (deep merge).', () => {
-        writeFileSync('.env.development', dotEnvContent2);
-        writeFileSync('.env', dotEnvContent);
+      describe('should return the configuration value, from .local files', () => {
 
-        strictEqual(Env.get('HELLO'), 'world');
+        it('and determine the variable values, based on configuration file importance', () => {
+          writeFileSync('.env.development.local', dotEnvContent4);
+          writeFileSync('.env.local', dotEnvContent2);
+
+          strictEqual(Env.get('FOO_BAR_FOUR'), 'four');
+          strictEqual(Env.get('FOO_BAR'), 'hello4');
+        });
+      });
+
+      it('and not override the already defined configuration variable values', () => {
+        writeFileSync('.env.local', dotEnvContent2);
+        strictEqual(Env.get('FOO_BAR'), 'hello2');
+
+        writeFileSync('.env.development.local', dotEnvContent);
+        strictEqual(Env.get('FOO_BAR'), 'hello2');
       });
 
     });
