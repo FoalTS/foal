@@ -5,3 +5,4 @@
  */
 
 export { SocketIOController } from './socketio-controller.service';
+export { WebsocketContext } from './websocket-context';
