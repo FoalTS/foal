@@ -6,4 +6,13 @@
 
 export { SocketIOController } from './socketio-controller.service';
 export { WebsocketContext } from './websocket-context';
+export {
+  MergeWebsocketHooks,
+  WebsocketHook,
+  WebsocketHookDecorator,
+  WebsocketHookFunction,
+  WebsocketHookPostFunction,
+  getWebsocketHookFunction,
+  getWebsocketHookFunctions,
+} from './websocket-hooks';
 export { WebsocketResponse, WebsocketErrorResponse } from './websocket-responses';
