@@ -5,7 +5,7 @@
  */
 
 export { EventName } from './event-name.decorator';
-export { SocketIOController } from './socketio-controller.service';
+export { IWebsocketController, SocketIOController } from './socketio-controller.service';
 export { WebsocketContext } from './websocket-context';
 export {
   MergeWebsocketHooks,
