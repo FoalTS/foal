@@ -1,5 +1,5 @@
 import { Class, ServiceManager, getMetadata } from '@foal/core';
-import { WebsocketHookFunction } from './websocket-hooks';
+import { WebsocketHookFunction } from '../websocket-hooks';
 import { WebsocketRoute } from './websocket-route.interface';
 
 /**

@@ -5,12 +5,11 @@ import { deepStrictEqual, doesNotThrow, notDeepStrictEqual, notStrictEqual, ok, 
 import { dependency, ServiceManager } from '@foal/core';
 
 // FoalTS
-import { wsController } from './ws-controller.util';
-import { WebsocketHook, WebsocketHookFunction } from './websocket-hooks';
+import { WebsocketHook, WebsocketHookFunction } from '../websocket-hooks';
 import { makeWebsocketControllerRoutes } from './make-websocket-controller-routes';
-import { WebsocketResponse } from './websocket-responses';
-import { WebsocketContext } from './websocket-context';
-import { EventName } from './event-name.decorator';
+import { WebsocketResponse } from '../websocket-responses';
+import { WebsocketContext } from '../websocket-context';
+import { EventName } from '../event-name.decorator';
 
 describe('makeWebsocketControllerRoutes', () => {
 
