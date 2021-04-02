@@ -16,3 +16,4 @@ export {
   getWebsocketHookFunctions,
 } from './websocket-hooks';
 export { WebsocketResponse, WebsocketErrorResponse } from './websocket-responses';
+export { wsController } from './ws-controller.util';
