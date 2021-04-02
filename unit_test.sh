@@ -13,6 +13,7 @@ cd ../mongodb && npm run test
 cd ../password && npm run test
 cd ../redis && npm run test
 cd ../social && npm run test
+cd ../socket.io && npm run test
 cd ../storage && npm run test
 cd ../swagger && npm run test
 cd ../typeorm && npm run test
