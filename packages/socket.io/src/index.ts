@@ -6,3 +6,4 @@
 
 export { SocketIOController } from './socketio-controller.service';
 export { WebsocketContext } from './websocket-context';
+export { WebsocketResponse, WebsocketErrorResponse } from './websocket-responses';
