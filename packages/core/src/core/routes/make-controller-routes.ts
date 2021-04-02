@@ -75,7 +75,6 @@ function getHooks(controllerClass: Class, controller: object, propertyKey?: stri
  * @param {ServiceManager} services - The application services.
  * @returns {Route[]} The created routes.
  */
-
 export function* makeControllerRoutes(
   controllerClass: Class, services: ServiceManager, openapi = false, documentControllers?: object[]
 ): Generator<{
