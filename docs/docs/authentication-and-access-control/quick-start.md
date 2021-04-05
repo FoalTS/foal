@@ -5,7 +5,6 @@ title: Quick Start
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 *Authentication* is the process of verifying that a user is who he or she claims to be. It answers the question *Who is the user?*. 
 

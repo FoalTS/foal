@@ -6,7 +6,6 @@ sidebar_label: Upload & Download Files
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Files can be uploaded and downloaded using [FoalTS file system](./local-and-cloud-storage.md). It allows you to use different types of file storage such as the local file system or cloud storage.
 
@@ -76,6 +75,8 @@ module.exports = {
 ## File Uploads
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
+
+> The `enctype` of your requests must be of type `multipart/form-data`. If needed, you can use a [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object for this.
 
 ### Using Buffers
 
@@ -359,6 +360,7 @@ export class AppController {
 <html>
 <body>
   <img src="/profile">
+  <!-- The enctype "multipart/form-data" is required. -->
   <form action="/profile" method="post" enctype="multipart/form-data">
       <input type="file" name="profile">
       <input type="submit" value="Upload image" name="submit">

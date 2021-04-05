@@ -5,7 +5,6 @@ title: Servicios e Inyección de Dependencias
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 ```sh
 foal generate service my-service
@@ -346,7 +345,7 @@ export abstract class Logger {
   static concreteClassName = 'ConcreteLogger';
   static defaultConcreteClassPath = join(__dirname, './console-logger.service');
 
-  abstract log(str: string);
+  abstract log(str: string): void;
 }
 ```
 
