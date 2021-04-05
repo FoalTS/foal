@@ -2,6 +2,7 @@
 import * as http from 'http';
 
 // 3p
+import { Config, createApp, displayServerURL } from '@foal/core';
 import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 
@@ -11,8 +12,6 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
   // Only test compilation
   // tslint:disable-next-line
   async function main() {
-    // Connection to the database(s)...
-
     const expressApp = express();
     expressApp.use(rateLimit({
       // Limit each IP to 100 requests per windowMs
@@ -31,5 +30,11 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
         res.status(this.statusCode || 429).send(this.message);
       }
     }));
+
+    const app = await createApp(AppController, { expressInstance: expressApp });
+
+    const httpServer = http.createServer(app);
+    const port = Config.get('port', 'number', 3001);
+    httpServer.listen(port, () => displayServerURL(port));
   }
 });
