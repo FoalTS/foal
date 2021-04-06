@@ -6,7 +6,7 @@ import { ServiceManager } from '@foal/core';
 import { WebsocketErrorResponse, WebsocketResponse } from './websocket-responses';
 import { WebsocketContext } from './websocket-context';
 
-export type WebsocketHookPostFunction = (response: WebsocketResponse|WebsocketErrorResponse) => void | Promise<void>;
+export type WebsocketHookPostFunction = (response: WebsocketResponse|WebsocketErrorResponse|undefined) => void | Promise<void>;
 
 export type WebsocketHookFunction = (ctx: WebsocketContext, services: ServiceManager) =>
   void | WebsocketResponse | WebsocketErrorResponse | WebsocketHookPostFunction |
