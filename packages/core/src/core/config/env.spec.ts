@@ -23,14 +23,13 @@ FOO_BAR_WITH_WHITESPACES=  with whitespaces
 FOO_BAR_WITH_QUOTES_AND_WHITESPACES="  with whitespaces  "
 
 `;
-const dotEnvContent2 = 'FOO_BAR=hello2';
-const dotEnvContent3 = `FOO_BAR=hello3
-FOO_BAR_THREE=three
-FOO_BAR_TRUE="true"
+const dotEnvContent2 = `FOO_BAR=hello2
+FOO_BAR_THREE=two
 `;
-const dotEnvContent4 = `FOO_BAR=hello4
-FOO_BAR_FOUR=four
-HELLO=space`;
+const dotEnvContent3 = `FOO_BAR_THREE=three
+FOO_BAR_FOUR=three
+`;
+const dotEnvContent4 = `FOO_BAR_FOUR=four`;
 
 describe('Env', () => {
 
@@ -138,18 +137,13 @@ describe('Env', () => {
       describe('should return the configuration value', () => {
 
         it('and determine the variable values, based on configuration file importance', () => {
-          writeFileSync('.env.development', dotEnvContent2);
+          writeFileSync('.env.development.local', dotEnvContent4);
+          writeFileSync('.env.development', dotEnvContent3);
+          writeFileSync('.env.local', dotEnvContent2);
           writeFileSync('.env', dotEnvContent);
 
-          strictEqual(Env.get('FOO_BAR'), 'hello2');
-        });
-
-        it('and determine the variable values, based on configuration file importance #2', () => {
-          writeFileSync('.env.local', dotEnvContent4);
-          writeFileSync('.env', dotEnvContent3);
-          writeFileSync('.env.development.local', dotEnvContent2);
-          writeFileSync('.env.development', dotEnvContent);
-
+          strictEqual(Env.get('FOO_BAR_FOUR'), 'four');
+          strictEqual(Env.get('FOO_BAR_THREE'), 'three');
           strictEqual(Env.get('FOO_BAR'), 'hello2');
         });
 
@@ -159,7 +153,7 @@ describe('Env', () => {
           writeFileSync('.env.local', dotEnvContent2);
           writeFileSync('.env', dotEnvContent);
 
-          strictEqual(Env.get('HELLO'), 'space');
+          strictEqual(Env.get('HELLO'), 'world');
           strictEqual(Env.get('FOO_BAR_WITH_QUOTES_AND_WHITESPACES'), '  with whitespaces  ');
         });
 
@@ -196,7 +190,7 @@ describe('Env', () => {
           writeFileSync('.env.local', dotEnvContent2);
 
           strictEqual(Env.get('FOO_BAR_FOUR'), 'four');
-          strictEqual(Env.get('FOO_BAR'), 'hello4');
+          strictEqual(Env.get('FOO_BAR'), 'hello2');
         });
       });
 
