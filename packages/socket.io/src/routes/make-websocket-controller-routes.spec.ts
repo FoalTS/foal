@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotThrow, notDeepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
+import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
 import { dependency, ServiceManager } from '@foal/core';
