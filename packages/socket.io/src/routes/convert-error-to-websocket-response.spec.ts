@@ -110,7 +110,7 @@ describe('convertErrorToResponse', () => {
         const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), () => {});
 
         if (!(response instanceof WebsocketErrorResponse)) {
-          throw new Error('An HttpResponseInternalServerError should have been returned.');
+          throw new Error('An WebsocketErrorResponse should have been returned.');
         }
 
         strictEqual(response.payload.message, error2.message);

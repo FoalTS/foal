@@ -2,6 +2,7 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
+import 'reflect-metadata';
 import { dependency, ServiceManager } from '@foal/core';
 
 // FoalTS

@@ -361,7 +361,7 @@ describe('getWebsocketResponse', () => {
         await getWebsocketResponse(route, ctx, services, appController);
 
         if (!(postFunctionResponse instanceof WebsocketErrorResponse)) {
-          throw new Error('An HttpResponseInternalServerError instance should have been used.');
+          throw new Error('An WebsocketErrorResponse instance should have been used.');
         }
 
         strictEqual(postFunctionResponse.payload.message, error.message);
@@ -404,7 +404,7 @@ describe('getWebsocketResponse', () => {
         await getWebsocketResponse(route, ctx, services, appController);
 
         if (!(postFunctionResponse instanceof WebsocketErrorResponse)) {
-          throw new Error('An HttpResponseInternalServerError instance should have been used.');
+          throw new Error('An WebsocketErrorResponse instance should have been used.');
         }
 
         strictEqual(postFunctionResponse.payload.message, error.message);

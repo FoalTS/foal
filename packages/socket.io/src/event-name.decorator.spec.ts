@@ -1,6 +1,8 @@
 // std
-import 'reflect-metadata';
 import { strictEqual } from 'assert';
+
+// 3p
+import 'reflect-metadata';
 
 // FoalTS
 import { EventName } from './event-name.decorator';
