@@ -18,9 +18,9 @@ describe('wsController util', () => {
   it('should define the metadata path={path} of the controller class.', () => {
     class Foobar {}
 
-    wsController('/foo', Foobar);
+    wsController('foo', Foobar);
 
-    strictEqual(getMetadata('websocket-event-name', Foobar), '/foo');
+    strictEqual(getMetadata('websocket-event-name', Foobar), 'foo');
   });
 
 });
