@@ -23,5 +23,8 @@ export function renderWebsocketError(error: Error, ctx: WebsocketContext): Webso
     });
   }
 
-  return new WebsocketErrorResponse({ message: 'An internal server error has occurred.' });
+  return new WebsocketErrorResponse({
+    code: 'INTERNAL_SERVER_ERROR',
+    message: 'An internal server error has occurred.'
+  });
 }

@@ -43,6 +43,7 @@ describe('renderWebsocketError', () => {
     it('should return a response with the proper payload.', async () => {
       const response = await renderWebsocketError(error, ctx);
       deepStrictEqual(response.payload, {
+        code: 'INTERNAL_SERVER_ERROR',
         message: 'An internal server error has occurred.'
       });
     });
