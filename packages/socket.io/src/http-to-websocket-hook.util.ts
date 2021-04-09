@@ -1,5 +1,5 @@
 // 3p
-import { Context, getHookFunction, HookDecorator, isHttpResponseClientError, isHttpResponseServerError, ServiceManager } from '@foal/core';
+import { Context, getHookFunction, HookDecorator, isHttpResponseClientError, isHttpResponseServerError } from '@foal/core';
 
 // FoalTS
 import { WebsocketHook, WebsocketHookDecorator } from './websocket-hooks';
