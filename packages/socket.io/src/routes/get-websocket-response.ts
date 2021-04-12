@@ -2,12 +2,15 @@
 import { ServiceManager } from '@foal/core';
 
 // FoalTS
-import { WebsocketContext } from '../websocket-context';
+import {
+  WebsocketContext,
+  WebsocketHookPostFunction,
+  WebsocketErrorResponse,
+  WebsocketResponse,
+  ISocketIOController
+} from '../architecture';
 import { WebsocketRoute } from './websocket-route.interface';
-import { ISocketIOController } from './socketio-controller.interface';
-import { WebsocketErrorResponse, WebsocketResponse } from '../websocket-responses';
-import { WebsocketHookPostFunction } from '../websocket-hooks';
-import { convertErrorToWebsocketResponse } from './convert-error-to-websocket-response';
+import { convertErrorToWebsocketResponse } from '../errors';
 
 export async function getWebsocketResponse(
   route: WebsocketRoute, ctx: WebsocketContext, services: ServiceManager, socketIOController: ISocketIOController

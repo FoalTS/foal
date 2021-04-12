@@ -3,9 +3,7 @@ import { getAjvInstance } from '@foal/core';
 import { ValidateFunction } from 'ajv';
 
 // FoalTS
-import { WebsocketContext } from './websocket-context';
-import { WebsocketHook, WebsocketHookDecorator } from './websocket-hooks';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { WebsocketContext, WebsocketHook, WebsocketHookDecorator, WebsocketErrorResponse } from '../architecture';
 
 export function ValidatePayload(schema: object | ((controller: any) => object)): WebsocketHookDecorator {
   let validateSchema: ValidateFunction|undefined;

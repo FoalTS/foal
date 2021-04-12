@@ -2,10 +2,8 @@
 import { Config } from '@foal/core';
 
 // FoalTS
-import { ISocketIOController } from './socketio-controller.interface';
-import { renderWebsocketError } from '../render-websocket-error.util';
-import { WebsocketContext } from '../websocket-context';
-import { WebsocketErrorResponse, WebsocketResponse } from '../websocket-responses';
+import { ISocketIOController, WebsocketContext, WebsocketErrorResponse, WebsocketResponse } from '../architecture';
+import { renderWebsocketError } from './render-websocket-error';
 
 export async function convertErrorToWebsocketResponse(
   error: Error, ctx: WebsocketContext, socketIOController: ISocketIOController, log = console.error

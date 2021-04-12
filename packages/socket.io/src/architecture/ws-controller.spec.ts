@@ -5,7 +5,7 @@ import { strictEqual } from 'assert';
 import { getMetadata } from '@foal/core';
 
 // FoalTS
-import { wsController } from './ws-controller.util';
+import { wsController } from './ws-controller';
 
 describe('wsController util', () => {
 

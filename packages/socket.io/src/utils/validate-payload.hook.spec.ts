@@ -6,9 +6,7 @@ import { ServiceManager } from '@foal/core';
 
 // FoalTS
 import { ValidatePayload } from './validate-payload.hook';
-import { getWebsocketHookFunction } from './websocket-hooks';
-import { WebsocketContext } from './websocket-context';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { getWebsocketHookFunction, WebsocketContext, WebsocketErrorResponse } from '../architecture';
 
 describe('ValidatePayload', () => {
 

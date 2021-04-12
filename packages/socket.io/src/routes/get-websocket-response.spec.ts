@@ -6,10 +6,8 @@ import { Config, ServiceManager } from '@foal/core';
 
 // FoalTS
 import { getWebsocketResponse } from './get-websocket-response';
-import { ISocketIOController } from './socketio-controller.interface';
+import { ISocketIOController, WebsocketContext, WebsocketErrorResponse, WebsocketResponse } from '../architecture';
 import { WebsocketRoute } from './websocket-route.interface';
-import { WebsocketErrorResponse, WebsocketResponse } from '../websocket-responses';
-import { WebsocketContext } from '../websocket-context';
 
 describe('getWebsocketResponse', () => {
 

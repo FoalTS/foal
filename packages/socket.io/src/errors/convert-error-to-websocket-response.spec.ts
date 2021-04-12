@@ -5,10 +5,8 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Config } from '@foal/core';
 
 // FoalTS
-import { ISocketIOController } from './socketio-controller.interface';
+import { ISocketIOController, WebsocketContext, WebsocketErrorResponse } from '../architecture'
 import { convertErrorToWebsocketResponse } from './convert-error-to-websocket-response';
-import { WebsocketContext } from '../websocket-context';
-import { WebsocketErrorResponse } from '../websocket-responses';
 
 describe('convertErrorToResponse', () => {
 

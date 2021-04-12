@@ -5,9 +5,8 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { Config} from '@foal/core';
 
 // FoalTS
-import { renderWebsocketError } from './render-websocket-error.util';
-import { WebsocketContext } from './websocket-context';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { renderWebsocketError } from './render-websocket-error';
+import { WebsocketContext, WebsocketErrorResponse } from '../architecture';
 
 describe('renderWebsocketError', () => {
 

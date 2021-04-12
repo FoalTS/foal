@@ -2,8 +2,8 @@
 import { Class } from '@foal/core';
 
 // FoalTS
-import { WebsocketContext } from '../websocket-context';
-import { WebsocketErrorResponse, WebsocketResponse } from '../websocket-responses';
+import { WebsocketContext } from './websocket-context';
+import { WebsocketErrorResponse, WebsocketResponse } from './websocket-responses';
 
 export interface IWebsocketController {
   subControllers?: Class<IWebsocketController>[];

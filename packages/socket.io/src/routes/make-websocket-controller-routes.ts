@@ -1,5 +1,8 @@
+// 3p
 import { Class, ServiceManager, getMetadata } from '@foal/core';
-import { WebsocketHookFunction } from '../websocket-hooks';
+
+// FoalTS
+import { WebsocketHookFunction } from '../architecture';
 import { WebsocketRoute } from './websocket-route.interface';
 
 /**

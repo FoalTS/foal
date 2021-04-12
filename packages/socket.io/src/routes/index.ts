@@ -1,3 +1,3 @@
-export * from './convert-error-to-websocket-response';
-export * from './make-websocket-controller-routes';
-export * from './websocket-route.interface';
+export { getWebsocketResponse } from './get-websocket-response';
+export { makeWebsocketControllerRoutes } from './make-websocket-controller-routes';
+export { WebsocketRoute } from './websocket-route.interface';

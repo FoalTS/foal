@@ -1,12 +1,10 @@
 // 3p
 import { Context, Hook, HttpResponseBadRequest, HttpResponseInternalServerError, HttpResponseRedirect, ServiceManager, Session } from '@foal/core';
 import { deepStrictEqual, rejects, strictEqual } from 'assert';
-import { HttpToWebsocketHook } from './http-to-websocket-hook.util';
+import { HttpToWebsocketHook } from './http-to-websocket-hook.hook';
 
 // FoalTS
-import { WebsocketContext } from './websocket-context';
-import { getWebsocketHookFunction } from './websocket-hooks';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { WebsocketContext, getWebsocketHookFunction, WebsocketErrorResponse } from '../architecture';
 
 describe('HttpToWebsocketHook', () => {
 

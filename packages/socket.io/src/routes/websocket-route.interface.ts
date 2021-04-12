@@ -1,4 +1,4 @@
-import { WebsocketHookFunction } from '../websocket-hooks';
+import { WebsocketHookFunction } from '../architecture';
 
 export interface WebsocketRoute {
   eventName: string;

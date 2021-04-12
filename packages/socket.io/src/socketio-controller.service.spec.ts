@@ -20,12 +20,8 @@ import { ServerOptions } from 'socket.io';
 import { createAdapter } from 'socket.io-redis';
 
 // FoalTS
-import { EventName } from './event-name.decorator';
+import { EventName, WebsocketHook, WebsocketContext, WebsocketErrorResponse, WebsocketResponse, wsController } from './architecture';
 import { SocketIOController } from './socketio-controller.service';
-import { WebsocketContext } from './websocket-context';
-import { WebsocketErrorResponse, WebsocketResponse } from './websocket-responses';
-import { wsController } from './ws-controller.util';
-import { WebsocketHook } from './websocket-hooks';
 
 describe('SocketIOController', () => {
 

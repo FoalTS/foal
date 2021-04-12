@@ -5,8 +5,7 @@ import { basename } from 'path';
 import { Config } from '@foal/core';
 
 // FoalTS
-import { WebsocketContext } from './websocket-context';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { WebsocketContext, WebsocketErrorResponse } from '../architecture';
 
 export function renderWebsocketError(error: Error, ctx: WebsocketContext): WebsocketErrorResponse {
   if (Config.get('settings.debug', 'boolean')) {

@@ -4,13 +4,9 @@
  * Released under the MIT License.
  */
 
-export { EventName } from './event-name.decorator';
-export { HttpToWebsocketHook } from './http-to-websocket-hook.util';
-export { renderWebsocketError } from './render-websocket-error.util';
-export { SocketIOController } from './socketio-controller.service';
-export { ValidatePayload } from './validate-payload.hook';
-export { WebsocketContext } from './websocket-context';
 export {
+  EventName,
+  WebsocketContext,
   MergeWebsocketHooks,
   WebsocketHook,
   WebsocketHookDecorator,
@@ -18,6 +14,10 @@ export {
   WebsocketHookPostFunction,
   getWebsocketHookFunction,
   getWebsocketHookFunctions,
-} from './websocket-hooks';
-export { WebsocketResponse, WebsocketErrorResponse } from './websocket-responses';
-export { wsController } from './ws-controller.util';
+  WebsocketResponse,
+  WebsocketErrorResponse,
+  wsController
+} from './architecture';
+export { HttpToWebsocketHook, ValidatePayload } from './utils';
+export { renderWebsocketError } from './errors';
+export { SocketIOController } from './socketio-controller.service';

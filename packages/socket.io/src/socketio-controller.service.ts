@@ -4,11 +4,8 @@ import { Server, ServerOptions } from 'socket.io';
 import { Adapter } from 'socket.io-adapter';
 
 // FoalTS
-import { getWebsocketResponse } from './routes/get-websocket-response';
-import { makeWebsocketControllerRoutes } from './routes/make-websocket-controller-routes';
-import { ISocketIOController } from './routes/socketio-controller.interface';
-import { WebsocketContext } from './websocket-context';
-import { WebsocketErrorResponse, WebsocketResponse } from './websocket-responses';
+import { makeWebsocketControllerRoutes, getWebsocketResponse } from './routes';
+import { WebsocketContext, ISocketIOController, WebsocketErrorResponse, WebsocketResponse } from './architecture';
 
 export abstract class SocketIOController implements ISocketIOController {
   @dependency

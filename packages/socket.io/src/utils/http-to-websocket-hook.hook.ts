@@ -3,8 +3,7 @@ import { Context, getHookFunction, HookDecorator, isHttpResponseClientError, isH
 import * as cookie from 'cookie';
 
 // FoalTS
-import { WebsocketHook, WebsocketHookDecorator } from './websocket-hooks';
-import { WebsocketErrorResponse } from './websocket-responses';
+import { WebsocketHook, WebsocketHookDecorator, WebsocketErrorResponse } from '../architecture';
 
 export function HttpToWebsocketHook(httpHook: HookDecorator): WebsocketHookDecorator {
   return WebsocketHook(async (ctx, services) => {

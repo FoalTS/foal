@@ -6,11 +6,9 @@ import 'reflect-metadata';
 import { dependency, ServiceManager } from '@foal/core';
 
 // FoalTS
-import { WebsocketHook, WebsocketHookFunction } from '../websocket-hooks';
+import { WebsocketHook, WebsocketHookFunction, WebsocketContext, EventName } from '../architecture';
 import { makeWebsocketControllerRoutes } from './make-websocket-controller-routes';
-import { WebsocketResponse } from '../websocket-responses';
-import { WebsocketContext } from '../websocket-context';
-import { EventName } from '../event-name.decorator';
+import { WebsocketResponse } from '../architecture/websocket-responses';
 
 describe('makeWebsocketControllerRoutes', () => {
 
