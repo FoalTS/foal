@@ -25,6 +25,15 @@ function getHooks(controllerClass: Class, controller: object, propertyKey?: stri
     .map(hook => hook.bind(controller));
 }
 
+/**
+ * Recursively create the routes of a Websocket controller and its subcontrollers from the
+ * controller class definition.
+ *
+ * @export
+ * @param {Class} controllerClass - The controller class.
+ * @param {ServiceManager} services - The application services.
+ * @returns {Generator<WebsocketRoute>} The created routes.
+ */
 export function* makeWebsocketControllerRoutes(controllerClass: Class, services: ServiceManager): Generator<WebsocketRoute> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);

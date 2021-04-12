@@ -7,6 +7,14 @@ import { Adapter } from 'socket.io-adapter';
 import { makeWebsocketControllerRoutes, getWebsocketResponse } from './routes';
 import { WebsocketContext, ISocketIOController, WebsocketErrorResponse, WebsocketResponse } from './architecture';
 
+/**
+ * Service to establish a Websocket connection.
+ *
+ * @export
+ * @abstract
+ * @class SocketIOController
+ * @implements {ISocketIOController}
+ */
 export abstract class SocketIOController implements ISocketIOController {
   @dependency
   services: ServiceManager;

@@ -5,6 +5,18 @@ import * as cookie from 'cookie';
 // FoalTS
 import { WebsocketHook, WebsocketHookDecorator, WebsocketErrorResponse } from '../architecture';
 
+/**
+ * Converts an HTTP hook to a websocket hook.
+ *
+ * HttpResponseClientErrors and HttpResponseServerErrors are converted to WebsocketErrorResponses.
+ * Other HTTP responses throw an error.
+ *
+ * The HTTP request object that is passed to the context is tha handshake request.
+ *
+ * @export
+ * @param {HookDecorator} httpHook
+ * @returns {WebsocketHookDecorator}
+ */
 export function HttpToWebsocketHook(httpHook: HookDecorator): WebsocketHookDecorator {
   return WebsocketHook(async (ctx, services) => {
     const httpHookFunction = getHookFunction(httpHook);
