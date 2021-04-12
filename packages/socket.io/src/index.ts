@@ -8,6 +8,7 @@ export { EventName } from './event-name.decorator';
 export { HttpToWebsocketHook } from './http-to-websocket-hook.util';
 export { renderWebsocketError } from './render-websocket-error.util';
 export { SocketIOController } from './socketio-controller.service';
+export { ValidatePayload } from './validate-payload.hook';
 export { WebsocketContext } from './websocket-context';
 export {
   MergeWebsocketHooks,
