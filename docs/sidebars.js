@@ -84,6 +84,7 @@ module.exports = {
         'api-section/openapi-and-swagger-ui',
         'api-section/public-api-and-cors-requests',
         'api-section/graphql',
+        'api-section/gRPC',
       ]),
       category('Frontend Integration', [
         'frontend-integration/single-page-applications',
