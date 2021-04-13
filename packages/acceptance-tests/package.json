@@ -18,6 +18,8 @@
     "@foal/redis": "^2.2.0",
     "@foal/typeorm": "^2.2.0",
     "@foal/typestack": "^2.2.0",
+    "@grpc/grpc-js": "~1.2.12",
+    "@grpc/proto-loader": "~0.6.0",
     "@types/express": "~4.17.2",
     "@types/express-rate-limit": "~3.3.3",
     "@types/jsonwebtoken": "~8.3.5",
