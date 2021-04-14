@@ -233,7 +233,7 @@ Next releases of FoalTS will include support for [GraphiQL](https://github.com/g
 
 By default, GraphQL returns all errors thrown (or rejected) in the resolvers. However, this behavior is often not desired in production as it could cause sensitive information to leak from the server.
 
-In comparison with REST APIs, when the [configuration key](../deployment-and-environments/configuration.md)  `settings.debug` does not equal `true` (production case), details of the errors thrown in controllers are not returned to the client. Only a `500 - Internal Server Error` error is sent back.
+In comparison with REST APIs, when the [configuration key](../architecture/configuration.md)  `settings.debug` does not equal `true` (production case), details of the errors thrown in controllers are not returned to the client. Only a `500 - Internal Server Error` error is sent back.
 
 In a similar way, FoalTS provides two utilities `formatError` and `@FormatError` for your GraphQL APIs to log and mask errors.  When `settings.debug` is `true`, the errors are converted into a new one whose unique message is `Internal Server Error`.
 

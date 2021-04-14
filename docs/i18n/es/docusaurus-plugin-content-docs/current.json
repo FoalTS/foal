@@ -31,8 +31,8 @@
     "message": "Bases de Datos",
     "description": "The label for category Databases in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Authentication & Access Control": {
-    "message": "Autenticación & Control de Acceso",
+  "sidebar.someSidebar.category.Authentication": {
+    "message": "Autenticación",
     "description": "The label for category Authentication & Access Control in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.API": {
@@ -47,8 +47,8 @@
     "message": "Sistema de Archivos",
     "description": "The label for category File System in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.CLI & Development Environment": {
-    "message": "CLI & Entorno de Desarrollo",
+  "sidebar.someSidebar.category.Dev Tools": {
+    "message": "Herramientas de Desarrollo",
     "description": "The label for category CLI & Development Environment in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Testing": {
@@ -63,9 +63,9 @@
     "message": "Recetas",
     "description": "The label for category Cookbook in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Deployment & Environments": {
-    "message": "Despliegue & Entornos",
-    "description": "The label for category Deployment & Environments in sidebar someSidebar"
+  "sidebar.someSidebar.category.Deployment": {
+    "message": "Despliegue",
+    "description": "The label for category Deployment in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Upgrading": {
     "message": "Actualización",

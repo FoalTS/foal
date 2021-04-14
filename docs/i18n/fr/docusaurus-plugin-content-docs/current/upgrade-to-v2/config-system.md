@@ -25,7 +25,7 @@ const port = Config.get('port', 'number', 3001);
 const port = Config.get('port', 'number', 3001);
 ```
 
-More details can be found [here](../deployment-and-environments/configuration.md).
+More details can be found [here](../architecture/configuration.md).
 
 ## Environment Variables
 

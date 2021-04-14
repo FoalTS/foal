@@ -1,5 +1,6 @@
 ---
-title: Enviar a Producción
+title: Checklist du Déploiement
+sidebar_label: Checklist
 ---
 
 
