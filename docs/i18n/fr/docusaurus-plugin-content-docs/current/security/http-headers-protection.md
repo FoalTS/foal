@@ -2,7 +2,6 @@
 title: En-têtes HTTP de Protection
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 To protect the application against some (!) common attacks, FoalTS sets by default various HTTP headers. These can be overrided in the `HttpResponse` objects.
 

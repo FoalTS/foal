@@ -15,7 +15,9 @@ export class Env {
     if (this.dotEnv === null) {
       this.dotEnv = {};
       this.loadEnv('.env');
+      this.loadEnv('.env.local');
       this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}`);
+      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}.local`);
     }
 
     if (this.dotEnv[key] !== undefined) {

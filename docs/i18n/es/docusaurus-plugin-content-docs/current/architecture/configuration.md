@@ -5,7 +5,6 @@ title: Configuración
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 In FoalTS, _configuration_ refers to any parameter that may vary between deploy environments (production, development, test, etc). It includes sensitive information, such as your database credentials, or simple settings, such as the server port.
 
@@ -280,3 +279,13 @@ If the same variable is provided both as environment variable and in the `.env` 
 ### Deployment Environments
 
 Just like the configuration files in the `config/` directory, the `.env` files can be used for several environments: `.env.production`, `.env.test`, etc.
+
+### Using `*.local` files
+
+> *This feature is available from version 2.3 onwards.*
+
+In case you want to have two `.env` files, one to define the default env vars needed by the application and another to override these values on your local machine, you can use a `.env.local` file.
+
+If a variable is defined in both files, the value in the `.env.local` file will take precedence.
+
+Similarly, you can define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).

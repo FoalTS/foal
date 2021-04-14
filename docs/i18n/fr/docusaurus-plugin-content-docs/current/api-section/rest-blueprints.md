@@ -2,7 +2,6 @@
 title: REST API
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 *Example:*
 ```
@@ -135,6 +134,6 @@ This flags adds an `owner: User` column to your entity and uses it in the API.
 
 The generated controllers also have OpenAPI decorators on their methods to document the API.
 
-In this way, when the [configuration key](../deployment-and-environments/configuration.md) `settings.openapi.useHooks` is set to `true`, we can get a full documentation of the API using [Swagger UI](./openapi-and-swagger-ui.md)
+In this way, when the [configuration key](../architecture/configuration.md) `settings.openapi.useHooks` is set to `true`, we can get a full documentation of the API using [Swagger UI](./openapi-and-swagger-ui.md)
 
 ![Example of documentation](./rest-openapi.png).

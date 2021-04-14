@@ -6,7 +6,6 @@ sidebar_label: SQL Databases
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 *A simple model:*
 ```typescript
@@ -245,7 +244,7 @@ For example, if the environment variable `DATABASE_PASSWORD` is defined, Foal wi
 
 In this way, you can define a default configuration in the `config/default.{yml|json}` file to use both during development and testing and override some settings in `config/test.{yml|json}` during testing.
 
-> You learn more on how configuration works in Foal [here](../deployment-and-environments/configuration.md)
+> You learn more on how configuration works in Foal [here](../architecture/configuration.md)
 
 In the example below, we add two new options:
 - `dropSchema` clears the database each time we call `createConnection`

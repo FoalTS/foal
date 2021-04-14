@@ -6,7 +6,6 @@ sidebar_label: Local & Cloud Storage
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 FoalTS provides its own file system for reading, writing and deleting files locally or in the Cloud. Thanks to its unified interface, you can easily choose different storage for each of your environments. This is especially useful when you're moving from development to production.
 
@@ -212,15 +211,26 @@ class FileService {
 } 
 ```
 
-> To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
-
---
-
-> If you only need to read the file size and not its content, you can use the `readSize` method.
+> **Warning**: When using the `read` method with streams, you may want to add an error listener to prevent the application from crashing if an unexpected error is emitted. Stream errors do not work as thrown or rejected errors and are automatically not caught by the framework.
 >
 > ```typescript
-> const size = await this.disk.readSize('avatars/xxx.jpg');
+> const { file } = await this.disk.read('avatars/xxx.jpg', 'stream');
+> file.on('error', (err: Error) => {
+>   // ...
+> });
 > ```
+
+#### File not found
+
+To check whether an error is an instance of `FileDoesNotExist`, you can call the `isFileDoesNotExist` function. Using `error instanceof FileDoesNotExist` may not work if you have multiple nested packages because of the way *npm* handles its dependencies.
+
+#### File size
+
+If you only need to read the file size and not its content, you can use the `readSize` method.
+
+```typescript
+const size = await this.disk.readSize('avatars/xxx.jpg');
+```
 
 ### Write files
 

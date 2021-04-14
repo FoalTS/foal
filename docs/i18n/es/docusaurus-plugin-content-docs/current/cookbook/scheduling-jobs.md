@@ -2,7 +2,6 @@
 title: Programación de Trabajos
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 You can schedule jobs using [shell scripts](../development-environment/create-and-run-scripts.md) and the [node-schedule](https://www.npmjs.com/package/node-schedule) library.
 

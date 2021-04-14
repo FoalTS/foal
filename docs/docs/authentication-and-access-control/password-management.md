@@ -3,7 +3,6 @@ title: Password Management
 sidebar_label: Passwords
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
 

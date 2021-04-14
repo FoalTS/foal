@@ -5,7 +5,6 @@ title: OpenAPI & Swagger UI
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 ## Introduction
 
@@ -294,7 +293,7 @@ export class ApiController {
 }
 ```
 
-You can disable this behavior globally with the [configuration key](../deployment-and-environments/configuration.md) `setting.openapi.useHooks`.
+You can disable this behavior globally with the [configuration key](../architecture/configuration.md) `setting.openapi.useHooks`.
 
 <Tabs
   defaultValue="yaml"
@@ -690,7 +689,7 @@ export class ApiController {
   @ApiResponse(200, {
     content: {
       'application/json': {
-        schema: { $ref: '#/components/schema/product' }
+        schema: { $ref: '#/components/schemas/product' }
       }
     }
   })
@@ -704,7 +703,7 @@ export class ApiController {
       'application/json': {
         schema: {
           type: 'array',
-          items: { $ref: '#/components/schema/product' }
+          items: { $ref: '#/components/schemas/product' }
         }
       }
     }

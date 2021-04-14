@@ -2,7 +2,6 @@
 title: Page 404
 ---
 
-> You are reading the documentation for version 2 of FoalTS. Instructions for upgrading to this version are available [here](../upgrade-to-v2/README.md). The old documentation can be found [here](https://foalts.org/docs/1.x/).
 
 Here's a way to implement custom 404 pages.
 
