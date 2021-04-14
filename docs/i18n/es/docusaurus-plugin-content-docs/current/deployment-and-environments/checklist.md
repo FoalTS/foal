@@ -1,5 +1,6 @@
 ---
-title: Ship to Production
+title: Lista de Comprobación de Despliegue
+sidebar_label: Lista de Comprobación
 ---
 
 

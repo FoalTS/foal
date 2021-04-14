@@ -13,7 +13,7 @@ Create a new directory with all the required files to get started.
 
 If you specify the flag `--mongodb`, the CLI will generate a new project using MongoDB instead of SQLite.
 
-If you specify the flag `--yaml`, the new project will use YAML format for its configuration files. You can find more information [here](../deployment-and-environments/configuration.md).
+If you specify the flag `--yaml`, the new project will use YAML format for its configuration files. You can find more information [here](../architecture/configuration.md).
 
 ## Create a controller
 
