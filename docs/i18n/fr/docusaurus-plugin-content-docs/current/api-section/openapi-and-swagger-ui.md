@@ -689,7 +689,7 @@ export class ApiController {
   @ApiResponse(200, {
     content: {
       'application/json': {
-        schema: { $ref: '#/components/schema/product' }
+        schema: { $ref: '#/components/schemas/product' }
       }
     }
   })
@@ -703,7 +703,7 @@ export class ApiController {
       'application/json': {
         schema: {
           type: 'array',
-          items: { $ref: '#/components/schema/product' }
+          items: { $ref: '#/components/schemas/product' }
         }
       }
     }
