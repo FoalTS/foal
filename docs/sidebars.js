@@ -123,6 +123,7 @@ module.exports = {
         'cookbook/limit-repeated-requests',
         'cookbook/base64url',
       ]),
+      'websockets',
       category('Deployment', [
         'deployment-and-environments/checklist',
       ])
