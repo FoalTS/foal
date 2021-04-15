@@ -6,6 +6,7 @@ import { Adapter } from 'socket.io-adapter';
 // FoalTS
 import { makeWebsocketControllerRoutes, getWebsocketResponse } from './routes';
 import { WebsocketContext, ISocketIOController, WebsocketErrorResponse, WebsocketResponse } from './architecture';
+import { WsServer } from './ws-server.service';
 
 /**
  * Service to establish a Websocket connection.
@@ -19,20 +20,21 @@ export abstract class SocketIOController implements ISocketIOController {
   @dependency
   services: ServiceManager;
 
+  @dependency
+  wsServer: WsServer;
+
   adapter: typeof Adapter|undefined;
 
   options: Partial<ServerOptions> = {};
 
-  private wsServer: Server|undefined;
-
   async attachHttpServer(httpServer: any): Promise<void> {
-    this.wsServer = new Server(httpServer, this.options);
+    this.wsServer.io = new Server(httpServer, this.options);
     if (this.adapter) {
-      this.wsServer.adapter(this.adapter);
+      this.wsServer.io.adapter(this.adapter);
     }
     const routes = Array.from(makeWebsocketControllerRoutes(this.constructor as Class<SocketIOController>, this.services));
 
-    this.wsServer.use(async (socket, next) => {
+    this.wsServer.io.use(async (socket, next) => {
       const connectionCtx = new WebsocketContext('', undefined, socket);
 
       try {
@@ -44,7 +46,7 @@ export abstract class SocketIOController implements ISocketIOController {
       next();
     })
 
-    this.wsServer.on('connection', socket => {
+    this.wsServer.io.on('connection', socket => {
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
           const ctx = new WebsocketContext(route.eventName, payload, socket);
@@ -70,11 +72,5 @@ export abstract class SocketIOController implements ISocketIOController {
   }
 
   onConnection(ctx: WebsocketContext): void|Promise<void> {}
-
-  close(): void {
-    if (this.wsServer) {
-      this.wsServer.close();
-    }
-  }
 
 }

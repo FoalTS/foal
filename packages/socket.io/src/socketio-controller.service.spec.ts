@@ -33,7 +33,7 @@ describe('SocketIOController', () => {
 
     afterEach(() => {
       if (controller) {
-        controller.close();
+        controller.wsServer.close();
       }
       if (clientSocket) {
         clientSocket.close();
