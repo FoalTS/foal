@@ -21,3 +21,4 @@ export {
 export { HttpToWebsocketHook, ValidatePayload } from './utils';
 export { renderWebsocketError } from './errors';
 export { SocketIOController } from './socketio-controller.service';
+export { WsServer } from './ws-server.service';
