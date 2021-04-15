@@ -10,6 +10,9 @@ import 'reflect-metadata';
  */
 export function EventName(eventName: string) {
   return (target: any, propertyKey: string) => {
+    if (!eventName) {
+      throw new Error('@EventName does not support empty names.');
+    }
     Reflect.defineMetadata('websocket-event-name', eventName, target, propertyKey);
   };
 }

@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { strictEqual, throws } from 'assert';
 
 // 3p
 import 'reflect-metadata';
@@ -17,6 +17,18 @@ describe('EventName', () => {
 
     const actual = Reflect.getOwnMetadata('websocket-event-name', Foobar.prototype, 'barfoo');
     strictEqual(actual, 'foo');
+  });
+
+  it('should throw an error if the event name is empty.', () => {
+    throws(
+      () => {
+        class Foobar {
+          @EventName('')
+          barfoo() {}
+        }
+      },
+      new Error('@EventName does not support empty names.')
+    );
   });
 
 });
