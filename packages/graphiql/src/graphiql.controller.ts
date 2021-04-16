@@ -1,19 +1,42 @@
 // std
-import { createReadStream, stat } from 'fs';
+import { createReadStream, readFile, stat } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
 // 3p
-import { Get, HttpResponseOK } from '@foal/core';
+import { Get, HttpResponseOK, renderToString } from '@foal/core';
 
 export class GraphiQLController {
 
-  // options: {} = {};
+  options: {
+    query?: string;
+    variables?: string;
+    headers?: string;
+    externalFragments?: string;
+    operationName?: string;
+    response?: string;
+    defaultQuery?: string;
+    defaultVariableEditorOpen?: boolean;
+    defaultSecondaryEditorOpen?: boolean;
+    editorTheme?: string;
+    readOnly?: boolean;
+    docExplorerOpen?: boolean;
+    headerEditorEnabled?: boolean;
+    shouldPersistHeaders?: boolean;
+  } = {};
 
-  // @Get()
-  // index() {
+  apiEndpoint = '/graphql';
 
-  // }
+  @Get()
+  async index() {
+    const template = await promisify(readFile)(join(__dirname, 'templates/index.html'), 'utf8');
+
+    const page = renderToString(template, {
+      options: JSON.stringify(this.options),
+      endpoint: this.apiEndpoint
+    });
+    return new HttpResponseOK(page);
+  }
 
   @Get('/react.production.min.js')
   getReactProduction() {

@@ -7,6 +7,8 @@ import { join } from 'path';
 
 // 3p
 import { getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
+
+// FoalTS
 import { GraphiQLController } from './graphiql.controller';
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
@@ -19,6 +21,45 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
 }
 
 describe('GraphiQLController', () => {
+
+  describe('has an "index" method that', () => {
+
+    async function compareSpecAndTemplate(controller: GraphiQLController, specFileName: string) {
+      const expected = readFileSync(join(__dirname, 'specs', specFileName), 'utf8');
+
+      const response = await controller.index();
+      if (!isHttpResponseOK(response)) {
+        throw new Error('GraphiQLController.index should have returned a HttpResponseOK instance.');
+      }
+      const actual = response.body;
+
+      strictEqual(actual, expected);
+    }
+
+    it('should render the HTML template.', async () => {
+      const controller = new GraphiQLController();
+      await compareSpecAndTemplate(controller, 'index.default.html');
+    });
+
+    it('should render the HTML template (custom endpoint).', async () => {
+      class GraphiQLController2 extends GraphiQLController {
+        apiEndpoint = '/another-endpoint';
+      }
+      const controller = new GraphiQLController2();
+      await compareSpecAndTemplate(controller, 'index.endpoint.html');
+    });
+
+    it('should render the HTML template (custom API endpoint).', async () => {
+      class GraphiQLController2 extends GraphiQLController {
+        options = {
+          defaultSecondaryEditorOpen: true
+        }
+      }
+      const controller = new GraphiQLController2();
+      await compareSpecAndTemplate(controller, 'index.options.html');
+    });
+
+  });
 
   function testAsset(
     methodName: 'getReactProduction'|'getReactDomProduction'|'getGraphiqlCss'|'getGraphiqlJs',

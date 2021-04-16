@@ -32,6 +32,7 @@ export {
   hashPassword,
   isInFile,
   render,
+  renderToString,
   renderError,
   signToken,
   verifyPassword,
