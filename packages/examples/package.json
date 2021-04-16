@@ -46,11 +46,14 @@
   "dependencies": {
     "@foal/aws-s3": "^2.2.0",
     "@foal/core": "^2.2.0",
+    "@foal/graphiql": "^2.2.0",
+    "@foal/graphql": "^2.2.0",
     "@foal/social": "^2.2.0",
     "@foal/storage": "^2.2.0",
     "@foal/swagger": "^2.2.0",
     "@foal/typeorm": "^2.2.0",
     "better-sqlite3": "~7.1.2",
+    "graphql": "^15.5.0",
     "source-map-support": "~0.5.19",
     "typeorm": "~0.2.26",
     "yamljs": "~0.3.0"
