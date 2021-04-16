@@ -19,7 +19,8 @@ This page is greatly inspired from https://github.com/graphql/graphiql/blob/main
 
     <script src="./react.production.min.js" ></script>
     <script src="./react-dom.production.min.js" ></script>
-    <link rel="stylesheet" href="./graphiql.min.css" />{{ cssTheme }}
+    <link rel="stylesheet" href="./graphiql.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/theme/solarized.css" />
   </head>
 
   <body>
@@ -28,7 +29,7 @@ This page is greatly inspired from https://github.com/graphql/graphiql/blob/main
     <script>
       function graphQLFetcher(graphQLParams) {
         return fetch(
-          '{{ endpoint }}',
+          '/graphql',
           {
             method: 'post',
             headers: {
@@ -47,7 +48,7 @@ This page is greatly inspired from https://github.com/graphql/graphiql/blob/main
       ReactDOM.render(
         React.createElement(GraphiQL, Object.assign({
           fetcher: graphQLFetcher,
-        }, {{ options }})),
+        }, {})),
         document.getElementById('graphiql'),
       );
     </script>

@@ -29,6 +29,8 @@ export class GraphiQLController {
 
   apiEndpoint = '/graphql';
 
+  cssThemeURL?: string;
+
   @Get('/')
   async index(ctx: Context) {
     if (!ctx.request.path.endsWith('/')) {
@@ -39,7 +41,8 @@ export class GraphiQLController {
 
     const page = renderToString(template, {
       options: JSON.stringify(this.options),
-      endpoint: this.apiEndpoint
+      endpoint: this.apiEndpoint,
+      cssTheme: this.cssThemeURL ? `\n<link rel="stylesheet" href="${this.cssThemeURL}" />` : ''
     });
     return new HttpResponseOK(page);
   }

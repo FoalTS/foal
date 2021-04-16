@@ -79,6 +79,14 @@ describe('GraphiQLController', () => {
       await compareSpecAndTemplate(controller, 'index.options.html');
     });
 
+    it('should render the HTML template (custom css theme).', async () => {
+      class GraphiQLController2 extends GraphiQLController {
+        cssThemeURL = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/theme/solarized.css'
+      }
+      const controller = new GraphiQLController2();
+      await compareSpecAndTemplate(controller, 'index.css-theme.html');
+    });
+
   });
 
   function testAsset(
