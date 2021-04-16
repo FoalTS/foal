@@ -5,9 +5,9 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "test": "node copy-files src && mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "node copy-files src && mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
+    "build": "rimraf lib && node copy-files lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
