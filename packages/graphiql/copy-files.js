@@ -18,8 +18,8 @@ if (!fs.existsSync(staticDirPath)) {
 }
 
 const paths = [
-  'react/cjs/react.production.min.js',
-  'react-dom/cjs/react-dom.production.min.js',
+  'react/umd/react.production.min.js',
+  'react-dom/umd/react-dom.production.min.js',
   'graphiql/graphiql.min.js',
   'graphiql/graphiql.min.css',
 ]
