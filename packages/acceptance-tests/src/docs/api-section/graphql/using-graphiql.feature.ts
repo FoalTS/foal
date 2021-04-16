@@ -55,7 +55,7 @@ describe('Feature: Using GraphiQL', () => {
 
     class AppController {
       subControllers = [
-        controller('/graphiql', GraphiQLController)
+        controller('/graphiql', GraphiQL2Controller)
       ];
     }
 
@@ -82,7 +82,7 @@ describe('Feature: Using GraphiQL', () => {
 
     class AppController {
       subControllers = [
-        controller('/graphiql', GraphiQLController)
+        controller('/graphiql', GraphiQL2Controller)
       ];
     }
 
@@ -114,7 +114,7 @@ describe('Feature: Using GraphiQL', () => {
 
     class AppController {
       subControllers = [
-        controller('/graphiql', GraphiQLController)
+        controller('/graphiql', GraphiQL2Controller)
       ];
     }
 
