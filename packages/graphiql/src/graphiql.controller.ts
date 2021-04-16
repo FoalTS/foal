@@ -6,24 +6,26 @@ import { promisify } from 'util';
 // 3p
 import { Context, Get, HttpResponseMovedPermanently, HttpResponseOK, renderToString } from '@foal/core';
 
+export interface GraphiQLControllerOptions {
+  query?: string;
+  variables?: string;
+  headers?: string;
+  externalFragments?: string;
+  operationName?: string;
+  response?: string;
+  defaultQuery?: string;
+  defaultVariableEditorOpen?: boolean;
+  defaultSecondaryEditorOpen?: boolean;
+  editorTheme?: string;
+  readOnly?: boolean;
+  docExplorerOpen?: boolean;
+  headerEditorEnabled?: boolean;
+  shouldPersistHeaders?: boolean;
+}
+
 export class GraphiQLController {
 
-  options: {
-    query?: string;
-    variables?: string;
-    headers?: string;
-    externalFragments?: string;
-    operationName?: string;
-    response?: string;
-    defaultQuery?: string;
-    defaultVariableEditorOpen?: boolean;
-    defaultSecondaryEditorOpen?: boolean;
-    editorTheme?: string;
-    readOnly?: boolean;
-    docExplorerOpen?: boolean;
-    headerEditorEnabled?: boolean;
-    shouldPersistHeaders?: boolean;
-  } = {};
+  options: GraphiQLControllerOptions = {};
 
   apiEndpoint = '/graphql';
 

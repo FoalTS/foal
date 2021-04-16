@@ -4,4 +4,4 @@
  * Released under the MIT License.
  */
 
-export { GraphiQLController } from './graphiql.controller';
+export { GraphiQLController, GraphiQLControllerOptions } from './graphiql.controller';
