@@ -75,7 +75,7 @@ export class OpenApiController extends SwaggerController {
 
 **Result**
 
-![Swagger page](./openapi-quick-start.png)
+![Swagger page](./images/openapi-quick-start.png)
 
 ## OpenAPI
 
@@ -423,7 +423,7 @@ Another alternative is to use the  [SwaggerController](#Swagger%20UI) directly. 
 
 ## Swagger UI
 
-![Example of Swagger UI](./swagger.png)
+![Example of Swagger UI](./images/swagger.png)
 
 ```
 npm install @foal/swagger
@@ -474,7 +474,7 @@ export class OpenApiController extends SwaggerController {
 
 Some applications may serve several APIs (for example two versions of a same API). Here is an example on how to handle this.
 
-![Example of several versions](./swagger3.png)
+![Example of several versions](./images/swagger3.png)
 
 *app.controller.ts*
 ```typescript
