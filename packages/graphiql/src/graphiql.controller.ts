@@ -23,6 +23,12 @@ export interface GraphiQLControllerOptions {
   shouldPersistHeaders?: boolean;
 }
 
+/**
+ * Controller to render a GraphiQL page.
+ *
+ * @export
+ * @class GraphiQLController
+ */
 export class GraphiQLController {
 
   options: GraphiQLControllerOptions = {};

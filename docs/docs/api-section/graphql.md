@@ -225,9 +225,80 @@ export class RootResolverService {
 }
 ```
 
-## GraphQL Playground
+## GraphiQL
 
-Next releases of FoalTS will include support for [GraphiQL](https://github.com/graphql/graphiql).
+> *This feature is available from version 2.3 onwards.*
+
+![GraphiQL](./images/graphiql.png)
+
+You can generate a `GraphiQL` page with the `GraphiQLController` class by installing the following package.
+
+```bash
+npm install @foal/graphiql
+```
+
+*app.controller.ts*
+```typescript
+import { controller } from '@foal/core';
+import { GraphiQLController } from '@foal/graphiql';
+
+import { GraphqlApiController } from './services';
+
+export class AppController {
+
+  subControllers = [
+    // ...
+    controller('/graphql', GraphqlApiController),
+    controller('/graphiql', GraphiQLController)
+  ];
+
+}
+```
+
+### Custom GraphiQL Options
+
+Most [GraphiQL options](https://github.com/graphql/graphiql/tree/main/packages/graphiql#props) are supported and can be provided by inheriting the `GraphiQLController` class.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  options: GraphiQLControllerOptions = {
+    docExplorerOpen: true,
+  }
+}
+
+```
+
+### Custom API endpoint
+
+By default, the GraphiQL page assumes that the GraphiQL API is located at `/graphql`. This behavior can be overridden with the `apiEndpoint` property.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  apiEndpoint = '/api';
+}
+
+```
+
+### Custom CSS theme
+
+In order to change the page theme, the controller class allows you to include custom CSS files.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  cssThemeURL = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/theme/solarized.css';
+
+  options: GraphiQLControllerOptions = {
+    editorTheme: 'solarized light'
+  }
+}
+
+```
 
 ## Error Handling - Masking & Logging Errors
 
