@@ -4,7 +4,7 @@ import { join } from 'path';
 import { promisify } from 'util';
 
 // 3p
-import { Get, HttpResponseOK, renderToString } from '@foal/core';
+import { Context, Get, HttpResponseMovedPermanently, HttpResponseOK, renderToString } from '@foal/core';
 
 export class GraphiQLController {
 
@@ -27,8 +27,12 @@ export class GraphiQLController {
 
   apiEndpoint = '/graphql';
 
-  @Get()
-  async index() {
+  @Get('/')
+  async index(ctx: Context) {
+    if (!ctx.request.path.endsWith('/')) {
+      return new HttpResponseMovedPermanently(ctx.request.path + '/');
+    }
+
     const template = await promisify(readFile)(join(__dirname, 'templates/index.html'), 'utf8');
 
     const page = renderToString(template, {

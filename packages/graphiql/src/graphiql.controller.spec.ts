@@ -6,7 +6,7 @@ import { Readable } from 'stream';
 import { join } from 'path';
 
 // 3p
-import { getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
+import { Context, getHttpMethod, getPath, isHttpResponseMovedPermanently, isHttpResponseOK } from '@foal/core';
 
 // FoalTS
 import { GraphiQLController } from './graphiql.controller';
@@ -24,10 +24,30 @@ describe('GraphiQLController', () => {
 
   describe('has an "index" method that', () => {
 
+    it('should handle requests at GET /.', () => {
+      strictEqual(getHttpMethod(GraphiQLController, 'index'), 'GET');
+      strictEqual(getPath(GraphiQLController, 'index'), '/');
+    });
+
+    it('should redirect the user to xxx/ if there is no trailing slash in the URL.', async () => {
+      // This way, the browser requests the assets at the correct path (the relative path).
+      const controller = new GraphiQLController();
+
+      const ctx = new Context({ path: 'xxx' });
+      const response = await controller.index(ctx);
+
+      if (!isHttpResponseMovedPermanently(response)) {
+        throw new Error('GraphiQLController.index should return an HttpResponseMovedPermanently instance.');
+      }
+
+      strictEqual(response.path, ctx.request.path + '/');
+    });
+
     async function compareSpecAndTemplate(controller: GraphiQLController, specFileName: string) {
       const expected = readFileSync(join(__dirname, 'specs', specFileName), 'utf8');
 
-      const response = await controller.index();
+      const ctx = new Context({ path: 'graphql/' });
+      const response = await controller.index(ctx);
       if (!isHttpResponseOK(response)) {
         throw new Error('GraphiQLController.index should have returned a HttpResponseOK instance.');
       }
