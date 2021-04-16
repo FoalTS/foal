@@ -14,7 +14,7 @@ Version 2.3 of Foal has been released! Here are the improvements that it brings.
 
 <!--truncate-->
 
-## Support of GraphiQL
+## GraphiQL
 
 From version 2.3, it is possible to generate a GraphiQL page in one line of code. This can be useful if you quickly need to test your API.
 
@@ -58,3 +58,13 @@ export class GraphiQL2Controller extends GraphiQLController {
 }
 
 ```
+
+## Support for `.env.local` files
+
+Foal's configuration system already supported `.env` files in previous versions. As of version 2.3, the framework also supports `.env.local` files.
+
+This can be useful in case you want to have two `.env` files, one to define the default env vars needed by the application and another to override these values on your local machine.
+
+If a variable is defined in both files, the value in the `.env.local` file will take precedence.
+
+Similarly, you can also define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).
