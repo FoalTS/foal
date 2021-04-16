@@ -11,7 +11,8 @@ This page shows how to use gRPC in Foal. It is based on the [official gRPC tutor
 First you need to install some additional dependencies.
 
 ```bash
-npm install cpx2 @grpc/grpc-js @grpc/proto-loader
+npm install @grpc/grpc-js @grpc/proto-loader
+npm install cpx2 --save-dev
 ```
 
 Then update your `package.json` so that your build scripts will correctly copy your `.proto` files into the `build/` directory.
