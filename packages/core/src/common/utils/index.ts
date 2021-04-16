@@ -6,5 +6,5 @@ export { getAjvInstance } from './get-ajv-instance';
 export { hashPassword } from './hash-password.util';
 export { isInFile } from './is-in-file.util';
 export { renderError } from './render-error.util';
-export { render } from './render.util';
+export { render, renderToString } from './render.util';
 export { verifyPassword } from './verify-password.util';

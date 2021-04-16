@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@foal/core": "^2.2.0",
+    "@foal/graphiql": "^2.2.0",
     "@foal/jwks-rsa": "^2.2.0",
     "@foal/jwt": "^2.2.0",
     "@foal/mongodb": "^2.2.0",

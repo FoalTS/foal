@@ -3,7 +3,7 @@ import {
 } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
-import { AuthController, OpenapiController, ProfileController } from './controllers';
+import { AuthController, OpenapiController, ProfileController, GraphqlApiController, GraphiQL2Controller } from './controllers';
 
 export class AppController {
 
@@ -11,6 +11,8 @@ export class AppController {
     controller('', AuthController),
     controller('/swagger', OpenapiController),
     controller('/profile', ProfileController),
+    controller('/graphql', GraphqlApiController),
+    controller('/graphiql', GraphiQL2Controller)
   ];
 
   @Get('/')
