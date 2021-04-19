@@ -162,19 +162,18 @@ export class ApiController extends GraphQLController {
 Note that for this to work, you must copy the graphql files during the build. To do this, you need to install the `copy` package and update some commands of your `package.json`.
 
 ```
-npm install copy
+npm install cpx2  --save-dev
 ```
 
 ```json
 {
-  ...
   "scripts": {
-    ...
-    "build": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
-    ...
-    "build:test": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
-    ...
-    "build:e2e": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json"
+    "build": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
+    "develop": "npm run build && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build -e js,graphql --no-restart-on error ./build/index.js\"",
+    "build:test": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
+    "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
+    "build:e2e": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json",
+    "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build \\\"./build/e2e/**/*.js\\\"\"",
     ...
   }
 }

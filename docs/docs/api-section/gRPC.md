@@ -11,7 +11,8 @@ This page shows how to use gRPC in Foal. It is based on the [official gRPC tutor
 First you need to install some additional dependencies.
 
 ```bash
-npm install cpx2 @grpc/grpc-js @grpc/proto-loader
+npm install @grpc/grpc-js @grpc/proto-loader
+npm install cpx2 --save-dev
 ```
 
 Then update your `package.json` so that your build scripts will correctly copy your `.proto` files into the `build/` directory.
@@ -19,7 +20,12 @@ Then update your `package.json` so that your build scripts will correctly copy y
 ```json
 {
   "build": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.app.json",
-  "develop": "npm run build && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build -e js,.proto --no-restart-on error ./build/index.js\"",
+  "develop": "npm run build && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build -e js,proto --no-restart-on error ./build/index.js\"",
+  "build:test": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.test.json",
+  "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
+  "build:e2e": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.e2e.json",
+  "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build \\\"./build/e2e/**/*.js\\\"\"",
+    ...
 }
 ```
 
