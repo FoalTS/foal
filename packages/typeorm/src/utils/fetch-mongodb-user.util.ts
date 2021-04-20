@@ -1,5 +1,5 @@
 // 3p
-import { Class } from '@foal/core';
+import { Class, FetchUser } from '@foal/core';
 // tslint:disable-next-line:no-unused-variable
 import { getMongoRepository, ObjectID } from 'typeorm';
 
@@ -15,11 +15,9 @@ import { getMongoRepository, ObjectID } from 'typeorm';
  *
  * @export
  * @param {(Class<{ id: ObjectID }|{ _id: ObjectID }>)} userEntityClass - The entity class.
- * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
+ * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchMongoDBUser(
-  userEntityClass: Class<{ id: ObjectID }|{ _id: ObjectID }>
-): (id: number|string) => Promise<any> {
+export function fetchMongoDBUser(userEntityClass: Class<{ id: ObjectID }|{ _id: ObjectID }>): FetchUser {
   return (id: number|string) => {
     if (typeof id === 'number') {
       throw new Error('Unexpected type for MongoDB user ID: number.');

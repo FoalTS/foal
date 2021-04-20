@@ -1,5 +1,5 @@
 // 3p
-import { Class } from '@foal/core';
+import { Class, FetchUser } from '@foal/core';
 import { getRepository } from 'typeorm';
 
 /**
@@ -14,8 +14,8 @@ import { getRepository } from 'typeorm';
  *
  * @export
  * @param {(Class<{ id: number|string }>)} userEntityClass - The entity class.
- * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
+ * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchUser(userEntityClass: Class<{ id: number|string }>): (id: number|string) => Promise<any> {
+export function fetchUser(userEntityClass: Class<{ id: number|string }>): FetchUser {
   return (id: number|string) => getRepository(userEntityClass).findOne({ id });
 }

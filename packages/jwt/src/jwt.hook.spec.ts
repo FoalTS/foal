@@ -5,6 +5,7 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 import {
   Config,
   Context,
+  FetchUser,
   getApiComponents,
   getApiParameters,
   getApiResponses,
@@ -88,9 +89,13 @@ const header1 = {
 
 export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: boolean) {
   const user = { id: 1 };
+  let actualServices: ServiceManager;
   const secret = 'my_secret';
 
-  const fetchUser = async (id: string|number) => id === '1' ? user : null;
+  const fetchUser: FetchUser = async (id, services) => {
+    actualServices = services;
+    return id === '1' ? user : undefined;
+  };
 
   let ctx: Context;
   let hook: HookFunction;
@@ -847,6 +852,15 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           'error="invalid_token", error_description="The token must include a subject which is the id of the user."'
         );
       });
+
+      it('and should call options.user with the service manager.', async () => {
+        const jwt = sign({}, secret, { subject: user.id.toString() });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
+
+        await hook(ctx, services);
+
+        strictEqual(actualServices, services);
+      })
 
       it('with the user retrieved from the database.', async () => {
         const jwt = sign({}, secret, { subject: user.id.toString() });
