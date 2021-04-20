@@ -738,7 +738,7 @@ describe('UseSessions', () => {
         });
 
         it('and should call options.user with the service manager.', async () => {
-          const response = await hook(ctx, services);
+          await hook(ctx, services);
 
           strictEqual(actualServices, services)
         })

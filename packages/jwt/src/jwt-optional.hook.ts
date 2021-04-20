@@ -1,5 +1,5 @@
 // 3p
-import { FetchUser, HookDecorator } from '@foal/core';
+import { HookDecorator } from '@foal/core';
 
 // FoalTS
 import { JWT, JWTOptions, VerifyOptions } from './jwt.hook';
