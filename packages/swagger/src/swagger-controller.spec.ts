@@ -2,7 +2,6 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 import { readFileSync, stat } from 'fs';
 import { join } from 'path';
-import { Readable } from 'stream';
 import { promisify } from 'util';
 
 // 3p
@@ -17,20 +16,12 @@ import {
   isHttpResponseOK,
   OpenApi,
   OPENAPI_SERVICE_ID,
-  ServiceManager
+  ServiceManager,
+  streamToBuffer
 } from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
-
-function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
 
 describe('SwaggerController', () => {
 

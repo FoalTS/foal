@@ -35,6 +35,7 @@ export {
   renderToString,
   renderError,
   signToken,
+  streamToBuffer,
   verifyPassword,
   verifySignedToken,
 } from './common';

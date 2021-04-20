@@ -2,23 +2,13 @@
 import { ok, strictEqual } from 'assert';
 import { stat, readFileSync } from 'fs';
 import { promisify } from 'util';
-import { Readable } from 'stream';
 import { join } from 'path';
 
 // 3p
-import { Context, getHttpMethod, getPath, isHttpResponseMovedPermanently, isHttpResponseOK } from '@foal/core';
+import { Context, getHttpMethod, getPath, isHttpResponseMovedPermanently, isHttpResponseOK, streamToBuffer } from '@foal/core';
 
 // FoalTS
 import { GraphiQLController } from './graphiql.controller';
-
-function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
 
 describe('GraphiQLController', () => {
 
