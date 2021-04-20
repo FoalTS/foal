@@ -6,6 +6,7 @@ import {
   ApiSecurityRequirement,
   Config,
   Context,
+  FetchUser,
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
@@ -47,7 +48,7 @@ class InvalidRequestResponse extends HttpResponseBadRequest {
  * @interface JWTOptions
  */
 export interface JWTOptions {
-  user?: (id: string|number) => Promise<any|undefined>;
+  user?: FetchUser;
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;

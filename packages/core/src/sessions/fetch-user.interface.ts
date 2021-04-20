@@ -1,0 +1,1 @@
+export type FetchUser = (id: string|number) => Promise<any>;
