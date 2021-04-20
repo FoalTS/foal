@@ -1,5 +1,5 @@
 // 3p
-import { HookDecorator } from '@foal/core';
+import { FetchUser, HookDecorator } from '@foal/core';
 
 // FoalTS
 import { JWT, JWTOptions, VerifyOptions } from './jwt.hook';
@@ -17,7 +17,7 @@ import { JWT, JWTOptions, VerifyOptions } from './jwt.hook';
  *
  * @export
  * @param {JWTOptions} [options={}] - Hook options.
- * @param {(id: string|number) => Promise<any|undefined>} [options.user] - A function that takes an id
+ * @param {FetchUser} [options.user] - A function that takes an id
  * and returns the corresponding user. If no user could be found, it returns undefined.
  * @param {(token: string) => boolean|Promise<boolean>} [options.blacklist] - A function that takes a token
  * and returns true or false. If the returned value is true, then the hook returns a 401 error.

@@ -752,7 +752,7 @@ describe('UseSessions', () => {
 
         context('given the function options.user returns undefined (session invalid)', () => {
 
-          const fetchUser = async (id: number|string) => undefined;
+          const fetchUser: FetchUser = async id => undefined;
 
           beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
 
