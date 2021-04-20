@@ -19,7 +19,7 @@ export class S3Disk extends Disk {
 
   async write(
     dirname: string,
-    content: Buffer | NodeJS.ReadableStream,
+    content: Buffer | Readable,
     options: { name?: string } | { extension?: string } = {}
   ): Promise<{ path: string; }> {
     let name = this.hasName(options) ? options.name : await generateToken();

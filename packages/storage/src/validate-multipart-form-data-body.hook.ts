@@ -1,5 +1,6 @@
 // std
 import { extname } from 'path';
+import { Readable } from 'stream';
 
 // 3p
 import {
@@ -89,7 +90,7 @@ export function ValidateMultipartFormDataBody(
 
       busboy.on('field', (name: string, value: string) => fields[name] = value);
       // tslint:disable-next-line: max-line-length
-      busboy.on('file', (name: string, stream: NodeJS.ReadableStream, filename: string, encoding: string, mimeType: string) => {
+      busboy.on('file', (name: string, stream: Readable, filename: string, encoding: string, mimeType: string) => {
         latestFileHasBeenUploaded = convertRejectedPromise(async () => {
           stream.on('limit', () => sizeLimitReached = name);
 
