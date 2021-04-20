@@ -162,7 +162,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     /* Set ctx.user */
 
     if (session.userId !== null && options.user) {
-      ctx.user = await options.user(session.userId);
+      ctx.user = await options.user(session.userId, services);
       if (!ctx.user) {
         await session.destroy();
         const response = unauthorizedOrRedirect('The token does not match any user.');
