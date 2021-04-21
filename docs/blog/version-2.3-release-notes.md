@@ -68,3 +68,24 @@ This can be useful in case you want to have two `.env` files, one to define the 
 If a variable is defined in both files, the value in the `.env.local` file will take precedence.
 
 Similarly, you can also define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).
+
+## Base 64 and base 64 URL utilities
+
+Two functions are provided to convert base64 encoded strings to base64url encoded strings and vice versa.
+
+```typescript
+import { convertBase64ToBase64url, convertBase64urlToBase64 } from '@foal/core';
+
+const str = convertBase64ToBase64url(base64Str);
+const str2 = convertBase64urlToBase64(base64urlStr);
+```
+
+## Converting Streams to Buffers
+
+In case you need to convert a readable stream to a concatenated buffer during testing, you can now use the `streamToBuffer` function for this.
+
+```typescript
+import { streamToBuffer } from '@foal/core';
+
+const buffer = await streamToBuffer(stream);
+```
