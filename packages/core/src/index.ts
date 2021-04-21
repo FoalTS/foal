@@ -24,6 +24,7 @@ export {
   controller,
   displayServerURL,
   convertBase64ToBase64url,
+  convertBase64urlToBase64,
   escape,
   escapeProp,
   generateSignedToken,
@@ -35,6 +36,7 @@ export {
   renderToString,
   renderError,
   signToken,
+  streamToBuffer,
   verifyPassword,
   verifySignedToken,
 } from './common';

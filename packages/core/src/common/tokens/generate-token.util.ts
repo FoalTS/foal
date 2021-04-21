@@ -3,7 +3,7 @@ import { randomBytes } from 'crypto';
 import { promisify } from 'util';
 
 // FoalTS
-import { convertBase64ToBase64url } from './convert-base64-to-base64-url.util';
+import { convertBase64ToBase64url } from '../encoding';
 
 /**
  * Generate a 256-bit base64url-encoded token.

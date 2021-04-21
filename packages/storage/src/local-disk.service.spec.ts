@@ -5,20 +5,11 @@ import { join } from 'path';
 import { Readable } from 'stream';
 
 // 3p
-import { Config, ConfigNotFoundError, createService } from '@foal/core';
+import { Config, ConfigNotFoundError, createService, streamToBuffer } from '@foal/core';
 
 // FoalTS
 import { FileDoesNotExist } from './disk.service';
 import { LocalDisk } from './local-disk.service';
-
-function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
 
 function rmDirAndFilesIfExist(path: string) {
   if (!existsSync(path)) {
