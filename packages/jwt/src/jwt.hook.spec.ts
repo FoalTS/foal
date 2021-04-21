@@ -5,6 +5,8 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 import {
   Config,
   Context,
+  convertBase64ToBase64url,
+  convertBase64urlToBase64,
   FetchUser,
   getApiComponents,
   getApiParameters,
@@ -66,13 +68,13 @@ b5VoYLNsdvZhqjVFTrYNEuhTJFYCF7jAiZLYvYm0C99BqcJnJPl7JjWynoNHNKw3
 9f6PIOE1rAmPE8Cfz/GFF5115ZKVlq+2BY8EKNxbCIy2d/vMEvisnXI=
 -----END RSA PRIVATE KEY-----`;
 
-function toBase64(headerOrPayload: string): string {
-  return Buffer.from(headerOrPayload, 'binary').toString('base64').replace(/=/g, '');
+function toBase64Url(headerOrPayload: string): string {
+  return convertBase64ToBase64url(Buffer.from(headerOrPayload, 'binary').toString('base64'));
 }
 
 /* tslint:disable-next-line:no-unused-variable */
-function fromBase64(str: string): string {
-  return Buffer.from(str, 'base64').toString('binary');
+function fromBase64Url(str: string): string {
+  return Buffer.from(convertBase64urlToBase64(str), 'base64').toString('binary');
 }
 
 const payload1 = {
@@ -249,7 +251,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('should return an HttpResponseUnauthorized object if the header is invalid'
         + ' (not a base64-encoded string).', async () => {
       const token = '$$$'
-        + '.' + toBase64(JSON.stringify(payload1))
+        + '.' + toBase64Url(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       ctx = createContext({ Authorization: `Bearer ${token}` });
 
@@ -269,8 +271,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the header is invalid'
         + ' (not a representation of a valid JSON object).', async () => {
-      const token = toBase64('{')
-        + '.' + toBase64(JSON.stringify(payload1))
+      const token = toBase64Url('{')
+        + '.' + toBase64Url(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       ctx = createContext({ Authorization: `Bearer ${token}` });
 
@@ -289,7 +291,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should return an HttpResponseUnauthorized object if the payload is invalid.', async () => {
-      const token = toBase64(JSON.stringify(header1))
+      const token = toBase64Url(JSON.stringify(header1))
         + '.eyJz32IiOiIxMjM0NTY3ODkwIiwibmFtZSI6UkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ'
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moZGA08mogA';
       ctx = createContext({ Authorization: `Bearer ${token}` });
@@ -350,7 +352,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the signature is invalid.', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-        + '.' + toBase64(JSON.stringify(payload1))
+        + '.' + toBase64Url(JSON.stringify(payload1))
         + '.HMwf4pIs-aI8UG5Rv2dKplZP4XKvwVT5moeGA08mogA';
       ctx = createContext({ Authorization: `Bearer ${token}` });
 
@@ -387,7 +389,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
     it('should return an HttpResponseUnauthorized object if the signature is wrong (different secret).', async () => {
       const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-        + '.' + toBase64(JSON.stringify(payload1))
+        + '.' + toBase64Url(JSON.stringify(payload1))
         + '.-I5sDyvGWSA8Qwk6OwM7VLV9Nz3pkINNHakp3S8kOn0';
       ctx = createContext({ Authorization: `Bearer ${token}` });
 
