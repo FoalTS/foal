@@ -1,10 +1,8 @@
 // std
-import { randomBytes } from 'crypto';
 import { URL, URLSearchParams } from 'url';
-import { promisify } from 'util';
 
 // 3p
-import { Config, Context, dependency, HttpResponseRedirect } from '@foal/core';
+import { Config, Context, dependency, generateToken, HttpResponseRedirect } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 /**
@@ -284,7 +282,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   }
 
   private async getState(): Promise<string> {
-    const buff = await promisify(randomBytes)(32);
-    return buff.toString('base64');
+    return generateToken();
   }
 }
