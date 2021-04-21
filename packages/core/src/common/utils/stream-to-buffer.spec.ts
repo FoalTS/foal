@@ -26,6 +26,8 @@ describe('streamToBuffer', () => {
   it('should rejects an error if the stream emits an error.', async () => {
     const stream = new Readable();
 
+    stream.push(null);
+
     const promise = streamToBuffer(stream);
 
     stream.emit('error', new Error('foobar'));
