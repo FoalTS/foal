@@ -89,3 +89,9 @@ import { streamToBuffer } from '@foal/core';
 
 const buffer = await streamToBuffer(stream);
 ```
+
+## Bug Fixes
+
+### Social authentication
+
+Social authentication controllers could sometimes return 500 errors, depending on the social provider you were using. This was due to a problem of string encoding in the callback URL. This bug has been fixed in this version.
