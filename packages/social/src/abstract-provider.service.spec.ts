@@ -246,6 +246,23 @@ describe('AbstractProvider', () => {
         notStrictEqual(stateCookieValue.length, 0);
       });
 
+      it('with a generated state with does not contain problematic URL characters.', async () => {
+        // This test is bad because it is not deterministic.
+        // Unfortunately, since the state is randomly generated, we can't do better.
+
+        const response = await provider.redirect();
+
+        const searchParams = new URLSearchParams(response.path);
+        const stateParamValue = searchParams.get('state');
+        if (typeof stateParamValue !== 'string') {
+          throw new Error('State parameter not found.');
+        }
+
+        strictEqual(stateParamValue.includes('+'), false);
+        strictEqual(stateParamValue.includes('/'), false);
+        strictEqual(stateParamValue.includes('='), false);
+      });
+
       it('with a generated state in a cookie whose secure option is defined with the config.', async () => {
         Config.set('settings.social.cookie.secure', true);
 
