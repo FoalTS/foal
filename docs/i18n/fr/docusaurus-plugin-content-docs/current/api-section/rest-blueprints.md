@@ -16,8 +16,8 @@ foal generate rest-api <name> [--register] [--auth]
 
 This command generates three files: an entity, a controller and the controller's test. Depending on your directory structure, they may be generated in different locations:
 
-- If two directories `entities` and `controllers` exist, the files are created in these ones.
-- Otherwise they all are created in the current directory.
+- in the directories `src/app/controllers` and `src/app/entities` if they exist
+- or in the directories `controllers` and `entities`.
 
 The generated controller already has a set of implemented routes **that you can customize as you like**. It defines a REST API and is ready to use. The only thing to do is to connect the controller to the `AppController` or one of its children.
 

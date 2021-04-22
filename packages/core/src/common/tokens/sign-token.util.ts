@@ -2,7 +2,7 @@
 import { createHmac } from 'crypto';
 
 // FoalTS
-import { convertBase64ToBase64url } from './convert-base64-to-base64-url.util';
+import { convertBase64ToBase64url } from '../encoding';
 
 export function sign(base64Value: string, base64Secret: string): Buffer {
   return createHmac('sha256', Buffer.from(base64Secret, 'base64'))

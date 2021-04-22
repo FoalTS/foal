@@ -62,6 +62,7 @@ module.exports = {
         'common/templating',
         'common/logging-and-debugging',
         'common/generate-tokens',
+        'common/conversions',
       ]),
       category('Databases', [
         'databases/typeorm',
@@ -121,7 +122,6 @@ module.exports = {
         'cookbook/expressjs',
         'cookbook/root-imports',
         'cookbook/limit-repeated-requests',
-        'cookbook/base64url',
       ]),
       category('Deployment', [
         'deployment-and-environments/checklist',
