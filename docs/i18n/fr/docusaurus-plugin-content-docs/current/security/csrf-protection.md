@@ -1,12 +1,11 @@
 ---
-title: Protection CSRF
+title: CSRF Protection
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
---
 
 > Cross-Site Request Forgery (CSRF) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user’s web browser to perform an unwanted action on a trusted site when the user is authenticated.
 >
@@ -529,6 +528,8 @@ module.exports = {
 </Tabs>
 
 ### Disable CSRF protection on a specific route
+
+> *This feature is available from version 2.1 onwards.*
 
 In case the CSRF protection is enabled globally and you want to disable it for a specific route, you can use the `csrf` option for that.
 
