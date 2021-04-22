@@ -2,9 +2,9 @@
 import { Readable } from 'stream';
 
 // 3p
-import { Config, generateToken } from '@foal/core';
+import { Config, generateToken, streamToBuffer } from '@foal/core';
 import { Disk, FileDoesNotExist } from '@foal/storage';
-import * as S3 from 'aws-sdk/clients/s3';
+import { S3, S3ClientConfig } from '@aws-sdk/client-s3';
 
 /**
  * File storage to read, write and delete files in AWS S3.
@@ -14,8 +14,6 @@ import * as S3 from 'aws-sdk/clients/s3';
  * @extends {Disk}
  */
 export class S3Disk extends Disk {
-
-  private s3: S3;
 
   async write(
     dirname: string,
@@ -30,11 +28,11 @@ export class S3Disk extends Disk {
 
     const path = `${dirname}/${name}`;
 
-    await this.getS3().upload({
+    await this.s3.putObject({
       Body: content,
-      Bucket: this.getBucket(),
+      Bucket: this.bucket,
       Key: path,
-    }).promise();
+    });
 
     return { path };
   }
@@ -44,39 +42,34 @@ export class S3Disk extends Disk {
     content: C
   ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
     try {
-      if (content === 'buffer') {
-        const { Body, ContentLength } = await this.getS3().getObject({
-          Bucket: this.getBucket(),
-          Key: path,
-        }).promise();
+      const { Body, ContentLength } = await this.s3.getObject({
+        Bucket: this.bucket,
+        Key: path,
+      });
 
-        return {
-          file: Body as any,
-          size: ContentLength as number
-        };
+      if (!ContentLength) {
+        throw new Error('Expected to have a content-length header in HTTP response.');
       }
 
-      const { ContentLength }  = await this.getS3().headObject({
-        Bucket: this.getBucket(),
-        Key: path,
-      }).promise();
+      if (!Body) {
+        throw new Error('Expected to have a body in HTTP response.');
+      }
 
-      const stream = this.getS3().getObject({
-        Bucket: this.getBucket(),
-        Key: path,
-      }).createReadStream()
-        // Do not kill the process (and crash the server) if the stream emits an error.
-        // Note: users can still add other listeners to the stream to "catch" the error.
-        // Note: error streams are unlikely to occur ("headObject" may have thrown these errors previously).
-        // TODO: test this line.
-        .on('error', () => {});
+      // "Body" is of type Readable on Node and of type ReadableStream | Blob on the browser.
+      // See https://github.com/aws/aws-sdk-js-v3/issues/1877.
+      const stream = Body as Readable;
+
+      // Do not kill the process (and crash the server) if the stream emits an error.
+      // Note: users can still add other listeners to the stream to "catch" the error.
+      // TODO: test this line.
+      stream.on('error', () => {});
 
       return {
-        file: stream as any,
-        size: ContentLength as number
+        file: (content === 'buffer' ? await streamToBuffer(stream) : stream) as any,
+        size: ContentLength
       };
     } catch (error) {
-      if (error.code === 'NoSuchKey' || error.code === 'NotFound') {
+      if (error.name === 'NoSuchKey') {
         throw new FileDoesNotExist(path);
       }
       // TODO: test this line.
@@ -86,13 +79,17 @@ export class S3Disk extends Disk {
 
   async readSize(path: string): Promise<number> {
     try {
-      const { ContentLength }  = await this.getS3().headObject({
-        Bucket: this.getBucket(),
+      const { ContentLength }  = await this.s3.headObject({
+        Bucket: this.bucket,
         Key: path,
-      }).promise();
-      return ContentLength as number;
+      });
+
+      if (!ContentLength) {
+        throw new Error('Expected to have a content-length header in HTTP response.');
+      }
+      return ContentLength;
     } catch (error) {
-      if (error.code === 'NotFound') {
+      if (error.name === 'NotFound') {
         throw new FileDoesNotExist(path);
       }
       // TODO: test this line.
@@ -101,13 +98,13 @@ export class S3Disk extends Disk {
   }
 
   async delete(path: string): Promise<void> {
-    await this.getS3().deleteObject({
-      Bucket: this.getBucket(),
+    await this.s3.deleteObject({
+      Bucket: this.bucket,
       Key: path
-    }).promise();
+    });
   }
 
-  private getBucket(): string {
+  private get bucket(): string {
     return Config.getOrThrow(
       'settings.disk.s3.bucket',
       'string',
@@ -115,16 +112,29 @@ export class S3Disk extends Disk {
     );
   }
 
-  private getS3(): S3 {
-    if (!this.s3) {
-      this.s3 = new S3({
-        accessKeyId: Config.get('settings.aws.accessKeyId', 'string'),
-        apiVersion: '2006-03-01',
+  private _s3: S3;
+
+  private get s3(): S3 {
+    if (!this._s3) {
+      const s3Config: S3ClientConfig = {
         endpoint: Config.get('settings.aws.endpoint', 'string'),
-        secretAccessKey: Config.get('settings.aws.secretAccessKey', 'string'),
-      });
+      };
+
+      const accessKeyId = Config.get('settings.aws.accessKeyId', 'string');
+      const secretAccessKey = Config.get('settings.aws.secretAccessKey', 'string');
+      if (accessKeyId && secretAccessKey) {
+        s3Config.credentials = { accessKeyId, secretAccessKey }
+      }
+
+      const region = Config.get('settings.aws.region', 'string');
+      if (region) {
+        s3Config.region = region;
+      }
+
+      this._s3 = new S3(s3Config);
     }
-    return this.s3;
+
+    return this._s3;
   }
 
 }

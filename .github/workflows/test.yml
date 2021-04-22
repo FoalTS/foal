@@ -18,6 +18,7 @@ jobs:
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
       SETTINGS_AWS_SECRET_ACCESS_KEY: ${{ secrets.SETTINGS_AWS_SECRET_ACCESS_KEY }}
+      SETTINGS_AWS_REGION: ${{ secrets.SETTINGS_AWS_REGION }}
       NODE_VERSION: ${{ matrix.node-version }}
 
     services:
