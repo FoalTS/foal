@@ -69,6 +69,10 @@ If a variable is defined in both files, the value in the `.env.local` file will 
 
 Similarly, you can also define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).
 
+## Prisma documentation
+
+The documentation has been expanded to include [examples](https://foalts.org/docs/databases/using-another-orm) of how to use Prisma with Foal.
+
 ## Base 64 and base 64 URL utilities
 
 Two functions are provided to convert base64 encoded strings to base64url encoded strings and vice versa.
@@ -88,6 +92,29 @@ In case you need to convert a readable stream to a concatenated buffer during te
 import { streamToBuffer } from '@foal/core';
 
 const buffer = await streamToBuffer(stream);
+```
+
+## Accessing services during authentication
+
+The `user` option of `@JWTRequired` and `@UseSessions` now gives you the possibility to access services.
+
+```typescript
+class UserService {
+  getUser(id) {
+    return User.findOne({ id });
+  }
+}
+
+@JWTRequired({
+  user: (id, services) => services.get(UserService).getUser(id)
+})
+class ApiController {
+  @Get('/products')
+  getProducts(ctx: Context) {
+    // ctx.user is the object returned by UserService.
+  }
+}
+
 ```
 
 ## Bug Fixes
