@@ -6,12 +6,14 @@ import {
   ApiSecurityRequirement,
   Config,
   Context,
+  FetchUser,
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
   HttpResponseForbidden,
   HttpResponseUnauthorized,
-  IApiSecurityScheme
+  IApiSecurityScheme,
+  ServiceManager
 } from '@foal/core';
 import { decode, verify } from 'jsonwebtoken';
 
@@ -47,7 +49,7 @@ class InvalidRequestResponse extends HttpResponseBadRequest {
  * @interface JWTOptions
  */
 export interface JWTOptions {
-  user?: (id: string|number) => Promise<any|undefined>;
+  user?: FetchUser;
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
@@ -85,7 +87,7 @@ export interface VerifyOptions {
  * @returns {HookDecorator}
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
-  async function hook(ctx: Context) {
+  async function hook(ctx: Context, services: ServiceManager) {
     let token: string;
     if (options.cookie) {
       const cookieName = Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME);
@@ -208,7 +210,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('The token must include a subject which is the id of the user.');
     }
 
-    const user = await options.user(payload.sub);
+    const user = await options.user(payload.sub, services);
     if (!user) {
       return new InvalidTokenResponse('The token subject does not match any user.');
     }

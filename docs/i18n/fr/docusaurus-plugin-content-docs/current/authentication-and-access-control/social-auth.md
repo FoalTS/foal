@@ -25,7 +25,7 @@ First install the appropriate package.
 npm install @foal/social
 ```
 
-Then, you will need to provide your client ID, client secret and your redirect URIs to Foal. This can be done through the usual [configuration files](../deployment-and-environments/configuration.md).
+Then, you will need to provide your client ID, client secret and your redirect URIs to Foal. This can be done through the usual [configuration files](../architecture/configuration.md).
 
 *default.yml*
 ```yaml

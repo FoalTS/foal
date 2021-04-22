@@ -54,6 +54,7 @@ module.exports = {
         'architecture/hooks',
         'architecture/initialization',
         'architecture/error-handling',
+        'architecture/configuration',
       ]),
       category('Common', [
         'common/validation-and-sanitization',
@@ -61,6 +62,7 @@ module.exports = {
         'common/templating',
         'common/logging-and-debugging',
         'common/generate-tokens',
+        'common/conversions',
       ]),
       category('Databases', [
         'databases/typeorm',
@@ -69,7 +71,7 @@ module.exports = {
         'databases/mongodb',
         'databases/using-another-orm',
       ]),
-      category('Authentication & Access Control', [
+      category('Authentication', [
         'authentication-and-access-control/quick-start',
         'authentication-and-access-control/user-class',
         'authentication-and-access-control/password-management',
@@ -96,7 +98,7 @@ module.exports = {
         'file-system/local-and-cloud-storage',
         'file-system/upload-and-download-files',
       ]),
-      category('CLI & Development Environment', [
+      category('Dev Tools', [
         'development-environment/build-and-start-the-app',
         'development-environment/create-and-run-scripts',
         'development-environment/code-generation',
@@ -120,11 +122,9 @@ module.exports = {
         'cookbook/expressjs',
         'cookbook/root-imports',
         'cookbook/limit-repeated-requests',
-        'cookbook/base64url',
       ]),
-      category('Deployment & Environments', [
-        'deployment-and-environments/configuration',
-        'deployment-and-environments/ship-to-production',
+      category('Deployment', [
+        'deployment-and-environments/checklist',
       ])
     ]),
     expandedCategory('Upgrading', [

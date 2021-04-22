@@ -29,6 +29,7 @@ import {
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
   SESSION_USER_COOKIE_NAME
 } from './constants';
+import { FetchUser } from './fetch-user.interface';
 import { readSession } from './read-session';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
@@ -726,11 +727,21 @@ describe('UseSessions', () => {
       context('given options.user is defined', () => {
 
         const user = { id: userId };
+        let actualServices: ServiceManager;
 
         beforeEach(() => {
-          const fetchUser = async (id: number|string) => id === userId ? user : undefined;
+          const fetchUser: FetchUser = async (id, services) => {
+            actualServices = services;
+            return id === userId ? user : undefined
+          };
           hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
         });
+
+        it('and should call options.user with the service manager.', async () => {
+          await hook(ctx, services);
+
+          strictEqual(actualServices, services)
+        })
 
         it('with the user retrieved from the function options.user if it returns a user.', async () => {
           const response = await hook(ctx, services);
@@ -739,9 +750,9 @@ describe('UseSessions', () => {
           strictEqual(ctx.user, user);
         });
 
-        context('given the function options.user returns null (session invalid)', () => {
+        context('given the function options.user returns undefined (session invalid)', () => {
 
-          const fetchUser = async (id: number|string) => undefined;
+          const fetchUser: FetchUser = async id => undefined;
 
           beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
 

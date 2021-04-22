@@ -1,0 +1,55 @@
+<!--
+This page is greatly inspired from https://github.com/graphql/graphiql/blob/main/examples/graphiql-cdn/index.html.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      #graphiql {
+        height: 100vh;
+      }
+    </style>
+
+    <script src="./react.production.min.js" ></script>
+    <script src="./react-dom.production.min.js" ></script>
+    <link rel="stylesheet" href="./graphiql.min.css" />
+  </head>
+
+  <body>
+    <div id="graphiql">Loading...</div>
+    <script src="./graphiql.min.js" ></script>
+    <script>
+      function graphQLFetcher(graphQLParams) {
+        return fetch(
+          '/graphql',
+          {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(graphQLParams),
+          },
+        ).then(function (response) {
+          return response.json().catch(function () {
+            return response.text();
+          });
+        });
+      }
+
+      ReactDOM.render(
+        React.createElement(GraphiQL, Object.assign({
+          fetcher: graphQLFetcher,
+        }, {})),
+        document.getElementById('graphiql'),
+      );
+    </script>
+  </body>
+</html>

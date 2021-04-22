@@ -19,13 +19,14 @@ import {
 } from '../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession } from './create-session';
+import { FetchUser } from './fetch-user.interface';
 import { readSession } from './read-session';
 import { removeSessionCookie } from './remove-session-cookie';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
 export interface UseSessionOptions {
-  user?: (id: string|number) => Promise<any|undefined>;
+  user?: FetchUser;
   store?: Class<SessionStore>;
   cookie?: boolean;
   csrf?: boolean;
@@ -161,7 +162,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     /* Set ctx.user */
 
     if (session.userId !== null && options.user) {
-      ctx.user = await options.user(session.userId);
+      ctx.user = await options.user(session.userId, services);
       if (!ctx.user) {
         await session.destroy();
         const response = unauthorizedOrRedirect('The token does not match any user.');

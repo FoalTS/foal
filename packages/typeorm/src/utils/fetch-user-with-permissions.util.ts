@@ -1,5 +1,5 @@
 // 3p
-import { Class } from '@foal/core';
+import { Class, FetchUser } from '@foal/core';
 import { getRepository } from 'typeorm';
 
 /**
@@ -15,11 +15,9 @@ import { getRepository } from 'typeorm';
  *
  * @export
  * @param {(Class<{ id: number|string }>)} userEntityClass - The entity class which must extend UserWithPermissions.
- * @returns {((id: number|string) => Promise<any>)} The returned function expecting an id.
+ * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchUserWithPermissions(
-  userEntityClass: Class<{ id: number|string }>
-): (id: number|string) => Promise<any> {
+export function fetchUserWithPermissions(userEntityClass: Class<{ id: number|string }>): FetchUser {
   return (id: number|string) => getRepository(userEntityClass).findOne(
     { id },
     { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }

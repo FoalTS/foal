@@ -1,4 +1,5 @@
 // std
+import { ServiceManager } from '@foal/core';
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
@@ -55,7 +56,7 @@ describe('fetchMongoDBUser', () => {
 
   it('should throw an Error if the ID is a number.', async () => {
     try {
-      await fetchMongoDBUser(User)(46);
+      await fetchMongoDBUser(User)(46, new ServiceManager());
       throw new Error('An error should have been thrown');
     } catch (error) {
       strictEqual(error.message, 'Unexpected type for MongoDB user ID: number.');
@@ -63,19 +64,19 @@ describe('fetchMongoDBUser', () => {
   });
 
   it('should return the user fetched from the database (id).', async () => {
-    const actual = await fetchMongoDBUser(User)(user.id.toString());
+    const actual = await fetchMongoDBUser(User)(user.id.toString(), new ServiceManager());
     notStrictEqual(actual, undefined);
     strictEqual(user.id.equals(actual.id), true);
   });
 
   it('should return the user fetched from the database (_id).', async () => {
-    const actual = await fetchMongoDBUser(User2)(user2._id.toString());
+    const actual = await fetchMongoDBUser(User2)(user2._id.toString(), new ServiceManager());
     notStrictEqual(actual, undefined);
     strictEqual(user2._id.equals(actual._id), true);
   });
 
   it('should return undefined if no user is found in the database (string).', async () => {
-    const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d');
+    const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d', new ServiceManager());
     strictEqual(actual, undefined);
   });
 

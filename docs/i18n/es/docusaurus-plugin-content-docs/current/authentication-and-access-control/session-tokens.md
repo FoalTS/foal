@@ -895,7 +895,7 @@ interface SessionState {
 The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
 ```typescript
-(id: string|number) => Promise<any|undefined>
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>
 ```
 
 If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.

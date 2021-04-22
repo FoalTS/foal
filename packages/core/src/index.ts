@@ -1,6 +1,6 @@
 /**
  * FoalTS
- * Copyright(c) 2017-2020 Loïc Poullain <loic.poullain@centraliens.net>
+ * Copyright(c) 2017-2021 Loïc Poullain <loic.poullain@centraliens.net>
  * Released under the MIT License.
  */
 
@@ -24,6 +24,7 @@ export {
   controller,
   displayServerURL,
   convertBase64ToBase64url,
+  convertBase64urlToBase64,
   escape,
   escapeProp,
   generateSignedToken,
@@ -32,8 +33,10 @@ export {
   hashPassword,
   isInFile,
   render,
+  renderToString,
   renderError,
   signToken,
+  streamToBuffer,
   verifyPassword,
   verifySignedToken,
 } from './common';
@@ -219,4 +222,5 @@ export {
   UseSessions,
   createSession,
   readSession,
+  FetchUser,
 } from './sessions';
