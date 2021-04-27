@@ -205,7 +205,7 @@ export { Group, Permission } from '@foal/typeorm';
 | groups | Group[] | A many-to-many relation with the table group |
 | userPermissions | Permission[] | A many-to-many relation with the table permission |
 
-![Relations between Users, Groups and Permissions](./permissions-groups-and-users.png)
+![Relations between Users, Groups and Permissions](./images/permissions-groups-and-users.png)
 
 ### The `hasPerm` Method
 
