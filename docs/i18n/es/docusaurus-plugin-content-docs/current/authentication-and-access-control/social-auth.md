@@ -83,7 +83,7 @@ settings:
   "settings": {
     "social": {
       "google": {
-        "clientID": "xxx",
+        "clientId": "xxx",
         "clientSecret": "env(SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET)",
         "redirectUri": "http://localhost:3001/signin/google/callback"
       }
@@ -100,7 +100,7 @@ module.exports = {
   settings: {
     social: {
       google: {
-        clientID: 'xxx',
+        clientId: 'xxx',
         clientSecret: 'env(SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET)',
         redirectUri: 'http://localhost:3001/signin/google/callback'
       }
