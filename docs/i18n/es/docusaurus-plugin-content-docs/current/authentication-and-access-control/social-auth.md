@@ -2,69 +2,130 @@
 title: Autenticación Social
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-FoalTS social authentication is based on OAuth2 protocol. To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
+In addition to traditional password authentication, Foal provides services to authenticate users through social providers. The framework officially supports the following:
+
+- Google
+- Facebook
+- Github
+- Linkedin
+
+If your provider is not listed here but supports OAuth 2.0, then you can still [extend the `AbstractProvider`](#custom-provider) class to integrate it or use a [community provider](#community-providers) below.
+
+## Get Started
+
+### General overview
+
+![Social auth schema](./images/social-auth-overview.png)
+
+The authentication process works as follows:
+
+1. The user clicks the *Log In with xxx* button in the browser and the client sends a request to the server.
+2. The server redirects the user to the consent page where they are asked to give permission to log in with their account and/or give access to some of their personal information.
+3. The user approves and the consent page redirects the user with an authorization code to the *redirect* URI specified in the configuration.
+4. Your application then makes one or more requests to the OAuth servers to obtain an access token and information about the user.
+5. The social provider servers return this information.
+6. Finally, your server-side application logs the user in based on this information and redirects the user when done.
+
+> *This explanation of OAuth 2 is intentionally simplified. It highlights only the parts of the protocol that are necessary to successfully implement social authentication with Foal. But the framework also performs other tasks under the hood to fully comply with the OAuth 2.0 protocol and it adds security protection against CSRF attacks.*
+
+### Registering an application
+
+To set up social authentication with Foal, you first need to register your application to the social provider you chose (Google, Facebook, etc). This can be done through its website.
 
 Usually your are required to provide:
 - an *application name*,
 - a *logo*,
-- and *redirect URIs* where the social provider should redirect the users after successful authentication (ex: `http://localhost:3001/signin/google/callback`, `https://example.com/signin/facebook/callback`)
+- and *redirect URIs* where the social provider should redirect the users once they give their consent on the provider page (ex: `http://localhost:3001/signin/google/callback`, `https://example.com/signin/google/callback`).
 
 Once done, you should receive:
 - a *client ID* that is public and identifies your application,
-- and a *client secret* that must not be revealed and can therefore only be used on the backend side.
+- and a *client secret* that must not be revealed and can therefore only be used on the backend side. It is used when your server communicates with the OAuth provider's servers.
 
 > You must obtain a *client secret*. If you do not have one, it means you probably chose the wrong option at some point.
 
-## Configuration
+### Installation and configuration
 
-First install the appropriate package.
+Once you have registered your application, install the appropriate package.
 
-```
+```bash
 npm install @foal/social
 ```
 
 Then, you will need to provide your client ID, client secret and your redirect URIs to Foal. This can be done through the usual [configuration files](../architecture/configuration.md).
 
-*default.yml*
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
 ```yaml
 settings:
   social:
     google:
-      clientId: xxx
+      clientId: 'xxx'
+      clientSecret: 'env(SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET)'
       redirectUri: 'http://localhost:3001/signin/google/callback'
 ```
 
-*production.yml*
-```yaml
-settings:
-  social:
-    cookie:
-      secure: true # In production, your website should use HTTPS.
-    google:
-      redirectUri: 'https://example.com/signin/google/callback' # Your redirect URI in production
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "social": {
+      "google": {
+        "clientID": "xxx",
+        "clientSecret": "env(SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET)",
+        "redirectUri": "http://localhost:3001/signin/google/callback"
+      }
+    }
+  }
+}
 ```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    social: {
+      google: {
+        clientID: 'xxx',
+        clientSecret: 'env(SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET)',
+        redirectUri: 'http://localhost:3001/signin/google/callback'
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
 
 *.env*
 ```
 SETTINGS_SOCIAL_GOOGLE_CLIENT_SECRET=yyy
 ```
 
-## Social Providers
+### Adding controllers
 
-Authentication is managed by *social providers*. These are services whose methods can be called within a controller to build a social login.
+The last step is to add a controller that will call methods of a *social service* to handle authentication. The example below uses Google as provider.
 
 ```typescript
 // 3p
-import {
-  Context,
-  dependency,
-  Get,
-  HttpResponseRedirect,
-} from '@foal/core';
+import { Context, dependency, Get } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-
-import { User } from '../entities';
 
 export class AuthController {
   @dependency
@@ -79,7 +140,7 @@ export class AuthController {
 
   @Get('/signin/google/callback')
   async handleGoogleRedirection(ctx: Context) {
-    // Once the user gives their permission to login with Google, the provider
+    // Once the user gives their permission to log in with Google, the OAuth server
     // will redirect the user to this route. This route must match the redirect URI.
     const { userInfo, tokens } = await this.google.getUserInfo(ctx);
 
@@ -92,12 +153,220 @@ export class AuthController {
 }
 ```
 
-You can also override the scopes in the `redirect` method:
+You can also override in the `redirect` method the scopes you want:
 ```typescript
 return this.google.redirect({ scopes: [ 'email' ] });
 ```
 
 Additional parameters can passed to the `redirect` and `getUserInfo` methods depending on the provider.
+
+## Techniques
+
+### Usage with sessions
+
+This example shows how to manage authentication (login and registration) with sessions.
+
+*user.entity.ts*
+```typescript
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class User extends BaseEntity {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+}
+
+export { DatabaseSession } from '@foal/typeorm';
+```
+
+*auth.controller.ts*
+```typescript
+// 3p
+import {
+  Context,
+  dependency,
+  Get,
+  HttpResponseRedirect,
+  Session,
+  Store,
+  UseSessions,
+} from '@foal/core';
+import { GoogleProvider } from '@foal/social';
+
+import { User } from '../entities';
+
+export class AuthController {
+  @dependency
+  google: GoogleProvider;
+
+  @dependency
+  store: Store;
+
+  @Get('/signin/google')
+  redirectToGoogle() {
+    return this.google.redirect();
+  }
+
+  @Get('/signin/google/callback')
+  @UseSessions({
+    cookie: true,
+    // The `getUserInfo` method uses another CSRF protection specific to the OAuth2 procotol.
+    csrf: false,
+  })
+  async handleGoogleRedirection(ctx: Context<User, Session>) {
+    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+
+    if (!userInfo.email) {
+      throw new Error('Google should have returned an email address.');
+    }
+
+    let user = await User.findOne({ email: userInfo.email });
+
+    if (!user) {
+      // If the user has not already signed up, then add them to the database.
+      user = new User();
+      user.email = userInfo.email;
+      await user.save();
+    }
+
+    ctx.session.setUser(user);
+
+    return new HttpResponseRedirect('/');
+  }
+
+}
+```
+
+### Usage with JWT
+
+This example shows how to manage authentication (login and registration) with JWT.
+
+*user.entity.ts*
+```typescript
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class User extends BaseEntity {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+}
+```
+
+*auth.controller.ts*
+```typescript
+// std
+import { promisify } from 'util';
+
+// 3p
+import {
+  Context,
+  dependency,
+  Get,
+  HttpResponseRedirect,
+} from '@foal/core';
+import { GoogleProvider } from '@foal/social';
+import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
+import { sign } from 'jsonwebtoken';
+
+import { User } from '../entities';
+
+export class AuthController {
+  @dependency
+  google: GoogleProvider;
+
+  @Get('/signin/google')
+  redirectToGoogle() {
+    return this.google.redirect();
+  }
+
+  @Get('/signin/google/callback')
+  async handleGoogleRedirection(ctx: Context) {
+    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+
+    if (!userInfo.email) {
+      throw new Error('Google should have returned an email address.');
+    }
+
+    let user = await User.findOne({ email: userInfo.email });
+
+    if (!user) {
+      // If the user has not already signed up, then add them to the database.
+      user = new User();
+      user.email = userInfo.email;
+      await user.save();
+    }
+
+    const payload = {
+      email: user.email,
+      id: user.id,
+    };
+    
+    const jwt = await promisify(sign as any)(
+      payload,
+      getSecretOrPrivateKey(),
+      { subject: user.id.toString() }
+    );
+
+    const response = new HttpResponseRedirect('/');
+    await setAuthCookie(response, jwt);
+    return response;
+  }
+
+}
+```
+
+## Custom Provider
+
+If your provider is not officially supported by Foal but supports the OAuth 2.0 protocol, you can still implement your own social service. All you need to do is to make it inherit from the `AbstractProvider` class.
+
+*Example*
+```typescript
+// 3p
+import { AbstractProvider, SocialTokens } from '@foal/core';
+
+export interface GithubAuthParameter {
+  // ...
+}
+
+export interface GithubUserInfoParameter {
+  // ...
+}
+
+export class GithubProvider extends AbstractProvider<GithubAuthParameter, GithubUserInfoParameter> {
+
+  protected configPaths = {
+    clientId: 'social.github.clientId',
+    clientSecret: 'social.github.clientSecret',
+    redirectUri: 'social.github.redirectUri',
+  };
+
+  protected authEndpoint = '...';
+  protected tokenEndpoint = '...';
+  protected userInfoEndpoint = '...'; // Optional. Depending on the provider.
+
+  protected defaultScopes: string[] = [ 'email' ]; // Optional
+
+  async getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter) {
+    // ...
+
+    // In case the server returns an error when requesting 
+    // user information, you can throw a UserInfoError.
+  }
+
+} 
+```
+
+## Official Providers
 
 ### Google
 
@@ -158,7 +427,7 @@ const { userInfo } = await this.facebook.getUserInfo(ctx, {
 
 |Name|Type|Description|
 |---|---|---|
-|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `redirect` method. Default: `['id', 'name', 'email'].`|
+|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `redirect` method. Default: `['id', 'name', 'email']`.|
 
 ### Github
 
@@ -216,111 +485,32 @@ const { userInfo } = await this.linkedin.getUserInfo(ctx, {
 | `fields` | `string[]` | List of fields that the returned user info object should contain. Additional documentation on [field projections](https://developer.linkedin.com/docs/guide/v2/concepts/projections). |
 | `projection` | `string` | LinkedIn projection parameter. |
 
-## Sign In and Sign Up Example
+## Community Providers
 
-This example shows how to implement a sign in and sign up flow with sessions and a TypeORM `User` entity.
+There are no community providers available yet! If you want to share one, feel free to [open a PR](https://github.com/FoalTS/foal) on Github.
 
-*user.entity.ts*
-```typescript
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+## Common Errors
 
-@Entity()
-export class User {
+| Error | Description |
+| --- | --- |
+| `InvalidStateError` | The `state` query does not match the value found in the cookie. |
+| `AuthorizationError` | The authorization server returns an error. This can happen when a user does not give consent on the provider page. |
+| `UserInfoError` | Thrown in `AbstractProvider.getUserFromTokens` if the request to the resource server is unsuccessful. |
 
-  @PrimaryGeneratedColumn()
-  id: number;
+## Security
 
-  @Column({ unique: true })
-  email: string;
+### HTTPS
 
-}
-```
+When deploying the application, you application must use HTTPS.
 
-*auth.controller.ts*
-```typescript
-// 3p
-import {
-  Context,
-  dependency,
-  Get,
-  HttpResponseRedirect,
-  Store,
-  UseSessions,
-} from '@foal/core';
-import { GoogleProvider } from '@foal/social';
-
-import { User } from '../entities';
-
-export class AuthController {
-  @dependency
-  google: GoogleProvider;
-
-  @dependency
-  store: Store;
-
-  @Get('/signin/google')
-  redirectToGoogle() {
-    return this.google.redirect();
-  }
-
-  @Get('/signin/google/callback')
-  @UseSessions({
-    cookie: true,
-  })
-  async handleGoogleRedirection(ctx: Context) {
-    const { userInfo } = await this.google.getUserInfo(ctx);
-
-    let user = await User.findOne({ email: userInfo.email });
-
-    if (!user) {
-      // If the user has not already signed up, then add them to the database.
-      user = new User();
-      user.email = userInfo.email;
-      await user.save();
-    }
-
-    ctx.session.setUser(user);
-
-    return new HttpResponseRedirect('/');
-  }
-
-}
-```
-
-## Custom Provider
-
-If necessary, you can also implement your own provider. This one must inherit the abstract class `AbstractProvider`.
-
-*Example*
-```typescript
-// 3p
-import { AbstractProvider, SocialTokens } from '@foal/core';
-
-export interface GithubAuthParameter {
-  // ...
-}
-
-export interface GithubUserInfoParameter {
-  // ...
-}
-
-export class GithubProvider extends AbstractProvider<GithubAuthParameter, GithubUserInfoParameter> {
-
-  protected configPaths = {
-    clientId: 'social.github.clientId',
-    clientSecret: 'social.github.clientSecret',
-    redirectUri: 'social.github.redirectUri',
-  };
-
-  protected authEndpoint = '...';
-  protected tokenEndpoint = '...';
-  protected userInfoEndpoint = '...'; // Optional. Depending on the provider.
-
-  protected defaultScopes: string[] = [ 'email' ]; // Optional
-
-  async getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter) {
-    // ...
-  }
-
-} 
+*production.yml*
+```yaml
+settings:
+  social:
+    cookie:
+      # Only pass the state cookie if the request is transmitted over a secure channel (HTTPS).
+      secure: true
+    google:
+      # Your redirect URI in production
+      redirectUri: 'https://example.com/signin/google/callback'
 ```
