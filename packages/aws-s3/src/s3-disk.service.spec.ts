@@ -310,7 +310,6 @@ describe('S3Disk', () => {
           Bucket: bucketName,
           Key: 'foo/test.txt',
         }).promise();
-        console.log(response);
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (error.code !== 'NoSuchKey') {

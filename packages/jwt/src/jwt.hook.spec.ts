@@ -416,7 +416,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         ctx = createContext({ Authorization: `Bearer ${token}` });
 
         const response = await hook(ctx, services);
-        console.log(response);
         if (isHttpResponseUnauthorized(response)) {
           throw new Error('The hook should NOT have returned an instance of HttpResponseUnauthorized');
         }
