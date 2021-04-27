@@ -125,15 +125,8 @@ The last step is to add a controller that will call methods of a *social service
 
 ```typescript
 // 3p
-import {
-  Context,
-  dependency,
-  Get,
-  HttpResponseRedirect,
-} from '@foal/core';
+import { Context, dependency, Get } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-
-import { User } from '../entities';
 
 export class AuthController {
   @dependency
@@ -200,6 +193,7 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
+  Session,
   Store,
   UseSessions,
 } from '@foal/core';
@@ -225,8 +219,8 @@ export class AuthController {
     // The `getUserInfo` method uses another CSRF protection specific to the OAuth2 procotol.
     csrf: false,
   })
-  async handleGoogleRedirection(ctx: Context) {
-    const { userInfo } = await this.google.getUserInfo(ctx);
+  async handleGoogleRedirection(ctx: Context<User, Session>) {
+    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
@@ -271,6 +265,9 @@ export class User extends BaseEntity {
 
 *auth.controller.ts*
 ```typescript
+// std
+import { promisify } from 'util';
+
 // 3p
 import {
   Context,
@@ -295,7 +292,7 @@ export class AuthController {
 
   @Get('/signin/google/callback')
   async handleGoogleRedirection(ctx: Context) {
-    const { userInfo } = await this.google.getUserInfo(ctx);
+    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
@@ -315,7 +312,7 @@ export class AuthController {
       id: user.id,
     };
     
-    const jwt = promisify(sign as any)(
+    const jwt = await promisify(sign as any)(
       payload,
       getSecretOrPrivateKey(),
       { subject: user.id.toString() }
