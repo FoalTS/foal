@@ -520,7 +520,7 @@ export class ApiController {
 
 *Cookies*
 
-![User cookie](./user-cookie.png)
+![User cookie](./images/user-cookie.png)
 
 *Client-side code*
 
