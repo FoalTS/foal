@@ -2,8 +2,6 @@
 title: Introducción
 ---
 
-> Está leyendo la documentación de la versión 2 de FoalTS. Las instrucciones para actualizar a esta versión están disponibles [aquí](../../upgrade-to-v2/README.md). La documentación antigua se puede encontrar [aquí](https://foalts.org/docs/1.x/).
-
 En este tutorial aprenderá a gestionar usuarios, autenticación y autorización en FoalTS. También tendrá una rápida visión de las pruebas de lado a lado.
 
 Para ello, va a crear una lista de tareas multiusuario. Ampliará la aplicación creada en el tutorial anterior [Lista de Tareas Simple](../simple-todo-list/1-installation.md) que debe seguir antes de pasar por éste.

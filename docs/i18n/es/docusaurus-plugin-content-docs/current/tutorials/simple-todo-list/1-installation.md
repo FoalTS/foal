@@ -2,8 +2,6 @@
 title: Instalación
 ---
 
-> Está leyendo la documentación de la versión 2 de FoalTS. Las instrucciones para actualizar a esta versión están disponibles [aquí](../../upgrade-to-v2/README.md). La documentación antigua se puede encontrar [aquí](https://foalts.org/docs/1.x/).
-
 En este tutorial aprenderá a crear una aplicación web básica con FoalTS. La aplicación de demostración es una simple lista de tareas con la que los usuarios pueden ver, crear y eliminar sus tareas.
 
 > **Requisitos:**
