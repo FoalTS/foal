@@ -45,13 +45,13 @@ describe('getAjvInstance', () => {
     const schema = {
       properties: {
         password: {
-          type: "string",
+          type: 'string',
         },
         confirmPassword: {
           const: {
-            $data: "1/password",
+            $data: '1/password',
           },
-          type: "string",
+          type: 'string',
         },
       },
       type: 'object',
@@ -61,9 +61,9 @@ describe('getAjvInstance', () => {
       confirmPassword: 'superSecretPassword'
     };
     const ajv = getAjvInstance();
-    strictEqual(ajv.validate(schema, data), true, 'If property "confirmPassword" matches "password", AJV should validate the data as valid.');
+    strictEqual(ajv.validate(schema, data), true, 'If property 'confirmPassword' matches 'password', AJV should validate the data as valid.');
     strictEqual(ajv.errors, null);
-    
+
     const data2 = {
       password: 'superSecretPassword',
       confirmPassword: 'notEvenCloseToTheSamePassword'
@@ -71,22 +71,22 @@ describe('getAjvInstance', () => {
     strictEqual(ajv.validate(schema, data2), false, 'If property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
     deepStrictEqual(ajv.errors, [
       {
-        dataPath: ".confirmPassword",
-        keyword: "const",
-        message: "should be equal to constant",
+        dataPath: '.confirmPassword',
+        keyword: 'const',
+        message: 'should be equal to constant',
         params: {
-          allowedValue: "superSecretPassword"
+          allowedValue: 'superSecretPassword'
         },
-        schemaPath: "#/properties/confirmPassword/const"
+        schemaPath: '#/properties/confirmPassword/const'
       }
     ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
   });
 
 
 
-       
-       
-      
+
+
+
 
   describe('', () => {
 
@@ -133,7 +133,7 @@ describe('getAjvInstance', () => {
       const data4 = {
         foo: null
       };
-      strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
+      strictEqual(ajv.validate(schema, data4), true, 'Property 'foo' should be nullable.');
 
       // allErrors
       const schema5 = {
@@ -164,17 +164,17 @@ describe('getAjvInstance', () => {
           schemaPath: '#/properties/b/type',
         },
       ]);
-      
+
       const schema6 = {
         properties: {
           password: {
-            type: "string",
+            type: 'string',
           },
           confirmPassword: {
             const: {
-              $data: "1/password",
+              $data: '1/password',
             },
-            type: "string",
+            type: 'string',
           },
         },
         type: 'object',
@@ -182,24 +182,24 @@ describe('getAjvInstance', () => {
       const data6 = {
         password: 'superSecretPassword',
         confirmPassword: 'superSecretPassword'
-      };      
+      };
       strictEqual(ajv.validate(schema6, data6), false, 'If $data is false in the configuration, AJV should not be able to validate using $data references.');
       strictEqual(ajv.errors, [
         {
-          keyword: "const",
-          dataPath: ".confirmPassword",
-          schemaPath: "#/properties/confirmPassword/const",
+          keyword: 'const',
+          dataPath: '.confirmPassword',
+          schemaPath: '#/properties/confirmPassword/const',
           params: {
             allowedValue: {
-              data: "1/password"
+              data: '1/password'
             },
           },
-          message:"should be equal to constant"
+          message:'should be equal to constant'
         }
       ],
-      'AJV should should have error data explaining "confirmPassword" didn\'t match the expected value in "password"'
-      );   
-    });    
+      'AJV should should have error data explaining 'confirmPassword' didn\'t match the expected value in 'password''
+      );
+    });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
       Config.set('settings.ajv.coerceTypes', 'hello');
