@@ -171,14 +171,14 @@ describe('getAjvInstance', () => {
       };
       const data6 = {
         password: 'superSecretPassword',
-        confirmPassword: 'superSecretPassword'
+        confirmPassword: 'superSecretPassword',
       };      
       strictEqual(ajv.validate(schema6, data6), true, 'If $data is true in the configuration, and property "confirmPassword" matches "password", AJV should validate the data as valid.');
       strictEqual(ajv.errors, null);
   
       const data7 = {
         password: 'superSecretPassword',
-        confirmPassword: 'notEvenCloseToTheSamePassword'
+        confirmPassword: 'notEvenCloseToTheSamePassword',
       };
       strictEqual(ajv.validate(schema6, data7), false, 'If $data is true in the configuration, and property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
       deepStrictEqual(ajv.errors, [
@@ -187,7 +187,7 @@ describe('getAjvInstance', () => {
           keyword: 'const',
           message: 'should be equal to constant',
           params: {
-            allowedValue: 'superSecretPassword'
+            allowedValue: 'superSecretPassword',
           },
           schemaPath: '#/properties/confirmPassword/const'
         }
