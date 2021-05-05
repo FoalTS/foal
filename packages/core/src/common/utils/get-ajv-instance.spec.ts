@@ -192,8 +192,6 @@ describe('getAjvInstance', () => {
           schemaPath: '#/properties/confirmPassword/const',
         }
       ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
-
-     
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
