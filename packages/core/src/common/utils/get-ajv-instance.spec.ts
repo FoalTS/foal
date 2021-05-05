@@ -41,7 +41,7 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
-  it('should support not $data references.', () => {
+  it('should not support $data references.', () => {
     const schema6 = {
       properties: {
         password: {
@@ -74,7 +74,7 @@ describe('getAjvInstance', () => {
         },
         message:'should be equal to constant',
       }
-    ], 'AJV should should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
+    ], 'AJV should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
   });
 
   describe('', () => {
@@ -191,7 +191,7 @@ describe('getAjvInstance', () => {
           },
           schemaPath: '#/properties/confirmPassword/const',
         }
-      ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
+      ], 'AJV should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
