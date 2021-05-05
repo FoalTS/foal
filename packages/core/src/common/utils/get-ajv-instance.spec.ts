@@ -189,7 +189,7 @@ describe('getAjvInstance', () => {
           params: {
             allowedValue: 'superSecretPassword',
           },
-          schemaPath: '#/properties/confirmPassword/const'
+          schemaPath: '#/properties/confirmPassword/const',
         }
       ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
 
