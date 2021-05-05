@@ -41,8 +41,8 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
-  it('should support $data references.', () => {
-    const schema = {
+  it('should support not $data references.', () => {
+    const schema6 = {
       properties: {
         password: {
           type: 'string',
@@ -56,43 +56,32 @@ describe('getAjvInstance', () => {
       },
       type: 'object',
     };
-    const data = {
+    const data6 = {
       password: 'superSecretPassword',
-      confirmPassword: 'superSecretPassword'
+      confirmPassword: 'superSecretPassword',
     };
     const ajv = getAjvInstance();
-    strictEqual(ajv.validate(schema, data), true, 'If property "confirmPassword" matches "password", AJV should validate the data as valid.');
-    strictEqual(ajv.errors, null);
-
-    const data2 = {
-      password: 'superSecretPassword',
-      confirmPassword: 'notEvenCloseToTheSamePassword'
-    };
-    strictEqual(ajv.validate(schema, data2), false, 'If property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
+    strictEqual(ajv.validate(schema6, data6), false, 'By default, AJV should not be able to validate using $data references.');
     deepStrictEqual(ajv.errors, [
       {
-        dataPath: '.confirmPassword',
         keyword: 'const',
-        message: 'should be equal to constant',
+        dataPath: '.confirmPassword',
+        schemaPath: '#/properties/confirmPassword/const',
         params: {
-          allowedValue: 'superSecretPassword'
+          allowedValue: {
+            $data: '1/password',
+          },
         },
-        schemaPath: '#/properties/confirmPassword/const'
+        message:'should be equal to constant',
       }
-    ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
+    ], 'AJV should should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
   });
-
-
-
-
-
-
 
   describe('', () => {
 
     beforeEach(() => {
       delete (_instanceWrapper as any).instance;
-      Config.set('settings.ajv.$data', false);
+      Config.set('settings.ajv.$data', true);
       Config.set('settings.ajv.allErrors', true);
       Config.set('settings.ajv.coerceTypes', false);
       Config.set('settings.ajv.nullable', true);
@@ -165,6 +154,7 @@ describe('getAjvInstance', () => {
         },
       ]);
 
+      // $data
       const schema6 = {
         properties: {
           password: {
@@ -182,23 +172,28 @@ describe('getAjvInstance', () => {
       const data6 = {
         password: 'superSecretPassword',
         confirmPassword: 'superSecretPassword'
+      };      
+      strictEqual(ajv.validate(schema6, data6), true, 'If $data is true in the configuration, and property "confirmPassword" matches "password", AJV should validate the data as valid.');
+      strictEqual(ajv.errors, null);
+  
+      const data7 = {
+        password: 'superSecretPassword',
+        confirmPassword: 'notEvenCloseToTheSamePassword'
       };
-      strictEqual(ajv.validate(schema6, data6), false, 'If $data is false in the configuration, AJV should not be able to validate using $data references.');
-      strictEqual(ajv.errors, [
+      strictEqual(ajv.validate(schema6, data7), false, 'If $data is true in the configuration, and property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
+      deepStrictEqual(ajv.errors, [
         {
-          keyword: 'const',
           dataPath: '.confirmPassword',
-          schemaPath: '#/properties/confirmPassword/const',
+          keyword: 'const',
+          message: 'should be equal to constant',
           params: {
-            allowedValue: {
-              data: '1/password'
-            },
+            allowedValue: 'superSecretPassword'
           },
-          message:'should be equal to constant'
+          schemaPath: '#/properties/confirmPassword/const'
         }
-      ],
-      'AJV should should have error data explaining "confirmPassword" didn\'t match the expected value in "password"'
-      );
+      ], 'AJV should should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
+
+     
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
