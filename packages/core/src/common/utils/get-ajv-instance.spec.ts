@@ -172,10 +172,10 @@ describe('getAjvInstance', () => {
       const data6 = {
         password: 'superSecretPassword',
         confirmPassword: 'superSecretPassword',
-      };      
+      };
       strictEqual(ajv.validate(schema6, data6), true, 'If $data is true in the configuration, and property "confirmPassword" matches "password", AJV should validate the data as valid.');
       strictEqual(ajv.errors, null);
-  
+
       const data7 = {
         password: 'superSecretPassword',
         confirmPassword: 'notEvenCloseToTheSamePassword',
