@@ -40,7 +40,7 @@ Whatever architecture you choose, the authentication process will always follow 
 
 1. On each request, receive and check the token and retrieve the associated user if the token is valid.
 
-![Authentication architecture](./auth-architecture.png)
+![Authentication architecture](./images/auth-architecture.png)
 
 ### The Available Tokens (step 1)
 

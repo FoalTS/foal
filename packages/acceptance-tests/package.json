@@ -17,6 +17,7 @@
     "@foal/jwt": "^2.3.0",
     "@foal/mongodb": "^2.3.0",
     "@foal/redis": "^2.3.0",
+    "@foal/social": "^2.3.0",
     "@foal/typeorm": "^2.3.0",
     "@foal/typestack": "^2.3.0",
     "@grpc/grpc-js": "~1.2.12",
