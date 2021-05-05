@@ -61,7 +61,7 @@ describe('getAjvInstance', () => {
       confirmPassword: 'superSecretPassword'
     };
     const ajv = getAjvInstance();
-    strictEqual(ajv.validate(schema, data), true, 'If property 'confirmPassword' matches 'password', AJV should validate the data as valid.');
+    strictEqual(ajv.validate(schema, data), true, 'If property "confirmPassword" matches "password", AJV should validate the data as valid.');
     strictEqual(ajv.errors, null);
 
     const data2 = {
@@ -133,7 +133,7 @@ describe('getAjvInstance', () => {
       const data4 = {
         foo: null
       };
-      strictEqual(ajv.validate(schema, data4), true, 'Property 'foo' should be nullable.');
+      strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
 
       // allErrors
       const schema5 = {
@@ -197,7 +197,7 @@ describe('getAjvInstance', () => {
           message:'should be equal to constant'
         }
       ],
-      'AJV should should have error data explaining 'confirmPassword' didn\'t match the expected value in 'password''
+      'AJV should should have error data explaining "confirmPassword" didn\'t match the expected value in "password"'
       );
     });
 
