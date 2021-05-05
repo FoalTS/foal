@@ -306,7 +306,7 @@ describe('S3Disk', () => {
       await disk.delete('foo/test.txt');
 
       try {
-        const response = await s3.getObject({
+        await s3.getObject({
           Bucket: bucketName,
           Key: 'foo/test.txt',
         }).promise();
