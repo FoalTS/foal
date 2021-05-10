@@ -1,34 +1,34 @@
 ---
-title: Installation
+title: Instalasi
 ---
 
-In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which users can view, create and delete their tasks.
+Pada tutorial kali ini kita akan coba membuat aplikasi web dengan Foal. Aplikasinya berupa todo-list sederhana, di mana user bisa melakukan view, create dan delete catatan to-do mereka.
 
-> **Requirements:**
+> **Yang diperlukan:**
 >
-> [Node.js](https://nodejs.org/en/) 10 or greater
+> [Node.js](https://nodejs.org/en/) versi 10 ke atas
 
-## Create a New Project
+## Memulai Proyek Baru
 
-First you need to install globaly the *Command Line Interface (CLI)* of FoalTS. It will help you create a new project and generate files all along your development.
+Pertama-tama kita perlu menginstal Foal *Command Line Interface (CLI)* secara global. Foal CLI ini akan kita gunakan untuk memulai proyek baru serta membuat file pada saat develop.
 
 ```sh
 npm install -g @foal/cli
 ```
 
-Then create a new application.
+Kemudian buat sebuah aplikasi baru.
 
 ```sh
 foal createapp my-app
 ```
 
-:::note
+:::catatan
 
-Having trouble installing Foal? 👉 Checkout our [troubleshooting page](./installation-troubleshooting).
+Ada kesulitan saat instalasi Foal? 👉 Silakan cek [halaman troubleshooting](./installation-troubleshooting).
 
-:::note
+:::catatan
 
-This command generates a new directory with the basic structure of the new application. It also installs all the dependencies. Let's look at what `createapp` created:
+Perintah `createapp` ini akan menghasilkan sebuah folder baru yang terstruktur. Sekaligus juga akan menginstal semua file dependency yang dibutuhkan. Mari kita lihat hasilnya:
 
 ```shell
 my-app/
@@ -45,41 +45,40 @@ my-app/
   .eslintrc.js
 ```
 
-The outer `my-app` root directory is just a container for your project.
-- The `config/` directory contains configuration files for your different environments (production, test, development, e2e, etc).
-- The `node_modules/` directory contains all the prod and dev dependencies of your project.
-- The static files are located in the `public/` directory. They are usually images, CSS and client JavaScript files and are served directly when the server is running.
-- The `src/` directory contains all the source code of the application.
-  - The inner `app/` directory includes the components of your server (controllers, services and hooks).
-  - End-to-end tests are located in the `e2e/` directory.
-  - The inner `scripts/` folder contains scripts intended to be called from the command line (ex: create-user).
-- The `ormconfig.js` file defines the configuration and credentials of the database(s) connection(s). They can also be passed through environment variables.
-- The `package.json` lists the dependencies and commands of the project.
-- The `tsconfig.*.json` files list the TypeScript compiler configuration for each `npm` command.
-- Finally the linting configuration can be found in the `.eslintrc.js` file.
+Folder `my-app` merupakan folder induk proyek kita.
+- Folder `config/` berisi file konfigurasi berbagai environment (produksi, tes, develop, e2e, dll)
+- Folder `node_modules/` berisi semua file dependency yang diperlukan oleh proyek.
+- Folder `public/` berisi file statis. Biasanya berupa file gambar, CSS dan Javascript.
+- Folder `src/` berisi kode dari aplikasi yang kita bangun. 
+  - Subfolder `app/` berisi kode utama kita (seperti controllers, services, hooks) 
+  - Subfolder `e2e/` berisi tes end-to-end.
+  - Subfolder `scripts/` berisi script untuk dijalankan di terminal/prompt sebagai command line (seperti: create-user) 
+- File `ormconfig.js` berisi data konfigurasi dan kredensial koneksi database. Kredensial bisa juga diambil dari variabel di environment.
+- File `package.json` berisi daftar dependency yang terinstal dan perintah menjalankan proyek.
+- File `tsconfig.*.json` berisi konfigurasi kompilasi TypeScript.
+- File `.eslintrc.js` berisi konfigurasi linting atau merapikan kode.
 
 > **TypeScript**
 >
-> The language used to develop a FoalTS application is [TypeScript](https://www.typescriptlang.org/). It is a typed superset of JavaScript that compiles to plain JavaScript. The benefits of using TypeScript are many, but in summary, the language provides great tools and the future features of JavaScript.
+> Bahasa yang dipergunakan dalam membangun aplikasi web dengan Foal adalah [TypeScript](https://www.typescriptlang.org/). TypeScript ini pada akhirnya dikompilasi menjadi JavaScript. Kelebihan penggunaan TypeScript antara lain tersedianya utilitas di saat develop dan memiliki fitur terbaru dari JavaScript.
 
-## Start The Server
+## Jalankan Server
 
-Let's verify that the FoalTS project works. Run the following commands:
+Mari kita lihat, apakah proyek kita bisa dijalankan. Eksekusi perintah berikut:
 
 ```
 cd my-app
 npm run develop
 ```
 
-You've started the development server.
+Seharusnya sekarang server sudah jalan.
 
-> The **development server** watches at your files and automatically compiles and reloads your code. You don’t need to restart the server each time you make code changes. Note that it is only intended to be used in development, do not use it on production.
+> **Server** dengan mode develop akan memantau file kode kita, bila ada perubahan maka secara otomatis akan mengkompilasi ulang dan melakuan reload. Sehingga kita tidak perlu payah me-restart server setiap kali ada perubahan kode. Perlu dicatat bahwa mode ini hanya untuk saat develop, bukan untuk saat produksi. 
 
-
-> **Port 3001 already in use?**
+> **Port 3001 sudah dipakai server lain?**
 >
-> You can define in `config/default.json` which port the application is using.
+> Kita bisa mengatur port di file `config/default.json`.
 
-Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the text *Welcome on board*.
+Buka [http://localhost:3001](http://localhost:3001) di browser. Seharusnya tampil tulisan *Welcome on board*.
 
-Congratulations, you now have a server running!
+Selamat, server kita sudah jalan!
