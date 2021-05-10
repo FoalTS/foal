@@ -220,6 +220,6 @@ Here are some guidelines to maintain consistency between translations (and to ma
 - The framework name should not be translated (Foal and FoalTS).
 - The names of the files must be the same as those in English.
 - The code examples (variable names, etc) are left as is. They are not translated.
-- Use the same number of paragraphs and line breaks.
-- Try to be consistent throughout the translation (names, etc.).
-- Use Anglicisms if it makes sense in your language.
+- **Use the same number of paragraphs and line breaks.** This will make it easier to update translations if changes are made to the English documentation.
+- Try to be consistent throughout the translation (names, etc.) and with the other files.
+- Use Anglicisms if they make sense in your language. You can have a look at the translations of other frameworks or libraries to help you ([react.js](https://reactjs.org/languages/), etc).

@@ -289,3 +289,22 @@ In case you want to have two `.env` files, one to define the default env vars ne
 If a variable is defined in both files, the value in the `.env.local` file will take precedence.
 
 Similarly, you can define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).
+
+### Note on the use of dotenv
+
+Many NodeJS applications use the [dotenv](https://www.npmjs.com/package/dotenv) library to manage the environment configuration. It loads variables from the `.env` file if it exists and assigns their values to the `process.env` object.
+
+When using Foal, it is strongly recommended that you do not use this library as it may break some functionality. For example, you will not be able to use other files such as `.env.production` and `.env.local`.
+
+The recommended approach to loading environment variables from `.env` files is to use Foal's configuration system using the `Config` or `Env` class.
+
+*Example*
+```typescript
+// dotenv
+const value = process.env.FOO_BAR;
+
+// Foal
+import { Env } from '@foal/core';
+
+const value = Env.get('FOO_BAR');
+```
