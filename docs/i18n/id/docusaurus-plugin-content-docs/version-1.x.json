@@ -4,35 +4,35 @@
     "description": "The label for version 1.x"
   },
   "sidebar.someSidebar.category.TUTORIALS": {
-    "message": "TUTORIALS",
+    "message": "TUTORIAL",
     "description": "The label for category TUTORIALS in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Simple To-Do List": {
-    "message": "Simple To-Do List",
+    "message": "To-Do List Sederhana",
     "description": "The label for category Simple To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Multi-User To-Do List": {
-    "message": "Multi-User To-Do List",
+    "message": "To-Do List Multi-User",
     "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.MongoDB To-Do List": {
-    "message": "MongoDB To-Do List",
+    "message": "To-Do List MongoDB",
     "description": "The label for category MongoDB To-Do List in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.TOPIC GUIDES": {
-    "message": "TOPIC GUIDES",
+    "message": "TOPIK",
     "description": "The label for category TOPIC GUIDES in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Architecture": {
-    "message": "Architecture",
+    "message": "Arsitektur",
     "description": "The label for category Architecture in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Databases": {
-    "message": "Databases",
+    "message": "Database",
     "description": "The label for category Databases in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Authentication & Access Control": {
-    "message": "Authentication & Access Control",
+    "message": "Otentifikasi & Pengaturan Akses",
     "description": "The label for category Authentication & Access Control in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.API": {
@@ -40,7 +40,7 @@
     "description": "The label for category API in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Frontend Integration": {
-    "message": "Frontend Integration",
+    "message": "Integrasi Frontend",
     "description": "The label for category Frontend Integration in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.File System": {
@@ -48,11 +48,11 @@
     "description": "The label for category File System in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.CLI & Development Environment": {
-    "message": "CLI & Development Environment",
+    "message": "CLI & Develop",
     "description": "The label for category CLI & Development Environment in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Testing": {
-    "message": "Testing",
+    "message": "Tes",
     "description": "The label for category Testing in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Cloud": {
@@ -60,39 +60,39 @@
     "description": "The label for category Cloud in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Security": {
-    "message": "Security",
+    "message": "Keamanan",
     "description": "The label for category Security in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Utilities": {
-    "message": "Utilities",
+    "message": "Utilitas",
     "description": "The label for category Utilities in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Cookbook": {
-    "message": "Cookbook",
+    "message": "Kumpulan Resep",
     "description": "The label for category Cookbook in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Deployment & Environments": {
-    "message": "Deployment & Environments",
+    "message": "Deploy",
     "description": "The label for category Deployment & Environments in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Upgrading": {
-    "message": "Upgrading",
+    "message": "Upgrade",
     "description": "The label for category Upgrading in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Community": {
-    "message": "Community",
+    "message": "Komunitas",
     "description": "The label for category Community in sidebar someSidebar"
   },
   "sidebar.someSidebar.link.To v1": {
-    "message": "To v1",
+    "message": "Ke v1",
     "description": "The label for link To v1 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v1.0.0"
   },
   "sidebar.someSidebar.link.To v0.8": {
-    "message": "To v0.8",
+    "message": "Ke v0.8",
     "description": "The label for link To v0.8 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v0.8.0"
   },
   "sidebar.someSidebar.link.Awesome Foal": {
-    "message": "Awesome Foal",
+    "message": "Koleksi Menarik Foal",
     "description": "The label for link Awesome Foal in sidebar someSidebar, linking to https://github.com/FoalTS/awesome-foalts"
   }
 }
