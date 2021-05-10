@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Introduksi
 slug: /
 ---
 
@@ -13,38 +13,39 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
-| Version | Status | End-of-life |
+| Versi | Status | Berakhir |
 | --- | --- | --- |
-| 2.x | Current | - |
-| 1.x | Maintenance | 2021-05-31 |
+| 2.x | Terkini | - |
+| 1.x | Pemeliharaan | 2021-05-31 |
 
-## What is Foal?
+## Apa itu Foal?
 
-*Foal* (or *FoalTS*) is a Node.JS framework for creating web applications.
+*Foal* (atau *FoalTS*) merupakan sebuah framework Node.JS untuk membangun aplikasi web.
 
-It provides a set of ready-to-use components so you don't have to reinvent the wheel every time. In one single place, you have a complete environment to build web applications. This includes a CLI, testing tools, frontend utilities, scripts, advanced authentication, ORM, deployment environments, GraphQL and Swagger API, AWS utilities, and more. You no longer need to get lost on npm searching for packages and making them work together. All is provided.
+Foal menghadirkan berbagai komponen siap pakai agar kita tak perlu membuat ulang. Kita diberikan sebuah medium lengkap untuk memulai membangun aplikasi web. Antara lain CLI, tes, utilitas frontend, script, otentifikasi, ORM, deploy, GraphQL, Swagger API, AWS, dll. Tak perlu susah payah mencari dan meramu sendiri berbagai package dari npm, semua telah disiapkan.
 
-But while offering all these features, the framework remains simple. Complexity and unnecessary abstractions are put aside to provide the most intuitive and expressive syntax. We believe that concise and elegant code is the best way to develop an application and maintain it in the future. It also allows you to spend more time coding rather than trying to understand how the framework works.
+Namun meskipun menawarkan banyak fitur, Foal sendiri tetaplah simpel. Kerumitan yang tidak perlu bagi pengguna sengaja dihindarkan. Kode yang ringkas dan jelas pada saat membangun akan memudahkan pemeliharaan aplikasi tersebut di masa mendatang. Foal mendorong kita untuk lebih fokus ke kode daripada sibuk menelisik bagaimana internal sebuah framework bekerja.
 
-Finally, the framework is entirely written in TypeScript. The language brings you optional static type-checking along with the latest ECMAScript features. This allows you to detect most silly errors during compilation and improve the quality of your code. It also offers you autocompletion and a well documented API.
+Terakhir, Foal dibuat menggunakan TypeScript. Typescript sangat membantu dalam urusan type-checking dan memberi kita fitur terbaru dari ECMAScript. Kesalahan dalam kode pun dapat terdeteksi lebih dini. Typescript juga memberikan kita fitur auto-komplit dan dokumen API saat bekerja dalam editor.
 
-## Development Policy
+## Kebijakan saat Develop
 
-> *For contributors only.*
+> *Hanya untuk kontributor.*
 
-### Thousands of Tests
+### Ribuan kali Tes
 
-Testing FoalTS is put on a very high priority. Providing a reliable product is really important to us. As of December 2020, the framework is covered by more than 2100 tests.
+Pengetesan Foal senantiasa menjadi prioritas. Sangat penting bagi kami untuk menghadirkan sebuah produk handal yang benar-benar teruji. Per Desember 2020, Foal telah melalui lebih dari 2100 kali tes. 
 
-### Documentation
+### Dokumentasi
 
-New features, no matter what they offer, are useless if they are not well documented. Maintaining complete and quality documentation is key to the framework. If you think something is missing or unclear, feel free to open an issue on Github!
+Fitur baru, apapun itu, kurang bermanfaat bila tidak disertai dengan petunjuk yang baik. Dokumentasi yang lengkap dan berkualitas adalah kunci dari sebuah framework. Sekiranya ada bagian yang terlewat atau kurang jelas tentang Foal, mohon berkenan melaporkannya via Github, dengan senang hati kami terima! 
 
-### Product Stability
 
-Great attention is paid to the stability of the product. You can find out more by consulting our [dependency policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [semantic versioning rules](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) and [long-term support policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
+### Stabilitas Produk
 
-## Get Started
+Kami mencurahkan segenap perhatian atas stabilitas produk. Untuk keterangan lebih lanjut, silakan rujuk [kebijakan independensi](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [aturan versi semantik](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) dan [kebijakan dukungan jangka panjang](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
+
+## Mulai
 
 ```
 > npm install -g @foal/cli
@@ -53,6 +54,6 @@ Great attention is paid to the stability of the product. You can find out more b
 > npm run develop
 ```
 
-The development server is started! Go to `http://localhost:3001` and find our welcoming page!
+Server develop sudah jalan! Coba buka `http://localhost:3001` dan lihat apa yang tampil!
 
-👉 [Continue with the tutorial](./tutorials/simple-todo-list/1-installation) 🌱
+👉 [Lanjutkan dengan tutorial](./tutorials/simple-todo-list/1-installation) 🌱
