@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { doesNotReject, strictEqual } from 'assert';
 
 // FoalTS
 import { Config, Context, isHttpResponseInternalServerError } from '../../core';
@@ -103,6 +103,13 @@ describe('renderError', () => {
         const text: string = response.body;
         strictEqual(text.includes('You are seeing this error because you have settings.debug set to true in your configuration file.'), true);
       });
+
+      it('should not throw an error is the format of the stack trace is unexpected.', async () => {
+        const error = new Error();
+        error.stack = 'hello world';
+
+        await doesNotReject(() => renderError(error, ctx));
+      })
 
     });
 
