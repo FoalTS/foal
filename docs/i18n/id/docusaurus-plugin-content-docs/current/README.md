@@ -40,7 +40,6 @@ Pengetesan Foal senantiasa menjadi prioritas. Sangat penting bagi kami untuk men
 
 Fitur baru, apapun itu, kurang bermanfaat bila tidak disertai dengan petunjuk yang baik. Dokumentasi yang lengkap dan berkualitas adalah kunci dari sebuah framework. Sekiranya ada bagian yang terlewat atau kurang jelas tentang Foal, mohon berkenan melaporkannya via Github, dengan senang hati kami terima! 
 
-
 ### Stabilitas Produk
 
 Kami mencurahkan segenap perhatian atas stabilitas produk. Untuk keterangan lebih lanjut, silakan rujuk [kebijakan independensi](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [aturan versi semantik](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) dan [kebijakan dukungan jangka panjang](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
