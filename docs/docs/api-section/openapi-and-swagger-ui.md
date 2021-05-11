@@ -115,14 +115,14 @@ export class ApiController {
               items: {
                 properties: {
                   name: { type: 'string' }
-                }
+                },
                 type: 'object',
                 required: [ 'name' ]
               },
               type: 'array',
             }
           }
-        }
+        },
         description: 'successful operation'
       }
     },
