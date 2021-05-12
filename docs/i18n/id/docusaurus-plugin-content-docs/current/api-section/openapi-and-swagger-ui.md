@@ -115,14 +115,14 @@ export class ApiController {
               items: {
                 properties: {
                   name: { type: 'string' }
-                }
+                },
                 type: 'object',
                 required: [ 'name' ]
               },
               type: 'array',
             }
           }
-        }
+        },
         description: 'successful operation'
       }
     },
@@ -686,6 +686,7 @@ export class ApiController {
 
   @Get('/products/:productId')
   @ApiResponse(200, {
+    description: 'successful operation'
     content: {
       'application/json': {
         schema: { $ref: '#/components/schemas/product' }
@@ -698,6 +699,7 @@ export class ApiController {
 
   @Get('/products')
   @ApiResponse(200, {
+    description: 'successful operation',
     content: {
       'application/json': {
         schema: {
