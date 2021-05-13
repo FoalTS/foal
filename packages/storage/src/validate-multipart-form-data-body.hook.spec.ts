@@ -1,6 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync } from 'fs';
+import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
 // 3p
@@ -521,6 +521,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         encoding: '7bit',
         filename: 'image.test.png',
         mimeType: 'image/png',
+        size: statSync(testImagePath).size
       }));
     });
 
@@ -542,6 +543,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         encoding: '7bit',
         filename: 'image.test.png',
         mimeType: 'image/png',
+        size: statSync(testImagePath).size
       }));
     });
 
@@ -566,12 +568,14 @@ describe.only('ValidateMultipartFormDataBody', () => {
             encoding: '7bit',
             filename: 'image.test.png',
             mimeType: 'image/png',
+            size: statSync(testImagePath).size
           }),
           new File({
             buffer: readFileSync(testImage2Path),
             encoding: '7bit',
             filename: 'image.test2.png',
             mimeType: 'image/png',
+            size: statSync(testImage2Path).size
           }),
         ]);
       });
@@ -667,6 +671,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         strictEqual(foobar.encoding, '7bit');
         strictEqual(foobar.mimeType, 'image/png');
         strictEqual(foobar.filename, 'image.test.png');
+        strictEqual(foobar.size, statSync(testImagePath).size);
       }
     );
 
@@ -698,6 +703,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         strictEqual(foobar.encoding, '7bit');
         strictEqual(foobar.mimeType, 'image/png');
         strictEqual(foobar.filename, 'image.test.png');
+        strictEqual(foobar.size, statSync(testImagePath).size);
       }
     );
 
@@ -734,6 +740,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         strictEqual(foobar[0].encoding, '7bit');
         strictEqual(foobar[0].mimeType, 'image/png');
         strictEqual(foobar[0].filename, 'image.test.png');
+        strictEqual(foobar[0].size, statSync(testImagePath).size);
 
         const path2 = foobar[1].path;
         strictEqual(typeof path2, 'string');
@@ -745,6 +752,7 @@ describe.only('ValidateMultipartFormDataBody', () => {
         strictEqual(foobar[1].encoding, '7bit');
         strictEqual(foobar[1].mimeType, 'image/png');
         strictEqual(foobar[1].filename, 'image.test2.png');
+        strictEqual(foobar[1].size, statSync(testImage2Path).size);
       }
     );
 
