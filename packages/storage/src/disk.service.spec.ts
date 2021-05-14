@@ -155,6 +155,16 @@ describe('AbstractDisk', () => {
         strictEqual(response.getHeader('Content-Disposition'), 'attachment; filename="download.png"');
       });
 
+      it('should have a correct Cache-Control header based on the "cache" option.', async () => {
+        let response = await disk.createHttpResponse(path);
+        strictEqual(response.getHeader('Cache-Control'), undefined);
+
+        response = await disk.createHttpResponse(path, {
+          cache: 'no-cache'
+        });
+        strictEqual(response.getHeader('Cache-Control'), 'no-cache');
+      });
+
     });
 
   });
