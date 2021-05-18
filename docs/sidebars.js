@@ -45,7 +45,7 @@ module.exports = {
         'tutorials/multi-user-todo-list/7-the-signup-page',
         'tutorials/multi-user-todo-list/8-e2e-testing-and-authentication',
       ]),
-      category('Example with React', [
+      category('Full Example with React', [
         'tutorials/real-world-example-with-react/1-introduction',
         'tutorials/real-world-example-with-react/2-database-set-up',
         'tutorials/real-world-example-with-react/3-the-models',
