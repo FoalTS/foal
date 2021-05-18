@@ -22,7 +22,7 @@ In this tutorial, you will learn to:
 
 > *For the sake of simplicity, the front-end application will not use a state management library (such as [redux](https://redux.js.org/)). But you can of course add one if you wish. The logic to follow will remain mainly the same.*
 
-## The Application
+## Application Overview
 
 The application you will create is a social website where users can share interesting links to tutorials. All posts will be public, so no authentication will be required to view them. Publishing a post, on the other hand, will require the creation of an account.
 
