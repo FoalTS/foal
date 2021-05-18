@@ -108,5 +108,3 @@ Three new tables are added to the database: the `user` and `story` tables and a 
 | link       | varchar   | NOT NULL                            |
 +------------+-----------+-------------------------------------+
 ```
-
-Your models are now ready to be used.
