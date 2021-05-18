@@ -21,3 +21,40 @@ In this tutorial, you will learn to:
 - and build and deploy an application to production.
 
 > *For the sake of simplicity, the front-end application will not use a state management library (such as [redux](https://redux.js.org/)). But you can of course add one if you wish. The logic to follow will remain mainly the same.*
+
+## The Application
+
+The application you will create is a social website where users can share interesting links to tutorials. All posts will be public, so no authentication will be required to view them. Publishing a post, on the other hand, will require the creation of an account.
+
+*Feed page*
+![Feed page](./images/feed.png)
+
+*Profile page*
+![Profile page](./images/profile.png)
+
+*Registration and login pages*
+![Registration and login pages](./images/sign-up-and-log-in.png)
+
+## Get Started
+
+Let's get started. First of all, create a new directory.
+
+```bash
+mkdir foal-react-tuto
+```
+
+Generate the backend appplication.
+
+```bash
+cd foal-react-tuto
+foal createapp backend-app
+```
+
+And then start the development server.
+
+```bash
+cd backend-app
+npm run develop
+```
+
+Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the *Welcome on board* message.
