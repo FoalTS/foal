@@ -63,7 +63,7 @@ function Home() {
   const {siteConfig = {}} = context;
   return (
     <Layout
-      description="Elegant and all-inclusive Node.Js web framework based on TypeScript.">
+      description="Elegant and complete Node.Js web framework based on TypeScript.">
         <header className={styles.masthead}>
           <div className={styles.content}>
             <h1>Foal</h1>

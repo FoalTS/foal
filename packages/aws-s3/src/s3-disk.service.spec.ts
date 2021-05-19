@@ -306,11 +306,10 @@ describe('S3Disk', () => {
       await disk.delete('foo/test.txt');
 
       try {
-        const response = await s3.getObject({
+        await s3.getObject({
           Bucket: bucketName,
           Key: 'foo/test.txt',
         }).promise();
-        console.log(response);
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (error.code !== 'NoSuchKey') {
