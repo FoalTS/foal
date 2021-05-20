@@ -7,7 +7,7 @@ import styles from './index.module.scss';
 
 const features = [
   {
-    title: 'All-inclusive',
+    title: 'Full featured',
     description: (
       <>
         Achieve more by reusing ready-made components.
