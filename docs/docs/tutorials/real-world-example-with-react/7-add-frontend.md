@@ -30,6 +30,6 @@ cd ../backend-app
 foal connect ../frontend-app react
 ```
 
-Now, if you restart the frontend server, the stories should display correctly on the *feed* page.
+If you restart the frontend server, the stories should display correctly on the *feed* page (except for the images).
 
 ![Feed page](./images/feed.png)
