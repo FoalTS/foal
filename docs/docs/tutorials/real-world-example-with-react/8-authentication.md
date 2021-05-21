@@ -57,7 +57,7 @@ Open the new created file and add two routes.
 | `/api/auth/logout` | `POST` | Logs the user out. |
 
 ```typescript
-import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
 import { User } from '../../entities';
 
 const credentialsSchema = {
@@ -74,7 +74,7 @@ export class AuthController {
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
+  async login(ctx: Context<User|undefined, Session>) {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 
@@ -87,12 +87,9 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session?.setUser(user);
-    // For security reason, it is recommended practice to regenerate
-    // the session ID on login.
-    await ctx.session?.regenerateID();
+    ctx.session.setUser(user);
+    ctx.user = user;
 
-    // Return the user description to the client.
     return new HttpResponseOK({
       id: user.id,
       name: user.name,
@@ -100,8 +97,8 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx: Context) {
-    await ctx.session?.destroy();
+  async logout(ctx: Context<User|undefined, Session>) {
+    await ctx.session.destroy();
     return new HttpResponseNoContent();
   }
 
