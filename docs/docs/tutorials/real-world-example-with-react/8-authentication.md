@@ -2,9 +2,11 @@
 title: Logging Users In and Out
 ---
 
-Stories are now displayed on the home page. If we want users to be able to post new stories and upload a profile picture, we need to allow them to log in to the application.
+Stories are displayed on the home page. If we want users to be able to post new stories and upload a profile picture, we need to allow them to log in to the application.
 
 To do this, we will use Foal's sessions with cookies.
+
+> FoalTS offers many options for user authentication. For example, you can send session tokens with the `Authorization` header or use stateless tokens with JWT. We won't explore all these possibilities in this tutorial but you can find the full documentation [here](../../authentication-and-access-control/quick-start.md).
 
 Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of the class.
 
@@ -36,6 +38,10 @@ export class ApiController {
 ```
 
 When used with the `cookie` option, this hook ensures that `ctx.session` is always defined in every method of the controller and its subcontrollers. This object can be used to store information between multiple requests, such as a user ID for example. You will use it to authenticate users.
+
+> In the background, Foal generates a unique session token for each user using the API and stores it in a cookie on the client host. When the client makes a new request, the browser automatically sends the token with the request so that the server can retrieve the session information. The session data is stored in the database in the *sessions* table.
+>
+> But you don't need to worry about it, everything is managed by Foal.
 
 Create a new controller.
 
@@ -105,6 +111,5 @@ export class AuthController {
 
 The `login` method first checks that the user exists and that the credentials provided are correct. If so, it associates the user with the current session.
 
-On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `undefined`. If they have, then `ctx.user` will be an instance of `User`.
+On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `undefined`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
 
-> *You may have noticed that we provided another option to the `@UseSessions` hook earlier, called `user`. This option is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.*

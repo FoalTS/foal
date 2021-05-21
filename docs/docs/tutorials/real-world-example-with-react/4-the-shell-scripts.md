@@ -57,7 +57,7 @@ The `main` function is called after successful validation. It is divided into se
 
 > The `hashPassword` function is used to hash and salt passwords before storing them in the database. For security reasons, you should use this function before saving passwords.
 
-Now that the script is ready, build it.
+Build the script.
 
 ```bash
 npm run build

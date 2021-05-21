@@ -39,7 +39,7 @@ Then generate a new controller. This one will be in charge of rendering the new 
 foal generate openapi --register
 ```
 
-And finally, make the generated class extend the abstract class `SwaggerController`. Provide the root controller of your API as an option to the controller.
+Make the generated class extend the abstract class `SwaggerController`. Then provide the root controller of your API as an option to the controller.
 
 ```typescript
 import { SwaggerController } from '@foal/swagger';
@@ -54,7 +54,7 @@ export class OpenapiController extends SwaggerController  {
 }
 ```
 
-The last step is to update your `app.controller.ts` file so that the Swagger UI page is available at [/swagger](http://localhost:3001/swagger).
+Finally, update your `app.controller.ts` file so that the Swagger UI page is available at [/swagger](http://localhost:3001/swagger).
 
 ```typescript
 import { controller, IAppController } from '@foal/core';
