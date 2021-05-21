@@ -38,9 +38,10 @@ Create a new `.env` file in the root of your project and provide the database cr
 # Use the identification information of your database.
 # The values below are given as an example.
 DB_HOST="localhost"
-DB_PORT="3306" # Default port for PostgreSQL is 5432.
+# Default port for PostgreSQL is 5432.
+DB_PORT="3306"
 DB_USERNAME="test"
-DB_USERNAME="test"
+DB_PASSWORD="test"
 DB_NAME="test"
 ```
 
