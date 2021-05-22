@@ -59,7 +59,8 @@ module.exports = {
         'tutorials/real-world-example-with-react/11-sign-up',
         'tutorials/real-world-example-with-react/12-csrf',
         'tutorials/real-world-example-with-react/13-file-upload',
-        'tutorials/real-world-example-with-react/14-social-auth',
+        'tutorials/real-world-example-with-react/14-production-build',
+        'tutorials/real-world-example-with-react/15-social-auth',
       ])
     ]),
     expandedCategory('TOPIC GUIDES', [
