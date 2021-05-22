@@ -14,7 +14,7 @@ import { Disk } from './disk.service';
 import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
-describe.only('ValidateMultipartFormDataBody', () => {
+describe('ValidateMultipartFormDataBody', () => {
 
   const testImagePath = 'src/image.test.png';
   const testImage2Path = 'src/image.test2.png';
