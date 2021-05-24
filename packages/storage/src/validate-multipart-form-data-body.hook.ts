@@ -1,5 +1,7 @@
 // std
 import { extname } from 'path';
+import { pipeline, Transform } from 'stream';
+import { promisify } from 'util';
 
 // 3p
 import {
@@ -98,10 +100,21 @@ export function ValidateMultipartFormDataBody(
 
           let path: string | undefined;
           let buffer: Buffer | undefined;
+          let size = 0;
           if (options.saveTo) {
-            path = (await disk.write(options.saveTo, stream, { extension })).path;
+            const sizeStream = new Transform({
+              transform(chunk: Buffer, encoding, callback) {
+                size += chunk.length;
+                callback(undefined, chunk);
+              }
+            })
+
+            const promise = promisify(pipeline)(stream, sizeStream);
+            path = (await disk.write(options.saveTo, sizeStream, { extension })).path;
+            await promise;
           } else {
             buffer = await streamToBuffer(stream);
+            size = buffer.length;
           }
           const file = new File({
             buffer,
@@ -109,6 +122,7 @@ export function ValidateMultipartFormDataBody(
             filename,
             mimeType,
             path,
+            size
           });
 
           if (options.multiple) {
