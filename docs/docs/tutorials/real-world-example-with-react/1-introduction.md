@@ -17,8 +17,7 @@ In this tutorial, you will learn to:
 - protect against CSRF attacks,
 - upload and save files,
 - allow users to connect with a social provider (Google),
-- manage multiple environments,
-- and build and deploy an application to production.
+- and build the application for production.
 
 > *For the sake of simplicity, the front-end application will not use a state management library (such as [redux](https://redux.js.org/)). But you can of course add one if you wish. The logic to follow will remain mainly the same.*
 
