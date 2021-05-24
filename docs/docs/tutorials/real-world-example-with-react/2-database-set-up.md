@@ -6,6 +6,12 @@ The first step in this tutorial is to establish a database connection. If you ha
 
 > *By default, Foal uses SQLite in every new application, as it does not require any installation. If you want to continue using it in this tutorial, you can skip this section and go to the next page.* 
 
+First, install MySQL (or Postgres) driver.
+
+```bash
+npm install mysql # or pg
+```
+
 Open the `config/default.json` file and update the `database` section as follows. If your database is PostgreSQL, change the `type` value to `postgres`.
 
 ```json

@@ -14,7 +14,7 @@ Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of 
 import { ApiInfo, ApiServer, controller, UseSessions } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
 import { User } from '../entities';
-import { AuthController, ProfileController, StoriesController } from './api';
+import { StoriesController } from './api';
 
 @ApiInfo({
   title: 'Application API',
@@ -46,7 +46,7 @@ When used with the `cookie` option, this hook ensures that `ctx.session` is alwa
 Create a new controller.
 
 ```bash
-foal generate controller api/auth --register.
+foal generate controller api/auth --register
 ```
 
 Open the new created file and add two routes.

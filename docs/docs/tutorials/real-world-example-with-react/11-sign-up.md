@@ -51,4 +51,4 @@ export class AuthController {
 
 ```
 
-If you go the [sign up page](http://localhost:3001/signup), you should now be able to register as a new user.
+If you go the [sign up page](http://localhost:3000/signup), you should now be able to register as a new user.

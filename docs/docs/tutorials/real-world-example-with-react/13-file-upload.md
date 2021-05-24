@@ -33,21 +33,21 @@ Update the configuration in `config/default.json` to specify the location of fil
 
 Then create the directory `assets/images/profiles/uploaded` where the profile images will be uploaded.
 
-You are now ready to create the controller. Generate a new one.
+You are ready to create the controller. Generate a new one.
 
 ```bash
 foal generate controller api/profile --register
 ```
 
-Open the file and add two new routes.
+Open the new file and add two new routes.
 
 | API endpoint | Method | Description |
 | --- | --- | --- |
-| `/api/profile/avatar` | `GET` | Retrieves the user's profile image. If an optional query parameter `userId` is provided, the server returns the avatar of that user. Otherwise, it returns the avatar of the current user. If no user is authenticated or has no profile picture, a default image is returned. |
+| `/api/profile/avatar` | `GET` | Retrieves the user's profile image. If the optional query parameter `userId` is provided, the server returns the avatar of that user. Otherwise, it returns the avatar of the current user. If no user is authenticated or has no profile picture, a default image is returned. |
 | `/api/profile` | `POST` | Updates the user profile. A `name` field and an optional `avatar` file are expected. |
 
 ```typescript
-import { Context, dependency, Get, HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Post, UserRequired, ValidateBody, ValidateQueryParam } from '@foal/core';
+import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
 import { File, Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 import { User } from '../../entities';
 

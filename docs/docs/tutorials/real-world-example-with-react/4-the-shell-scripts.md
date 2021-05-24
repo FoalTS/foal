@@ -2,7 +2,7 @@
 title: The Shell Scripts
 ---
 
-Your models are now ready to be used. As in the previous tutorial, you will use shell scripts to feed the database.
+Your models are ready to be used. As in the previous tutorial, you will use shell scripts to feed the database.
 
 ## The `create-user` script
 
@@ -12,7 +12,7 @@ Open the file and replace its content with the following:
 
 ```typescript
 // 3p
-import { hashPassword } from '@foal/swagger/node_modules/@foal/core';
+import { hashPassword } from '@foal/core';
 import { createConnection, getConnection } from 'typeorm';
 
 // App
@@ -70,13 +70,17 @@ foal run create-user email="john@foalts.org" password="john_password" name="John
 foal run create-user email="mary@foalts.org" password="mary_password" name="Mary"
 ```
 
-> If you try to re-run one of these commands, you'll get the error below as the email key is unique.
+> If you try to re-run one of these commands, you'll get the MySQL error below as the email key is unique.
 >
-> `SQLITE_CONSTRAINT: UNIQUE constraint failed: user.email`
+> `ER_DUP_ENTRY: Duplicate entry 'john@foalts.org' for key 'IDX_xxx'`
 
 ## The `create-story` script
 
 The `create-story` script is a bit more complex as `Story` has a many-to-one relation with `User`.
+
+```bash
+foal generate script create-story
+```
 
 Open the `create-story.ts` file and replace its content.
 

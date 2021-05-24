@@ -35,7 +35,7 @@ export async function signUp(credentials: ICredentials): Promise<IUser> {
 
 Go to [http://localhost:3000/login](http://localhost:3000/login) and log in. You should be redirected to the home page. If you click on the *Profile* button in the navigation bar, you should be taken to your personal page. You can add or remove stories if you wish.
 
-Now let's refresh the page. You are redirected to the home page as if you were logged out. Ouch!
+Now let's refresh the page. You are redirected to the login page as if you were logged out. Ouch!
 
 The reason behind this is that the front-end application no longer knows that you are logged in. If you look at the `App` component, you will see that the `currentUser` state is initialized to `null` when the application is loaded. So we need to find a way to keep track of the user's login state even if the page is refreshed.
 
@@ -57,11 +57,7 @@ import { Context } from '@foal/core';
 
 This option sets an additional `user` cookie on the client host with information about the current user.
 
-Now go back to the `App.tsx` file, install the `cookie` package and add the `getCurrentUserFromCookie` below.
-
-```bash
-npm install cookie
-```
+Now go back to the `App.tsx` file and add the `getCurrentUserFromCookie` below.
 
 ```typescript
 import * as cookie from 'cookie';
@@ -90,4 +86,4 @@ When the application loads, this function will check if a `user` cookie exists w
 
 Refresh the page **twice**. The application now works as expected.
 
-> You could also have set a client-side cookie in the `logIn` function and deleted it in the `logOut` function. But this solution does not work well when the user is logged out after a period of inactivity (session expiration).
+> You could also have set a client-side cookie in the `logIn` function and deleted it in the `logOut` function. But this solution does not work well when the user is automatically logged out after a period of inactivity (session expiration).

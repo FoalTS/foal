@@ -12,6 +12,7 @@ Go to the newly created directory and start the development server.
 
 ```bash
 cd frontend-app
+npm install
 npm run start
 ```
 
@@ -27,9 +28,9 @@ Another way to solve this problem is to *connect* your front-end development ser
 
 ```bash
 cd ../backend-app
-foal connect ../frontend-app react
+foal connect react ../frontend-app
 ```
 
 If you restart the frontend server, the stories should display correctly on the *feed* page (except for the images).
 
-![Feed page](./images/feed.png)
+![Feed page](./images/feed-no-images.png)

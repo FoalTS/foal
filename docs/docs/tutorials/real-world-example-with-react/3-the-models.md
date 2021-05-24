@@ -77,7 +77,7 @@ export class Story extends BaseEntity {
 
 ## Run Migrations
 
-The last step is to create the tables in the database. Generate the migrations from the entities and run them.
+Finally, create the tables in the database. Generate the migrations from the entities and run them.
 
 ```bash
 npm run makemigrations
@@ -103,7 +103,7 @@ Three new tables are added to the database: the `user` and `story` tables and a 
 |                             story                            |
 +------------+-----------+-------------------------------------+
 | id         | integer   | PRIMARY KEY AUTO_INCREMENT NOT NULL |
-| authorId   | integer   |                                     |
+| authorId   | integer   | NOT NULL                            |
 | title      | varchar   | NOT NULL                            |
 | link       | varchar   | NOT NULL                            |
 +------------+-----------+-------------------------------------+
