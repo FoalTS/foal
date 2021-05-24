@@ -29,7 +29,7 @@ class ProductController {
     // ...
   }
 
-  @Put('/products/;id')
+  @Put('/products/:id')
   @ValidateBody({
     $ref: '#/components/requestBodies/product'
   })

@@ -5,7 +5,6 @@ title: OpenAPI & Swagger UI
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-
 ## Introduction
 
 **OpenAPI Specification** (formerly known as Swagger Specification) is an API description format for REST APIs. An OpenAPI *document* allows developers to describe entirely an API.
@@ -116,14 +115,14 @@ export class ApiController {
               items: {
                 properties: {
                   name: { type: 'string' }
-                }
+                },
                 type: 'object',
                 required: [ 'name' ]
               },
               type: 'array',
             }
           }
-        }
+        },
         description: 'successful operation'
       }
     },
@@ -687,6 +686,7 @@ export class ApiController {
 
   @Get('/products/:productId')
   @ApiResponse(200, {
+    description: 'successful operation'
     content: {
       'application/json': {
         schema: { $ref: '#/components/schemas/product' }
@@ -699,6 +699,7 @@ export class ApiController {
 
   @Get('/products')
   @ApiResponse(200, {
+    description: 'successful operation',
     content: {
       'application/json': {
         schema: {
