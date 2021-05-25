@@ -31,7 +31,7 @@ Update the configuration in `config/default.json` to specify the location of fil
 }
 ```
 
-Then create the directory `assets/images/profiles/uploaded` where the profile images will be uploaded.
+Then create the directory `assets/images/profiles/uploaded` where the profile images will be uploaded. Download the default profile image [here](./assets/default.png) and place it in the `assets/images/profiles` folder with the name `default.png`.
 
 You are ready to create the controller. Generate a new one.
 
