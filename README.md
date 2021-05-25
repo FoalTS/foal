@@ -52,8 +52,6 @@ Finally, the framework is entirely written in TypeScript. The language brings yo
 
 ## Development Policy
 
-> *For contributors only.*
-
 ### Thousands of Tests
 
 Testing FoalTS is put on a very high priority. Providing a reliable product is really important to us. As of December 2020, the framework is covered by more than 2100 tests.
