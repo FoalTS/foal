@@ -37,7 +37,7 @@ This file is the main configuration file for the application and is used as the 
 The syntax `env(*)` tells the configuration system to get the value from the given environment variable. If it does not exist, Foal will try to read it from a `.env` file.
 
 
-Create a new `.env` file in the root of your project and provide the database credentials.
+Create a new `.env` file in the root of `backend-app` and provide the database credentials.
 
 *.env*
 ```bash
@@ -55,4 +55,4 @@ Restart the development server. The application is now connected to your databas
 
 > You could have specified all the database connection options directly in the `default.json` file but this is considered bad practice.
 >
-> Configuration files are usually committed to version control and it is recommended not to commit files containing sensitive information. Also, you will probably have different connection options depending on the host the application is running on (local or production). This approach allows you to provide different options for each.
+> Configuration files are usually committed to version control and it is recommended not to commit files containing sensitive information.

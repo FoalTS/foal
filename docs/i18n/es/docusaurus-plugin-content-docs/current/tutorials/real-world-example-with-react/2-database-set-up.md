@@ -37,7 +37,7 @@ This file is the main configuration file for the application and is used as the 
 The syntax `env(*)` tells the configuration system to get the value from the given environment variable. If it does not exist, Foal will try to read it from a `.env` file.
 
 
-Create a new `.env` file in the root of your project and provide the database credentials.
+Create a new `.env` file in the root of `backend-app` and provide the database credentials.
 
 *.env*
 ```bash

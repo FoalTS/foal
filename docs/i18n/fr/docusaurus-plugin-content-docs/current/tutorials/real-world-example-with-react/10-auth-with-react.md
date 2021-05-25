@@ -84,6 +84,6 @@ export default function App() {
 
 When the application loads, this function will check if a `user` cookie exists with information about the current user. If so, its contents will be used to set the value of `currentUser`.
 
-Refresh the page **twice**. The application now works as expected.
+Refresh the page. The application now works as expected.
 
 > You could also have set a client-side cookie in the `logIn` function and deleted it in the `logOut` function. But this solution does not work well when the user is automatically logged out after a period of inactivity (session expiration).
