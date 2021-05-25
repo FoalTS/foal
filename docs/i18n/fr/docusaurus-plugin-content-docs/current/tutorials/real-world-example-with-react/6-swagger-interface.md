@@ -1,5 +1,5 @@
 ---
-title: API Testing with Swagger
+title: Test de l'API avec Swagger
 ---
 
 Now that the first API endpoint has been implemented, the next step is to test it.

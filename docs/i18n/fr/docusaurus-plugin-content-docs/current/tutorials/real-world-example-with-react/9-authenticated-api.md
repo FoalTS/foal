@@ -1,5 +1,5 @@
 ---
-title: Authenticating Users in the API
+title: Authentification des Utilisateurs dans l'API
 ---
 
 Now that the login is configured, you can add two new routes to create and delete stories. Their access will be limited to authenticated users. 

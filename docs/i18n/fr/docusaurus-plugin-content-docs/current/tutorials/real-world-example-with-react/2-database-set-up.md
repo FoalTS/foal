@@ -1,5 +1,5 @@
 ---
-title: Database Set Up
+title: Base de Données (configuration)
 ---
 
 The first step in this tutorial is to establish a database connection. If you haven't already done so, install [MySQL](https://dev.mysql.com/downloads/) or [PostgreSQL](https://www.postgresql.org/download/).

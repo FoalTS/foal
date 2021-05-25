@@ -1,5 +1,5 @@
 ---
-title: Authenticating Users in React
+title: Authentification des utilisateurs dans React
 ---
 
 The backend API is ready to be used. Now let's add authentication in the frontend side.

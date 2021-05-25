@@ -1,5 +1,5 @@
 ---
-title: Image Upload and Download
+title: Téléchargement d'Images
 ---
 
 The next step in this tutorial is to allow users to upload a profile picture. This image will be displayed on the homepage in front of each author's story.

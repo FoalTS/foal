@@ -1,5 +1,5 @@
 ---
-title: The Frontend App
+title: L'Application Frontend
 ---
 
 Very good, so far you have a first working version of your API. It's time to add the frontend.

@@ -1,5 +1,5 @@
 ---
-title: The Shell Scripts
+title: Les Scripts Shell
 ---
 
 Your models are ready to be used. As in the previous tutorial, you will use shell scripts to feed the database.
