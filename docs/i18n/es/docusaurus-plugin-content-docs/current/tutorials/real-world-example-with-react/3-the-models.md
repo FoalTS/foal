@@ -1,5 +1,5 @@
 ---
-title: The User and Story Models
+title: Los Modelos User y Story
 ---
 
 Now that the database connection is established, you can create your two entities `User` and `Story`.

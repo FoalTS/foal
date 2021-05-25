@@ -1,5 +1,5 @@
 ---
-title: Adding Sign Up
+title: Añadida de la página de inscripción
 ---
 
 So far, only users created with the `create-user` script can log in and publish stories. In this section you will add a new API endpoint for users to sign up with the registration page.

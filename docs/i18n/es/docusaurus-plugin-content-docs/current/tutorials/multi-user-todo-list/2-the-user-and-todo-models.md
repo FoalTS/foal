@@ -1,5 +1,5 @@
 ---
-title: The Modelos User & Todo
+title: Los Modelos User & Todo
 ---
 
 En primer lugar, si ha descargado el código fuente del tutorial anterior, compile y ejecute las migraciones existentes.

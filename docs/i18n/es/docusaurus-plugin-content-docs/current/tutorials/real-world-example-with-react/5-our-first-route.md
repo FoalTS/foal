@@ -1,5 +1,5 @@
 ---
-title: Your First Route
+title: Su Primera Ruta
 ---
 
 The database is now filled with some stories. Let's implement the first route to retrieve them.

@@ -1,5 +1,5 @@
 ---
-title: Logging Users In and Out
+title: Conexión de los Usuarios
 ---
 
 Stories are displayed on the home page. If we want users to be able to post new stories and upload a profile picture, we need to allow them to log in to the application.

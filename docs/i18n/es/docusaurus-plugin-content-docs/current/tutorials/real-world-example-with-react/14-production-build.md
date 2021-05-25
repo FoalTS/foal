@@ -1,5 +1,5 @@
 ---
-title: Production Build
+title: Construcción de Producción
 ---
 
 So far, the front-end and back-end applications are compiled and served by two different development servers. The next step is to build them into a single one ready for production.
