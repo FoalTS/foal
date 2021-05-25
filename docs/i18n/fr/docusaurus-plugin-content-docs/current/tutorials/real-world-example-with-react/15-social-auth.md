@@ -183,4 +183,4 @@ Go to [http://localhost:3001/login](http://localhost:3001/login) and click on th
 
 > For this to work, you need to make sure you are using port `3001` to test the social login. This assumes that you created the production build in the previous step of this tutorial. You can't use the React development server here because the redirects won't work with both ports `3000` and `3001`. 
 
-Congratulations! You have reached the end of this tutorial. You can find the complete source code [here] (TODO).
+Congratulations! You have reached the end of this tutorial. You can find the complete source code [here](./assets/tutorial-foal-react.zip).
