@@ -44,6 +44,23 @@ module.exports = {
         'tutorials/multi-user-todo-list/6-todos-and-ownership',
         'tutorials/multi-user-todo-list/7-the-signup-page',
         'tutorials/multi-user-todo-list/8-e2e-testing-and-authentication',
+      ]),
+      category('Full Example with React', [
+        'tutorials/real-world-example-with-react/1-introduction',
+        'tutorials/real-world-example-with-react/2-database-set-up',
+        'tutorials/real-world-example-with-react/3-the-models',
+        'tutorials/real-world-example-with-react/4-the-shell-scripts',
+        'tutorials/real-world-example-with-react/5-our-first-route',
+        'tutorials/real-world-example-with-react/6-swagger-interface',
+        'tutorials/real-world-example-with-react/7-add-frontend',
+        'tutorials/real-world-example-with-react/8-authentication',
+        'tutorials/real-world-example-with-react/9-authenticated-api',
+        'tutorials/real-world-example-with-react/10-auth-with-react',
+        'tutorials/real-world-example-with-react/11-sign-up',
+        'tutorials/real-world-example-with-react/12-file-upload',
+        'tutorials/real-world-example-with-react/13-csrf',
+        'tutorials/real-world-example-with-react/14-production-build',
+        'tutorials/real-world-example-with-react/15-social-auth',
       ])
     ]),
     expandedCategory('TOPIC GUIDES', [

@@ -15,6 +15,10 @@
     "message": "Lista de Tareas Multiusuario",
     "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
   },
+  "sidebar.someSidebar.category.Full Example with React": {
+    "message": "Ejemplo Completo con React",
+    "description": "The label for category Full Example with React in sidebar someSidebar"
+  },
   "sidebar.someSidebar.category.TOPIC GUIDES": {
     "message": "GUÍAS DE TEMAS",
     "description": "The label for category TOPIC GUIDES in sidebar someSidebar"
