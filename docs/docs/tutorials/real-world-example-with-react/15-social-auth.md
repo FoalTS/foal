@@ -50,13 +50,13 @@ npm run migrations
 Then open `auth.controller.ts` and add a condition to check whether the password value is `null` in the database.
 
 ```typescript
-  if (!user.password) {
-    return new HttpResponseUnauthorized();
-  }
+if (!user.password) {
+  return new HttpResponseUnauthorized();
+}
 
-  if (!(await verifyPassword(password, user.password))) {
-    return new HttpResponseUnauthorized();
-  }
+if (!(await verifyPassword(password, user.password))) {
+  return new HttpResponseUnauthorized();
+}
 ```
 
 ## Configuration
@@ -98,7 +98,7 @@ GOOGLE_CLIENT_SECRET="your Google client secret"
 Create the controller.
 
 ```bash
-foal generate api/social-auth --register
+foal generate controller api/social-auth --register
 ```
 
 Open the file and add two new routes.
@@ -166,6 +166,17 @@ export class SocialAuthController {
 
 }
 
+```
+
+Open `api.controller.ts` and replace the path prefix of the `SocialAuthController` with `/auth`.
+
+```typescript
+subControllers = [
+  controller('/stories', StoriesController),
+  controller('/auth', AuthController),
+  controller('/profile', ProfileController),
+  controller('/auth', SocialAuthController)
+];
 ```
 
 Go to [http://localhost:3001/login](http://localhost:3001/login) and click on the *Connect with Google* button. You are redirected to the Google login page. Once you have validated the connection, you will be redirected to the home page. If you have a Google profile picture, you will see it on your profile page.
