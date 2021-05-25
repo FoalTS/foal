@@ -4,7 +4,7 @@ title: The Frontend App
 
 Very good, so far you have a first working version of your API. It's time to add the frontend.
 
-Download the zip file [here] (TODO). It contains a front-end code base that you will complete as you go along. Most of the application is already implemented for you. You will only have to deal with authentication and file uploads during this tutorial.
+Download the zip file [here](./assets/frontend-app.zip). It contains a front-end code base that you will complete as you go along. Most of the application is already implemented for you. You will only have to deal with authentication and file uploads during this tutorial.
 
 Create a new directory `frontend-app` at the root of your project and move the contents of the zip into it.
 
