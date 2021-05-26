@@ -22,9 +22,9 @@ Then update your `package.json` so that your build scripts will correctly copy y
   "build": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.app.json",
   "develop": "npm run build && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml,proto --no-restart-on error ./build/index.js\"",
   "build:test": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.test.json",
-  "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build,config \\\"./build/**/*.spec.js\\\"\"",
+  "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
   "build:e2e": "foal rmdir build && cpx \"src/**/*.proto\" build && tsc -p tsconfig.e2e.json",
-  "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build,config \\\"./build/e2e/**/*.js\\\"\"",
+  "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.proto\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build \\\"./build/e2e/**/*.js\\\"\"",
     ...
 }
 ```
