@@ -7,7 +7,7 @@ This tutorial shows how to build a real-world application with React and Foal. I
 In this tutorial, you will learn to:
 - establish a connection with MySQL or Postgres,
 - provide credentials to the application in a secure way,
-- create many-to-one models,
+- create models with many-to-one relations,
 - use a query builder,
 - generate an interface to test your API (Swagger UI),
 - fix same-origin policy errors,
