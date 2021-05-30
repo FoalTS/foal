@@ -18,7 +18,7 @@ export class MongoDBStore extends SessionStore {
   private mongoDBClient: any;
   private collection: any;
 
-  async boot(uri: string) {
+  async boot(uri?: string) {
     const mongoDBURI = uri || Config.getOrThrow(
       'settings.mongodb.uri',
       'string',
