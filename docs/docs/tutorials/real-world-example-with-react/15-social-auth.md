@@ -175,7 +175,7 @@ subControllers = [
   controller('/stories', StoriesController),
   controller('/auth', AuthController),
   controller('/profile', ProfileController),
-  controller('/auth', SocialAuthController)
+  controller('/oauth', SocialAuthController)
 ];
 ```
 
