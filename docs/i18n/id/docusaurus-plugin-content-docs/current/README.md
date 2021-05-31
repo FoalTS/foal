@@ -13,11 +13,6 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
-| Version | Status | End-of-life |
-| --- | --- | --- |
-| 2.x | Current | - |
-| 1.x | Maintenance | 2021-05-31 |
-
 ## What is Foal?
 
 *Foal* (or *FoalTS*) is a Node.JS framework for creating web applications.
