@@ -3,26 +3,23 @@ import { File } from './file';
 
 describe('File', () => {
 
-  it('should set its properties "encoding", "filename", "mimeType" and "size" from the constructor.', () => {
+  it('should set its properties "encoding", "filename" and "mimeType" from the constructor.', () => {
     const file1 = new File({
       encoding: '7bit',
       filename: 'report.txt',
       mimeType: 'text/plain',
-      size: 36,
+      path: '',
     });
     strictEqual(file1.encoding, '7bit');
     strictEqual(file1.filename, 'report.txt');
     strictEqual(file1.mimeType, 'text/plain');
-    strictEqual(file1.size, 36);
 
     const file2 = new File({
       encoding: '7bit',
-      // filename is optional
       mimeType: 'text/plain',
-      // size is optional
+      path: '',
     });
     strictEqual(file2.filename, undefined);
-    strictEqual(file2.size, 0);
   });
 
   describe('when a path is provided in the constructor', () => {
