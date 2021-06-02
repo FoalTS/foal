@@ -216,8 +216,6 @@ export class AuthController {
   @Get('/signin/google/callback')
   @UseSessions({
     cookie: true,
-    // The `getUserInfo` method uses another CSRF protection specific to the OAuth2 procotol.
-    csrf: false,
   })
   async handleGoogleRedirection(ctx: Context<User, Session>) {
     const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
