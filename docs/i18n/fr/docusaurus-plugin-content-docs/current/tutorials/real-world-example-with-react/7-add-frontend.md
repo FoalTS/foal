@@ -2,13 +2,13 @@
 title: L'Application Frontend
 ---
 
-Very good, so far you have a first working version of your API. It's time to add the frontend.
+Très bien, jusqu'à présent vous avez une première version fonctionnelle de votre API. Il est temps d'ajouter le frontend.
 
-Download the zip file [here](./assets/frontend-app.zip). It contains a front-end code base that you will complete as you go along. Most of the application is already implemented for you. You will only have to deal with authentication and file uploads during this tutorial.
+Téléchargez le fichier zip [ici](./assets/frontend-app.zip). Il contient une base de code front-end que vous compléterez au fur et à mesure. La plupart de l'application est déjà implémentée pour vous. Vous n'aurez à vous occuper que de l'authentification et du téléchargement de fichiers pendant ce tutoriel.
 
-Create a new directory `frontend-app` at the root of your project and move the contents of the zip into it.
+Créez un nouveau répertoire `frontend-app` à la racine de votre projet et déplacez-y le contenu du zip.
 
-Go to the newly created directory and start the development server.
+Allez dans le répertoire nouvellement créé et démarrez le serveur de développement.
 
 ```bash
 cd frontend-app
@@ -16,21 +16,21 @@ npm install
 npm run start
 ```
 
-The frontend application loads at [http://localhost:3000](http://localhost:3000).
+L'application frontend se charge à [http://localhost:3000](http://localhost:3000).
 
 ![Feed page](./images/feed-error.png)
 
-The interface displays an error and prompts you to refresh the page. This error is due to the fact that the frontend and backend applications are served on different ports. So when sending a request, the frontend sends it to the wrong port.
+L'interface affiche une erreur et vous invite à rafraîchir la page. Cette erreur est due au fait que les applications frontend et backend sont servies sur des ports différents. Ainsi, lorsqu'il envoie une requête, le frontend l'envoie au mauvais port.
 
-One way to solve this problem is to temporarily update the `requests/stories.ts` file to use the port `3001` in development. But this forces you to add different code than is actually used in production, and it also generates *same-origin policy* errors that you will still have to deal with.
+Une façon de résoudre ce problème est de mettre à jour temporairement le fichier `requests/stories.ts` pour utiliser le port `3001` en développement. Mais cela vous oblige à ajouter un code différent de celui qui est réellement utilisé en production, et cela génère également des erreurs *same-origin policy* que vous devrez toujours gérer.
 
-Another way to solve this problem is to *connect* your front-end development server to port 3001 in development. This can be done with the following command.
+Une autre façon de résoudre ce problème est de *connecter* votre serveur de développement frontend au port 3001 en développement. Ceci peut être fait avec la commande suivante.
 
 ```bash
 cd ../backend-app
 foal connect react ../frontend-app
 ```
 
-If you restart the frontend server, the stories should display correctly on the *feed* page (except for the images).
+Si vous redémarrez le serveur frontal, les posts devraient s'afficher correctement sur la page *feed* (sauf pour les images).
 
 ![Feed page](./images/feed-no-images.png)

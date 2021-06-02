@@ -55,4 +55,4 @@ Restart the development server. The application is now connected to your databas
 
 > You could have specified all the database connection options directly in the `default.json` file but this is considered bad practice.
 >
-> Configuration files are usually committed to version control and it is recommended not to commit files containing sensitive information. Also, you will probably have different connection options depending on the host the application is running on (local or production). This approach allows you to provide different options for each.
+> Configuration files are usually committed to version control and it is recommended not to commit files containing sensitive information.

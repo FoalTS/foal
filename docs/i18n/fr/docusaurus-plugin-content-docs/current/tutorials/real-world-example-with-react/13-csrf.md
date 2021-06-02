@@ -2,9 +2,9 @@
 title: Protection CSRF
 ---
 
-Since you use authentication with cookies, you need to add CSRF protection to your application.  This is really easy with Foal, even when building a SPA.
+Comme vous utilisez l'authentification avec des cookies, vous devez ajouter une protection CSRF à votre application. C'est très facile avec Foal, même lorsque vous construisez une SPA.
 
-Open the `default.json` config file and enable the CSRF protection.
+Ouvrez le fichier de configuration `default.json` et activez la protection CSRF.
 
 ```json
 {
@@ -22,10 +22,10 @@ Open the `default.json` config file and enable the CSRF protection.
 }
 ```
 
-Now, when using sessions with cookies, the server will send an additional token to the client in a cookie named `XSRF-Token`. This token will have to be retrieved by the front-end application and sent back in every subsequent POST, PATCH, PUT and DELETE request with the `X-XSRF-Token` header. If it is not, the server will return a 403 error.
+Maintenant, lorsque les sessions sont utilisées avec des cookies, le serveur enverra un jeton supplémentaire au client dans un cookie nommé `XSRF-Token`. Ce jeton devra être récupéré par l'application frontend et renvoyé dans chaque requête POST, PATCH, PUT et DELETE avec l'en-tête `X-XSRF-Token`. Si ce n'est pas le cas, le serveur renverra une erreur 403.
 
-If you use [axios](https://www.npmjs.com/package/axios) as your request library, as in this tutorial, you don't have to do anything. Everything is handled in the background. 
+Si vous utilisez [axios](https://www.npmjs.com/package/axios) comme bibliothèque de requêtes, comme dans ce tutoriel, vous n'avez rien à faire. Tout est géré en arrière-plan. 
 
-If you restart your development server and open your browser's development tools, you will see that axios automatically includes the token for you when creating a new story.
+Si vous redémarrez votre serveur de développement et ouvrez les outils de développement de votre navigateur, vous verrez qu'axios inclut automatiquement le jeton pour vous lors de la création d'un nouveau post.
 
 ![X-XSRF-Token header example](./images/csrf.png)

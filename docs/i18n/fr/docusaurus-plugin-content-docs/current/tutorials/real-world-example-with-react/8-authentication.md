@@ -2,13 +2,13 @@
 title: Connecter les Utilisateurs
 ---
 
-Stories are displayed on the home page. If we want users to be able to post new stories and upload a profile picture, we need to allow them to log in to the application.
+Les posts sont affichées sur la page d'accueil. Si nous voulons que les utilisateurs puissent publier de nouveaux posts et télécharger une photo de profil, nous devons leur permettre de se connecter à l'application.
 
-To do this, we will use Foal's sessions with cookies.
+Pour ce faire, nous allons utiliser les sessions de Foal avec des cookies.
 
-> FoalTS offers many options for user authentication. For example, you can send session tokens with the `Authorization` header or use stateless tokens with JWT. We won't explore all these possibilities in this tutorial but you can find the full documentation [here](../../authentication-and-access-control/quick-start.md).
+> FoalTS offre de nombreuses options pour l'authentification des utilisateurs. Par exemple, vous pouvez envoyer des jetons (*tokens*) de session avec l'en-tête `Authorization` ou utiliser des jetons sans état avec JWT. Nous n'allons pas explorer toutes ces possibilités dans ce tutoriel mais vous pouvez trouver la documentation complète [ici](../../authentication-and-access-control/quick-start.md).
 
-Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of the class.
+Ouvrez le fichier `api.controller.ts` et ajoutez le hook `@UseSessions` en haut de la classe.
 
 ```typescript
 import { ApiInfo, ApiServer, controller, UseSessions } from '@foal/core';
@@ -37,24 +37,24 @@ export class ApiController {
 
 ```
 
-When used with the `cookie` option, this hook ensures that `ctx.session` is always defined in every method of the controller and its subcontrollers. This object can be used to store information between multiple requests, such as a user ID for example. You will use it to authenticate users.
+Lorsqu'il est utilisé avec l'option `cookie`, ce hook garantit que `ctx.session` est toujours défini dans chaque méthode du contrôleur et de ses sous-contrôleurs. Cet objet peut être utilisé pour stocker des informations entre plusieurs requêtes, comme un identifiant d'utilisateur par exemple. Vous l'utiliserez pour authentifier les utilisateurs.
 
-> In the background, Foal generates a unique session token for each user using the API and stores it in a cookie on the client host. When the client makes a new request, the browser automatically sends the token with the request so that the server can retrieve the session information. The session data is stored in the database in the *sessions* table.
+> En arrière-plan, Foal génère un jeton de session unique pour chaque utilisateur utilisant l'API et le stocke dans un cookie sur l'hôte du client. Lorsque le client effectue une nouvelle requête, le navigateur envoie automatiquement le jeton avec la requête afin que le serveur puisse récupérer les informations de session. Les données de session sont stockées dans la base de données dans la table *sessions*.
 >
-> But you don't need to worry about it, everything is managed by Foal.
+> Mais vous n'avez pas à vous en préoccuper, tout est géré par Foal.
 
-Create a new controller.
+Créez un nouveau contrôleur.
 
 ```bash
 foal generate controller api/auth --register
 ```
 
-Open the new created file and add two routes.
+Ouvrez le nouveau fichier créé et ajoutez deux routes.
 
-| API endpoint | Method | Description |
+| Point de terminaison | Méthode | Description |
 | --- | --- | --- |
-| `/api/auth/login` | `POST` | Logs the user in. An email and a password are expected in the request body. |
-| `/api/auth/logout` | `POST` | Logs the user out. |
+| `/api/auth/login` | `POST` | Connecte l'utilisateur. Un email et un mot de passe sont attendus dans le corps de la requête. |
+| `/api/auth/logout` | `POST` | Déconnecte l'utilisateur. |
 
 ```typescript
 import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
@@ -106,7 +106,7 @@ export class AuthController {
 
 ```
 
-The `login` method first checks that the user exists and that the credentials provided are correct. If so, it associates the user with the current session.
+La méthode `login` vérifie d'abord que l'utilisateur existe et que les informations d'identification fournies sont correctes. Si c'est le cas, elle associe l'utilisateur à la session en cours.
 
-On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `undefined`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
+Lors des requêtes suivantes, le hook *UseSessions* récupérera l'ID de l'utilisateur dans la session et définira la propriété `ctx.user` en conséquence. Si l'utilisateur ne s'est pas encore connecté, la propriété `ctx.user` sera `undefined`. Dans le cas contraire, `ctx.user` sera une instance de `User`. Ceci est rendu possible par l'option `user` que nous avons fournie au hook plus tôt. Il s'agit en fait la fonction qui prend l'ID de l'utilisateur comme paramètre et retourne la valeur à assigner à `ctx.user`.
 

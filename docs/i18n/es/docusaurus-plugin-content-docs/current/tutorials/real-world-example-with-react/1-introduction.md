@@ -42,7 +42,7 @@ Let's get started. First of all, create a new directory.
 mkdir foal-react-tuto
 ```
 
-Generate the backend appplication.
+Generate the backend application.
 
 ```bash
 cd foal-react-tuto
