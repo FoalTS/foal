@@ -23,32 +23,3 @@ In previous versions of Foal, the `develop` command did not restart the server w
 If you use `createOpenApiDocument`, in a shell script for example, the function accepts an optional `serviceManager` parameter from this version.
 
 This can be useful if your OpenAPI decorators access controller properties whose values are manually injected.
-
-## File size available after upload
-
-When uploading and validating files with the hook `@ValidateMultipartFormDataBody`, the `File` objects returned by the hooks now have a new a property `size`.
-
-
-```typescript
-import { Context, Post, HttpResponseOK } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
-
-export class UserController {
-
-  @Post('/profile')
-  @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true, saveTo: 'images/profiles' }
-    }
-  })
-  uploadProfilePhoto(ctx: Context) {
-    const { path, size } = ctx.request.body.files.profile;
-    console.log(path);
-    // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
-    console.log(size);
-    // a number
-    return new HttpResponseOK();
-  }
-
-}
-```

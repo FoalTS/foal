@@ -1,6 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
-import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync } from 'fs';
+import { createReadStream, mkdirSync, readdirSync, readFileSync, rmdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 
 // 3p
@@ -15,9 +15,6 @@ import { File } from './file';
 import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {
-
-  const testImagePath = 'src/image.test.png';
-  const testImage2Path = 'src/image.test2.png';
 
   beforeEach(() => {
     Config.set('settings.loggerFormat', 'none');
@@ -190,10 +187,10 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar', createReadStream(testImage2Path))
-        .attach('foobar2', createReadStream(testImage2Path))
-        .attach('foobar4', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .attach('foobar4', createReadStream('src/image.test2.png'))
         .field('name', 'hello')
         .expect(400); // Test that no error is rejected in the hook (error 500).
 
@@ -234,8 +231,8 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar2', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
         .expect(400)
         .expect({
           body: {
@@ -255,8 +252,8 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar2', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
         .expect(400); // Test that no error is rejected in the hook (error 500).
 
       strictEqual(readdirSync('uploaded/images').length, 0);
@@ -295,8 +292,8 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
         .expect(400)
         .expect({
           body: {
@@ -315,8 +312,8 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
         .expect(400); // Test that no error is rejected in the hook (error 500).
 
       strictEqual(readdirSync('uploaded/images').length, 0);
@@ -332,7 +329,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
     await request(app)
       .post('/')
-      .attach('foobar', createReadStream(testImagePath))
+      .attach('foobar', createReadStream('src/image.test.png'))
       .expect(200);
 
     deepStrictEqual(actual.body.files.foobar, undefined);
@@ -489,10 +486,10 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
-        .attach('foobar', createReadStream(testImage2Path))
-        .attach('foobar2', createReadStream(testImage2Path))
-        .attach('foobar4', createReadStream(testImage2Path))
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .attach('foobar', createReadStream('src/image.test2.png'))
+        .attach('foobar2', createReadStream('src/image.test2.png'))
+        .attach('foobar4', createReadStream('src/image.test2.png'))
         .field('name', 'hello')
         .expect(400); // Test that no error is rejected in the hook (error 500).
 
@@ -513,15 +510,14 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
+        .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
       deepStrictEqual(actual.body.files.foobar, new File({
-        buffer: readFileSync(testImagePath),
+        buffer: readFileSync('src/image.test.png'),
         encoding: '7bit',
         filename: 'image.test.png',
         mimeType: 'image/png',
-        size: statSync(testImagePath).size
       }));
     });
 
@@ -535,15 +531,14 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
+        .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
       deepStrictEqual(actual.body.files.foobar, new File({
-        buffer: readFileSync(testImagePath),
+        buffer: readFileSync('src/image.test.png'),
         encoding: '7bit',
         filename: 'image.test.png',
         mimeType: 'image/png',
-        size: statSync(testImagePath).size
       }));
     });
 
@@ -558,24 +553,22 @@ describe('ValidateMultipartFormDataBody', () => {
 
         await request(app)
           .post('/')
-          .attach('foobar', createReadStream(testImagePath))
-          .attach('foobar', createReadStream(testImage2Path))
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
           .expect(200);
 
         deepStrictEqual(actual.body.files.foobar, [
           new File({
-            buffer: readFileSync(testImagePath),
+            buffer: readFileSync('src/image.test.png'),
             encoding: '7bit',
             filename: 'image.test.png',
             mimeType: 'image/png',
-            size: statSync(testImagePath).size
           }),
           new File({
-            buffer: readFileSync(testImage2Path),
+            buffer: readFileSync('src/image.test2.png'),
             encoding: '7bit',
             filename: 'image.test2.png',
             mimeType: 'image/png',
-            size: statSync(testImage2Path).size
           }),
         ]);
       });
@@ -621,7 +614,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
+        .attach('foobar', createReadStream('src/image.test.png'))
         .expect(500);
     });
 
@@ -638,7 +631,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
+        .attach('foobar', createReadStream('src/image.test.png'))
         .expect(500);
     });
 
@@ -653,7 +646,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
         await request(app)
           .post('/')
-          .attach('foobar', createReadStream(testImagePath))
+          .attach('foobar', createReadStream('src/image.test.png'))
           .expect(200);
 
         const foobar = actual.body.files.foobar;
@@ -664,14 +657,13 @@ describe('ValidateMultipartFormDataBody', () => {
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
-          readFileSync(testImagePath),
+          readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
 
         strictEqual(foobar.encoding, '7bit');
         strictEqual(foobar.mimeType, 'image/png');
         strictEqual(foobar.filename, 'image.test.png');
-        strictEqual(foobar.size, statSync(testImagePath).size);
       }
     );
 
@@ -686,7 +678,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
         await request(app)
           .post('/')
-          .attach('foobar', createReadStream(testImagePath))
+          .attach('foobar', createReadStream('src/image.test.png'))
           .expect(200);
 
         const foobar = actual.body.files.foobar;
@@ -697,13 +689,12 @@ describe('ValidateMultipartFormDataBody', () => {
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
-          readFileSync(testImagePath),
+          readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
         strictEqual(foobar.encoding, '7bit');
         strictEqual(foobar.mimeType, 'image/png');
         strictEqual(foobar.filename, 'image.test.png');
-        strictEqual(foobar.size, statSync(testImagePath).size);
       }
     );
 
@@ -718,8 +709,8 @@ describe('ValidateMultipartFormDataBody', () => {
 
         await request(app)
           .post('/')
-          .attach('foobar', createReadStream(testImagePath))
-          .attach('foobar', createReadStream(testImage2Path))
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
           .expect(200);
 
         const foobar = actual.body.files.foobar;
@@ -734,25 +725,23 @@ describe('ValidateMultipartFormDataBody', () => {
         strictEqual(typeof path, 'string');
 
         deepStrictEqual(
-          readFileSync(testImagePath),
+          readFileSync('src/image.test.png'),
           (await disk.read(path, 'buffer')).file
         );
         strictEqual(foobar[0].encoding, '7bit');
         strictEqual(foobar[0].mimeType, 'image/png');
         strictEqual(foobar[0].filename, 'image.test.png');
-        strictEqual(foobar[0].size, statSync(testImagePath).size);
 
         const path2 = foobar[1].path;
         strictEqual(typeof path2, 'string');
 
         deepStrictEqual(
-          readFileSync(testImage2Path),
+          readFileSync('src/image.test2.png'),
           (await disk.read(path2, 'buffer')).file
         );
         strictEqual(foobar[1].encoding, '7bit');
         strictEqual(foobar[1].mimeType, 'image/png');
         strictEqual(foobar[1].filename, 'image.test2.png');
-        strictEqual(foobar[1].size, statSync(testImage2Path).size);
       }
     );
 
@@ -766,7 +755,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath))
+        .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
       strictEqual(typeof actual.body.files.foobar, 'object');
@@ -790,7 +779,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
       await request(app)
         .post('/')
-        .attach('foobar', createReadStream(testImagePath), { filename: 'my_image' })
+        .attach('foobar', createReadStream('src/image.test.png'), { filename: 'my_image' })
         .expect(200);
 
       strictEqual(typeof actual.body.files.foobar, 'object');
