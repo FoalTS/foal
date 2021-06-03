@@ -8,7 +8,7 @@ La base de datos está ahora llena de algunas publicaciones. Implementemos la pr
 | --- | --- | --- |
 | `/api/stories` | `GET` | Enumera las publicaciones de todos los usuarios. Se puede proporcionar un parámetro de consulta opcional `authorId` para filtrar las publicaciones a devolver. |
 
-Primero, genere el controlador de la historia.
+Primero, genere el controlador de las publicaciones.
 
 ```bash
 foal generate controller api/stories --register
