@@ -6,7 +6,7 @@ L'API backend est prête à être utilisée. Maintenant, ajoutons l'authentifica
 
 Voici comment l'application React est organisée :
 - En cliquant sur le bouton *Log in* ou *Log out*, l'application appelle les fonctions définies dans `requests/auth.ts` pour faire des requêtes au serveur.
-- Les informations sur l'utilisateur actuel sont stockées dans le composant racine `App.tsx` sous le nom `currentUser`. Si l'utilisateur s'est connecté, cet état est de type `{ id : number, name : string }`. Sinon, sa valeur est `null`.
+- Les informations sur l'utilisateur actuel sont stockées dans le composant racine `App.tsx` sous le nom `currentUser`. Si l'utilisateur s'est connecté, cet état est de type `{ id: number, name: string }`. Sinon, sa valeur est `null`.
 - Lors de la connexion, le serveur renvoie des informations sur l'utilisateur qui sont utilisées pour définir l'état `currentUser`. Lors de la déconnexion, l'application donne à cet état la valeur `null`.
 
 > Savoir, côté client, si un utilisateur est connecté et qui il est est utile pour gérer l'affichage des éléments de l'interface utilisateur. Cela nous permet, par exemple, de savoir quels boutons de navigation doivent être visibles.

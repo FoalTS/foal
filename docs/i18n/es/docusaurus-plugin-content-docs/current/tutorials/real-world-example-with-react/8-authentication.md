@@ -108,5 +108,5 @@ export class AuthController {
 
 El método `login` comprueba primero que el usuario existe y que las credenciales proporcionadas son correctas. Si es así, asocia el usuario a la sesión actual.
 
-En las siguientes consultas, el hook *UseSessions* recuperará el ID del usuario de la sesión y establecerá la propiedad `ctx.user` en consecuencia. Si el usuario no se ha conectado previamente, entonces `ctx.user` será `undefined`. Si lo ha hecho, entonces `ctx.user` será una instancia de `User`. Esto es posible gracias a la opción `user` que proporcionamos al hook anteriormente. En realidad es la función que toma el ID de usuario como parámetro y devuelve el valor a asignar a `ctx.user`.
+En las siguientes consultas, el hook *UseSessions* recuperará el ID del usuario de la sesión y establecerá la propiedad `ctx.user` en consecuencia. Si el usuario no se ha conectado previamente, entonces `ctx.user` será `undefined`. Si lo ha hecho, entonces `ctx.user` será una instancia de `User`. Esto es posible gracias a la opción `user` que proporcionamos al hook anteriormente. Es la función que toma el ID de usuario como parámetro y devuelve el valor a asignar a `ctx.user`.
 

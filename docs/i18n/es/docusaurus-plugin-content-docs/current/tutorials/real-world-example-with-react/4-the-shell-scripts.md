@@ -2,7 +2,7 @@
 title: Los Scripts Shell
 ---
 
-Sus modelos están listos para ser utilizados. Como en el tutorial anterior, utilizará scripts de shell para alimentar la base de datos.
+Sus modelos están listos para ser utilizados. Como en el tutorial anterior, utilizará scripts shell para alimentar la base de datos.
 
 ## El script `create-user`
 

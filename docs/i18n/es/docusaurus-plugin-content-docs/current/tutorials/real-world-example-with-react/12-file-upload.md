@@ -14,7 +14,7 @@ Primero, instale el paquete.
 npm install @foal/storage
 ```
 
-Actualice la configuración en `config/default.json` para especificar la ubicación de los archivos a los que puede acceder el gestor de discos.
+Actualice la configuración en `config/default.json` para especificar la ubicación de los archivos a los que puede acceder el gestor de disco.
 
 ```json
 {
@@ -44,7 +44,7 @@ Abra el nuevo archivo y añada dos nuevas rutas.
 | Punto final | Método | Descripción |
 | --- | --- | --- |
 | `/api/profile/avatar` | `GET` | Recupera la imagen del perfil del usuario. Si se proporciona el parámetro de consulta opcional `userId`, el servidor devuelve el avatar de ese usuario. En caso contrario, devuelve el avatar del usuario actual. Si ningún usuario está autenticado o no tiene imagen de perfil, se devuelve una imagen por defecto. |
-| `/api/profile` | `POST` | Actualiza el perfil del usuario. Se espera un campo `nombre` y un archivo opcional `avatar`. |
+| `/api/profile` | `POST` | Actualiza el perfil del usuario. Se espera un campo `name` y un archivo opcional `avatar`. |
 
 ```typescript
 import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';

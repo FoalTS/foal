@@ -7,7 +7,7 @@ Ahora que el login está configurado, puede añadir dos nuevas rutas para crear 
 | Punto final | Método | Descripción |
 | --- | --- | --- |
 | `/api/stories` | `POST` | Crea uno nuevo post. |
-| `/api/stories/:storyId` | `DELETE` | Borra un nuevo post. |
+| `/api/stories/:storyId` | `DELETE` | Borra un post. |
 
 Abra el archivo `stories.controller.ts` y añada dos nuevos métodos al controlador.
 

@@ -62,7 +62,7 @@ Este método devuelve la aplicación React para cualquier solicitud GET que acep
 
 Si vuelve a [http://localhost:3001/login](http://localhost:3001/login) y actualiza la página, debería aparecer la página de acceso.
 
-## Construyendo la aplicación Foal
+## Construir la aplicación Foal
 
 Ahora, si quiere construir la aplicación backend para no utilizar la opción `npm run develop`, puede ejecutar este comando:
 
