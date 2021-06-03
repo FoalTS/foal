@@ -2,14 +2,14 @@
 title: Authentification des Utilisateurs dans l'API
 ---
 
-Now that the login is configured, you can add two new routes to create and delete stories. Their access will be limited to authenticated users. 
+Maintenant que le login est configuré, vous pouvez ajouter deux nouvelles routes pour créer et supprimer des posts. Leur accès sera limité aux utilisateurs authentifiés. 
 
-| API endpoint | Method | Description |
+| Point de terminaison | Méthode | Description |
 | --- | --- | --- |
 | `/api/stories` | `POST` | Creates a new story. |
 | `/api/stories/:storyId` | `DELETE` | Deletes a new story. |
 
-Open the `stories.controller.ts` file and add two new methods to the controller.
+Ouvrez le fichier `stories.controller.ts` et ajoutez deux nouvelles méthodes au contrôleur.
 
 ```typescript
 import { Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Post, UserRequired, ValidateBody, ValidatePathParam, ValidateQueryParam } from '@foal/core';
@@ -60,6 +60,6 @@ export class StoriesController {
 }
 ```
 
-When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is not defined (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
+Lors de l'envoi d'une requête à ces points de terminaison, le hook `@UserRequired` retournera une erreur 401 si `ctx.user` n'est pas défini (c'est-à-dire si l'utilisateur ne s'est pas connecté au préalable). Mais s'il l'est, la méthode du contrôleur sera exécutée.
 
-Go to [http://localhost:3001/swagger](http://localhost:3001/swagger) and check that the controller is working as expected. You can, for example, first try to create a story without being connected and then log in and try again.
+Allez sur [http://localhost:3001/swagger](http://localhost:3001/swagger) et vérifiez que le contrôleur fonctionne comme prévu. Vous pouvez, par exemple, essayer de créer un post sans être connecté, puis vous connecter et réessayer.

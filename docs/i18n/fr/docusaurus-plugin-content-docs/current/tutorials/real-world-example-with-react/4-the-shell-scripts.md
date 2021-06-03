@@ -2,13 +2,13 @@
 title: Les Scripts Shell
 ---
 
-Your models are ready to be used. As in the previous tutorial, you will use shell scripts to feed the database.
+Vos modèles sont prêts à être utilisés. Comme dans le tutoriel précédent, vous allez utiliser des scripts shell pour alimenter la base de données.
 
-## The `create-user` script
+## Le script `créer-utilisateur`
 
-A script called `create-user` already exists in the `scripts` directory.
+Un script appelé `create-user` existe déjà dans le répertoire `scripts`.
 
-Open the file and replace its content with the following:
+Ouvrez le fichier et remplacez son contenu par ce qui suit :
 
 ```typescript
 // 3p
@@ -49,40 +49,40 @@ export async function main(args: { email: string, password: string, name?: strin
 
 ```
 
-Some parts of this code should look familiar to you.
+Certaines parties de ce code devraient vous sembler familières.
 
-The `schema` object is used to validate the arguments typed on the command line. In this case, the script expects two mandatory parameters `email` and `password` and an optional `name`. The `format` property checks that the `email` string is an email (presence of `@` character, etc). 
+L'objet `schema` est utilisé pour valider les arguments tapés sur la ligne de commande. Dans notre cas, le script attend deux paramètres obligatoires `email` et `password` et un optionnel `name`. La propriété `format` vérifie que la chaîne `email` est un email (présence du caractère `@`, etc). 
 
-The `main` function is called after successful validation. It is divided into several parts. First, it creates a new user with the arguments specified in the command line. Then it establishes a connection to the database and saves the user.
+La fonction `main` est appelée après que la validation ait réussi. Elle est divisée en plusieurs parties. D'abord, elle crée un nouvel utilisateur avec les arguments spécifiés dans la ligne de commande. Ensuite, elle établit une connexion avec la base de données et enregistre l'utilisateur.
 
-> The `hashPassword` function is used to hash and salt passwords before storing them in the database. For security reasons, you should use this function before saving passwords.
+> La fonction `hashPassword` est utilisée pour hacher et saler les mots de passe avant de les stocker dans la base de données. Pour des raisons de sécurité, vous devez utiliser cette fonction avant de sauvegarder les mots de passe.
 
-Build the script.
+Construisez le script.
 
 ```bash
 npm run build
 ```
 
-Then create two new users.
+Créez ensuite deux nouveaux utilisateurs.
 
 ```bash
 foal run create-user email="john@foalts.org" password="john_password" name="John"
 foal run create-user email="mary@foalts.org" password="mary_password" name="Mary"
 ```
 
-> If you try to re-run one of these commands, you'll get the MySQL error below as the email key is unique.
+> Si vous essayez de réexécuter l'une de ces commandes, vous obtiendrez l'erreur MySQL ci-dessous car la clé `email` est unique.
 >
 > `ER_DUP_ENTRY: Duplicate entry 'john@foalts.org' for key 'IDX_xxx'`
 
-## The `create-story` script
+## Le scénario `create-story`.
 
-The `create-story` script is a bit more complex as `Story` has a many-to-one relation with `User`.
+Le script `create-story` est un peu plus complexe car `Story` a une relation many-to-one avec `User`.
 
 ```bash
 foal generate script create-story
 ```
 
-Open the `create-story.ts` file and replace its content.
+Ouvrez le fichier `create-story.ts` et remplacez son contenu.
 
 ```typescript
 import { createConnection } from 'typeorm';
@@ -120,17 +120,17 @@ export async function main(args: { author: string, title: string, link: string }
 
 ```
 
-We added an `author` parameter to know which user posted the story. It expects the user's email.
+Nous avons ajouté un paramètre `author` pour savoir quel utilisateur a posté l'article. Il attend l'email de l'utilisateur.
 
-The `main` function then tries to find the user who has this email. If it exists, the user is added to the story as the author. If it does not, then the script ends with a message displayed in the console.
+La fonction `main` essaie alors de trouver l'utilisateur qui possède cet email. S'il existe, l'utilisateur est ajouté à la *story* en tant qu'auteur. Si ce n'est pas le cas, le script se termine par un message affiché dans la console.
 
-Build the script.
+Construisez le script.
 
 ```bash
 npm run build
 ```
 
-And create new stories for each user.
+Et créez de nouveaux posts pour chaque utilisateur.
 
 ```bash
 foal run create-story author="john@foalts.org" title="How to build a simple to-do list" link="https://foalts.org/docs/tutorials/simple-todo-list/1-installation"

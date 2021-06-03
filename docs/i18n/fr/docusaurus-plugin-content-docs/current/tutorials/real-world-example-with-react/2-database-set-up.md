@@ -2,17 +2,17 @@
 title: Base de Données (configuration)
 ---
 
-The first step in this tutorial is to establish a database connection. If you haven't already done so, install [MySQL](https://dev.mysql.com/downloads/) or [PostgreSQL](https://www.postgresql.org/download/).
+La première étape de ce tutoriel consiste à établir une connexion à la base de données. Si vous ne l'avez pas encore fait, installez [MySQL](https://dev.mysql.com/downloads/) ou [PostgreSQL](https://www.postgresql.org/download/).
 
-> *By default, Foal uses SQLite in every new application, as it does not require any installation. If you want to continue using it in this tutorial, you can skip this section and go to the next page.* 
+> *Par défaut, Foal utilise SQLite dans chaque nouvelle application, car il ne nécessite aucune installation. Si vous souhaitez continuer à l'utiliser dans le cadre de ce tutoriel, vous pouvez sauter cette section et passer à la page suivante*. 
 
-First, install MySQL (or Postgres) driver.
+Tout d'abord, installez le pilote MySQL (ou Postgres).
 
 ```bash
 npm install mysql # or pg
 ```
 
-Open the `config/default.json` file and update the `database` section as follows. If your database is PostgreSQL, change the `type` value to `postgres`.
+Ouvrez le fichier `config/default.json` et mettez à jour la section `database` comme suit. Si votre base de données est PostgreSQL, changez la valeur `type` en `postgres`.
 
 ```json
 {
@@ -32,12 +32,11 @@ Open the `config/default.json` file and update the `database` section as follows
 
 ```
 
-This file is the main configuration file for the application and is used as the basis for whatever environment the application is running in.
+Ce fichier est le fichier de configuration principal de l'application et sert de base à l'environnement dans lequel l'application s'exécute, quel qu'il soit.
 
-The syntax `env(*)` tells the configuration system to get the value from the given environment variable. If it does not exist, Foal will try to read it from a `.env` file.
+La syntaxe `env(*)` indique au système de configuration de lire la valeur de la variable d'environnement donnée. Si elle n'existe pas, Foal essaiera de la lire à partir d'un fichier `.env`.
 
-
-Create a new `.env` file in the root of `backend-app` and provide the database credentials.
+Créez un nouveau fichier `.env` à la racine de `backend-app` et fournissez les informations d'identification de la base de données.
 
 *.env*
 ```bash
@@ -51,8 +50,8 @@ DB_PASSWORD="test"
 DB_NAME="test"
 ```
 
-Restart the development server. The application is now connected to your database.
+Redémarrez le serveur de développement. L'application est maintenant connectée à votre base de données.
 
-> You could have specified all the database connection options directly in the `default.json` file but this is considered bad practice.
+> Vous auriez pu spécifier toutes les options de connexion à la base de données directement dans le fichier `default.json` mais cela est considéré comme une mauvaise pratique.
 >
-> Configuration files are usually committed to version control and it is recommended not to commit files containing sensitive information. Also, you will probably have different connection options depending on the host the application is running on (local or production). This approach allows you to provide different options for each.
+> Les fichiers de configuration sont généralement *committés* avec le contrôle de version et il est recommandé de ne pas *committer* des fichiers contenant des informations sensibles.

@@ -2,33 +2,33 @@
 title: Construction de Production
 ---
 
-So far, the front-end and back-end applications are compiled and served by two different development servers. The next step is to build them into a single one ready for production.
+Jusqu'à présent, les applications frontend et backend sont compilées et servies par deux serveurs de développement différents. L'étape suivante consiste à les regrouper en un seul serveur prêt pour la production.
 
-## Building the React app
+## Construction de l'Application React
 
-In your frontend directory, run the following command:
+Dans le répertoire de votre frontend, exécutez la commande suivante :
 
 ```bash
 npm run build
 ```
 
-This command builds the React application for production and saves the files in the `build` directory.
+Cette commande construit l'application React pour la production et enregistre les fichiers dans le répertoire `build`.
 
-Open it and copy all its contents to the `public` directory of your Foal application.
+Ouvrez-le et copiez tout son contenu dans le répertoire `public` de votre application Foal.
 
-> When you use `foal connect` with Angular or Vue, the frontend build will automatically save the files in `public`.
+> Lorsque vous utilisez `foal connect` avec Angular ou Vue, le frontend build enregistrera automatiquement les fichiers dans `public`.
 
-Now, if you navigate to [http://localhost:3001](http://localhost:3001), you will see the frontend application served by the backend server.
+Maintenant, si vous naviguez vers [http://localhost:3001](http://localhost:3001), vous verrez l'application frontend servie par le serveur dorsal.
 
-## Preventing 404 errors
+## Prévention des erreurs 404
 
-Open the link [http://localhost:3001/login](http://localhost:3001/login) in a new tab. The server returns a 404 error.
+Ouvrez le lien [http://localhost:3001/login](http://localhost:3001/login) dans un nouvel onglet. Le serveur renvoie une erreur 404.
 
-This is perfectly normal. At the moment, the server does not have a handler for the `/login` route and therefore returns this error. Previously, this problem was handled by the React development server, which is why there was no such error.
+C'est tout à fait normal. Pour le moment, le serveur n'a pas de gestionnaire pour la route `/login` et renvoie donc cette erreur. Auparavant, ce problème était géré par le serveur de développement React, c'est pourquoi cette erreur n'existait pas.
 
-To solve this problem, you will add a controller method that will process unhandled requests.
+Pour résoudre ce problème, vous allez ajouter une méthode de contrôleur qui traitera les requêtes non traitées.
 
-Open `app.controller.ts` and update its contents.
+Ouvrez `app.controller.ts` et mettez à jour son contenu.
 
 ```typescript
 import { Context, controller, Get, HttpResponseNotFound, IAppController, render } from '@foal/core';
@@ -58,19 +58,19 @@ export class AppController implements IAppController {
 
 ```
 
-This method returns the React application for any GET request that accepts HTML content and has not been handled by the other methods of the controller and its subcontrollers.
+Cette méthode renvoie l'application React pour toute requête GET qui accepte du contenu HTML et qui n'a pas été traitée par les autres méthodes du contrôleur et de ses sous-contrôleurs.
 
-If you return to [http://localhost:3001/login](http://localhost:3001/login) and refresh the page, the login page should display.
+Si vous retournez à [http://localhost:3001/login](http://localhost:3001/login) et rafraîchissez la page, la page de connexion devrait s'afficher.
 
-## Building the Foal app
+## Construction de l'Application Foal
 
-Now, if you want to build the backend application so that you don't use the `npm run develop` option, you can run this command:
+Maintenant, si vous voulez construire l'application backend sans utiliser l'option `npm run develop`, vous pouvez exécuter cette commande :
 
 ```bash
 npm run build
 ```
 
-Then, to launch the application, simply execute the following:
+Ensuite, pour lancer l'application, il suffit d'exécuter ce qui suit :
 
 ```bash
 npm run start

@@ -2,16 +2,16 @@
 title: Authentification des utilisateurs dans React
 ---
 
-The backend API is ready to be used. Now let's add authentication in the frontend side.
+L'API backend est prête à être utilisée. Maintenant, ajoutons l'authentification dans la partie frontend.
 
-Here is how the React application is organized:
-- When clicking the *Log in* or *Log out* button, the application calls the functions defined in `requests/auth.ts` to make requests to the server.
-- Information about the current user is stored in the root component `App.tsx` under the name `currentUser`. If the user has logged in, this state is of type `{ id: number, name: string }`. Otherwise, its value is `null`.
-- When logging in, the server returns information about the user which is used to set the `currentUser` state. On logout, the application sets this state to `null`.
+Voici comment l'application React est organisée :
+- En cliquant sur le bouton *Log in* ou *Log out*, l'application appelle les fonctions définies dans `requests/auth.ts` pour faire des requêtes au serveur.
+- Les informations sur l'utilisateur actuel sont stockées dans le composant racine `App.tsx` sous le nom `currentUser`. Si l'utilisateur s'est connecté, cet état est de type `{ id : number, name : string }`. Sinon, sa valeur est `null`.
+- Lors de la connexion, le serveur renvoie des informations sur l'utilisateur qui sont utilisées pour définir l'état `currentUser`. Lors de la déconnexion, l'application donne à cet état la valeur `null`.
 
-> Knowing, on the client side, if a user is logged in and who they are is useful to manage the display of user interface elements. This allows us, for example, to know which navigation buttons should be visible.
+> Savoir, côté client, si un utilisateur est connecté et qui il est est utile pour gérer l'affichage des éléments de l'interface utilisateur. Cela nous permet, par exemple, de savoir quels boutons de navigation doivent être visibles.
 
-Open the file `requests/auth.ts` and implement the empty functions.
+Ouvrez le fichier `requests/auth.ts` et implémentez les fonctions vides.
 
 ```typescript
 import axios from 'axios';
@@ -33,15 +33,15 @@ export async function signUp(credentials: ICredentials): Promise<IUser> {
 
 ```
 
-Go to [http://localhost:3000/login](http://localhost:3000/login) and log in. You should be redirected to the home page. If you click on the *Profile* button in the navigation bar, you should be taken to your personal page. You can add or remove stories if you wish.
+Allez sur [http://localhost:3000/login](http://localhost:3000/login) et connectez-vous. Vous devriez être redirigé vers la page d'accueil. Si vous cliquez sur le bouton *Profile* dans la barre de navigation, vous devriez être dirigé vers votre page personnelle. Vous pouvez ajouter ou supprimer des posts si vous le souhaitez.
 
-Now let's refresh the page. You are redirected to the login page as if you were logged out. Ouch!
+Maintenant, rafraîchissons la page. Vous êtes redirigé vers la page de connexion comme si vous étiez déconnecté. Aïe !
 
-The reason behind this is that the front-end application no longer knows that you are logged in. If you look at the `App` component, you will see that the `currentUser` state is initialized to `null` when the application is loaded. So we need to find a way to keep track of the user's login state even if the page is refreshed.
+La raison en est que l'application frontend ne sait plus que vous êtes connecté. Si vous regardez le composant `App`, vous verrez que l'état `currentUser` est initialisé à `null` lorsque l'application est chargée. Nous devons donc trouver un moyen de garder la trace de l'état de connexion de l'utilisateur même si la page est rafraîchie.
 
-To do this, you will use an additional cookie to store this information that will be readable by the front-end application.
+Pour ce faire, vous utiliserez un cookie supplémentaire pour stocker cette information qui sera lisible par l'application React.
 
-Open the `api.controller.ts` file and add the `userCookie` option.
+Ouvrez le fichier `api.controller.ts` et ajoutez l'option `userCookie`.
 
 ```typescript
 import { Context } from '@foal/core';
@@ -55,9 +55,9 @@ import { Context } from '@foal/core';
 })
 ```
 
-This option sets an additional `user` cookie on the client host with information about the current user.
+Cette option définit un cookie `user` supplémentaire sur l'hôte client avec des informations sur l'utilisateur actuel.
 
-Now go back to the `App.tsx` file and add the `getCurrentUserFromCookie` below.
+Retournez maintenant au fichier `App.tsx` et ajoutez la fonction `getCurrentUserFromCookie` ci-dessous.
 
 ```typescript
 import * as cookie from 'cookie';
@@ -82,8 +82,8 @@ export default function App() {
 }
 ```
 
-When the application loads, this function will check if a `user` cookie exists with information about the current user. If so, its contents will be used to set the value of `currentUser`.
+Au chargement de l'application, cette fonction vérifiera si un cookie `user` existe avec des informations sur l'utilisateur actuel. Si c'est le cas, son contenu sera utilisé pour définir la valeur de `currentUser`.
 
-Refresh the page. The application now works as expected.
+Rafraîchissez la page. L'application fonctionne maintenant comme prévu.
 
-> You could also have set a client-side cookie in the `logIn` function and deleted it in the `logOut` function. But this solution does not work well when the user is automatically logged out after a period of inactivity (session expiration).
+> Vous auriez également pu définir un cookie côté client dans la fonction `logIn` et le supprimer dans la fonction `logOut`. Mais cette solution ne fonctionne pas bien lorsque l'utilisateur est automatiquement déconnecté après une période d'inactivité (expiration de la session).

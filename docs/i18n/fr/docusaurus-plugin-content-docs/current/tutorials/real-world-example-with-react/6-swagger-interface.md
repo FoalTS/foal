@@ -2,15 +2,15 @@
 title: Test de l'API avec Swagger
 ---
 
-Now that the first API endpoint has been implemented, the next step is to test it.
+Maintenant que le premier point de terminaison a été implémenté, l'étape suivante consiste à le tester.
 
-To do this, you will generate a complete documentation page of your API from which you can send requests. This page will be generated using [Swagger UI](https://swagger.io/tools/swagger-ui/) and the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/).
+Pour ce faire, vous allez générer une page de documentation complète de votre API à partir de laquelle vous pourrez envoyer des requêtes. Cette page sera générée à l'aide de [Swagger UI](https://swagger.io/tools/swagger-ui/) et de la [spécification OpenAPI](https://github.com/OAI/OpenAPI-Specification/).
 
 ```bash
 npm install @foal/swagger
 ```
 
-First, provide some information to describe your API globally.
+Tout d'abord, fournissez quelques informations pour décrire votre API de manière globale.
 
 ```typescript
 import { ApiInfo, ApiServer, controller } from '@foal/core';
@@ -33,13 +33,13 @@ export class ApiController {
 
 ```
 
-Then generate a new controller. This one will be in charge of rendering the new page.
+Ensuite, générez un nouveau contrôleur. Celui-ci sera en charge du rendu de la nouvelle page.
 
 ```bash
 foal generate controller openapi --register
 ```
 
-Make the generated class extend the abstract class `SwaggerController`. And then provide the root controller of your API as an option to the controller.
+Faites en sorte que la classe générée étende la classe abstraite `SwaggerController`. Et ensuite, fournissez le contrôleur racine de votre API comme option au contrôleur.
 
 ```typescript
 import { SwaggerController } from '@foal/swagger';
@@ -54,7 +54,7 @@ export class OpenapiController extends SwaggerController  {
 }
 ```
 
-Finally, update your `app.controller.ts` file so that the Swagger UI page is available at [/swagger](http://localhost:3001/swagger).
+Enfin, mettez à jour votre fichier `app.controller.ts` afin que la page Swagger UI soit disponible à l'adresse [/swagger](http://localhost:3001/swagger).
 
 ```typescript
 import { controller, IAppController } from '@foal/core';
@@ -75,10 +75,10 @@ export class AppController implements IAppController {
 
 ```
 
-If you navigate to [http://localhost:3001/swagger](http://localhost:3001/swagger), you will see the documentation page generated from your code.
+Si vous naviguez vers [http://localhost:3001/swagger](http://localhost:3001/swagger), vous verrez la page de documentation générée à partir de votre code.
 
 ![Swagger page](./images/swagger1.png)
 
-Now click on the *Try it out* button. The fields become editable and you can send requests to test your API.
+Cliquez maintenant sur le bouton *Try it out*. Les champs deviennent éditables et vous pouvez envoyer des requêtes pour tester votre API.
 
 ![Swagger page](./images/swagger2.png)
