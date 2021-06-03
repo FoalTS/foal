@@ -2,14 +2,14 @@
 title: Autenticación en la API
 ---
 
-Now that the login is configured, you can add two new routes to create and delete stories. Their access will be limited to authenticated users. 
+Ahora que el login está configurado, puede añadir dos nuevas rutas para crear y eliminar publicaciones. Su acceso estará limitado a los usuarios autentificados. 
 
-| API endpoint | Method | Description |
+| Punto final | Método | Descripción |
 | --- | --- | --- |
-| `/api/stories` | `POST` | Creates a new story. |
-| `/api/stories/:storyId` | `DELETE` | Deletes a new story. |
+| `/api/stories` | `POST` | Crea uno nuevo post. |
+| `/api/stories/:storyId` | `DELETE` | Borra un nuevo post. |
 
-Open the `stories.controller.ts` file and add two new methods to the controller.
+Abra el archivo `stories.controller.ts` y añada dos nuevos métodos al controlador.
 
 ```typescript
 import { Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Post, UserRequired, ValidateBody, ValidatePathParam, ValidateQueryParam } from '@foal/core';
@@ -60,6 +60,6 @@ export class StoriesController {
 }
 ```
 
-When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is not defined (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
+Al enviar una solicitud a estos puntos finales, el hook `@UserRequired` devolverá un error 401 si `ctx.user` no está definido (es decir, si el usuario no se ha identificado primero). Pero si lo está, se ejecutará el método del controlador.
 
-Go to [http://localhost:3001/swagger](http://localhost:3001/swagger) and check that the controller is working as expected. You can, for example, first try to create a story without being connected and then log in and try again.
+Vaya a [http://localhost:3001/swagger](http://localhost:3001/swagger) y compruebe que el controlador funciona como se espera. Puede, por ejemplo, intentar primero crear una publicación sin estar conectado y luego conectarse e intentarlo de nuevo.

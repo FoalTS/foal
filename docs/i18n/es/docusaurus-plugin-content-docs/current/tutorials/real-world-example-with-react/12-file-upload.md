@@ -2,19 +2,19 @@
 title: Carga y Descarga de Imágenes
 ---
 
-The next step in this tutorial is to allow users to upload a profile picture. This image will be displayed on the homepage in front of each author's story.
+El siguiente paso en este tutorial es permitir a los usuarios subir una imagen de perfil. Esta imagen se mostrará en la página de inicio delante de cada publicación de cada autor.
 
-To do this, you will use Foal's storage system. It allows you to validate and save the files uploaded by the client. These files can be saved to your local drive or in the cloud using AWS S3. We won't use the cloud feature in this tutorial, but you can find out how to configure it [here](../../file-system/local-and-cloud-storage.md).
+Para ello, utilizará el sistema de almacenamiento de Foal. Éste le permite validar y guardar los archivos subidos por el cliente. Estos archivos pueden guardarse en su unidad local o en la nube utilizando AWS S3. No utilizaremos la función de la nube en este tutorial, pero puede encontrar cómo configurarla [aquí](../../file-system/local-and-cloud-storage.md).
 
-## Server Side
+## Lado del servidor
 
-First, install the package. 
+Primero, instale el paquete. 
 
 ```bash
 npm install @foal/storage
 ```
 
-Update the configuration in `config/default.json` to specify the location of files that the disk manager can access.
+Actualice la configuración en `config/default.json` para especificar la ubicación de los archivos a los que puede acceder el gestor de discos.
 
 ```json
 {
@@ -31,20 +31,20 @@ Update the configuration in `config/default.json` to specify the location of fil
 }
 ```
 
-Then create the directory `assets/images/profiles/uploaded` where the profile images will be uploaded. Download the default profile image [here](./assets/default.png) and place it in the `assets/images/profiles` folder with the name `default.png`.
+A continuación, cree el directorio `assets/images/profiles/uploaded` donde se cargarán las imágenes de perfil. Descargue la imagen de perfil por defecto [aquí](./assets/default.png) y colóquela en la carpeta `assets/images/profiles` con el nombre `default.png`.
 
-You are ready to create the controller. Generate a new one.
+Ya está listo para crear el controlador. Genere uno nuevo.
 
 ```bash
 foal generate controller api/profile --register
 ```
 
-Open the new file and add two new routes.
+Abra el nuevo archivo y añada dos nuevas rutas.
 
-| API endpoint | Method | Description |
+| Punto final | Método | Descripción |
 | --- | --- | --- |
-| `/api/profile/avatar` | `GET` | Retrieves the user's profile image. If the optional query parameter `userId` is provided, the server returns the avatar of that user. Otherwise, it returns the avatar of the current user. If no user is authenticated or has no profile picture, a default image is returned. |
-| `/api/profile` | `POST` | Updates the user profile. A `name` field and an optional `avatar` file are expected. |
+| `/api/profile/avatar` | `GET` | Recupera la imagen del perfil del usuario. Si se proporciona el parámetro de consulta opcional `userId`, el servidor devuelve el avatar de ese usuario. En caso contrario, devuelve el avatar del usuario actual. Si ningún usuario está autenticado o no tiene imagen de perfil, se devuelve una imagen por defecto. |
+| `/api/profile` | `POST` | Actualiza el perfil del usuario. Se espera un campo `nombre` y un archivo opcional `avatar`. |
 
 ```typescript
 import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
@@ -103,15 +103,15 @@ export class ProfileController {
 
 ```
 
-Go to [http://localhost:3001/swagger](http://localhost:3001/swagger) and try to upload a profile picture. You must be logged in first.
+Vaya a [http://localhost:3001/swagger](http://localhost:3001/swagger) e intente subir una foto de perfil. Primero debe iniciar la sesión.
 
-> You may have noticed the `@dependency` decorator for setting the `disk: Disk` property. This mechanism is called dependency injection and is particularly useful in unit testing. You can read more about it [here](../../architecture/architecture-overview.md)
+> Puede que haya notado el decorador `@dependency` para establecer la propiedad `disk: Disk`. Este mecanismo se llama inyección de dependencia y es particularmente útil en las pruebas unitarias. Puede leer más sobre ello [aquí](../../architecture/architecture-overview.md)
 
-## Client Side
+## Lado del cliente
 
-On the client side, downloading the profile image is handled in the `ProfileHeader.tsx` and `requests/profile.ts` files.
+En el lado del cliente, la descarga de la imagen del perfil se gestiona en los archivos `ProfileHeader.tsx` y `requests/profile.ts`.
 
-Open the latter and implement the `updateProfile` function.
+Abra este último e implemente la función `updateProfile`.
 
 ```typescript
 import axios from 'axios';
@@ -131,4 +131,4 @@ export async function updateProfile(username: string, avatar: File|null): Promis
 }
 ```
 
-Now, if you go back to [http://localhost:3000/profile](http://localhost:3000/profile), you should be able to upload your profile picture.
+Ahora, si vuelve a [http://localhost:3000/profile](http://localhost:3000/profile), debería poder subir su foto de perfil.

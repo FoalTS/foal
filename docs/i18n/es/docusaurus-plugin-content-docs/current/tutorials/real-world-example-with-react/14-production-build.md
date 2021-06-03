@@ -2,33 +2,33 @@
 title: Construcción de Producción
 ---
 
-So far, the front-end and back-end applications are compiled and served by two different development servers. The next step is to build them into a single one ready for production.
+Hasta ahora, las aplicaciones front-end y back-end están compiladas y servidas por dos servidores de desarrollo diferentes. El siguiente paso es construirlas en una sola lista para producción.
 
-## Building the React app
+## Construir la aplicación React
 
-In your frontend directory, run the following command:
+En su directorio de front-end, ejecute el siguiente comando:
 
 ```bash
 npm run build
 ```
 
-This command builds the React application for production and saves the files in the `build` directory.
+Este comando construye la aplicación React para producción y guarda los archivos en el directorio `build`.
 
-Open it and copy all its contents to the `public` directory of your Foal application.
+Ábralo y copie todo su contenido en el directorio `public` de su aplicación Foal.
 
-> When you use `foal connect` with Angular or Vue, the frontend build will automatically save the files in `public`.
+> Cuando utilice `foal connect` con Angular o Vue, el frontend build guardará automáticamente los archivos en `public`.
 
-Now, if you navigate to [http://localhost:3001](http://localhost:3001), you will see the frontend application served by the backend server.
+Ahora, si navega a [http://localhost:3001](http://localhost:3001), verá la aplicación frontend servida por el servidor backend.
 
-## Preventing 404 errors
+## Prevención de errores 404
 
-Open the link [http://localhost:3001/login](http://localhost:3001/login) in a new tab. The server returns a 404 error.
+Abra el enlace [http://localhost:3001/login](http://localhost:3001/login) en una nueva pestaña. El servidor devuelve un error 404.
 
-This is perfectly normal. At the moment, the server does not have a handler for the `/login` route and therefore returns this error. Previously, this problem was handled by the React development server, which is why there was no such error.
+Esto es perfectamente normal. En este momento, el servidor no tiene un manejador para la ruta `/login` y por lo tanto devuelve este error. Anteriormente, este problema era manejado por el servidor de desarrollo de React, por lo que no existía este error.
 
-To solve this problem, you will add a controller method that will process unhandled requests.
+Para resolver este problema, añadirá un método de controlador que procesará las peticiones no gestionadas.
 
-Open `app.controller.ts` and update its contents.
+Abra `app.controller.ts` y actualice su contenido.
 
 ```typescript
 import { Context, controller, Get, HttpResponseNotFound, IAppController, render } from '@foal/core';
@@ -58,19 +58,19 @@ export class AppController implements IAppController {
 
 ```
 
-This method returns the React application for any GET request that accepts HTML content and has not been handled by the other methods of the controller and its subcontrollers.
+Este método devuelve la aplicación React para cualquier solicitud GET que acepte contenido HTML y que no haya sido manejada por los otros métodos del controlador y sus subcontroladores.
 
-If you return to [http://localhost:3001/login](http://localhost:3001/login) and refresh the page, the login page should display.
+Si vuelve a [http://localhost:3001/login](http://localhost:3001/login) y actualiza la página, debería aparecer la página de acceso.
 
-## Building the Foal app
+## Construyendo la aplicación Foal
 
-Now, if you want to build the backend application so that you don't use the `npm run develop` option, you can run this command:
+Ahora, si quiere construir la aplicación backend para no utilizar la opción `npm run develop`, puede ejecutar este comando:
 
 ```bash
 npm run build
 ```
 
-Then, to launch the application, simply execute the following:
+Luego, para lanzar la aplicación, simplemente ejecute lo siguiente:
 
 ```bash
 npm run start

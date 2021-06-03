@@ -2,17 +2,17 @@
 title: Los Modelos User y Story
 ---
 
-Now that the database connection is established, you can create your two entities `User` and `Story`.
+Ahora que la conexión a la base de datos está establecida, puede crear sus dos entidades `User` y `Story`.
 
-The `User` entity will be the model used by the framework to identify users and the `Story` entity will represent the users' posts.
+La entidad `User` será el modelo utilizado por el framework para identificar a los usuarios y la entidad `Story` representará las publicaciones de los usuarios.
 
-## The `User` Model
+## El modelo `User`
 
-Open the `user.entity.ts` file from the `entities` directory and add four new properties to your model: `email`, `password`, `name` and `avatar`.
+Abra el archivo `user.entity.ts` del directorio `entities` y añada cuatro nuevas propiedades a su modelo: `email`, `password`, `name` y `avatar`.
 
-The `avatar` column will contain the paths to the profile images.
+La columna `avatar` contendrá las rutas de acceso a las imágenes del perfil.
 
-You will also need to export an additional model `DatabaseSession` from the `@foal/typeorm` package. You don't need to worry about it now, it will be used later in the tutorial when you add authentication.
+También tendrá que exportar un modelo adicional `DatabaseSession` del paquete `@foal/typeorm`. No necesita preocuparse por ello ahora, se utilizará más adelante en el tutorial cuando añada la autenticación.
 
 ```typescript
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -41,15 +41,15 @@ export class User extends BaseEntity {
 export { DatabaseSession } from '@foal/typeorm';
 ```
 
-## The `Story` Model
+## El modelo `Story`
 
-Then create your second entity.
+A continuación, cree su segunda entidad.
 
 ```
 foal generate entity story
 ```
 
-Open the new file and add three new properties: `author`, `title` and `link`.
+Abra el nuevo archivo y añada tres nuevas propiedades: `autor`, `título` y `enlace`.
 
 ```typescript
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -73,18 +73,18 @@ export class Story extends BaseEntity {
 }
 ```
 
-> By default, TypeORM allows *many-to-one* relationships to be nullable. The option passed to the decorator specifies that this one cannot be.
+> Por defecto, TypeORM permite que las relaciones *many-to-one* sean anulables. La opción pasada al decorador especifica que ésta no puede serlo.
 
-## Run Migrations
+## Ejecute las migraciones
 
-Finally, create the tables in the database. Generate the migrations from the entities and run them.
+Por último, cree las tablas en la base de datos. Genere las migraciones a partir de las entidades y ejecútelas.
 
 ```bash
 npm run makemigrations
 npm run migrations
 ```
 
-Three new tables are added to the database: the `user` and `story` tables and a `sessions` table.
+Se añaden tres nuevas tablas a la base de datos: las tablas `user` y `story` y una tabla `sessions`.
 
 ```
 +------------+-----------+-------------------------------------+

@@ -2,17 +2,18 @@
 title: Autenticación Social con Google
 ---
 
-In this last part of the tutorial, we will give users the ability to log in with Google. Currently, they can only log in with an email and a password.
+En esta última parte del tutorial, daremos a los usuarios la posibilidad de iniciar sesión con Google. Actualmente, sólo pueden iniciar sesión con un correo electrónico y una contraseña.
 
-To do this, you will use Foal's social authentication system.
+Para ello, utilizará el sistema de autenticación social de Foal.
 
-> *This section assumes that you have already set up a Google application and have retrieved your client ID and secret. If you have not, you might want to check this [page](../../authentication-and-access-control/social-auth.md) first. The redirection URIs allowed in your Google application must include `http://localhost:3001/api/auth/google/callback`.*
+> *Esta sección supone que ya ha configurado una aplicación de Google y ha recuperado su ID de cliente y su secreto. Si no lo ha hecho, es posible que quiera consultar primero esta [página](../../authentication-and-access-control/social-auth.md). Los URI de redirección permitidos en su aplicación de Google deben incluir `http://localhost:3001/api/auth/google/callback`.*
 
-## Nullable Passwords
 
-The first step is to update the `User` model. Some users may only use the social login and therefore not have a password. To take this into account, we will make the `password` column accept null values.
+## Contraseñas anulables
 
-Open `user.entity.ts` and update its contents.
+El primer paso es actualizar el modelo `User`. Es posible que algunos usuarios sólo utilicen el inicio de sesión social y, por lo tanto, no tengan una contraseña. Para tener esto en cuenta, haremos que la columna `password` acepte valores nulos.
+
+Abra `user.entity.ts` y actualice su contenido.
 
 ```typescript
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -40,14 +41,14 @@ export class User extends BaseEntity {
 export { DatabaseSession } from '@foal/typeorm';
 ```
 
-Make and run the migrations.
+Realice y ejecute las migraciones.
 
 ```bash
 npm run makemigrations
 npm run migrations
 ```
 
-Then open `auth.controller.ts` and add a condition to check whether the password value is `null` in the database.
+A continuación, abra `auth.controller.ts` y añada una condición para comprobar si el valor de la contraseña es `null` en la base de datos.
 
 ```typescript
 if (!user.password) {
@@ -59,9 +60,9 @@ if (!(await verifyPassword(password, user.password))) {
 }
 ```
 
-## Configuration
+## Configuración
 
-Now that the password problem is solved, you can install the packages and provide your social credentials in the configuration.
+Ahora que el problema de la contraseña está resuelto, puede instalar los paquetes y proporcionar sus credenciales sociales en la configuración.
 
 ```bash
 npm install @foal/social node-fetch
@@ -93,20 +94,20 @@ GOOGLE_CLIENT_ID="your Google client ID"
 GOOGLE_CLIENT_SECRET="your Google client secret"
 ```
 
-## The Social Controller
+## El controlador social
 
-Create the controller.
+Cree el controlador.
 
 ```bash
 foal generate controller api/social-auth --register
 ```
 
-Open the file and add two new routes.
+Abra el archivo y añada dos nuevas rutas.
 
-| API endpoint | Method | Description |
+| Punto final | Método | Descripción |
 | --- | --- | --- |
-| `/api/auth/google` | `POST` | Redirects the user to Google login page. |
-| `/api/auth/google/callback` | `GET` | Handles redirection from Google once the user has approved the connection. |
+| `/api/auth/google` | `POST` | Redirige al usuario a la página de inicio de sesión de Google.  |
+| `/api/auth/google/callback` | `GET` | Gestiona la redirección de Google una vez que el usuario ha aprobado la conexión. |
 
 ```typescript
 import { Context, dependency, Get, HttpResponseRedirect, Session } from '@foal/core';
@@ -168,7 +169,7 @@ export class SocialAuthController {
 
 ```
 
-Open `api.controller.ts` and replace the path prefix of the `SocialAuthController` with `/auth`.
+Abra `api.controller.ts` y sustituya el prefijo de la ruta del `SocialAuthController` por `/auth`.
 
 ```typescript
 subControllers = [
@@ -179,8 +180,8 @@ subControllers = [
 ];
 ```
 
-Go to [http://localhost:3001/login](http://localhost:3001/login) and click on the *Connect with Google* button. You are redirected to the Google login page. Once you have validated the connection, you will be redirected to the home page. If you have a Google profile picture, you will see it on your profile page.
+Vaya a [http://localhost:3001/login](http://localhost:3001/login) y haga clic en el botón *Connect with Google*. Será redirigido a la página de conexión de Google. Una vez que haya validado la conexión, será redirigido a la página de inicio. Si tiene una foto de perfil de Google, la verá en su página de perfil.
 
-> For this to work, you need to make sure you are using port `3001` to test the social login. This assumes that you created the production build in the previous step of this tutorial. You can't use the React development server here because the redirects won't work with both ports `3000` and `3001`. 
+> Para que esto funcione, debe asegurarse de que está utilizando el puerto `3001` para probar el inicio de sesión social. Esto asume que usted creó la construcción de producción en el paso anterior de este tutorial. No puede utilizar el servidor de desarrollo de React aquí porque las redirecciones no funcionarán con ambos puertos `3000` y `3001`. 
 
-Congratulations! You have reached the end of this tutorial. You can find the complete source code [here](./assets/tutorial-foal-react.zip).
+¡Enhorabuena! Ha llegado al final de este tutorial. Puede encontrar el código fuente completo [aquí](./assets/tutorial-foal-react.zip).
