@@ -22,7 +22,7 @@ L'application frontend se charge à [http://localhost:3000](http://localhost:300
 
 L'interface affiche une erreur et vous invite à rafraîchir la page. Cette erreur est due au fait que les applications frontend et backend sont servies sur des ports différents. Ainsi, lorsqu'il envoie une requête, le frontend l'envoie au mauvais port.
 
-Une façon de résoudre ce problème est de mettre à jour temporairement le fichier `requests/stories.ts` pour utiliser le port `3001` en développement. Mais cela vous oblige à ajouter un code différent de celui qui est réellement utilisé en production, et cela génère également des erreurs *same-origin policy* que vous devrez toujours gérer.
+Une façon de résoudre ce problème est de mettre à jour temporairement le fichier `requests/stories.ts` pour utiliser le port `3001` en développement. Mais cela vous oblige à ajouter un code différent de celui qui est réellement utilisé en production, et cela génère également des erreurs de *same-origin policy* que vous devrez toujours gérer.
 
 Une autre façon de résoudre ce problème est de *connecter* votre serveur de développement frontend au port 3001 en développement. Ceci peut être fait avec la commande suivante.
 
@@ -31,6 +31,6 @@ cd ../backend-app
 foal connect react ../frontend-app
 ```
 
-Si vous redémarrez le serveur frontal, les posts devraient s'afficher correctement sur la page *feed* (sauf pour les images).
+Si vous redémarrez le serveur React, les posts devraient s'afficher correctement sur la page *feed* (sauf pour les images).
 
 ![Feed page](./images/feed-no-images.png)

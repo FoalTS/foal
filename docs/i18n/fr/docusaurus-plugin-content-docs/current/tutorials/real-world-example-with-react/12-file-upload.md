@@ -6,7 +6,7 @@ L'étape suivante de ce tutoriel consiste à permettre aux utilisateurs de tél�
 
 Pour ce faire, vous utiliserez le système de stockage de Foal. Il vous permet de valider et d'enregistrer les fichiers téléchargés par le client. Ces fichiers peuvent être sauvegardés sur votre disque local ou dans le Cloud en utilisant AWS S3. Nous n'utiliserons pas la fonction "cloud" dans ce tutoriel, mais vous pouvez découvrir comment la configurer [ici](../../file-system/local-and-cloud-storage.md).
 
-## Côté Serveur
+## Côté serveur
 
 Tout d'abord, installez le paquet.
 
@@ -14,7 +14,7 @@ Tout d'abord, installez le paquet.
 npm install @foal/storage
 ```
 
-Mettez à jour la configuration dans `config/default.json` pour spécifier l'emplacement des fichiers auxquels le gestionnaire de disques peut accéder.
+Mettez à jour la configuration dans `config/default.json` pour spécifier l'emplacement des fichiers auxquels le gestionnaire de disque peut accéder.
 
 ```json
 {
@@ -43,7 +43,7 @@ Ouvrez le nouveau fichier et ajoutez deux nouvelles routes.
 
 | Point de terminaison | Méthode | Description |
 | --- | --- | --- |
-| `/api/profile/avatar` | `GET` | Récupère l'image de profil de l'utilisateur. Si le paramètre de requête facultatif `userId` est fourni, le serveur renvoie l'avatar de cet utilisateur. Sinon, il renvoie l'avatar de l'utilisateur actuel. Si aucun utilisateur n'est authentifié ou n'a pas d'image de profil, une image par défaut est renvoyée. |
+| `/api/profile/avatar` | `GET` | Récupère l'image de profil de l'utilisateur. Si le paramètre de requête facultatif `userId` est fourni, le serveur renvoie l'avatar de cet utilisateur. Sinon, il renvoie l'avatar de l'utilisateur actuel. Si aucun utilisateur n'est authentifié ou s'il ou elle n'a pas d'image de profil, une image par défaut est renvoyée. |
 | `/api/profile` | `POST` | Met à jour le profil de l'utilisateur. Un champ `name` et un fichier `avatar` facultatif sont attendus. |
 
 ```typescript
@@ -105,7 +105,7 @@ export class ProfileController {
 
 Allez sur [http://localhost:3001/swagger](http://localhost:3001/swagger) et essayez de télécharger une photo de profil. Vous devez d'abord vous connecter.
 
-> Vous avez peut-être remarqué le décorateur `@dependency` pour définir la propriété `disk: Disk`. Ce mécanisme est appelé injection de dépendance et est particulièrement utile dans les tests unitaires. Vous pouvez en savoir plus à ce sujet [ici](../../architecture/architecture-overview.md)
+> Vous avez peut-être remarqué le décorateur `@dependency` pour définir la propriété `disk: Disk`. Ce mécanisme est appelé injection de dépendance et est particulièrement utile dans les tests unitaires. Vous pouvez en savoir plus à ce sujet [ici](../../architecture/architecture-overview.md).
 
 ## Côté client
 

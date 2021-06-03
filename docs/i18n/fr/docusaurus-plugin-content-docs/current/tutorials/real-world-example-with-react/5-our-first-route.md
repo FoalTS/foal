@@ -2,13 +2,13 @@
 title: Votre Première Route
 ---
 
-La base de données est maintenant remplie de quelques posts. Implémentons la première route pour les récupérer.
+La base de données est maintenant remplie avec quelques posts. Implémentons la première route pour les récupérer.
 
 | Point de terminaison | Méthode | Description |
 | --- | --- | --- |
 | `/api/stories` | `GET` | Liste les posts de tous les utilisateurs. Un paramètre de requête facultatif `authorId` peut être fourni pour filtrer les posts à retourner. |
 
-Tout d'abord, générez le contrôleur de post.
+Tout d'abord, générez le contrôleur des posts.
 
 ```bash
 foal generate controller api/stories --register

@@ -2,7 +2,7 @@
 title: Test de l'API avec Swagger
 ---
 
-Maintenant que le premier Point de terminaison a été implémenté, l'étape suivante consiste à le tester.
+Maintenant que le premier point de terminaison a été implémenté, l'étape suivante consiste à le tester.
 
 Pour ce faire, vous allez générer une page de documentation complète de votre API à partir de laquelle vous pourrez envoyer des requêtes. Cette page sera générée à l'aide de [Swagger UI](https://swagger.io/tools/swagger-ui/) et de la [spécification OpenAPI](https://github.com/OAI/OpenAPI-Specification/).
 

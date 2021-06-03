@@ -2,7 +2,7 @@
 title: Ajout de la Page d'Inscription
 ---
 
-Jusqu'à présent, seuls les utilisateurs créés avec le script `create-user` peuvent se connecter et publier des articles. Dans cette section, vous allez ajouter un nouveau point de terminaison de l'API pour que les utilisateurs puissent s'inscrire avec la page d'inscription.
+Jusqu'à présent, seuls les utilisateurs créés avec le script `create-user` peuvent se connecter et publier des posts. Dans cette section, vous allez ajouter un nouveau point de terminaison de l'API pour que les utilisateurs puissent s'inscrire avec la page d'inscription.
 
 | Point de terminaison | Méthode | Description |
 | --- | --- | --- |

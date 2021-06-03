@@ -6,7 +6,7 @@ Les posts sont affichées sur la page d'accueil. Si nous voulons que les utilisa
 
 Pour ce faire, nous allons utiliser les sessions de Foal avec des cookies.
 
-> FoalTS offre de nombreuses options pour l'authentification des utilisateurs. Par exemple, vous pouvez envoyer des jetons (*tokens*) de session avec l'en-tête `Authorization` ou utiliser des jetons sans état avec JWT. Nous n'allons pas explorer toutes ces possibilités dans ce tutoriel mais vous pouvez trouver la documentation complète [ici](../../authentication-and-access-control/quick-start.md).
+> FoalTS offre de nombreuses options pour authentifier les utilisateurs. Par exemple, vous pouvez envoyer des jetons (*tokens*) de session avec l'en-tête `Authorization` ou utiliser des jetons sans état avec JWT. Nous n'allons pas explorer toutes ces possibilités dans ce tutoriel mais vous pouvez trouver la documentation complète [ici](../../authentication-and-access-control/quick-start.md).
 
 Ouvrez le fichier `api.controller.ts` et ajoutez le hook `@UseSessions` en haut de la classe.
 
@@ -37,7 +37,7 @@ export class ApiController {
 
 ```
 
-Lorsqu'il est utilisé avec l'option `cookie`, ce hook garantit que `ctx.session` est toujours défini dans chaque méthode du contrôleur et de ses sous-contrôleurs. Cet objet peut être utilisé pour stocker des informations entre plusieurs requêtes, comme un identifiant d'utilisateur par exemple. Vous l'utiliserez pour authentifier les utilisateurs.
+Lorsqu'il est utilisé avec l'option `cookie`, ce hook garantit que `ctx.session` est toujours défini dans chaque méthode du contrôleur et de ses sous-contrôleurs. Cet objet peut être utilisé pour stocker des informations entre plusieurs requêtes, comme un ID d'utilisateur par exemple. Vous l'utiliserez pour authentifier les utilisateurs.
 
 > En arrière-plan, Foal génère un jeton de session unique pour chaque utilisateur utilisant l'API et le stocke dans un cookie sur l'hôte du client. Lorsque le client effectue une nouvelle requête, le navigateur envoie automatiquement le jeton avec la requête afin que le serveur puisse récupérer les informations de session. Les données de session sont stockées dans la base de données dans la table *sessions*.
 >

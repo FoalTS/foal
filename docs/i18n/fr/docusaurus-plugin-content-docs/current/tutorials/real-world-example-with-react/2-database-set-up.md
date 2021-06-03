@@ -32,7 +32,7 @@ Ouvrez le fichier `config/default.json` et mettez à jour la section `database` 
 
 ```
 
-Ce fichier est le principal fichier de configuration de l'application et sert de base à l'environnement dans lequel l'application s'exécute.
+Ce fichier est le fichier de configuration principal de l'application et sert de base à l'environnement dans lequel l'application s'exécute, quel qu'il soit.
 
 La syntaxe `env(*)` indique au système de configuration de lire la valeur de la variable d'environnement donnée. Si elle n'existe pas, Foal essaiera de la lire à partir d'un fichier `.env`.
 
@@ -54,4 +54,4 @@ Redémarrez le serveur de développement. L'application est maintenant connecté
 
 > Vous auriez pu spécifier toutes les options de connexion à la base de données directement dans le fichier `default.json` mais cela est considéré comme une mauvaise pratique.
 >
-> Les fichiers de configuration sont généralement *committed* avec le contrôle de version et il est recommandé de ne pas *committer* des fichiers contenant des informations sensibles.
+> Les fichiers de configuration sont généralement *committés* avec le contrôle de version et il est recommandé de ne pas *committer* des fichiers contenant des informations sensibles.

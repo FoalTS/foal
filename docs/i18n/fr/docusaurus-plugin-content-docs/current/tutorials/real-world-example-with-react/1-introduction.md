@@ -10,16 +10,16 @@ Dans ce tutoriel, vous apprendrez à :
 - créer des modèles avec des relations many-to-one,
 - utiliser un constructeur de requêtes,
 - générer une interface pour tester votre API (Swagger UI),
-- corriger les erreurs de politique de same-origin,
+- corriger les erreurs de politique *same-origin*,
 - permettre aux utilisateurs de se connecter et de s'enregistrer avec un email et un mot de passe,
 - authentifier les utilisateurs sur le frontend et le backend,
 - gérer le contrôle d'accès,
 - se protéger contre les attaques CSRF,
-- télécharger et enregistrer des fichiers (*file upload*),
+- télécharger et enregistrer des fichiers *(file upload)*,
 - permettre aux utilisateurs de se connecter avec un fournisseur social (Google),
 - et construire l'application pour la production.
 
-> *Pour des raisons de simplicité, l'application frontale n'utilisera pas de bibliothèque de gestion d'état (telle que [redux](https://redux.js.org/)). Mais vous pouvez bien sûr en ajouter une si vous le souhaitez. La logique à suivre restera principalement la même.*
+> *Pour des raisons de simplicité, l'application frontend n'utilisera pas de bibliothèque de gestion d'état (telle que [redux](https://redux.js.org/)). Mais vous pouvez bien sûr en ajouter une si vous le souhaitez. La logique à suivre restera principalement la même.*
 
 ## Aperçu de l'Application
 

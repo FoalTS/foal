@@ -9,7 +9,7 @@ Voici comment l'application React est organisée :
 - Les informations sur l'utilisateur actuel sont stockées dans le composant racine `App.tsx` sous le nom `currentUser`. Si l'utilisateur s'est connecté, cet état est de type `{ id : number, name : string }`. Sinon, sa valeur est `null`.
 - Lors de la connexion, le serveur renvoie des informations sur l'utilisateur qui sont utilisées pour définir l'état `currentUser`. Lors de la déconnexion, l'application donne à cet état la valeur `null`.
 
-> Savoir, côté client, si un utilisateur est connecté et qui il est est est utile pour gérer l'affichage des éléments de l'interface utilisateur. Cela nous permet, par exemple, de savoir quels boutons de navigation doivent être visibles.
+> Savoir, côté client, si un utilisateur est connecté et qui il est est utile pour gérer l'affichage des éléments de l'interface utilisateur. Cela nous permet, par exemple, de savoir quels boutons de navigation doivent être visibles.
 
 Ouvrez le fichier `requests/auth.ts` et implémentez les fonctions vides.
 
@@ -39,7 +39,7 @@ Maintenant, rafraîchissons la page. Vous êtes redirigé vers la page de connex
 
 La raison en est que l'application frontend ne sait plus que vous êtes connecté. Si vous regardez le composant `App`, vous verrez que l'état `currentUser` est initialisé à `null` lorsque l'application est chargée. Nous devons donc trouver un moyen de garder la trace de l'état de connexion de l'utilisateur même si la page est rafraîchie.
 
-Pour ce faire, vous utiliserez un cookie supplémentaire pour stocker cette information qui sera lisible par l'application frontale.
+Pour ce faire, vous utiliserez un cookie supplémentaire pour stocker cette information qui sera lisible par l'application React.
 
 Ouvrez le fichier `api.controller.ts` et ajoutez l'option `userCookie`.
 
@@ -55,9 +55,9 @@ import { Context } from '@foal/core';
 })
 ```
 
-This option sets an additional `user` cookie on the client host with information about the current user.
+Cette option définit un cookie `user` supplémentaire sur l'hôte client avec des informations sur l'utilisateur actuel.
 
-Now go back to the `App.tsx` file and add the `getCurrentUserFromCookie` below.
+Retournez maintenant au fichier `App.tsx` et ajoutez la fonction `getCurrentUserFromCookie` ci-dessous.
 
 ```typescript
 import * as cookie from 'cookie';

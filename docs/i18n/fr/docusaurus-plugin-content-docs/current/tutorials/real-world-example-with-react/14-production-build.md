@@ -26,7 +26,7 @@ Ouvrez le lien [http://localhost:3001/login](http://localhost:3001/login) dans u
 
 C'est tout à fait normal. Pour le moment, le serveur n'a pas de gestionnaire pour la route `/login` et renvoie donc cette erreur. Auparavant, ce problème était géré par le serveur de développement React, c'est pourquoi cette erreur n'existait pas.
 
-Pour résoudre ce problème, vous allez ajouter une méthode de contrôleur qui traitera les requêtes non gérées.
+Pour résoudre ce problème, vous allez ajouter une méthode de contrôleur qui traitera les requêtes non traitées.
 
 Ouvrez `app.controller.ts` et mettez à jour son contenu.
 

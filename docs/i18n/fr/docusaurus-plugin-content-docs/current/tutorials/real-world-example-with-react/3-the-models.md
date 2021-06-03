@@ -73,7 +73,7 @@ export class Story extends BaseEntity {
 }
 ```
 
-> Par défaut, TypeORM permet aux relations *many-to-one* d'être nullables. L'option passée au décorateur spécifie qu'elle ne peut pas l'être.
+> Par défaut, TypeORM permet aux relations *many-to-one* d'être nullables. L'option passée au décorateur spécifie que celle-ci ne peut pas l'être.
 
 ## Exécuter les Migrations
 

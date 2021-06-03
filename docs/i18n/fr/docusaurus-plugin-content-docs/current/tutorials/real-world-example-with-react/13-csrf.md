@@ -22,7 +22,7 @@ Ouvrez le fichier de configuration `default.json` et activez la protection CSRF.
 }
 ```
 
-Maintenant, lorsque les sessions sont utilisées avec des cookies, le serveur enverra un jeton supplémentaire au client dans un cookie nommé `XSRF-Token`. Ce jeton devra être récupéré par l'application frontend et renvoyé dans chaque requête POST, PATCH, PUT et DELETE avec l'en-tête `X-XSRF-Token`. Si ce n'est pas le cas, le serveur renverra une erreur 403.
+Maintenant, lorsque les sessions seront utilisées avec des cookies, le serveur enverra un jeton supplémentaire au client dans un cookie nommé `XSRF-Token`. Ce jeton devra être récupéré par l'application frontend et renvoyé dans chaque requête POST, PATCH, PUT et DELETE avec l'en-tête `X-XSRF-Token`. Si ce n'est pas le cas, le serveur renverra une erreur 403.
 
 Si vous utilisez [axios](https://www.npmjs.com/package/axios) comme bibliothèque de requêtes, comme dans ce tutoriel, vous n'avez rien à faire. Tout est géré en arrière-plan. 
 
