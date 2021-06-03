@@ -6,8 +6,8 @@ Maintenant que le login est configuré, vous pouvez ajouter deux nouvelles route
 
 | Point de terminaison | Méthode | Description |
 | --- | --- | --- |
-| `/api/stories` | `POST` | Creates a new story. |
-| `/api/stories/:storyId` | `DELETE` | Deletes a new story. |
+| `/api/stories` | `POST` | Crée un nouveau post. |
+| `/api/stories/:storyId` | `DELETE` | Supprime un post. |
 
 Ouvrez le fichier `stories.controller.ts` et ajoutez deux nouvelles méthodes au contrôleur.
 
