@@ -162,7 +162,7 @@ const file = ctx.request.body.files.profile;
 
 ### Adding Fields
 
-Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook.
+Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook. All specified fields are mandatory in the request.
 
 ```typescript
 import { Context, Post } from '@foal/core';
