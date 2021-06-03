@@ -2,19 +2,19 @@
 title: Su Primera Ruta
 ---
 
-The database is now filled with some stories. Let's implement the first route to retrieve them.
+La base de datos está ahora llena de algunas publicaciones. Implementemos la primera ruta para recuperarlas.
 
-| API endpoint | Method | Description |
+| Punto final | Método | Descripción |
 | --- | --- | --- |
-| `/api/stories` | `GET` | Lists the stories of all users. An optional query parameter `authorId` can be provided to filter the stories to be returned. |
+| `/api/stories` | `GET` | Enumera las publicaciones de todos los usuarios. Se puede proporcionar un parámetro de consulta opcional `authorId` para filtrar las publicaciones a devolver. |
 
-First, generate the story controller.
+Primero, genere el controlador de las publicaciones.
 
 ```bash
 foal generate controller api/stories --register
 ```
 
-A new file appears in the `api` subdirectory. Open it and replace its contents.
+Aparece un nuevo archivo en el subdirectorio `api`. Ábralo y sustituya su contenido.
 
 ```typescript
 import { Context, Delete, Get, HttpResponseCreated, HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Post, UserRequired, ValidateBody, ValidatePathParam, ValidateQueryParam } from '@foal/core';
@@ -49,9 +49,11 @@ export class StoriesController {
 
 ```
 
-The `readStories` method retrieves and returns the stories along with some information about their authors.
 
-When requesting this endpoint, the response body will look like this:
+El método `readStories` recupera y devuelve las publicaciones junto con alguna información sobre sus autores.
+
+Al enviar una consulta a este punto final, el cuerpo de la respuesta tendrá el siguiente aspecto:
+
 ```json
 [
   {

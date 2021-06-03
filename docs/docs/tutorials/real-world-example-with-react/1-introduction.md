@@ -49,7 +49,7 @@ cd foal-react-tuto
 foal createapp backend-app
 ```
 
-And then start the development server.
+Then start the development server.
 
 ```bash
 cd backend-app

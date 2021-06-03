@@ -2,13 +2,13 @@
 title: Añadida de la página de inscripción
 ---
 
-So far, only users created with the `create-user` script can log in and publish stories. In this section you will add a new API endpoint for users to sign up with the registration page.
+Hasta ahora, sólo los usuarios creados con el script `create-user` pueden registrarse y publicar posts. En esta sección añadirá un nuevo punto final de la API para que los usuarios se registren con la página de registro.
 
-| API endpoint | Method | Description |
+| Punto final | Método | Descripción |
 | --- | --- | --- |
-| `/api/auth/signup` | `POST` | Registers a new user. An email and a password are expected in the request body. |
+| `/api/auth/signup` | `POST` | Registra un nuevo usuario. Se espera un correo electrónico y una contraseña en el cuerpo de la solicitud. |
 
-Open the `auth.controller.ts` file and add a new route.
+Abra el archivo `auth.controller.ts` y añada una nueva ruta.
 
 ```typescript
 import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
@@ -51,4 +51,4 @@ export class AuthController {
 
 ```
 
-If you go the [sign up page](http://localhost:3000/signup), you should now be able to register as a new user.
+Si va a la [página de registro](http://localhost:3000/signup), ahora debería poder registrarse como nuevo usuario.

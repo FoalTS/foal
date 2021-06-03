@@ -2,9 +2,9 @@
 title: Protección contra CSRF
 ---
 
-Since you use authentication with cookies, you need to add CSRF protection to your application.  This is really easy with Foal, even when building a SPA.
+Dado que utiliza la autenticación con cookies, necesita añadir protección CSRF a su aplicación. Esto es realmente fácil con Foal, incluso cuando se construye un SPA.
 
-Open the `default.json` config file and enable the CSRF protection.
+Abra el archivo de configuración `default.json` y habilite la protección CSRF.
 
 ```json
 {
@@ -22,10 +22,10 @@ Open the `default.json` config file and enable the CSRF protection.
 }
 ```
 
-Now, when using sessions with cookies, the server will send an additional token to the client in a cookie named `XSRF-Token`. This token will have to be retrieved by the front-end application and sent back in every subsequent POST, PATCH, PUT and DELETE request with the `X-XSRF-Token` header. If it is not, the server will return a 403 error.
+Ahora, al utilizar sesiones con cookies, el servidor enviará un token adicional al cliente en una cookie denominada `XSRF-Token`. Este token tendrá que ser recuperado por la aplicación front-end y enviado de vuelta en cada petición POST, PATCH, PUT y DELETE posterior con la cabecera `X-XSRF-Token`. Si no es así, el servidor devolverá un error 403.
 
-If you use [axios](https://www.npmjs.com/package/axios) as your request library, as in this tutorial, you don't have to do anything. Everything is handled in the background. 
+Si utiliza [axios](https://www.npmjs.com/package/axios) como su biblioteca de peticiones, como en este tutorial, no tiene que hacer nada. Todo se maneja en segundo plano. 
 
-If you restart your development server and open your browser's development tools, you will see that axios automatically includes the token for you when creating a new story.
+Si reinicia su servidor de desarrollo y abre las herramientas de desarrollo de su navegador, verá que axios incluye automáticamente el token por usted al crear una nueva publicación.
 
 ![X-XSRF-Token header example](./images/csrf.png)

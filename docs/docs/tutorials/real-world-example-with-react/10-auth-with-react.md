@@ -57,7 +57,7 @@ import { Context } from '@foal/core';
 
 This option sets an additional `user` cookie on the client host with information about the current user.
 
-Now go back to the `App.tsx` file and add the `getCurrentUserFromCookie` below.
+Now go back to the `App.tsx` file and add the `getCurrentUserFromCookie` function below.
 
 ```typescript
 import * as cookie from 'cookie';

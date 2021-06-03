@@ -2,58 +2,58 @@
 title: Introducción
 ---
 
-This tutorial shows how to build a real-world application with React and Foal. It assumes that you have already read the first guide *[How to build a Simple To-Do List](../simple-todo-list/1-installation.md)* and that you have a basic knowledge of React.
+Este tutorial muestra cómo construir una aplicación del mundo real con React y Foal. Asume que ya ha leído la primera guía *[Cómo construir una lista de tareas simple](../simple-todo-list/1-installation.md)* y que tiene un conocimiento básico de React.
 
-In this tutorial, you will learn to:
-- establish a connection with MySQL or Postgres,
-- provide credentials to the application in a secure way,
-- create models with many-to-one relations,
-- use a query builder,
-- generate an interface to test your API (Swagger UI),
-- fix same-origin policy errors,
-- allow users to log in and register with an email and a password,
-- authenticate users on the frontend and the backend,
-- manage access control,
-- protect against CSRF attacks,
-- upload and save files,
-- allow users to connect with a social provider (Google),
-- and build the application for production.
+En este tutorial, aprenderá a
+- establecer una conexión con MySQL o Postgres,
+- proporcionar credenciales a la aplicación de forma segura,
+- crear modelos con relaciones muchos-a-uno,
+- utilizar un constructor de consultas,
+- generar una interfaz para probar su API (Swagger UI),
+- arreglar los errores de la política del mismo origen,
+- permitir que los usuarios se conecten y se registren con un correo electrónico y una contraseña,
+- autenticar a los usuarios en el frontend y en el backend,
+- gestionar el control de acceso,
+- proteger contra los ataques CSRF,
+- subir y guardar archivos,
+- permitir a los usuarios conectarse con un proveedor social (Google),
+- y construir la aplicación para la producción.
 
-> *For the sake of simplicity, the front-end application will not use a state management library (such as [redux](https://redux.js.org/)). But you can of course add one if you wish. The logic to follow will remain mainly the same.*
+> *Para simplificar, la aplicación front-end no utilizará una biblioteca de gestión de estado (como [redux](https://redux.js.org/)). Pero, por supuesto, puede añadir una si lo desea. La lógica a seguir seguirá siendo principalmente la misma.*
 
-## Application Overview
+## Descripción de la Aplicación
 
-The application you will create is a social website where users can share interesting links to tutorials. All posts will be public, so no authentication will be required to view them. Publishing a post, on the other hand, will require the creation of an account.
+La aplicación que creará es un sitio web social donde los usuarios pueden compartir enlaces interesantes a tutoriales. Todos los posts serán públicos, por lo que no será necesaria la autentificación para verlos. La publicación de un post, en cambio, requerirá la creación de una cuenta.
 
-*Feed page*
+*Página principal*
 ![Feed page](./images/feed.png)
 
-*Profile page*
+*Página de perfil*
 ![Profile page](./images/profile.png)
 
-*Registration and login pages*
+*Páginas de registro e inicio de sesión*
 ![Registration and login pages](./images/sign-up-and-log-in.png)
 
-## Get Started
+## Empezar
 
-Let's get started. First of all, create a new directory.
+Comencemos. En primer lugar, cree un nuevo directorio.
 
 ```bash
 mkdir foal-react-tuto
 ```
 
-Generate the backend application.
+Genere la aplicación backend.
 
 ```bash
 cd foal-react-tuto
 foal createapp backend-app
 ```
 
-And then start the development server.
+Luego inicie el servidor de desarrollo.
 
 ```bash
 cd backend-app
 npm run develop
 ```
 
-Go to [http://localhost:3001](http://localhost:3001) in your browser. You should see the *Welcome on board* message.
+Vaya a [http://localhost:3001](http://localhost:3001) en su navegador. Debería ver el mensaje *Welcome on board*.

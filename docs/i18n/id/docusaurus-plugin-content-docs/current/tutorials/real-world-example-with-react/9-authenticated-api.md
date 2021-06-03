@@ -7,7 +7,7 @@ Now that the login is configured, you can add two new routes to create and delet
 | API endpoint | Method | Description |
 | --- | --- | --- |
 | `/api/stories` | `POST` | Creates a new story. |
-| `/api/stories/:storyId` | `DELETE` | Deletes a new story. |
+| `/api/stories/:storyId` | `DELETE` | Deletes a story. |
 
 Open the `stories.controller.ts` file and add two new methods to the controller.
 
