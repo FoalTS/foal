@@ -19,6 +19,7 @@ A collection of official and unofficial libraries and resources about Foal.
 - [@foal/swagger](https://www.npmjs.com/package/@foal/swagger): display a SwaggerUI page.
 - [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm): session store for TypeORM.
 - [@foal/typestack](https://www.npmjs.com/package/@foal/typestack): validate and unserialize requests with [class-transformer](https://www.npmjs.com/package/class-transformer) and [class-validator](https://www.npmjs.com/package/class-validator).
+- [@codeperate/foalts-apischema-builder](https://www.npmjs.com/package/@codeperate/foalts-apischema-builder): build ApiSchema with builder pattern.
 
 ## Videos
 
