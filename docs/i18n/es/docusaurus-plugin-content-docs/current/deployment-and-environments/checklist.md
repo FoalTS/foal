@@ -8,7 +8,7 @@ sidebar_label: Lista de Comprobación
 
 Set the `NODE_ENV` environment variable to `production`.
 
-```
+```bash
 NODE_ENV=production npm run start
 ```
 
@@ -44,7 +44,7 @@ SETTINGS_JWT_SECRET=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
 
 You can generate 256-bit secrets encoded in base64 with the following command:
 
-```
+```bash
 foal createsecret
 ```
 
@@ -54,7 +54,7 @@ Use different credentials for your production database. Specify them using envir
 
 If you use database migrations, run them on your production server with the following command:
 
-```
+```bash
 npm run migrations
 ```
 

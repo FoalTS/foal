@@ -307,8 +307,6 @@ export class ApiController {
 
 > This section explains how to use sessions with cookies. See the section above to see how to use them with a `bearer` token and the `Authorization` header.
 
---
-
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
 When using the `@UseSessions` hook with the `cookie` option, FoalTS makes sure that `ctx.session` is always set and takes care of managing the session token on the client (using a cookie).
