@@ -386,7 +386,7 @@ class Service {
 foal generate script generate-openapi-doc
 ```
 
-The `createOpenApiDocument` function can also be used in a shell script to generate the document.
+The `createOpenApiDocument` function can also be used in a shell script to generate the document. You can provide it with an optional serviceManager if needed.
 
 > *Note that this function instantiates the controllers. So if you have logic in your constructors, you may prefer to put it in `init` methods.*
 
@@ -411,7 +411,7 @@ export async function main() {
 
 ```
 
-```
+```bash
 npm run build:scripts
 foal run generate-openapi-doc
 ```
