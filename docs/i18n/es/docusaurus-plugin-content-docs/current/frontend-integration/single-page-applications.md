@@ -1,5 +1,5 @@
 ---
-title: Foo
+title: Single Page Applications (SPA)
 sidebar_label: Single Page Applications
 ---
 
