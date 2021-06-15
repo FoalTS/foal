@@ -3,31 +3,31 @@
     "version-1.x/README",
     { "type": "category", "label": "TUTORIALS", "collapsed": false, "items": [
       { "type": "category", "label": "Simple To-Do List", "items": [
-        "version-1.x/tutorials/simple-todo-list/1-installation",
-        "version-1.x/tutorials/simple-todo-list/2-introduction",
-        "version-1.x/tutorials/simple-todo-list/3-the-todo-model",
-        "version-1.x/tutorials/simple-todo-list/4-the-shell-script-create-todo",
-        "version-1.x/tutorials/simple-todo-list/5-the-rest-api",
-        "version-1.x/tutorials/simple-todo-list/6-validation-and-sanitization",
-        "version-1.x/tutorials/simple-todo-list/7-unit-testing"
+        "version-1.x/tutorials/simple-todo-list/tuto-1-installation",
+        "version-1.x/tutorials/simple-todo-list/tuto-2-introduction",
+        "version-1.x/tutorials/simple-todo-list/tuto-3-the-todo-model",
+        "version-1.x/tutorials/simple-todo-list/tuto-4-the-shell-script-create-todo",
+        "version-1.x/tutorials/simple-todo-list/tuto-5-the-rest-api",
+        "version-1.x/tutorials/simple-todo-list/tuto-6-validation-and-sanitization",
+        "version-1.x/tutorials/simple-todo-list/tuto-7-unit-testing"
       ]},
       { "type": "category", "label": "Multi-User To-Do List", "items": [
-        "version-1.x/tutorials/multi-user-todo-list/1-Introduction",
-        "version-1.x/tutorials/multi-user-todo-list/2-the-user-and-todo-models",
-        "version-1.x/tutorials/multi-user-todo-list/3-the-shell-scripts",
-        "version-1.x/tutorials/multi-user-todo-list/5-auth-controllers-and-hooks",
-        "version-1.x/tutorials/multi-user-todo-list/6-todos-and-ownership",
-        "version-1.x/tutorials/multi-user-todo-list/7-the-signup-page",
-        "version-1.x/tutorials/multi-user-todo-list/8-e2e-testing-and-authentication"
+        "version-1.x/tutorials/multi-user-todo-list/tuto-1-Introduction",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-2-the-user-and-todo-models",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-3-the-shell-scripts",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-5-auth-controllers-and-hooks",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-6-todos-and-ownership",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-7-the-signup-page",
+        "version-1.x/tutorials/multi-user-todo-list/tuto-8-e2e-testing-and-authentication"
       ]},
       { "type": "category", "label": "MongoDB To-Do List", "items": [
-        "version-1.x/tutorials/mongodb-todo-list/1-installation",
-        "version-1.x/tutorials/mongodb-todo-list/2-introduction",
-        "version-1.x/tutorials/mongodb-todo-list/3-the-todo-model",
-        "version-1.x/tutorials/mongodb-todo-list/4-the-shell-script-create-todo",
-        "version-1.x/tutorials/mongodb-todo-list/5-the-rest-api",
-        "version-1.x/tutorials/mongodb-todo-list/6-validation-and-sanitization",
-        "version-1.x/tutorials/mongodb-todo-list/7-unit-testing"
+        "version-1.x/tutorials/mongodb-todo-list/tuto-1-installation",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-2-introduction",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-3-the-todo-model",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-4-the-shell-script-create-todo",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-5-the-rest-api",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-6-validation-and-sanitization",
+        "version-1.x/tutorials/mongodb-todo-list/tuto-7-unit-testing"
       ]}
     ]},
     { "type": "category", "label": "TOPIC GUIDES", "collapsed": false, "items": [
