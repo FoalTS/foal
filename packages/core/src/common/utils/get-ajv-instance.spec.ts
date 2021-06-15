@@ -198,7 +198,7 @@ describe('getAjvInstance', () => {
       ], 'AJV should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
     });
 
-    it.only('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
+    it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
       Config.set('settings.ajv.coerceTypes', false);
       getAjvInstance().validate({}, {});
       clearCache();
