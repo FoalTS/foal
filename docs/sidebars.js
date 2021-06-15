@@ -36,15 +36,6 @@ module.exports = {
         'tutorials/simple-todo-list/6-validation-and-sanitization',
         'tutorials/simple-todo-list/7-unit-testing',
       ]),
-      category('Multi-User To-Do List', [
-        'tutorials/multi-user-todo-list/1-Introduction',
-        'tutorials/multi-user-todo-list/2-the-user-and-todo-models',
-        'tutorials/multi-user-todo-list/3-the-shell-scripts',
-        'tutorials/multi-user-todo-list/5-auth-controllers-and-hooks',
-        'tutorials/multi-user-todo-list/6-todos-and-ownership',
-        'tutorials/multi-user-todo-list/7-the-signup-page',
-        'tutorials/multi-user-todo-list/8-e2e-testing-and-authentication',
-      ]),
       category('Full Example with React', [
         'tutorials/real-world-example-with-react/1-introduction',
         'tutorials/real-world-example-with-react/2-database-set-up',
