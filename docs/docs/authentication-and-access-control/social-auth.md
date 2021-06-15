@@ -396,7 +396,7 @@ this.google.redirect({ /* ... */ }, {
 
 #### Register an OAuth application
 
-Visit [Facebook's developper website](https://developers.facebook.com/) to create an application and obtain a client ID and a client secret.
+Visit [Facebook's developer website](https://developers.facebook.com/) to create an application and obtain a client ID and a client secret.
 
 #### Redirection parameters
 
