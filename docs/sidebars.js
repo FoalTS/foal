@@ -115,7 +115,7 @@ module.exports = {
       ]),
       category('Cookbook', [
         'cookbook/scheduling-jobs',
-        'cookbook/404-page',
+        'cookbook/not-found-page',
         'cookbook/request-body-size',
         'cookbook/expressjs',
         'cookbook/root-imports',

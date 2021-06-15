@@ -102,7 +102,7 @@
         "version-1.x/cookbook/error-handling",
         "version-1.x/cookbook/generate-tokens",
         "version-1.x/cookbook/scheduling-jobs",
-        "version-1.x/cookbook/404-page",
+        "version-1.x/cookbook/not-found-page",
         "version-1.x/cookbook/request-body-size",
         "version-1.x/cookbook/expressjs",
         "version-1.x/cookbook/root-imports",
