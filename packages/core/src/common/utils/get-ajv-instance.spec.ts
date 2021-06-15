@@ -2,6 +2,10 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
+function clearCache() {
+  delete (_instanceWrapper as any).instance;
+}
+
 describe('getAjvInstance', () => {
 
   it('should use defaults.', () => {
@@ -80,7 +84,7 @@ describe('getAjvInstance', () => {
   describe('', () => {
 
     beforeEach(() => {
-      delete (_instanceWrapper as any).instance;
+      clearCache();
       Config.set('settings.ajv.$data', true);
       Config.set('settings.ajv.allErrors', true);
       Config.set('settings.ajv.coerceTypes', false);
@@ -194,8 +198,16 @@ describe('getAjvInstance', () => {
       ], 'AJV should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
     });
 
-    it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
-      Config.set('settings.ajv.coerceTypes', 'hello');
+    it.only('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
+      Config.set('settings.ajv.coerceTypes', false);
+      getAjvInstance().validate({}, {});
+      clearCache();
+
+      Config.set('settings.ajv.coerceTypes', 'array');
+      getAjvInstance().validate({}, {});
+      clearCache();
+
+      Config.set('settings.ajv.coerceTypes', 1);
 
       try {
         getAjvInstance().validate({}, {});
@@ -204,8 +216,8 @@ describe('getAjvInstance', () => {
           throw new Error('A ConfigTypeError should have been thrown');
         }
         strictEqual(error.key, 'settings.ajv.coerceTypes');
-        strictEqual(error.expected, 'boolean');
-        strictEqual(error.actual, 'string');
+        strictEqual(error.expected, 'boolean|string');
+        strictEqual(error.actual, 'number');
         return;
       }
 
@@ -267,7 +279,7 @@ describe('getAjvInstance', () => {
     });
 
     after(() => {
-      delete (_instanceWrapper as any).instance;
+      clearCache();
       Config.remove('settings.ajv.$data');
       Config.remove('settings.ajv.allErrors');
       Config.remove('settings.ajv.coerceTypes');
