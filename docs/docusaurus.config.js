@@ -1,6 +1,6 @@
 module.exports = {
   title: 'FoalTS',
-  tagline: 'Node.JS framework for building web applications',
+  tagline: 'Elegant and fully-featured Node.JS framework for building web applications',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -46,10 +46,6 @@ module.exports = {
       searchParameters: {},
 
       //... other Algolia params
-    },
-    announcementBar: {
-      id: 'v1-end-of-life',
-      content: '💡 Version 1 of FoalTS will reach its end of life on 2021-05-31.  👉 <a href="https://foalts.org/docs/upgrade-to-v2/README">Upgrade to version 2</a>.'
     },
     colorMode: {
       defaultMode: 'light',

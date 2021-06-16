@@ -30,7 +30,7 @@ export async function renderError(error: Error, ctx: Context): Promise<HttpRespo
 
     body = renderToString(template, {
       column,
-      filename: basename(path),
+      filename: basename(path || ''),
       line,
       message: error.message,
       name: error.name,

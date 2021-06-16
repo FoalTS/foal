@@ -1,6 +1,6 @@
 {
   "version.label": {
-    "message": "2.3.0 (terbaru)",
+    "message": "2.5.0 (terbaru)",
     "description": "The label for version current"
   },
   "sidebar.someSidebar.category.TUTORIALS": {
@@ -11,9 +11,9 @@
     "message": "To-Do List Sederhana",
     "description": "The label for category Simple To-Do List in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Multi-User To-Do List": {
-    "message": "To-Do List Multi-User",
-    "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
+  "sidebar.someSidebar.category.Full Example with React": {
+    "message": "Full Example with React",
+    "description": "The label for category Full Example with React in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.TOPIC GUIDES": {
     "message": "TOPIK",

@@ -1,5 +1,5 @@
 ---
-title: The Modelo Todo
+title: El Modelo Todo
 ---
 
 Vamos a crear su primer modelo. El CLI proporciona un comando útil para generar un nuevo archivo con un modelo vacío.

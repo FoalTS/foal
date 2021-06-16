@@ -23,6 +23,7 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
 export function getAjvInstance(): Ajv.Ajv {
   if (!_instanceWrapper.instance) {
     _instanceWrapper.instance = new Ajv({
+      $data: Config.get('settings.ajv.$data', 'boolean'),
       allErrors: Config.get('settings.ajv.allErrors', 'boolean'),
       coerceTypes: Config.get('settings.ajv.coerceTypes', 'boolean', true),
       nullable: Config.get('settings.ajv.nullable', 'boolean'),

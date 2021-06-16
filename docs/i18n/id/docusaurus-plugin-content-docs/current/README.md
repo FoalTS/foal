@@ -13,11 +13,6 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
-| Versi | Status | Berakhir |
-| --- | --- | --- |
-| 2.x | Terkini | - |
-| 1.x | Pemeliharaan | 2021-05-31 |
-
 ## Apa itu Foal?
 
 *Foal* (atau *FoalTS*) merupakan sebuah framework Node.JS untuk membangun aplikasi web.
@@ -29,8 +24,6 @@ Namun meskipun menawarkan banyak fitur, Foal sendiri tetaplah simpel. Kerumitan 
 Terakhir, Foal dibuat menggunakan TypeScript. Typescript sangat membantu dalam urusan type-checking dan memberi kita fitur terbaru dari ECMAScript. Kesalahan dalam kode pun dapat terdeteksi lebih dini. Typescript juga memberikan kita fitur auto-komplit dan dokumen API saat bekerja dalam editor.
 
 ## Kebijakan saat Develop
-
-> *Hanya untuk kontributor.*
 
 ### Ribuan kali Tes
 

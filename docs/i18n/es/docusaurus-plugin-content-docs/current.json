@@ -1,6 +1,6 @@
 {
   "version.label": {
-    "message": "2.3.0 (última)",
+    "message": "2.5.0 (última)",
     "description": "The label for version current"
   },
   "sidebar.someSidebar.category.TUTORIALS": {
@@ -11,9 +11,9 @@
     "message": "Lista de Tareas Simple",
     "description": "The label for category Simple To-Do List in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Multi-User To-Do List": {
-    "message": "Lista de Tareas Multiusuario",
-    "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
+  "sidebar.someSidebar.category.Full Example with React": {
+    "message": "Ejemplo Completo con React",
+    "description": "The label for category Full Example with React in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.TOPIC GUIDES": {
     "message": "GUÍAS DE TEMAS",

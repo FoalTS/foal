@@ -162,7 +162,7 @@ const file = ctx.request.body.files.profile;
 
 ### Adding Fields
 
-Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook.
+Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook. All specified fields are mandatory in the request.
 
 ```typescript
 import { Context, Post } from '@foal/core';
@@ -278,6 +278,7 @@ class ApiController {
 | --- | --- | --- |
 | forceDownload | boolean | It indicates whether the response should include the `Content-Disposition: attachment` header. If this is the case, browsers will not attempt to display the returned file (e.g. with the browser's PDF viewer) and will download the file directly. |
 | filename | string | Default name proposed by the browser when saving the file. If it is not specified, FoalTS extracts the name from the path (`foo.jpg` in the example). |
+| cache | string | Value of the `Cache-Control` header (if necessary). |
 
 ## Usage with a Database
 
