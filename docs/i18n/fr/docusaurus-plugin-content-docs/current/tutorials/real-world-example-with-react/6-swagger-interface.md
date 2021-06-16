@@ -1,5 +1,7 @@
 ---
 title: Test de l'API avec Swagger
+id: tuto-6-swagger-interface
+slug: 6-swagger-interface
 ---
 
 Maintenant que le premier point de terminaison a été implémenté, l'étape suivante consiste à le tester.

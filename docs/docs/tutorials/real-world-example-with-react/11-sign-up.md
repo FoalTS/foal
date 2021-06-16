@@ -1,5 +1,7 @@
 ---
 title: Adding Sign Up
+id: tuto-11-sign-up
+slug: 11-sign-up
 ---
 
 So far, only users created with the `create-user` script can log in and publish stories. In this section you will add a new API endpoint for users to sign up with the registration page.

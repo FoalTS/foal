@@ -1,5 +1,7 @@
 ---
 title: L'API REST
+id: tuto-5-the-rest-api
+slug: 5-the-rest-api
 ---
 
 Bien, pour l'instant, vous avez un frontend qui fonctionne correctement et quelques todos dans votre base de données. Il est maintenant temps de coder une API REST pour relier les deux.

@@ -1,5 +1,7 @@
 ---
 title: Introducción
+id: tuto-1-introduction
+slug: 1-introduction
 ---
 
 Este tutorial muestra cómo construir una aplicación del mundo real con React y Foal. Asume que ya ha leído la primera guía *[Cómo construir una lista de tareas simple](../simple-todo-list/1-installation.md)* y que tiene un conocimiento básico de React.

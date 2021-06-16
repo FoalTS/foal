@@ -1,5 +1,7 @@
 ---
 title: Validation & Sanitization
+id: tuto-6-validation-and-sanitization
+slug: 6-validation-and-sanitization
 ---
 
 Currently inputs received by the server are not checked. Everyone could send anything when requesting `POST /api/todos`. That's why client inputs cannot be trusted.

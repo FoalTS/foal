@@ -1,5 +1,7 @@
 ---
 title: Prueba de la API con Swagger
+id: tuto-6-swagger-interface
+slug: 6-swagger-interface
 ---
 
 Ahora que se ha implementado el primer punto final de la API, el siguiente paso es probarlo.

@@ -1,5 +1,7 @@
 ---
 title: Pruebas Unitarias
+id: tuto-7-unit-testing
+slug: 7-unit-testing
 ---
 
 El último paso de este tutorial es añadir algunas pruebas unitarias al `ApiController`.

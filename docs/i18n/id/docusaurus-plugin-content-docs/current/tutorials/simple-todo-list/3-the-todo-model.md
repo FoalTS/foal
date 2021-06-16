@@ -1,5 +1,7 @@
 ---
 title: The Todo Model
+id: tuto-3-the-todo-model
+slug: 3-the-todo-model
 ---
 
 Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.

@@ -1,5 +1,7 @@
 ---
 title: Authentification des Utilisateurs dans l'API
+id: tuto-9-authenticated-api
+slug: 9-authenticated-api
 ---
 
 Maintenant que le login est configuré, vous pouvez ajouter deux nouvelles routes pour créer et supprimer des posts. Leur accès sera limité aux utilisateurs authentifiés. 

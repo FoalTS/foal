@@ -1,5 +1,7 @@
 ---
 title: Introducción
+id: tuto-2-introduction
+slug: 2-introduction
 ---
 
 La aplicación que creará es una simple lista de tareas. Consiste en una parte frontend que ya ha sido escrita para usted y una parte backend que será el tema de este tutorial.

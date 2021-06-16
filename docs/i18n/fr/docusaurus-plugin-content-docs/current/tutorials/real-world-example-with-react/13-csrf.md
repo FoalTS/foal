@@ -1,5 +1,7 @@
 ---
 title: Protection CSRF
+id: tuto-13-csrf
+slug: 13-csrf
 ---
 
 Comme vous utilisez l'authentification avec des cookies, vous devez ajouter une protection CSRF à votre application. C'est très facile avec Foal, même lorsque vous construisez une SPA.

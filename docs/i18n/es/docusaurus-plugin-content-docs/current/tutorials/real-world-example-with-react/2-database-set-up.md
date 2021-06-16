@@ -1,5 +1,7 @@
 ---
 title: Base de Datos (configuración)
+id: tuto-2-database-set-up
+slug: 2-database-set-up
 ---
 
 El primer paso de este tutorial es establecer una conexión con la base de datos. Si aún no lo ha hecho, instale [MySQL](https://dev.mysql.com/downloads/) o [PostgreSQL](https://www.postgresql.org/download/).

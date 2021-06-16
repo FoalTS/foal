@@ -1,5 +1,7 @@
 ---
 title: Authenticating Users in the API
+id: tuto-9-authenticated-api
+slug: 9-authenticated-api
 ---
 
 Now that the login is configured, you can add two new routes to create and delete stories. Their access will be limited to authenticated users. 

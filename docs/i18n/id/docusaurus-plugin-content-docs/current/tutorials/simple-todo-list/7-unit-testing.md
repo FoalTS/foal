@@ -1,5 +1,7 @@
 ---
 title: Unit Testing
+id: tuto-7-unit-testing
+slug: 7-unit-testing
 ---
 
 The last step of this tutorial is to add some unit tests to the `ApiController`.

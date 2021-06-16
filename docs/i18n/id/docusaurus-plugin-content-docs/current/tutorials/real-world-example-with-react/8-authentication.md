@@ -1,5 +1,7 @@
 ---
 title: Logging Users In and Out
+id: tuto-8-authentication
+slug: 8-authentication
 ---
 
 Stories are displayed on the home page. If we want users to be able to post new stories and upload a profile picture, we need to allow them to log in to the application.
