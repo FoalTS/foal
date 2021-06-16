@@ -4,8 +4,8 @@
   <ShortName>FoalTS</ShortName>
   <Description>Search FoalTS</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://foalts.org/img/logo.png</Image>
-  <Url type="text/html" method="get" template="https://foalts.org/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://foalts.org/opensearch.xml" />
-  <moz:SearchForm>https://foalts.org</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://foalts.org/fr/img/logo.png</Image>
+  <Url type="text/html" method="get" template="https://foalts.org/fr/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://foalts.org/fr/opensearch.xml" />
+  <moz:SearchForm>https://foalts.org/fr/</moz:SearchForm>
 </OpenSearchDescription>
