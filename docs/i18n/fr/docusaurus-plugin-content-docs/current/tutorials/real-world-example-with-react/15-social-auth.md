@@ -1,5 +1,7 @@
 ---
 title: Authentification Sociale avec Google
+id: tuto-15-social-auth
+slug: 15-social-auth
 ---
 
 Dans cette dernière partie du tutoriel, nous allons donner aux utilisateurs la possibilité de se connecter avec Google. Actuellement, ils ne peuvent se connecter qu'avec un email et un mot de passe.

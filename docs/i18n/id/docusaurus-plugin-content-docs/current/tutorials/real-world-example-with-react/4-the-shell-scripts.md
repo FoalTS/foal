@@ -1,5 +1,7 @@
 ---
 title: The Shell Scripts
+id: tuto-4-the-shell-scripts
+slug: 4-the-shell-scripts
 ---
 
 Your models are ready to be used. As in the previous tutorial, you will use shell scripts to feed the database.

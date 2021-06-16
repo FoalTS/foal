@@ -1,5 +1,7 @@
 ---
 title: Conexión de los Usuarios
+id: tuto-8-authentication
+slug: 8-authentication
 ---
 
 Los posts se muestran en la página de inicio. Si queremos que los usuarios puedan publicar nuevos posts y subir una foto de perfil, tenemos que permitirles iniciar sesión en la aplicación.

@@ -1,5 +1,7 @@
 ---
 title: Carga y Descarga de Imágenes
+id: tuto-12-file-upload
+slug: 12-file-upload
 ---
 
 El siguiente paso en este tutorial es permitir a los usuarios subir una imagen de perfil. Esta imagen se mostrará en la página de inicio delante de cada publicación de cada autor.

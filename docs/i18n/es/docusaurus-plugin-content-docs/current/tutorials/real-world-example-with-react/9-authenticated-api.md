@@ -1,5 +1,7 @@
 ---
 title: Autenticación en la API
+id: tuto-9-authenticated-api
+slug: 9-authenticated-api
 ---
 
 Ahora que el login está configurado, puede añadir dos nuevas rutas para crear y eliminar publicaciones. Su acceso estará limitado a los usuarios autentificados. 

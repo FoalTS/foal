@@ -1,5 +1,7 @@
 ---
 title: Su Primera Ruta
+id: tuto-5-our-first-route
+slug: 5-our-first-route
 ---
 
 La base de datos está ahora llena de algunas publicaciones. Implementemos la primera ruta para recuperarlas.

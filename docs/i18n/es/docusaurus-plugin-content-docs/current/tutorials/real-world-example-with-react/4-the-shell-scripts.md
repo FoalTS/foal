@@ -1,5 +1,7 @@
 ---
 title: Los Scripts Shell
+id: tuto-4-the-shell-scripts
+slug: 4-the-shell-scripts
 ---
 
 Sus modelos están listos para ser utilizados. Como en el tutorial anterior, utilizará scripts shell para alimentar la base de datos.

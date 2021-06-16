@@ -1,5 +1,7 @@
 ---
 title: The REST API
+id: tuto-5-the-rest-api
+slug: 5-the-rest-api
 ---
 
 Good, so far you have a frontend working properly and some todos in your database. Now it is time to code a REST API to link them both.

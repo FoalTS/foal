@@ -1,5 +1,7 @@
 ---
 title: Database Set Up
+id: tuto-2-database-set-up
+slug: 2-database-set-up
 ---
 
 The first step in this tutorial is to establish a database connection. If you haven't already done so, install [MySQL](https://dev.mysql.com/downloads/) or [PostgreSQL](https://www.postgresql.org/download/).

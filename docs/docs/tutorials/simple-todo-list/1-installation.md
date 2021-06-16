@@ -1,5 +1,7 @@
 ---
 title: Installation
+id: tuto-1-installation
+slug: 1-installation
 ---
 
 In this tutorial you will learn how to create a basic web application with FoalTS. The demo application is a simple to-do list with which users can view, create and delete their tasks.

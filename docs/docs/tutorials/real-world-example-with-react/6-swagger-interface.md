@@ -1,5 +1,7 @@
 ---
 title: API Testing with Swagger
+id: tuto-6-swagger-interface
+slug: 6-swagger-interface
 ---
 
 Now that the first API endpoint has been implemented, the next step is to test it.

@@ -1,5 +1,7 @@
 ---
 title: Authenticating Users in React
+id: tuto-10-auth-with-react
+slug: 10-auth-with-react
 ---
 
 The backend API is ready to be used. Now let's add authentication in the frontend side.

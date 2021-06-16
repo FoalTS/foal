@@ -1,5 +1,7 @@
 ---
 title: Your First Route
+id: tuto-5-our-first-route
+slug: 5-our-first-route
 ---
 
 The database is now filled with some stories. Let's implement the first route to retrieve them.

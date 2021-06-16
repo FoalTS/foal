@@ -1,5 +1,7 @@
 ---
 title: Image Upload and Download
+id: tuto-12-file-upload
+slug: 12-file-upload
 ---
 
 The next step in this tutorial is to allow users to upload a profile picture. This image will be displayed on the homepage in front of each author's story.

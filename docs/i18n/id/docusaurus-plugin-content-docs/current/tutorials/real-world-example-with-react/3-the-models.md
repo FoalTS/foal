@@ -1,5 +1,7 @@
 ---
 title: The User and Story Models
+id: tuto-3-the-models
+slug: 3-the-models
 ---
 
 Now that the database connection is established, you can create your two entities `User` and `Story`.

@@ -1,5 +1,7 @@
 ---
 title: Téléchargement d'Images
+id: tuto-12-file-upload
+slug: 12-file-upload
 ---
 
 L'étape suivante de ce tutoriel consiste à permettre aux utilisateurs de télécharger une photo de profil. Cette image sera affichée sur la page d'accueil en face de chaque post de chaque auteur.

@@ -1,5 +1,7 @@
 ---
 title: Validación & Sanitización
+id: tuto-6-validation-and-sanitization
+slug: 6-validation-and-sanitization
 ---
 
 Actualmente las entradas recibidas por el servidor no se comprueban. Todo el mundo puede enviar cualquier cosa al solicitar `POST /api/todos`. Por eso no se puede confiar en las entradas del cliente.

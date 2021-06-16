@@ -1,5 +1,7 @@
 ---
 title: Introduction
+id: tuto-2-introduction
+slug: 2-introduction
 ---
 
 L'application que vous allez créer est une simple liste de tâches. Elle se compose d'une partie frontend qui a déjà été écrite pour vous et d'une partie backend qui sera le sujet de ce tutoriel.

@@ -1,5 +1,7 @@
 ---
 title: Production Build
+id: tuto-14-production-build
+slug: 14-production-build
 ---
 
 So far, the front-end and back-end applications are compiled and served by two different development servers. The next step is to build them into a single one ready for production.

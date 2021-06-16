@@ -1,5 +1,7 @@
 ---
 title: Los Modelos User y Story
+id: tuto-3-the-models
+slug: 3-the-models
 ---
 
 Ahora que la conexión a la base de datos está establecida, puede crear sus dos entidades `User` y `Story`.

@@ -1,5 +1,7 @@
 ---
 title: Le Script Shell create-todo
+id: tuto-4-the-shell-script-create-todo
+slug: 4-the-shell-script-create-todo
 ---
 
 Il est maintenant temps de remplir la base de données avec quelques tâches.
