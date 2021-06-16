@@ -11,10 +11,6 @@
     "message": "To-Do List Sederhana",
     "description": "The label for category Simple To-Do List in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Multi-User To-Do List": {
-    "message": "To-Do List Multi-User",
-    "description": "The label for category Multi-User To-Do List in sidebar someSidebar"
-  },
   "sidebar.someSidebar.category.Full Example with React": {
     "message": "Full Example with React",
     "description": "The label for category Full Example with React in sidebar someSidebar"
