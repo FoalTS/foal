@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://foalts.org/blog</id>
+    <id>https://foalts.org/fr/blog</id>
     <title>FoalTS Blog</title>
     <updated>2021-06-11T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://foalts.org/blog"/>
+    <link rel="alternate" href="https://foalts.org/fr/blog"/>
     <subtitle>FoalTS Blog</subtitle>
-    <icon>https://foalts.org/img/logo.png</icon>
+    <icon>https://foalts.org/fr/img/logo.png</icon>
     <entry>
         <title type="html"><![CDATA[Version 2.5 release notes]]></title>
         <id>Version 2.5 release notes</id>

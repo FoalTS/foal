@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>FoalTS Blog</title>
-        <link>https://foalts.org/blog</link>
+        <link>https://foalts.org/es/blog</link>
         <description>FoalTS Blog</description>
         <lastBuildDate>Fri, 11 Jun 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
