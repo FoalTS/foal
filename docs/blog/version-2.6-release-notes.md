@@ -27,3 +27,7 @@ Version 2.6 of Foal has been released! Here are the improvements that it brings.
 ```
 
 Option documentation: [https://ajv.js.org/coercion.html#coercion-to-and-from-array](https://ajv.js.org/coercion.html#coercion-to-and-from-array).
+
+# Swagger page supports strict CSP
+
+Inline scripts in the Swagger page have been removed to support more strict *Content Security Policy* directive.

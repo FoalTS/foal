@@ -101,7 +101,14 @@ export abstract class SwaggerController {
       return new HttpResponseMovedPermanently(ctx.request.path + '/');
     }
 
-    const template = await promisify(readFile)(join(__dirname, 'index.tpl.html'), 'utf8');
+    const page = await promisify(readFile)(join(__dirname, 'index.html'), 'utf8');
+    return new HttpResponseOK(page)
+      .setHeader('Content-Type', 'text/html; charset=utf-8');
+  }
+
+  @Get('/main.js')
+  async main(ctx: Context) {
+    const template = await promisify(readFile)(join(__dirname, 'main.tpl.js'), 'utf8');
     let body = '';
 
     if (!Array.isArray(this.options)) {
@@ -114,7 +121,7 @@ export abstract class SwaggerController {
       const options = this.options
         .map(option => {
           if (option.primary) {
-            primaryName = `\n        \'urls.primaryName\': "${option.name}",`;
+            primaryName = `\n    \'urls.primaryName\': "${option.name}",`;
           }
           return {
             name: option.name,
@@ -127,7 +134,7 @@ export abstract class SwaggerController {
     }
     body = body.replace('{{ uiOptions }}', JSON.stringify(this.uiOptions));
     return new HttpResponseOK(body)
-      .setHeader('Content-Type', 'text/html; charset=utf-8');
+      .setHeader('Content-Type', 'application/javascript');
   }
 
   @Get('/swagger-ui.css')
