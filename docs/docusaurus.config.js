@@ -111,11 +111,7 @@ module.exports = {
           position: 'right',
         },
       ],
-    },
-    footer: {
-      links: [
-      ],
-    },
+    }
   },
   plugins: [
     'docusaurus-plugin-sass',
