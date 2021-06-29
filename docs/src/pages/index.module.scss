@@ -4,53 +4,65 @@ $lightwhite: hsl(213, 100%, 92%);
 $bg-white: #fafafa;
 $text-white: rgb(232, 237, 255);
 
+$light-blue: #1b7cf2;
+
 .btn {
   font-size: 1.2rem;
   font-family: Arial;
-  border-radius: 30px;
-  padding: 0.5rem 4rem;
+  border-radius: 10px;
+  padding: 0.8rem 2rem;
 
   box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
-  background-color: #ffc351;
-  color: #242526;
-  border: none;
+  background-color: $text-white;
+  color: $light-blue;
+  border: solid 2px #e8edff;
+}
+
+.btnSecondary {
+  margin-left: 15px;
+  background-color: transparent;
+  color: #e8edff;
 }
 
 .btn:hover {
-  background-color: $lightwhite;
   text-decoration: none;
+  color: inherit;
 }
 
 .masthead {
   min-height: 500px;
 
-  background-color: #1b7cf2;
-  background-image: url('../img/background8.png');
+  background-color: $light-blue;
+  // background-image: url('../img/background8.png');
   background-attachment: fixed;
   background-position: center; 
 
   .content {
-    padding-top: 70px;
+    padding-top: 90px;
     text-align: center;
   }
 
   h1 {
     color: $text-white;
-    font-weight: bold;
+    font-weight: normal;
 
     font-family: Arial;
-    font-size: 120px;
+    font-size: 55px;
 
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+
+    span {
+      font-weight: bold;
+    }
   }
 
   h3 {
     font-weight: normal;
-    font-size: 28px;
+    font-size: 25px;
     font-family: Arial;
     color: $text-white;
 
-    margin-bottom: 50px;
+    margin-bottom: 80px;
   }
 }
 

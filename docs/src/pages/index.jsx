@@ -62,17 +62,22 @@ function Home() {
   const context = useDocusaurusContext();
   const {siteConfig = {}} = context;
   return (
-    <Layout
+    <Layout  
       description="Elegant and complete Node.Js web framework based on TypeScript.">
         <header className={styles.masthead}>
           <div className={styles.content}>
-            <h1>Foal</h1>
-            <h3>{siteConfig.tagline}</h3>
+            <h1>The elegant and complete <span>NodeJS</span> framework</h1>
+            <h3>Simple, flexible and fully-featured.</h3>
             <div>
               <Link
                 className={styles.btn}
                 to={useBaseUrl("docs/tutorials/simple-todo-list/1-installation")}>
                 Get started
+              </Link>
+              <Link
+                className={`${styles.btn} ${styles.btnSecondary}`}
+                to="https://discord.gg/QUrJv98">
+                Join the chat
               </Link>
             </div>
           </div>
