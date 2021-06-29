@@ -18,15 +18,20 @@ $light-blue: #1b7cf2;
   border: solid 2px #e8edff;
 }
 
+.btn:hover {
+  text-decoration: none;
+  color: rgb(22, 89, 172);
+}
+
 .btnSecondary {
   margin-left: 15px;
   background-color: transparent;
   color: #e8edff;
 }
 
-.btn:hover {
+.btnSecondary:hover {
   text-decoration: none;
-  color: inherit;
+  color: white;
 }
 
 .masthead {
