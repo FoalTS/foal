@@ -118,7 +118,8 @@ $green: hsl(113, 89%, 40%);
 .section1,
 .section2
 {
-  padding: 70px 60px;
+  // 80->70 on medium.
+  padding: 80px 60px;
 }
 
 .smallSection {
@@ -136,6 +137,7 @@ $green: hsl(113, 89%, 40%);
 .metrics {
   display: flex;
   justify-content: space-around;
+  color: $black;
 
   > div {
     display: flex;
@@ -226,7 +228,6 @@ $green: hsl(113, 89%, 40%);
 
   }
 
-
 }
 
 .featureRow:last-of-type {
@@ -235,6 +236,39 @@ $green: hsl(113, 89%, 40%);
       margin-bottom: 0;
     }
   }
+}
+
+.featureImageWrapperRight,
+.featureImageWrapperLeft
+{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featureImageWrapperRight {
+  padding-left: 60px;
+
+  > img {
+    max-width: 80%;
+  }
+}
+
+.featureImageWrapperLeft {
+  padding-right: 60px;
+
+  > img {
+    max-width: 70%;
+  }
+}
+
+.codeImage {
+  border-radius: 20px;
+  background-color: #1e1e1e;
+  padding: 10px;
+  padding-bottom: 12px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .testimonials {

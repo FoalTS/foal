@@ -109,12 +109,14 @@ function Home() {
           </div>
           <div className={`${styles.section2} ${styles.feature}`}>
             <div className={styles.col2}>
-
+              <div className={styles.featureImageWrapperLeft}>
+                <img src={useBaseUrl('img/home/typescript.png')} alt=""  />
+              </div>
             </div>
             <div className={styles.col1}>
               <h2>TypeScript Support</h2>
               <p>
-                Thanks to TypeScript, most careless errors are caught during compilation
+                Thanks to TypeScript, most of your careless errors are caught during compilation
                 and the overall quality of your code is improved. The language also offers
                 you autocompletion and a well-documented API.
               </p>
@@ -124,13 +126,20 @@ function Home() {
             <div className={styles.col1}>
               <h2>Simple and Intuitive Architecture</h2>
               <p>
-                Complexity and unnecessary abstractions are put aside. Foal's components
-                are designed to be easy to use and understand, so you don't have to
-                spend more time reading the documentation than you do coding.
+                In Foal, you only manage three concepts: controllers, services and hooks.
+                <br/>
+                <br/>
+                Complexity and unnecessary abstractions are set aside
+                so that you spend more time coding rather than reading the documentation.
+                <br />
+                <br />
+                No steep learning curve or over-engineering here.
               </p>
             </div>
             <div className={styles.col2}>
-
+              <div className={styles.featureImageWrapperRight}>
+                <img src={useBaseUrl('img/home/architecture2.png')} alt="" className={styles.codeImage} />
+              </div>
             </div>
           </div>
           <div className={`${styles.section2} ${styles.testimonials}`}>
