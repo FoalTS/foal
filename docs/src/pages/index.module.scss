@@ -6,6 +6,26 @@ $text-white: rgb(232, 237, 255);
 
 $light-blue: #1b7cf2;
 
+$section-background1: $bg-white;
+$section-background2: #f8f8fa;
+
+$black: hsl(213, 99%, 13%);
+$green: hsl(113, 89%, 40%);
+
+@mixin title {
+  font-family: Arial;
+  letter-spacing: 0.04rem;
+}
+
+@mixin paragraph {
+  font-family: Arial;
+  letter-spacing: 0.04rem;
+}
+
+/*
+ * Buttons
+ */
+
 .btn {
   font-size: 1.2rem;
   font-family: Arial;
@@ -16,6 +36,11 @@ $light-blue: #1b7cf2;
   background-color: $text-white;
   color: $light-blue;
   border: solid 2px #e8edff;
+}
+
+.btnMedium {
+  padding: 0.6rem 1.5rem;
+  font-size: 1.1rem;
 }
 
 .btn:hover {
@@ -30,7 +55,16 @@ $light-blue: #1b7cf2;
 }
 
 .btnSecondary:hover {
-  text-decoration: none;
+  color: white;
+}
+
+.btnPrimary {
+  background-color: #1b7cf2;
+  color: #e8edff;
+  border: solid 1px #156dd9;
+}
+
+.btnPrimary:hover {
   color: white;
 }
 
@@ -38,9 +72,6 @@ $light-blue: #1b7cf2;
   min-height: 500px;
 
   background-color: $light-blue;
-  // background-image: url('../img/background8.png');
-  background-attachment: fixed;
-  background-position: center; 
 
   .content {
     padding-top: 90px;
@@ -55,10 +86,6 @@ $light-blue: #1b7cf2;
     font-size: 55px;
 
     margin-bottom: 20px;
-
-    span {
-      font-weight: bold;
-    }
   }
 
   h3 {
@@ -71,13 +98,9 @@ $light-blue: #1b7cf2;
   }
 }
 
-.main {
-
-  > div {
-    text-align: center;
-  }
-
-  padding-bottom: 40px;
+.screenshotContainer {
+  text-align: center;
+  
   background: linear-gradient(rgb(171, 203, 243), 5%, $bg-white);
 
   @media (max-width: 576px)  {
@@ -87,43 +110,141 @@ $light-blue: #1b7cf2;
   img {
     margin-top: -70px;
     max-width: 70%;
-    margin-left: auto;
-    margin-right: auto;
     box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
+}
 
-  .features {
+.section1,
+.section2
+{
+  padding: 70px 60px;
+}
+
+.smallSection {
+  padding: 50px 60px;
+}
+
+.section1 {
+  background-color: $section-background2;
+}
+
+.section2 {
+  background-color: $section-background1;
+}
+
+.metrics {
+  display: flex;
+  justify-content: space-around;
+
+  > div {
     display: flex;
-    flex-wrap: wrap;
-    max-width: 85%;
-    justify-content: space-between;
+    align-items: center;
+  }
 
-    margin: auto;
+  .number {
+    @include title();
 
-    margin-top: 60px;
-    margin-bottom: 50px;
+    font-size: 30px;
+    font-family: arial;
+    font-weight: bold;
 
-    @media (max-width: 1280px) {
-      margin-top: 40px;
-      margin-bottom: 30px;
-    } 
-
-    @media (max-width: 768px) {
-      margin-bottom: 10px;
-    } 
-
-    .col {
-      width: 30%;
-
-      @media (max-width: 768px) {
-        width: 100%;
-        margin-bottom: 20px;
-      }
-
-      h3 {
-        font-size: 1.5rem;
-      }
+    .plus {
+      margin-left: 2px;
     }
   }
+
+  .caption {
+    @include paragraph();
+
+    line-height: 15px;
+    font-size: 15px;
+    margin-left: 10px;
+  }
+}
+
+.feature {
+  display: flex;
+
+  h2 {
+    @include title();
+
+    margin-bottom: 30px;
+    color: $black;
+  }
+
+  p {
+    @include paragraph();
+  }
+
+  .col1 {
+    flex: 1;
+  }
+
+  .col2 {
+    flex: 2;
+  }
+}
+
+.featureRow {
+  display: flex;
+  padding-left: 40px;
+
+  .featureCell {
+    padding: 0 20px;
+    flex: 1;
+    display: flex;
+  }
+
+  .featureSymbol {
+    margin-top: -3px;
+    color: $green;
+  }
+
+  .featureContent {
+    flex: 1;
+    padding-left: 12px;
+
+    h3 {
+      @include title();
+
+      font-weight: normal;
+      margin-bottom: 10px;
+      color: $black;
+    }
+
+    p {
+      @include paragraph();
+
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+
+      :last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+  }
+
+
+}
+
+.featureRow:last-of-type {
+  .featureContent {
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.testimonials {
+  h2 {
+    text-align: center;
+    font-family: Arial;
+    color: $black;
+  }
+}
+
+.getStarted {
+  text-align: center;
 }
