@@ -38,11 +38,6 @@ $green: hsl(113, 89%, 40%);
   border: solid 2px #e8edff;
 }
 
-.btnMedium {
-  padding: 0.6rem 1.5rem;
-  font-size: 1.1rem;
-}
-
 .btn:hover {
   text-decoration: none;
   color: rgb(22, 89, 172);
@@ -276,6 +271,38 @@ $green: hsl(113, 89%, 40%);
     text-align: center;
     font-family: Arial;
     color: $black;
+    margin-bottom: 0;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .card {
+    padding: 20px;
+    border-radius: 4px;
+    width: 320px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-top: 60px;
+
+    .testimonial {
+      font-family: Arial;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .author {
+      font-weight: bold;
+      font-family: Arial;
+      font-size: 0.9rem;
+
+      .job {
+        font-weight: normal;
+      }
+    }
+
   }
 }
 

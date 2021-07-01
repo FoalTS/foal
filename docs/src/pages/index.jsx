@@ -19,6 +19,19 @@ function FeatureCell(props) {
   );
 }
 
+function Testimonial(props) {
+  return (
+    <div className={styles.card}>
+      <div className={styles.testimonial}>
+        {props.children}
+      </div>
+      <div className={styles.author}>
+        {props.author}<span className={styles.job}>, {props.job}</span>
+      </div>
+    </div>
+  );
+}
+
 function Home() {
   const context = useDocusaurusContext();
   return (
@@ -144,10 +157,21 @@ function Home() {
           </div>
           <div className={`${styles.section2} ${styles.testimonials}`}>
             <h2>What they say about Foal</h2>
+            <div className={styles.content}>
+              <Testimonial author="Loïc Poullain" job="fullstack developer">
+                This is an awesome product.
+              </Testimonial>
+              <Testimonial author="Loïc Poullain" job="fullstack developer">
+                This is an awesome product.
+              </Testimonial>
+              <Testimonial author="Loïc Poullain" job="fullstack developer">
+                This is an awesome product.
+              </Testimonial>
+            </div>
           </div>
           <div className={`${styles.section1} ${styles.getStarted}`}>
             <Link
-              className={`${styles.btn} ${styles.btnMedium} ${styles.btnPrimary}`}
+              className={`${styles.btn} ${styles.btnPrimary}`}
               to={useBaseUrl("docs/tutorials/simple-todo-list/1-installation")}>
               Get started
             </Link>
