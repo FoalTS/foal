@@ -12,6 +12,8 @@ $section-background2: #f8f8fa;
 $black: hsl(213, 99%, 13%);
 $green: hsl(113, 89%, 40%);
 
+$large-screen: 1281px;
+
 @mixin title {
   font-family: Arial;
   letter-spacing: 0.04rem;
@@ -45,7 +47,7 @@ $green: hsl(113, 89%, 40%);
 
 .btnSecondary {
   margin-left: 15px;
-  background-color: transparent;
+  background-color: $light-blue;
   color: #e8edff;
 }
 
@@ -64,12 +66,25 @@ $green: hsl(113, 89%, 40%);
 }
 
 .masthead {
-  min-height: 500px;
+  height: 500px;
+
+  @media (min-width: $large-screen)  {
+    height: 570px;
+  }
 
   background-color: $light-blue;
+  background-size: cover;
+  // Made with https://bgjar.com/.
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg fill='none'%3e%3crect width='1440' height='560' x='0' y='0' %3e%3c/rect%3e%3cpath d='M0 0L208.11 0L0 213.75z' fill='rgba(255%2c 255%2c 255%2c .1)'%3e%3c/path%3e%3cpath d='M0 213.75L208.11 0L328.02 0L0 287.17z' fill='rgba(255%2c 255%2c 255%2c .075)'%3e%3c/path%3e%3cpath d='M0 287.17L328.02 0L411.13 0L0 336.97z' fill='rgba(255%2c 255%2c 255%2c .05)'%3e%3c/path%3e%3cpath d='M0 336.97L411.13 0L901.35 0L0 373.59000000000003z' fill='rgba(255%2c 255%2c 255%2c .025)'%3e%3c/path%3e%3cpath d='M1440 560L1360.03 560L1440 341.26z' fill='rgba(0%2c 0%2c 0%2c .1)'%3e%3c/path%3e%3cpath d='M1440 341.26L1360.03 560L632 560L1440 331.03z' fill='rgba(0%2c 0%2c 0%2c .075)'%3e%3c/path%3e%3cpath d='M1440 331.03L632 560L254.26999999999998 560L1440 140.21999999999997z' fill='rgba(0%2c 0%2c 0%2c .05)'%3e%3c/path%3e%3cpath d='M1440 140.22000000000003L254.26999999999998 560L143.52999999999997 560L1440 42.93000000000002z' fill='rgba(0%2c 0%2c 0%2c .025)'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask %3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='15.28%25' y1='-39.29%25' x2='84.72%25' y2='139.29%25' gradientUnits='userSpaceOnUse' %3e%3cstop stop-color='%230e2a47' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(27%2c 124%2c 241%2c 1)' offset='0'%3e%3c/stop%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e");
 
   .content {
     padding-top: 90px;
+
+    @media (min-width: $large-screen)  {
+      padding-top: 120px;
+    }
+  
+
     text-align: center;
   }
 
@@ -104,7 +119,13 @@ $green: hsl(113, 89%, 40%);
 
   img {
     margin-top: -70px;
-    max-width: 70%;
+
+    @media (min-width: $large-screen)  {
+      margin-top: -90px;
+    }
+
+    width: 70%;
+    max-width: 1280px;
     box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
@@ -113,12 +134,29 @@ $green: hsl(113, 89%, 40%);
 .section1,
 .section2
 {
-  // 80->70 on medium.
   padding: 80px 60px;
+
+  @media (max-width: 768px)  {
+    padding: 70px 60px;
+  }
+
+  @media (min-width: $large-screen)  {
+    padding: 100px 60px;
+  }
+
+  > div {
+    max-width: 1280px;
+    margin: auto;
+  }
 }
 
 .smallSection {
   padding: 50px 60px;
+
+  
+  @media (min-width: $large-screen)  {
+    padding: 70px 60px;
+  }
 }
 
 .section1 {
@@ -233,29 +271,46 @@ $green: hsl(113, 89%, 40%);
   }
 }
 
-.featureImageWrapperRight,
-.featureImageWrapperLeft
+.architectureWrapper,
+.typescriptWrapper
 {
   height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
-.featureImageWrapperRight {
+.architectureWrapper {
   padding-left: 60px;
+  padding-right: 30px;
+  justify-content: right;
 
   > img {
-    max-width: 80%;
+    max-width: 75%;
   }
 }
 
-.featureImageWrapperLeft {
+.typescriptWrapper {
   padding-right: 60px;
+  justify-content: center;
 
-  > img {
-    max-width: 70%;
+  > div {
+    > strong {
+      color: #3178c6;
+      font-weight: 500;
+      font-size: 6rem;
+    }
+
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > svg {
+      height: 6rem;
+      margin-right: 20px;
+    }
   }
+
 }
 
 .codeImage {
