@@ -86,6 +86,12 @@ module.exports = {
           type: 'localeDropdown',
           position: 'right',
         },
+        {
+          href: 'https://github.com/FoalTS/foal',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
     }
   },
