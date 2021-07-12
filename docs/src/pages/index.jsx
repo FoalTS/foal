@@ -166,7 +166,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className={styles.section2}>
+          {/* <div className={styles.section2}>
             <div className={styles.testimonials}>
               <h2>What they say about Foal</h2>
               <div className={styles.content}>
@@ -181,8 +181,9 @@ function Home() {
                 </Testimonial>
               </div>
             </div>
-          </div>
-          <div className={`${styles.section1} ${styles.smallSection}`}>
+          </div> */}
+          {/* <div className={`${styles.section1} ${styles.smallSection}`}> */}
+          <div className={`${styles.section2} ${styles.smallSection}`}>
             <div className={styles.getStarted}>
               <Link
                 className={`${styles.btn} ${styles.btnPrimary}`}
