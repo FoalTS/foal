@@ -330,14 +330,12 @@ $small-screen: 576px;
 .typescriptWrapper
 {
   height: 100%;
-  display: flex;
-  align-items: center;
 }
 
 .architectureWrapper {
   padding-left: 60px;
   padding-right: 30px;
-  justify-content: right;
+  text-align: right;
       
   @media (max-width: $medium-screen) {
     justify-content: center;
@@ -352,6 +350,8 @@ $small-screen: 576px;
 
 .typescriptWrapper {
   padding-right: 60px;
+  display: flex;
+  align-items: center;
   justify-content: center;
       
   @media (max-width: $medium-screen) {
