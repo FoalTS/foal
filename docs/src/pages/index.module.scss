@@ -13,6 +13,8 @@ $black: hsl(213, 99%, 13%);
 $green: hsl(113, 89%, 40%);
 
 $large-screen: 1281px;
+$medium-screen: 769px;
+$small-screen: 576px;
 
 @mixin title {
   font-family: Arial;
@@ -80,6 +82,10 @@ $large-screen: 1281px;
   .content {
     padding-top: 90px;
 
+    @media (max-width: $small-screen)  {
+      padding-top: 70px;
+    }
+
     @media (min-width: $large-screen)  {
       padding-top: 120px;
     }
@@ -96,6 +102,10 @@ $large-screen: 1281px;
     font-size: 55px;
 
     margin-bottom: 20px;
+
+    @media (max-width: $small-screen)  {
+      font-size: 40px;
+    }
   }
 
   h3 {
@@ -105,6 +115,11 @@ $large-screen: 1281px;
     color: $text-white;
 
     margin-bottom: 80px;
+
+    @media (max-width: $medium-screen) {
+      margin-bottom: 60px;
+    }
+
   }
 }
 
@@ -124,6 +139,11 @@ $large-screen: 1281px;
       margin-top: -90px;
     }
 
+
+    @media (max-width: $small-screen) {
+      display: none;
+    }
+    
     width: 70%;
     max-width: 1280px;
     box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
@@ -136,8 +156,8 @@ $large-screen: 1281px;
 {
   padding: 80px 60px;
 
-  @media (max-width: 768px)  {
-    padding: 70px 60px;
+  @media (max-width: $medium-screen)  {
+    padding: 50px 60px;
   }
 
   @media (min-width: $large-screen)  {
@@ -153,6 +173,9 @@ $large-screen: 1281px;
 .smallSection {
   padding: 50px 60px;
 
+  @media (max-width: $medium-screen) {
+    padding: 40px 60px;
+  }
   
   @media (min-width: $large-screen)  {
     padding: 70px 60px;
@@ -172,9 +195,23 @@ $large-screen: 1281px;
   justify-content: space-around;
   color: $black;
 
+
+  @media (max-width: $small-screen) {
+    flex-direction: column;
+  }
+
   > div {
     display: flex;
     align-items: center;
+
+    @media (max-width: $medium-screen) {
+      flex-direction: column;
+    }
+
+    @media (max-width: $small-screen) {
+      padding-bottom: 20px;
+    }
+
   }
 
   .number {
@@ -195,11 +232,20 @@ $large-screen: 1281px;
     line-height: 15px;
     font-size: 15px;
     margin-left: 10px;
+    
+    @media (max-width: $medium-screen) {
+      margin-left: 0;
+    }
+
   }
 }
 
 .feature {
   display: flex;
+
+  @media (max-width: $medium-screen) {
+    flex-direction: column;
+  }
 
   h2 {
     @include title();
@@ -224,6 +270,15 @@ $large-screen: 1281px;
 .featureRow {
   display: flex;
   padding-left: 40px;
+
+  @media (max-width: $medium-screen) {
+    padding-top: 20px;
+    padding-left: 0;
+  }
+
+  @media (max-width: $small-screen) {
+    flex-direction: column;
+  }
 
   .featureCell {
     padding: 0 20px;
@@ -283,6 +338,12 @@ $large-screen: 1281px;
   padding-left: 60px;
   padding-right: 30px;
   justify-content: right;
+      
+  @media (max-width: $medium-screen) {
+    justify-content: center;
+    padding: 0;
+    padding-top: 40px;
+  }
 
   > img {
     max-width: 75%;
@@ -292,12 +353,22 @@ $large-screen: 1281px;
 .typescriptWrapper {
   padding-right: 60px;
   justify-content: center;
+      
+  @media (max-width: $medium-screen) {
+    padding: 0;
+    padding-bottom: 40px;
+  }
+
 
   > div {
     > strong {
       color: #3178c6;
       font-weight: 500;
       font-size: 6rem;
+
+      @media (max-width: $small-screen) {
+        display: none;
+      }
     }
 
     height: 100%;
