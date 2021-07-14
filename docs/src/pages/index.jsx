@@ -78,7 +78,7 @@ function Home() {
           <div className={styles.section1}>
             <div className={styles.feature}>
               <div className={styles.col1}>
-                <h2>All-in-One Framework</h2>
+                <h2>All-in-One Framework 🚀</h2>
                 <p>
                   The foundation is already there.
                   You don't have to rebuild everything from scratch or find and make 3rd-party packages work together.
@@ -127,7 +127,7 @@ function Home() {
           <div className={styles.section2}>
             <div className={styles.feature}>
               <div className={styles.col1}>
-                <h2>Simple and Intuitive</h2>
+                <h2>Simple and Intuitive 👌</h2>
                 <p>
                   In Foal, you only manage three concepts: controllers, services and hooks.
                   <br/>
@@ -157,11 +157,11 @@ function Home() {
                 </div>
               </div>
               <div className={styles.col1}>
-                <h2>Built with TypeScript</h2>
+                <h2>TypeScript Language</h2>
                 <p>
-                  Thanks to TypeScript, most of your careless errors are caught during compilation
-                  and the overall quality of your code is improved. The language also offers
-                  you autocompletion and a well-documented API.
+                Foal leverages TypeScript to improve the overall quality of your code
+                and detect most of your careless errors during compilation.
+                The language also gives you autocompletion and a well-documented API.
                 </p>
               </div>
             </div>
@@ -186,7 +186,7 @@ function Home() {
           <div className={`${styles.section2} ${styles.smallSection}`}>
             <div className={styles.getStarted}>
               <Link
-                className={`${styles.btn} ${styles.btnPrimary}`}
+                className={styles.btn}
                 to={useBaseUrl("docs/tutorials/simple-todo-list/1-installation")}>
                 Get started
               </Link>
