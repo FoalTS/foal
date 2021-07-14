@@ -22,6 +22,9 @@ function FeatureCell(props) {
 function Testimonial(props) {
   return (
     <div className={styles.card}>
+      <h4 className={styles.title}>
+        {props.title}
+      </h4>
       <div className={styles.testimonial}>
         {props.children}
       </div>
@@ -102,7 +105,7 @@ function Home() {
                     Implement stateful or stateless authentication with cookies or the Authorization header.
                   </FeatureCell>
                   <FeatureCell title="Unit and E2E tests">
-                    Write automated tests with a ready-made environment.
+                    Write automated tests with a ready-to-use environment and a simple dependency injection system.
                   </FeatureCell>
                 </div>
                 <div className={styles.featureRow}>
@@ -170,13 +173,13 @@ function Home() {
             <div className={styles.testimonials}>
               <h2>What they say about Foal</h2>
               <div className={styles.content}>
-                <Testimonial author="Loïc Poullain" job="fullstack developer">
+                <Testimonial title="The missing NodeJS framework!" author="Loïc Poullain" job="fullstack developer">
                   This is an awesome product.
                 </Testimonial>
-                <Testimonial author="Loïc Poullain" job="fullstack developer">
+                <Testimonial title="Straightforward architecture" author="Loïc Poullain" job="fullstack developer">
                   This is an awesome product.
                 </Testimonial>
-                <Testimonial author="Loïc Poullain" job="fullstack developer">
+                <Testimonial title="Awesome" author="Loïc Poullain" job="fullstack developer">
                   This is an awesome product.
                 </Testimonial>
               </div>
