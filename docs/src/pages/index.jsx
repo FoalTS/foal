@@ -195,7 +195,7 @@ function Home() {
               </Link>
             </div>
           </div>
-          <footer className={`${styles.section1} ${styles.footerWrapper}`}>
+          <footer className={styles.footerWrapper}>
             <div className={styles.footer}>
               <a className={styles.githubLink} href="https://github.com/FoalTS/foal"></a>
               <a className={styles.twitterLink} href="https://twitter.com/FoalTs"></a>
