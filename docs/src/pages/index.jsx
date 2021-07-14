@@ -185,8 +185,8 @@ function Home() {
               </div>
             </div>
           </div> */}
-          {/* <div className={`${styles.section1} ${styles.smallSection}`}> */}
-          <div className={`${styles.section2} ${styles.smallSection}`}>
+          {/* <div className={styles.section1}> */}
+          <div className={styles.section2}>
             <div className={styles.getStarted}>
               <Link
                 className={styles.btn}
@@ -195,6 +195,14 @@ function Home() {
               </Link>
             </div>
           </div>
+          <footer className={`${styles.section1} ${styles.footerWrapper}`}>
+            <div className={styles.footer}>
+              <a className={styles.githubLink} href="https://github.com/FoalTS/foal"></a>
+              <a className={styles.twitterLink} href="https://twitter.com/FoalTs"></a>
+              <a className={styles.youtubeLink} href="https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ"></a>
+              <a className={styles.chatLink} href="https://discord.gg/QUrJv98"></a>
+            </div>
+          </footer>
         </section>
     </Layout>
   );
