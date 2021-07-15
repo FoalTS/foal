@@ -482,7 +482,7 @@ $small-screen: 576px;
   background-color: #505864;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 
-  padding: 40px 60px;
+  padding: 20px;
 
   .footer {
     display: flex;
@@ -495,8 +495,8 @@ $small-screen: 576px;
   .chatLink:before
   {
     content: '';
-    width: 26px;
-    height: 26px;
+    width: 22px;
+    height: 22px;
     margin: 0 10px;
     display: flex;
   }
