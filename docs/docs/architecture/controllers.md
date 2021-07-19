@@ -280,6 +280,21 @@ new HttpResponseOK(myStream, { stream: true })
 > new HttpResponseServerError({}, { error, ctx });
 > ```
 
+The type of the `body` may be constrained. This is useful if you wish to guarantee your endpoints return a certain data shape.
+
+*Example with a constrained body type*
+```typescript
+interface Item {
+  title: string
+}
+
+// OK
+new HttpResponseOK<Item>({ title: 'foobar' })
+
+// Error
+new HttpResponseOK<Item>('foobar')
+```
+
 ### Adding Headers
 
 *Example*
