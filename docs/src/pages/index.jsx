@@ -42,8 +42,8 @@ function Home() {
       description="Elegant and complete Node.Js web framework based on TypeScript.">
         <header className={styles.masthead}>
           <div className={styles.content}>
-            <h1>The elegant and complete <strong>NodeJS</strong> framework</h1>
-            <h3>Simple, flexible and fully-featured.</h3>
+            <h1>The elegant NodeJS framework</h1>
+            <h3>Build prototypes in hours, full applications in days.</h3>
             <div>
               <Link
                 className={styles.btn}

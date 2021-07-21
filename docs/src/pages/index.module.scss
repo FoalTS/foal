@@ -2,7 +2,7 @@
 
 $lightwhite: hsl(213, 100%, 92%);
 $bg-white: #fafafa;
-$text-white: rgb(229, 235, 255);
+$text-white: hsl(226, 100%, 95%);
 
 $light-blue: hsl(213, 89%, 53%);
 $medium-blue: hsl(213, 59%, 23%);
@@ -105,7 +105,7 @@ $small-screen: 576px;
     font-weight: normal;
 
     font-family: Arial;
-    font-size: 55px;
+    font-size: 3.9rem;
 
     margin-bottom: 20px;
 
@@ -116,11 +116,11 @@ $small-screen: 576px;
 
   h3 {
     font-weight: normal;
-    font-size: 25px;
+    font-size: 1.6rem;
     font-family: Arial;
-    color: $text-white;
+    color: hsl(226, 100%, 88%);
 
-    margin-bottom: 80px;
+    margin-bottom: 70px;
 
     @media (max-width: $medium-screen) {
       margin-bottom: 40px;
