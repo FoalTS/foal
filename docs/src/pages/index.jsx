@@ -171,7 +171,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className={styles.testimonialsSection}>
+          {/* <div className={styles.testimonialsSection}>
             <div className={styles.testimonials}>
               <h2>What they say about Foal</h2>
               <div className={styles.content}>
@@ -186,7 +186,7 @@ function Home() {
                 </Testimonial>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className={styles.getStartedSection}>
             <div className={styles.getStarted}>
               <Link

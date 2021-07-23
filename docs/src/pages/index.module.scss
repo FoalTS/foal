@@ -290,8 +290,9 @@ $max-content-width: 1280px;
   @include section();
   @include smallSection();
 
-  background-image: url('../img/bg5.svg');
-  background-size: cover;
+  background-color: $bg-white;
+  // background-image: url('../img/bg5.svg');
+  // background-size: cover;
 }
 
 .metrics {
