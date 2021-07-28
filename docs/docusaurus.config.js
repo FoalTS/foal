@@ -1,6 +1,6 @@
 module.exports = {
   title: 'FoalTS',
-  tagline: 'Elegant and fully-featured Node.JS framework for building web applications',
+  tagline: 'Elegant and complete web framework for NodeJS',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -78,30 +78,6 @@ module.exports = {
           position: 'left'
         },
         {
-          href: 'https://github.com/FoalTS/foal',
-          position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub repository',
-        },
-        {
-          href: 'https://twitter.com/FoalTs',
-          position: 'right',
-          className: 'header-twitter-link',
-          'aria-label': 'Twitter profile',
-        },
-        {
-          href: 'https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ',
-          position: 'right',
-          className: 'header-youtube-link',
-          'aria-label': 'Youtube channel',
-        },
-        {
-          href: 'https://discord.gg/QUrJv98',
-          position: 'right',
-          className: 'header-chat-link',
-          'aria-label': 'Discord chat server',
-        },
-        {
           type: 'docsVersionDropdown',
           position: 'right',
           dropdownActiveClassDisabled: true,
@@ -109,6 +85,12 @@ module.exports = {
         {
           type: 'localeDropdown',
           position: 'right',
+        },
+        {
+          href: 'https://github.com/FoalTS/foal',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
         },
       ],
     }

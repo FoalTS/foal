@@ -1,66 +1,160 @@
 /* stylelint-disable docusaurus/copyright-header */
 
-$lightwhite: hsl(213, 100%, 92%);
+/*
+ * Colors
+ */
+
 $bg-white: #fafafa;
-$text-white: rgb(232, 237, 255);
+$text-white: hsl(226, 100%, 95%);
+
+$light-blue: hsl(213, 89%, 53%);
+$darker-blue: hsl(213, 81%, 48%);
+$medium-blue: hsl(213, 59%, 23%);
+$medium-blue2: hsl(213, 69%, 23%);
+
+$orange: hsl(39, 80%, 60%);
+$text-orange-white: hsl(39, 100%, 95%);
+
+/*
+ * Sizes
+ */
+
+$black: hsl(213, 99%, 13%);
+$green: hsl(113, 89%, 40%);
+
+$large-screen: 1281px;
+$medium-screen: 769px;
+$small-screen: 576px;
+
+$section-padding-y: 80px;
+$small-section-padding-y: 50px;
+$section-padding-x: 60px;
+
+$max-content-width: 1280px;
+
+@media (max-width: $medium-screen)  {
+  $section-padding-y: 50px;
+  $small-section-padding-y: 40px;
+}
+
+@media (min-width: $large-screen)  {
+  $section-padding-y: 100px;
+  $small-section-padding-y: 70px;
+}
+
+/*
+ * Fonts
+ */
+
+@mixin title {
+  font-family: Arial;
+  letter-spacing: 0.04rem;
+}
+
+@mixin paragraph {
+  font-family: Arial;
+  letter-spacing: 0.04rem;
+}
+
+/*
+ * Buttons
+ */
 
 .btn {
   font-size: 1.2rem;
+  margin-right: 8px;
+  margin-left: 8px;
   font-family: Arial;
-  border-radius: 30px;
-  padding: 0.5rem 4rem;
+  border-radius: 6px;
+  padding: 0.8rem 2rem;
 
   box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
-  background-color: #ffc351;
-  color: #242526;
-  border: none;
+  background-color: $orange;
+  color: $text-orange-white;
+  text-transform: uppercase;
+  border: solid 1px $orange;
 }
 
 .btn:hover {
-  background-color: $lightwhite;
   text-decoration: none;
+  color: white;
+}
+
+.btnSecondary {
+  background-color: transparent;
+  color: $text-white;
+  text-transform: none;
+  border-color: $text-white;
+}
+
+
+@media (max-width: $small-screen)  {
+  .btn {
+    display: inline-block;
+  }
+
+  .btnSecondary {
+    margin-top: 10px;
+  }
 }
 
 .masthead {
-  min-height: 500px;
+  height: 500px;
 
-  background-color: #1b7cf2;
+  @media (min-width: $large-screen)  {
+    height: 570px;
+  }
+
+  background-color: $light-blue;
+  background-size: cover;
   background-image: url('../img/background8.png');
-  background-attachment: fixed;
-  background-position: center; 
 
   .content {
-    padding-top: 70px;
+    padding-top: 100px;
+
+    @media (max-width: $small-screen)  {
+      padding-top: 70px;
+    }
+
+    @media (min-width: $large-screen)  {
+      padding-top: 120px;
+    }
+  
+
     text-align: center;
   }
 
   h1 {
     color: $text-white;
-    font-weight: bold;
 
     font-family: Arial;
-    font-size: 120px;
+    font-size: 3.9rem;
 
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+
+    @media (max-width: $small-screen)  {
+      font-size: 40px;
+    }
   }
 
   h3 {
     font-weight: normal;
-    font-size: 28px;
+    font-size: 1.6rem;
     font-family: Arial;
     color: $text-white;
 
-    margin-bottom: 50px;
+    margin-bottom: 70px;
+
+    @media (max-width: $medium-screen) {
+      margin-bottom: 40px;
+    }
+
   }
 }
 
-.main {
-
-  > div {
-    text-align: center;
-  }
-
-  padding-bottom: 40px;
+.screenshotContainer {
+  text-align: center;
+  
   background: linear-gradient(rgb(171, 203, 243), 5%, $bg-white);
 
   @media (max-width: 576px)  {
@@ -69,44 +163,456 @@ $text-white: rgb(232, 237, 255);
 
   img {
     margin-top: -70px;
-    max-width: 70%;
-    margin-left: auto;
-    margin-right: auto;
+
+    @media (min-width: $large-screen)  {
+      margin-top: -90px;
+    }
+
+
+    @media (max-width: $small-screen) {
+      display: none;
+    }
+    
+    width: 70%;
+    max-width: $max-content-width;
     box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
+}
 
-  .features {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 85%;
-    justify-content: space-between;
+@mixin section {
+  padding: $section-padding-y $section-padding-x;
 
+  > div {
+    max-width: $max-content-width;
     margin: auto;
+  }
+}
 
-    margin-top: 60px;
-    margin-bottom: 50px;
+@mixin smallSection {
+  padding: $small-section-padding-y $section-padding-x;
+}
 
-    @media (max-width: 1280px) {
-      margin-top: 40px;
-      margin-bottom: 30px;
-    } 
+.metricsSection {
+  @include section();
+  @include smallSection();
 
-    @media (max-width: 768px) {
+  background-color: $bg-white;
+}
+
+.allInOneSection {
+  @include section();
+
+  background-image: url('../img/bg5.svg');
+  background-size: cover;
+
+
+  h2 {
+    color: $text-white;
+    font-weight: bold;
+  }
+
+  h3 {
+    color: $medium-blue2;
+  }
+
+  p {
+    color: $text-white;
+    font-size: 1.05rem;
+  }
+
+  .featuresWrapper {
+    margin-left: 40px;
+
+    $offset: $section-padding-y * 2 / 5;
+
+    margin-top: - $offset;
+    margin-bottom: - $offset;
+    padding-top: $offset;
+    padding-bottom: $offset;
+
+
+    @media (max-width: $medium-screen) {
+      margin-left: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    background-color: $bg-white;
+    border-radius: 5px;
+
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  
+    p {
+      color: black;
+    }
+  }
+}
+
+.architectureSection {
+  @include section();
+
+  background-color: $bg-white;
+
+  h2 {
+    color: $light-blue;
+    font-weight: normal;
+  }
+
+  p {
+    color: black;
+  }
+}
+
+.typescriptSection {
+  @include section();
+
+  background-color: $darker-blue;
+
+  h2 {
+    color: $text-white;
+    font-weight: bold;
+  }
+
+  p {
+    color: hsl(226, 100%, 92%);
+    font-size: 1.05rem;
+  }
+}
+
+.testimonialsSection {
+  @include section();
+
+  background-color: $bg-white;
+}
+
+.getStartedSection {
+  @include section();
+  @include smallSection();
+
+  background-color: $bg-white;
+  // background-image: url('../img/bg5.svg');
+  // background-size: cover;
+}
+
+.metrics {
+  display: flex;
+  justify-content: space-around;
+  color: $black;
+
+
+  @media (max-width: $small-screen) {
+    flex-direction: column;
+
+    > div {
       margin-bottom: 10px;
-    } 
+    }
+  }
 
-    .col {
-      width: 30%;
+  > div {
+    display: flex;
+    align-items: center;
 
-      @media (max-width: 768px) {
-        width: 100%;
+    @media (max-width: $medium-screen) {
+      flex-direction: column;
+    }
+
+    @media (max-width: $small-screen) {
+      padding-bottom: 20px;
+    }
+
+  }
+
+  .number {
+    @include title();
+
+    font-size: 30px;
+    font-family: arial;
+    font-weight: bold;
+    color: $medium-blue;
+
+    .plus {
+      margin-left: 2px;
+    }
+  }
+
+  .caption {
+    @include paragraph();
+
+    line-height: 15px;
+    font-size: 15px;
+    margin-left: 10px;
+    
+    @media (max-width: $medium-screen) {
+      margin-left: 0;
+    }
+
+  }
+}
+
+.feature {
+  display: flex;
+
+  @media (max-width: $medium-screen) {
+    flex-direction: column;
+  }
+
+  h2 {
+    @include title();
+
+    margin-bottom: 30px;
+    font-size: 1.9rem;
+    letter-spacing: 0.05rem;
+  }
+
+  p {
+    @include paragraph();
+  }
+
+  .col1 {
+    flex: 4;
+  }
+
+  .col2 {
+    flex: 7;
+  }
+}
+
+.featureRow {
+  display: flex;
+
+  @media (max-width: $medium-screen) {
+    padding-top: 20px;
+    padding-left: 0;
+  }
+
+  @media (max-width: $small-screen) {
+    flex-direction: column;
+  }
+
+  .featureCell {
+    padding: 0 20px;
+    flex: 1;
+    display: flex;
+  }
+
+  .featureSymbol {
+    margin-top: -5px;
+    color: $green;
+  }
+
+  .featureContent {
+    flex: 1;
+    padding-left: 12px;
+
+    h3 {
+      @include title();
+
+      font-weight: normal;
+      margin-bottom: 15px;
+
+      @media (min-width: $large-screen)  {
         margin-bottom: 20px;
       }
+      font-size: 1rem;
+    }
 
-      h3 {
-        font-size: 1.5rem;
+    p {
+      @include paragraph();
+
+      margin-bottom: 30px;
+
+      @media (min-width: $large-screen)  {
+        margin-bottom: 40px;
+      }
+
+      font-size: 0.9rem;
+
+      :last-of-type {
+        margin-bottom: 0;
       }
     }
+
+  }
+
+}
+
+.featureRow:last-of-type {
+  .featureContent {
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.architectureWrapper,
+.typescriptWrapper
+{
+  height: 100%;
+}
+
+.architectureWrapper {
+  padding-left: 60px;
+  padding-right: 30px;
+  text-align: center;
+      
+  @media (max-width: $medium-screen) {
+    padding: 0;
+    padding-top: 40px;
+  }
+
+        
+  @media (max-width: $small-screen) {
+    display: none;
+  }
+
+  > img {
+    max-width: 75%;
+  }
+}
+
+.typescriptWrapper {
+  padding-right: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+      
+  @media (max-width: $medium-screen) {
+    padding: 0;
+    padding-bottom: 40px;
+  }
+
+
+  > div {
+    > strong {
+      color: $text-white;
+      font-weight: 500;
+      font-size: 6rem;
+
+      @media (max-width: $small-screen) {
+        display: none;
+      }
+    }
+
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > svg {
+      height: 6rem;
+      margin-right: 20px;
+      fill: $text-white
+    }
+  }
+
+}
+
+.codeImage {
+  border-radius: 20px;
+  background-color: #1e1e1e;
+  padding: 10px;
+  padding-bottom: 12px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.testimonials {
+  h2 {
+    text-align: center;
+    font-family: Arial;
+    color: $light-blue;
+    margin-bottom: 0;
+  }
+
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .card {
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-top: 60px;
+
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: $medium-blue2;
+      margin-bottom: 25px;
+    }
+
+    .testimonial {
+      font-family: Arial;
+      font-style: italic;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .author {
+      font-weight: bold;
+      font-family: Arial;
+      font-size: 0.9rem;
+      color: $medium-blue2;
+
+      .job {
+        font-weight: normal;
+      }
+    }
+
+  }
+}
+
+.getStarted {
+  text-align: center;
+}
+
+.footerWrapper {
+  color: hsl(226, 15%, 70%);
+  background-color: #505864;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+
+  padding: 20px;
+
+  .footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .githubLink:before,
+  .twitterLink:before,
+  .youtubeLink:before,
+  .chatLink:before
+  {
+    content: '';
+    width: 22px;
+    height: 22px;
+    margin: 0 10px;
+    display: flex;
+  }
+
+  .githubLink:before {
+    // https://fontawesome.com/license
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 496 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z'/%3E%3C/svg%3E") no-repeat;
+  }
+
+  .twitterLink:before {
+    // https://fontawesome.com/license
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z'/%3E%3C/svg%3E") no-repeat;
+  }
+
+  .youtubeLink:before {
+    // https://fontawesome.com/license
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 576 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z'/%3E%3C/svg%3E") no-repeat;
+  }
+
+  .chatLink:before {
+    // https://fontawesome.com/license
+    background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 448 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z'/%3E%3C/svg%3E") no-repeat;
   }
 }
