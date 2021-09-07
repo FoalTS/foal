@@ -38,6 +38,18 @@ describe('connectAngular', () => {
       .assertEqual('connector-test/angular/angular.json', 'angular/angular.json');
   });
 
+  it('should update angular.json (empty config) with the proxy file and the output dir.', () => {
+    fs
+      .ensureDir('connector-test/angular/src')
+      .copyFixture('angular/angular.empty.json', 'connector-test/angular/angular.json')
+      .copyFixture('angular/package.json', 'connector-test/angular/package.json');
+
+    connectAngular('./connector-test/angular');
+
+    fs
+      .assertEqual('connector-test/angular/angular.json', 'angular/angular.empty.json');
+  });
+
   it('should not throw if angular.json does not exist.', () => {
     fs
       .ensureDir('connector-test/angular/src');
