@@ -41,12 +41,17 @@ export function connectAngular(path: string) {
       const config = JSON.parse(content);
 
       // Proxy configuration
+      config.projects[config.defaultProject].architect ||= {};
+      config.projects[config.defaultProject].architect.serve ||= {};
+      config.projects[config.defaultProject].architect.serve.options ||= {};
       config.projects[config.defaultProject].architect.serve.options.proxyConfig = 'src/proxy.conf.json';
 
       // Output build directory
       const outputPath = join(relative(path, process.cwd()), 'public')
         // Make projects generated on Windows build on Unix.
         .replace(/\\/g, '/');
+      config.projects[config.defaultProject].architect.build ||= {};
+      config.projects[config.defaultProject].architect.build.options ||= {};
       config.projects[config.defaultProject].architect.build.options.outputPath = outputPath;
 
       return JSON.stringify(config, null, 2);
