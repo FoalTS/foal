@@ -13,6 +13,7 @@ export function renderWebsocketError(error: Error, ctx: WebsocketContext): Webso
     const [ , , path, line, column ] = Array.from(rex.exec(error.stack || '') || []);
 
     return new WebsocketErrorResponse({
+      code: 'INTERNAL_SERVER_ERROR',
       column: parseInt(column, 10),
       filename: basename(path),
       line: parseInt(line, 10),

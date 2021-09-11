@@ -8,7 +8,7 @@ import { Config} from '@foal/core';
 import { renderWebsocketError } from './render-websocket-error';
 import { WebsocketContext, WebsocketErrorResponse } from '../architecture';
 
-describe('renderWebsocketError', () => {
+describe.only('renderWebsocketError', () => {
 
   let ctx: WebsocketContext;
   let error: Error;
@@ -58,6 +58,13 @@ describe('renderWebsocketError', () => {
     describe('returns a response whose payload', () => {
 
       testErrorObject();
+
+      it('should contain the code name "INTERNAL_SERVER_ERROR".', async () => {
+        const response = await renderWebsocketError(error, ctx);
+
+        const { code } = response.payload;
+        strictEqual(code, 'INTERNAL_SERVER_ERROR');
+      });
 
       it('should contain the name of the error.', async () => {
         const response = await renderWebsocketError(error, ctx);
