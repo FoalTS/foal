@@ -383,49 +383,18 @@ export class WebsocketController extends SocketIOController {
 })
 ```
 
-## Using HTTP Hooks
-
-```typescript
-import { UserRequired } from '@foal/core';
-import { EventName, HttpToWebsocketHook, WebsocketUser } from '@foal/socket.io';
-
-export class UserController {
-
-  @EventName('create')
-  @HttpToWebsocketHook(UserRequired())
-  createUser(ctx: WebsocketUser) {
-    // ...
-  }
-}
-```
-
-In order to reuse existing logic, Foal offers in some cases the possibility to convert HTTP hooks to WebSocket hooks using the `@HttpToWebsocketHook` utility. Since the two protocols are completely different, here are the points that need to be considered:
-
-- The `Context.request` value passed to the HTTP hook is built from the original HTTP request that established the Websocket connection. It is therefore identical to each Websocket request. In addition, it is the request object instantiated by Node.js to which a `get` method and a `cookies` property have been added. Some attributes of an ordinary Express request object are therefore missing.
-- If an `HttpResponseClientError` (4xx) or `HttpResponseServerError` (5xx) is returned by the hook, then it is converted to a `WebsocketErrorResponse` as follows:
-
-    ```typescript
-    new WebsocketErrorResponse({
-      statusCode: 401,
-      statusMessage: 'UNAUTHORIZED',
-      body: 'something'
-    })
-    ```
-- If a post function or an `HttpResponse` of another type is returned, then the hook throws an error.
-
 ## Using Sessions
 
 Foal sessions can be used in WebSocket controllers using the `@UseWebsocketSessions` hook which is very similar to its HTTP version `@UseSessions`. The token is not sent in the `Authorization` header or in a cookie but is stored as a property of the `socket` object, so you don't have to deal with it.
 
 ```typescript
 import { UserRequired } from '@foal/core';
-import { EventName, HttpToWebsocketHook, UseWebsocketSessions, WebsocketContext } from '@foal/socket.io';
+import { EventName, UseWebsocketSessions, WebsocketContext } from '@foal/socket.io';
 
 export class ProductController {
 
   @EventName('read products')
   @UseWebsocketSessions()
-  @HttpToWebsocketHook(UserRequired())
   readProducts(ctx: WebsocketContext) {
     // ...
   }
