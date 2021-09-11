@@ -1,6 +1,5 @@
 // 3p
 import { getAjvInstance } from '@foal/core';
-import { ValidateFunction } from 'ajv';
 
 // FoalTS
 import { WebsocketContext, WebsocketHook, WebsocketHookDecorator, WebsocketErrorResponse } from '../architecture';
@@ -13,7 +12,7 @@ import { WebsocketContext, WebsocketHook, WebsocketHookDecorator, WebsocketError
  * @returns {WebsocketHookDecorator}
  */
 export function ValidatePayload(schema: object | ((controller: any) => object)): WebsocketHookDecorator {
-  let validateSchema: ValidateFunction|undefined;
+  let validateSchema: any;
 
   function validate(this: any, ctx: WebsocketContext) {
     if (!validateSchema) {

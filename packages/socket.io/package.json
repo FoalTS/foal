@@ -55,8 +55,6 @@
   },
   "dependencies": {
     "@foal/core": "^2.2.0",
-    "ajv": "~6.12.0",
-    "cookie": "~0.4.1",
     "reflect-metadata": "~0.1.13",
     "socket.io": "~4.0.1"
   }
