@@ -383,49 +383,6 @@ export class WebsocketController extends SocketIOController {
 })
 ```
 
-## Using Sessions
-
-Foal sessions can be used in WebSocket controllers using the `@UseWebsocketSessions` hook which is very similar to its HTTP version `@UseSessions`. The token is not sent in the `Authorization` header or in a cookie but is stored as a property of the `socket` object, so you don't have to deal with it.
-
-```typescript
-import { UserRequired } from '@foal/core';
-import { EventName, UseWebsocketSessions, WebsocketContext } from '@foal/socket.io';
-
-export class ProductController {
-
-  @EventName('read products')
-  @UseWebsocketSessions()
-  readProducts(ctx: WebsocketContext) {
-    // ...
-  }
-
-}
-```
-
-TODO: error table.
-
-> When using `@UseWebsocketSessions`, a session is created automatically if none already exists. You can disable this behavior with the `create: false` option.
-
-### Forwarding HTTP sessions
-
-If the user was already logged in before (using cookies or a bearer token), you may want them to continue to be logged in when switching from HTTP to Websocket. This is can be done using the utility `forwardHttpSessionToWebsocket` which includes CSRF protection.
-
-TODO: example with the `Authorization` header on the client.
-
-TODO: check errors
-
-```typescript
-import { forwardHttpSessionToWebsocket, SocketIOController, WebsocketContext } from '@foal/socket.io';
-
-export class WebsocketController extends SocketIOController {
-
-  onConnection(ctx: WebsocketContext) {
-    await forwardHttpSessionToWebsocket(ctx, { cookie: true });
-  }
-
-}
-```
-
 ## Unit Testing
 
 Testing WebSocket controllers and hooks is very similar to testing their HTTP equivalent. The `WebsocketContext` takes three parameters.
