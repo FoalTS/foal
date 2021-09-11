@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotThrow, notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import { Config} from '@foal/core';
@@ -8,7 +8,7 @@ import { Config} from '@foal/core';
 import { renderWebsocketError } from './render-websocket-error';
 import { WebsocketContext, WebsocketErrorResponse } from '../architecture';
 
-describe.only('renderWebsocketError', () => {
+describe('renderWebsocketError', () => {
 
   let ctx: WebsocketContext;
   let error: Error;
@@ -105,6 +105,13 @@ describe.only('renderWebsocketError', () => {
         const { stack } = response.payload;
         strictEqual(stack, error.stack);
       });
+
+      it('should not throw an error is the format of the stack trace is unexpected.', async () => {
+        const error = new Error();
+        error.stack = 'hello world';
+
+        await doesNotThrow(() => renderWebsocketError(error, ctx));
+      })
 
     });
 

@@ -15,7 +15,7 @@ export function renderWebsocketError(error: Error, ctx: WebsocketContext): Webso
     return new WebsocketErrorResponse({
       code: 'INTERNAL_SERVER_ERROR',
       column: parseInt(column, 10),
-      filename: basename(path),
+      filename: basename(path || ''),
       line: parseInt(line, 10),
       message: error.message,
       name: error.name,
