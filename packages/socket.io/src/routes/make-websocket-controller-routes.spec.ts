@@ -19,7 +19,6 @@ describe('makeWebsocketControllerRoutes', () => {
   const hook5: WebsocketHookFunction = () => new WebsocketResponse('hook5');
   const hook6: WebsocketHookFunction = () => new WebsocketResponse('hook6');
 
-  // TODO: check that having {} by default is not a problem.
   const ctx = new WebsocketContext('foo', {});
   const services = new ServiceManager();
 
