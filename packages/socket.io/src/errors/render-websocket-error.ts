@@ -20,11 +20,11 @@ export function renderWebsocketError(error: Error, ctx: WebsocketContext): Webso
       message: error.message,
       name: error.name,
       stack: error.stack,
-    });
+    }, { ctx, error });
   }
 
   return new WebsocketErrorResponse({
     code: 'INTERNAL_SERVER_ERROR',
     message: 'An internal server error has occurred.'
-  });
+  }, { ctx, error });
 }

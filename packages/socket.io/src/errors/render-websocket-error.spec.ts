@@ -24,13 +24,16 @@ describe('renderWebsocketError', () => {
 
   function testErrorObject() {
     it(
-      'should return an WebsocketErrorResponse object.',
+      'should return an WebsocketErrorResponse object with the proper "ctx" and "error" properties.',
       async () => {
         const response = await renderWebsocketError(error, ctx);
 
         if (!(response instanceof WebsocketErrorResponse)) {
           throw new Error('The function should have returned an WebsocketErrorResponse object.');
         }
+
+        strictEqual(response.ctx, ctx);
+        strictEqual(response.error, error);
       }
     );
   }
