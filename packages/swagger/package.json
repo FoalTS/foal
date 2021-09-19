@@ -1,13 +1,13 @@
 {
   "name": "@foal/swagger",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Swagger UI for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && copy-cli \"./src/**.html\" lib && copy-cli \"./src/**.tpl.js\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -43,8 +43,8 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^2.5.0",
-    "swagger-ui-dist": "~3.47.1"
+    "@foal/core": "^2.6.0",
+    "swagger-ui-dist": "~3.52.2"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
