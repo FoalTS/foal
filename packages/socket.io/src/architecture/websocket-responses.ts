@@ -1,3 +1,5 @@
+import { WebsocketContext } from './websocket-context';
+
 /**
  * Returns a response to the socket.io client with an optional payload.
  *
@@ -15,5 +17,11 @@ export class WebsocketResponse {
  * @class WebsocketResponse
  */
 export class WebsocketErrorResponse {
-  constructor(public payload?: any) {}
+  readonly error?: Error;
+  readonly ctx?: WebsocketContext;
+
+  constructor(public payload?: any, options: { error?: Error, ctx?: WebsocketContext } = {}) {
+    this.error = options.error;
+    this.ctx = options.ctx;
+  }
 }
