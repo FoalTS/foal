@@ -118,7 +118,7 @@ describe('getWebsocketResponse', () => {
     let order: string;
     let controllerCalled: boolean;
     let response: WebsocketResponse|WebsocketErrorResponse;
-    let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
+    let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
     beforeEach(() => {
       order = '';
@@ -180,7 +180,7 @@ describe('getWebsocketResponse', () => {
     let order: string;
     let controllerCalled: boolean;
     let error: Error;
-    let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
+    let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
     beforeEach(() => {
       order = '';
@@ -210,10 +210,6 @@ describe('getWebsocketResponse', () => {
       });
     });
 
-    beforeEach(() => Config.set('settings.debug', true));
-
-    afterEach(() => Config.remove('settings.debug'));
-
     it('should convert the error to a response and return it.', async () => {
       const response = await getWebsocketResponse(route, ctx, services, appController);
 
@@ -221,7 +217,8 @@ describe('getWebsocketResponse', () => {
         throw new Error('An WebsocketErrorResponse instance should have been returned.');
       }
 
-      strictEqual(response.payload.message, error.message);
+      strictEqual(response.error, error);
+      strictEqual(response.ctx, ctx);
     });
 
     it('should not execute the remaining hooks.', async () => {
@@ -243,7 +240,8 @@ describe('getWebsocketResponse', () => {
         throw new Error('An WebsocketErrorResponse instance should have been used.');
       }
 
-      strictEqual(postFunctionResponse.payload.message, error.message);
+      strictEqual(postFunctionResponse.error, error);
+      strictEqual(postFunctionResponse.ctx, ctx);
     });
 
   });
@@ -254,7 +252,7 @@ describe('getWebsocketResponse', () => {
 
       let route: WebsocketRoute;
       let response: WebsocketResponse;
-      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
+      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
       beforeEach(() => {
         response = new WebsocketResponse();
@@ -288,8 +286,7 @@ describe('getWebsocketResponse', () => {
     context('given the controller method does not return a WebsocketResponse or a WebsocketErrorResponse object', () => {
 
       let route: WebsocketRoute;
-      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
-      let called = false;
+      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
       beforeEach(() => {
         route = createRoute({
@@ -297,25 +294,31 @@ describe('getWebsocketResponse', () => {
             fn: () => {}
           },
           hooks: [
-            () => response => {
-              called = true;
-              postFunctionResponse = response;
-            },
+            () => response => { postFunctionResponse = response; },
           ]
         });
       });
 
-      it('should return undefined.', async () => {
+      it('should create an error, convert it to a response and return it.', async () => {
         const response = await getWebsocketResponse(route, ctx, services, appController);
 
-        strictEqual(response, undefined)
+        if (!(response instanceof WebsocketErrorResponse)) {
+          throw new Error('An WebsocketErrorResponse instance should have been returned.');
+        }
+
+        strictEqual(response.error?.message, 'The controller method "fn" should return a WebsocketResponse or a WebsocketErrorResponse.');
+        strictEqual(response.ctx, ctx);
       });
 
-      it('should execute the remaining post functions.', async () => {
+      it('should create an error, convert it to a response and use it in post functions.', async () => {
         await getWebsocketResponse(route, ctx, services, appController);
 
-        strictEqual(called, true);
-        strictEqual(postFunctionResponse, undefined);
+        if (!(postFunctionResponse instanceof WebsocketErrorResponse)) {
+          throw new Error('An HttpResponseInternalServerError instance should have been used.');
+        }
+
+        strictEqual(postFunctionResponse.error?.message, 'The controller method "fn" should return a WebsocketResponse or a WebsocketErrorResponse.');
+        strictEqual(postFunctionResponse.ctx, ctx);
       });
 
     });
@@ -324,7 +327,7 @@ describe('getWebsocketResponse', () => {
 
       let route: WebsocketRoute;
       let error: Error;
-      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
+      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
       beforeEach(() => {
         error = new Error('Error thrown in hook.');
@@ -341,10 +344,6 @@ describe('getWebsocketResponse', () => {
         });
       });
 
-      beforeEach(() => Config.set('settings.debug', true));
-
-      afterEach(() => Config.remove('settings.debug'));
-
       it('should convert the error to a response and return it.', async () => {
         const response = await getWebsocketResponse(route, ctx, services, appController);
 
@@ -352,7 +351,8 @@ describe('getWebsocketResponse', () => {
           throw new Error('An WebsocketErrorResponse instance should have been returned.');
         }
 
-        strictEqual(response.payload.message, error.message);
+        strictEqual(response.error, error);
+        strictEqual(response.ctx, ctx);
       });
 
       it('should convert the error to a response and use it in post functions.', async () => {
@@ -362,7 +362,8 @@ describe('getWebsocketResponse', () => {
           throw new Error('An WebsocketErrorResponse instance should have been used.');
         }
 
-        strictEqual(postFunctionResponse.payload.message, error.message);
+        strictEqual(postFunctionResponse.error, error);
+        strictEqual(postFunctionResponse.ctx, ctx);
       });
 
     });
@@ -371,7 +372,7 @@ describe('getWebsocketResponse', () => {
 
       let route: WebsocketRoute;
       let error: Error;
-      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse|undefined;
+      let postFunctionResponse: WebsocketResponse|WebsocketErrorResponse;
 
       beforeEach(() => {
         error = new Error('Error thrown in hook.');
@@ -384,10 +385,6 @@ describe('getWebsocketResponse', () => {
         });
       });
 
-      beforeEach(() => Config.set('settings.debug', true));
-
-      afterEach(() => Config.remove('settings.debug'));
-
       it('should convert the error to a response and return it.', async () => {
         const response = await getWebsocketResponse(route, ctx, services, appController);
 
@@ -395,7 +392,8 @@ describe('getWebsocketResponse', () => {
           throw new Error('An WebsocketErrorResponse instance should have been returned.');
         }
 
-        strictEqual(response.payload.message, error.message);
+        strictEqual(response.error, error);
+        strictEqual(response.ctx, ctx);
       });
 
       it('should convert the error to a response and use it in the next post functions.', async () => {
@@ -405,7 +403,8 @@ describe('getWebsocketResponse', () => {
           throw new Error('An WebsocketErrorResponse instance should have been used.');
         }
 
-        strictEqual(postFunctionResponse.payload.message, error.message);
+        strictEqual(postFunctionResponse.error, error);
+        strictEqual(postFunctionResponse.ctx, ctx);
       });
 
     });

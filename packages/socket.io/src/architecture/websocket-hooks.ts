@@ -12,7 +12,7 @@ import { WebsocketContext } from './websocket-context';
  *
  * @export
  */
-export type WebsocketHookPostFunction = (response: WebsocketResponse|WebsocketErrorResponse|undefined) => void | Promise<void>;
+export type WebsocketHookPostFunction = (response: WebsocketResponse|WebsocketErrorResponse) => void | Promise<void>;
 
 /**
  * Interface of a function from which a Websocket hook can be created.

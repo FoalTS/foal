@@ -14,7 +14,7 @@ import { convertErrorToWebsocketResponse } from '../errors';
 
 export async function getWebsocketResponse(
   route: WebsocketRoute, ctx: WebsocketContext, services: ServiceManager, socketIOController: ISocketIOController
-): Promise<undefined | WebsocketResponse | WebsocketErrorResponse> {
+): Promise<WebsocketResponse | WebsocketErrorResponse> {
   let response: undefined | WebsocketResponse | WebsocketErrorResponse;
 
   const hookPostFunctions: WebsocketHookPostFunction[] = [];
@@ -36,10 +36,15 @@ export async function getWebsocketResponse(
 
   if (!((response instanceof WebsocketResponse) || (response instanceof WebsocketErrorResponse))) {
     try {
-    response = await route.controller[route.propertyKey](ctx, ctx.payload);
+      response = await route.controller[route.propertyKey](ctx, ctx.payload);
     } catch (error) {
       response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
     }
+  }
+
+  if (!((response instanceof WebsocketResponse) || (response instanceof WebsocketErrorResponse))) {
+    const error = new Error(`The controller method "${route.propertyKey}" should return a WebsocketResponse or a WebsocketErrorResponse.`);
+    response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
   }
 
   for (const postFn of hookPostFunctions) {
