@@ -8,7 +8,7 @@ import { Config } from '@foal/core';
 import { ISocketIOController, WebsocketContext, WebsocketErrorResponse } from '../architecture'
 import { convertErrorToWebsocketResponse } from './convert-error-to-websocket-response';
 
-describe('convertErrorToResponse', () => {
+describe('convertErrorToWebsocketResponse', () => {
 
   class SocketIOController implements ISocketIOController {}
 
@@ -18,10 +18,7 @@ describe('convertErrorToResponse', () => {
   beforeEach(() => {
     error =  new Error('Error for convertErrorToWebsocketResponse');
     ctx = new WebsocketContext('foo event', {});
-    Config.set('settings.debug', true);
   });
-
-  afterEach(() => Config.remove('settings.debug'));
 
   context('given the configuration settings.logErrors is true or not defined', () => {
 
@@ -62,7 +59,8 @@ describe('convertErrorToResponse', () => {
         throw new Error('An WebsocketErrorResponse should have been returned.');
       }
 
-      strictEqual(response.payload.message, 'Error for convertErrorToWebsocketResponse');
+      strictEqual(response.error, error);
+      strictEqual(response.ctx, ctx);
     });
 
   });
@@ -111,7 +109,8 @@ describe('convertErrorToResponse', () => {
           throw new Error('An WebsocketErrorResponse should have been returned.');
         }
 
-        strictEqual(response.payload.message, error2.message);
+        strictEqual(response.error, error2);
+        strictEqual(response.ctx, ctx);
       });
 
     });
@@ -131,7 +130,8 @@ describe('convertErrorToResponse', () => {
           throw new Error('An WebsocketErrorResponse should have been returned.');
         }
 
-        strictEqual(response.payload.message, error2.message);
+        strictEqual(response.error, error2);
+        strictEqual(response.ctx, ctx);
       });
 
     });
