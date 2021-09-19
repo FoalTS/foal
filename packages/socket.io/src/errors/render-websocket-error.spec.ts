@@ -55,9 +55,9 @@ describe('renderWebsocketError', () => {
 
     afterEach(() => Config.remove('settings.debug'));
 
-    describe('returns a response whose payload', () => {
+    testErrorObject();
 
-      testErrorObject();
+    describe('returns a response whose payload', () => {
 
       it('should contain the code name "INTERNAL_SERVER_ERROR".', async () => {
         const response = await renderWebsocketError(error, ctx);
