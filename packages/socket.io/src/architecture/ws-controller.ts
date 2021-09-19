@@ -5,7 +5,7 @@ import 'reflect-metadata';
 import { Class } from '@foal/core';
 
 /**
- * Defineds the prefix of the event names of a controller class. This function is usually called
+ * Defines the prefix of the event names of a controller class. This function is usually called
  * when adding the controller as a sub-controller.
  *
  * @export
