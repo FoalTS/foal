@@ -84,11 +84,11 @@ function Home() {
                 <h2>All-in-One Framework 🚀</h2>
                 <p>
                   The foundation is already there.
-                  You don't have to rebuild everything from scratch or find and make 3rd-party packages work together.
+                  <strong>You don't have to rebuild everything from scratch</strong> or find and make 3rd-party packages work together.
                   Everything is included.
                   <br/>
                   <br/>
-                  But if you wish, you can still import and use your favorite libraries. The framework is extensible.
+                  But if you wish, you can still import and use your favorite libraries. <strong>The framework is extensible</strong>.
                 </p>
               </div>
               <div className={styles.col2}>
@@ -132,16 +132,16 @@ function Home() {
           <div className={styles.architectureSection}>
             <div className={styles.feature}>
               <div className={styles.col1}>
-                <h2>Simple and Intuitive 👌</h2>
+                <h2>Simple and Intuitive</h2>
                 <p>
-                  In Foal, you only manage three concepts: controllers, services and hooks.
+                  In Foal, you <strong>only</strong> manage <strong>three concepts</strong>: controllers, services and hooks.
                   <br/>
                   <br/>
                   Complexity and unnecessary abstractions are set aside
                   so that you spend more time coding rather than reading the documentation.
                   <br />
                   <br />
-                  No steep learning curve or over-engineering here.
+                  <strong>No steep learning curve</strong> or over-engineering here.
                 </p>
               </div>
               <div className={styles.col2}>
@@ -162,11 +162,11 @@ function Home() {
                 </div>
               </div>
               <div className={styles.col1}>
-                <h2>TypeScript Language</h2>
+                <h2>Robust Language</h2>
                 <p>
-                Foal leverages TypeScript to improve the overall quality of your code
+                Foal leverages <strong>TypeScript</strong> to improve the overall quality of your code
                 and detect most of your careless errors during compilation.
-                The language also gives you autocompletion and a well-documented API.
+                The language also gives you <strong>autocompletion</strong> and a <strong>well-documented API</strong>.
                 </p>
               </div>
             </div>
