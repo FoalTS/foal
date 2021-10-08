@@ -42,6 +42,19 @@ describe('createEntity', () => {
           .assertEqual('index.ts', 'entity/index.ts');
       });
 
+      it('should create the directory if it does not exist.', () => {
+        fs
+          .copyFixture('entity/package.json', 'package.json')
+          .ensureDir(root)
+          .cd(root)
+          .copyFixture('entity/index.ts', 'index.ts');
+
+        createEntity({ name: 'barfoo/hello/test-fooBar' });
+
+        fs
+          .assertExists('barfoo/hello/test-foo-bar.entity.ts');
+      });
+
       it('create index.ts if it does not exist.', () => {
         fs
           .copyFixture('entity/package.json', 'package.json')

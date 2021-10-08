@@ -36,7 +36,7 @@ describe('createService', () => {
           .assertExists('barfoo/hello/test-foo-bar.service.ts');
       });
 
-      it('should should create index.ts if it does not exist.', () => {
+      it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
 
         createService({ name: 'test-fooBar' });
