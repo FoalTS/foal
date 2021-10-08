@@ -104,7 +104,7 @@ export async function createApp(
   app.use(express.text({ type: ['text/*', 'application/graphql'], limit }));
 
   // Parse cookies.
-  app.use(cookieParser(Config.get('settings.cookie.secret', 'string')));
+  app.use(cookieParser(Config.get('settings.cookieParser.secret', 'string')));
 
   // Create the service and controller manager.
   const services = options.serviceManager || new ServiceManager();

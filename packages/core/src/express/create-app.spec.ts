@@ -51,7 +51,7 @@ describe('createApp', () => {
     Config.remove('settings.staticPathPrefix');
     Config.remove('settings.debug');
     Config.remove('settings.bodyParser.limit');
-    Config.remove('settings.cookie.secret');
+    Config.remove('settings.cookieParser.secret');
   });
 
   const cookieSecret = 'strong-secret';
@@ -165,7 +165,7 @@ describe('createApp', () => {
       }
     }
 
-    Config.set('settings.cookie.secret', cookieSecret)
+    Config.set('settings.cookieParser.secret', cookieSecret)
 
     const app = await createApp(AppController);
     return request(app).get('/')
