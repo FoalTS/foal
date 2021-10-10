@@ -51,7 +51,12 @@ describe('createApp', () => {
     Config.remove('settings.staticPathPrefix');
     Config.remove('settings.debug');
     Config.remove('settings.bodyParser.limit');
+    Config.remove('settings.cookieParser.secret');
   });
+
+  const cookieSecret = 'strong-secret';
+  const cookieUnsignedValue = 'barfoo';
+  const cookieSignedValue = 's:barfoo.uTsjjvqRPbwnsdLHMg22+9HLBCoeAVFnTDZCyE83AhY';
 
   it('should include security headers in HTTP responses.', async () => {
     class AppController {
@@ -118,12 +123,59 @@ describe('createApp', () => {
     }
     const app = await createApp(AppController);
     return request(app).get('/')
-      // The type of the second parameter of `set` is incorrect.
-      .set('Cookie', ['nameOne=valueOne;nameTwo=valueTwo'] as any)
+      .set('Cookie', ['nameOne=valueOne;nameTwo=valueTwo'])
       .expect(200)
       .expect({
         nameOne: 'valueOne',
         nameTwo: 'valueTwo',
+      });
+  });
+
+  it('should not parse signed cookies if no cookie secret is provided in the config.', async () => {
+    class AppController {
+      @Get('/')
+      index(ctx: Context) {
+        return new HttpResponseOK({
+          unsigned: ctx.request.cookies,
+          signed: ctx.request.signedCookies,
+        });
+      }
+    }
+
+    const app = await createApp(AppController);
+    return request(app).get('/')
+      .set('Cookie', [`cookie1=${cookieSignedValue}`])
+      .expect(200)
+      .expect({
+        unsigned: {
+          cookie1: cookieSignedValue,
+        },
+        signed: {}
+      });
+  });
+
+  it('should parse signed cookies if a cookie secret is provided in the config.', async () => {
+    class AppController {
+      @Get('/')
+      index(ctx: Context) {
+        return new HttpResponseOK({
+          unsigned: ctx.request.cookies,
+          signed: ctx.request.signedCookies,
+        });
+      }
+    }
+
+    Config.set('settings.cookieParser.secret', cookieSecret)
+
+    const app = await createApp(AppController);
+    return request(app).get('/')
+      .set('Cookie', [`cookie1=${cookieSignedValue}`])
+      .expect(200)
+      .expect({
+        unsigned: {},
+        signed: {
+          cookie1: cookieUnsignedValue,
+        }
       });
   });
 
