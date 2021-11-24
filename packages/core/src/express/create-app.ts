@@ -25,6 +25,7 @@ export interface CreateAppOptions {
   expressInstance?: any;
   serviceManager?: ServiceManager;
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
+  afterPreMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
 }
 
@@ -105,6 +106,11 @@ export async function createApp(
 
   // Parse cookies.
   app.use(cookieParser(Config.get('settings.cookieParser.secret', 'string')));
+
+   // Add optional after pre-middlewares.
+   for (const middleware of options.afterPreMiddlewares || []) {
+    app.use(middleware);
+  }
 
   // Create the service and controller manager.
   const services = options.serviceManager || new ServiceManager();
