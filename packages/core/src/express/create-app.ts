@@ -108,7 +108,7 @@ export async function createApp(
   app.use(cookieParser(Config.get('settings.cookieParser.secret', 'string')));
 
    // Add optional after pre-middlewares.
-   for (const middleware of options.afterPreMiddlewares || []) {
+  for (const middleware of options.afterPreMiddlewares || []) {
     app.use(middleware);
   }
 
