@@ -184,9 +184,9 @@ export class Config {
         this.readJS('config/default.js'),
         this.readYAML('config/default.yml'),
         this.readJSON('config/default.json'),
-        this.readJS(`config/${process.env.NODE_ENV || 'development'}.js`),
-        this.readYAML(`config/${process.env.NODE_ENV || 'development'}.yml`),
-        this.readJSON(`config/${process.env.NODE_ENV || 'development'}.json`),
+        this.readJS(`config/${Env.getEnvironmentName()}.js`),
+        this.readYAML(`config/${Env.getEnvironmentName()}.yml`),
+        this.readJSON(`config/${Env.getEnvironmentName()}.json`),
       ].reduce((config1, config2) => this.mergeDeep(config1, config2));
     }
 

@@ -61,6 +61,7 @@ describe('Config', () => {
   });
 
   afterEach(() => {
+    delete process.env.FOAL_ENV;
     delete process.env.NODE_ENV;
     delete process.env.FOO_BAR;
 
@@ -107,11 +108,11 @@ describe('Config', () => {
 
     });
 
-    function testConfigFile(path: string, fileContent: string, nodeEnv?: string): void {
+    function testConfigFile(path: string, fileContent: string, nodeEnv?: string, nodeEnvName = 'NODE_ENV'): void {
       beforeEach(() => {
         writeFileSync(path, fileContent, 'utf8');
         if (nodeEnv) {
-          process.env.NODE_ENV = nodeEnv;
+          process.env[nodeEnvName] = nodeEnv;
         }
       });
 
@@ -129,27 +130,39 @@ describe('Config', () => {
       });
     }
 
+    context('given FOAL_ENV is defined and config/${FOAL_ENV}.json exists', () => {
+      testConfigFile('config/test.json', json, 'test', 'FOAL_ENV');
+    });
+
     context('given NODE_ENV is defined and config/${NODE_ENV}.json exists', () => {
       testConfigFile('config/test.json', json, 'test');
     });
 
-    context('given NODE_ENV is not defined and config/development.json exists', () => {
+    context('given NODE_ENV and FOAL_ENV are not defined and config/development.json exists', () => {
       testConfigFile('config/development.json', json);
+    });
+
+    context('given FOAL_ENV is defined and config/${FOAL_ENV}.yml exists', () => {
+      testConfigFile('config/test.yml', yaml, 'test', 'FOAL_ENV');
     });
 
     context('given NODE_ENV is defined and config/${NODE_ENV}.yml exists', () => {
       testConfigFile('config/test.yml', yaml, 'test');
     });
 
-    context('given NODE_ENV is not defined and config/development.yml exists', () => {
+    context('given NODE_ENV and FOAL_ENV not defined and config/development.yml exists', () => {
       testConfigFile('config/development.yml', yaml);
+    });
+
+    context('given FOAL_ENV is defined and config/${FOAL_ENV}.js exists', () => {
+      testConfigFile('config/test.js', js, 'test', 'FOAL_ENV');
     });
 
     context('given NODE_ENV is defined and config/${NODE_ENV}.js exists', () => {
       testConfigFile('config/test.js', js, 'test');
     });
 
-    context('given NODE_ENV is not defined and config/development.js exists', () => {
+    context('given NODE_ENV and FOAL_ENV not defined and config/development.js exists', () => {
       testConfigFile('config/development.js', js);
     });
 

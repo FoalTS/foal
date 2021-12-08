@@ -33,6 +33,34 @@ const dotEnvContent4 = `FOO_BAR_FOUR=four`;
 
 describe('Env', () => {
 
+  describe('has a static "getEnvironmentName" that', () => {
+
+    afterEach(() => {
+      delete process.env.FOAL_ENV;
+      delete process.env.NODE_ENV;
+    });
+
+    it('should return the value of process.env.FOAL_ENV if it exists.', () => {
+      process.env.FOAL_ENV = 'foobar';
+      strictEqual(Env.getEnvironmentName(), 'foobar');
+    });
+
+    it('should return the value of process.env.NODE_ENV if it exists.', () => {
+      process.env.NODE_ENV = 'barfoo';
+      strictEqual(Env.getEnvironmentName(), 'barfoo');
+    });
+
+    it('should return the value "development" if process.env.FOAL_ENV and process.env.NODE_ENV are not defined.', () => {
+      strictEqual(Env.getEnvironmentName(), 'development');
+    });
+
+    it('should return the value of process.env.FOAL_ENV if both FOAL_ENV and NODE_ENV are defined.', () => {
+      process.env.FOAL_ENV = 'foobar';
+      process.env.NODE_ENV = 'barfoo';
+      strictEqual(Env.getEnvironmentName(), 'foobar');
+    });
+  })
+
   describe('has a static "get" method that', () => {
 
     beforeEach(() => Env.clearCache());
@@ -51,17 +79,17 @@ describe('Env', () => {
 
     });
 
-    function testConfigFile(filename: string, nodeEnv?: string): void {
+    function testConfigFile(filename: string, nodeEnv?: string, nodeEnvName = 'NODE_ENV'): void {
       beforeEach(() => {
         writeFileSync(filename, dotEnvContent, 'utf8');
         if (nodeEnv) {
-          process.env.NODE_ENV = nodeEnv;
+          process.env[nodeEnvName] = nodeEnv;
         }
       });
 
       afterEach(() => {
         removeFile(filename);
-        delete process.env.NODE_ENV;
+        delete process.env[nodeEnvName];
       });
 
       context('and given a variable exists with the given name', () => {
@@ -109,11 +137,19 @@ describe('Env', () => {
       testConfigFile('.env.test.local', 'test');
     });
 
-    context('given NODE_ENV is not defined and .env.development exists', () => {
+    context('given FOAL_ENV is defined and .env.${FOAL_ENV} exists', () => {
+      testConfigFile('.env.test', 'test', 'FOAL_ENV');
+    });
+
+    context('given FOAL_ENV is defined and .env.${FOAL_ENV}.local exists', () => {
+      testConfigFile('.env.test.local', 'test', 'FOAL_ENV');
+    });
+
+    context('given NODE_ENV and FOAL_ENV are not defined and .env.development exists', () => {
       testConfigFile('.env.development');
     });
 
-    context('given NODE_ENV is not defined and .env.development.local exists', () => {
+    context('given NODE_ENV and FOAL_ENV are not defined and .env.development.local exists', () => {
       testConfigFile('.env.development.local');
     });
 
