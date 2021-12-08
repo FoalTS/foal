@@ -20,8 +20,8 @@ export class Env {
       this.dotEnv = {};
       this.loadEnv('.env');
       this.loadEnv('.env.local');
-      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}`);
-      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}.local`);
+      this.loadEnv(`.env.${this.getEnvironmentName()}`);
+      this.loadEnv(`.env.${this.getEnvironmentName()}.local`);
     }
 
     if (this.dotEnv[key] !== undefined) {
