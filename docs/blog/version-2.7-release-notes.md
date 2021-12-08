@@ -53,3 +53,9 @@ src/
    |- log.hook.ts
    '- index.ts
 ```
+
+## Environment name can be provided via `NODE_ENV` or `FOAL_ENV`
+
+Version 2.7 allows to you to specify the environment name (production, development, etc) with the `FOAL_ENV` environment variable.
+
+This can be useful if you have third party libraries whose behavior also depends on the value of `NODE_ENV` (see [Github issue here](https://github.com/FoalTS/foal/issues/1004)).
