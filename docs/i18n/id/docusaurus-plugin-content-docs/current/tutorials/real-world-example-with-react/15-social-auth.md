@@ -1,5 +1,7 @@
 ---
 title: Social Auth with Google
+id: tuto-15-social-auth
+slug: 15-social-auth
 ---
 
 In this last part of the tutorial, we will give users the ability to log in with Google. Currently, they can only log in with an email and a password.

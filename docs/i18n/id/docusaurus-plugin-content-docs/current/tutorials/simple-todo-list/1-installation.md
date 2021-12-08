@@ -1,5 +1,7 @@
 ---
 title: Instalasi
+id: tuto-1-installation
+slug: 1-installation
 ---
 
 Pada tutorial kali ini kita akan coba membuat aplikasi web dengan Foal. Aplikasinya berupa todo-list sederhana, di mana user bisa melakukan view, create dan delete catatan to-do mereka.

@@ -28,8 +28,8 @@ title: GraphQL
 
 To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc), load type definitions from separate files or handle errors thrown in resolvers.
 
-```
-npm install graphql @foal/graphql
+```bash
+npm install graphql@14 @foal/graphql
 ```
 
 Due to a specificity of the `graphql` library, you must also modify your `tsconfig.json` as follows:

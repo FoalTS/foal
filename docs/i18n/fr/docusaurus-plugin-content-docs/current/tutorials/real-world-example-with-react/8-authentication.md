@@ -1,5 +1,7 @@
 ---
 title: Connecter les Utilisateurs
+id: tuto-8-authentication
+slug: 8-authentication
 ---
 
 Les posts sont affichées sur la page d'accueil. Si nous voulons que les utilisateurs puissent publier de nouveaux posts et télécharger une photo de profil, nous devons leur permettre de se connecter à l'application.

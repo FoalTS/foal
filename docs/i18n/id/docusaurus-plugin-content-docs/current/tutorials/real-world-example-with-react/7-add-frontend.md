@@ -1,5 +1,7 @@
 ---
 title: The Frontend App
+id: tuto-7-add-frontend
+slug: 7-add-frontend
 ---
 
 Very good, so far you have a first working version of your API. It's time to add the frontend.

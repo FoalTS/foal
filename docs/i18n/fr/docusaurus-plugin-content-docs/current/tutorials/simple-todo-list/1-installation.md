@@ -1,5 +1,7 @@
 ---
 title: Installation
+id: tuto-1-installation
+slug: 1-installation
 ---
 
 Dans ce tutoriel, vous apprendrez comment créer une application web de base avec FoalTS. L'application de démonstration est une simple liste de tâches avec laquelle les utilisateurs peuvent visualiser, créer et supprimer leurs tâches.

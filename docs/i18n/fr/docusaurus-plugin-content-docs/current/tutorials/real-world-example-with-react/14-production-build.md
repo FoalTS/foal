@@ -1,5 +1,7 @@
 ---
 title: Construction de Production
+id: tuto-14-production-build
+slug: 14-production-build
 ---
 
 Jusqu'à présent, les applications frontend et backend sont compilées et servies par deux serveurs de développement différents. L'étape suivante consiste à les regrouper en un seul serveur prêt pour la production.

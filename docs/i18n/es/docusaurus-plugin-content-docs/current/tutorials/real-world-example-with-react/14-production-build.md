@@ -1,5 +1,7 @@
 ---
 title: Construcción de Producción
+id: tuto-14-production-build
+slug: 14-production-build
 ---
 
 Hasta ahora, las aplicaciones front-end y back-end están compiladas y servidas por dos servidores de desarrollo diferentes. El siguiente paso es construirlas en una sola lista para producción.

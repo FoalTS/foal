@@ -1,5 +1,7 @@
 ---
 title: Votre Première Route
+id: tuto-5-our-first-route
+slug: 5-our-first-route
 ---
 
 La base de données est maintenant remplie avec quelques posts. Implémentons la première route pour les récupérer.

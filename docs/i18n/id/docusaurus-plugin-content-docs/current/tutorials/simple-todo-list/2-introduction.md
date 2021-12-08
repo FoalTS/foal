@@ -1,5 +1,7 @@
 ---
 title: Introduction
+id: tuto-2-introduction
+slug: 2-introduction
 ---
 
 The application that you will create is a simple to-do list. It consists of a frontend part that has already been written for you and a backend part that will be the topic of this tutorial.

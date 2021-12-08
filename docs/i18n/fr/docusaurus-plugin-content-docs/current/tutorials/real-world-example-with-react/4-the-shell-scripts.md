@@ -1,5 +1,7 @@
 ---
 title: Les Scripts Shell
+id: tuto-4-the-shell-scripts
+slug: 4-the-shell-scripts
 ---
 
 Vos modèles sont prêts à être utilisés. Comme dans le tutoriel précédent, vous allez utiliser des scripts shell pour alimenter la base de données.

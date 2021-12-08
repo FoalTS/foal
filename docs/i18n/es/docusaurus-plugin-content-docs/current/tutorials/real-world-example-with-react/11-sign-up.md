@@ -1,5 +1,7 @@
 ---
 title: Añadida de la página de inscripción
+id: tuto-11-sign-up
+slug: 11-sign-up
 ---
 
 Hasta ahora, sólo los usuarios creados con el script `create-user` pueden registrarse y publicar posts. En esta sección añadirá un nuevo punto final de la API para que los usuarios se registren con la página de registro.

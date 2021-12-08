@@ -1,5 +1,7 @@
 ---
 title: Autenticación Social con Google
+id: tuto-15-social-auth
+slug: 15-social-auth
 ---
 
 En esta última parte del tutorial, daremos a los usuarios la posibilidad de iniciar sesión con Google. Actualmente, sólo pueden iniciar sesión con un correo electrónico y una contraseña.
