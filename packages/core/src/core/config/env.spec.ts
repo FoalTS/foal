@@ -33,6 +33,34 @@ const dotEnvContent4 = `FOO_BAR_FOUR=four`;
 
 describe('Env', () => {
 
+  describe('has a static "getEnvironmentName" that', () => {
+
+    afterEach(() => {
+      delete process.env.FOAL_ENV;
+      delete process.env.NODE_ENV;
+    });
+
+    it('should return the value of process.env.FOAL_ENV if it exists.', () => {
+      process.env.FOAL_ENV = 'foobar';
+      strictEqual(Env.getEnvironmentName(), 'foobar');
+    });
+
+    it('should return the value of process.env.NODE_ENV if it exists.', () => {
+      process.env.NODE_ENV = 'barfoo';
+      strictEqual(Env.getEnvironmentName(), 'barfoo');
+    });
+
+    it('should return the value "development" if process.env.FOAL_ENV and process.env.NODE_ENV are not defined.', () => {
+      strictEqual(Env.getEnvironmentName(), 'development');
+    });
+
+    it('should return the value of process.env.FOAL_ENV if both FOAL_ENV and NODE_ENV are defined.', () => {
+      process.env.FOAL_ENV = 'foobar';
+      process.env.NODE_ENV = 'barfoo';
+      strictEqual(Env.getEnvironmentName(), 'foobar');
+    });
+  })
+
   describe('has a static "get" method that', () => {
 
     beforeEach(() => Env.clearCache());

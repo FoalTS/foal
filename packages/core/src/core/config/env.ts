@@ -11,6 +11,10 @@ export class Env {
     this.dotEnv = null;
   }
 
+  static getEnvironmentName(): string {
+    return process.env.FOAL_ENV || process.env.NODE_ENV || 'development';
+  }
+
   static get(key: string): string|undefined {
     if (this.dotEnv === null) {
       this.dotEnv = {};
