@@ -382,6 +382,55 @@ describe('createApp', () => {
       .expect('Hello world!');
   });
 
+  it('should use the optional afterPreMiddlewares if they are given.', async () => {
+    class AppController {
+      @Get('/')
+      get(ctx: Context) {
+        return new HttpResponseOK(
+          (ctx.request as any).foalMessage
+        );
+      }
+    }
+
+    const app = await createApp(AppController, {
+      afterPreMiddlewares: [
+        (req: any, res: any, next: (err?: any) => any) => {
+          req.foalMessage = 'Hello world!'; next();
+        }
+      ]
+    });
+    return request(app)
+      .get('/')
+      .expect(200)
+      .expect('Hello world!');
+  });
+
+  it('should execute the optional afterPreMiddlewares after Foal middlewares.', async () => {
+    class AppController {
+      @Get('/')
+      get() {
+        return new HttpResponseOK();
+      }
+    }
+
+    let actualCookieValue = '';
+    const app = await createApp(AppController, {
+      afterPreMiddlewares: [
+        (req: any, res: any, next: (err?: any) => any) => {
+          actualCookieValue = req.cookies?.foo;
+          next();
+        }
+      ]
+    });
+
+    await request(app)
+      .get('/')
+      .set('Cookie', ['foo=bar'])
+      .expect(200);
+
+    strictEqual(actualCookieValue, 'bar');
+  });
+
   it('should use the optional postMiddlewares if they are given.', async () => {
     Config.set('settings.debug', true);
 
