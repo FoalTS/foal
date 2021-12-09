@@ -54,7 +54,7 @@ module.exports = {
     },
     navbar: {
       title: 'FoalTS',
-      style: 'dark',
+      style: 'primary',
       hideOnScroll: true,
       logo: {
         alt: 'FoalTS Logo',

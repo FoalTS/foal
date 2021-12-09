@@ -19,7 +19,24 @@
   --ifm-code-font-size: 95%;
 }
 
-.navbar--dark {
+main {
+  padding-top: calc(var(--ifm-spacing-horizontal)*2);
+}
+
+main > div {
+  max-width: calc( var(--ifm-container-width) - var(--doc-sidebar-width)) !important;
+}
+
+.badge {
+  display: none;
+}
+
+.navbar {
+  background-image: url('../img/background8.png');
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 24px 0px, rgba(0, 0, 0, 0.16) 0px 0px 0px 1px;
+
+  --ifm-navbar-link-color: #f0f2fa;
+
   // This makes the searchbar looks like in the dark mode.
   --docsearch-text-color: #fff;
   --docsearch-muted-color: rgb(164, 166, 168);
@@ -58,7 +75,7 @@
 {
   color: var(--ifm-navbar-link-color);
   background-color: #166ad0;
-  border-radius: 7px;
+  border-radius: 3px;
 }
 
 .docusaurus-highlight-code-line {
@@ -87,7 +104,7 @@
  */
 
 :root {
-  --doc-sidebar-width: 280px;
+  --doc-sidebar-width: 280px !important;
 }
 
 .menu > ul.menu__list > li.menu__list-item > a.menu__link--sublist:first-child {
