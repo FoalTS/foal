@@ -14,6 +14,22 @@ Version 2.7 of Foal has been released! Here are the improvements that it brings.
 
 <!--truncate-->
 
+## New `afterPreMiddlewares` option in `createApp`
+
+It is now possible to run a custom middleware after all internal Express middlewares of the framework.
+
+This can be useful in rare situations, for example when using the [RequestContext helper](https://mikro-orm.io/docs/identity-map/#-requestcontext-helper-for-di-containers) in Mikro-ORM.
+
+```typescript
+const app = await createApp({
+   afterPreMiddlewares: [
+      (req, res, next) => {
+         RequestContext.create(orm.em, next);
+      }
+   ]
+})
+```
+
 ## `foal generate entity` and `foal generate hook` support sub-directories
 
 ### Example with entities (models)
