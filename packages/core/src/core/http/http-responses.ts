@@ -61,6 +61,8 @@ export abstract class HttpResponse<T = any> {
    */
   readonly stream: boolean = false;
 
+  body: T;
+
   private cookies: { [key: string]: { value: string|undefined, options: CookieOptions } } = {};
   private headers: { [key: string]: string } = {};
 
@@ -69,7 +71,10 @@ export abstract class HttpResponse<T = any> {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponse
    */
-  constructor(public body?: T, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    if (typeof body !== 'undefined') {
+      this.body = body;
+    }
     this.stream = options.stream || false;
   }
 

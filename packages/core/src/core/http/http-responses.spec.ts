@@ -117,7 +117,7 @@ describe('HttpResponse', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponse<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -168,7 +168,7 @@ describe('isHttpResponseSuccess', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponse<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -208,7 +208,7 @@ describe('HttpResponseOK', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseOK<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -270,7 +270,7 @@ describe('HttpResponseCreated', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseCreated<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -437,7 +437,7 @@ describe('HttpResponseRedirect', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseRedirect<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -521,7 +521,7 @@ describe('HttpResponseBadRequest', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseBadRequest<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -583,7 +583,7 @@ describe('HttpResponseUnauthorized', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseUnauthorized<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -645,7 +645,7 @@ describe('HttpResponseForbidden', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseForbidden<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -707,7 +707,7 @@ describe('HttpResponseNotFound', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseNotFound<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -769,7 +769,7 @@ describe('HttpResponseMethodNotAllowed', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseMethodNotAllowed<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -831,7 +831,7 @@ describe('HttpResponseConflict', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseConflict<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -893,7 +893,7 @@ describe('HttpResponseTooManyRequests', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseTooManyRequests<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -995,7 +995,7 @@ describe('HttpResponseInternalServerError', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseInternalServerError<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
@@ -1057,7 +1057,7 @@ describe('HttpResponseNotImplemented', () => {
 
   it('should allow specifying the required type for the body', () => {
     type NumberResponse = HttpResponseNotImplemented<number>
-    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number | undefined ? true : never
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
   });
