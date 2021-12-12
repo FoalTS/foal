@@ -120,3 +120,9 @@ const app = await createApp({
    ]
 })
 ```
+
+
+## Contributors
+
+- [@MCluck90](https://github.com/MCluck90)
+- [@kingdun3284](https://github.com/kingdun3284)
