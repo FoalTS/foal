@@ -1,6 +1,7 @@
 ---
 title: Awesome Foal
 ---
+
 A collection of official and unofficial libraries and resources about Foal.
 
 ## Packages

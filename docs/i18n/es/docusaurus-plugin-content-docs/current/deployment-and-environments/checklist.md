@@ -6,7 +6,7 @@ sidebar_label: Lista de Comprobación
 
 ## Set the Node.JS environment to `production`
 
-Set the `NODE_ENV` environment variable to `production`.
+Set the `NODE_ENV` (or `FOAL_ENV`) environment variable to `production`.
 
 ```bash
 NODE_ENV=production npm run start

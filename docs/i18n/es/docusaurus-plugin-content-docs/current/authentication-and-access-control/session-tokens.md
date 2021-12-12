@@ -475,6 +475,7 @@ export class AuthController {
 }
 ```
 
+
 ## Reading User Information on the Client (cookies)
 
 > *This feature is available from version 2.2 onwards.*
@@ -527,6 +528,7 @@ export class ApiController {
 ```javascript
 const user = JSON.parse(decodeURIComponent(/* cookie value */));
 ```
+
 
 ## Save and Read Content
 
