@@ -1,4 +1,5 @@
 // FoalTS
+import { basename, dirname } from 'path';
 import { FileSystem } from '../../file-system';
 import { getNames } from '../../utils';
 
@@ -12,12 +13,15 @@ export function createEntity({ name }: { name: string }) {
     root = 'entities';
   }
 
-  const names = getNames(name);
+  const names = getNames(basename(name));
+  const subdir = dirname(name);
 
   const isMongoDBProject = fs.projectHasDependency('mongodb');
 
   fs
     .cd(root)
+    .ensureDir(subdir)
+    .cd(subdir)
     .renderOnlyIf(!isMongoDBProject, 'entity/entity.ts', `${names.kebabName}.entity.ts`, names)
     .renderOnlyIf(isMongoDBProject, 'entity/entity.mongodb.ts', `${names.kebabName}.entity.ts`, names)
     .ensureFile('index.ts')

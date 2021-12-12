@@ -96,6 +96,8 @@ The *default* configuration files are used regardless of the environment, i.e. r
 
 Configuration values can also be set or overridden for a specific environment using the filename syntax: `config/<environment-name>.{json|yml|js}`. If no value is assigned to `NODE_ENV`, the environment considered is *development*.
 
+> The environment name can be provided in two ways in Foal: via the `NODE_ENV` environment variable or via `FOAL_ENV`. If both of these variables are set, then the value of `FOAL_ENV` is used by the configuration system.
+
 ### Reserved Parameters
 
 All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.

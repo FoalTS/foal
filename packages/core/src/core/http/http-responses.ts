@@ -16,6 +16,7 @@ export interface CookieOptions {
   path?: string;
   secure?: boolean;
   sameSite?: 'strict'|'lax'|'none';
+  signed?: boolean;
 }
 
 /**
@@ -27,7 +28,7 @@ export interface CookieOptions {
  * @abstract
  * @class HttpResponse
  */
-export abstract class HttpResponse {
+export abstract class HttpResponse<T = any> {
   /**
    * Property used internally by isHttpResponse.
    *
@@ -68,7 +69,7 @@ export abstract class HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponse
    */
-  constructor(public body?: any, options: { stream?: boolean } = {}) {
+  constructor(public body?: T, options: { stream?: boolean } = {}) {
     this.stream = options.stream || false;
   }
 
@@ -182,7 +183,7 @@ export function isHttpResponse(obj: any): obj is HttpResponse {
  * @class HttpResponseSuccess
  * @extends {HttpResponse}
  */
-export abstract class HttpResponseSuccess extends HttpResponse {
+export abstract class HttpResponseSuccess<T = any> extends HttpResponse<T> {
   /**
    * Property used internally by isHttpResponseSuccess.
    *
@@ -195,7 +196,7 @@ export abstract class HttpResponseSuccess extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseSuccess
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -225,7 +226,7 @@ export function isHttpResponseSuccess(obj: any): obj is HttpResponseSuccess {
  * @class HttpResponseOK
  * @extends {HttpResponseSuccess}
  */
-export class HttpResponseOK extends HttpResponseSuccess {
+export class HttpResponseOK<T = any> extends HttpResponseSuccess<T> {
   /**
    * Property used internally by isHttpResponseOK.
    *
@@ -240,7 +241,7 @@ export class HttpResponseOK extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseOK
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -270,7 +271,7 @@ export function isHttpResponseOK(obj: any): obj is HttpResponseOK {
  * @class HttpResponseCreated
  * @extends {HttpResponseSuccess}
  */
-export class HttpResponseCreated extends HttpResponseSuccess {
+export class HttpResponseCreated<T = any> extends HttpResponseSuccess<T> {
   /**
    * Property used internally by isHttpResponseCreated.
    *
@@ -285,7 +286,7 @@ export class HttpResponseCreated extends HttpResponseSuccess {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseCreated
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -362,7 +363,7 @@ export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent 
  * @class HttpResponseRedirection
  * @extends {HttpResponse}
  */
-export abstract class HttpResponseRedirection extends HttpResponse {
+export abstract class HttpResponseRedirection<T = any> extends HttpResponse<T> {
   /**
    * Property used internally by isHttpResponseRedirection.
    *
@@ -375,7 +376,7 @@ export abstract class HttpResponseRedirection extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirection
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -452,7 +453,7 @@ export function isHttpResponseMovedPermanently(obj: any): obj is HttpResponseMov
  * @class HttpResponseRedirect
  * @extends {HttpResponseRedirection}
  */
-export class HttpResponseRedirect extends HttpResponseRedirection {
+export class HttpResponseRedirect<T = any> extends HttpResponseRedirection<T> {
   /**
    * Property used internally by isHttpResponseRedirect.
    *
@@ -468,7 +469,7 @@ export class HttpResponseRedirect extends HttpResponseRedirection {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseRedirect
    */
-  constructor(public path: string, body?: any, options: { stream?: boolean } = {}) {
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -501,7 +502,7 @@ export function isHttpResponseRedirect(obj: any): obj is HttpResponseRedirect {
  * @class HttpResponseClientError
  * @extends {HttpResponse}
  */
-export abstract class HttpResponseClientError extends HttpResponse {
+export abstract class HttpResponseClientError<T = any> extends HttpResponse<T> {
   /**
    * Property used internally by isHttpResponseClientError.
    *
@@ -514,7 +515,7 @@ export abstract class HttpResponseClientError extends HttpResponse {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseClientError
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -545,7 +546,7 @@ export function isHttpResponseClientError(obj: any): obj is HttpResponseClientEr
  * @class HttpResponseBadRequest
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseBadRequest extends HttpResponseClientError {
+export class HttpResponseBadRequest<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseBadRequest.
    *
@@ -560,7 +561,7 @@ export class HttpResponseBadRequest extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseBadRequest
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -591,7 +592,7 @@ export function isHttpResponseBadRequest(obj: any): obj is HttpResponseBadReques
  * @class HttpResponseUnauthorized
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseUnauthorized extends HttpResponseClientError {
+export class HttpResponseUnauthorized<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseUnauthorized.
    *
@@ -606,7 +607,7 @@ export class HttpResponseUnauthorized extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseUnauthorized
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
     this.setHeader('WWW-Authenticate', '');
   }
@@ -638,7 +639,7 @@ export function isHttpResponseUnauthorized(obj: any): obj is HttpResponseUnautho
  * @class HttpResponseForbidden
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseForbidden extends HttpResponseClientError {
+export class HttpResponseForbidden<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseForbidden.
    *
@@ -653,7 +654,7 @@ export class HttpResponseForbidden extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseForbidden
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -683,7 +684,7 @@ export function isHttpResponseForbidden(obj: any): obj is HttpResponseForbidden 
  * @class HttpResponseNotFound
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseNotFound extends HttpResponseClientError {
+export class HttpResponseNotFound<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseNotFound.
    *
@@ -698,7 +699,7 @@ export class HttpResponseNotFound extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotFound
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -728,7 +729,7 @@ export function isHttpResponseNotFound(obj: any): obj is HttpResponseNotFound {
  * @class HttpResponseMethodNotAllowed
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
+export class HttpResponseMethodNotAllowed<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseMethodNotAllowed.
    *
@@ -743,7 +744,7 @@ export class HttpResponseMethodNotAllowed extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseMethodNotAllowed
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -774,7 +775,7 @@ export function isHttpResponseMethodNotAllowed(obj: any): obj is HttpResponseMet
  * @class HttpResponseConflict
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseConflict extends HttpResponseClientError {
+export class HttpResponseConflict<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseConflict.
    *
@@ -789,7 +790,7 @@ export class HttpResponseConflict extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseConflict
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -819,7 +820,7 @@ export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
  * @class HttpResponseTooManyRequests
  * @extends {HttpResponseClientError}
  */
-export class HttpResponseTooManyRequests extends HttpResponseClientError {
+export class HttpResponseTooManyRequests<T = any> extends HttpResponseClientError<T> {
   /**
    * Property used internally by isHttpResponseTooManyRequests.
    *
@@ -834,7 +835,7 @@ export class HttpResponseTooManyRequests extends HttpResponseClientError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseTooManyRequests
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -868,14 +869,14 @@ export function isHttpResponseTooManyRequests(obj: any): obj is HttpResponseTooM
  * @class HttpResponseServerError
  * @extends {HttpResponse}
  */
-export abstract class HttpResponseServerError extends HttpResponse {
+export abstract class HttpResponseServerError<T = any> extends HttpResponse<T> {
   /**
    * Property used internally by isHttpResponseServerError.
    *
    * @memberof HttpResponseServerError
    */
   readonly isHttpResponseServerError = true;
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }
@@ -906,7 +907,7 @@ export function isHttpResponseServerError(obj: any): obj is HttpResponseServerEr
  * @class HttpResponseInternalServerError
  * @extends {HttpResponseServerError}
  */
-export class HttpResponseInternalServerError extends HttpResponseServerError {
+export class HttpResponseInternalServerError<T = any> extends HttpResponseServerError<T> {
   /**
    * Property used internally by isHttpResponseInternalServerError.
    *
@@ -923,7 +924,7 @@ export class HttpResponseInternalServerError extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseInternalServerError
    */
-  constructor(body?: any, options: { stream?: boolean, error?: Error, ctx?: Context } = {}) {
+  constructor(body?: T, options: { stream?: boolean, error?: Error, ctx?: Context } = {}) {
     super(body, options);
     this.error = options.error;
     this.ctx = options.ctx;
@@ -956,7 +957,7 @@ export function isHttpResponseInternalServerError(obj: any): obj is HttpResponse
  * @class HttpResponseNotImplemented
  * @extends {HttpResponseServerError}
  */
-export class HttpResponseNotImplemented extends HttpResponseServerError {
+export class HttpResponseNotImplemented<T = any> extends HttpResponseServerError<T> {
   /**
    * Property used internally by isHttpResponseNotImplemented.
    *
@@ -971,7 +972,7 @@ export class HttpResponseNotImplemented extends HttpResponseServerError {
    * @param {*} [body] - Optional body of the response.
    * @memberof HttpResponseNotImplemented
    */
-  constructor(body?: any, options: { stream?: boolean } = {}) {
+  constructor(body?: T, options: { stream?: boolean } = {}) {
     super(body, options);
   }
 }

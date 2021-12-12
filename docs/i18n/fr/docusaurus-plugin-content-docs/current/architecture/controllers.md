@@ -195,7 +195,7 @@ class AppController {
 
 #### Read Cookies
 
-Cookies are accessible with the `cookies` attribute.
+Cookies are accessible through the `cookies` attribute.
 
 ```typescript
 import { Context, HttpResponseOK, Get } from '@foal/core';
@@ -209,6 +209,23 @@ class AppController {
   }
 }
 ```
+
+Signed cookies are accessible through the `signedCookies` attribute.
+
+```typescript
+import { Context, HttpResponseOK, Get } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index(ctx: Context) {
+    const cookie1: string|undefined = ctx.request.signedCookies.cookie1;
+    // Do something.
+    return new HttpResponseOK();
+  }
+}
+```
+
+> In order to use signed cookies, you must provide a secret with the configuration key `settings.cookieParser.secret`.
 
 
 #### The Controller Method Arguments
@@ -332,6 +349,23 @@ class AppController {
 ```
 
 > The `maxAge` cookie directive defines the number of **seconds** until the cookie expires.
+
+*Example with a signed cookie.*
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+
+class AppController {
+  @Get('/')
+  index() {
+    return new HttpResponseOK()
+      .setCookie('cookie1', 'value1', {
+        signed: true
+      });
+  }
+}
+```
+
+> In order to use signed cookies, you must provide a secret with the configuration key `settings.cookieParser.secret`.
 
 ## Testing Controllers
 
