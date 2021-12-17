@@ -17,10 +17,14 @@ export class RedisStore extends SessionStore {
     this.redisClient = createClient(redisURI);
   }
 
+  getRedisClient() {
+    return this.redisClient;
+  }
+
   save(state: SessionState, maxInactivity: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const payload = JSON.stringify(state);
-      this.redisClient.set(`sessions:${state.id}`, payload, 'NX', 'EX', maxInactivity, (err: any, val: string|null) => {
+      this.redisClient.set(`sessions:${state.id}`, payload, 'NX', 'EX', maxInactivity, (err: any, val: string | null) => {
         // TODO: test this line.
         if (err) {
           return reject(err);
@@ -35,7 +39,7 @@ export class RedisStore extends SessionStore {
 
   read(id: string): Promise<SessionState | null> {
     return new Promise<SessionState | null>((resolve, reject) => {
-      this.redisClient.get(`sessions:${id}`, async (err: any, val: string|null) => {
+      this.redisClient.get(`sessions:${id}`, async (err: any, val: string | null) => {
         // TODO: test this line.
         if (err) {
           return reject(err);
@@ -86,7 +90,7 @@ export class RedisStore extends SessionStore {
     });
   }
 
-  async cleanUpExpiredSessions(): Promise<void> {}
+  async cleanUpExpiredSessions(): Promise<void> { }
 
   /**
    * Closes the connection to the database.
