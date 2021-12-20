@@ -5,7 +5,7 @@ import { Adapter } from 'socket.io-adapter';
 
 // FoalTS
 import { makeWebsocketControllerRoutes, getWebsocketResponse } from './routes';
-import { WebsocketContext, ISocketIOController, WebsocketErrorResponse, WebsocketResponse } from './architecture';
+import { WebsocketContext, ISocketIOController, WebsocketErrorResponse } from './architecture';
 import { WsServer } from './ws-server.service';
 
 /**
