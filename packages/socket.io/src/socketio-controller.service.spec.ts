@@ -155,7 +155,7 @@ describe('SocketIOController', () => {
         strictEqual(actualContext?.user, undefined);
       });
 
-      it('and should return an ok response if the controller method returns a WebsocketResponse (with a payload).', async () => {
+      it('and should return an ok response if the controller method returns a WebsocketResponse (with no payload).', async () => {
         class WebsocketController extends SocketIOController {
           @EventName('create user')
           createUser() {
@@ -169,7 +169,7 @@ describe('SocketIOController', () => {
         deepStrictEqual(payload, { status: 'ok' });
       });
 
-      it('and should return an ok response if the controller method returns a WebsocketResponse (with no payload).', async () => {
+      it('and should return an ok response if the controller method returns a WebsocketResponse (with a payload).', async () => {
         const data = { foo: 'bar' };
         class WebsocketController extends SocketIOController {
           @EventName('create user')
@@ -184,7 +184,7 @@ describe('SocketIOController', () => {
         deepStrictEqual(payload, { status: 'ok', data });
       });
 
-      it('and should return an error response if the controller method returns a WebsocketErrorResponse (with a payload).', async () => {
+      it('and should return an error response if the controller method returns a WebsocketErrorResponse (with no payload).', async () => {
         class WebsocketController extends SocketIOController {
           @EventName('create user')
           createUser() {
@@ -198,7 +198,7 @@ describe('SocketIOController', () => {
         deepStrictEqual(payload, { status: 'error' });
       });
 
-      it('and should return an error response if the controller method returns a WebsocketErrorResponse (with no payload).', async () => {
+      it('and should return an error response if the controller method returns a WebsocketErrorResponse (with a payload).', async () => {
         const error = { foo: 'bar' };
         class WebsocketController extends SocketIOController {
           @EventName('create user')
@@ -252,7 +252,9 @@ describe('SocketIOController', () => {
           @WebsocketHook((ctx, services) => {
             services.get(Service).foo();
           })
-          createUser() {}
+          createUser() {
+            return new WebsocketResponse();
+          }
         }
 
         const serviceManager = new ServiceManager();
@@ -284,6 +286,7 @@ describe('SocketIOController', () => {
           @EventName('create user')
           createUser(ctx: WebsocketContext) {
             ctx.socket.broadcast.emit('refresh users');
+            return new WebsocketResponse();
           }
         }
 
