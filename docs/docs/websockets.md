@@ -400,15 +400,20 @@ Testing WebSocket controllers and hooks is very similar to testing their HTTP eq
 This example shows how to manage multiple node servers using a redis adapter.
 
 ```bash
-npm install socket.io-redis
+npm install @socket.io/redis-adapter@7 redis@4
 ```
 
 ```typescript
 import { EventName, WebsocketContext } from '@foal/core';
-import { createAdapter } from 'socket.io-redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+
+await Promise.all([pubClient.connect(), subClient.connect()])
 
 export class WebsocketController extends SocketIOController {
-  adapter = createAdapter('redis://localhost:6379');
+  adapter = createAdapter(pubClient, subClient);
 
   @EventName('create user')
   createUser(ctx: WebsocketContext) {
