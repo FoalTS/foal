@@ -1,7 +1,6 @@
 // 3p
 import { Class, dependency, ServiceManager } from '@foal/core';
 import { Server, ServerOptions } from 'socket.io';
-import { Adapter } from 'socket.io-adapter';
 
 // FoalTS
 import { makeWebsocketControllerRoutes, getWebsocketResponse } from './routes';
@@ -23,7 +22,7 @@ export abstract class SocketIOController implements ISocketIOController {
   @dependency
   wsServer: WsServer;
 
-  adapter: typeof Adapter|undefined;
+  adapter: ServerOptions['adapter'] | undefined;
 
   options: Partial<ServerOptions> = {};
 

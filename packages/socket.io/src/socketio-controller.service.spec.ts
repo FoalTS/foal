@@ -6,7 +6,7 @@ import { AddressInfo } from 'net';
 import * as http from 'http';
 
 // 3p
-import { io, Socket } from 'socket.io-client';
+import { io, ManagerOptions, Socket } from 'socket.io-client';
 import {
   Class,
   Config,
@@ -16,12 +16,13 @@ import {
   IAppController,
   ServiceManager
 } from '@foal/core';
-import { ServerOptions } from 'socket.io';
-import { createAdapter } from 'socket.io-redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
 
 // FoalTS
 import { EventName, WebsocketHook, WebsocketContext, WebsocketErrorResponse, WebsocketResponse, wsController } from './architecture';
 import { SocketIOController } from './socketio-controller.service';
+import { SocketOptions } from 'dgram';
 
 describe('SocketIOController', () => {
 
@@ -31,7 +32,10 @@ describe('SocketIOController', () => {
     let httpServer: Server;
     let clientSocket: Socket;
 
-    afterEach(() => {
+    let pubClient: any;
+    let subClient: any;
+
+    afterEach(async () => {
       if (controller) {
         controller.wsServer.close();
       }
@@ -41,11 +45,18 @@ describe('SocketIOController', () => {
       if (httpServer) {
         httpServer.close();
       }
+
+      if (pubClient) {
+        await pubClient.quit();
+      }
+      if (subClient) {
+        await subClient.quit();
+      }
     });
 
     afterEach(() => Config.remove('settings.logErrors'));
 
-    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ServerOptions>): Promise<void> {
+    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>): Promise<void> {
       return new Promise(resolve => {
         httpServer = createServer();
 
@@ -280,8 +291,11 @@ describe('SocketIOController', () => {
       })
 
       it('with the optional SocketIOController.adapter.', done => {
+        pubClient = createClient({ url: 'redis://localhost:6380' });
+        subClient = pubClient.duplicate();
+
         class WebsocketController extends SocketIOController {
-          adapter = createAdapter('redis://localhost:6380')
+          adapter = createAdapter(pubClient, subClient);
 
           @EventName('create user')
           createUser(ctx: WebsocketContext) {
@@ -305,17 +319,23 @@ describe('SocketIOController', () => {
           });
         }
 
-        Promise.all([
-          createHttpServerAndSockets(),
-          createHttpServerAndSockets(),
-        ]).then(clientSockets => {
-          clientSockets[0].on('refresh users', () => {
-            clientSockets[0].close();
-            clientSockets[1].close();
-            done();
-          });
-          clientSockets[1].emit('create user')
-        }).catch(done);
+        Promise
+          .all([pubClient.connect(), subClient.connect()])
+          .then(() => Promise
+            .all([
+              createHttpServerAndSockets(),
+              createHttpServerAndSockets(),
+            ])
+            .then(clientSockets => {
+              clientSockets[0].on('refresh users', () => {
+                clientSockets[0].close();
+                clientSockets[1].close();
+                done();
+              });
+              clientSockets[1].emit('create user')
+            })
+            .catch(done));
+
       })
 
     });
