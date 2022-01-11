@@ -1,0 +1,82 @@
+{
+  "version.label": {
+    "message": "2.7.1 (terbaru)",
+    "description": "The label for version current"
+  },
+  "sidebar.someSidebar.category.TUTORIALS": {
+    "message": "TUTORIAL",
+    "description": "The label for category TUTORIALS in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Simple To-Do List": {
+    "message": "To-Do List Sederhana",
+    "description": "The label for category Simple To-Do List in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Full Example with React": {
+    "message": "Full Example with React",
+    "description": "The label for category Full Example with React in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.TOPIC GUIDES": {
+    "message": "TOPIK",
+    "description": "The label for category TOPIC GUIDES in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Architecture": {
+    "message": "Arsitektur",
+    "description": "The label for category Architecture in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Common": {
+    "message": "Umum",
+    "description": "The label for category Common in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Databases": {
+    "message": "Database",
+    "description": "The label for category Databases in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Authentication": {
+    "message": "Otentifikasi",
+    "description": "The label for category Authentication in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.API": {
+    "message": "API",
+    "description": "The label for category API in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Frontend Integration": {
+    "message": "Integrasi Frontend",
+    "description": "The label for category Frontend Integration in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.File System": {
+    "message": "File System",
+    "description": "The label for category File System in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Dev Tools": {
+    "message": "Dev Tools",
+    "description": "The label for category Dev Tools in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Testing": {
+    "message": "Tes",
+    "description": "The label for category Testing in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Security": {
+    "message": "Keamanan",
+    "description": "The label for category Security in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Cookbook": {
+    "message": "Kumpulan Resep",
+    "description": "The label for category Cookbook in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Deployment": {
+    "message": "Deploy",
+    "description": "The label for category Deployment in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Upgrading": {
+    "message": "Upgrade",
+    "description": "The label for category Upgrading in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.category.Community": {
+    "message": "Komunitas",
+    "description": "The label for category Community in sidebar someSidebar"
+  },
+  "sidebar.someSidebar.link.To v1": {
+    "message": "Ke v1",
+    "description": "The label for link To v1 in sidebar someSidebar, linking to https://github.com/FoalTS/foal/releases/tag/v1.0.0"
+  }
+}

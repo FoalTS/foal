@@ -1,6 +1,6 @@
 module.exports = {
   title: 'FoalTS',
-  tagline: 'Node.JS framework for building web applications',
+  tagline: 'Elegant and complete web framework for NodeJS',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -10,7 +10,7 @@ module.exports = {
   projectName: 'foal', // Usually your repo name.
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'fr', 'es'],
+    locales: ['en', 'fr', 'es', 'id'],
     localeConfigs: {
       en: {
         label: 'English',
@@ -20,6 +20,9 @@ module.exports = {
       },
       es: {
         label: 'Español',
+      },
+      id: {
+        label: 'Bahasa Indonesia',
       },
     },
   },
@@ -51,7 +54,7 @@ module.exports = {
     },
     navbar: {
       title: 'FoalTS',
-      style: 'dark',
+      style: 'primary',
       hideOnScroll: true,
       logo: {
         alt: 'FoalTS Logo',
@@ -75,30 +78,6 @@ module.exports = {
           position: 'left'
         },
         {
-          href: 'https://github.com/FoalTS/foal',
-          position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub repository',
-        },
-        {
-          href: 'https://twitter.com/FoalTs',
-          position: 'right',
-          className: 'header-twitter-link',
-          'aria-label': 'Twitter profile',
-        },
-        {
-          href: 'https://www.youtube.com/channel/UCQFojM334E0YdoDq56MjfOQ',
-          position: 'right',
-          className: 'header-youtube-link',
-          'aria-label': 'Youtube channel',
-        },
-        {
-          href: 'https://discord.gg/QUrJv98',
-          position: 'right',
-          className: 'header-chat-link',
-          'aria-label': 'Discord chat server',
-        },
-        {
           type: 'docsVersionDropdown',
           position: 'right',
           dropdownActiveClassDisabled: true,
@@ -107,12 +86,14 @@ module.exports = {
           type: 'localeDropdown',
           position: 'right',
         },
+        {
+          href: 'https://github.com/FoalTS/foal',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
-    },
-    footer: {
-      links: [
-      ],
-    },
+    }
   },
   plugins: [
     'docusaurus-plugin-sass',

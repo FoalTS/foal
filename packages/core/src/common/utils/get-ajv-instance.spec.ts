@@ -2,6 +2,10 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
+function clearCache() {
+  delete (_instanceWrapper as any).instance;
+}
+
 describe('getAjvInstance', () => {
 
   it('should use defaults.', () => {
@@ -41,15 +45,52 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
+  it('should not support $data references.', () => {
+    const schema6 = {
+      properties: {
+        password: {
+          type: 'string',
+        },
+        confirmPassword: {
+          const: {
+            $data: '1/password',
+          },
+          type: 'string',
+        },
+      },
+      type: 'object',
+    };
+    const data6 = {
+      password: 'superSecretPassword',
+      confirmPassword: 'superSecretPassword',
+    };
+    const ajv = getAjvInstance();
+    strictEqual(ajv.validate(schema6, data6), false, 'By default, AJV should not be able to validate using $data references.');
+    deepStrictEqual(ajv.errors, [
+      {
+        keyword: 'const',
+        dataPath: '.confirmPassword',
+        schemaPath: '#/properties/confirmPassword/const',
+        params: {
+          allowedValue: {
+            $data: '1/password',
+          },
+        },
+        message:'should be equal to constant',
+      }
+    ], 'AJV should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
+  });
+
   describe('', () => {
 
     beforeEach(() => {
-      delete (_instanceWrapper as any).instance;
+      clearCache();
+      Config.set('settings.ajv.$data', true);
+      Config.set('settings.ajv.allErrors', true);
       Config.set('settings.ajv.coerceTypes', false);
+      Config.set('settings.ajv.nullable', true);
       Config.set('settings.ajv.removeAdditional', false);
       Config.set('settings.ajv.useDefaults', false);
-      Config.set('settings.ajv.nullable', true);
-      Config.set('settings.ajv.allErrors', true);
     });
 
     it('should accept custom configuration from the Config.', () => {
@@ -116,10 +157,57 @@ describe('getAjvInstance', () => {
           schemaPath: '#/properties/b/type',
         },
       ]);
+
+      // $data
+      const schema6 = {
+        properties: {
+          password: {
+            type: 'string',
+          },
+          confirmPassword: {
+            const: {
+              $data: '1/password',
+            },
+            type: 'string',
+          },
+        },
+        type: 'object',
+      };
+      const data6 = {
+        password: 'superSecretPassword',
+        confirmPassword: 'superSecretPassword',
+      };
+      strictEqual(ajv.validate(schema6, data6), true, 'If $data is true in the configuration, and property "confirmPassword" matches "password", AJV should validate the data as valid.');
+      strictEqual(ajv.errors, null);
+
+      const data7 = {
+        password: 'superSecretPassword',
+        confirmPassword: 'notEvenCloseToTheSamePassword',
+      };
+      strictEqual(ajv.validate(schema6, data7), false, 'If $data is true in the configuration, and property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
+      deepStrictEqual(ajv.errors, [
+        {
+          dataPath: '.confirmPassword',
+          keyword: 'const',
+          message: 'should be equal to constant',
+          params: {
+            allowedValue: 'superSecretPassword',
+          },
+          schemaPath: '#/properties/confirmPassword/const',
+        }
+      ], 'AJV should have errors explaining "confirmPassword" didn\'t match the expected value in "password"');
     });
 
     it('should throw a ConfigTypeError when the value of `settings.ajv.coerceTypes` has an invalid type.', () => {
-      Config.set('settings.ajv.coerceTypes', 'hello');
+      Config.set('settings.ajv.coerceTypes', false);
+      getAjvInstance().validate({}, {});
+      clearCache();
+
+      Config.set('settings.ajv.coerceTypes', 'array');
+      getAjvInstance().validate({}, {});
+      clearCache();
+
+      Config.set('settings.ajv.coerceTypes', 1);
 
       try {
         getAjvInstance().validate({}, {});
@@ -128,8 +216,8 @@ describe('getAjvInstance', () => {
           throw new Error('A ConfigTypeError should have been thrown');
         }
         strictEqual(error.key, 'settings.ajv.coerceTypes');
-        strictEqual(error.expected, 'boolean');
-        strictEqual(error.actual, 'string');
+        strictEqual(error.expected, 'boolean|string');
+        strictEqual(error.actual, 'number');
         return;
       }
 
@@ -172,13 +260,32 @@ describe('getAjvInstance', () => {
       throw new Error('An error should have been thrown');
     });
 
+    it('should throw a ConfigTypeError when the value of `settings.ajv.$data` has an invalid type.', () => {
+      Config.set('settings.ajv.$data', 'hello');
+
+      try {
+        getAjvInstance().validate({}, {});
+      } catch (error) {
+        if (!(error instanceof ConfigTypeError)) {
+          throw new Error('A ConfigTypeError should have been thrown');
+        }
+        strictEqual(error.key, 'settings.ajv.$data');
+        strictEqual(error.expected, 'boolean');
+        strictEqual(error.actual, 'string');
+        return;
+      }
+
+      throw new Error('An error should have been thrown');
+    });
+
     after(() => {
-      delete (_instanceWrapper as any).instance;
+      clearCache();
+      Config.remove('settings.ajv.$data');
+      Config.remove('settings.ajv.allErrors');
       Config.remove('settings.ajv.coerceTypes');
+      Config.remove('settings.ajv.nullable');
       Config.remove('settings.ajv.removeAdditional');
       Config.remove('settings.ajv.useDefaults');
-      Config.remove('settings.ajv.nullable');
-      Config.remove('settings.ajv.allErrors');
     });
 
   });

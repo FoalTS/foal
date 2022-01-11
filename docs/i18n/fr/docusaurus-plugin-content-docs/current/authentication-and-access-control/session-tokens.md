@@ -307,8 +307,6 @@ export class ApiController {
 
 > This section explains how to use sessions with cookies. See the section above to see how to use them with a `bearer` token and the `Authorization` header.
 
---
-
 > Be aware that if you use cookies, your application must provide a [CSRF defense](../security/csrf-protection.md).
 
 When using the `@UseSessions` hook with the `cookie` option, FoalTS makes sure that `ctx.session` is always set and takes care of managing the session token on the client (using a cookie).
@@ -523,7 +521,7 @@ export class ApiController {
 
 *Cookies*
 
-![User cookie](./user-cookie.png)
+![User cookie](./images/user-cookie.png)
 
 *Client-side code*
 
@@ -899,7 +897,7 @@ interface SessionState {
 The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
 ```typescript
-(id: string|number) => Promise<any|undefined>
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>
 ```
 
 If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.

@@ -33,7 +33,7 @@ describe('GoogleProvider', () => {
     it('should throw an InvalidJWTError if the id_token is not a valid JWT.', () => {
       const tokens: SocialTokens = {
         access_token: 'xxx',
-        id_token: 'x.y.z',
+        id_token: 'x.ew.z',
         token_type: 'bearer',
       };
 

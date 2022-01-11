@@ -1,4 +1,5 @@
 // FoalTS
+import { convertBase64urlToBase64 } from '@foal/core';
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
 
 export interface GoogleAuthParams {
@@ -37,7 +38,8 @@ export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never> {
   getUserInfoFromTokens(tokens: SocialTokens): object {
     try {
       const encodedPayload = tokens.id_token.split('.')[1];
-      const decodedPayload = Buffer.from(encodedPayload, 'base64').toString('utf8');
+      const decodedPayload = Buffer.from(convertBase64urlToBase64(encodedPayload), 'base64')
+        .toString('utf8');
       return JSON.parse(decodedPayload);
     } catch (error) {
       throw new InvalidJWTError(`The ID token returned by Google is not a valid JWT: ${error.message}.`);

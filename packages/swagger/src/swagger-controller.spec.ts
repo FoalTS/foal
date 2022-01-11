@@ -2,7 +2,6 @@
 import { deepStrictEqual, ok, strictEqual } from 'assert';
 import { readFileSync, stat } from 'fs';
 import { join } from 'path';
-import { Readable } from 'stream';
 import { promisify } from 'util';
 
 // 3p
@@ -17,20 +16,12 @@ import {
   isHttpResponseOK,
   OpenApi,
   OPENAPI_SERVICE_ID,
-  ServiceManager
+  ServiceManager,
+  streamToBuffer
 } from '@foal/core';
 
 // FoalTS
 import { SwaggerController } from './swagger-controller';
-
-function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
 
 describe('SwaggerController', () => {
 
@@ -184,9 +175,7 @@ describe('SwaggerController', () => {
 
   /* UI */
 
-  describe('has a "index" method that', () => {
-
-    const ctx = new Context({ path: 'swagger/' });
+  describe('has an "index" method that', () => {
 
     it('should handle requests at GET /.', () => {
       strictEqual(getHttpMethod(ConcreteClass, 'index'), 'GET');
@@ -207,11 +196,10 @@ describe('SwaggerController', () => {
       strictEqual(response.path, ctx.request.path + '/');
     });
 
-    it('should properly render the template given options are { url: "xxx" }.', async () => {
-      class ConcreteClass extends SwaggerController {
-        options = { url: 'xxx' };
-      }
+    it('should return the swagger HTML page.', async () => {
       const controller = new ConcreteClass();
+
+      const ctx = new Context({ path: 'swagger/' });
       const response = await controller.index(ctx);
 
       if (!isHttpResponseOK(response)) {
@@ -220,7 +208,36 @@ describe('SwaggerController', () => {
 
       strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
 
-      const expected = readFileSync(join(__dirname, 'index.url.spec.html'), 'utf8');
+      const expected = readFileSync(join(__dirname, 'index.html'), 'utf8');
+      strictEqual(response.body, expected);
+    })
+
+  });
+
+  describe('has a "main" method that', () => {
+
+    const ctx = new Context({ path: 'swagger/' });
+
+    it('should handle requests at GET /main.js.', () => {
+      strictEqual(getHttpMethod(ConcreteClass, 'main'), 'GET');
+      strictEqual(getPath(ConcreteClass, 'main'), '/main.js');
+    });
+
+
+    it('should properly render the template given options are { url: "xxx" }.', async () => {
+      class ConcreteClass extends SwaggerController {
+        options = { url: 'xxx' };
+      }
+      const controller = new ConcreteClass();
+      const response = await controller.main(ctx);
+
+      if (!isHttpResponseOK(response)) {
+        throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
+      }
+
+      strictEqual(response.getHeader('Content-Type'), 'application/javascript');
+
+      const expected = readFileSync(join(__dirname, 'specs/main.url.spec.js'), 'utf8');
       strictEqual(response.body, expected);
     });
 
@@ -229,15 +246,15 @@ describe('SwaggerController', () => {
         options = { controllerClass: class {} };
       }
       const controller = new ConcreteClass();
-      const response = await controller.index(ctx);
+      const response = await controller.main(ctx);
 
       if (!isHttpResponseOK(response)) {
-        throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+        throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
       }
 
-      strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+      strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-      const expected = readFileSync(join(__dirname, 'index.controller.spec.html'), 'utf8');
+      const expected = readFileSync(join(__dirname, 'specs/main.controller.spec.js'), 'utf8');
       strictEqual(response.body, expected);
     });
 
@@ -250,15 +267,15 @@ describe('SwaggerController', () => {
           ];
         }
         const controller = new ConcreteClass();
-        const response = await controller.index(ctx);
+        const response = await controller.main(ctx);
 
         if (!isHttpResponseOK(response)) {
-          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+          throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
         }
 
-        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'index.no-primary.spec.html'), 'utf8');
+        const expected = readFileSync(join(__dirname, 'specs/main.no-primary.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 
@@ -271,15 +288,15 @@ describe('SwaggerController', () => {
           ];
         }
         const controller = new ConcreteClass();
-        const response = await controller.index(ctx);
+        const response = await controller.main(ctx);
 
         if (!isHttpResponseOK(response)) {
-          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+          throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
         }
 
-        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'index.primary.spec.html'), 'utf8');
+        const expected = readFileSync(join(__dirname, 'specs/main.primary.spec.js'), 'utf8');
         strictEqual(response.body, expected);
 
     });
@@ -293,15 +310,15 @@ describe('SwaggerController', () => {
           uiOptions = { docExpansion: 'none' };
         }
         const controller = new ConcreteClass();
-        const response = await controller.index(ctx);
+        const response = await controller.main(ctx);
 
         if (!isHttpResponseOK(response)) {
-          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+          throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
         }
 
-        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'index.url.ui-options.spec.html'), 'utf8');
+        const expected = readFileSync(join(__dirname, 'specs/main.url.ui-options.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 
@@ -314,15 +331,15 @@ describe('SwaggerController', () => {
           uiOptions = { docExpansion: 'none' };
         }
         const controller = new ConcreteClass();
-        const response = await controller.index(ctx);
+        const response = await controller.main(ctx);
 
         if (!isHttpResponseOK(response)) {
-          throw new Error('SwaggerController.index should return an HttpResponseOK instance.');
+          throw new Error('SwaggerController.main should return an HttpResponseOK instance.');
         }
 
-        strictEqual(response.getHeader('Content-Type'), 'text/html; charset=utf-8');
+        strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'index.no-primary.ui-options.spec.html'), 'utf8');
+        const expected = readFileSync(join(__dirname, 'specs/main.no-primary.ui-options.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 
@@ -335,7 +352,7 @@ describe('SwaggerController', () => {
   ): void {
     describe(`has a "${methodName}" method that`, () => {
 
-      it('should handle requests at GET /.', () => {
+      it(`should handle requests at GET /${filename}.`, () => {
         strictEqual(getHttpMethod(ConcreteClass, methodName), 'GET');
         strictEqual(getPath(ConcreteClass, methodName), `/${filename}`);
       });

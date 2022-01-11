@@ -475,6 +475,7 @@ export class AuthController {
 }
 ```
 
+
 ## Reading User Information on the Client (cookies)
 
 > *This feature is available from version 2.2 onwards.*
@@ -520,13 +521,14 @@ export class ApiController {
 
 *Cookies*
 
-![User cookie](./user-cookie.png)
+![User cookie](./images/user-cookie.png)
 
 *Client-side code*
 
 ```javascript
 const user = JSON.parse(decodeURIComponent(/* cookie value */));
 ```
+
 
 ## Save and Read Content
 
@@ -895,7 +897,7 @@ interface SessionState {
 The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
 ```typescript
-(id: string|number) => Promise<any|undefined>
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>
 ```
 
 If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.

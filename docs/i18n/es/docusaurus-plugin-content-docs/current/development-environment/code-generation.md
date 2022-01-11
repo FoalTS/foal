@@ -94,6 +94,24 @@ foal g entity <name>
 
 Create a new entity in `./src/app/entities`, in `./entities` or in the current directory depending on which folders are found.
 
+*Example*
+```shell
+foal g entity user
+foal g entity business/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- entities/
+   |- business/
+   | |- product.entity.ts
+   | '- index.ts
+   |- user.entity.ts
+   '- index.ts
+```
+
 ## Create REST API
 
 ```shell
@@ -143,6 +161,25 @@ foal g hook <name>
 ```
 
 Create a new hook in `./src/app/hooks`, in `./hooks` or in the current directory depending on which folders are found.
+
+*Example*
+```shell
+foal g hook log
+foal g hook auth/admin-required
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- hooks/
+   |- auth/
+   | |- admin-required.hook.ts
+   | '- index.ts
+   |- log.hook.ts
+   '- index.ts
+```
+
 
 ## Create a script
 

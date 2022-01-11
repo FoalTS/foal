@@ -115,6 +115,13 @@ describe('HttpResponse', () => {
     notStrictEqual(actual1.my_cookie2.options, actual2.my_cookie2.options);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponse<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponse', () => {
@@ -159,6 +166,13 @@ describe('isHttpResponseSuccess', () => {
     strictEqual(isHttpResponseSuccess(null), false);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponse<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('HttpResponseOK', () => {
@@ -190,6 +204,13 @@ describe('HttpResponseOK', () => {
 
     httpResponse = new HttpResponseOK({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseOK<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
@@ -245,6 +266,13 @@ describe('HttpResponseCreated', () => {
 
     httpResponse = new HttpResponseCreated({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseCreated<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
@@ -407,6 +435,13 @@ describe('HttpResponseRedirect', () => {
     strictEqual(httpResponse.stream, true);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRedirect<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseRedirect', () => {
@@ -484,6 +519,13 @@ describe('HttpResponseBadRequest', () => {
     strictEqual(httpResponse.stream, true);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseBadRequest<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseBadRequest', () => {
@@ -537,6 +579,13 @@ describe('HttpResponseUnauthorized', () => {
 
     httpResponse = new HttpResponseUnauthorized({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnauthorized<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
@@ -594,6 +643,13 @@ describe('HttpResponseForbidden', () => {
     strictEqual(httpResponse.stream, true);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseForbidden<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseForbidden', () => {
@@ -647,6 +703,13 @@ describe('HttpResponseNotFound', () => {
 
     httpResponse = new HttpResponseNotFound({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNotFound<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
@@ -704,6 +767,13 @@ describe('HttpResponseMethodNotAllowed', () => {
     strictEqual(httpResponse.stream, true);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMethodNotAllowed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseMethodNotAllowed', () => {
@@ -759,6 +829,13 @@ describe('HttpResponseConflict', () => {
     strictEqual(httpResponse.stream, true);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseConflict<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseConflict', () => {
@@ -812,6 +889,13 @@ describe('HttpResponseTooManyRequests', () => {
 
     httpResponse = new HttpResponseTooManyRequests({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseTooManyRequests<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
@@ -909,6 +993,13 @@ describe('HttpResponseInternalServerError', () => {
     strictEqual(httpResponse.ctx, ctx);
   });
 
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseInternalServerError<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
 });
 
 describe('isHttpResponseInternalServerError', () => {
@@ -962,6 +1053,13 @@ describe('HttpResponseNotImplemented', () => {
 
     httpResponse = new HttpResponseNotImplemented({}, { stream: true });
     strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNotImplemented<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });

@@ -96,6 +96,8 @@ The *default* configuration files are used regardless of the environment, i.e. r
 
 Configuration values can also be set or overridden for a specific environment using the filename syntax: `config/<environment-name>.{json|yml|js}`. If no value is assigned to `NODE_ENV`, the environment considered is *development*.
 
+> The environment name can be provided in two ways in Foal: via the `NODE_ENV` environment variable or via `FOAL_ENV`. If both of these variables are set, then the value of `FOAL_ENV` is used by the configuration system.
+
 ### Reserved Parameters
 
 All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.
@@ -274,7 +276,7 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-If the same variable is provided both as environment variable and in the `.env` file, then the value of the environment variable is used.
+If the same variable is provided both as environment variable and in the `.env` file, then the value of the `.env` file is used.
 
 ### Deployment Environments
 
@@ -289,3 +291,22 @@ In case you want to have two `.env` files, one to define the default env vars ne
 If a variable is defined in both files, the value in the `.env.local` file will take precedence.
 
 Similarly, you can define environment-specific local files (`.env.development.local`, `.env.production.local`, etc).
+
+### Note on the use of dotenv
+
+Many NodeJS applications use the [dotenv](https://www.npmjs.com/package/dotenv) library to manage the environment configuration. It loads variables from the `.env` file if it exists and assigns their values to the `process.env` object.
+
+When using Foal, it is strongly recommended that you do not use this library as it may break some functionality. For example, you will not be able to use other files such as `.env.production` and `.env.local`.
+
+The recommended approach to loading environment variables from `.env` files is to use Foal's configuration system using the `Config` or `Env` class.
+
+*Example*
+```typescript
+// dotenv
+const value = process.env.FOO_BAR;
+
+// Foal
+import { Env } from '@foal/core';
+
+const value = Env.get('FOO_BAR');
+```

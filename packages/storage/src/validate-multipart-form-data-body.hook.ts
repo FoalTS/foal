@@ -12,7 +12,8 @@ import {
   HttpResponseBadRequest,
   IApiRequestBody,
   IApiSchema,
-  ServiceManager
+  ServiceManager,
+  streamToBuffer
 } from '@foal/core';
 import * as Busboy from 'busboy';
 
@@ -27,16 +28,6 @@ export interface MultipartFormDataSchema {
   files: {
     [key: string]: { required: boolean, multiple?: boolean, saveTo?: string }
   };
-}
-
-function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    // TODO: test this line.
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
 }
 
 async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () => void): Promise<{ error?: any }> {

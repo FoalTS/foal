@@ -1,5 +1,7 @@
 ---
-title: The Modelo Todo
+title: El Modelo Todo
+id: tuto-3-the-todo-model
+slug: 3-the-todo-model
 ---
 
 Vamos a crear su primer modelo. El CLI proporciona un comando útil para generar un nuevo archivo con un modelo vacío.

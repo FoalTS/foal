@@ -1,4 +1,5 @@
 // std
+import { ServiceManager } from '@foal/core';
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
@@ -80,19 +81,19 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     after(() => getConnection().close());
 
     it('should return the user fetched from the database (id: number).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id);
+      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
       notStrictEqual(actual, undefined);
       strictEqual((actual as User).id, user.id);
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id.toString());
+      const actual = await fetchUserWithPermissions(User)(user.id.toString(), new ServiceManager());
       notStrictEqual(actual, undefined);
       strictEqual((actual as User).id, user.id);
     });
 
     it('should return the user fetched from the database with their groups and permissions.', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id);
+      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
       notStrictEqual(actual, undefined);
       strictEqual((actual as User).id, user.id);
 
@@ -110,7 +111,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return undefined if no user is found in the database.', async () => {
-      const actual = await fetchUserWithPermissions(User)(56);
+      const actual = await fetchUserWithPermissions(User)(56, new ServiceManager());
       strictEqual(actual, undefined);
     });
 

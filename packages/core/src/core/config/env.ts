@@ -11,13 +11,17 @@ export class Env {
     this.dotEnv = null;
   }
 
+  static getEnvironmentName(): string {
+    return process.env.FOAL_ENV || process.env.NODE_ENV || 'development';
+  }
+
   static get(key: string): string|undefined {
     if (this.dotEnv === null) {
       this.dotEnv = {};
       this.loadEnv('.env');
       this.loadEnv('.env.local');
-      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}`);
-      this.loadEnv(`.env.${process.env.NODE_ENV || 'development'}.local`);
+      this.loadEnv(`.env.${this.getEnvironmentName()}`);
+      this.loadEnv(`.env.${this.getEnvironmentName()}.local`);
     }
 
     if (this.dotEnv[key] !== undefined) {

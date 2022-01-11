@@ -1,5 +1,7 @@
 ---
 title: Validation & Assainissement
+id: tuto-6-validation-and-sanitization
+slug: 6-validation-and-sanitization
 ---
 
 Actuellement, les entrées reçues par le serveur ne sont pas vérifiées. Tout le monde peut envoyer n'importe quoi en lançant une requête à `POST /api/todos`. C'est pourquoi les entrées du client ne sont pas considérées comme fiables.

@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 import { Readable } from 'stream';
 
 // 3p
-import { Config, ConfigNotFoundError, createService } from '@foal/core';
+import { Config, ConfigNotFoundError, createService, streamToBuffer } from '@foal/core';
 import { FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
@@ -12,15 +12,6 @@ import { S3Disk } from './s3-disk.service';
 
 // Isolate each job with a different S3 bucket.
 const bucketName = `foal-test-${process.env.NODE_VERSION || 10}`;
-
-function streamToBuffer(stream: Readable): Promise<Buffer> {
-  const chunks: Buffer[] = [];
-  return new Promise<Buffer>((resolve, reject) => {
-    stream.on('data', chunk => chunks.push(chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(Buffer.concat(chunks)));
-  });
-}
 
 async function rmObjectsIfExist(s3: S3) {
   const response = await s3.listObjects({
@@ -315,11 +306,10 @@ describe('S3Disk', () => {
       await disk.delete('foo/test.txt');
 
       try {
-        const response = await s3.getObject({
+        await s3.getObject({
           Bucket: bucketName,
           Key: 'foo/test.txt',
         }).promise();
-        console.log(response);
         throw new Error('An error should have been thrown');
       } catch (error) {
         if (error.code !== 'NoSuchKey') {

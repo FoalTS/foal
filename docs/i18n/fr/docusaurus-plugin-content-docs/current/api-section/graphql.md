@@ -2,7 +2,6 @@
 title: GraphQL
 ---
 
-
 [GraphQL](https://graphql.org/) is a query language for APIs. Unlike traditional REST APIs, GraphQL APIs have only one endpoint to which requests are sent. The content of the request describes all the operations to be performed and the data to be returned in the response. Many resources can be retrieved in a single request and the client gets exactly the properties it asks for.
 
 *Example of request*
@@ -29,8 +28,8 @@ title: GraphQL
 
 To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc), load type definitions from separate files or handle errors thrown in resolvers.
 
-```
-npm install graphql @foal/graphql
+```bash
+npm install graphql@14 @foal/graphql
 ```
 
 Due to a specificity of the `graphql` library, you must also modify your `tsconfig.json` as follows:
@@ -163,19 +162,18 @@ export class ApiController extends GraphQLController {
 Note that for this to work, you must copy the graphql files during the build. To do this, you need to install the `copy` package and update some commands of your `package.json`.
 
 ```
-npm install copy
+npm install cpx2  --save-dev
 ```
 
 ```json
 {
-  ...
   "scripts": {
-    ...
-    "build": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
-    ...
-    "build:test": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
-    ...
-    "build:e2e": "foal rmdir build && copy-cli \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json"
+    "build": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
+    "develop": "npm run build && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml,graphql --no-restart-on error ./build/index.js\"",
+    "build:test": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
+    "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
+    "build:e2e": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json",
+    "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build \\\"./build/e2e/**/*.js\\\"\"",
     ...
   }
 }
@@ -226,9 +224,80 @@ export class RootResolverService {
 }
 ```
 
-## GraphQL Playground
+## GraphiQL
 
-Next releases of FoalTS will include support for [GraphiQL](https://github.com/graphql/graphiql).
+> *This feature is available from version 2.3 onwards.*
+
+![GraphiQL](./images/graphiql.png)
+
+You can generate a `GraphiQL` page with the `GraphiQLController` class by installing the following package.
+
+```bash
+npm install @foal/graphiql
+```
+
+*app.controller.ts*
+```typescript
+import { controller } from '@foal/core';
+import { GraphiQLController } from '@foal/graphiql';
+
+import { GraphqlApiController } from './services';
+
+export class AppController {
+
+  subControllers = [
+    // ...
+    controller('/graphql', GraphqlApiController),
+    controller('/graphiql', GraphiQLController)
+  ];
+
+}
+```
+
+### Custom GraphiQL Options
+
+Most [GraphiQL options](https://github.com/graphql/graphiql/tree/main/packages/graphiql#props) are supported and can be provided by inheriting the `GraphiQLController` class.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  options: GraphiQLControllerOptions = {
+    docExplorerOpen: true,
+  }
+}
+
+```
+
+### Custom API endpoint
+
+By default, the GraphiQL page assumes that the GraphiQL API is located at `/graphql`. This behavior can be overridden with the `apiEndpoint` property.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  apiEndpoint = '/api';
+}
+
+```
+
+### Custom CSS theme
+
+In order to change the page theme, the controller class allows you to include custom CSS files.
+
+```typescript
+import { GraphiQLController, GraphiQLControllerOptions } from '@foal/graphiql';
+
+export class GraphiQL2Controller extends GraphiQLController {
+  cssThemeURL = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/theme/solarized.css';
+
+  options: GraphiQLControllerOptions = {
+    editorTheme: 'solarized light'
+  }
+}
+
+```
 
 ## Error Handling - Masking & Logging Errors
 

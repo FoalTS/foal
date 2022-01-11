@@ -378,7 +378,7 @@ import { createConnection } from 'typeorm';
 
 import { AppController } from './app/app.controller';
 import { Product } from './app/entities';
-import { Logger } from './app/services';
+import { ConsoleLogger } from './app/services';
 
 async function main() {
   const connection = await createConnection();

@@ -135,7 +135,7 @@ export abstract class Disk {
    */
   async createHttpResponse(
     path: string,
-    options: { forceDownload?: boolean, filename?: string } = {}
+    options: { forceDownload?: boolean, filename?: string, cache?: string } = {}
   ): Promise<HttpResponse> {
     const { file, size } = await this.read(path, 'stream');
     const response = new HttpResponseOK(file, { stream: true });
@@ -143,6 +143,10 @@ export abstract class Disk {
     const mimeType = getType(path);
     if (mimeType) {
       response.setHeader('Content-Type', mimeType);
+    }
+
+    if (options.cache) {
+      response.setHeader('Cache-Control', options.cache);
     }
 
     return response

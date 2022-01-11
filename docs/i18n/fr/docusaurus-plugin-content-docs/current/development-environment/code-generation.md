@@ -1,5 +1,5 @@
 ---
-title: Génération de Code
+title: Code Generation
 ---
 
 
@@ -94,18 +94,62 @@ foal g entity <name>
 
 Create a new entity in `./src/app/entities`, in `./entities` or in the current directory depending on which folders are found.
 
+*Example*
+```shell
+foal g entity user
+foal g entity business/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- entities/
+   |- business/
+   | |- product.entity.ts
+   | '- index.ts
+   |- user.entity.ts
+   '- index.ts
+```
+
 ## Create REST API
 
 ```shell
 foal g rest-api <name>
 ```
 
-Create a new controller and a new entity to build a basic REST API. Depending on which directories are found, they will be generated in `src/app/{entities}|{controllers}/`, `{entities}|{controllers}/` or in the current directory.
+Create a new controller and a new entity to build a basic REST API. Depending on which directories are found, they will be generated in `src/app/{entities}|{controllers}/` or in `{entities}|{controllers}/`.
 
-If you are in the root directory and you want to automatically register the controller within the app controller you can add the `--register` flag.
-
+*Example*
 ```shell
-foal g rest-api <name> --register
+foal g rest-api order
+foal g rest-api api/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  |- controllers/
+  | |- api/
+  | | |- product.controller.ts
+  | | '- index.ts
+  | |- order.controller.ts
+  | '- index.ts
+  '- entities/
+    |- index.entity.ts
+    |- order.entity.ts
+    '- index.ts
+```
+
+### The `--register` flag
+
+If you wish to automatically create a new route attached to this controller, you can use the `--register` flag to do so (see [create-a-controller](#create-a-controller)).
+
+*Example*
+```shell
+foal g controller api --register
+foal g controller api/product --register
 ```
 
 See the page [REST Blueprints](../api-section/rest-blueprints.md) for more details.
@@ -117,6 +161,25 @@ foal g hook <name>
 ```
 
 Create a new hook in `./src/app/hooks`, in `./hooks` or in the current directory depending on which folders are found.
+
+*Example*
+```shell
+foal g hook log
+foal g hook auth/admin-required
+```
+
+*Output*
+```
+src/
+ '- app/
+  '- hooks/
+   |- auth/
+   | |- admin-required.hook.ts
+   | '- index.ts
+   |- log.hook.ts
+   '- index.ts
+```
+
 
 ## Create a script
 

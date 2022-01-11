@@ -13,11 +13,6 @@ slug: /
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
 ![2FA](https://img.shields.io/badge/2FA-npm,%20GitHub-green.svg)
 
-| Versión | Estado | Fin de vida |
-| --- | --- | --- |
-| 2.x | Actual | - |
-| 1.x | Mantenimiento | 2021-05-31 |
-
 ## ¿Qué es Foal?
 
 *Foal* (o *FoalTS*) es un framework Node.JS para crear aplicaciones web.
@@ -29,8 +24,6 @@ Pero a la vez que ofrece todas estas características, el framework sigue siendo
 Y por último, el framework está enteramente escrito en TypeScript. Este lenguaje le aporta una comprobación de tipos estática opcional junto con las últimas características de ECMAScript. Esto le permite detectar la mayoría de los errores tontos durante la compilación y mejorar la calidad de su código. También le ofrece autocompletado y una API bien documentada.
 
 ## Política de Desarrollo
-
-> *Sólo para contribuyentes.*
 
 ### Miles de Pruebas
 
