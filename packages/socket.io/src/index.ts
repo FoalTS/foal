@@ -6,6 +6,8 @@
 
 export {
   EventName,
+  ISocketIOController,
+  IWebsocketController,
   WebsocketContext,
   MergeWebsocketHooks,
   WebsocketHook,

@@ -3,7 +3,7 @@ title: Real-Time Communication
 sidebar_label: Real-Time
 ---
 
-> *This feature is available from version 2.7 onwards.*
+> *This feature is available from version 2.8 onwards.*
 
 Foal allows you to establish two-way interactive communication between your server(s) and your clients. For this, it uses the [socket.io v4](https://socket.io/) library which is primarily based on the **WebSocket** protocol. It supports disconnection detection and automatic reconnection and works with proxies and load balancers.
 
@@ -17,7 +17,7 @@ npm install @foal/socket.io
 
 *services/websocket.service.ts*
 ```typescript
-import { EventName, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
+import { EventName, ValidatePayload, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
 export class WebsocketController extends SocketIOController {
 
@@ -35,6 +35,7 @@ export class WebsocketController extends SocketIOController {
 
     // Send a message to all clients.
     ctx.socket.broadcast.emit('refresh products');
+    return new WebsocketResponse();
   }
 
 }
@@ -64,7 +65,7 @@ async function main() {
 > This example uses JavaScript code as client, but socket.io supports also [many other languages](https://socket.io/docs/v4) (python, java, etc).
 
 ```bash
-npm install socket.io-client
+npm install socket.io-client@4
 ```
 
 ```typescript
@@ -80,6 +81,10 @@ socket.on('connect', () => {
     }
   });
 
+});
+
+socket.on('connect_error', () => {
+  console.log('Impossible to establish the socket.io connection');
 });
 
 socket.on('refresh products', response => {
@@ -140,7 +145,7 @@ However, unlike their HTTP version, instances of `WebsocketContext` do not have 
 
 #### Responses
 
-A controller method may or may not return a response.
+A controller method returns a response which is either a `WebsocketResponse` or a `WebsocketErrorResponse`.
 
 If a `WebsocketResponse(data)` is returned, the server will return to the client an object of this form:
 ```typescript
@@ -159,14 +164,7 @@ If it is a `WebsocketErrorResponse(error)`, the returned object will look like t
 }
 ```
 
-If no response is returned in the controller method, then no object is sent back to the client and the callback of the client function `emit` is not called. 
-
-```typescript
-socket.emit('create product', { name: 'product 1' }, response => {
-  // This function is executed only if the controller method
-  // returns a WebsocketResponse or a WebsocketErrorResponse.
-});
-```
+> Note that the `data` and `error` parameters are both optional.
 
 #### Hooks
 
@@ -207,7 +205,7 @@ At any time, the server can send one or more messages to the client using its `s
 
 *Server code*
 ```typescript
-import { EventName, WebsocketContext } from '@foal/socket.io';
+import { EventName, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
 export class UserController {
 
@@ -215,6 +213,7 @@ export class UserController {
   createUser(ctx: WebsocketContext) {
     ctx.socket.emit('event 1', 'first message');
     ctx.socket.emit('event 1', 'second message');
+    return new WebsocketResponse();
   }
 }
 ```
@@ -236,7 +235,7 @@ If a message is to be broadcast to all clients, you can use the `broadcast` prop
 
 *Server code*
 ```typescript
-import { EventName, WebsocketContext } from '@foal/socket.io';
+import { EventName, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
 export class UserController {
 
@@ -244,6 +243,7 @@ export class UserController {
   createUser(ctx: WebsocketContext) {
     ctx.socket.broadcast.emit('event 1', 'first message');
     ctx.socket.broadcast.emit('event 1', 'second message');
+    return new WebsocketResponse();
   }
 }
 ```
@@ -264,7 +264,7 @@ socket.on('event 1', response => {
 Socket.io uses the concept of [rooms](https://socket.io/docs/v4/rooms/) to gather clients in groups. This can be useful if you need to send a message to a particular subset of clients.
 
 ```typescript
-import { EventName, WebsocketContext } from '@foal/socket.io';
+import { EventName, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
 export class UserController {
 
@@ -275,6 +275,7 @@ export class UserController {
   @EventName('event 1')
   createUser(ctx: WebsocketContext) {
     ctx.socket.to('some room').emit('event 2');
+    return new WebsocketResponse();
   }
 
 }
@@ -325,7 +326,7 @@ import { EventName, renderWebsocketError, SocketIOController, WebsocketContext, 
 
 class PermissionDenied extends Error {}
 
-export class WebsocketController extends SocketIOController {
+export class WebsocketController extends SocketIOController implements ISocketIOController {
   @EventName('create user')
   createUser() {
     throw new PermissionDenied();
@@ -365,6 +366,7 @@ export class WebsocketController extends SocketIOController {
 
     // Send a message to all clients.
     ctx.socket.broadcast.emit('refresh products');
+    return new WebsocketResponse();
   }
 
 }
@@ -403,14 +405,34 @@ This example shows how to manage multiple node servers using a redis adapter.
 npm install @socket.io/redis-adapter@7 redis@4
 ```
 
+*src/index.ts*
 ```typescript
-import { EventName, WebsocketContext } from '@foal/core';
+import { createApp, ServiceManager } from '@foal/core';
+import { WebsocketController, pubClient, subClient } from './services/websocket.controller';
+
+async function main() {
+  const serviceManager = new ServiceManager();
+
+  const app = await createApp(AppController, { serviceManager });
+  const httpServer = http.createServer(app);
+
+  // Connect the redis clients to the database.
+  await Promise.all([pubClient.connect(), subClient.connect()]);
+
+  await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
+
+  // ...
+}
+```
+
+*websocket.controller.ts*
+```typescript
+import { EventName, WebsocketContext, WebsocketResponse } from '@foal/core';
 import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
 
-const pubClient = createClient({ url: 'redis://localhost:6379' });
-const subClient = pubClient.duplicate();
-
-await Promise.all([pubClient.connect(), subClient.connect()])
+export const pubClient = createClient({ url: 'redis://localhost:6379' });
+export const subClient = pubClient.duplicate();
 
 export class WebsocketController extends SocketIOController {
   adapter = createAdapter(pubClient, subClient);
@@ -419,6 +441,7 @@ export class WebsocketController extends SocketIOController {
   createUser(ctx: WebsocketContext) {
     // Broadcast an event to all clients of all servers.
     ctx.socket.broadcast.emit('refresh users');
+    return new WebsocketResponse();
   }
 }
 ```
@@ -439,6 +462,8 @@ export class WebsocketController extends SocketIOController {
 }
 ```
 
+> The context passed in the `onConnection` method has an undefined payload and an empty event name.
+
 #### Error-handling
 
 Any errors thrown or rejected in the `onConnection` is sent back to the client. So you may need to add a `try {} catch {}` in some cases.
@@ -454,7 +479,7 @@ socket.on("connect_error", () => {
 
 ### Custom server options
 
-Custom options can be passed to the socket.io server as follows. The complete list of options can be found [here](https://socket.io/docs/v4/server-api/#Server).
+Custom options can be passed to the socket.io server as follows. The complete list of options can be found [here](https://socket.io/docs/v4/server-options/).
 
 ```typescript
 import { SocketIOController } from '@foal/socket.io';
