@@ -100,7 +100,7 @@ The WebSocket architecture is very similar to the HTTP architecture. They both h
 
 *user.controller.ts*
 ```typescript
-import { EventName } from '@foal/socket.io';
+import { EventName, WebsocketContext } from '@foal/socket.io';
 
 export class UserController {
 
@@ -167,7 +167,7 @@ If it is a `WebsocketErrorResponse(error)`, the returned object will look like t
 In the same way, Foal provides hooks for websockets. They work the same as their HTTP version except that some types are different (`WebsocketContext`, `WebsocketResponse|WebsocketErrorResponse`).
 
 ```typescript
-import { EventName, WebsocketHook } from '@foal/socket.io';
+import { EventName, WebsocketContext, WebsocketErrorResponse, WebsocketHook } from '@foal/socket.io';
 
 export class UserController {
 

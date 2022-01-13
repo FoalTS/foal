@@ -15,10 +15,19 @@ describe('Feature: Setting up a websocket connection', () => {
   let socket2: ReturnType<typeof io>;
   let httpServer: ReturnType<typeof http.createServer>;
 
+
   afterEach(done => {
-    socket.disconnect();
-    socket2.disconnect();
-    httpServer.close(done);
+    if (socket) {
+      socket.disconnect();
+    }
+    if (socket2) {
+      socket2.disconnect();
+    }
+    if (httpServer) {
+      httpServer.close(done);
+    } else {
+      done();
+    }
   })
 
   it('Example: simple example.', async () => {
