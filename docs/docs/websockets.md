@@ -87,12 +87,8 @@ socket.on('connect_error', () => {
   console.log('Impossible to establish the socket.io connection');
 });
 
-socket.on('refresh products', response => {
-  if (response.status === 'error') {
-    console.log(response.error);
-    return;
-  }
-  console.log(response.data);
+socket.on('refresh products', () => {
+  console.log('refresh products!');
 });
 ```
 
