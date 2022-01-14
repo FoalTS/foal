@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 
 // FoalTS
 import { EventName, SocketIOController, wsController, WebsocketContext, ISocketIOController, WebsocketResponse } from '@foal/socket.io';
-import { closeConnections, createConnections } from './common';
+import { closeConnections, createConnections, sleep } from './common';
 import { AddressInfo } from 'net';
 
 describe('Feature: Broadcasting a message', () => {
@@ -67,7 +67,7 @@ describe('Feature: Broadcasting a message', () => {
 
     const response = await new Promise(resolve => socket2.emit('user:create', {}, resolve));
 
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await sleep();
 
     deepStrictEqual(response, { status: 'ok' });
 

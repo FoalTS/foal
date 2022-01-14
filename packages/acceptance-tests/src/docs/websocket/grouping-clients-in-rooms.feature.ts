@@ -8,7 +8,7 @@ import { io } from 'socket.io-client';
 
 // FoalTS
 import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse, wsController } from '@foal/socket.io';
-import { closeConnections, createConnections } from './common';
+import { closeConnections, createConnections, sleep } from './common';
 
 describe('Feature: Grouping clients in rooms', () => {
 
@@ -54,7 +54,7 @@ describe('Feature: Grouping clients in rooms', () => {
 
     const response = await new Promise(resolve => socket2.emit('event 1', {}, resolve));
 
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await sleep();
 
     deepStrictEqual(response, { status: 'ok' });
 

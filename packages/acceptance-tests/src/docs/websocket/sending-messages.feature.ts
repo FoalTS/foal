@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 
 // FoalTS
 import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse, wsController } from '@foal/socket.io';
-import { closeConnections, createConnections } from './common';
+import { closeConnections, createConnections, sleep } from './common';
 
 describe('Feature: Sending messages', () => {
 
@@ -58,7 +58,7 @@ describe('Feature: Sending messages', () => {
 
     const response = await new Promise(resolve => socket.emit('user:create', {}, resolve));
 
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await sleep();
 
     deepStrictEqual(response, { status: 'ok' });
 
