@@ -7,7 +7,7 @@ import { AddressInfo } from 'net';
 import { io } from 'socket.io-client';
 
 // FoalTS
-import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
+import { EventName, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 import { closeConnections, createConnections, sleep } from './common';
 
 describe('Feature: Grouping clients in rooms', () => {
@@ -25,7 +25,7 @@ describe('Feature: Grouping clients in rooms', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    class WebsocketController extends SocketIOController implements ISocketIOController{
+    class WebsocketController extends SocketIOController {
 
       onConnection(ctx: WebsocketContext) {
         ctx.socket.join('some room');
