@@ -58,7 +58,7 @@ describe('Feature: Sending messages', () => {
 
     const response = await new Promise(resolve => socket.emit('user:create', {}, resolve));
 
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => setTimeout(resolve, 200));
 
     deepStrictEqual(response, { status: 'ok' });
 

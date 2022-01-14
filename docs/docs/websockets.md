@@ -252,9 +252,9 @@ socket.on('event 1', payload => {
 Socket.io uses the concept of [rooms](https://socket.io/docs/v4/rooms/) to gather clients in groups. This can be useful if you need to send a message to a particular subset of clients.
 
 ```typescript
-import { EventName, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
+import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
-export class UserController {
+export class WebsocketController extends SocketIOController implements ISocketIOController{
 
   onConnection(ctx: WebsocketContext) {
     ctx.socket.join('some room');
