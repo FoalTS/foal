@@ -187,12 +187,12 @@ export class UserController {
 
 | HTTP | Websocket |
 | --- | --- |
-| `@Get`, `@Post`, etc | `@EventName` |
-| `controller` | `wsController` |
-| `Context` | `WebsocketContext` |
-| `HttpResponse`(s) | `WebsocketResponse`, `WebsocketErrorResponse` |
-| `Hook` | `WebsocketHook` |
-| `MergeHooks` | `MergeWebsocketHooks` |
+| `@Get`, `@Post`, etc | `@EventName` |
+| `controller` | `wsController` |
+| `Context` | `WebsocketContext` |
+| `HttpResponse`(s) | `WebsocketResponse`, `WebsocketErrorResponse` |
+| `Hook` | `WebsocketHook` |
+| `MergeHooks` | `MergeWebsocketHooks` |
 | `getHookFunction`, `getHookFunctions` | `getWebsocketHookFunction`, `getWebsocketHookFunctions` |
 
 ### Send a message
@@ -216,12 +216,8 @@ export class UserController {
 
 *Client code*
 ```typescript
-socket.on('event 1', response => {
-  if (response.status === 'error') {
-    console.log(response.error);
-    return;
-  }
-  console.log('Message: ', response.data);
+socket.on('event 1', payload => {
+  console.log('Message: ', payload);
 });
 ```
 
