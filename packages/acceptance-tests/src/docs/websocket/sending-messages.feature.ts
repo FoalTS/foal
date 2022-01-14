@@ -1,4 +1,5 @@
 // std
+import { deepStrictEqual } from 'assert';
 import * as http from 'http';
 
 // 3p
@@ -6,23 +7,16 @@ import { io } from 'socket.io-client';
 
 // FoalTS
 import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse, wsController } from '@foal/socket.io';
-import { createApp, ServiceManager } from '@foal/core';
-import { deepStrictEqual } from 'assert';
+import { closeConnections, createConnections } from './common';
 
 describe('Feature: Sending messages', () => {
 
   let socket: ReturnType<typeof io>;
   let httpServer: ReturnType<typeof http.createServer>;
+  let controller: SocketIOController;
 
-  afterEach(done => {
-    if (socket) {
-      socket.disconnect();
-    }
-    if (httpServer) {
-      httpServer.close(done);
-    } else {
-      done();
-    }
+  afterEach(async () => {
+    await closeConnections({ httpServer, socket, controller });
   })
 
   it('Example: Simple Example.', async () => {
@@ -49,23 +43,7 @@ describe('Feature: Sending messages', () => {
       ]
     }
 
-    class AppController {}
-
-    async function main() {
-      const serviceManager = new ServiceManager();
-
-      const app = await createApp(AppController, { serviceManager });
-      httpServer = http.createServer(app);
-
-      // Instanciate, init and connect websocket controllers.
-      await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
-
-      await new Promise(resolve => httpServer.listen(3001, () => resolve()));
-    }
-
-    await main();
-
-    socket = io('ws://localhost:3001');
+    ({ httpServer, socket, controller } = await createConnections(WebsocketController));
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 

@@ -6,23 +6,17 @@ import * as http from 'http';
 import { io } from 'socket.io-client';
 
 // FoalTS
-import { ServiceManager, createApp } from '@foal/core';
 import { EventName, SocketIOController, wsController, WebsocketContext, WebsocketErrorResponse, WebsocketHook, ISocketIOController } from '@foal/socket.io';
+import { closeConnections, createConnections } from './common';
 
-describe('Feature: Using Websocket controllers and hooks', () => {
+describe.only('Feature: Using Websocket controllers and hooks', () => {
 
   let socket: ReturnType<typeof io>;
   let httpServer: ReturnType<typeof http.createServer>;
+  let controller: SocketIOController;
 
-  afterEach(done => {
-    if (socket) {
-      socket.disconnect();
-    }
-    if (httpServer) {
-      httpServer.close(done);
-    } else {
-      done();
-    }
+  afterEach(async () => {
+    await closeConnections({ httpServer, socket, controller });
   })
 
   it('Example: Simple example with a controller.', async () => {
@@ -43,6 +37,7 @@ describe('Feature: Using Websocket controllers and hooks', () => {
 
     }
 
+    // tslint:disable-next-line
     class WebsocketController extends SocketIOController {
       subControllers = [
         wsController('users ', UserController)
@@ -78,25 +73,9 @@ describe('Feature: Using Websocket controllers and hooks', () => {
       ]
     }
 
-    class AppController {}
+    ({ httpServer, socket, controller } = await createConnections(WebsocketController));
 
-    async function main() {
-      const serviceManager = new ServiceManager();
-
-      const app = await createApp(AppController, { serviceManager });
-      httpServer = http.createServer(app);
-
-      // Instanciate, init and connect websocket controllers.
-      await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
-
-      await new Promise(resolve => httpServer.listen(3001, () => resolve()));
-    }
-
-    await main();
-
-    socket = io('ws://localhost:3001');
-
-    await new Promise((resolve, reject) => socket.on('connect', () => {
+    await new Promise((resolve, reject) => {
 
       socket.emit('user:create', { name: 3 }, (response: any) => {
         try {
@@ -112,7 +91,7 @@ describe('Feature: Using Websocket controllers and hooks', () => {
         reject();
       });
 
-    }));
+    });
 
   });
 
