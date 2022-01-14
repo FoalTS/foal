@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 import { EventName, SocketIOController, wsController, WebsocketContext, WebsocketErrorResponse, WebsocketHook, ISocketIOController } from '@foal/socket.io';
 import { closeConnections, createConnections } from './common';
 
-describe.only('Feature: Using Websocket controllers and hooks', () => {
+describe('Feature: Using Websocket controllers and hooks', () => {
 
   let socket: ReturnType<typeof io>;
   let httpServer: ReturnType<typeof http.createServer>;

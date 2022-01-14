@@ -6,20 +6,25 @@ import * as http from 'http';
 import { io } from 'socket.io-client';
 
 // FoalTS
-import { EventName, ISocketIOController, SocketIOController, WebsocketContext, WebsocketResponse, wsController } from '@foal/socket.io';
+import { EventName, SocketIOController, wsController, WebsocketContext, ISocketIOController, WebsocketResponse } from '@foal/socket.io';
 import { closeConnections, createConnections } from './common';
+import { AddressInfo } from 'net';
 
-describe('Feature: Sending messages', () => {
+describe('Feature: Broadcasting a message', () => {
 
   let socket: ReturnType<typeof io>;
+  let socket2: ReturnType<typeof io>;
   let httpServer: ReturnType<typeof http.createServer>;
   let controller: SocketIOController;
 
   afterEach(async () => {
+    if (socket2) {
+      socket2.disconnect();
+    }
     await closeConnections({ httpServer, socket, controller });
   })
 
-  it('Example: Simple Example.', async () => {
+  it('Example: Simple example.', async () => {
 
     const messagesReceived: any[] = [];
 
@@ -29,8 +34,8 @@ describe('Feature: Sending messages', () => {
 
       @EventName('create')
       createUser(ctx: WebsocketContext) {
-        ctx.socket.emit('event 1', 'first message');
-        ctx.socket.emit('event 1', 'second message');
+        ctx.socket.broadcast.emit('event 1', 'first message');
+        ctx.socket.broadcast.emit('event 1', 'second message');
         return new WebsocketResponse();
       }
     }
@@ -45,6 +50,7 @@ describe('Feature: Sending messages', () => {
 
     ({ httpServer, socket, controller } = await createConnections(WebsocketController));
 
+
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     socket.on('event 1', payload => {
@@ -56,7 +62,10 @@ describe('Feature: Sending messages', () => {
 
     deepStrictEqual(messagesReceived, [])
 
-    const response = await new Promise(resolve => socket.emit('user:create', {}, resolve));
+    const port = (httpServer.address() as AddressInfo).port;
+    socket2 = io(`http://localhost:${port}`);
+
+    const response = await new Promise(resolve => socket2.emit('user:create', {}, resolve));
 
     await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -66,6 +75,7 @@ describe('Feature: Sending messages', () => {
       'first message',
       'second message',
     ])
+
   });
 
 });
