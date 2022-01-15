@@ -1,5 +1,4 @@
 // std
-import { deepStrictEqual, strictEqual } from 'assert';
 import * as http from 'http';
 import { AddressInfo } from 'net';
 
@@ -8,7 +7,7 @@ import { io } from 'socket.io-client';
 
 // FoalTS
 import { EventName, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
-import { closeConnections, createConnections, sleep } from './common';
+import { closeConnections, createConnections } from './common';
 
 describe('Feature: Grouping clients in rooms', () => {
 
@@ -18,6 +17,9 @@ describe('Feature: Grouping clients in rooms', () => {
   let controller: SocketIOController;
 
   afterEach(async () => {
+    if (socket2) {
+      socket2.disconnect();
+    }
     await closeConnections({ httpServer, socket, controller });
   })
 
@@ -43,22 +45,13 @@ describe('Feature: Grouping clients in rooms', () => {
 
     ({ httpServer, socket, controller } = await createConnections(WebsocketController));
 
-    let event2HasBeenCalled = false;
-
-    socket.on('event 2', () => {
-      event2HasBeenCalled = true
-    });
-
     const port = (httpServer.address() as AddressInfo).port;
     socket2 = io(`http://localhost:${port}`);
 
-    const response = await new Promise(resolve => socket2.emit('event 1', {}, resolve));
-
-    await sleep();
-
-    deepStrictEqual(response, { status: 'ok' });
-
-    strictEqual(event2HasBeenCalled, true)
+    return new Promise(async resolve => {
+      socket.on('event 2', resolve);
+      socket2.emit('event 1');
+    })
 
   });
 

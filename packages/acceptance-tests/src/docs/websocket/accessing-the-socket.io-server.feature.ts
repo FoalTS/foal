@@ -1,6 +1,5 @@
 
 // std
-import { strictEqual } from 'assert';
 import { AddressInfo } from 'net';
 import * as http from 'http';
 
@@ -10,7 +9,7 @@ import * as superagent from 'superagent';
 
 // FoalTS
 import { ISocketIOController, SocketIOController, WsServer } from '@foal/socket.io';
-import { closeConnections, createConnections, sleep } from './common';
+import { closeConnections, createConnections } from './common';
 import { dependency, Post, HttpResponseOK, controller as httpController } from '@foal/core';
 
 describe('Feature: Accessing the socket.io server', () => {
@@ -52,22 +51,13 @@ describe('Feature: Accessing the socket.io server', () => {
 
     ({ httpServer, socket, controller } = await createConnections(WebsocketController, AppController));
 
-    let refreshUsersHasBeenCalled = false;
-
-    socket.on('refresh users', () => {
-      refreshUsersHasBeenCalled = true
+    return new Promise((resolve, reject) => {
+      socket.on('refresh users', resolve);
+      superagent
+        .post(`http://localhost:${(httpServer.address() as AddressInfo).port}/users`)
+        .send()
+        .catch(reject);
     });
-
-    strictEqual(refreshUsersHasBeenCalled, false);
-
-    const response = await superagent
-      .post(`http://localhost:${(httpServer.address() as AddressInfo).port}/users`)
-      .send();
-    strictEqual(response.status, 200);
-
-    await sleep();
-
-    strictEqual(refreshUsersHasBeenCalled, true)
 
   });
 
