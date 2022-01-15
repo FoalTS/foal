@@ -415,7 +415,7 @@ async function main() {
 
 *websocket.controller.ts*
 ```typescript
-import { EventName, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/core';
+import { EventName, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
 
