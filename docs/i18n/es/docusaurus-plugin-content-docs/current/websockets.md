@@ -1,5 +1,5 @@
 ---
-title: Real-Time Communication
+title: Comunicación en Tiempo Real
 sidebar_label: WebSockets
 ---
 
