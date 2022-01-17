@@ -131,6 +131,7 @@ module.exports = {
         'cookbook/root-imports',
         'cookbook/limit-repeated-requests',
       ]),
+      'websockets',
       category('Deployment', [
         'deployment-and-environments/checklist',
       ])

@@ -1,22 +1,11 @@
 ---
-title: Version 2.8 release notes
-author: Loïc Poullain
-author_title: Fullstack developer and creator of FoalTS
-author_url: https://github.com/LoicPoullain
-author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
-image: blog/twitter-banners/version-2.8-release-notes.png
-tags: [release]
+title: Real-Time Communication
+sidebar_label: WebSockets
 ---
 
-![Banner](./assets/version-2.8-is-here/banner.png)
+> *This feature is available from version 2.8 onwards.*
 
-Version 2.8 of Foal has been released! Here are the improvements that it brings.
-
-<!--truncate-->
-
-# WebSocket support and `socket.io` integration
-
-As of version 2.8, Foal officially supports WebSockets, allowing you to establish two-way interactive communication between your server(s) and your clients.
+Foal allows you to establish two-way interactive communication between your server(s) and your clients. For this, it uses the [socket.io v4](https://socket.io/) library which is primarily based on the **WebSocket** protocol. It supports disconnection detection and automatic reconnection and works with proxies and load balancers.
 
 ## Get Started
 

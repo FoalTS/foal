@@ -19,7 +19,7 @@ import { isFunction } from './is-function.util';
  * Hook factory validating the body of the request against a AJV schema.
  *
  * @export
- * @param {(object | ((controller: any) => object))} schema - Schema used to validate the body request.
+ * @param {(object | ((controller: any) => object))} schema - Schema used to validate the request body.
  * @param {{ openapi?: boolean }} [options] - Options to add openapi metadata
  * @returns {HookDecorator} - The hook.
  */
