@@ -21,7 +21,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
-import { createClient } from 'redis';
+import * as redis from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
@@ -40,7 +40,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
   let app: any;
   let token: string;
-  let redisClient: ReturnType<typeof createClient>;
+  let redisClient: redis.RedisClient;
 
   @Entity()
   class User {
@@ -149,10 +149,16 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'mongodb',
     });
 
-    redisClient = createClient({ url: REDIS_URI });
-    await redisClient.connect();
+    redisClient = redis.createClient(REDIS_URI);
 
-    await redisClient.flushDb();
+    await new Promise((resolve, reject) => {
+      redisClient.flushdb((err, success) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(success);
+      });
+    });
 
     const user = new User();
     user.email = 'john@foalts.org';
@@ -170,7 +176,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     return Promise.all([
       connection.close(),
       app.foal.services.get(RedisStore).close(),
-      redisClient.quit(),
+      redisClient.end(true)
     ]);
   });
 
