@@ -29,6 +29,7 @@ describe('SocketIOController', () => {
 
     let controller: SocketIOController;
     let httpServer: Server;
+    let httpServer2: Server;
     let clientSocket: Socket;
 
     let pubClient: any;
@@ -43,6 +44,9 @@ describe('SocketIOController', () => {
       }
       if (httpServer) {
         httpServer.close();
+      }
+      if (httpServer2) {
+        httpServer2.close();
       }
       if (pubClient) {
         await pubClient.end(true);
@@ -270,7 +274,7 @@ describe('SocketIOController', () => {
         serviceManager.set(Service, new ServiceMock());
         const app = await createApp(AppController, { serviceManager });
 
-        const httpServer = http.createServer(app);
+        httpServer = http.createServer(app);
         await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
 
         strictEqual(called, false);
@@ -302,8 +306,8 @@ describe('SocketIOController', () => {
           }
         }
 
-        function createHttpServerAndSockets(): Promise<Socket> {
-          return new Promise<Socket>(resolve => {
+        function createHttpServerAndSockets(): Promise<{ clientSocket: Socket, httpServer: Server }> {
+          return new Promise<{ clientSocket: Socket, httpServer: Server }>(resolve => {
             const httpServer = createServer();
 
             const controller = createController(WebsocketController);
@@ -312,7 +316,7 @@ describe('SocketIOController', () => {
             httpServer.listen(() => {
               const port = (httpServer.address() as AddressInfo).port;
               const clientSocket = io(`http://localhost:${port}`);
-              clientSocket.on('connect', () => resolve(clientSocket));
+              clientSocket.on('connect', () => resolve({ clientSocket, httpServer }));
             });
           });
         }
@@ -322,6 +326,14 @@ describe('SocketIOController', () => {
             createHttpServerAndSockets(),
             createHttpServerAndSockets(),
           ])
+          .then(serverAndSockets => {
+            httpServer = serverAndSockets[0].httpServer;
+            httpServer2 = serverAndSockets[1].httpServer;
+            return [
+              serverAndSockets[0].clientSocket,
+              serverAndSockets[1].clientSocket,
+            ]
+          })
           .then(clientSockets => {
             clientSockets[0].on('refresh users', () => {
               clientSockets[0].close();
