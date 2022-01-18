@@ -50,7 +50,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
             if (err) {
               return reject(err);
             }
-            resolve(encoded);
+            resolve(encoded as string);
           }
         );
       });
