@@ -10,6 +10,9 @@
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "@foal/core": "^2.7.2",
     "@foal/graphiql": "^2.7.2",

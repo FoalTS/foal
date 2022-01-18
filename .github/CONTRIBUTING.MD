@@ -35,29 +35,25 @@ The framework development environment uses [lerna](https://lerna.js.org/) for ma
 
 **Steps:**
 1. Install docker.
-2. Install lerna
-    ```
-    npm install -g lerna
-    ```
-3. Start the databases.
+2. Start the databases.
     ```sh
     npm run start-docker # use `npm run stop-docker` to stop them 
     ```
-4. Install the root dependencies.
+3. Install the root dependencies.
     ```
     npm install
     ```
-5. Install the dependencies of each package and build each package.
+4. Install the dependencies of each package and build each package.
     ```
-    lerna bootstrap
+    npm run bootstrap
     ```
-6. Check code format.
+5. Check code format.
     ```
     npm run lint
     ```
-7. Run all the tests.
+6. Run all the tests.
     ```
-    lerna run --no-bail test
+    npm run test
     ```
 
 Tests can also be run individually for each package using `npm run test` or `npm run dev:test` (watch mode) at the root of the package directory.
