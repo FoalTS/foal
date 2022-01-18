@@ -42,7 +42,7 @@
   ],
   "dependencies": {
     "@foal/core": "^2.7.2",
-    "redis": "~3.1.2"
+    "redis": "~4.0.1"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
