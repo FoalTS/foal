@@ -187,6 +187,7 @@ export {
   getHookFunction,
   getHookFunctions,
   getHttpMethod,
+  getMetadata,
   getPath,
 
   isHttpResponse,

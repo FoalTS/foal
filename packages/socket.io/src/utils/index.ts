@@ -1,0 +1,1 @@
+export { ValidatePayload } from './validate-payload.hook';

@@ -1,6 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
-import { Context } from './contexts';
+import { Context } from './context';
 
 // FoalTS
 import {
