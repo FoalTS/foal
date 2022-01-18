@@ -398,7 +398,27 @@ Testing WebSocket controllers and hooks is very similar to testing their HTTP eq
 This example shows how to manage multiple node servers using a redis adapter.
 
 ```bash
-npm install @socket.io/redis-adapter@7 redis@3
+npm install @socket.io/redis-adapter@7 redis@4
+```
+
+*src/index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { WebsocketController, pubClient, subClient } from './services/websocket.controller';
+
+async function main() {
+  const serviceManager = new ServiceManager();
+
+  const app = await createApp(AppController, { serviceManager });
+  const httpServer = http.createServer(app);
+
+  // Connect the redis clients to the database.
+  await Promise.all([pubClient.connect(), subClient.connect()]);
+
+  await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
+
+  // ...
+}
 ```
 
 *websocket.controller.ts*

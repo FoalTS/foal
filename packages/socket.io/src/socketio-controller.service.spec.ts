@@ -6,7 +6,7 @@ import { AddressInfo } from 'net';
 import * as http from 'http';
 
 // 3p
-import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
+import { io, ManagerOptions, Socket } from 'socket.io-client';
 import {
   Class,
   Config,
@@ -17,11 +17,12 @@ import {
   ServiceManager
 } from '@foal/core';
 import { createAdapter } from '@socket.io/redis-adapter';
-import * as redis from 'redis';
+import { createClient } from 'redis';
 
 // FoalTS
 import { EventName, WebsocketHook, WebsocketContext, WebsocketErrorResponse, WebsocketResponse, wsController } from './architecture';
 import { SocketIOController } from './socketio-controller.service';
+import { SocketOptions } from 'dgram';
 
 describe('SocketIOController', () => {
 
@@ -49,10 +50,10 @@ describe('SocketIOController', () => {
         httpServer2.close();
       }
       if (pubClient) {
-        await pubClient.end(true);
+        await pubClient.quit();
       }
       if (subClient) {
-        await subClient.end(true);
+        await subClient.quit();
       }
     });
 
@@ -293,7 +294,7 @@ describe('SocketIOController', () => {
       })
 
       it('with the optional SocketIOController.adapter.', done => {
-        pubClient = redis.createClient('redis://localhost:6380');
+        pubClient = createClient({ url: 'redis://localhost:6380' });
         subClient = pubClient.duplicate();
 
         class WebsocketController extends SocketIOController {
@@ -322,27 +323,29 @@ describe('SocketIOController', () => {
         }
 
         Promise
-          .all([
-            createHttpServerAndSockets(),
-            createHttpServerAndSockets(),
-          ])
-          .then(serverAndSockets => {
-            httpServer = serverAndSockets[0].httpServer;
-            httpServer2 = serverAndSockets[1].httpServer;
-            return [
-              serverAndSockets[0].clientSocket,
-              serverAndSockets[1].clientSocket,
-            ]
-          })
-          .then(clientSockets => {
-            clientSockets[0].on('refresh users', () => {
-              clientSockets[0].close();
-              clientSockets[1].close();
-              done();
-            });
-            clientSockets[1].emit('create user')
-          })
-          .catch(done);
+          .all([pubClient.connect(), subClient.connect()])
+          .then(() => Promise
+            .all([
+              createHttpServerAndSockets(),
+              createHttpServerAndSockets(),
+            ])
+            .then(serverAndSockets => {
+              httpServer = serverAndSockets[0].httpServer;
+              httpServer2 = serverAndSockets[1].httpServer;
+              return [
+                serverAndSockets[0].clientSocket,
+                serverAndSockets[1].clientSocket,
+              ]
+            })
+            .then(clientSockets => {
+              clientSockets[0].on('refresh users', () => {
+                clientSockets[0].close();
+                clientSockets[1].close();
+                done();
+              });
+              clientSockets[1].emit('create user')
+            })
+            .catch(done));
       })
 
     });
