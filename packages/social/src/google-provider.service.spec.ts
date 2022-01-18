@@ -42,7 +42,7 @@ describe('GoogleProvider', () => {
       try {
         provider.getUserInfoFromTokens(tokens);
         throw new Error('The "getUserInfoFromTokens" method should have thrown an InvalidJWTError.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof InvalidJWTError)) {
           throw error;
         }

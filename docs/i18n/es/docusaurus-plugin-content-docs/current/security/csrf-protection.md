@@ -281,7 +281,7 @@ export class AuthController {
           if (err) {
             return reject(err);
           }
-          resolve(encoded);
+          resolve(encoded as string);
         }
       );
     });

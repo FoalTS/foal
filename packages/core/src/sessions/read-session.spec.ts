@@ -48,7 +48,7 @@ describe('readSession', () => {
     }
     async destroy(id: string): Promise<void> {
       // This line is required to test the use of "await".
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
       this.destroyCalledWith = id;
     }
     clear(): Promise<void> {

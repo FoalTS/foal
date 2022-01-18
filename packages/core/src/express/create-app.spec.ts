@@ -637,7 +637,7 @@ describe('createApp', () => {
     try {
       await createApp(AppController);
       throw new Error('An error should have been thrown');
-    } catch (error) {
+    } catch (error: any) {
       strictEqual(error.message, 'Service initialization failed.');
     }
   });
@@ -652,7 +652,7 @@ describe('createApp', () => {
     try {
       await createApp(AppController);
       throw new Error('An error should have been thrown');
-    } catch (error) {
+    } catch (error: any) {
       strictEqual(error.message, 'Initialization failed.');
     }
   });

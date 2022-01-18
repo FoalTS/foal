@@ -52,7 +52,7 @@ describe('MongoDBStore', () => {
     mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     try {
       await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
-    } catch (error) {
+    } catch (error: any) {
       if (!(error.message.includes('ns not found'))) {
         throw error;
       }

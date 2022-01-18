@@ -113,7 +113,7 @@ describe('FileSystem', () => {
       try {
         fs.cdProjectRootDir();
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ClientError)) {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
@@ -135,7 +135,7 @@ describe('FileSystem', () => {
       try {
         fs.cdProjectRootDir();
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ClientError)) {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
@@ -159,7 +159,7 @@ describe('FileSystem', () => {
       try {
         fs.cdProjectRootDir();
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ClientError)) {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
@@ -175,7 +175,7 @@ describe('FileSystem', () => {
       try {
         fs.cdProjectRootDir();
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ClientError)) {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
@@ -346,7 +346,7 @@ describe('FileSystem', () => {
       try {
         fs.copy('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The template "test-file-system/foobar.txt" does not exist.');
       }
     });
@@ -429,7 +429,7 @@ describe('FileSystem', () => {
       try {
         fs.render('test-file-system/foobar.txt', 'hello.txt', {});
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The template "test-file-system/foobar.txt" does not exist.');
       }
     });
@@ -498,7 +498,7 @@ describe('FileSystem', () => {
       try {
         fs.modify('test-file-system/foobar.txt', content => content);
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ClientError)) {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
@@ -930,7 +930,7 @@ describe('FileSystem', () => {
       try {
         fs.assertExists('bar');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The file "bar" does not exist.');
       }
     });
@@ -959,7 +959,7 @@ describe('FileSystem', () => {
       try {
         fs.assertNotExists('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The file "foo" should not exist.');
       }
     });
@@ -992,7 +992,7 @@ describe('FileSystem', () => {
       try {
         fs.assertEmptyDir('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The directory "foo" should be empty.');
       }
     });
@@ -1039,7 +1039,7 @@ describe('FileSystem', () => {
       try {
         fs.assertEqual('bar', 'test-file-system/foo.spec');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         notStrictEqual(error.message, 'An error should have been thrown.');
       }
     });
@@ -1052,7 +1052,7 @@ describe('FileSystem', () => {
       try {
         fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.code, 'ERR_ASSERTION');
         strictEqual(error.message.includes('\'hi\\nmy\\nearth\\n!\''), true);
         strictEqual(error.message.includes('\'hello\\nmy\\nworld\''), true);
@@ -1067,7 +1067,7 @@ describe('FileSystem', () => {
       try {
         fs.assertEqual('foobar', 'test-file-system/hello.txt');
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The spec file "test-file-system/hello.txt" does not exist.');
       }
     });
@@ -1110,7 +1110,7 @@ describe('FileSystem', () => {
       try {
         fs.copyFixture('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message, 'The fixture file "test-file-system/foobar.txt" does not exist.');
       }
     });

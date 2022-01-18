@@ -13,7 +13,7 @@ export async function convertErrorToResponse(
   if (appController.handleError) {
     try {
       return await appController.handleError(error, ctx);
-    } catch (error2) {
+    } catch (error2: any) {
       return renderError(error2, ctx);
     }
   }

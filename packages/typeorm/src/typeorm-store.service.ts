@@ -58,7 +58,7 @@ export class TypeORMStore extends SessionStore {
           user_id: state.userId ?? undefined,
         })
         .execute();
-    } catch (error) {
+    } catch (error: any) {
       // SQLite, MariaDB & MySQL, PostgreSQL
       if (
         ['SQLITE_CONSTRAINT', 'ER_DUP_ENTRY', '23505'].includes(error.code)

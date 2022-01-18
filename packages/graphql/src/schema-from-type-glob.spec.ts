@@ -30,7 +30,7 @@ describe('schemaFromTypeGlob', () => {
       .catch(err => {
         try {
           strictEqual(err.message, 'No file found for the pattern "./test/*.graphql".');
-        } catch (error) {
+        } catch (error: any) {
           done(error);
           return;
         }

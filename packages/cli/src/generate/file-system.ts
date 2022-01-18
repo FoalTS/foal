@@ -107,7 +107,7 @@ export class FileSystem {
     let pkg: any;
     try {
       pkg = JSON.parse(content);
-    } catch (error) {
+    } catch (error: any) {
       throw new ClientError(
         `The file package.json is not a valid JSON. ${error.message}`
       );

@@ -34,7 +34,7 @@ describe('formatError', () => {
         .catch(err => {
           try {
             strictEqual(err.message, 'hello!!!');
-          } catch (error) {
+          } catch (error: any) {
             return done(error);
           }
           return done();
@@ -54,7 +54,7 @@ describe('formatError', () => {
         .catch(err => {
           try {
             strictEqual(err.message, 'hello!!!');
-          } catch (error) {
+          } catch (error: any) {
             return done(error);
           }
           return done();
@@ -74,7 +74,7 @@ describe('formatError', () => {
         .catch(err => {
           try {
             strictEqual(err.message, 'hello!!!');
-          } catch (error) {
+          } catch (error: any) {
             return done(error);
           }
           return done();

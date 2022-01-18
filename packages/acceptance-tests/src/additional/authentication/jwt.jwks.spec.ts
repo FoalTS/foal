@@ -75,7 +75,7 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
       deepStrictEqual(response.body, {
         name: 'Alix'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       throw error;
     }

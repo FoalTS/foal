@@ -38,7 +38,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
     console.log(
       await getManager().save(group)
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await getConnection().close();

@@ -57,7 +57,7 @@ export abstract class GraphQLController {
     if (ctx.request.query.variables) {
       try {
         variables = JSON.parse(ctx.request.query.variables);
-      } catch (error) {
+      } catch (error: any) {
         return new HttpResponseBadRequest(
           `The "variables" URL parameter is not a valid JSON-encoded string: ${error.message}`
         );
