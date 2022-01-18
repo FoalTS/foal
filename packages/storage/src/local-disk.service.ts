@@ -35,7 +35,7 @@ export class LocalDisk extends Disk {
     if (content instanceof Buffer) {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
-      await new Promise((resolve, reject) => {
+      await new Promise<void>((resolve, reject) => {
         pipeline(content, createWriteStream(this.getPath(path)), err => {
           // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
           // TODO: test the error case.
