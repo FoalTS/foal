@@ -10,7 +10,8 @@
     "start-docker": "docker-compose build && docker-compose up -d",
     "stop-docker": "docker-compose down",
     "bootstrap": "lerna bootstrap",
-    "clean": "lerna clean"
+    "clean": "lerna clean",
+    "test": "lerna run --no-bail test"
   },
   "repository": {
     "type": "git",
