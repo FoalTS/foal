@@ -59,7 +59,7 @@ describe('LocalDisk', () => {
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown');
         }
@@ -115,7 +115,7 @@ describe('LocalDisk', () => {
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown');
         }
@@ -145,7 +145,7 @@ describe('LocalDisk', () => {
       try {
         await disk.read('foo/test.txt', 'buffer');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -157,7 +157,7 @@ describe('LocalDisk', () => {
       try {
         await disk.read('foo/test.txt', 'stream');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -191,7 +191,7 @@ describe('LocalDisk', () => {
       try {
         await disk.readSize('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown');
         }
@@ -204,7 +204,7 @@ describe('LocalDisk', () => {
       try {
         await disk.readSize('foo/test.txt');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -230,7 +230,7 @@ describe('LocalDisk', () => {
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown');
         }
@@ -251,7 +251,7 @@ describe('LocalDisk', () => {
       try {
         await disk.delete('foo/test.txt');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }

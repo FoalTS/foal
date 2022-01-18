@@ -132,7 +132,7 @@ export async function createApp(
         // TODO: better test this line.
         const response = await getResponse(route, ctx, services, appController);
         sendResponse(response, res);
-      } catch (error) {
+      } catch (error: any) {
         // This try/catch will never be called: the `getResponse` function catches any errors
         // thrown or rejected in the application and converts it into a response.
         // However, for more security, this line has been added to avoid crashing the server

@@ -84,7 +84,7 @@ describe('Feature: Using Websocket controllers and hooks', () => {
             error: 'Invalid name type'
           });
           resolve();
-        } catch (error) {
+        } catch (error: any) {
           reject(error);
           return;
         }

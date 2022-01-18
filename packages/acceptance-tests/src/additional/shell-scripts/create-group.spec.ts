@@ -56,7 +56,7 @@ describe('[Shell scripts] create-perm', () => {
       }, { relations: ['permissions'] });
       strictEqual(group.permissions.length, 1);
       strictEqual(group.permissions[0].codeName, 'delete-users');
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     } finally {
       await getConnection().close();

@@ -29,7 +29,7 @@ export class ProfileController {
     if (user.profile) {
       try {
         await this.disk.delete(user.profile);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error.message);
       }
     }

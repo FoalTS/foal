@@ -23,7 +23,7 @@ export async function getWebsocketResponse(
     let result: WebsocketResponse | WebsocketErrorResponse | WebsocketHookPostFunction | void;
     try {
       result = await hook(ctx, services);
-    } catch (error) {
+    } catch (error: any) {
       result = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
     }
     if ((result instanceof WebsocketResponse) || (result instanceof WebsocketErrorResponse)) {
@@ -37,7 +37,7 @@ export async function getWebsocketResponse(
   if (!((response instanceof WebsocketResponse) || (response instanceof WebsocketErrorResponse))) {
     try {
       response = await route.controller[route.propertyKey](ctx, ctx.payload);
-    } catch (error) {
+    } catch (error: any) {
       response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
     }
   }
@@ -50,7 +50,7 @@ export async function getWebsocketResponse(
   for (const postFn of hookPostFunctions) {
     try {
       await postFn(response);
-    } catch (error) {
+    } catch (error: any) {
       response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
     }
   }

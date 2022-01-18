@@ -35,7 +35,7 @@ export class MongoDBStore extends SessionStore {
         sessionID: state.id,
         state,
       });
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 11000) {
         throw new SessionAlreadyExists();
       }

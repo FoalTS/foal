@@ -16,7 +16,7 @@ export async function getResponse(
     let result: HttpResponse | HookPostFunction | void;
     try {
       result = await hook(ctx, services);
-    } catch (error) {
+    } catch (error: any) {
       result = await convertErrorToResponse(error, ctx, appController);
     }
     if (isHttpResponse(result)) {
@@ -30,7 +30,7 @@ export async function getResponse(
   if (!isHttpResponse(response)) {
     try {
       response = await route.controller[route.propertyKey](ctx, ctx.request.params, ctx.request.body);
-    } catch (error) {
+    } catch (error: any) {
       response = await convertErrorToResponse(error, ctx, appController);
     }
   }
@@ -43,7 +43,7 @@ export async function getResponse(
   for (const postFn of hookPostFunctions) {
     try {
       await postFn(response);
-    } catch (error) {
+    } catch (error: any) {
       response = await convertErrorToResponse(error, ctx, appController);
     }
   }

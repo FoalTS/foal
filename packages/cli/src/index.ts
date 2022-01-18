@@ -160,7 +160,7 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
             ...generateTypes.map(t => `  - ${t}`)
           );
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ClientError) {
         displayError(error.message);
         return;
@@ -176,7 +176,7 @@ program
   .action(async (name: string) => {
     try {
       await rmdir(name);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOTDIR') {
         displayError(error.message);
         return;

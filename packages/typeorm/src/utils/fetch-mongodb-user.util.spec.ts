@@ -58,7 +58,7 @@ describe('fetchMongoDBUser', () => {
     try {
       await fetchMongoDBUser(User)(46, new ServiceManager());
       throw new Error('An error should have been thrown');
-    } catch (error) {
+    } catch (error: any) {
       strictEqual(error.message, 'Unexpected type for MongoDB user ID: number.');
     }
   });

@@ -99,7 +99,7 @@ describe('FacebookProvider', () => {
       try {
         await provider.getUserInfoFromTokens(tokens);
         throw new Error('getUserInfoFromTokens should have thrown a TokenError.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof UserInfoError)) {
           throw error;
         }

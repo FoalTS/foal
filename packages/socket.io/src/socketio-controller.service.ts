@@ -38,7 +38,7 @@ export abstract class SocketIOController implements ISocketIOController {
 
       try {
         await this.onConnection(connectionCtx);
-      } catch (error) {
+      } catch (error: any) {
         return next(error);
       }
 

@@ -76,7 +76,7 @@ describe('S3Disk', () => {
     try {
       await disk.delete('foo/test.txt');
       throw new Error('An error should have been thrown.');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code !== 'NetworkingError' && error.code !== 'UnknownEndpoint') {
         throw new Error(`Invalid error code: ${error.code}`);
       }
@@ -91,7 +91,7 @@ describe('S3Disk', () => {
       try {
         await disk.write('foo', Buffer.from('hello', 'utf8'));
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown.');
         }
@@ -157,7 +157,7 @@ describe('S3Disk', () => {
       try {
         await disk.read('foo', 'buffer');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown.');
         }
@@ -193,7 +193,7 @@ describe('S3Disk', () => {
       try {
         await disk.read('foo/test.txt', 'buffer');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -205,7 +205,7 @@ describe('S3Disk', () => {
       try {
         await disk.read('foo/test.txt', 'stream');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -245,7 +245,7 @@ describe('S3Disk', () => {
       try {
         await disk.readSize('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown.');
         }
@@ -258,7 +258,7 @@ describe('S3Disk', () => {
       try {
         await disk.readSize('foo/test.txt');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FileDoesNotExist)) {
           throw new Error('The method should have thrown a FileDoesNotExist error.');
         }
@@ -287,7 +287,7 @@ describe('S3Disk', () => {
       try {
         await disk.delete('foo');
         throw new Error('An error should have been thrown.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigNotFoundError)) {
           throw new Error('A ConfigNotFoundError should have been thrown.');
         }
@@ -311,7 +311,7 @@ describe('S3Disk', () => {
           Key: 'foo/test.txt',
         }).promise();
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         if (error.code !== 'NoSuchKey') {
           throw error;
         }
