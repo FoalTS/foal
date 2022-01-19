@@ -12,7 +12,14 @@ export class RedisStore extends SessionStore {
 
   private redisClient: any;
 
+  setRedisClient(redisClient: any) {
+    this.redisClient = redisClient;
+  }
+
   boot() {
+    if (this.redisClient) {
+      return;
+    }
     const redisURI = Config.get('settings.redis.uri', 'string');
     this.redisClient = createClient(redisURI);
   }
@@ -94,6 +101,6 @@ export class RedisStore extends SessionStore {
    * @memberof RedisStore
    */
   async close(): Promise<void> {
-    await this.redisClient.end(true);
+    await this.redisClient.quit();
   }
 }
