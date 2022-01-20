@@ -27,9 +27,6 @@ describe('MongoDBStore', () => {
 
   let store: MongoDBStore;
   let mongoDBClient: any;
-  let state: SessionState;
-  let state2: SessionState;
-  let maxInactivity: number;
 
   before(() => Config.set('settings.mongodb.uri', MONGODB_URI));
 
@@ -107,6 +104,10 @@ describe('MongoDBStore', () => {
         userId: null,
       };
     }
+
+    let state: SessionState;
+    let state2: SessionState;
+    let maxInactivity: number;
 
     before(async () => {
       mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });

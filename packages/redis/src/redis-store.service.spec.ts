@@ -13,8 +13,6 @@ describe('RedisStore', () => {
 
   let store: RedisStore;
   let redisClient: any;
-  let state: SessionState;
-  let maxInactivity: number;
 
   before(() => Config.set('settings.redis.uri', REDIS_URI));
 
@@ -67,6 +65,9 @@ describe('RedisStore', () => {
     function getKey(id: string): string {
       return `${COLLECTION_NAME}:${id}`;
     }
+
+    let state: SessionState;
+    let maxInactivity: number;
 
     before(async () => {
       redisClient = createClient(REDIS_URI);
