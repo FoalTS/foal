@@ -90,6 +90,10 @@ describe('MongoDBStore', () => {
 
   describe('when the service has been initialized', () => {
 
+    let state: SessionState;
+    let state2: SessionState;
+    let maxInactivity: number;
+
     function createState(): SessionState {
       return {
         content: {
@@ -104,10 +108,6 @@ describe('MongoDBStore', () => {
         userId: null,
       };
     }
-
-    let state: SessionState;
-    let state2: SessionState;
-    let maxInactivity: number;
 
     before(async () => {
       mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });

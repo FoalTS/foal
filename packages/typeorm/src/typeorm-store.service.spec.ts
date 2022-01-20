@@ -2,7 +2,7 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { Connection, createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
@@ -10,11 +10,11 @@ import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
-async function createTestConnection(type: DBType) {
+async function createTestConnection(type: DBType, name?: string): Promise<Connection> {
   switch (type) {
     case 'mysql':
     case 'mariadb':
-      await createConnection({
+      return createConnection({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -23,10 +23,10 @@ async function createTestConnection(type: DBType) {
         synchronize: true,
         type,
         username: 'test',
+        name,
       });
-      break;
     case 'postgres':
-      await createConnection({
+      return createConnection({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -34,20 +34,20 @@ async function createTestConnection(type: DBType) {
         synchronize: true,
         type,
         username: 'test',
+        name,
       });
-      break;
     case 'sqlite':
     case 'better-sqlite3':
-      await createConnection({
+      return createConnection({
         database: 'test_db.sqlite',
         dropSchema: true,
         entities: [ DatabaseSession ],
         synchronize: true,
         type,
+        name,
       });
-      break;
     default:
-      break;
+      throw new Error('Invalid database type.');
   }
 }
 
@@ -187,475 +187,514 @@ function storeTestSuite(type: DBType) {
   describe(`with ${type}`, () => {
 
     let store: TypeORMStore;
-    let state: SessionState;
-    let state2: SessionState;
-    let maxInactivity: number;
 
-    function createState(): SessionState {
-      return {
-        content: {
-          foo: 'bar'
-        },
-        createdAt: 0,
-        flash: {
-          hello: 'world'
-        },
-        id: 'xxx',
-        updatedAt: 0,
-        // The null value is important in this test suite.
-        userId: null,
-      };
-    }
+    describe('has a "boot" method that', () => {
 
-    before(async () => {
-      store = createService(TypeORMStore);
-      await createTestConnection(type);
+      let connection2: Connection;
+
+      beforeEach(async () => {
+        store = createService(TypeORMStore);
+        await createTestConnection(type);
+      });
+
+      afterEach(() => Promise.all([
+        getConnection().isConnected ? getConnection().close() : undefined,
+        connection2.isConnected ? connection2.close() : undefined,
+      ]))
+
+      context('when setConnection has been previously called', () => {
+
+        it('should NOT create a new TypeORM connection but use the one provided.', async () => {
+          connection2 = await createTestConnection(type, 'connection2');
+
+          store.setConnection(connection2);
+
+          strictEqual(connection2.isConnected, true);
+
+          await store.boot();
+          await store.close();
+
+          strictEqual(connection2.isConnected, false);
+        });
+
+      });
+
     });
 
-    beforeEach(async () => {
-      state = createState();
-      state2 = {
-        ...createState(),
-        id: `${state.id}2`
-      };
-      maxInactivity = 1000;
-      await getRepository(DatabaseSession).clear();
-    });
+    describe('when the service has been initialized', () => {
 
-    after(() => getConnection().close());
+      let state: SessionState;
+      let state2: SessionState;
+      let maxInactivity: number;
 
-    function convertDbSessionToState(dbSession: DatabaseSession): SessionState {
-      return {
-        content: JSON.parse(dbSession.content),
-        createdAt: dbSession.created_at,
-        flash: JSON.parse(dbSession.flash),
-        id: dbSession.id,
-        updatedAt: dbSession.updated_at,
-        // tslint:disable-next-line
-        userId: dbSession.user_id ?? null,
-      };
-    }
-
-    function convertStateToDbSession(state: SessionState): DatabaseSession {
-      if (typeof state.userId === 'string') {
-        throw new Error('user ID cannot be a string.');
+      function createState(): SessionState {
+        return {
+          content: {
+            foo: 'bar'
+          },
+          createdAt: 0,
+          flash: {
+            hello: 'world'
+          },
+          id: 'xxx',
+          updatedAt: 0,
+          // The null value is important in this test suite.
+          userId: null,
+        };
       }
-      return getRepository(DatabaseSession).create({
-        content: JSON.stringify(state.content),
-        created_at: state.createdAt,
-        flash: JSON.stringify(state.flash),
-        id: state.id,
-        updated_at: state.updatedAt,
-        // tslint:disable-next-line
-        user_id: state.userId ?? undefined,
+
+      before(async () => {
+        store = createService(TypeORMStore);
+        await createTestConnection(type);
+        store.boot();
       });
-    }
 
-    describe('has a "save" method that', () => {
+      beforeEach(async () => {
+        state = createState();
+        state2 = {
+          ...createState(),
+          id: `${state.id}2`
+        };
+        maxInactivity = 1000;
+        await getRepository(DatabaseSession).clear();
+      });
 
-      it('should throw if the user ID is defined and is not a number.', async () => {
-        await rejects(
-          () => store.save(
+      after(() => getConnection().close());
+
+      function convertDbSessionToState(dbSession: DatabaseSession): SessionState {
+        return {
+          content: JSON.parse(dbSession.content),
+          createdAt: dbSession.created_at,
+          flash: JSON.parse(dbSession.flash),
+          id: dbSession.id,
+          updatedAt: dbSession.updated_at,
+          // tslint:disable-next-line
+          userId: dbSession.user_id ?? null,
+        };
+      }
+
+      function convertStateToDbSession(state: SessionState): DatabaseSession {
+        if (typeof state.userId === 'string') {
+          throw new Error('user ID cannot be a string.');
+        }
+        return getRepository(DatabaseSession).create({
+          content: JSON.stringify(state.content),
+          created_at: state.createdAt,
+          flash: JSON.stringify(state.flash),
+          id: state.id,
+          updated_at: state.updatedAt,
+          // tslint:disable-next-line
+          user_id: state.userId ?? undefined,
+        });
+      }
+
+      describe('has a "save" method that', () => {
+
+        it('should throw if the user ID is defined and is not a number.', async () => {
+          await rejects(
+            () => store.save(
+              {
+                ...createState(),
+                userId: 'xxx',
+              },
+              maxInactivity
+            ),
             {
-              ...createState(),
-              userId: 'xxx',
-            },
-            maxInactivity
-          ),
-          {
-            message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
-          }
-        );
-      });
-
-      context('given no session exists in the database with the given ID', () => {
-
-        it('should save the session state in the database.', async () => {
-          await store.save(state, maxInactivity);
-
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
-          deepStrictEqual(convertDbSessionToState(dbSession), state);
-        });
-
-      });
-
-      context('given a session already exists in the database with the given ID', () => {
-
-        beforeEach(async () => {
-          const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
-        });
-
-        it('should throw a SessionAlreadyExists error.', async () => {
-          return rejects(
-            () => store.save(state, maxInactivity),
-            new SessionAlreadyExists()
+              message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+            }
           );
         });
 
-      });
+        context('given no session exists in the database with the given ID', () => {
 
-    });
+          it('should save the session state in the database.', async () => {
+            await store.save(state, maxInactivity);
 
-    describe('has a "read" method that', () => {
+            const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+            deepStrictEqual(convertDbSessionToState(dbSession), state);
+          });
 
-      context('given no session exists in the database with the given ID', () => {
+        });
 
-        it('should return null.', async () => {
-          strictEqual(await store.read('c'), null);
+        context('given a session already exists in the database with the given ID', () => {
+
+          beforeEach(async () => {
+            const session = convertStateToDbSession(state);
+            await getRepository(DatabaseSession).save(session);
+          });
+
+          it('should throw a SessionAlreadyExists error.', async () => {
+            return rejects(
+              () => store.save(state, maxInactivity),
+              new SessionAlreadyExists()
+            );
+          });
+
         });
 
       });
 
-      context('given a session exists in the database with the given ID', () => {
+      describe('has a "read" method that', () => {
+
+        context('given no session exists in the database with the given ID', () => {
+
+          it('should return null.', async () => {
+            strictEqual(await store.read('c'), null);
+          });
+
+        });
+
+        context('given a session exists in the database with the given ID', () => {
+
+          beforeEach(async () => {
+            const session = convertStateToDbSession(state);
+            await getRepository(DatabaseSession).save(session);
+          });
+
+          it('should return the session state.', async () => {
+            const expected = createState();
+            const actual = await store.read(state.id);
+
+            deepStrictEqual(actual, expected);
+          });
+
+        });
+
+      });
+
+      describe('has a "update" method that', () => {
+
+        it('should throw if the user ID is defined and is not a number.', async () => {
+          await rejects(
+            () => store.update(
+              {
+                ...createState(),
+                userId: 'xxx',
+              },
+              maxInactivity
+            ),
+            {
+              message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+            }
+          );
+        });
+
+        context('given no session exists in the database with the given ID', () => {
+
+          it('should save the session state in the database.', async () => {
+            await store.update(state, maxInactivity);
+
+            const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+            deepStrictEqual(convertDbSessionToState(dbSession), state);
+          });
+
+        });
+
+        context('given a session already exists in the database with the given ID', () => {
+
+          let updatedState: SessionState;
+
+          beforeEach(async () => {
+            const session = convertStateToDbSession(state);
+            const session2 = convertStateToDbSession(state2);
+            // The state2 must be saved before the state.
+            await getRepository(DatabaseSession).save([ session2, session ]);
+
+            updatedState = {
+              content: {
+                ...state.content,
+                foo2: 'bar2',
+              },
+              createdAt: state.createdAt + 1,
+              flash: {
+                ...state.flash,
+                hello2: 'world2',
+              },
+              id: state.id,
+              updatedAt: state.updatedAt + 2,
+              userId: 3,
+            };
+          });
+
+          it('should update the session state in the database.', async () => {
+            await store.update(updatedState, maxInactivity);
+
+            const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+            deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
+          });
+
+          it('should not update the other session states in the database.', async () => {
+            await store.update(updatedState, maxInactivity);
+
+            const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state2.id });
+            deepStrictEqual(convertDbSessionToState(dbSession), state2);
+          });
+
+        });
+
+      });
+
+      describe('has a "destroy" method that', () => {
+
+        context('given no session exists in the database with the given ID', () => {
+
+          it('should not throw an error.', () => {
+            return doesNotReject(() => store.destroy('c'));
+          });
+
+        });
+
+        context('given a session already exists in the database with the given ID', () => {
+
+          beforeEach(async () => {
+            const session = convertStateToDbSession(state);
+            const session2 = convertStateToDbSession(state2);
+            // The state2 must be saved before the state.
+            await getRepository(DatabaseSession).save([ session2, session ]);
+          });
+
+          it('should delete the session in the database.', async () => {
+            await store.destroy(state.id);
+
+            strictEqual((await getRepository(DatabaseSession).findOne({ id: state.id })), undefined);
+          });
+
+          it('should not delete the other sessions in the database.', async () => {
+            await store.destroy(state.id);
+
+            return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: state2.id }));
+          });
+
+        });
+
+      });
+
+      describe('has a "clear" method that', () => {
 
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
           await getRepository(DatabaseSession).save(session);
         });
 
-        it('should return the session state.', async () => {
-          const expected = createState();
-          const actual = await store.read(state.id);
+        it('should remove all sessions.', async () => {
+          await store.clear();
 
-          deepStrictEqual(actual, expected);
+          strictEqual((await getRepository(DatabaseSession).find()).length, 0);
         });
 
       });
 
-    });
+      describe('has a "cleanUpExpiredSessions" method that', () => {
 
-    describe('has a "update" method that', () => {
+        let maxLifeTime: number;
 
-      it('should throw if the user ID is defined and is not a number.', async () => {
-        await rejects(
-          () => store.update(
+        beforeEach(async () => {
+          maxInactivity = 10;
+          maxLifeTime = 20;
+
+          const now = Math.trunc(Date.now() / 1000);
+          const states: SessionState[] = [
             {
               ...createState(),
-              userId: 'xxx',
+              createdAt: now - 1,
+              id: 'xxx',
+              updatedAt: now - 1,
             },
-            maxInactivity
-          ),
-          {
-            message: '[TypeORMStore] Impossible to save the session. The user ID must be a number.'
+            {
+              ...createState(),
+              createdAt: now,
+              id: 'yyy',
+              updatedAt: now - maxInactivity - 1,
+            },
+            {
+              ...createState(),
+              createdAt: now - maxLifeTime - 1,
+              id: 'zzz',
+              updatedAt: now,
+            },
+          ];
+
+          for (const state of states) {
+            const session = convertStateToDbSession(state);
+            await getRepository(DatabaseSession).save(session);
           }
-        );
-      });
+        });
 
-      context('given no session exists in the database with the given ID', () => {
+        it('should not remove unexpired sessions.', async () => {
+          await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        it('should save the session state in the database.', async () => {
-          await store.update(state, maxInactivity);
+          return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: 'xxx' }));
+        });
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
-          deepStrictEqual(convertDbSessionToState(dbSession), state);
+        it('should remove sessions expired due to inactivity.', async () => {
+          await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
+
+          return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'yyy' }));
+        });
+
+        it('should remove sessions expired due to absolute end of life.', async () => {
+          await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
+
+          return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'zzz' }));
         });
 
       });
 
-      context('given a session already exists in the database with the given ID', () => {
-
-        let updatedState: SessionState;
+      describe('has a "getAuthenticatedUsers" method that', () => {
 
         beforeEach(async () => {
-          const session = convertStateToDbSession(state);
-          const session2 = convertStateToDbSession(state2);
-          // The state2 must be saved before the state.
-          await getRepository(DatabaseSession).save([ session2, session ]);
+          const sessions = getRepository(DatabaseSession).create([
+            {
+              content: '{}',
+              created_at: 1,
+              flash: JSON.stringify({}),
+              id: 'a',
+              updated_at: 2,
+            },
+            {
+              content: '{}',
+              created_at: 3,
+              flash: JSON.stringify({}),
+              id: 'b',
+              updated_at: 4,
+              user_id: 1,
+            },
+            {
+              content: '{}',
+              created_at: 5,
+              flash: JSON.stringify({}),
+              id: 'c',
+              updated_at: 6,
+              user_id: 2,
+            },
+            {
+              content: '{}',
+              created_at: 7,
+              flash: JSON.stringify({}),
+              id: 'd',
+              updated_at: 8,
+              user_id: 2
+            }
+          ]);
 
-          updatedState = {
-            content: {
-              ...state.content,
-              foo2: 'bar2',
-            },
-            createdAt: state.createdAt + 1,
-            flash: {
-              ...state.flash,
-              hello2: 'world2',
-            },
-            id: state.id,
-            updatedAt: state.updatedAt + 2,
-            userId: 3,
-          };
+          await getRepository(DatabaseSession).save(sessions);
         });
 
-        it('should update the session state in the database.', async () => {
-          await store.update(updatedState, maxInactivity);
-
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
-          deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
-        });
-
-        it('should not update the other session states in the database.', async () => {
-          await store.update(updatedState, maxInactivity);
-
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state2.id });
-          deepStrictEqual(convertDbSessionToState(dbSession), state2);
+        it('should return the IDs of the authenticated users (distinct).', async () => {
+          const sessions = await store.getAuthenticatedUserIds();
+          // No null or dupplicated values.
+          deepStrictEqual(sessions, [ 1, 2 ]);
         });
 
       });
 
-    });
-
-    describe('has a "destroy" method that', () => {
-
-      context('given no session exists in the database with the given ID', () => {
-
-        it('should not throw an error.', () => {
-          return doesNotReject(() => store.destroy('c'));
-        });
-
-      });
-
-      context('given a session already exists in the database with the given ID', () => {
+      describe('has a "destroyAllSessionsOf" method that', () => {
 
         beforeEach(async () => {
-          const session = convertStateToDbSession(state);
-          const session2 = convertStateToDbSession(state2);
-          // The state2 must be saved before the state.
-          await getRepository(DatabaseSession).save([ session2, session ]);
+          const sessions = getRepository(DatabaseSession).create([
+            {
+              content: '{}',
+              created_at: 1,
+              flash: JSON.stringify({}),
+              id: 'a',
+              updated_at: 2,
+            },
+            {
+              content: '{}',
+              created_at: 3,
+              flash: JSON.stringify({}),
+              id: 'b',
+              updated_at: 4,
+              user_id: 1,
+            },
+            {
+              content: '{}',
+              created_at: 5,
+              flash: JSON.stringify({}),
+              id: 'c',
+              updated_at: 6,
+              user_id: 2,
+            },
+            {
+              content: '{}',
+              created_at: 7,
+              flash: JSON.stringify({}),
+              id: 'd',
+              updated_at: 8,
+              user_id: 2
+            }
+          ]);
+
+          await getRepository(DatabaseSession).save(sessions);
         });
 
-        it('should delete the session in the database.', async () => {
-          await store.destroy(state.id);
+        it('destroy all the sessions of the given user.', async () => {
+          const user = { id: 2 };
+          await store.destroyAllSessionsOf(user);
 
-          strictEqual((await getRepository(DatabaseSession).findOne({ id: state.id })), undefined);
+          const sessions = await getRepository(DatabaseSession).find();
+          strictEqual(sessions.length, 2);
+          strictEqual(sessions[0].id, 'a');
+          strictEqual(sessions[1].id, 'b');
         });
 
-        it('should not delete the other sessions in the database.', async () => {
-          await store.destroy(state.id);
+      });
 
-          return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: state2.id }));
+      describe('has a "getSessionIDsOf" method that', () => {
+
+        beforeEach(async () => {
+          const sessions = getRepository(DatabaseSession).create([
+            {
+              content: '{}',
+              created_at: 1,
+              flash: JSON.stringify({}),
+              id: 'a',
+              updated_at: 2,
+            },
+            {
+              content: '{}',
+              created_at: 3,
+              flash: JSON.stringify({}),
+              id: 'b',
+              updated_at: 4,
+              user_id: 1,
+            },
+            {
+              content: '{ "foo": "bar" }',
+              created_at: 5,
+              flash: JSON.stringify({ hello: 'world' }),
+              id: 'c',
+              updated_at: 6,
+              user_id: 2,
+            },
+            {
+              content: '{ "bar": "foo" }',
+              created_at: 7,
+              flash: JSON.stringify({}),
+              id: 'd',
+              updated_at: 8,
+              user_id: 2
+            }
+          ]);
+
+          await getRepository(DatabaseSession).save(sessions);
         });
 
-      });
+        it('should return an empty array if the user ID does not match any users.', async () => {
+          const user = { id: 0 };
+          const sessions = await store.getSessionIDsOf(user);
+          strictEqual(sessions.length, 0);
+        });
 
-    });
+        it('should return the IDs of the sessions associated with the given user.', async () => {
+          const user = { id: 2 };
+          const sessions = await store.getSessionIDsOf(user);
+          strictEqual(sessions.length, 2);
 
-    describe('has a "clear" method that', () => {
+          strictEqual(sessions[0], 'c');
+          strictEqual(sessions[1], 'd');
+        });
 
-      beforeEach(async () => {
-        const session = convertStateToDbSession(state);
-        await getRepository(DatabaseSession).save(session);
-      });
-
-      it('should remove all sessions.', async () => {
-        await store.clear();
-
-        strictEqual((await getRepository(DatabaseSession).find()).length, 0);
-      });
-
-    });
-
-    describe('has a "cleanUpExpiredSessions" method that', () => {
-
-      let maxLifeTime: number;
-
-      beforeEach(async () => {
-        maxInactivity = 10;
-        maxLifeTime = 20;
-
-        const now = Math.trunc(Date.now() / 1000);
-        const states: SessionState[] = [
-          {
-            ...createState(),
-            createdAt: now - 1,
-            id: 'xxx',
-            updatedAt: now - 1,
-          },
-          {
-            ...createState(),
-            createdAt: now,
-            id: 'yyy',
-            updatedAt: now - maxInactivity - 1,
-          },
-          {
-            ...createState(),
-            createdAt: now - maxLifeTime - 1,
-            id: 'zzz',
-            updatedAt: now,
-          },
-        ];
-
-        for (const state of states) {
-          const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
-        }
-      });
-
-      it('should not remove unexpired sessions.', async () => {
-        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
-
-        return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: 'xxx' }));
-      });
-
-      it('should remove sessions expired due to inactivity.', async () => {
-        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
-
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'yyy' }));
-      });
-
-      it('should remove sessions expired due to absolute end of life.', async () => {
-        await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
-
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'zzz' }));
-      });
-
-    });
-
-    describe('has a "getAuthenticatedUsers" method that', () => {
-
-      beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
-          {
-            content: '{}',
-            created_at: 1,
-            flash: JSON.stringify({}),
-            id: 'a',
-            updated_at: 2,
-          },
-          {
-            content: '{}',
-            created_at: 3,
-            flash: JSON.stringify({}),
-            id: 'b',
-            updated_at: 4,
-            user_id: 1,
-          },
-          {
-            content: '{}',
-            created_at: 5,
-            flash: JSON.stringify({}),
-            id: 'c',
-            updated_at: 6,
-            user_id: 2,
-          },
-          {
-            content: '{}',
-            created_at: 7,
-            flash: JSON.stringify({}),
-            id: 'd',
-            updated_at: 8,
-            user_id: 2
-          }
-        ]);
-
-        await getRepository(DatabaseSession).save(sessions);
-      });
-
-      it('should return the IDs of the authenticated users (distinct).', async () => {
-        const sessions = await store.getAuthenticatedUserIds();
-        // No null or dupplicated values.
-        deepStrictEqual(sessions, [ 1, 2 ]);
-      });
-
-    });
-
-    describe('has a "destroyAllSessionsOf" method that', () => {
-
-      beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
-          {
-            content: '{}',
-            created_at: 1,
-            flash: JSON.stringify({}),
-            id: 'a',
-            updated_at: 2,
-          },
-          {
-            content: '{}',
-            created_at: 3,
-            flash: JSON.stringify({}),
-            id: 'b',
-            updated_at: 4,
-            user_id: 1,
-          },
-          {
-            content: '{}',
-            created_at: 5,
-            flash: JSON.stringify({}),
-            id: 'c',
-            updated_at: 6,
-            user_id: 2,
-          },
-          {
-            content: '{}',
-            created_at: 7,
-            flash: JSON.stringify({}),
-            id: 'd',
-            updated_at: 8,
-            user_id: 2
-          }
-        ]);
-
-        await getRepository(DatabaseSession).save(sessions);
-      });
-
-      it('destroy all the sessions of the given user.', async () => {
-        const user = { id: 2 };
-        await store.destroyAllSessionsOf(user);
-
-        const sessions = await getRepository(DatabaseSession).find();
-        strictEqual(sessions.length, 2);
-        strictEqual(sessions[0].id, 'a');
-        strictEqual(sessions[1].id, 'b');
-      });
-
-    });
-
-    describe('has a "getSessionIDsOf" method that', () => {
-
-      beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
-          {
-            content: '{}',
-            created_at: 1,
-            flash: JSON.stringify({}),
-            id: 'a',
-            updated_at: 2,
-          },
-          {
-            content: '{}',
-            created_at: 3,
-            flash: JSON.stringify({}),
-            id: 'b',
-            updated_at: 4,
-            user_id: 1,
-          },
-          {
-            content: '{ "foo": "bar" }',
-            created_at: 5,
-            flash: JSON.stringify({ hello: 'world' }),
-            id: 'c',
-            updated_at: 6,
-            user_id: 2,
-          },
-          {
-            content: '{ "bar": "foo" }',
-            created_at: 7,
-            flash: JSON.stringify({}),
-            id: 'd',
-            updated_at: 8,
-            user_id: 2
-          }
-        ]);
-
-        await getRepository(DatabaseSession).save(sessions);
-      });
-
-      it('should return an empty array if the user ID does not match any users.', async () => {
-        const user = { id: 0 };
-        const sessions = await store.getSessionIDsOf(user);
-        strictEqual(sessions.length, 0);
-      });
-
-      it('should return the IDs of the sessions associated with the given user.', async () => {
-        const user = { id: 2 };
-        const sessions = await store.getSessionIDsOf(user);
-        strictEqual(sessions.length, 2);
-
-        strictEqual(sessions[0], 'c');
-        strictEqual(sessions[1], 'd');
       });
 
     });

@@ -47,6 +47,9 @@ describe('RedisStore', () => {
 
   describe('when the service has been initialized', () => {
 
+    let state: SessionState;
+    let maxInactivity: number;
+
     function createState(): SessionState {
       return {
         content: {
@@ -65,9 +68,6 @@ describe('RedisStore', () => {
     function getKey(id: string): string {
       return `${COLLECTION_NAME}:${id}`;
     }
-
-    let state: SessionState;
-    let maxInactivity: number;
 
     before(async () => {
       redisClient = createClient(REDIS_URI);
