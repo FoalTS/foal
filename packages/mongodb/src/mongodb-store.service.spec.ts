@@ -75,6 +75,11 @@ describe('MongoDBStore', () => {
 
         store.setMongoDBClient(mongoDBClient);
 
+        if ((await mongoDBClient.db().collections()).length === 0) {
+          // This line is required in order to use the method "indexInformation()".
+          await mongoDBClient.db().createCollection('sessions');
+        }
+
         let indexInformation = await mongoDBClient.db().collection(COLLECTION_NAME).indexInformation();
         strictEqual(Object.keys(indexInformation).some(key => indexInformation[key][0][0] === 'sessionID'), false);
 
