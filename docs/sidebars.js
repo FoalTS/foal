@@ -121,7 +121,6 @@ module.exports = {
       category('Security', [
         'security/http-headers-protection',
         'security/csrf-protection',
-        'security/xss-protection',
       ]),
       category('Cookbook', [
         'cookbook/scheduling-jobs',
