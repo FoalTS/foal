@@ -25,8 +25,6 @@ export {
   displayServerURL,
   convertBase64ToBase64url,
   convertBase64urlToBase64,
-  escape,
-  escapeProp,
   generateSignedToken,
   generateToken,
   getAjvInstance,
