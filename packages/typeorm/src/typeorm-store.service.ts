@@ -39,17 +39,17 @@ export class DatabaseSession {
  */
 export class TypeORMStore extends SessionStore {
 
-  private connection: Connection;
+  private _connection: Connection;
 
   setConnection(connection: Connection) {
-    this.connection = connection;
+    this._connection = connection;
   }
 
-  boot() {
-    if (this.connection) {
-      return;
+  get connection(): Connection {
+    if (this._connection) {
+      return this._connection;
     }
-    this.connection = getConnection();
+    return getConnection();
   }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
