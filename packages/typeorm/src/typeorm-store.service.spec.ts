@@ -682,7 +682,7 @@ function storeTestSuite(type: DBType) {
 
 }
 
-describe.only('TypeORMStore', () => {
+describe('TypeORMStore', () => {
 
   storeTestSuite('mysql');
   storeTestSuite('mariadb');
