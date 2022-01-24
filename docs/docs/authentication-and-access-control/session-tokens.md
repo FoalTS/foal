@@ -1041,3 +1041,92 @@ The `@UseSessions` hook automatically saves the session state on each request. I
 ```typescript
 await session.commit();
 ```
+
+### Provide Another Client to Use in the Stores
+
+By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases. The `TypeORMStore` uses the default TypeORM connection.
+
+This behavior can be overridden by providing a custom client to the stores at initialization.
+
+#### `TypeORMStore`
+
+*First example*
+```typescript
+export class AppController {
+  @dependency
+  store: TypeORMStore;
+
+  // ...
+
+  async init() {
+    const connection = await createConnection('connection2');
+    this.store.setConnection(connection);
+  }
+}
+```
+
+*Second example*
+
+```typescript
+async function main() {
+  const connection = await createConnection('connection2');
+
+  const services = new ServiceManager();
+  services.get(TypeORMStore).setConnection(connection);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
+
+#### `RedisStore`
+
+```
+npm install redis@3
+```
+
+*index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { RedisStore } from '@foal/redis';
+import { createClient } from 'redis';
+
+async function main() {
+  const redisClient = createClient('redis://localhost:6379');
+
+  const services = new ServiceManager();
+  services.get(RedisStore).setRedisClient(redisClient);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
+
+#### `MongoDBStore`
+
+```
+npm install mongodb@3
+```
+
+*index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { RedisStore } from '@foal/mongodb';
+import { MongoDBStore } from 'mongodb';
+
+async function main() {
+  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+  const services = new ServiceManager();
+  services.get(MongoDBStore).setMongoDBClient(mongoDBClient);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
