@@ -1042,7 +1042,7 @@ The `@UseSessions` hook automatically saves the session state on each request. I
 await session.commit();
 ```
 
-### Provide Another Client to Use in the Stores
+### Provide A Custom Client to Use in the Stores
 
 By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases. The `TypeORMStore` uses the default TypeORM connection.
 
@@ -1052,6 +1052,10 @@ This behavior can be overridden by providing a custom client to the stores at in
 
 *First example*
 ```typescript
+import { dependency } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
 export class AppController {
   @dependency
   store: TypeORMStore;
@@ -1068,11 +1072,15 @@ export class AppController {
 *Second example*
 
 ```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
 async function main() {
   const connection = await createConnection('connection2');
 
-  const services = new ServiceManager();
-  services.get(TypeORMStore).setConnection(connection);
+  const serviceManager = new ServiceManager();
+  serviceManager.get(TypeORMStore).setConnection(connection);
 
   const app = await createApp(AppController, { serviceManager });
 
@@ -1095,8 +1103,8 @@ import { createClient } from 'redis';
 async function main() {
   const redisClient = createClient('redis://localhost:6379');
 
-  const services = new ServiceManager();
-  services.get(RedisStore).setRedisClient(redisClient);
+  const serviceManager = new ServiceManager();
+  serviceManager.get(RedisStore).setRedisClient(redisClient);
 
   const app = await createApp(AppController, { serviceManager });
 
@@ -1113,8 +1121,8 @@ npm install mongodb@3
 *index.ts*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
-import { RedisStore } from '@foal/mongodb';
-import { MongoDBStore } from 'mongodb';
+import { MongoDBStore } from '@foal/mongodb';
+import { MongoClient } from 'mongodb';
 
 async function main() {
   const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
@@ -1122,8 +1130,8 @@ async function main() {
     useUnifiedTopology: true
   });
 
-  const services = new ServiceManager();
-  services.get(MongoDBStore).setMongoDBClient(mongoDBClient);
+  const serviceManager = new ServiceManager();
+  serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);
 
   const app = await createApp(AppController, { serviceManager });
 
