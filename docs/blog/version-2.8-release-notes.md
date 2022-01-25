@@ -479,3 +479,100 @@ export class WebsocketController extends SocketIOController {
 
 }
 ```
+
+# Passing a custom database client to a session store
+
+By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases. The `TypeORMStore` uses the default TypeORM connection.
+
+It is now possible to override this behavior by providing a custom client to the stores at initialization.
+
+## `TypeORMStore`
+
+*First example*
+```typescript
+import { dependency } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
+export class AppController {
+  @dependency
+  store: TypeORMStore;
+
+  // ...
+
+  async init() {
+    const connection = await createConnection('connection2');
+    this.store.setConnection(connection);
+  }
+}
+```
+
+*Second example*
+
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { TypeORMStore } from '@foal/typeorm';
+import { createConnection } from 'typeorm';
+
+async function main() {
+  const connection = await createConnection('connection2');
+
+  const serviceManager = new ServiceManager();
+  serviceManager.get(TypeORMStore).setConnection(connection);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
+
+## `RedisStore`
+
+```
+npm install redis@3
+```
+
+*index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { RedisStore } from '@foal/redis';
+import { createClient } from 'redis';
+
+async function main() {
+  const redisClient = createClient('redis://localhost:6379');
+
+  const serviceManager = new ServiceManager();
+  serviceManager.get(RedisStore).setRedisClient(redisClient);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
+
+## `MongoDBStore`
+
+```
+npm install mongodb@3
+```
+
+*index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { MongoDBStore } from '@foal/mongodb';
+import { MongoClient } from 'mongodb';
+
+async function main() {
+  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
+  const serviceManager = new ServiceManager();
+  serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);
+
+  const app = await createApp(AppController, { serviceManager });
+
+  // ...
+}
+```
