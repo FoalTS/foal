@@ -8,4 +8,5 @@ export {
   getRSAPublicKeyFromJWKS,
   Headers,
   Options,
+  JSONWebKey,
 } from './get-rsa-public-key-from-jwks';

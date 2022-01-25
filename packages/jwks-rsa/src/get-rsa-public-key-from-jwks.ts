@@ -1,3 +1,8 @@
+// std
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
+
+// 3p
 import { InvalidTokenError } from '@foal/jwt';
 // tslint:disable-next-line:no-var-requires
 const jwksClient = require('jwks-rsa');
@@ -16,10 +21,40 @@ export interface Options {
   cacheMaxEntries?: number;
   cacheMaxAge?: number;
   jwksRequestsPerMinute?: number;
-  strictSsl?: boolean;
+  proxy?: string;
   requestHeaders?: Headers;
-  handleSigningKeyError?(err: Error, cb: (err: Error) => void): any;
+  timeout?: number;
+  requestAgent?: HttpAgent | HttpsAgent;
+  fetcher?(jwksUri: string): Promise<{ keys: any }>;
+  getKeysInterceptor?(): Promise<JSONWebKey[]>;
 }
+
+export interface JSONWebKey {
+  kid: string,
+  alg: string,
+  [key: string]: any
+}
+
+
+interface JwksClient {
+  getSigningKey(kid?: string | null | undefined): Promise<SigningKey>;
+}
+
+interface CertSigningKey {
+  kid: string;
+  alg: string;
+  getPublicKey(): string;
+  publicKey: string;
+}
+
+interface RsaSigningKey {
+  kid: string;
+  alg: string;
+  getPublicKey(): string;
+  rsaPublicKey: string;
+}
+
+type SigningKey = CertSigningKey | RsaSigningKey;
 
 /**
  * Create a function to retreive the RSA public key from a JWKS endpoint based on the kid of
@@ -38,18 +73,16 @@ export function getRSAPublicKeyFromJWKS(options: Options): (header: any, payload
       throw new InvalidTokenError('missing kid');
     }
 
-    const client = jwksClient(options);
+    const client = jwksClient(options) as JwksClient;
 
-    return new Promise<string>((resolve, reject) => {
-      client.getSigningKey(kid, (err: any, key: any) => {
-        if (err) {
-          return reject(err.name === 'SigningKeyNotFoundError' ? new InvalidTokenError('invalid kid') : err);
-        }
-        // "key.publicKey || key.rsaPublicKey" because of
-        // https://github.com/auth0/node-jwks-rsa/blob/master/src/integrations/express.js#L36
-        // The " || key.rsaPublicKey" part is currently not tested.
-        resolve(key.publicKey || key.rsaPublicKey);
-      });
-    });
+    try {
+      const key = await client.getSigningKey(kid);
+      return key.getPublicKey();
+    } catch (err: any) {
+      if (err.name === 'SigningKeyNotFoundError') {
+        throw new InvalidTokenError('invalid kid');
+      }
+      throw err;
+    }
   };
 }
