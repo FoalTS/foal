@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { rejects, strictEqual } from 'assert';
 import { Server } from 'http';
 
 // 3p
@@ -50,40 +50,49 @@ describe('getRSAPublicKeyFromJWKS', () => {
 
     it('should reject an InvalidTokenError if header.alg is not RS256.', () => {
       const fn = getRSAPublicKeyFromJWKS(defaultOptions);
-      return fn({ alg: 'HS256' }, {})
-        .then(() => { throw new Error('An InvalidTokenError should have been thrown.'); })
-        .catch(err => {
+
+      return rejects(
+        () => fn({ alg: 'HS256' }, {}),
+        (err: any) => {
           if (!isInvalidTokenError(err)) {
             throw new Error('An InvalidTokenError should have been thrown.');
           }
           strictEqual(err.message, 'invalid algorithm');
-        });
+          return true;
+        }
+      );
     });
 
     it('should reject an InvalidTokenError if no kid is provided.', () => {
       const fn = getRSAPublicKeyFromJWKS(defaultOptions);
-      return fn({ alg: 'RS256' }, {})
-        .then(() => { throw new Error('An InvalidTokenError should have been thrown.'); })
-        .catch(err => {
+
+      return rejects(
+        () => fn({ alg: 'RS256' }, {}),
+        (err: any) => {
           if (!isInvalidTokenError(err)) {
             throw new Error('An InvalidTokenError should have been thrown.');
           }
           strictEqual(err.message, 'missing kid');
-        });
+          return true;
+        }
+      );
     });
 
     it('should reject an InvalidTokenError if the kid does not match any keys.', () => {
       const fn = getRSAPublicKeyFromJWKS({
         jwksUri: 'http://localhost:3000/.well-known/jwks.json'
       });
-      return fn({ alg: 'RS256', kid: '345' }, {})
-        .then(() => { throw new Error('An InvalidTokenError should have been thrown.'); })
-        .catch(err => {
+
+      return rejects(
+        () => fn({ alg: 'RS256', kid: '345' }, {}),
+        (err: any) => {
           if (!isInvalidTokenError(err)) {
             throw new Error('An InvalidTokenError should have been thrown.');
           }
           strictEqual(err.message, 'invalid kid');
-        });
+          return true;
+        }
+      );
     });
 
     it('should reject errors returned from the JWKS client if they are not SigningKeyNotFoundError.', () => {
@@ -91,9 +100,11 @@ describe('getRSAPublicKeyFromJWKS', () => {
       const fn = getRSAPublicKeyFromJWKS({
         jwksUri: 'http://localhost:3000/.well-known/jwks.json'
       });
-      return fn({ alg: 'RS256', kid: '345' }, {})
-        .then(() => { throw new Error('An InvalidTokenError should have been thrown.'); })
-        .catch(err => strictEqual(err.message, 'connect ECONNREFUSED 127.0.0.1:3000'));
+
+      return rejects(
+        () => fn({ alg: 'RS256', kid: '345' }, {}),
+        new Error('connect ECONNREFUSED 127.0.0.1:3000')
+      );
     });
 
     it('should return the public key that matches the given kid.', async () => {
