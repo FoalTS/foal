@@ -47,6 +47,7 @@
     "jsonwebtoken": "~8.3.0",
     "mocha": "~8.3.0",
     "mongodb": "~3.6.6",
+    "mongodb4": ""
     "nuxt": "~2.9.2",
     "react": "~16.8.6",
     "react-dom": "~16.8.6",
