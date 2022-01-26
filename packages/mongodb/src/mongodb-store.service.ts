@@ -18,13 +18,19 @@ export class MongoDBStore extends SessionStore {
   private mongoDBClient: any;
   private collection: any;
 
+  setMongoDBClient(mongoDBClient: any) {
+    this.mongoDBClient = mongoDBClient;
+  }
+
   async boot() {
-    const mongoDBURI = Config.getOrThrow(
-      'settings.mongodb.uri',
-      'string',
-      'You must provide the URI of your database when using MongoDBStore.'
-    );
-    this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    if (!this.mongoDBClient) {
+      const mongoDBURI = Config.getOrThrow(
+        'settings.mongodb.uri',
+        'string',
+        'You must provide the URI of your database when using MongoDBStore.'
+      );
+      this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    }
     this.collection = this.mongoDBClient.db().collection('sessions');
     this.collection.createIndex({ sessionID: 1 }, { unique: true });
   }
