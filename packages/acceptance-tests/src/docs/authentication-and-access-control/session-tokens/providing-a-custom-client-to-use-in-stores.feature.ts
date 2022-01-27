@@ -110,7 +110,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
           await session.commit();
         } catch (error: any) {
           // Should throw because the connection has already been closed.
-          if (error.name === 'AbortError') {
+          if (error.message === 'The client is closed') {
             return new HttpResponseOK();
           }
           throw error;
