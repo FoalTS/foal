@@ -1115,7 +1115,7 @@ async function main() {
 #### `MongoDBStore`
 
 ```
-npm install mongodb@3
+npm install mongodb@4
 ```
 
 *index.ts*
@@ -1125,10 +1125,7 @@ import { MongoDBStore } from '@foal/mongodb';
 import { MongoClient } from 'mongodb';
 
 async function main() {
-  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
 
   const serviceManager = new ServiceManager();
   serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);

@@ -1,11 +1,8 @@
-// std
-import { } from 'assert';
-
 // 3p
 import * as request from 'supertest';
 import { createClient } from 'redis';
 import { getConnection } from '@foal/typeorm/node_modules/typeorm';
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb4';
 
 // FoalTS
 import { createApp, createSession, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';
@@ -158,7 +155,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
           await session.commit();
         } catch (error: any) {
           // Should throw because the connection has already been closed.
-          if (error.name === 'MongoError') {
+          if (error.name === 'MongoNotConnectedError') {
             return new HttpResponseOK();
           }
           throw error;
@@ -170,10 +167,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      });
+      mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
 
       const serviceManager = new ServiceManager();
       serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);
