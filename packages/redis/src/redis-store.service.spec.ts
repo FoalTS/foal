@@ -25,7 +25,7 @@ describe('RedisStore', () => {
     afterEach(() => Promise.all([
       store.close(),
       redisClient.quit()
-    ]))
+    ]).catch((err: any) => strictEqual(err.message, 'The client is closed')))
 
     context('when setRedisClient has been previously called', () => {
 
@@ -96,7 +96,7 @@ describe('RedisStore', () => {
       const session = await createSession({} as any);
       const key = getKey(session.getToken());
       await redisClient.set(key, 'bar');
-      strictEqual(await redisClient.exists(key), true);
+      strictEqual(await redisClient.exists(key), 1);
     });
 
     describe('has a "save" method that', () => {
